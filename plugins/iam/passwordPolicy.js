@@ -1,55 +1,79 @@
-var pluginInfo = {
-	title: 'Password Policy',
-	query: 'passwordPolicy',
-	category: 'IAM',
-	aws_service: 'IAM',
-	description: 'Ensures a strong password policy is setup for the account',
-	more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
-	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
-	tests: {
-		minPasswordLength: {
-			title: 'Minimum Password Length',
-			description: 'Ensures password policy requires a password of at least 12 characters',
-			recommendedAction: 'Increase the minimum length requirement for the password policy',
-			results: []
-		},
-		requiresSymbols: {
-			title: 'Password Requires Symbols',
-			description: 'Ensures password policy requires the use of symbols',
-			recommendedAction: 'Update the password policy to require the use of symbols',
-			results: []
-		},
-		maxPasswordAge: {
-			title: 'Maximum Password Age',
-			description: 'Ensures password policy requires passwords to be reset every 180 days',
-			recommendedAction: 'Descrease the maximum allowed age of passwords for the password policy',
-			results: []
-		},
-		passwordReusePrevention: {
-			title: 'Password Reuse Prevention',
-			description: 'Ensures password policy prevents previous password reuse',
-			recommendedAction: 'Increase the minimum previous passwors that can be reused',
-			results: []
+var AWS = require('aws-sdk');
+
+function getPluginInfo() {
+	return {
+		title: 'Password Policy',
+		query: 'passwordPolicy',
+		category: 'IAM',
+		aws_service: 'IAM',
+		description: 'Ensures a strong password policy is setup for the account',
+		more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
+		link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
+		tests: {
+			minPasswordLength: {
+				title: 'Minimum Password Length',
+				description: 'Ensures password policy requires a password of at least 12 characters',
+				recommendedAction: 'Increase the minimum length requirement for the password policy',
+				results: []
+			},
+			requiresSymbols: {
+				title: 'Password Requires Symbols',
+				description: 'Ensures password policy requires the use of symbols',
+				recommendedAction: 'Update the password policy to require the use of symbols',
+				results: []
+			},
+			maxPasswordAge: {
+				title: 'Maximum Password Age',
+				description: 'Ensures password policy requires passwords to be reset every 180 days',
+				recommendedAction: 'Descrease the maximum allowed age of passwords for the password policy',
+				results: []
+			},
+			passwordReusePrevention: {
+				title: 'Password Reuse Prevention',
+				description: 'Ensures password policy prevents previous password reuse',
+				recommendedAction: 'Increase the minimum previous passwors that can be reused',
+				results: []
+			}
 		}
-	}
-};
+	};
+}
 
 module.exports = {
-	title: pluginInfo.title,
-	query: pluginInfo.query,
-	category: pluginInfo.category,
-	description: pluginInfo.description,
-	more_info: pluginInfo.more_info,
-	link: pluginInfo.link,
+	title: getPluginInfo().title,
+	query: getPluginInfo().query,
+	category: getPluginInfo().category,
+	description: getPluginInfo().description,
+	more_info: getPluginInfo().more_info,
+	link: getPluginInfo().link,
 
-	run: function(AWS, callback) {
+	run: function(AWSConfig, callback) {
 
-		var iam = new AWS.IAM();
+		var iam = new AWS.IAM(AWSConfig);
+		var pluginInfo = getPluginInfo();
 
 		iam.getAccountPasswordPolicy(function(err, data){
 			if (err) {
-				callback(err);
-				return;
+				pluginInfo.tests.minPasswordLength.results.push({
+					status: 3,
+					message: 'Unable to query for password policy status'
+				});
+
+				pluginInfo.tests.requiresSymbols.results.push({
+					status: 3,
+					message: 'Unable to query for password policy status'
+				});
+
+				pluginInfo.tests.maxPasswordAge.results.push({
+					status: 3,
+					message: 'Unable to query for password policy status'
+				});
+
+				pluginInfo.tests.passwordReusePrevention.results.push({
+					status: 3,
+					message: 'Unable to query for password policy status'
+				});
+
+				return callback(null, pluginInfo);
 			}
 			
 			if (data) {
@@ -134,8 +158,27 @@ module.exports = {
 				}
 				callback(null, pluginInfo);
 			} else {
-				callback('unexpected return data');
-				return;
+				pluginInfo.tests.minPasswordLength.results.push({
+					status: 3,
+					message: 'Unable to query for password policy status'
+				});
+
+				pluginInfo.tests.requiresSymbols.results.push({
+					status: 3,
+					message: 'Unable to query for password policy status'
+				});
+
+				pluginInfo.tests.maxPasswordAge.results.push({
+					status: 3,
+					message: 'Unable to query for password policy status'
+				});
+
+				pluginInfo.tests.passwordReusePrevention.results.push({
+					status: 3,
+					message: 'Unable to query for password policy status'
+				});
+
+				return callback(null, pluginInfo);
 			}
 		});
 	}

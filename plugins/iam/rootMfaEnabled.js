@@ -1,37 +1,44 @@
-var pluginInfo = {
-	title: 'Root MFA Enabled',
-	query: 'rootMfaEnabled',
-	category: 'IAM',
-	aws_service: 'IAM',
-	description: 'Ensures a multi-factor authentication device is enabled for the root account',
-	more_info: 'The root account should have an MFA device setup to enable two-factor authentication',
-	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
-	tests: {
-		rootMfaEnabled: {
-			title: 'Root MFA Enabled',
-			description: 'Ensures a multi-factor authentication device is enabled for the root account',
-			recommendedAction: 'Enable an MFA device for the root account and then use an IAM user for managing services',
-			results: []
+var AWS = require('aws-sdk');
+
+function getPluginInfo() {
+	return {
+		title: 'Root MFA Enabled',
+		query: 'rootMfaEnabled',
+		category: 'IAM',
+		aws_service: 'IAM',
+		description: 'Ensures a multi-factor authentication device is enabled for the root account',
+		more_info: 'The root account should have an MFA device setup to enable two-factor authentication',
+		link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
+		tests: {
+			rootMfaEnabled: {
+				title: 'Root MFA Enabled',
+				description: 'Ensures a multi-factor authentication device is enabled for the root account',
+				recommendedAction: 'Enable an MFA device for the root account and then use an IAM user for managing services',
+				results: []
+			}
 		}
-	}
-};
+	};
+}
 
 module.exports = {
-	title: pluginInfo.title,
-	query: pluginInfo.query,
-	category: pluginInfo.category,
-	description: pluginInfo.description,
-	more_info: pluginInfo.more_info,
-	link: pluginInfo.link,
+	title: getPluginInfo().title,
+	query: getPluginInfo().query,
+	category: getPluginInfo().category,
+	description: getPluginInfo().description,
+	more_info: getPluginInfo().more_info,
+	link: getPluginInfo().link,
 
-	run: function(AWS, callback) {
-
-		var iam = new AWS.IAM();
+	run: function(AWSConfig, callback) {
+		var iam = new AWS.IAM(AWSConfig);
+		var pluginInfo = getPluginInfo();
 
 		iam.getAccountSummary(function(err, data){
 			if (err) {
-				callback(err);
-				return;
+				pluginInfo.tests.rootMfaEnabled.results.push({
+					status: 3,
+					message: 'Unable to query for MFA status'
+				});
+				return callback(null, pluginInfo);
 			}
 
 			// Perform checks for establishing if MFA token is enabled
@@ -47,11 +54,15 @@ module.exports = {
 						message: 'An MFA device was not found for the root account'
 					});
 				}
-				callback(null, pluginInfo);
-			} else {
-				callback('unexpected return data');
-				return;
+				return callback(null, pluginInfo);
 			}
+
+			pluginInfo.tests.rootMfaEnabled.results.push({
+				status: 3,
+				message: 'Unexpected data when querying MFA status'
+			});
+
+			return callback(null, pluginInfo);
 		});
 	}
 };

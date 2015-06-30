@@ -1,39 +1,47 @@
 var async = require('async');
+var AWS = require('aws-sdk');
 
-var pluginInfo = {
-	title: 'Users MFA Enabled',
-	query: 'usersMfaEnabled',
-	category: 'IAM',
-	aws_service: 'IAM',
-	description: 'Ensures a multi-factor authentication device is enabled for all users within the account',
-	more_info: 'User accounts should have an MFA device setup to enable two-factor authentication',
-	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
-	tests: {
-		usersMfaEnabled: {
-			title: 'Users MFA Enabled',
-			description: 'Ensures a multi-factor authentication device is enabled for all users within the account',
-			recommendedAction: 'Enable an MFA device for the user account',
-			results: []
+function getPluginInfo() {
+	return {
+		title: 'Users MFA Enabled',
+		query: 'usersMfaEnabled',
+		category: 'IAM',
+		aws_service: 'IAM',
+		description: 'Ensures a multi-factor authentication device is enabled for all users within the account',
+		more_info: 'User accounts should have an MFA device setup to enable two-factor authentication',
+		link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
+		tests: {
+			usersMfaEnabled: {
+				title: 'Users MFA Enabled',
+				description: 'Ensures a multi-factor authentication device is enabled for all users within the account',
+				recommendedAction: 'Enable an MFA device for the user account',
+				results: []
+			}
 		}
-	}
-};
+	};
+}
 
 module.exports = {
-	title: pluginInfo.title,
-	query: pluginInfo.query,
-	category: pluginInfo.category,
-	description: pluginInfo.description,
-	more_info: pluginInfo.more_info,
-	link: pluginInfo.link,
+	title: getPluginInfo().title,
+	query: getPluginInfo().query,
+	category: getPluginInfo().category,
+	description: getPluginInfo().description,
+	more_info: getPluginInfo().more_info,
+	link: getPluginInfo().link,
 
-	run: function(AWS, callback) {
+	run: function(AWSConfig, callback) {
 
-		var iam = new AWS.IAM();
+		var iam = new AWS.IAM(AWSConfig);
+		var pluginInfo = getPluginInfo();
 
 		iam.listUsers({}, function(err, data){
 			if (err) {
-				callback(err);
-				return;
+				pluginInfo.tests.usersMfaEnabled.results.push({
+					status: 3,
+					message: 'Unable to query for user MFA status'
+				});
+
+				return callback(null, pluginInfo);
 			}
 
 			// Perform checks for establishing if MFA token is enabled
@@ -80,8 +88,12 @@ module.exports = {
 					callback(null, pluginInfo);
 				}
 			} else {
-				callback('unexpected return data');
-				return;
+				pluginInfo.tests.usersMfaEnabled.results.push({
+					status: 3,
+					message: 'Unable to query for user MFA status'
+				});
+
+				return callback(null, pluginInfo);
 			}
 		});
 	}

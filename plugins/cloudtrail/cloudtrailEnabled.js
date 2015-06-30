@@ -1,38 +1,47 @@
 // TODO: Enable for all regions
 
-var pluginInfo = {
-	title: 'CloudTrail Enabled',
-	query: 'cloudtrailEnabled',
-	category: 'CloudTrail',
-	aws_service: 'CloudTrail',
-	description: 'Ensures CloudTrail is enabled for all regions within an account',
-	more_info: 'User accounts should have an MFA device setup to enable two-factor authentication',
-	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
-	tests: {
-		cloudtrailEnabled: {
-			title: 'CloudTrail Enabled',
-			description: 'Ensures CloudTrail is enabled for all regions within an account',
-			recommendedAction: 'Enable CloudTrail for all regions',
-			results: []
+var AWS = require('aws-sdk');
+
+function getPluginInfo() {
+	return {
+		title: 'CloudTrail Enabled',
+		query: 'cloudtrailEnabled',
+		category: 'CloudTrail',
+		aws_service: 'CloudTrail',
+		description: 'Ensures CloudTrail is enabled for all regions within an account',
+		more_info: 'User accounts should have an MFA device setup to enable two-factor authentication',
+		link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
+		tests: {
+			cloudtrailEnabled: {
+				title: 'CloudTrail Enabled',
+				description: 'Ensures CloudTrail is enabled for all regions within an account',
+				recommendedAction: 'Enable CloudTrail for all regions',
+				results: []
+			}
 		}
-	}
-};
+	};
+}
 
 module.exports = {
-	title: pluginInfo.title,
-	query: pluginInfo.query,
-	category: pluginInfo.category,
-	description: pluginInfo.description,
-	more_info: pluginInfo.more_info,
-	link: pluginInfo.link,
+	title: getPluginInfo().title,
+	query: getPluginInfo().query,
+	category: getPluginInfo().category,
+	description: getPluginInfo().description,
+	more_info: getPluginInfo().more_info,
+	link: getPluginInfo().link,
 
-	run: function(AWS, callback) {
-		var cloudtrail = new AWS.CloudTrail();
+	run: function(AWSConfig, callback) {
+		var cloudtrail = new AWS.CloudTrail(AWSConfig);
+		var pluginInfo = getPluginInfo();
 
 		cloudtrail.describeTrails({}, function(err, data){
 			if (err) {
-				callback(err);
-				return;
+				pluginInfo.tests.cloudtrailEnabled.results.push({
+					status: 3,
+					message: 'Unable to query for CloudTrail policy'
+				});
+
+				return callback(null, pluginInfo);
 			}
 
 			// Perform checks for establishing if MFA token is enabled
@@ -60,8 +69,12 @@ module.exports = {
 				}
 				callback(null, pluginInfo);
 			} else {
-				callback('unexpected return data');
-				return;
+				pluginInfo.tests.cloudtrailEnabled.results.push({
+					status: 3,
+					message: 'Unable to query for CloudTrail policy'
+				});
+
+				return callback(null, pluginInfo);
 			}
 		});
 	}

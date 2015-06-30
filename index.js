@@ -1,31 +1,46 @@
 var async = require('async');
-var AWS = require('aws-sdk');
 
-// AWS.config.update({
+// var AWSConfig = {
 //     accessKeyId: '',
 //     secretAccessKey: '',
 //     sessionToken: '',
 //     region: 'us-east-1'
-// });
+// };
 
-AWS.config.loadFromPath('./credentials.json');
+var AWSConfig = require('./credentials.json');
 
 var plugins = [
-    // 'iam/rootMfaEnabled.js',
-    // 'iam/usersMfaEnabled.js',
-    // 'iam/passwordPolicy.js',
-    // 'cloudtrail/cloudtrailEnabled.js',
-    // 'ec2/elasticIpLimit.js',
-    // 'cloudtrail/cloudtrailBucketDelete.js',
+    'iam/rootMfaEnabled.js',
+    'iam/usersMfaEnabled.js',
+    'iam/passwordPolicy.js',
+    'cloudtrail/cloudtrailEnabled.js',
+    'cloudtrail/cloudtrailBucketDelete.js',
+    'ec2/elasticIpLimit.js'
     // 'elb/sslExpiry.js'
 ];
 
+console.log('CATEGORY\tPLUGIN\t\t\tTEST\t\t\tSTATUS\tMESSAGE');
+
 async.eachSeries(plugins, function(pluginPath, callback){
     var plugin = require(__dirname + '/plugins/' + pluginPath);
-    console.log('Running plugin: ' + plugin.title + '...');
 
-    plugin.run(AWS, function(err, result){
-        console.log(JSON.stringify(result, null, 2));
+    plugin.run(AWSConfig, function(err, result){
+        //console.log(JSON.stringify(result, null, 2));
+        for (i in result.tests) {
+            for (j in result.tests[i].results) {
+                var statusWord;
+                if (result.tests[i].results[j].status === 0) {
+                    statusWord = 'OK';
+                } else if (result.tests[i].results[j].status === 1) {
+                    statusWord = 'WARN';
+                } else if (result.tests[i].results[j].status === 2) {
+                    statusWord = 'FAIL';
+                } else {
+                    statusWord = 'UNKNOWN';
+                }
+                console.log(result.category + '\t\t' + result.title + '\t' + result.tests[i].title + '\t' + statusWord + '\t' + result.tests[i].results[j].message);
+            }
+        }
         callback(err);
     });
 }, function(err, data){

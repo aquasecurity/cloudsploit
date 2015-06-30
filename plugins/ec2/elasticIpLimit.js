@@ -1,36 +1,45 @@
-var pluginInfo = {
-	title: 'Elastic IP Limit',
-	query: 'elasticIpLimit',
-	category: 'EC2',
-	aws_service: 'EC2',
-	description: 'Determine if the number of allocated EIPs is close to the AWS per-account limit',
-	more_info: 'AWS limits accounts to 5 EIPs due to scarcity of IPv4 addresses',
-	link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html#using-instance-addressing-limit',
-	tests: {
-		elasticIpLimit: {
-			title: 'Elastic IP Limit',
-			description: 'Determine if the number of allocated EIPs is close to the AWS per-account limit',
-			recommendedAction: 'Contact AWS support to increase the number of EIPs available',
-			results: []
+var AWS = require('aws-sdk');
+
+function getPluginInfo() {
+	return {
+		title: 'Elastic IP Limit',
+		query: 'elasticIpLimit',
+		category: 'EC2',
+		aws_service: 'EC2',
+		description: 'Determine if the number of allocated EIPs is close to the AWS per-account limit',
+		more_info: 'AWS limits accounts to 5 EIPs due to scarcity of IPv4 addresses',
+		link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html#using-instance-addressing-limit',
+		tests: {
+			elasticIpLimit: {
+				title: 'Elastic IP Limit',
+				description: 'Determine if the number of allocated EIPs is close to the AWS per-account limit',
+				recommendedAction: 'Contact AWS support to increase the number of EIPs available',
+				results: []
+			}
 		}
-	}
-};
+	};
+}
 
 module.exports = {
-	title: pluginInfo.title,
-	query: pluginInfo.query,
-	category: pluginInfo.category,
-	description: pluginInfo.description,
-	more_info: pluginInfo.more_info,
-	link: pluginInfo.link,
+	title: getPluginInfo().title,
+	query: getPluginInfo().query,
+	category: getPluginInfo().category,
+	description: getPluginInfo().description,
+	more_info: getPluginInfo().more_info,
+	link: getPluginInfo().link,
 
-	run: function(AWS, callback) {
-		var ec2 = new AWS.EC2();
+	run: function(AWSConfig, callback) {
+		var ec2 = new AWS.EC2(AWSConfig);
+		var pluginInfo = getPluginInfo();
 
 		ec2.describeAddresses({}, function(err, data){
 			if (err) {
-				callback(err);
-				return;
+				pluginInfo.tests.elasticIpLimit.results.push({
+					status: 3,
+					message: 'Unable to query for Elastic IP limit'
+				});
+
+				return callback(null, pluginInfo);
 			}
 
 			// Perform checks for establishing if MFA token is enabled
@@ -58,8 +67,12 @@ module.exports = {
 				}
 				callback(null, pluginInfo);
 			} else {
-				callback('unexpected return data');
-				return;
+				pluginInfo.tests.elasticIpLimit.results.push({
+					status: 3,
+					message: 'Unable to query for Elastic IP limit'
+				});
+
+				return callback(null, pluginInfo);
 			}
 		});
 	}
