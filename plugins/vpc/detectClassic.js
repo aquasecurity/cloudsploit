@@ -1,76 +1,87 @@
-// TODO: Finish
-
+var AWS = require('aws-sdk');
 var async = require('async');
 
-var pluginInfo = {
-	title: 'Detect EC2 Classic',
-	query: 'detectClassic',
-	category: 'VPC',
-	aws_service: 'VPC',
-	description: 'Ensures AWS VPC is being used instead of EC2 Classic',
-	more_info: 'VPCs are the latest and more secure method of launching AWS resources. EC2 Classic should not be used.',
-	link: 'http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Introduction.html',
-	tests: {
-		detectClassic: {
-			title: 'Detect EC2 Classic',
-			description: 'Ensures AWS VPC is being used instead of EC2 Classic',
-			recommendedAction: 'Migrate resources from EC2 Classic to VPC',
-			results: []
+function getPluginInfo() {
+	return {
+		title: 'Detect EC2 Classic',
+		query: 'detectClassic',
+		category: 'VPC',
+		aws_service: 'VPC',
+		description: 'Ensures AWS VPC is being used instead of EC2 Classic',
+		more_info: 'VPCs are the latest and more secure method of launching AWS resources. EC2 Classic should not be used.',
+		link: 'http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Introduction.html',
+		tests: {
+			classicInstances: {
+				title: 'Detect EC2 Classic Instances',
+				description: 'Ensures AWS VPC is being used for instances instead of EC2 Classic',
+				recommendedAction: 'Migrate instances from EC2 Classic to VPC',
+				results: []
+			}
 		}
 	}
 };
 
 module.exports = {
-	title: pluginInfo.title,
-	query: pluginInfo.query,
-	category: pluginInfo.category,
-	description: pluginInfo.description,
-	more_info: pluginInfo.more_info,
-	link: pluginInfo.link,
+	title: getPluginInfo().title,
+	query: getPluginInfo().query,
+	category: getPluginInfo().category,
+	description: getPluginInfo().description,
+	more_info: getPluginInfo().more_info,
+	link: getPluginInfo().link,
 
-	run: function(AWS, callback) {
-		var ec2 = new AWS.EC2();
+	run: function(AWSConfig, callback) {
+		var ec2 = new AWS.EC2(AWSConfig);
+		var pluginInfo = getPluginInfo();
 
-		ec2.xxx({}, function(err, data){
-			if (err) {
-				callback(err);
-				return;
+		ec2.describeInstances({}, function(err, data){
+			if (err || !data || !data.Reservations) {
+				pluginInfo.tests.classicInstances.results.push({
+					status: 3,
+					message: 'Unable to query for instances'
+				});
+
+				return callback(null, pluginInfo);
 			}
 
 			// Perform checks for establishing if MFA token is enabled
-			if (data && data.trailList) {
-				if (!data.trailList.length) {
-					pluginInfo.tests.cloudtrailEnabled.results.push({
-						status: 0,
-						message: 'No S3 buckets to check'
-					});
-					callback(null, pluginInfo);
-				} else {
-					var s3 = new AWS.S3();
+			if (!data.Reservations.length) {
+				pluginInfo.tests.classicInstances.results.push({
+					status: 0,
+					message: 'No instances found'
+				});
 
-					async.eachLimit(data.trailList, 2, function(trailList, cb){
-						s3.getBucketVersioning({Bucket:trailList.S3BucketName}, function(s3err, s3data){
-							if (s3data && s3data.MFADelete && s3data.MFADelete === 'Enabled') {
-								pluginInfo.tests.cloudtrailEnabled.results.push({
-									status: 0,
-									message: 'Bucket: ' + trailList.S3BucketName + ' has MFA delete enabled'
-								});
-							} else {
-								pluginInfo.tests.cloudtrailEnabled.results.push({
-									status: 1,
-									message: 'Bucket: ' + trailList.S3BucketName + ' has MFA delete disabled'
-								});
-							}
-							cb();
-						});
-					}, function(err){
-						callback(null, pluginInfo);
-					});
-				}
-			} else {
-				callback('unexpected return data');
-				return;
+				return callback(null, pluginInfo);
 			}
+
+			for (i in data.Reservations) {
+				for (j in data.Reservations[i].Instances) {
+					// Find the instance name if possible
+					var instanceName = ' ';
+					if (data.Reservations[i].Instances[j].Tags && data.Reservations[i].Instances[j].Tags.length) {
+						for (k in data.Reservations[i].Instances[j].Tags) {
+							if (data.Reservations[i].Instances[j].Tags[k].Key === 'Name' && data.Reservations[i].Instances[j].Tags[k].Value && data.Reservations[i].Instances[j].Tags[k].Value.length) {
+								instanceName = ' (' + data.Reservations[i].Instances[j].Tags[k].Value + ') ';
+							}
+						}
+					}
+
+					if (!data.Reservations[i].Instances[j].NetworkInterfaces || !data.Reservations[i].Instances[j].NetworkInterfaces.length) {
+						// Network interfaces are only listed when the instance is in a VPC
+						// Not having interfaces indicates the instance is in classic
+						pluginInfo.tests.classicInstances.results.push({
+							status: 1,
+							message: 'Instance: ' + data.Reservations[i].Instances[j].InstanceId + instanceName + 'is not in a VPC'
+						});
+					} else {
+						pluginInfo.tests.classicInstances.results.push({
+							status: 0,
+							message: 'Instance: ' + data.Reservations[i].Instances[j].InstanceId + instanceName + 'is in a VPC'
+						});
+					}
+				}
+			}
+
+			callback(null, pluginInfo);
 		});
 	}
 };
