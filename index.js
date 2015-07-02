@@ -10,15 +10,15 @@ var async = require('async');
 var AWSConfig = require('./credentials.json');
 
 var plugins = [
-    // 'iam/rootMfaEnabled.js',
-    // 'iam/usersMfaEnabled.js',
-    // 'iam/passwordPolicy.js',
-    // 'cloudtrail/cloudtrailEnabled.js',
-    // 'cloudtrail/cloudtrailBucketDelete.js',
-    // 'ec2/accountLimits.js',
-    // 'elb/certificateExpiry.js',
+    'iam/rootMfaEnabled.js',
+    'iam/usersMfaEnabled.js',
+    'iam/passwordPolicy.js',
+    'cloudtrail/cloudtrailEnabled.js',
+    'cloudtrail/cloudtrailBucketDelete.js',
+    'ec2/accountLimits.js',
+    'elb/certificateExpiry.js',
     'elb/insecureCiphers.js',
-    // 'vpc/detectClassic.js',
+    'vpc/detectClassic.js'
 ];
 
 console.log('CATEGORY\tPLUGIN\t\t\tTEST\t\t\tSTATUS\tMESSAGE');
