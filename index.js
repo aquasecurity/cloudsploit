@@ -19,6 +19,7 @@ var plugins = [
     'elb/certificateExpiry.js',
     'elb/insecureCiphers.js',
     'vpc/detectClassic.js'
+    'ec2/openPorts.js'
 ];
 
 console.log('CATEGORY\tPLUGIN\t\t\tTEST\t\t\tSTATUS\tMESSAGE');
