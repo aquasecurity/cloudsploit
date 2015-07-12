@@ -6,15 +6,14 @@ function getPluginInfo() {
 		title: 'Detect EC2 Classic',
 		query: 'detectClassic',
 		category: 'VPC',
-		aws_service: 'VPC',
 		description: 'Ensures AWS VPC is being used instead of EC2 Classic',
-		more_info: 'VPCs are the latest and more secure method of launching AWS resources. EC2 Classic should not be used.',
-		link: 'http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Introduction.html',
 		tests: {
 			classicInstances: {
 				title: 'Detect EC2 Classic Instances',
 				description: 'Ensures AWS VPC is being used for instances instead of EC2 Classic',
-				recommendedAction: 'Migrate instances from EC2 Classic to VPC',
+				more_info: 'VPCs are the latest and more secure method of launching AWS resources. EC2 Classic should not be used.',
+				link: 'http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Introduction.html',
+				recommended_action: 'Migrate instances from EC2 Classic to VPC',
 				results: []
 			}
 		}
@@ -28,6 +27,7 @@ module.exports = {
 	description: getPluginInfo().description,
 	more_info: getPluginInfo().more_info,
 	link: getPluginInfo().link,
+	tests: getPluginInfo().tests,
 
 	run: function(AWSConfig, callback) {
 		var ec2 = new AWS.EC2(AWSConfig);

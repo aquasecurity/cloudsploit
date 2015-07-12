@@ -5,33 +5,38 @@ function getPluginInfo() {
 		title: 'Password Policy',
 		query: 'passwordPolicy',
 		category: 'IAM',
-		aws_service: 'IAM',
 		description: 'Ensures a strong password policy is setup for the account',
-		more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
-		link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
 		tests: {
 			minPasswordLength: {
 				title: 'Minimum Password Length',
 				description: 'Ensures password policy requires a password of at least 12 characters',
-				recommendedAction: 'Increase the minimum length requirement for the password policy',
+				more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
+				link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
+				recommended_action: 'Increase the minimum length requirement for the password policy',
 				results: []
 			},
 			requiresSymbols: {
 				title: 'Password Requires Symbols',
 				description: 'Ensures password policy requires the use of symbols',
-				recommendedAction: 'Update the password policy to require the use of symbols',
+				more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
+				link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
+				recommended_action: 'Update the password policy to require the use of symbols',
 				results: []
 			},
 			maxPasswordAge: {
 				title: 'Maximum Password Age',
 				description: 'Ensures password policy requires passwords to be reset every 180 days',
-				recommendedAction: 'Descrease the maximum allowed age of passwords for the password policy',
+				more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
+				link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
+				recommended_action: 'Descrease the maximum allowed age of passwords for the password policy',
 				results: []
 			},
 			passwordReusePrevention: {
 				title: 'Password Reuse Prevention',
 				description: 'Ensures password policy prevents previous password reuse',
-				recommendedAction: 'Increase the minimum previous passwors that can be reused',
+				more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
+				link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
+				recommended_action: 'Increase the minimum previous passwors that can be reused',
 				results: []
 			}
 		}
@@ -45,6 +50,7 @@ module.exports = {
 	description: getPluginInfo().description,
 	more_info: getPluginInfo().more_info,
 	link: getPluginInfo().link,
+	tests: getPluginInfo().tests,
 
 	run: function(AWSConfig, callback) {
 

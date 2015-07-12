@@ -7,15 +7,14 @@ function getPluginInfo() {
 		title: 'CloudTrail Enabled',
 		query: 'cloudtrailEnabled',
 		category: 'CloudTrail',
-		aws_service: 'CloudTrail',
 		description: 'Ensures CloudTrail is enabled for all regions within an account',
-		more_info: 'User accounts should have an MFA device setup to enable two-factor authentication',
-		link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
 		tests: {
 			cloudtrailEnabled: {
 				title: 'CloudTrail Enabled',
 				description: 'Ensures CloudTrail is enabled for all regions within an account',
-				recommendedAction: 'Enable CloudTrail for all regions',
+				more_info: 'User accounts should have an MFA device setup to enable two-factor authentication',
+				link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
+				recommended_action: 'Enable CloudTrail for all regions',
 				results: []
 			}
 		}
@@ -29,6 +28,7 @@ module.exports = {
 	description: getPluginInfo().description,
 	more_info: getPluginInfo().more_info,
 	link: getPluginInfo().link,
+	tests: getPluginInfo().tests,
 
 	run: function(AWSConfig, callback) {
 		var cloudtrail = new AWS.CloudTrail(AWSConfig);

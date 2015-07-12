@@ -6,27 +6,30 @@ function getPluginInfo() {
 		title: 'Account Limits',
 		query: 'accountLimits',
 		category: 'EC2',
-		aws_service: 'EC2',
 		description: 'Determine if the number of resources is close to the AWS per-account limit',
-		more_info: 'AWS limits accounts to certain numbers of resources. Exceeding those limits could prevent resources from launching.',
-		link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html#using-instance-addressing-limit',
 		tests: {
 			elasticIpLimit: {
 				title: 'Elastic IP Limit',
 				description: 'Determine if the number of allocated EIPs is close to the AWS per-account limit',
-				recommendedAction: 'Contact AWS support to increase the number of EIPs available',
+				more_info: 'AWS limits accounts to certain numbers of resources. Exceeding those limits could prevent resources from launching.',
+				link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html#using-instance-addressing-limit',
+				recommended_action: 'Contact AWS support to increase the number of EIPs available',
 				results: []
 			},
 			vpcElasticIpLimit: {
 				title: 'VPC Elastic IP Limit',
 				description: 'Determine if the number of allocated VPC EIPs is close to the AWS per-account limit',
-				recommendedAction: 'Contact AWS support to increase the number of EIPs available',
+				more_info: 'AWS limits accounts to certain numbers of resources. Exceeding those limits could prevent resources from launching.',
+				link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html#using-instance-addressing-limit',
+				recommended_action: 'Contact AWS support to increase the number of EIPs available',
 				results: []
 			},
 			instanceLimit: {
 				title: 'Instance Limit',
 				description: 'Determine if the number of EC2 instances is close to the AWS per-account limit',
-				recommendedAction: 'Contact AWS support to increase the number of instances available',
+				more_info: 'AWS limits accounts to certain numbers of resources. Exceeding those limits could prevent resources from launching.',
+				link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html#using-instance-addressing-limit',
+				recommended_action: 'Contact AWS support to increase the number of instances available',
 				results: []
 			}
 		}
@@ -40,6 +43,7 @@ module.exports = {
 	description: getPluginInfo().description,
 	more_info: getPluginInfo().more_info,
 	link: getPluginInfo().link,
+	tests: getPluginInfo().tests,
 
 	run: function(AWSConfig, callback) {
 		var ec2 = new AWS.EC2(AWSConfig);

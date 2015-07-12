@@ -10,7 +10,7 @@ var async = require('async');
 var AWSConfig = require('./credentials.json');
 
 var plugins = [
-    'iam/rootMfaEnabled.js',
+    'iam/rootAccountSecurity.js',
     'iam/usersMfaEnabled.js',
     'iam/passwordPolicy.js',
     'cloudtrail/cloudtrailEnabled.js',
@@ -18,7 +18,7 @@ var plugins = [
     'ec2/accountLimits.js',
     'elb/certificateExpiry.js',
     'elb/insecureCiphers.js',
-    'vpc/detectClassic.js'
+    'vpc/detectClassic.js',
     'ec2/openPorts.js'
 ];
 

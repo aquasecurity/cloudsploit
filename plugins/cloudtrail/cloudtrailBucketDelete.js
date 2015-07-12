@@ -8,15 +8,14 @@ function getPluginInfo() {
 		title: 'CloudTrail Bucket Delete Policy',
 		query: 'cloudtrailBucketDelete',
 		category: 'CloudTrail',
-		aws_service: 'CloudTrail',
 		description: 'Ensures CloudTrail logging bucket has a policy to prevent deletion of logs without an MFA token',
-		more_info: 'To provide additional security, CloudTrail logging buckets should require an MFA token to delete objects',
-		link: 'http://docs.aws.amazon.com/AmazonS3/latest/dev/Versioning.html#MultiFactorAuthenticationDelete',
 		tests: {
 			cloudtrailBucketDelete: {
 				title: 'CloudTrail Bucket Delete Policy',
 				description: 'Ensures CloudTrail logging bucket has a policy to prevent deletion of logs without an MFA token',
-				recommendedAction: 'Enable MFA delete on the CloudTrail bucket',
+				more_info: 'To provide additional security, CloudTrail logging buckets should require an MFA token to delete objects',
+				recommended_action: 'Enable MFA delete on the CloudTrail bucket',
+				link: 'http://docs.aws.amazon.com/AmazonS3/latest/dev/Versioning.html#MultiFactorAuthenticationDelete',
 				results: []
 			}
 		}
@@ -30,6 +29,7 @@ module.exports = {
 	description: getPluginInfo().description,
 	more_info: getPluginInfo().more_info,
 	link: getPluginInfo().link,
+	tests: getPluginInfo().tests,
 
 	run: function(AWSConfig, callback) {
 		var cloudtrail = new AWS.CloudTrail(AWSConfig);

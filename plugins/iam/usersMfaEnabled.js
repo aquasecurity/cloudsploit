@@ -6,15 +6,14 @@ function getPluginInfo() {
 		title: 'Users MFA Enabled',
 		query: 'usersMfaEnabled',
 		category: 'IAM',
-		aws_service: 'IAM',
 		description: 'Ensures a multi-factor authentication device is enabled for all users within the account',
-		more_info: 'User accounts should have an MFA device setup to enable two-factor authentication',
-		link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
 		tests: {
 			usersMfaEnabled: {
 				title: 'Users MFA Enabled',
 				description: 'Ensures a multi-factor authentication device is enabled for all users within the account',
-				recommendedAction: 'Enable an MFA device for the user account',
+				more_info: 'User accounts should have an MFA device setup to enable two-factor authentication',
+				link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
+				recommended_action: 'Enable an MFA device for the user account',
 				results: []
 			}
 		}
@@ -28,6 +27,7 @@ module.exports = {
 	description: getPluginInfo().description,
 	more_info: getPluginInfo().more_info,
 	link: getPluginInfo().link,
+	tests: getPluginInfo().tests,
 
 	run: function(AWSConfig, callback) {
 
