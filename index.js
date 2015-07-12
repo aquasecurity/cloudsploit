@@ -16,10 +16,10 @@ var plugins = [
     'cloudtrail/cloudtrailEnabled.js',
     'cloudtrail/cloudtrailBucketDelete.js',
     'ec2/accountLimits.js',
-    'elb/certificateExpiry.js',
-    'elb/insecureCiphers.js',
+    'ec2/certificateExpiry.js',
+    'ec2/insecureCiphers.js',
     'vpc/detectClassic.js',
-    'ec2/openPorts.js'
+    'ec2/securityGroups.js'
 ];
 
 console.log('CATEGORY\tPLUGIN\t\t\tTEST\t\t\tSTATUS\tMESSAGE');
