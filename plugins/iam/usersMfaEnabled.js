@@ -50,6 +50,15 @@ module.exports = {
 					var good = [];
 					var bad = [];
 
+					if (data.Users.length > 100) {
+						pluginInfo.tests.usersMfaEnabled.results.push({
+							status: 3,
+							message: 'Unable to query for more than 100 users MFA status'
+						});
+
+						data.Users = data.Users.slice(0,100);
+					}
+
 					async.eachLimit(data.Users, 3, function(user, cb){
 						iam.listMFADevices({UserName: user.UserName}, function(mfaErr, mfaData){
 							if (mfaErr) {

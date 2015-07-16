@@ -11,7 +11,7 @@ function getPluginInfo() {
 			excessiveSecurityGroups: {
 				title: 'Excessive Securtiy Groups',
 				description: 'Determine if there are an excessive number of security groups in the account',
-				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive protocols such as SSH and RDP should be restricted to known IP addresses.',
+				more_info: 'Keeping the number of security groups to a minimum helps reduce the attack surface of an account. Rather than creating new groups with the same rules for each project, common rules should be grouped under the same security groups. For example, instead of adding port 22 from a known IP to every group, create a single "SSH" security group which can be used on multiple instances.',
 				link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
 				recommended_action: 'Limit the number of security groups to prevent accidental authorizations',
 				results: []
@@ -19,7 +19,7 @@ function getPluginInfo() {
 			openFTP: {
 				title: 'Open FTP',
 				description: 'Determine if TCP port 20 or 21 for FTP is open to the public',
-				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive protocols such as SSH and RDP should be restricted to known IP addresses.',
+				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as FTP should be restricted to known IP addresses.',
 				link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
 				recommended_action: 'Restrict TCP ports 20 and 21 to known IP addresses',
 				results: []
@@ -27,7 +27,7 @@ function getPluginInfo() {
 			openSSH: {
 				title: 'Open SSH',
 				description: 'Determine if TCP port 22 for SSH is open to the public',
-				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive protocols such as SSH and RDP should be restricted to known IP addresses.',
+				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as SSH should be restricted to known IP addresses.',
 				link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
 				recommended_action: 'Restrict TCP port 22 to known IP addresses',
 				results: []
@@ -35,7 +35,7 @@ function getPluginInfo() {
 			openTelnet: {
 				title: 'Open Telnet',
 				description: 'Determine if TCP port 23 for Telnet is open to the public',
-				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive protocols such as SSH and RDP should be restricted to known IP addresses.',
+				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Telnet should be restricted to known IP addresses.',
 				link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
 				recommended_action: 'Restrict TCP port 23 to known IP addresses',
 				results: []
@@ -43,7 +43,7 @@ function getPluginInfo() {
 			openSMTP: {
 				title: 'Open SMTP',
 				description: 'Determine if TCP port 25 for SMTP is open to the public',
-				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive protocols such as SSH and RDP should be restricted to known IP addresses.',
+				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as SMTP should be restricted to known IP addresses.',
 				link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
 				recommended_action: 'Restrict TCP port 25 to known IP addresses',
 				results: []
@@ -51,7 +51,7 @@ function getPluginInfo() {
 			openDNS: {
 				title: 'Open DNS',
 				description: 'Determine if TCP or UDP port 53 for DNS is open to the public',
-				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive protocols such as SSH and RDP should be restricted to known IP addresses.',
+				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as DNS should be restricted to known IP addresses.',
 				link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
 				recommended_action: 'Restrict TCP and UDP port 53 to known IP addresses',
 				results: []
@@ -59,7 +59,7 @@ function getPluginInfo() {
 			openRPC: {
 				title: 'Open RPC',
 				description: 'Determine if TCP port 135 for RCP is open to the public',
-				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive protocols such as SSH and RDP should be restricted to known IP addresses.',
+				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as RCP should be restricted to known IP addresses.',
 				link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
 				recommended_action: 'Restrict TCP port 135 to known IP addresses',
 				results: []
@@ -67,7 +67,7 @@ function getPluginInfo() {
 			openNetBIOS: {
 				title: 'Open NetBIOS',
 				description: 'Determine if UDP port 137 or 138 for NetBIOS is open to the public',
-				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive protocols such as SSH and RDP should be restricted to known IP addresses.',
+				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as NetBIOS should be restricted to known IP addresses.',
 				link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
 				recommended_action: 'Restrict UDP ports 137 and 138 to known IP addresses',
 				results: []
@@ -75,7 +75,7 @@ function getPluginInfo() {
 			openSMBoTCP: {
 				title: 'Open SMBoTCP',
 				description: 'Determine if TCP port 445 for Windows SMB over TCP is open to the public',
-				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive protocols such as SSH and RDP should be restricted to known IP addresses.',
+				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as SMB should be restricted to known IP addresses.',
 				link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
 				recommended_action: 'Restrict TCP port 445 to known IP addresses',
 				results: []
@@ -83,7 +83,7 @@ function getPluginInfo() {
 			openCIFS: {
 				title: 'Open CIFS',
 				description: 'Determine if UDP port 445 for CIFS is open to the public',
-				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive protocols such as SSH and RDP should be restricted to known IP addresses.',
+				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as CIFS should be restricted to known IP addresses.',
 				link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
 				recommended_action: 'Restrict UDP port 445 to known IP addresses',
 				results: []
@@ -91,7 +91,7 @@ function getPluginInfo() {
 			openSQLServer: {
 				title: 'Open SQL Server',
 				description: 'Determine if TCP port 1433 or UDP port 1434 for SQL Server is open to the public',
-				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive protocols such as SSH and RDP should be restricted to known IP addresses.',
+				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as SQL server should be restricted to known IP addresses.',
 				link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
 				recommended_action: 'Restrict TCP port 1433 and UDP port 1434 to known IP addresses',
 				results: []
@@ -99,7 +99,7 @@ function getPluginInfo() {
 			openRDP: {
 				title: 'Open RDP',
 				description: 'Determine if TCP port 3389 for RDP is open to the public',
-				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive protocols such as SSH and RDP should be restricted to known IP addresses.',
+				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as RDP should be restricted to known IP addresses.',
 				link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
 				recommended_action: 'Restrict TCP port 3389 to known IP addresses',
 				results: []
@@ -107,7 +107,7 @@ function getPluginInfo() {
 			openMySQL: {
 				title: 'Open MySQL',
 				description: 'Determine if TCP port 4333 or 3306 for MySQL is open to the public',
-				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive protocols such as SSH and RDP should be restricted to known IP addresses.',
+				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as MySQL should be restricted to known IP addresses.',
 				link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
 				recommended_action: 'Restrict TCP ports 4333 and 3306 to known IP addresses',
 				results: []
@@ -115,7 +115,7 @@ function getPluginInfo() {
 			openPostgreSQL: {
 				title: 'Open PostgreSQL',
 				description: 'Determine if TCP port 5432 for PostgreSQL is open to the public',
-				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive protocols such as SSH and RDP should be restricted to known IP addresses.',
+				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as PostgreSQL should be restricted to known IP addresses.',
 				link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
 				recommended_action: 'Restrict TCP port 5432 to known IP addresses',
 				results: []
@@ -123,7 +123,7 @@ function getPluginInfo() {
 			openVNCClient: {
 				title: 'Open VNC Client',
 				description: 'Determine if TCP port 5500 for VNC Client is open to the public',
-				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive protocols such as SSH and RDP should be restricted to known IP addresses.',
+				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as VNC Client should be restricted to known IP addresses.',
 				link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
 				recommended_action: 'Restrict TCP port 5500 to known IP addresses',
 				results: []
@@ -131,7 +131,7 @@ function getPluginInfo() {
 			openVNCServer: {
 				title: 'Open VNC Server',
 				description: 'Determine if TCP port 5900 for VNC Server is open to the public',
-				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive protocols such as SSH and RDP should be restricted to known IP addresses.',
+				more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as VNC Server should be restricted to known IP addresses.',
 				link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
 				recommended_action: 'Restrict TCP port 5900 to known IP addresses',
 				results: []

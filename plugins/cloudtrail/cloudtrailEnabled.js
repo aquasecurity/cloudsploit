@@ -12,8 +12,8 @@ function getPluginInfo() {
 			cloudtrailEnabled: {
 				title: 'CloudTrail Enabled',
 				description: 'Ensures CloudTrail is enabled for all regions within an account',
-				more_info: 'User accounts should have an MFA device setup to enable two-factor authentication',
-				link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
+				more_info: 'CloudTrail should be enabled for all regions in order to detect suspicious activity in regions that are not typically used.',
+				link: 'http://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-getting-started.html',
 				recommended_action: 'Enable CloudTrail for all regions',
 				results: []
 			}

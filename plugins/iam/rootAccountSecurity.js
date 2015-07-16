@@ -10,7 +10,7 @@ function getPluginInfo() {
 			rootMfaEnabled: {
 				title: 'Root MFA Enabled',
 				description: 'Ensures a multi-factor authentication device is enabled for the root account',
-				more_info: 'The root account should have an MFA device setup to enable two-factor authentication and should avoid using access keys',
+				more_info: 'The root account should have an MFA device setup to enable two-factor authentication.',
 				link: 'http://docs.aws.amazon.com/general/latest/gr/managing-aws-access-keys.html',
 				recommended_action: 'Enable an MFA device for the root account and then use an IAM user for managing services',
 				results: []
@@ -18,7 +18,7 @@ function getPluginInfo() {
 			rootAccessKeys: {
 				title: 'Root Access Keys',
 				description: 'Ensures the root account is not using access keys',
-				more_info: 'The root account should have an MFA device setup to enable two-factor authentication and should avoid using access keys',
+				more_info: 'The root account should avoid using access keys. Since the root account has full permissions across the entire account, creating access keys for it only increases the chance that they are compromised. Instead, create IAM users with pre-defined roles.',
 				link: 'http://docs.aws.amazon.com/general/latest/gr/managing-aws-access-keys.html',
 				recommended_action: 'Remove access keys for the root account and setup IAM users with limited permissions instead',
 				results: []
