@@ -13,6 +13,7 @@ module.exports = {
 	'passwordPolicy': require(__dirname + '/plugins/iam/passwordPolicy.js'),
 	'rootAccountSecurity': require(__dirname + '/plugins/iam/rootAccountSecurity.js'),
 	'usersMfaEnabled': require(__dirname + '/plugins/iam/usersMfaEnabled.js'),
+	'accessKeys': require(__dirname + '/plugins/iam/accessKeys.js'),
 	
 	'detectClassic': require(__dirname + '/plugins/vpc/detectClassic.js')
 };

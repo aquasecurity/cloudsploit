@@ -13,6 +13,7 @@ var plugins = [
     'iam/rootAccountSecurity.js',
     'iam/usersMfaEnabled.js',
     'iam/passwordPolicy.js',
+    'iam/accessKeys.js',
     'cloudtrail/cloudtrailEnabled.js',
     'cloudtrail/cloudtrailBucketDelete.js',
     'ec2/accountLimits.js',
