@@ -159,7 +159,6 @@ module.exports = {
 						async.eachLimit(allAccessKeys, 5, function(accessKey, cb){
 							iam.getAccessKeyLastUsed({AccessKeyId: accessKey}, function(accessKeyErr, accessKeyData){
 								if (accessKeyErr || !accessKeyData || !accessKeyData.AccessKeyLastUsed || !accessKeyData.AccessKeyLastUsed.LastUsedDate) {
-									console.log(accessKeyData);
 									pluginInfo.tests.accessKeysLastUsed.results.push({
 										status: 3,
 										message: 'Unable to query last used status for access key: ' + accessKey

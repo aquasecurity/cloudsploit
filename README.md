@@ -39,6 +39,7 @@ The scans require read-only permissions to your account. This can be done by add
             "iam:GetAccessKeyLastUsed",
             "iam:ListMFADevices",
             "iam:ListUsers",
+            "iam:ListAccessKeys",
             "iam:ListVirtualMFADevices",
             "elasticloadbalancing:DescribeLoadBalancerPolicies",
             "elasticloadbalancing:DescribeLoadBalancers"
