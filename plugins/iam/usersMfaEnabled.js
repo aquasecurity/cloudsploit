@@ -85,7 +85,10 @@ module.exports = {
 						});
 					}, function(err){
 						if (err) {
-							return callback('Error querying for MFA device status');
+							pluginInfo.tests.usersMfaEnabled.results.push({
+								status: 3,
+								message: 'Unable to query for user MFA status'
+							});
 						}
 						callback(null, pluginInfo);
 					});
