@@ -32,8 +32,22 @@ module.exports = {
 	run: function(AWSConfig, callback) {
 		var ec2 = new AWS.EC2(AWSConfig);
 		var pluginInfo = getPluginInfo();
+		var params = {
+			Filters: [
+				{
+					Name: 'instance-state',
+					Values: [
+						'pending',
+						'running',
+						'shutting-down',
+						'stopping',
+						'stopped'
+					]
+				}
+			]
+		};
 
-		ec2.describeInstances({}, function(err, data){
+		ec2.describeInstances(params, function(err, data){
 			if (err || !data || !data.Reservations) {
 				pluginInfo.tests.classicInstances.results.push({
 					status: 3,
