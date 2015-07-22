@@ -60,6 +60,10 @@ module.exports = {
 					}
 
 					async.eachLimit(data.Users, 3, function(user, cb){
+						if (!user.PasswordLastUsed) {
+							// Skip users without passwords since they won't be logging into the console
+							return cb();
+						}
 						iam.listMFADevices({UserName: user.UserName}, function(mfaErr, mfaData){
 							if (mfaErr) {
 								pluginInfo.tests.usersMfaEnabled.results.push({
