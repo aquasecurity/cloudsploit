@@ -14,6 +14,7 @@ module.exports = {
 	'rootAccountSecurity': require(__dirname + '/plugins/iam/rootAccountSecurity.js'),
 	'usersMfaEnabled': require(__dirname + '/plugins/iam/usersMfaEnabled.js'),
 	'accessKeys': require(__dirname + '/plugins/iam/accessKeys.js'),
+	'groupSecurity': require(__dirname + '/plugins/iam/groupSecurity.js'),
 	
 	'detectClassic': require(__dirname + '/plugins/vpc/detectClassic.js')
 };

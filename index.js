@@ -7,20 +7,21 @@ var async = require('async');
 //     region: 'us-east-1'
 // };
 
-var AWSConfig = require('./credentials.json');
+var AWSConfig = require(__dirname + '/../../cloudsploit-secure/scan-test-credentials.json');
 
 var plugins = [
-    'iam/rootAccountSecurity.js',
-    'iam/usersMfaEnabled.js',
-    'iam/passwordPolicy.js',
-    'iam/accessKeys.js',
-    'cloudtrail/cloudtrailEnabled.js',
-    'cloudtrail/cloudtrailBucketDelete.js',
-    'ec2/accountLimits.js',
-    'ec2/certificateExpiry.js',
-    'ec2/insecureCiphers.js',
-    'vpc/detectClassic.js',
-    'ec2/securityGroups.js'
+    // 'iam/rootAccountSecurity.js',
+    // 'iam/usersMfaEnabled.js',
+    // 'iam/passwordPolicy.js',
+    // 'iam/accessKeys.js',
+    'iam/groupSecurity.js',
+    // 'cloudtrail/cloudtrailEnabled.js',
+    // 'cloudtrail/cloudtrailBucketDelete.js',
+    // 'ec2/accountLimits.js',
+    // 'ec2/certificateExpiry.js',
+    // 'ec2/insecureCiphers.js',
+    // 'vpc/detectClassic.js',
+    // 'ec2/securityGroups.js'
 ];
 
 console.log('CATEGORY\tPLUGIN\t\t\tTEST\t\t\tSTATUS\tMESSAGE');
