@@ -12,7 +12,7 @@ function getPluginInfo() {
 				title: 'Access Keys Rotated',
 				description: 'Ensures access keys are not older than 180 days in order to reduce accidental exposures',
 				more_info: 'Access keys should be rotated frequently to avoid having them accidentally exposed.',
-				link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
+				link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/ManagingCredentials.html',
 				recommended_action: 'To rotate an access key, first create a new key, replace the key and secret throughout your app or scripts, then set the previous key to disabled. Once you ensure that no services are broken, then fully delete the old key.',
 				results: []
 			},
@@ -20,8 +20,16 @@ function getPluginInfo() {
 				title: 'Access Keys Last Used',
 				description: 'Detects access keys that have not been used for a period of time and that should be decomissioned',
 				more_info: 'Having numerous, unused access keys extends the attack surface. Access keys should be removed if they are no longer being used.',
-				link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
+				link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/ManagingCredentials.html',
 				recommended_action: 'Log into the IAM portal and remove the offending access key.',
+				results: []
+			},
+			accessKeysExtra: {
+				title: 'Access Keys Extra',
+				description: 'Detects the use of more than one access key by any single user',
+				more_info: 'Having more than one access key for a single user increases the chance of accidental exposure. Each account should only have one key that defines the users permissions.',
+				link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/ManagingCredentials.html',
+				recommended_action: 'Remove the extra access key for the specified user.',
 				results: []
 			}
 		}
@@ -44,15 +52,13 @@ module.exports = {
 
 		iam.listUsers({}, function(err, data){
 			if (err) {
-				pluginInfo.tests.accessKeysRotated.results.push({
+				var returnMsg = {
 					status: 3,
 					message: 'Unable to query for users'
-				});
-
-				pluginInfo.tests.accessKeysLastUsed.results.push({
-					status: 3,
-					message: 'Unable to query for users'
-				});
+				};
+				pluginInfo.tests.accessKeysRotated.results.push(returnMsg);
+				pluginInfo.tests.accessKeysLastUsed.results.push(returnMsg);
+				pluginInfo.tests.accessKeysExtra.results.push(returnMsg);
 
 				return callback(null, pluginInfo);
 			}
@@ -63,15 +69,12 @@ module.exports = {
 					var bad = [];
 
 					if (data.Users.length > 100) {
-						pluginInfo.tests.accessKeysRotated.results.push({
+						var returnMsg = {
 							status: 3,
 							message: 'Unable to query for more than 100 user access keys'
-						});
-
-						pluginInfo.tests.accessKeysLastUsed.results.push({
-							status: 3,
-							message: 'Unable to query for more than 100 user access keys'
-						});
+						};
+						pluginInfo.tests.accessKeysRotated.results.push(returnMsg);
+						pluginInfo.tests.accessKeysLastUsed.results.push(returnMsg);
 
 						data.Users = data.Users.slice(0,100);
 					}
@@ -93,6 +96,13 @@ module.exports = {
 							} else {
 								if (accessKeyData && accessKeyData.AccessKeyMetadata) {
 									if (accessKeyData.AccessKeyMetadata.length) {
+										if (accessKeyData.AccessKeyMetadata.length > 1) {
+											pluginInfo.tests.accessKeysExtra.results.push({
+												status: 1,
+												message: 'User: ' + user.UserName + ' is using ' + accessKeyData.AccessKeyMetadata.length + ' access keys'
+											});
+										}
+
 										for (i in accessKeyData.AccessKeyMetadata) {
 											allAccessKeys.push(accessKeyData.AccessKeyMetadata[i].AccessKeyId);
 											
@@ -120,30 +130,35 @@ module.exports = {
 						});
 					}, function(err){
 						if (err) {
-							pluginInfo.tests.accessKeysRotated.results.push({
+							var errMsg = {
 								status: 3,
 								message: 'Unable to query access keys'
-							});
-							pluginInfo.tests.accessKeysLastUsed.results.push({
-								status: 3,
-								message: 'Unable to query access keys'
-							});
+							};
+							pluginInfo.tests.accessKeysRotated.results.push(errMsg);
+							pluginInfo.tests.accessKeysLastUsed.results.push(errMsg);
+							pluginInfo.tests.accessKeysExtra.results.push(errMsg);
 
 							return callback(null, pluginInfo);
 						}
 
 						if (!allAccessKeys.length) {
-							pluginInfo.tests.accessKeysRotated.results.push({
+							var returnMsg = {
 								status: 0,
 								message: 'No access keys found'
-							});
-
-							pluginInfo.tests.accessKeysLastUsed.results.push({
-								status: 0,
-								message: 'No access keys found'
-							});
+							};
+							pluginInfo.tests.accessKeysRotated.results.push(returnMsg);
+							pluginInfo.tests.accessKeysLastUsed.results.push(returnMsg);
+							pluginInfo.tests.accessKeysExtra.results.push(returnMsg);
 
 							return callback(null, pluginInfo);
+						}
+
+						// Add a PASS result if no users had more than one key
+						if (!pluginInfo.tests.accessKeysExtra.results.length) {
+							pluginInfo.tests.accessKeysExtra.results.push({
+								status: 0,
+								message: 'No users had more than 1 access key'
+							});
 						}
 
 						// Now test last used info
@@ -197,25 +212,23 @@ module.exports = {
 						});
 					});
 				} else {
-					pluginInfo.tests.accessKeysRotated.results.push({
+					var returnMsg = {
 						status: 0,
 						message: 'No user accounts with access keys found'
-					});
-					pluginInfo.tests.accessKeysLastUsed.results.push({
-						status: 0,
-						message: 'No user accounts with access keys found'
-					});
+					};
+					pluginInfo.tests.accessKeysRotated.results.push(returnMsg);
+					pluginInfo.tests.accessKeysLastUsed.results.push(returnMsg);
+
 					callback(null, pluginInfo);
 				}
 			} else {
-				pluginInfo.tests.accessKeysRotated.results.push({
+				var returnMsg = {
 					status: 3,
 					message: 'Unable to query access keys'
-				});
-				pluginInfo.tests.accessKeysLastUsed.results.push({
-					status: 3,
-					message: 'Unable to query access keys'
-				});
+				};
+				pluginInfo.tests.accessKeysRotated.results.push(returnMsg);
+				pluginInfo.tests.accessKeysLastUsed.results.push(returnMsg);
+				pluginInfo.tests.accessKeysExtra.results.push(returnMsg);
 
 				return callback(null, pluginInfo);
 			}
