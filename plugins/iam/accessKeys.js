@@ -54,7 +54,8 @@ module.exports = {
 			if (err) {
 				var returnMsg = {
 					status: 3,
-					message: 'Unable to query for users'
+					message: 'Unable to query for users',
+					region: 'global'
 				};
 				pluginInfo.tests.accessKeysRotated.results.push(returnMsg);
 				pluginInfo.tests.accessKeysLastUsed.results.push(returnMsg);
@@ -71,7 +72,8 @@ module.exports = {
 					if (data.Users.length > 100) {
 						var returnMsg = {
 							status: 3,
-							message: 'Unable to query for more than 100 user access keys'
+							message: 'Unable to query for more than 100 user access keys',
+							region: 'global'
 						};
 						pluginInfo.tests.accessKeysRotated.results.push(returnMsg);
 						pluginInfo.tests.accessKeysLastUsed.results.push(returnMsg);
@@ -91,7 +93,8 @@ module.exports = {
 							if (accessKeyErr) {
 								pluginInfo.tests.accessKeysRotated.results.push({
 									status: 3,
-									message: 'Unable to query access keys for user: ' + user.UserName
+									message: 'Unable to query access keys for user: ' + user.UserName,
+									region: 'global'
 								});
 							} else {
 								if (accessKeyData && accessKeyData.AccessKeyMetadata) {
@@ -99,7 +102,8 @@ module.exports = {
 										if (accessKeyData.AccessKeyMetadata.length > 1) {
 											pluginInfo.tests.accessKeysExtra.results.push({
 												status: 1,
-												message: 'User: ' + user.UserName + ' is using ' + accessKeyData.AccessKeyMetadata.length + ' access keys'
+												message: 'User: ' + user.UserName + ' is using ' + accessKeyData.AccessKeyMetadata.length + ' access keys',
+												region: 'global'
 											});
 										}
 
@@ -120,7 +124,8 @@ module.exports = {
 
 											pluginInfo.tests.accessKeysRotated.results.push({
 												status: status,
-												message: message
+												message: message,
+												region: 'global'
 											});
 										}
 									}
@@ -132,7 +137,8 @@ module.exports = {
 						if (err) {
 							var errMsg = {
 								status: 3,
-								message: 'Unable to query access keys'
+								message: 'Unable to query access keys',
+								region: 'global'
 							};
 							pluginInfo.tests.accessKeysRotated.results.push(errMsg);
 							pluginInfo.tests.accessKeysLastUsed.results.push(errMsg);
@@ -144,7 +150,8 @@ module.exports = {
 						if (!allAccessKeys.length) {
 							var returnMsg = {
 								status: 0,
-								message: 'No access keys found'
+								message: 'No access keys found',
+								region: 'global'
 							};
 							pluginInfo.tests.accessKeysRotated.results.push(returnMsg);
 							pluginInfo.tests.accessKeysLastUsed.results.push(returnMsg);
@@ -157,7 +164,8 @@ module.exports = {
 						if (!pluginInfo.tests.accessKeysExtra.results.length) {
 							pluginInfo.tests.accessKeysExtra.results.push({
 								status: 0,
-								message: 'No users had more than 1 access key'
+								message: 'No users had more than 1 access key',
+								region: 'global'
 							});
 						}
 
@@ -165,7 +173,8 @@ module.exports = {
 						if (allAccessKeys.length > 100) {
 							pluginInfo.tests.accessKeysLastUsed.results.push({
 								status: 3,
-								message: 'Unable to query for more than 100 user access keys'
+								message: 'Unable to query for more than 100 user access keys',
+								region: 'global'
 							});
 
 							allAccessKeys = allAccessKeys.slice(0,100);
@@ -176,7 +185,8 @@ module.exports = {
 								if (accessKeyErr || !accessKeyData || !accessKeyData.AccessKeyLastUsed || !accessKeyData.AccessKeyLastUsed.LastUsedDate) {
 									pluginInfo.tests.accessKeysLastUsed.results.push({
 										status: 3,
-										message: 'Unable to query last used status for access key: ' + accessKey
+										message: 'Unable to query last used status for access key: ' + accessKey,
+										region: 'global'
 									});
 
 									return cb();
@@ -195,7 +205,8 @@ module.exports = {
 
 								pluginInfo.tests.accessKeysLastUsed.results.push({
 									status: status,
-									message: message
+									message: message,
+									region: 'global'
 								});
 
 								cb();
@@ -204,7 +215,8 @@ module.exports = {
 							if (err) {
 								pluginInfo.tests.accessKeysLastUsed.results.push({
 									status: 3,
-									message: 'Unable to query access keys'
+									message: 'Unable to query access keys',
+									region: 'global'
 								});
 							}
 
@@ -214,7 +226,8 @@ module.exports = {
 				} else {
 					var returnMsg = {
 						status: 0,
-						message: 'No user accounts with access keys found'
+						message: 'No user accounts with access keys found',
+						region: 'global'
 					};
 					pluginInfo.tests.accessKeysRotated.results.push(returnMsg);
 					pluginInfo.tests.accessKeysLastUsed.results.push(returnMsg);
@@ -224,7 +237,8 @@ module.exports = {
 			} else {
 				var returnMsg = {
 					status: 3,
-					message: 'Unable to query access keys'
+					message: 'Unable to query access keys',
+					region: 'global'
 				};
 				pluginInfo.tests.accessKeysRotated.results.push(returnMsg);
 				pluginInfo.tests.accessKeysLastUsed.results.push(returnMsg);

@@ -1,5 +1,6 @@
 var AWS = require('aws-sdk');
 var async = require('async');
+var regions = require(__dirname + '/../../regions.json');
 
 function getPluginInfo() {
 	return {
@@ -104,92 +105,104 @@ module.exports = {
 	tests: getPluginInfo().tests,
 
 	run: function(AWSConfig, callback) {
-		var elb = new AWS.ELB(AWSConfig);
 		var pluginInfo = getPluginInfo();
 
-		elb.describeLoadBalancers({}, function(err, data){
-			if (err || !data || !data.LoadBalancerDescriptions) {
-				pluginInfo.tests.insecureCiphers.results.push({
-					status: 3,
-					message: 'Unable to query for load balancers'
-				});
+		async.each(regions, function(region, rcb){
+			AWSConfig.region = region;
+			var elb = new AWS.ELB(AWSConfig);
 
-				return callback(null, pluginInfo);
-			}
+			elb.describeLoadBalancers({}, function(err, data){
+				if (err || !data || !data.LoadBalancerDescriptions) {
+					pluginInfo.tests.insecureCiphers.results.push({
+						status: 3,
+						message: 'Unable to query for load balancers',
+						region: region
+					});
 
-			// Gather list of policies from load balancers
-			var policies = [];
+					return rcb();
+				}
 
-			for (i in data.LoadBalancerDescriptions) {
-				for (j in data.LoadBalancerDescriptions[i].ListenerDescriptions) {
-					if (data.LoadBalancerDescriptions[i].ListenerDescriptions[j].Listener.Protocol === 'HTTPS') {
-						var elbPolicies = [];
-						for (k in data.LoadBalancerDescriptions[i].ListenerDescriptions[j].PolicyNames) {
-							elbPolicies.push(data.LoadBalancerDescriptions[i].ListenerDescriptions[j].PolicyNames[k]);
-						}
-						if (elbPolicies.length) {
-							var elbObj = {
-								LoadBalancerName: data.LoadBalancerDescriptions[i].LoadBalancerName,
-								PolicyNames: elbPolicies
-							};
-							policies.push(elbObj);
+				// Gather list of policies from load balancers
+				var policies = [];
+
+				for (i in data.LoadBalancerDescriptions) {
+					for (j in data.LoadBalancerDescriptions[i].ListenerDescriptions) {
+						if (data.LoadBalancerDescriptions[i].ListenerDescriptions[j].Listener.Protocol === 'HTTPS') {
+							var elbPolicies = [];
+							for (k in data.LoadBalancerDescriptions[i].ListenerDescriptions[j].PolicyNames) {
+								elbPolicies.push(data.LoadBalancerDescriptions[i].ListenerDescriptions[j].PolicyNames[k]);
+							}
+							if (elbPolicies.length) {
+								var elbObj = {
+									LoadBalancerName: data.LoadBalancerDescriptions[i].LoadBalancerName,
+									PolicyNames: elbPolicies
+								};
+								policies.push(elbObj);
+							}
 						}
 					}
 				}
-			}
 
-			if (!policies.length) {
-				pluginInfo.tests.insecureCiphers.results.push({
-					status: 0,
-					message: 'No load balancers are using HTTPS'
-				});
+				if (!policies.length) {
+					pluginInfo.tests.insecureCiphers.results.push({
+						status: 0,
+						message: 'No load balancers are using HTTPS',
+						region: region
+					});
 
-				return callback(null, pluginInfo);
-			}
+					return rcb();
+				}
 
-			if (policies.length > 30) {
-				pluginInfo.tests.insecureCiphers.results.push({
-					status: 3,
-					message: 'More than 30 load balancers found. Only the first 30 are checked.'
-				});
+				if (policies.length > 30) {
+					pluginInfo.tests.insecureCiphers.results.push({
+						status: 3,
+						message: 'More than 30 load balancers found. Only the first 30 are checked.',
+						region: region
+					});
 
-				policies = policies.slice(0,30);
-			}
+					policies = policies.slice(0,30);
+				}
 
-			async.eachLimit(policies, 4, function(policy, cb){
-				elb.describeLoadBalancerPolicies(policy, function(err, data){
-					if (err || !data || !data.PolicyDescriptions) {
-						pluginInfo.tests.insecureCiphers.results.push({
-							status: 3,
-							message: 'Unable to query load balancer policies for ELB: ' + policy.LoadBalancerName
-						});
-						return cb();
-					}
+				async.eachLimit(policies, 4, function(policy, cb){
+					elb.describeLoadBalancerPolicies(policy, function(err, data){
+						if (err || !data || !data.PolicyDescriptions) {
+							pluginInfo.tests.insecureCiphers.results.push({
+								status: 3,
+								message: 'Unable to query load balancer policies for ELB: ' + policy.LoadBalancerName,
+								region: region
+							});
+							return cb();
+						}
 
-					for (i in data.PolicyDescriptions) {
-						var elbBad = [];
-						for (j in data.PolicyDescriptions[i].PolicyAttributeDescriptions) {
-							if (data.PolicyDescriptions[i].PolicyAttributeDescriptions[j].AttributeValue === 'true' && badCiphers.indexOf(data.PolicyDescriptions[i].PolicyAttributeDescriptions[j].AttributeName) > -1) {
-								elbBad.push(data.PolicyDescriptions[i].PolicyAttributeDescriptions[j].AttributeName);
+						for (i in data.PolicyDescriptions) {
+							var elbBad = [];
+							for (j in data.PolicyDescriptions[i].PolicyAttributeDescriptions) {
+								if (data.PolicyDescriptions[i].PolicyAttributeDescriptions[j].AttributeValue === 'true' && badCiphers.indexOf(data.PolicyDescriptions[i].PolicyAttributeDescriptions[j].AttributeName) > -1) {
+									elbBad.push(data.PolicyDescriptions[i].PolicyAttributeDescriptions[j].AttributeName);
+								}
+							}
+							if (elbBad.length) {
+								pluginInfo.tests.insecureCiphers.results.push({
+									status: 1,
+									message: 'ELB: ' + policy.LoadBalancerName + ' uses insecure protocols or ciphers: ' + elbBad.join(', '),
+									region: region
+								});
+							} else {
+								pluginInfo.tests.insecureCiphers.results.push({
+									status: 0,
+									message: 'ELB: ' + policy.LoadBalancerName + ' uses secure protocols and ciphers',
+									region: region
+								});
 							}
 						}
-						if (elbBad.length) {
-							pluginInfo.tests.insecureCiphers.results.push({
-								status: 1,
-								message: 'ELB: ' + policy.LoadBalancerName + ' uses insecure protocols or ciphers: ' + elbBad.join(', ')
-							});
-						} else {
-							pluginInfo.tests.insecureCiphers.results.push({
-								status: 0,
-								message: 'ELB: ' + policy.LoadBalancerName + ' uses secure protocols and ciphers'
-							});
-						}
-					}
-					cb();
+						cb();
+					});
+				}, function(){
+					rcb();
 				});
-			}, function(){
-				callback(null, pluginInfo);
 			});
+		}, function(){
+			callback(null, pluginInfo);
 		});
 	}
 };

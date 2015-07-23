@@ -1,5 +1,6 @@
 var AWS = require('aws-sdk');
 var async = require('async');
+var regions = require(__dirname + '/../../regions.json');
 
 function getPluginInfo() {
 	return {
@@ -150,187 +151,214 @@ module.exports = {
 	tests: getPluginInfo().tests,
 
 	run: function(AWSConfig, callback) {
-		var ec2 = new AWS.EC2(AWSConfig);
 		var pluginInfo = getPluginInfo();
 
-		// Get the account attributes
-		ec2.describeSecurityGroups({}, function(err, data){
-			if (err) {
-				var statusObj = {
-					status: 3,
-					message: 'Unable to query for security groups'
-				};
+		async.each(regions, function(region, rcb){
+			AWSConfig.region = region;
+			var ec2 = new AWS.EC2(AWSConfig);
 
-				// Add unknown result to all tests
-				for (i in pluginInfo.tests) {
-					pluginInfo.tests[i].results.push(statusObj);
+			// Get the account attributes
+			ec2.describeSecurityGroups({}, function(err, data){
+				if (err) {
+					var statusObj = {
+						status: 3,
+						message: 'Unable to query for security groups',
+						region: region
+					};
+
+					// Add unknown result to all tests
+					for (i in pluginInfo.tests) {
+						pluginInfo.tests[i].results.push(statusObj);
+					}
+
+					return rcb();
 				}
 
-				return callback(null, pluginInfo);
-			}
+				// Loop through response to assign custom limits
+				if (data && data.SecurityGroups && data.SecurityGroups.length) {
+					if (data.SecurityGroups.length > 40) {
+						pluginInfo.tests.excessiveSecurityGroups.results.push({
+							status: 2,
+							message: 'Excessive number of security groups: ' + data.SecurityGroups.length + ' groups present',
+							region: region
+						});
+					} else if (data.SecurityGroups.length > 30) {
+						pluginInfo.tests.excessiveSecurityGroups.results.push({
+							status: 1,
+							message: 'Large number of security groups: ' + data.SecurityGroups.length + ' groups present',
+							region: region
+						});
+					} else {
+						pluginInfo.tests.excessiveSecurityGroups.results.push({
+							status: 0,
+							message: 'Acceptable number of security groups: ' + data.SecurityGroups.length + ' groups present',
+							region: region
+						});
+					}
 
-			// Loop through response to assign custom limits
-			if (data && data.SecurityGroups && data.SecurityGroups.length) {
-				if (data.SecurityGroups.length > 40) {
-					pluginInfo.tests.excessiveSecurityGroups.results.push({
-						status: 2,
-						message: 'Excessive number of security groups: ' + data.SecurityGroups.length + ' groups present'
-					});
-				} else if (data.SecurityGroups.length > 30) {
-					pluginInfo.tests.excessiveSecurityGroups.results.push({
-						status: 1,
-						message: 'Large number of security groups: ' + data.SecurityGroups.length + ' groups present'
-					});
-				} else {
-					pluginInfo.tests.excessiveSecurityGroups.results.push({
-						status: 0,
-						message: 'Acceptable number of security groups: ' + data.SecurityGroups.length + ' groups present'
-					});
-				}
+					for (i in data.SecurityGroups) {
+						for (j in data.SecurityGroups[i].IpPermissions) {
+							var permission = data.SecurityGroups[i].IpPermissions[j];
 
-				for (i in data.SecurityGroups) {
-					for (j in data.SecurityGroups[i].IpPermissions) {
-						var permission = data.SecurityGroups[i].IpPermissions[j];
+							for (k in permission.IpRanges) {
+								var range = permission.IpRanges[k];
 
-						for (k in permission.IpRanges) {
-							var range = permission.IpRanges[k];
+								if (range.CidrIp === '0.0.0.0/0') {
 
-							if (range.CidrIp === '0.0.0.0/0') {
+									// All tests
+									if (permission.IpProtocol === 'tcp' && ( (permission.FromPort <= 20 && permission.ToPort >= 20) || (permission.FromPort <= 21 && permission.ToPort >= 21) ) ) {
+										pluginInfo.tests.openFTP.results.push({
+											status: 2,
+											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has FTP TCP port 20 and/or 21 open to 0.0.0.0/0',
+											region: region
+										});
+									}
 
-								// All tests
-								if (permission.IpProtocol === 'tcp' && ( (permission.FromPort <= 20 && permission.ToPort >= 20) || (permission.FromPort <= 21 && permission.ToPort >= 21) ) ) {
-									pluginInfo.tests.openFTP.results.push({
-										status: 2,
-										message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has FTP TCP port 20 and/or 21 open to 0.0.0.0/0'
-									});
-								}
+									if (permission.IpProtocol === 'tcp' && permission.FromPort <= 22 && permission.ToPort >= 22) {
+										pluginInfo.tests.openSSH.results.push({
+											status: 2,
+											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has SSH TCP port 22 open to 0.0.0.0/0',
+											region: region
+										});
+									}
 
-								if (permission.IpProtocol === 'tcp' && permission.FromPort <= 22 && permission.ToPort >= 22) {
-									pluginInfo.tests.openSSH.results.push({
-										status: 2,
-										message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has SSH TCP port 22 open to 0.0.0.0/0'
-									});
-								}
+									if (permission.IpProtocol === 'tcp' && permission.FromPort <= 23 && permission.ToPort >= 23) {
+										pluginInfo.tests.openTelnet.results.push({
+											status: 2,
+											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has Telnet TCP port 23 open to 0.0.0.0/0',
+											region: region
+										});
+									}
 
-								if (permission.IpProtocol === 'tcp' && permission.FromPort <= 23 && permission.ToPort >= 23) {
-									pluginInfo.tests.openTelnet.results.push({
-										status: 2,
-										message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has Telnet TCP port 23 open to 0.0.0.0/0'
-									});
-								}
+									if (permission.IpProtocol === 'tcp' && permission.FromPort <= 25 && permission.ToPort >= 25) {
+										pluginInfo.tests.openSMTP.results.push({
+											status: 2,
+											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has SMTP TCP port 25 open to 0.0.0.0/0',
+											region: region
+										});
+									}
 
-								if (permission.IpProtocol === 'tcp' && permission.FromPort <= 25 && permission.ToPort >= 25) {
-									pluginInfo.tests.openSMTP.results.push({
-										status: 2,
-										message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has SMTP TCP port 25 open to 0.0.0.0/0'
-									});
-								}
+									if ( (permission.IpProtocol === 'tcp' || permission.IpProtocol === 'udp') && permission.FromPort <= 53 && permission.ToPort >= 53) {
+										pluginInfo.tests.openDNS.results.push({
+											status: 2,
+											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has DNS TCP and/or UDP port 53 open to 0.0.0.0/0',
+											region: region
+										});
+									}
 
-								if ( (permission.IpProtocol === 'tcp' || permission.IpProtocol === 'udp') && permission.FromPort <= 53 && permission.ToPort >= 53) {
-									pluginInfo.tests.openDNS.results.push({
-										status: 2,
-										message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has DNS TCP and/or UDP port 53 open to 0.0.0.0/0'
-									});
-								}
+									if (permission.IpProtocol === 'tcp' && permission.FromPort <= 135 && permission.ToPort >= 135) {
+										pluginInfo.tests.openRPC.results.push({
+											status: 2,
+											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has RPC TCP port 135 open to 0.0.0.0/0',
+											region: region
+										});
+									}
 
-								if (permission.IpProtocol === 'tcp' && permission.FromPort <= 135 && permission.ToPort >= 135) {
-									pluginInfo.tests.openRPC.results.push({
-										status: 2,
-										message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has RPC TCP port 135 open to 0.0.0.0/0'
-									});
-								}
+									if (permission.IpProtocol === 'tcp' && ( (permission.FromPort <= 137 && permission.ToPort >= 137) || (permission.FromPort <= 138 && permission.ToPort >= 138) ) ) {
+										pluginInfo.tests.openNetBIOS.results.push({
+											status: 2,
+											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has NetBIOS TCP port 137 and/or 138 open to 0.0.0.0/0',
+											region: region
+										});
+									}
 
-								if (permission.IpProtocol === 'tcp' && ( (permission.FromPort <= 137 && permission.ToPort >= 137) || (permission.FromPort <= 138 && permission.ToPort >= 138) ) ) {
-									pluginInfo.tests.openNetBIOS.results.push({
-										status: 2,
-										message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has NetBIOS TCP port 137 and/or 138 open to 0.0.0.0/0'
-									});
-								}
+									if (permission.IpProtocol === 'tcp' && permission.FromPort <= 445 && permission.ToPort >= 445) {
+										pluginInfo.tests.openSMBoTCP.results.push({
+											status: 2,
+											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has SMBoTCP TCP port 445 open to 0.0.0.0/0',
+											region: region
+										});
+									}
 
-								if (permission.IpProtocol === 'tcp' && permission.FromPort <= 445 && permission.ToPort >= 445) {
-									pluginInfo.tests.openSMBoTCP.results.push({
-										status: 2,
-										message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has SMBoTCP TCP port 445 open to 0.0.0.0/0'
-									});
-								}
+									if (permission.IpProtocol === 'udp' && permission.FromPort <= 445 && permission.ToPort >= 445) {
+										pluginInfo.tests.openCIFS.results.push({
+											status: 2,
+											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has CIFS TCP port 445 open to 0.0.0.0/0',
+											region: region
+										});
+									}
 
-								if (permission.IpProtocol === 'udp' && permission.FromPort <= 445 && permission.ToPort >= 445) {
-									pluginInfo.tests.openCIFS.results.push({
-										status: 2,
-										message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has CIFS TCP port 445 open to 0.0.0.0/0'
-									});
-								}
+									if ( (permission.IpProtocol === 'tcp' && permission.FromPort <= 1433 && permission.ToPort >= 1433) || (permission.IpProtocol === 'udp' && permission.FromPort <= 1434 && permission.ToPort >= 1434) ) {
+										pluginInfo.tests.openSQLServer.results.push({
+											status: 2,
+											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has SQL Server TCP port 1433 or UDP port 1434 open to 0.0.0.0/0',
+											region: region
+										});
+									}
 
-								if ( (permission.IpProtocol === 'tcp' && permission.FromPort <= 1433 && permission.ToPort >= 1433) || (permission.IpProtocol === 'udp' && permission.FromPort <= 1434 && permission.ToPort >= 1434) ) {
-									pluginInfo.tests.openSQLServer.results.push({
-										status: 2,
-										message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has SQL Server TCP port 1433 or UDP port 1434 open to 0.0.0.0/0'
-									});
-								}
+									if (permission.IpProtocol === 'tcp' && permission.FromPort <= 3389 && permission.ToPort >= 3389) {
+										pluginInfo.tests.openRDP.results.push({
+											status: 2,
+											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has RDP TCP port 3389 open to 0.0.0.0/0',
+											region: region
+										});
+									}
 
-								if (permission.IpProtocol === 'tcp' && permission.FromPort <= 3389 && permission.ToPort >= 3389) {
-									pluginInfo.tests.openRDP.results.push({
-										status: 2,
-										message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has RDP TCP port 3389 open to 0.0.0.0/0'
-									});
-								}
+									if (permission.IpProtocol === 'tcp' && ( (permission.FromPort <= 3306 && permission.ToPort >= 3306) || (permission.FromPort <= 4333 && permission.ToPort >= 4333) ) ) {
+										pluginInfo.tests.openMySQL.results.push({
+											status: 2,
+											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has MySQL TCP port 3306 and/or 4333 open to 0.0.0.0/0',
+											region: region
+										});
+									}
 
-								if (permission.IpProtocol === 'tcp' && ( (permission.FromPort <= 3306 && permission.ToPort >= 3306) || (permission.FromPort <= 4333 && permission.ToPort >= 4333) ) ) {
-									pluginInfo.tests.openMySQL.results.push({
-										status: 2,
-										message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has MySQL TCP port 3306 and/or 4333 open to 0.0.0.0/0'
-									});
-								}
+									if (permission.IpProtocol === 'tcp' && permission.FromPort <= 5432 && permission.ToPort >= 5432) {
+										pluginInfo.tests.openPostgreSQL.results.push({
+											status: 2,
+											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has PostgreSQL TCP port 5432 open to 0.0.0.0/0',
+											region: region
+										});
+									}
 
-								if (permission.IpProtocol === 'tcp' && permission.FromPort <= 5432 && permission.ToPort >= 5432) {
-									pluginInfo.tests.openPostgreSQL.results.push({
-										status: 2,
-										message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has PostgreSQL TCP port 5432 open to 0.0.0.0/0'
-									});
-								}
+									if (permission.IpProtocol === 'tcp' && permission.FromPort <= 5500 && permission.ToPort >= 5500) {
+										pluginInfo.tests.openVNCClient.results.push({
+											status: 2,
+											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has VNC Client TCP port 5500 open to 0.0.0.0/0',
+											region: region
+										});
+									}
 
-								if (permission.IpProtocol === 'tcp' && permission.FromPort <= 5500 && permission.ToPort >= 5500) {
-									pluginInfo.tests.openVNCClient.results.push({
-										status: 2,
-										message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has VNC Client TCP port 5500 open to 0.0.0.0/0'
-									});
-								}
-
-								if (permission.IpProtocol === 'tcp' && permission.FromPort <= 5900 && permission.ToPort >= 5900) {
-									pluginInfo.tests.openVNCServer.results.push({
-										status: 2,
-										message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has VNC Server TCP port 5900 open to 0.0.0.0/0'
-									});
+									if (permission.IpProtocol === 'tcp' && permission.FromPort <= 5900 && permission.ToPort >= 5900) {
+										pluginInfo.tests.openVNCServer.results.push({
+											status: 2,
+											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has VNC Server TCP port 5900 open to 0.0.0.0/0',
+											region: region
+										});
+									}
 								}
 							}
 						}
 					}
-				}
-				
-				// Afterwards, if a test doesn't have any negative results, add an okay result
-				for (i in pluginInfo.tests) {
-					if (!pluginInfo.tests[i].results.length) {
-						pluginInfo.tests[i].results.push({
-							status: 0,
-							message: 'No public open ports found'
-						});
+					
+					// Afterwards, if a test doesn't have any negative results, add an okay result
+					for (i in pluginInfo.tests) {
+						if (!pluginInfo.tests[i].results.length) {
+							pluginInfo.tests[i].results.push({
+								status: 0,
+								message: 'No public open ports found',
+								region: region
+							});
+						}
 					}
+
+					rcb();
+				} else {
+					var statusObj = {
+						status: 3,
+						message: 'Unable to query for security groups',
+						region: region
+					};
+
+					// Add unknown result to all tests
+					for (i in pluginInfo.tests) {
+						pluginInfo.tests[i].results.push(statusObj);
+					}
+
+					rcb();
 				}
-
-				return callback(null, pluginInfo);
-			} else {
-				var statusObj = {
-					status: 3,
-					message: 'Unable to query for security groups'
-				};
-
-				// Add unknown result to all tests
-				for (i in pluginInfo.tests) {
-					pluginInfo.tests[i].results.push(statusObj);
-				}
-
-				return callback(null, pluginInfo);
-			}
+			});
+		}, function(){
+			callback(null, pluginInfo);
 		});
 	}
 };

@@ -1,6 +1,6 @@
-// TODO: Enable for all regions
-
 var AWS = require('aws-sdk');
+var regions = require(__dirname + '/../../regions.json');
+var async = require('async');
 
 function getPluginInfo() {
 	return {
@@ -31,51 +31,63 @@ module.exports = {
 	tests: getPluginInfo().tests,
 
 	run: function(AWSConfig, callback) {
-		var cloudtrail = new AWS.CloudTrail(AWSConfig);
 		var pluginInfo = getPluginInfo();
 
-		cloudtrail.describeTrails({}, function(err, data){
-			if (err) {
-				pluginInfo.tests.cloudtrailEnabled.results.push({
-					status: 3,
-					message: 'Unable to query for CloudTrail policy'
-				});
+		async.each(regions, function(region, cb){
+			// Update the region
+			AWSConfig.region = region;
+			var cloudtrail = new AWS.CloudTrail(AWSConfig);
 
-				return callback(null, pluginInfo);
-			}
+			cloudtrail.describeTrails({}, function(err, data){
+				if (err) {
+					pluginInfo.tests.cloudtrailEnabled.results.push({
+						status: 3,
+						message: 'Unable to query for CloudTrail policy in region: ' + region,
+						region: region
+					});
 
-			// Perform checks for establishing if MFA token is enabled
-			if (data && data.trailList) {
-				if (!data.trailList.length) {
-					pluginInfo.tests.cloudtrailEnabled.results.push({
-						status: 2,
-						message: 'CloudTrail is not enabled for this account'
-					});
-				} else if (data.trailList[0] && !data.trailList[0].IncludeGlobalServiceEvents) {
-					pluginInfo.tests.cloudtrailEnabled.results.push({
-						status: 1,
-						message: 'CloudTrail is enabled but does not include global service events'
-					});
-				} else if (data.trailList[0] && data.trailList[0].IncludeGlobalServiceEvents) {
-					pluginInfo.tests.cloudtrailEnabled.results.push({
-						status: 0,
-						message: 'CloudTrail is enabled and includes global service events'
-					});
+					return cb();
+				}
+
+				// Perform checks for establishing if MFA token is enabled
+				if (data && data.trailList) {
+					if (!data.trailList.length) {
+						pluginInfo.tests.cloudtrailEnabled.results.push({
+							status: 2,
+							message: 'CloudTrail is not enabled for region: ' + region,
+							region: region
+						});
+					} else if (data.trailList[0] && !data.trailList[0].IncludeGlobalServiceEvents) {
+						pluginInfo.tests.cloudtrailEnabled.results.push({
+							status: 1,
+							message: 'CloudTrail is enabled but does not include global service events',
+							region: region
+						});
+					} else if (data.trailList[0] && data.trailList[0].IncludeGlobalServiceEvents) {
+						pluginInfo.tests.cloudtrailEnabled.results.push({
+							status: 0,
+							message: 'CloudTrail is enabled and includes global service events',
+							region: region
+						});
+					} else {
+						pluginInfo.tests.cloudtrailEnabled.results.push({
+							status: 2,
+							message: 'CloudTrail is enabled but is not properly configured',
+							region: region
+						});
+					}
+					cb();
 				} else {
 					pluginInfo.tests.cloudtrailEnabled.results.push({
-						status: 2,
-						message: 'CloudTrail is enabled but is not properly configured'
+						status: 3,
+						message: 'Unable to query for CloudTrail policy for region: ' + region,
+						region: region
 					});
+					cb();
 				}
-				callback(null, pluginInfo);
-			} else {
-				pluginInfo.tests.cloudtrailEnabled.results.push({
-					status: 3,
-					message: 'Unable to query for CloudTrail policy'
-				});
-
-				return callback(null, pluginInfo);
-			}
+			});
+		}, function(){
+			return callback(null, pluginInfo);
 		});
 	}
 };

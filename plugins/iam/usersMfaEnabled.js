@@ -38,7 +38,8 @@ module.exports = {
 			if (err) {
 				pluginInfo.tests.usersMfaEnabled.results.push({
 					status: 3,
-					message: 'Unable to query for user MFA status'
+					message: 'Unable to query for user MFA status',
+					region: 'global'
 				});
 
 				return callback(null, pluginInfo);
@@ -53,7 +54,8 @@ module.exports = {
 					if (data.Users.length > 100) {
 						pluginInfo.tests.usersMfaEnabled.results.push({
 							status: 3,
-							message: 'Unable to query for more than 100 users MFA status'
+							message: 'Unable to query for more than 100 users MFA status',
+							region: 'global'
 						});
 
 						data.Users = data.Users.slice(0,100);
@@ -68,19 +70,22 @@ module.exports = {
 							if (mfaErr) {
 								pluginInfo.tests.usersMfaEnabled.results.push({
 									status: 3,
-									message: 'Unable to query MFA device for user: ' + user.UserName
+									message: 'Unable to query MFA device for user: ' + user.UserName,
+									region: 'global'
 								});
 							} else {
 								if (mfaData && mfaData.MFADevices) {
 									if (mfaData.MFADevices.length) {
 										pluginInfo.tests.usersMfaEnabled.results.push({
 											status: 0,
-											message: 'User: ' + user.UserName + ' has an MFA device'
+											message: 'User: ' + user.UserName + ' has an MFA device',
+											region: 'global'
 										});
 									} else {
 										pluginInfo.tests.usersMfaEnabled.results.push({
 											status: 1,
-											message: 'User: ' + user.UserName + ' does not have an MFA device enabled'
+											message: 'User: ' + user.UserName + ' does not have an MFA device enabled',
+											region: 'global'
 										});
 									}
 								}
@@ -91,7 +96,8 @@ module.exports = {
 						if (err) {
 							pluginInfo.tests.usersMfaEnabled.results.push({
 								status: 3,
-								message: 'Unable to query for user MFA status'
+								message: 'Unable to query for user MFA status',
+								region: 'global'
 							});
 						}
 						callback(null, pluginInfo);
@@ -99,14 +105,16 @@ module.exports = {
 				} else {
 					pluginInfo.tests.usersMfaEnabled.results.push({
 						status: 0,
-						message: 'No user accounts found'
+						message: 'No user accounts found',
+						region: 'global'
 					});
 					callback(null, pluginInfo);
 				}
 			} else {
 				pluginInfo.tests.usersMfaEnabled.results.push({
 					status: 3,
-					message: 'Unable to query for user MFA status'
+					message: 'Unable to query for user MFA status',
+					region: 'global'
 				});
 
 				return callback(null, pluginInfo);

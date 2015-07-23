@@ -1,6 +1,8 @@
 var AWS = require('aws-sdk');
 var async = require('async');
 
+var regions = require(__dirname + '/../../regions.json');
+
 function getPluginInfo() {
 	return {
 		title: 'Detect EC2 Classic',
@@ -30,12 +32,12 @@ module.exports = {
 	tests: getPluginInfo().tests,
 
 	run: function(AWSConfig, callback) {
-		var ec2 = new AWS.EC2(AWSConfig);
 		var pluginInfo = getPluginInfo();
+
 		var params = {
 			Filters: [
 				{
-					Name: 'instance-state',
+					Name: 'instance-state-name',
 					Values: [
 						'pending',
 						'running',
@@ -47,54 +49,71 @@ module.exports = {
 			]
 		};
 
-		ec2.describeInstances(params, function(err, data){
-			if (err || !data || !data.Reservations) {
-				pluginInfo.tests.classicInstances.results.push({
-					status: 3,
-					message: 'Unable to query for instances'
-				});
+		async.each(regions, function(region, rcb){
+			AWSConfig.region = region;
+			var ec2 = new AWS.EC2(AWSConfig);
 
-				return callback(null, pluginInfo);
-			}
+			ec2.describeInstances(params, function(err, data){
+				if (err || !data || !data.Reservations) {
+					console.log(err);
+					pluginInfo.tests.classicInstances.results.push({
+						status: 3,
+						message: 'Unable to query for instances',
+						region: region
+					});
 
-			// Perform checks for establishing if MFA token is enabled
-			if (!data.Reservations.length) {
-				pluginInfo.tests.classicInstances.results.push({
-					status: 0,
-					message: 'No instances found'
-				});
+					return rcb();
+				}
 
-				return callback(null, pluginInfo);
-			}
+				// Perform checks for establishing if MFA token is enabled
+				if (!data.Reservations.length) {
+					pluginInfo.tests.classicInstances.results.push({
+						status: 0,
+						message: 'No instances found',
+						region: region
+					});
 
-			for (i in data.Reservations) {
-				for (j in data.Reservations[i].Instances) {
-					// Find the instance name if possible
-					var instanceName = ' ';
-					if (data.Reservations[i].Instances[j].Tags && data.Reservations[i].Instances[j].Tags.length) {
-						for (k in data.Reservations[i].Instances[j].Tags) {
-							if (data.Reservations[i].Instances[j].Tags[k].Key === 'Name' && data.Reservations[i].Instances[j].Tags[k].Value && data.Reservations[i].Instances[j].Tags[k].Value.length) {
-								instanceName = ' (' + data.Reservations[i].Instances[j].Tags[k].Value + ') ';
-							}
+					return rcb();
+				}
+
+				var inVpc = 0;
+				var notInVpc = 0;
+
+				for (i in data.Reservations) {
+					for (j in data.Reservations[i].Instances) {
+						if (!data.Reservations[i].Instances[j].NetworkInterfaces || !data.Reservations[i].Instances[j].NetworkInterfaces.length) {
+							// Network interfaces are only listed when the instance is in a VPC
+							// Not having interfaces indicates the instance is in classic
+							notInVpc+=1;
+						} else {
+							inVpc+=1;
 						}
 					}
-
-					if (!data.Reservations[i].Instances[j].NetworkInterfaces || !data.Reservations[i].Instances[j].NetworkInterfaces.length) {
-						// Network interfaces are only listed when the instance is in a VPC
-						// Not having interfaces indicates the instance is in classic
-						pluginInfo.tests.classicInstances.results.push({
-							status: 1,
-							message: 'Instance: ' + data.Reservations[i].Instances[j].InstanceId + instanceName + 'is not in a VPC'
-						});
-					} else {
-						pluginInfo.tests.classicInstances.results.push({
-							status: 0,
-							message: 'Instance: ' + data.Reservations[i].Instances[j].InstanceId + instanceName + 'is in a VPC'
-						});
-					}
 				}
-			}
 
+				if (notInVpc) {
+					pluginInfo.tests.classicInstances.results.push({
+						status: 1,
+						message: 'There are ' + notInVpc + ' instances in EC2-Classic',
+						region: region
+					});
+				} else if (inVpc) {
+					pluginInfo.tests.classicInstances.results.push({
+						status: 0,
+						message: 'There are ' + inVpc + ' instances in a VPC',
+						region: region
+					});
+				} else {
+					pluginInfo.tests.classicInstances.results.push({
+						status: 0,
+						message: 'No instances found',
+						region: region
+					});
+				}
+
+				rcb();
+			});
+		}, function(){
 			callback(null, pluginInfo);
 		});
 	}

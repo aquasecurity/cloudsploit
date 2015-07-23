@@ -1,5 +1,6 @@
 var AWS = require('aws-sdk');
 var async = require('async');
+var regions = require(__dirname + '/../../regions.json');
 
 function getPluginInfo() {
 	return {
@@ -46,213 +47,207 @@ module.exports = {
 	tests: getPluginInfo().tests,
 
 	run: function(AWSConfig, callback) {
-		var ec2 = new AWS.EC2(AWSConfig);
 		var pluginInfo = getPluginInfo();
 
-		// Get the account attributes
-		ec2.describeAccountAttributes({}, function(err, data){
-			if (err) {
-				pluginInfo.tests.elasticIpLimit.results.push({
-					status: 3,
-					message: 'Unable to query for account limits'
-				});
-				pluginInfo.tests.vpcElasticIpLimit.results.push({
-					status: 3,
-					message: 'Unable to query for account limits'
-				});
-				pluginInfo.tests.instanceLimit.results.push({
-					status: 3,
-					message: 'Unable to query for account limits'
-				});
+		async.each(regions, function(region, rcb){
+			AWSConfig.region = region;
+			var ec2 = new AWS.EC2(AWSConfig);
 
-				return callback(null, pluginInfo);
-			}
+			// Get the account attributes
+			ec2.describeAccountAttributes({}, function(err, data){
+				if (err) {
+					pluginInfo.tests.elasticIpLimit.results.push({
+						status: 3,
+						message: 'Unable to query for account limits',
+						region: region
+					});
+					pluginInfo.tests.vpcElasticIpLimit.results.push({
+						status: 3,
+						message: 'Unable to query for account limits',
+						region: region
+					});
+					pluginInfo.tests.instanceLimit.results.push({
+						status: 3,
+						message: 'Unable to query for account limits',
+						region: region
+					});
 
-			// Default limits to override
-			var limits = {
-				'max-instances': 20,
-				'max-elastic-ips': 5,
-				'vpc-max-elastic-ips': 5
-			};
-
-			// Loop through response to assign custom limits
-			if (data && data.AccountAttributes && data.AccountAttributes.length) {
-				for (i in data.AccountAttributes) {
-					if (limits[data.AccountAttributes[i].AttributeName]) {
-						limits[data.AccountAttributes[i].AttributeName] = data.AccountAttributes[i].AttributeValues[0].AttributeValue;
-					}
+					return rcb();
 				}
-				
-				// Now call APIs to determine actual usage
-				async.parallel([
-					function(cb) {
-						// Determine elastic IP usage
-						ec2.describeAddresses({}, function(err, data){
-							if (err) {
-								pluginInfo.tests.elasticIpLimit.results.push({
-									status: 3,
-									message: 'Unable to query for Elastic IP limit'
-								});
-								pluginInfo.tests.vpcElasticIpLimit.results.push({
-									status: 3,
-									message: 'Unable to query for VPC Elastic IP limit'
-								});
 
-								return cb();
-							}
+				// Default limits to override
+				var limits = {
+					'max-instances': 20,
+					'max-elastic-ips': 5,
+					'vpc-max-elastic-ips': 5
+				};
 
-							if (data && data.Addresses) {
-								if (!data.Addresses.length) {
+				// Loop through response to assign custom limits
+				if (data && data.AccountAttributes && data.AccountAttributes.length) {
+					for (i in data.AccountAttributes) {
+						if (limits[data.AccountAttributes[i].AttributeName]) {
+							limits[data.AccountAttributes[i].AttributeName] = data.AccountAttributes[i].AttributeValues[0].AttributeValue;
+						}
+					}
+					
+					// Now call APIs to determine actual usage
+					async.parallel([
+						function(cb) {
+							// Determine elastic IP usage
+							ec2.describeAddresses({}, function(err, data){
+								if (err) {
 									pluginInfo.tests.elasticIpLimit.results.push({
-										status: 0,
-										message: 'No Elastic IPs found'
+										status: 3,
+										message: 'Unable to query for Elastic IP limit',
+										region: region
 									});
 									pluginInfo.tests.vpcElasticIpLimit.results.push({
-										status: 0,
-										message: 'No VPC Elastic IPs found'
+										status: 3,
+										message: 'Unable to query for VPC Elastic IP limit',
+										region: region
 									});
 
 									return cb();
 								}
 
-								// If EIPs exist, determine type of each
-								var eips = 0;
-								var vpcEips = 0;
-								for (i in data.Addresses) {
-									if (data.Addresses[i].Domain === 'vpc') {
-										vpcEips++;
-									} else {
-										eips++;
+								if (data && data.Addresses) {
+									if (!data.Addresses.length) {
+										pluginInfo.tests.elasticIpLimit.results.push({
+											status: 0,
+											message: 'No Elastic IPs found',
+											region: region
+										});
+										pluginInfo.tests.vpcElasticIpLimit.results.push({
+											status: 0,
+											message: 'No VPC Elastic IPs found',
+											region: region
+										});
+
+										return cb();
 									}
+
+									// If EIPs exist, determine type of each
+									var eips = 0;
+									var vpcEips = 0;
+									for (i in data.Addresses) {
+										if (data.Addresses[i].Domain === 'vpc') {
+											vpcEips++;
+										} else {
+											eips++;
+										}
+									}
+
+									var returnMsg = {
+										status: 0,
+										message: 'Account contains ' + eips + ' of ' + limits['max-elastic-ips'] + ' available Elastic IPs',
+										region: region
+									};
+
+									if (eips === 0) {
+										returnMsg.message = 'No Elastic IPs found';
+									} else if (eips === limits['max-elastic-ips'] - 1) {
+										returnMsg.status = 1;
+									} else if (eips >= limits['max-elastic-ips']) {
+										returnMsg.status = 2;
+									}
+
+									pluginInfo.tests.elasticIpLimit.results.push(returnMsg);
+
+									var returnMsgVpc = {
+										status: 0,
+										message: 'Account contains ' + vpcEips + ' of ' + limits['vpc-max-elastic-ips'] + ' available VPC Elastic IPs',
+										region: region
+									};
+
+									if (vpcEips === 0) {
+										returnMsgVpc.message = 'No VPC Elastic IPs found'
+									} else if (vpcEips === limits['vpc-max-elastic-ips'] - 1) {
+										returnMsgVpc.status = 1;
+									} else if (vpcEips >= limits['vpc-max-elastic-ips']) {
+										returnMsgVpc.status = 2;
+									}
+
+									pluginInfo.tests.vpcElasticIpLimit.results.push(returnMsgVpc);
+									
+									return cb();
 								}
 
-								if (eips === 0) {
-									pluginInfo.tests.elasticIpLimit.results.push({
-										status: 0,
-										message: 'No Elastic IPs found'
-									});
-								} else if (eips === limits['max-elastic-ips'] - 1) {
-									pluginInfo.tests.elasticIpLimit.results.push({
-										status: 1,
-										message: 'Account contains ' + eips + ' of ' + limits['max-elastic-ips'] + ' available Elastic IPs'
-									});
-								} else if (eips >= limits['max-elastic-ips']) {
-									pluginInfo.tests.elasticIpLimit.results.push({
-										status: 2,
-										message: 'Account contains ' + eips + ' of ' + limits['max-elastic-ips'] + ' available Elastic IPs'
-									});
-								} else {
-									pluginInfo.tests.elasticIpLimit.results.push({
-										status: 0,
-										message: 'Account contains ' + eips + ' of ' + limits['max-elastic-ips'] + ' available Elastic IPs'
-									});
-								}
+								// No data or addresses map
+								pluginInfo.tests.elasticIpLimit.results.push({
+									status: 3,
+									message: 'Unable to query for Elastic IP limit',
+									region: region
+								});
+								pluginInfo.tests.vpcElasticIpLimit.results.push({
+									status: 3,
+									message: 'Unable to query for VPC Elastic IP limit',
+									region: region
+								});
 
-								if (vpcEips === 0) {
-									pluginInfo.tests.vpcElasticIpLimit.results.push({
-										status: 0,
-										message: 'No VPC Elastic IPs found'
-									});
-								} else if (vpcEips === limits['vpc-max-elastic-ips'] - 1) {
-									pluginInfo.tests.vpcElasticIpLimit.results.push({
-										status: 1,
-										message: 'Account contains ' + vpcEips + ' of ' + limits['vpc-max-elastic-ips'] + ' available VPC Elastic IPs'
-									});
-								} else if (vpcEips >= limits['vpc-max-elastic-ips']) {
-									pluginInfo.tests.vpcElasticIpLimit.results.push({
-										status: 2,
-										message: 'Account contains ' + vpcEips + ' of ' + limits['vpc-max-elastic-ips'] + ' available VPC Elastic IPs'
-									});
-								} else {
-									pluginInfo.tests.vpcElasticIpLimit.results.push({
-										status: 0,
-										message: 'Account contains ' + vpcEips + ' of ' + limits['vpc-max-elastic-ips'] + ' available VPC Elastic IPs'
-									});
-								}
-								
 								return cb();
-							}
-
-							// No data or addresses map
-							pluginInfo.tests.elasticIpLimit.results.push({
-								status: 3,
-								message: 'Unable to query for Elastic IP limit'
 							});
-							pluginInfo.tests.vpcElasticIpLimit.results.push({
-								status: 3,
-								message: 'Unable to query for VPC Elastic IP limit'
-							});
+						},
 
-							return cb();
-						});
-					},
-
-					function(cb) {
-						// Query for the number of instances
-						if (limits['max-instances'] > 1000) {
-							pluginInfo.tests.instanceLimit.results.push({
-								status: 3,
-								message: 'Unable to query for more than 1000 instances'
-							});
-
-							return cb();
-						}
-
-						ec2.describeInstances({MaxResults:1000}, function(err, data){
-							if (err || !data || !data.Reservations) {
+						function(cb) {
+							// Query for the number of instances
+							if (limits['max-instances'] > 1000) {
 								pluginInfo.tests.instanceLimit.results.push({
 									status: 3,
-									message: 'Unable to query for instances'
+									message: 'Unable to query for more than 1000 instances',
+									region: region
 								});
 
 								return cb();
 							}
 
-							if (data.Reservations.length === 0) {
-								pluginInfo.tests.instanceLimit.results.push({
-									status: 0,
-									message: 'Account contains 0 of ' + limits['max-instances'] + ' available instances'
-								});
-							} else if (data.Reservations.length === limits['max-instances'] - 3) {
-								pluginInfo.tests.instanceLimit.results.push({
-									status: 1,
-									message: 'Account contains ' + data.Reservations.length + ' of ' + limits['max-instances'] + ' available instances'
-								});
-							} else if (data.Reservations.length >= limits['max-instances'] - 2) {
-								pluginInfo.tests.instanceLimit.results.push({
-									status: 2,
-									message: 'Account contains ' + data.Reservations.length + ' of ' + limits['max-instances'] + ' available instances'
-								});
-							} else {
-								pluginInfo.tests.instanceLimit.results.push({
-									status: 0,
-									message: 'Account contains ' + data.Reservations.length + ' of ' + limits['max-instances'] + ' available instances'
-								});
-							}
+							ec2.describeInstances({MaxResults:1000}, function(err, data){
+								if (err || !data || !data.Reservations) {
+									pluginInfo.tests.instanceLimit.results.push({
+										status: 3,
+										message: 'Unable to query for instances',
+										region: region
+									});
 
-							return cb();
-						})
-					}
-				], function(){
-					// All tests are finished
-					return callback(null, pluginInfo);
-				});
-			} else {
-				pluginInfo.tests.elasticIpLimit.results.push({
-					status: 3,
-					message: 'Unable to query for account limits'
-				});
-				pluginInfo.tests.vpcElasticIpLimit.results.push({
-					status: 3,
-					message: 'Unable to query for account limits'
-				});
-				pluginInfo.tests.instanceLimit.results.push({
-					status: 3,
-					message: 'Unable to query for account limits'
-				});
+									return cb();
+								}
 
-				return callback(null, pluginInfo);
-			}
+								var returnMsgIl = {
+									status: 0,
+									message: 'Account contains ' + data.Reservations.length + ' of ' + limits['max-instances'] + ' available instances',
+									region: region
+								};
+
+								if (data.Reservations.length === limits['max-instances'] - 3) {
+									returnMsgIl.status = 1;
+								} else if (data.Reservations.length >= limits['max-instances'] - 2) {
+									returnMsgIl.status = 2;
+								}
+
+								pluginInfo.tests.instanceLimit.results.push(returnMsgIl);
+
+								cb();
+							})
+						}
+					], function(){
+						// All tests are finished
+						rcb();
+					});
+				} else {
+					var returnMsgErr = {
+						status: 3,
+						message: 'Unable to query for account limits',
+						region: region
+					};
+
+					pluginInfo.tests.elasticIpLimit.results.push(returnMsgErr);
+					pluginInfo.tests.vpcElasticIpLimit.results.push(returnMsgErr);
+					pluginInfo.tests.instanceLimit.results.push(returnMsgErr);
+
+					rcb();
+				}
+			});
+		}, function(){
+			return callback(null, pluginInfo);
 		});
 	}
 };

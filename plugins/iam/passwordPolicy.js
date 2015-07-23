@@ -61,22 +61,26 @@ module.exports = {
 			if (err) {
 				pluginInfo.tests.minPasswordLength.results.push({
 					status: 3,
-					message: 'Unable to query for password policy status'
+					message: 'Unable to query for password policy status',
+					region: 'global'
 				});
 
 				pluginInfo.tests.requiresSymbols.results.push({
 					status: 3,
-					message: 'Unable to query for password policy status'
+					message: 'Unable to query for password policy status',
+					region: 'global'
 				});
 
 				pluginInfo.tests.maxPasswordAge.results.push({
 					status: 3,
-					message: 'Unable to query for password policy status'
+					message: 'Unable to query for password policy status',
+					region: 'global'
 				});
 
 				pluginInfo.tests.passwordReusePrevention.results.push({
 					status: 3,
-					message: 'Unable to query for password policy status'
+					message: 'Unable to query for password policy status',
+					region: 'global'
 				});
 
 				return callback(null, pluginInfo);
@@ -87,78 +91,92 @@ module.exports = {
 					if (!data.PasswordPolicy.MinimumPasswordLength) {
 						pluginInfo.tests.minPasswordLength.results.push({
 							status: 2,
-							message: 'Password policy does not specify a minimum password length'
+							message: 'Password policy does not specify a minimum password length',
+							region: 'global'
 						});
 					} else if (data.PasswordPolicy.MinimumPasswordLength < 5) {
 						pluginInfo.tests.minPasswordLength.results.push({
 							status: 2,
-							message: 'Minimum password length of: ' + data.PasswordPolicy.MinimumPasswordLength + ' is less than 5 characters'
+							message: 'Minimum password length of: ' + data.PasswordPolicy.MinimumPasswordLength + ' is less than 5 characters',
+							region: 'global'
 						});
 					} else if (data.PasswordPolicy.MinimumPasswordLength < 9) {
 						pluginInfo.tests.minPasswordLength.results.push({
 							status: 1,
-							message: 'Minimum password length of: ' + data.PasswordPolicy.MinimumPasswordLength + ' is less than 9 characters'
+							message: 'Minimum password length of: ' + data.PasswordPolicy.MinimumPasswordLength + ' is less than 9 characters',
+							region: 'global'
 						});
 					} else {
 						pluginInfo.tests.minPasswordLength.results.push({
 							status: 0,
-							message: 'Minimum password length of: ' + data.PasswordPolicy.MinimumPasswordLength + ' is suitable'
+							message: 'Minimum password length of: ' + data.PasswordPolicy.MinimumPasswordLength + ' is suitable',
+							region: 'global'
 						});
 					}
 
 					if (!data.PasswordPolicy.RequireSymbols) {
 						pluginInfo.tests.requiresSymbols.results.push({
 							status: 1,
-							message: 'Password policy does not require symbols'
+							message: 'Password policy does not require symbols',
+							region: 'global'
 						});
 					} else {
 						pluginInfo.tests.requiresSymbols.results.push({
 							status: 0,
-							message: 'Password policy requires symbols'
+							message: 'Password policy requires symbols',
+							region: 'global'
 						});
 					}
 
 					if (!data.PasswordPolicy.MaxPasswordAge) {
 						pluginInfo.tests.maxPasswordAge.results.push({
 							status: 2,
-							message: 'Password policy does not specify a maximum password age'
+							message: 'Password policy does not specify a maximum password age',
+							region: 'global'
 						});
 					} else if (data.PasswordPolicy.MaxPasswordAge > 365) {
 						pluginInfo.tests.maxPasswordAge.results.push({
 							status: 2,
-							message: 'Maximum password age of: ' + data.PasswordPolicy.MaxPasswordAge + ' days is more than one year'
+							message: 'Maximum password age of: ' + data.PasswordPolicy.MaxPasswordAge + ' days is more than one year',
+							region: 'global'
 						});
 					} else if (data.PasswordPolicy.MaxPasswordAge > 180) {
 						pluginInfo.tests.maxPasswordAge.results.push({
 							status: 1,
-							message: 'Maximum password age of: ' + data.PasswordPolicy.MaxPasswordAge + ' days is more than six months'
+							message: 'Maximum password age of: ' + data.PasswordPolicy.MaxPasswordAge + ' days is more than six months',
+							region: 'global'
 						});
 					} else {
 						pluginInfo.tests.maxPasswordAge.results.push({
 							status: 0,
-							message: 'Maximum password age of: ' + data.PasswordPolicy.MaxPasswordAge + ' days is suitable'
+							message: 'Maximum password age of: ' + data.PasswordPolicy.MaxPasswordAge + ' days is suitable',
+							region: 'global'
 						});
 					}
 
 					if (!data.PasswordPolicy.PasswordReusePrevention) {
 						pluginInfo.tests.passwordReusePrevention.results.push({
 							status: 2,
-							message: 'Password policy does not prevent previous password reuse'
+							message: 'Password policy does not prevent previous password reuse',
+							region: 'global'
 						});
 					} else if (data.PasswordPolicy.PasswordReusePrevention < 2) {
 						pluginInfo.tests.passwordReusePrevention.results.push({
 							status: 2,
-							message: 'Maximum password reuse of: ' + data.PasswordPolicy.PasswordReusePrevention + ' passwords is less than 2'
+							message: 'Maximum password reuse of: ' + data.PasswordPolicy.PasswordReusePrevention + ' passwords is less than 2',
+							region: 'global'
 						});
 					} else if (data.PasswordPolicy.PasswordReusePrevention < 5) {
 						pluginInfo.tests.passwordReusePrevention.results.push({
 							status: 1,
-							message: 'Maximum password reuse of: ' + data.PasswordPolicy.PasswordReusePrevention + ' passwords is less than 5'
+							message: 'Maximum password reuse of: ' + data.PasswordPolicy.PasswordReusePrevention + ' passwords is less than 5',
+							region: 'global'
 						});
 					} else {
 						pluginInfo.tests.passwordReusePrevention.results.push({
 							status: 0,
-							message: 'Maximum password reuse of: ' + data.PasswordPolicy.PasswordReusePrevention + ' passwords is suitable'
+							message: 'Maximum password reuse of: ' + data.PasswordPolicy.PasswordReusePrevention + ' passwords is suitable',
+							region: 'global'
 						});
 					}
 				}
@@ -166,22 +184,26 @@ module.exports = {
 			} else {
 				pluginInfo.tests.minPasswordLength.results.push({
 					status: 3,
-					message: 'Unable to query for password policy status'
+					message: 'Unable to query for password policy status',
+					region: 'global'
 				});
 
 				pluginInfo.tests.requiresSymbols.results.push({
 					status: 3,
-					message: 'Unable to query for password policy status'
+					message: 'Unable to query for password policy status',
+					region: 'global'
 				});
 
 				pluginInfo.tests.maxPasswordAge.results.push({
 					status: 3,
-					message: 'Unable to query for password policy status'
+					message: 'Unable to query for password policy status',
+					region: 'global'
 				});
 
 				pluginInfo.tests.passwordReusePrevention.results.push({
 					status: 3,
-					message: 'Unable to query for password policy status'
+					message: 'Unable to query for password policy status',
+					region: 'global'
 				});
 
 				return callback(null, pluginInfo);

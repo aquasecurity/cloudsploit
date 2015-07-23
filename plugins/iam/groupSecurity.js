@@ -37,7 +37,8 @@ module.exports = {
 			if (err) {
 				var returnMsg = {
 					status: 3,
-					message: 'Unable to query for groups'
+					message: 'Unable to query for groups',
+					region: 'global'
 				};
 				pluginInfo.tests.emptyGroups.results.push(returnMsg);
 				
@@ -49,7 +50,8 @@ module.exports = {
 				if (!data.Groups.length) {
 					pluginInfo.tests.emptyGroups.results.push({
 						status: 0,
-						message: 'No groups found'
+						message: 'No groups found',
+						region: 'global'
 					});
 
 					return callback(null, pluginInfo);
@@ -60,7 +62,8 @@ module.exports = {
 						if (err || !data) {
 							pluginInfo.tests.emptyGroups.results.push({
 								status: 3,
-								message: 'Unable to query for group: ' + group.GroupName
+								message: 'Unable to query for group: ' + group.GroupName,
+								region: 'global'
 							});
 
 							return cb();
@@ -69,12 +72,14 @@ module.exports = {
 						if (!data.Users || !data.Users.length) {
 							pluginInfo.tests.emptyGroups.results.push({
 								status: 1,
-								message: 'Group: ' + group.GroupName + ' does not contain any users'
+								message: 'Group: ' + group.GroupName + ' does not contain any users',
+								region: 'global'
 							});
 						} else {
 							pluginInfo.tests.emptyGroups.results.push({
 								status: 0,
-								message: 'Group: ' + group.GroupName + ' contains ' + data.Users.length + ' user(s)'
+								message: 'Group: ' + group.GroupName + ' contains ' + data.Users.length + ' user(s)',
+								region: 'global'
 							});
 						}
 
@@ -86,7 +91,8 @@ module.exports = {
 			} else {
 				pluginInfo.tests.emptyGroups.results.push({
 					status: 3,
-					message: 'Unexpected data when querying groups'
+					message: 'Unexpected data when querying groups',
+					region: 'global'
 				});
 
 				return callback(null, pluginInfo);

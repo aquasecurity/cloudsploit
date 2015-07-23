@@ -44,11 +44,13 @@ module.exports = {
 			if (err) {
 				pluginInfo.tests.rootMfaEnabled.results.push({
 					status: 3,
-					message: 'Unable to query for MFA status'
+					message: 'Unable to query for MFA status',
+					region: 'global'
 				});
 				pluginInfo.tests.rootAccessKeys.results.push({
 					status: 3,
-					message: 'Unable to query for access key status'
+					message: 'Unable to query for access key status',
+					region: 'global'
 				});
 				return callback(null, pluginInfo);
 			}
@@ -58,24 +60,28 @@ module.exports = {
 				if (data.SummaryMap.AccountMFAEnabled) {
 					pluginInfo.tests.rootMfaEnabled.results.push({
 						status: 0,
-						message: 'An MFA device was found for the root account'
+						message: 'An MFA device was found for the root account',
+						region: 'global'
 					});
 				} else {
 					pluginInfo.tests.rootMfaEnabled.results.push({
 						status: 2,
-						message: 'An MFA device was not found for the root account'
+						message: 'An MFA device was not found for the root account',
+						region: 'global'
 					});
 				}
 
 				if (data.SummaryMap.AccountAccessKeysPresent > 0) {
 					pluginInfo.tests.rootAccessKeys.results.push({
 						status: 2,
-						message: 'Access keys were found for the root account'
+						message: 'Access keys were found for the root account',
+						region: 'global'
 					});
 				} else {
 					pluginInfo.tests.rootAccessKeys.results.push({
 						status: 0,
-						message: 'No access keys were found for the root account'
+						message: 'No access keys were found for the root account',
+						region: 'global'
 					});
 				}
 
@@ -84,12 +90,14 @@ module.exports = {
 
 			pluginInfo.tests.rootMfaEnabled.results.push({
 				status: 3,
-				message: 'Unexpected data when querying MFA status'
+				message: 'Unexpected data when querying MFA status',
+				region: 'global'
 			});
 
 			pluginInfo.tests.rootAccessKeys.results.push({
 				status: 3,
-				message: 'Unexpected data when querying access key status'
+				message: 'Unexpected data when querying access key status',
+				region: 'global'
 			});
 
 			return callback(null, pluginInfo);

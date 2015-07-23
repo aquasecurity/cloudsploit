@@ -1,7 +1,6 @@
-// TODO: Enable for all regions
-
 var async = require('async');
 var AWS = require('aws-sdk');
+var regions = require(__dirname + '/../../regions.json');
 
 function getPluginInfo() {
 	return {
@@ -32,28 +31,35 @@ module.exports = {
 	tests: getPluginInfo().tests,
 
 	run: function(AWSConfig, callback) {
-		var cloudtrail = new AWS.CloudTrail(AWSConfig);
 		var pluginInfo = getPluginInfo();
 
-		cloudtrail.describeTrails({}, function(err, data){
-			if (err) {
-				pluginInfo.tests.cloudtrailBucketDelete.results.push({
-					status: 3,
-					message: 'Unable to query for CloudTrail policy'
-				});
+		async.each(regions, function(region, rcb){
+			// Update the region
+			AWSConfig.region = region;
+			var cloudtrail = new AWS.CloudTrail(AWSConfig);
 
-				return callback(null, pluginInfo);
-			}
-
-			// Perform checks for establishing if MFA token is enabled
-			if (data && data.trailList) {
-				if (!data.trailList.length) {
+			cloudtrail.describeTrails({}, function(err, data){
+				if (err) {
 					pluginInfo.tests.cloudtrailBucketDelete.results.push({
-						status: 0,
-						message: 'No S3 buckets to check'
+						status: 3,
+						message: 'Unable to query for CloudTrail policy for region: ' + region,
+						region: region
 					});
-					callback(null, pluginInfo);
-				} else {
+
+					return rcb();
+				}
+
+				// Perform checks for establishing if MFA token is enabled
+				if (data && data.trailList) {
+					if (!data.trailList.length) {
+						pluginInfo.tests.cloudtrailBucketDelete.results.push({
+							status: 0,
+							message: 'No S3 buckets to check for region: ' + region,
+							region: region
+						});
+						return rcb();
+					}
+
 					var s3 = new AWS.S3();
 
 					async.eachLimit(data.trailList, 2, function(trailList, cb){
@@ -61,28 +67,33 @@ module.exports = {
 							if (s3data && s3data.MFADelete && s3data.MFADelete === 'Enabled') {
 								pluginInfo.tests.cloudtrailBucketDelete.results.push({
 									status: 0,
-									message: 'Bucket: ' + trailList.S3BucketName + ' has MFA delete enabled'
+									message: 'Bucket: ' + trailList.S3BucketName + ' has MFA delete enabled',
+									region: region
 								});
 							} else {
 								pluginInfo.tests.cloudtrailBucketDelete.results.push({
 									status: 1,
-									message: 'Bucket: ' + trailList.S3BucketName + ' has MFA delete disabled'
+									message: 'Bucket: ' + trailList.S3BucketName + ' has MFA delete disabled',
+									region: region
 								});
 							}
 							cb();
 						});
-					}, function(err){
-						callback(null, pluginInfo);
+					}, function(){
+						rcb();
 					});
-				}
-			} else {
-				pluginInfo.tests.cloudtrailBucketDelete.results.push({
-					status: 3,
-					message: 'Unable to query for CloudTrail policy'
-				});
+				} else {
+					pluginInfo.tests.cloudtrailBucketDelete.results.push({
+						status: 3,
+						message: 'Unable to query for CloudTrail policy for region: ' + region,
+						region: region
+					});
 
-				return callback(null, pluginInfo);
-			}
+					rcb();
+				}
+			});
+		}, function(){
+			callback(null, pluginInfo);
 		});
 	}
 };

@@ -10,21 +10,21 @@ var async = require('async');
 var AWSConfig = require(__dirname + '/../../cloudsploit-secure/scan-test-credentials.json');
 
 var plugins = [
-    // 'iam/rootAccountSecurity.js',
-    // 'iam/usersMfaEnabled.js',
-    // 'iam/passwordPolicy.js',
-    // 'iam/accessKeys.js',
+    'iam/rootAccountSecurity.js',
+    'iam/usersMfaEnabled.js',
+    'iam/passwordPolicy.js',
+    'iam/accessKeys.js',
     'iam/groupSecurity.js',
-    // 'cloudtrail/cloudtrailEnabled.js',
-    // 'cloudtrail/cloudtrailBucketDelete.js',
-    // 'ec2/accountLimits.js',
-    // 'ec2/certificateExpiry.js',
-    // 'ec2/insecureCiphers.js',
-    // 'vpc/detectClassic.js',
-    // 'ec2/securityGroups.js'
+    'cloudtrail/cloudtrailEnabled.js',
+    'cloudtrail/cloudtrailBucketDelete.js',
+    'ec2/accountLimits.js',
+    'ec2/certificateExpiry.js',
+    'ec2/insecureCiphers.js',
+    'vpc/detectClassic.js',
+    'ec2/securityGroups.js'
 ];
 
-console.log('CATEGORY\tPLUGIN\t\t\tTEST\t\t\tSTATUS\tMESSAGE');
+console.log('CATEGORY\tPLUGIN\t\t\tTEST\t\t\tREGION\t\tSTATUS\tMESSAGE');
 
 async.eachSeries(plugins, function(pluginPath, callback){
     var plugin = require(__dirname + '/plugins/' + pluginPath);
@@ -43,7 +43,7 @@ async.eachSeries(plugins, function(pluginPath, callback){
                 } else {
                     statusWord = 'UNKNOWN';
                 }
-                console.log(result.category + '\t\t' + result.title + '\t' + result.tests[i].title + '\t' + statusWord + '\t' + result.tests[i].results[j].message);
+                console.log(result.category + '\t\t' + result.title + '\t' + result.tests[i].title + '\t' + (result.tests[i].results[j].region || 'Global') + '\t\t' + statusWord + '\t' + result.tests[i].results[j].message);
             }
         }
         callback(err);

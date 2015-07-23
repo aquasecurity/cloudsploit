@@ -37,7 +37,8 @@ module.exports = {
 			if (err || !data || !data.ServerCertificateMetadataList) {
 				pluginInfo.tests.certificateExpiry.results.push({
 					status: 3,
-					message: 'Unable to query for certificates'
+					message: 'Unable to query for certificates',
+					region: 'global'
 				});
 
 				return callback(null, pluginInfo);
@@ -46,7 +47,8 @@ module.exports = {
 			if (!data.ServerCertificateMetadataList.length) {
 				pluginInfo.tests.certificateExpiry.results.push({
 					status: 0,
-					message: 'No certificates found'
+					message: 'No certificates found',
+					region: 'global'
 				});
 
 				return callback(null, pluginInfo);
@@ -57,7 +59,8 @@ module.exports = {
 			if (data.ServerCertificateMetadataList.length > 100) {
 				pluginInfo.tests.certificateExpiry.results.push({
 					status: 3,
-					message: 'More than 100 certificates were found. Certificates beyond 100 were not tested'
+					message: 'More than 100 certificates were found. Certificates beyond 100 were not tested',
+					region: 'global'
 				});
 			}
 
@@ -69,22 +72,26 @@ module.exports = {
 					if (difference > 45) {
 						pluginInfo.tests.certificateExpiry.results.push({
 							status: 0,
-							message: 'Certificate: ' + data.ServerCertificateMetadataList[i].ServerCertificateName + ' expires in ' + Math.abs(difference) + ' days'
+							message: 'Certificate: ' + data.ServerCertificateMetadataList[i].ServerCertificateName + ' expires in ' + Math.abs(difference) + ' days',
+							region: 'global'
 						});
 					} else if (difference > 30) {
 						pluginInfo.tests.certificateExpiry.results.push({
 							status: 1,
-							message: 'Certificate: ' + data.ServerCertificateMetadataList[i].ServerCertificateName + ' expires in ' + Math.abs(difference) + ' days'
+							message: 'Certificate: ' + data.ServerCertificateMetadataList[i].ServerCertificateName + ' expires in ' + Math.abs(difference) + ' days',
+							region: 'global'
 						});
 					} else if (difference > 0) {
 						pluginInfo.tests.certificateExpiry.results.push({
 							status: 2,
-							message: 'Certificate: ' + data.ServerCertificateMetadataList[i].ServerCertificateName + ' expires in ' + Math.abs(difference) + ' days'
+							message: 'Certificate: ' + data.ServerCertificateMetadataList[i].ServerCertificateName + ' expires in ' + Math.abs(difference) + ' days',
+							region: 'global'
 						});
 					} else {
 						pluginInfo.tests.certificateExpiry.results.push({
 							status: 2,
-							message: 'Certificate: ' + data.ServerCertificateMetadataList[i].ServerCertificateName + ' expired ' + Math.abs(difference) + ' days ago'
+							message: 'Certificate: ' + data.ServerCertificateMetadataList[i].ServerCertificateName + ' expired ' + Math.abs(difference) + ' days ago',
+							region: 'global'
 						});
 					}
 				}
