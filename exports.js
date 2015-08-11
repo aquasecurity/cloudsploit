@@ -16,5 +16,7 @@ module.exports = {
 	'accessKeys': require(__dirname + '/plugins/iam/accessKeys.js'),
 	'groupSecurity': require(__dirname + '/plugins/iam/groupSecurity.js'),
 	
-	'detectClassic': require(__dirname + '/plugins/vpc/detectClassic.js')
+	'detectClassic': require(__dirname + '/plugins/vpc/detectClassic.js'),
+
+	's3Buckets': require(__dirname + '/plugins/s3/s3Buckets.js')
 };

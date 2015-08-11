@@ -21,7 +21,8 @@ var plugins = [
     'ec2/certificateExpiry.js',
     'ec2/insecureCiphers.js',
     'vpc/detectClassic.js',
-    'ec2/securityGroups.js'
+    'ec2/securityGroups.js',
+    's3/s3Buckets.js'
 ];
 
 console.log('CATEGORY\tPLUGIN\t\t\tTEST\t\t\tREGION\t\tSTATUS\tMESSAGE');
