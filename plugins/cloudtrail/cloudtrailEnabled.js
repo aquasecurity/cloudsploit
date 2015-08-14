@@ -14,7 +14,7 @@ function getPluginInfo() {
 				description: 'Ensures CloudTrail is enabled for all regions within an account',
 				more_info: 'CloudTrail should be enabled for all regions in order to detect suspicious activity in regions that are not typically used.',
 				link: 'http://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-getting-started.html',
-				recommended_action: 'Enable CloudTrail for all regions',
+				recommended_action: 'Enable CloudTrail for all regions and ensure that at least one region monitors global service events',
 				results: []
 			}
 		}
@@ -32,6 +32,8 @@ module.exports = {
 
 	run: function(AWSConfig, callback) {
 		var pluginInfo = getPluginInfo();
+
+		var globalServicesMonitored = false;
 
 		async.each(regions, function(region, cb){
 			// Update the region
@@ -57,18 +59,16 @@ module.exports = {
 							message: 'CloudTrail is not enabled for region: ' + region,
 							region: region
 						});
-					} else if (data.trailList[0] && !data.trailList[0].IncludeGlobalServiceEvents) {
-						pluginInfo.tests.cloudtrailEnabled.results.push({
-							status: 1,
-							message: 'CloudTrail is enabled but does not include global service events',
-							region: region
-						});
-					} else if (data.trailList[0] && data.trailList[0].IncludeGlobalServiceEvents) {
+					} else if (data.trailList[0]) {
 						pluginInfo.tests.cloudtrailEnabled.results.push({
 							status: 0,
-							message: 'CloudTrail is enabled and includes global service events',
+							message: 'CloudTrail is enabled',
 							region: region
 						});
+
+						if (data.trailList[0].IncludeGlobalServiceEvents) {
+							globalServicesMonitored = true;
+						}
 					} else {
 						pluginInfo.tests.cloudtrailEnabled.results.push({
 							status: 2,
@@ -87,6 +87,20 @@ module.exports = {
 				}
 			});
 		}, function(){
+			if (!globalServicesMonitored) {
+				pluginInfo.tests.cloudtrailEnabled.results.push({
+					status: 2,
+					message: 'CloudTrail is not monitoring global services',
+					region: 'global'
+				});
+			} else {
+				pluginInfo.tests.cloudtrailEnabled.results.push({
+					status: 0,
+					message: 'CloudTrail is monitoring global services',
+					region: 'global'
+				});
+			}
+
 			return callback(null, pluginInfo);
 		});
 	}
