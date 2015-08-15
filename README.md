@@ -18,6 +18,27 @@ npm install
 ## Setup
 To begin using the scanner, edit the index.js file with your AWS key, secret, and optionally (for temporary credentials), a session token. In the list of plugins, comment out any plugins you do not wish to run. Then save and run ```node index.js```.
 
+### Cross Account Roles
+When using the [hosted scanner](https://cloudsploit.com/scan), you'll need to create a cross-account IAM role. Cross-account roles enable you to share access to your account with another AWS account using the same policy model that you're used to. The advantage is that cross-account roles are much more secure than key-based access, since an attacker who steals a cross-account role ARN still can't make API calls unless they also infiltrate the authorized AWS account.
+
+To create a cross-account role:
+
+1. Navigate to the [IAM console](https://console.aws.amazon.com/iam/home).
+2. Click "Roles" and then "Create New Role".
+3. Provide a role name (suggested "cloudsploit").
+4. Select the "Role for Cross-Account Access" radio button.
+5. Click the "Select" button next to "Allows IAM users from a 3rd party AWS account to access this account."
+6. Enter `057012691312` for the account ID (this is the ID of CloudSploit's AWS account).
+7. Copy the auto-generated external ID from the CloudSploit web page and paste it into the AWS IAM console textbox.
+8. Ensure that "Require MFA" is _not_ selected.
+9. Click "Next Step".
+10. Select the "Security Audit" policy. Then click "Next Step" again.
+11. Click on your new role.
+12. Expand "Inline Policies" and click on the link to create a new one.
+13. Select "Custom Policy".
+14. Provide any policy name, and then copy the entire [permissions document](#permissions) below into the box.
+15. Click "Apply Policy".
+
 ## Permissions
 The scans require read-only permissions to your account. This can be done by adding the following IAM policy to a new user. Note: this policy will likely change as more plugins are written. If a test returns "UNKNOWN" it is likely missing a required permission.
 
