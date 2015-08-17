@@ -56,14 +56,6 @@ module.exports = {
 
 			var now = new Date();
 
-			if (data.ServerCertificateMetadataList.length > 100) {
-				pluginInfo.tests.certificateExpiry.results.push({
-					status: 3,
-					message: 'More than 100 certificates were found. Certificates beyond 100 were not tested',
-					region: 'global'
-				});
-			}
-
 			for (i in data.ServerCertificateMetadataList) {
 				if (data.ServerCertificateMetadataList[i].ServerCertificateName && data.ServerCertificateMetadataList[i].Expiration) {
 					var then = new Date(data.ServerCertificateMetadataList[i].Expiration);
