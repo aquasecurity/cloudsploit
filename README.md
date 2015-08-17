@@ -50,7 +50,7 @@ The scans require read-only permissions to your account. This can be done by add
       "Action": [
             "cloudtrail:DescribeTrails",
             "s3:GetBucketVersioning",
-            "s3:ListBuckets",
+            "s3:ListAllMyBuckets",
             "s3:GetBucketAcl",
             "ec2:DescribeAccountAttributes",
             "ec2:DescribeAddresses",
