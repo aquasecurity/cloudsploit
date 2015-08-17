@@ -1,13 +1,13 @@
 var async = require('async');
 
-// var AWSConfig = {
-//     accessKeyId: '',
-//     secretAccessKey: '',
-//     sessionToken: '',
-//     region: 'us-east-1'
-// };
+var AWSConfig = {
+    accessKeyId:     process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    sessionToken:    process.env.AWS_SESSION_TOKEN,
+    region:          process.env.AWS_DEFAULT_REGION
+};
 
-var AWSConfig = require(__dirname + '/../../cloudsploit-secure/scan-test-credentials.json');
+// var AWSConfig = require(__dirname + '/../../cloudsploit-secure/scan-test-credentials.json');
 
 var plugins = [
     'iam/rootAccountSecurity.js',
