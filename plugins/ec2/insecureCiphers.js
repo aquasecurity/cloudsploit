@@ -153,16 +153,6 @@ module.exports = {
 					return rcb();
 				}
 
-				if (policies.length > 30) {
-					pluginInfo.tests.insecureCiphers.results.push({
-						status: 3,
-						message: 'More than 30 load balancers found. Only the first 30 are checked.',
-						region: region
-					});
-
-					policies = policies.slice(0,30);
-				}
-
 				async.eachLimit(policies, 4, function(policy, cb){
 					elb.describeLoadBalancerPolicies(policy, function(err, data){
 						if (err || !data || !data.PolicyDescriptions) {
