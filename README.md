@@ -40,7 +40,11 @@ To create a cross-account role:
 15. Click "Apply Policy".
 
 ## Permissions
-The scans require read-only permissions to your account. This can be done by adding the following IAM policy to a new user. Note: this policy will likely change as more plugins are written. If a test returns "UNKNOWN" it is likely missing a required permission.
+The scans require read-only permissions to your account. This can be done by adding the "Security Audit" AWS managed policy to your IAM user or role, as well as the "cloudtrail:DescribeTrails" permission (can be created via an inline permissions document).
+
+If you'd prefer to be more restrictive, the following IAM policy contains the exact permissions used by the scan.
+
+WARNING: This policy will likely change as more plugins are written. If a test returns "UNKNOWN" it is likely missing a required permission. The preferred method is to use the "Security Audit" policy.
 
 ```
 {
@@ -50,7 +54,7 @@ The scans require read-only permissions to your account. This can be done by add
       "Action": [
             "cloudtrail:DescribeTrails",
             "s3:GetBucketVersioning",
-            "s3:ListBuckets",
+            "s3:ListAllMyBuckets"
             "s3:GetBucketAcl",
             "ec2:DescribeAccountAttributes",
             "ec2:DescribeAddresses",
