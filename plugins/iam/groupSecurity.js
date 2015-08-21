@@ -57,13 +57,14 @@ module.exports = {
 					return callback(null, pluginInfo);
 				}
 
-				async.eachLimit(data.Groups, 5, function(group, cb){
+				async.eachLimit(data.Groups, 20, function(group, cb){
 					iam.getGroup({GroupName: group.GroupName}, function(err, data){
 						if (err || !data) {
 							pluginInfo.tests.emptyGroups.results.push({
 								status: 3,
 								message: 'Unable to query for group: ' + group.GroupName,
-								region: 'global'
+								region: 'global',
+								resource: group.Arn
 							});
 
 							return cb();
@@ -73,13 +74,15 @@ module.exports = {
 							pluginInfo.tests.emptyGroups.results.push({
 								status: 1,
 								message: 'Group: ' + group.GroupName + ' does not contain any users',
-								region: 'global'
+								region: 'global',
+								resource: group.Arn
 							});
 						} else {
 							pluginInfo.tests.emptyGroups.results.push({
 								status: 0,
 								message: 'Group: ' + group.GroupName + ' contains ' + data.Users.length + ' user(s)',
-								region: 'global'
+								region: 'global',
+								resource: group.Arn
 							});
 						}
 

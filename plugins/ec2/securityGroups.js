@@ -210,7 +210,8 @@ module.exports = {
 										pluginInfo.tests.openFTP.results.push({
 											status: 2,
 											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has FTP TCP port 20 and/or 21 open to 0.0.0.0/0',
-											region: region
+											region: region,
+											resource: data.SecurityGroups[i].GroupId
 										});
 									}
 
@@ -218,7 +219,8 @@ module.exports = {
 										pluginInfo.tests.openSSH.results.push({
 											status: 2,
 											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has SSH TCP port 22 open to 0.0.0.0/0',
-											region: region
+											region: region,
+											resource: data.SecurityGroups[i].GroupId
 										});
 									}
 
@@ -226,7 +228,8 @@ module.exports = {
 										pluginInfo.tests.openTelnet.results.push({
 											status: 2,
 											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has Telnet TCP port 23 open to 0.0.0.0/0',
-											region: region
+											region: region,
+											resource: data.SecurityGroups[i].GroupId
 										});
 									}
 
@@ -234,7 +237,8 @@ module.exports = {
 										pluginInfo.tests.openSMTP.results.push({
 											status: 2,
 											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has SMTP TCP port 25 open to 0.0.0.0/0',
-											region: region
+											region: region,
+											resource: data.SecurityGroups[i].GroupId
 										});
 									}
 
@@ -242,7 +246,8 @@ module.exports = {
 										pluginInfo.tests.openDNS.results.push({
 											status: 2,
 											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has DNS TCP and/or UDP port 53 open to 0.0.0.0/0',
-											region: region
+											region: region,
+											resource: data.SecurityGroups[i].GroupId
 										});
 									}
 
@@ -250,7 +255,8 @@ module.exports = {
 										pluginInfo.tests.openRPC.results.push({
 											status: 2,
 											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has RPC TCP port 135 open to 0.0.0.0/0',
-											region: region
+											region: region,
+											resource: data.SecurityGroups[i].GroupId
 										});
 									}
 
@@ -258,7 +264,8 @@ module.exports = {
 										pluginInfo.tests.openNetBIOS.results.push({
 											status: 2,
 											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has NetBIOS TCP port 137 and/or 138 open to 0.0.0.0/0',
-											region: region
+											region: region,
+											resource: data.SecurityGroups[i].GroupId
 										});
 									}
 
@@ -266,7 +273,8 @@ module.exports = {
 										pluginInfo.tests.openSMBoTCP.results.push({
 											status: 2,
 											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has SMBoTCP TCP port 445 open to 0.0.0.0/0',
-											region: region
+											region: region,
+											resource: data.SecurityGroups[i].GroupId
 										});
 									}
 
@@ -274,7 +282,8 @@ module.exports = {
 										pluginInfo.tests.openCIFS.results.push({
 											status: 2,
 											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has CIFS TCP port 445 open to 0.0.0.0/0',
-											region: region
+											region: region,
+											resource: data.SecurityGroups[i].GroupId
 										});
 									}
 
@@ -282,7 +291,8 @@ module.exports = {
 										pluginInfo.tests.openSQLServer.results.push({
 											status: 2,
 											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has SQL Server TCP port 1433 or UDP port 1434 open to 0.0.0.0/0',
-											region: region
+											region: region,
+											resource: data.SecurityGroups[i].GroupId
 										});
 									}
 
@@ -290,7 +300,8 @@ module.exports = {
 										pluginInfo.tests.openRDP.results.push({
 											status: 2,
 											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has RDP TCP port 3389 open to 0.0.0.0/0',
-											region: region
+											region: region,
+											resource: data.SecurityGroups[i].GroupId
 										});
 									}
 
@@ -298,7 +309,8 @@ module.exports = {
 										pluginInfo.tests.openMySQL.results.push({
 											status: 2,
 											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has MySQL TCP port 3306 and/or 4333 open to 0.0.0.0/0',
-											region: region
+											region: region,
+											resource: data.SecurityGroups[i].GroupId
 										});
 									}
 
@@ -306,7 +318,8 @@ module.exports = {
 										pluginInfo.tests.openPostgreSQL.results.push({
 											status: 2,
 											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has PostgreSQL TCP port 5432 open to 0.0.0.0/0',
-											region: region
+											region: region,
+											resource: data.SecurityGroups[i].GroupId
 										});
 									}
 
@@ -314,7 +327,8 @@ module.exports = {
 										pluginInfo.tests.openVNCClient.results.push({
 											status: 2,
 											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has VNC Client TCP port 5500 open to 0.0.0.0/0',
-											region: region
+											region: region,
+											resource: data.SecurityGroups[i].GroupId
 										});
 									}
 
@@ -322,7 +336,8 @@ module.exports = {
 										pluginInfo.tests.openVNCServer.results.push({
 											status: 2,
 											message: 'Security group: ' + data.SecurityGroups[i].GroupId + ' (' + data.SecurityGroups[i].GroupName + ') has VNC Server TCP port 5900 open to 0.0.0.0/0',
-											region: region
+											region: region,
+											resource: data.SecurityGroups[i].GroupId
 										});
 									}
 								}

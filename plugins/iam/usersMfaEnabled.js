@@ -61,7 +61,7 @@ module.exports = {
 						data.Users = data.Users.slice(0,100);
 					}
 
-					async.eachLimit(data.Users, 3, function(user, cb){
+					async.eachLimit(data.Users, 20, function(user, cb){
 						if (!user.PasswordLastUsed) {
 							// Skip users without passwords since they won't be logging into the console
 							return cb();
@@ -71,7 +71,8 @@ module.exports = {
 								pluginInfo.tests.usersMfaEnabled.results.push({
 									status: 3,
 									message: 'Unable to query MFA device for user: ' + user.UserName,
-									region: 'global'
+									region: 'global',
+									resource: user.Arn
 								});
 							} else {
 								if (mfaData && mfaData.MFADevices) {
@@ -79,13 +80,15 @@ module.exports = {
 										pluginInfo.tests.usersMfaEnabled.results.push({
 											status: 0,
 											message: 'User: ' + user.UserName + ' has an MFA device',
-											region: 'global'
+											region: 'global',
+											resource: user.Arn
 										});
 									} else {
 										pluginInfo.tests.usersMfaEnabled.results.push({
 											status: 1,
 											message: 'User: ' + user.UserName + ' does not have an MFA device enabled',
-											region: 'global'
+											region: 'global',
+											resource: user.Arn
 										});
 									}
 								}

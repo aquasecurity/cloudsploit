@@ -25,7 +25,7 @@ var plugins = [
     's3/s3Buckets.js'
 ];
 
-console.log('CATEGORY\tPLUGIN\t\t\tTEST\t\t\tREGION\t\tSTATUS\tMESSAGE');
+console.log('CATEGORY\t\tPLUGIN\t\t\t\tTEST\t\t\t\tRESOURCE\t\t\tREGION\t\tSTATUS\tMESSAGE');
 
 async.eachSeries(plugins, function(pluginPath, callback){
     var plugin = require(__dirname + '/plugins/' + pluginPath);
@@ -44,7 +44,7 @@ async.eachSeries(plugins, function(pluginPath, callback){
                 } else {
                     statusWord = 'UNKNOWN';
                 }
-                console.log(result.category + '\t\t' + result.title + '\t' + result.tests[i].title + '\t' + (result.tests[i].results[j].region || 'Global') + '\t\t' + statusWord + '\t' + result.tests[i].results[j].message);
+                console.log(result.category + '\t\t' + result.title + '\t' + result.tests[i].title + '\t' + (result.tests[i].results[j].resource || 'N/A') + '\t' + (result.tests[i].results[j].region || 'Global') + '\t\t' + statusWord + '\t' + result.tests[i].results[j].message);
             }
         }
         callback(err);

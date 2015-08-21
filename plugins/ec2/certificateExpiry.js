@@ -56,14 +56,6 @@ module.exports = {
 
 			var now = new Date();
 
-			if (data.ServerCertificateMetadataList.length > 100) {
-				pluginInfo.tests.certificateExpiry.results.push({
-					status: 3,
-					message: 'More than 100 certificates were found. Certificates beyond 100 were not tested',
-					region: 'global'
-				});
-			}
-
 			for (i in data.ServerCertificateMetadataList) {
 				if (data.ServerCertificateMetadataList[i].ServerCertificateName && data.ServerCertificateMetadataList[i].Expiration) {
 					var then = new Date(data.ServerCertificateMetadataList[i].Expiration);
@@ -73,25 +65,29 @@ module.exports = {
 						pluginInfo.tests.certificateExpiry.results.push({
 							status: 0,
 							message: 'Certificate: ' + data.ServerCertificateMetadataList[i].ServerCertificateName + ' expires in ' + Math.abs(difference) + ' days',
-							region: 'global'
+							region: 'global',
+							resource: data.ServerCertificateMetadataList[i].Arn
 						});
 					} else if (difference > 30) {
 						pluginInfo.tests.certificateExpiry.results.push({
 							status: 1,
 							message: 'Certificate: ' + data.ServerCertificateMetadataList[i].ServerCertificateName + ' expires in ' + Math.abs(difference) + ' days',
-							region: 'global'
+							region: 'global',
+							resource: data.ServerCertificateMetadataList[i].Arn
 						});
 					} else if (difference > 0) {
 						pluginInfo.tests.certificateExpiry.results.push({
 							status: 2,
 							message: 'Certificate: ' + data.ServerCertificateMetadataList[i].ServerCertificateName + ' expires in ' + Math.abs(difference) + ' days',
-							region: 'global'
+							region: 'global',
+							resource: data.ServerCertificateMetadataList[i].Arn
 						});
 					} else {
 						pluginInfo.tests.certificateExpiry.results.push({
 							status: 2,
 							message: 'Certificate: ' + data.ServerCertificateMetadataList[i].ServerCertificateName + ' expired ' + Math.abs(difference) + ' days ago',
-							region: 'global'
+							region: 'global',
+							resource: data.ServerCertificateMetadataList[i].Arn
 						});
 					}
 				}

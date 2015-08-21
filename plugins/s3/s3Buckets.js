@@ -69,13 +69,14 @@ module.exports = {
 
 				data.Buckets = data.Buckets.slice(0,100);
 
-				async.eachLimit(data.Buckets, 10, function(bucket, cb){
+				async.eachLimit(data.Buckets, 20, function(bucket, cb){
 					s3.getBucketAcl({Bucket:bucket.Name}, function(err, data){
 						if (err || !data) {
 							pluginInfo.tests.bucketAllUsersPolicy.results.push({
 								status: 3,
 								message: 'Error querying for bucket policy for bucket: ' + bucket.Name,
-								region: 'global'
+								region: 'global',
+								resource: 'arn:aws:s3:::' + bucket.Name
 							});
 
 							return cb();
@@ -99,13 +100,15 @@ module.exports = {
 							pluginInfo.tests.bucketAllUsersPolicy.results.push({
 								status: 2,
 								message: 'Bucket: ' + bucket.Name + ' allows global access to: ' + allowsAllUsersTypes.concat(', '),
-								region: 'global'
+								region: 'global',
+								resource: 'arn:aws:s3:::' + bucket.Name
 							});
 						} else {
 							pluginInfo.tests.bucketAllUsersPolicy.results.push({
 								status: 0,
 								message: 'Bucket: ' + bucket.Name + ' does not allow global write or read ACL access',
-								region: 'global'
+								region: 'global',
+								resource: 'arn:aws:s3:::' + bucket.Name
 							});
 						}
 						cb();

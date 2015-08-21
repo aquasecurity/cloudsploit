@@ -88,13 +88,14 @@ module.exports = {
 					var oneEightyDaysAgo = new Date(now - (oneDay*180));
 					var threeSixtyDaysAgo = new Date(now - (oneDay*360));
 
-					async.eachLimit(data.Users, 3, function(user, cb){
+					async.eachLimit(data.Users, 20, function(user, cb){
 						iam.listAccessKeys({UserName: user.UserName}, function(accessKeyErr, accessKeyData){
 							if (accessKeyErr) {
 								pluginInfo.tests.accessKeysRotated.results.push({
 									status: 3,
 									message: 'Unable to query access keys for user: ' + user.UserName,
-									region: 'global'
+									region: 'global',
+									resource: user.Arn
 								});
 							} else {
 								if (accessKeyData && accessKeyData.AccessKeyMetadata) {
@@ -103,7 +104,8 @@ module.exports = {
 											pluginInfo.tests.accessKeysExtra.results.push({
 												status: 1,
 												message: 'User: ' + user.UserName + ' is using ' + accessKeyData.AccessKeyMetadata.length + ' access keys',
-												region: 'global'
+												region: 'global',
+												resource: user.Arn
 											});
 										}
 
@@ -125,7 +127,8 @@ module.exports = {
 											pluginInfo.tests.accessKeysRotated.results.push({
 												status: status,
 												message: message,
-												region: 'global'
+												region: 'global',
+												resource: accessKeyData.AccessKeyMetadata[i].AccessKeyId
 											});
 										}
 									}
@@ -180,13 +183,14 @@ module.exports = {
 							allAccessKeys = allAccessKeys.slice(0,100);
 						}
 
-						async.eachLimit(allAccessKeys, 5, function(accessKey, cb){
+						async.eachLimit(allAccessKeys, 10, function(accessKey, cb){
 							iam.getAccessKeyLastUsed({AccessKeyId: accessKey}, function(accessKeyErr, accessKeyData){
 								if (accessKeyErr || !accessKeyData || !accessKeyData.AccessKeyLastUsed || !accessKeyData.AccessKeyLastUsed.LastUsedDate) {
 									pluginInfo.tests.accessKeysLastUsed.results.push({
 										status: 3,
 										message: 'Unable to query last used status for access key: ' + accessKey,
-										region: 'global'
+										region: 'global',
+										resource: accessKey
 									});
 
 									return cb();
@@ -206,7 +210,8 @@ module.exports = {
 								pluginInfo.tests.accessKeysLastUsed.results.push({
 									status: status,
 									message: message,
-									region: 'global'
+									region: 'global',
+									resource: accessKey
 								});
 
 								cb();

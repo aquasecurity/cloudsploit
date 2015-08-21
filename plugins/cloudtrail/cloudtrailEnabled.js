@@ -44,7 +44,7 @@ module.exports = {
 				if (err) {
 					pluginInfo.tests.cloudtrailEnabled.results.push({
 						status: 3,
-						message: 'Unable to query for CloudTrail policy in region: ' + region,
+						message: 'Unable to query for CloudTrail policy',
 						region: region
 					});
 
@@ -56,7 +56,7 @@ module.exports = {
 					if (!data.trailList.length) {
 						pluginInfo.tests.cloudtrailEnabled.results.push({
 							status: 2,
-							message: 'CloudTrail is not enabled for region: ' + region,
+							message: 'CloudTrail is not enabled',
 							region: region
 						});
 					} else if (data.trailList[0]) {
@@ -80,7 +80,7 @@ module.exports = {
 				} else {
 					pluginInfo.tests.cloudtrailEnabled.results.push({
 						status: 3,
-						message: 'Unable to query for CloudTrail policy for region: ' + region,
+						message: 'Unable to query for CloudTrail policy',
 						region: region
 					});
 					cb();

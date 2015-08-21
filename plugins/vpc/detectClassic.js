@@ -55,7 +55,6 @@ module.exports = {
 
 			ec2.describeInstances(params, function(err, data){
 				if (err || !data || !data.Reservations) {
-					console.log(err);
 					pluginInfo.tests.classicInstances.results.push({
 						status: 3,
 						message: 'Unable to query for instances',

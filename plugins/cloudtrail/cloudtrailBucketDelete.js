@@ -42,7 +42,7 @@ module.exports = {
 				if (err) {
 					pluginInfo.tests.cloudtrailBucketDelete.results.push({
 						status: 3,
-						message: 'Unable to query for CloudTrail policy for region: ' + region,
+						message: 'Unable to query for CloudTrail policy',
 						region: region
 					});
 
@@ -54,7 +54,7 @@ module.exports = {
 					if (!data.trailList.length) {
 						pluginInfo.tests.cloudtrailBucketDelete.results.push({
 							status: 0,
-							message: 'No S3 buckets to check for region: ' + region,
+							message: 'No S3 buckets to check',
 							region: region
 						});
 						return rcb();
@@ -62,19 +62,21 @@ module.exports = {
 
 					var s3 = new AWS.S3();
 
-					async.eachLimit(data.trailList, 2, function(trailList, cb){
+					async.eachLimit(data.trailList, 10, function(trailList, cb){
 						s3.getBucketVersioning({Bucket:trailList.S3BucketName}, function(s3err, s3data){
 							if (s3data && s3data.MFADelete && s3data.MFADelete === 'Enabled') {
 								pluginInfo.tests.cloudtrailBucketDelete.results.push({
 									status: 0,
 									message: 'Bucket: ' + trailList.S3BucketName + ' has MFA delete enabled',
-									region: region
+									region: region,
+									resource: trailList.S3BucketName
 								});
 							} else {
 								pluginInfo.tests.cloudtrailBucketDelete.results.push({
 									status: 1,
 									message: 'Bucket: ' + trailList.S3BucketName + ' has MFA delete disabled',
-									region: region
+									region: region,
+									resource: trailList.S3BucketName
 								});
 							}
 							cb();
@@ -85,7 +87,7 @@ module.exports = {
 				} else {
 					pluginInfo.tests.cloudtrailBucketDelete.results.push({
 						status: 3,
-						message: 'Unable to query for CloudTrail policy for region: ' + region,
+						message: 'Unable to query for CloudTrail policy',
 						region: region
 					});
 

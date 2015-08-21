@@ -135,6 +135,7 @@ module.exports = {
 							if (elbPolicies.length) {
 								var elbObj = {
 									LoadBalancerName: data.LoadBalancerDescriptions[i].LoadBalancerName,
+									LoadBalancerDNS: data.LoadBalancerDescriptions[i].DNSName,
 									PolicyNames: elbPolicies
 								};
 								policies.push(elbObj);
@@ -153,23 +154,14 @@ module.exports = {
 					return rcb();
 				}
 
-				if (policies.length > 30) {
-					pluginInfo.tests.insecureCiphers.results.push({
-						status: 3,
-						message: 'More than 30 load balancers found. Only the first 30 are checked.',
-						region: region
-					});
-
-					policies = policies.slice(0,30);
-				}
-
-				async.eachLimit(policies, 4, function(policy, cb){
+				async.eachLimit(policies, 20, function(policy, cb){
 					elb.describeLoadBalancerPolicies(policy, function(err, data){
 						if (err || !data || !data.PolicyDescriptions) {
 							pluginInfo.tests.insecureCiphers.results.push({
 								status: 3,
 								message: 'Unable to query load balancer policies for ELB: ' + policy.LoadBalancerName,
-								region: region
+								region: region,
+								resource: policy.LoadBalancerDNS,
 							});
 							return cb();
 						}
@@ -185,13 +177,15 @@ module.exports = {
 								pluginInfo.tests.insecureCiphers.results.push({
 									status: 1,
 									message: 'ELB: ' + policy.LoadBalancerName + ' uses insecure protocols or ciphers: ' + elbBad.join(', '),
-									region: region
+									region: region,
+									resource: policy.LoadBalancerDNS,
 								});
 							} else {
 								pluginInfo.tests.insecureCiphers.results.push({
 									status: 0,
 									message: 'ELB: ' + policy.LoadBalancerName + ' uses secure protocols and ciphers',
-									region: region
+									region: region,
+									resource: policy.LoadBalancerDNS,
 								});
 							}
 						}
