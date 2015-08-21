@@ -16,7 +16,7 @@
     "security"
   ],
   "author": "CloudSploit",
-  "license": "ISC",
+  "license": "GPLv3",
   "bugs": {
     "url": "https://github.com/cloudsploit/scans/issues"
   },
