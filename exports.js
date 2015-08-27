@@ -18,5 +18,7 @@ module.exports = {
 	
 	'detectClassic': require(__dirname + '/plugins/vpc/detectClassic.js'),
 
-	's3Buckets': require(__dirname + '/plugins/s3/s3Buckets.js')
+	's3Buckets': require(__dirname + '/plugins/s3/s3Buckets.js'),
+
+	'domainSecurity': require(__dirname + '/plugins/route53/domainSecurity.js')
 };

@@ -22,7 +22,8 @@ var plugins = [
     'ec2/insecureCiphers.js',
     'vpc/detectClassic.js',
     'ec2/securityGroups.js',
-    's3/s3Buckets.js'
+    's3/s3Buckets.js',
+    'route53/domainSecurity.js'
 ];
 
 console.log('CATEGORY\t\tPLUGIN\t\t\t\tTEST\t\t\t\tRESOURCE\t\t\tREGION\t\tSTATUS\tMESSAGE');
