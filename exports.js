@@ -20,5 +20,7 @@ module.exports = {
 
 	's3Buckets': require(__dirname + '/plugins/s3/s3Buckets.js'),
 
-	'domainSecurity': require(__dirname + '/plugins/route53/domainSecurity.js')
+	'domainSecurity': require(__dirname + '/plugins/route53/domainSecurity.js'),
+
+	'databaseSecurity': require(__dirname + '/plugins/rds/databaseSecurity.js')
 };
