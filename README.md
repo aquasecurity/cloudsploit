@@ -71,7 +71,9 @@ WARNING: This policy will likely change as more plugins are written. If a test r
             "iam:ListAccessKeys",
             "iam:ListVirtualMFADevices",
             "elasticloadbalancing:DescribeLoadBalancerPolicies",
-            "elasticloadbalancing:DescribeLoadBalancers"
+            "elasticloadbalancing:DescribeLoadBalancers",
+            "route53domains:ListDomains",
+            "rds:describeDBInstances"
       ],
       "Effect": "Allow",
       "Resource": "*"
