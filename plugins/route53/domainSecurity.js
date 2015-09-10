@@ -46,6 +46,12 @@ module.exports = {
 
 	run: function(AWSConfig, callback) {
 		var pluginInfo = getPluginInfo();
+
+		// Domains are a global service and will fail if a region is specified
+		if (AWSConfig.region) {
+			delete AWSConfig.region;
+		}
+
 		var route53domains = new AWS.Route53Domains(AWSConfig);
 
 		route53domains.listDomains({MaxItems:100}, function(err, data){
