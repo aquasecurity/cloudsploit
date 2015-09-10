@@ -155,7 +155,7 @@ module.exports = {
 				}
 
 				async.eachLimit(policies, 20, function(policy, cb){
-					elb.describeLoadBalancerPolicies(policy, function(err, data){
+					elb.describeLoadBalancerPolicies({LoadBalancerName: policy.LoadBalancerName, PolicyNames:policy.PolicyNames}, function(err, data){
 						if (err || !data || !data.PolicyDescriptions) {
 							pluginInfo.tests.insecureCiphers.results.push({
 								status: 3,
