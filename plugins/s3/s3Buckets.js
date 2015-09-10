@@ -33,8 +33,11 @@ module.exports = {
 	run: function(AWSConfig, callback) {
 		var pluginInfo = getPluginInfo();
 
-		// Update the region
-		//AWSConfig.region = region;
+		// Buckets are a global service and will fail if a region is specified
+		if (AWSConfig.region) {
+			delete AWSConfig.region;
+		}
+
 		var s3 = new AWS.S3(AWSConfig);
 
 		s3.listBuckets(function(err, data){
