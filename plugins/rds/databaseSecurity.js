@@ -63,8 +63,6 @@ module.exports = {
 			AWSConfig.region = region;
 			var rds = new AWS.RDS(AWSConfig);
 
-			console.log('Running for: ' + region);
-
 			rds.describeDBInstances({}, function(err, data){
 				if (err || !data) {
 					var statusObj = {
