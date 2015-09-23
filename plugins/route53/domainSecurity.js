@@ -54,7 +54,7 @@ module.exports = {
 
 		var route53domains = new AWS.Route53Domains(AWSConfig);
 
-		route53domains.listDomains({MaxItems:100}, function(err, data){
+		route53domains.listDomains(function(err, data){
 			if (err || !data) {
 				var statusObj = {
 					status: 3,
