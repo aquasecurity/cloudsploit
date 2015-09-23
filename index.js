@@ -1,4 +1,20 @@
 var async = require('async');
+var AWS = require('aws-sdk');
+
+//
+// Default to the AWS SDK credential lookup behavior which searches in the following order.
+//
+// 1. Loaded from IAM roles for Amazon EC2 (if running on EC2),
+// 2. Loaded from the shared credentials file (~/.aws/credentials),
+// 3. Loaded from environment variables,
+// 4. Loaded from a JSON file on disk,
+// 5. Hardcoded in your application
+//
+// see: http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html#Setting_AWS_Credentials
+//
+// The credentials can be configured manually by using one of the code blocks below.
+//
+var AWSConfig = AWS.config
 
 // var AWSConfig = {
 //     accessKeyId: '',
@@ -7,7 +23,7 @@ var async = require('async');
 //     region: 'us-east-1'
 // };
 
-var AWSConfig = require(__dirname + '/../../cloudsploit-secure/scan-test-credentials.json');
+// var AWSConfig = require(__dirname + '/../../cloudsploit-secure/scan-test-credentials.json');
 
 var plugins = [
     'iam/rootAccountSecurity.js',
