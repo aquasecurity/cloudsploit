@@ -33,7 +33,7 @@ module.exports = {
 		var iam = new AWS.IAM(AWSConfig);
 		var pluginInfo = getPluginInfo();
 
-		iam.listServerCertificates({MaxItems:100}, function(err, data){
+		iam.listServerCertificates(function(err, data){
 			if (err || !data || !data.ServerCertificateMetadataList) {
 				pluginInfo.tests.certificateExpiry.results.push({
 					status: 3,
