@@ -60,7 +60,7 @@ exports.handler = function(event, context) {
         if (!event.external_id || !/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$/.test(event.external_id)) {
             return context.succeed(createErrorResponse('Invalid external id'));
         }
-    } else {
+    } else if (event.access_key || event.secret_key || event.session_token) {
         if (!event.access_key || !/^([A-Z0-9]){20}$/.test(event.access_key)) {
             return context.succeed(createErrorResponse('Invalid access key'));
         }
@@ -112,11 +112,16 @@ exports.handler = function(event, context) {
     }
 
     function callPlugin() {
-        var AWSConfig = {
-            accessKeyId: event.access_key,
-            secretAccessKey: event.secret_key,
-            region: event.region
-        };
+
+        var AWSConfig = {};
+
+        if (event.access_key) {
+          AWSConfig = {
+              accessKeyId: event.access_key,
+              secretAccessKey: event.secret_key,
+              region: event.region
+          };
+        }
 
         if (event.session_token) {
             AWSConfig.sessionToken = event.session_token;
