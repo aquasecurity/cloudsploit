@@ -69,18 +69,6 @@ module.exports = {
 					var good = [];
 					var bad = [];
 
-					if (data.Users.length > 100) {
-						var returnMsg = {
-							status: 3,
-							message: 'Unable to query for more than 100 user access keys',
-							region: 'global'
-						};
-						pluginInfo.tests.accessKeysRotated.results.push(returnMsg);
-						pluginInfo.tests.accessKeysLastUsed.results.push(returnMsg);
-
-						data.Users = data.Users.slice(0,100);
-					}
-
 					var allAccessKeys = [];
 
 					var oneDay = 24*60*60*1000;

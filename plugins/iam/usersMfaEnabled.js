@@ -51,16 +51,6 @@ module.exports = {
 					var good = [];
 					var bad = [];
 
-					if (data.Users.length > 100) {
-						pluginInfo.tests.usersMfaEnabled.results.push({
-							status: 3,
-							message: 'Unable to query for more than 100 users MFA status',
-							region: 'global'
-						});
-
-						data.Users = data.Users.slice(0,100);
-					}
-
 					async.eachLimit(data.Users, 20, function(user, cb){
 						if (!user.PasswordLastUsed) {
 							// Skip users without passwords since they won't be logging into the console
