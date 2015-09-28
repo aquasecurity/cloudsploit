@@ -160,17 +160,6 @@ module.exports = {
 							});
 						}
 
-						// Now test last used info
-						if (allAccessKeys.length > 100) {
-							pluginInfo.tests.accessKeysLastUsed.results.push({
-								status: 3,
-								message: 'Unable to query for more than 100 user access keys',
-								region: 'global'
-							});
-
-							allAccessKeys = allAccessKeys.slice(0,100);
-						}
-
 						async.eachLimit(allAccessKeys, 10, function(accessKey, cb){
 							iam.getAccessKeyLastUsed({AccessKeyId: accessKey}, function(accessKeyErr, accessKeyData){
 								if (accessKeyErr || !accessKeyData) {
