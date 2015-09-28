@@ -189,18 +189,7 @@ module.exports = {
 						},
 
 						function(cb) {
-							// Query for the number of instances
-							if (limits['max-instances'] > 1000) {
-								pluginInfo.tests.instanceLimit.results.push({
-									status: 3,
-									message: 'Unable to query for more than 1000 instances',
-									region: region
-								});
-
-								return cb();
-							}
-
-							ec2.describeInstances({MaxResults:1000}, function(err, data){
+							ec2.describeInstances(function(err, data){
 								if (err || !data || !data.Reservations) {
 									pluginInfo.tests.instanceLimit.results.push({
 										status: 3,
