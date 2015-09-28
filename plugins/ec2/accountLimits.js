@@ -189,8 +189,27 @@ module.exports = {
 						},
 
 						function(cb) {
-							ec2.describeInstances(function(err, data){
-								if (err || !data || !data.Reservations) {
+							var reservations = 0;
+
+							ec2.describeInstances().eachPage(function(err, data){
+								if (!data) {
+									var returnMsgIl = {
+										status: 0,
+										message: 'Account contains ' + reservations + ' of ' + limits['max-instances'] + ' available instances',
+										region: region
+									};
+
+									if (reservations === limits['max-instances'] - 3) {
+										returnMsgIl.status = 1;
+									} else if (reservations >= limits['max-instances'] - 2) {
+										returnMsgIl.status = 2;
+									}
+
+									pluginInfo.tests.instanceLimit.results.push(returnMsgIl);
+									return cb();
+								}
+
+								if (err) {
 									pluginInfo.tests.instanceLimit.results.push({
 										status: 3,
 										message: 'Unable to query for instances',
@@ -200,22 +219,8 @@ module.exports = {
 									return cb();
 								}
 
-								var returnMsgIl = {
-									status: 0,
-									message: 'Account contains ' + data.Reservations.length + ' of ' + limits['max-instances'] + ' available instances',
-									region: region
-								};
-
-								if (data.Reservations.length === limits['max-instances'] - 3) {
-									returnMsgIl.status = 1;
-								} else if (data.Reservations.length >= limits['max-instances'] - 2) {
-									returnMsgIl.status = 2;
-								}
-
-								pluginInfo.tests.instanceLimit.results.push(returnMsgIl);
-
-								cb();
-							})
+								reservations += data.Reservations.length;
+							});
 						}
 					], function(){
 						// All tests are finished
