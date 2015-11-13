@@ -1,5 +1,5 @@
 var AWS = require('aws-sdk');
-var regions = require(__dirname + '/../../regions.json');
+var regions = require('./../../regions.json');
 var async = require('async');
 
 function getPluginInfo() {

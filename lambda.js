@@ -1,10 +1,10 @@
 // Plugins can be executed by AWS Lambda
 // Pass in either an access_key and secret_key or an IAM execution role / external ID
 
-var plugins = require(__dirname + '/exports.js');
+var plugins = require('./exports.js');
 var AWS = require('aws-sdk');
 var sts = new AWS.STS({apiVersion: '2011-06-15'});
-var regions = require(__dirname + '/regions.json');
+var regions = require('./regions.json');
 
 function createSuccessResponse(data) {
     return {

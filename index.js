@@ -7,7 +7,7 @@ var async = require('async');
 //     region: 'us-east-1'
 // };
 
-var AWSConfig = require(__dirname + '/../../cloudsploit-secure/scan-test-credentials.json');
+var AWSConfig = require('./../../cloudsploit-secure/scan-test-credentials.json');
 
 var plugins = [
     'iam/rootAccountSecurity.js',
@@ -30,7 +30,7 @@ var plugins = [
 console.log('CATEGORY\t\tPLUGIN\t\t\t\tTEST\t\t\t\tRESOURCE\t\t\tREGION\t\tSTATUS\tMESSAGE');
 
 async.eachSeries(plugins, function(pluginPath, callback){
-    var plugin = require(__dirname + '/plugins/' + pluginPath);
+    var plugin = require('./plugins/' + pluginPath);
 
     plugin.run(AWSConfig, function(err, result){
         //console.log(JSON.stringify(result, null, 2));
