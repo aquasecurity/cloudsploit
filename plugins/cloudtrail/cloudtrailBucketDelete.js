@@ -60,7 +60,8 @@ module.exports = {
 						return rcb();
 					}
 
-					var s3 = new AWS.S3();
+					delete AWSConfig.region;	// Remove region for S3-specific endpoints
+					var s3 = new AWS.S3(AWSConfig);
 
 					async.eachLimit(data.trailList, 10, function(trailList, cb){
 						s3.getBucketVersioning({Bucket:trailList.S3BucketName}, function(s3err, s3data){
