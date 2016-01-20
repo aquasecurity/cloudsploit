@@ -69,18 +69,6 @@ module.exports = {
 					var good = [];
 					var bad = [];
 
-					if (data.Users.length > 100) {
-						var returnMsg = {
-							status: 3,
-							message: 'Unable to query for more than 100 user access keys',
-							region: 'global'
-						};
-						pluginInfo.tests.accessKeysRotated.results.push(returnMsg);
-						pluginInfo.tests.accessKeysLastUsed.results.push(returnMsg);
-
-						data.Users = data.Users.slice(0,100);
-					}
-
 					var allAccessKeys = [];
 
 					var oneDay = 24*60*60*1000;
@@ -170,17 +158,6 @@ module.exports = {
 								message: 'No users had more than 1 access key',
 								region: 'global'
 							});
-						}
-
-						// Now test last used info
-						if (allAccessKeys.length > 100) {
-							pluginInfo.tests.accessKeysLastUsed.results.push({
-								status: 3,
-								message: 'Unable to query for more than 100 user access keys',
-								region: 'global'
-							});
-
-							allAccessKeys = allAccessKeys.slice(0,100);
 						}
 
 						async.eachLimit(allAccessKeys, 10, function(accessKey, cb){

@@ -62,16 +62,6 @@ module.exports = {
 					return callback(null, pluginInfo);
 				}
 
-				if (data.Buckets.length > 100) {
-					pluginInfo.tests.bucketAllUsersPolicy.results.push({
-						status: 3,
-						message: 'More than 100 buckets found in account. Only testing first 100.',
-						region: 'global'
-					});
-				}
-
-				data.Buckets = data.Buckets.slice(0,100);
-
 				async.eachLimit(data.Buckets, 20, function(bucket, cb){
 					s3.getBucketAcl({Bucket:bucket.Name}, function(err, data){
 						if (err || !data) {
