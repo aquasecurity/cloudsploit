@@ -15,6 +15,7 @@ module.exports = {
 	'usersMfaEnabled': require(__dirname + '/plugins/iam/usersMfaEnabled.js'),
 	'accessKeys': require(__dirname + '/plugins/iam/accessKeys.js'),
 	'groupSecurity': require(__dirname + '/plugins/iam/groupSecurity.js'),
+	'sshKeys': require(__dirname + '/plugins/iam/sshKeys.js'),
 	
 	'detectClassic': require(__dirname + '/plugins/vpc/detectClassic.js'),
 
