@@ -1,5 +1,6 @@
 var async = require('async');
 
+// OPTION 1: Configure AWS credentials through hard-coded key and secret
 // var AWSConfig = {
 //     accessKeyId: '',
 //     secretAccessKey: '',
@@ -7,13 +8,17 @@ var async = require('async');
 //     region: 'us-east-1'
 // };
 
-var AWSConfig = require(__dirname + '/../../cloudsploit-secure/scan-test-credentials.json');
+// OPTION 2: Import an AWS config file containing credentials
+// var AWSConfig = require(__dirname + '/credentials.json');
+
+// OPTION 3: Set AWS credentials in environment variables
 
 var plugins = [
     'iam/rootAccountSecurity.js',
     'iam/usersMfaEnabled.js',
     'iam/passwordPolicy.js',
     'iam/accessKeys.js',
+    'iam/sshKeys.js',
     'iam/groupSecurity.js',
     'cloudtrail/cloudtrailEnabled.js',
     'cloudtrail/cloudtrailBucketDelete.js',
