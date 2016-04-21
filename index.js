@@ -29,7 +29,8 @@ var plugins = [
     'ec2/securityGroups.js',
     's3/s3Buckets.js',
     'route53/domainSecurity.js',
-    'rds/databaseSecurity.js'
+    'rds/databaseSecurity.js',
+    'kms/kmsKeys.js'
 ];
 
 console.log('CATEGORY\t\tPLUGIN\t\t\t\tTEST\t\t\t\tRESOURCE\t\t\tREGION\t\tSTATUS\tMESSAGE');

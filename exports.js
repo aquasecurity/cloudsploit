@@ -23,5 +23,7 @@ module.exports = {
 
 	'domainSecurity': require(__dirname + '/plugins/route53/domainSecurity.js'),
 
-	'databaseSecurity': require(__dirname + '/plugins/rds/databaseSecurity.js')
+	'databaseSecurity': require(__dirname + '/plugins/rds/databaseSecurity.js'),
+
+	'kmsKeys': require(__dirname + '/plugins/kms/kmsKeys.js')
 };
