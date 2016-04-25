@@ -10,51 +10,75 @@ var async = require('async');
 
 // OPTION 2: Import an AWS config file containing credentials
 // var AWSConfig = require(__dirname + '/credentials.json');
+var AWSConfig = require(__dirname + '/../../../cloudsploit-secure/scan-self.json');
 
 // OPTION 3: Set AWS credentials in environment variables
 
-var plugins = [
-    'iam/rootAccountSecurity.js',
-    'iam/usersMfaEnabled.js',
-    'iam/passwordPolicy.js',
-    'iam/accessKeys.js',
-    'iam/sshKeys.js',
-    'iam/groupSecurity.js',
-    'cloudtrail/cloudtrailEnabled.js',
-    'cloudtrail/cloudtrailBucketDelete.js',
-    'ec2/accountLimits.js',
-    'ec2/certificateExpiry.js',
-    'ec2/insecureCiphers.js',
-    'vpc/detectClassic.js',
-    'ec2/securityGroups.js',
-    's3/s3Buckets.js',
-    'route53/domainSecurity.js',
-    'rds/databaseSecurity.js',
-    'kms/kmsKeys.js'
+var tests = [
+    // 'iam/rootAccountSecurity.js',
+    // 'iam/usersMfaEnabled.js',
+    // 'iam/passwordPolicy.js',
+    // 'iam/accessKeysRotated.js',
+    // 'iam/sshKeys.js',
+    // 'iam/groupSecurity.js',
+    // 'iam/certificateExpiry.js',
+    // 'cloudtrail/cloudtrailEnabled.js',
+    // 'cloudtrail/cloudtrailBucketDelete.js',
+    // 'cloudtrail/cloudtrailFileValidation.js',
+    // 'ec2/elasticIpLimit.js',
+    // 'ec2/vpcElasticIpLimit.js',
+    // 'ec2/instanceLimit.js',
+    // 'ec2/insecureCiphers.js',
+    // 'vpc/classicInstances.js',
+    // 'ec2/excessiveSecurityGroups.js',
+    // 'ec2/openFTP.js',
+    // 'ec2/openSSH.js',
+    // 'ec2/openTelnet.js',
+    // 'ec2/openCIFS.js',
+    // 'ec2/openDNS.js',
+    // 'ec2/openMySQL.js',
+    // 'ec2/openNetBIOS.js',
+    // 'ec2/openPostgreSQL.js',
+    // 'ec2/openRDP.js',
+    // 'ec2/openRPC.js',
+    // 'ec2/openSMBoTCP.js',
+    // 'ec2/openSMTP.js',
+    // 'ec2/openSQLServer.js',
+    // 'ec2/openVNCClient.js',
+    // 'ec2/openVNCServer.js',
+    // 's3/bucketAllUsersPolicy.js',
+    // 'route53/domainAutoRenew.js',
+    // 'route53/domainTransferLock.js',
+    // 'route53/domainExpiry.js',
+    'rds/rdsEncryptionEnabled.js',
+    'rds/rdsAutomatedBackups.js',
+    'rds/rdsPubliclyAccessible.js',
+    'rds/rdsRestorable.js',
+    // 'kms/kmsKeys.js'
 ];
 
-console.log('CATEGORY\t\tPLUGIN\t\t\t\tTEST\t\t\t\tRESOURCE\t\t\tREGION\t\tSTATUS\tMESSAGE');
+console.log('CATEGORY\tTEST\t\t\t\tRESOURCE\t\t\tREGION\t\tSTATUS\tMESSAGE');
 
-async.eachSeries(plugins, function(pluginPath, callback){
-    var plugin = require(__dirname + '/plugins/' + pluginPath);
+async.eachSeries(tests, function(testPath, callback){
+    var test = require(__dirname + '/plugins/' + testPath);
 
-    plugin.run(AWSConfig, function(err, result){
+    test.run(AWSConfig, function(err, results){
         //console.log(JSON.stringify(result, null, 2));
-        for (i in result.tests) {
-            for (j in result.tests[i].results) {
-                var statusWord;
-                if (result.tests[i].results[j].status === 0) {
-                    statusWord = 'OK';
-                } else if (result.tests[i].results[j].status === 1) {
-                    statusWord = 'WARN';
-                } else if (result.tests[i].results[j].status === 2) {
-                    statusWord = 'FAIL';
-                } else {
-                    statusWord = 'UNKNOWN';
-                }
-                console.log(result.category + '\t\t' + result.title + '\t' + result.tests[i].title + '\t' + (result.tests[i].results[j].resource || 'N/A') + '\t' + (result.tests[i].results[j].region || 'Global') + '\t\t' + statusWord + '\t' + result.tests[i].results[j].message);
+        
+        for (r in results) {
+            var statusWord;
+            if (results[r].status === 0) {
+                statusWord = 'OK';
+            } else if (results[r].status === 1) {
+                statusWord = 'WARN';
+            } else if (results[r].status === 2) {
+                statusWord = 'FAIL';
+            } else {
+                statusWord = 'UNKNOWN';
             }
+            console.log(test.category + '\t' + test.title + '\t' + (results[r].resource || 'N/A') + '\t' + (results[r].region || 'Global') + '\t\t' + statusWord + '\t' + results[r].message);
         }
+
         callback(err);
     });
 }, function(err, data){

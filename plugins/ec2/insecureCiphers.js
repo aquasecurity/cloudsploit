@@ -1,25 +1,6 @@
 var AWS = require('aws-sdk');
 var async = require('async');
-var regions = require(__dirname + '/../../regions.json');
-
-function getPluginInfo() {
-	return {
-		title: 'Insecure Ciphers',
-		query: 'insecureCiphers',
-		category: 'EC2',
-		description: 'Detect use of insecure ciphers on ELBs',
-		tests: {
-			insecureCiphers: {
-				title: 'Insecure Ciphers',
-				description: 'Detect use of insecure ciphers on ELBs',
-				more_info: 'Various security vulnerabilities have rendered several ciphers insecure. Only the reccommended ciphers should be used.',
-				link: 'http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/elb-security-policy-options.html',
-				recommended_action: 'Update your ELBs to use the reccommended cipher suites',
-				results: []
-			}
-		}
-	}
-};
+var helpers = require('../../helpers');
 
 var badCiphers = [
 	'Protocol-SSLv2',
@@ -96,24 +77,23 @@ var badCiphers = [
 ];
 
 module.exports = {
-	title: getPluginInfo().title,
-	query: getPluginInfo().query,
-	category: getPluginInfo().category,
-	description: getPluginInfo().description,
-	more_info: getPluginInfo().more_info,
-	link: getPluginInfo().link,
-	tests: getPluginInfo().tests,
+	title: 'Insecure Ciphers',
+	category: 'EC2',
+	description: 'Detect use of insecure ciphers on ELBs',
+	more_info: 'Various security vulnerabilities have rendered several ciphers insecure. Only the reccommended ciphers should be used.',
+	link: 'http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/elb-security-policy-options.html',
+	recommended_action: 'Update your ELBs to use the reccommended cipher suites',
 
 	run: function(AWSConfig, callback) {
-		var pluginInfo = getPluginInfo();
+		var results = [];
 
-		async.each(regions, function(region, rcb){
+		async.each(helpers.regions.elb, function(region, rcb){
 			AWSConfig.region = region;
 			var elb = new AWS.ELB(AWSConfig);
 
-			elb.describeLoadBalancers({}, function(err, data){
+			helpers.cache(elb, 'describeLoadBalancers', function(err, data) {
 				if (err || !data || !data.LoadBalancerDescriptions) {
-					pluginInfo.tests.insecureCiphers.results.push({
+					results.push({
 						status: 3,
 						message: 'Unable to query for load balancers',
 						region: region
@@ -145,7 +125,7 @@ module.exports = {
 				}
 
 				if (!policies.length) {
-					pluginInfo.tests.insecureCiphers.results.push({
+					results.push({
 						status: 0,
 						message: 'No load balancers are using HTTPS',
 						region: region
@@ -157,7 +137,7 @@ module.exports = {
 				async.eachLimit(policies, 20, function(policy, cb){
 					elb.describeLoadBalancerPolicies({LoadBalancerName: policy.LoadBalancerName, PolicyNames:policy.PolicyNames}, function(err, data){
 						if (err || !data || !data.PolicyDescriptions) {
-							pluginInfo.tests.insecureCiphers.results.push({
+							results.push({
 								status: 3,
 								message: 'Unable to query load balancer policies for ELB: ' + policy.LoadBalancerName,
 								region: region,
@@ -174,14 +154,14 @@ module.exports = {
 								}
 							}
 							if (elbBad.length) {
-								pluginInfo.tests.insecureCiphers.results.push({
+								results.push({
 									status: 1,
 									message: 'ELB: ' + policy.LoadBalancerName + ' uses insecure protocols or ciphers: ' + elbBad.join(', '),
 									region: region,
 									resource: policy.LoadBalancerDNS,
 								});
 							} else {
-								pluginInfo.tests.insecureCiphers.results.push({
+								results.push({
 									status: 0,
 									message: 'ELB: ' + policy.LoadBalancerName + ' uses secure protocols and ciphers',
 									region: region,
@@ -196,7 +176,7 @@ module.exports = {
 				});
 			});
 		}, function(){
-			callback(null, pluginInfo);
+			callback(null, results);
 		});
 	}
 };

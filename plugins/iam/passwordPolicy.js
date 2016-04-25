@@ -9,10 +9,26 @@ function getPluginInfo() {
 		tests: {
 			minPasswordLength: {
 				title: 'Minimum Password Length',
-				description: 'Ensures password policy requires a password of at least 12 characters',
+				description: 'Ensures password policy requires a password of at least 14 characters',
 				more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
 				link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
 				recommended_action: 'Increase the minimum length requirement for the password policy',
+				results: []
+			},
+			requiresUppercase: {
+				title: 'Password Requires Uppercase',
+				description: 'Ensures password policy requires at least one uppercase letter',
+				more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
+				link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
+				recommended_action: 'Update the password policy to require the use of uppercase letters',
+				results: []
+			},
+			requiresLowercase: {
+				title: 'Password Requires Lowercase',
+				description: 'Ensures password policy requires at least one lowercase letter',
+				more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
+				link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
+				recommended_action: 'Update the password policy to require the use of lowercase letters',
 				results: []
 			},
 			requiresSymbols: {
@@ -21,6 +37,14 @@ function getPluginInfo() {
 				more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
 				link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
 				recommended_action: 'Update the password policy to require the use of symbols',
+				results: []
+			},
+			requiresNumbers: {
+				title: 'Password Requires Numbers',
+				description: 'Ensures password policy requires the use of numbers',
+				more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
+				link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
+				recommended_action: 'Update the password policy to require the use of numbers',
 				results: []
 			},
 			maxPasswordAge: {
@@ -36,7 +60,15 @@ function getPluginInfo() {
 				description: 'Ensures password policy prevents previous password reuse',
 				more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
 				link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
-				recommended_action: 'Increase the minimum previous passwors that can be reused',
+				recommended_action: 'Increase the minimum previous passwors that can be reused to 24.',
+				results: []
+			},
+			passwordExpiration: {
+				title: 'Password Expiration',
+				description: 'Ensures password policy enforces a password expiration',
+				more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
+				link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
+				recommended_action: 'Enable password expiration for the account',
 				results: []
 			}
 		}
@@ -59,28 +91,12 @@ module.exports = {
 
 		iam.getAccountPasswordPolicy(function(err, data){
 			if (err) {
-				pluginInfo.tests.minPasswordLength.results.push({
-					status: 3,
-					message: 'Unable to query for password policy status',
-					region: 'global'
-				});
-
-				pluginInfo.tests.requiresSymbols.results.push({
-					status: 3,
-					message: 'Unable to query for password policy status',
-					region: 'global'
-				});
-
-				pluginInfo.tests.maxPasswordAge.results.push({
-					status: 3,
-					message: 'Unable to query for password policy status',
-					region: 'global'
-				});
-
-				pluginInfo.tests.passwordReusePrevention.results.push({
-					status: 3,
-					message: 'Unable to query for password policy status',
-					region: 'global'
+				pluginInfo.tests.forEach(function(test){
+					test.results.push({
+						status: 3,
+						message: 'Unable to query for password policy status',
+						region: 'global'
+					});
 				});
 
 				return callback(null, pluginInfo);
@@ -94,22 +110,50 @@ module.exports = {
 							message: 'Password policy does not specify a minimum password length',
 							region: 'global'
 						});
-					} else if (data.PasswordPolicy.MinimumPasswordLength < 5) {
+					} else if (data.PasswordPolicy.MinimumPasswordLength < 10) {
 						pluginInfo.tests.minPasswordLength.results.push({
 							status: 2,
-							message: 'Minimum password length of: ' + data.PasswordPolicy.MinimumPasswordLength + ' is less than 5 characters',
+							message: 'Minimum password length of: ' + data.PasswordPolicy.MinimumPasswordLength + ' is less than 10 characters',
 							region: 'global'
 						});
-					} else if (data.PasswordPolicy.MinimumPasswordLength < 9) {
+					} else if (data.PasswordPolicy.MinimumPasswordLength < 14) {
 						pluginInfo.tests.minPasswordLength.results.push({
 							status: 1,
-							message: 'Minimum password length of: ' + data.PasswordPolicy.MinimumPasswordLength + ' is less than 9 characters',
+							message: 'Minimum password length of: ' + data.PasswordPolicy.MinimumPasswordLength + ' is less than 14 characters',
 							region: 'global'
 						});
 					} else {
 						pluginInfo.tests.minPasswordLength.results.push({
 							status: 0,
 							message: 'Minimum password length of: ' + data.PasswordPolicy.MinimumPasswordLength + ' is suitable',
+							region: 'global'
+						});
+					}
+
+					if (!data.PasswordPolicy.RequireUppercaseCharacters) {
+						pluginInfo.tests.requiresUppercase.results.push({
+							status: 1,
+							message: 'Password policy does not require uppercase characters',
+							region: 'global'
+						});
+					} else {
+						pluginInfo.tests.requiresUppercase.results.push({
+							status: 0,
+							message: 'Password policy requires uppercase characters',
+							region: 'global'
+						});
+					}
+
+					if (!data.PasswordPolicy.RequireLowercaseCharacters) {
+						pluginInfo.tests.requiresLowercase.results.push({
+							status: 1,
+							message: 'Password policy does not require lowercase characters',
+							region: 'global'
+						});
+					} else {
+						pluginInfo.tests.requiresLowercase.results.push({
+							status: 0,
+							message: 'Password policy requires lowercase characters',
 							region: 'global'
 						});
 					}
@@ -124,6 +168,20 @@ module.exports = {
 						pluginInfo.tests.requiresSymbols.results.push({
 							status: 0,
 							message: 'Password policy requires symbols',
+							region: 'global'
+						});
+					}
+
+					if (!data.PasswordPolicy.RequireNumbers) {
+						pluginInfo.tests.requiresNumbers.results.push({
+							status: 1,
+							message: 'Password policy does not require numbers',
+							region: 'global'
+						});
+					} else {
+						pluginInfo.tests.requiresNumbers.results.push({
+							status: 0,
+							message: 'Password policy requires numbers',
 							region: 'global'
 						});
 					}
@@ -160,16 +218,16 @@ module.exports = {
 							message: 'Password policy does not prevent previous password reuse',
 							region: 'global'
 						});
-					} else if (data.PasswordPolicy.PasswordReusePrevention < 2) {
-						pluginInfo.tests.passwordReusePrevention.results.push({
-							status: 2,
-							message: 'Maximum password reuse of: ' + data.PasswordPolicy.PasswordReusePrevention + ' passwords is less than 2',
-							region: 'global'
-						});
 					} else if (data.PasswordPolicy.PasswordReusePrevention < 5) {
 						pluginInfo.tests.passwordReusePrevention.results.push({
-							status: 1,
+							status: 2,
 							message: 'Maximum password reuse of: ' + data.PasswordPolicy.PasswordReusePrevention + ' passwords is less than 5',
+							region: 'global'
+						});
+					} else if (data.PasswordPolicy.PasswordReusePrevention < 24) {
+						pluginInfo.tests.passwordReusePrevention.results.push({
+							status: 1,
+							message: 'Maximum password reuse of: ' + data.PasswordPolicy.PasswordReusePrevention + ' passwords is less than 24',
 							region: 'global'
 						});
 					} else {
@@ -179,31 +237,41 @@ module.exports = {
 							region: 'global'
 						});
 					}
+
+					if (!data.PasswordPolicy.ExpirePasswords) {
+						pluginInfo.tests.passwordExpiration.results.push({
+							status: 2,
+							message: 'Password expiration policy is not set to expire passwords',
+							region: 'global'
+						});
+					} else if (data.PasswordPolicy.ExpirePasswords < 90) {
+						pluginInfo.tests.passwordExpiration.results.push({
+							status: 2,
+							message: 'Password expiration of: ' + data.PasswordPolicy.ExpirePasswords + ' days is less than 90',
+							region: 'global'
+						});
+					} else if (data.PasswordPolicy.ExpirePasswords < 24) {
+						pluginInfo.tests.passwordExpiration.results.push({
+							status: 1,
+							message: 'Password expiration of: ' + data.PasswordPolicy.ExpirePasswords + ' days is less than 180',
+							region: 'global'
+						});
+					} else {
+						pluginInfo.tests.passwordExpiration.results.push({
+							status: 0,
+							message: 'Password expiration of: ' + data.PasswordPolicy.ExpirePasswords + ' passwords is suitable',
+							region: 'global'
+						});
+					}
 				}
 				callback(null, pluginInfo);
 			} else {
-				pluginInfo.tests.minPasswordLength.results.push({
-					status: 3,
-					message: 'Unable to query for password policy status',
-					region: 'global'
-				});
-
-				pluginInfo.tests.requiresSymbols.results.push({
-					status: 3,
-					message: 'Unable to query for password policy status',
-					region: 'global'
-				});
-
-				pluginInfo.tests.maxPasswordAge.results.push({
-					status: 3,
-					message: 'Unable to query for password policy status',
-					region: 'global'
-				});
-
-				pluginInfo.tests.passwordReusePrevention.results.push({
-					status: 3,
-					message: 'Unable to query for password policy status',
-					region: 'global'
+				pluginInfo.tests.forEach(function(test){
+					test.results.push({
+						status: 3,
+						message: 'Unable to query for password policy status',
+						region: 'global'
+					});
 				});
 
 				return callback(null, pluginInfo);
