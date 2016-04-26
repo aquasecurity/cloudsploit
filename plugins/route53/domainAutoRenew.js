@@ -21,6 +21,7 @@ module.exports = {
 		var route53domains = new AWS.Route53Domains(AWSConfig);
 
 		helpers.cache(route53domains, 'listDomains', function(err, data) {
+			console.log(err);
 			if (err || !data || !data.Domains) {
 				results.push({
 					status: 3,

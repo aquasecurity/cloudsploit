@@ -15,12 +15,23 @@ var AWSConfig = require(__dirname + '/../../../cloudsploit-secure/scan-self.json
 // OPTION 3: Set AWS credentials in environment variables
 
 var tests = [
-    // 'iam/rootAccountSecurity.js',
+    // 'iam/rootMfaEnabled.js',
+    // 'iam/rootAccessKeys.js',
+    // 'iam/rootAccountInUse.js',
     // 'iam/usersMfaEnabled.js',
-    // 'iam/passwordPolicy.js',
+    // 'iam/minPasswordLength.js',
+    // 'iam/maxPasswordAge.js',
+    // 'iam/passwordExpiration.js',
+    // 'iam/passwordRequiresLowercase.js',
+    // 'iam/passwordRequiresUppercase.js',
+    // 'iam/passwordRequiresNumbers.js',
+    // 'iam/passwordRequiresSymbols.js',
+    // 'iam/passwordReusePrevention.js',
     // 'iam/accessKeysRotated.js',
-    // 'iam/sshKeys.js',
-    // 'iam/groupSecurity.js',
+    // 'iam/accessKeysLastUsed.js',
+    // 'iam/accessKeysExtra.js',
+    // 'iam/sshKeysRotated.js',
+    // 'iam/emptyGroups.js',
     // 'iam/certificateExpiry.js',
     // 'cloudtrail/cloudtrailEnabled.js',
     // 'cloudtrail/cloudtrailBucketDelete.js',
@@ -50,10 +61,10 @@ var tests = [
     // 'route53/domainAutoRenew.js',
     // 'route53/domainTransferLock.js',
     // 'route53/domainExpiry.js',
-    'rds/rdsEncryptionEnabled.js',
-    'rds/rdsAutomatedBackups.js',
-    'rds/rdsPubliclyAccessible.js',
-    'rds/rdsRestorable.js',
+    // 'rds/rdsEncryptionEnabled.js',
+    // 'rds/rdsAutomatedBackups.js',
+    // 'rds/rdsPubliclyAccessible.js',
+    // 'rds/rdsRestorable.js',
     // 'kms/kmsKeys.js'
 ];
 

@@ -15,6 +15,18 @@ function daysAgo(date1) {
 	return daysBetween(date1, new Date());
 }
 
+function mostRecentDate(dates) {
+	var mostRecentDate;
+
+	for (d in dates) {
+		if (!mostRecentDate || dates[d] > mostRecentDate) {
+			mostRecentDate = dates[d];
+		}
+	}
+
+	return mostRecentDate;
+}
+
 function waitForCredentialReport(iam, callback) {
 	if (CREDENTIAL_REPORT_DATA) return callback(null, CREDENTIAL_REPORT_DATA);
 	if (CREDENTIAL_REPORT_ERROR) return callback(CREDENTIAL_REPORT_ERROR);
@@ -57,5 +69,6 @@ function waitForCredentialReport(iam, callback) {
 module.exports = {
 	daysBetween: daysBetween,
 	daysAgo: daysAgo,
+	mostRecentDate: mostRecentDate,
 	waitForCredentialReport: waitForCredentialReport
 };
