@@ -14,8 +14,11 @@ module.exports = {
 		var results = [];
 
 		async.each(helpers.regions.ec2, function(region, rcb){
-			AWSConfig.region = region;
-			var ec2 = new AWS.EC2(AWSConfig);
+			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+
+			// Update the region
+			LocalAWSConfig.region = region;
+			var ec2 = new AWS.EC2(LocalAWSConfig);
 
 			// Get the account attributes
 			helpers.cache(ec2, 'describeSecurityGroups', function(err, data) {

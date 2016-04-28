@@ -13,12 +13,12 @@ module.exports = {
 	run: function(AWSConfig, callback) {
 		var results = [];
 
-		// Buckets are a global service and will fail if a region is specified
-		if (AWSConfig.region) {
-			delete AWSConfig.region;
-		}
+		var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
 
-		var s3 = new AWS.S3(AWSConfig);
+		// Update the region
+		LocalAWSConfig.region = 'us-east-1';
+
+		var s3 = new AWS.S3(LocalAWSConfig);
 
 		helpers.cache(s3, 'listBuckets', function(err, data) {
 			if (err || !data || !data.Buckets) {

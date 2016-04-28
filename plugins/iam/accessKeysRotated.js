@@ -14,7 +14,12 @@ module.exports = {
 
 		var results = [];
 
-		var iam = new AWS.IAM(AWSConfig);
+		var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+
+		// Update the region
+		LocalAWSConfig.region = 'us-east-1';
+
+		var iam = new AWS.IAM(LocalAWSConfig);
 
 		helpers.functions.waitForCredentialReport(iam, function(err, data){
 			if (err || !data || !data.Content) {

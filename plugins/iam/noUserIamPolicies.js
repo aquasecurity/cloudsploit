@@ -3,12 +3,12 @@ var AWS = require('aws-sdk');
 var helpers = require('../../helpers');
 
 module.exports = {
-	title: 'Users MFA Enabled',
+	title: 'No User IAM Policies',
 	category: 'IAM',
-	description: 'Ensures a multi-factor authentication device is enabled for all users within the account',
-	more_info: 'User accounts should have an MFA device setup to enable two-factor authentication',
-	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
-	recommended_action: 'Enable an MFA device for the user account',
+	description: 'Ensures IAM policies are not connected directly to IAM users',
+	more_info: 'To reduce management complexity, IAM permissions should only be assigned to roles and groups. Users can then be added to those groups. Policies should not be applied directly to a user.',
+	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#use-groups-for-permissions',
+	recommended_action: 'Create groups with the required policies, move the IAM users to the applicable groups, and then remove the inline and directly attached policies from the IAM user.',
 
 	run: function(AWSConfig, callback) {
 		var results = [];
@@ -24,7 +24,7 @@ module.exports = {
 			if (err || !data || !data.Users) {
 				results.push({
 					status: 3,
-					message: 'Unable to query for user MFA status',
+					message: 'Unable to query for user IAM policy status',
 					region: 'global'
 				});
 
@@ -42,10 +42,7 @@ module.exports = {
 			}
 
 			async.eachLimit(data.Users, 20, function(user, cb){
-				if (!user.PasswordLastUsed) {
-					// Skip users without passwords since they won't be logging into the console
-					return cb();
-				}
+				
 				iam.listMFADevices({UserName: user.UserName}, function(mfaErr, mfaData){
 					if (mfaErr) {
 						results.push({

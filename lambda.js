@@ -23,10 +23,10 @@ var pluginQueries = [];
 for (i in plugins) {
     pluginsList.push({
         title: plugins[i].title,
-        query: plugins[i].query,
+        query: i,
         description: plugins[i].description
     });
-    pluginQueries.push(plugins[i].query);
+    pluginQueries.push(i);
 }
 
 var pluginRunner = function(event, context) {

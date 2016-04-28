@@ -12,13 +12,12 @@ module.exports = {
 	run: function(AWSConfig, callback) {
 		var results = [];
 
-		// Domains are a global service and will fail if a region is specified
-		if (AWSConfig.region) {
-			// TODO: revisit this
-			//delete AWSConfig.region;
-		}
+		var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
 
-		var route53domains = new AWS.Route53Domains(AWSConfig);
+		// Update the region
+		LocalAWSConfig.region = 'us-east-1';
+
+		var route53domains = new AWS.Route53Domains(LocalAWSConfig);
 
 		helpers.cache(route53domains, 'listDomains', function(err, data) {
 			if (err || !data || !data.Domains) {

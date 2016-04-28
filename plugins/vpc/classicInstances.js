@@ -29,8 +29,11 @@ module.exports = {
 		};
 
 		async.each(helpers.regions.vpc, function(region, rcb){
-			AWSConfig.region = region;
-			var ec2 = new AWS.EC2(AWSConfig);
+			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+
+			// Update the region
+			LocalAWSConfig.region = region;
+			var ec2 = new AWS.EC2(LocalAWSConfig);
 
 			ec2.describeInstances(params, function(err, data){
 				if (err || !data || !data.Reservations) {

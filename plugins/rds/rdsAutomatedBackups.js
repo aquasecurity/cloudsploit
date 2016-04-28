@@ -14,8 +14,11 @@ module.exports = {
 		var results = [];
 
 		async.each(helpers.regions.rds, function(region, rcb){
-			AWSConfig.region = region;
-			var rds = new AWS.RDS(AWSConfig);
+			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+
+			// Update the region
+			LocalAWSConfig.region = region;
+			var rds = new AWS.RDS(LocalAWSConfig);
 
 			helpers.cache(rds, 'describeDBInstances', function(err, data) {
 				if (err || !data || !data.DBInstances) {

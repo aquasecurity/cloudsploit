@@ -16,9 +16,11 @@ module.exports = {
 		var globalServicesMonitored = false;
 
 		async.each(helpers.regions.cloudtrail, function(region, cb){
+			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+
 			// Update the region
-			AWSConfig.region = region;
-			var cloudtrail = new AWS.CloudTrail(AWSConfig);
+			LocalAWSConfig.region = region;
+			var cloudtrail = new AWS.CloudTrail(LocalAWSConfig);
 
 			helpers.cache(cloudtrail, 'describeTrails', function(err, data) {
 				if (err) {

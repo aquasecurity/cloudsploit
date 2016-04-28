@@ -14,9 +14,11 @@ module.exports = {
 		var results = [];
 
 		async.each(helpers.regions.kms, function(region, rcb){
+			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+
 			// Update the region
-			AWSConfig.region = region;
-			var kms = new AWS.KMS(AWSConfig);
+			LocalAWSConfig.region = region;
+			var kms = new AWS.KMS(LocalAWSConfig);
 
 			kms.listKeys({Limit: 1000}, function(listKeysErr, listKeysData){
 				if (listKeysErr || !listKeysData) {

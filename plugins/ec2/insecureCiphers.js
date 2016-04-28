@@ -88,8 +88,11 @@ module.exports = {
 		var results = [];
 
 		async.each(helpers.regions.elb, function(region, rcb){
-			AWSConfig.region = region;
-			var elb = new AWS.ELB(AWSConfig);
+			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+
+			// Update the region
+			LocalAWSConfig.region = region;
+			var elb = new AWS.ELB(LocalAWSConfig);
 
 			helpers.cache(elb, 'describeLoadBalancers', function(err, data) {
 				if (err || !data || !data.LoadBalancerDescriptions) {

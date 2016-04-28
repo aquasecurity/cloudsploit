@@ -13,7 +13,12 @@ module.exports = {
 	run: function(AWSConfig, callback) {
 		var results = [];
 
-		var iam = new AWS.IAM(AWSConfig);
+		var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+
+		// Update the region
+		LocalAWSConfig.region = 'us-east-1';
+
+		var iam = new AWS.IAM(LocalAWSConfig);
 
 		helpers.cache(iam, 'listServerCertificates', function(err, data) {
 			if (err || !data || !data.ServerCertificateMetadataList) {
