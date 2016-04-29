@@ -45,7 +45,15 @@ var pluginRunner = function(event, context) {
                 if (err) {
                     console.log(err);
                 } else {
-                    resultsToSend.push(results);
+                    resultsToSend.push({
+                        title: plugins[pluginToRun].title,
+                        category: plugins[pluginToRun].category,
+                        description: plugins[pluginToRun].description,
+                        more_info: plugins[pluginToRun].more_info,
+                        recommended_action: plugins[pluginToRun].recommended_action,
+                        link: plugins[pluginToRun].link,
+                        results: results
+                    });
                 }
 
                 cb();

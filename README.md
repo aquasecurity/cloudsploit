@@ -16,7 +16,7 @@ npm install
 ```
 
 ## Setup
-To begin using the scanner, edit the index.js file with your AWS key, secret, and optionally (for temporary credentials), a session token. You can also set a file containing credentials or load them via environment variables. To determine the permissions associated with your credentials, see the [permissions section below](#permissions). In the list of plugins, comment out any plugins you do not wish to run. Then save and run ```node index.js```. 
+To begin using the scanner, edit the `index.js` file with your AWS key, secret, and optionally (for temporary credentials), a session token. You can also set a file containing credentials or load them via environment variables. To determine the permissions associated with your credentials, see the [permissions section below](#permissions). In the list of plugins in the `exports.js` file, comment out any plugins you do not wish to run. Then save and run ```node index.js```. 
 
 ### Cross Account Roles
 When using the [hosted scanner](https://cloudsploit.com/scan), you'll need to create a cross-account IAM role. Cross-account roles enable you to share access to your account with another AWS account using the same policy model that you're used to. The advantage is that cross-account roles are much more secure than key-based access, since an attacker who steals a cross-account role ARN still can't make API calls unless they also infiltrate the authorized AWS account.
@@ -74,6 +74,8 @@ WARNING: This policy will likely change as more plugins are written. If a test r
             "ec2:DescribeInstances",
             "ec2:DescribeSecurityGroups",
             "iam:ListServerCertificates",
+            "iam:GenerateCredentialReport",
+            "iam:GetCredentialReport",
             "iam:GetAccountPasswordPolicy",
             "iam:GetAccountSummary",
             "iam:GetAccessKeyLastUsed",
@@ -82,11 +84,13 @@ WARNING: This policy will likely change as more plugins are written. If a test r
             "iam:ListUsers",
             "iam:ListGroups",
             "iam:ListAccessKeys",
-            "iam:ListVirtualMFADevices",
+            "iam:ListVirtualMFADevices"
+            "iam:ListSSHPublicKeys",
             "elasticloadbalancing:DescribeLoadBalancerPolicies",
             "elasticloadbalancing:DescribeLoadBalancers",
             "route53domains:ListDomains",
-            "rds:describeDBInstances"
+            "rds:DescribeDBInstances",
+            "kms:ListKeys"
       ],
       "Effect": "Allow",
       "Resource": "*"
@@ -100,19 +104,15 @@ Writing a plugin is very simple, but must follow several rules:
 
 * Exports the following:
   * ```title``` (string): a user-friendly title for the plugin
-  * ```query``` (string): a camel-case title for the plugin to reference from the index.js file (examplePlugin, sampleTester, etc.)
   * ```category``` (string): the AWS category (EC2, RDS, ELB, etc.)
   * ```description``` (string): a description of what the plugin does
-  * ```tests``` (map): an object containing tests that should be run. Each test should have:
-    * ```title``` (string): a test-level title
-    * ```description``` (string): a test-level description of what the test does
-    * ```more_info``` (string): a more detailed description of the risk being tested for
-    * ```link``` (string): an AWS help URL describing the service or risk, preferably with mitigation methods
-    * ```recommended_action``` (string): what the user should do to mitigate the risk found
-    * ```results``` (array): an empty list that will be populated with results of the test
+  * ```more_info``` (string): a more detailed description of the risk being tested for
+  * ```link``` (string): an AWS help URL describing the service or risk, preferably with mitigation methods
+  * ```recommended_action``` (string): what the user should do to mitigate the risk found
   * ```run``` (function): a function that runs the test (see below)
 * Accepts an ```AWSConfig``` object via the run function (AWSConfig contains the access key, secret, region, etc.)
-* Calls back with the plugin info containing results for each test
+* Accepts a ```cache``` object via the run function (cache should be an empty object declared before running multiple plugins.)
+* Calls back with the results
 
 ### Result Codes
 Each test has a result code that is used to determine if the test was successful and its risk level. The following codes are used:
@@ -123,8 +123,7 @@ Each test has a result code that is used to determine if the test was successful
 * 3: UNKNOWN: The results could not be determined (API failure, wrong permissions, etc.)
 
 ### Tips for Writing Plugins
-* Many security risks can be detected using the same API calls. These risks should be combined as multiple tests under a single plugin in order to minimize the number of API calls being made. For example, two plugins: "s3BucketPolicies" and "s3BucketPreventDelete" both call APIs to list every S3 bucket. These can be combined into a single plugin "s3Buckets" which exports two tests called "bucketPolicies" and "preventDelete". This way, the API is called once, but multiple tests are run on the same results.
-* To avoid overwriting the test results when multiple scans are running at once, each plugin should have a function "getPluginInfo" that will return a copy of the plugin's info and tests. This avoids global declaration of the test results.
+* Many security risks can be detected using the same API calls. To minimize the number of API calls being made, utilize the `cache` helper function to cache the results of an API call made in one test for future tests. For example, two plugins: "s3BucketPolicies" and "s3BucketPreventDelete" both call APIs to list every S3 bucket. These can be combined into a single plugin "s3Buckets" which exports two tests called "bucketPolicies" and "preventDelete". This way, the API is called once, but multiple tests are run on the same results.
 * Ensure AWS API calls are being used optimally. For example, call describeInstances with empty parameters to get all instances, instead of calling describeInstances multiple times looping through each instance name.
 * Use async.eachLimit to reduce the number of simultaneous API calls. Instead of using a for loop on 100 requests, spread them out using async's each limit.
 
@@ -191,25 +190,19 @@ Run the test again, and you should now see results for the scan:
   "data": [
     {
       "title": "CloudTrail Enabled",
-      "query": "cloudtrailEnabled",
       "category": "CloudTrail",
       "description": "Ensures CloudTrail is enabled for all regions within an account",
-      "tests": {
-        "cloudtrailEnabled": {
-          "title": "CloudTrail Enabled",
-          "description": "Ensures CloudTrail is enabled for all regions within an account",
-          "more_info": "CloudTrail should be enabled for all regions in order to detect suspicious activity in regions that are not typically used.",
-          "link": "http://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-getting-started.html",
-          "recommended_action": "Enable CloudTrail for all regions and ensure that at least one region monitors global service events",
-          "results": [
-            {
-              "status": 2,
-              "message": "CloudTrail is not enabled",
-              "region": "us-east-1"
-            },
-            ...
-          }
-        }
+      "description": "Ensures CloudTrail is enabled for all regions within an account",
+      "more_info": "CloudTrail should be enabled for all regions in order to detect suspicious activity in regions that are not typically used.",
+      "link": "http://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-getting-started.html",
+      "recommended_action": "Enable CloudTrail for all regions and ensure that at least one region monitors global service events",
+      "results": [
+        {
+          "status": 2,
+          "message": "CloudTrail is not enabled",
+          "region": "us-east-1"
+        },
+        ...
       }
     }
   ]
