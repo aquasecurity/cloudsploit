@@ -3,17 +3,15 @@ var async = require('async');
 var helpers = require('../../helpers');
 
 module.exports = {
-	title: 'CloudTrail Enabled',
+	title: 'CloudTrail File Validation',
 	category: 'CloudTrail',
-	description: 'Ensures CloudTrail is enabled for all regions within an account',
-	more_info: 'CloudTrail should be enabled for all regions in order to detect suspicious activity in regions that are not typically used.',
-	recommended_action: 'Enable CloudTrail for all regions and ensure that at least one region monitors global service events',
-	link: 'http://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-getting-started.html',
+	description: 'Ensures CloudTrail file validation is enabled for all regions within an account',
+	more_info: 'CloudTrail file validation is essentially a hash of the file which can be used to ensure its integrity in the case of an account compromise.',
+	recommended_action: 'Enable CloudTrail file validation for all regions',
+	link: 'http://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-log-file-validation-enabling.html',
 
 	run: function(AWSConfig, cache, callback) {
 		var results = [];
-
-		var globalServicesMonitored = false;
 
 		async.each(helpers.regions.cloudtrail, function(region, cb){
 			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
@@ -26,7 +24,7 @@ module.exports = {
 				if (err) {
 					results.push({
 						status: 3,
-						message: 'Unable to query for CloudTrail policy',
+						message: 'Unable to query for CloudTrail file validation status',
 						region: region
 					});
 
@@ -42,14 +40,22 @@ module.exports = {
 							region: region
 						});
 					} else if (data.trailList[0]) {
-						results.push({
-							status: 0,
-							message: 'CloudTrail is enabled',
-							region: region
-						});
-
-						if (data.trailList[0].IncludeGlobalServiceEvents) {
-							globalServicesMonitored = true;
+						for (t in data.trailList) {
+							if (!data.trailList[t].LogFileValidationEnabled) {
+								results.push({
+									status: 2,
+									message: 'CloudTrail log file validation is not enabled',
+									region: region,
+									resource: data.trailList[t].TrailARN
+								});
+							} else {
+								results.push({
+									status: 0,
+									message: 'CloudTrail log file validation is enabled',
+									region: region,
+									resource: data.trailList[t].TrailARN
+								});
+							}
 						}
 					} else {
 						results.push({
@@ -62,7 +68,7 @@ module.exports = {
 				} else {
 					results.push({
 						status: 3,
-						message: 'Unable to query for CloudTrail policy',
+						message: 'Unable to query for CloudTrail file validation status',
 						region: region
 					});
 
@@ -70,21 +76,7 @@ module.exports = {
 				}
 			});
 		}, function(){
-			if (!globalServicesMonitored) {
-				results.push({
-					status: 2,
-					message: 'CloudTrail is not monitoring global services',
-					region: 'global'
-				});
-			} else {
-				results.push({
-					status: 0,
-					message: 'CloudTrail is monitoring global services',
-					region: 'global'
-				});
-			}
-
-			return callback(null, results);
+			callback(null, results);
 		});
 	}
 };

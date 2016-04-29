@@ -1,46 +1,28 @@
 var async = require('async');
 var AWS = require('aws-sdk');
-var regions = require(__dirname + '/../../regions.json');
-
-function getPluginInfo() {
-	return {
-		title: 'KMS Keys',
-		query: 'kmsKeys',
-		category: 'KMS',
-		description: 'Ensures KMS keys have proper security controls in place',
-		tests: {
-			kmsKeyRotation: {
-				title: 'KMS Key Rotation',
-				description: 'Ensures KMS keys are set to rotate on a regular schedule',
-				more_info: 'All KMS keys should have key rotation enabled. AWS will handle the rotation of the encryption key itself, as well as storage of previous keys, so previous data does not need to be re-encrypted before the rotation occurs.',
-				recommended_action: 'Enable yearly rotation for the KMS key',
-				link: 'http://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html',
-				results: []
-			}
-		}
-	};
-}
+var helpers = require('../../helpers');
 
 module.exports = {
-	title: getPluginInfo().title,
-	query: getPluginInfo().query,
-	category: getPluginInfo().category,
-	description: getPluginInfo().description,
-	more_info: getPluginInfo().more_info,
-	link: getPluginInfo().link,
-	tests: getPluginInfo().tests,
+	title: 'KMS Key Rotation',
+	category: 'KMS',
+	description: 'Ensures KMS keys are set to rotate on a regular schedule',
+	more_info: 'All KMS keys should have key rotation enabled. AWS will handle the rotation of the encryption key itself, as well as storage of previous keys, so previous data does not need to be re-encrypted before the rotation occurs.',
+	recommended_action: 'Enable yearly rotation for the KMS key',
+	link: 'http://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html',
 
-	run: function(AWSConfig, callback) {
-		var pluginInfo = getPluginInfo();
+	run: function(AWSConfig, cache, callback) {
+		var results = [];
 
-		async.each(regions, function(region, rcb){
+		async.each(helpers.regions.kms, function(region, rcb){
+			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+
 			// Update the region
-			AWSConfig.region = region;
-			var kms = new AWS.KMS(AWSConfig);
+			LocalAWSConfig.region = region;
+			var kms = new AWS.KMS(LocalAWSConfig);
 
 			kms.listKeys({Limit: 1000}, function(listKeysErr, listKeysData){
 				if (listKeysErr || !listKeysData) {
-					pluginInfo.tests.kmsKeyRotation.results.push({
+					results.push({
 						status: 3,
 						message: 'Unable to query for KMS keys',
 						region: region
@@ -50,7 +32,7 @@ module.exports = {
 				}
 
 				if (!listKeysData.Keys || !listKeysData.Keys.length) {
-					pluginInfo.tests.kmsKeyRotation.results.push({
+					results.push({
 						status: 0,
 						message: 'No KMS keys found',
 						region: region
@@ -63,7 +45,7 @@ module.exports = {
 
 					kms.describeKey({KeyId: kmsKey.KeyId}, function(describeKeyErr, describeKeyData){
 						if (describeKeyErr || !describeKeyData) {
-							pluginInfo.tests.kmsKeyRotation.results.push({
+							results.push({
 								status: 3,
 								message: 'Unable to describe KMS key: ' + kmsKey.KeyId,
 								region: region
@@ -84,21 +66,21 @@ module.exports = {
 						// Now check the rotation status
 						kms.getKeyRotationStatus({KeyId: kmsKey.KeyId}, function(keyRotationStatusErr, keyRotationStatusData){
 							if (keyRotationStatusErr || !keyRotationStatusData) {
-								pluginInfo.tests.kmsKeyRotation.results.push({
+								results.push({
 									status: 3,
 									message: 'Unable to get KMS key rotation status',
 									region: region,
 									resource: describeKeyData.KeyMetadata.Arn
 								});
 							} else if (keyRotationStatusData.KeyRotationEnabled) {
-								pluginInfo.tests.kmsKeyRotation.results.push({
+								results.push({
 									status: 0,
 									message: 'Key rotation is enabled',
 									region: region,
 									resource: describeKeyData.KeyMetadata.Arn
 								});
 							} else {
-								pluginInfo.tests.kmsKeyRotation.results.push({
+								results.push({
 									status: 2,
 									message: 'Key rotation is not enabled',
 									region: region,
@@ -114,7 +96,7 @@ module.exports = {
 				});
 			});
 		}, function(){
-			callback(null, pluginInfo);
+			callback(null, results);
 		});
 	}
 };
