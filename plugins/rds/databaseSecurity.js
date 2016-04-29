@@ -175,7 +175,8 @@ module.exports = {
 						}
 
 						pluginInfo.tests.rdsRestorable.results.push(statusObj);
-					} else {
+					} else if (!data.DBInstances[i].ReadReplicaSourceDBInstanceIdentifier) {
+						// Apply rule to everything else except Read replicas
 						pluginInfo.tests.rdsRestorable.results.push({
 							status: 2,
 							message: 'RDS instance does not have a restorable time',
