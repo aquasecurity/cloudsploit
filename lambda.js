@@ -32,6 +32,7 @@ for (i in plugins) {
 var pluginRunner = function(event, context) {
     if (event.plugins) {
         var resultsToSend = [];
+        var cache = {};
 
         if (!event.plugins.length) {
             event.plugins = pluginQueries;
@@ -40,7 +41,7 @@ var pluginRunner = function(event, context) {
         async.eachLimit(event.plugins, 10, function(pluginToRun, cb){
             console.log('Running: ' + pluginToRun);
             // Run the plugin requested
-            plugins[pluginToRun].run({}, function(err, results){
+            plugins[pluginToRun].run({}, cache, function(err, results){
                 if (err) {
                     console.log(err);
                 } else {

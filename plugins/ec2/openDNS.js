@@ -10,7 +10,7 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
 	recommended_action: 'Restrict TCP and UDP port 53 to known IP addresses',
 
-	run: function(AWSConfig, callback) {
+	run: function(AWSConfig, cache, callback) {
 		var results = [];
 
 		async.each(helpers.regions.ec2, function(region, rcb){
@@ -21,7 +21,7 @@ module.exports = {
 			var ec2 = new AWS.EC2(LocalAWSConfig);
 
 			// Get the account attributes
-			helpers.cache(ec2, 'describeSecurityGroups', function(err, data) {
+			helpers.cache(cache, ec2, 'describeSecurityGroups', function(err, data) {
 				if (err || !data || !data.SecurityGroups) {
 					results.push({
 						status: 3,

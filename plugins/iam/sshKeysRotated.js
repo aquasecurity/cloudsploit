@@ -10,7 +10,7 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_ssh-keys.html',
 	recommended_action: 'To rotate an SSH key, first create a new public-private key pair, then upload the public key to AWS and delete the old key.',
 
-	run: function(AWSConfig, callback) {
+	run: function(AWSConfig, cache, callback) {
 		var results = [];
 
 		var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
@@ -20,7 +20,7 @@ module.exports = {
 
 		var iam = new AWS.IAM(LocalAWSConfig);
 
-		helpers.cache(iam, 'listUsers', function(err, data) {
+		helpers.cache(cache, iam, 'listUsers', function(err, data) {
 			if (err || !data || !data.Users) {
 				results.push({
 					status: 3,

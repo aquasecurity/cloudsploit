@@ -10,7 +10,7 @@ module.exports = {
 	recommended_action: 'Enable CloudTrail file validation for all regions',
 	link: 'http://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-log-file-validation-enabling.html',
 
-	run: function(AWSConfig, callback) {
+	run: function(AWSConfig, cache, callback) {
 		var results = [];
 
 		async.each(helpers.regions.cloudtrail, function(region, cb){
@@ -20,7 +20,7 @@ module.exports = {
 			LocalAWSConfig.region = region;
 			var cloudtrail = new AWS.CloudTrail(LocalAWSConfig);
 
-			helpers.cache(cloudtrail, 'describeTrails', function(err, data) {
+			helpers.cache(cache, cloudtrail, 'describeTrails', function(err, data) {
 				if (err) {
 					results.push({
 						status: 3,

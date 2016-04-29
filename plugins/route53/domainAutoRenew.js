@@ -9,7 +9,7 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/Route53/latest/APIReference/api-enable-domain-auto-renew.html',
 	recommended_action: 'Enable auto renew for the domain',
 
-	run: function(AWSConfig, callback) {
+	run: function(AWSConfig, cache, callback) {
 		var results = [];
 
 		var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
@@ -19,7 +19,7 @@ module.exports = {
 
 		var route53domains = new AWS.Route53Domains(LocalAWSConfig);
 
-		helpers.cache(route53domains, 'listDomains', function(err, data) {
+		helpers.cache(cache, route53domains, 'listDomains', function(err, data) {
 			if (err || !data || !data.Domains) {
 				results.push({
 					status: 3,

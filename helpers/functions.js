@@ -3,7 +3,6 @@ var cache = require('./cache.js');
 
 var ONE_DAY = 24*60*60*1000;
 
-var CREDENTIAL_DOWNLOAD_STARTED = false;
 var CREDENTIAL_REPORT_DATA;
 var CREDENTIAL_REPORT_ERROR;
 
@@ -27,20 +26,19 @@ function mostRecentDate(dates) {
 	return mostRecentDate;
 }
 
-function waitForCredentialReport(iam, callback) {
+function waitForCredentialReport(iam, callback, CREDENTIAL_DOWNLOAD_STARTED) {
 	if (CREDENTIAL_REPORT_DATA) return callback(null, CREDENTIAL_REPORT_DATA);
 	if (CREDENTIAL_REPORT_ERROR) return callback(CREDENTIAL_REPORT_ERROR);
 
 	if (!CREDENTIAL_DOWNLOAD_STARTED) {
-		CREDENTIAL_DOWNLOAD_STARTED = true;
-
 		iam.generateCredentialReport(function(err, data){
 			if ((err && err.code && err.code == 'ReportInProgress') || (data && data.State)) {
 				// Okay to query for credential report
-				waitForCredentialReport(iam, callback);
+				waitForCredentialReport(iam, callback, true);
 			} else {
-				CREDENTIAL_REPORT_ERROR = 'Error downloading report';
-				callback(CREDENTIAL_REPORT_ERROR);
+				//CREDENTIAL_REPORT_ERROR = 'Error downloading report';
+				//callback(CREDENTIAL_REPORT_ERROR);
+				callback('Error downloading report');
 			}
 		});
 	} else {
@@ -56,12 +54,14 @@ function waitForCredentialReport(iam, callback) {
 
 		async.retry({times: 10, interval: 1000}, pingCredentialReport, function(reportErr, reportData){
 			if (reportErr || !reportData) {
-				CREDENTIAL_REPORT_ERROR = 'Error downloading report';
-				return callback(CREDENTIAL_REPORT_ERROR);
+				//CREDENTIAL_REPORT_ERROR = 'Error downloading report';
+				//return callback(CREDENTIAL_REPORT_ERROR);
+				return callback('Error downloading report');
 			}
 
-			CREDENTIAL_REPORT_DATA = reportData;
-			callback(null, CREDENTIAL_REPORT_DATA);
+			//CREDENTIAL_REPORT_DATA = reportData;
+			//callback(null, CREDENTIAL_REPORT_DATA);
+			callback(null, reportData);
 		});
 	}
 }

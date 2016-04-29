@@ -15,7 +15,7 @@ module.exports = {
 	recommended_action: 'Contact AWS support to increase the number of EIPs available',
 	link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html#using-instance-addressing-limit',
 
-	run: function(AWSConfig, callback) {
+	run: function(AWSConfig, cache, callback) {
 		var results = [];
 
 		async.each(helpers.regions.ec2, function(region, rcb){
@@ -26,7 +26,7 @@ module.exports = {
 			var ec2 = new AWS.EC2(LocalAWSConfig);
 
 			// Get the account attributes
-			helpers.cache(ec2, 'describeAccountAttributes', function(err, data) {
+			helpers.cache(cache, ec2, 'describeAccountAttributes', function(err, data) {
 				if (err || !data || !data.AccountAttributes || !data.AccountAttributes.length) {
 					results.push({
 						status: 3,
@@ -44,7 +44,7 @@ module.exports = {
 					}
 				}
 				
-				helpers.cache(ec2, 'describeAddresses', function(err, data) {
+				helpers.cache(cache, ec2, 'describeAddresses', function(err, data) {
 					if (err || !data || !data.Addresses) {
 						results.push({
 							status: 3,

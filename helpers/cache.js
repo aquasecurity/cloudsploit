@@ -1,23 +1,21 @@
-var CACHE = {};
-
-var cache = function(service, command, callback) {
+var cacher = function(cache, service, command, callback) {
 	if (!service.config.region) { service.config.region = 'global'; }
 
-	if (CACHE[service.config.endpoint] &&
-		CACHE[service.config.endpoint][command] &&
-		CACHE[service.config.endpoint][command][service.config.region]) {
-		return callback(null, CACHE[service.config.endpoint][command][service.config.region]);
+	if (cache[service.config.endpoint] &&
+		cache[service.config.endpoint][command] &&
+		cache[service.config.endpoint][command][service.config.region]) {
+		return callback(null, cache[service.config.endpoint][command][service.config.region]);
 	}
 
 	service[command](function(err, data){
 		if (!err && data) {
-			if (!CACHE[service.config.endpoint]) { CACHE[service.config.endpoint] = {}; }
-			if (!CACHE[service.config.endpoint][command]) { CACHE[service.config.endpoint][command] = {}; }
-			CACHE[service.config.endpoint][command][service.config.region] = data;
+			if (!cache[service.config.endpoint]) { cache[service.config.endpoint] = {}; }
+			if (!cache[service.config.endpoint][command]) { cache[service.config.endpoint][command] = {}; }
+			cache[service.config.endpoint][command][service.config.region] = data;
 		}
 
 		callback(err, data);
 	});
 }
 
-module.exports = cache;
+module.exports = cacher;

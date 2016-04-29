@@ -1,5 +1,6 @@
 var async = require('async');
 var plugins = require('./exports.js');
+var cache = {};
 
 // OPTION 1: Configure AWS credentials through hard-coded key and secret
 // var AWSConfig = {
@@ -17,7 +18,7 @@ var plugins = require('./exports.js');
 console.log('CATEGORY\tPLUGIN\t\t\t\tRESOURCE\t\t\tREGION\t\tSTATUS\tMESSAGE');
 
 async.forEachOfLimit(plugins, 10, function(plugin, key, callback){
-    plugin.run(AWSConfig, function(err, results){        
+    plugin.run(AWSConfig, cache, function(err, results){        
         for (r in results) {
             var statusWord;
             if (results[r].status === 0) {

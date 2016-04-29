@@ -10,7 +10,7 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Introduction.html',
 	recommended_action: 'Migrate instances from EC2 Classic to VPC',
 
-	run: function(AWSConfig, callback) {
+	run: function(AWSConfig, cache, callback) {
 		var results = [];
 
 		var params = {
@@ -35,7 +35,7 @@ module.exports = {
 			LocalAWSConfig.region = region;
 			var ec2 = new AWS.EC2(LocalAWSConfig);
 
-			ec2.describeInstances(params, function(err, data){
+			helpers.cache(cache, ec2, 'describeInstances', function(err, data) {
 				if (err || !data || !data.Reservations) {
 					results.push({
 						status: 3,

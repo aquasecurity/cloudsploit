@@ -10,7 +10,7 @@ module.exports = {
 	recommended_action: 'Enable yearly rotation for the KMS key',
 	link: 'http://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html',
 
-	run: function(AWSConfig, callback) {
+	run: function(AWSConfig, cache, callback) {
 		var results = [];
 
 		async.each(helpers.regions.kms, function(region, rcb){

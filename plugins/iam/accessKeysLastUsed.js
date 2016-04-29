@@ -10,7 +10,7 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/ManagingCredentials.html',
 	recommended_action: 'Log into the IAM portal and remove the offending access key.',
 
-	run: function(AWSConfig, callback) {
+	run: function(AWSConfig, cache, callback) {
 
 		var results = [];
 

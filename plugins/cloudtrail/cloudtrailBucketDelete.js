@@ -10,7 +10,7 @@ module.exports = {
 	recommended_action: 'Enable MFA delete on the CloudTrail bucket',
 	link: 'http://docs.aws.amazon.com/AmazonS3/latest/dev/Versioning.html#MultiFactorAuthenticationDelete',
 
-	run: function(AWSConfig, callback) {
+	run: function(AWSConfig, cache, callback) {
 		var results = [];
 
 		async.each(helpers.regions.cloudtrail, function(region, rcb){
@@ -20,7 +20,7 @@ module.exports = {
 			LocalAWSConfig.region = region;
 			var cloudtrail = new AWS.CloudTrail(LocalAWSConfig);
 
-			helpers.cache(cloudtrail, 'describeTrails', function(err, data) {
+			helpers.cache(cache, cloudtrail, 'describeTrails', function(err, data) {
 				if (err) {
 					results.push({
 						status: 3,

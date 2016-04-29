@@ -3,17 +3,15 @@ var async = require('async');
 var helpers = require('../../helpers');
 
 module.exports = {
-	title: 'CloudTrail Enabled',
+	title: 'CloudTrail To CloudWatch',
 	category: 'CloudTrail',
-	description: 'Ensures CloudTrail is enabled for all regions within an account',
-	more_info: 'CloudTrail should be enabled for all regions in order to detect suspicious activity in regions that are not typically used.',
-	recommended_action: 'Enable CloudTrail for all regions and ensure that at least one region monitors global service events',
-	link: 'http://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-getting-started.html',
+	description: 'Ensures CloudTrail logs are being properly delivered to CloudWatch',
+	more_info: 'Sending CloudTrail logs to CloudWatch enables easy integration with AWS CloudWatch alerts, as well as an additional backup log storage location.',
+	recommended_action: 'Enable CloudTrail CloudWatch integration for all regions',
+	link: 'http://docs.aws.amazon.com/awscloudtrail/latest/userguide/send-cloudtrail-events-to-cloudwatch-logs.html',
 
 	run: function(AWSConfig, cache, callback) {
 		var results = [];
-
-		var globalServicesMonitored = false;
 
 		async.each(helpers.regions.cloudtrail, function(region, cb){
 			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
@@ -26,7 +24,7 @@ module.exports = {
 				if (err) {
 					results.push({
 						status: 3,
-						message: 'Unable to query for CloudTrail policy',
+						message: 'Unable to query for CloudTrail CloudWatch integration status',
 						region: region
 					});
 
@@ -42,14 +40,22 @@ module.exports = {
 							region: region
 						});
 					} else if (data.trailList[0]) {
-						results.push({
-							status: 0,
-							message: 'CloudTrail is enabled',
-							region: region
-						});
-
-						if (data.trailList[0].IncludeGlobalServiceEvents) {
-							globalServicesMonitored = true;
+						for (t in data.trailList) {
+							if (!data.trailList[t].CloudWatchLogsLogGroupArn) {
+								results.push({
+									status: 2,
+									message: 'CloudTrail CloudWatch integration is not enabled',
+									region: region,
+									resource: data.trailList[t].TrailARN
+								});
+							} else {
+								results.push({
+									status: 0,
+									message: 'CloudTrail CloudWatch integration is enabled',
+									region: region,
+									resource: data.trailList[t].TrailARN
+								});
+							}
 						}
 					} else {
 						results.push({
@@ -62,7 +68,7 @@ module.exports = {
 				} else {
 					results.push({
 						status: 3,
-						message: 'Unable to query for CloudTrail policy',
+						message: 'Unable to query for CloudTrail CloudWatch integration status',
 						region: region
 					});
 
@@ -70,21 +76,7 @@ module.exports = {
 				}
 			});
 		}, function(){
-			if (!globalServicesMonitored) {
-				results.push({
-					status: 2,
-					message: 'CloudTrail is not monitoring global services',
-					region: 'global'
-				});
-			} else {
-				results.push({
-					status: 0,
-					message: 'CloudTrail is monitoring global services',
-					region: 'global'
-				});
-			}
-
-			return callback(null, results);
+			callback(null, results);
 		});
 	}
 };

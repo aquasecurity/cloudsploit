@@ -4,6 +4,7 @@ module.exports = {
 	'cloudtrailBucketDelete'	: require(__dirname + '/plugins/cloudtrail/cloudtrailBucketDelete.js'),
 	'cloudtrailEnabled'			: require(__dirname + '/plugins/cloudtrail/cloudtrailEnabled.js'),
 	'cloudtrailFileValidation'	: require(__dirname + '/plugins/cloudtrail/cloudtrailFileValidation.js'),
+	'cloudtrailToCloudwatch'	: require(__dirname + '/plugins/cloudtrail/cloudtrailToCloudwatch.js'),
 
 	'elasticIpLimit'			: require(__dirname + '/plugins/ec2/elasticIpLimit.js'),
 	'excessiveSecurityGroups'	: require(__dirname + '/plugins/ec2/excessiveSecurityGroups.js'),
@@ -33,6 +34,7 @@ module.exports = {
 	'emptyGroups'				: require(__dirname + '/plugins/iam/emptyGroups.js'),
 	'maxPasswordAge'			: require(__dirname + '/plugins/iam/maxPasswordAge.js'),
 	'minPasswordLength'			: require(__dirname + '/plugins/iam/minPasswordLength.js'),
+	'noUserIamPolicies'			: require(__dirname + '/plugins/iam/noUserIamPolicies.js'),
 	'passwordExpiration'		: require(__dirname + '/plugins/iam/passwordExpiration.js'),
 	'passwordRequiresLowercase'	: require(__dirname + '/plugins/iam/passwordRequiresLowercase.js'),
 	'passwordRequiresNumbers'	: require(__dirname + '/plugins/iam/passwordRequiresNumbers.js'),

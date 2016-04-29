@@ -9,7 +9,7 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
 	recommended_action: 'Enable password expiration for the account',
 
-	run: function(AWSConfig, callback) {
+	run: function(AWSConfig, cache, callback) {
 		var results = [];
 
 		var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
@@ -19,7 +19,7 @@ module.exports = {
 
 		var iam = new AWS.IAM(LocalAWSConfig);
 
-		helpers.cache(iam, 'getAccountPasswordPolicy', function(err, data) {
+		helpers.cache(cache, iam, 'getAccountPasswordPolicy', function(err, data) {
 			if (err || !data || !data.PasswordPolicy) {
 				results.push({
 					status: 3,

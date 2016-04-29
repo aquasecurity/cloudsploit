@@ -10,7 +10,7 @@ module.exports = {
 	recommended_action: 'Disable global all users policies on all S3 buckets',
 	link: 'http://docs.aws.amazon.com/AmazonS3/latest/UG/EditingBucketPermissions.html',
 
-	run: function(AWSConfig, callback) {
+	run: function(AWSConfig, cache, callback) {
 		var results = [];
 
 		var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
@@ -20,7 +20,7 @@ module.exports = {
 
 		var s3 = new AWS.S3(LocalAWSConfig);
 
-		helpers.cache(s3, 'listBuckets', function(err, data) {
+		helpers.cache(cache, s3, 'listBuckets', function(err, data) {
 			if (err || !data || !data.Buckets) {
 				results.push({
 					status: 3,

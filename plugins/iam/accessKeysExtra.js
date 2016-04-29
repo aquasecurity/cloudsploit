@@ -10,7 +10,7 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/ManagingCredentials.html',
 	recommended_action: 'Remove the extra access key for the specified user.',
 
-	run: function(AWSConfig, callback) {
+	run: function(AWSConfig, cache, callback) {
 
 		var results = [];
 

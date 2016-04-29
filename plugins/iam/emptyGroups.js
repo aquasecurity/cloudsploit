@@ -10,7 +10,7 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_WorkingWithGroupsAndUsers.html',
 	recommended_action: 'Remove unused groups without users',
 
-	run: function(AWSConfig, callback) {
+	run: function(AWSConfig, cache, callback) {
 		var results = [];
 
 		var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
@@ -20,7 +20,7 @@ module.exports = {
 
 		var iam = new AWS.IAM(LocalAWSConfig);
 		
-		helpers.cache(iam, 'listGroups', function(err, data) {
+		helpers.cache(cache, iam, 'listGroups', function(err, data) {
 			if (err || !data || !data.Groups) {
 				results.push({
 					status: 3,

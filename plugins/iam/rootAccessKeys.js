@@ -10,7 +10,7 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/general/latest/gr/managing-aws-access-keys.html',
 	recommended_action: 'Remove access keys for the root account and setup IAM users with limited permissions instead',
 
-	run: function(AWSConfig, callback) {
+	run: function(AWSConfig, cache, callback) {
 
 		var results = [];
 

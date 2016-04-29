@@ -10,7 +10,7 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/general/latest/gr/managing-aws-access-keys.html',
 	recommended_action: 'Enable an MFA device for the root account and then use an IAM user for managing services',
 
-	run: function(AWSConfig, callback) {
+	run: function(AWSConfig, cache, callback) {
 
 		var results = [];
 

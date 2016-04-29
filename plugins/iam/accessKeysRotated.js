@@ -10,7 +10,7 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/ManagingCredentials.html',
 	recommended_action: 'To rotate an access key, first create a new key, replace the key and secret throughout your app or scripts, then set the previous key to disabled. Once you ensure that no services are broken, then fully delete the old key.',
 
-	run: function(AWSConfig, callback) {
+	run: function(AWSConfig, cache, callback) {
 
 		var results = [];
 
