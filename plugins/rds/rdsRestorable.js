@@ -62,7 +62,8 @@ module.exports = {
 						}
 
 						results.push(statusObj);
-					} else {
+					} else if (!data.DBInstances[i].ReadReplicaSourceDBInstanceIdentifier) {
+						// Apply rule to everything else except Read replicas
 						results.push({
 							status: 2,
 							message: 'RDS instance does not have a restorable time',
