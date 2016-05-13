@@ -1,38 +1,17 @@
 var AWS = require('aws-sdk');
 var async = require('async');
-
-var regions = require(__dirname + '/../../regions.json');
-
-function getPluginInfo() {
-	return {
-		title: 'Detect EC2 Classic',
-		query: 'detectClassic',
-		category: 'VPC',
-		description: 'Ensures AWS VPC is being used instead of EC2 Classic',
-		tests: {
-			classicInstances: {
-				title: 'Detect EC2 Classic Instances',
-				description: 'Ensures AWS VPC is being used for instances instead of EC2 Classic',
-				more_info: 'VPCs are the latest and more secure method of launching AWS resources. EC2 Classic should not be used.',
-				link: 'http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Introduction.html',
-				recommended_action: 'Migrate instances from EC2 Classic to VPC',
-				results: []
-			}
-		}
-	}
-};
+var helpers = require('../../helpers');
 
 module.exports = {
-	title: getPluginInfo().title,
-	query: getPluginInfo().query,
-	category: getPluginInfo().category,
-	description: getPluginInfo().description,
-	more_info: getPluginInfo().more_info,
-	link: getPluginInfo().link,
-	tests: getPluginInfo().tests,
+	title: 'Detect EC2 Classic Instances',
+	category: 'VPC',
+	description: 'Ensures AWS VPC is being used for instances instead of EC2 Classic',
+	more_info: 'VPCs are the latest and more secure method of launching AWS resources. EC2 Classic should not be used.',
+	link: 'http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Introduction.html',
+	recommended_action: 'Migrate instances from EC2 Classic to VPC',
 
-	run: function(AWSConfig, callback) {
-		var pluginInfo = getPluginInfo();
+	run: function(AWSConfig, cache, callback) {
+		var results = [];
 
 		var params = {
 			Filters: [
@@ -49,13 +28,16 @@ module.exports = {
 			]
 		};
 
-		async.each(regions, function(region, rcb){
-			AWSConfig.region = region;
-			var ec2 = new AWS.EC2(AWSConfig);
+		async.each(helpers.regions.vpc, function(region, rcb){
+			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
 
-			ec2.describeInstances(params, function(err, data){
+			// Update the region
+			LocalAWSConfig.region = region;
+			var ec2 = new AWS.EC2(LocalAWSConfig);
+
+			helpers.cache(cache, ec2, 'describeInstances', function(err, data) {
 				if (err || !data || !data.Reservations) {
-					pluginInfo.tests.classicInstances.results.push({
+					results.push({
 						status: 3,
 						message: 'Unable to query for instances',
 						region: region
@@ -66,7 +48,7 @@ module.exports = {
 
 				// Perform checks for establishing if MFA token is enabled
 				if (!data.Reservations.length) {
-					pluginInfo.tests.classicInstances.results.push({
+					results.push({
 						status: 0,
 						message: 'No instances found',
 						region: region
@@ -91,19 +73,19 @@ module.exports = {
 				}
 
 				if (notInVpc) {
-					pluginInfo.tests.classicInstances.results.push({
+					results.push({
 						status: 1,
 						message: 'There are ' + notInVpc + ' instances in EC2-Classic',
 						region: region
 					});
 				} else if (inVpc) {
-					pluginInfo.tests.classicInstances.results.push({
+					results.push({
 						status: 0,
 						message: 'There are ' + inVpc + ' instances in a VPC',
 						region: region
 					});
 				} else {
-					pluginInfo.tests.classicInstances.results.push({
+					results.push({
 						status: 0,
 						message: 'No instances found',
 						region: region
@@ -113,7 +95,7 @@ module.exports = {
 				rcb();
 			});
 		}, function(){
-			callback(null, pluginInfo);
+			callback(null, results);
 		});
 	}
 };
