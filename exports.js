@@ -6,6 +6,8 @@ module.exports = {
 	'cloudtrailFileValidation'	: require(__dirname + '/plugins/cloudtrail/cloudtrailFileValidation.js'),
 	'cloudtrailToCloudwatch'	: require(__dirname + '/plugins/cloudtrail/cloudtrailToCloudwatch.js'),
 
+	'configServiceEnabled'		: require(__dirname + '/plugins/configservice/configServiceEnabled.js'),
+
 	'elasticIpLimit'			: require(__dirname + '/plugins/ec2/elasticIpLimit.js'),
 	'excessiveSecurityGroups'	: require(__dirname + '/plugins/ec2/excessiveSecurityGroups.js'),
 	'insecureCiphers'			: require(__dirname + '/plugins/ec2/insecureCiphers.js'),
