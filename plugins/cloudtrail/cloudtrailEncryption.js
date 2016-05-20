@@ -3,13 +3,13 @@ var async = require('async');
 var helpers = require('../../helpers');
 
 module.exports = {
-	title: 'CloudTrail File Validation',
+	title: 'CloudTrail Encryption',
 	category: 'CloudTrail',
-	description: 'Ensures CloudTrail file validation is enabled for all regions within an account',
-	more_info: 'CloudTrail file validation is essentially a hash of the file which can be used to ensure its integrity in the case of an account compromise.',
-	recommended_action: 'Enable CloudTrail file validation for all regions',
-	link: 'http://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-log-file-validation-enabling.html',
-	cis_benchmark: '2.2',
+	description: 'Ensures CloudTrail encryption at rest is enabled for logs',
+	more_info: 'CloudTrail log files contain sensitive information about an account and should be encrypted at risk for additional protection.',
+	recommended_action: 'Enable CloudTrail log encryption through the CloudTrail console or API',
+	link: 'http://docs.aws.amazon.com/awscloudtrail/latest/userguide/encrypting-cloudtrail-log-files-with-aws-kms.html',
+	cis_benchmark: '2.7',
 
 	run: function(AWSConfig, cache, callback) {
 		var results = [];
@@ -25,7 +25,7 @@ module.exports = {
 				if (err) {
 					results.push({
 						status: 3,
-						message: 'Unable to query for CloudTrail file validation status',
+						message: 'Unable to query for CloudTrail encryption status',
 						region: region
 					});
 
@@ -42,17 +42,17 @@ module.exports = {
 						});
 					} else if (data.trailList[0]) {
 						for (t in data.trailList) {
-							if (!data.trailList[t].LogFileValidationEnabled) {
+							if (!data.trailList[t].KmsKeyId) {
 								results.push({
 									status: 2,
-									message: 'CloudTrail log file validation is not enabled',
+									message: 'CloudTrail encryption is not enabled',
 									region: region,
 									resource: data.trailList[t].TrailARN
 								});
 							} else {
 								results.push({
 									status: 0,
-									message: 'CloudTrail log file validation is enabled',
+									message: 'CloudTrail encryption is enabled',
 									region: region,
 									resource: data.trailList[t].TrailARN
 								});
@@ -69,7 +69,7 @@ module.exports = {
 				} else {
 					results.push({
 						status: 3,
-						message: 'Unable to query for CloudTrail file validation status',
+						message: 'Unable to query for CloudTrail encryption status',
 						region: region
 					});
 

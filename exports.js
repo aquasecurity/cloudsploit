@@ -1,10 +1,13 @@
 // Export all available scans
 
 module.exports = {
+	'cloudtrailBucketAccessLogging'	: require(__dirname + '/plugins/cloudtrail/cloudtrailBucketAccessLogging.js'),
 	'cloudtrailBucketDelete'	: require(__dirname + '/plugins/cloudtrail/cloudtrailBucketDelete.js'),
 	'cloudtrailEnabled'			: require(__dirname + '/plugins/cloudtrail/cloudtrailEnabled.js'),
+	'cloudtrailEncryption'	: require(__dirname + '/plugins/cloudtrail/cloudtrailEncryption.js'),
 	'cloudtrailFileValidation'	: require(__dirname + '/plugins/cloudtrail/cloudtrailFileValidation.js'),
 	'cloudtrailToCloudwatch'	: require(__dirname + '/plugins/cloudtrail/cloudtrailToCloudwatch.js'),
+	'cloudtrailBucketPrivate'	: require(__dirname + '/plugins/cloudtrail/cloudtrailBucketPrivate.js'),
 
 	'configServiceEnabled'		: require(__dirname + '/plugins/configservice/configServiceEnabled.js'),
 
@@ -28,6 +31,7 @@ module.exports = {
 	'openVNCClient'				: require(__dirname + '/plugins/ec2/openVNCClient.js'),
 	'openVNCServer'				: require(__dirname + '/plugins/ec2/openVNCServer.js'),
 	'vpcElasticIpLimit'			: require(__dirname + '/plugins/ec2/vpcElasticIpLimit.js'),
+	'defaultSecurityGroup'			: require(__dirname + '/plugins/ec2/defaultSecurityGroup.js'),
 
 	'accessKeysExtra'			: require(__dirname + '/plugins/iam/accessKeysExtra.js'),
 	'accessKeysLastUsed'		: require(__dirname + '/plugins/iam/accessKeysLastUsed.js'),
@@ -63,4 +67,5 @@ module.exports = {
 	'bucketAllUsersPolicy'		: require(__dirname + '/plugins/s3/bucketAllUsersPolicy.js'),
 
 	'classicInstances'			: require(__dirname + '/plugins/vpc/classicInstances.js')	
+	'flowLogsEnabled'			: require(__dirname + '/plugins/vpc/flowLogsEnabled.js'),
 };

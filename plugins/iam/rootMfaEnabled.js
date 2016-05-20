@@ -9,6 +9,7 @@ module.exports = {
 	more_info: 'The root account should have an MFA device setup to enable two-factor authentication.',
 	link: 'http://docs.aws.amazon.com/general/latest/gr/managing-aws-access-keys.html',
 	recommended_action: 'Enable an MFA device for the root account and then use an IAM user for managing services',
+	cis_benchmark: '1.13',
 
 	run: function(AWSConfig, cache, callback) {
 

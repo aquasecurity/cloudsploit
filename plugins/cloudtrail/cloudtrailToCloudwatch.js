@@ -9,6 +9,7 @@ module.exports = {
 	more_info: 'Sending CloudTrail logs to CloudWatch enables easy integration with AWS CloudWatch alerts, as well as an additional backup log storage location.',
 	recommended_action: 'Enable CloudTrail CloudWatch integration for all regions',
 	link: 'http://docs.aws.amazon.com/awscloudtrail/latest/userguide/send-cloudtrail-events-to-cloudwatch-logs.html',
+	cis_benchmark: '2.4',
 
 	run: function(AWSConfig, cache, callback) {
 		var results = [];

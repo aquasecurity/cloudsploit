@@ -9,6 +9,7 @@ module.exports = {
 	more_info: 'Access keys should be rotated frequently to avoid having them accidentally exposed.',
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/ManagingCredentials.html',
 	recommended_action: 'To rotate an access key, first create a new key, replace the key and secret throughout your app or scripts, then set the previous key to disabled. Once you ensure that no services are broken, then fully delete the old key.',
+	cis_benchmark: '1.3',
 
 	run: function(AWSConfig, cache, callback) {
 

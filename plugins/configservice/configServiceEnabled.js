@@ -9,6 +9,7 @@ module.exports = {
 	more_info: 'The AWS Config Service tracks changes to a number of resources in an AWS account and is invaluable in determining how account changes affect other resources and in recovery in the event of an account intrusion or accidental configuration change.',
 	recommended_action: 'Enable the AWS Config Service for all regions and resources in an account. Ensure that it is properly recording and delivering logs.',
 	link: 'https://aws.amazon.com/config/details/',
+	cis_benchmark: '2.5',
 
 	run: function(AWSConfig, cache, callback) {
 		var results = [];
