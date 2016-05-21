@@ -109,10 +109,10 @@ To run a standard scan, showing all outputs and results, simply run:
 node index.js
 ```
 
-To run a CIS Benchmark test, add the `--cis-benchmark` argument.
+To run a CIS Benchmark test, add the `--cis-benchmarks` argument.
 
 ```
-node index.js --cis-benchmark
+node index.js --cis-benchmarks
 ```
 
 ## Writing a Plugin
