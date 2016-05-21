@@ -66,6 +66,6 @@ module.exports = {
 
 	'bucketAllUsersPolicy'		: require(__dirname + '/plugins/s3/bucketAllUsersPolicy.js'),
 
-	'classicInstances'			: require(__dirname + '/plugins/vpc/classicInstances.js')	
+	'classicInstances'			: require(__dirname + '/plugins/vpc/classicInstances.js'),
 	'flowLogsEnabled'			: require(__dirname + '/plugins/vpc/flowLogsEnabled.js'),
 };
