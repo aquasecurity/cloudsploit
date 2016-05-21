@@ -4,6 +4,8 @@ CloudSploit Scans
 ## Background
 CloudSploit scans is an open-source project designed to allow detection of security risks in an AWS account. These scripts are designed to run against an AWS account and return a series of potential misconfigurations and security risks.
 
+CloudSploit scans now also support CIS Benchmark tests. The [CIS Benchmarks](https://benchmarks.cisecurity.org/downloads/show-single/?file=awsfoundations.100) are a series of scored tests developed by the Center for Internet Security. CloudSploit will use its own plugins to generate a report aligning with the CIS requirements.
+
 ## Installation
 Ensure that node is installed. If not, install it from [here](https://nodejs.org/download/).
 
@@ -97,6 +99,20 @@ WARNING: This policy will likely change as more plugins are written. If a test r
     }
   ]
 }
+```
+
+## Running
+
+To run a standard scan, showing all outputs and results, simply run:
+
+```
+node index.js
+```
+
+To run a CIS Benchmark test, add the `--cis-benchmark` argument.
+
+```
+node index.js --cis-benchmark
 ```
 
 ## Writing a Plugin
