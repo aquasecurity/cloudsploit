@@ -37,22 +37,22 @@ module.exports = {
 					message: 'Password expiration policy is not set to expire passwords',
 					region: 'global'
 				});
-			} else if (data.PasswordPolicy.ExpirePasswords < 90) {
+			} else if (data.PasswordPolicy.MaxPasswordAge < 90) {
 				results.push({
 					status: 2,
-					message: 'Password expiration of: ' + data.PasswordPolicy.ExpirePasswords + ' days is less than 90',
+					message: 'Password expiration of: ' + data.PasswordPolicy.MaxPasswordAge + ' days is less than 90',
 					region: 'global'
 				});
-			} else if (data.PasswordPolicy.ExpirePasswords < 24) {
+			} else if (data.PasswordPolicy.MaxPasswordAge < 24) {
 				results.push({
 					status: 1,
-					message: 'Password expiration of: ' + data.PasswordPolicy.ExpirePasswords + ' days is less than 180',
+					message: 'Password expiration of: ' + data.PasswordPolicy.MaxPasswordAge + ' days is less than 180',
 					region: 'global'
 				});
 			} else {
 				results.push({
 					status: 0,
-					message: 'Password expiration of: ' + data.PasswordPolicy.ExpirePasswords + ' passwords is suitable',
+					message: 'Password expiration of: ' + data.PasswordPolicy.MaxPasswordAge + ' passwords is suitable',
 					region: 'global'
 				});
 			}
