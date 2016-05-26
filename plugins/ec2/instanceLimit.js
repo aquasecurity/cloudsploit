@@ -18,7 +18,7 @@ module.exports = {
 	run: function(AWSConfig, cache, callback) {
 		var results = [];
 
-		async.each(helpers.regions.ec2, function(region, rcb){
+		async.forEachSeries(helpers.regions.ec2, function(region, rcb){
 			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
 
 			// Update the region
@@ -33,7 +33,6 @@ module.exports = {
 						message: 'Unable to query for account limits',
 						region: region
 					});
-
 					return rcb();
 				}
 
@@ -43,9 +42,9 @@ module.exports = {
 						limits[data.AccountAttributes[i].AttributeName] = data.AccountAttributes[i].AttributeValues[0].AttributeValue;
 					}
 				}
-				
 				// Now call APIs to determine actual usage
 				helpers.cache(cache, ec2, 'describeInstances', function(err, data) {
+					
 					if (err || !data || !data.Reservations) {
 						results.push({
 							status: 3,
@@ -55,7 +54,6 @@ module.exports = {
 
 						return rcb();
 					}
-
 					var returnMsgIl = {
 						status: 0,
 						message: 'Account contains ' + data.Reservations.length + ' of ' + limits['max-instances'] + ' available instances',
