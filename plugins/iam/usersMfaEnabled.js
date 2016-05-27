@@ -84,6 +84,15 @@ module.exports = {
 						region: 'global'
 					});
 				}
+
+				if (!results.length) {
+					results.push({
+						status: 0,
+						message: 'No users with passwords requiring MFA found',
+						region: 'global'
+					});
+				}
+
 				callback(null, results);
 			});
 		});
