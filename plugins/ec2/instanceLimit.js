@@ -2,11 +2,6 @@ var AWS = require('aws-sdk');
 var async = require('async');
 var helpers = require('../../helpers');
 
-// Default limits to override
-var limits = {
-	'max-instances': 20
-};
-
 module.exports = {
 	title: 'Instance Limit',
 	category: 'EC2',
@@ -24,6 +19,11 @@ module.exports = {
 			// Update the region
 			LocalAWSConfig.region = region;
 			var ec2 = new AWS.EC2(LocalAWSConfig);
+
+			// Default limits to override
+			var limits = {
+				'max-instances': 20
+			};
 
 			// Get the account attributes
 			helpers.cache(cache, ec2, 'describeAccountAttributes', function(err, data) {
