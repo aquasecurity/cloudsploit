@@ -16,7 +16,6 @@ var categoryMap = {};
 
 // OPTION 2: Import an AWS config file containing credentials
 // var AWSConfig = require(__dirname + '/credentials.json');
-var AWSConfig = require(__dirname + '/../../../cloudsploit-secure/scan-self.json');
 
 // OPTION 3: Set AWS credentials in environment variables
 
