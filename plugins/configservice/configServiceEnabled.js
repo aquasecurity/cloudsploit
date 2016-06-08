@@ -16,7 +16,7 @@ module.exports = {
 
 		var globalServicesMonitored = false;
 
-		async.each(helpers.regions.cloudtrail, function(region, rcb){
+		async.eachLimit(helpers.regions.configservice, helpers.MAX_REGIONS_AT_A_TIME, function(region, rcb){
 			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
 
 			// Update the region

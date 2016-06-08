@@ -13,7 +13,7 @@ module.exports = {
 	run: function(AWSConfig, cache, callback) {
 		var results = [];
 
-		async.each(helpers.regions.rds, function(region, rcb){
+		async.eachLimit(helpers.regions.rds, helpers.MAX_REGIONS_AT_A_TIME, function(region, rcb){
 			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
 
 			// Update the region

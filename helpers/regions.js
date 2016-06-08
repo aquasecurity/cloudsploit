@@ -14,6 +14,7 @@ var regions = [
 module.exports = {
 	all: regions,
 	cloudtrail: regions,
+	configservice: regions,
 	ec2: regions,
 	elb: regions,
 	kms: regions,

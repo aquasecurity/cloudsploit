@@ -1,8 +1,3 @@
-var async = require('async');
-
-var MAX_RETRIES = 15;		// Maximum times to retry calling the AWS API
-var MAX_TIMEOUT = 20000;	// How long to wait for each AWS response before failing
-
 var cacher = function(cache, service, command, callback) {
 	if (!service.config.region) { service.config.region = 'global'; }
 
@@ -35,16 +30,9 @@ var cacher = function(cache, service, command, callback) {
 			callbacks: [callback]
 		};
 
-		var cbCalled = false;
-		var tryNum = 0;
-
-		async.retry(MAX_RETRIES, async.timeout(function(cb){
-			service[command](function(err, data){
-				if (!cbCalled) cb(err,data);
-			});
-		}, MAX_TIMEOUT), function(err, data) {
-			cbCalled = true;
-
+		
+		service[command](function(err, data){
+			
 			if (!err && data) {
 				cache[endpoint][command][region].data = data;
 

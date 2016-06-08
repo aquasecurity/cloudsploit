@@ -87,7 +87,7 @@ module.exports = {
 	run: function(AWSConfig, cache, callback) {
 		var results = [];
 
-		async.each(helpers.regions.elb, function(region, rcb){
+		async.eachLimit(helpers.regions.elb, helpers.MAX_REGIONS_AT_A_TIME, function(region, rcb){
 			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
 
 			// Update the region
@@ -137,7 +137,7 @@ module.exports = {
 					return rcb();
 				}
 
-				async.eachLimit(policies, 20, function(policy, cb){
+				async.eachLimit(policies, 15, function(policy, cb){
 					elb.describeLoadBalancerPolicies({LoadBalancerName: policy.LoadBalancerName, PolicyNames:policy.PolicyNames}, function(err, data){
 						if (err || !data || !data.PolicyDescriptions) {
 							results.push({
