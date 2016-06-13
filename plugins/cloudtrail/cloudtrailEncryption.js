@@ -9,7 +9,6 @@ module.exports = {
 	more_info: 'CloudTrail log files contain sensitive information about an account and should be encrypted at risk for additional protection.',
 	recommended_action: 'Enable CloudTrail log encryption through the CloudTrail console or API',
 	link: 'http://docs.aws.amazon.com/awscloudtrail/latest/userguide/encrypting-cloudtrail-log-files-with-aws-kms.html',
-	cis_benchmark: '2.7',
 
 	run: function(AWSConfig, cache, callback) {
 		var results = [];

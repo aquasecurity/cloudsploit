@@ -9,7 +9,6 @@ module.exports = {
 	more_info: 'Having numerous, unused access keys extends the attack surface. Access keys should be removed if they are no longer being used.',
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/ManagingCredentials.html',
 	recommended_action: 'Log into the IAM portal and remove the offending access key.',
-	cis_benchmark: '1.4',
 
 	run: function(AWSConfig, cache, callback) {
 

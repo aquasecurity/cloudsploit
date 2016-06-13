@@ -9,7 +9,6 @@ module.exports = {
 	more_info: 'The root account should not be used for day-to-day account management. IAM users, roles, and groups should be used instead.',
 	link: 'http://docs.aws.amazon.com/general/latest/gr/root-vs-iam.html',
 	recommended_action: 'Create IAM users with appropriate group-level permissions for account access. Create an MFA token for the root account, and store its password and token generation QR codes in a secure place.',
-	cis_benchmark: '1.1',
 
 	run: function(AWSConfig, cache, callback) {
 

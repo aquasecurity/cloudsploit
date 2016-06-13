@@ -8,7 +8,6 @@ module.exports = {
 	more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
 	recommended_action: 'Enable password expiration for the account',
-	cis_benchmark: '1.11',
 
 	run: function(AWSConfig, cache, callback) {
 		var results = [];

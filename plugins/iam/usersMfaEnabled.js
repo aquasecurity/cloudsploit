@@ -9,7 +9,6 @@ module.exports = {
 	more_info: 'User accounts should have an MFA device setup to enable two-factor authentication',
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
 	recommended_action: 'Enable an MFA device for the user account',
-	cis_benchmark: '1.2',
 
 	run: function(AWSConfig, cache, callback) {
 		var results = [];

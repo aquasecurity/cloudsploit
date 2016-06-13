@@ -9,7 +9,6 @@ module.exports = {
 	more_info: 'All KMS keys should have key rotation enabled. AWS will handle the rotation of the encryption key itself, as well as storage of previous keys, so previous data does not need to be re-encrypted before the rotation occurs.',
 	recommended_action: 'Enable yearly rotation for the KMS key',
 	link: 'http://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html',
-	cis_benchmark: '2.8',
 
 	run: function(AWSConfig, cache, callback) {
 		var results = [];

@@ -9,7 +9,6 @@ module.exports = {
 	more_info: 'VPC flow logs record all traffic flowing in to and out of a VPC. These logs are critical for auditing and review after security incidents.',
 	link: 'http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/flow-logs.html',
 	recommended_action: 'Enable VPC flow logs for each VPC',
-	cis_benchmark: '4.3',
 
 	run: function(AWSConfig, cache, callback) {
 		var results = [];

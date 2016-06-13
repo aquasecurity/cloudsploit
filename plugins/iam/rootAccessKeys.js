@@ -9,7 +9,6 @@ module.exports = {
 	more_info: 'The root account should avoid using access keys. Since the root account has full permissions across the entire account, creating access keys for it only increases the chance that they are compromised. Instead, create IAM users with pre-defined roles.',
 	link: 'http://docs.aws.amazon.com/general/latest/gr/managing-aws-access-keys.html',
 	recommended_action: 'Remove access keys for the root account and setup IAM users with limited permissions instead',
-	cis_benchmark: '1.12',
 
 	run: function(AWSConfig, cache, callback) {
 

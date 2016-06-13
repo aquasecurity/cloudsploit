@@ -9,7 +9,6 @@ module.exports = {
 	more_info: 'CloudTrail should be enabled for all regions in order to detect suspicious activity in regions that are not typically used.',
 	recommended_action: 'Enable CloudTrail for all regions and ensure that at least one region monitors global service events',
 	link: 'http://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-getting-started.html',
-	cis_benchmark: '2.1',
 
 	run: function(AWSConfig, cache, callback) {
 		var results = [];
