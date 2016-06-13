@@ -115,6 +115,10 @@ To run a security report, add the `--security-report` argument.
 node index.js --security-report
 ```
 
+## Optional Plugins
+
+Some plugins require additional permissions not outlined above. Since their required IAM permissions are not included in the `SecurityAudit` managed policy, these plugins are not included in the `exports.js` file by default. To enable these plugins, uncomment them from the `exports.js` file, add the policies required to an inline IAM policy, and re-run the scan.
+
 ## Writing a Plugin
 Writing a plugin is very simple, but must follow several rules:
 
