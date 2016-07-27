@@ -49,34 +49,45 @@ module.exports = {
 					
 					var difference = helpers.functions.daysBetween(then, now);
 
-					if (difference > 45) {
-						results.push({
-							status: 0,
-							message: 'Certificate: ' + data.ServerCertificateMetadataList[i].ServerCertificateName + ' expires in ' + Math.abs(difference) + ' days',
-							region: 'global',
-							resource: data.ServerCertificateMetadataList[i].Arn
-						});
-					} else if (difference > 30) {
-						results.push({
-							status: 1,
-							message: 'Certificate: ' + data.ServerCertificateMetadataList[i].ServerCertificateName + ' expires in ' + Math.abs(difference) + ' days',
-							region: 'global',
-							resource: data.ServerCertificateMetadataList[i].Arn
-						});
-					} else if (difference > 0) {
-						results.push({
-							status: 2,
-							message: 'Certificate: ' + data.ServerCertificateMetadataList[i].ServerCertificateName + ' expires in ' + Math.abs(difference) + ' days',
-							region: 'global',
-							resource: data.ServerCertificateMetadataList[i].Arn
-						});
-					} else {
+					// Expired already
+					if (then < now) {
 						results.push({
 							status: 2,
 							message: 'Certificate: ' + data.ServerCertificateMetadataList[i].ServerCertificateName + ' expired ' + Math.abs(difference) + ' days ago',
 							region: 'global',
 							resource: data.ServerCertificateMetadataList[i].Arn
 						});
+					} else {
+						// Expires in the future
+						if (difference > 45) {
+							results.push({
+								status: 0,
+								message: 'Certificate: ' + data.ServerCertificateMetadataList[i].ServerCertificateName + ' expires in ' + Math.abs(difference) + ' days',
+								region: 'global',
+								resource: data.ServerCertificateMetadataList[i].Arn
+							});
+						} else if (difference > 30) {
+							results.push({
+								status: 1,
+								message: 'Certificate: ' + data.ServerCertificateMetadataList[i].ServerCertificateName + ' expires in ' + Math.abs(difference) + ' days',
+								region: 'global',
+								resource: data.ServerCertificateMetadataList[i].Arn
+							});
+						} else if (difference > 0) {
+							results.push({
+								status: 2,
+								message: 'Certificate: ' + data.ServerCertificateMetadataList[i].ServerCertificateName + ' expires in ' + Math.abs(difference) + ' days',
+								region: 'global',
+								resource: data.ServerCertificateMetadataList[i].Arn
+							});
+						} else {
+							results.push({
+								status: 2,
+								message: 'Certificate: ' + data.ServerCertificateMetadataList[i].ServerCertificateName + ' expired ' + Math.abs(difference) + ' days ago',
+								region: 'global',
+								resource: data.ServerCertificateMetadataList[i].Arn
+							});
+						}
 					}
 				}
 			}
