@@ -68,6 +68,7 @@ WARNING: This policy will likely change as more plugins are written. If a test r
     {
       "Action": [
             "cloudtrail:DescribeTrails",
+            "cloudfront:ListDistributions",
             "s3:GetBucketVersioning",
             "s3:ListAllMyBuckets",
             "s3:GetBucketAcl",
