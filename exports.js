@@ -1,6 +1,8 @@
 // Export all available scans
 
 module.exports = {
+	'publicS3Origin'				: require(__dirname + '/plugins/cloudfront/publicS3Origin.js'),
+
 	'cloudtrailBucketAccessLogging'	: require(__dirname + '/plugins/cloudtrail/cloudtrailBucketAccessLogging.js'),
 	'cloudtrailBucketDelete'		: require(__dirname + '/plugins/cloudtrail/cloudtrailBucketDelete.js'),
 	'cloudtrailEnabled'				: require(__dirname + '/plugins/cloudtrail/cloudtrailEnabled.js'),
