@@ -74,9 +74,9 @@ module.exports = {
 						resource: distribution.DomainName,
 						region: 'global'
 					});
-
-					cb();
 				}
+
+				cb();
 
 			}, function(){
 				callback(null, results);
