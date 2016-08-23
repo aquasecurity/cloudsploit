@@ -40,49 +40,77 @@ module.exports = {
 				return callback(null, results);
 			}
 
+			// A hack to query buckets in non-standard US region
+			var retryRegion = function(bucket, rrCb) {
+				s3.getBucketLocation({Bucket: bucket}, function(err, data){
+					if (err) return rrCb(err);
+					if (!data || !data.LocationConstraint) return rrCb('Unable to locate region');
+					if (data.LocationConstraint == 'EU') data.LocationConstraint = 'eu-west-1';
+
+					var altAWSConfig = JSON.parse(JSON.stringify(LocalAWSConfig));
+					altAWSConfig.region = data.LocationConstraint;
+					var s3Alt = new AWS.S3(altAWSConfig);
+
+					s3Alt.getBucketAcl({Bucket:bucket}, function(aclErr, aclData){
+						if (aclErr) return rrCb(aclErr);
+						rrCb(null, aclData);
+					});
+				});
+			};
+
 			async.eachLimit(data.Buckets, 20, function(bucket, cb){
-				s3.getBucketAcl({Bucket:bucket.Name}, function(err, data){
-					if (err || !data) {
-						results.push({
-							status: 3,
-							message: 'Error querying for bucket policy for bucket: ' + bucket.Name,
-							region: 'global',
-							resource: 'arn:aws:s3:::' + bucket.Name
-						});
+				s3.getBucketAcl({Bucket:bucket.Name}, function(getErr, getData){
+					var handleData = function(err, data) {
+						if (err || !data) {
+							results.push({
+								status: 3,
+								message: 'Error querying for bucket policy for bucket: ' + bucket.Name,
+								region: 'global',
+								resource: 'arn:aws:s3:::' + bucket.Name
+							});
 
-						return cb();
-					}
-
-					var allowsAllUsersTypes = [];
-
-					for (i in data.Grants) {
-						if (data.Grants[i].Grantee.Type &&
-							data.Grants[i].Grantee.Type === 'Group' &&
-							data.Grants[i].Grantee.URI &&
-							data.Grants[i].Grantee.URI.indexOf('AllUsers') > -1 &&
-							data.Grants[i].Permission &&
-							data.Grants[i].Permission !== 'READ'
-						) {
-							allowsAllUsersTypes.push(data.Grants[i].Permission);
+							return cb();
 						}
-					}
 
-					if (allowsAllUsersTypes.length) {
-						results.push({
-							status: 2,
-							message: 'Bucket: ' + bucket.Name + ' allows global access to: ' + allowsAllUsersTypes.concat(', '),
-							region: 'global',
-							resource: 'arn:aws:s3:::' + bucket.Name
+						var allowsAllUsersTypes = [];
+
+						for (i in data.Grants) {
+							if (data.Grants[i].Grantee.Type &&
+								data.Grants[i].Grantee.Type === 'Group' &&
+								data.Grants[i].Grantee.URI &&
+								data.Grants[i].Grantee.URI.indexOf('AllUsers') > -1 &&
+								data.Grants[i].Permission &&
+								data.Grants[i].Permission !== 'READ'
+							) {
+								allowsAllUsersTypes.push(data.Grants[i].Permission);
+							}
+						}
+
+						if (allowsAllUsersTypes.length) {
+							results.push({
+								status: 2,
+								message: 'Bucket: ' + bucket.Name + ' allows global access to: ' + allowsAllUsersTypes.concat(', '),
+								region: 'global',
+								resource: 'arn:aws:s3:::' + bucket.Name
+							});
+						} else {
+							results.push({
+								status: 0,
+								message: 'Bucket: ' + bucket.Name + ' does not allow global write or read ACL access',
+								region: 'global',
+								resource: 'arn:aws:s3:::' + bucket.Name
+							});
+						}
+						cb();
+					};
+
+					if (getErr && getErr.code && getErr.code === 'PermanentRedirect') {
+						retryRegion(bucket.Name, function(retryErr, retryData){
+							handleData(retryErr, retryData);
 						});
 					} else {
-						results.push({
-							status: 0,
-							message: 'Bucket: ' + bucket.Name + ' does not allow global write or read ACL access',
-							region: 'global',
-							resource: 'arn:aws:s3:::' + bucket.Name
-						});
+						handleData(getErr, getData);
 					}
-					cb();
 				});
 			}, function(){
 				callback(null, results);
