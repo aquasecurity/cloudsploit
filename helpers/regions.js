@@ -8,7 +8,8 @@ var regions = [
 	'ap-southeast-2',	// Asia Pacific (Sydney)
 	'eu-central-1',		// EU (Frankfurt)
 	'eu-west-1',		// EU (Ireland)
-	'sa-east-1'			// South America (São Paulo)
+	'sa-east-1',		// South America (São Paulo)
+	'ap-south-1'		// Mumbai
 ];
 
 module.exports = {
