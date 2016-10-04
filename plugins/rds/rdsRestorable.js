@@ -20,59 +20,128 @@ module.exports = {
 			LocalAWSConfig.region = region;
 			var rds = new AWS.RDS(LocalAWSConfig);
 
-			helpers.cache(cache, rds, 'describeDBInstances', function(err, data) {
-				if (err || !data || !data.DBInstances) {
-					results.push({
-						status: 3,
-						message: 'Unable to query for RDS instances',
-						region: region
-					});
+			async.waterfall([
+				// Query for regular instances
+				function(pcb) {
+					helpers.cache(cache, rds, 'describeDBInstances', function(err, data) {
+						var clustersPresent = false;
 
-					return rcb();
-				}
+						if (err || !data || !data.DBInstances) {
+							results.push({
+								status: 3,
+								message: 'Unable to query for RDS instances',
+								region: region
+							});
 
-				if (!data.DBInstances.length) {
-					results.push({
-						status: 0,
-						message: 'No RDS instances found',
-						region: region
-					});
-
-					return rcb();
-				}
-
-				for (i in data.DBInstances) {
-					// For resource, attempt to use the endpoint address (more specific) but fallback to the instance identifier
-					var dbResource = (data.DBInstances[i].Endpoint && data.DBInstances[i].Endpoint.Address) ? data.DBInstances[i].Endpoint.Address : data.DBInstances[i].DBInstanceIdentifier;
-
-					if (data.DBInstances[i].LatestRestorableTime) {
-						var difference = helpers.functions.daysAgo(data.DBInstances[i].LatestRestorableTime);
-
-						var statusObj = {
-							status: 0,
-							message: 'RDS instance restorable time is ' + difference + ' hours old',
-							resource: dbResource,
-							region: region
-						};
-
-						if (difference > 24) {
-							statusObj.status = 2;
-						} else if (difference > 6) {
-							statusObj.status = 1;
+							return pcb(null, clustersPresent);
 						}
 
-						results.push(statusObj);
-					} else if (!data.DBInstances[i].ReadReplicaSourceDBInstanceIdentifier) {
-						// Apply rule to everything else except Read replicas
-						results.push({
-							status: 2,
-							message: 'RDS instance does not have a restorable time',
-							resource: dbResource,
-							region: region
-						});
-					}
+						if (!data.DBInstances.length) {
+							results.push({
+								status: 0,
+								message: 'No RDS instances found',
+								region: region
+							});
+
+							return pcb(null, clustersPresent);
+						}
+
+						for (i in data.DBInstances) {
+							// Aurora databases do not list the restore information in this API call
+							if (data.DBInstances[i].Engine && data.DBInstances[i].Engine === 'aurora') {
+								clustersPresent = true;
+								continue;
+							}
+
+							// For resource, attempt to use the endpoint address (more specific) but fallback to the instance identifier
+							var dbResource = (data.DBInstances[i].Endpoint && data.DBInstances[i].Endpoint.Address) ? data.DBInstances[i].Endpoint.Address : data.DBInstances[i].DBInstanceIdentifier;
+
+							if (data.DBInstances[i].LatestRestorableTime) {
+								var difference = helpers.functions.daysAgo(data.DBInstances[i].LatestRestorableTime);
+
+								var statusObj = {
+									status: 0,
+									message: 'RDS instance restorable time is ' + difference + ' hours old',
+									resource: dbResource,
+									region: region
+								};
+
+								if (difference > 24) {
+									statusObj.status = 2;
+								} else if (difference > 6) {
+									statusObj.status = 1;
+								}
+
+								results.push(statusObj);
+							} else if (!data.DBInstances[i].ReadReplicaSourceDBInstanceIdentifier) {
+								// Apply rule to everything else except Read replicas
+								results.push({
+									status: 2,
+									message: 'RDS instance does not have a restorable time',
+									resource: dbResource,
+									region: region
+								});
+							}
+						}
+						
+						pcb(null, clustersPresent);
+					});
+				},
+				// Query for cluster instances
+				function(clustersPresent, pcb) {
+					if (!clustersPresent) return pcb();
+
+					helpers.cache(cache, rds, 'describeDBClusters', function(err, data) {
+						if (err || !data || !data.DBClusters) {
+							results.push({
+								status: 3,
+								message: 'Unable to query for RDS clusters',
+								region: region
+							});
+
+							return pcb();
+						}
+
+						if (!data.DBClusters.length) {
+							return pcb();
+						}
+
+						for (i in data.DBClusters) {
+							
+							// For resource, attempt to use the endpoint address (more specific) but fallback to the instance identifier
+							var dbResource = (data.DBClusters[i].Endpoint && data.DBClusters[i].Endpoint.Address) ? data.DBClusters[i].Endpoint.Address : data.DBClusters[i].DBClusterIdentifier;
+
+							if (data.DBClusters[i].LatestRestorableTime) {
+								var difference = helpers.functions.daysAgo(data.DBClusters[i].LatestRestorableTime);
+
+								var statusObj = {
+									status: 0,
+									message: 'RDS cluster restorable time is ' + difference + ' hours old',
+									resource: dbResource,
+									region: region
+								};
+
+								if (difference > 24) {
+									statusObj.status = 2;
+								} else if (difference > 6) {
+									statusObj.status = 1;
+								}
+
+								results.push(statusObj);
+							} else {
+								results.push({
+									status: 2,
+									message: 'RDS cluster does not have a restorable time',
+									resource: dbResource,
+									region: region
+								});
+							}
+						}
+						
+						pcb();
+					});
 				}
-				
+			], function(){
 				rcb();
 			});
 		}, function(){
