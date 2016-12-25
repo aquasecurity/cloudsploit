@@ -26,7 +26,7 @@ if (securityReport) {
 }
 
 async.forEachOfLimit(plugins, 10, function(plugin, key, callback){
-    plugin.run(AWSConfig, cache, function(err, results){
+    plugin.run(AWSConfig, cache, false, function(err, results){
         var benchmarkStatus = 'PASS';
         for (r in results) {
             var statusWord;

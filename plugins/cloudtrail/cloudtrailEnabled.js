@@ -10,8 +10,9 @@ module.exports = {
 	recommended_action: 'Enable CloudTrail for all regions and ensure that at least one region monitors global service events',
 	link: 'http://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-getting-started.html',
 
-	run: function(AWSConfig, cache, callback) {
+	run: function(AWSConfig, cache, includeSource, callback) {
 		var results = [];
+		var source = {};
 
 		var globalServicesMonitored = false;
 
@@ -23,6 +24,8 @@ module.exports = {
 			var cloudtrail = new AWS.CloudTrail(LocalAWSConfig);
 
 			helpers.cache(cache, cloudtrail, 'describeTrails', function(err, data) {
+				if (includeSource) source[region] = {error: err, data: data};
+
 				if (err) {
 					results.push({
 						status: 3,
@@ -84,7 +87,7 @@ module.exports = {
 				});
 			}
 
-			return callback(null, results);
+			return callback(null, results, source);
 		});
 	}
 };

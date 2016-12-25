@@ -10,8 +10,9 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithAutomatedBackups.html',
 	recommended_action: 'Enable automated backups for the RDS instance',
 
-	run: function(AWSConfig, cache, callback) {
+	run: function(AWSConfig, cache, includeSource, callback) {
 		var results = [];
+		var source = {};
 
 		async.eachLimit(helpers.regions.rds, helpers.MAX_REGIONS_AT_A_TIME, function(region, rcb){
 			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
@@ -21,6 +22,8 @@ module.exports = {
 			var rds = new AWS.RDS(LocalAWSConfig);
 
 			helpers.cache(cache, rds, 'describeDBInstances', function(err, data) {
+				if (includeSource) source[region] = {error: err, data: data};
+				
 				if (err || !data || !data.DBInstances) {
 					results.push({
 						status: 3,
@@ -72,7 +75,7 @@ module.exports = {
 				rcb();
 			});
 		}, function(){
-			callback(null, results);
+			callback(null, results, source);
 		});
 	}
 };

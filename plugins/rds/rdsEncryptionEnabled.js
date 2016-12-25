@@ -10,8 +10,9 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html',
 	recommended_action: 'RDS does not currently allow modifications to encryption after the instance has been launched, so a new instance will need to be created with encryption enabled.',
 
-	run: function(AWSConfig, cache, callback) {
+	run: function(AWSConfig, cache, includeSource, callback) {
 		var results = [];
+		var source = {};
 
 		async.eachLimit(helpers.regions.rds, helpers.MAX_REGIONS_AT_A_TIME, function(region, rcb){
 			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
@@ -21,6 +22,8 @@ module.exports = {
 			var rds = new AWS.RDS(LocalAWSConfig);
 
 			helpers.cache(cache, rds, 'describeDBInstances', function(err, data) {
+				if (includeSource) source[region] = {error: err, data: data};
+				
 				if (err || !data || !data.DBInstances) {
 					results.push({
 						status: 3,
@@ -66,7 +69,7 @@ module.exports = {
 				rcb();
 			});
 		}, function(){
-			callback(null, results);
+			callback(null, results, source);
 		});
 	}
 };

@@ -10,9 +10,10 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/ManagingCredentials.html',
 	recommended_action: 'To rotate an access key, first create a new key, replace the key and secret throughout your app or scripts, then set the previous key to disabled. Once you ensure that no services are broken, then fully delete the old key.',
 
-	run: function(AWSConfig, cache, callback) {
+	run: function(AWSConfig, cache, includeSource, callback) {
 
 		var results = [];
+		var source = {};
 
 		var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
 
@@ -22,6 +23,8 @@ module.exports = {
 		var iam = new AWS.IAM(LocalAWSConfig);
 
 		helpers.functions.waitForCredentialReport(iam, function(err, data){
+			if (includeSource) source.global = {error: err, data: []};
+
 			if (err || !data || !data.Content) {
 				results.push({
 					status: 3,
@@ -29,7 +32,7 @@ module.exports = {
 					region: 'global'
 				});
 
-				return callback(null, results);
+				return callback(null, results, source);
 			}
 
 			try {
@@ -42,8 +45,10 @@ module.exports = {
 					region: 'global'
 				});
 
-				return callback(null, results);
+				return callback(null, results, source);
 			}
+
+			if (includeSource) source.global.data = csvRows;
 
 			if (csvRows.length <= 2) {
 				// The only user is the root user
@@ -53,7 +58,7 @@ module.exports = {
 					region: 'global'
 				});
 
-				return callback(null, results);
+				return callback(null, results, source);
 			}
 
 			for (r in csvRows) {
@@ -118,7 +123,7 @@ module.exports = {
 				});
 			}
 
-			callback(null, results);
+			callback(null, results, source);
 		});
 	}
 };

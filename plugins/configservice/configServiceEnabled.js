@@ -10,8 +10,9 @@ module.exports = {
 	recommended_action: 'Enable the AWS Config Service for all regions and resources in an account. Ensure that it is properly recording and delivering logs.',
 	link: 'https://aws.amazon.com/config/details/',
 
-	run: function(AWSConfig, cache, callback) {
+	run: function(AWSConfig, cache, includeSource, callback) {
 		var results = [];
+		var source = {};
 
 		var globalServicesMonitored = false;
 
@@ -25,7 +26,11 @@ module.exports = {
 			async.parallel([
 				// See if global services are monitored
 				function(pcb) {
+					if (includeSource) source['describeConfigurationRecorders'] = {};
+
 					helpers.cache(cache, configservice, 'describeConfigurationRecorders', function(err, data) {
+						if (includeSource) source['describeConfigurationRecorders'][region] = {error: err, data: data};
+
 						if (data &&
 							data.ConfigurationRecorders &&
 							data.ConfigurationRecorders[0] &&
@@ -39,7 +44,11 @@ module.exports = {
 				},
 				// Look up API response that returns whether the config service is recording
 				function(pcb) {
+					if (includeSource) source['describeConfigurationRecorderStatus'] = {};
+
 					helpers.cache(cache, configservice, 'describeConfigurationRecorderStatus', function(err, data) {
+						if (includeSource) source['describeConfigurationRecorderStatus'][region] = {error: err, data: data};
+
 						if (err || !data || !data.ConfigurationRecordersStatus) {
 							results.push({
 								status: 3,
@@ -104,7 +113,7 @@ module.exports = {
 				});
 			}
 
-			return callback(null, results);
+			return callback(null, results, source);
 		});
 	}
 };

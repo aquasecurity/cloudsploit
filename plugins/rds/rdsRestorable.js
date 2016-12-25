@@ -10,8 +10,9 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_PIT.html',
 	recommended_action: 'Ensure the instance is running and configured properly. If the time drifts too far, consider opening a support ticket with AWS.',
 
-	run: function(AWSConfig, cache, callback) {
+	run: function(AWSConfig, cache, includeSource, callback) {
 		var results = [];
+		var source = {};
 
 		async.eachLimit(helpers.regions.rds, helpers.MAX_REGIONS_AT_A_TIME, function(region, rcb){
 			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
@@ -23,7 +24,12 @@ module.exports = {
 			async.waterfall([
 				// Query for regular instances
 				function(pcb) {
+					if (includeSource) source['describeDBInstances'] = {};
+					if (includeSource) source['describeDBClusters'] = {};
+
 					helpers.cache(cache, rds, 'describeDBInstances', function(err, data) {
+						if (includeSource) source['describeDBInstances'][region] = {error: err, data: data};
+
 						var clustersPresent = false;
 
 						if (err || !data || !data.DBInstances) {
@@ -92,6 +98,8 @@ module.exports = {
 					if (!clustersPresent) return pcb();
 
 					helpers.cache(cache, rds, 'describeDBClusters', function(err, data) {
+						if (includeSource) source['describeDBClusters'][region] = {error: err, data: data};
+						
 						if (err || !data || !data.DBClusters) {
 							results.push({
 								status: 3,
@@ -145,7 +153,7 @@ module.exports = {
 				rcb();
 			});
 		}, function(){
-			callback(null, results);
+			callback(null, results, source);
 		});
 	}
 };

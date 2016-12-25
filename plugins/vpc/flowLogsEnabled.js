@@ -10,8 +10,12 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/flow-logs.html',
 	recommended_action: 'Enable VPC flow logs for each VPC',
 
-	run: function(AWSConfig, cache, callback) {
+	run: function(AWSConfig, cache, includeSource, callback) {
 		var results = [];
+		var source = {};
+
+		if (includeSource) source['describeVpcs'] = {};
+		if (includeSource) source['describeFlowLogs'] = {};
 
 		async.eachLimit(helpers.regions.flowlogs, helpers.MAX_REGIONS_AT_A_TIME, function(region, rcb){
 			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
@@ -21,6 +25,8 @@ module.exports = {
 			var ec2 = new AWS.EC2(LocalAWSConfig);
 
 			helpers.cache(cache, ec2, 'describeVpcs', function(err, data) {
+				if (includeSource) source['describeVpcs'][region] = {error: err, data: data};
+
 				if (err || !data || !data.Vpcs) {
 					results.push({
 						status: 3,
@@ -51,6 +57,7 @@ module.exports = {
 
 				// Now lookup flow logs and map to VPCs
 				helpers.cache(cache, ec2, 'describeFlowLogs', function(flErr, flData) {
+					if (includeSource) source['describeFlowLogs'][region] = {error: flErr, data: flData};
 
 					if (flErr || !flData || !flData.FlowLogs) {
 						console.log(flErr);
@@ -111,7 +118,7 @@ module.exports = {
 				});
 			});
 		}, function(){
-			callback(null, results);
+			callback(null, results, source);
 		});
 	}
 };

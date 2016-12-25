@@ -9,8 +9,9 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-transfer-from-route-53.html',
 	recommended_action: 'Enable the transfer lock for the domain',
 
-	run: function(AWSConfig, cache, callback) {
+	run: function(AWSConfig, cache, includeSource, callback) {
 		var results = [];
+		var source = {};
 
 		var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
 
@@ -20,6 +21,8 @@ module.exports = {
 		var route53domains = new AWS.Route53Domains(LocalAWSConfig);
 
 		helpers.cache(cache, route53domains, 'listDomains', function(err, data) {
+			if (includeSource) source.global = {error: err, data: data};
+			
 			if (err || !data || !data.Domains) {
 				results.push({
 					status: 3,
@@ -27,7 +30,7 @@ module.exports = {
 					region: 'global'
 				});
 
-				return callback(null, results);
+				return callback(null, results, source);
 			}
 
 			if (!data.Domains.length) {
@@ -37,7 +40,7 @@ module.exports = {
 					region: 'global'
 				});
 
-				return callback(null, results);
+				return callback(null, results, source);
 			}
 
 			for (i in data.Domains) {
@@ -59,7 +62,7 @@ module.exports = {
 				}
 			}
 
-			callback(null, results);
+			callback(null, results, source);
 		});
 	}
 };

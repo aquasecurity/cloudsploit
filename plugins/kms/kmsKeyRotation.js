@@ -10,8 +10,9 @@ module.exports = {
 	recommended_action: 'Enable yearly rotation for the KMS key',
 	link: 'http://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html',
 
-	run: function(AWSConfig, cache, callback) {
+	run: function(AWSConfig, cache, includeSource, callback) {
 		var results = [];
+		var source = {};
 
 		async.eachLimit(helpers.regions.kms, helpers.MAX_REGIONS_AT_A_TIME, function(region, rcb){
 			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
@@ -21,6 +22,8 @@ module.exports = {
 			var kms = new AWS.KMS(LocalAWSConfig);
 
 			kms.listKeys({Limit: 1000}, function(listKeysErr, listKeysData){
+				if (includeSource) source.global = {error: listKeysErr, data: listKeysData};
+				
 				if (listKeysErr || !listKeysData) {
 					results.push({
 						status: 3,
@@ -96,7 +99,7 @@ module.exports = {
 				});
 			});
 		}, function(){
-			callback(null, results);
+			callback(null, results, source);
 		});
 	}
 };

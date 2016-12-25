@@ -10,9 +10,9 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/general/latest/gr/managing-aws-access-keys.html',
 	recommended_action: 'Enable an MFA device for the root account and then use an IAM user for managing services',
 
-	run: function(AWSConfig, cache, callback) {
-
+	run: function(AWSConfig, cache, includeSource, callback) {
 		var results = [];
+		var source = {};
 
 		var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
 
@@ -22,6 +22,8 @@ module.exports = {
 		var iam = new AWS.IAM(LocalAWSConfig);
 
 		helpers.functions.waitForCredentialReport(iam, function(err, data){
+			if (includeSource) source.global = {error: err, data: []};
+
 			if (err || !data || !data.Content) {
 				results.push({
 					status: 3,
@@ -29,7 +31,7 @@ module.exports = {
 					region: 'global'
 				});
 
-				return callback(null, results);
+				return callback(null, results, source);
 			}
 
 			try {
@@ -42,8 +44,10 @@ module.exports = {
 					region: 'global'
 				});
 
-				return callback(null, results);
+				return callback(null, results, source);
 			}
+
+			if (includeSource) source.global.data = csvRows;
 
 			for (r in csvRows) {
 				if (r == 0) { continue; }	// Skip the header row
@@ -84,7 +88,7 @@ module.exports = {
 				});
 			}
 
-			callback(null, results);
+			callback(null, results, source);
 		});
 	}
 };
