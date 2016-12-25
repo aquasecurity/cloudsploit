@@ -10,8 +10,9 @@ module.exports = {
 	recommended_action: 'Set the S3 bucket access policy for all CloudTrail buckets to only allow known users to access its files.',
 	link: 'http://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket-policies.html',
 
-	run: function(AWSConfig, cache, callback) {
+	run: function(AWSConfig, cache, includeSource, callback) {
 		var results = [];
+		var source = {};
 
 		async.eachLimit(helpers.regions.cloudtrail, helpers.MAX_REGIONS_AT_A_TIME, function(region, rcb){
 			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
@@ -21,6 +22,8 @@ module.exports = {
 			var cloudtrail = new AWS.CloudTrail(LocalAWSConfig);
 
 			helpers.cache(cache, cloudtrail, 'describeTrails', function(err, data) {
+				if (includeSource) source[region] = {error: err, data: data};
+
 				if (err) {
 					results.push({
 						status: 3,
@@ -102,7 +105,7 @@ module.exports = {
 				}
 			});
 		}, function(){
-			callback(null, results);
+			callback(null, results, source);
 		});
 	}
 };

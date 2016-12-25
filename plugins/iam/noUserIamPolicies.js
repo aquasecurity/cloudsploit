@@ -10,8 +10,9 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#use-groups-for-permissions',
 	recommended_action: 'Create groups with the required policies, move the IAM users to the applicable groups, and then remove the inline and directly attached policies from the IAM user.',
 
-	run: function(AWSConfig, cache, callback) {
+	run: function(AWSConfig, cache, includeSource, callback) {
 		var results = [];
+		var source = {};
 		
 		var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
 
@@ -21,6 +22,8 @@ module.exports = {
 		var iam = new AWS.IAM(LocalAWSConfig);
 
 		helpers.cache(cache, iam, 'listUsers', function(err, data) {
+			if (includeSource) source.global = {error: err, data: data};
+			
 			if (err || !data || !data.Users) {
 				results.push({
 					status: 3,
@@ -28,7 +31,7 @@ module.exports = {
 					region: 'global'
 				});
 
-				return callback(null, results);
+				return callback(null, results, source);
 			}
 
 			if (!data.Users.length) {
@@ -38,7 +41,7 @@ module.exports = {
 					region: 'global'
 				});
 				
-				return callback(null, results);
+				return callback(null, results, source);
 			}
 
 			async.eachLimit(data.Users, 20, function(user, cb){
@@ -108,7 +111,7 @@ module.exports = {
 						region: 'global'
 					});
 				}
-				callback(null, results);
+				callback(null, results, source);
 			});
 		});
 	}

@@ -10,8 +10,9 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html#default-security-group',
 	recommended_action: 'Update the rules for the default security group to deny all traffic by default',
 
-	run: function(AWSConfig, cache, callback) {
+	run: function(AWSConfig, cache, includeSource, callback) {
 		var results = [];
+		var source = {};
 
 		async.eachLimit(helpers.regions.ec2, helpers.MAX_REGIONS_AT_A_TIME, function(region, rcb){
 			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
@@ -22,6 +23,8 @@ module.exports = {
 
 			// Get the account attributes
 			helpers.cache(cache, ec2, 'describeSecurityGroups', function(err, data) {
+				if (includeSource) source[region] = {error: err, data: data};
+
 				if (err || !data || !data.SecurityGroups) {
 					results.push({
 						status: 3,
@@ -66,7 +69,7 @@ module.exports = {
 				rcb();
 			});
 		}, function(){
-			callback(null, results);
+			callback(null, results, source);
 		});
 	}
 };

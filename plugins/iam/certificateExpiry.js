@@ -10,8 +10,9 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/elb-update-ssl-cert.html',
 	recommended_action: 'Update your certificates before the expiration date',
 
-	run: function(AWSConfig, cache, callback) {
+	run: function(AWSConfig, cache, includeSource, callback) {
 		var results = [];
+		var source = {};
 
 		var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
 
@@ -21,6 +22,8 @@ module.exports = {
 		var iam = new AWS.IAM(LocalAWSConfig);
 
 		helpers.cache(cache, iam, 'listServerCertificates', function(err, data) {
+			if (includeSource) source[region] = {error: err, data: data};
+
 			if (err || !data || !data.ServerCertificateMetadataList) {
 				results.push({
 					status: 3,
@@ -28,7 +31,7 @@ module.exports = {
 					region: 'global'
 				});
 
-				return callback(null, results);
+				return callback(null, results, source);
 			}
 
 			if (!data.ServerCertificateMetadataList.length) {
@@ -38,7 +41,7 @@ module.exports = {
 					region: 'global'
 				});
 
-				return callback(null, results);
+				return callback(null, results, source);
 			}
 
 			var now = new Date();
@@ -92,7 +95,7 @@ module.exports = {
 				}
 			}
 
-			return callback(null, results);
+			return callback(null, results, source);
 		});
 	}
 };

@@ -10,8 +10,9 @@ module.exports = {
 	recommended_action: 'Contact AWS support to increase the number of EIPs available',
 	link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html#using-instance-addressing-limit',
 
-	run: function(AWSConfig, cache, callback) {
+	run: function(AWSConfig, cache, includeSource, callback) {
 		var results = [];
+		var source = {};
 
 		async.eachLimit(helpers.regions.ec2, helpers.MAX_REGIONS_AT_A_TIME, function(region, rcb){
 			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
@@ -26,7 +27,12 @@ module.exports = {
 			};
 
 			// Get the account attributes
+			if (includeSource) source['describeAccountAttributes'] = {};
+			if (includeSource) source['describeAddresses'] = {};
+
 			helpers.cache(cache, ec2, 'describeAccountAttributes', function(err, data) {
+				if (includeSource) source['describeAccountAttributes'][region] = {error: err, data: data};
+
 				if (err || !data || !data.AccountAttributes || !data.AccountAttributes.length) {
 					results.push({
 						status: 3,
@@ -45,6 +51,8 @@ module.exports = {
 				}
 				
 				helpers.cache(cache, ec2, 'describeAddresses', function(err, data) {
+					if (includeSource) source['describeAddresses'][region] = {error: err, data: data};
+					
 					if (err || !data || !data.Addresses) {
 						results.push({
 							status: 3,
@@ -92,7 +100,7 @@ module.exports = {
 				});
 			});
 		}, function(){
-			return callback(null, results);
+			return callback(null, results, source);
 		});
 	}
 };

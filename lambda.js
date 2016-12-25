@@ -41,7 +41,7 @@ var pluginRunner = function(event, context) {
         async.eachLimit(event.plugins, 10, function(pluginToRun, cb){
             console.log('Running: ' + pluginToRun);
             // Run the plugin requested
-            plugins[pluginToRun].run({}, cache, function(err, results){
+            plugins[pluginToRun].run({}, cache, false, function(err, results){
                 if (err) {
                     console.log(err);
                 } else {

@@ -10,8 +10,9 @@ module.exports = {
 	recommended_action: 'Disable global all users policies on all S3 buckets',
 	link: 'http://docs.aws.amazon.com/AmazonS3/latest/UG/EditingBucketPermissions.html',
 
-	run: function(AWSConfig, cache, callback) {
+	run: function(AWSConfig, cache, includeSource, callback) {
 		var results = [];
+		var source = {};
 
 		var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
 
@@ -21,6 +22,8 @@ module.exports = {
 		var s3 = new AWS.S3(LocalAWSConfig);
 
 		helpers.cache(cache, s3, 'listBuckets', function(err, data) {
+			if (includeSource) source.global = {error: err, data: data};
+			
 			if (err || !data || !data.Buckets) {
 				results.push({
 					status: 3,
@@ -28,7 +31,7 @@ module.exports = {
 					region: 'global'
 				});
 
-				return callback(null, results);
+				return callback(null, results, source);
 			}
 
 			if (!data.Buckets.length) {
@@ -37,7 +40,7 @@ module.exports = {
 					message: 'No S3 buckets to check',
 					region: 'global'
 				});
-				return callback(null, results);
+				return callback(null, results, source);
 			}
 
 			// A hack to query buckets in non-standard US region
@@ -113,7 +116,7 @@ module.exports = {
 					}
 				});
 			}, function(){
-				callback(null, results);
+				callback(null, results, source);
 			});
 		});
 	}

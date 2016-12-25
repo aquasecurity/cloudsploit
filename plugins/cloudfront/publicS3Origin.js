@@ -10,9 +10,10 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html',
 	recommended_action: 'Create an origin access identity for CloudFront, then make the contents of the S3 bucket private.',
 
-	run: function(AWSConfig, cache, callback) {
+	run: function(AWSConfig, cache, includeSource, callback) {
 
 		var results = [];
+		var source = {};
 
 		var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
 
@@ -22,6 +23,8 @@ module.exports = {
 		var cloudfront = new AWS.CloudFront(LocalAWSConfig);
 
 		helpers.cache(cache, cloudfront, 'listDistributions', function(err, data) {
+			if (includeSource) source.global = {error: err, data: data};
+
 			if (err || !data || !data.DistributionList) {
 				results.push({
 					status: 3,
@@ -29,7 +32,7 @@ module.exports = {
 					region: 'global'
 				});
 
-				return callback(null, results);
+				return callback(null, results, source);
 			}
 
 			if (!data.DistributionList.Items || !data.DistributionList.Items.length) {
@@ -39,7 +42,7 @@ module.exports = {
 					region: 'global'
 				});
 
-				return callback(null, results);
+				return callback(null, results, source);
 			}
 
 			async.each(data.DistributionList.Items, function(distribution, cb){
@@ -79,7 +82,7 @@ module.exports = {
 				cb();
 
 			}, function(){
-				callback(null, results);
+				callback(null, results, source);
 			});
 		});
 	}

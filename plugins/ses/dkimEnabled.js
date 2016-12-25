@@ -10,8 +10,9 @@ module.exports = {
 	recommended_action: 'Enable DKIM for all domains and addresses in all regions used to send email through SES.',
 	link: 'http://docs.aws.amazon.com/ses/latest/DeveloperGuide/easy-dkim.html',
 
-	run: function(AWSConfig, cache, callback) {
+	run: function(AWSConfig, cache, includeSource, callback) {
 		var results = [];
+		var source = {};
 
 		// AWS limits this API call to 1 per second, perform serially
 		async.eachLimit(helpers.regions.ses, 1, function(region, rcb){
@@ -27,7 +28,12 @@ module.exports = {
 				}, 1000);
 			};
 
+			if (includeSource) source['listIdentities'] = {};
+			if (includeSource) source['getIdentityDkimAttributes'] = {};
+
 			ses.listIdentities({IdentityType: 'Domain'}, function(listErr, listData) {
+				if (includeSource) source['listIdentities'][region] = {error: listErr, data: listData};
+
 				if (listErr || !listData || !listData.Identities) {
 					results.push({
 						status: 3,
@@ -48,7 +54,8 @@ module.exports = {
 
 				// Determine the DKIM status
 				ses.getIdentityDkimAttributes({Identities: listData.Identities}, function(getErr, getData){
-					
+					if (includeSource) source['getIdentityDkimAttributes'][region] = {error: getErr, data: getData};
+
 					if (getErr || !getData || !getData.DkimAttributes) {
 						results.push({
 							status: 3,
@@ -89,7 +96,7 @@ module.exports = {
 				});
 			});
 		}, function(){
-			return callback(null, results);
+			return callback(null, results, source);
 		});
 	}
 };

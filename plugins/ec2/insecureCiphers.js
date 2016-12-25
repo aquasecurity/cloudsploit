@@ -84,8 +84,9 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/elb-security-policy-options.html',
 	recommended_action: 'Update your ELBs to use the reccommended cipher suites',
 
-	run: function(AWSConfig, cache, callback) {
+	run: function(AWSConfig, cache, includeSource, callback) {
 		var results = [];
+		var source = {};
 
 		async.eachLimit(helpers.regions.elb, helpers.MAX_REGIONS_AT_A_TIME, function(region, rcb){
 			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
@@ -95,6 +96,8 @@ module.exports = {
 			var elb = new AWS.ELB(LocalAWSConfig);
 
 			helpers.cache(cache, elb, 'describeLoadBalancers', function(err, data) {
+				if (includeSource) source[region] = {error: err, data: data};
+
 				if (err || !data || !data.LoadBalancerDescriptions) {
 					results.push({
 						status: 3,
@@ -179,7 +182,7 @@ module.exports = {
 				});
 			});
 		}, function(){
-			callback(null, results);
+			callback(null, results, source);
 		});
 	}
 };
