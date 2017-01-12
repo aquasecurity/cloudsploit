@@ -36,7 +36,7 @@ module.exports = {
 			LocalAWSConfig.region = region;
 			var ec2 = new AWS.EC2(LocalAWSConfig);
 
-			helpers.cache(cache, ec2, 'describeInstances', function(err, data) {
+			ec2.describeInstances(params, function(err, data){
 				if (includeSource) source[region] = {error: err, data: data};
 				
 				if (err || !data || !data.Reservations) {
