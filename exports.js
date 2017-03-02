@@ -74,4 +74,9 @@ module.exports = {
 	// OPTIONAL Plugins
 	// These plugins require additional IAM permissions beyond the SecurityAudit managed policy
 	// 'dkimEnabled'					: require(__dirname + '/plugins/ses/dkimEnabled.js'),
+
+	// CUSTOM Plugins
+	// This plug-in has been developed to show customised capabilities of CloudSploit Auditing
+	'vpcHasMultipleSubnets'			: require(__dirname + '/plugins/vpc/multipleSubnets.js'),
+
 };
