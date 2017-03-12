@@ -1,3 +1,5 @@
 ._*
 credentials.json
 node_modules/
+custom.js
+plugins_*
