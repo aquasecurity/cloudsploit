@@ -50,7 +50,7 @@ module.exports = {
 			// A hack to query buckets in non-standard US region
 			var retryRegion = function(bucket, rrCb) {
 				s3.getBucketLocation({Bucket: bucket}, function(err, data){
-					source['getBucketAcl'][bucket] = {error:err,data:data};
+					if (includeSource) source['getBucketAcl'][bucket] = {error:err,data:data};
 
 					if (err) return rrCb(err);
 					if (!data || !data.LocationConstraint) return rrCb('Unable to locate region');
@@ -69,7 +69,7 @@ module.exports = {
 
 			async.eachLimit(data.Buckets, 20, function(bucket, cb){
 				s3.getBucketAcl({Bucket:bucket.Name}, function(getErr, getData){
-					source['getBucketAcl'][bucket.Name] = {error:getErr,data:getData};
+					if (includeSource) source['getBucketAcl'][bucket.Name] = {error:getErr,data:getData};
 
 					var handleData = function(err, data) {
 						if (err || !data) {
