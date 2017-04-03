@@ -18,11 +18,15 @@ module.exports = {
 
 		// Update the region
 		LocalAWSConfig.region = 'us-east-1';
+		LocalAWSConfig.signatureVersion = 'v4';
 
 		var s3 = new AWS.S3(LocalAWSConfig);
 
+		if (includeSource) source['listBuckets'] = {};
+		if (includeSource) source['getBucketAcl'] = {};
+
 		helpers.cache(cache, s3, 'listBuckets', function(err, data) {
-			if (includeSource) source.global = {error: err, data: data};
+			if (includeSource) source['listBuckets'].global = {error: err, data: data};
 			
 			if (err || !data || !data.Buckets) {
 				results.push({
@@ -46,6 +50,8 @@ module.exports = {
 			// A hack to query buckets in non-standard US region
 			var retryRegion = function(bucket, rrCb) {
 				s3.getBucketLocation({Bucket: bucket}, function(err, data){
+					source['getBucketAcl'][bucket] = {error:err,data:data};
+
 					if (err) return rrCb(err);
 					if (!data || !data.LocationConstraint) return rrCb('Unable to locate region');
 					if (data.LocationConstraint == 'EU') data.LocationConstraint = 'eu-west-1';
@@ -63,6 +69,8 @@ module.exports = {
 
 			async.eachLimit(data.Buckets, 20, function(bucket, cb){
 				s3.getBucketAcl({Bucket:bucket.Name}, function(getErr, getData){
+					source['getBucketAcl'][bucket.Name] = {error:getErr,data:getData};
+
 					var handleData = function(err, data) {
 						if (err || !data) {
 							results.push({
