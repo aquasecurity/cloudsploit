@@ -46,6 +46,7 @@ module.exports = {
 					}
 
 					delete AWSConfig.region;	// Remove region for S3-specific endpoints
+					AWSConfig.signatureVersion = 'v4';
 					var s3 = new AWS.S3(AWSConfig);
 
 					async.eachLimit(data.trailList, 10, function(trailList, cb){

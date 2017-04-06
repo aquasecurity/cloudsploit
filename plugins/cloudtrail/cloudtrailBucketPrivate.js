@@ -21,8 +21,11 @@ module.exports = {
 			LocalAWSConfig.region = region;
 			var cloudtrail = new AWS.CloudTrail(LocalAWSConfig);
 
+			if (includeSource) source['describeTrails'] = {};
+			if (includeSource) source['getBucketAcl'] = {};
+
 			helpers.cache(cache, cloudtrail, 'describeTrails', function(err, data) {
-				if (includeSource) source[region] = {error: err, data: data};
+				if (includeSource) source['describeTrails'][region] = {error: err, data: data};
 
 				if (err) {
 					results.push({
@@ -46,11 +49,13 @@ module.exports = {
 					}
 
 					delete AWSConfig.region;	// Remove region for S3-specific endpoints
+					AWSConfig.signatureVersion = 'v4';
 					var s3 = new AWS.S3(AWSConfig);
 
 					async.eachLimit(data.trailList, 10, function(trailList, cb){
 						s3.getBucketAcl({Bucket:trailList.S3BucketName}, function(s3err, s3data){
-
+							if (includeSource) source['getBucketAcl'][trailList.S3BucketName] = {error:s3err,data:s3data};
+							
 							if (s3err || !s3data) {
 								results.push({
 									status: 3,
