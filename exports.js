@@ -71,6 +71,7 @@ module.exports = {
     'classicInstances'              : require(__dirname + '/plugins/vpc/classicInstances.js'),
     'flowLogsEnabled'               : require(__dirname + '/plugins/vpc/flowLogsEnabled.js'),
     'vpcMultipleSubnets'            : require(__dirname + '/plugins/vpc/multipleSubnets.js'),
+    'instanceIamRole'               : require(__dirname + '/plugins/ec2/instanceIamRole.js'),
 
     // OPTIONAL Plugins
     // These plugins require additional IAM permissions beyond the SecurityAudit managed policy
