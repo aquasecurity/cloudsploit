@@ -1,4 +1,3 @@
-var AWS = require('aws-sdk');
 var helpers = require('../../helpers');
 
 module.exports = {
@@ -8,86 +7,54 @@ module.exports = {
 	more_info: 'Expired domains can be lost and reregistered by a third-party.',
 	link: 'http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/registrar.html',
 	recommended_action: 'Reregister the expiring domain',
+	apis: ['Route53Domains:listDomains'],
 
-	run: function(AWSConfig, cache, includeSource, callback) {
+	run: function(cache, callback) {
 		var results = [];
 		var source = {};
 
-		var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+		var region = 'us-east-1';
 
-		// Update the region
-		LocalAWSConfig.region = 'us-east-1';
+		var listDomains = helpers.addSource(cache, source,
+			['route53domains', 'listDomains', region]);
 
-		var route53domains = new AWS.Route53Domains(LocalAWSConfig);
+		if (!listDomains) return callback(null, results, source);
 
-		helpers.cache(cache, route53domains, 'listDomains', function(err, data) {
-			if (includeSource) source.global = {error: err, data: data};
-			
-			if (err || !data || !data.Domains) {
-				results.push({
-					status: 3,
-					message: 'Unable to query for domains',
-					region: 'global'
-				});
+		if (listDomains.err || !listDomains.data) {
+			helpers.addResult(results, 3, 'Unable to query for domains');
+			return callback(null, results, source);
+		}
 
-				return callback(null, results, source);
-			}
+		if (!listDomains.data.length) {
+			helpers.addResult(results, 0, 'No domains registered through Route53');
+			return callback(null, results, source);
+		}
 
-			if (!data.Domains.length) {
-				results.push({
-					status: 0,
-					message: 'No domains registered through Route53',
-					region: 'global'
-				});
+		for (i in listDomains.data) {
+			var domain = listDomains.data[i];
 
-				return callback(null, results, source);
-			}
+			if (domain.Expiry) {
+				var difference = helpers.functions.daysAgo(domain.Expiry);
+				var returnMsg = 'Domain: ' + domain.DomainName + ' expires in ' + difference + ' days';
 
-			for (i in data.Domains) {
-
-				if (data.Domains[i].Expiry) {
-					var difference = helpers.functions.daysAgo(data.Domains[i].Expiry);
-
-					if (difference > 45) {
-						results.push({
-							status: 0,
-							message: 'Domain: ' + data.Domains[i].DomainName + ' expires in ' + difference + ' days',
-							region: 'global',
-							resource: data.Domains[i].DomainName
-						});
-					} else if (difference > 30) {
-						results.push({
-							status: 1,
-							message: 'Domain: ' + data.Domains[i].DomainName + ' expires in ' + difference + ' days',
-							region: 'global',
-							resource: data.Domains[i].DomainName
-						});
-					} else if (difference > 0) {
-						results.push({
-							status: 2,
-							message: 'Domain: ' + data.Domains[i].DomainName + ' expires in ' + difference + ' days',
-							region: 'global',
-							resource: data.Domains[i].DomainName
-						});
-					} else {
-						results.push({
-							status: 2,
-							message: 'Domain: ' + data.Domains[i].DomainName + ' expired ' + difference + ' days ago',
-							region: 'global',
-							resource: data.Domains[i].DomainName
-						});
-					}
+				if (difference > 45) {
+					helpers.addResult(results, 0, returnMsg, 'global', domain.DomainName);
+				} else if (difference > 30) {
+					helpers.addResult(results, 1, returnMsg, 'global', domain.DomainName);
+				} else if (difference > 0) {
+					helpers.addResult(results, 2, returnMsg, 'global', domain.DomainName);
 				} else {
-					results.push({
-						status: 3,
-						message: 'Expiration for domain: ' + data.Domains[i].DomainName + ' could not be determined',
-						resource: data.Domains[i].DomainName,
-						region: 'global'
-					});
+					helpers.addResult(results, 2,
+						'Domain: ' + domain.DomainName + ' expired ' + difference + ' days ago',
+						'global', domain.DomainName);
 				}
+			} else {
+				helpers.addResult(results, 3,
+					'Expiration for domain: ' + domain.DomainName + ' could not be determined',
+					'global', domain.DomainName);
 			}
+		}
 
-			callback(null, results, source);
-		});
+		callback(null, results, source);
 	}
 };

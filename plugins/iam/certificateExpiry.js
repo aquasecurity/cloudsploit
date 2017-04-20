@@ -1,4 +1,3 @@
-var AWS = require('aws-sdk');
 var async = require('async');
 var helpers = require('../../helpers');
 
@@ -9,93 +8,59 @@ module.exports = {
 	more_info: 'Certificates that have expired will trigger warnings in all major browsers',
 	link: 'http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/elb-update-ssl-cert.html',
 	recommended_action: 'Update your certificates before the expiration date',
+	apis: ['IAM:listServerCertificates'],
 
-	run: function(AWSConfig, cache, includeSource, callback) {
+	run: function(cache, callback) {
 		var results = [];
 		var source = {};
 
-		var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+		var region = 'us-east-1';
 
-		// Update the region
-		LocalAWSConfig.region = 'us-east-1';
+		var listServerCertificates = helpers.addSource(cache, source,
+				['iam', 'listServerCertificates', region]);
 
-		var iam = new AWS.IAM(LocalAWSConfig);
+		if (!listServerCertificates) return callback(null, results, source);
 
-		helpers.cache(cache, iam, 'listServerCertificates', function(err, data) {
-			if (includeSource) source[region] = {error: err, data: data};
+		if (listServerCertificates.err || !listServerCertificates.data) {
+			helpers.addResult(results, 3, 'Unable to query for certificates');
+			return callback(null, results, source);
+		}
 
-			if (err || !data || !data.ServerCertificateMetadataList) {
-				results.push({
-					status: 3,
-					message: 'Unable to query for certificates',
-					region: 'global'
-				});
+		if (!listServerCertificates.data.length) {
+			helpers.addResult(results, 0, 'No certificates found');
+			return callback(null, results, source);
+		}
 
-				return callback(null, results, source);
-			}
+		var now = new Date();
 
-			if (!data.ServerCertificateMetadataList.length) {
-				results.push({
-					status: 0,
-					message: 'No certificates found',
-					region: 'global'
-				});
+		for (i in listServerCertificates.data) {
+			if (listServerCertificates.data[i].ServerCertificateName && listServerCertificates.data[i].Expiration) {
+				var certificate = listServerCertificates.data[i];
 
-				return callback(null, results, source);
-			}
+				var then = new Date(certificate.Expiration);
+				
+				var difference = helpers.functions.daysBetween(then, now);
+				var expiresInMsg = 'Certificate: ' + certificate.ServerCertificateName + ' expires in ' + Math.abs(difference) + ' days';
+				var expiredMsg = 'Certificate: ' + certificate.ServerCertificateName + ' expired ' + Math.abs(difference) + ' days ago';
 
-			var now = new Date();
-
-			for (i in data.ServerCertificateMetadataList) {
-				if (data.ServerCertificateMetadataList[i].ServerCertificateName && data.ServerCertificateMetadataList[i].Expiration) {
-					var then = new Date(data.ServerCertificateMetadataList[i].Expiration);
-					
-					var difference = helpers.functions.daysBetween(then, now);
-
-					// Expired already
-					if (then < now) {
-						results.push({
-							status: 2,
-							message: 'Certificate: ' + data.ServerCertificateMetadataList[i].ServerCertificateName + ' expired ' + Math.abs(difference) + ' days ago',
-							region: 'global',
-							resource: data.ServerCertificateMetadataList[i].Arn
-						});
+				// Expired already
+				if (then < now) {
+					helpers.addResult(results, 2, expiredMsg, 'global', certificate.Arn);
+				} else {
+					// Expires in the future
+					if (difference > 45) {
+						helpers.addResult(results, 0, expiresInMsg, 'global', certificate.Arn);
+					} else if (difference > 30) {
+						helpers.addResult(results, 1, expiresInMsg, 'global', certificate.Arn);
+					} else if (difference > 0) {
+						helpers.addResult(results, 2, expiresInMsg, 'global', certificate.Arn);
 					} else {
-						// Expires in the future
-						if (difference > 45) {
-							results.push({
-								status: 0,
-								message: 'Certificate: ' + data.ServerCertificateMetadataList[i].ServerCertificateName + ' expires in ' + Math.abs(difference) + ' days',
-								region: 'global',
-								resource: data.ServerCertificateMetadataList[i].Arn
-							});
-						} else if (difference > 30) {
-							results.push({
-								status: 1,
-								message: 'Certificate: ' + data.ServerCertificateMetadataList[i].ServerCertificateName + ' expires in ' + Math.abs(difference) + ' days',
-								region: 'global',
-								resource: data.ServerCertificateMetadataList[i].Arn
-							});
-						} else if (difference > 0) {
-							results.push({
-								status: 2,
-								message: 'Certificate: ' + data.ServerCertificateMetadataList[i].ServerCertificateName + ' expires in ' + Math.abs(difference) + ' days',
-								region: 'global',
-								resource: data.ServerCertificateMetadataList[i].Arn
-							});
-						} else {
-							results.push({
-								status: 2,
-								message: 'Certificate: ' + data.ServerCertificateMetadataList[i].ServerCertificateName + ' expired ' + Math.abs(difference) + ' days ago',
-								region: 'global',
-								resource: data.ServerCertificateMetadataList[i].Arn
-							});
-						}
+						helpers.addResult(results, 0, expiredMsg, 'global', certificate.Arn);
 					}
 				}
 			}
+		}
 
-			return callback(null, results, source);
-		});
+		callback(null, results, source);
 	}
 };

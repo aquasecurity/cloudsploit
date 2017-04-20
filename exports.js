@@ -13,9 +13,10 @@ module.exports = {
 
     'configServiceEnabled'          : require(__dirname + '/plugins/configservice/configServiceEnabled.js'),
 
+    'defaultSecurityGroup'          : require(__dirname + '/plugins/ec2/defaultSecurityGroup.js'),
     'elasticIpLimit'                : require(__dirname + '/plugins/ec2/elasticIpLimit.js'),
     'excessiveSecurityGroups'       : require(__dirname + '/plugins/ec2/excessiveSecurityGroups.js'),
-    'insecureCiphers'               : require(__dirname + '/plugins/ec2/insecureCiphers.js'),
+    // 'insecureCiphers'               : require(__dirname + '/plugins/ec2/insecureCiphers.js'),
     'instanceLimit'                 : require(__dirname + '/plugins/ec2/instanceLimit.js'),
     'openCIFS'                      : require(__dirname + '/plugins/ec2/openCIFS.js'),
     'openDNS'                       : require(__dirname + '/plugins/ec2/openDNS.js'),
@@ -33,7 +34,7 @@ module.exports = {
     'openVNCClient'                 : require(__dirname + '/plugins/ec2/openVNCClient.js'),
     'openVNCServer'                 : require(__dirname + '/plugins/ec2/openVNCServer.js'),
     'vpcElasticIpLimit'             : require(__dirname + '/plugins/ec2/vpcElasticIpLimit.js'),
-    'defaultSecurityGroup'          : require(__dirname + '/plugins/ec2/defaultSecurityGroup.js'),
+    
 
     'accessKeysExtra'               : require(__dirname + '/plugins/iam/accessKeysExtra.js'),
     'accessKeysLastUsed'            : require(__dirname + '/plugins/iam/accessKeysLastUsed.js'),
@@ -74,5 +75,5 @@ module.exports = {
 
     // OPTIONAL Plugins
     // These plugins require additional IAM permissions beyond the SecurityAudit managed policy
-    // 'dkimEnabled'                    : require(__dirname + '/plugins/ses/dkimEnabled.js'),
+    'dkimEnabled'                    : require(__dirname + '/plugins/ses/dkimEnabled.js'),
 };

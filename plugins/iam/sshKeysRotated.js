@@ -1,5 +1,3 @@
-var async = require('async');
-var AWS = require('aws-sdk');
 var helpers = require('../../helpers');
 
 module.exports = {
@@ -9,91 +7,73 @@ module.exports = {
 	more_info: 'SSH keys should be rotated frequently to avoid having them accidentally exposed.',
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_ssh-keys.html',
 	recommended_action: 'To rotate an SSH key, first create a new public-private key pair, then upload the public key to AWS and delete the old key.',
+	apis: ['IAM:generateCredentialReport'],
 
-	run: function(AWSConfig, cache, includeSource, callback) {
+	run: function(cache, callback) {
 		var results = [];
 		var source = {};
 
-		var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+		var region = 'us-east-1';
 
-		// Update the region
-		LocalAWSConfig.region = 'us-east-1';
+		var generateCredentialReport = helpers.addSource(cache, source,
+				['iam', 'generateCredentialReport', region]);
 
-		var iam = new AWS.IAM(LocalAWSConfig);
+		if (!generateCredentialReport) return callback(null, results, source);
 
-		helpers.cache(cache, iam, 'listUsers', function(err, data) {
-			if (includeSource) source.global = {error: err, data: data};
-			
-			if (err || !data || !data.Users) {
-				results.push({
-					status: 3,
-					message: 'Unable to query for users',
-					region: 'global'
-				});
+		if (generateCredentialReport.err || !generateCredentialReport.data) {
+			helpers.addResult(results, 3, 'Unable to query for users');
+			return callback(null, results, source);
+		}
 
-				return callback(null, results, source);
+		if (generateCredentialReport.data.length === 1) {
+			// Only have the root user
+			helpers.addResult(results, 0, 'No user accounts with SSH keys found');
+			return callback(null, results, source);
+		}
+
+		var found = false;
+
+		function addSSHKeyResults(lastRotated, keyNum, arn, userName, userCreationTime) {
+			var keyDate = new Date(lastRotated);
+			var daysOld = helpers.functions.daysAgo(keyDate);
+
+			var returnMsg = 'SSH key: ' + keyNum + ' for user: ' + userName +
+							' is ' + daysOld + ' days old';
+
+			if (helpers.functions.daysAgo(userCreationTime) > 180 &&
+				(!lastRotated || lastRotated === 'N/A' || helpers.functions.daysAgo(lastRotated) > 360)) {
+				helpers.addResult(results, 2, returnMsg, 'global', arn);
+			} else if (helpers.functions.daysAgo(userCreationTime) > 90 &&
+				(!lastRotated || lastRotated === 'N/A' || helpers.functions.daysAgo(lastRotated) > 180)) {
+				helpers.addResult(results, 1, returnMsg, 'global', arn);
+			} else {
+				helpers.addResult(results, 0,
+					'User SSH key '  + keyNum + ' ' +
+					((lastRotated === 'N/A') ? 'has never been rotated but user is only ' + helpers.functions.daysAgo(userCreationTime) + ' days old' : 'was last rotated ' + helpers.functions.daysAgo(lastRotated) + ' days ago'), 'global', arn);
 			}
 
-			if (!data.Users.length) {
-				results.push({
-					status: 0,
-					message: 'No user accounts with SSH keys found',
-					region: 'global'
-				});
+			found = true;
+		}
 
-				return callback(null, results, source);
+		for (r in generateCredentialReport.data) {
+			var obj = generateCredentialReport.data[r];
+
+			// TODO: test the root account?
+			// if (obj.user === '<root_account>') continue;
+
+			if (obj.cert_1_active && obj.cert_1_active === 'true') {
+				addSSHKeyResults(obj.cert_1_last_rotated, '1', obj.arn, obj.user, obj.user_creation_time);
 			}
 
-			var allSSHKeys = [];
+			if (obj.cert_2_active && obj.cert_2_active === 'true') {
+				addSSHKeyResults(obj.cert_2_last_rotated, '2', obj.arn, obj.user, obj.user_creation_time);
+			}
+		}
 
-			async.eachLimit(data.Users, 20, function(user, cb){
-				iam.listSSHPublicKeys({UserName: user.UserName}, function(sshKeysErr, sshKeysData) {
-					if (sshKeysErr) {
-						results.push({
-							status: 3,
-							message: 'Unable to query SSH keys for user: ' + user.UserName,
-							region: 'global',
-							resource: user.Arn
-						});
-					} else {
-						if (sshKeysData && sshKeysData.SSHPublicKeys && sshKeysData.SSHPublicKeys.length) {
-							for (i in sshKeysData.SSHPublicKeys) {
-								allSSHKeys.push(sshKeysData.SSHPublicKeys[i].SSHPublicKeyId);
-								
-								var keyDate = new Date(sshKeysData.SSHPublicKeys[i].UploadDate);
-								var daysOld = helpers.functions.daysAgo(keyDate);
+		if (!found) {
+			helpers.addResult(results, 0, 'No SSH keys found');
+		}
 
-								var message = 'SSH key: ' + sshKeysData.SSHPublicKeys[i].SSHPublicKeyId + ' for user: ' + sshKeysData.SSHPublicKeys[i].UserName + ' is ' + daysOld + ' days old';
-								var status = 0;
-								
-								if (daysOld >= 360) {
-									status = 2;
-								} else if (daysOld >= 180) {
-									status = 1;
-								}
-
-								results.push({
-									status: status,
-									message: message,
-									region: 'global',
-									resource: sshKeysData.SSHPublicKeys[i].SSHPublicKeyId
-								});
-							}
-						}
-					}
-					cb();
-				});
-			}, function(){
-				if (!allSSHKeys.length) {
-					results.push({
-						status: 0,
-						message: 'No SSH keys found',
-						region: 'global'
-					});
-				}
-
-				callback(null, results, source);
-			});
-		});
+		callback(null, results, source);
 	}
 };

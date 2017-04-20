@@ -1,5 +1,4 @@
 var async = require('async');
-var cache = require('./cache.js');
 
 var ONE_DAY = 24*60*60*1000;
 
@@ -26,49 +25,45 @@ function mostRecentDate(dates) {
 	return mostRecentDate;
 }
 
-function waitForCredentialReport(iam, callback, CREDENTIAL_DOWNLOAD_STARTED) {
-	if (CREDENTIAL_REPORT_DATA) return callback(null, CREDENTIAL_REPORT_DATA);
-	if (CREDENTIAL_REPORT_ERROR) return callback(CREDENTIAL_REPORT_ERROR);
+function addResult(results, status, message, region, resource){
+	results.push({
+		status: status,
+		message: message,
+		region: region || 'global',
+		resource: resource || null
+	});
+}
 
-	if (!CREDENTIAL_DOWNLOAD_STARTED) {
-		iam.generateCredentialReport(function(err, data){
-			if ((err && err.code && err.code == 'ReportInProgress') || (data && data.State)) {
-				// Okay to query for credential report
-				waitForCredentialReport(iam, callback, true);
-			} else {
-				//CREDENTIAL_REPORT_ERROR = 'Error downloading report';
-				//callback(CREDENTIAL_REPORT_ERROR);
-				callback('Error downloading report');
-			}
-		});
+function addSource(cache, source, paths){
+	// paths = array of arrays (props of each element; service, call, region, extra)
+	var service = paths[0];
+	var call = paths[1];
+	var region = paths[2];
+	var extra = paths[3];
+
+	if (extra) {
+		var original = (cache[service] &&
+					   cache[service][call] &&
+					   cache[service][call][region] &&
+					   cache[service][call][region][extra]) ? 
+					   cache[service][call][region][extra] : null;
 	} else {
-		var pingCredentialReport = function(pingCb, pingResults) {
-			iam.getCredentialReport(function(getErr, getData) {
-				if (getErr || !getData || !getData.Content) {
-					return pingCb('Waiting for credential report');
-				}
-
-				pingCb(null, getData);
-			});
-		};
-
-		async.retry({times: 10, interval: 1000}, pingCredentialReport, function(reportErr, reportData){
-			if (reportErr || !reportData) {
-				//CREDENTIAL_REPORT_ERROR = 'Error downloading report';
-				//return callback(CREDENTIAL_REPORT_ERROR);
-				return callback('Error downloading report');
-			}
-
-			//CREDENTIAL_REPORT_DATA = reportData;
-			//callback(null, CREDENTIAL_REPORT_DATA);
-			callback(null, reportData);
-		});
+		var original = (cache[service] &&
+					   cache[service][call] &&
+					   cache[service][call][region]) ?
+					   cache[service][call][region] : null;
 	}
+
+	if (!source[service]) source[service] = {};
+	source[service][region] = original;
+
+	return original;
 }
 
 module.exports = {
 	daysBetween: daysBetween,
 	daysAgo: daysAgo,
 	mostRecentDate: mostRecentDate,
-	waitForCredentialReport: waitForCredentialReport
+	addResult: addResult,
+	addSource: addSource
 };

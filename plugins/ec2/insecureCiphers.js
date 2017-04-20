@@ -1,4 +1,4 @@
-var AWS = require('aws-sdk');
+// TODO: come back to this one
 var async = require('async');
 var helpers = require('../../helpers');
 
@@ -83,103 +83,102 @@ module.exports = {
 	more_info: 'Various security vulnerabilities have rendered several ciphers insecure. Only the recommended ciphers should be used.',
 	link: 'http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/elb-security-policy-options.html',
 	recommended_action: 'Update your ELBs to use the recommended cipher suites',
+	apis: ['EC2:describeLoadBalancers', 'EC2:describeLoadBalancerPolicies'],
 
-	run: function(AWSConfig, cache, includeSource, callback) {
+	run: function(cache, callback) {
 		var results = [];
 		var source = {};
 
-		async.eachLimit(helpers.regions.elb, helpers.MAX_REGIONS_AT_A_TIME, function(region, rcb){
-			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+		async.each(helpers.regions.elb, function(region, rcb){
+			var describeLoadBalancers = helpers.addSource(cache, source,
+				['elb', 'describeLoadBalancers', region]);
 
-			// Update the region
-			LocalAWSConfig.region = region;
-			var elb = new AWS.ELB(LocalAWSConfig);
+			if (!describeLoadBalancers) return rcb();
 
-			helpers.cache(cache, elb, 'describeLoadBalancers', function(err, data) {
-				if (includeSource) source[region] = {error: err, data: data};
+			if (describeLoadBalancers.err || !describeLoadBalancers.data) {
+				helpers.addResult(results, 3, 'Unable to query for load balancers', region);
+				return rcb();
+			}
 
-				if (err || !data || !data.LoadBalancerDescriptions) {
-					results.push({
-						status: 3,
-						message: 'Unable to query for load balancers',
-						region: region
-					});
+			// Gather list of policies from load balancers
+			var policies = [];
 
-					return rcb();
-				}
-
-				// Gather list of policies from load balancers
-				var policies = [];
-
-				for (i in data.LoadBalancerDescriptions) {
-					for (j in data.LoadBalancerDescriptions[i].ListenerDescriptions) {
-						if (data.LoadBalancerDescriptions[i].ListenerDescriptions[j].Listener.Protocol === 'HTTPS') {
-							var elbPolicies = [];
-							for (k in data.LoadBalancerDescriptions[i].ListenerDescriptions[j].PolicyNames) {
-								elbPolicies.push(data.LoadBalancerDescriptions[i].ListenerDescriptions[j].PolicyNames[k]);
-							}
-							if (elbPolicies.length) {
-								var elbObj = {
-									LoadBalancerName: data.LoadBalancerDescriptions[i].LoadBalancerName,
-									LoadBalancerDNS: data.LoadBalancerDescriptions[i].DNSName,
-									PolicyNames: elbPolicies
-								};
-								policies.push(elbObj);
-							}
+			for (i in describeLoadBalancers.data) {
+				for (j in describeLoadBalancers.data[i].ListenerDescriptions) {
+					if (describeLoadBalancers.data[i].ListenerDescriptions[j].Listener.Protocol === 'HTTPS') {
+						var elbPolicies = [];
+						for (k in describeLoadBalancers.data[i].ListenerDescriptions[j].PolicyNames) {
+							elbPolicies.push(describeLoadBalancers.data[i].ListenerDescriptions[j].PolicyNames[k]);
+						}
+						if (elbPolicies.length) {
+							var elbObj = {
+								LoadBalancerName: describeLoadBalancers.data[i].LoadBalancerName,
+								LoadBalancerDNS: describeLoadBalancers.data[i].DNSName,
+								PolicyNames: elbPolicies
+							};
+							policies.push(elbObj);
 						}
 					}
 				}
+			}
 
-				if (!policies.length) {
-					results.push({
-						status: 0,
-						message: 'No load balancers are using HTTPS',
-						region: region
-					});
+			if (!policies.length) {
+				helpers.addResult(results, 0, 'No load balancers are using HTTPS', region);
+				return rcb();
+			}
 
+			async.each(policies, function(policy, cb){
+				var describeLoadBalancerPolicies = helpers.addSource(cache, source,
+					['elb', 'describeLoadBalancerPolicies', region]);
+
+				var describeLoadBalancerPolicies = (cache.elb &&
+											 cache.elb.describeLoadBalancerPolicies &&
+											 cache.elb.describeLoadBalancerPolicies[region]) ?
+											 cache.elb.describeLoadBalancerPolicies[region] : null;
+
+				if (!describeLoadBalancerPolicies || describeLoadBalancerPolicies.err || !describeLoadBalancerPolicies.data) {
+					helpers.addResult(results, 3, 'Unable to query for load balancers', region);
 					return rcb();
 				}
 
-				async.eachLimit(policies, 15, function(policy, cb){
-					elb.describeLoadBalancerPolicies({LoadBalancerName: policy.LoadBalancerName, PolicyNames:policy.PolicyNames}, function(err, data){
-						if (err || !data || !data.PolicyDescriptions) {
+				elb.describeLoadBalancerPolicies({LoadBalancerName: policy.LoadBalancerName, PolicyNames:policy.PolicyNames}, function(err, data){
+					if (err || !data || !data.PolicyDescriptions) {
+						results.push({
+							status: 3,
+							message: 'Unable to query load balancer policies for ELB: ' + policy.LoadBalancerName,
+							region: region,
+							resource: policy.LoadBalancerDNS,
+						});
+						return cb();
+					}
+
+					for (i in data.PolicyDescriptions) {
+						var elbBad = [];
+						for (j in data.PolicyDescriptions[i].PolicyAttributeDescriptions) {
+							if (data.PolicyDescriptions[i].PolicyAttributeDescriptions[j].AttributeValue === 'true' && badCiphers.indexOf(data.PolicyDescriptions[i].PolicyAttributeDescriptions[j].AttributeName) > -1) {
+								elbBad.push(data.PolicyDescriptions[i].PolicyAttributeDescriptions[j].AttributeName);
+							}
+						}
+						if (elbBad.length) {
 							results.push({
-								status: 3,
-								message: 'Unable to query load balancer policies for ELB: ' + policy.LoadBalancerName,
+								status: 1,
+								message: 'ELB: ' + policy.LoadBalancerName + ' uses insecure protocols or ciphers: ' + elbBad.join(', '),
 								region: region,
 								resource: policy.LoadBalancerDNS,
 							});
-							return cb();
+						} else {
+							results.push({
+								status: 0,
+								message: 'ELB: ' + policy.LoadBalancerName + ' uses secure protocols and ciphers',
+								region: region,
+								resource: policy.LoadBalancerDNS,
+							});
 						}
-
-						for (i in data.PolicyDescriptions) {
-							var elbBad = [];
-							for (j in data.PolicyDescriptions[i].PolicyAttributeDescriptions) {
-								if (data.PolicyDescriptions[i].PolicyAttributeDescriptions[j].AttributeValue === 'true' && badCiphers.indexOf(data.PolicyDescriptions[i].PolicyAttributeDescriptions[j].AttributeName) > -1) {
-									elbBad.push(data.PolicyDescriptions[i].PolicyAttributeDescriptions[j].AttributeName);
-								}
-							}
-							if (elbBad.length) {
-								results.push({
-									status: 1,
-									message: 'ELB: ' + policy.LoadBalancerName + ' uses insecure protocols or ciphers: ' + elbBad.join(', '),
-									region: region,
-									resource: policy.LoadBalancerDNS,
-								});
-							} else {
-								results.push({
-									status: 0,
-									message: 'ELB: ' + policy.LoadBalancerName + ' uses secure protocols and ciphers',
-									region: region,
-									resource: policy.LoadBalancerDNS,
-								});
-							}
-						}
-						cb();
-					});
-				}, function(){
-					rcb();
+					}
+					cb();
 				});
+			}, function(){
+				rcb();
 			});
 		}, function(){
 			callback(null, results, source);

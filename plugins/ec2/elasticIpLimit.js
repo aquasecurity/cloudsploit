@@ -1,4 +1,3 @@
-var AWS = require('aws-sdk');
 var async = require('async');
 var helpers = require('../../helpers');
 
@@ -9,98 +8,69 @@ module.exports = {
 	more_info: 'AWS limits accounts to certain numbers of resources. Exceeding those limits could prevent resources from launching.',
 	recommended_action: 'Contact AWS support to increase the number of EIPs available',
 	link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html#using-instance-addressing-limit',
+	apis: ['EC2:describeAccountAttributes', 'EC2:describeAddresses'],
 
-	run: function(AWSConfig, cache, includeSource, callback) {
+	run: function(cache, callback) {
 		var results = [];
 		var source = {};
 
-		async.eachLimit(helpers.regions.ec2, helpers.MAX_REGIONS_AT_A_TIME, function(region, rcb){
-			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+		async.each(helpers.regions.ec2, function(region, rcb){
+			var describeAccountAttributes = helpers.addSource(cache, source,
+				['ec2', 'describeAccountAttributes', region]);
 
-			// Update the region
-			LocalAWSConfig.region = region;
-			var ec2 = new AWS.EC2(LocalAWSConfig);
+			if (!describeAccountAttributes) return rcb();
 
-			// Default limits to override
+			if (describeAccountAttributes.err || !describeAccountAttributes.data) {
+				helpers.addResult(results, 3, 'Unable to query for account limits', region);
+				return rcb();
+			}
+
 			var limits = {
 				'max-elastic-ips': 5
 			};
 
-			// Get the account attributes
-			if (includeSource) source['describeAccountAttributes'] = {};
-			if (includeSource) source['describeAddresses'] = {};
-
-			helpers.cache(cache, ec2, 'describeAccountAttributes', function(err, data) {
-				if (includeSource) source['describeAccountAttributes'][region] = {error: err, data: data};
-
-				if (err || !data || !data.AccountAttributes || !data.AccountAttributes.length) {
-					results.push({
-						status: 3,
-						message: 'Unable to query for account limits',
-						region: region
-					});
-
-					return rcb();
+			// Loop through response to assign custom limits
+			for (i in describeAccountAttributes.data) {
+				if (limits[describeAccountAttributes.data[i].AttributeName]) {
+					limits[describeAccountAttributes.data[i].AttributeName] = describeAccountAttributes.data[i].AttributeValues[0].AttributeValue;
 				}
+			}
 
-				// Loop through response to assign custom limits
-				for (i in data.AccountAttributes) {
-					if (limits[data.AccountAttributes[i].AttributeName]) {
-						limits[data.AccountAttributes[i].AttributeName] = data.AccountAttributes[i].AttributeValues[0].AttributeValue;
-					}
-				}
-				
-				helpers.cache(cache, ec2, 'describeAddresses', function(err, data) {
-					if (includeSource) source['describeAddresses'][region] = {error: err, data: data};
+			var describeAddresses = helpers.addSource(cache, source,
+				['ec2', 'describeAddresses', region]);
 
-					if (err || !data || !data.Addresses) {
-						results.push({
-							status: 3,
-							message: 'Unable to describe addresses for Elastic IP limit',
-							region: region
-						});
+			if (!describeAddresses) return rcb();
 
-						return rcb();
-					}
+			if (describeAddresses.err || !describeAddresses.data) {
+				helpers.addResult(results, 3, 'Unable to describe addresses for Elastic IP limit', region);
+				return rcb();
+			}
+			
+			if (!describeAddresses.data.length) {
+				helpers.addResult(results, 0, 'No Elastic IPs found', region);
+				return rcb();
+			}
 
-					if (!data.Addresses.length) {
-						results.push({
-							status: 0,
-							message: 'No Elastic IPs found',
-							region: region
-						});
+			// If EIPs exist, determine type of each
+			var eips = 0;
 
-						return rcb();
-					}
+			for (i in describeAddresses.data) {
+				if (describeAddresses.data[i].Domain !== 'vpc') { eips++; }
+			}
 
-					// If EIPs exist, determine type of each
-					var eips = 0;
+			var returnMsg = 'Account contains ' + eips + ' of ' + limits['max-elastic-ips'] + ' available Elastic IPs';
 
-					for (i in data.Addresses) {
-						if (data.Addresses[i].Domain !== 'vpc') { eips++; }
-					}
-
-					var returnMsg = {
-						status: 0,
-						message: 'Account contains ' + eips + ' of ' + limits['max-elastic-ips'] + ' available Elastic IPs',
-						region: region
-					};
-
-					if (eips === 0) {
-						returnMsg.message = 'No Elastic IPs found';
-					} else if (eips === limits['max-elastic-ips'] - 1) {
-						returnMsg.status = 1;
-					} else if (eips >= limits['max-elastic-ips']) {
-						returnMsg.status = 2;
-					}
-
-					results.push(returnMsg);
-					
-					rcb();
-				});
-			});
+			if (eips === 0) {
+				helpers.addResult(results, 0, 'No Elastic IPs found', region);
+			} else if (eips === limits['max-elastic-ips'] - 1) {
+				helpers.addResult(results, 1, returnMsg, region);
+			} else if (eips >= limits['max-elastic-ips']) {
+				helpers.addResult(results, 2, returnMsg, region);
+			}
+			
+			rcb();
 		}, function(){
-			return callback(null, results, source);
+			callback(null, results, source);
 		});
 	}
 };

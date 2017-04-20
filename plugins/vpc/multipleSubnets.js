@@ -1,4 +1,4 @@
-var AWS = require('aws-sdk');
+// TODO: MOVE TO EC2
 var async = require('async');
 var helpers = require('../../helpers');
 
@@ -9,110 +9,65 @@ module.exports = {
 	more_info: 'A single network within a VPC increases the risk of a broader blast radius in the event of a compromise.',
 	link: 'https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Subnets.html#SubnetSecurity',
 	recommended_action: 'Create multiple networks/subnets in each VPC and change the architecture to take advantage of public and private tiers.',
+	apis: ['EC2:describeVpcs', 'EC2:describeSubnets'],
 
-	run: function(AWSConfig, cache, includeSource, callback) {
+	run: function(cache, callback) {
 		var results = [];
 		var source = {};
 
-		if (includeSource) source['describeVpcs'] = {};
-		if (includeSource) source['describeSubnets'] = {};
+		async.each(helpers.regions.ec2, function(region, rcb){
+			var describeVpcs = helpers.addSource(cache, source,
+				['ec2', 'describeVpcs', region]);
 
-		async.eachLimit(helpers.regions.vpc, helpers.MAX_REGIONS_AT_A_TIME, function(region, rcb){
-			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+			if (!describeVpcs) return rcb();
 
-			// Update the region
-			LocalAWSConfig.region = region;
-			var ec2 = new AWS.EC2(LocalAWSConfig);
+			if (describeVpcs.err || !describeVpcs.data) {
+				helpers.addResult(results, 3, 'Unable to query for VPCs', region);
+				return rcb();
+			}
 
-			helpers.cache(cache, ec2, 'describeVpcs', function(err, data) {
-				if (includeSource) source['describeVpcs'][region] = {error: err, data: data};
+			if (!describeVpcs.data.length) {
+				helpers.addResult(results, 0, 'No VPCs found', region);
+				return rcb();
+			}
 
-				if (err || !data || !data.Vpcs || !data.Vpcs.length) {
-					results.push({
-						status: 3,
-						message: 'Unable to query for VPCs',
-						region: region
-					});
+			if (!describeVpcs.data.length > 1) {
+				helpers.addResult(results, 0,
+					'Multiple (' + describeVpcs.data.length + ') VPCs are used.', region);
+				return rcb();
+			}
 
-					return rcb();
-				}
+			// Looks like we have only one VPC
+			var vpcId = describeVpcs.data[0].VpcId;
 
-				// First check if there are multiple VPCs, because they may use VPCs instead of subnets
-				if (data.Vpcs.length > 1) {
-					results.push({
-						status: 0,
-						message: 'Multiple (' + data.Vpcs.length + ') VPCs are used.',
-						region: region
-					});
+			if (!vpcId) {
+				helpers.addResult(results, 3, 'Unable to query for subnets for VPC.', region);
+				return rcb();
+			}
 
-					return rcb();
-				} else {
-					// Looks like we have only one VPC
-					var vpcId = data.Vpcs[0].VpcId;
+			var describeSubnets = helpers.addSource(cache, source,
+				['ec2', 'describeSubnets', region, vpcId]);
 
-					if (!vpcId) {
-						results.push({
-							status: 3,
-							message: 'Unable to query for subnets for VPC.',
-							region: region
-						});
+			if (!describeSubnets || describeSubnets.err || !describeSubnets.data) {
+				helpers.addResult(results, 3, 'Unable to query for subnets in VPC.', region, vpcId);
+				return rcb();
+			}
 
-						return rcb();
-					}
+			if (describeSubnets.data.Subnets.length > 2) {
+				helpers.addResult(results, 0,
+					'There are ' + describeSubnets.data.Subnets.length + ' different subnets used in one VPC.',
+					region, vpcId);
+			} else if (describeSubnets.data.Subnets.length > 1) {
+				helpers.addResult(results, 1,
+					'Using ' + describeSubnets.data.Subnets.length + ' subnets may not be sufficient for a multi-layered architecture',
+					region, vpcId);
+			} else {
+				helpers.addResult(results, 2,
+					'Only one subnet (' + describeSubnets.data.Subnets[0].SubnetId + ') in one VPC is used.',
+					region, vpcId);
+			}
 
-					// Check for the multiple subnets in that single VPC
-					var params = {
-						Filters: [
-							{
-								Name: "vpc-id",
-								Values: [
-									vpcId
-								]
-							}
-						]
-					};
-
-					ec2.describeSubnets(params, function(subnetErr, subnetData) {
-						if (includeSource) source['describeSubnets'][region] = {error: subnetErr, data: subnetData};
-
-						if (subnetErr || !subnetData || !subnetData.Subnets || !subnetData.Subnets.length) {
-							results.push({
-								status: 3,
-								message: 'Unable to query for subnets in VPC.',
-								region: region,
-								resource: vpcId
-							});
-
-							return rcb();
-						}
-
-						if (subnetData.Subnets.length > 2) {
-							results.push({
-								status: 0,
-								message: 'There are ' + subnetData.Subnets.length + ' different subnets used in one VPC.',
-								region: region,
-								resource: vpcId
-							});
-						} else if (subnetData.Subnets.length > 1) {
-							results.push({
-								status: 1,
-								message: 'Using ' + subnetData.Subnets.length + ' subnets may not be sufficient for a multi-layered architecture',
-								region: region,
-								resource: vpcId
-							});
-						} else {
-							results.push({
-								status: 2,
-								message: 'Only one subnet (' + subnetData.Subnets[0].SubnetId + ') in one VPC is used.',
-								region: region,
-								resource: vpcId
-							});
-						}
-
-						rcb();
-					});
-				}
-			});
+			rcb();
 		}, function(){
 			callback(null, results, source);
 		});

@@ -1,5 +1,4 @@
 var async = require('async');
-var AWS = require('aws-sdk');
 var helpers = require('../../helpers');
 
 module.exports = {
@@ -9,105 +8,68 @@ module.exports = {
 	more_info: 'CloudTrail buckets contain large amounts of sensitive account data and should only be accessible by logged in users.',
 	recommended_action: 'Set the S3 bucket access policy for all CloudTrail buckets to only allow known users to access its files.',
 	link: 'http://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket-policies.html',
+	apis: ['CloudTrail:describeTrails', 'S3:getBucketAcl'],
 
-	run: function(AWSConfig, cache, includeSource, callback) {
+	run: function(cache, callback) {
 		var results = [];
 		var source = {};
 
-		async.eachLimit(helpers.regions.cloudtrail, helpers.MAX_REGIONS_AT_A_TIME, function(region, rcb){
-			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+		async.each(helpers.regions.cloudtrail, function(region, rcb){
 
-			// Update the region
-			LocalAWSConfig.region = region;
-			var cloudtrail = new AWS.CloudTrail(LocalAWSConfig);
+			var describeTrails = helpers.addSource(cache, source,
+				['cloudtrail', 'describeTrails', region]);
 
-			if (includeSource) source['describeTrails'] = {};
-			if (includeSource) source['getBucketAcl'] = {};
+			if (!describeTrails) return rcb();
 
-			helpers.cache(cache, cloudtrail, 'describeTrails', function(err, data) {
-				if (includeSource) source['describeTrails'][region] = {error: err, data: data};
+			if (describeTrails.err || !describeTrails.data) {
+				helpers.addResult(results, 3, 'Unable to query for CloudTrail policy', region);
+				return rcb();
+			}
 
-				if (err) {
-					results.push({
-						status: 3,
-						message: 'Unable to query for CloudTrail policy',
-						region: region
-					});
+			if (!describeTrails.data.length) {
+				helpers.addResult(results, 0, 'No S3 buckets to check', region);
+				return rcb();
+			}
 
-					return rcb();
+			async.each(describeTrails.data, function(trail, cb){
+				if (!trail.S3BucketName) return cb();
+
+				var getBucketAcl = helpers.addSource(cache, source,
+					['s3', 'getBucketAcl', 'us-east-1', trail.S3BucketName]);
+
+				if (!getBucketAcl || getBucketAcl.err || !getBucketAcl.data) {
+					helpers.addResult(results, 3,
+						'Error querying for bucket policy for bucket: ' + trail.S3BucketName,
+						region, 'arn:aws:s3:::' + trail.S3BucketName)
+
+					return cb();
 				}
 
-				// Perform checks for establishing if MFA token is enabled
-				if (data && data.trailList) {
-					if (!data.trailList.length) {
-						results.push({
-							status: 0,
-							message: 'No S3 buckets to check',
-							region: region
-						});
-						return rcb();
+				var allowsAllUsersTypes = [];
+
+				for (i in getBucketAcl.data.Grants) {
+					if (getBucketAcl.data.Grants[i].Grantee.Type &&
+						getBucketAcl.data.Grants[i].Grantee.Type === 'Group' &&
+						getBucketAcl.data.Grants[i].Grantee.URI &&
+						getBucketAcl.data.Grants[i].Grantee.URI.indexOf('AllUsers') > -1
+					) {
+						allowsAllUsersTypes.push(getBucketAcl.data.Grants[i].Permission);
 					}
-
-					delete AWSConfig.region;	// Remove region for S3-specific endpoints
-					AWSConfig.signatureVersion = 'v4';
-					var s3 = new AWS.S3(AWSConfig);
-
-					async.eachLimit(data.trailList, 10, function(trailList, cb){
-						s3.getBucketAcl({Bucket:trailList.S3BucketName}, function(s3err, s3data){
-							if (includeSource) source['getBucketAcl'][trailList.S3BucketName] = {error:s3err,data:s3data};
-							
-							if (s3err || !s3data) {
-								results.push({
-									status: 3,
-									message: 'Error querying for bucket policy for bucket: ' + trailList.S3BucketName,
-									region: region,
-									resource: 'arn:aws:s3:::' + trailList.S3BucketName
-								});
-
-								return cb();
-							}
-
-							var allowsAllUsersTypes = [];
-
-							for (i in s3data.Grants) {
-								if (s3data.Grants[i].Grantee.Type &&
-									s3data.Grants[i].Grantee.Type === 'Group' &&
-									s3data.Grants[i].Grantee.URI &&
-									s3data.Grants[i].Grantee.URI.indexOf('AllUsers') > -1
-								) {
-									allowsAllUsersTypes.push(s3data.Grants[i].Permission);
-								}
-							}
-
-							if (allowsAllUsersTypes.length) {
-								results.push({
-									status: 2,
-									message: 'Bucket: ' + trailList.S3BucketName + ' allows global access to: ' + allowsAllUsersTypes.concat(', '),
-									region: region,
-									resource: 'arn:aws:s3:::' + trailList.S3BucketName
-								});
-							} else {
-								results.push({
-									status: 0,
-									message: 'Bucket: ' + trailList.S3BucketName + ' does not allow public access',
-									region: region,
-									resource: 'arn:aws:s3:::' + trailList.S3BucketName
-								});
-							}
-							cb();
-						});
-					}, function(){
-						rcb();
-					});
-				} else {
-					results.push({
-						status: 3,
-						message: 'Unable to query for CloudTrail policy',
-						region: region
-					});
-
-					rcb();
 				}
+
+				if (allowsAllUsersTypes.length) {
+					helpers.addResult(results, 2,
+						'Bucket: ' + trail.S3BucketName + ' allows global access to: ' + allowsAllUsersTypes.concat(', '),
+						region, 'arn:aws:s3:::' + trail.S3BucketName);
+				} else {
+					helpers.addResult(results, 0,
+						'Bucket: ' + trail.S3BucketName + ' does not allow public access',
+						region, 'arn:aws:s3:::' + trail.S3BucketName);
+				}
+
+				cb();
+			}, function(){
+				rcb();
 			});
 		}, function(){
 			callback(null, results, source);

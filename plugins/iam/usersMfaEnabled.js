@@ -1,5 +1,3 @@
-var async = require('async');
-var AWS = require('aws-sdk');
 var helpers = require('../../helpers');
 
 module.exports = {
@@ -9,94 +7,53 @@ module.exports = {
 	more_info: 'User accounts should have an MFA device setup to enable two-factor authentication',
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
 	recommended_action: 'Enable an MFA device for the user account',
+	apis: ['IAM:generateCredentialReport'],
 
-	run: function(AWSConfig, cache, includeSource, callback) {
+	run: function(cache, callback) {
 		var results = [];
 		var source = {};
 		
-		var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+		var region = 'us-east-1';
 
-		// Update the region
-		LocalAWSConfig.region = 'us-east-1';
+		var generateCredentialReport = helpers.addSource(cache, source,
+				['iam', 'generateCredentialReport', region]);
 
-		var iam = new AWS.IAM(LocalAWSConfig);
+		if (!generateCredentialReport) return callback(null, results, source);
 
-		helpers.cache(cache, iam, 'listUsers', function(err, data) {
-			if (includeSource) source.global = {error: err, data: data};
-			
-			if (err || !data || !data.Users) {
-				results.push({
-					status: 3,
-					message: 'Unable to query for user MFA status',
-					region: 'global'
-				});
+		if (generateCredentialReport.err || !generateCredentialReport.data) {
+			helpers.addResult(results, 3, 'Unable to query for user MFA status');
+			return callback(null, results, source);
+		}
 
-				return callback(null, results, source);
+		if (generateCredentialReport.data.length === 1) {
+			// Only have the root user
+			helpers.addResult(results, 0, 'No user accounts found');
+			return callback(null, results, source);
+		}
+
+		var found = false;
+
+		for (r in generateCredentialReport.data) {
+			var obj = generateCredentialReport.data[r];
+
+			// Skip root user and users without passwords
+			// since they won't be logging into the console
+			if (obj.user === '<root_account>') continue;
+			if (!obj.password_last_used) continue;
+
+			if (obj.mfa_active && obj.mfa_active === 'true') {
+				helpers.addResult(results, 0,
+					'User: ' + obj.user + ' has an MFA device', 'global', obj.arn);
+			} else {
+				helpers.addResult(results, 1,
+					'User: ' + obj.user + ' does not have an MFA device enabled', 'global', obj.arn);
 			}
+		}
 
-			if (!data.Users.length) {
-				results.push({
-					status: 0,
-					message: 'No user accounts found',
-					region: 'global'
-				});
-				
-				return callback(null, results, source);
-			}
+		if (!found) {
+			helpers.addResult(results, 0, 'No users with passwords requiring MFA found');
+		}
 
-			async.eachLimit(data.Users, 20, function(user, cb){
-				if (!user.PasswordLastUsed) {
-					// Skip users without passwords since they won't be logging into the console
-					return cb();
-				}
-				iam.listMFADevices({UserName: user.UserName}, function(mfaErr, mfaData){
-					if (mfaErr) {
-						results.push({
-							status: 3,
-							message: 'Unable to query MFA device for user: ' + user.UserName,
-							region: 'global',
-							resource: user.Arn
-						});
-					} else {
-						if (mfaData && mfaData.MFADevices) {
-							if (mfaData.MFADevices.length) {
-								results.push({
-									status: 0,
-									message: 'User: ' + user.UserName + ' has an MFA device',
-									region: 'global',
-									resource: user.Arn
-								});
-							} else {
-								results.push({
-									status: 1,
-									message: 'User: ' + user.UserName + ' does not have an MFA device enabled',
-									region: 'global',
-									resource: user.Arn
-								});
-							}
-						}
-					}
-					cb();
-				});
-			}, function(err){
-				if (err) {
-					results.push({
-						status: 3,
-						message: 'Unable to query for user MFA status',
-						region: 'global'
-					});
-				}
-
-				if (!results.length) {
-					results.push({
-						status: 0,
-						message: 'No users with passwords requiring MFA found',
-						region: 'global'
-					});
-				}
-
-				callback(null, results, source);
-			});
-		});
+		callback(null, results, source);
 	}
 };

@@ -1,4 +1,3 @@
-var AWS = require('aws-sdk');
 var helpers = require('../../helpers');
 
 module.exports = {
@@ -8,58 +7,40 @@ module.exports = {
 	more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
 	recommended_action: 'Increase the minimum previous passwors that can be reused to 24.',
+	apis: ['IAM:getAccountPasswordPolicy'],
 
-	run: function(AWSConfig, cache, includeSource, callback) {
+	run: function(cache, callback) {
 		var results = [];
 		var source = {};
 
-		var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+		var region = 'us-east-1';
 
-		// Update the region
-		LocalAWSConfig.region = 'us-east-1';
+		var getAccountPasswordPolicy = helpers.addSource(cache, source,
+				['iam', 'getAccountPasswordPolicy', region]);
 
-		var iam = new AWS.IAM(LocalAWSConfig);
+		if (!getAccountPasswordPolicy) return callback(null, results, source);
 
-		helpers.cache(cache, iam, 'getAccountPasswordPolicy', function(err, data) {
-			if (includeSource) source.global = {error: err, data: data};
-			
-			if (err || !data || !data.PasswordPolicy) {
-				results.push({
-					status: 3,
-					message: 'Unable to query for password policy status',
-					region: 'global'
-				});
+		if (getAccountPasswordPolicy.err || !getAccountPasswordPolicy.data ||
+			!getAccountPasswordPolicy.data.PasswordPolicy) {
+			helpers.addResult(results, 3, 'Unable to query for password policy status');
+			return callback(null, results, source);
+		}
 
-				return callback(null, results, source);
-			}
-			
-			if (!data.PasswordPolicy.PasswordReusePrevention) {
-				results.push({
-					status: 2,
-					message: 'Password policy does not prevent previous password reuse',
-					region: 'global'
-				});
-			} else if (data.PasswordPolicy.PasswordReusePrevention < 5) {
-				results.push({
-					status: 2,
-					message: 'Maximum password reuse of: ' + data.PasswordPolicy.PasswordReusePrevention + ' passwords is less than 24',
-					region: 'global'
-				});
-			} else if (data.PasswordPolicy.PasswordReusePrevention < 24) {
-				results.push({
-					status: 1,
-					message: 'Maximum password reuse of: ' + data.PasswordPolicy.PasswordReusePrevention + ' passwords is less than 24',
-					region: 'global'
-				});
-			} else {
-				results.push({
-					status: 0,
-					message: 'Maximum password reuse of: ' + data.PasswordPolicy.PasswordReusePrevention + ' passwords is suitable',
-					region: 'global'
-				});
-			}
+		var passwordPolicy = getAccountPasswordPolicy.data.PasswordPolicy;
 
-			callback(null, results, source);
-		});
+		if (!passwordPolicy.PasswordReusePrevention) {
+			helpers.addResult(results, 2, 'Password policy does not previous previous password reuse');
+		} else if (passwordPolicy.PasswordReusePrevention < 5) {
+			helpers.addResult(results, 2,
+				'Maximum password reuse of: ' + passwordPolicy.PasswordReusePrevention + ' passwords is less than 5');
+		} else if (passwordPolicy.PasswordReusePrevention < 24) {
+			helpers.addResult(results, 1,
+				'Maximum password reuse of: ' + passwordPolicy.PasswordReusePrevention + ' passwords is less than 24');
+		} else {
+			helpers.addResult(results, 0,
+				'Maximum password reuse of: ' + passwordPolicy.PasswordReusePrevention + ' passwords is suitable');
+		}
+
+		callback(null, results, source);
 	}
 };
