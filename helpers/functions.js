@@ -60,10 +60,23 @@ function addSource(cache, source, paths){
 	return original;
 }
 
+function addError(original){
+	if (!original || !original.err) {
+		return 'Unable to obtain data';
+	} else if (typeof original.err === 'string') {
+		return original.err;
+	} else if (original.err.message) {
+		return original.err.message;
+	} else {
+		return 'Unable to obtain data';
+	}
+}
+
 module.exports = {
 	daysBetween: daysBetween,
 	daysAgo: daysAgo,
 	mostRecentDate: mostRecentDate,
 	addResult: addResult,
-	addSource: addSource
+	addSource: addSource,
+	addError: addError
 };

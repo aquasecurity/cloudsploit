@@ -33,7 +33,7 @@ module.exports = {
 			if (obj && obj.user === '<root_account>') {
 				found = true;
 
-				if (obj.mfa_active && obj.mfa_active === 'true') {
+				if (obj.mfa_active) {
 					helpers.addResult(results, 0,
 						'An MFA device was found for the root account', 'global', obj.arn);
 				} else {

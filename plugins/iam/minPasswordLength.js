@@ -25,14 +25,16 @@ module.exports = {
 			return callback(null, results, source);
 		}
 
-		if (!getAccountPasswordPolicy.MinimumPasswordLength) {
+		var passwordPolicy = getAccountPasswordPolicy.data;
+
+		if (!passwordPolicy.MinimumPasswordLength) {
 			helpers.addResult(results, 2, 'Password policy does not specify a minimum password length');
-		} else if (getAccountPasswordPolicy.MinimumPasswordLength < 10) {
-			helpers.addResult(results, 2, 'Minimum password length of: ' + getAccountPasswordPolicy.MinimumPasswordLength + ' is less than 10 characters');
-		} else if (getAccountPasswordPolicy.MinimumPasswordLength < 14) {
-			helpers.addResult(results, 1, 'Minimum password length of: ' + getAccountPasswordPolicy.MinimumPasswordLength + ' is less than 14 characters');
+		} else if (passwordPolicy.MinimumPasswordLength < 10) {
+			helpers.addResult(results, 2, 'Minimum password length of: ' + passwordPolicy.MinimumPasswordLength + ' is less than 10 characters');
+		} else if (passwordPolicy.MinimumPasswordLength < 14) {
+			helpers.addResult(results, 1, 'Minimum password length of: ' + passwordPolicy.MinimumPasswordLength + ' is less than 14 characters');
 		} else {
-			helpers.addResult(results, 0, 'Minimum password length of: ' + getAccountPasswordPolicy.MinimumPasswordLength + ' is suitable');
+			helpers.addResult(results, 0, 'Minimum password length of: ' + passwordPolicy.MinimumPasswordLength + ' is suitable');
 		}
 
 		callback(null, results, source);

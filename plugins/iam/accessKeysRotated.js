@@ -36,7 +36,7 @@ module.exports = {
 		var found = false;
 
 		function addAccessKeyResults(lastRotated, keyNum, arn, userCreationTime) {
-			var returnMsg = 'User access key ' + keyNum + ' ' + ((lastRotated === 'N/A') ? 'has never been rotated' : 'was last rotated ' + helpers.functions.daysAgo(lastRotated) + ' days ago');
+			var returnMsg = 'User access key ' + keyNum + ' ' + ((lastRotated === 'N/A' || !lastRotated) ? 'has never been rotated' : 'was last rotated ' + helpers.functions.daysAgo(lastRotated) + ' days ago');
 
 			if (helpers.functions.daysAgo(userCreationTime) > 180 &&
 				(!lastRotated || lastRotated === 'N/A' || helpers.functions.daysAgo(lastRotated) > 180)) {
@@ -58,11 +58,11 @@ module.exports = {
 			// The root account security is handled in a different plugin
 			if (obj.user === '<root_account>') return cb();
 
-			if (obj.access_key_1_active === 'true') {
+			if (obj.access_key_1_active) {
 				addAccessKeyResults(obj.access_key_1_last_rotated, '1', obj.arn, obj.user_creation_time);
 			}
 
-			if (obj.access_key_2_active === 'true') {
+			if (obj.access_key_2_active) {
 				addAccessKeyResults(obj.access_key_2_last_rotated, '2', obj.arn, obj.user_creation_time);
 			}
 

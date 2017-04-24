@@ -38,7 +38,7 @@ module.exports = {
 			// The root account security is handled in a different plugin
 			if (obj.user === '<root_account>') return cb();
 
-			if (obj.access_key_1_active === 'true' && obj.access_key_2_active === 'true') {
+			if (obj.access_key_1_active && obj.access_key_2_active) {
 				helpers.addResult(results, 2, 'User is using both access keys', 'global', obj.arn);
 			} else {
 				helpers.addResult(results, 0, 'User is not using both access keys', 'global', obj.arn);

@@ -49,7 +49,7 @@ module.exports = {
 			} else {
 				helpers.addResult(results, 0,
 					'User SSH key '  + keyNum + ' ' +
-					((lastRotated === 'N/A') ? 'has never been rotated but user is only ' + helpers.functions.daysAgo(userCreationTime) + ' days old' : 'was last rotated ' + helpers.functions.daysAgo(lastRotated) + ' days ago'), 'global', arn);
+					((lastRotated === 'N/A' || !lastRotated) ? 'has never been rotated but user is only ' + helpers.functions.daysAgo(userCreationTime) + ' days old' : 'was last rotated ' + helpers.functions.daysAgo(lastRotated) + ' days ago'), 'global', arn);
 			}
 
 			found = true;
@@ -61,11 +61,11 @@ module.exports = {
 			// TODO: test the root account?
 			// if (obj.user === '<root_account>') continue;
 
-			if (obj.cert_1_active && obj.cert_1_active === 'true') {
+			if (obj.cert_1_active) {
 				addSSHKeyResults(obj.cert_1_last_rotated, '1', obj.arn, obj.user, obj.user_creation_time);
 			}
 
-			if (obj.cert_2_active && obj.cert_2_active === 'true') {
+			if (obj.cert_2_active) {
 				addSSHKeyResults(obj.cert_2_last_rotated, '2', obj.arn, obj.user, obj.user_creation_time);
 			}
 		}

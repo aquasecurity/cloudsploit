@@ -47,15 +47,16 @@ module.exports = {
 			}
 			
 			if (!describeInstances.data.length) {
-				helpers.addResult(results, 0, 'No Elastic IPs found', region);
+				helpers.addResult(results, 0, 'No instances found', region);
 				return rcb();
 			}
 
-			var returnMsg = 'Account contains ' + describeInstances.data.length + ' of ' + limits['max-instances'] + ' available instances';
+			var percentage = Math.ceil(describeInstances.data.length / limits['max-instances']);
+			var returnMsg = 'Account contains ' + describeInstances.data.length + ' of ' + limits['max-instances'] + ' (' + percentage + '%) available instances';
 
-			if (describeInstances.data.length === limits['max-instances'] - 3) {
+			if (percentage >= 75) {
 				helpers.addResult(results, 1, returnMsg, region);
-			} else if (describeInstances.data.length >= limits['max-instances'] - 2) {
+			} else if (percentage >= 90) {
 				helpers.addResult(results, 2, returnMsg, region);
 			} else {
 				helpers.addResult(results, 0, returnMsg, region);

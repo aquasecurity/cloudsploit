@@ -4,6 +4,7 @@ to run the CloudSploit scans. This data will be returned in the callback
 as a JSON object.
 
 Arguments:
+- AWSConfig: If using an access key/secret, pass in the config object. Pass null if not.
 - settings: custom settings for the scan. Properties:
 	- skip_regions: (Optional) List of regions to skip
 	- api_calls: (Optional) If provided, will only query these APIs.
@@ -152,10 +153,10 @@ var postcalls = [
 			getBucketAcl: {
 				deleteRegion: true,
 				signatureVersion: 'v4',
-				reliesOnService: 'cloudtrail',
-				reliesOnCall: 'describeTrails',
+				reliesOnService: 's3',
+				reliesOnCall: 'listBuckets',
 				filterKey: 'Bucket',
-				filterValue: 'S3BucketName'
+				filterValue: 'Name'
 			}
 		},
 		EC2: {
@@ -230,8 +231,7 @@ var postcalls = [
 ];
 
 // Loop through all of the top-level collectors for each service
-var collect = function(settings, callback) {
-	var AWSConfig = {};
+var collect = function(AWSConfig, settings, callback) {
 	var collection = {};
 
 	async.eachOfLimit(calls, 10, function(call, service, serviceCb){
@@ -331,7 +331,8 @@ var collect = function(settings, callback) {
 
 						var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
 						if (callObj.deleteRegion) {
-							delete LocalAWSConfig.region;
+							//delete LocalAWSConfig.region;
+							LocalAWSConfig.region = 'us-east-1';
 						} else {
 							LocalAWSConfig.region = region;
 						}
@@ -350,18 +351,24 @@ var collect = function(settings, callback) {
 						} else {
 							var executor = new AWS[service](LocalAWSConfig);
 
-							async.eachLimit(collection[callObj.reliesOnService][callObj.reliesOnCall][AWSConfig.region].data, 10, function(dep, depCb){
-								collection[serviceLower][callKey][AWSConfig.region][dep[callObj.filterValue]] = {};
+							if (!collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region] ||
+								!collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region].data) {
+								console.log('Unable to find data for: ' + JSON.stringify(callObj));
+								return regionCb();
+							}
+
+							async.eachLimit(collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region].data, 10, function(dep, depCb){
+								collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]] = {};
 
 								var filter = {};
 								filter[callObj.filterKey] = dep[callObj.filterValue];
 
 								executor[callKey](filter, function(err, data){
 									if (err) {
-										collection[serviceLower][callKey][AWSConfig.region][dep[callObj.filterValue]].err = err;
+										collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = err;
 									}
 
-									collection[serviceLower][callKey][AWSConfig.region][dep[callObj.filterValue]].data = data;
+									collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = data;
 
 									depCb();
 								});

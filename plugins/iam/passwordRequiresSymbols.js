@@ -20,13 +20,12 @@ module.exports = {
 
 		if (!getAccountPasswordPolicy) return callback(null, results, source);
 
-		if (getAccountPasswordPolicy.err || !getAccountPasswordPolicy.data ||
-			!getAccountPasswordPolicy.data.PasswordPolicy) {
+		if (getAccountPasswordPolicy.err || !getAccountPasswordPolicy.data) {
 			helpers.addResult(results, 3, 'Unable to query for password policy status');
 			return callback(null, results, source);
 		}
 
-		var passwordPolicy = getAccountPasswordPolicy.data.PasswordPolicy;
+		var passwordPolicy = getAccountPasswordPolicy.data;
 
 		if (!passwordPolicy.RequireSymbols) {
 			helpers.addResult(results, 1, 'Password policy does not require symbols');

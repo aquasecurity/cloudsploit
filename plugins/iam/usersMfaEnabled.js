@@ -41,7 +41,7 @@ module.exports = {
 			if (obj.user === '<root_account>') continue;
 			if (!obj.password_last_used) continue;
 
-			if (obj.mfa_active && obj.mfa_active === 'true') {
+			if (obj.mfa_active) {
 				helpers.addResult(results, 0,
 					'User: ' + obj.user + ' has an MFA device', 'global', obj.arn);
 			} else {

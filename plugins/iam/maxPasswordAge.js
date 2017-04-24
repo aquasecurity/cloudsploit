@@ -25,14 +25,16 @@ module.exports = {
 			return callback(null, results, source);
 		}
 
-		if (!getAccountPasswordPolicy.MaxPasswordAge) {
+		var passwordPolicy = getAccountPasswordPolicy.data;
+
+		if (!passwordPolicy.MaxPasswordAge) {
 			helpers.addResult(results, 2, 'Password policy does not specify a maximum password age');
-		} else if (getAccountPasswordPolicy.MaxPasswordAge > 365) {
-			helpers.addResult(results, 2, 'Maximum password age of: ' + getAccountPasswordPolicy.MaxPasswordAge + ' days is more than one year');
-		} else if (getAccountPasswordPolicy.MaxPasswordAge > 180) {
-			helpers.addResult(results, 1, 'Maximum password age of: ' + getAccountPasswordPolicy.MaxPasswordAge + ' days is more than six months');
+		} else if (passwordPolicy.MaxPasswordAge > 365) {
+			helpers.addResult(results, 2, 'Maximum password age of: ' + passwordPolicy.MaxPasswordAge + ' days is more than one year');
+		} else if (passwordPolicy.MaxPasswordAge > 180) {
+			helpers.addResult(results, 1, 'Maximum password age of: ' + passwordPolicy.MaxPasswordAge + ' days is more than six months');
 		} else {
-			helpers.addResult(results, 0, 'Maximum password age of: ' + getAccountPasswordPolicy.MaxPasswordAge + ' days is suitable');
+			helpers.addResult(results, 0, 'Maximum password age of: ' + passwordPolicy.MaxPasswordAge + ' days is suitable');
 		}
 
 		callback(null, results, source);

@@ -22,7 +22,7 @@ module.exports = {
 			if (!listKeys) return rcb();
 
 			if (listKeys.err || !listKeys.data) {
-				helpers.addResult(results, 3, 'Unable to query for KMS keys');
+				helpers.addResult(results, 3, helpers.addError(listKeys));
 				return rcb();
 			}
 
@@ -39,14 +39,14 @@ module.exports = {
 					['kms', 'getKeyRotationStatus', region, kmsKey.KeyId]);
 
 				if (!describeKey || describeKey.err || !describeKey.data) {
-					helpers.addResult(results, 3,
-						'Unable to describe KMS key: ' + kmsKey.KeyId, region, kmsKey.KeyArn);
+					helpers.addResult(results, 3, helpers.addError(describeKey),
+						region, kmsKey.KeyArn);
 					return kcb();
 				}
 
 				if (!getKeyRotationStatus || getKeyRotationStatus.err || !getKeyRotationStatus.data) {
-					helpers.addResult(results, 3,
-						'Unable to get KMS key rotation status for key: ' + kmsKey.KeyId, region, kmsKey.KeyArn);
+					helpers.addResult(results, 3, helpers.addError(getKeyRotationStatus),
+						region, kmsKey.KeyArn);
 					return kcb();
 				}
 

@@ -35,16 +35,21 @@ module.exports = {
 		var found = false;
 
 		function addAccessKeyResults(lastUsed, keyNum, arn) {
-			var returnMsg = 'User access key ' + keyNum + ' ' + ((lastUsed === 'N/A') ? 'has never been used' : 'was last used ' + helpers.functions.daysAgo(lastUsed) + ' days ago');
-
-			if (helpers.functions.daysAgo(lastUsed) > 180) {
-				helpers.addResult(results, 2, returnMsg, arn)
-			} else if (helpers.functions.daysAgo(lastUsed) > 90) {
-				helpers.addResult(results, 1, returnMsg, arn)
-			} else {
+			if (!lastUsed) {
 				helpers.addResult(results, 0,
-					'User access key '  + keyNum + ' was last used ' +
-					helpers.functions.daysAgo(lastUsed) + ' days ago', arn);
+					'User access key '  + keyNum + ' has never been used', arn);
+			} else {
+				var returnMsg = 'User access key ' + keyNum + ': was last used ' + helpers.functions.daysAgo(lastUsed) + ' days ago';
+
+				if (helpers.functions.daysAgo(lastUsed) > 180) {
+					helpers.addResult(results, 2, returnMsg, 'global', arn)
+				} else if (helpers.functions.daysAgo(lastUsed) > 90) {
+					helpers.addResult(results, 1, returnMsg, 'global', arn)
+				} else {
+					helpers.addResult(results, 0,
+						'User access key '  + keyNum + ' was last used ' +
+						helpers.functions.daysAgo(lastUsed) + ' days ago', 'global', arn);
+				}
 			}
 
 			found = true;
@@ -55,11 +60,11 @@ module.exports = {
 			// TODO: update to handle booleans
 			if (obj.user === '<root_account>') return cb();
 
-			if (obj.access_key_1_last_used_date && obj.access_key_1_last_used_date !== 'N/A') {
+			if (obj.access_key_1_active) {
 				addAccessKeyResults(obj.access_key_1_last_used_date, '1', obj.arn);
 			}
 
-			if (obj.access_key_2_last_used_date && obj.access_key_2_last_used_date  !== 'N/A') {
+			if (obj.access_key_2_active) {
 				addAccessKeyResults(obj.access_key_2_last_used_date, '2', obj.arn);
 			}
 

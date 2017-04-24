@@ -33,10 +33,8 @@ module.exports = {
 			if (obj && obj.user === '<root_account>') {
 				found = true;
 
-				if (obj.access_key_1_active &&
-					obj.access_key_1_active === 'false' &&
-					obj.access_key_2_active &&
-					obj.access_key_2_active === 'false') {
+				if (!obj.access_key_1_active &&
+					!obj.access_key_2_active) {
 					helpers.addResult(results, 0, 'Access keys were not found for the root account', 'global', obj.arn);
 				} else {
 					helpers.addResult(results, 2, 'Access keys were found for the root account', 'global', obj.arn);
