@@ -58,14 +58,15 @@ module.exports = {
 				if (describeAddresses.data[i].Domain !== 'vpc') { eips++; }
 			}
 
-			var returnMsg = 'Account contains ' + eips + ' of ' + limits['max-elastic-ips'] + ' available Elastic IPs';
+			var percentage = Math.ceil((eips / limits['max-elastic-ips'])*100);
+			var returnMsg = 'Account contains ' + eips + ' of ' + limits['max-elastic-ips'] + ' (' + percentage + '%) available Elastic IPs';
 
-			if (eips === 0) {
-				helpers.addResult(results, 0, 'No Elastic IPs found', region);
-			} else if (eips === limits['max-elastic-ips'] - 1) {
-				helpers.addResult(results, 1, returnMsg, region);
-			} else if (eips >= limits['max-elastic-ips']) {
+			if (percentage >= 90) {
 				helpers.addResult(results, 2, returnMsg, region);
+			} else if (percentage >= 75) {
+				helpers.addResult(results, 1, returnMsg, region);
+			} else {
+				helpers.addResult(results, 0, returnMsg, region);
 			}
 			
 			rcb();

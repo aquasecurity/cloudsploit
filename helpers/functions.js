@@ -41,21 +41,26 @@ function addSource(cache, source, paths){
 	var region = paths[2];
 	var extra = paths[3];
 
+	if (!source[service]) source[service] = {};
+	if (!source[service][call]) source[service][call] = {};
+	if (!source[service][call][region]) source[service][call][region] = {};
+
 	if (extra) {
 		var original = (cache[service] &&
 					   cache[service][call] &&
 					   cache[service][call][region] &&
 					   cache[service][call][region][extra]) ? 
 					   cache[service][call][region][extra] : null;
+
+		source[service][call][region][extra] = original;
 	} else {
 		var original = (cache[service] &&
 					   cache[service][call] &&
 					   cache[service][call][region]) ?
 					   cache[service][call][region] : null;
-	}
 
-	if (!source[service]) source[service] = {};
-	source[service][region] = original;
+		source[service][call][region] = original;
+	}
 
 	return original;
 }

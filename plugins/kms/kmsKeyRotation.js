@@ -8,7 +8,7 @@ module.exports = {
 	more_info: 'All KMS keys should have key rotation enabled. AWS will handle the rotation of the encryption key itself, as well as storage of previous keys, so previous data does not need to be re-encrypted before the rotation occurs.',
 	recommended_action: 'Enable yearly rotation for the KMS key',
 	link: 'http://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html',
-	apis: ['KMS:listKeys'],
+	apis: ['KMS:listKeys', 'KMS:describeKey', 'KMS:getKeyRotationStatus'],
 
 	run: function(cache, callback) {
 		var results = [];
@@ -27,7 +27,7 @@ module.exports = {
 			}
 
 			if (!listKeys.data.length) {
-				helpers.addResult(results, 0, 'No KMS keys found');
+				helpers.addResult(results, 0, 'No KMS keys found', region);
 				return rcb();				
 			}
 
@@ -44,14 +44,7 @@ module.exports = {
 					return kcb();
 				}
 
-				if (!getKeyRotationStatus || getKeyRotationStatus.err || !getKeyRotationStatus.data) {
-					helpers.addResult(results, 3, helpers.addError(getKeyRotationStatus),
-						region, kmsKey.KeyArn);
-					return kcb();
-				}
-
 				var describeKeyData = describeKey.data;
-				var keyRotationStatusData = getKeyRotationStatus.data;
 
 				// AWS-generated keys for CodeCommit, ACM, etc. should be skipped.
 				// The only way to distinguish these keys is the default description used by AWS.
@@ -59,6 +52,14 @@ module.exports = {
 				if (describeKeyData.KeyMetadata &&
 					(describeKeyData.KeyMetadata.Description && describeKeyData.KeyMetadata.Description.indexOf('Default master key that protects my') === 0) ||
 					(describeKeyData.KeyMetadata.KeyState && describeKeyData.KeyMetadata.KeyState == 'PendingDeletion')) {
+					return kcb();
+				}
+
+				var keyRotationStatusData = getKeyRotationStatus.data;
+
+				if (!getKeyRotationStatus || getKeyRotationStatus.err || !getKeyRotationStatus.data) {
+					helpers.addResult(results, 3, helpers.addError(getKeyRotationStatus),
+						region, kmsKey.KeyArn);
 					return kcb();
 				}
 

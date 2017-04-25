@@ -241,7 +241,7 @@ var collect = function(AWSConfig, settings, callback) {
 
 		// Loop through each of the service's functions
 		async.eachOfLimit(call, 10, function(callObj, callKey, callCb){
-			if (settings.api_calls && settings.api_calls.indexOf(callKey) === -1) return callCb(); 
+			if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
 			if (!collection[serviceLower][callKey]) collection[serviceLower][callKey] = {};
 
 			async.eachLimit(helpers.regions[serviceLower], helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb){
@@ -311,7 +311,7 @@ var collect = function(AWSConfig, settings, callback) {
 				if (!collection[serviceLower]) collection[serviceLower] = {};
 
 				async.eachOfLimit(serviceObj, 1, function(callObj, callKey, callCb){
-					if (settings.api_calls && settings.api_calls.indexOf(callKey) === -1) return callCb();
+					if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
 					if (!collection[serviceLower][callKey]) collection[serviceLower][callKey] = {};
 					
 					async.eachLimit(helpers.regions[serviceLower], helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb){

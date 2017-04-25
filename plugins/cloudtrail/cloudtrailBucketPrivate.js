@@ -1,3 +1,7 @@
+// TODO: the collector for this does not work
+// bc the reliesOn prop is for s3 list buckets
+// which isn't called at all
+
 var async = require('async');
 var helpers = require('../../helpers');
 

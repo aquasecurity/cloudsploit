@@ -21,10 +21,8 @@ module.exports = {
 			var service = 'FTP';
 
 			async.each(helpers.regions.ec2, function(region, rcb){
-				var describeSecurityGroups = (cache.ec2 &&
-											  	 cache.ec2.describeSecurityGroups &&
-											  	 cache.ec2.describeSecurityGroups[region]) ?
-											  	 cache.ec2.describeSecurityGroups[region] : null;
+				var describeSecurityGroups = helpers.addSource(cache, source,
+					['ec2', 'describeSecurityGroups', region]);
 
 				if (!describeSecurityGroups) return rcb();
 

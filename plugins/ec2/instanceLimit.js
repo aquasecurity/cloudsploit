@@ -51,13 +51,13 @@ module.exports = {
 				return rcb();
 			}
 
-			var percentage = Math.ceil(describeInstances.data.length / limits['max-instances']);
+			var percentage = Math.ceil((describeInstances.data.length / limits['max-instances'])*100);
 			var returnMsg = 'Account contains ' + describeInstances.data.length + ' of ' + limits['max-instances'] + ' (' + percentage + '%) available instances';
 
-			if (percentage >= 75) {
-				helpers.addResult(results, 1, returnMsg, region);
-			} else if (percentage >= 90) {
+			if (percentage >= 90) {
 				helpers.addResult(results, 2, returnMsg, region);
+			} else if (percentage >= 75) {
+				helpers.addResult(results, 1, returnMsg, region);
 			} else {
 				helpers.addResult(results, 0, returnMsg, region);
 			}

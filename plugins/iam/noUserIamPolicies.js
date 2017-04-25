@@ -26,7 +26,7 @@ module.exports = {
 			return callback(null, results, source);
 		}
 
-		if (!listUsers.length) {
+		if (!listUsers.data.length) {
 			helpers.addResult(results, 0, 'No user accounts found');
 			return callback(null, results, source);
 		}
@@ -47,8 +47,9 @@ module.exports = {
 
 			if (listAttachedUserPolicies.err || !listAttachedUserPolicies.data ||
 				listUserPolicies.err || !listUserPolicies.data) {
-				helpers.addResult(results, 3, 'Unable to query policies for user: ' + user.UserName, 'global', user.Arn);
-				return callback(null, results, source);
+				helpers.addResult(results, 3, 'Unable to query policies for user: ' +
+					user.UserName, 'global', user.Arn);
+				return cb();
 			}
 
 			if ((listAttachedUserPolicies.data.AttachedPolicies &&
@@ -59,6 +60,8 @@ module.exports = {
 			} else {
 				helpers.addResult(results, 0, 'User is not using attached or inline policies', 'global', user.Arn);
 			}
+
+			cb();
 		}, function(){
 			callback(null, results, source);
 		});
