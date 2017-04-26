@@ -20,6 +20,14 @@ module.exports = {
 
 		if (!getAccountPasswordPolicy) return callback(null, results, source);
 
+		// Handle special case errors
+		if (getAccountPasswordPolicy.err &&
+			getAccountPasswordPolicy.err.code &&
+			getAccountPasswordPolicy.err.code === 'NoSuchEntity') {
+			helpers.addResult(results, 2, 'Account does not have a password policy');
+			return callback(null, results, source);
+		}
+
 		if (getAccountPasswordPolicy.err || !getAccountPasswordPolicy.data) {
 			helpers.addResult(results, 3, 'Unable to query for password policy status');
 			return callback(null, results, source);

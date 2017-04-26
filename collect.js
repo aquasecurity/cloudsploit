@@ -21,6 +21,14 @@ var async = require('async');
 var helpers = require(__dirname + '/helpers');
 var collectors = require(__dirname + '/collectors');
 
+var globalServices = [
+	'S3',
+	'IAM',
+	'CloudFront',
+	'Route53',
+	'Route53Domains'
+];
+
 var calls = {
 	CloudFront: {
 		listDistributions: {
@@ -153,10 +161,7 @@ var postcalls = [
 			getBucketAcl: {
 				deleteRegion: true,
 				signatureVersion: 'v4',
-				reliesOnService: 's3',
-				reliesOnCall: 'listBuckets',
-				filterKey: 'Bucket',
-				filterValue: 'Name'
+				override: true
 			}
 		},
 		EC2: {
@@ -245,8 +250,9 @@ var collect = function(AWSConfig, settings, callback) {
 			if (!collection[serviceLower][callKey]) collection[serviceLower][callKey] = {};
 
 			async.eachLimit(helpers.regions[serviceLower], helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb){
-				// TODO: handle global region vs us-east-1 for IAM, etc.
-				if (settings.skip_regions && settings.skip_regions.indexOf(region) > -1) return regionCb();
+				if (settings.skip_regions &&
+					settings.skip_regions.indexOf(region) > -1 &&
+					globalServices.indexOf(service) === -1) return regionCb();
 				if (!collection[serviceLower][callKey][region]) collection[serviceLower][callKey][region] = {};
 
 				var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
@@ -315,8 +321,9 @@ var collect = function(AWSConfig, settings, callback) {
 					if (!collection[serviceLower][callKey]) collection[serviceLower][callKey] = {};
 					
 					async.eachLimit(helpers.regions[serviceLower], helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb){
-						// TODO: handle global region vs us-east-1 for IAM, etc.
-						if (settings.skip_regions && settings.skip_regions.indexOf(region) > -1) return regionCb();
+						if (settings.skip_regions &&
+							settings.skip_regions.indexOf(region) > -1 &&
+							globalServices.indexOf(service) === -1) return regionCb();
 						if (!collection[serviceLower][callKey][region]) collection[serviceLower][callKey][region] = {};
 
 						// Ensure pre-requisites are met
@@ -353,7 +360,6 @@ var collect = function(AWSConfig, settings, callback) {
 
 							if (!collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region] ||
 								!collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region].data) {
-								console.log('Unable to find data for: ' + JSON.stringify(callObj));
 								return regionCb();
 							}
 
@@ -366,11 +372,30 @@ var collect = function(AWSConfig, settings, callback) {
 								executor[callKey](filter, function(err, data){
 									if (err) {
 										collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = err;
+										
+										// Handle the S3 redirect issue
+										if (service === 'S3' && err.statusCode && err.statusCode == 301) {
+											executor.getBucketLocation({Bucket: dep[callObj.filterValue]}, function(locErr, locData){
+												if (locErr || !locData || !locData.LocationConstraint) return depCb();
+												// Special case where location constraint is EU - rewrite as eu-west-1
+												if (locData.LocationConstraint == 'EU') locData.LocationConstraint = 'eu-west-1';
+												
+												var altAWSConfig = JSON.parse(JSON.stringify(LocalAWSConfig));
+												altAWSConfig.region = data.LocationConstraint;
+												var s3Alt = new AWS.S3(altAWSConfig);
+
+												s3Alt[callKey](filter, function(altErr, altData){
+													if (altErr || !altData) return depCb();
+													collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = null;
+													collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = altData;
+													depCb();
+												});
+											});
+										}
+									} else {
+										collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = data;
+										depCb();
 									}
-
-									collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = data;
-
-									depCb();
 								});
 							}, function(){
 								if (callObj.rateLimit) {

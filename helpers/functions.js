@@ -2,9 +2,6 @@ var async = require('async');
 
 var ONE_DAY = 24*60*60*1000;
 
-var CREDENTIAL_REPORT_DATA;
-var CREDENTIAL_REPORT_ERROR;
-
 function daysBetween(date1, date2) {
 	return Math.round(Math.abs((new Date(date1).getTime() - new Date(date2).getTime())/(ONE_DAY)));
 }
