@@ -70,15 +70,16 @@ module.exports = {
 
 			if (describeDBClusters.err || !describeDBClusters.data) {
 				helpers.addResult(results, 3, 'Unable to query for RDS clusters', region);
+				return rcb();
 			}
 
 			if (!describeDBClusters.data.length) {
 				return rcb();
 			}
 
-			for (i in describeDBClusters) {
-				var db = describeDBClusters[i];
-				var dbResource = db.DBInstanceArn;
+			for (i in describeDBClusters.data) {
+				var db = describeDBClusters.data[i];
+				var dbResource = db.DBClusterArn;
 
 				if (db.LatestRestorableTime) {
 					var difference = helpers.functions.daysAgo(db.LatestRestorableTime);
@@ -96,6 +97,8 @@ module.exports = {
 						region, dbResource);
 				}
 			}
+
+			rcb();
 		}, function(){
 			callback(null, results, source);
 		});

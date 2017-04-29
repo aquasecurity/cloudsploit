@@ -37,7 +37,7 @@ module.exports = {
 		function addAccessKeyResults(lastUsed, keyNum, arn) {
 			if (!lastUsed) {
 				helpers.addResult(results, 0,
-					'User access key '  + keyNum + ' has never been used', arn);
+					'User access key '  + keyNum + ' has never been used', 'global', arn);
 			} else {
 				var returnMsg = 'User access key ' + keyNum + ': was last used ' + helpers.functions.daysAgo(lastUsed) + ' days ago';
 
@@ -57,7 +57,6 @@ module.exports = {
 
 		async.each(generateCredentialReport.data, function(obj, cb){
 			// The root account security is handled in a different plugin
-			// TODO: update to handle booleans
 			if (obj.user === '<root_account>') return cb();
 
 			if (obj.access_key_1_active) {

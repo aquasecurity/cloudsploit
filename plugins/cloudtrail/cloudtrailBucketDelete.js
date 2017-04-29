@@ -45,8 +45,8 @@ module.exports = {
 					return cb();
 				}
 
-				if (getBucketVersioning && getBucketVersioning.MFADelete &&
-					getBucketVersioning.MFADelete === 'Enabled') {
+				if (getBucketVersioning.data.MFADelete &&
+					getBucketVersioning.data.MFADelete === 'Enabled') {
 					helpers.addResult(results, 0,
 						'Bucket: ' + trail.S3BucketName + ' has MFA delete enabled',
 						region, 'arn:aws:s3:::' + trail.S3BucketName);

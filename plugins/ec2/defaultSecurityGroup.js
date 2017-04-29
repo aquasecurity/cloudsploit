@@ -32,17 +32,19 @@ module.exports = {
 
 			for (s in describeSecurityGroups.data) {
 				var sg = describeSecurityGroups.data[s];
+				// arn:aws:ec2:region:account-id:security-group/security-group-id
+				var resource = 'arn:aws:ec2:' + region + ':' + sg.OwnerId + ':security-group/' + sg.GroupId;
 
 				if (sg.GroupName === 'default') {
 					if (sg.IpPermissions.length ||
 					 	sg.IpPermissionsEgress.length) {
 						helpers.addResult(results, 2,
-							'Default security group has ' + sg.IpPermissions.length + ' inbound and ' + sg.IpPermissionsEgress.length + ' outbound rules',
-							region, sg.GroupId);
+							'Default security group has ' + (sg.IpPermissions.length || '0') + ' inbound and ' + (sg.IpPermissionsEgress.length || '0') + ' outbound rules',
+							region, resource);
 					} else {
 						helpers.addResult(results, 0,
 							'Default security group does not have inbound or outbound rules',
-							region, sg.GroupId);
+							region, resource);
 					}
 				}
 			}

@@ -1,6 +1,7 @@
 var fs = require('fs');
 var async = require('async');
 var plugins = require('./exports.js');
+var collector = require('./collect.js');
 var cache = {};
 var securityReport = (process.argv.indexOf('--security-report') > -1);
 var sourceFile = process.argv[process.argv.indexOf('--source') + 1];
@@ -17,7 +18,6 @@ var sourceFile = process.argv[process.argv.indexOf('--source') + 1];
 // var AWSConfig = require(__dirname + '/credentials.json');
 
 // OPTION 3: Set AWS credentials in environment variables
-
 if (!sourceFile) {
     return console.log('ERROR: Please provide a source file via --source /path/to file');
 }

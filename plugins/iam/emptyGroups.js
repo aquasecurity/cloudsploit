@@ -31,7 +31,7 @@ module.exports = {
 			return callback(null, results, source);
 		}
 		
-		async.each(data.Groups, function(group, cb){
+		async.each(listGroups.data, function(group, cb){
 			if (!group.GroupName) return cb();
 
 			var getGroup = helpers.addSource(cache, source,

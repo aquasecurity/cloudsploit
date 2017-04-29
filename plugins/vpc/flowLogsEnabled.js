@@ -50,7 +50,7 @@ module.exports = {
 			for (f in describeFlowLogs.data) {
 				if (describeFlowLogs.data[f].ResourceId &&
 					vpcMap[describeFlowLogs.data[f].ResourceId]) {
-					vpcMap[describeFlowLogs.data[f].ResourceId].push(flData.FlowLogs[f]);
+					vpcMap[describeFlowLogs.data[f].ResourceId].push(describeFlowLogs.data[f]);
 				}
 			}
 

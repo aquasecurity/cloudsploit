@@ -140,23 +140,16 @@ var calls = {
 
 var postcalls = [
 	{
-		// TODO: handle bucket retries for non-us-east locations
 		S3: {
 			getBucketLogging: {
 				deleteRegion: true,
 				signatureVersion: 'v4',
-				reliesOnService: 'cloudtrail',
-				reliesOnCall: 'describeTrails',
-				filterKey: 'Bucket',
-				filterValue: 'S3BucketName'
+				override: true
 			},
 			getBucketVersioning: {
 				deleteRegion: true,
 				signatureVersion: 'v4',
-				reliesOnService: 'cloudtrail',
-				reliesOnCall: 'describeTrails',
-				filterKey: 'Bucket',
-				filterValue: 'S3BucketName'
+				override: true
 			},
 			getBucketAcl: {
 				deleteRegion: true,
@@ -372,26 +365,7 @@ var collect = function(AWSConfig, settings, callback) {
 								executor[callKey](filter, function(err, data){
 									if (err) {
 										collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = err;
-										
-										// Handle the S3 redirect issue
-										if (service === 'S3' && err.statusCode && err.statusCode == 301) {
-											executor.getBucketLocation({Bucket: dep[callObj.filterValue]}, function(locErr, locData){
-												if (locErr || !locData || !locData.LocationConstraint) return depCb();
-												// Special case where location constraint is EU - rewrite as eu-west-1
-												if (locData.LocationConstraint == 'EU') locData.LocationConstraint = 'eu-west-1';
-												
-												var altAWSConfig = JSON.parse(JSON.stringify(LocalAWSConfig));
-												altAWSConfig.region = data.LocationConstraint;
-												var s3Alt = new AWS.S3(altAWSConfig);
-
-												s3Alt[callKey](filter, function(altErr, altData){
-													if (altErr || !altData) return depCb();
-													collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = null;
-													collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = altData;
-													depCb();
-												});
-											});
-										}
+										depCb();
 									} else {
 										collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = data;
 										depCb();

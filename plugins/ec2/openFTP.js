@@ -49,12 +49,17 @@ module.exports = {
 								for (port in ports[permission.IpProtocol]) {
 									if (permission.FromPort <= port && permission.ToPort >= port) {
 										found = true;
+
+										var resource = 'arn:aws:ec2:' + region + ':' + 
+													describeSecurityGroups.data[i].OwnerId +
+													':security-group/' + describeSecurityGroups.data[i].GroupId;
+
 										helpers.addResult(results, 2,
 											'Security group: ' + describeSecurityGroups.data[i].GroupId +
 											' (' + describeSecurityGroups.data[i].GroupName +
 											') has ' + service + ' ' + permission.IpProtocol.toUpperCase() +
 											' port ' + port + ' open to 0.0.0.0/0', region,
-											describeSecurityGroups.data[i].GroupId);
+											resource);
 									}
 								}
 							}
