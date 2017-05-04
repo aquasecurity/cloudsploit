@@ -1,4 +1,3 @@
-var AWS = require('aws-sdk');
 var async = require('async');
 var helpers = require('../../helpers');
 
@@ -9,75 +8,47 @@ module.exports = {
 	more_info: 'While having empty groups does not present a direct security risk, it does broaden the management landscape which could potentially introduce risks in the future.',
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_WorkingWithGroupsAndUsers.html',
 	recommended_action: 'Remove unused groups without users',
+	apis: ['IAM:listGroups', 'IAM:getGroup'],
 
-	run: function(AWSConfig, cache, includeSource, callback) {
+	run: function(cache, callback) {
 		var results = [];
 		var source = {};
 
-		var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+		var region = 'us-east-1';
 
-		// Update the region
-		LocalAWSConfig.region = 'us-east-1';
+		var listGroups = helpers.addSource(cache, source,
+				['iam', 'listGroups', region]);
 
-		var iam = new AWS.IAM(LocalAWSConfig);
+		if (!listGroups) return callback(null, results, source);
+
+		if (listGroups.err || !listGroups.data) {
+			helpers.addResult(results, 3, 'Unable to query for groups');
+			return callback(null, results, source);
+		}
+
+		if (!listGroups.data.length) {
+			helpers.addResult(results, 0, 'No groups found');
+			return callback(null, results, source);
+		}
 		
-		helpers.cache(cache, iam, 'listGroups', function(err, data) {
-			if (includeSource) source.global = {error: err, data: data};
+		async.each(listGroups.data, function(group, cb){
+			if (!group.GroupName) return cb();
 
-			if (err || !data || !data.Groups) {
-				results.push({
-					status: 3,
-					message: 'Unable to query for groups',
-					region: 'global'
-				});
-				
-				return callback(null, results, source);
+			var getGroup = helpers.addSource(cache, source,
+				['iam', 'getGroup', region, group.GroupName]);
+
+			if (!getGroup || getGroup.err || !getGroup.data || !getGroup.data.Users) {
+				helpers.addResult(results, 3, 'Unable to query for group: ' + group.GroupName, 'global', group.Arn);
+			} else if (!getGroup.data.Users.length) {
+				helpers.addResult(results, 1, 'Group: ' + group.GroupName + ' does not contain any users', 'global', group.Arn);
+				return cb();
+			} else {
+				helpers.addResult(results, 0, 'Group: ' + group.GroupName + ' contains ' + getGroup.data.Users.length + ' user(s)', 'global', group.Arn);
 			}
 
-			if (!data.Groups.length) {
-				results.push({
-					status: 0,
-					message: 'No groups found',
-					region: 'global'
-				});
-
-				return callback(null, results, source);
-			}
-
-			async.eachLimit(data.Groups, 20, function(group, cb){
-				iam.getGroup({GroupName: group.GroupName}, function(err, data){
-					if (err || !data || !data.Users) {
-						results.push({
-							status: 3,
-							message: 'Unable to query for group: ' + group.GroupName,
-							region: 'global',
-							resource: group.Arn
-						});
-
-						return cb();
-					}
-
-					if (!data.Users.length) {
-						results.push({
-							status: 1,
-							message: 'Group: ' + group.GroupName + ' does not contain any users',
-							region: 'global',
-							resource: group.Arn
-						});
-					} else {
-						results.push({
-							status: 0,
-							message: 'Group: ' + group.GroupName + ' contains ' + data.Users.length + ' user(s)',
-							region: 'global',
-							resource: group.Arn
-						});
-					}
-
-					cb();
-				});
-			}, function(){
-				callback(null, results, source);
-			});
+			cb();
+		}, function(){
+			callback(null, results, source);
 		});
 	}
 };

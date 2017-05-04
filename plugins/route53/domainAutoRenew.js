@@ -1,4 +1,3 @@
-var AWS = require('aws-sdk');
 var helpers = require('../../helpers');
 
 module.exports = {
@@ -8,61 +7,43 @@ module.exports = {
 	more_info: 'Domains purchased through Route53 should be set to auto renew. Domains that are not renewed can quickly be acquired by a third-party and cause loss of access for customers.',
 	link: 'http://docs.aws.amazon.com/Route53/latest/APIReference/api-enable-domain-auto-renew.html',
 	recommended_action: 'Enable auto renew for the domain',
+	apis: ['Route53Domains:listDomains'],
 
-	run: function(AWSConfig, cache, includeSource, callback) {
+	run: function(cache, callback) {
 		var results = [];
 		var source = {};
 
-		var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+		var region = 'us-east-1';
 
-		// Update the region
-		LocalAWSConfig.region = 'us-east-1';
+		var listDomains = helpers.addSource(cache, source,
+			['route53domains', 'listDomains', region]);
 
-		var route53domains = new AWS.Route53Domains(LocalAWSConfig);
+		if (!listDomains) return callback(null, results, source);
 
-		helpers.cache(cache, route53domains, 'listDomains', function(err, data) {
-			if (includeSource) source.global = {error: err, data: data};
+		if (listDomains.err || !listDomains.data) {
+			helpers.addResult(results, 3, 'Unable to query for domains');
+			return callback(null, results, source);
+		}
 
-			if (err || !data || !data.Domains) {
-				results.push({
-					status: 3,
-					message: 'Unable to query for domains',
-					region: 'global'
-				});
+		if (!listDomains.data.length) {
+			helpers.addResult(results, 0, 'No domains registered through Route53');
+			return callback(null, results, source);
+		}
 
-				return callback(null, results, source);
+		for (i in listDomains.data) {
+			var domain = listDomains.data[i];
+
+			if (domain.AutoRenew) {
+				helpers.addResult(results, 0,
+					'Domain: ' + domain.DomainName + ' has auto renew enabled',
+					'global', domain.DomainName);
+			} else {
+				helpers.addResult(results, 1,
+					'Domain: ' + domain.DomainName + ' does not have auto renew enabled',
+					'global', domain.DomainName);
 			}
+		}
 
-			if (!data.Domains.length) {
-				results.push({
-					status: 0,
-					message: 'No domains registered through Route53',
-					region: 'global'
-				});
-
-				return callback(null, results, source);
-			}
-
-			for (i in data.Domains) {
-
-				if (data.Domains[i].AutoRenew) {
-					results.push({
-						status: 0,
-						message: 'Domain: ' + data.Domains[i].DomainName + ' has auto renew enabled',
-						resource: data.Domains[i].DomainName,
-						region: 'global'
-					});
-				} else {
-					results.push({
-						status: 1,
-						message: 'Domain: ' + data.Domains[i].DomainName + ' does not have auto renew enabled',
-						resource: data.Domains[i].DomainName,
-						region: 'global'
-					});
-				}
-			}
-
-			callback(null, results, source);
-		});
+		callback(null, results, source);
 	}
 };

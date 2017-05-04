@@ -1,4 +1,3 @@
-var AWS = require('aws-sdk');
 var helpers = require('../../helpers');
 
 module.exports = {
@@ -8,46 +7,40 @@ module.exports = {
 	more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
 	recommended_action: 'Update the password policy to require the use of symbols',
+	apis: ['IAM:getAccountPasswordPolicy'],
 
-	run: function(AWSConfig, cache, includeSource, callback) {
+	run: function(cache, callback) {
 		var results = [];
 		var source = {};
 
-		var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+		var region = 'us-east-1';
 
-		// Update the region
-		LocalAWSConfig.region = 'us-east-1';
+		var getAccountPasswordPolicy = helpers.addSource(cache, source,
+				['iam', 'getAccountPasswordPolicy', region]);
 
-		var iam = new AWS.IAM(LocalAWSConfig);
+		if (!getAccountPasswordPolicy) return callback(null, results, source);
 
-		helpers.cache(cache, iam, 'getAccountPasswordPolicy', function(err, data) {
-			if (includeSource) source.global = {error: err, data: data};
-			
-			if (err || !data || !data.PasswordPolicy) {
-				results.push({
-					status: 3,
-					message: 'Unable to query for password policy status',
-					region: 'global'
-				});
+		// Handle special case errors
+		if (getAccountPasswordPolicy.err &&
+			getAccountPasswordPolicy.err.code &&
+			getAccountPasswordPolicy.err.code === 'NoSuchEntity') {
+			helpers.addResult(results, 2, 'Account does not have a password policy');
+			return callback(null, results, source);
+		}
 
-				return callback(null, results, source);
-			}
-			
-			if (!data.PasswordPolicy.RequireSymbols) {
-				results.push({
-					status: 1,
-					message: 'Password policy does not require symbols',
-					region: 'global'
-				});
-			} else {
-				results.push({
-					status: 0,
-					message: 'Password policy requires symbols',
-					region: 'global'
-				});
-			}
+		if (getAccountPasswordPolicy.err || !getAccountPasswordPolicy.data) {
+			helpers.addResult(results, 3, 'Unable to query for password policy status');
+			return callback(null, results, source);
+		}
 
-			callback(null, results, source);
-		});
+		var passwordPolicy = getAccountPasswordPolicy.data;
+
+		if (!passwordPolicy.RequireSymbols) {
+			helpers.addResult(results, 1, 'Password policy does not require symbols');
+		} else {
+			helpers.addResult(results, 0, 'Password policy requires symbols');
+		}
+
+		callback(null, results, source);
 	}
 };

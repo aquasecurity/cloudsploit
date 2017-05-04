@@ -1,5 +1,4 @@
 var async = require('async');
-var AWS = require('aws-sdk');
 var helpers = require('../../helpers');
 
 module.exports = {
@@ -9,77 +8,57 @@ module.exports = {
 	more_info: 'To provide additional security, CloudTrail logging buckets should require an MFA token to delete objects',
 	recommended_action: 'Enable MFA delete on the CloudTrail bucket',
 	link: 'http://docs.aws.amazon.com/AmazonS3/latest/dev/Versioning.html#MultiFactorAuthenticationDelete',
+	apis: ['CloudTrail:describeTrails', 'S3:getBucketVersioning'],
 
-	run: function(AWSConfig, cache, includeSource, callback) {
+	run: function(cache, callback) {
 		var results = [];
 		var source = {};
 
-		async.eachLimit(helpers.regions.cloudtrail, helpers.MAX_REGIONS_AT_A_TIME, function(region, rcb){
-			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+		async.each(helpers.regions.cloudtrail, function(region, rcb){
 
-			// Update the region
-			LocalAWSConfig.region = region;
-			var cloudtrail = new AWS.CloudTrail(LocalAWSConfig);
+			var describeTrails = helpers.addSource(cache, source,
+				['cloudtrail', 'describeTrails', region]);
 
-			helpers.cache(cache, cloudtrail, 'describeTrails', function(err, data) {
-				if (includeSource) source[region] = {error: err, data: data};
+			if (!describeTrails) return rcb();
 
-				if (err) {
-					results.push({
-						status: 3,
-						message: 'Unable to query for CloudTrail policy',
-						region: region
-					});
+			if (describeTrails.err || !describeTrails.data) {
+				helpers.addResult(results, 3, 'Unable to query for CloudTrail policy', region);
+				return rcb();
+			}
 
-					return rcb();
+			if (!describeTrails.data.length) {
+				helpers.addResult(results, 0, 'No S3 buckets to check', region);
+				return rcb();
+			}
+
+			async.each(describeTrails.data, function(trail, cb){
+				if (!trail.S3BucketName) return cb();
+
+				var getBucketVersioning = helpers.addSource(cache, source,
+					['s3', 'getBucketVersioning', 'us-east-1', trail.S3BucketName]);
+
+				if (!getBucketVersioning || getBucketVersioning.err || !getBucketVersioning.data) {
+					helpers.addResult(results, 3,
+						'Error querying for bucket policy for bucket: ' + trail.S3BucketName,
+						region, 'arn:aws:s3:::' + trail.S3BucketName)
+
+					return cb();
 				}
 
-				// Perform checks for establishing if MFA token is enabled
-				if (data && data.trailList) {
-					if (!data.trailList.length) {
-						results.push({
-							status: 0,
-							message: 'No S3 buckets to check',
-							region: region
-						});
-						return rcb();
-					}
-
-					delete AWSConfig.region;	// Remove region for S3-specific endpoints
-					AWSConfig.signatureVersion = 'v4';
-					var s3 = new AWS.S3(AWSConfig);
-
-					async.eachLimit(data.trailList, 10, function(trailList, cb){
-						s3.getBucketVersioning({Bucket:trailList.S3BucketName}, function(s3err, s3data){
-							if (s3data && s3data.MFADelete && s3data.MFADelete === 'Enabled') {
-								results.push({
-									status: 0,
-									message: 'Bucket: ' + trailList.S3BucketName + ' has MFA delete enabled',
-									region: region,
-									resource: trailList.S3BucketName
-								});
-							} else {
-								results.push({
-									status: 1,
-									message: 'Bucket: ' + trailList.S3BucketName + ' has MFA delete disabled',
-									region: region,
-									resource: trailList.S3BucketName
-								});
-							}
-							cb();
-						});
-					}, function(){
-						rcb();
-					});
+				if (getBucketVersioning.data.MFADelete &&
+					getBucketVersioning.data.MFADelete === 'Enabled') {
+					helpers.addResult(results, 0,
+						'Bucket: ' + trail.S3BucketName + ' has MFA delete enabled',
+						region, 'arn:aws:s3:::' + trail.S3BucketName);
 				} else {
-					results.push({
-						status: 3,
-						message: 'Unable to query for CloudTrail policy',
-						region: region
-					});
-
-					rcb();
+					helpers.addResult(results, 1,
+						'Bucket: ' + trail.S3BucketName + ' has MFA delete disabled',
+						region, 'arn:aws:s3:::' + trail.S3BucketName);
 				}
+
+				cb();
+			}, function(){
+				rcb();
 			});
 		}, function(){
 			callback(null, results, source);

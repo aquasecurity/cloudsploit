@@ -1,4 +1,3 @@
-var AWS = require('aws-sdk');
 var async = require('async');
 var helpers = require('../../helpers');
 
@@ -9,80 +8,63 @@ module.exports = {
 	more_info: 'AWS limits accounts to certain numbers of resources. Exceeding those limits could prevent resources from launching.',
 	link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html#using-instance-addressing-limit',
 	recommended_action: 'Contact AWS support to increase the number of instances available',
+	apis: ['EC2:describeAccountAttributes', 'EC2:describeInstances'],
 
-	run: function(AWSConfig, cache, includeSource, callback) {
+	run: function(cache, callback) {
 		var results = [];
 		var source = {};
 
-		async.eachLimit(helpers.regions.ec2, helpers.MAX_REGIONS_AT_A_TIME, function(region, rcb){
-			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+		async.each(helpers.regions.ec2, function(region, rcb){
+			var describeAccountAttributes = helpers.addSource(cache, source,
+				['ec2', 'describeAccountAttributes', region]);
 
-			// Update the region
-			LocalAWSConfig.region = region;
-			var ec2 = new AWS.EC2(LocalAWSConfig);
+			if (!describeAccountAttributes) return rcb();
 
-			// Default limits to override
+			if (describeAccountAttributes.err || !describeAccountAttributes.data) {
+				helpers.addResult(results, 3, 'Unable to query for account limits', region);
+				return rcb();
+			}
+
 			var limits = {
 				'max-instances': 20
 			};
 
-			// Get the account attributes
-			if (includeSource) source['describeAccountAttributes'] = {};
-			if (includeSource) source['describeInstances'] = {};
-
-			helpers.cache(cache, ec2, 'describeAccountAttributes', function(err, data) {
-				if (includeSource) source['describeAccountAttributes'][region] = {error: err, data: data};
-
-				if (err || !data || !data.AccountAttributes || !data.AccountAttributes.length) {
-					results.push({
-						status: 3,
-						message: 'Unable to query for account limits',
-						region: region
-					});
-
-					return rcb();
+			// Loop through response to assign custom limits
+			for (i in describeAccountAttributes.data) {
+				if (limits[describeAccountAttributes.data[i].AttributeName]) {
+					limits[describeAccountAttributes.data[i].AttributeName] = describeAccountAttributes.data[i].AttributeValues[0].AttributeValue;
 				}
+			}
 
-				// Loop through response to assign custom limits
-				for (i in data.AccountAttributes) {
-					if (limits[data.AccountAttributes[i].AttributeName]) {
-						limits[data.AccountAttributes[i].AttributeName] = data.AccountAttributes[i].AttributeValues[0].AttributeValue;
-					}
-				}
-				
-				// Now call APIs to determine actual usage
-				helpers.cache(cache, ec2, 'describeInstances', function(err, data) {
-					if (includeSource) source['describeInstances'][region] = {error: err, data: data};
+			var describeInstances = helpers.addSource(cache, source,
+				['ec2', 'describeInstances', region]);
 
-					if (err || !data || !data.Reservations) {
-						results.push({
-							status: 3,
-							message: 'Unable to query for instances',
-							region: region
-						});
+			if (!describeInstances) return rcb();
 
-						return rcb();
-					}
+			if (describeInstances.err || !describeInstances.data) {
+				helpers.addResult(results, 3, 'Unable to query for instances', region);
+				return rcb();
+			}
+			
+			if (!describeInstances.data.length) {
+				helpers.addResult(results, 0, 'No instances found', region);
+				return rcb();
+			}
 
-					var returnMsgIl = {
-						status: 0,
-						message: 'Account contains ' + data.Reservations.length + ' of ' + limits['max-instances'] + ' available instances',
-						region: region
-					};
+			var percentage = Math.ceil((describeInstances.data.length / limits['max-instances'])*100);
+			var returnMsg = 'Account contains ' + describeInstances.data.length + ' of ' + limits['max-instances'] + ' (' + percentage + '%) available instances';
 
-					if (data.Reservations.length === limits['max-instances'] - 3) {
-						returnMsgIl.status = 1;
-					} else if (data.Reservations.length >= limits['max-instances'] - 2) {
-						returnMsgIl.status = 2;
-					}
+			if (percentage >= 90) {
+				helpers.addResult(results, 2, returnMsg, region);
+			} else if (percentage >= 75) {
+				helpers.addResult(results, 1, returnMsg, region);
+			} else {
+				helpers.addResult(results, 0, returnMsg, region);
+			}
 
-					results.push(returnMsgIl);
-
-					rcb();
-				});
-			});
+			rcb();
 		}, function(){
-			return callback(null, results, source);
+			callback(null, results, source);
 		});
 	}
 };

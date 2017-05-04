@@ -1,4 +1,3 @@
-var AWS = require('aws-sdk');
 var async = require('async');
 var helpers = require('../../helpers');
 
@@ -9,64 +8,41 @@ module.exports = {
 	more_info: 'Keeping the number of security groups to a minimum helps reduce the attack surface of an account. Rather than creating new groups with the same rules for each project, common rules should be grouped under the same security groups. For example, instead of adding port 22 from a known IP to every group, create a single "SSH" security group which can be used on multiple instances.',
 	link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
 	recommended_action: 'Limit the number of security groups to prevent accidental authorizations',
+	apis: ['EC2:describeSecurityGroups'],
 
-	run: function(AWSConfig, cache, includeSource, callback) {
+	run: function(cache, callback) {
 		var results = [];
 		var source = {};
 
-		async.eachLimit(helpers.regions.ec2, helpers.MAX_REGIONS_AT_A_TIME, function(region, rcb){
-			var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+		async.each(helpers.regions.ec2, function(region, rcb){
 
-			// Update the region
-			LocalAWSConfig.region = region;
-			var ec2 = new AWS.EC2(LocalAWSConfig);
+			var describeSecurityGroups = helpers.addSource(cache, source,
+				['ec2', 'describeSecurityGroups', region]);
+			
+			if (!describeSecurityGroups) return rcb();
 
-			// Get the account attributes
-			helpers.cache(cache, ec2, 'describeSecurityGroups', function(err, data) {
-				if (includeSource) source[region] = {error: err, data: data};
+			if (describeSecurityGroups.err || !describeSecurityGroups.data) {
+				helpers.addResult(results, 3, 'Unable to query for security groups', region);
+				return rcb();
+			}
 
-				if (err || !data || !data.SecurityGroups) {
-					results.push({
-						status: 3,
-						message: 'Unable to query for security groups',
-						region: region
-					});
+			if (!describeSecurityGroups.data.length) {
+				helpers.addResult(results, 0, 'No security groups present', region);
+				return rcb();
+			}
 
-					return rcb();
-				}
+			var returnMsg = ' number of security groups: ' + describeSecurityGroups.data.length + ' groups present';
 
-				if (!data.SecurityGroups.length) {
-					results.push({
-						status: 0,
-						message: 'No security groups present',
-						region: region
-					});
+			if (describeSecurityGroups.data.length > 40) {
+				helpers.addResult(results, 2, 'Excessive' + returnMsg, region);
+			} else if (describeSecurityGroups.data.length > 30) {
+				helpers.addResult(results, 1, 'Large' + returnMsg, region);
+			} else {
+				helpers.addResult(results, 0, 'Acceptable' + returnMsg, region);
+			}
 
-					return rcb();
-				}
-
-				if (data.SecurityGroups.length > 40) {
-					results.push({
-						status: 2,
-						message: 'Excessive number of security groups: ' + data.SecurityGroups.length + ' groups present',
-						region: region
-					});
-				} else if (data.SecurityGroups.length > 30) {
-					results.push({
-						status: 1,
-						message: 'Large number of security groups: ' + data.SecurityGroups.length + ' groups present',
-						region: region
-					});
-				} else {
-					results.push({
-						status: 0,
-						message: 'Acceptable number of security groups: ' + data.SecurityGroups.length + ' groups present',
-						region: region
-					});
-				}
-
-				rcb();
-			});
+			rcb();
+			
 		}, function(){
 			callback(null, results, source);
 		});

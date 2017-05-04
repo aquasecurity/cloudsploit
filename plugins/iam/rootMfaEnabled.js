@@ -1,5 +1,3 @@
-var async = require('async');
-var AWS = require('aws-sdk');
 var helpers = require('../../helpers');
 
 module.exports = {
@@ -9,86 +7,48 @@ module.exports = {
 	more_info: 'The root account should have an MFA device setup to enable two-factor authentication.',
 	link: 'http://docs.aws.amazon.com/general/latest/gr/managing-aws-access-keys.html',
 	recommended_action: 'Enable an MFA device for the root account and then use an IAM user for managing services',
+	apis: ['IAM:generateCredentialReport'],
 
-	run: function(AWSConfig, cache, includeSource, callback) {
+	run: function(cache, callback) {
 		var results = [];
 		var source = {};
 
-		var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+		var region = 'us-east-1';
 
-		// Update the region
-		LocalAWSConfig.region = 'us-east-1';
+		var generateCredentialReport = helpers.addSource(cache, source,
+				['iam', 'generateCredentialReport', region]);
 
-		var iam = new AWS.IAM(LocalAWSConfig);
+		if (!generateCredentialReport) return callback(null, results, source);
 
-		helpers.functions.waitForCredentialReport(iam, function(err, data){
-			if (includeSource) source.global = {error: err, data: []};
+		if (generateCredentialReport.err || !generateCredentialReport.data) {
+			helpers.addResult(results, 3, 'Unable to query for root user');
+			return callback(null, results, source);
+		}
 
-			if (err || !data || !data.Content) {
-				results.push({
-					status: 3,
-					message: 'Unable to query for root user',
-					region: 'global'
-				});
+		var found = false;
 
-				return callback(null, results, source);
-			}
+		for (r in generateCredentialReport.data) {
+			var obj = generateCredentialReport.data[r];
 
-			try {
-				var csvContent = data.Content.toString();
-				var csvRows = csvContent.split('\n');
-			} catch(e) {
-				results.push({
-					status: 3,
-					message: 'Unable to query for root user',
-					region: 'global'
-				});
+			if (obj && obj.user === '<root_account>') {
+				found = true;
 
-				return callback(null, results, source);
-			}
-
-			if (includeSource) source.global.data = csvRows;
-
-			for (r in csvRows) {
-				if (r == 0) { continue; }	// Skip the header row
-
-				var csvRow = csvRows[r];
-				var csvFields = csvRow.split(',');
-
-				var user = csvFields[0];
-				var arn = csvFields[1];
-				var mfaEnabled = csvFields[7];
-
-				if (user === '<root_account>') { 
-					if (mfaEnabled === 'true') {
-						results.push({
-							status: 0,
-							message: 'An MFA device was found for the root account',
-							region: 'global',
-							resource: arn
-						});
-					} else {
-						results.push({
-							status: 2,
-							message: 'An MFA device was not found for the root account',
-							region: 'global',
-							resource: arn
-						});
-					}
-
-					break;	
+				if (obj.mfa_active) {
+					helpers.addResult(results, 0,
+						'An MFA device was found for the root account', 'global', obj.arn);
+				} else {
+					helpers.addResult(results, 2,
+						'An MFA device was not found for the root account', 'global', obj.arn);
 				}
-			}
 
-			if (!results.length) {
-				results.push({
-					status: 0,
-					message: 'Unable to query for root user',
-					region: 'global'
-				});
+				break;
 			}
+		}
 
-			callback(null, results, source);
-		});
+		if (!found) {
+			helpers.addResult(results, 3, 'Unable to query for root user');
+		}
+
+		callback(null, results, source);
 	}
 };

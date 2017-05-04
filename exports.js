@@ -13,9 +13,9 @@ module.exports = {
 
     'configServiceEnabled'          : require(__dirname + '/plugins/configservice/configServiceEnabled.js'),
 
+    'defaultSecurityGroup'          : require(__dirname + '/plugins/ec2/defaultSecurityGroup.js'),
     'elasticIpLimit'                : require(__dirname + '/plugins/ec2/elasticIpLimit.js'),
     'excessiveSecurityGroups'       : require(__dirname + '/plugins/ec2/excessiveSecurityGroups.js'),
-    'insecureCiphers'               : require(__dirname + '/plugins/ec2/insecureCiphers.js'),
     'instanceLimit'                 : require(__dirname + '/plugins/ec2/instanceLimit.js'),
     'openCIFS'                      : require(__dirname + '/plugins/ec2/openCIFS.js'),
     'openDNS'                       : require(__dirname + '/plugins/ec2/openDNS.js'),
@@ -33,7 +33,11 @@ module.exports = {
     'openVNCClient'                 : require(__dirname + '/plugins/ec2/openVNCClient.js'),
     'openVNCServer'                 : require(__dirname + '/plugins/ec2/openVNCServer.js'),
     'vpcElasticIpLimit'             : require(__dirname + '/plugins/ec2/vpcElasticIpLimit.js'),
-    'defaultSecurityGroup'          : require(__dirname + '/plugins/ec2/defaultSecurityGroup.js'),
+    'classicInstances'              : require(__dirname + '/plugins/ec2/classicInstances.js'),
+    'flowLogsEnabled'               : require(__dirname + '/plugins/ec2/flowLogsEnabled.js'),
+    'vpcMultipleSubnets'            : require(__dirname + '/plugins/ec2/multipleSubnets.js'),
+
+    'insecureCiphers'               : require(__dirname + '/plugins/elb/insecureCiphers.js'),
 
     'accessKeysExtra'               : require(__dirname + '/plugins/iam/accessKeysExtra.js'),
     'accessKeysLastUsed'            : require(__dirname + '/plugins/iam/accessKeysLastUsed.js'),
@@ -68,11 +72,7 @@ module.exports = {
 
     'bucketAllUsersPolicy'          : require(__dirname + '/plugins/s3/bucketAllUsersPolicy.js'),
 
-    'classicInstances'              : require(__dirname + '/plugins/vpc/classicInstances.js'),
-    'flowLogsEnabled'               : require(__dirname + '/plugins/vpc/flowLogsEnabled.js'),
-    'vpcMultipleSubnets'            : require(__dirname + '/plugins/vpc/multipleSubnets.js'),
-
     // OPTIONAL Plugins
     // These plugins require additional IAM permissions beyond the SecurityAudit managed policy
-    // 'dkimEnabled'                    : require(__dirname + '/plugins/ses/dkimEnabled.js'),
+    'dkimEnabled'                    : require(__dirname + '/plugins/ses/dkimEnabled.js'),
 };

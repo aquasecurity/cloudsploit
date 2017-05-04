@@ -9,118 +9,67 @@ module.exports = {
 	more_info: 'Access keys should be rotated frequently to avoid having them accidentally exposed.',
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/ManagingCredentials.html',
 	recommended_action: 'To rotate an access key, first create a new key, replace the key and secret throughout your app or scripts, then set the previous key to disabled. Once you ensure that no services are broken, then fully delete the old key.',
+	apis: ['IAM:generateCredentialReport'],
 
-	run: function(AWSConfig, cache, includeSource, callback) {
+	run: function(cache, callback) {
 
 		var results = [];
 		var source = {};
 
-		var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+		var region = 'us-east-1';
 
-		// Update the region
-		LocalAWSConfig.region = 'us-east-1';
+		var generateCredentialReport = helpers.addSource(cache, source,
+				['iam', 'generateCredentialReport', region]);
 
-		var iam = new AWS.IAM(LocalAWSConfig);
+		if (!generateCredentialReport) return callback(null, results, source);
 
-		helpers.functions.waitForCredentialReport(iam, function(err, data){
-			if (includeSource) source.global = {error: err, data: []};
+		if (generateCredentialReport.err || !generateCredentialReport.data) {
+			helpers.addResult(results, 3, 'Unable to query for users');
+			return callback(null, results, source);
+		}
 
-			if (err || !data || !data.Content) {
-				results.push({
-					status: 3,
-					message: 'Unable to query for users',
-					region: 'global'
-				});
+		if (generateCredentialReport.data.length <= 2) {
+			helpers.addResult(results, 0, 'No users using access keys found');
+			return callback(null, results, source);
+		}
 
-				return callback(null, results, source);
+		var found = false;
+
+		function addAccessKeyResults(lastRotated, keyNum, arn, userCreationTime) {
+			var returnMsg = 'User access key ' + keyNum + ' ' + ((lastRotated === 'N/A' || !lastRotated) ? 'has never been rotated' : 'was last rotated ' + helpers.functions.daysAgo(lastRotated) + ' days ago');
+
+			if (helpers.functions.daysAgo(userCreationTime) > 180 &&
+				(!lastRotated || lastRotated === 'N/A' || helpers.functions.daysAgo(lastRotated) > 180)) {
+				helpers.addResult(results, 2, returnMsg, 'global', arn);
+			} else if (helpers.functions.daysAgo(userCreationTime) > 90 &&
+				(!lastRotated || lastRotated === 'N/A' || helpers.functions.daysAgo(lastRotated) > 90)) {
+				helpers.addResult(results, 1, returnMsg, 'global', arn);
+			} else {
+				helpers.addResult(results, 0,
+					'User access key '  + keyNum + ' ' +
+					((lastRotated === 'N/A') ? 'has never been rotated but user is only ' + helpers.functions.daysAgo(userCreationTime) + ' days old' : 'was last rotated ' + helpers.functions.daysAgo(lastRotated) + ' days ago'), 'global', arn)
 			}
 
-			try {
-				var csvContent = data.Content.toString();
-				var csvRows = csvContent.split('\n');
-			} catch(e) {
-				results.push({
-					status: 3,
-					message: 'Unable to query for users',
-					region: 'global'
-				});
+			found = true;
+		}
 
-				return callback(null, results, source);
+		async.each(generateCredentialReport.data, function(obj, cb){
+			// TODO: update to handle booleans
+			// The root account security is handled in a different plugin
+			if (obj.user === '<root_account>') return cb();
+
+			if (obj.access_key_1_active) {
+				addAccessKeyResults(obj.access_key_1_last_rotated, '1', obj.arn, obj.user_creation_time);
 			}
 
-			if (includeSource) source.global.data = csvRows;
-
-			if (csvRows.length <= 2) {
-				// The only user is the root user
-				results.push({
-					status: 0,
-					message: 'No users using access keys found',
-					region: 'global'
-				});
-
-				return callback(null, results, source);
+			if (obj.access_key_2_active) {
+				addAccessKeyResults(obj.access_key_2_last_rotated, '2', obj.arn, obj.user_creation_time);
 			}
 
-			for (r in csvRows) {
-				if (r == 0) {continue; }	// Skip the header row
-
-				var csvRow = csvRows[r];
-				var csvFields = csvRow.split(',');
-
-				var user = csvFields[0];
-				var arn = csvFields[1];
-				var userCreationTime = csvFields[2];
-				var accessKey1Active = csvFields[8];
-				var accessKey1LastRotated = csvFields[9];
-				var accessKey2Active = csvFields[13];
-				var accessKey2LastRotated = csvFields[14];
-
-				if (accessKey1Active === 'false' && accessKey2Active === 'false') {
-					// User is not using access keys, skip
-					continue;
-				}
-
-				if (user === '<root_account>') { 
-					// The root account security is handled in a different plugin
-					continue;
-				}
-
-				function addAccessKeyResults(lastRotated, keyNum) {
-					var result = {
-						status: 0,
-						message: 'User access key ' + keyNum + ' ' + ((lastRotated === 'N/A') ? 'has never been rotated' : 'was last rotated ' + helpers.functions.daysAgo(lastRotated) + ' days ago'),
-						region: 'global',
-						resource: arn
-					};
-
-					if (helpers.functions.daysAgo(userCreationTime) > 180 &&
-						(lastRotated === 'N/A' || helpers.functions.daysAgo(lastRotated) > 180)) {
-						result.status = 2;
-					} else if (helpers.functions.daysAgo(userCreationTime) > 90 &&
-						(lastRotated === 'N/A' || helpers.functions.daysAgo(lastRotated) > 90)) {
-						result.status = 1;
-					} else {
-						result.message = 'User access key '  + keyNum + ' ' + ((lastRotated === 'N/A') ? 'has never been rotated but user is only ' + helpers.functions.daysAgo(userCreationTime) + ' days old' : 'was last rotated ' + helpers.functions.daysAgo(lastRotated) + ' days ago');
-					}
-
-					results.push(result);
-				}
-
-				if (accessKey1Active === 'true') {
-					addAccessKeyResults(accessKey1LastRotated, '1');
-				}
-
-				if (accessKey2Active === 'true') {
-					addAccessKeyResults(accessKey2LastRotated, '2');
-				}
-			}
-
-			if (!results.length) {
-				results.push({
-					status: 0,
-					message: 'No users using access keys found',
-					region: 'global'
-				});
+			cb();
+		}, function(){
+			if (!found) {
+				helpers.addResult(results, 0, 'No users using access keys found');
 			}
 
 			callback(null, results, source);

@@ -1,13 +1,11 @@
 var async = require('async');
 var plugins = require('./exports.js');
-var cache = {};
-var securityReport = (process.argv.indexOf('--security-report') > -1);
+var collector = require('./collect.js');
 
-var benchmarkMap = {};
-var categoryMap = {};
+var AWSConfig;
 
 // OPTION 1: Configure AWS credentials through hard-coded key and secret
-// var AWSConfig = {
+// AWSConfig = {
 //     accessKeyId: '',
 //     secretAccessKey: '',
 //     sessionToken: '',
@@ -15,54 +13,60 @@ var categoryMap = {};
 // };
 
 // OPTION 2: Import an AWS config file containing credentials
-// var AWSConfig = require(__dirname + '/credentials.json');
+// AWSConfig = require(__dirname + '/credentials.json');
 
-// OPTION 3: Set AWS credentials in environment variables
-
-if (securityReport) {
-    console.log('Running security report. This may take a few minutes...\nFor more details on the results, run the scan again without the --security-report argument.');
-} else {
-    console.log('CATEGORY\tPLUGIN\t\t\t\tRESOURCE\t\t\tREGION\t\tSTATUS\tMESSAGE');
+if (!AWSConfig || !AWSConfig.accessKeyId) {
+    return console.log('ERROR: Invalid AWSConfig');
 }
 
-async.forEachOfLimit(plugins, 10, function(plugin, key, callback){
-    plugin.run(AWSConfig, cache, false, function(err, results){
-        var benchmarkStatus = 'PASS';
-        for (r in results) {
-            var statusWord;
-            if (results[r].status === 0) {
-                statusWord = 'OK';
-            } else if (results[r].status === 1) {
-                statusWord = 'WARN';
-                if (benchmarkStatus !== 'UNKN') benchmarkStatus = 'FAIL';
-            } else if (results[r].status === 2) {
-                statusWord = 'FAIL';
-                if (benchmarkStatus !== 'UNKN') benchmarkStatus = 'FAIL';
-            } else {
-                statusWord = 'UNKNOWN';
-                benchmarkStatus = 'UNKN';
-            }
-            if (!securityReport) {
-                console.log(plugin.category + '\t' + plugin.title + '\t' + (results[r].resource || 'N/A') + '\t' + (results[r].region || 'Global') + '\t\t' + statusWord + '\t' + results[r].message);
-            }
-        }
+var skipRegions = [];   // Add any regions you wish to skip here. Ex: 'us-east-2'
 
-        if (securityReport) {
-            if (!categoryMap[plugin.category]) categoryMap[plugin.category] = {};
-            categoryMap[plugin.category][plugin.title] = benchmarkStatus;
-        }
+// STEP 1 - Obtain API calls to make
+console.log('INFO: Determining API calls to make...');
 
-        callback(err);
-    });
-}, function(err, data){
-    if (err) return console.log(err);
-    if (securityReport) {
-        for (c in categoryMap) {
-            console.log('\n' + c);
+var apiCalls = [];
 
-            for (p in categoryMap[c]) {
-                console.log('     ' + categoryMap[c][p] + ' ' + p);
-            }
+for (p in plugins) {
+    for (a in plugins[p].apis) {
+        if (apiCalls.indexOf(plugins[p].apis[a]) === -1) {
+            apiCalls.push(plugins[p].apis[a]);
         }
     }
+}
+
+console.log('INFO: API calls determined.');
+console.log('INFO: Collecting AWS metadata. This may take several minutes...');
+
+// STEP 2 - Collect API Metadata from AWS
+collector(AWSConfig, {api_calls: apiCalls, skip_regions: skipRegions}, function(err, collection){
+    if (err || !collection) return console.log('ERROR: Unable to obtain API metadata');
+
+    console.log('INFO: Metadata collection complete. Analyzing...');
+    console.log('INFO: Analysis complete. Scan report to follow...\n');
+
+    async.forEachOfLimit(plugins, 10, function(plugin, key, callback){
+        plugin.run(collection, function(err, results){
+            for (r in results) {
+                var statusWord;
+                if (results[r].status === 0) {
+                    statusWord = 'OK';
+                } else if (results[r].status === 1) {
+                    statusWord = 'WARN';
+                } else if (results[r].status === 2) {
+                    statusWord = 'FAIL';
+                } else {
+                    statusWord = 'UNKNOWN';
+                }
+                
+                console.log(plugin.category + '\t' + plugin.title + '\t' +
+                            (results[r].resource || 'N/A') + '\t' +
+                            (results[r].region || 'Global') + '\t\t' +
+                            statusWord + '\t' + results[r].message);
+            }
+
+            callback(err);
+        });
+    }, function(err){
+        if (err) return console.log(err);
+    });
 });

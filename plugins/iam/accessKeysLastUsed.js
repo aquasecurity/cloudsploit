@@ -1,5 +1,4 @@
 var async = require('async');
-var AWS = require('aws-sdk');
 var helpers = require('../../helpers');
 
 module.exports = {
@@ -9,108 +8,69 @@ module.exports = {
 	more_info: 'Having numerous, unused access keys extends the attack surface. Access keys should be removed if they are no longer being used.',
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/ManagingCredentials.html',
 	recommended_action: 'Log into the IAM portal and remove the offending access key.',
+	apis: ['IAM:generateCredentialReport'],
 
-	run: function(AWSConfig, cache, includeSource, callback) {
+	run: function(cache, callback) {
 
 		var results = [];
 		var source = {};
 
-		var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+		var region = 'us-east-1';
 
-		// Update the region
-		LocalAWSConfig.region = 'us-east-1';
+		var generateCredentialReport = helpers.addSource(cache, source,
+				['iam', 'generateCredentialReport', region]);
 
-		var iam = new AWS.IAM(LocalAWSConfig);
+		if (!generateCredentialReport) return callback(null, results, source);
 
-		helpers.functions.waitForCredentialReport(iam, function(err, data){
-			if (includeSource) source.global = {error: err, data: []};
+		if (generateCredentialReport.err || !generateCredentialReport.data) {
+			helpers.addResult(results, 3, 'Unable to query for users');
+			return callback(null, results, source);
+		}
 
-			if (err || !data || !data.Content) {
-				results.push({
-					status: 3,
-					message: 'Unable to query for users',
-					region: 'global'
-				});
+		if (generateCredentialReport.data.length <= 2) {
+			helpers.addResult(results, 0, 'No users using access keys found');
+			return callback(null, results, source);
+		}
 
-				return callback(null, results, source);
-			}
+		var found = false;
 
-			try {
-				var csvContent = data.Content.toString();
-				var csvRows = csvContent.split('\n');
-			} catch(e) {
-				results.push({
-					status: 3,
-					message: 'Unable to query for users',
-					region: 'global'
-				});
+		function addAccessKeyResults(lastUsed, keyNum, arn) {
+			if (!lastUsed) {
+				helpers.addResult(results, 0,
+					'User access key '  + keyNum + ' has never been used', 'global', arn);
+			} else {
+				var returnMsg = 'User access key ' + keyNum + ': was last used ' + helpers.functions.daysAgo(lastUsed) + ' days ago';
 
-				return callback(null, results, source);
-			}
-
-			if (includeSource) source.global.data = csvRows;
-
-			if (csvRows.length <= 2) {
-				// The only user is the root user
-				results.push({
-					status: 0,
-					message: 'No users using access keys found',
-					region: 'global'
-				});
-
-				return callback(null, results, source);
-			}
-
-			for (r in csvRows) {
-				if (r == 0) { continue; }	// Skip the header row
-
-				var csvRow = csvRows[r];
-				var csvFields = csvRow.split(',');
-
-				var user = csvFields[0];
-				var arn = csvFields[1];
-				var accessKey1LastUsed = csvFields[10];
-				var accessKey2LastUsed = csvFields[15];
-
-				if (user === '<root_account>') { 
-					// The root account security is handled in a different plugin
-					continue;
-				}
-
-				function addAccessKeyResults(lastUsed, keyNum) {
-					var result = {
-						status: 0,
-						message: 'User access key ' + keyNum + ' ' + ((lastUsed === 'N/A') ? 'has never been used' : 'was last used ' + helpers.functions.daysAgo(lastUsed) + ' days ago'),
-						region: 'global',
-						resource: arn
-					};
-
-					if (helpers.functions.daysAgo(lastUsed) > 180) {
-						result.status = 2;
-					} else if (helpers.functions.daysAgo(lastUsed) > 90) {
-						result.status = 1;
-					} else {
-						result.message = 'User access key '  + keyNum + ' was last used ' + helpers.functions.daysAgo(lastUsed) + ' days ago';
-					}
-
-					results.push(result);
-				}
-
-				if (accessKey1LastUsed !== 'N/A') {
-					addAccessKeyResults(accessKey1LastUsed, '1');
-				}
-
-				if (accessKey2LastUsed  !== 'N/A') {
-					addAccessKeyResults(accessKey2LastUsed, '2');
+				if (helpers.functions.daysAgo(lastUsed) > 180) {
+					helpers.addResult(results, 2, returnMsg, 'global', arn)
+				} else if (helpers.functions.daysAgo(lastUsed) > 90) {
+					helpers.addResult(results, 1, returnMsg, 'global', arn)
+				} else {
+					helpers.addResult(results, 0,
+						'User access key '  + keyNum + ' was last used ' +
+						helpers.functions.daysAgo(lastUsed) + ' days ago', 'global', arn);
 				}
 			}
 
-			if (!results.length) {
-				results.push({
-					status: 0,
-					message: 'No users using access keys found',
-					region: 'global'
-				});
+			found = true;
+		}
+
+		async.each(generateCredentialReport.data, function(obj, cb){
+			// The root account security is handled in a different plugin
+			if (obj.user === '<root_account>') return cb();
+
+			if (obj.access_key_1_active) {
+				addAccessKeyResults(obj.access_key_1_last_used_date, '1', obj.arn);
+			}
+
+			if (obj.access_key_2_active) {
+				addAccessKeyResults(obj.access_key_2_last_used_date, '2', obj.arn);
+			}
+
+			cb();
+		}, function(){
+			if (!found) {
+				helpers.addResult(results, 0, 'No users using access keys found');
 			}
 
 			callback(null, results, source);

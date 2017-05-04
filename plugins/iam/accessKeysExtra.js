@@ -1,5 +1,4 @@
 var async = require('async');
-var AWS = require('aws-sdk');
 var helpers = require('../../helpers');
 
 module.exports = {
@@ -9,97 +8,48 @@ module.exports = {
 	more_info: 'Having more than one access key for a single user increases the chance of accidental exposure. Each account should only have one key that defines the users permissions.',
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/ManagingCredentials.html',
 	recommended_action: 'Remove the extra access key for the specified user.',
+	apis: ['IAM:generateCredentialReport'],
 
-	run: function(AWSConfig, cache, includeSource, callback) {
+	run: function(cache, callback) {
 
 		var results = [];
 		var source = {};
 
-		var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+		var region = 'us-east-1';
 
-		// Update the region
-		LocalAWSConfig.region = 'us-east-1';
+		var generateCredentialReport = helpers.addSource(cache, source,
+				['iam', 'generateCredentialReport', region]);
 
-		var iam = new AWS.IAM(LocalAWSConfig);
+		if (!generateCredentialReport) return callback(null, results, source);
 
-		helpers.functions.waitForCredentialReport(iam, function(err, data){
-			if (includeSource) source.global = {error: err, data: []};
+		if (generateCredentialReport.err || !generateCredentialReport.data) {
+			helpers.addResult(results, 3, 'Unable to query for users');
+			return callback(null, results, source);
+		}
 
-			if (err || !data || !data.Content) {
-				results.push({
-					status: 3,
-					message: 'Unable to query for users',
-					region: 'global'
-				});
+		if (generateCredentialReport.data.length <= 2) {
+			helpers.addResult(results, 0, 'No users using access keys found');
+			return callback(null, results, source);
+		}
 
-				return callback(null, results, source);
+		var found = false;
+
+		async.each(generateCredentialReport.data, function(obj, cb){
+			// The root account security is handled in a different plugin
+			if (obj.user === '<root_account>') return cb();
+
+			if (obj.access_key_1_active && obj.access_key_2_active) {
+				helpers.addResult(results, 2, 'User is using both access keys', 'global', obj.arn);
+			} else {
+				helpers.addResult(results, 0, 'User is not using both access keys', 'global', obj.arn);
 			}
 
-			try {
-				var csvContent = data.Content.toString();
-				var csvRows = csvContent.split('\n');
-			} catch(e) {
-				results.push({
-					status: 3,
-					message: 'Unable to query for users',
-					region: 'global'
-				});
+			found = true;
 
-				return callback(null, results, source);
-			}
-
-			if (includeSource) source.global.data = csvRows;
-
-			if (csvRows.length <= 2) {
-				// The only user is the root user
-				results.push({
-					status: 0,
-					message: 'No users using access keys found',
-					region: 'global'
-				});
-
-				return callback(null, results, source);
-			}
-
-			for (r in csvRows) {
-				if (r == 0) { continue; }	// Skip the header row
-
-				var csvRow = csvRows[r];
-				var csvFields = csvRow.split(',');
-
-				var user = csvFields[0];
-				var arn = csvFields[1];
-				var accessKey1Active = csvFields[8];
-				var accessKey2Active = csvFields[13];
-
-				if (user === '<root_account>') { 
-					// The root account security is handled in a different plugin
-					continue;
-				}
-
-				if (accessKey1Active === 'true' && accessKey2Active === 'true') {
-					results.push({
-						status: 2,
-						message: 'User is using both access keys',
-						region: 'global',
-						resource: arn
-					});
-				} else {
-					results.push({
-						status: 0,
-						message: 'User is not using both access keys',
-						region: 'global',
-						resource: arn
-					});
-				}
-			}
-
-			if (!results.length) {
-				results.push({
-					status: 0,
-					message: 'No users using both access keys found',
-					region: 'global'
-				});
+			cb();
+		}, function(){
+			if (!found) {
+				helpers.addResult(results, 0, 'No users using both access keys found');
 			}
 
 			callback(null, results, source);

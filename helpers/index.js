@@ -1,7 +1,9 @@
 module.exports = {
-	cache: require('./cache.js'),
 	functions: require('./functions.js'),
 	regions: require('./regions.js'),
+	addResult: require('./functions.js').addResult,
+	addSource: require('./functions.js').addSource,
+	addError: require('./functions.js').addError,
 
-	MAX_REGIONS_AT_A_TIME: 4
+	MAX_REGIONS_AT_A_TIME: 6
 };
