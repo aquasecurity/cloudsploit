@@ -1,7 +1,7 @@
+![CloudSploit](https://cloudsploit.com/img/logo-big-text-100.png "CloudSploit")
+
 CloudSploit Scans
 =================
-
-![CloudSploit](https://cloudsploit.com/img/logo-big-text-100.png "CloudSploit")
 
 ## Background
 CloudSploit scans is an open-source project designed to allow detection of security risks in an AWS account. These scripts are designed to run against an AWS account and return a series of potential misconfigurations and security risks.
