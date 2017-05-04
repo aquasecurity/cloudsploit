@@ -40,7 +40,7 @@ module.exports = {
 				if (!getBucketLogging || getBucketLogging.err || !getBucketLogging.data) {
 					helpers.addResult(results, 3,
 						'Error querying for bucket policy for bucket: ' + trail.S3BucketName,
-						region, 'arn:aws:s3:::' + trail.S3BucketName)
+						region, 'arn:aws:s3:::' + trail.S3BucketName);
 
 					return cb();
 				}

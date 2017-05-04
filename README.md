@@ -1,13 +1,13 @@
 CloudSploit Scans
 =================
 
+![CloudSploit](https://cloudsploit.com/img/logo-big-text-100.png "CloudSploit")
+
 ## Background
 CloudSploit scans is an open-source project designed to allow detection of security risks in an AWS account. These scripts are designed to run against an AWS account and return a series of potential misconfigurations and security risks.
 
-CloudSploit scans now also support security reports. The security reports are a high-level overview of results, organized by category. The report provides a simply pass/fail result for all available plugins.
-
 ## Installation
-Ensure that node is installed. If not, install it from [here](https://nodejs.org/download/).
+Ensure that NodeJS is installed. If not, install it from [here](https://nodejs.org/download/).
 
 ```
 git clone git@github.com:cloudsploit/scans.git
@@ -18,7 +18,7 @@ npm install
 ```
 
 ## Setup
-To begin using the scanner, edit the `index.js` file with your AWS key, secret, and optionally (for temporary credentials), a session token. You can also set a file containing credentials or load them via environment variables. To determine the permissions associated with your credentials, see the [permissions section below](#permissions). In the list of plugins in the `exports.js` file, comment out any plugins you do not wish to run. Then save and run ```node index.js```. 
+To begin using the scanner, edit the `index.js` file with your AWS key, secret, and optionally (for temporary credentials), a session token. You can also set a file containing credentials. To determine the permissions associated with your credentials, see the [permissions section below](#permissions). In the list of plugins in the `exports.js` file, comment out any plugins you do not wish to run. You can also skip entire regions by modifying the `skipRegions` array.
 
 ### Cross Account Roles
 When using the [hosted scanner](https://cloudsploit.com/scan), you'll need to create a cross-account IAM role. Cross-account roles enable you to share access to your account with another AWS account using the same policy model that you're used to. The advantage is that cross-account roles are much more secure than key-based access, since an attacker who steals a cross-account role ARN still can't make API calls unless they also infiltrate the authorized AWS account.
@@ -35,14 +35,10 @@ To create a cross-account role:
 8. Ensure that "Require MFA" is _not_ selected.
 9. Click "Next Step".
 10. Select the "Security Audit" policy. Then click "Next Step" again.
-11. Click on your new role.
-12. Expand "Inline Policies" and click on the link to create a new one.
-13. Select "Custom Policy".
-14. Provide any policy name, and then copy the entire [permissions document](#permissions) below into the box.
-15. Click "Apply Policy".
+11. Click through to create the role.
 
 ## Permissions
-The scans require read-only permissions to your account. This can be done by adding the "Security Audit" AWS managed policy to your IAM user or role, as well as the "cloudtrail:DescribeTrails" permission (can be created via an inline permissions document).
+The scans require read-only permissions to your account. This can be done by adding the "Security Audit" AWS managed policy to your IAM user or role.
 
 ### Security Audit Managed Policy (Recommended)
 
@@ -67,33 +63,39 @@ WARNING: This policy will likely change as more plugins are written. If a test r
   "Statement": [
     {
       "Action": [
-            "cloudtrail:DescribeTrails",
             "cloudfront:ListDistributions",
-            "s3:GetBucketVersioning",
-            "s3:ListAllMyBuckets",
-            "s3:GetBucketAcl",
-            "ec2:DescribeAccountAttributes",
-            "ec2:DescribeAddresses",
+            "cloudtrail:DescribeTrails",
+            "configservice:DescribeConfigurationRecorders",
+            "configservice:DescribeConfigurationRecorderStatus",
             "ec2:DescribeInstances",
             "ec2:DescribeSecurityGroups",
-            "iam:ListServerCertificates",
-            "iam:GenerateCredentialReport",
-            "iam:GetCredentialReport",
-            "iam:GetAccountPasswordPolicy",
-            "iam:GetAccountSummary",
-            "iam:GetAccessKeyLastUsed",
-            "iam:GetGroup",
-            "iam:ListMFADevices",
-            "iam:ListUsers",
-            "iam:ListGroups",
-            "iam:ListAccessKeys",
-            "iam:ListVirtualMFADevices"
-            "iam:ListSSHPublicKeys",
+            "ec2:DescribeAccountAttributes",
+            "ec2:DescribeAddresses",
+            "ec2:DescribeVpcs",
+            "ec2:DescribeFlowLogs",
+            "ec2:DescribeSubnets",
             "elasticloadbalancing:DescribeLoadBalancerPolicies",
             "elasticloadbalancing:DescribeLoadBalancers",
-            "route53domains:ListDomains",
+            "iam:GenerateCredentialReport",
+            "iam:ListServerCertificates",
+            "iam:ListGroups",
+            "iam:GetGroup",
+            "iam:GetAccountPasswordPolicy",
+            "iam:ListUsers",
+            "iam:ListUserPolicies",
+            "iam:ListAttachedUserPolicies",
+            "kms:ListKeys",
+            "kms:DescribeKey",
+            "kms:GetKeyRotationStatus",
             "rds:DescribeDBInstances",
-            "kms:ListKeys"
+            "rds:DescribeDBClusters",
+            "route53domains:ListDomains",
+            "s3:GetBucketVersioning",
+            "s3:GetBucketLogging",
+            "s3:GetBucketAcl",
+            "s3:ListBuckets",
+            "ses:ListIdentities",
+            "ses:getIdentityDkimAttributes"
       ],
       "Effect": "Allow",
       "Resource": "*"
@@ -110,18 +112,42 @@ To run a standard scan, showing all outputs and results, simply run:
 node index.js
 ```
 
-To run a security report, add the `--security-report` argument.
-
-```
-node index.js --security-report
-```
-
 ## Optional Plugins
 
-Some plugins require additional permissions not outlined above. Since their required IAM permissions are not included in the `SecurityAudit` managed policy, these plugins are not included in the `exports.js` file by default. To enable these plugins, uncomment them from the `exports.js` file, add the policies required to an inline IAM policy, and re-run the scan.
+Some plugins may require additional permissions not outlined above. Since their required IAM permissions are not included in the `SecurityAudit` managed policy, these plugins are not included in the `exports.js` file by default. To enable these plugins, uncomment them from the `exports.js` file, if applicable, add the policies required to an inline IAM policy, and re-run the scan.
+
+## Architecture
+
+CloudSploit works in two phases. First, it queries the AWS APIs for various metadata about your account. This is known as the "collection" phase. Once all the necessary data has been collected, the result is passed to the second phase - "scanning." The scan uses the collected data to search for potential misconfigurations, risks, and other security issues. These are then provided as output.
 
 ## Writing a Plugin
-Writing a plugin is very simple, but must follow several rules:
+### Collection Phase
+To write a plugin, you must understand what AWS API calls your scan makes. These must be added to the `collect.js` file. This file determines the AWS API calls and the order in which they are made. For example:
+```
+CloudFront: {
+  listDistributions: {
+    property: 'DistributionList',
+    secondProperty: 'Items'
+  }
+},
+```
+This declaration tells the CloudSploit collection engine to query the CloudFront service using the `listDistributions` call and then save the results returned under `DistributionList.Items`.
+
+The second section in `collect.js` is `postcalls`, which is an array of objects defining API calls that rely on other calls being returned first. For example, if you need to first query for all EC2 instances, and then loop through each instance and run a more detailed call, you would add the `EC2:DescribeInstances` call in the first `calls` section and then add the more detailed call in `postCalls` setting it to rely on the output of `DescribeInstances`.
+
+An example:
+```
+getGroup: {
+  reliesOnService: 'iam',
+  reliesOnCall: 'listGroups',
+  filterKey: 'GroupName',
+  filterValue: 'GroupName'
+},
+```
+This section tells CloudSploit to wait until the `IAM:listGroups` call has been made, and then loop through the data that is returned. The `filterKey` tells CloudSploit the name of the key from the original response, while `filterValue` tells it which property to set in the `getGroup` call filter. For example: `iam.getGroup({GroupName:abc})` where `abc` is the `GroupName` from the returned list. CloudSploit will loop through each response, re-invoking `getGroup` for each element.
+
+### Scanning Phase
+After the data has been collected, it is passed to the scanning engine when the results are analyzed for risks. Each plugin must export the following:
 
 * Exports the following:
   * ```title``` (string): a user-friendly title for the plugin
@@ -131,9 +157,8 @@ Writing a plugin is very simple, but must follow several rules:
   * ```link``` (string): an AWS help URL describing the service or risk, preferably with mitigation methods
   * ```recommended_action``` (string): what the user should do to mitigate the risk found
   * ```run``` (function): a function that runs the test (see below)
-* Accepts an ```AWSConfig``` object via the run function (AWSConfig contains the access key, secret, region, etc.)
-* Accepts a ```cache``` object via the run function (cache should be an empty object declared before running multiple plugins.)
-* Calls back with the results
+* Accepts a ```collection``` object via the run function containing the full collection object obtained in the first phase.
+* Calls back with the results and the data source.
 
 ### Result Codes
 Each test has a result code that is used to determine if the test was successful and its risk level. The following codes are used:
@@ -148,100 +173,64 @@ Each test has a result code that is used to determine if the test was successful
 * Ensure AWS API calls are being used optimally. For example, call describeInstances with empty parameters to get all instances, instead of calling describeInstances multiple times looping through each instance name.
 * Use async.eachLimit to reduce the number of simultaneous API calls. Instead of using a for loop on 100 requests, spread them out using async's each limit.
 
-## Running Scans via Lambda
+### Example
+To more clearly illustrate writing a new plugin, let's consider the "IAM Empty Groups" plugin. First, we know that we will need to query for a list of groups via `listGroups`, then loop through each group and query for the more detailed set of data via `getGroup`.
 
-CloudSploit can be run as a Lambda function within your account. To set this up, you must create a role for your function with the necessary privileges, then configure it to run via an invocation or schedule.
-
-### Configure a Lambda Role
-
-Lambda functions need an IAM role which they can assume. Create a new role for Lambda within the IAM console. Then, apply the following managed policies:
-
-* Security Audit
-* AWSLambdaBasicExecutionRole
-
-### Create a New Function
-
-1. Open the Lambda console and create a new Lambda function.
-2. Enter a name and description for the function.
-3. Give it at least 256 MB of memory and a 3-5 minute timeout (if your account uses few services, you can select a lower timeout).
-4. For "Handler", enter "lambda.handler"
-5. For "Role", select the role you created previously.
-6. You do not need to run from within a VPC, but you can select those options if you'd like.
-7. Within this cloned repository on your local machine, navigate to the root directory and ZIP all the contents. If you extracted the ZIP, `lambda.js` should be at the top level. (Do not ZIP the repository's folder, ZIP its contents).
-8. Upload the ZIP to the Lambda console.
-9. Save your function.
-
-### Testing the Function
-
-The Lambda function expects the event object to contain a series of plugin query names which it should run. If none are provided, it will respond with the list of all available plugins. To test this, configure a test event within the Lambda console and enter `{}`. Save and then test. You should see a response like the following:
+We'll add these API calls to `collect.js`. First, under `calls` add:
 
 ```
-{
-  "code": 0,
-  "data": [
-    {
-      "title": "CloudTrail Bucket Delete Policy",
-      "query": "cloudtrailBucketDelete",
-      "description": "Ensures CloudTrail logging bucket has a policy to prevent deletion of logs without an MFA token"
-    },
-    {
-      "title": "CloudTrail Enabled",
-      "query": "cloudtrailEnabled",
-      "description": "Ensures CloudTrail is enabled for all regions within an account"
-    },
-...
+IAM: {
+  listGroups: {
+    property: 'Groups'
+  }
+},
+```
+The `property` tells CloudSploit which property to read in the response from AWS.
+
+Then, under `postCalls`, add:
+```
+IAM: {
+  getGroup: {
+    reliesOnService: 'iam',
+    reliesOnCall: 'listGroups',
+    filterKey: 'GroupName',
+    filterValue: 'GroupName'
+  }
+},
+```
+CloudSploit will first get the list of groups, then, it will loop through each one, using the group name to get more detailed info via `getGroup`.
+
+Next, we'll write the plugin. Create a new file in the `plugins/iam` folder called `emptyGroups.js` (this plugin already exists, but you can create a similar one for the purposes of this example).
+
+In the file, we'll be sure to export the plugin's title, category, description, link, and more information about it. Additionally, we will add any API calls it makes:
+```
+apis: ['IAM:listGroups', 'IAM:getGroup'],
+```
+In the `run` function, we can obtain the output of the collection phase from earlier by doing:
+```
+var listGroups = helpers.addSource(cache, source,
+        ['iam', 'listGroups', region]);
+```
+Then, we can loop through each of the results and do:
+```
+var getGroup = helpers.addSource(cache, source,
+  ['iam', 'getGroup', region, group.GroupName]);
+```
+The `helpers` function ensures that the proper results are returned from the collection and that they are saved into a "source" variable which can be returned with the results.
+
+Now, we can write the plugin functionality by checking for the data relevant to our requirements:
+```
+if (!getGroup || getGroup.err || !getGroup.data || !getGroup.data.Users) {
+  helpers.addResult(results, 3, 'Unable to query for group: ' + group.GroupName, 'global', group.Arn);
+} else if (!getGroup.data.Users.length) {
+  helpers.addResult(results, 1, 'Group: ' + group.GroupName + ' does not contain any users', 'global', group.Arn);
+  return cb();
+} else {
+  helpers.addResult(results, 0, 'Group: ' + group.GroupName + ' contains ' + getGroup.data.Users.length + ' user(s)', 'global', group.Arn);
 }
 ```
-
-This response shows all of the available plugins which can be run. Note the "query" property. Next, configure the test event with the following: 
-
+The `addResult` function ensures we are adding the results to the `results` array in the proper format. This function accepts the following:
 ```
-{
-  "plugins": [
-    "cloudtrailEnabled"
-  ]
-}
+(results array, score, message, region, resource)
 ```
-
-Run the test again, and you should now see results for the scan:
-
-```
-{
-  "code": 0,
-  "data": [
-    {
-      "title": "CloudTrail Enabled",
-      "category": "CloudTrail",
-      "description": "Ensures CloudTrail is enabled for all regions within an account",
-      "description": "Ensures CloudTrail is enabled for all regions within an account",
-      "more_info": "CloudTrail should be enabled for all regions in order to detect suspicious activity in regions that are not typically used.",
-      "link": "http://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-getting-started.html",
-      "recommended_action": "Enable CloudTrail for all regions and ensure that at least one region monitors global service events",
-      "results": [
-        {
-          "status": 2,
-          "message": "CloudTrail is not enabled",
-          "region": "us-east-1"
-        },
-        ...
-      }
-    }
-  ]
-}
-```
-
-You will have results for each region. You can then run additional tests by modifying the value of "plugins" in the `event.plugins` test object. You can include as many plugins in each test as you'd like.
-
-### Running all Plugins
-
-To run all plugins at once, simply invoke the Lambda function with the following event object:
-
-```
-{
-  "plugins": []
-}
-```
-
-### Next Steps
-
-You can now schedule your function to run periodically, send you emails with results, or perform any number of actions based on the results of a scan.
+The `resource` is optional, and the `score` must be between 0 and 3 to indicate PASS, WARN, FAIL, or UNKNOWN.

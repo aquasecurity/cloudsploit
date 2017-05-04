@@ -16,11 +16,11 @@ module.exports = {
 
 		var globalServicesMonitored = false;
 
-		async.each(helpers.regions.cloudtrail, function(region, cb){
+		async.each(helpers.regions.cloudtrail, function(region, rcb){
 			var describeTrails = helpers.addSource(cache, source,
 				['cloudtrail', 'describeTrails', region]);
 
-			if (!describeTrails) return cb();
+			if (!describeTrails) return rcb();
 
 			if (describeTrails.err || !describeTrails.data) {
 				helpers.addResult(results, 3, 'Unable to query for CloudTrail policy', region);
@@ -38,7 +38,7 @@ module.exports = {
 			} else {
 				helpers.addResult(results, 2, 'CloudTrail is enabled but is not properly configured', region);
 			}
-			cb();
+			rcb();
 		}, function(){
 			if (!globalServicesMonitored) {
 				helpers.addResult(results, 2, 'CloudTrail is not monitoring global services');

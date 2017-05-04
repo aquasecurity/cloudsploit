@@ -1,10 +1,9 @@
-// TODO: MOVE TO EC2
 var async = require('async');
 var helpers = require('../../helpers');
 
 module.exports = {
 	title: 'VPC Multiple Subnets',
-	category: 'VPC',
+	category: 'EC2',
 	description: 'Ensures that VPCs have multiple networks to provide a layered architecture',
 	more_info: 'A single network within a VPC increases the risk of a broader blast radius in the event of a compromise.',
 	link: 'https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Subnets.html#SubnetSecurity',
@@ -61,9 +60,13 @@ module.exports = {
 				helpers.addResult(results, 1,
 					'Using ' + describeSubnets.data.Subnets.length + ' subnets may not be sufficient for a multi-layered architecture',
 					region, vpcId);
-			} else {
+			} else if (describeSubnets.data.Subnets.length === 1) {
 				helpers.addResult(results, 2,
 					'Only one subnet (' + describeSubnets.data.Subnets[0].SubnetId + ') in one VPC is used.',
+					region, vpcId);
+			} else {
+				helpers.addResult(results, 0,
+					'The VPC does not have any subnets',
 					region, vpcId);
 			}
 

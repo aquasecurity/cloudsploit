@@ -22,6 +22,43 @@ function mostRecentDate(dates) {
 	return mostRecentDate;
 }
 
+function waitForCredentialReport(iam, callback, CREDENTIAL_DOWNLOAD_STARTED) {
+	if (!CREDENTIAL_DOWNLOAD_STARTED) {
+		iam.generateCredentialReport(function(err, data){
+			if ((err && err.code && err.code == 'ReportInProgress') || (data && data.State)) {
+				// Okay to query for credential report
+				waitForCredentialReport(iam, callback, true);
+			} else {
+				//CREDENTIAL_REPORT_ERROR = 'Error downloading report';
+				//callback(CREDENTIAL_REPORT_ERROR);
+				callback('Error downloading report');
+			}
+		});
+	} else {
+		var pingCredentialReport = function(pingCb, pingResults) {
+			iam.getCredentialReport(function(getErr, getData) {
+				if (getErr || !getData || !getData.Content) {
+					return pingCb('Waiting for credential report');
+				}
+
+				pingCb(null, getData);
+			});
+		};
+
+		async.retry({times: 10, interval: 1000}, pingCredentialReport, function(reportErr, reportData){
+			if (reportErr || !reportData) {
+				//CREDENTIAL_REPORT_ERROR = 'Error downloading report';
+				//return callback(CREDENTIAL_REPORT_ERROR);
+				return callback('Error downloading report');
+			}
+
+			//CREDENTIAL_REPORT_DATA = reportData;
+			//callback(null, CREDENTIAL_REPORT_DATA);
+			callback(null, reportData);
+		});
+	}
+}
+
 function addResult(results, status, message, region, resource){
 	results.push({
 		status: status,
@@ -80,5 +117,6 @@ module.exports = {
 	mostRecentDate: mostRecentDate,
 	addResult: addResult,
 	addSource: addSource,
-	addError: addError
+	addError: addError,
+	waitForCredentialReport: waitForCredentialReport
 };

@@ -14,15 +14,15 @@ module.exports = {
 		var results = [];
 		var source = {};
 
-		async.each(helpers.regions.cloudtrail, function(region, cb){
+		async.each(helpers.regions.cloudtrail, function(region, rcb){
 			var describeTrails = helpers.addSource(cache, source,
 				['cloudtrail', 'describeTrails', region]);
 
-			if (!describeTrails) return cb();
+			if (!describeTrails) return rcb();
 
 			if (describeTrails.err || !describeTrails.data) {
 				helpers.addResult(results, 3, 'Unable to query for CloudTrail CloudWatch integration status', region);
-				return cb();
+				return rcb();
 			}
 
 			if (!describeTrails.data.length) {
@@ -40,7 +40,7 @@ module.exports = {
 			} else {
 				helpers.addResult(results, 2, 'CloudTrail is enabled but is not properly configured', region);
 			}
-			cb();
+			rcb();
 		}, function(){
 			callback(null, results, source);
 		});
