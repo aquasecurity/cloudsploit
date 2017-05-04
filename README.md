@@ -1,4 +1,4 @@
-![CloudSploit](https://cloudsploit.com/img/logo-big-text-100.png "CloudSploit")
+[![CloudSploit](https://cloudsploit.com/img/logo-big-text-100.png "CloudSploit")](https://cloudsploit.com)
 
 CloudSploit Scans
 =================
