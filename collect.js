@@ -82,6 +82,22 @@ var calls = {
 		describeFlowLogs: {
 			// TODO: override bc flowlogs are not available in all regions?
 			property: 'FlowLogs'
+		},
+		describeImages: {
+			property: 'Images',
+			params: {
+				Owners: [
+					'self'
+				],
+				Filters: [
+					{
+						Name: 'state',
+						Values: [
+							'available'
+						]
+					}
+				]
+			}
 		}
 	},
 	ELB: {
@@ -134,6 +150,11 @@ var calls = {
 			property: 'Identities',
 			params: {IdentityType: 'Domain'},	// TODO: maybe don't filter these?
 			rateLimit: 1000	// ms to rate limit between regions
+		}
+	},
+	SNS: {
+		listTopics: {
+			property: 'Topics'
 		}
 	}
 };
@@ -223,6 +244,14 @@ var postcalls = [
 				reliesOnCall: 'listIdentities',
 				override: true,
 				rateLimit: 1000
+			}
+		},
+		SNS: {
+			getTopicAttributes: {
+				reliesOnService: 'sns',
+				reliesOnCall: 'listTopics',
+				filterKey: 'TopicArn',
+				filterValue: 'TopicArn'
 			}
 		}
 	}

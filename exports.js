@@ -36,6 +36,7 @@ module.exports = {
     'classicInstances'              : require(__dirname + '/plugins/ec2/classicInstances.js'),
     'flowLogsEnabled'               : require(__dirname + '/plugins/ec2/flowLogsEnabled.js'),
     'vpcMultipleSubnets'            : require(__dirname + '/plugins/ec2/multipleSubnets.js'),
+    'publicAmi'                     : require(__dirname + '/plugins/ec2/publicAmi.js'),
 
     'insecureCiphers'               : require(__dirname + '/plugins/elb/insecureCiphers.js'),
 
@@ -72,7 +73,7 @@ module.exports = {
 
     'bucketAllUsersPolicy'          : require(__dirname + '/plugins/s3/bucketAllUsersPolicy.js'),
 
-    // OPTIONAL Plugins
-    // These plugins require additional IAM permissions beyond the SecurityAudit managed policy
-    'dkimEnabled'                    : require(__dirname + '/plugins/ses/dkimEnabled.js'),
+    'dkimEnabled'                   : require(__dirname + '/plugins/ses/dkimEnabled.js'),
+
+    'topicPolicies'                 : require(__dirname + '/plugins/sns/topicPolicies.js'),
 };
