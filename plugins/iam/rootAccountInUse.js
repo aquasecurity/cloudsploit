@@ -51,7 +51,7 @@ module.exports = {
 					helpers.addResult(results, 0, 'Root account has not been used', 'global', obj.arn);
 				} else {
 					var dateToCompare = helpers.functions.mostRecentDate(accessDates);
-					var resultCode = (helpers.functions.daysAgo(dateToCompare) < 30) ? 2: 0;
+					var resultCode = (helpers.functions.daysAgo(dateToCompare) < 15) ? 2: 0;
 
 
 					helpers.addResult(results, resultCode,
