@@ -2,6 +2,7 @@
 
 module.exports = {
     'publicS3Origin'                : require(__dirname + '/plugins/cloudfront/publicS3Origin.js'),
+    'secureOrigin'                  : require(__dirname + '/plugins/cloudfront/secureOrigin.js'),
 
     'cloudtrailBucketAccessLogging' : require(__dirname + '/plugins/cloudtrail/cloudtrailBucketAccessLogging.js'),
     'cloudtrailBucketDelete'        : require(__dirname + '/plugins/cloudtrail/cloudtrailBucketDelete.js'),
@@ -76,4 +77,6 @@ module.exports = {
     'dkimEnabled'                   : require(__dirname + '/plugins/ses/dkimEnabled.js'),
 
     'topicPolicies'                 : require(__dirname + '/plugins/sns/topicPolicies.js'),
+
+    //'monitoringMetrics'             : require(__dirname + '/plugins/cloudwatchlogs/monitoringMetrics.js'),
 };

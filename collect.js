@@ -41,6 +41,14 @@ var calls = {
 			property: 'trailList'
 		}
 	},
+	CloudWatchLogs: {
+		describeMetricFilters: {
+			property: 'metricFilters',
+			params: {
+				limit: 1000
+			}
+		}
+	},
 	ConfigService: {
 		describeConfigurationRecorders: {
 			property: 'ConfigurationRecorders'

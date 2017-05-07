@@ -33,8 +33,8 @@ module.exports = {
 			if (!distribution.Origins ||
 				!distribution.Origins.Items ||
 				!distribution.Origins.Items.length) {
-				helpers.addResult(results, 0, 'No CloudFront distributions found',
-						'global', distribution.DomainName);
+				helpers.addResult(results, 0, 'No CloudFront origins found',
+						'global', distribution.ARN);
 				return cb();
 			}
 
@@ -46,11 +46,11 @@ module.exports = {
 					 !origin.S3OriginConfig.OriginAccessIdentity.length)) {
 					helpers.addResult(results, 2, 'CloudFront distribution is using an S3 ' + 
 						'origin without an origin access identity', 'global',
-						distribution.DomainName);
+						distribution.ARN);
 				} else {
 					helpers.addResult(results, 0, 'CloudFront distribution origin is not setup ' +
 							'without an origin access identity', 'global',
-							distribution.DomainName);
+							distribution.ARN);
 				}
 			}
 
