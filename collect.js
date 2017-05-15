@@ -45,7 +45,7 @@ var calls = {
 		describeMetricFilters: {
 			property: 'metricFilters',
 			params: {
-				limit: 1000
+				limit: 50 // The max available
 			}
 		}
 	},
