@@ -135,6 +135,11 @@ var calls = {
 			property: 'Keys'
 		}
 	},
+	Lambda: {
+		listFunctions: {
+			property: 'Functions'
+		}
+	},
 	RDS: {
 		describeDBInstances: {
 			property: 'DBInstances'
