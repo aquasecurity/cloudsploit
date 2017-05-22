@@ -78,5 +78,5 @@ module.exports = {
 
     'topicPolicies'                 : require(__dirname + '/plugins/sns/topicPolicies.js'),
 
-    //'monitoringMetrics'             : require(__dirname + '/plugins/cloudwatchlogs/monitoringMetrics.js'),
+    'monitoringMetrics'             : require(__dirname + '/plugins/cloudwatchlogs/monitoringMetrics.js'),
 };
