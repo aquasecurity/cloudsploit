@@ -23,6 +23,7 @@ module.exports = {
 	route53domains: ['us-east-1'],
 	s3: ['us-east-1'],
 	cloudtrail: regions,
+	cloudwatchlogs: regions,
 	configservice: regions,
 	ec2: regions,
 	elb: regions,
