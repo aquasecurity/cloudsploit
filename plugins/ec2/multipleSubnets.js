@@ -52,13 +52,9 @@ module.exports = {
 				return rcb();
 			}
 
-			if (describeSubnets.data.Subnets.length > 2) {
+			if (describeSubnets.data.Subnets.length > 1) {
 				helpers.addResult(results, 0,
 					'There are ' + describeSubnets.data.Subnets.length + ' different subnets used in one VPC.',
-					region, vpcId);
-			} else if (describeSubnets.data.Subnets.length > 1) {
-				helpers.addResult(results, 1,
-					'Using ' + describeSubnets.data.Subnets.length + ' subnets may not be sufficient for a multi-layered architecture',
 					region, vpcId);
 			} else if (describeSubnets.data.Subnets.length === 1) {
 				helpers.addResult(results, 2,
