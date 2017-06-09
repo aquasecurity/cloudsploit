@@ -22,7 +22,8 @@ module.exports = {
 			if (!describeVpcs) return rcb();
 
 			if (describeVpcs.err || !describeVpcs.data) {
-				helpers.addResult(results, 3, 'Unable to query for VPCs', region);
+				helpers.addResult(results, 3,
+					'Unable to query for VPCs: ' + helpers.addError(describeVpcs), region);
 				return rcb();
 			}
 
@@ -42,7 +43,8 @@ module.exports = {
 				['ec2', 'describeFlowLogs', region]);
 
 			if (! describeFlowLogs || describeFlowLogs.err || !describeFlowLogs.data) {
-				helpers.addResult(results, 3, 'Unable to query for flow logs', region);
+				helpers.addResult(results, 3,
+					'Unable to query for flow logs: ' + helpers.addError(describeFlowLogs), region);
 				return rcb();
 			}
 

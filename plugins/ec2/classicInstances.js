@@ -22,7 +22,8 @@ module.exports = {
 			if (!describeInstances) return rcb();
 
 			if (describeInstances.err || !describeInstances.data) {
-				helpers.addResult(results, 3, 'Unable to query for instances', region);
+				helpers.addResult(results, 3,
+					'Unable to query for instances: ' + helpers.addError(describeInstances), region);
 				return rcb();
 			}
 

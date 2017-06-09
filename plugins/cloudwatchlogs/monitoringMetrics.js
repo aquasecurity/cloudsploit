@@ -99,7 +99,7 @@ module.exports = {
 			if (!describeMetricFilters ||
 				describeMetricFilters.err || !describeMetricFilters.data) {
 				helpers.addResult(results, 3,
-					'Unable to query for CloudWatchLogs metric filters', region);
+					'Unable to query for CloudWatchLogs metric filters: ' + helpers.addError(describeMetricFilters), region);
 
 				return rcb();
 			}

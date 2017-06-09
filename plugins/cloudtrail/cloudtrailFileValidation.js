@@ -21,7 +21,8 @@ module.exports = {
 			if (!describeTrails) return rcb();
 
 			if (describeTrails.err || !describeTrails.data) {
-				helpers.addResult(results, 3, 'Unable to query for CloudTrail file validation status', region);
+				helpers.addResult(results, 3,
+					'Unable to query for CloudTrail file validation status: ' + helpers.addError(describeTrails), region);
 				return rcb();
 			}
 

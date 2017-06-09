@@ -22,7 +22,8 @@ module.exports = {
 		if (!listUsers) return callback(null, results, source);
 
 		if (listUsers.err || !listUsers.data) {
-			helpers.addResult(results, 3, 'Unable to query for user IAM policy status');
+			helpers.addResult(results, 3,
+				'Unable to query for user IAM policy status: ' + helpers.addError(listUsers));
 			return callback(null, results, source);
 		}
 

@@ -24,7 +24,8 @@ module.exports = {
 		if (!generateCredentialReport) return callback(null, results, source);
 
 		if (generateCredentialReport.err || !generateCredentialReport.data) {
-			helpers.addResult(results, 3, 'Unable to query for users');
+			helpers.addResult(results, 3,
+				'Unable to query for users: ' + helpers.addError(generateCredentialReport));
 			return callback(null, results, source);
 		}
 

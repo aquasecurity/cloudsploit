@@ -29,7 +29,8 @@ module.exports = {
 		}
 
 		if (getAccountPasswordPolicy.err || !getAccountPasswordPolicy.data) {
-			helpers.addResult(results, 3, 'Unable to query for password policy status');
+			helpers.addResult(results, 3,
+				'Unable to query for password policy status: ' + helpers.addError(getAccountPasswordPolicy));
 			return callback(null, results, source);
 		}
 

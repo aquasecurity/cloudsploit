@@ -22,7 +22,8 @@ module.exports = {
 		if (!listServerCertificates) return callback(null, results, source);
 
 		if (listServerCertificates.err || !listServerCertificates.data) {
-			helpers.addResult(results, 3, 'Unable to query for certificates');
+			helpers.addResult(results, 3,
+				'Unable to query for certificates: ' + helpers.addError(listServerCertificates));
 			return callback(null, results, source);
 		}
 

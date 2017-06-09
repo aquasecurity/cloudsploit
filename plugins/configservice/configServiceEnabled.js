@@ -40,7 +40,8 @@ module.exports = {
 			if (!describeConfigurationRecorderStatus ||
 				describeConfigurationRecorderStatus.err ||
 				!describeConfigurationRecorderStatus.data) {
-				helpers.addResult(results, 3, 'Unable to query for Config Service status', region);
+				helpers.addResult(results, 3,
+					'Unable to query for Config Service status: ' + helpers.addError(describeConfigurationRecorderStatus), region);
 				return rcb();
 			}
 

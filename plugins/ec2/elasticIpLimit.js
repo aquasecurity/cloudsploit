@@ -21,7 +21,8 @@ module.exports = {
 			if (!describeAccountAttributes) return rcb();
 
 			if (describeAccountAttributes.err || !describeAccountAttributes.data) {
-				helpers.addResult(results, 3, 'Unable to query for account limits', region);
+				helpers.addResult(results, 3,
+					'Unable to query for account limits: ' + helpers.addError(describeAccountAttributes), region);
 				return rcb();
 			}
 
@@ -42,7 +43,8 @@ module.exports = {
 			if (!describeAddresses) return rcb();
 
 			if (describeAddresses.err || !describeAddresses.data) {
-				helpers.addResult(results, 3, 'Unable to describe addresses for Elastic IP limit', region);
+				helpers.addResult(results, 3,
+					'Unable to describe addresses for Elastic IP limit: ' + helpers.addError(describeAddresses), region);
 				return rcb();
 			}
 			

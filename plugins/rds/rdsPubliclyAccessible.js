@@ -21,7 +21,8 @@ module.exports = {
 			if (!describeDBInstances) return rcb();
 
 			if (describeDBInstances.err || !describeDBInstances.data) {
-				helpers.addResult(results, 3, 'Unable to query for RDS instances', region);
+				helpers.addResult(results, 3,
+					'Unable to query for RDS instances: ' + helpers.addError(describeDBInstances), region);
 				return rcb();
 			}
 

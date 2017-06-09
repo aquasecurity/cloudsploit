@@ -95,7 +95,8 @@ module.exports = {
 			if (!describeLoadBalancers) return rcb();
 
 			if (describeLoadBalancers.err || !describeLoadBalancers.data) {
-				helpers.addResult(results, 3, 'Unable to query for load balancers', region);
+				helpers.addResult(results, 3,
+					'Unable to query for load balancers: ' + helpers.addError(describeLoadBalancers), region);
 				return rcb();
 			}
 

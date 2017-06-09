@@ -21,7 +21,8 @@ module.exports = {
 		if (!listDomains) return callback(null, results, source);
 
 		if (listDomains.err || !listDomains.data) {
-			helpers.addResult(results, 3, 'Unable to query for domains');
+			helpers.addResult(results, 3,
+				'Unable to query for domains: ' + helpers.addError(listDomains));
 			return callback(null, results, source);
 		}
 
