@@ -21,7 +21,8 @@ module.exports = {
 			if (!describeVpcs) return rcb();
 
 			if (describeVpcs.err || !describeVpcs.data) {
-				helpers.addResult(results, 3, 'Unable to query for VPCs', region);
+				helpers.addResult(results, 3,
+					'Unable to query for VPCs: ' + helpers.addError(describeVpcs), region);
 				return rcb();
 			}
 
@@ -48,7 +49,8 @@ module.exports = {
 				['ec2', 'describeSubnets', region, vpcId]);
 
 			if (!describeSubnets || describeSubnets.err || !describeSubnets.data) {
-				helpers.addResult(results, 3, 'Unable to query for subnets in VPC.', region, vpcId);
+				helpers.addResult(results, 3,
+					'Unable to query for subnets in VPC: ' + helpers.addError(describeSubnets), region, vpcId);
 				return rcb();
 			}
 

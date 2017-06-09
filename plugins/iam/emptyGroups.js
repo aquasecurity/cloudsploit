@@ -22,7 +22,8 @@ module.exports = {
 		if (!listGroups) return callback(null, results, source);
 
 		if (listGroups.err || !listGroups.data) {
-			helpers.addResult(results, 3, 'Unable to query for groups');
+			helpers.addResult(results, 3,
+				'Unable to query for groups: ' + helpers.addError(listGroups));
 			return callback(null, results, source);
 		}
 

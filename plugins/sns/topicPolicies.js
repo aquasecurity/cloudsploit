@@ -21,7 +21,8 @@ module.exports = {
 			if (!listTopics) return rcb();
 
 			if (listTopics.err || !listTopics.data) {
-				helpers.addResult(results, 3, 'Unable to query for SNS topics', region);
+				helpers.addResult(results, 3,
+					'Unable to query for SNS topics: ' + helpers.addError(listTopics), region);
 				return rcb();
 			}
 
@@ -41,7 +42,7 @@ module.exports = {
 
 				if (getTopicAttributes.err || !getTopicAttributes.data) {
 					helpers.addResult(results, 3,
-						'Unable to query SNS topic for policy',
+						'Unable to query SNS topic for policy: ' + helpers.addError(getTopicAttributes),
 						region, topic.TopicArn);
 
 					return cb();

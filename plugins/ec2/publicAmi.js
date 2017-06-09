@@ -21,7 +21,8 @@ module.exports = {
 			if (!describeImages) return rcb();
 
 			if (describeImages.err || !describeImages.data) {
-				helpers.addResult(results, 3, 'Unable to query for AMIs', region);
+				helpers.addResult(results, 3,
+					'Unable to query for AMIs: ' + helpers.addError(describeImages), region);
 				return rcb();
 			}
 

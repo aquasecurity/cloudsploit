@@ -22,7 +22,8 @@ module.exports = {
 		if (!listBuckets) return callback(null, results, source);
 
 		if (listBuckets.err || !listBuckets.data) {
-			helpers.addResult(results, 3, 'Unable to query for S3 buckets');
+			helpers.addResult(results, 3,
+				'Unable to query for S3 buckets: ' + helpers.addError(listBuckets));
 			return callback(null, results, source);
 		}
 

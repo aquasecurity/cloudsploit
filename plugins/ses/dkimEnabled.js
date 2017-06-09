@@ -21,7 +21,8 @@ module.exports = {
 			if (!listIdentities) return rcb();
 
 			if (listIdentities.err || !listIdentities.data) {
-				helpers.addResult(results, 3, 'Unable to query for SES identities', region);
+				helpers.addResult(results, 3,
+					'Unable to query for SES identities: ' + helpers.addError(listIdentities), region);
 				return rcb();
 			}
 
@@ -36,7 +37,8 @@ module.exports = {
 			if (!getIdentityDkimAttributes ||
 				getIdentityDkimAttributes.err ||
 				!getIdentityDkimAttributes.data) {
-				helpers.addResult(results, 3, 'Unable to get SES DKIM attributes', region);
+				helpers.addResult(results, 3,
+					'Unable to get SES DKIM attributes: ' + helpers.addError(getIdentityDkimAttributes), region);
 				return rcb();
 			}
 

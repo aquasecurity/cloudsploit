@@ -27,7 +27,8 @@ module.exports = {
 			if (!describeSecurityGroups) return rcb();
 
 			if (describeSecurityGroups.err || !describeSecurityGroups.data) {
-				helpers.addResult(results, 3, 'Unable to query for security groups', region);
+				helpers.addResult(results, 3,
+					'Unable to query for security groups: ' + helpers.addError(describeSecurityGroups), region);
 				return rcb();
 			}
 
