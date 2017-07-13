@@ -34,17 +34,17 @@ module.exports = {
 			var found = false;
 
 			for (i in describeImages.data) {
-                var image = describeImages.data[i];
-                for (j in image.BlockDeviceMappings) {
-                    var volume = image.BlockDeviceMappings[j];
-                    if (volume.hasOwnProperty('Ebs')) {
-                        if (!volume.Ebs.Encrypted) {
-                            found = true;
-                            helpers.addResult(results, 2, 'AMI EBS volume is unencrypted', region, image.ImageId);
-                        }
-                    }
-                }
-            }
+				var image = describeImages.data[i];
+				for (j in image.BlockDeviceMappings) {
+					var volume = image.BlockDeviceMappings[j];
+					if (volume.hasOwnProperty('Ebs')) {
+						if (!volume.Ebs.Encrypted) {
+							found = true;
+							helpers.addResult(results, 2, 'AMI EBS volume is unencrypted', region, image.ImageId);
+						}
+					}
+				}
+			}
 
 			if (!found) {
 				helpers.addResult(results, 0, 'No AMIs with unencrypted volumes found', region);
