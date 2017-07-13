@@ -33,9 +33,8 @@ module.exports = {
 
 			var found = false;
 
-			// Now lookup flow logs and map to images
 			for (i in describeImages.data) {
-				var image = describeImages.data[i];
+                var image = describeImages.data[i];
                 for (j in image.BlockDeviceMappings) {
                     var volume = image.BlockDeviceMappings[j];
                     if (volume.hasOwnProperty('Ebs')) {
@@ -45,7 +44,7 @@ module.exports = {
                         }
                     }
                 }
-			}
+            }
 
 			if (!found) {
 				helpers.addResult(results, 0, 'No AMIs with unencrypted volumes found', region);
