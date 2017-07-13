@@ -38,7 +38,7 @@ module.exports = {
     'flowLogsEnabled'               : require(__dirname + '/plugins/ec2/flowLogsEnabled.js'),
     'vpcMultipleSubnets'            : require(__dirname + '/plugins/ec2/multipleSubnets.js'),
     'publicAmi'                     : require(__dirname + '/plugins/ec2/publicAmi.js'),
-    'encryptedAmi'                     : require(__dirname + '/plugins/ec2/encryptedAmi.js'),
+    'encryptedAmi'                  : require(__dirname + '/plugins/ec2/encryptedAmi.js'),
 
     'insecureCiphers'               : require(__dirname + '/plugins/elb/insecureCiphers.js'),
 
