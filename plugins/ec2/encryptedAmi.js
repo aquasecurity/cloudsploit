@@ -6,7 +6,7 @@ module.exports = {
 	category: 'EC2',
 	description: 'Checks for encrypted root EBS volume for AMI',
 	more_info: 'Instances that are not based on encrypted EBS root volumes pose a security threat due to potential data snooping.',
-	link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/sharingamis-intro.html',
+	link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-ebs.html',
 	recommended_action: 'Create an Amazon EC2 instance backed by encrypted EBS volume.',
 	apis: ['EC2:describeImages'],
 
