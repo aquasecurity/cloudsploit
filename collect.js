@@ -148,6 +148,11 @@ var calls = {
 			property: 'DBClusters'
 		}
 	},
+	Redshift: {
+		describeClusters: {
+			property: 'Clusters'
+		}
+	},
 	Route53Domains: {
 		listDomains: {
 			property: 'Domains'

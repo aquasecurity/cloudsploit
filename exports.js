@@ -82,5 +82,8 @@ module.exports = {
   
     'lambdaOldRuntimes'             : require(__dirname + '/plugins/lambda/lambdaOldRuntimes.js'),
   
-    'monitoringMetrics'             : require(__dirname + '/plugins/cloudwatchlogs/monitoringMetrics.js')
+    'monitoringMetrics'             : require(__dirname + '/plugins/cloudwatchlogs/monitoringMetrics.js'),
+
+    'redshiftEncryptionEnabled'     : require(__dirname + '/plugins/redshift/redshiftEncryptionEnabled.js'),
+    'redshiftPubliclyAccessible'    : require(__dirname + '/plugins/redshift/redshiftPubliclyAccessible.js')
 };
