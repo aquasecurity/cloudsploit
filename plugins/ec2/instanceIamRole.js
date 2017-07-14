@@ -1,4 +1,3 @@
-// TODO: MOVE TO EC2
 var async = require('async');
 var helpers = require('../../helpers');
 
