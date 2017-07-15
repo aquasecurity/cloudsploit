@@ -31,10 +31,11 @@ module.exports = {
 				return rcb();
 			}
 
-			var accountId = describeInstances.data[i].OwnerId;
 			var found = 0;
 
 			for (i in describeInstances.data) {
+				var accountId = describeInstances.data[i].OwnerId;
+
 				for (j in describeInstances.data[i].Instances) {
 					var instance = describeInstances.data[i].Instances[j];
 
@@ -44,7 +45,7 @@ module.exports = {
 						helpers.addResult(results, 2,
 							'Instance does not use an IAM role', region,
 							'arn:aws:ec2:' + region + ':' + accountId + ':instance/' +
-							instance.ImageId);
+							instance.InstanceId);
 					}
 				}
 			}
