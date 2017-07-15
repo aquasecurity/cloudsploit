@@ -99,6 +99,69 @@ function addSource(cache, source, paths){
 	return original;
 }
 
+function findOpenPorts(groups, ports, service, region, results) {
+	var found = false;	
+
+	for (g in groups) {
+		var strings = [];
+		var resource = 'arn:aws:ec2:' + region + ':' +
+					   groups[g].OwnerId + ':security-group/' +
+					   groups[g].GroupId;
+
+		for (p in groups[g].IpPermissions) {
+			var permission = groups[g].IpPermissions[p];
+
+			for (k in permission.IpRanges) {
+				var range = permission.IpRanges[k];
+
+				if (range.CidrIp === '0.0.0.0/0' && ports[permission.IpProtocol]) {
+					for (portIndex in ports[permission.IpProtocol]) {
+						var port = ports[permission.IpProtocol][portIndex];
+
+						if (permission.FromPort <= port && permission.ToPort >= port) {
+							var string = permission.IpProtocol.toUpperCase() +
+								' port ' + port + ' open to 0.0.0.0/0';
+							if (strings.indexOf(string) === -1) strings.push(string);
+							found = true;
+						}
+					}
+				}
+			}
+
+			for (k in permission.Ipv6Ranges) {
+				var range = permission.Ipv6Ranges[k];
+
+				if (range.CidrIpv6 === '::/0' && ports[permission.IpProtocol]) {
+					for (portIndex in ports[permission.IpProtocol]) {
+						var port = ports[permission.IpProtocol][portIndex];
+
+						if (permission.FromPort <= port && permission.ToPort >= port) {
+							var string = permission.IpProtocol.toUpperCase() +
+								' port ' + port + ' open to ::/0';
+							if (strings.indexOf(string) === -1) strings.push(string);
+							found = true;
+						}
+					}
+				}
+			}
+		}
+
+		if (strings.length) {
+			addResult(results, 2,
+				'Security group: ' + groups[g].GroupId +
+				' (' + groups[g].GroupName +
+				') has ' + service + ': ' + strings.join(' and '), region,
+				resource);
+		}
+	}
+
+	if (!found) {
+		addResult(results, 0, 'No public open ports found', region);
+	}
+
+	return;
+}
+
 function addError(original){
 	if (!original || !original.err) {
 		return 'Unable to obtain data';
@@ -118,5 +181,6 @@ module.exports = {
 	addResult: addResult,
 	addSource: addSource,
 	addError: addError,
+	findOpenPorts: findOpenPorts,
 	waitForCredentialReport: waitForCredentialReport
 };
