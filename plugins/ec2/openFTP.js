@@ -11,70 +11,37 @@ module.exports = {
 	apis: ['EC2:describeSecurityGroups'],
 
 	run: function(cache, callback) {
-			var results = [];
-			var source = {};
+		var results = [];
+		var source = {};
 
-			var ports = {
-				'tcp': [20, 21]
-			};
+		var ports = {
+			'tcp': [20, 21]
+		};
 
-			var service = 'FTP';
+		var service = 'FTP';
 
-			async.each(helpers.regions.ec2, function(region, rcb){
-				var describeSecurityGroups = helpers.addSource(cache, source,
-					['ec2', 'describeSecurityGroups', region]);
+		async.each(helpers.regions.ec2, function(region, rcb){
+			var describeSecurityGroups = helpers.addSource(cache, source,
+				['ec2', 'describeSecurityGroups', region]);
 
-				if (!describeSecurityGroups) return rcb();
+			if (!describeSecurityGroups) return rcb();
 
-				if (describeSecurityGroups.err || !describeSecurityGroups.data) {
-					helpers.addResult(results, 3,
-						'Unable to query for security groups: ' + helpers.addError(describeSecurityGroups), region);
-					return rcb();
-				}
+			if (describeSecurityGroups.err || !describeSecurityGroups.data) {
+				helpers.addResult(results, 3,
+					'Unable to query for security groups: ' + helpers.addError(describeSecurityGroups), region);
+				return rcb();
+			}
 
-				if (!describeSecurityGroups.data.length) {
-					helpers.addResult(results, 0, 'No security groups present', region);
-					return rcb();
-				}
+			if (!describeSecurityGroups.data.length) {
+				helpers.addResult(results, 0, 'No security groups present', region);
+				return rcb();
+			}
 
-				var found = false;
+			helpers.findOpenPorts(describeSecurityGroups.data, ports, service, region, results);
 
-				for (i in describeSecurityGroups.data) {
-					for (j in describeSecurityGroups.data[i].IpPermissions) {
-						var permission = describeSecurityGroups.data[i].IpPermissions[j];
-
-						for (k in permission.IpRanges) {
-							var range = permission.IpRanges[k];
-
-							if (range.CidrIp === '0.0.0.0/0' && ports[permission.IpProtocol]) {
-								for (port in ports[permission.IpProtocol]) {
-									if (permission.FromPort <= port && permission.ToPort >= port) {
-										found = true;
-
-										var resource = 'arn:aws:ec2:' + region + ':' + 
-													describeSecurityGroups.data[i].OwnerId +
-													':security-group/' + describeSecurityGroups.data[i].GroupId;
-
-										helpers.addResult(results, 2,
-											'Security group: ' + describeSecurityGroups.data[i].GroupId +
-											' (' + describeSecurityGroups.data[i].GroupName +
-											') has ' + service + ' ' + permission.IpProtocol.toUpperCase() +
-											' port ' + port + ' open to 0.0.0.0/0', region,
-											resource);
-									}
-								}
-							}
-						}
-					}
-				}
-
-				if (!found) {
-					helpers.addResult(results, 0, 'No public open ports found', region);
-				}
-
-				rcb();
-			}, function(){
-				callback(null, results, source);
-			});
-		}
+			rcb();
+		}, function(){
+			callback(null, results, source);
+		});
+	}
 };
