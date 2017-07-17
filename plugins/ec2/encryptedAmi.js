@@ -41,6 +41,7 @@ module.exports = {
 						if (!volume.Ebs.Encrypted) {
 							found = true;
 							helpers.addResult(results, 2, 'AMI EBS volume is unencrypted', region, image.ImageId);
+							break;
 						}
 					}
 				}
