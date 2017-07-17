@@ -3,6 +3,7 @@
 module.exports = {
     'publicS3Origin'                : require(__dirname + '/plugins/cloudfront/publicS3Origin.js'),
     'secureOrigin'                  : require(__dirname + '/plugins/cloudfront/secureOrigin.js'),
+    'insecureProtocols'             : require(__dirname + '/plugins/cloudfront/insecureProtocols.js'),
 
     'cloudtrailBucketAccessLogging' : require(__dirname + '/plugins/cloudtrail/cloudtrailBucketAccessLogging.js'),
     'cloudtrailBucketDelete'        : require(__dirname + '/plugins/cloudtrail/cloudtrailBucketDelete.js'),
@@ -39,6 +40,7 @@ module.exports = {
     'vpcMultipleSubnets'            : require(__dirname + '/plugins/ec2/multipleSubnets.js'),
     'publicAmi'                     : require(__dirname + '/plugins/ec2/publicAmi.js'),
     'encryptedAmi'                  : require(__dirname + '/plugins/ec2/encryptedAmi.js'),
+    'instanceIamRole'               : require(__dirname + '/plugins/ec2/instanceIamRole.js'),
 
     'insecureCiphers'               : require(__dirname + '/plugins/elb/insecureCiphers.js'),
 
@@ -81,5 +83,8 @@ module.exports = {
   
     'lambdaOldRuntimes'             : require(__dirname + '/plugins/lambda/lambdaOldRuntimes.js'),
   
-    'monitoringMetrics'             : require(__dirname + '/plugins/cloudwatchlogs/monitoringMetrics.js')
+    'monitoringMetrics'             : require(__dirname + '/plugins/cloudwatchlogs/monitoringMetrics.js'),
+
+    'redshiftEncryptionEnabled'     : require(__dirname + '/plugins/redshift/redshiftEncryptionEnabled.js'),
+    'redshiftPubliclyAccessible'    : require(__dirname + '/plugins/redshift/redshiftPubliclyAccessible.js')
 };
