@@ -1,0 +1,48 @@
+var async = require('async');
+var AWS = require('aws-sdk');
+var helpers = require('../../helpers');
+
+module.exports = {
+    title: 'CloudFront HTTPS Only',
+    category: 'CloudFront',
+    description: 'Ensures CloudFront distributions are configured to redirect non-HTTPS traffic to HTTPS.',
+    more_info: 'For maximum security, CloudFront distributions can be configured to only accept HTTPS connections or to redirect HTTP connections to HTTPS.',
+    link: 'http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CloudFront.html',
+    recommended_action: 'Remove HTTP-only listeners from distributions.',
+
+    run: function(cache, callback) {
+
+        var results = [];
+        var source = {};
+
+        var listDistributions = helpers.addSource(cache, source,
+            ['cloudfront', 'listDistributions', 'us-east-1']);
+
+        if (!listDistributions) return callback(null, results, source);
+
+        if (listDistributions.err || !listDistributions.data) {
+            helpers.addResult(results, 3,
+                'Unable to query for CloudFront distributions: ' + helpers.addError(listDistributions));
+            return callback(null, results, source);
+        }
+
+        if (!listDistributions.data.length) {
+            helpers.addResult(results, 0, 'No CloudFront distributions found');
+        }
+        // loop through Instances for every reservation
+        listDistributions.data.forEach(function(Distribution){
+            if (Distribution.DefaultCacheBehavior.ViewerProtocolPolicy == 'redirect-to-https'){
+                helpers.addResult(results, 0, 'CloudFront distributions ' + 
+                        'are configured to redirect non-HTTPS traffic to HTTPS', 'global',
+                        Distribution.Id)
+            }
+            else{
+                helpers.addResult(results, 2, 'CloudFront distributions ' + 
+                        'are not configured HTTPS', 'global',
+                        Distribution.Id)
+            }
+
+            return callback(null, results, source);
+        });
+    }
+};
