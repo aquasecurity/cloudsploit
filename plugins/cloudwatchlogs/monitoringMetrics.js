@@ -118,7 +118,8 @@ module.exports = {
 				var filter = describeMetricFilters.data[f];
 
 				if (filter.logGroupName) {
-					filters[filter.logGroupName] = filter;
+					if (!filters[filter.logGroupName]) filters[filter.logGroupName] = [];
+					filters[filter.logGroupName].push(filter.filterPattern.replace(/\s+/g, '').toLowerCase());
 				}
 			}
 
@@ -149,8 +150,7 @@ module.exports = {
 					for (f in filters) {
 						var filter = filters[f];
 
-						if (pattern.pattern.replace(/\s+/g, '').toLowerCase() ===
-							filter.filterPattern.replace(/\s+/g, '').toLowerCase()) {
+						if (filter.indexOf(pattern.pattern.replace(/\s+/g, '').toLowerCase()) > - 1) {
 							pattern.found = true;
 							break;
 						}
