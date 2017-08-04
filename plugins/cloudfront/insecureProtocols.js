@@ -38,7 +38,12 @@ module.exports = {
 				return cb();
 			}
 
-			if (distribution.ViewerCertificate.MinimumProtocolVersion === 'SSLv3') {
+			// Treat the default certificate as secure
+			// IAM/ACM certificates should be analyzed for protocol version
+			if (distribution.ViewerCertificate.CloudFrontDefaultCertificate) {
+				helpers.addResult(results, 0, 'Distribution is using secure default certificate',
+						'global', distribution.ARN);
+			} else if (distribution.ViewerCertificate.MinimumProtocolVersion === 'SSLv3') {
 				helpers.addResult(results, 1, 'Distribution is using insecure SSLv3',
 						'global', distribution.ARN);
 			} else {
