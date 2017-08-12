@@ -1,6 +1,5 @@
 var async = require('async');
 var helpers = require('../../helpers');
-var describeLoadBalancerAttributes = require('../../collectors/elb/describeLoadBalancerAttributes.js');
 
 module.exports = {
     title: 'ELB Logging Enabled',
@@ -39,15 +38,19 @@ module.exports = {
                 // loop through listeners
                 var describeLoadBalancerAttributes = helpers.addSource(cache, source,
                     ['elb', 'describeLoadBalancerAttributes', region, lb.LoadBalancerName]);
-                if (describeLoadBalancerAttributes.data.LoadBalancerAttributes.AccessLog) {
-                    accessLog = describeLoadBalancerAttributes.data.LoadBalancerAttributes.AccessLog
 
+                if ( describeLoadBalancerAttributes.data && 
+                    describeLoadBalancerAttributes.data.LoadBalancerAttributes && 
+                    describeLoadBalancerAttributes.data.LoadBalancerAttributes.AccessLog) {
+                    accessLog = describeLoadBalancerAttributes.data.LoadBalancerAttributes.AccessLog
+                    
+                    //console.log(lb.DNSName)
                     if (accessLog.Enabled){
                         helpers.addResult(results, 0,
-                            'logging Enabled for ' + lb.LoadBalancerName, region);
+                            'Logging enabled for ' + lb.DNSName, region);
                     } else {
                         helpers.addResult(results, 2,
-                            'logging Not Enabled for ' + lb.LoadBalancerName, region);
+                            'Logging not enabled for ' + lb.DNSName, region);
                     }
                 }
                 cb();

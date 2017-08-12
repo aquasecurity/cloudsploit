@@ -37,20 +37,22 @@ module.exports = {
 
             async.each(describeLoadBalancers.data, function(lb, cb){
                 // loop through listeners
+                var non_https_listner = [];
                 lb.ListenerDescriptions.forEach(function(listener){
                     // if it is not https add errors to results
                     if (listener.Listener.Protocol != 'HTTPS'){
-                        helpers.addResult(
-                            results, 2, 
-                            'Remove Listener ' + 
-                            listener.Listener.Protocol + '-' + 
-                            listener.Listener.LoadBalancerPort + 
-                            ' from ' + lb.LoadBalancerName,      
-                            region
+                        non_https_listner.push(
+                            listener.Listener.Protocol + ' / ' +  
+                            listener.Listener.LoadBalancerPort
                         );
                     }
 
                 });
+                if (non_https_listner){
+                    helpers.addResult(results, 2, non_https_listner.join(', '), region);
+                }else{
+                    helpers.addResult(results, 0, 'No listeners found', region);
+                }
                 cb();
             }, function(){
                 rcb();

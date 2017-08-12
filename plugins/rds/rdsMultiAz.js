@@ -35,11 +35,11 @@ module.exports = {
             describeDBInstances.data.forEach(function(Rds){
                 if (Rds.MultiAZ){
                     helpers.addResult(results, 0,
-                        'MultiAZ enabled for High Availability',
+                        'RDS instance has multi-AZ enabled',
                         region, Rds.DBInstanceArn);
                 } else {
                     helpers.addResult(results, 2,
-                        'MultiAZ Not Enabled',
+                        'RDS instance does not have multi-AZ enabled',
                         region, Rds.DBInstanceArn);
                 }
             });
