@@ -117,7 +117,7 @@ module.exports = {
 			for (f in describeMetricFilters.data) {
 				var filter = describeMetricFilters.data[f];
 
-				if (filter.logGroupName) {
+				if (filter.logGroupName && filter.filterPattern) {
 					if (!filters[filter.logGroupName]) filters[filter.logGroupName] = [];
 					filters[filter.logGroupName].push(filter.filterPattern.replace(/\s+/g, '').toLowerCase());
 				}
