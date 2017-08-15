@@ -49,7 +49,11 @@ module.exports = {
 
                 });
                 if (non_https_listner){
-                    helpers.addResult(results, 2, non_https_listner.join(', '), region);
+                    //helpers.addResult(results, 2, non_https_listner.join(', '), region);
+                    msg = "The following listeners are not using HTTPS: "
+                    helpers.addResult(
+                        results, 2, msg + non_https_listner.join(', '), region
+                    );
                 }else{
                     helpers.addResult(results, 0, 'No listeners found', region);
                 }

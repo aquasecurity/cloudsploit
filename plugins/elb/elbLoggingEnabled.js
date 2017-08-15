@@ -37,7 +37,7 @@ module.exports = {
             async.each(describeLoadBalancers.data, function(lb, cb){
                 // loop through listeners
                 var describeLoadBalancerAttributes = helpers.addSource(cache, source,
-                    ['elb', 'describeLoadBalancerAttributes', region, lb.LoadBalancerName]);
+                    ['elb', 'describeLoadBalancerAttributes', region, lb.DNSName]);
 
                 if ( describeLoadBalancerAttributes.data && 
                     describeLoadBalancerAttributes.data.LoadBalancerAttributes && 
@@ -47,10 +47,10 @@ module.exports = {
                     //console.log(lb.DNSName)
                     if (accessLog.Enabled){
                         helpers.addResult(results, 0,
-                            'Logging enabled for ' + lb.DNSName, region);
+                            'Logging enabled for ' + lb.DNSName, region, lb.DNSName);
                     } else {
                         helpers.addResult(results, 2,
-                            'Logging not enabled for ' + lb.DNSName, region);
+                            'Logging not enabled for ' + lb.DNSName, region, lb.DNSName);
                     }
                 }
                 cb();

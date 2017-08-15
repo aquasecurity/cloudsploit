@@ -1,6 +1,8 @@
 // Export all available scans
 
 module.exports = {
+    'asgMultiAz'                       : require(__dirname + '/plugins/autoscaling/asgMultiAz.js'),
+
     'publicS3Origin'                : require(__dirname + '/plugins/cloudfront/publicS3Origin.js'),
     'secureOrigin'                  : require(__dirname + '/plugins/cloudfront/secureOrigin.js'),
     'insecureProtocols'             : require(__dirname + '/plugins/cloudfront/insecureProtocols.js'),
@@ -15,7 +17,6 @@ module.exports = {
 
     'configServiceEnabled'          : require(__dirname + '/plugins/configservice/configServiceEnabled.js'),
 
-    'asgMultiAz'                    : require(__dirname + '/plugins/ec2/asgMultiAz.js'),
     'defaultSecurityGroup'          : require(__dirname + '/plugins/ec2/defaultSecurityGroup.js'),
     'elasticIpLimit'                : require(__dirname + '/plugins/ec2/elasticIpLimit.js'),
     'excessiveSecurityGroups'       : require(__dirname + '/plugins/ec2/excessiveSecurityGroups.js'),

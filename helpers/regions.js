@@ -18,7 +18,7 @@ var regions = [
 module.exports = {
 	all: regions,
 	cloudfront: ['us-east-1'], // CloudFront uses the default global region
-	autoscaling: ['us-east-1'], // autoscaling uses the default global region
+	autoscaling: regions,
 	iam: ['us-east-1'],
 	route53: ['us-east-1'],
 	route53domains: ['us-east-1'],
