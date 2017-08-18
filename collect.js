@@ -30,6 +30,11 @@ var globalServices = [
 ];
 
 var calls = {
+	AutoScaling:{
+		describeAutoScalingGroups: {
+			property: 'AutoScalingGroups'
+		}
+	},
 	CloudFront: {
 		listDistributions: {
 			property: 'DistributionList',
@@ -205,6 +210,11 @@ var postcalls = [
 		},
 		ELB: {
 			describeLoadBalancerPolicies: {
+				reliesOnService: 'elb',
+				reliesOnCall: 'describeLoadBalancers',
+				override: true
+			},
+			describeLoadBalancerAttributes: {
 				reliesOnService: 'elb',
 				reliesOnCall: 'describeLoadBalancers',
 				override: true

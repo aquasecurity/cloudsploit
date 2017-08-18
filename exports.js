@@ -1,10 +1,12 @@
 // Export all available scans
 
 module.exports = {
+    'asgMultiAz'                       : require(__dirname + '/plugins/autoscaling/asgMultiAz.js'),
+
     'publicS3Origin'                : require(__dirname + '/plugins/cloudfront/publicS3Origin.js'),
     'secureOrigin'                  : require(__dirname + '/plugins/cloudfront/secureOrigin.js'),
     'insecureProtocols'             : require(__dirname + '/plugins/cloudfront/insecureProtocols.js'),
-
+    'cloudfrontHttpsOnly'           : require(__dirname + '/plugins/cloudfront/cloudfrontHttpsOnly.js'),
     'cloudtrailBucketAccessLogging' : require(__dirname + '/plugins/cloudtrail/cloudtrailBucketAccessLogging.js'),
     'cloudtrailBucketDelete'        : require(__dirname + '/plugins/cloudtrail/cloudtrailBucketDelete.js'),
     'cloudtrailEnabled'             : require(__dirname + '/plugins/cloudtrail/cloudtrailEnabled.js'),
@@ -43,6 +45,8 @@ module.exports = {
     'instanceIamRole'               : require(__dirname + '/plugins/ec2/instanceIamRole.js'),
 
     'insecureCiphers'               : require(__dirname + '/plugins/elb/insecureCiphers.js'),
+    'elbHttpsOnly'                  : require(__dirname + '/plugins/elb/elbHttpsOnly.js'),
+    'elbLoggingEnabled'             : require(__dirname + '/plugins/elb/elbLoggingEnabled.js'),
 
     'accessKeysExtra'               : require(__dirname + '/plugins/iam/accessKeysExtra.js'),
     'accessKeysLastUsed'            : require(__dirname + '/plugins/iam/accessKeysLastUsed.js'),
@@ -70,6 +74,7 @@ module.exports = {
     'rdsEncryptionEnabled'          : require(__dirname + '/plugins/rds/rdsEncryptionEnabled.js'),
     'rdsPubliclyAccessible'         : require(__dirname + '/plugins/rds/rdsPubliclyAccessible.js'),
     'rdsRestorable'                 : require(__dirname + '/plugins/rds/rdsRestorable.js'),
+    'rdsMultiAz'                    : require(__dirname + '/plugins/rds/rdsMultiAz.js'),
 
     'domainAutoRenew'               : require(__dirname + '/plugins/route53/domainAutoRenew.js'),
     'domainExpiry'                  : require(__dirname + '/plugins/route53/domainExpiry.js'),
