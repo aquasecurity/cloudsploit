@@ -50,8 +50,8 @@ module.exports = {
                         'is not configured HTTPS', 'global',
                         Distribution.ARN)
             }
-
-            return callback(null, results, source);
         });
+
+        callback(null, results, source);
     }
 };
