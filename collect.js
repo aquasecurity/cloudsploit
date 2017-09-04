@@ -184,6 +184,13 @@ var calls = {
 
 var postcalls = [
 	{
+		CloudFront: {
+            getDistribution: {
+                reliesOnService: 'cloudfront',
+                reliesOnCall: 'listDistributions',
+                override: true
+            }
+        },
 		S3: {
 			getBucketLogging: {
 				deleteRegion: true,
