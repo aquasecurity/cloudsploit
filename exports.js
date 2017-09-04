@@ -7,7 +7,7 @@ module.exports = {
     'secureOrigin'                  : require(__dirname + '/plugins/cloudfront/secureOrigin.js'),
     'insecureProtocols'             : require(__dirname + '/plugins/cloudfront/insecureProtocols.js'),
     'cloudfrontHttpsOnly'           : require(__dirname + '/plugins/cloudfront/cloudfrontHttpsOnly.js'),
-    'cloudfrontLoggingEnabled.js'   : require(__dirname + '/plugins/cloudfront/cloudfrontLoggingEnabled.js'),
+    'cloudfrontLoggingEnabled'      : require(__dirname + '/plugins/cloudfront/cloudfrontLoggingEnabled.js'),
     
     'cloudtrailBucketAccessLogging' : require(__dirname + '/plugins/cloudtrail/cloudtrailBucketAccessLogging.js'),
     'cloudtrailBucketDelete'        : require(__dirname + '/plugins/cloudtrail/cloudtrailBucketDelete.js'),
