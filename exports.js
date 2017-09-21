@@ -21,6 +21,7 @@ module.exports = {
     'elasticIpLimit'                : require(__dirname + '/plugins/ec2/elasticIpLimit.js'),
     'excessiveSecurityGroups'       : require(__dirname + '/plugins/ec2/excessiveSecurityGroups.js'),
     'instanceLimit'                 : require(__dirname + '/plugins/ec2/instanceLimit.js'),
+    'openAllPortsProtocols'         : require(__dirname + '/plugins/ec2/openAllPortsProtocols.js'),
     'openCIFS'                      : require(__dirname + '/plugins/ec2/openCIFS.js'),
     'openDNS'                       : require(__dirname + '/plugins/ec2/openDNS.js'),
     'openFTP'                       : require(__dirname + '/plugins/ec2/openFTP.js'),
