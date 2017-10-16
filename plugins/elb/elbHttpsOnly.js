@@ -15,7 +15,7 @@ module.exports = {
     recommended_action: 'Remove non-HTTPS listeners from load balancer.',
     apis: ['ELB:describeLoadBalancers'],
 
-    run: function(cache, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         async.each(helpers.regions.elb, function(region, rcb){

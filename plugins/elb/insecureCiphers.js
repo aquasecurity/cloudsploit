@@ -84,7 +84,7 @@ module.exports = {
 	recommended_action: 'Update your ELBs to use the recommended cipher suites',
 	apis: ['ELB:describeLoadBalancers', 'ELB:describeLoadBalancerPolicies'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

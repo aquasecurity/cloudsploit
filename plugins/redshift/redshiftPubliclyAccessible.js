@@ -10,7 +10,7 @@ module.exports = {
 	recommended_action: 'Remove the public endpoint from the Redshift cluster',
 	apis: ['Redshift:describeClusters'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

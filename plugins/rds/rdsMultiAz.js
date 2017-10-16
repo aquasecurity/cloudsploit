@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Modify the RDS instance to enable scaling across multiple availability zones.',
     apis: ['RDS:describeDBInstances'],
 
-    run: function(cache, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
 

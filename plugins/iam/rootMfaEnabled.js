@@ -9,7 +9,7 @@ module.exports = {
 	recommended_action: 'Enable an MFA device for the root account and then use an IAM user for managing services',
 	apis: ['IAM:generateCredentialReport'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

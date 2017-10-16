@@ -14,7 +14,7 @@ module.exports = {
     recommended_action: 'Enable ELB request logging',
     apis: ['ELB:describeLoadBalancers', 'ELB:describeLoadBalancerAttributes'],
 
-    run: function(cache, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         async.each(helpers.regions.elb, function(region, rcb){

@@ -10,7 +10,7 @@ module.exports = {
 	recommended_action: 'Enable automated backups for the RDS instance',
 	apis: ['RDS:describeDBInstances'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

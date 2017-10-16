@@ -10,7 +10,7 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/sns/latest/dg/AccessPolicyLanguage.html',
 	apis: ['SNS:listTopics', 'SNS:getTopicAttributes'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

@@ -9,7 +9,7 @@ module.exports = {
 	recommended_action: 'Reregister the expiring domain',
 	apis: ['Route53Domains:listDomains'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

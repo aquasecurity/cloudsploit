@@ -10,7 +10,7 @@ module.exports = {
 	recommended_action: 'Modify the security group to specify a specific port and protocol to allow.',
 	apis: ['EC2:describeSecurityGroups'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

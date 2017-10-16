@@ -10,7 +10,7 @@ module.exports = {
 	recommended_action: 'Remove the extra access key for the specified user.',
 	apis: ['IAM:generateCredentialReport'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 
 		var results = [];
 		var source = {};

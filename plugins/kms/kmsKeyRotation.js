@@ -10,7 +10,7 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html',
 	apis: ['KMS:listKeys', 'KMS:describeKey', 'KMS:getKeyRotationStatus'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

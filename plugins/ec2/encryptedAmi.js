@@ -10,7 +10,7 @@ module.exports = {
 	recommended_action: 'Create an Amazon EC2 instance backed by encrypted EBS volume.',
 	apis: ['EC2:describeImages'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

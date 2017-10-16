@@ -10,7 +10,7 @@ module.exports = {
 	recommended_action: 'Contact AWS support to increase the number of instances available',
 	apis: ['EC2:describeAccountAttributes', 'EC2:describeInstances'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

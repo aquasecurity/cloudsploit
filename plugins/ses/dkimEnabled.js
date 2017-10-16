@@ -10,7 +10,7 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/ses/latest/DeveloperGuide/easy-dkim.html',
 	apis: ['SES:listIdentities', 'SES:getIdentityDkimAttributes'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

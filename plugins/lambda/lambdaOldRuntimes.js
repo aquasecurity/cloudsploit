@@ -10,7 +10,7 @@ module.exports = {
 	recommended_action: 'Upgrade the Lambda function runtime to use a more current version.',
 	apis: ['Lambda:listFunctions'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

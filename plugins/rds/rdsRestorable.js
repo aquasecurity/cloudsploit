@@ -10,7 +10,7 @@ module.exports = {
 	recommended_action: 'Ensure the instance is running and configured properly. If the time drifts too far, consider opening a support ticket with AWS.',
 	apis: ['RDS:describeDBInstances', 'RDS:describeDBClusters'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

@@ -9,7 +9,7 @@ module.exports = {
 	recommended_action: 'Enable auto renew for the domain',
 	apis: ['Route53Domains:listDomains'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

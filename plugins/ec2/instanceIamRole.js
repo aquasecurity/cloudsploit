@@ -10,7 +10,7 @@ module.exports = {
 	recommended_action: 'Attach an IAM role to the EC2 instance',
 	apis: ['EC2:describeInstances'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 
