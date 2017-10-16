@@ -9,7 +9,7 @@ module.exports = {
 	recommended_action: 'Remove access keys for the root account and setup IAM users with limited permissions instead',
 	apis: ['IAM:generateCredentialReport'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

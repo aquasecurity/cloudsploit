@@ -10,7 +10,7 @@ module.exports = {
 	recommended_action: 'Convert the public AMI a private image.',
 	apis: ['EC2:describeImages'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

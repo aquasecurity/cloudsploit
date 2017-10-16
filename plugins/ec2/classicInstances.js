@@ -11,7 +11,7 @@ module.exports = {
 	recommended_action: 'Migrate instances from EC2 Classic to VPC',
 	apis: ['EC2:describeInstances'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

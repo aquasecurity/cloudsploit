@@ -10,7 +10,7 @@ module.exports = {
 	recommended_action: 'Ensure that traffic sent between viewers and CloudFront is passed over HTTPS and uses TLSv1, not SSLv3.',
 	apis: ['CloudFront:listDistributions'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 
 		var results = [];
 		var source = {};

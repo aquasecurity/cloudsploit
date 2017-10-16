@@ -11,7 +11,7 @@ module.exports = {
 	recommended_action: 'To rotate an access key, first create a new key, replace the key and secret throughout your app or scripts, then set the previous key to disabled. Once you ensure that no services are broken, then fully delete the old key.',
 	apis: ['IAM:generateCredentialReport'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 
 		var results = [];
 		var source = {};

@@ -10,7 +10,7 @@ module.exports = {
 	recommended_action: 'Remove unused groups without users',
 	apis: ['IAM:listGroups', 'IAM:getGroup'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

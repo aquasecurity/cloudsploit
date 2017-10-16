@@ -10,7 +10,7 @@ module.exports = {
 	recommended_action: 'Create an origin access identity for CloudFront, then make the contents of the S3 bucket private.',
 	apis: ['CloudFront:listDistributions'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 
 		var results = [];
 		var source = {};

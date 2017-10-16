@@ -10,7 +10,7 @@ module.exports = {
 	recommended_action: 'Update the rules for the default security group to deny all traffic by default',
 	apis: ['EC2:describeSecurityGroups'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

@@ -10,7 +10,7 @@ module.exports = {
 	recommended_action: 'Limit the number of security groups to prevent accidental authorizations',
 	apis: ['EC2:describeSecurityGroups'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

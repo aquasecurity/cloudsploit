@@ -10,7 +10,7 @@ module.exports = {
 	recommended_action: 'Update your certificates before the expiration date',
 	apis: ['IAM:listServerCertificates'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

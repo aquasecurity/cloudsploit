@@ -11,7 +11,7 @@ module.exports = {
 	recommended_action: 'Enable VPC flow logs for each VPC',
 	apis: ['EC2:describeVpcs', 'EC2:describeFlowLogs'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

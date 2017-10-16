@@ -10,7 +10,7 @@ module.exports = {
 	recommended_action: 'Ensure that traffic sent between CloudFront and its origin is passed over HTTPS and uses TLSv1.1 or higher. Do not use the match-viewer option.',
 	apis: ['CloudFront:listDistributions'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 
 		var results = [];
 		var source = {};

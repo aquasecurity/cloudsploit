@@ -69,7 +69,7 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/awscloudtrail/latest/userguide/send-cloudtrail-events-to-cloudwatch-logs.html',
 	apis: ['CloudTrail:describeTrails', 'CloudWatchLogs:describeMetricFilters'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

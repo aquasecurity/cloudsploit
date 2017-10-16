@@ -9,7 +9,7 @@ module.exports = {
 	recommended_action: 'Enable password expiration for the account',
 	apis: ['IAM:getAccountPasswordPolicy'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

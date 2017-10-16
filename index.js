@@ -21,6 +21,9 @@ if (!AWSConfig || !AWSConfig.accessKeyId) {
 
 var skipRegions = [];   // Add any regions you wish to skip here. Ex: 'us-east-2'
 
+// Custom settings - place plugin-specific settings here
+var settings = {};
+
 // STEP 1 - Obtain API calls to make
 console.log('INFO: Determining API calls to make...');
 
@@ -45,7 +48,7 @@ collector(AWSConfig, {api_calls: apiCalls, skip_regions: skipRegions}, function(
     console.log('INFO: Analysis complete. Scan report to follow...\n');
 
     async.forEachOfLimit(plugins, 10, function(plugin, key, callback){
-        plugin.run(collection, function(err, results){
+        plugin.run(collection, settings, function(err, results){
             for (r in results) {
                 var statusWord;
                 if (results[r].status === 0) {

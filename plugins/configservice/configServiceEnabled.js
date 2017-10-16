@@ -10,7 +10,7 @@ module.exports = {
 	link: 'https://aws.amazon.com/config/details/',
 	apis: ['ConfigService:describeConfigurationRecorders', 'ConfigService:describeConfigurationRecorderStatus'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

@@ -9,7 +9,7 @@ module.exports = {
 	recommended_action: 'Increase the minimum length requirement for the password policy',
 	apis: ['IAM:getAccountPasswordPolicy'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

@@ -10,7 +10,7 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket-policies.html',
 	apis: ['CloudTrail:describeTrails', 'S3:getBucketAcl'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

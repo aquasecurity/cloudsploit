@@ -9,7 +9,7 @@ module.exports = {
 	recommended_action: 'Update the password policy to require the use of numbers',
 	apis: ['IAM:getAccountPasswordPolicy'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

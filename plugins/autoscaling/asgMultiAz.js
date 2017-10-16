@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Modify the autoscaling instance to enable scaling across multiple availability zones.',
     apis: ['AutoScaling:describeAutoScalingGroups'],
 
-    run: function(cache, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         async.each(helpers.regions.autoscaling, function(region, rcb){

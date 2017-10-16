@@ -11,7 +11,7 @@ module.exports = {
     recommended_action: 'Remove HTTP-only listeners from distributions.',
     apis: ['CloudFront:listDistributions'],
 
-    run: function(cache, callback) {
+    run: function(cache, settings, callback) {
 
         var results = [];
         var source = {};

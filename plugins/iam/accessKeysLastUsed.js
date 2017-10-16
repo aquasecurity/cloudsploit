@@ -10,7 +10,7 @@ module.exports = {
 	recommended_action: 'Log into the IAM portal and remove the offending access key.',
 	apis: ['IAM:generateCredentialReport'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 
 		var results = [];
 		var source = {};

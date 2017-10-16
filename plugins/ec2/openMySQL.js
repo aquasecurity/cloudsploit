@@ -10,7 +10,7 @@ module.exports = {
 	recommended_action: 'Restrict TCP ports 4333 and 3306 to known IP addresses',
 	apis: ['EC2:describeSecurityGroups'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

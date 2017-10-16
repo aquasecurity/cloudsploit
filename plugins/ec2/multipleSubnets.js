@@ -10,7 +10,7 @@ module.exports = {
 	recommended_action: 'Create multiple networks/subnets in each VPC and change the architecture to take advantage of public and private tiers.',
 	apis: ['EC2:describeVpcs', 'EC2:describeSubnets'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

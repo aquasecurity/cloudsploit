@@ -10,7 +10,7 @@ module.exports = {
 	recommended_action: 'Redshift does not currently allow modifications to encryption after the cluster has been launched, so a new cluster will need to be created with encryption enabled.',
 	apis: ['Redshift:describeClusters'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 

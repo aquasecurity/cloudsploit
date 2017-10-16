@@ -9,7 +9,7 @@ module.exports = {
 	recommended_action: 'Descrease the maximum allowed age of passwords for the password policy',
 	apis: ['IAM:getAccountPasswordPolicy'],
 
-	run: function(cache, callback) {
+	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
 
