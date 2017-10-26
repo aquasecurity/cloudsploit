@@ -9,8 +9,29 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
 	recommended_action: 'Limit the number of security groups to prevent accidental authorizations',
 	apis: ['EC2:describeSecurityGroups'],
+	settings: {
+		excessive_security_groups_fail: {
+			name: 'Excessive Security Groups Fail',
+			description: 'Return a failing result when the number of security groups exceeds this value',
+			regex: '^[1-9]{1}[0-9]{0,5}$',
+			default: 40
+		},
+		excessive_security_groups_warn: {
+			name: 'Excessive Security Groups Warn',
+			description: 'Return a warning result when the number of security groups exceeds this value',
+			regex: '^[1-9]{1}[0-9]{0,5}$',
+			default: 30
+		}
+	},
 
 	run: function(cache, settings, callback) {
+		var config = {
+			excessive_security_groups_fail: settings.excessive_security_groups_fail || this.settings.excessive_security_groups_fail.default,
+			excessive_security_groups_warn: settings.excessive_security_groups_warn || this.settings.excessive_security_groups_warn.default
+		};
+
+		var custom = helpers.isCustom(settings, this.settings);
+
 		var results = [];
 		var source = {};
 
@@ -34,12 +55,12 @@ module.exports = {
 
 			var returnMsg = ' number of security groups: ' + describeSecurityGroups.data.length + ' groups present';
 
-			if (describeSecurityGroups.data.length > 40) {
-				helpers.addResult(results, 2, 'Excessive' + returnMsg, region);
-			} else if (describeSecurityGroups.data.length > 30) {
-				helpers.addResult(results, 1, 'Large' + returnMsg, region);
+			if (describeSecurityGroups.data.length > config.excessive_security_groups_fail) {
+				helpers.addResult(results, 2, 'Excessive' + returnMsg, region, null, custom);
+			} else if (describeSecurityGroups.data.length > config.excessive_security_groups_warn) {
+				helpers.addResult(results, 1, 'Large' + returnMsg, region, null, custom);
 			} else {
-				helpers.addResult(results, 0, 'Acceptable' + returnMsg, region);
+				helpers.addResult(results, 0, 'Acceptable' + returnMsg, region, null, custom);
 			}
 
 			rcb();

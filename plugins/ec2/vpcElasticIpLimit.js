@@ -9,8 +9,29 @@ module.exports = {
 	recommended_action: 'Contact AWS support to increase the number of EIPs available',
 	link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html#using-instance-addressing-limit',
 	apis: ['EC2:describeAccountAttributes', 'EC2:describeAddresses'],
+	settings: {
+		vpc_elastic_ip_percentage_fail: {
+			name: 'VPC Elastic IP Percentage Fail',
+			description: 'Return a failing result when consumed VPC elastic IPs equals or exceeds this percentage',
+			regex: '^(100|[1-9][0-9]?)$',
+			default: 90
+		},
+		vpc_elastic_ip_percentage_warn: {
+			name: 'VPC Elastic IP Percentage Warn',
+			description: 'Return a warning result when consumed VPC elastic IPs equals or exceeds this percentage',
+			regex: '^(100|[1-9][0-9]?)$',
+			default: 75
+		}
+	},
 
 	run: function(cache, settings, callback) {
+		var config = {
+			vpc_elastic_ip_percentage_fail: settings.vpc_elastic_ip_percentage_fail || this.settings.vpc_elastic_ip_percentage_fail.default,
+			vpc_elastic_ip_percentage_warn: settings.vpc_elastic_ip_percentage_warn || this.settings.vpc_elastic_ip_percentage_warn.default
+		};
+
+		var custom = helpers.isCustom(settings, this.settings);
+
 		var results = [];
 		var source = {};
 
@@ -63,12 +84,12 @@ module.exports = {
 			var percentage = Math.ceil((eips / limits['vpc-max-elastic-ips'])*100);
 			var returnMsg = 'Account contains ' + eips + ' of ' + limits['vpc-max-elastic-ips'] + ' (' + percentage + '%) available VPC Elastic IPs';
 
-			if (percentage >= 90) {
-				helpers.addResult(results, 2, returnMsg, region);
-			} else if (percentage >= 75) {
-				helpers.addResult(results, 1, returnMsg, region);
+			if (percentage >= config.vpc_elastic_ip_percentage_fail) {
+				helpers.addResult(results, 2, returnMsg, region, null, custom);
+			} else if (percentage >= config.vpc_elastic_ip_percentage_warn) {
+				helpers.addResult(results, 1, returnMsg, region, null, custom);
 			} else {
-				helpers.addResult(results, 0, returnMsg, region);
+				helpers.addResult(results, 0, returnMsg, region, null, custom);
 			}
 			
 			rcb();

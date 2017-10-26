@@ -8,8 +8,29 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
 	recommended_action: 'Descrease the maximum allowed age of passwords for the password policy',
 	apis: ['IAM:getAccountPasswordPolicy'],
+	settings: {
+		max_password_age_fail: {
+			name: 'Max Password Age Fail',
+			description: 'Return a failing result when max password age exceeds this number of days',
+			regex: '^[1-9]{1}[0-9]{0,3}$',
+			default: 365
+		},
+		max_password_age_warn: {
+			name: 'Max Password Age Warn',
+			description: 'Return a warning result when max password age exceeds this number of days',
+			regex: '^[1-9]{1}[0-9]{0,3}$',
+			default: 180
+		}
+	},
 
 	run: function(cache, settings, callback) {
+		var config = {
+			max_password_age_fail: settings.max_password_age_fail || this.settings.max_password_age_fail.default,
+			max_password_age_warn: settings.max_password_age_warn || this.settings.max_password_age_warn.default
+		};
+
+		var custom = helpers.isCustom(settings, this.settings);
+
 		var results = [];
 		var source = {};
 
@@ -38,12 +59,12 @@ module.exports = {
 
 		if (!passwordPolicy.MaxPasswordAge) {
 			helpers.addResult(results, 2, 'Password policy does not specify a maximum password age');
-		} else if (passwordPolicy.MaxPasswordAge > 365) {
-			helpers.addResult(results, 2, 'Maximum password age of: ' + passwordPolicy.MaxPasswordAge + ' days is more than one year');
-		} else if (passwordPolicy.MaxPasswordAge > 180) {
-			helpers.addResult(results, 1, 'Maximum password age of: ' + passwordPolicy.MaxPasswordAge + ' days is more than six months');
+		} else if (passwordPolicy.MaxPasswordAge > config.max_password_age_fail) {
+			helpers.addResult(results, 2, 'Maximum password age of: ' + passwordPolicy.MaxPasswordAge + ' days is more than one year', 'global', null, custom);
+		} else if (passwordPolicy.MaxPasswordAge > config.max_password_age_warn) {
+			helpers.addResult(results, 1, 'Maximum password age of: ' + passwordPolicy.MaxPasswordAge + ' days is more than six months', 'global', null, custom);
 		} else {
-			helpers.addResult(results, 0, 'Maximum password age of: ' + passwordPolicy.MaxPasswordAge + ' days is suitable');
+			helpers.addResult(results, 0, 'Maximum password age of: ' + passwordPolicy.MaxPasswordAge + ' days is suitable', 'global', null, custom);
 		}
 
 		callback(null, results, source);

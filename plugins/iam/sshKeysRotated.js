@@ -8,8 +8,29 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_ssh-keys.html',
 	recommended_action: 'To rotate an SSH key, first create a new public-private key pair, then upload the public key to AWS and delete the old key.',
 	apis: ['IAM:generateCredentialReport'],
+	settings: {
+		ssh_keys_rotated_fail: {
+			name: 'SSH Keys Rotated Fail',
+			description: 'Return a failing result when SSH keys have not been rotated for this many days',
+			regex: '^[1-9]{1}[0-9]{0,2}$',
+			default: 360
+		},
+		ssh_keys_rotated_warn: {
+			name: 'SSH Keys Rotated Warn',
+			description: 'Return a warning result when SSH keys have not been rotated for this many days',
+			regex: '^[1-9]{1}[0-9]{0,2}$',
+			default: 180
+		}
+	},
 
 	run: function(cache, settings, callback) {
+		var config = {
+			ssh_keys_rotated_fail: settings.ssh_keys_rotated_fail || this.settings.ssh_keys_rotated_fail.default,
+			ssh_keys_rotated_warn: settings.ssh_keys_rotated_warn || this.settings.ssh_keys_rotated_warn.default
+		};
+
+		var custom = helpers.isCustom(settings, this.settings);
+
 		var results = [];
 		var source = {};
 
@@ -42,11 +63,11 @@ module.exports = {
 							' is ' + daysOld + ' days old';
 
 			if (helpers.functions.daysAgo(userCreationTime) > 180 &&
-				(!lastRotated || lastRotated === 'N/A' || helpers.functions.daysAgo(lastRotated) > 360)) {
-				helpers.addResult(results, 2, returnMsg, 'global', arn);
+				(!lastRotated || lastRotated === 'N/A' || helpers.functions.daysAgo(lastRotated) > config.ssh_keys_rotated_fail)) {
+				helpers.addResult(results, 2, returnMsg, 'global', arn, custom);
 			} else if (helpers.functions.daysAgo(userCreationTime) > 90 &&
-				(!lastRotated || lastRotated === 'N/A' || helpers.functions.daysAgo(lastRotated) > 180)) {
-				helpers.addResult(results, 1, returnMsg, 'global', arn);
+				(!lastRotated || lastRotated === 'N/A' || helpers.functions.daysAgo(lastRotated) > config.ssh_keys_rotated_warn)) {
+				helpers.addResult(results, 1, returnMsg, 'global', arn, custom);
 			} else {
 				helpers.addResult(results, 0,
 					'User SSH key '  + keyNum + ' ' +

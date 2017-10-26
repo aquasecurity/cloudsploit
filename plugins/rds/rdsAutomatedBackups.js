@@ -9,8 +9,22 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithAutomatedBackups.html',
 	recommended_action: 'Enable automated backups for the RDS instance',
 	apis: ['RDS:describeDBInstances'],
+	settings: {
+		rds_backup_period: {
+			name: 'RDS Backup Period',
+			description: 'Return a passing result when RDS backup retention period is higher than this number of days',
+			regex: '^[1-9]{1}[0-9]{0,3}$',
+			default: 6
+		}
+	},
 
 	run: function(cache, settings, callback) {
+		var config = {
+			rds_backup_period: settings.rds_backup_period || this.settings.rds_backup_period.default
+		};
+
+		var custom = helpers.isCustom(settings, this.settings);
+
 		var results = [];
 		var source = {};
 
@@ -36,18 +50,18 @@ module.exports = {
 				var db = describeDBInstances.data[i];
 				var dbResource = db.DBInstanceArn;
 
-				if (db.BackupRetentionPeriod && db.BackupRetentionPeriod > 6) {
+				if (db.BackupRetentionPeriod && db.BackupRetentionPeriod > config.rds_backup_period) {
 					helpers.addResult(results, 0,
 						'Automated backups are enabled with sufficient retention (' + db.BackupRetentionPeriod + ' days)',
-						region, dbResource);
+						region, dbResource, custom);
 				} else if (db.BackupRetentionPeriod) {
 					helpers.addResult(results, 1,
 						'Automated backups are enabled but do not have sufficient retention (' + db.BackupRetentionPeriod + ' days)',
-						region, dbResource);
+						region, dbResource, custom);
 				} else {
 					helpers.addResult(results, 2,
 						'Automated backups are not enabled',
-						region, dbResource);
+						region, dbResource, custom);
 				}
 			}
 			

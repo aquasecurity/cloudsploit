@@ -9,8 +9,29 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html#using-instance-addressing-limit',
 	recommended_action: 'Contact AWS support to increase the number of instances available',
 	apis: ['EC2:describeAccountAttributes', 'EC2:describeInstances'],
+	settings: {
+		instance_limit_percentage_fail: {
+			name: 'Instance Limit Percentage Fail',
+			description: 'Return a failing result when utilized instances equals or exceeds this percentage',
+			regex: '^(100|[1-9][0-9]?)$',
+			default: 90
+		},
+		instance_limit_percentage_warn: {
+			name: 'Instance Limit Percentage Warn',
+			description: 'Return a warning result when utilized instances equals or exceeds this percentage',
+			regex: '^(100|[1-9][0-9]?)$',
+			default: 75
+		}
+	},
 
 	run: function(cache, settings, callback) {
+		var config = {
+			instance_limit_percentage_fail: settings.instance_limit_percentage_fail || this.settings.instance_limit_percentage_fail.default,
+			instance_limit_percentage_warn: settings.instance_limit_percentage_warn || this.settings.instance_limit_percentage_warn.default
+		};
+
+		var custom = helpers.isCustom(settings, this.settings);
+
 		var results = [];
 		var source = {};
 
@@ -56,12 +77,12 @@ module.exports = {
 			var percentage = Math.ceil((describeInstances.data.length / limits['max-instances'])*100);
 			var returnMsg = 'Account contains ' + describeInstances.data.length + ' of ' + limits['max-instances'] + ' (' + percentage + '%) available instances';
 
-			if (percentage >= 90) {
-				helpers.addResult(results, 2, returnMsg, region);
-			} else if (percentage >= 75) {
-				helpers.addResult(results, 1, returnMsg, region);
+			if (percentage >= config.instance_limit_percentage_fail) {
+				helpers.addResult(results, 2, returnMsg, region, null, custom);
+			} else if (percentage >= config.instance_limit_percentage_warn) {
+				helpers.addResult(results, 1, returnMsg, region, null, custom);
 			} else {
-				helpers.addResult(results, 0, returnMsg, region);
+				helpers.addResult(results, 0, returnMsg, region, null, custom);
 			}
 
 			rcb();
