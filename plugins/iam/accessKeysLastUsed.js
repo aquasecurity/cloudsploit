@@ -9,8 +9,28 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/ManagingCredentials.html',
 	recommended_action: 'Log into the IAM portal and remove the offending access key.',
 	apis: ['IAM:generateCredentialReport'],
+	settings: {
+		access_keys_last_used_fail: {
+			name: 'Access Keys Last Used Fail',
+			description: 'Return a failing result when access keys exceed this number of days without being used',
+			regex: '^[1-9]{1}[0-9]{0,3}$',
+			default: 180
+		},
+		access_keys_last_used_warn: {
+			name: 'Access Keys Last Used Warn',
+			description: 'Return a warning result when access keys exceed this number of days without being used',
+			regex: '^[1-9]{1}[0-9]{0,3}$',
+			default: 90
+		}
+	},
 
 	run: function(cache, settings, callback) {
+		var config = {
+			access_keys_last_used_fail: settings.access_keys_last_used_fail || this.settings.access_keys_last_used_fail.default,
+			access_keys_last_used_warn: settings.access_keys_last_used_warn || this.settings.access_keys_last_used_warn.default
+		};
+
+		var custom = helpers.isCustom(settings, this.settings);
 
 		var results = [];
 		var source = {};
@@ -42,14 +62,14 @@ module.exports = {
 			} else {
 				var returnMsg = 'User access key ' + keyNum + ': was last used ' + helpers.functions.daysAgo(lastUsed) + ' days ago';
 
-				if (helpers.functions.daysAgo(lastUsed) > 180) {
-					helpers.addResult(results, 2, returnMsg, 'global', arn)
-				} else if (helpers.functions.daysAgo(lastUsed) > 90) {
-					helpers.addResult(results, 1, returnMsg, 'global', arn)
+				if (helpers.functions.daysAgo(lastUsed) > config.access_keys_last_used_fail) {
+					helpers.addResult(results, 2, returnMsg, 'global', arn, custom);
+				} else if (helpers.functions.daysAgo(lastUsed) > config.access_keys_last_used_warn) {
+					helpers.addResult(results, 1, returnMsg, 'global', arn, custom);
 				} else {
 					helpers.addResult(results, 0,
 						'User access key '  + keyNum + ' was last used ' +
-						helpers.functions.daysAgo(lastUsed) + ' days ago', 'global', arn);
+						helpers.functions.daysAgo(lastUsed) + ' days ago', 'global', arn, custom);
 				}
 			}
 

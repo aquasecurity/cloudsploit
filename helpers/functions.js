@@ -59,12 +59,13 @@ function waitForCredentialReport(iam, callback, CREDENTIAL_DOWNLOAD_STARTED) {
 	}
 }
 
-function addResult(results, status, message, region, resource){
+function addResult(results, status, message, region, resource, custom){
 	results.push({
 		status: status,
 		message: message,
 		region: region || 'global',
-		resource: resource || null
+		resource: resource || null,
+		custom: custom || false
 	});
 }
 
@@ -174,6 +175,20 @@ function addError(original){
 	}
 }
 
+function isCustom(providedSettings, pluginSettings) {
+	var isCustom = false;
+
+	for (s in pluginSettings) {
+		if (providedSettings[s] && pluginSettings[s].default &&
+			(providedSettings[s] !== pluginSettings[s].default)) {
+			isCustom = true;
+			break;
+		}
+	}
+
+	return isCustom;
+}
+
 module.exports = {
 	daysBetween: daysBetween,
 	daysAgo: daysAgo,
@@ -182,5 +197,6 @@ module.exports = {
 	addSource: addSource,
 	addError: addError,
 	findOpenPorts: findOpenPorts,
-	waitForCredentialReport: waitForCredentialReport
+	waitForCredentialReport: waitForCredentialReport,
+	isCustom: isCustom
 };

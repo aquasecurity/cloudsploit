@@ -10,8 +10,28 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/ManagingCredentials.html',
 	recommended_action: 'To rotate an access key, first create a new key, replace the key and secret throughout your app or scripts, then set the previous key to disabled. Once you ensure that no services are broken, then fully delete the old key.',
 	apis: ['IAM:generateCredentialReport'],
+	settings: {
+		access_keys_rotated_fail: {
+			name: 'Access Keys Rotated Fail',
+			description: 'Return a failing result when access keys exceed this number of days without being rotated',
+			regex: '^[1-9]{1}[0-9]{0,3}$',
+			default: 180
+		},
+		access_keys_rotated_warn: {
+			name: 'Access Keys Rotated Warn',
+			description: 'Return a warning result when access keys exceed this number of days without being rotated',
+			regex: '^[1-9]{1}[0-9]{0,3}$',
+			default: 90
+		}
+	},
 
 	run: function(cache, settings, callback) {
+		var config = {
+			access_keys_rotated_fail: settings.access_keys_rotated_fail || this.settings.access_keys_rotated_fail.default,
+			access_keys_rotated_warn: settings.access_keys_rotated_warn || this.settings.access_keys_rotated_warn.default
+		};
+
+		var custom = helpers.isCustom(settings, this.settings);
 
 		var results = [];
 		var source = {};
@@ -39,16 +59,16 @@ module.exports = {
 		function addAccessKeyResults(lastRotated, keyNum, arn, userCreationTime) {
 			var returnMsg = 'User access key ' + keyNum + ' ' + ((lastRotated === 'N/A' || !lastRotated) ? 'has never been rotated' : 'was last rotated ' + helpers.functions.daysAgo(lastRotated) + ' days ago');
 
-			if (helpers.functions.daysAgo(userCreationTime) > 180 &&
-				(!lastRotated || lastRotated === 'N/A' || helpers.functions.daysAgo(lastRotated) > 180)) {
-				helpers.addResult(results, 2, returnMsg, 'global', arn);
-			} else if (helpers.functions.daysAgo(userCreationTime) > 90 &&
-				(!lastRotated || lastRotated === 'N/A' || helpers.functions.daysAgo(lastRotated) > 90)) {
-				helpers.addResult(results, 1, returnMsg, 'global', arn);
+			if (helpers.functions.daysAgo(userCreationTime) > config.access_keys_rotated_fail &&
+				(!lastRotated || lastRotated === 'N/A' || helpers.functions.daysAgo(lastRotated) > config.access_keys_rotated_fail)) {
+				helpers.addResult(results, 2, returnMsg, 'global', arn, custom);
+			} else if (helpers.functions.daysAgo(userCreationTime) > config.access_keys_rotated_warn &&
+				(!lastRotated || lastRotated === 'N/A' || helpers.functions.daysAgo(lastRotated) > config.access_keys_rotated_warn)) {
+				helpers.addResult(results, 1, returnMsg, 'global', arn, custom);
 			} else {
 				helpers.addResult(results, 0,
 					'User access key '  + keyNum + ' ' +
-					((lastRotated === 'N/A') ? 'has never been rotated but user is only ' + helpers.functions.daysAgo(userCreationTime) + ' days old' : 'was last rotated ' + helpers.functions.daysAgo(lastRotated) + ' days ago'), 'global', arn)
+					((lastRotated === 'N/A') ? 'has never been rotated but user is only ' + helpers.functions.daysAgo(userCreationTime) + ' days old' : 'was last rotated ' + helpers.functions.daysAgo(lastRotated) + ' days ago'), 'global', arn, custom);
 			}
 
 			found = true;
