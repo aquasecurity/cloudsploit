@@ -4,6 +4,7 @@ module.exports = {
 	addResult: require('./functions.js').addResult,
 	addSource: require('./functions.js').addSource,
 	addError: require('./functions.js').addError,
+	isCustom: require('./functions.js').isCustom,
 	findOpenPorts: require('./functions.js').findOpenPorts,
 
 	MAX_REGIONS_AT_A_TIME: 6
