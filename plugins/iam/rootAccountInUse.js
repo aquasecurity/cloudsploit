@@ -8,8 +8,22 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/general/latest/gr/root-vs-iam.html',
 	recommended_action: 'Create IAM users with appropriate group-level permissions for account access. Create an MFA token for the root account, and store its password and token generation QR codes in a secure place.',
 	apis: ['IAM:generateCredentialReport'],
+	settings: {
+		root_account_in_use_days: {
+			name: 'Root Account In Use Days',
+			description: 'Return a failing result when the root account has been used within this many days',
+			regex: '^[1-9]{1}[0-9]{0,3}$',
+			default: 15
+		}
+	},
 
 	run: function(cache, settings, callback) {
+		var config = {
+			root_account_in_use_days: settings.root_account_in_use_days || this.settings.root_account_in_use_days.default
+		};
+
+		var custom = helpers.isCustom(settings, this.settings);
+
 		var results = [];
 		var source = {};
 
@@ -52,12 +66,12 @@ module.exports = {
 					helpers.addResult(results, 0, 'Root account has not been used', 'global', obj.arn);
 				} else {
 					var dateToCompare = helpers.functions.mostRecentDate(accessDates);
-					var resultCode = (helpers.functions.daysAgo(dateToCompare) < 15) ? 2: 0;
+					var resultCode = (helpers.functions.daysAgo(dateToCompare) < config.root_account_in_use_days) ? 2: 0;
 
 
 					helpers.addResult(results, resultCode,
 						'Root account was last used ' + helpers.functions.daysAgo(dateToCompare) + ' days ago',
-						'global', obj.arn);
+						'global', obj.arn, custom);
 				}
 
 				break;

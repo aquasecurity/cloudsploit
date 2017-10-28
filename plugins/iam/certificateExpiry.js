@@ -9,8 +9,29 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/elb-update-ssl-cert.html',
 	recommended_action: 'Update your certificates before the expiration date',
 	apis: ['IAM:listServerCertificates'],
+	settings: {
+		certificate_expiry_fail: {
+			name: 'Certificate Expiry Fail',
+			description: 'Return a failing result when certificate expiration date exceeds this number of days in the future',
+			regex: '^[1-9]{1}[0-9]{0,3}$',
+			default: 45
+		},
+		certificate_expiry_warn: {
+			name: 'Certificate Expiry Warn',
+			description: 'Return a warning result when certificate expiration date exceeds this number of days in the future',
+			regex: '^[1-9]{1}[0-9]{0,3}$',
+			default: 30
+		}
+	},
 
 	run: function(cache, settings, callback) {
+		var config = {
+			certificate_expiry_fail: settings.certificate_expiry_fail || this.settings.certificate_expiry_fail.default,
+			certificate_expiry_warn: settings.certificate_expiry_warn || this.settings.certificate_expiry_warn.default
+		};
+
+		var custom = helpers.isCustom(settings, this.settings);
+
 		var results = [];
 		var source = {};
 
@@ -49,14 +70,14 @@ module.exports = {
 					helpers.addResult(results, 2, expiredMsg, 'global', certificate.Arn);
 				} else {
 					// Expires in the future
-					if (difference > 45) {
-						helpers.addResult(results, 0, expiresInMsg, 'global', certificate.Arn);
-					} else if (difference > 30) {
-						helpers.addResult(results, 1, expiresInMsg, 'global', certificate.Arn);
+					if (difference > config.certificate_expiry_fail) {
+						helpers.addResult(results, 0, expiresInMsg, 'global', certificate.Arn, custom);
+					} else if (difference > config.certificate_expiry_warn) {
+						helpers.addResult(results, 1, expiresInMsg, 'global', certificate.Arn, custom);
 					} else if (difference > 0) {
-						helpers.addResult(results, 2, expiresInMsg, 'global', certificate.Arn);
+						helpers.addResult(results, 2, expiresInMsg, 'global', certificate.Arn, custom);
 					} else {
-						helpers.addResult(results, 0, expiredMsg, 'global', certificate.Arn);
+						helpers.addResult(results, 0, expiredMsg, 'global', certificate.Arn, custom);
 					}
 				}
 			}
