@@ -18,6 +18,7 @@ module.exports = {
     'configServiceEnabled'          : require(__dirname + '/plugins/configservice/configServiceEnabled.js'),
 
     'defaultSecurityGroup'          : require(__dirname + '/plugins/ec2/defaultSecurityGroup.js'),
+    'overlappingSecurityGroup'      : require(__dirname + '/plugins/ec2/overlappingSecurityGroup.js'),
     'elasticIpLimit'                : require(__dirname + '/plugins/ec2/elasticIpLimit.js'),
     'excessiveSecurityGroups'       : require(__dirname + '/plugins/ec2/excessiveSecurityGroups.js'),
     'instanceLimit'                 : require(__dirname + '/plugins/ec2/instanceLimit.js'),
@@ -86,9 +87,9 @@ module.exports = {
     'dkimEnabled'                   : require(__dirname + '/plugins/ses/dkimEnabled.js'),
 
     'topicPolicies'                 : require(__dirname + '/plugins/sns/topicPolicies.js'),
-  
+
     'lambdaOldRuntimes'             : require(__dirname + '/plugins/lambda/lambdaOldRuntimes.js'),
-  
+
     'monitoringMetrics'             : require(__dirname + '/plugins/cloudwatchlogs/monitoringMetrics.js'),
 
     'redshiftEncryptionEnabled'     : require(__dirname + '/plugins/redshift/redshiftEncryptionEnabled.js'),
