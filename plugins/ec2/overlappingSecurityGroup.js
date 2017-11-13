@@ -79,6 +79,7 @@ module.exports = {
                             permission.ToPort;
 
                         if (Object.keys(array_open_hash_map).includes(strhash)) {
+                            found = true;
                             msg = group.GroupId + ' duplicated with ' + array_open_hash_map[strhash]
                             helpers.addResult(results, 1,
                                 'Security group: ' + group.GroupId +
@@ -90,6 +91,9 @@ module.exports = {
 
                     }
                 }
+            }
+            if (!found) {
+                helpers.addResult(results, 0, 'No Overlapping SecurityGroups found', region);
             }
             rcb();
         }, function(){
