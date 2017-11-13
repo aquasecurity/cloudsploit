@@ -15,7 +15,7 @@ module.exports = {
     recommended_action: 'Enable CloudFront request logging.',
     apis: ['CloudFront:listDistributions', 'CloudFront:getDistribution'],
 
-    run: function(cache, callback) {
+    run: function(cache, settings, callback) {
 
         var results = [];
         var source = {};
@@ -40,9 +40,11 @@ module.exports = {
             var getDistribution = helpers.addSource(cache, source,
                     ['cloudfront', 'getDistribution', 'us-east-1', Distribution.Id]);
 
-            if (getDistribution.data && 
-                getDistribution.data.DistributionConfig.Logging){
-                logging = getDistribution.data.DistributionConfig.Logging;
+            if (getDistribution.data &&
+                getDistribution.data.Distribution &&
+                getDistribution.data.Distribution.DistributionConfig &&
+                getDistribution.data.Distribution.DistributionConfig.Logging){
+                logging = getDistribution.data.Distribution.DistributionConfig.Logging;
                 if (logging.Enabled){
                     helpers.addResult(results, 0,
                             'Request logging is enabled', Distribution.ARN);
@@ -51,7 +53,8 @@ module.exports = {
                         'Request logging is not enabled', Distribution.ARN);
                 }
             }
-            return callback(null, results, source);
         });
+
+        return callback(null, results, source);
     }
 };
