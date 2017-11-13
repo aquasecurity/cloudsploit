@@ -47,10 +47,10 @@ module.exports = {
                 logging = getDistribution.data.Distribution.DistributionConfig.Logging;
                 if (logging.Enabled){
                     helpers.addResult(results, 0,
-                            'Request logging is enabled', Distribution.ARN);
+                            'Request logging is enabled', 'global', Distribution.ARN);
                 } else {
                     helpers.addResult(results, 2,
-                        'Request logging is not enabled', Distribution.ARN);
+                        'Request logging is not enabled', 'global', Distribution.ARN);
                 }
             }
         });
