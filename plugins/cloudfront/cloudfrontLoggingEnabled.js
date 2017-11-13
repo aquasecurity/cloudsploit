@@ -6,12 +6,12 @@ module.exports = {
     title: 'CloudFront Logging Enabled',
     category: 'CloudFront',
     description: 'Ensures CloudFront distributions have request logging enabled.',
-    more_info: 'Plugins to Create Logging requests to CloudFront ' +
+    more_info: 'Logging requests to CloudFront ' +
                'distributions is a helpful way of detecting and ' + 
                'investigating potential attacks, malicious activity, ' + 
                'or misuse of backend resources. Logs can be sent to S3 ' + 
                'and processed for further analysis.',
-    link: 'http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CloudFront.html',
+    link: 'http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/AccessLogs.html',
     recommended_action: 'Enable CloudFront request logging.',
     apis: ['CloudFront:listDistributions', 'CloudFront:getDistribution'],
 
@@ -45,10 +45,10 @@ module.exports = {
                 logging = getDistribution.data.DistributionConfig.Logging;
                 if (logging.Enabled){
                     helpers.addResult(results, 0,
-                            'Logging enabled for ' + Distribution.ARN);
+                            'Request logging is enabled', Distribution.ARN);
                 } else {
                     helpers.addResult(results, 2,
-                        'Logging not enabled for ' + Distribution.ARN);
+                        'Request logging is not enabled', Distribution.ARN);
                 }
             }
             return callback(null, results, source);
