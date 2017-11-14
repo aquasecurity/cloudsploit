@@ -49,9 +49,9 @@ module.exports = {
 				// For resource, attempt to use the endpoint address (more specific) but fallback to the instance identifier
 				var db = describeDBInstances.data[i];
 				var dbResource = db.DBInstanceArn;
-				debugger;
+
 				// skip if it is read only replica Source Indentifier
-				if ('ReadReplicaSourceDBInstanceIdentifier' in db){
+				if (db.ReadReplicaSourceDBInstanceIdentifier){
 					continue;
 				}
 
