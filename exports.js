@@ -1,14 +1,14 @@
 // Export all available scans
 
 module.exports = {
-    'asgMultiAz'                       : require(__dirname + '/plugins/autoscaling/asgMultiAz.js'),
+    'asgMultiAz'                    : require(__dirname + '/plugins/autoscaling/asgMultiAz.js'),
 
     'publicS3Origin'                : require(__dirname + '/plugins/cloudfront/publicS3Origin.js'),
     'secureOrigin'                  : require(__dirname + '/plugins/cloudfront/secureOrigin.js'),
     'insecureProtocols'             : require(__dirname + '/plugins/cloudfront/insecureProtocols.js'),
     'cloudfrontHttpsOnly'           : require(__dirname + '/plugins/cloudfront/cloudfrontHttpsOnly.js'),
     'cloudfrontLoggingEnabled'      : require(__dirname + '/plugins/cloudfront/cloudfrontLoggingEnabled.js'),
-    
+
     'cloudtrailBucketAccessLogging' : require(__dirname + '/plugins/cloudtrail/cloudtrailBucketAccessLogging.js'),
     'cloudtrailBucketDelete'        : require(__dirname + '/plugins/cloudtrail/cloudtrailBucketDelete.js'),
     'cloudtrailEnabled'             : require(__dirname + '/plugins/cloudtrail/cloudtrailEnabled.js'),
@@ -84,13 +84,14 @@ module.exports = {
     'domainTransferLock'            : require(__dirname + '/plugins/route53/domainTransferLock.js'),
 
     'bucketAllUsersPolicy'          : require(__dirname + '/plugins/s3/bucketAllUsersPolicy.js'),
+    'bucketVersioning'              : require(__dirname + '/plugins/s3/BucketVersioning.js'),
 
     'dkimEnabled'                   : require(__dirname + '/plugins/ses/dkimEnabled.js'),
 
     'topicPolicies'                 : require(__dirname + '/plugins/sns/topicPolicies.js'),
-  
+
     'lambdaOldRuntimes'             : require(__dirname + '/plugins/lambda/lambdaOldRuntimes.js'),
-  
+
     'monitoringMetrics'             : require(__dirname + '/plugins/cloudwatchlogs/monitoringMetrics.js'),
 
     'redshiftEncryptionEnabled'     : require(__dirname + '/plugins/redshift/redshiftEncryptionEnabled.js'),
