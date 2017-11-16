@@ -66,6 +66,9 @@ var calls = {
 		describeAccountAttributes: {
 			property: 'AccountAttributes'
 		},
+		describeVolumes: {
+			property: 'Volumes'
+		},
 		describeAddresses: {
 			property: 'Addresses'
 		},
@@ -331,7 +334,7 @@ var collect = function(AWSConfig, settings, callback) {
 						if (err) {
 							collection[serviceLower][callKey][region].err = err;
 						}
-						
+
 						// TODO: pagination
 						// TODO: handle s3 region fixes (possibly use an override)
 						if (!data) return regionCb();
@@ -358,7 +361,7 @@ var collect = function(AWSConfig, settings, callback) {
 					} else {
 						executor[callKey](executorCb);
 					}
-					
+
 				}
 			}, function(){
 				callCb();
@@ -376,7 +379,7 @@ var collect = function(AWSConfig, settings, callback) {
 				async.eachOfLimit(serviceObj, 1, function(callObj, callKey, callCb){
 					if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
 					if (!collection[serviceLower][callKey]) collection[serviceLower][callKey] = {};
-					
+
 					async.eachLimit(helpers.regions[serviceLower], helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb){
 						if (settings.skip_regions &&
 							settings.skip_regions.indexOf(region) > -1 &&

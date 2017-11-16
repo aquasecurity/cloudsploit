@@ -8,7 +8,7 @@ module.exports = {
     'insecureProtocols'             : require(__dirname + '/plugins/cloudfront/insecureProtocols.js'),
     'cloudfrontHttpsOnly'           : require(__dirname + '/plugins/cloudfront/cloudfrontHttpsOnly.js'),
     'cloudfrontLoggingEnabled'      : require(__dirname + '/plugins/cloudfront/cloudfrontLoggingEnabled.js'),
-    
+
     'cloudtrailBucketAccessLogging' : require(__dirname + '/plugins/cloudtrail/cloudtrailBucketAccessLogging.js'),
     'cloudtrailBucketDelete'        : require(__dirname + '/plugins/cloudtrail/cloudtrailBucketDelete.js'),
     'cloudtrailEnabled'             : require(__dirname + '/plugins/cloudtrail/cloudtrailEnabled.js'),
@@ -46,6 +46,7 @@ module.exports = {
     'publicAmi'                     : require(__dirname + '/plugins/ec2/publicAmi.js'),
     'encryptedAmi'                  : require(__dirname + '/plugins/ec2/encryptedAmi.js'),
     'instanceIamRole'               : require(__dirname + '/plugins/ec2/instanceIamRole.js'),
+    'detachedEbsVolumes'            : require(__dirname + '/plugins/ec2/detachedEbsVolumes.js'),
 
     'insecureCiphers'               : require(__dirname + '/plugins/elb/insecureCiphers.js'),
     'elbHttpsOnly'                  : require(__dirname + '/plugins/elb/elbHttpsOnly.js'),
@@ -88,9 +89,9 @@ module.exports = {
     'dkimEnabled'                   : require(__dirname + '/plugins/ses/dkimEnabled.js'),
 
     'topicPolicies'                 : require(__dirname + '/plugins/sns/topicPolicies.js'),
-  
+
     'lambdaOldRuntimes'             : require(__dirname + '/plugins/lambda/lambdaOldRuntimes.js'),
-  
+
     'monitoringMetrics'             : require(__dirname + '/plugins/cloudwatchlogs/monitoringMetrics.js'),
 
     'redshiftEncryptionEnabled'     : require(__dirname + '/plugins/redshift/redshiftEncryptionEnabled.js'),
