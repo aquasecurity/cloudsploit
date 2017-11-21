@@ -31,7 +31,7 @@ module.exports = {
 				return rcb();
 			}
 
-			var found = false;
+			var unencryptedAmis = [];
 
 			for (i in describeImages.data) {
 				var image = describeImages.data[i];
@@ -39,15 +39,20 @@ module.exports = {
 					var volume = image.BlockDeviceMappings[j];
 					if (volume.hasOwnProperty('Ebs')) {
 						if (!volume.Ebs.Encrypted) {
-							found = true;
-							helpers.addResult(results, 2, 'AMI EBS volume is unencrypted', region, image.ImageId);
+							unencryptedAmis.push(image.ImageId);
 							break;
 						}
 					}
 				}
 			}
 
-			if (!found) {
+			if (unencryptedAmis.length > 20) {
+				helpers.addResult(results, 2, 'More than 20 AMI EBS volumes are unencrypted', region);
+			} else if (unencryptedAmis.length) {
+				for (u in unencryptedAmis) {
+					helpers.addResult(results, 2, 'AMI EBS volume is unencrypted', region, unencryptedAmis[u]);
+				}
+			} else {
 				helpers.addResult(results, 0, 'No AMIs with unencrypted volumes found', region);
 			}
 
