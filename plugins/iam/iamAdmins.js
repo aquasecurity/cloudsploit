@@ -4,11 +4,16 @@ var helpers = require('../../helpers');
 module.exports = {
 	title: 'IAM User Admins',
 	category: 'IAM',
-	description: 'Ensures a minimum number of IAM admins are present in the account',
-	more_info: 'To reduce management complexity, IAM permissions should only be assigned to roles and groups. Users can then be added to those groups. Policies should not be applied directly to a user.',
-	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#use-groups-for-permissions',
-	recommended_action: 'Create groups with the required policies, move the IAM users to the applicable groups, and then remove the inline and directly attached policies from the IAM user.',
-	apis: ['IAM:listUsers', 'IAM:listUserPolicies', 'IAM:listAttachedUserPolicies'],
+	description: 'Ensures the number of IAM admins in the account are minimized',
+	more_info: 'While at least two IAM admin users should be configured, the total number of admins should be kept to a minimum.',
+	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html',
+	recommended_action: 'Keep two users with admin permissions but ensure other IAM users have more limited permissions.',
+	apis: ['IAM:listUsers', 'IAM:listUserPolicies', 'IAM:listAttachedUserPolicies',
+		   'IAM:listGroups', 'IAM:listGroupPolicies', 'IAM:listAttachedGroupPolicies'],
+
+	// If 2 users, mark both as PASS (1 of 2 admins)
+	// If > 2, mark all FAIL (1 of 10+ admins)
+	// 
 
 	run: function(cache, settings, callback) {
 		var results = [];
