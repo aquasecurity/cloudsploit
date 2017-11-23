@@ -21,6 +21,7 @@ module.exports = {
 
     'defaultSecurityGroup'          : require(__dirname + '/plugins/ec2/defaultSecurityGroup.js'),
     'elasticIpLimit'                : require(__dirname + '/plugins/ec2/elasticIpLimit.js'),
+    'subnetIpAvailability'          : require(__dirname + '/plugins/ec2/subnetIpAvailability.js'),
     'excessiveSecurityGroups'       : require(__dirname + '/plugins/ec2/excessiveSecurityGroups.js'),
     'instanceLimit'                 : require(__dirname + '/plugins/ec2/instanceLimit.js'),
     'openAllPortsProtocols'         : require(__dirname + '/plugins/ec2/openAllPortsProtocols.js'),
