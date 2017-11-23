@@ -243,11 +243,23 @@ var postcalls = [
 				filterKey: 'UserName',
 				filterValue: 'UserName'
 			},
+			listAttachedGroupPolicies: {
+				reliesOnService: 'iam',
+				reliesOnCall: 'listGroups',
+				filterKey: 'GroupName',
+				filterValue: 'GroupName'
+			},
 			listUserPolicies: {
 				reliesOnService: 'iam',
 				reliesOnCall: 'listUsers',
 				filterKey: 'UserName',
 				filterValue: 'UserName'
+			},
+			listGroupPolicies: {
+				reliesOnService: 'iam',
+				reliesOnCall: 'listGroups',
+				filterKey: 'GroupName',
+				filterValue: 'GroupName'
 			},
 			listSSHPublicKeys: {
 				reliesOnService: 'iam',
@@ -260,6 +272,22 @@ var postcalls = [
 				reliesOnCall: 'listUsers',
 				filterKey: 'UserName',
 				filterValue: 'UserName'
+			},
+			listGroupsForUser: {
+				reliesOnService: 'iam',
+				reliesOnCall: 'listUsers',
+				filterKey: 'UserName',
+				filterValue: 'UserName'
+			},
+			getUserPolicy: {
+				reliesOnService: 'iam',
+				reliesOnCall: 'listUserPolicies',
+				override: true
+			},
+			getGroupPolicy: {
+				reliesOnService: 'iam',
+				reliesOnCall: 'listGroupPolicies',
+				override: true
 			}
 		},
 		KMS: {
