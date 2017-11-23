@@ -45,15 +45,13 @@ module.exports = {
                     region, 'arn:aws:s3:::' + bucket.Name)
             }
 
-            if(getBucketVersioning.Status == 'Suspended'){
+            if (getBucketVersioning.data.Status == 'Suspended') {
                 helpers.addResult(results, 2,
-                    'Bucket : ' + bucket.Name + 'has versioning disabled',
+                    'Bucket : ' + bucket.Name + ' has versioning disabled',
                     region, 'arn:aws:s3:::' + bucket.Name)
-            }
-
-            if(getBucketVersioning.Status == 'Enabled'){
+            } else if (getBucketVersioning.data.Status == 'Enabled') {
                 helpers.addResult(results, 0,
-                    'Bucket : ' + bucket.Name + 'has versioning enabled',
+                    'Bucket : ' + bucket.Name + ' has versioning enabled',
                     region, 'arn:aws:s3:::' + bucket.Name)
             }
 
