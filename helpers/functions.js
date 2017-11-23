@@ -84,7 +84,7 @@ function addSource(cache, source, paths){
 		var original = (cache[service] &&
 					   cache[service][call] &&
 					   cache[service][call][region] &&
-					   cache[service][call][region][extra]) ? 
+					   cache[service][call][region][extra]) ?
 					   cache[service][call][region][extra] : null;
 
 		source[service][call][region][extra] = original;
@@ -101,7 +101,7 @@ function addSource(cache, source, paths){
 }
 
 function findOpenPorts(groups, ports, service, region, results) {
-	var found = false;	
+	var found = false;
 
 	for (g in groups) {
 		var strings = [];
@@ -189,8 +189,18 @@ function isCustom(providedSettings, pluginSettings) {
 	return isCustom;
 }
 
+function cidrSize(block){
+	/*
+	Determine the number of IP addresses in a given CIDR block
+	Algorithm from https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing#CIDR_notation
+	2^(address length - prefix length)
+	*/
+	return Math.pow(2, 32 - block.split('/')[1]);
+}
+
 module.exports = {
 	daysBetween: daysBetween,
+	cidrSize: cidrSize,
 	daysAgo: daysAgo,
 	mostRecentDate: mostRecentDate,
 	addResult: addResult,
