@@ -42,19 +42,16 @@ module.exports = {
             if (!getBucketVersioning || getBucketVersioning.err || !getBucketVersioning.data) {
                 helpers.addResult(results, 3,
                     'Error querying bucket versioning for : ' + bucket.Name,
-                    region, 'arn:aws:s3:::' + bucket.Name)
-            }
-
-            if (getBucketVersioning.data.Status == 'Suspended') {
-                helpers.addResult(results, 2,
-                    'Bucket : ' + bucket.Name + ' has versioning disabled',
-                    region, 'arn:aws:s3:::' + bucket.Name)
+                    'global', 'arn:aws:s3:::' + bucket.Name)
             } else if (getBucketVersioning.data.Status == 'Enabled') {
                 helpers.addResult(results, 0,
                     'Bucket : ' + bucket.Name + ' has versioning enabled',
-                    region, 'arn:aws:s3:::' + bucket.Name)
+                    'global', 'arn:aws:s3:::' + bucket.Name);
+            } else {
+                helpers.addResult(results, 2,
+                    'Bucket : ' + bucket.Name + ' has versioning disabled',
+                    'global', 'arn:aws:s3:::' + bucket.Name);
             }
-
         });
 
         callback(null, results, source);
