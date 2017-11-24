@@ -186,6 +186,11 @@ var calls = {
 			property: 'Topics'
 		}
 	},
+	SQS: {
+		listQueues: {
+			property: 'QueueUrls'
+		}
+	},
 	STS: {
 		getCallerIdentity: {
 			property: 'Account'
@@ -298,6 +303,13 @@ var postcalls = [
 				reliesOnCall: 'listTopics',
 				filterKey: 'TopicArn',
 				filterValue: 'TopicArn'
+			}
+		},
+		SQS: {
+			getQueueAttributes: {
+				reliesOnService: 'sqs',
+				reliesOnCall: 'listQueues',
+				override: true
 			}
 		}
 	}
