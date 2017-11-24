@@ -286,16 +286,6 @@ var postcalls = [
 				reliesOnCall: 'listUsers',
 				filterKey: 'UserName',
 				filterValue: 'UserName'
-			},
-			getUserPolicy: {
-				reliesOnService: 'iam',
-				reliesOnCall: 'listUserPolicies',
-				override: true
-			},
-			getGroupPolicy: {
-				reliesOnService: 'iam',
-				reliesOnCall: 'listGroupPolicies',
-				override: true
 			}
 		},
 		KMS: {
@@ -326,6 +316,20 @@ var postcalls = [
 				reliesOnCall: 'listTopics',
 				filterKey: 'TopicArn',
 				filterValue: 'TopicArn'
+			}
+		}
+	},
+	{
+		IAM: {
+			getUserPolicy: {
+				reliesOnService: 'iam',
+				reliesOnCall: 'listUsers',
+				override: true
+			},
+			getGroupPolicy: {
+				reliesOnService: 'iam',
+				reliesOnCall: 'listGroups',
+				override: true
 			}
 		}
 	}

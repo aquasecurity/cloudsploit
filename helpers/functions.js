@@ -208,6 +208,8 @@ function normalizePolicyDocument(doc) {
 	if (typeof doc === 'string') {
 		// Need to parse to JSON
 		try {
+			// Need to urldecode
+			if (doc.charAt(0) === '%') doc = decodeURIComponent(doc);
 			doc = JSON.parse(doc);
 		} catch (e) {
 			//Could not parse policy document into JSON
