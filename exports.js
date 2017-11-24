@@ -58,6 +58,7 @@ module.exports = {
     'accessKeysRotated'             : require(__dirname + '/plugins/iam/accessKeysRotated.js'),
     'certificateExpiry'             : require(__dirname + '/plugins/iam/certificateExpiry.js'),
     'emptyGroups'                   : require(__dirname + '/plugins/iam/emptyGroups.js'),
+    'iamUserAdmins'                 : require(__dirname + '/plugins/iam/iamUserAdmins.js'),
     'maxPasswordAge'                : require(__dirname + '/plugins/iam/maxPasswordAge.js'),
     'minPasswordLength'             : require(__dirname + '/plugins/iam/minPasswordLength.js'),
     'noUserIamPolicies'             : require(__dirname + '/plugins/iam/noUserIamPolicies.js'),

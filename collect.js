@@ -251,11 +251,23 @@ var postcalls = [
 				filterKey: 'UserName',
 				filterValue: 'UserName'
 			},
+			listAttachedGroupPolicies: {
+				reliesOnService: 'iam',
+				reliesOnCall: 'listGroups',
+				filterKey: 'GroupName',
+				filterValue: 'GroupName'
+			},
 			listUserPolicies: {
 				reliesOnService: 'iam',
 				reliesOnCall: 'listUsers',
 				filterKey: 'UserName',
 				filterValue: 'UserName'
+			},
+			listGroupPolicies: {
+				reliesOnService: 'iam',
+				reliesOnCall: 'listGroups',
+				filterKey: 'GroupName',
+				filterValue: 'GroupName'
 			},
 			listSSHPublicKeys: {
 				reliesOnService: 'iam',
@@ -264,6 +276,12 @@ var postcalls = [
 				filterValue: 'UserName'
 			},
 			listMFADevices: {
+				reliesOnService: 'iam',
+				reliesOnCall: 'listUsers',
+				filterKey: 'UserName',
+				filterValue: 'UserName'
+			},
+			listGroupsForUser: {
 				reliesOnService: 'iam',
 				reliesOnCall: 'listUsers',
 				filterKey: 'UserName',
@@ -298,6 +316,20 @@ var postcalls = [
 				reliesOnCall: 'listTopics',
 				filterKey: 'TopicArn',
 				filterValue: 'TopicArn'
+			}
+		}
+	},
+	{
+		IAM: {
+			getUserPolicy: {
+				reliesOnService: 'iam',
+				reliesOnCall: 'listUsers',
+				override: true
+			},
+			getGroupPolicy: {
+				reliesOnService: 'iam',
+				reliesOnCall: 'listGroups',
+				override: true
 			}
 		}
 	}
