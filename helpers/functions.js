@@ -198,6 +198,55 @@ function cidrSize(block){
 	return Math.pow(2, 32 - block.split('/')[1]);
 }
 
+function normalizePolicyDocument(doc) {
+	/*
+	Convert a policy document for IAM into a normalized object that can be used
+	by plugins to check policy attributes.
+	Returns an array of statements with normalized effect, action, and resource.
+	*/
+
+	if (typeof doc === 'string') {
+		// Need to parse to JSON
+		try {
+			doc = JSON.parse(doc);
+		} catch (e) {
+			//Could not parse policy document into JSON
+			return false;
+		}
+	}
+
+	if (typeof doc !== 'object') {
+		//Could not parse policy document. Not valid JSON
+		return false;
+	}
+
+	if (!doc.Statement) return false;
+
+	var statementsToReturn = [];
+
+	// If Statement is an object, convert to array
+	if (!Array.isArray(doc.Statement)) doc.Statement = [doc.Statement];
+
+	for (s in doc.Statement) {
+		var statement = doc.Statement[s];
+
+		if (!statement.Effect || !statement.Effect.length ||
+			!statement.Action || !statement.Action.length ||
+			!statement.Resource || !statement.Resource.length) {
+			break;
+		}
+
+		if (typeof statement.Effect !== 'string') break;
+
+		if (!Array.isArray(statement.Action)) statement.Action = [statement.Action];
+		if (!Array.isArray(statement.Resource)) statement.Resource = [statement.Resource];
+
+		statementsToReturn.push(statement);
+	}
+
+	return statementsToReturn;
+}
+
 module.exports = {
 	daysBetween: daysBetween,
 	cidrSize: cidrSize,
@@ -208,5 +257,6 @@ module.exports = {
 	addError: addError,
 	findOpenPorts: findOpenPorts,
 	waitForCredentialReport: waitForCredentialReport,
-	isCustom: isCustom
+	isCustom: isCustom,
+	normalizePolicyDocument: normalizePolicyDocument
 };
