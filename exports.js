@@ -92,6 +92,7 @@ module.exports = {
     'dkimEnabled'                   : require(__dirname + '/plugins/ses/dkimEnabled.js'),
 
     'topicPolicies'                 : require(__dirname + '/plugins/sns/topicPolicies.js'),
+    'sqsCrossAccount'               : require(__dirname + '/plugins/sqs/sqsCrossAccount.js'),
 
     'lambdaOldRuntimes'             : require(__dirname + '/plugins/lambda/lambdaOldRuntimes.js'),
 

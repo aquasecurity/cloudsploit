@@ -8,6 +8,7 @@ module.exports = function(AWSConfig, collection, callback) {
         collection.sqs.getQueueAttributes[AWSConfig.region][queue] = {};
 
         var params = {
+            QueueUrl: queue,
             AttributeNames: [
             	'Policy',
             	'QueueArn',
