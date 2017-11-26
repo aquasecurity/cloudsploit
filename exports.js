@@ -93,6 +93,7 @@ module.exports = {
 
     'topicPolicies'                 : require(__dirname + '/plugins/sns/topicPolicies.js'),
     'sqsCrossAccount'               : require(__dirname + '/plugins/sqs/sqsCrossAccount.js'),
+    'sqsEncrypted'                  : require(__dirname + '/plugins/sqs/sqsEncrypted.js'),
 
     'lambdaOldRuntimes'             : require(__dirname + '/plugins/lambda/lambdaOldRuntimes.js'),
 
