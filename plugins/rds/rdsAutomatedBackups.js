@@ -50,6 +50,11 @@ module.exports = {
 				var db = describeDBInstances.data[i];
 				var dbResource = db.DBInstanceArn;
 
+				// skip if it is read only replica Source Indentifier for PostgreSQL
+				if (db.Engine === 'postgresql' && db.ReadReplicaSourceDBInstanceIdentifier){
+					continue;
+				}
+
 				if (db.BackupRetentionPeriod && db.BackupRetentionPeriod > config.rds_backup_period) {
 					helpers.addResult(results, 0,
 						'Automated backups are enabled with sufficient retention (' + db.BackupRetentionPeriod + ' days)',
@@ -64,7 +69,7 @@ module.exports = {
 						region, dbResource, custom);
 				}
 			}
-			
+
 			rcb();
 		}, function(){
 			callback(null, results, source);

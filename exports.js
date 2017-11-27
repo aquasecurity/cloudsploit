@@ -1,12 +1,14 @@
 // Export all available scans
 
 module.exports = {
-    'asgMultiAz'                       : require(__dirname + '/plugins/autoscaling/asgMultiAz.js'),
+    'asgMultiAz'                    : require(__dirname + '/plugins/autoscaling/asgMultiAz.js'),
 
     'publicS3Origin'                : require(__dirname + '/plugins/cloudfront/publicS3Origin.js'),
     'secureOrigin'                  : require(__dirname + '/plugins/cloudfront/secureOrigin.js'),
     'insecureProtocols'             : require(__dirname + '/plugins/cloudfront/insecureProtocols.js'),
     'cloudfrontHttpsOnly'           : require(__dirname + '/plugins/cloudfront/cloudfrontHttpsOnly.js'),
+    'cloudfrontLoggingEnabled'      : require(__dirname + '/plugins/cloudfront/cloudfrontLoggingEnabled.js'),
+
     'cloudtrailBucketAccessLogging' : require(__dirname + '/plugins/cloudtrail/cloudtrailBucketAccessLogging.js'),
     'cloudtrailBucketDelete'        : require(__dirname + '/plugins/cloudtrail/cloudtrailBucketDelete.js'),
     'cloudtrailEnabled'             : require(__dirname + '/plugins/cloudtrail/cloudtrailEnabled.js'),
@@ -20,6 +22,7 @@ module.exports = {
     'defaultSecurityGroup'          : require(__dirname + '/plugins/ec2/defaultSecurityGroup.js'),
     'overlappingSecurityGroup'      : require(__dirname + '/plugins/ec2/overlappingSecurityGroup.js'),
     'elasticIpLimit'                : require(__dirname + '/plugins/ec2/elasticIpLimit.js'),
+    'subnetIpAvailability'          : require(__dirname + '/plugins/ec2/subnetIpAvailability.js'),
     'excessiveSecurityGroups'       : require(__dirname + '/plugins/ec2/excessiveSecurityGroups.js'),
     'instanceLimit'                 : require(__dirname + '/plugins/ec2/instanceLimit.js'),
     'openAllPortsProtocols'         : require(__dirname + '/plugins/ec2/openAllPortsProtocols.js'),
@@ -45,6 +48,7 @@ module.exports = {
     'publicAmi'                     : require(__dirname + '/plugins/ec2/publicAmi.js'),
     'encryptedAmi'                  : require(__dirname + '/plugins/ec2/encryptedAmi.js'),
     'instanceIamRole'               : require(__dirname + '/plugins/ec2/instanceIamRole.js'),
+    'ebsEncryptionEnabled'          : require(__dirname + '/plugins/ec2/ebsEncryptionEnabled.js'),
 
     'insecureCiphers'               : require(__dirname + '/plugins/elb/insecureCiphers.js'),
     'elbHttpsOnly'                  : require(__dirname + '/plugins/elb/elbHttpsOnly.js'),
@@ -55,6 +59,7 @@ module.exports = {
     'accessKeysRotated'             : require(__dirname + '/plugins/iam/accessKeysRotated.js'),
     'certificateExpiry'             : require(__dirname + '/plugins/iam/certificateExpiry.js'),
     'emptyGroups'                   : require(__dirname + '/plugins/iam/emptyGroups.js'),
+    'iamUserAdmins'                 : require(__dirname + '/plugins/iam/iamUserAdmins.js'),
     'maxPasswordAge'                : require(__dirname + '/plugins/iam/maxPasswordAge.js'),
     'minPasswordLength'             : require(__dirname + '/plugins/iam/minPasswordLength.js'),
     'noUserIamPolicies'             : require(__dirname + '/plugins/iam/noUserIamPolicies.js'),
@@ -83,10 +88,14 @@ module.exports = {
     'domainTransferLock'            : require(__dirname + '/plugins/route53/domainTransferLock.js'),
 
     'bucketAllUsersPolicy'          : require(__dirname + '/plugins/s3/bucketAllUsersPolicy.js'),
+    'bucketVersioning'              : require(__dirname + '/plugins/s3/bucketVersioning.js'),
 
     'dkimEnabled'                   : require(__dirname + '/plugins/ses/dkimEnabled.js'),
 
     'topicPolicies'                 : require(__dirname + '/plugins/sns/topicPolicies.js'),
+  
+    'sqsCrossAccount'               : require(__dirname + '/plugins/sqs/sqsCrossAccount.js'),
+    'sqsEncrypted'                  : require(__dirname + '/plugins/sqs/sqsEncrypted.js'),
 
     'lambdaOldRuntimes'             : require(__dirname + '/plugins/lambda/lambdaOldRuntimes.js'),
 

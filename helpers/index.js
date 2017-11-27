@@ -5,7 +5,9 @@ module.exports = {
 	addSource: require('./functions.js').addSource,
 	addError: require('./functions.js').addError,
 	isCustom: require('./functions.js').isCustom,
+	cidrSize: require('./functions.js').cidrSize,
 	findOpenPorts: require('./functions.js').findOpenPorts,
+	normalizePolicyDocument: require('./functions.js').normalizePolicyDocument,
 
 	MAX_REGIONS_AT_A_TIME: 6
 };

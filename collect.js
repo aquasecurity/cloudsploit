@@ -66,8 +66,14 @@ var calls = {
 		describeAccountAttributes: {
 			property: 'AccountAttributes'
 		},
+		describeSubnets: {
+			property: 'Subnets'
+		},
 		describeAddresses: {
 			property: 'Addresses'
+		},
+		describeVolumes: {
+			property: 'Volumes'
 		},
 		describeInstances: {
 			property: 'Reservations',
@@ -179,11 +185,28 @@ var calls = {
 		listTopics: {
 			property: 'Topics'
 		}
+	},
+	SQS: {
+		listQueues: {
+			property: 'QueueUrls'
+		}
+	},
+	STS: {
+		getCallerIdentity: {
+			property: 'Account'
+		}
 	}
 };
 
 var postcalls = [
 	{
+		CloudFront: {
+            getDistribution: {
+                reliesOnService: 'cloudfront',
+                reliesOnCall: 'listDistributions',
+                override: true
+            }
+        },
 		S3: {
 			getBucketLogging: {
 				deleteRegion: true,
@@ -233,11 +256,23 @@ var postcalls = [
 				filterKey: 'UserName',
 				filterValue: 'UserName'
 			},
+			listAttachedGroupPolicies: {
+				reliesOnService: 'iam',
+				reliesOnCall: 'listGroups',
+				filterKey: 'GroupName',
+				filterValue: 'GroupName'
+			},
 			listUserPolicies: {
 				reliesOnService: 'iam',
 				reliesOnCall: 'listUsers',
 				filterKey: 'UserName',
 				filterValue: 'UserName'
+			},
+			listGroupPolicies: {
+				reliesOnService: 'iam',
+				reliesOnCall: 'listGroups',
+				filterKey: 'GroupName',
+				filterValue: 'GroupName'
 			},
 			listSSHPublicKeys: {
 				reliesOnService: 'iam',
@@ -246,6 +281,12 @@ var postcalls = [
 				filterValue: 'UserName'
 			},
 			listMFADevices: {
+				reliesOnService: 'iam',
+				reliesOnCall: 'listUsers',
+				filterKey: 'UserName',
+				filterValue: 'UserName'
+			},
+			listGroupsForUser: {
 				reliesOnService: 'iam',
 				reliesOnCall: 'listUsers',
 				filterKey: 'UserName',
@@ -280,6 +321,27 @@ var postcalls = [
 				reliesOnCall: 'listTopics',
 				filterKey: 'TopicArn',
 				filterValue: 'TopicArn'
+			}
+		},
+		SQS: {
+			getQueueAttributes: {
+				reliesOnService: 'sqs',
+				reliesOnCall: 'listQueues',
+				override: true
+			}
+		}
+	},
+	{
+		IAM: {
+			getUserPolicy: {
+				reliesOnService: 'iam',
+				reliesOnCall: 'listUsers',
+				override: true
+			},
+			getGroupPolicy: {
+				reliesOnService: 'iam',
+				reliesOnCall: 'listGroups',
+				override: true
 			}
 		}
 	}
@@ -324,7 +386,7 @@ var collect = function(AWSConfig, settings, callback) {
 						if (err) {
 							collection[serviceLower][callKey][region].err = err;
 						}
-						
+
 						// TODO: pagination
 						// TODO: handle s3 region fixes (possibly use an override)
 						if (!data) return regionCb();
@@ -351,7 +413,7 @@ var collect = function(AWSConfig, settings, callback) {
 					} else {
 						executor[callKey](executorCb);
 					}
-					
+
 				}
 			}, function(){
 				callCb();
@@ -369,7 +431,7 @@ var collect = function(AWSConfig, settings, callback) {
 				async.eachOfLimit(serviceObj, 1, function(callObj, callKey, callCb){
 					if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
 					if (!collection[serviceLower][callKey]) collection[serviceLower][callKey] = {};
-					
+
 					async.eachLimit(helpers.regions[serviceLower], helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb){
 						if (settings.skip_regions &&
 							settings.skip_regions.indexOf(region) > -1 &&

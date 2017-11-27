@@ -10,9 +10,9 @@ module.exports = {
 	recommended_action: 'Update your certificates before the expiration date',
 	apis: ['IAM:listServerCertificates'],
 	settings: {
-		certificate_expiry_fail: {
-			name: 'Certificate Expiry Fail',
-			description: 'Return a failing result when certificate expiration date exceeds this number of days in the future',
+		certificate_expiry_pass: {
+			name: 'Certificate Expiry Pass',
+			description: 'Return a passing result when certificate expiration date exceeds this number of days in the future',
 			regex: '^[1-9]{1}[0-9]{0,3}$',
 			default: 45
 		},
@@ -26,7 +26,7 @@ module.exports = {
 
 	run: function(cache, settings, callback) {
 		var config = {
-			certificate_expiry_fail: settings.certificate_expiry_fail || this.settings.certificate_expiry_fail.default,
+			certificate_expiry_pass: settings.certificate_expiry_pass || this.settings.certificate_expiry_pass.default,
 			certificate_expiry_warn: settings.certificate_expiry_warn || this.settings.certificate_expiry_warn.default
 		};
 
@@ -70,7 +70,7 @@ module.exports = {
 					helpers.addResult(results, 2, expiredMsg, 'global', certificate.Arn);
 				} else {
 					// Expires in the future
-					if (difference > config.certificate_expiry_fail) {
+					if (difference > config.certificate_expiry_pass) {
 						helpers.addResult(results, 0, expiresInMsg, 'global', certificate.Arn, custom);
 					} else if (difference > config.certificate_expiry_warn) {
 						helpers.addResult(results, 1, expiresInMsg, 'global', certificate.Arn, custom);

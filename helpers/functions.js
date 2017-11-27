@@ -84,7 +84,7 @@ function addSource(cache, source, paths){
 		var original = (cache[service] &&
 					   cache[service][call] &&
 					   cache[service][call][region] &&
-					   cache[service][call][region][extra]) ? 
+					   cache[service][call][region][extra]) ?
 					   cache[service][call][region][extra] : null;
 
 		source[service][call][region][extra] = original;
@@ -101,7 +101,7 @@ function addSource(cache, source, paths){
 }
 
 function findOpenPorts(groups, ports, service, region, results) {
-	var found = false;	
+	var found = false;
 
 	for (g in groups) {
 		var strings = [];
@@ -189,8 +189,69 @@ function isCustom(providedSettings, pluginSettings) {
 	return isCustom;
 }
 
+function cidrSize(block){
+	/*
+	Determine the number of IP addresses in a given CIDR block
+	Algorithm from https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing#CIDR_notation
+	2^(address length - prefix length)
+	*/
+	return Math.pow(2, 32 - block.split('/')[1]);
+}
+
+function normalizePolicyDocument(doc) {
+	/*
+	Convert a policy document for IAM into a normalized object that can be used
+	by plugins to check policy attributes.
+	Returns an array of statements with normalized effect, action, and resource.
+	*/
+
+	if (typeof doc === 'string') {
+		// Need to parse to JSON
+		try {
+			// Need to urldecode
+			if (doc.charAt(0) === '%') doc = decodeURIComponent(doc);
+			doc = JSON.parse(doc);
+		} catch (e) {
+			//Could not parse policy document into JSON
+			return false;
+		}
+	}
+
+	if (typeof doc !== 'object') {
+		//Could not parse policy document. Not valid JSON
+		return false;
+	}
+
+	if (!doc.Statement) return false;
+
+	var statementsToReturn = [];
+
+	// If Statement is an object, convert to array
+	if (!Array.isArray(doc.Statement)) doc.Statement = [doc.Statement];
+
+	for (s in doc.Statement) {
+		var statement = doc.Statement[s];
+
+		if (!statement.Effect || !statement.Effect.length ||
+			!statement.Action || !statement.Action.length ||
+			!statement.Resource || !statement.Resource.length) {
+			break;
+		}
+
+		if (typeof statement.Effect !== 'string') break;
+
+		if (!Array.isArray(statement.Action)) statement.Action = [statement.Action];
+		if (!Array.isArray(statement.Resource)) statement.Resource = [statement.Resource];
+
+		statementsToReturn.push(statement);
+	}
+
+	return statementsToReturn;
+}
+
 module.exports = {
 	daysBetween: daysBetween,
+	cidrSize: cidrSize,
 	daysAgo: daysAgo,
 	mostRecentDate: mostRecentDate,
 	addResult: addResult,
@@ -198,5 +259,6 @@ module.exports = {
 	addError: addError,
 	findOpenPorts: findOpenPorts,
 	waitForCredentialReport: waitForCredentialReport,
-	isCustom: isCustom
+	isCustom: isCustom,
+	normalizePolicyDocument: normalizePolicyDocument
 };
