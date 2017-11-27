@@ -48,6 +48,7 @@ module.exports = {
     'encryptedAmi'                  : require(__dirname + '/plugins/ec2/encryptedAmi.js'),
     'instanceIamRole'               : require(__dirname + '/plugins/ec2/instanceIamRole.js'),
     'ebsEncryptionEnabled'          : require(__dirname + '/plugins/ec2/ebsEncryptionEnabled.js'),
+    'emptySecurityGroups'              : require(__dirname + '/plugins/ec2/emptySecurityGroups.js'),
 
     'insecureCiphers'               : require(__dirname + '/plugins/elb/insecureCiphers.js'),
     'elbHttpsOnly'                  : require(__dirname + '/plugins/elb/elbHttpsOnly.js'),
