@@ -76,6 +76,7 @@ module.exports = {
     'usersMfaEnabled'               : require(__dirname + '/plugins/iam/usersMfaEnabled.js'),
 
     'kmsKeyRotation'                : require(__dirname + '/plugins/kms/kmsKeyRotation.js'),
+    'kmsScheduledDeletion'          : require(__dirname + '/plugins/kms/kmsScheduledDeletion.js'),
 
     'rdsAutomatedBackups'           : require(__dirname + '/plugins/rds/rdsAutomatedBackups.js'),
     'rdsEncryptionEnabled'          : require(__dirname + '/plugins/rds/rdsEncryptionEnabled.js'),
