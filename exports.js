@@ -52,6 +52,7 @@ module.exports = {
     'insecureCiphers'               : require(__dirname + '/plugins/elb/insecureCiphers.js'),
     'elbHttpsOnly'                  : require(__dirname + '/plugins/elb/elbHttpsOnly.js'),
     'elbLoggingEnabled'             : require(__dirname + '/plugins/elb/elbLoggingEnabled.js'),
+    'elbNoInstances'                : require(__dirname + '/plugins/elb/elbNoInstances.js'),
 
     'accessKeysExtra'               : require(__dirname + '/plugins/iam/accessKeysExtra.js'),
     'accessKeysLastUsed'            : require(__dirname + '/plugins/iam/accessKeysLastUsed.js'),
