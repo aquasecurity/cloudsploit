@@ -74,6 +74,7 @@ module.exports = {
     'rootMfaEnabled'                : require(__dirname + '/plugins/iam/rootMfaEnabled.js'),
     'sshKeysRotated'                : require(__dirname + '/plugins/iam/sshKeysRotated.js'),
     'usersMfaEnabled'               : require(__dirname + '/plugins/iam/usersMfaEnabled.js'),
+    'usersPasswordLastUsed'         : require(__dirname + '/plugins/iam/usersPasswordLastUsed.js'),
 
     'kmsKeyRotation'                : require(__dirname + '/plugins/kms/kmsKeyRotation.js'),
     'kmsScheduledDeletion'          : require(__dirname + '/plugins/kms/kmsScheduledDeletion.js'),
