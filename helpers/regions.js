@@ -10,6 +10,7 @@ var regions = [
 	'eu-central-1',		// EU (Frankfurt)
 	'eu-west-1',		// EU (Ireland)
 	'eu-west-2',		// London
+	'eu-west-2',		// Paris
 	'sa-east-1',		// South America (São Paulo)
 	'ap-south-1',		// Mumbai
 	'ca-central-1'		// Canada (Montreal)
@@ -35,17 +36,17 @@ module.exports = {
 	redshift: regions,
 	apigateway: [
 		'us-east-1', 'us-east-2', 'us-west-1', 'us-west-2',
-		'eu-west-1', 'eu-central-1',
+		'eu-west-1', 'eu-west-2', 'eu-west-3', 'eu-central-1',
 		'ap-southeast-1', 'ap-northeast-1'],
 	cloudwatch: regions,
 	dynamodb: regions,
 	ecr: [
 		'us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'ca-central-1',
-		'eu-west-1', 'eu-west-2', 'eu-central-1',
+		'eu-west-1', 'eu-west-2', 'eu-west-3', 'eu-central-1',
 		'ap-northeast-1', 'ap-southeast-1', 'ap-southeast-2'],
 	ecs: [
 		'us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'ca-central-1',
-		'eu-west-1', 'eu-west-2', 'eu-central-1',
+		'eu-west-1', 'eu-west-2', 'eu-west-3', 'eu-central-1',
 		'ap-southeast-1', 'ap-northeast-1', 'ap-southeast-2'],
 	ses: [
 		'us-east-1', 'us-west-2',
@@ -54,7 +55,7 @@ module.exports = {
 	sqs: regions,
 	sts: ['us-east-1'],
 	lambda: ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2',
-			 'eu-west-1', 'eu-central-1', 'eu-west-2', 'ap-southeast-1',
+			 'eu-west-1', 'eu-central-1', 'eu-west-2', 'eu-west-3', 'ap-southeast-1',
 			 'ap-southeast-2', 'ap-northeast-1', 'ap-northeast-2',
 			 'ap-south-1']
 };
