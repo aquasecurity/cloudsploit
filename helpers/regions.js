@@ -10,7 +10,7 @@ var regions = [
 	'eu-central-1',		// EU (Frankfurt)
 	'eu-west-1',		// EU (Ireland)
 	'eu-west-2',		// London
-	'eu-west-2',		// Paris
+	'eu-west-3',		// Paris
 	'sa-east-1',		// South America (São Paulo)
 	'ap-south-1',		// Mumbai
 	'ca-central-1'		// Canada (Montreal)
