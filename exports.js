@@ -20,6 +20,7 @@ module.exports = {
     'configServiceEnabled'          : require(__dirname + '/plugins/configservice/configServiceEnabled.js'),
 
     'defaultSecurityGroup'          : require(__dirname + '/plugins/ec2/defaultSecurityGroup.js'),
+    'overlappingSecurityGroup'      : require(__dirname + '/plugins/ec2/overlappingSecurityGroup.js'),
     'elasticIpLimit'                : require(__dirname + '/plugins/ec2/elasticIpLimit.js'),
     'subnetIpAvailability'          : require(__dirname + '/plugins/ec2/subnetIpAvailability.js'),
     'excessiveSecurityGroups'       : require(__dirname + '/plugins/ec2/excessiveSecurityGroups.js'),
@@ -96,6 +97,7 @@ module.exports = {
     'dkimEnabled'                   : require(__dirname + '/plugins/ses/dkimEnabled.js'),
 
     'topicPolicies'                 : require(__dirname + '/plugins/sns/topicPolicies.js'),
+  
     'sqsCrossAccount'               : require(__dirname + '/plugins/sqs/sqsCrossAccount.js'),
     'sqsEncrypted'                  : require(__dirname + '/plugins/sqs/sqsEncrypted.js'),
 

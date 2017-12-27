@@ -242,6 +242,11 @@ var postcalls = [
 				reliesOnService: 'ec2',
 				reliesOnCall: 'describeVpcs',
 				override: true
+			},
+			describeSecurityGroups: {
+				reliesOnService: 'ec2',
+				reliesOnCall: 'describeInstances',
+				override: true
 			}
 		},
 		ELB: {
