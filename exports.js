@@ -93,6 +93,7 @@ module.exports = {
 
     'bucketAllUsersPolicy'          : require(__dirname + '/plugins/s3/bucketAllUsersPolicy.js'),
     'bucketVersioning'              : require(__dirname + '/plugins/s3/bucketVersioning.js'),
+    'bucketLogging'                 : require(__dirname + '/plugins/s3/bucketLogging.js'),
 
     'dkimEnabled'                   : require(__dirname + '/plugins/ses/dkimEnabled.js'),
 
