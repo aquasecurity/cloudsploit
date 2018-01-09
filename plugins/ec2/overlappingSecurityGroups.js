@@ -109,8 +109,10 @@ module.exports = {
                                 // Ignore overlaps within same rule
                                 if (groupId === otherGroupId) continue;
 
-                                var compOp1 = groupId + '/' + otherGroupId;
-                                var compOp2 = otherGroupId + '/' + groupId;
+                                var ruleStr = ' (' + rule.replace(/,/g, ", ") + ')';
+
+                                var compOp1 = groupId + '/' + otherGroupId + ruleStr;
+                                var compOp2 = otherGroupId + '/' + groupId + ruleStr;
 
                                 // arn:aws:ec2:region:account-id:instance/instance-id
                                 var arn = 'arn:aws:ec2:' + region + ':' + accountId + ':instance/' + instanceId;
@@ -138,7 +140,7 @@ module.exports = {
             } else {
                 for (i in overlaps) {
                     helpers.addResult(results, 1,
-                        'Instance has overlapping security group rules via groups: ' + overlaps[i],
+                        'Instance has overlapping security group rules via groups: ' + overlaps[i].join(', '),
                         region, i);
                 }
             }
