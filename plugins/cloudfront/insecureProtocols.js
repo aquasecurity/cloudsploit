@@ -9,6 +9,11 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/secure-connections-supported-viewer-protocols-ciphers.html',
 	recommended_action: 'Ensure that traffic sent between viewers and CloudFront is passed over HTTPS and uses TLSv1, not SSLv3.',
 	apis: ['CloudFront:listDistributions'],
+	compliance: {
+        hipaa: 'The transmission security aspect of HIPAA requires communication containing \
+        		sensitive data to be transmitted over secure connections. CloudFront \
+        		protocols must be up-to-date to avoid data exposure.'
+    },
 
 	run: function(cache, settings, callback) {
 

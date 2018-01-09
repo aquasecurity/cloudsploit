@@ -9,6 +9,11 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html',
 	recommended_action: 'Create an origin access identity for CloudFront, then make the contents of the S3 bucket private.',
 	apis: ['CloudFront:listDistributions'],
+	compliance: {
+        hipaa: 'HIPAA requires that access to protected information is controlled and audited. \
+        		If an S3 bucket backing a CloudFront distribution does not require the end \
+        		user to access the contents through CloudFront, this policy may be violated.'
+    },
 
 	run: function(cache, settings, callback) {
 

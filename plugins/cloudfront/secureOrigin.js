@@ -9,6 +9,12 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web.html',
 	recommended_action: 'Ensure that traffic sent between CloudFront and its origin is passed over HTTPS and uses TLSv1.1 or higher. Do not use the match-viewer option.',
 	apis: ['CloudFront:listDistributions'],
+	compliance: {
+        hipaa: 'HIPAA requires that all traffic transmitted over the network is encrypted \
+        		even if that traffic is within the AWS client network. This control \
+        		ensures that traffic between CloudFront and any backend resource is \
+        		encrypted in transit.'
+    },
 
 	run: function(cache, settings, callback) {
 
