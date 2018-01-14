@@ -9,6 +9,12 @@ module.exports = {
 	link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-ebs.html',
 	recommended_action: 'Create an Amazon EC2 instance backed by encrypted EBS volume.',
 	apis: ['EC2:describeImages'],
+	compliance: {
+        hipaa: 'HIPAA data should not be stored on EC2 AMIs. However, if data is ' +
+        		'accidentally included within an AMI, encrypting that data will ' +
+        		'allow it to remain compliant with the encryption at-rest ' +
+        		'regulatory requirement.'
+    },
 
 	run: function(cache, settings, callback) {
 		var results = [];

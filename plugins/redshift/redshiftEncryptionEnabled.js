@@ -9,6 +9,12 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/redshift/latest/mgmt/working-with-db-encryption.html',
 	recommended_action: 'Redshift does not currently allow modifications to encryption after the cluster has been launched, so a new cluster will need to be created with encryption enabled.',
 	apis: ['Redshift:describeClusters'],
+	compliance: {
+        hipaa: 'All data in HIPAA environments must be encrypted, including ' +
+        		'data at rest. Redshift encryption ensures that this HIPAA control ' +
+        		'is implemented by providing KMS-backed encryption for all Redshift ' +
+        		'data.'
+    },
 
 	run: function(cache, settings, callback) {
 		var results = [];

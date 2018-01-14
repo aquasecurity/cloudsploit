@@ -8,6 +8,12 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/general/latest/gr/root-vs-iam.html',
 	recommended_action: 'Create IAM users with appropriate group-level permissions for account access. Create an MFA token for the root account, and store its password and token generation QR codes in a secure place.',
 	apis: ['IAM:generateCredentialReport'],
+	compliance: {
+        hipaa: 'HIPAA requires strong auditing controls surrounding actions ' +
+        		'taken in the environment. The root user lacks these controls ' +
+        		'since it is not tied to a specific user. The root account ' +
+        		'should not be used.'
+    },
 	settings: {
 		root_account_in_use_days: {
 			name: 'Root Account In Use Days',

@@ -83,6 +83,12 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/elb-security-policy-options.html',
 	recommended_action: 'Update your ELBs to use the recommended cipher suites',
 	apis: ['ELB:describeLoadBalancers', 'ELB:describeLoadBalancerPolicies'],
+	compliance: {
+        hipaa: 'All HIPAA data should be encrypted in transit. Using secure ciphers ' +
+        		'is a critical aspect of this requirement. Using outdated ciphers with ' +
+        		'known vulnerabilities places all transmitted data at risk of interception ' +
+        		'and tampering.'
+    },
 
 	run: function(cache, settings, callback) {
 		var results = [];

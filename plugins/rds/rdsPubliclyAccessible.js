@@ -9,6 +9,13 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.html',
 	recommended_action: 'Remove the public endpoint from the RDS instance',
 	apis: ['RDS:describeDBInstances'],
+	compliance: {
+        hipaa: 'RDS instances should only be launched in VPC environments and ' +
+        		'accessed through private endpoints. Exposing RDS instances to ' +
+        		'the public network may increase the risk of access from ' +
+        		'disallowed parties. HIPAA requires strict access and integrity ' +
+        		'controls around sensitive data.'
+    },
 
 	run: function(cache, settings, callback) {
 		var results = [];

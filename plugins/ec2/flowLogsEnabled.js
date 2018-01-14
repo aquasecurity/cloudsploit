@@ -10,6 +10,11 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/flow-logs.html',
 	recommended_action: 'Enable VPC flow logs for each VPC',
 	apis: ['EC2:describeVpcs', 'EC2:describeFlowLogs'],
+	compliance: {
+        hipaa: 'VPC Flow Logs provide a detailed traffic log of a VPC network ' +
+        		'containing HIPAA data. Flow Logs should be enabled to satisfy ' +
+        		'the audit controls of the HIPAA framework.'
+    },
 
 	run: function(cache, settings, callback) {
 		var results = [];

@@ -11,6 +11,12 @@ module.exports = {
     recommended_action: 'Enable bucket logging for each S3 bucket.',
     link: 'http://docs.aws.amazon.com/AmazonS3/latest/dev/Logging.html',
     apis: ['S3:listBuckets', 'S3:getBucketLogging'],
+    compliance: {
+        hipaa: 'HIPAA requires strict auditing controls around data access. ' +
+                'S3 logging helps ensure these controls are met by logging ' +
+                'access to all bucket objects. Logs should be stored in a ' +
+                'secure, remote location.'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -15,9 +15,9 @@ module.exports = {
     recommended_action: 'Enable CloudFront request logging.',
     apis: ['CloudFront:listDistributions', 'CloudFront:getDistribution'],
     compliance: {
-        hipaa: 'As part of the audit control requirement for HIPAA, request logging for \
-                CloudFront should be enabled and logs should be stored in a secure location \
-                with proper retention policies.'
+        hipaa: 'As part of the audit control requirement for HIPAA, request logging for ' +
+                'CloudFront should be enabled and logs should be stored in a secure location ' +
+                'with proper retention policies.'
     },
 
     run: function(cache, settings, callback) {

@@ -10,6 +10,11 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Introduction.html',
 	recommended_action: 'Migrate instances from EC2 Classic to VPC',
 	apis: ['EC2:describeInstances'],
+	compliance: {
+        hipaa: 'AWS VPC is the recommended location for processing of HIPAA-related ' +
+        		'data. All EC2 instances storing or processing HIPAA data should be ' +
+        		'launched in a VPC to avoid exposure to the public network.'
+    },
 
 	run: function(cache, settings, callback) {
 		var results = [];

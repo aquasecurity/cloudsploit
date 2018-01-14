@@ -8,6 +8,12 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
 	recommended_action: 'Enable an MFA device for the user account',
 	apis: ['IAM:generateCredentialReport'],
+	compliance: {
+        hipaa: 'MFA helps provide additional assurance that the user accessing ' +
+        		'the AWS is environment has been identified. HIPAA requires ' +
+        		'strong controls around entity authentication which can be ' +
+        		'enhanced through the use of MFA.'
+    },
 
 	run: function(cache, settings, callback) {
 		var results = [];
