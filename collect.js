@@ -220,6 +220,14 @@ var postcalls = [
                 override: true
             }
         },
+        CloudTrail: {
+        	getTrailStatus: {
+        		reliesOnService: 'cloudtrail',
+        		reliesOnCall: 'describeTrails',
+        		filterKey: 'Name',
+				filterValue: 'TrailARN'
+        	}
+        },
 		S3: {
 			getBucketLogging: {
 				deleteRegion: true,

@@ -8,7 +8,7 @@ module.exports = {
 	more_info: 'CloudTrail should be enabled for all regions in order to detect suspicious activity in regions that are not typically used.',
 	recommended_action: 'Enable CloudTrail for all regions and ensure that at least one region monitors global service events',
 	link: 'http://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-getting-started.html',
-	apis: ['CloudTrail:describeTrails'],
+	apis: ['CloudTrail:describeTrails', 'CloudTrail:getTrailStatus'],
 
 	run: function(cache, settings, callback) {
 		var results = [];
@@ -30,15 +30,34 @@ module.exports = {
 
 			if (!describeTrails.data.length) {
 				helpers.addResult(results, 2, 'CloudTrail is not enabled', region);
-			} else if (describeTrails.data[0]) {
-				helpers.addResult(results, 0, 'CloudTrail is enabled', region);
-				
-				if (describeTrails.data[0].IncludeGlobalServiceEvents) {
-					globalServicesMonitored = true;
-				}
 			} else {
-				helpers.addResult(results, 2, 'CloudTrail is enabled but is not properly configured', region);
+				// Ensure logging is enabled
+				var found;
+
+				for (t in describeTrails.data) {
+					var trail = describeTrails.data[t];
+
+					var getTrailStatus = helpers.addSource(cache, source,
+					    ['cloudtrail', 'getTrailStatus', region, trail.TrailARN]);
+
+					if (getTrailStatus && getTrailStatus.data &&
+						getTrailStatus.data.IsLogging) {
+						helpers.addResult(results, 0, 'CloudTrail is enabled', region);
+
+						if (trail.IncludeGlobalServiceEvents) {
+							globalServicesMonitored = true;
+						}
+
+						found = true;
+						break;
+					}
+				}
+
+				if (!found) {
+					helpers.addResult(results, 2, 'CloudTrail is setup but is not logging API calls', region);
+				}
 			}
+			
 			rcb();
 		}, function(){
 			if (!globalServicesMonitored) {
