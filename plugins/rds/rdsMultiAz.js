@@ -33,7 +33,11 @@ module.exports = {
 
             // loop through Rds Instances
             describeDBInstances.data.forEach(function(Rds){
-                if (Rds.MultiAZ){
+                if (Rds.Engine === 'aurora') {
+                    helpers.addResult(results, 0,
+                        'RDS Aurora instances are multi-AZ',
+                        region, Rds.DBInstanceArn);
+                } else if (Rds.MultiAZ){
                     helpers.addResult(results, 0,
                         'RDS instance has multi-AZ enabled',
                         region, Rds.DBInstanceArn);
