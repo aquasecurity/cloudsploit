@@ -13,6 +13,12 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html',
     recommended_action: 'Enable ELB request logging',
     apis: ['ELB:describeLoadBalancers', 'ELB:describeLoadBalancerAttributes'],
+    compliance: {
+        hipaa: 'HIPAA requires access logging to be enabled for the auditing ' +
+                'of services serving HIPAA data. All ELBs providing this access ' +
+                'should have logging enabled to deliver logs to a secure remote ' +
+                'location.'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

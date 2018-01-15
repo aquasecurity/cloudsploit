@@ -9,6 +9,12 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html',
 	recommended_action: 'RDS does not currently allow modifications to encryption after the instance has been launched, so a new instance will need to be created with encryption enabled.',
 	apis: ['RDS:describeDBInstances'],
+	compliance: {
+        hipaa: 'All data in HIPAA environments must be encrypted, including ' +
+        		'data at rest. RDS encryption ensures that this HIPAA control ' +
+        		'is implemented by providing KMS-backed encryption for all RDS ' +
+        		'data.'
+    },
 
 	run: function(cache, settings, callback) {
 		var results = [];

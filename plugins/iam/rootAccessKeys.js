@@ -8,6 +8,12 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/general/latest/gr/managing-aws-access-keys.html',
 	recommended_action: 'Remove access keys for the root account and setup IAM users with limited permissions instead',
 	apis: ['IAM:generateCredentialReport'],
+	compliance: {
+        hipaa: 'HIPAA requires strong auditing controls surrounding actions ' +
+        		'taken in the environment. The root user lacks these controls ' +
+        		'since it is not tied to a specific user. The root access keys ' +
+        		'should not be used.'
+    },
 
 	run: function(cache, settings, callback) {
 		var results = [];

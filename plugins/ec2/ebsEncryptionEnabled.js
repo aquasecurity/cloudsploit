@@ -9,6 +9,11 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSEncryption.html',
     recommended_action: 'Enable encryption for EBS volumes.',
     apis: ['EC2:describeVolumes'],
+    compliance: {
+        hipaa: 'HIPAA requires that all data is encrypted, including data at rest. ' +
+                'EBS is a HIPAA-compliant solution that provides automated encryption ' +
+                'of EC2 instance data at rest.'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

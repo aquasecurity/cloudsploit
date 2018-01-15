@@ -9,6 +9,10 @@ module.exports = {
 	recommended_action: 'Enable access logging on the CloudTrail bucket from the S3 console',
 	link: 'http://docs.aws.amazon.com/AmazonS3/latest/UG/ManagingBucketLogging.html',
 	apis: ['CloudTrail:describeTrails', 'S3:getBucketLogging'],
+	compliance: {
+        hipaa: 'Access logging for CloudTrail helps ensure strict integrity controls, ' +
+        		'verifying that the audit logs for the AWS environment are not modified.'
+    },
 
 	run: function(cache, settings, callback) {
 		var results = [];

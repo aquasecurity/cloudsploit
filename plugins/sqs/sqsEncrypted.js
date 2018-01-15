@@ -14,6 +14,11 @@ module.exports = {
 	recommended_action: 'Enable encryption using KMS for all SQS queues.',
 	link: 'http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-server-side-encryption.html',
 	apis: ['SQS:listQueues', 'SQS:getQueueAttributes'],
+	compliance: {
+        hipaa: 'SQS encryption must be used when processing any HIPAA-related data. ' +
+        		'AWS KMS encryption ensures that the SQS message payload meets the ' +
+        		'encryption in transit and at rest requirements of HIPAA.'
+    },
 
 	run: function(cache, settings, callback) {
 		var results = [];

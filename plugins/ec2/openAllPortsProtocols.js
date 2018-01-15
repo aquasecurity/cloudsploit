@@ -9,6 +9,12 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
 	recommended_action: 'Modify the security group to specify a specific port and protocol to allow.',
 	apis: ['EC2:describeSecurityGroups'],
+	compliance: {
+        hipaa: 'HIPAA requires strict access controls to networks and services ' +
+        		'processing sensitive data. Security groups are the built-in ' +
+        		'method for restricting access to AWS services and should be ' +
+        		'configured to allow least-privilege access.'
+    },
 
 	run: function(cache, settings, callback) {
 		var results = [];

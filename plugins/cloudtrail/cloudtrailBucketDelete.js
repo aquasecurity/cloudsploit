@@ -9,6 +9,12 @@ module.exports = {
 	recommended_action: 'Enable MFA delete on the CloudTrail bucket',
 	link: 'http://docs.aws.amazon.com/AmazonS3/latest/dev/Versioning.html#MultiFactorAuthenticationDelete',
 	apis: ['CloudTrail:describeTrails', 'S3:getBucketVersioning'],
+	compliance: {
+        hipaa: 'An MFA delete policy helps ensure that individuals attempting to ' +
+        		'delete CloudTrail logs have verified their identity. HIPAA requires ' +
+        		'strict access controls for users modifying the environments in which ' +
+        		'HIPAA data is stored.'
+    },
 
 	run: function(cache, settings, callback) {
 		var results = [];

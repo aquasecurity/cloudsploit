@@ -10,6 +10,11 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CloudFront.html',
     recommended_action: 'Remove HTTP-only listeners from distributions.',
     apis: ['CloudFront:listDistributions'],
+    compliance: {
+        hipaa: 'HIPAA requires all data to be transmitted over secure channels. ' +
+                'CloudFront HTTPS redirection should be used to ensure site visitors ' +
+                'are always connecting over a secure channel.'
+    },
 
     run: function(cache, settings, callback) {
 

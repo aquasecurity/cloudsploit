@@ -9,7 +9,12 @@ module.exports = {
 	recommended_action: 'Enable CloudTrail for all regions and ensure that at least one region monitors global service events',
 	link: 'http://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-getting-started.html',
 	apis: ['CloudTrail:describeTrails', 'CloudTrail:getTrailStatus'],
-
+	compliance: {
+        hipaa: 'HIPAA has clearly defined audit requirements for environments ' +
+        		'containing sensitive data. CloudTrail is the recommended ' +
+        		'logging and auditing solution for AWS since it is tightly ' +
+        		'integrated into most AWS services and APIs.'
+  },
 	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};

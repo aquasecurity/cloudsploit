@@ -118,6 +118,19 @@ node index.js
 
 Some plugins may require additional permissions not outlined above. Since their required IAM permissions are not included in the `SecurityAudit` managed policy, these plugins are not included in the `exports.js` file by default. To enable these plugins, uncomment them from the `exports.js` file, if applicable, add the policies required to an inline IAM policy, and re-run the scan.
 
+## Compliance
+
+CloudSploit also supports mapping of its plugins to particular compliance policies. To run the compliance scan, use the `--compliance` flag. For example:
+```
+node index.js --compliance=hipaa
+```
+
+CloudSploit currently supports the following compliance mappings:
+
+### HIPAA
+
+HIPAA scans map CloudSploit plugins to the Health Insurance Portability and Accountability Act of 1996.
+
 ## Architecture
 
 CloudSploit works in two phases. First, it queries the AWS APIs for various metadata about your account. This is known as the "collection" phase. Once all the necessary data has been collected, the result is passed to the second phase - "scanning." The scan uses the collected data to search for potential misconfigurations, risks, and other security issues. These are then provided as output.

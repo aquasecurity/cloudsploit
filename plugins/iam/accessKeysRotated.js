@@ -10,6 +10,11 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/ManagingCredentials.html',
 	recommended_action: 'To rotate an access key, first create a new key, replace the key and secret throughout your app or scripts, then set the previous key to disabled. Once you ensure that no services are broken, then fully delete the old key.',
 	apis: ['IAM:generateCredentialReport'],
+	compliance: {
+        hipaa: 'Rotating access keys helps to ensure that those keys have note been ' +
+        		'compromised. HIPAA requires strict controls around authentication of ' +
+        		'users or systems accessing HIPAA-compliant environments.'
+    },
 	settings: {
 		access_keys_rotated_fail: {
 			name: 'Access Keys Rotated Fail',

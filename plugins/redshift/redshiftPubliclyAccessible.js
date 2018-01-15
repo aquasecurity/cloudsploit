@@ -9,6 +9,13 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/redshift/latest/mgmt/getting-started-cluster-in-vpc.html',
 	recommended_action: 'Remove the public endpoint from the Redshift cluster',
 	apis: ['Redshift:describeClusters'],
+	compliance: {
+        hipaa: 'Redshift instances should only be launched in VPC environments and ' +
+        		'accessed through private endpoints. Exposing Redshift instances to ' +
+        		'the public network may increase the risk of access from ' +
+        		'disallowed parties. HIPAA requires strict access and integrity ' +
+        		'controls around sensitive data.'
+    },
 
 	run: function(cache, settings, callback) {
 		var results = [];
