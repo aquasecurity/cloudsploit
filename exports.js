@@ -20,6 +20,7 @@ module.exports = {
     'configServiceEnabled'          : require(__dirname + '/plugins/configservice/configServiceEnabled.js'),
 
     'defaultSecurityGroup'          : require(__dirname + '/plugins/ec2/defaultSecurityGroup.js'),
+    'defaultVpcInUse'               : require(__dirname + '/plugins/ec2/defaultVpcInUse.js'),
     'elasticIpLimit'                : require(__dirname + '/plugins/ec2/elasticIpLimit.js'),
     'subnetIpAvailability'          : require(__dirname + '/plugins/ec2/subnetIpAvailability.js'),
     'excessiveSecurityGroups'       : require(__dirname + '/plugins/ec2/excessiveSecurityGroups.js'),
