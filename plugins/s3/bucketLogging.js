@@ -46,7 +46,8 @@ module.exports = {
 
             if (!getBucketLogging || getBucketLogging.err || !getBucketLogging.data) {
                 helpers.addResult(results, 3,
-                    'Error querying bucket logging for : ' + bucket.Name,
+                    'Error querying bucket logging for : ' + bucket.Name +
+                    ': ' + helpers.addError(getBucketLogging),
                     'global', 'arn:aws:s3:::' + bucket.Name)
             } else if (getBucketLogging.data.LoggingEnabled) {
                 helpers.addResult(results, 0,

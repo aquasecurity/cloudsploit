@@ -43,7 +43,8 @@ module.exports = {
 
 			if (!getBucketAcl || getBucketAcl.err || !getBucketAcl.data) {
 				helpers.addResult(results, 3,
-					'Error querying for bucket policy for bucket: ' + bucket.Name,
+					'Error querying for bucket policy for bucket: ' + bucket.Name +
+					': ' + helpers.addError(getBucketAcl),
 					'global', bucketResource);
 				continue;
 			}

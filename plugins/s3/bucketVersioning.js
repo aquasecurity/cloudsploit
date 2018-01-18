@@ -41,7 +41,8 @@ module.exports = {
 
             if (!getBucketVersioning || getBucketVersioning.err || !getBucketVersioning.data) {
                 helpers.addResult(results, 3,
-                    'Error querying bucket versioning for : ' + bucket.Name,
+                    'Error querying bucket versioning for : ' + bucket.Name +
+                    ': ' + helpers.addError(getBucketVersioning),
                     'global', 'arn:aws:s3:::' + bucket.Name)
             } else if (getBucketVersioning.data.Status == 'Enabled') {
                 helpers.addResult(results, 0,

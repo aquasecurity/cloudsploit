@@ -123,7 +123,8 @@ module.exports = {
 
 				if (describeLoadBalancerPolicies.err || !describeLoadBalancerPolicies.data) {
 					helpers.addResult(results, 3,
-						'Unable to query load balancer policies for ELB: ' + lb.LoadBalancerName,
+						'Unable to query load balancer policies for ELB: ' + lb.LoadBalancerName +
+						': ' + helpers.addError(describeLoadBalancerPolicies),
 						region, lb.DNSName);
 
 					return cb();
