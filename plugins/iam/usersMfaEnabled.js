@@ -46,7 +46,7 @@ module.exports = {
 			// Skip root user and users without passwords
 			// since they won't be logging into the console
 			if (obj.user === '<root_account>') continue;
-			if (!obj.password_last_used) continue;
+			if (!obj.password_enabled) continue;
 
 			if (obj.mfa_active) {
 				helpers.addResult(results, 0,
@@ -54,6 +54,7 @@ module.exports = {
 			} else {
 				helpers.addResult(results, 1,
 					'User: ' + obj.user + ' does not have an MFA device enabled', 'global', obj.arn);
+				found = true;
 			}
 		}
 
