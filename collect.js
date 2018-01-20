@@ -250,6 +250,11 @@ var postcalls = [
 				reliesOnService: 'ec2',
 				reliesOnCall: 'describeVpcs',
 				override: true
+			},
+			describeVpcInstances: {
+				reliesOnService: 'ec2',
+				reliesOnCall: 'describeVpcs',
+				override: true
 			}
 		},
 		ELB: {
