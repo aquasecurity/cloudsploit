@@ -29,6 +29,7 @@ module.exports = {
     'openDNS'                       : require(__dirname + '/plugins/ec2/openDNS.js'),
     'openFTP'                       : require(__dirname + '/plugins/ec2/openFTP.js'),
     'openMySQL'                     : require(__dirname + '/plugins/ec2/openMySQL.js'),
+    'openOracle'                    : require(__dirname + '/plugins/ec2/openOracle.js'),
     'openNetBIOS'                   : require(__dirname + '/plugins/ec2/openNetBIOS.js'),
     'openPostgreSQL'                : require(__dirname + '/plugins/ec2/openPostgreSQL.js'),
     'openRDP'                       : require(__dirname + '/plugins/ec2/openRDP.js'),
