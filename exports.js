@@ -44,6 +44,7 @@ module.exports = {
     'classicInstances'              : require(__dirname + '/plugins/ec2/classicInstances.js'),
     'flowLogsEnabled'               : require(__dirname + '/plugins/ec2/flowLogsEnabled.js'),
     'vpcMultipleSubnets'            : require(__dirname + '/plugins/ec2/multipleSubnets.js'),
+    'crossVpcPublicPrivate'         : require(__dirname + '/plugins/ec2/crossVpcPublicPrivate.js'),
     'overlappingSecurityGroups'     : require(__dirname + '/plugins/ec2/overlappingSecurityGroups.js'),
     'publicAmi'                     : require(__dirname + '/plugins/ec2/publicAmi.js'),
     'encryptedAmi'                  : require(__dirname + '/plugins/ec2/encryptedAmi.js'),

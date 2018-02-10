@@ -98,6 +98,10 @@ var calls = {
 		describeVpcs: {
 			property: 'Vpcs'
 		},
+		describeRouteTables:
+		{
+			property: 'RouteTables'
+		},
 		describeFlowLogs: {
 			// TODO: override bc flowlogs are not available in all regions?
 			property: 'FlowLogs'
