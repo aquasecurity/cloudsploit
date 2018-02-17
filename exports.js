@@ -94,6 +94,7 @@ module.exports = {
     'domainTransferLock'            : require(__dirname + '/plugins/route53/domainTransferLock.js'),
 
     'bucketAllUsersPolicy'          : require(__dirname + '/plugins/s3/bucketAllUsersPolicy.js'),
+    'bucketAllUsersAcl'             : require(__dirname + '/plugins/s3/bucketAllUsersAcl.js'),
     'bucketVersioning'              : require(__dirname + '/plugins/s3/bucketVersioning.js'),
     'bucketLogging'                 : require(__dirname + '/plugins/s3/bucketLogging.js'),
 
