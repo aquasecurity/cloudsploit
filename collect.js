@@ -243,6 +243,11 @@ var postcalls = [
 				deleteRegion: true,
 				signatureVersion: 'v4',
 				override: true
+			},
+			getBucketPolicy: {
+				deleteRegion: true,
+				signatureVersion: 'v4',
+				override: true
 			}
 		},
 		EC2: {
