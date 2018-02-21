@@ -58,7 +58,7 @@ module.exports = {
 				var db = describeDBInstances.data[i];
 
 				// Aurora databases do not list the restore information in this API call
-				if (db.Engine && db.Engine === 'aurora') {
+				if (db.Engine && (db.Engine === 'aurora' || db.Engine === 'aurora-postgresql')) {
 					clustersPresent = true;
 					continue;
 				}
