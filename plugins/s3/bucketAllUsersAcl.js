@@ -72,7 +72,7 @@ module.exports = {
 						    	if (bucketResult < 2) bucketResult = 2;
 						    }
 						} else if (uri === ACL_AUTHENTICATED_USERS) {
-						    aclMessage.push('Grantee AuthenticatedUsers allowed permission: ' + permission);
+						    bucketIssues.push('Grantee AuthenticatedUsers allowed permission: ' + permission);
 						    if (permission === 'READ') {
 						    	if (bucketResult < 1) bucketResult = 1;
 						    } else {
