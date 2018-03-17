@@ -157,6 +157,9 @@ var calls = {
 	KMS: {
 		listKeys: {
 			property: 'Keys'
+		},
+		listAliases: {
+			property: 'Aliases'
 		}
 	},
 	Lambda: {
