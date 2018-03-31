@@ -62,6 +62,11 @@ var calls = {
 			property: 'ConfigurationRecordersStatus'
 		}
 	},
+	DirectConnect: {
+		describeDirectConnectGateways: {
+			property: 'directConnectGateways'
+		}
+	},
 	EC2: {
 		describeAccountAttributes: {
 			property: 'AccountAttributes'
@@ -122,6 +127,34 @@ var calls = {
 			property: 'NatGateways',
 			params: {
 				Filter: [
+					{
+						Name: 'state',
+						Values: [
+							'available'
+						]
+					}
+				]
+			}
+		},
+		describeVpcPeeringConnections: {
+			property: 'VpcPeeringConnections',
+			params: {
+				Filters: [
+					{
+						Name: 'status-code',
+						Values: [
+							'pending-acceptance',
+							'provisioning',
+							'active'
+						]
+					}
+				]
+			}
+		},
+		describeVpnGateways: {
+			property: 'VpnGateways',
+			params: {
+				Filters: [
 					{
 						Name: 'state',
 						Values: [
