@@ -157,7 +157,7 @@ var calls = {
 	KMS: {
 		listKeys: {
 			property: 'Keys'
-		}
+		},
 	},
 	Lambda: {
 		listFunctions: {
@@ -331,6 +331,11 @@ var postcalls = [
 				reliesOnCall: 'listKeys',
 				filterKey: 'KeyId',
 				filterValue: 'KeyId'
+			},
+			getKeyPolicy: {
+				reliesOnService: 'kms',
+				reliesOnCall: 'listKeys',
+				override: true
 			}
 		},
 		SES: {
