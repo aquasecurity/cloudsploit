@@ -7,7 +7,6 @@ module.exports = function(AWSConfig, collection, callback) {
     async.eachLimit(collection.kms.listKeys[AWSConfig.region].data, 15, function(key, cb){
         collection.kms.getKeyPolicy[AWSConfig.region][key.KeyId] = {};
 
-        // Check for the multiple subnets in that single key
         var params = {
             // The identifier of the CMK whose key policy you want to retrieve.
             // You can use the key ID or the Amazon Resource Name (ARN) of the CMK.
@@ -15,12 +14,18 @@ module.exports = function(AWSConfig, collection, callback) {
             // The name of the key policy to retrieve.
             PolicyName: "default"
         };
+
         kms.getKeyPolicy(params, function(err, data) {
             if (err) {
                 collection.kms.getKeyPolicy[AWSConfig.region][key.KeyId].err = err;
             }
             // convert the data to json object
-            var policyData = JSON.parse(data.Policy);
+            try {
+                var policyData = JSON.parse(data.Policy);
+            } catch(e) {
+                var policyData = null;
+            }
+            
             collection.kms.getKeyPolicy[AWSConfig.region][key.KeyId].data = policyData;
             cb();
         });
