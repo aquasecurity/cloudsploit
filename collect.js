@@ -67,6 +67,11 @@ var calls = {
 			property: 'directConnectGateways'
 		}
 	},
+	DirectoryService: {
+		describeDirectories: {
+			property: 'DirectoryDescriptions'
+		}
+	},
 	EC2: {
 		describeAccountAttributes: {
 			property: 'AccountAttributes'
