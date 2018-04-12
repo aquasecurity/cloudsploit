@@ -43,9 +43,9 @@ module.exports = {
 				var clusterResource = (cluster.Endpoint && cluster.Endpoint.Address) ? cluster.Endpoint.Address : cluster.ClusterIdentifier;
 
 				if (cluster.Encrypted) {
-					helpers.addResult(results, 1, 'Redshift cluster is encrypted', region, clusterResource);
+					helpers.addResult(results, 0, 'Redshift cluster is encrypted', region, clusterResource);
 				} else {
-					helpers.addResult(results, 0, 'Redshift cluster is not encrypted', region, clusterResource);
+					helpers.addResult(results, 1, 'Redshift cluster is not encrypted', region, clusterResource);
 				}
 			}
 			
