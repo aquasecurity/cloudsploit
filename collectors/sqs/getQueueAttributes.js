@@ -10,9 +10,7 @@ module.exports = function(AWSConfig, collection, callback) {
         var params = {
             QueueUrl: queue,
             AttributeNames: [
-            	'Policy',
-            	'QueueArn',
-            	'KmsMasterKeyId'
+            	'All'
             ]
         };
 
