@@ -1,6 +1,40 @@
 var async = require('async');
 var helpers = require('../../helpers');
 
+function globalPrincipal(principal) {
+	if (typeof principal === 'string' && principal === '*') {
+		return true;
+	}
+
+	var awsPrincipals = principal.AWS;
+	if(!Array.isArray(awsPrincipals)) {
+		awsPrincipals = [awsPrincipals];
+	}
+
+	return awsPrincipals.some(p => (
+		p === '*' ||
+		p === 'arn:aws:iam::*'
+	));
+}
+
+function crossAccountPrincipal(principal, accountId) {
+	if (typeof principal === 'string' &&
+	    /^[0-9]{12}$/.test(principal) &&
+	    principal !== accountId) {
+		return true;
+	}
+
+	var awsPrincipals = principal.AWS;
+	if(!Array.isArray(awsPrincipals)) {
+		awsPrincipals = [awsPrincipals];
+	}
+
+	return principal.AWS.some(p => (
+		/^arn:aws:iam::[0-9]{12}.*/.test(p) &&
+		p.indexOf(accountId) === -1
+	));
+}
+
 module.exports = {
 	title: 'SQS Cross Account Access',
 	category: 'SQS',
@@ -35,7 +69,7 @@ module.exports = {
 			}
 
 			async.each(listQueues.data, function(queue, cb){
-				
+
 				var getQueueAttributes = helpers.addSource(cache, source,
 					['sqs', 'getQueueAttributes', region, queue]);
 
@@ -82,15 +116,15 @@ module.exports = {
 					if (!statement.Effect || statement.Effect !== 'Allow') continue;
 					if (!statement.Principal) continue;
 
-					if (statement.Principal === '*' ||
-						(statement.Principal.AWS &&
-							(statement.Principal.AWS === '*' ||
-							 statement.Principal.AWS === 'arn:aws:iam::*'))) {
-
-						if (!statement.Condition ||
-							!statement.Condition.StringEquals ||
-							!statement.Condition.StringEquals['AWS:SourceOwner'] ||
-						 	statement.Condition.StringEquals['AWS:SourceOwner'] == '*') {
+					if (globalPrincipal(statement.Principal)) {
+						if(!statement.Condition ||
+							(statement.Condition.StringEquals && (
+								!statement.Condition.StringEquals['AWS:SourceOwner'] ||
+								statement.Condition.StringEquals['AWS:SourceOwner'] == '*') ||
+							(statement.Condition.ArnEquals && (
+								!statement.Condition.ArnEquals['aws:SourceArn'] ||
+								!statement.Condition.ArnEquals['aws:SourceArn'].includes(accountId))))
+							) {
 
 							for (a in statement.Action) {
 								if (globalActions.indexOf(statement.Action[a]) === -1) {
@@ -99,12 +133,7 @@ module.exports = {
 							}
 						}
 					} else {
-						if ((typeof statement.Principal === 'string' &&
-							/^[0-9]{12}$/.test(statement.Principal) &&
-							statement.Principal !== accountId) ||
-							(statement.Principal.AWS &&
-							/^arn:aws:iam::[0-9]{12}.*/.test(statement.Principal.AWS) &&
-							statement.Principal.AWS.indexOf(accountId) === -1)) {
+						if (crossAccountPrincipal(statement.Principal, accountId)) {
 							// Another account
 							for (a in statement.Action) {
 								if (crossAccountActions.indexOf(statement.Action[a]) === -1) {
