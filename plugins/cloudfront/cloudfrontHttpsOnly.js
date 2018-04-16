@@ -45,9 +45,8 @@ module.exports = {
                         Distribution.ARN)
             }
             else if (Distribution.DefaultCacheBehavior.ViewerProtocolPolicy == 'https-only'){
-                helpers.addResult(results, 1, 'The CloudFront ' + 
-                        'distribution is set to use HTTPS but not to' + 
-                        'redirect users accessing the endpoint over HTTP', 'global',
+                helpers.addResult(results, 0, 'The CloudFront ' + 
+                        'distribution is set to use HTTPS only.', 'global',
                         Distribution.ARN)
             }
             else{
