@@ -39,19 +39,17 @@ module.exports = {
         // loop through Instances for every reservation
         listDistributions.data.forEach(function(Distribution){
 
-            if (Distribution.DefaultCacheBehavior.ViewerProtocolPolicy == 'redirect-to-https'){
+            if (Distribution.DefaultCacheBehavior.ViewerProtocolPolicy == 'redirect-to-https') {
                 helpers.addResult(results, 0, 'CloudFront distribution ' + 
                         'is configured to redirect non-HTTPS traffic to HTTPS', 'global',
                         Distribution.ARN)
-            }
-            else if (Distribution.DefaultCacheBehavior.ViewerProtocolPolicy == 'https-only'){
+            } else if (Distribution.DefaultCacheBehavior.ViewerProtocolPolicy == 'https-only') {
                 helpers.addResult(results, 0, 'The CloudFront ' + 
                         'distribution is set to use HTTPS only.', 'global',
                         Distribution.ARN)
-            }
-            else{
-                helpers.addResult(results, 2, 'CloudFront distributions ' + 
-                        'is not configured HTTPS', 'global',
+            } else {
+                helpers.addResult(results, 2, 'CloudFront distribution ' + 
+                        'is not configured to use HTTPS', 'global',
                         Distribution.ARN)
             }
         });
