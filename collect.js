@@ -168,6 +168,9 @@ var calls = {
 					}
 				]
 			}
+		},
+		describeRouteTables: {
+			property: 'RouteTables'
 		}
 	},
 	ELB: {
