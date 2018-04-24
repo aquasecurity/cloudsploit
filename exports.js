@@ -52,6 +52,7 @@ module.exports = {
     'ebsEncryptionEnabled'          : require(__dirname + '/plugins/ec2/ebsEncryptionEnabled.js'),
     'natMultiAz'                    : require(__dirname + '/plugins/ec2/natMultiAz.js'),
     'defaultVpcInUse'               : require(__dirname + '/plugins/ec2/defaultVpcInUse.js'),
+    'crossVpcPublicPrivate'         : require(__dirname + '/plugins/ec2/crossVpcPublicPrivate.js'),
 
     'insecureCiphers'               : require(__dirname + '/plugins/elb/insecureCiphers.js'),
     'elbHttpsOnly'                  : require(__dirname + '/plugins/elb/elbHttpsOnly.js'),
