@@ -24,6 +24,7 @@ module.exports = {
                 // error handling
                 if (!describeSubnets || !describeSubnets.data || describeSubnets.err) {
                     helpers.addResult(results, 3, 'Unable to query for Subnets: ' + helpers.addError(describeSubnets), region);
+                    return rcb();
                 }
 
                 // grapping a list of Vpcs and Subnets
@@ -44,6 +45,7 @@ module.exports = {
                 // error handling
                 if (!describeRouteTables || !describeRouteTables.data || describeRouteTables.err) {
                     helpers.addResult(results, 3, 'Unable to query for RouteTables: ' + helpers.addError(describeRouteTables), region);
+                    return rcb();
                 }
 
 
@@ -52,11 +54,13 @@ module.exports = {
 
                 // error handling
                 if (!describeVpcPeeringConnections || !describeVpcPeeringConnections.data || describeVpcPeeringConnections.err) {
-                    helpers.addResult(results, 3, 'Unable to query for VpcPeering: ' + helpers.addError(describeRouteTables), region);
+                    helpers.addResult(results, 3, 'Unable to query for VpcPeering: ' + helpers.addError(describeVpcPeeringConnections), region);
+                    return rcb();
                 }
 
                 if (!describeVpcPeeringConnections.data.length) {
                     helpers.addResult(results, 0, 'No public private subnets connection found', region);
+                    return rcb()
                 }
 
                 // collecting data about the peering connections
@@ -66,12 +70,14 @@ module.exports = {
                     vpcPeeringInfo.push({
                         peeringId: describeVpcPeeringConnections.data[i].VpcPeeringConnectionId,
                         vpcId: describeVpcPeeringConnections.data[i].AccepterVpcInfo.VpcId,
-                        peercidr: describeVpcPeeringConnections.data[i].AccepterVpcInfo.CidrBlock
+                        peercidr: describeVpcPeeringConnections.data[i].AccepterVpcInfo.CidrBlock,
+                        ownerId: describeVpcPeeringConnections.data[i].AccepterVpcInfo.OwnerId
                     });
                     vpcPeeringInfo.push({
                         peeringId: describeVpcPeeringConnections.data[i].VpcPeeringConnectionId,
                         vpcId: describeVpcPeeringConnections.data[i].RequesterVpcInfo.VpcId,
-                        peercidr: describeVpcPeeringConnections.data[i].RequesterVpcInfo.CidrBlock
+                        peercidr: describeVpcPeeringConnections.data[i].RequesterVpcInfo.CidrBlock,
+                        ownerId: describeVpcPeeringConnections.data[i].RequesterVpcInfo.OwnerId
                     });
                 }
 
@@ -174,7 +180,8 @@ module.exports = {
                                 routeId: routesInfo[j].rtId,
                                 vpcId: vpcPeeringInfo[i].vpcId,
                                 peeringCidr: routesInfo[j].rtCB,
-                                peeringId: vpcPeeringInfo[i].peeringId
+                                peeringId: vpcPeeringInfo[i].peeringId,
+                                ownerId: vpcPeeringInfo[i].ownerId
                             });
                         }
                     }
@@ -191,13 +198,15 @@ module.exports = {
                                 pubRecord.push({
                                     vpcId: peeringRoutes[i].vpcId,
                                     peeringId: peeringRoutes[i].peeringId,
-                                    subnetId: subnets[j].subId
+                                    subnetId: subnets[j].subId,
+                                    ownerId: peeringRoutes[i].ownerId
                                 });
                             } else {
                                 prvRecord.push({
                                     vpcId: peeringRoutes[i].vpcId,
                                     peeringId: peeringRoutes[i].peeringId,
-                                    subnetId: subnets[j].subId
+                                    subnetId: subnets[j].subId,
+                                    ownerId: peeringRoutes[i].ownerId
                                 });
                             }
                         }
@@ -205,12 +214,18 @@ module.exports = {
                 }
 
                 // comparing and showing the results
+                var register = 0;
                 for (i in pubRecord) {
                     for (j in prvRecord) {
                         if (pubRecord[i].peeringId == prvRecord[j].peeringId) {
-                            helpers.addResult(results, 2, 'Public-Private cross vpc subnet connection found, for Subnets: ' + pubRecord[i].subnetId + ' and ' + prvRecord[j].subnetId, region);
+                            register++;
+                            helpers.addResult(results, 2, 'A route between public and private subnets of different VPCs found, for Subnets: ' + pubRecord[i].subnetId + ' and ' + prvRecord[j].subnetId, region, 'arn:aws:ec2:' + region + ':' + prvRecord[j].ownerId + ':vpc-peering-connection/' + prvRecord[j].peeringId);
                         }
                     }
+                }
+
+                if (!register) {
+                    helpers.addResult(results, 0, 'No routes between public and private subnets of different VPCs found', region);
                 }
 
                 return rcb();
