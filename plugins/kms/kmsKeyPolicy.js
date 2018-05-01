@@ -54,7 +54,7 @@ module.exports = {
 
 				if (!getKeyPolicy || getKeyPolicy.err || !getKeyPolicy.data){
 					helpers.addResult(results, 3,
-						'Unable to get key policy: ' + helpers.addError(describeKey),
+						'Unable to get key policy: ' + helpers.addError(getKeyPolicy),
 						region, kmsKey.KeyArn);
 					return kcb();
 				}
