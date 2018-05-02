@@ -9,8 +9,22 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html',
 	recommended_action: 'Attach an IAM role to the EC2 instance',
 	apis: ['EC2:describeInstances'],
+	settings: {
+		instance_iam_role_threshold: {
+			name: 'Instance IAM Role Threshold',
+			description: 'If more than this number of instances are missing an IAM role, results will be collapsed into a single result to avoid excessive result counts. Max is 299.',
+			regex: '^[1-2]{1}[0-9]{0,2}$',
+			default: 10
+		}
+	},
 
 	run: function(cache, settings, callback) {
+		var config = {
+			instance_iam_role_threshold: settings.instance_iam_role_threshold || this.settings.instance_iam_role_threshold.default
+		};
+
+		var custom = helpers.isCustom(settings, this.settings);
+
 		var results = [];
 		var source = {};
 
@@ -45,17 +59,17 @@ module.exports = {
 						helpers.addResult(results, 2,
 							'Instance does not use an IAM role', region,
 							'arn:aws:ec2:' + region + ':' + accountId + ':instance/' +
-							instance.InstanceId);
+							instance.InstanceId, custom);
 					}
 				}
 			}
 
 			// Too many results to print individually
-			if (found > 50) {
+			if (found > config.instance_iam_role_threshold) {
 				results = [];
 
 				helpers.addResult(results, 2,
-					'Over 50 EC2 instances do not use an IAM role', region);
+					'Over ' + config.instance_limit_percentage_warn + ' EC2 instances do not use an IAM role', region, null, custom);
 			}
 
 			if (!found) {
