@@ -48,13 +48,14 @@ module.exports = {
 			if (obj.user === '<root_account>') continue;
 			if (!obj.password_enabled) continue;
 
+			found = true;
+
 			if (obj.mfa_active) {
 				helpers.addResult(results, 0,
 					'User: ' + obj.user + ' has an MFA device', 'global', obj.arn);
 			} else {
 				helpers.addResult(results, 1,
 					'User: ' + obj.user + ' does not have an MFA device enabled', 'global', obj.arn);
-				found = true;
 			}
 		}
 
