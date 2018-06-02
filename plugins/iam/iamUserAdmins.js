@@ -70,11 +70,21 @@ module.exports = {
 			var getUserPolicy = helpers.addSource(cache, source,
 					['iam', 'getUserPolicy', region, user.UserName]);
 
-			if (listAttachedUserPolicies.err ||
-				listUserPolicies.err ||
-				listGroupsForUser.err) {
+			if (listAttachedUserPolicies.err) {
 				helpers.addResult(results, 3,
-					'Unable to query for IAM policy for user: ' + user.UserName, 'global', user.Arn);
+					'Unable to query for IAM attached policy for user: ' + user.UserName + ': ' + helpers.addError(listAttachedUserPolicies), 'global', user.Arn);
+				return cb();
+			}
+
+			if (listUserPolicies.err) {
+				helpers.addResult(results, 3,
+					'Unable to query for IAM user policy for user: ' + user.UserName + ': ' + helpers.addError(listUserPolicies), 'global', user.Arn);
+				return cb();
+			}
+
+			if (listGroupsForUser.err) {
+				helpers.addResult(results, 3,
+					'Unable to query for IAM user groups for user: ' + user.UserName + ': ' + helpers.addError(listGroupsForUser), 'global', user.Arn);
 				return cb();
 			}
 
@@ -207,7 +217,7 @@ module.exports = {
 			} else {
 				for (u in userAdmins) {
 					helpers.addResult(results, 2,
-						'User: ' + userAdmins[u].name + ' is one of ' + config.iam_admin_count + ' IAM user administrators',
+						'User: ' + userAdmins[u].name + ' is one of ' + userAdmins.length + ' IAM user administrators, which exceeds the expected value of: ' + config.iam_admin_count,
 						'global', userAdmins[u].arn, custom);
 				}
 			}

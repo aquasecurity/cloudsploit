@@ -38,8 +38,10 @@ module.exports = {
 			var getGroup = helpers.addSource(cache, source,
 				['iam', 'getGroup', region, group.GroupName]);
 
-			if (!getGroup || getGroup.err || !getGroup.data || !getGroup.data.Users) {
-				helpers.addResult(results, 3, 'Unable to query for group: ' + group.GroupName, 'global', group.Arn);
+			if (!getGroup || getGroup.err || !getGroup.data) {
+				helpers.addResult(results, 3, 'Unable to query for group: ' + group.GroupName + ': ' + helpers.addError(getGroup), 'global', group.Arn);
+			} else if (!getGroup.data.Users) {
+				helpers.addResult(results, 3, 'Unable to query for group: ' + group.GroupName + ': No users returned attached', 'global', group.Arn);
 			} else if (!getGroup.data.Users.length) {
 				helpers.addResult(results, 1, 'Group: ' + group.GroupName + ' does not contain any users', 'global', group.Arn);
 				return cb();

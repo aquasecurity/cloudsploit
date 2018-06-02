@@ -43,13 +43,24 @@ module.exports = {
 			var listUserPolicies = helpers.addSource(cache, source,
 					['iam', 'listUserPolicies', region, user.UserName]);
 
+			if (!listAttachedUserPolicies) return cb();
+			if (!listUserPolicies) return cb();
 
-			if (!listAttachedUserPolicies) return cb(null, results, source);
+			if (listAttachedUserPolicies.err) {
+				helpers.addResult(results, 3,
+					'Unable to query for IAM attached policy for user: ' + user.UserName + ': ' + helpers.addError(listAttachedUserPolicies), 'global', user.Arn);
+				return cb();
+			}
 
-			if (listAttachedUserPolicies.err || !listAttachedUserPolicies.data ||
-				listUserPolicies.err || !listUserPolicies.data) {
+			if (listUserPolicies.err) {
+				helpers.addResult(results, 3,
+					'Unable to query for IAM user policy for user: ' + user.UserName + ': ' + helpers.addError(listUserPolicies), 'global', user.Arn);
+				return cb();
+			}
+
+			if (!listAttachedUserPolicies.data || !listUserPolicies.data) {
 				helpers.addResult(results, 3, 'Unable to query policies for user: ' +
-					user.UserName, 'global', user.Arn);
+					user.UserName + ': no data returned', 'global', user.Arn);
 				return cb();
 			}
 

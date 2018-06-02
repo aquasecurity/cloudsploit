@@ -10,7 +10,7 @@ module.exports = function(AWSConfig, collection, callback) {
 		!collection.iam.listUsers[AWSConfig.region] ||
 		!collection.iam.listUsers[AWSConfig.region].data) return callback();
 
-	async.eachLimit(collection.iam.listUsers[AWSConfig.region].data, 10, function(user, cb){
+	async.eachLimit(collection.iam.listUsers[AWSConfig.region].data, 5, function(user, cb){
 		// Loop through each policy for that user
 		if (!user.UserName || !collection.iam ||
 			!collection.iam.listUserPolicies ||
@@ -39,7 +39,9 @@ module.exports = function(AWSConfig, collection, callback) {
 				pCb();
 			});
 		}, function(){
-			cb();
+			setTimeout(function(){
+				cb();
+			}, 100);
 		});
 	}, function(){
 		callback();

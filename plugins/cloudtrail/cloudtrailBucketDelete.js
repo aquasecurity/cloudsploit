@@ -46,7 +46,7 @@ module.exports = {
 
 				if (!getBucketVersioning || getBucketVersioning.err || !getBucketVersioning.data) {
 					helpers.addResult(results, 3,
-						'Error querying for bucket policy for bucket: ' + trail.S3BucketName,
+						'Error querying for bucket policy for bucket: ' + trail.S3BucketName + ': ' + helpers.addError(getBucketVersioning),
 						region, 'arn:aws:s3:::' + trail.S3BucketName)
 
 					return cb();

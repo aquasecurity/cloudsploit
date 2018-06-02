@@ -357,7 +357,8 @@ var postcalls = [
 				reliesOnService: 'iam',
 				reliesOnCall: 'listUsers',
 				filterKey: 'UserName',
-				filterValue: 'UserName'
+				filterValue: 'UserName',
+				rateLimit: 100
 			}
 		},
 		KMS: {

@@ -10,7 +10,7 @@ module.exports = function(AWSConfig, collection, callback) {
 		!collection.iam.listGroups[AWSConfig.region] ||
 		!collection.iam.listGroups[AWSConfig.region].data) return callback();
 
-	async.eachLimit(collection.iam.listGroups[AWSConfig.region].data, 10, function(group, cb){
+	async.eachLimit(collection.iam.listGroups[AWSConfig.region].data, 5, function(group, cb){
 		// Loop through each policy for that group
 		if (!group.GroupName || !collection.iam ||
 			!collection.iam.listGroupPolicies ||
@@ -23,7 +23,7 @@ module.exports = function(AWSConfig, collection, callback) {
 
 		collection.iam.getGroupPolicy[AWSConfig.region][group.GroupName] = {};
 
-		async.each(collection.iam.listGroupPolicies[AWSConfig.region][group.GroupName].data.PolicyNames, function(policyName, pCb){
+		async.eachLimit(collection.iam.listGroupPolicies[AWSConfig.region][group.GroupName].data.PolicyNames, 5, function(policyName, pCb){
 			collection.iam.getGroupPolicy[AWSConfig.region][group.GroupName][policyName] = {};
 
 			// Make the policy call
@@ -39,7 +39,9 @@ module.exports = function(AWSConfig, collection, callback) {
 				pCb();
 			});
 		}, function(){
-			cb();
+			setTimeout(function(){
+				cb();
+			}, 100);
 		});
 	}, function(){
 		callback();
