@@ -11,10 +11,12 @@ function globalPrincipal(principal) {
 		awsPrincipals = [awsPrincipals];
 	}
 
-	return awsPrincipals.some(p => (
-		p === '*' ||
-		p === 'arn:aws:iam::*'
-	));
+	if (awsPrincipals.indexOf('*') > -1 ||
+		awsPrincipals.indexOf('arn:aws:iam::*') > -1) {
+		return true;
+	}
+
+	return false;
 }
 
 function crossAccountPrincipal(principal, accountId) {
@@ -29,10 +31,14 @@ function crossAccountPrincipal(principal, accountId) {
 		awsPrincipals = [awsPrincipals];
 	}
 
-	return principal.AWS.some(p => (
-		/^arn:aws:iam::[0-9]{12}.*/.test(p) &&
-		p.indexOf(accountId) === -1
-	));
+	for (a in awsPrincipals) {
+		if (/^arn:aws:iam::[0-9]{12}.*/.test(awsPrincipals[a]) &&
+			awsPrincipals[a].indexOf(accountId) === -1) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 module.exports = {
@@ -123,7 +129,7 @@ module.exports = {
 								statement.Condition.StringEquals['AWS:SourceOwner'] == '*') ||
 							(statement.Condition.ArnEquals && (
 								!statement.Condition.ArnEquals['aws:SourceArn'] ||
-								!statement.Condition.ArnEquals['aws:SourceArn'].includes(accountId))))
+								statement.Condition.ArnEquals['aws:SourceArn'].indexOf(accountId) === -1)))
 							) {
 
 							for (a in statement.Action) {
