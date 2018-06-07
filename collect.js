@@ -173,6 +173,11 @@ var calls = {
 			property: 'RouteTables'
 		}
 	},
+	ElasticTranscoder: {
+		listPipelines: {
+			property: 'Pipelines'
+		}
+	},
 	ELB: {
 		describeLoadBalancers: {
 			property: 'LoadBalancerDescriptions'
@@ -233,6 +238,9 @@ var calls = {
 			property: 'Identities',
 			params: {IdentityType: 'Domain'},	// TODO: maybe don't filter these?
 			rateLimit: 1000	// ms to rate limit between regions
+		},
+		describeActiveReceiptRuleSet: {
+			property: 'Rules'
 		}
 	},
 	SNS: {
@@ -248,6 +256,11 @@ var calls = {
 	STS: {
 		getCallerIdentity: {
 			property: 'Account'
+		}
+	},
+	WorkSpaces: {
+		describeWorkspaces: {
+			property: 'Workspaces'
 		}
 	}
 };
@@ -286,6 +299,11 @@ var postcalls = [
 				override: true
 			},
 			getBucketPolicy: {
+				deleteRegion: true,
+				signatureVersion: 'v4',
+				override: true
+			},
+			getBucketEncryption: {
 				deleteRegion: true,
 				signatureVersion: 'v4',
 				override: true
