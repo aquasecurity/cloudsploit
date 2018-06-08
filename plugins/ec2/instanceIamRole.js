@@ -69,7 +69,7 @@ module.exports = {
 				results = [];
 
 				helpers.addResult(results, 2,
-					'Over ' + config.instance_limit_percentage_warn + ' EC2 instances do not use an IAM role', region, null, custom);
+					'Over ' + config.instance_iam_role_threshold + ' EC2 instances do not use an IAM role', region, null, custom);
 			}
 
 			if (!found) {
