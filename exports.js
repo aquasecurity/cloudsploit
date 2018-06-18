@@ -84,6 +84,7 @@ module.exports = {
     'kmsKeyRotation'                : require(__dirname + '/plugins/kms/kmsKeyRotation.js'),
     'kmsScheduledDeletion'          : require(__dirname + '/plugins/kms/kmsScheduledDeletion.js'),
     'kmsKeyPolicy'                  : require(__dirname + '/plugins/kms/kmsKeyPolicy.js'),
+    'kmsDefaultKeyUsage'            : require(__dirname + '/plugins/kms/kmsDefaultKeyUsage.js'),
 
     'rdsAutomatedBackups'           : require(__dirname + '/plugins/rds/rdsAutomatedBackups.js'),
     'rdsEncryptionEnabled'          : require(__dirname + '/plugins/rds/rdsEncryptionEnabled.js'),
