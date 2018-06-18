@@ -47,6 +47,12 @@ var calls = {
 		}
 	},
 	CloudWatchLogs: {
+		describeLogGroups: {
+			property: 'logGroups',
+			params: {
+				limit: 50
+			}
+		},
 		describeMetricFilters: {
 			property: 'metricFilters',
 			params: {
@@ -171,6 +177,11 @@ var calls = {
 		},
 		describeRouteTables: {
 			property: 'RouteTables'
+		}
+	},
+	EFS: {
+		describeFileSystems: {
+			property: 'FileSystems'
 		}
 	},
 	ElasticTranscoder: {

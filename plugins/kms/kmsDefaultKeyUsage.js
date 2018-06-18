@@ -11,12 +11,13 @@ module.exports = {
 	apis: ['KMS:listKeys', 'KMS:describeKey', 'CloudTrail:describeTrails', 'EC2:describeVolumes',
 		   'ElasticTranscoder:listPipelines', 'RDS:describeDBInstances', 'Redshift:describeClusters',
 		   'S3:listBuckets', 'S3:getBucketEncryption', 'SES:describeActiveReceiptRuleSet',
-		   'Workspaces:describeWorkspaces'],
+		   'Workspaces:describeWorkspaces', 'Lambda:listFunctions', 'CloudWatchLogs:describeLogGroups',
+		   'EFS:describeFileSystems', 'STS:getCallerIdentity'],
 
 	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
-		var reg = 0;
+		var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', 'us-east-1', 'data']);
 
         async.each(helpers.regions.kms, function(region, rcb) {
 			// List the KMS Keys
@@ -50,6 +51,7 @@ module.exports = {
 						if (describeTrails.data[i].KmsKeyId){
 							services.push({
 								serviceName: 'CloudTrail',
+								resource: describeTrails.data[i].TrailARN,
 								KMSKey: describeTrails.data[i].KmsKeyId
 							});
 						}
@@ -69,6 +71,7 @@ module.exports = {
 						if (describeVolumes.data[i].KmsKeyId) {
 							services.push({
 								serviceName: 'EBS',
+								resource: 'arn:aws:ec2:' + region + ':' + accountId + ':volume/' + describeVolumes.data[i].VolumeId,
 								KMSKey: describeVolumes.data[i].KmsKeyId
 							});
 						}
@@ -88,6 +91,7 @@ module.exports = {
 						if (listPipelines.data[i].AwsKmsKeyArn) {
 							services.push({
 								serviceName: 'ElasticTranscoder',
+								resource: listPipelines.data[i].Arn,
 								KMSKey: listPipelines.data[i].AwsKmsKeyArn
 							});
 						}
@@ -108,6 +112,7 @@ module.exports = {
 							describeDBInstances.data[i].KmsKeyId){
 							services.push({
 								serviceName: 'RDS',
+								resource: describeDBInstances.data[i].DBInstanceArn,
 								KMSKey: describeDBInstances.data[i].KmsKeyId
 							});
 						}
@@ -127,6 +132,7 @@ module.exports = {
 						if(describeClusters.data[i].KmsKeyId){
 							services.push({
 								serviceName: 'Redshift',
+								resource: 'arn:aws:redshift:' + region + ':' + accountId + ':cluster:' + describeClusters.data[i].ClusterIdentifier,
 								KMSKey: describeClusters.data[i].KmsKeyId
 							});
 						}
@@ -149,6 +155,7 @@ module.exports = {
 									describeActiveReceiptRuleSet.data[i].Actions[j].S3Action.KmsKeyArn) {
 									services.push({
 										serviceName: 'SES',
+										resource: 'SES ruleset',
 										KMSKey: describeActiveReceiptRuleSet.data[i].Actions[j].S3Action.KmsKeyArn
 									});
 								}
@@ -170,6 +177,7 @@ module.exports = {
 						if (describeWorkspaces.data[i].VolumeEncryptionKey) {
 							services.push({
 								serviceName: 'Workspaces',
+								resource: 'arn:aws:workspaces:' + region + ':' + accountId + ':workspace/' + describeWorkspaces.data[i].WorkspaceId,
 								KMSKey: describeWorkspaces.data[i].VolumeEncryptionKey
 							});
 						}
@@ -177,37 +185,102 @@ module.exports = {
 				}
 			}
 
-			// For S3 Buckets
-			// TODO: figure out the region
-			var listBuckets = helpers.addSource(cache, source, ['s3', 'listBuckets', 'us-east-1']);
+			// For Lambda
+			var listFunctions = helpers.addSource(cache, source, ['lambda', 'listFunctions', region]);
 
-			if (listBuckets) {
-				if (listBuckets.err || !listBuckets.data) {
+			if (listFunctions) {
+				if (listFunctions.err || !listFunctions.data) {
 					helpers.addResult(results, 3,
-						'Unable to query for S3 buckets: ' + helpers.addError(listBuckets), 'us-east-1');
+						'Unable to query for Lambda functions: ' + helpers.addError(listFunctions), region);
 				} else {
-					for (i in listBuckets.data) {
-						var bucket = listBuckets.data[i];
+					for (i in listFunctions.data){
+						if (listFunctions.data[i].KMSKeyArn) {
+							services.push({
+								serviceName: 'Lambda',
+								resource: listFunctions.data[i].FunctionArn,
+								KMSKey: listFunctions.data[i].KMSKeyArn
+							});
+						}
+					}
+				}
+			}
 
-						if (bucket.Name) {
-							var getBucketEncryption = helpers.addSource(cache, source,
-							    ['s3', 'getBucketEncryption', 'us-east-1', bucket.Name]);
+			// For CloudWatch Logs
+			var describeLogGroups = helpers.addSource(cache, source, ['cloudwatchlogs', 'describeLogGroups', region]);
 
-							if (getBucketEncryption) {
-								if (getBucketEncryption.err || !getBucketEncryption.data) {
-									helpers.addResult(results, 3,
-										'Unable to query for S3 bucket encryption status for bucket ' +
-										bucket.Name + ': ' + helpers.addError(getBucketEncryption), 'us-east-1');
-								} else {
-									for (j in getBucketEncryption.data){
-										if (getBucketEncryption.data[j].Rules) {
-											for (k in getBucketEncryption.data[j].Rules){
-												if (getBucketEncryption.data[j].Rules[k].ApplyServerSideEncryptionByDefault &&
-													getBucketEncryption.data[j].Rules[k].ApplyServerSideEncryptionByDefault.KMSMasterKeyID)
-												services.push({
-													serviceName: 'S3',
-													KMSKey: getBucketEncryption.data[j].Rules[k].ApplyServerSideEncryptionByDefault.KMSMasterKeyID
-												});
+			if (describeLogGroups) {
+				if (describeLogGroups.err || !describeLogGroups.data) {
+					helpers.addResult(results, 3,
+						'Unable to query for CloudWatch Logs groups: ' + helpers.addError(describeLogGroups), region);
+				} else {
+					for (i in describeLogGroups.data){
+						if (describeLogGroups.data[i].kmsKeyId) {
+							services.push({
+								serviceName: 'CloudWatchLogs',
+								resource: describeLogGroups.data[i].arn,
+								KMSKey: describeLogGroups.data[i].kmsKeyId
+							});
+						}
+					}
+				}
+			}
+
+			// For EFS
+			var describeFileSystems = helpers.addSource(cache, source, ['efs', 'describeFileSystems', region]);
+
+			if (describeFileSystems) {
+				if (describeFileSystems.err || !describeFileSystems.data) {
+					helpers.addResult(results, 3,
+						'Unable to query for EFS file systems: ' + helpers.addError(describeFileSystems), region);
+				} else {
+					for (i in describeFileSystems.data){
+						if (describeFileSystems.data[i].KmsKeyId) {
+							services.push({
+								serviceName: 'EFS',
+								resource: 'arn:aws:elasticfilesystem:' + region + ':' + accountId + ':file-system/' + describeFileSystems.data[i].FileSystemId,
+								KMSKey: describeFileSystems.data[i].KmsKeyId
+							});
+						}
+					}
+				}
+			}
+
+			// For S3 Buckets
+			if (region === 'us-east-1') {
+				var listBuckets = helpers.addSource(cache, source, ['s3', 'listBuckets', region]);
+
+				if (listBuckets) {
+					if (listBuckets.err || !listBuckets.data) {
+						helpers.addResult(results, 3,
+							'Unable to query for S3 buckets: ' + helpers.addError(listBuckets), region);
+					} else {
+						for (i in listBuckets.data) {
+							var bucket = listBuckets.data[i];
+
+							if (bucket.Name) {
+								var getBucketEncryption = helpers.addSource(cache, source,
+								    ['s3', 'getBucketEncryption', region, bucket.Name]);
+
+								if (getBucketEncryption) {
+									if (getBucketEncryption.err || !getBucketEncryption.data) {
+										var s3Err = helpers.addError(getBucketEncryption);
+										if (s3Err !== 'The server side encryption configuration was not found') {
+											helpers.addResult(results, 3,
+												'Unable to query for S3 bucket encryption status for bucket ' +
+												bucket.Name + ': ' + s3Err, region);
+										}
+									} else {
+										for (j in getBucketEncryption.data){
+											if (getBucketEncryption.data[j].Rules) {
+												for (k in getBucketEncryption.data[j].Rules){
+													if (getBucketEncryption.data[j].Rules[k].ApplyServerSideEncryptionByDefault &&
+														getBucketEncryption.data[j].Rules[k].ApplyServerSideEncryptionByDefault.KMSMasterKeyID)
+													services.push({
+														serviceName: 'S3',
+														resource: 'arn:aws:s3:::' + bucket.Name,
+														KMSKey: getBucketEncryption.data[j].Rules[k].ApplyServerSideEncryptionByDefault.KMSMasterKeyID
+													});
+												}
 											}
 										}
 									}
@@ -219,48 +292,47 @@ module.exports = {
 			}
 
 			// Loop through KMS keys
+			var defaultKeys = [];
 
             async.each(listKeys.data, function(key, kcb){
 				// Describe the KMS keys
 				var describeKey = helpers.addSource(cache, source, ['kms', 'describeKey', region, key.KeyId]);
 
 				if (!describeKey || describeKey.err || !describeKey.data) {
-
 					helpers.addResult(results, 3,
-						'Unable to query for KMS: ' + helpers.addError(describeKey), region);
-					return rcb();
+						'Unable to query for KMS key: ' + key.KeyId + ': ' + helpers.addError(describeKey), region);
+					return kcb();
 				}
 
 				var keysInfo = [];
 				for (i in describeKey.data){
 					keysInfo.push({
-							keyId: describeKey.data[i].KeyId,
-							Desc: describeKey.data[i].Description
-						});
-					}
+						keyId: describeKey.data[i].KeyId,
+						Desc: describeKey.data[i].Description
+					});
+				}
 
 				var defSTR = 'Default master key (.*)';
-				var defaultKeys = [];
+				
 				for (i in keysInfo){
 					if (keysInfo[i].Desc.match(defSTR)){
 						defaultKeys.push(keysInfo[i].keyId);
 					}
                 }
-                var reg = 0;
-                for (i in defaultKeys){
-                    for (j in services){
-                        if (defaultKeys[i] === services.KMSKey){
-                            reg++;
-                            helpers.addResult(results, 2, 'defult kms key in use', region, defaultKeys[i]);
-                        }
-                    }
-                }
                 
 				kcb();
 			}, function(){
-                if (!reg){
-                    helpers.addResult(results, 0, 'no defult kms key found in use', region);
+                var reg = 0;
+                for (i in defaultKeys){
+                    for (j in services){
+                        if (services[j].KMSKey.indexOf(defaultKeys[i]) > -1){
+                            reg++;
+                            helpers.addResult(results, 2, 'Default KMS key: ' + defaultKeys[i] + ' in use with: ' + services[j].serviceName + ' resource: ' + services[j].resource, region, services[j].KMSKey);
+                        }
+                    }
                 }
+
+                if (!reg) helpers.addResult(results, 0, 'No default KMS keys found in use', region);
                 rcb();
             });
         }, function(){
