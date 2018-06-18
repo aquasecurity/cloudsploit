@@ -178,6 +178,11 @@ var calls = {
 			property: 'LoadBalancerDescriptions'
 		}
 	},
+	ElasticTranscoder: {
+		listPipelines: {
+			property: 'Pipelines'
+		}
+	},
 	IAM: {
 		listServerCertificates: {
 			property: 'ServerCertificateMetadataList'
@@ -226,6 +231,9 @@ var calls = {
 	S3: {
 		listBuckets: {
 			property: 'Buckets'
+		},
+		getBucketEncryption: {
+			property: 'ServerSideEncryptionConfiguration'
 		}
 	},
 	SES: {
@@ -233,6 +241,9 @@ var calls = {
 			property: 'Identities',
 			params: {IdentityType: 'Domain'},	// TODO: maybe don't filter these?
 			rateLimit: 1000	// ms to rate limit between regions
+		},
+		describeActiveReceiptRuleSet: {
+			property: 'Rules'
 		}
 	},
 	SNS: {
@@ -248,6 +259,11 @@ var calls = {
 	STS: {
 		getCallerIdentity: {
 			property: 'Account'
+		}
+	},
+	WorkSpaces: {
+		describeWorkspaces: {
+			property: 'Workspaces'
 		}
 	}
 };
