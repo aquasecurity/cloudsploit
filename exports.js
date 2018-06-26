@@ -24,6 +24,7 @@ module.exports = {
     'subnetIpAvailability'          : require(__dirname + '/plugins/ec2/subnetIpAvailability.js'),
     'excessiveSecurityGroups'       : require(__dirname + '/plugins/ec2/excessiveSecurityGroups.js'),
     'instanceLimit'                 : require(__dirname + '/plugins/ec2/instanceLimit.js'),
+    'instanceMaxCount'              : require(__dirname + '/plugins/ec2/instanceMaxCount.js'),
     'instanceKeyBasedLogin'         : require(__dirname + '/plugins/ec2/instanceKeyBasedLogin.js'),
     'openAllPortsProtocols'         : require(__dirname + '/plugins/ec2/openAllPortsProtocols.js'),
     'openCIFS'                      : require(__dirname + '/plugins/ec2/openCIFS.js'),
