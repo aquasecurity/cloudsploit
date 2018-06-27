@@ -2,17 +2,17 @@ var async = require('async');
 var helpers = require('../../helpers');
 
 module.exports = {
-	title: 'Instance IAM Role',
+	title: 'EC2 Instance Key Based Login',
 	category: 'EC2',
-	description: 'Ensures EC2 instances are using an IAM role instead of hard-coded AWS credentials',
-	more_info: 'IAM roles should be assigned to all instances to enable them to access AWS resources. Using an IAM role is more secure than hard-coding AWS access keys into application code.',
-	link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html',
-	recommended_action: 'Attach an IAM role to the EC2 instance',
+	description: 'Ensures EC2 instances have associated keys for password-less SSH login',
+	more_info: 'AWS allows EC2 instances to be launched with a specified PEM key for SSH login which should be used instead of user and password login.',
+	link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html',
+	recommended_action: 'Ensure each EC2 instance has an associated SSH key and disable password login.',
 	apis: ['EC2:describeInstances'],
 	settings: {
-		instance_iam_role_threshold: {
-			name: 'Instance IAM Role Threshold',
-			description: 'If more than this number of instances are missing an IAM role, results will be collapsed into a single result to avoid excessive result counts. Max is 299.',
+		instance_keypair_threshold: {
+			name: 'Instance Key Pair Threshold',
+			description: 'If more than this number of instances are missing an ssh key pair, results will be collapsed into a single result to avoid excessive result counts. Max is 299.',
 			regex: '^[1-2]{1}[0-9]{0,2}$',
 			default: 10
 		}
@@ -20,7 +20,7 @@ module.exports = {
 
 	run: function(cache, settings, callback) {
 		var config = {
-			instance_iam_role_threshold: settings.instance_iam_role_threshold || this.settings.instance_iam_role_threshold.default
+            instance_keypair_threshold: settings.instance_keypair_threshold || this.settings.instance_keypair_threshold.default
 		};
 
 		var custom = helpers.isCustom(settings, this.settings);
@@ -53,28 +53,27 @@ module.exports = {
 				for (j in describeInstances.data[i].Instances) {
 					var instance = describeInstances.data[i].Instances[j];
 
-					if (!instance.IamInstanceProfile ||
-						!instance.IamInstanceProfile.Arn) {
+					if (!instance.KeyName) {
 						found += 1;
 						helpers.addResult(results, 2,
-							'Instance does not use an IAM role', region,
+							'Instance does not have associated keys for password-less SSH login', region,
 							'arn:aws:ec2:' + region + ':' + accountId + ':instance/' +
 							instance.InstanceId, custom);
 					}
 				}
 			}
 
-			// Too many results to print individually
-			if (found > config.instance_iam_role_threshold) {
-				results = [];
+            // Too many results to print individually
+            if (found > config.instance_keypair_threshold) {
+                results = [];
 
-				helpers.addResult(results, 2,
-					'Over ' + config.instance_iam_role_threshold + ' EC2 instances do not use an IAM role', region, null, custom);
-			}
+                helpers.addResult(results, 2,
+                    'Over ' + config.instance_keypair_threshold + ' EC2 instances do not have associated keys for password-less SSH login', region, null, custom);
+            }
 
 			if (!found) {
 				helpers.addResult(results, 0,
-					'All ' + describeInstances.data.length + ' instances are using IAM roles', region);
+					'All ' + describeInstances.data.length + ' instances have associated keys for password-less SSH login', region);
 			}
 
 			rcb();
