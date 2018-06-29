@@ -4,7 +4,7 @@ var helpers = require('../../helpers');
 module.exports = {
 	title: 'Default VPC In Use',
 	category: 'EC2',
-	description: 'Determines whether the default VPC is being used for launching EC2 instances.',
+	description: 'Determines whether the default VPC is being used or exists.',
 	more_info: 'The default VPC should not be used in order to avoid launching multiple services in the same network which may not require connectivity. Each application, or network tier, should use its own VPC.',
 	link: 'http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/default-vpc.html',
 	recommended_action: 'Move resources from the default VPC to a new VPC created for that application or resource group.',
@@ -141,7 +141,7 @@ module.exports = {
 
 			if (!numInstances && !numElbs &&
 				!numFunctions && !numDBs && !numRedshift) {
-				helpers.addResult(results, 0, 'Default VPC is not in use', region);
+				helpers.addResult(results, 1, 'Default VPC exists, but is not in use', region);
 				return rcb();
 			} else {
 				var numStr = numInstances + ' EC2 instance' + (numInstances === 1 ? '' : 's') + '; ' +
