@@ -5,25 +5,25 @@ var collector = require('./collect.js');
 var AWSConfig;
 
 // OPTION 1: Configure AWS credentials through hard-coded key and secret
-// AWSConfig = {
-//     accessKeyId: '',
-//     secretAccessKey: '',
-//     sessionToken: '',
-//     region: 'us-east-1'
-// };
+AWSConfig = {
+    accessKeyId: 'AKIAJC5K4256DYXGTWZQ',
+    secretAccessKey: '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',
+    sessionToken: '',
+    region: 'us-east-1'
+};
 
 // OPTION 2: Import an AWS config file containing credentials
 // AWSConfig = require(__dirname + '/credentials.json');
 
 // OPTION 3: ENV configuration with AWS_ env vars
-if(process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY){
-    AWSConfig = {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey:  process.env.AWS_SECRET_ACCESS_KEY,
-        sessionToken: process.env.AWS_SESSION_TOKEN,
-        region: process.env.AWS_DEFAULT_REGION || 'us-east-1'
-    };
-}
+// if(process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY){
+//     AWSConfig = {
+//         accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+//         secretAccessKey:  process.env.AWS_SECRET_ACCESS_KEY,
+//         sessionToken: process.env.AWS_SESSION_TOKEN,
+//         region: process.env.AWS_DEFAULT_REGION || 'us-east-1'
+//     };
+// }
 
 if (!AWSConfig || !AWSConfig.accessKeyId) {
     return console.log('ERROR: Invalid AWSConfig');

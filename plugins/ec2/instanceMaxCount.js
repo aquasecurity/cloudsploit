@@ -5,14 +5,14 @@ module.exports = {
 	title: 'EC2 Max Instances',
 	category: 'EC2',
 	description: 'Checks for the number of running instances in an account and triggers a failing result if it exceeds a certain count',
-	more_info: 'Checks for the number of running instances in an account and triggers a failing result if it exceeds a certain count',
+	more_info: 'It is recommended not to use the default key to keep track of the number of running instances, to prevent unauthorized launch and running excessive costs under your AWS account',
 	link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/monitoring_ec2.html',
-	recommended_action: 'Checks for the number of running instances in an account and triggers a failing result if it exceeds a certain count',
+	recommended_action: 'Go to the ec2 dashboard and audit the instances running, apparently additional unauthorized instances have been launched.',
 	apis: ['EC2:describeInstances'],
 	settings: {
 		instance_count_threshold: {
 			name: 'Instance Count Threshold',
-			description: 'If more than this number of instances are running ',
+			description: 'Checks for the number of running instances in an account and triggers a failing result if it exceeds a certain count',
 			regex: '^[1-2]{1}[0-9]{0,2}$',
 			default: 100
 		}
