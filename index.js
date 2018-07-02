@@ -12,7 +12,6 @@ var AWSConfig;
 //     region: 'us-east-1'
 // };
 
-
 // OPTION 2: Import an AWS config file containing credentials
 // AWSConfig = require(__dirname + '/credentials.json');
 
@@ -85,13 +84,13 @@ collector(AWSConfig, {api_calls: apiCalls, skip_regions: skipRegions}, function(
 
         plugin.run(collection, settings, function(err, results){
             if (COMPLIANCE) {
-                    console.log('');
-                    console.log('-----------------------');
-                    console.log(plugin.title);
-                    console.log('-----------------------');
-                    console.log(plugin.compliance[COMPLIANCE]);
-                    console.log('');
-                }
+                console.log('');
+                console.log('-----------------------');
+                console.log(plugin.title);
+                console.log('-----------------------');
+                console.log(plugin.compliance[COMPLIANCE]);
+                console.log('');
+            }
             for (r in results) {
                 var statusWord;
                 if (results[r].status === 0) {
@@ -105,9 +104,9 @@ collector(AWSConfig, {api_calls: apiCalls, skip_regions: skipRegions}, function(
                 }
 
                 console.log(plugin.category + '\t' + plugin.title + '\t' +
-                            (results[r].resource || 'N/A') + '\t' +
-                            (results[r].region || 'Global') + '\t\t' +
-                            statusWord + '\t' + results[r].message);
+                    (results[r].resource || 'N/A') + '\t' +
+                    (results[r].region || 'Global') + '\t\t' +
+                    statusWord + '\t' + results[r].message);
             }
 
             callback(err);
