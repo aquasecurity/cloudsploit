@@ -109,7 +109,7 @@ collector(AWSConfig, {api_calls: apiCalls, skip_regions: skipRegions}, function(
                     statusWord + '\t' + results[r].message);
             }
 
-            setTimeout(function() { callback(err); }, 0);
+            callback(err);
         });
     }, function(err){
         if (err) return console.log(err);
