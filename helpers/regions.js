@@ -29,6 +29,7 @@ module.exports = {
 	configservice: regions,
 	ec2: regions,
 	elb: regions,
+	elbv2: regions,
 	kms: regions,
 	vpc: regions,
 	flowlogs: regions,
