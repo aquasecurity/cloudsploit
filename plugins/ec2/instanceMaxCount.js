@@ -1,5 +1,6 @@
-var async = require('async');
+var async   = require('async');
 var helpers = require('../../helpers');
+
 
 module.exports = {
 	title: 'EC2 Max Instances',
@@ -16,18 +17,116 @@ module.exports = {
             regex: '^[1-2]{1}[0-9]{0,2}$',
             default: 200
         },
-		instance_count_region_threshold: {
-			name: 'Instance Count Region Threshold',
-			description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
-			regex: '^[1-2]{1}[0-9]{0,2}$',
-			default: 100
-		}
+        instance_count_region_threshold_us_east_1: {
+            name: 'us-east-1 : Instance Count Region Threshold',
+            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
+            regex: '^[1-2]{1}[0-9]{0,2}$',
+            default: 100
+        },
+        instance_count_region_threshold_us_east_2: {
+            name: 'us-east-2 : Instance Count Region Threshold',
+            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
+            regex: '^[1-2]{1}[0-9]{0,2}$',
+            default: 100
+        },
+        instance_count_region_threshold_us_west_1: {
+            name: 'us-west-1 : Instance Count Region Threshold',
+            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
+            regex: '^[1-2]{1}[0-9]{0,2}$',
+            default: 100
+        },
+        instance_count_region_threshold_us_west_2: {
+            name: 'us-west-2 : Instance Count Region Threshold',
+            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
+            regex: '^[1-2]{1}[0-9]{0,2}$',
+            default: 100
+        },
+        instance_count_region_threshold_ap_northeast_1: {
+            name: 'ap-northeast-1 : Instance Count Region Threshold',
+            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
+            regex: '^[1-2]{1}[0-9]{0,2}$',
+            default: 100
+        },
+        instance_count_region_threshold_ap_northeast_2: {
+            name: 'ap-northeast-2 : Instance Count Region Threshold',
+            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
+            regex: '^[1-2]{1}[0-9]{0,2}$',
+            default: 100
+        },
+        instance_count_region_threshold_ap_southeast_1: {
+            name: 'ap-southeast-1 : Instance Count Region Threshold',
+            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
+            regex: '^[1-2]{1}[0-9]{0,2}$',
+            default: 100
+        },
+        instance_count_region_threshold_ap_southeast_2: {
+            name: 'ap-southeast-2 : Instance Count Region Threshold',
+            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
+            regex: '^[1-2]{1}[0-9]{0,2}$',
+            default: 100
+        },
+        instance_count_region_threshold_eu_central_1: {
+            name: 'eu-central-1 : Instance Count Region Threshold',
+            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
+            regex: '^[1-2]{1}[0-9]{0,2}$',
+            default: 100
+        },
+        instance_count_region_threshold_eu_west_1: {
+            name: 'eu-west-1 : Instance Count Region Threshold',
+            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
+            regex: '^[1-2]{1}[0-9]{0,2}$',
+            default: 100
+        },
+        instance_count_region_threshold_eu_west_2: {
+            name: 'eu-west-2 : Instance Count Region Threshold',
+            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
+            regex: '^[1-2]{1}[0-9]{0,2}$',
+            default: 100
+        },
+        instance_count_region_threshold_eu_west_3: {
+            name: 'eu-west-3 : Instance Count Region Threshold',
+            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
+            regex: '^[1-2]{1}[0-9]{0,2}$',
+            default: 100
+        },
+        instance_count_region_threshold_sa_east_1: {
+            name: 'sa-east-1 : Instance Count Region Threshold',
+            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
+            regex: '^[1-2]{1}[0-9]{0,2}$',
+            default: 100
+        },
+        instance_count_region_threshold_ap_south_1: {
+            name: 'ap-south-1 : Instance Count Region Threshold',
+            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
+            regex: '^[1-2]{1}[0-9]{0,2}$',
+            default: 100
+        },
+        instance_count_region_threshold_ca_central_1: {
+            name: 'ca-central-1 : Instance Count Region Threshold',
+            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
+            regex: '^[1-2]{1}[0-9]{0,2}$',
+            default: 100
+        }
 	},
 
 	run: function(cache, settings, callback) {
 		var config = {
-            instance_count_global_threshold: settings.instance_count_global_threshold || this.settings.instance_count_global_threshold.default,
-            instance_count_region_threshold: settings.instance_count_region_threshold || this.settings.instance_count_region_threshold.default
+            instance_count_global_threshold: settings.instance_count_global_threshold || this.settings.instance_count_global_threshold,
+            instance_count_region_threshold_us_east_1: settings.instance_count_region_threshold_us_east_1 || this.settings.instance_count_region_threshold_us_east_1,
+            instance_count_region_threshold_us_east_2: settings.instance_count_region_threshold_us_east_2 || this.settings.instance_count_region_threshold_us_east_2,
+            instance_count_region_threshold_us_west_1: settings.instance_count_region_threshold_us_west_1 || this.settings.instance_count_region_threshold_us_west_1,
+            instance_count_region_threshold_us_west_2: settings.instance_count_region_threshold_us_west_2 || this.settings.instance_count_region_threshold_us_west_2,
+            instance_count_region_threshold_ap_northeast_1: settings.instance_count_region_threshold_ap_northeast_1 || this.settings.instance_count_region_threshold_ap_northeast_1,
+            instance_count_region_threshold_ap_northeast_2: settings.instance_count_region_threshold_ap_northeast_2 || this.settings.instance_count_region_threshold_ap_northeast_2,
+            instance_count_region_threshold_ap_southeast_1: settings.instance_count_region_threshold_ap_southeast_1 || this.settings.instance_count_region_threshold_ap_southeast_1,
+            instance_count_region_threshold_ap_southeast_2: settings.instance_count_region_threshold_ap_southeast_2 || this.settings.instance_count_region_threshold_ap_southeast_2,
+            instance_count_region_threshold_eu_central_1: settings.instance_count_region_threshold_eu_central_1 || this.settings.instance_count_region_threshold_eu_central_1,
+            instance_count_region_threshold_eu_west_1: settings.instance_count_region_threshold_eu_west_1 || this.settings.instance_count_region_threshold_eu_west_1,
+            instance_count_region_threshold_eu_west_2: settings.instance_count_region_threshold_eu_west_2 || this.settings.instance_count_region_threshold_eu_west_2,
+            instance_count_region_threshold_eu_west_3: settings.instance_count_region_threshold_eu_west_3 || this.settings.instance_count_region_threshold_eu_west_3,
+            instance_count_region_threshold_sa_east_1: settings.instance_count_region_threshold_sa_east_1 || this.settings.instance_count_region_threshold_sa_east_1,
+            instance_count_region_threshold_ap_south_1: settings.instance_count_region_threshold_ap_south_1 || this.settings.instance_count_region_threshold_ap_south_1,
+            instance_count_region_threshold_ca_central_1: settings.instance_count_region_threshold_ca_central_1 || this.settings.instance_count_region_threshold_ca_central_1
         };
 
 		var custom = helpers.isCustom(settings, this.settings);
@@ -38,6 +137,7 @@ module.exports = {
         var instance_count_global_threshold = 0;
 
 		async.each(helpers.regions.ec2, function(region, rcb){
+
 			var describeInstances = helpers.addSource(cache, source,
 				['ec2', 'describeInstances', region]);
 
@@ -68,10 +168,14 @@ module.exports = {
 			}
 
 			// Print region results
-            if (instance_count > config.instance_count_region_threshold) {
+			if (eval('config.instance_count_region_threshold_'+region.replace(new RegExp('-','g'),'_').toString()+'.default')==undefined){
+                helpers.addResult(results, 0,
+                    'The region ' + region + ' does not have a maximum instances count parameter.', region);
+			}
+            else if (instance_count > eval('config.instance_count_region_threshold_'+region.replace(new RegExp('-','g'),'_').toString()+'.default')) {
                 results = [];
                 helpers.addResult(results, 2,
-                    'Over ' + config.instance_count_region_threshold + ' EC2 instances running, exceeds ' + region + ' limits!', region, null, custom);
+                    'Over ' + eval('config.instance_count_region_threshold_'+region.replace(new RegExp('-','g'),'_').toString()+'.default') + ' EC2 instances running, exceeds ' + region + ' limits!', region, null, custom);
             } else {
 				helpers.addResult(results, 0,
 					'All ' + instance_count + ' instances are within the expected count.', region);
@@ -81,9 +185,9 @@ module.exports = {
 		});
 
         // Print global results
-        if (instance_count_global_threshold > config.instance_count_global_threshold) {
+        if (instance_count_global_threshold > config.instance_count_global_threshold.default) {
             helpers.addResult(results, 2,
-                'Over ' + config.instance_count_global_threshold + ' EC2 instances running in all regions, exceeds limits!', null, null, custom);
+                'Over ' + config.instance_count_global_threshold.default + ' EC2 instances running in all regions, exceeds limits!', null, null, custom);
         } else {
             helpers.addResult(results, 0,
                 'All ' + instance_count_global_threshold + ' instances in the account are within the global expected count.', null);
