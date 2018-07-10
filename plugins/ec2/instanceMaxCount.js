@@ -129,6 +129,8 @@ module.exports = {
             instance_count_region_threshold_ca_central_1: settings.instance_count_region_threshold_ca_central_1 || this.settings.instance_count_region_threshold_ca_central_1
         };
 
+		helpers.config = config;
+
 		var custom = helpers.isCustom(settings, this.settings);
 
 		var results = [];
@@ -168,14 +170,14 @@ module.exports = {
 			}
 
 			// Print region results
-			if (eval('config.instance_count_region_threshold_'+region.replace(new RegExp('-','g'),'_').toString()+'.default')==undefined){
+			if (eval('helpers.config.instance_count_region_threshold_'+region.replace(new RegExp('-','g'),'_').toString()+'.default')==undefined){
                 helpers.addResult(results, 0,
                     'The region ' + region + ' does not have a maximum instances count parameter.', region);
 			}
-            else if (instance_count > eval('config.instance_count_region_threshold_'+region.replace(new RegExp('-','g'),'_').toString()+'.default')) {
+            else if (instance_count > eval('helpers.config.instance_count_region_threshold_'+region.replace(new RegExp('-','g'),'_').toString()+'.default')) {
                 results = [];
                 helpers.addResult(results, 2,
-                    'Over ' + eval('config.instance_count_region_threshold_'+region.replace(new RegExp('-','g'),'_').toString()+'.default') + ' EC2 instances running, exceeds ' + region + ' limits!', region, null, custom);
+                    'Over ' + eval('helpers.config.instance_count_region_threshold_'+region.replace(new RegExp('-','g'),'_').toString()+'.default') + ' EC2 instances running, exceeds ' + region + ' limits!', region, null, custom);
             } else {
 				helpers.addResult(results, 0,
 					'All ' + instance_count + ' instances are within the expected count.', region);
