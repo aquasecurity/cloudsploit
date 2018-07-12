@@ -1,193 +1,240 @@
 var async   = require('async');
 var helpers = require('../../helpers');
 
-
 module.exports = {
-	title: 'EC2 Approved Instance Types',
-	category: 'EC2',
-	description: 'Checks for the running instances and validates they are in the approved list',
-	more_info: 'It is recommended to monitor running instances, to prevent unauthorized launch of unnaproved types and running excessive costs under your AWS account',
-	link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/monitoring_ec2.html',
-	recommended_action: 'Go to the ec2 dashboard and audit the instances running, apparently unauthorized instances have been launched.',
-	apis: ['EC2:describeInstances'],
-	settings: {
-        instance_count_region_approved_types_us_east_1: {
-            name: 'us-east-1 : Approved Instance Types Region',
-            description: 'Checks for instance types running in the specified region and triggers a failing result if non authorized types are found',
-            regex: '^[1-2]{1}[0-9]{0,2}$',
-            default: 100
+    title: 'EC2 Approved Instance Types',
+    category: 'EC2',
+    description: 'Ensures that running EC2 instances are within the approved types setting.',
+    more_info: 'The types of EC2 instances should be carefully audited, to ensure only approved types are launched and consuming compute resources. Many compromised AWS accounts see large EC2 instances launched without approval and overrun costs.',
+    link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/monitoring_ec2.html',
+    recommended_action: 'Ensure that the EC2 instances types match the approved types. If instances are launched that do not belong to the approved types, investigate to ensure they are legitimate.',
+    apis: ['EC2:describeInstances'],
+    settings: {
+        approved_instance_types_global: {
+            name: 'Approved Instance Types Global',
+            description: 'Checks for unapproved instances across all regions and triggers a failing result if any are found',
+            regex: '^[1-9]{1}[0-9]{0,3}$',
+            default: ["m1.small","m1.medium","m1.large","m1.xlarge","c1.medium","c1.xlarge","cc2.8xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","hs1.8xlarge","t1.micro","t2.nano","t2.micro","t2.small","t2.large","t2.xlarge","t2.2xlarge","m5.large","m5.xlarge","m5.2xlarge","m5.4xlarge","m5.12xlarge","m5.24xlarge","m4.large","m4.xlarge","m4.2xlarge","m4.4xlarge","m4.10xlarge","m4.16xlarge","c5.large","c5.xlarge","c5.2xlarge","c5.4xlarge","c5.9xlarge","c5.18xlarge","c4.large","c4.xlarge","c4.2xlarge","c4.4xlarge","c4.8xlarge","r4.large","r4.xlarge","r4.2xlarge","r4.4xlarge","r4.8xlarge","r4.16xlarge","p3.2xlarge","p3.8xlarge","p3.16xlarge","p2.xlarge","p2.8xlarge","p2.16xlarge","g3.4xlarge","g3.8xlarge","g3.16xlarge","h1.2xlarge","h1.4xlarge","h1.8xlarge","h1.16xlarge","d2.xlarge","d2.2xlarge","d2.4xlarge","d2.8xlarge","m3.medium","m3.large","m3.xlarge","m3.2xlarge","c3.large","c3.xlarge","c3.2xlarge","c3.4xlarge","c3.8xlarge","g2.2xlarge","g2.8xlarge","cr1.8xlarge","x1.16xlarge","x1.32xlarge","x1e.xlarge","x1e.2xlarge","x1e.4xlarge","x1e.8xlarge","x1e.16xlarge","x1e.32xlarge","r3.large","r3.xlarge","r3.2xlarge","r3.4xlarge","r3.8xlarge","i2.xlarge","i2.2xlarge","i2.4xlarge","i2.8xlarge","m5d.large","m5d.xlarge","m5d.2xlarge","m5d.4xlarge","m5d.12xlarge","m5d.24xlarge","c5d.large","c5d.xlarge","c5d.2xlarge","c5d.4xlarge","c5d.9xlarge","c5d.18xlarge","f1.2xlarge","f1.16xlarge","i3.large","i3.xlarge","i3.2xlarge","i3.4xlarge","i3.8xlarge","i3.16xlarge","i3.metal"]
         },
-        instance_count_region_approved_types_us_east_2: {
-            name: 'us-east-2 : Approved Instance Types Region',
-            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
-            regex: '^[1-2]{1}[0-9]{0,2}$',
-            default: 100
+        approved_instance_types_region_us_east_1: {
+            name: 'Approved Instance Types Region: us-east-1',
+            description: 'Checks for unapproved instances in the us-east-1 region and triggers a failing result if any are found',
+            regex: '^[1-9]{1}[0-9]{0,3}$',
+            default: ["m1.small","m1.medium","m1.large","m1.xlarge","c1.medium","c1.xlarge","cc2.8xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","hs1.8xlarge","t1.micro","t2.nano","t2.small","t2.large","t2.xlarge","t2.2xlarge","m5.large","m5.xlarge","m5.2xlarge","m5.4xlarge","m5.12xlarge","m5.24xlarge","m4.large","m4.xlarge","m4.2xlarge","m4.4xlarge","m4.10xlarge","m4.16xlarge","c5.large","c5.xlarge","c5.2xlarge","c5.4xlarge","c5.9xlarge","c5.18xlarge","c4.large","c4.xlarge","c4.2xlarge","c4.4xlarge","c4.8xlarge","r4.large","r4.xlarge","r4.2xlarge","r4.4xlarge","r4.8xlarge","r4.16xlarge","p3.2xlarge","p3.8xlarge","p3.16xlarge","p2.xlarge","p2.8xlarge","p2.16xlarge","g3.4xlarge","g3.8xlarge","g3.16xlarge","h1.2xlarge","h1.4xlarge","h1.8xlarge","h1.16xlarge","d2.xlarge","d2.2xlarge","d2.4xlarge","d2.8xlarge","m3.medium","m3.large","m3.xlarge","m3.2xlarge","c3.large","c3.xlarge","c3.2xlarge","c3.4xlarge","c3.8xlarge","g2.2xlarge","g2.8xlarge","cr1.8xlarge","x1.16xlarge","x1.32xlarge","x1e.xlarge","x1e.2xlarge","x1e.4xlarge","x1e.8xlarge","x1e.16xlarge","x1e.32xlarge","r3.large","r3.xlarge","r3.2xlarge","r3.4xlarge","r3.8xlarge","i2.xlarge","i2.2xlarge","i2.4xlarge","i2.8xlarge","m5d.large","m5d.xlarge","m5d.2xlarge","m5d.4xlarge","m5d.12xlarge","m5d.24xlarge","c5d.large","c5d.xlarge","c5d.2xlarge","c5d.4xlarge","c5d.9xlarge","c5d.18xlarge","f1.2xlarge","f1.16xlarge","i3.large","i3.xlarge","i3.2xlarge","i3.4xlarge","i3.8xlarge","i3.16xlarge","i3.metal"]
         },
-        instance_count_region_approved_types_us_west_1: {
-            name: 'us-west-1 : Approved Instance Types Region',
-            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
-            regex: '^[1-2]{1}[0-9]{0,2}$',
-            default: 100
+        approved_instance_types_region_us_east_2: {
+            name: 'Approved Instance Types Region: us-east-2',
+            description: 'Checks for unapproved instances in the us-east-2 region and triggers a failing result if any are found',
+            regex: '^[1-9]{1}[0-9]{0,3}$',
+            default: ["m1.small","m1.medium","m1.large","m1.xlarge","c1.medium","c1.xlarge","cc2.8xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","hs1.8xlarge","t1.micro","t2.nano","t2.micro","t2.small","t2.medium","t2.large","t2.xlarge","t2.2xlarge","m5.large","m5.xlarge","m5.2xlarge","m5.4xlarge","m5.12xlarge","m5.24xlarge","m4.large","m4.xlarge","m4.2xlarge","m4.4xlarge","m4.10xlarge","m4.16xlarge","c5.large","c5.xlarge","c5.2xlarge","c5.4xlarge","c5.9xlarge","c5.18xlarge","c4.large","c4.xlarge","c4.2xlarge","c4.4xlarge","c4.8xlarge","r4.large","r4.xlarge","r4.2xlarge","r4.4xlarge","r4.8xlarge","r4.16xlarge","p3.2xlarge","p3.8xlarge","p3.16xlarge","p2.xlarge","p2.8xlarge","p2.16xlarge","g3.4xlarge","g3.8xlarge","g3.16xlarge","h1.2xlarge","h1.4xlarge","h1.8xlarge","h1.16xlarge","d2.xlarge","d2.2xlarge","d2.4xlarge","d2.8xlarge","m3.medium","m3.large","m3.xlarge","m3.2xlarge","c3.large","c3.xlarge","c3.2xlarge","c3.4xlarge","c3.8xlarge","g2.2xlarge","g2.8xlarge","cr1.8xlarge","x1.16xlarge","x1.32xlarge","x1e.xlarge","x1e.2xlarge","x1e.4xlarge","x1e.8xlarge","x1e.16xlarge","x1e.32xlarge","r3.large","r3.xlarge","r3.2xlarge","r3.4xlarge","r3.8xlarge","i2.xlarge","i2.2xlarge","i2.4xlarge","i2.8xlarge","m5d.large","m5d.xlarge","m5d.2xlarge","m5d.4xlarge","m5d.12xlarge","m5d.24xlarge","c5d.large","c5d.xlarge","c5d.2xlarge","c5d.4xlarge","c5d.9xlarge","c5d.18xlarge","f1.2xlarge","f1.16xlarge","i3.large","i3.xlarge","i3.2xlarge","i3.4xlarge","i3.8xlarge","i3.16xlarge","i3.metal"]
         },
-        instance_count_region_approved_types_us_west_2: {
-            name: 'us-west-2 : Approved Instance Types Region',
-            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
-            regex: '^[1-2]{1}[0-9]{0,2}$',
-            default: 100
+        approved_instance_types_region_us_west_1: {
+            name: 'Approved Instance Types Region: us-west-1',
+            description: 'Checks for unapproved instances in the us-west-1 region and triggers a failing result if any are found',
+            regex: '^[1-9]{1}[0-9]{0,3}$',
+            default: ["m1.small","m1.medium","m1.large","m1.xlarge","c1.medium","c1.xlarge","cc2.8xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","hs1.8xlarge","t1.micro","t2.nano","t2.micro","t2.small","t2.medium","t2.large","t2.xlarge","t2.2xlarge","m5.large","m5.xlarge","m5.2xlarge","m5.4xlarge","m5.12xlarge","m5.24xlarge","m4.large","m4.xlarge","m4.2xlarge","m4.4xlarge","m4.10xlarge","m4.16xlarge","c5.large","c5.xlarge","c5.2xlarge","c5.4xlarge","c5.9xlarge","c5.18xlarge","c4.large","c4.xlarge","c4.2xlarge","c4.4xlarge","c4.8xlarge","r4.large","r4.xlarge","r4.2xlarge","r4.4xlarge","r4.8xlarge","r4.16xlarge","p3.2xlarge","p3.8xlarge","p3.16xlarge","p2.xlarge","p2.8xlarge","p2.16xlarge","g3.4xlarge","g3.8xlarge","g3.16xlarge","h1.2xlarge","h1.4xlarge","h1.8xlarge","h1.16xlarge","d2.xlarge","d2.2xlarge","d2.4xlarge","d2.8xlarge","m3.medium","m3.large","m3.xlarge","m3.2xlarge","c3.large","c3.xlarge","c3.2xlarge","c3.4xlarge","c3.8xlarge","g2.2xlarge","g2.8xlarge","cr1.8xlarge","x1.16xlarge","x1.32xlarge","x1e.xlarge","x1e.2xlarge","x1e.4xlarge","x1e.8xlarge","x1e.16xlarge","x1e.32xlarge","r3.large","r3.xlarge","r3.2xlarge","r3.4xlarge","r3.8xlarge","i2.xlarge","i2.2xlarge","i2.4xlarge","i2.8xlarge","m5d.large","m5d.xlarge","m5d.2xlarge","m5d.4xlarge","m5d.12xlarge","m5d.24xlarge","c5d.large","c5d.xlarge","c5d.2xlarge","c5d.4xlarge","c5d.9xlarge","c5d.18xlarge","f1.2xlarge","f1.16xlarge","i3.large","i3.xlarge","i3.2xlarge","i3.4xlarge","i3.8xlarge","i3.16xlarge","i3.metal"]
         },
-        instance_count_region_approved_types_ap_northeast_1: {
-            name: 'ap-northeast-1 : Approved Instance Types Region',
-            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
-            regex: '^[1-2]{1}[0-9]{0,2}$',
-            default: 100
+        approved_instance_types_region_us_west_2: {
+            name: 'Approved Instance Types Region: us-west-2',
+            description: 'Checks for unapproved instances in the us-west-2 region and triggers a failing result if any are found',
+            regex: '^[1-9]{1}[0-9]{0,3}$',
+            default: ["m1.small","m1.medium","m1.large","m1.xlarge","c1.medium","c1.xlarge","cc2.8xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","hs1.8xlarge","t1.micro","t2.nano","t2.micro","t2.small","t2.medium","t2.large","t2.xlarge","t2.2xlarge","m5.large","m5.xlarge","m5.2xlarge","m5.4xlarge","m5.12xlarge","m5.24xlarge","m4.large","m4.xlarge","m4.2xlarge","m4.4xlarge","m4.10xlarge","m4.16xlarge","c5.large","c5.xlarge","c5.2xlarge","c5.4xlarge","c5.9xlarge","c5.18xlarge","c4.large","c4.xlarge","c4.2xlarge","c4.4xlarge","c4.8xlarge","r4.large","r4.xlarge","r4.2xlarge","r4.4xlarge","r4.8xlarge","r4.16xlarge","p3.2xlarge","p3.8xlarge","p3.16xlarge","p2.xlarge","p2.8xlarge","p2.16xlarge","g3.4xlarge","g3.8xlarge","g3.16xlarge","h1.2xlarge","h1.4xlarge","h1.8xlarge","h1.16xlarge","d2.xlarge","d2.2xlarge","d2.4xlarge","d2.8xlarge","m3.medium","m3.large","m3.xlarge","m3.2xlarge","c3.large","c3.xlarge","c3.2xlarge","c3.4xlarge","c3.8xlarge","g2.2xlarge","g2.8xlarge","cr1.8xlarge","x1.16xlarge","x1.32xlarge","x1e.xlarge","x1e.2xlarge","x1e.4xlarge","x1e.8xlarge","x1e.16xlarge","x1e.32xlarge","r3.large","r3.xlarge","r3.2xlarge","r3.4xlarge","r3.8xlarge","i2.xlarge","i2.2xlarge","i2.4xlarge","i2.8xlarge","m5d.large","m5d.xlarge","m5d.2xlarge","m5d.4xlarge","m5d.12xlarge","m5d.24xlarge","c5d.large","c5d.xlarge","c5d.2xlarge","c5d.4xlarge","c5d.9xlarge","c5d.18xlarge","f1.2xlarge","f1.16xlarge","i3.large","i3.xlarge","i3.2xlarge","i3.4xlarge","i3.8xlarge","i3.16xlarge","i3.metal"]
         },
-        instance_count_region_approved_types_ap_northeast_2: {
-            name: 'ap-northeast-2 : Approved Instance Types Region',
-            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
-            regex: '^[1-2]{1}[0-9]{0,2}$',
-            default: 100
+        approved_instance_types_region_ap_northeast_1: {
+            name: 'Approved Instance Types Region: ap-northeast-1',
+            description: 'Checks for unapproved instances in the ap-northeast-1 region and triggers a failing result if any are found',
+            regex: '^[1-9]{1}[0-9]{0,3}$',
+            default: ["m1.small","m1.medium","m1.large","m1.xlarge","c1.medium","c1.xlarge","cc2.8xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","hs1.8xlarge","t1.micro","t2.nano","t2.micro","t2.small","t2.medium","t2.large","t2.xlarge","t2.2xlarge","m5.large","m5.xlarge","m5.2xlarge","m5.4xlarge","m5.12xlarge","m5.24xlarge","m4.large","m4.xlarge","m4.2xlarge","m4.4xlarge","m4.10xlarge","m4.16xlarge","c5.large","c5.xlarge","c5.2xlarge","c5.4xlarge","c5.9xlarge","c5.18xlarge","c4.large","c4.xlarge","c4.2xlarge","c4.4xlarge","c4.8xlarge","r4.large","r4.xlarge","r4.2xlarge","r4.4xlarge","r4.8xlarge","r4.16xlarge","p3.2xlarge","p3.8xlarge","p3.16xlarge","p2.xlarge","p2.8xlarge","p2.16xlarge","g3.4xlarge","g3.8xlarge","g3.16xlarge","h1.2xlarge","h1.4xlarge","h1.8xlarge","h1.16xlarge","d2.xlarge","d2.2xlarge","d2.4xlarge","d2.8xlarge","m3.medium","m3.large","m3.xlarge","m3.2xlarge","c3.large","c3.xlarge","c3.2xlarge","c3.4xlarge","c3.8xlarge","g2.2xlarge","g2.8xlarge","cr1.8xlarge","x1.16xlarge","x1.32xlarge","x1e.xlarge","x1e.2xlarge","x1e.4xlarge","x1e.8xlarge","x1e.16xlarge","x1e.32xlarge","r3.large","r3.xlarge","r3.2xlarge","r3.4xlarge","r3.8xlarge","i2.xlarge","i2.2xlarge","i2.4xlarge","i2.8xlarge","m5d.large","m5d.xlarge","m5d.2xlarge","m5d.4xlarge","m5d.12xlarge","m5d.24xlarge","c5d.large","c5d.xlarge","c5d.2xlarge","c5d.4xlarge","c5d.9xlarge","c5d.18xlarge","f1.2xlarge","f1.16xlarge","i3.large","i3.xlarge","i3.2xlarge","i3.4xlarge","i3.8xlarge","i3.16xlarge","i3.metal"]
         },
-        instance_count_region_approved_types_ap_southeast_1: {
-            name: 'ap-southeast-1 : Approved Instance Types Region',
-            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
-            regex: '^[1-2]{1}[0-9]{0,2}$',
-            default: 100
+        approved_instance_types_region_ap_northeast_2: {
+            name: 'Approved Instance Types Region: ap-northeast-2',
+            description: 'Checks for unapproved instances in the ap-northeast-2 region and triggers a failing result if any are found',
+            regex: '^[1-9]{1}[0-9]{0,3}$',
+            default: ["m1.small","m1.medium","m1.large","m1.xlarge","c1.medium","c1.xlarge","cc2.8xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","hs1.8xlarge","t1.micro","t2.nano","t2.micro","t2.small","t2.medium","t2.large","t2.xlarge","t2.2xlarge","m5.large","m5.xlarge","m5.2xlarge","m5.4xlarge","m5.12xlarge","m5.24xlarge","m4.large","m4.xlarge","m4.2xlarge","m4.4xlarge","m4.10xlarge","m4.16xlarge","c5.large","c5.xlarge","c5.2xlarge","c5.4xlarge","c5.9xlarge","c5.18xlarge","c4.large","c4.xlarge","c4.2xlarge","c4.4xlarge","c4.8xlarge","r4.large","r4.xlarge","r4.2xlarge","r4.4xlarge","r4.8xlarge","r4.16xlarge","p3.2xlarge","p3.8xlarge","p3.16xlarge","p2.xlarge","p2.8xlarge","p2.16xlarge","g3.4xlarge","g3.8xlarge","g3.16xlarge","h1.2xlarge","h1.4xlarge","h1.8xlarge","h1.16xlarge","d2.xlarge","d2.2xlarge","d2.4xlarge","d2.8xlarge","m3.medium","m3.large","m3.xlarge","m3.2xlarge","c3.large","c3.xlarge","c3.2xlarge","c3.4xlarge","c3.8xlarge","g2.2xlarge","g2.8xlarge","cr1.8xlarge","x1.16xlarge","x1.32xlarge","x1e.xlarge","x1e.2xlarge","x1e.4xlarge","x1e.8xlarge","x1e.16xlarge","x1e.32xlarge","r3.large","r3.xlarge","r3.2xlarge","r3.4xlarge","r3.8xlarge","i2.xlarge","i2.2xlarge","i2.4xlarge","i2.8xlarge","m5d.large","m5d.xlarge","m5d.2xlarge","m5d.4xlarge","m5d.12xlarge","m5d.24xlarge","c5d.large","c5d.xlarge","c5d.2xlarge","c5d.4xlarge","c5d.9xlarge","c5d.18xlarge","f1.2xlarge","f1.16xlarge","i3.large","i3.xlarge","i3.2xlarge","i3.4xlarge","i3.8xlarge","i3.16xlarge","i3.metal"]
         },
-        instance_count_region_approved_types_ap_southeast_2: {
-            name: 'ap-southeast-2 : Approved Instance Types Region',
-            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
-            regex: '^[1-2]{1}[0-9]{0,2}$',
-            default: 100
+        approved_instance_types_region_ap_southeast_1: {
+            name: 'Approved Instance Types Region: ap-southeast-1',
+            description: 'Checks for unapproved instances in the ap-southeast-1 region and triggers a failing result if any are found',
+            regex: '^[1-9]{1}[0-9]{0,3}$',
+            default: ["m1.small","m1.medium","m1.large","m1.xlarge","c1.medium","c1.xlarge","cc2.8xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","hs1.8xlarge","t1.micro","t2.nano","t2.micro","t2.small","t2.medium","t2.large","t2.xlarge","t2.2xlarge","m5.large","m5.xlarge","m5.2xlarge","m5.4xlarge","m5.12xlarge","m5.24xlarge","m4.large","m4.xlarge","m4.2xlarge","m4.4xlarge","m4.10xlarge","m4.16xlarge","c5.large","c5.xlarge","c5.2xlarge","c5.4xlarge","c5.9xlarge","c5.18xlarge","c4.large","c4.xlarge","c4.2xlarge","c4.4xlarge","c4.8xlarge","r4.large","r4.xlarge","r4.2xlarge","r4.4xlarge","r4.8xlarge","r4.16xlarge","p3.2xlarge","p3.8xlarge","p3.16xlarge","p2.xlarge","p2.8xlarge","p2.16xlarge","g3.4xlarge","g3.8xlarge","g3.16xlarge","h1.2xlarge","h1.4xlarge","h1.8xlarge","h1.16xlarge","d2.xlarge","d2.2xlarge","d2.4xlarge","d2.8xlarge","m3.medium","m3.large","m3.xlarge","m3.2xlarge","c3.large","c3.xlarge","c3.2xlarge","c3.4xlarge","c3.8xlarge","g2.2xlarge","g2.8xlarge","cr1.8xlarge","x1.16xlarge","x1.32xlarge","x1e.xlarge","x1e.2xlarge","x1e.4xlarge","x1e.8xlarge","x1e.16xlarge","x1e.32xlarge","r3.large","r3.xlarge","r3.2xlarge","r3.4xlarge","r3.8xlarge","i2.xlarge","i2.2xlarge","i2.4xlarge","i2.8xlarge","m5d.large","m5d.xlarge","m5d.2xlarge","m5d.4xlarge","m5d.12xlarge","m5d.24xlarge","c5d.large","c5d.xlarge","c5d.2xlarge","c5d.4xlarge","c5d.9xlarge","c5d.18xlarge","f1.2xlarge","f1.16xlarge","i3.large","i3.xlarge","i3.2xlarge","i3.4xlarge","i3.8xlarge","i3.16xlarge","i3.metal"]
         },
-        instance_count_region_approved_types_eu_central_1: {
-            name: 'eu-central-1 : Approved Instance Types Region',
-            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
-            regex: '^[1-2]{1}[0-9]{0,2}$',
-            default: 100
+        approved_instance_types_region_ap_southeast_2: {
+            name: 'Approved Instance Types Region: ap-southeast-2',
+            description: 'Checks for unapproved instances in the ap-southeast-2 region and triggers a failing result if any are found',
+            regex: '^[1-9]{1}[0-9]{0,3}$',
+            default: ["m1.small","m1.medium","m1.large","m1.xlarge","c1.medium","c1.xlarge","cc2.8xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","hs1.8xlarge","t1.micro","t2.nano","t2.micro","t2.small","t2.medium","t2.large","t2.xlarge","t2.2xlarge","m5.large","m5.xlarge","m5.2xlarge","m5.4xlarge","m5.12xlarge","m5.24xlarge","m4.large","m4.xlarge","m4.2xlarge","m4.4xlarge","m4.10xlarge","m4.16xlarge","c5.large","c5.xlarge","c5.2xlarge","c5.4xlarge","c5.9xlarge","c5.18xlarge","c4.large","c4.xlarge","c4.2xlarge","c4.4xlarge","c4.8xlarge","r4.large","r4.xlarge","r4.2xlarge","r4.4xlarge","r4.8xlarge","r4.16xlarge","p3.2xlarge","p3.8xlarge","p3.16xlarge","p2.xlarge","p2.8xlarge","p2.16xlarge","g3.4xlarge","g3.8xlarge","g3.16xlarge","h1.2xlarge","h1.4xlarge","h1.8xlarge","h1.16xlarge","d2.xlarge","d2.2xlarge","d2.4xlarge","d2.8xlarge","m3.medium","m3.large","m3.xlarge","m3.2xlarge","c3.large","c3.xlarge","c3.2xlarge","c3.4xlarge","c3.8xlarge","g2.2xlarge","g2.8xlarge","cr1.8xlarge","x1.16xlarge","x1.32xlarge","x1e.xlarge","x1e.2xlarge","x1e.4xlarge","x1e.8xlarge","x1e.16xlarge","x1e.32xlarge","r3.large","r3.xlarge","r3.2xlarge","r3.4xlarge","r3.8xlarge","i2.xlarge","i2.2xlarge","i2.4xlarge","i2.8xlarge","m5d.large","m5d.xlarge","m5d.2xlarge","m5d.4xlarge","m5d.12xlarge","m5d.24xlarge","c5d.large","c5d.xlarge","c5d.2xlarge","c5d.4xlarge","c5d.9xlarge","c5d.18xlarge","f1.2xlarge","f1.16xlarge","i3.large","i3.xlarge","i3.2xlarge","i3.4xlarge","i3.8xlarge","i3.16xlarge","i3.metal"]
         },
-        instance_count_region_approved_types_eu_west_1: {
-            name: 'eu-west-1 : Approved Instance Types Region',
-            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
-            regex: '^[1-2]{1}[0-9]{0,2}$',
-            default: 100
+        approved_instance_types_region_eu_central_1: {
+            name: 'Approved Instance Types Region: eu-central-1',
+            description: 'Checks for unapproved instances in the eu-central-1 region and triggers a failing result if any are found',
+            regex: '^[1-9]{1}[0-9]{0,3}$',
+            default: ["m1.small","m1.medium","m1.large","m1.xlarge","c1.medium","c1.xlarge","cc2.8xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","hs1.8xlarge","t1.micro","t2.nano","t2.micro","t2.small","t2.medium","t2.large","t2.xlarge","t2.2xlarge","m5.large","m5.xlarge","m5.2xlarge","m5.4xlarge","m5.12xlarge","m5.24xlarge","m4.large","m4.xlarge","m4.2xlarge","m4.4xlarge","m4.10xlarge","m4.16xlarge","c5.large","c5.xlarge","c5.2xlarge","c5.4xlarge","c5.9xlarge","c5.18xlarge","c4.large","c4.xlarge","c4.2xlarge","c4.4xlarge","c4.8xlarge","r4.large","r4.xlarge","r4.2xlarge","r4.4xlarge","r4.8xlarge","r4.16xlarge","p3.2xlarge","p3.8xlarge","p3.16xlarge","p2.xlarge","p2.8xlarge","p2.16xlarge","g3.4xlarge","g3.8xlarge","g3.16xlarge","h1.2xlarge","h1.4xlarge","h1.8xlarge","h1.16xlarge","d2.xlarge","d2.2xlarge","d2.4xlarge","d2.8xlarge","m3.medium","m3.large","m3.xlarge","m3.2xlarge","c3.large","c3.xlarge","c3.2xlarge","c3.4xlarge","c3.8xlarge","g2.2xlarge","g2.8xlarge","cr1.8xlarge","x1.16xlarge","x1.32xlarge","x1e.xlarge","x1e.2xlarge","x1e.4xlarge","x1e.8xlarge","x1e.16xlarge","x1e.32xlarge","r3.large","r3.xlarge","r3.2xlarge","r3.4xlarge","r3.8xlarge","i2.xlarge","i2.2xlarge","i2.4xlarge","i2.8xlarge","m5d.large","m5d.xlarge","m5d.2xlarge","m5d.4xlarge","m5d.12xlarge","m5d.24xlarge","c5d.large","c5d.xlarge","c5d.2xlarge","c5d.4xlarge","c5d.9xlarge","c5d.18xlarge","f1.2xlarge","f1.16xlarge","i3.large","i3.xlarge","i3.2xlarge","i3.4xlarge","i3.8xlarge","i3.16xlarge","i3.metal"]
         },
-        instance_count_region_approved_types_eu_west_2: {
-            name: 'eu-west-2 : Approved Instance Types Region',
-            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
-            regex: '^[1-2]{1}[0-9]{0,2}$',
-            default: 100
+        approved_instance_types_region_eu_west_1: {
+            name: 'Approved Instance Types Region: eu-west-1',
+            description: 'Checks for unapproved instances in the eu-west-1 region and triggers a failing result if any are found',
+            regex: '^[1-9]{1}[0-9]{0,3}$',
+            default: ["m1.small","m1.medium","m1.large","m1.xlarge","c1.medium","c1.xlarge","cc2.8xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","hs1.8xlarge","t1.micro","t2.nano","t2.micro","t2.small","t2.medium","t2.large","t2.xlarge","t2.2xlarge","m5.large","m5.xlarge","m5.2xlarge","m5.4xlarge","m5.12xlarge","m5.24xlarge","m4.large","m4.xlarge","m4.2xlarge","m4.4xlarge","m4.10xlarge","m4.16xlarge","c5.large","c5.xlarge","c5.2xlarge","c5.4xlarge","c5.9xlarge","c5.18xlarge","c4.large","c4.xlarge","c4.2xlarge","c4.4xlarge","c4.8xlarge","r4.large","r4.xlarge","r4.2xlarge","r4.4xlarge","r4.8xlarge","r4.16xlarge","p3.2xlarge","p3.8xlarge","p3.16xlarge","p2.xlarge","p2.8xlarge","p2.16xlarge","g3.4xlarge","g3.8xlarge","g3.16xlarge","h1.2xlarge","h1.4xlarge","h1.8xlarge","h1.16xlarge","d2.xlarge","d2.2xlarge","d2.4xlarge","d2.8xlarge","m3.medium","m3.large","m3.xlarge","m3.2xlarge","c3.large","c3.xlarge","c3.2xlarge","c3.4xlarge","c3.8xlarge","g2.2xlarge","g2.8xlarge","cr1.8xlarge","x1.16xlarge","x1.32xlarge","x1e.xlarge","x1e.2xlarge","x1e.4xlarge","x1e.8xlarge","x1e.16xlarge","x1e.32xlarge","r3.large","r3.xlarge","r3.2xlarge","r3.4xlarge","r3.8xlarge","i2.xlarge","i2.2xlarge","i2.4xlarge","i2.8xlarge","m5d.large","m5d.xlarge","m5d.2xlarge","m5d.4xlarge","m5d.12xlarge","m5d.24xlarge","c5d.large","c5d.xlarge","c5d.2xlarge","c5d.4xlarge","c5d.9xlarge","c5d.18xlarge","f1.2xlarge","f1.16xlarge","i3.large","i3.xlarge","i3.2xlarge","i3.4xlarge","i3.8xlarge","i3.16xlarge","i3.metal"]
         },
-        instance_count_region_approved_types_eu_west_3: {
-            name: 'eu-west-3 : Approved Instance Types Region',
-            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
-            regex: '^[1-2]{1}[0-9]{0,2}$',
-            default: 100
+        approved_instance_types_region_eu_west_2: {
+            name: 'Approved Instance Types Region: eu-west-2',
+            description: 'Checks for unapproved instances in the eu-west-2 region and triggers a failing result if any are found',
+            regex: '^[1-9]{1}[0-9]{0,3}$',
+            default: ["m1.small","m1.medium","m1.large","m1.xlarge","c1.medium","c1.xlarge","cc2.8xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","hs1.8xlarge","t1.micro","t2.nano","t2.micro","t2.small","t2.medium","t2.large","t2.xlarge","t2.2xlarge","m5.large","m5.xlarge","m5.2xlarge","m5.4xlarge","m5.12xlarge","m5.24xlarge","m4.large","m4.xlarge","m4.2xlarge","m4.4xlarge","m4.10xlarge","m4.16xlarge","c5.large","c5.xlarge","c5.2xlarge","c5.4xlarge","c5.9xlarge","c5.18xlarge","c4.large","c4.xlarge","c4.2xlarge","c4.4xlarge","c4.8xlarge","r4.large","r4.xlarge","r4.2xlarge","r4.4xlarge","r4.8xlarge","r4.16xlarge","p3.2xlarge","p3.8xlarge","p3.16xlarge","p2.xlarge","p2.8xlarge","p2.16xlarge","g3.4xlarge","g3.8xlarge","g3.16xlarge","h1.2xlarge","h1.4xlarge","h1.8xlarge","h1.16xlarge","d2.xlarge","d2.2xlarge","d2.4xlarge","d2.8xlarge","m3.medium","m3.large","m3.xlarge","m3.2xlarge","c3.large","c3.xlarge","c3.2xlarge","c3.4xlarge","c3.8xlarge","g2.2xlarge","g2.8xlarge","cr1.8xlarge","x1.16xlarge","x1.32xlarge","x1e.xlarge","x1e.2xlarge","x1e.4xlarge","x1e.8xlarge","x1e.16xlarge","x1e.32xlarge","r3.large","r3.xlarge","r3.2xlarge","r3.4xlarge","r3.8xlarge","i2.xlarge","i2.2xlarge","i2.4xlarge","i2.8xlarge","m5d.large","m5d.xlarge","m5d.2xlarge","m5d.4xlarge","m5d.12xlarge","m5d.24xlarge","c5d.large","c5d.xlarge","c5d.2xlarge","c5d.4xlarge","c5d.9xlarge","c5d.18xlarge","f1.2xlarge","f1.16xlarge","i3.large","i3.xlarge","i3.2xlarge","i3.4xlarge","i3.8xlarge","i3.16xlarge","i3.metal"]
         },
-        instance_count_region_approved_types_sa_east_1: {
-            name: 'sa-east-1 : Approved Instance Types Region',
-            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
-            regex: '^[1-2]{1}[0-9]{0,2}$',
-            default: 100
+        approved_instance_types_region_eu_west_3: {
+            name: 'Approved Instance Types Region: eu-west-3',
+            description: 'Checks for unapproved instances in the eu-west-3 region and triggers a failing result if any are found',
+            regex: '^[1-9]{1}[0-9]{0,3}$',
+            default: ["m1.small","m1.medium","m1.large","m1.xlarge","c1.medium","c1.xlarge","cc2.8xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","hs1.8xlarge","t1.micro","t2.nano","t2.micro","t2.small","t2.medium","t2.large","t2.xlarge","t2.2xlarge","m5.large","m5.xlarge","m5.2xlarge","m5.4xlarge","m5.12xlarge","m5.24xlarge","m4.large","m4.xlarge","m4.2xlarge","m4.4xlarge","m4.10xlarge","m4.16xlarge","c5.large","c5.xlarge","c5.2xlarge","c5.4xlarge","c5.9xlarge","c5.18xlarge","c4.large","c4.xlarge","c4.2xlarge","c4.4xlarge","c4.8xlarge","r4.large","r4.xlarge","r4.2xlarge","r4.4xlarge","r4.8xlarge","r4.16xlarge","p3.2xlarge","p3.8xlarge","p3.16xlarge","p2.xlarge","p2.8xlarge","p2.16xlarge","g3.4xlarge","g3.8xlarge","g3.16xlarge","h1.2xlarge","h1.4xlarge","h1.8xlarge","h1.16xlarge","d2.xlarge","d2.2xlarge","d2.4xlarge","d2.8xlarge","m3.medium","m3.large","m3.xlarge","m3.2xlarge","c3.large","c3.xlarge","c3.2xlarge","c3.4xlarge","c3.8xlarge","g2.2xlarge","g2.8xlarge","cr1.8xlarge","x1.16xlarge","x1.32xlarge","x1e.xlarge","x1e.2xlarge","x1e.4xlarge","x1e.8xlarge","x1e.16xlarge","x1e.32xlarge","r3.large","r3.xlarge","r3.2xlarge","r3.4xlarge","r3.8xlarge","i2.xlarge","i2.2xlarge","i2.4xlarge","i2.8xlarge","m5d.large","m5d.xlarge","m5d.2xlarge","m5d.4xlarge","m5d.12xlarge","m5d.24xlarge","c5d.large","c5d.xlarge","c5d.2xlarge","c5d.4xlarge","c5d.9xlarge","c5d.18xlarge","f1.2xlarge","f1.16xlarge","i3.large","i3.xlarge","i3.2xlarge","i3.4xlarge","i3.8xlarge","i3.16xlarge","i3.metal"]
         },
-        instance_count_region_approved_types_ap_south_1: {
-            name: 'ap-south-1 : Approved Instance Types Region',
-            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
-            regex: '^[1-2]{1}[0-9]{0,2}$',
-            default: 100
+        approved_instance_types_region_sa_east_1: {
+            name: 'Approved Instance Types Region: sa-east-1',
+            description: 'Checks for unapproved instances in the sa-east-1 region and triggers a failing result if any are found',
+            regex: '^[1-9]{1}[0-9]{0,3}$',
+            default: ["m1.small","m1.medium","m1.large","m1.xlarge","c1.medium","c1.xlarge","cc2.8xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","hs1.8xlarge","t1.micro","t2.nano","t2.micro","t2.small","t2.medium","t2.large","t2.xlarge","t2.2xlarge","m5.large","m5.xlarge","m5.2xlarge","m5.4xlarge","m5.12xlarge","m5.24xlarge","m4.large","m4.xlarge","m4.2xlarge","m4.4xlarge","m4.10xlarge","m4.16xlarge","c5.large","c5.xlarge","c5.2xlarge","c5.4xlarge","c5.9xlarge","c5.18xlarge","c4.large","c4.xlarge","c4.2xlarge","c4.4xlarge","c4.8xlarge","r4.large","r4.xlarge","r4.2xlarge","r4.4xlarge","r4.8xlarge","r4.16xlarge","p3.2xlarge","p3.8xlarge","p3.16xlarge","p2.xlarge","p2.8xlarge","p2.16xlarge","g3.4xlarge","g3.8xlarge","g3.16xlarge","h1.2xlarge","h1.4xlarge","h1.8xlarge","h1.16xlarge","d2.xlarge","d2.2xlarge","d2.4xlarge","d2.8xlarge","m3.medium","m3.large","m3.xlarge","m3.2xlarge","c3.large","c3.xlarge","c3.2xlarge","c3.4xlarge","c3.8xlarge","g2.2xlarge","g2.8xlarge","cr1.8xlarge","x1.16xlarge","x1.32xlarge","x1e.xlarge","x1e.2xlarge","x1e.4xlarge","x1e.8xlarge","x1e.16xlarge","x1e.32xlarge","r3.large","r3.xlarge","r3.2xlarge","r3.4xlarge","r3.8xlarge","i2.xlarge","i2.2xlarge","i2.4xlarge","i2.8xlarge","m5d.large","m5d.xlarge","m5d.2xlarge","m5d.4xlarge","m5d.12xlarge","m5d.24xlarge","c5d.large","c5d.xlarge","c5d.2xlarge","c5d.4xlarge","c5d.9xlarge","c5d.18xlarge","f1.2xlarge","f1.16xlarge","i3.large","i3.xlarge","i3.2xlarge","i3.4xlarge","i3.8xlarge","i3.16xlarge","i3.metal"]
         },
-        instance_count_region_approved_types_ca_central_1: {
-            name: 'ca-central-1 : Approved Instance Types Region',
-            description: 'Checks for the number of running instances in each region and triggers a failing result if it exceeds the specified count',
-            regex: '^[1-2]{1}[0-9]{0,2}$',
-            default: 100
+        approved_instance_types_region_ap_south_1: {
+            name: 'Approved Instance Types Region: ap-south-1',
+            description: 'Checks for unapproved instances in the ap-south-1 region and triggers a failing result if any are found',
+            regex: '^[1-9]{1}[0-9]{0,3}$',
+            default: ["m1.small","m1.medium","m1.large","m1.xlarge","c1.medium","c1.xlarge","cc2.8xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","hs1.8xlarge","t1.micro","t2.nano","t2.micro","t2.small","t2.medium","t2.large","t2.xlarge","t2.2xlarge","m5.large","m5.xlarge","m5.2xlarge","m5.4xlarge","m5.12xlarge","m5.24xlarge","m4.large","m4.xlarge","m4.2xlarge","m4.4xlarge","m4.10xlarge","m4.16xlarge","c5.large","c5.xlarge","c5.2xlarge","c5.4xlarge","c5.9xlarge","c5.18xlarge","c4.large","c4.xlarge","c4.2xlarge","c4.4xlarge","c4.8xlarge","r4.large","r4.xlarge","r4.2xlarge","r4.4xlarge","r4.8xlarge","r4.16xlarge","p3.2xlarge","p3.8xlarge","p3.16xlarge","p2.xlarge","p2.8xlarge","p2.16xlarge","g3.4xlarge","g3.8xlarge","g3.16xlarge","h1.2xlarge","h1.4xlarge","h1.8xlarge","h1.16xlarge","d2.xlarge","d2.2xlarge","d2.4xlarge","d2.8xlarge","m3.medium","m3.large","m3.xlarge","m3.2xlarge","c3.large","c3.xlarge","c3.2xlarge","c3.4xlarge","c3.8xlarge","g2.2xlarge","g2.8xlarge","cr1.8xlarge","x1.16xlarge","x1.32xlarge","x1e.xlarge","x1e.2xlarge","x1e.4xlarge","x1e.8xlarge","x1e.16xlarge","x1e.32xlarge","r3.large","r3.xlarge","r3.2xlarge","r3.4xlarge","r3.8xlarge","i2.xlarge","i2.2xlarge","i2.4xlarge","i2.8xlarge","m5d.large","m5d.xlarge","m5d.2xlarge","m5d.4xlarge","m5d.12xlarge","m5d.24xlarge","c5d.large","c5d.xlarge","c5d.2xlarge","c5d.4xlarge","c5d.9xlarge","c5d.18xlarge","f1.2xlarge","f1.16xlarge","i3.large","i3.xlarge","i3.2xlarge","i3.4xlarge","i3.8xlarge","i3.16xlarge","i3.metal"]
+        },
+        approved_instance_types_region_ca_central_1: {
+            name: 'Approved Instance Types Region: ca-central-1',
+            description: 'Checks for unapproved instances in the ca-central-1 region and triggers a failing result if any are found',
+            regex: '^[1-9]{1}[0-9]{0,3}$',
+            default: ["m1.small","m1.medium","m1.large","m1.xlarge","c1.medium","c1.xlarge","cc2.8xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","hs1.8xlarge","t1.micro","t2.nano","t2.micro","t2.small","t2.medium","t2.large","t2.xlarge","t2.2xlarge","m5.large","m5.xlarge","m5.2xlarge","m5.4xlarge","m5.12xlarge","m5.24xlarge","m4.large","m4.xlarge","m4.2xlarge","m4.4xlarge","m4.10xlarge","m4.16xlarge","c5.large","c5.xlarge","c5.2xlarge","c5.4xlarge","c5.9xlarge","c5.18xlarge","c4.large","c4.xlarge","c4.2xlarge","c4.4xlarge","c4.8xlarge","r4.large","r4.xlarge","r4.2xlarge","r4.4xlarge","r4.8xlarge","r4.16xlarge","p3.2xlarge","p3.8xlarge","p3.16xlarge","p2.xlarge","p2.8xlarge","p2.16xlarge","g3.4xlarge","g3.8xlarge","g3.16xlarge","h1.2xlarge","h1.4xlarge","h1.8xlarge","h1.16xlarge","d2.xlarge","d2.2xlarge","d2.4xlarge","d2.8xlarge","m3.medium","m3.large","m3.xlarge","m3.2xlarge","c3.large","c3.xlarge","c3.2xlarge","c3.4xlarge","c3.8xlarge","g2.2xlarge","g2.8xlarge","cr1.8xlarge","x1.16xlarge","x1.32xlarge","x1e.xlarge","x1e.2xlarge","x1e.4xlarge","x1e.8xlarge","x1e.16xlarge","x1e.32xlarge","r3.large","r3.xlarge","r3.2xlarge","r3.4xlarge","r3.8xlarge","i2.xlarge","i2.2xlarge","i2.4xlarge","i2.8xlarge","m5d.large","m5d.xlarge","m5d.2xlarge","m5d.4xlarge","m5d.12xlarge","m5d.24xlarge","c5d.large","c5d.xlarge","c5d.2xlarge","c5d.4xlarge","c5d.9xlarge","c5d.18xlarge","f1.2xlarge","f1.16xlarge","i3.large","i3.xlarge","i3.2xlarge","i3.4xlarge","i3.8xlarge","i3.16xlarge","i3.metal"]
         }
-	},
+    },
 
-	run: function(cache, settings, callback) {
-		var config = {
-            instance_count_region_approved_types_us_east_1: settings.instance_count_region_approved_types_us_east_1 || this.settings.instance_count_region_approved_types_us_east_1,
-            instance_count_region_approved_types_us_east_2: settings.instance_count_region_approved_types_us_east_2 || this.settings.instance_count_region_approved_types_us_east_2,
-            instance_count_region_approved_types_us_west_1: settings.instance_count_region_approved_types_us_west_1 || this.settings.instance_count_region_approved_types_us_west_1,
-            instance_count_region_approved_types_us_west_2: settings.instance_count_region_approved_types_us_west_2 || this.settings.instance_count_region_approved_types_us_west_2,
-            instance_count_region_approved_types_ap_northeast_1: settings.instance_count_region_approved_types_ap_northeast_1 || this.settings.instance_count_region_approved_types_ap_northeast_1,
-            instance_count_region_approved_types_ap_northeast_2: settings.instance_count_region_approved_types_ap_northeast_2 || this.settings.instance_count_region_approved_types_ap_northeast_2,
-            instance_count_region_approved_types_ap_southeast_1: settings.instance_count_region_approved_types_ap_southeast_1 || this.settings.instance_count_region_approved_types_ap_southeast_1,
-            instance_count_region_approved_types_ap_southeast_2: settings.instance_count_region_approved_types_ap_southeast_2 || this.settings.instance_count_region_approved_types_ap_southeast_2,
-            instance_count_region_approved_types_eu_central_1: settings.instance_count_region_approved_types_eu_central_1 || this.settings.instance_count_region_approved_types_eu_central_1,
-            instance_count_region_approved_types_eu_west_1: settings.instance_count_region_approved_types_eu_west_1 || this.settings.instance_count_region_approved_types_eu_west_1,
-            instance_count_region_approved_types_eu_west_2: settings.instance_count_region_approved_types_eu_west_2 || this.settings.instance_count_region_approved_types_eu_west_2,
-            instance_count_region_approved_types_eu_west_3: settings.instance_count_region_approved_types_eu_west_3 || this.settings.instance_count_region_approved_types_eu_west_3,
-            instance_count_region_approved_types_sa_east_1: settings.instance_count_region_approved_types_sa_east_1 || this.settings.instance_count_region_approved_types_sa_east_1,
-            instance_count_region_approved_types_ap_south_1: settings.instance_count_region_approved_types_ap_south_1 || this.settings.instance_count_region_approved_types_ap_south_1,
-            instance_count_region_approved_types_ca_central_1: settings.instance_count_region_approved_types_ca_central_1 || this.settings.instance_count_region_approved_types_ca_central_1
+    run: function(cache, settings, callback) {
+        var config = {
+            approved_instance_types_global: settings.approved_instance_types_global || this.settings.approved_instance_types_global.default,
+            approved_instance_types_region_us_east_1: settings.approved_instance_types_region_us_east_1 || this.settings.approved_instance_types_region_us_east_1.default,
+            approved_instance_types_region_us_east_2: settings.approved_instance_types_region_us_east_2 || this.settings.approved_instance_types_region_us_east_2.default,
+            approved_instance_types_region_us_west_1: settings.approved_instance_types_region_us_west_1 || this.settings.approved_instance_types_region_us_west_1.default,
+            approved_instance_types_region_us_west_2: settings.approved_instance_types_region_us_west_2 || this.settings.approved_instance_types_region_us_west_2.default,
+            approved_instance_types_region_ap_northeast_1: settings.approved_instance_types_region_ap_northeast_1 || this.settings.approved_instance_types_region_ap_northeast_1.default,
+            approved_instance_types_region_ap_northeast_2: settings.approved_instance_types_region_ap_northeast_2 || this.settings.approved_instance_types_region_ap_northeast_2.default,
+            approved_instance_types_region_ap_southeast_1: settings.approved_instance_types_region_ap_southeast_1 || this.settings.approved_instance_types_region_ap_southeast_1.default,
+            approved_instance_types_region_ap_southeast_2: settings.approved_instance_types_region_ap_southeast_2 || this.settings.approved_instance_types_region_ap_southeast_2.default,
+            approved_instance_types_region_eu_central_1: settings.approved_instance_types_region_eu_central_1 || this.settings.approved_instance_types_region_eu_central_1.default,
+            approved_instance_types_region_eu_west_1: settings.approved_instance_types_region_eu_west_1 || this.settings.approved_instance_types_region_eu_west_1.default,
+            approved_instance_types_region_eu_west_2: settings.approved_instance_types_region_eu_west_2 || this.settings.approved_instance_types_region_eu_west_2.default,
+            approved_instance_types_region_eu_west_3: settings.approved_instance_types_region_eu_west_3 || this.settings.approved_instance_types_region_eu_west_3.default,
+            approved_instance_types_region_sa_east_1: settings.approved_instance_types_region_sa_east_1 || this.settings.approved_instance_types_region_sa_east_1.default,
+            approved_instance_types_region_ap_south_1: settings.approved_instance_types_region_ap_south_1 || this.settings.approved_instance_types_region_ap_south_1.default,
+            approved_instance_types_region_ca_central_1: settings.approved_instance_types_region_ca_central_1 || this.settings.approved_instance_types_region_ca_central_1.default
         };
 
-		var custom = helpers.isCustom(settings, this.settings);
+        var custom = helpers.isCustom(settings, this.settings);
 
-		var results = [];
-		var source = {};
-		var instance_count = 0;
-        var instance_count_global_approved_types = 0;
+        var results = [];
+        var source = {};
+        var instancesFound = [];
+        var instanceCountGlobal = 0;
+        var globalSetting = config.approved_instance_types_global;
 
-		async.each(helpers.regions.ec2, function(region, rcb){
+        async.each(helpers.regions.ec2, function(region, rcb){
 
-			var describeInstances = helpers.addSource(cache, source,
-				['ec2', 'describeInstances', region]);
+            var describeInstances = helpers.addSource(cache, source,
+                ['ec2', 'describeInstances', region]);
 
-			if (!describeInstances) return rcb();
+            if (!describeInstances) return rcb();
 
-			if (describeInstances.err || !describeInstances.data) {
-				helpers.addResult(results, 3,
-					'Unable to query for instances: ' + helpers.addError(describeInstances), region);
-				return rcb();
-			}
+            if (describeInstances.err || !describeInstances.data) {
+                helpers.addResult(results, 3,
+                    'Unable to query for instances: ' + helpers.addError(describeInstances), region);
+                return rcb();
+            }
 
-			if (!describeInstances.data.length) {
-				helpers.addResult(results, 0, 'No instances found', region);
-				return rcb();
-			}
+            if (!describeInstances.data.length) {
+                helpers.addResult(results, 0, 'No instances found', region);
+                return rcb();
+            }
 
-			for (i in describeInstances.data) {
-				var accountId = describeInstances.data[i].OwnerId;
+            var instanceCount = 0;
+            var regionUnderscore = region.replace(/-/g, '_');
+            var regionSetting = config['approved_instance_types_region_'+regionUnderscore];
 
-				for (j in describeInstances.data[i].Instances) {
-					var instance = describeInstances.data[i].Instances[j];
+            for (i in describeInstances.data) {
+                for (j in describeInstances.data[i].Instances) {
+                    var instance = describeInstances.data[i].Instances[j];
+                    var approvedTypeRegion = (regionSetting.indexOf(instance.InstanceType) > -1 ? true : false);
+                    var approvedTypeGlobal = (globalSetting.indexOf(instance.InstanceType) > -1 ? true : false);
 
-					if (instance.State.Name == "running") {
-                        instance_count_global_approved_types +=1;
-                        instance_count +=1;
-					} else {
-
+                    if (instancesFound.length>0) {
+                        var instanceWithType = instancesFound.findIndex(obj => obj.instanceType == instance.InstanceType);
+                    } else {
+                        instanceWithType = -1;
                     }
-				}
-			}
 
-			// Print region results
-			if (eval('config.instance_count_region_approved_types_'+region.replace(new RegExp('-','g'),'_').toString()+'.default')==undefined){
-                helpers.addResult(results, 0,
-                    'The region ' + region + ' does not have an instances approved type parameter.', region);
-			}
-            else if (instance_count > eval('config.instance_count_region_approved_types_'+region.replace(new RegExp('-','g'),'_').toString()+'.default')) {
-                results = [];
-                helpers.addResult(results, 2,
-                    'Over ' + eval('config.instance_count_region_approved_types_'+region.replace(new RegExp('-','g'),'_').toString()+'.default') + ' EC2 instances running, exceeds ' + region + ' limits!', region, null, custom);
+                    if (instanceWithType<0) {
+                        instancesFound.push({instanceType:instance.InstanceType,region:region,state:instance.State.Name,count:0,approvedRegion:approvedTypeRegion,approvedGlobally:approvedTypeGlobal});
+                        var instanceWithType = instancesFound.findIndex(obj => obj.instanceType == instance.InstanceType);
+                    }
+
+                    instancesFound[instanceWithType].count +=1;
+                    if (!instancesFound[instanceWithType].approved) {
+                        instanceCountGlobal += 1;
+                    } else {
+                        instanceCount += 1;
+                    }
+                }
+            }
+
+            // Print region results
+            if (!regionSetting) {
+                helpers.addResult(results, 3,
+                    'The region: ' + region + ' does not have approved instances type settings.', region);
+            } else if (instancesFound.length>0) {
+                var instancesNotApproved = instancesFound.filter(obj => {
+                        return obj.approvedRegion == false
+                    });
+                for (i in instancesNotApproved){
+                    helpers.addResult(results, 2,
+                        instancesNotApproved[i].count + ' unnaproved EC2 ' + instancesNotApproved[i].instanceType + ' instances launched in ' +
+                        region + ' region', region, null, custom);
+                }
             } else {
-				helpers.addResult(results, 0,
-					'All ' + instance_count + ' instances are all within the approved types list.', region);
-			}
+                var instancesApproved = instancesFound.filter(obj => {
+                        return obj.approvedRegion == true
+                    });
+                for (i in instancesApproved){
+                    helpers.addResult(results, 2,
+                        instancesNotApproved[i].count + ' approved EC2 ' + instancesNotApproved[i].instanceType + ' instances launched in ' +
+                        region + ' region', region, null, custom);
+                }
+            }
 
-			rcb();
-		});
+            rcb();
+        });
 
         // Print global results
-        if (instance_count_global_approved_types > config.instance_count_global_approved_types.default) {
-            helpers.addResult(results, 2,
-                'Over ' + config.instance_count_global_approved_types.default + ' EC2 instances running in all regions, exceeds limits!', null, null, custom);
+        if (!globalSetting) {
+            helpers.addResult(results, 3,
+                'There is not a global approved instances type setting.', region);
+        } else if (instancesFound.length>0) {
+            var instancesNotApproved = instancesFound.filter(obj => {
+                    return obj.approvedGlobally == false
+                });
+            for (i in instancesNotApproved){
+                helpers.addResult(results, 2,
+                    instancesNotApproved[i].count + ' globally unnaproved EC2 ' + instancesNotApproved[i].instanceType + ' instances launched in ' +
+                    instancesNotApproved[i].region + ' region', null, null, custom);
+            }
         } else {
-            helpers.addResult(results, 0,
-                'All ' + instance_count_global_approved_types + ' instances are all within the approved types list.', null);
+            var instancesApproved = instancesFound.filter(obj => {
+                    return obj.approvedGlobally == true
+                });
+            for (i in instancesApproved){
+                helpers.addResult(results, 2,
+                    instancesNotApproved[i].count + ' globally approved EC2 ' + instancesNotApproved[i].instanceType + ' instances launched in ' +
+                    instancesNotApproved[i].region + ' region', null, null, custom);
+            }
         }
 
         callback(null, results, source);
-	}
+    }
 };
