@@ -194,6 +194,14 @@ var calls = {
 			property: 'LoadBalancerDescriptions'
 		}
 	},
+	ELBv2: {
+		describeLoadBalancers: {
+			property: 'LoadBalancers'
+		},
+		describeTargetGroups: {
+			property: 'TargetGroups'
+		}
+	},
 	IAM: {
 		listServerCertificates: {
 			property: 'ServerCertificateMetadataList'
@@ -337,6 +345,14 @@ var postcalls = [
 				reliesOnService: 'elb',
 				reliesOnCall: 'describeLoadBalancers',
 				override: true
+			}
+		},
+		ELBv2: {
+			describeTargetHealth: {
+				reliesOnService: 'elbv2',
+				reliesOnCall: 'describeTargetGroups',
+				filterKey: 'TargetGroupArn',
+				filterValue: 'TargetGroupArn'
 			}
 		},
 		IAM: {

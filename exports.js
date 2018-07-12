@@ -25,7 +25,7 @@ module.exports = {
     'excessiveSecurityGroups'       : require(__dirname + '/plugins/ec2/excessiveSecurityGroups.js'),
     'instanceLimit'                 : require(__dirname + '/plugins/ec2/instanceLimit.js'),
     'instanceMaxCount'              : require(__dirname + '/plugins/ec2/instanceMaxCount.js'),
-    'instanceApprovedTypes'              : require(__dirname + '/plugins/ec2/instanceApprovedTypes.js'),
+    'instanceApprovedTypes'         : require(__dirname + '/plugins/ec2/instanceApprovedTypes.js'),
     'instanceKeyBasedLogin'         : require(__dirname + '/plugins/ec2/instanceKeyBasedLogin.js'),
     'openAllPortsProtocols'         : require(__dirname + '/plugins/ec2/openAllPortsProtocols.js'),
     'openCIFS'                      : require(__dirname + '/plugins/ec2/openCIFS.js'),

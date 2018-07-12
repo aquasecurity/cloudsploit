@@ -108,7 +108,7 @@ module.exports = {
 
 				if (totalUsers.length > config.kms_key_policy_max_user_count) {
 					found = true;
-					helpers.addResult(results, 1, 'Key trusts ' + totalUsers.length +
+					helpers.addResult(results, 2, 'Key trusts ' + totalUsers.length +
 						' users', region, kmsKey.KeyArn, custom);
 				}
 
