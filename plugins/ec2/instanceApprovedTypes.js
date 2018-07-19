@@ -14,7 +14,7 @@ module.exports = {
             name: 'Disapproved Instance Types Global',
             description: 'Checks for unapproved instances across all regions and triggers a failing result if any are found',
             regex: '([a-zA-Z0-9.])',
-            default: 't2.small,cc2.8xlarge,hs1.8xlarge,m5.12xlarge,m5.24xlarge,m4.10xlarge,m4.16xlarge,c5.9xlarge,c5.18xlarge,c4.8xlarge,r4.8xlarge,r4.16xlarge,p3.8xlarge,p3.16xlarge,p2.8xlarge,p2.16xlarge,g3.8xlarge,g3.16xlarge,h1.8xlarge,h1.16xlarge,d2.8xlarge,c3.8xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.8xlarge,i2.8xlarge,m5d.12xlarge,m5d.24xlarge,c5d.9xlarge,c5d.18xlarge,f1.16xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
+            default: 'cc2.8xlarge,hs1.8xlarge,m5.12xlarge,m5.24xlarge,m4.10xlarge,m4.16xlarge,c5.9xlarge,c5.18xlarge,c4.8xlarge,r4.8xlarge,r4.16xlarge,p3.8xlarge,p3.16xlarge,p2.8xlarge,p2.16xlarge,g3.8xlarge,g3.16xlarge,h1.8xlarge,h1.16xlarge,d2.8xlarge,c3.8xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.8xlarge,i2.8xlarge,m5d.12xlarge,m5d.24xlarge,c5d.9xlarge,c5d.18xlarge,f1.16xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
         },
         disapproved_instance_types_region_us_east_1: {
             name: 'Disapproved Instance Types Region: us-east-1',
