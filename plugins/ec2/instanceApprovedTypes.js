@@ -10,122 +10,122 @@ module.exports = {
     recommended_action: 'Ensure that the EC2 instances types match the approved types. If instances are launched that do not belong to the approved types, investigate to ensure they are legitimate.',
     apis: ['EC2:describeInstances'],
     settings: {
-        approved_instance_types_global: {
-            name: 'Approved Instance Types Global',
+        disapproved_instance_types_global: {
+            name: 'Disapproved Instance Types Global',
             description: 'Checks for unapproved instances across all regions and triggers a failing result if any are found',
             regex: '([a-zA-Z0-9.])',
-            default: 'm1.small,m1.medium,m1.large,m1.xlarge,c1.medium,c1.xlarge,cc2.8xlarge,m2.xlarge,m2.2xlarge,m2.4xlarge,hs1.8xlarge,t1.micro,t2.nano,t2.micro,t2.small,t2.medium,t2.large,t2.xlarge,t2.2xlarge,m5.large,m5.xlarge,m5.2xlarge,m5.4xlarge,m5.12xlarge,m5.24xlarge,m4.large,m4.xlarge,m4.2xlarge,m4.4xlarge,m4.10xlarge,m4.16xlarge,c5.large,c5.xlarge,c5.2xlarge,c5.4xlarge,c5.9xlarge,c5.18xlarge,c4.large,c4.xlarge,c4.2xlarge,c4.4xlarge,c4.8xlarge,r4.large,r4.xlarge,r4.2xlarge,r4.4xlarge,r4.8xlarge,r4.16xlarge,p3.2xlarge,p3.8xlarge,p3.16xlarge,p2.xlarge,p2.8xlarge,p2.16xlarge,g3.4xlarge,g3.8xlarge,g3.16xlarge,h1.2xlarge,h1.4xlarge,h1.8xlarge,h1.16xlarge,d2.xlarge,d2.2xlarge,d2.4xlarge,d2.8xlarge,m3.medium,m3.large,m3.xlarge,m3.2xlarge,c3.large,c3.xlarge,c3.2xlarge,c3.4xlarge,c3.8xlarge,g2.2xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.xlarge,x1e.2xlarge,x1e.4xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.large,r3.xlarge,r3.2xlarge,r3.4xlarge,r3.8xlarge,i2.xlarge,i2.2xlarge,i2.4xlarge,i2.8xlarge,m5d.large,m5d.xlarge,m5d.2xlarge,m5d.4xlarge,m5d.12xlarge,m5d.24xlarge,c5d.large,c5d.xlarge,c5d.2xlarge,c5d.4xlarge,c5d.9xlarge,c5d.18xlarge,f1.2xlarge,f1.16xlarge,i3.large,i3.xlarge,i3.2xlarge,i3.4xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
+            default: 't2.small,cc2.8xlarge,hs1.8xlarge,m5.12xlarge,m5.24xlarge,m4.10xlarge,m4.16xlarge,c5.9xlarge,c5.18xlarge,c4.8xlarge,r4.8xlarge,r4.16xlarge,p3.8xlarge,p3.16xlarge,p2.8xlarge,p2.16xlarge,g3.8xlarge,g3.16xlarge,h1.8xlarge,h1.16xlarge,d2.8xlarge,c3.8xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.8xlarge,i2.8xlarge,m5d.12xlarge,m5d.24xlarge,c5d.9xlarge,c5d.18xlarge,f1.16xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
         },
-        approved_instance_types_region_us_east_1: {
-            name: 'Approved Instance Types Region: us-east-1',
+        disapproved_instance_types_region_us_east_1: {
+            name: 'Disapproved Instance Types Region: us-east-1',
             description: 'Checks for unapproved instances in the us-east-1 region and triggers a failing result if any are found',
             regex: '([a-zA-Z0-9.])',
-            default: 'm1.small,m1.medium,m1.large,m1.xlarge,c1.medium,c1.xlarge,cc2.8xlarge,m2.xlarge,m2.2xlarge,m2.4xlarge,hs1.8xlarge,t1.micro,t2.nano,t2.micro,t2.small,t2.medium,t2.large,t2.xlarge,t2.2xlarge,m5.large,m5.xlarge,m5.2xlarge,m5.4xlarge,m5.12xlarge,m5.24xlarge,m4.large,m4.xlarge,m4.2xlarge,m4.4xlarge,m4.10xlarge,m4.16xlarge,c5.large,c5.xlarge,c5.2xlarge,c5.4xlarge,c5.9xlarge,c5.18xlarge,c4.large,c4.xlarge,c4.2xlarge,c4.4xlarge,c4.8xlarge,r4.large,r4.xlarge,r4.2xlarge,r4.4xlarge,r4.8xlarge,r4.16xlarge,p3.2xlarge,p3.8xlarge,p3.16xlarge,p2.xlarge,p2.8xlarge,p2.16xlarge,g3.4xlarge,g3.8xlarge,g3.16xlarge,h1.2xlarge,h1.4xlarge,h1.8xlarge,h1.16xlarge,d2.xlarge,d2.2xlarge,d2.4xlarge,d2.8xlarge,m3.medium,m3.large,m3.xlarge,m3.2xlarge,c3.large,c3.xlarge,c3.2xlarge,c3.4xlarge,c3.8xlarge,g2.2xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.xlarge,x1e.2xlarge,x1e.4xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.large,r3.xlarge,r3.2xlarge,r3.4xlarge,r3.8xlarge,i2.xlarge,i2.2xlarge,i2.4xlarge,i2.8xlarge,m5d.large,m5d.xlarge,m5d.2xlarge,m5d.4xlarge,m5d.12xlarge,m5d.24xlarge,c5d.large,c5d.xlarge,c5d.2xlarge,c5d.4xlarge,c5d.9xlarge,c5d.18xlarge,f1.2xlarge,f1.16xlarge,i3.large,i3.xlarge,i3.2xlarge,i3.4xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
+            default: 'cc2.8xlarge,hs1.8xlarge,m5.12xlarge,m5.24xlarge,m4.10xlarge,m4.16xlarge,c5.9xlarge,c5.18xlarge,c4.8xlarge,r4.8xlarge,r4.16xlarge,p3.8xlarge,p3.16xlarge,p2.8xlarge,p2.16xlarge,g3.8xlarge,g3.16xlarge,h1.8xlarge,h1.16xlarge,d2.8xlarge,c3.8xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.8xlarge,i2.8xlarge,m5d.12xlarge,m5d.24xlarge,c5d.9xlarge,c5d.18xlarge,f1.16xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
         },
-        approved_instance_types_region_us_east_2: {
-            name: 'Approved Instance Types Region: us-east-2',
+        disapproved_instance_types_region_us_east_2: {
+            name: 'Disapproved Instance Types Region: us-east-2',
             description: 'Checks for unapproved instances in the us-east-2 region and triggers a failing result if any are found',
             regex: '([a-zA-Z0-9.])',
-            default: 'm1.small,m1.medium,m1.large,m1.xlarge,c1.medium,c1.xlarge,cc2.8xlarge,m2.xlarge,m2.2xlarge,m2.4xlarge,hs1.8xlarge,t1.micro,t2.nano,t2.micro,t2.small,t2.medium,t2.large,t2.xlarge,t2.2xlarge,m5.large,m5.xlarge,m5.2xlarge,m5.4xlarge,m5.12xlarge,m5.24xlarge,m4.large,m4.xlarge,m4.2xlarge,m4.4xlarge,m4.10xlarge,m4.16xlarge,c5.large,c5.xlarge,c5.2xlarge,c5.4xlarge,c5.9xlarge,c5.18xlarge,c4.large,c4.xlarge,c4.2xlarge,c4.4xlarge,c4.8xlarge,r4.large,r4.xlarge,r4.2xlarge,r4.4xlarge,r4.8xlarge,r4.16xlarge,p3.2xlarge,p3.8xlarge,p3.16xlarge,p2.xlarge,p2.8xlarge,p2.16xlarge,g3.4xlarge,g3.8xlarge,g3.16xlarge,h1.2xlarge,h1.4xlarge,h1.8xlarge,h1.16xlarge,d2.xlarge,d2.2xlarge,d2.4xlarge,d2.8xlarge,m3.medium,m3.large,m3.xlarge,m3.2xlarge,c3.large,c3.xlarge,c3.2xlarge,c3.4xlarge,c3.8xlarge,g2.2xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.xlarge,x1e.2xlarge,x1e.4xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.large,r3.xlarge,r3.2xlarge,r3.4xlarge,r3.8xlarge,i2.xlarge,i2.2xlarge,i2.4xlarge,i2.8xlarge,m5d.large,m5d.xlarge,m5d.2xlarge,m5d.4xlarge,m5d.12xlarge,m5d.24xlarge,c5d.large,c5d.xlarge,c5d.2xlarge,c5d.4xlarge,c5d.9xlarge,c5d.18xlarge,f1.2xlarge,f1.16xlarge,i3.large,i3.xlarge,i3.2xlarge,i3.4xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
+            default: 'cc2.8xlarge,hs1.8xlarge,m5.12xlarge,m5.24xlarge,m4.10xlarge,m4.16xlarge,c5.9xlarge,c5.18xlarge,c4.8xlarge,r4.8xlarge,r4.16xlarge,p3.8xlarge,p3.16xlarge,p2.8xlarge,p2.16xlarge,g3.8xlarge,g3.16xlarge,h1.8xlarge,h1.16xlarge,d2.8xlarge,c3.8xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.8xlarge,i2.8xlarge,m5d.12xlarge,m5d.24xlarge,c5d.9xlarge,c5d.18xlarge,f1.16xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
         },
-        approved_instance_types_region_us_west_1: {
-            name: 'Approved Instance Types Region: us-west-1',
+        disapproved_instance_types_region_us_west_1: {
+            name: 'Disapproved Instance Types Region: us-west-1',
             description: 'Checks for unapproved instances in the us-west-1 region and triggers a failing result if any are found',
             regex: '([a-zA-Z0-9.])',
-            default: 'm1.small,m1.medium,m1.large,m1.xlarge,c1.medium,c1.xlarge,cc2.8xlarge,m2.xlarge,m2.2xlarge,m2.4xlarge,hs1.8xlarge,t1.micro,t2.nano,t2.micro,t2.small,t2.medium,t2.large,t2.xlarge,t2.2xlarge,m5.large,m5.xlarge,m5.2xlarge,m5.4xlarge,m5.12xlarge,m5.24xlarge,m4.large,m4.xlarge,m4.2xlarge,m4.4xlarge,m4.10xlarge,m4.16xlarge,c5.large,c5.xlarge,c5.2xlarge,c5.4xlarge,c5.9xlarge,c5.18xlarge,c4.large,c4.xlarge,c4.2xlarge,c4.4xlarge,c4.8xlarge,r4.large,r4.xlarge,r4.2xlarge,r4.4xlarge,r4.8xlarge,r4.16xlarge,p3.2xlarge,p3.8xlarge,p3.16xlarge,p2.xlarge,p2.8xlarge,p2.16xlarge,g3.4xlarge,g3.8xlarge,g3.16xlarge,h1.2xlarge,h1.4xlarge,h1.8xlarge,h1.16xlarge,d2.xlarge,d2.2xlarge,d2.4xlarge,d2.8xlarge,m3.medium,m3.large,m3.xlarge,m3.2xlarge,c3.large,c3.xlarge,c3.2xlarge,c3.4xlarge,c3.8xlarge,g2.2xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.xlarge,x1e.2xlarge,x1e.4xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.large,r3.xlarge,r3.2xlarge,r3.4xlarge,r3.8xlarge,i2.xlarge,i2.2xlarge,i2.4xlarge,i2.8xlarge,m5d.large,m5d.xlarge,m5d.2xlarge,m5d.4xlarge,m5d.12xlarge,m5d.24xlarge,c5d.large,c5d.xlarge,c5d.2xlarge,c5d.4xlarge,c5d.9xlarge,c5d.18xlarge,f1.2xlarge,f1.16xlarge,i3.large,i3.xlarge,i3.2xlarge,i3.4xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
+            default: 'cc2.8xlarge,hs1.8xlarge,m5.12xlarge,m5.24xlarge,m4.10xlarge,m4.16xlarge,c5.9xlarge,c5.18xlarge,c4.8xlarge,r4.8xlarge,r4.16xlarge,p3.8xlarge,p3.16xlarge,p2.8xlarge,p2.16xlarge,g3.8xlarge,g3.16xlarge,h1.8xlarge,h1.16xlarge,d2.8xlarge,c3.8xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.8xlarge,i2.8xlarge,m5d.12xlarge,m5d.24xlarge,c5d.9xlarge,c5d.18xlarge,f1.16xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
         },
-        approved_instance_types_region_us_west_2: {
-            name: 'Approved Instance Types Region: us-west-2',
+        disapproved_instance_types_region_us_west_2: {
+            name: 'Disapproved Instance Types Region: us-west-2',
             description: 'Checks for unapproved instances in the us-west-2 region and triggers a failing result if any are found',
             regex: '([a-zA-Z0-9.])',
-            default: 'm1.small,m1.medium,m1.large,m1.xlarge,c1.medium,c1.xlarge,cc2.8xlarge,m2.xlarge,m2.2xlarge,m2.4xlarge,hs1.8xlarge,t1.micro,t2.nano,t2.micro,t2.small,t2.medium,t2.large,t2.xlarge,t2.2xlarge,m5.large,m5.xlarge,m5.2xlarge,m5.4xlarge,m5.12xlarge,m5.24xlarge,m4.large,m4.xlarge,m4.2xlarge,m4.4xlarge,m4.10xlarge,m4.16xlarge,c5.large,c5.xlarge,c5.2xlarge,c5.4xlarge,c5.9xlarge,c5.18xlarge,c4.large,c4.xlarge,c4.2xlarge,c4.4xlarge,c4.8xlarge,r4.large,r4.xlarge,r4.2xlarge,r4.4xlarge,r4.8xlarge,r4.16xlarge,p3.2xlarge,p3.8xlarge,p3.16xlarge,p2.xlarge,p2.8xlarge,p2.16xlarge,g3.4xlarge,g3.8xlarge,g3.16xlarge,h1.2xlarge,h1.4xlarge,h1.8xlarge,h1.16xlarge,d2.xlarge,d2.2xlarge,d2.4xlarge,d2.8xlarge,m3.medium,m3.large,m3.xlarge,m3.2xlarge,c3.large,c3.xlarge,c3.2xlarge,c3.4xlarge,c3.8xlarge,g2.2xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.xlarge,x1e.2xlarge,x1e.4xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.large,r3.xlarge,r3.2xlarge,r3.4xlarge,r3.8xlarge,i2.xlarge,i2.2xlarge,i2.4xlarge,i2.8xlarge,m5d.large,m5d.xlarge,m5d.2xlarge,m5d.4xlarge,m5d.12xlarge,m5d.24xlarge,c5d.large,c5d.xlarge,c5d.2xlarge,c5d.4xlarge,c5d.9xlarge,c5d.18xlarge,f1.2xlarge,f1.16xlarge,i3.large,i3.xlarge,i3.2xlarge,i3.4xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
+            default: 'cc2.8xlarge,hs1.8xlarge,m5.12xlarge,m5.24xlarge,m4.10xlarge,m4.16xlarge,c5.9xlarge,c5.18xlarge,c4.8xlarge,r4.8xlarge,r4.16xlarge,p3.8xlarge,p3.16xlarge,p2.8xlarge,p2.16xlarge,g3.8xlarge,g3.16xlarge,h1.8xlarge,h1.16xlarge,d2.8xlarge,c3.8xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.8xlarge,i2.8xlarge,m5d.12xlarge,m5d.24xlarge,c5d.9xlarge,c5d.18xlarge,f1.16xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
         },
-        approved_instance_types_region_ap_northeast_1: {
-            name: 'Approved Instance Types Region: ap-northeast-1',
+        disapproved_instance_types_region_ap_northeast_1: {
+            name: 'Disapproved Instance Types Region: ap-northeast-1',
             description: 'Checks for unapproved instances in the ap-northeast-1 region and triggers a failing result if any are found',
             regex: '([a-zA-Z0-9.])',
-            default: 'm1.small,m1.medium,m1.large,m1.xlarge,c1.medium,c1.xlarge,cc2.8xlarge,m2.xlarge,m2.2xlarge,m2.4xlarge,hs1.8xlarge,t1.micro,t2.nano,t2.micro,t2.small,t2.medium,t2.large,t2.xlarge,t2.2xlarge,m5.large,m5.xlarge,m5.2xlarge,m5.4xlarge,m5.12xlarge,m5.24xlarge,m4.large,m4.xlarge,m4.2xlarge,m4.4xlarge,m4.10xlarge,m4.16xlarge,c5.large,c5.xlarge,c5.2xlarge,c5.4xlarge,c5.9xlarge,c5.18xlarge,c4.large,c4.xlarge,c4.2xlarge,c4.4xlarge,c4.8xlarge,r4.large,r4.xlarge,r4.2xlarge,r4.4xlarge,r4.8xlarge,r4.16xlarge,p3.2xlarge,p3.8xlarge,p3.16xlarge,p2.xlarge,p2.8xlarge,p2.16xlarge,g3.4xlarge,g3.8xlarge,g3.16xlarge,h1.2xlarge,h1.4xlarge,h1.8xlarge,h1.16xlarge,d2.xlarge,d2.2xlarge,d2.4xlarge,d2.8xlarge,m3.medium,m3.large,m3.xlarge,m3.2xlarge,c3.large,c3.xlarge,c3.2xlarge,c3.4xlarge,c3.8xlarge,g2.2xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.xlarge,x1e.2xlarge,x1e.4xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.large,r3.xlarge,r3.2xlarge,r3.4xlarge,r3.8xlarge,i2.xlarge,i2.2xlarge,i2.4xlarge,i2.8xlarge,m5d.large,m5d.xlarge,m5d.2xlarge,m5d.4xlarge,m5d.12xlarge,m5d.24xlarge,c5d.large,c5d.xlarge,c5d.2xlarge,c5d.4xlarge,c5d.9xlarge,c5d.18xlarge,f1.2xlarge,f1.16xlarge,i3.large,i3.xlarge,i3.2xlarge,i3.4xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
+            default: 'cc2.8xlarge,hs1.8xlarge,m5.12xlarge,m5.24xlarge,m4.10xlarge,m4.16xlarge,c5.9xlarge,c5.18xlarge,c4.8xlarge,r4.8xlarge,r4.16xlarge,p3.8xlarge,p3.16xlarge,p2.8xlarge,p2.16xlarge,g3.8xlarge,g3.16xlarge,h1.8xlarge,h1.16xlarge,d2.8xlarge,c3.8xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.8xlarge,i2.8xlarge,m5d.12xlarge,m5d.24xlarge,c5d.9xlarge,c5d.18xlarge,f1.16xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
         },
-        approved_instance_types_region_ap_northeast_2: {
-            name: 'Approved Instance Types Region: ap-northeast-2',
+        disapproved_instance_types_region_ap_northeast_2: {
+            name: 'Disapproved Instance Types Region: ap-northeast-2',
             description: 'Checks for unapproved instances in the ap-northeast-2 region and triggers a failing result if any are found',
             regex: '([a-zA-Z0-9.])',
-            default: 'm1.small,m1.medium,m1.large,m1.xlarge,c1.medium,c1.xlarge,cc2.8xlarge,m2.xlarge,m2.2xlarge,m2.4xlarge,hs1.8xlarge,t1.micro,t2.nano,t2.micro,t2.small,t2.medium,t2.large,t2.xlarge,t2.2xlarge,m5.large,m5.xlarge,m5.2xlarge,m5.4xlarge,m5.12xlarge,m5.24xlarge,m4.large,m4.xlarge,m4.2xlarge,m4.4xlarge,m4.10xlarge,m4.16xlarge,c5.large,c5.xlarge,c5.2xlarge,c5.4xlarge,c5.9xlarge,c5.18xlarge,c4.large,c4.xlarge,c4.2xlarge,c4.4xlarge,c4.8xlarge,r4.large,r4.xlarge,r4.2xlarge,r4.4xlarge,r4.8xlarge,r4.16xlarge,p3.2xlarge,p3.8xlarge,p3.16xlarge,p2.xlarge,p2.8xlarge,p2.16xlarge,g3.4xlarge,g3.8xlarge,g3.16xlarge,h1.2xlarge,h1.4xlarge,h1.8xlarge,h1.16xlarge,d2.xlarge,d2.2xlarge,d2.4xlarge,d2.8xlarge,m3.medium,m3.large,m3.xlarge,m3.2xlarge,c3.large,c3.xlarge,c3.2xlarge,c3.4xlarge,c3.8xlarge,g2.2xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.xlarge,x1e.2xlarge,x1e.4xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.large,r3.xlarge,r3.2xlarge,r3.4xlarge,r3.8xlarge,i2.xlarge,i2.2xlarge,i2.4xlarge,i2.8xlarge,m5d.large,m5d.xlarge,m5d.2xlarge,m5d.4xlarge,m5d.12xlarge,m5d.24xlarge,c5d.large,c5d.xlarge,c5d.2xlarge,c5d.4xlarge,c5d.9xlarge,c5d.18xlarge,f1.2xlarge,f1.16xlarge,i3.large,i3.xlarge,i3.2xlarge,i3.4xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
+            default: 'cc2.8xlarge,hs1.8xlarge,m5.12xlarge,m5.24xlarge,m4.10xlarge,m4.16xlarge,c5.9xlarge,c5.18xlarge,c4.8xlarge,r4.8xlarge,r4.16xlarge,p3.8xlarge,p3.16xlarge,p2.8xlarge,p2.16xlarge,g3.8xlarge,g3.16xlarge,h1.8xlarge,h1.16xlarge,d2.8xlarge,c3.8xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.8xlarge,i2.8xlarge,m5d.12xlarge,m5d.24xlarge,c5d.9xlarge,c5d.18xlarge,f1.16xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
         },
-        approved_instance_types_region_ap_southeast_1: {
-            name: 'Approved Instance Types Region: ap-southeast-1',
+        disapproved_instance_types_region_ap_southeast_1: {
+            name: 'Disapproved Instance Types Region: ap-southeast-1',
             description: 'Checks for unapproved instances in the ap-southeast-1 region and triggers a failing result if any are found',
             regex: '([a-zA-Z0-9.])',
-            default: 'm1.small,m1.medium,m1.large,m1.xlarge,c1.medium,c1.xlarge,cc2.8xlarge,m2.xlarge,m2.2xlarge,m2.4xlarge,hs1.8xlarge,t1.micro,t2.nano,t2.micro,t2.small,t2.medium,t2.large,t2.xlarge,t2.2xlarge,m5.large,m5.xlarge,m5.2xlarge,m5.4xlarge,m5.12xlarge,m5.24xlarge,m4.large,m4.xlarge,m4.2xlarge,m4.4xlarge,m4.10xlarge,m4.16xlarge,c5.large,c5.xlarge,c5.2xlarge,c5.4xlarge,c5.9xlarge,c5.18xlarge,c4.large,c4.xlarge,c4.2xlarge,c4.4xlarge,c4.8xlarge,r4.large,r4.xlarge,r4.2xlarge,r4.4xlarge,r4.8xlarge,r4.16xlarge,p3.2xlarge,p3.8xlarge,p3.16xlarge,p2.xlarge,p2.8xlarge,p2.16xlarge,g3.4xlarge,g3.8xlarge,g3.16xlarge,h1.2xlarge,h1.4xlarge,h1.8xlarge,h1.16xlarge,d2.xlarge,d2.2xlarge,d2.4xlarge,d2.8xlarge,m3.medium,m3.large,m3.xlarge,m3.2xlarge,c3.large,c3.xlarge,c3.2xlarge,c3.4xlarge,c3.8xlarge,g2.2xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.xlarge,x1e.2xlarge,x1e.4xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.large,r3.xlarge,r3.2xlarge,r3.4xlarge,r3.8xlarge,i2.xlarge,i2.2xlarge,i2.4xlarge,i2.8xlarge,m5d.large,m5d.xlarge,m5d.2xlarge,m5d.4xlarge,m5d.12xlarge,m5d.24xlarge,c5d.large,c5d.xlarge,c5d.2xlarge,c5d.4xlarge,c5d.9xlarge,c5d.18xlarge,f1.2xlarge,f1.16xlarge,i3.large,i3.xlarge,i3.2xlarge,i3.4xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
+            default: 'cc2.8xlarge,hs1.8xlarge,m5.12xlarge,m5.24xlarge,m4.10xlarge,m4.16xlarge,c5.9xlarge,c5.18xlarge,c4.8xlarge,r4.8xlarge,r4.16xlarge,p3.8xlarge,p3.16xlarge,p2.8xlarge,p2.16xlarge,g3.8xlarge,g3.16xlarge,h1.8xlarge,h1.16xlarge,d2.8xlarge,c3.8xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.8xlarge,i2.8xlarge,m5d.12xlarge,m5d.24xlarge,c5d.9xlarge,c5d.18xlarge,f1.16xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
         },
-        approved_instance_types_region_ap_southeast_2: {
-            name: 'Approved Instance Types Region: ap-southeast-2',
+        disapproved_instance_types_region_ap_southeast_2: {
+            name: 'Disapproved Instance Types Region: ap-southeast-2',
             description: 'Checks for unapproved instances in the ap-southeast-2 region and triggers a failing result if any are found',
             regex: '([a-zA-Z0-9.])',
-            default: 'm1.small,m1.medium,m1.large,m1.xlarge,c1.medium,c1.xlarge,cc2.8xlarge,m2.xlarge,m2.2xlarge,m2.4xlarge,hs1.8xlarge,t1.micro,t2.nano,t2.micro,t2.small,t2.medium,t2.large,t2.xlarge,t2.2xlarge,m5.large,m5.xlarge,m5.2xlarge,m5.4xlarge,m5.12xlarge,m5.24xlarge,m4.large,m4.xlarge,m4.2xlarge,m4.4xlarge,m4.10xlarge,m4.16xlarge,c5.large,c5.xlarge,c5.2xlarge,c5.4xlarge,c5.9xlarge,c5.18xlarge,c4.large,c4.xlarge,c4.2xlarge,c4.4xlarge,c4.8xlarge,r4.large,r4.xlarge,r4.2xlarge,r4.4xlarge,r4.8xlarge,r4.16xlarge,p3.2xlarge,p3.8xlarge,p3.16xlarge,p2.xlarge,p2.8xlarge,p2.16xlarge,g3.4xlarge,g3.8xlarge,g3.16xlarge,h1.2xlarge,h1.4xlarge,h1.8xlarge,h1.16xlarge,d2.xlarge,d2.2xlarge,d2.4xlarge,d2.8xlarge,m3.medium,m3.large,m3.xlarge,m3.2xlarge,c3.large,c3.xlarge,c3.2xlarge,c3.4xlarge,c3.8xlarge,g2.2xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.xlarge,x1e.2xlarge,x1e.4xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.large,r3.xlarge,r3.2xlarge,r3.4xlarge,r3.8xlarge,i2.xlarge,i2.2xlarge,i2.4xlarge,i2.8xlarge,m5d.large,m5d.xlarge,m5d.2xlarge,m5d.4xlarge,m5d.12xlarge,m5d.24xlarge,c5d.large,c5d.xlarge,c5d.2xlarge,c5d.4xlarge,c5d.9xlarge,c5d.18xlarge,f1.2xlarge,f1.16xlarge,i3.large,i3.xlarge,i3.2xlarge,i3.4xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
+            default: 'cc2.8xlarge,hs1.8xlarge,m5.12xlarge,m5.24xlarge,m4.10xlarge,m4.16xlarge,c5.9xlarge,c5.18xlarge,c4.8xlarge,r4.8xlarge,r4.16xlarge,p3.8xlarge,p3.16xlarge,p2.8xlarge,p2.16xlarge,g3.8xlarge,g3.16xlarge,h1.8xlarge,h1.16xlarge,d2.8xlarge,c3.8xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.8xlarge,i2.8xlarge,m5d.12xlarge,m5d.24xlarge,c5d.9xlarge,c5d.18xlarge,f1.16xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
         },
-        approved_instance_types_region_eu_central_1: {
-            name: 'Approved Instance Types Region: eu-central-1',
+        disapproved_instance_types_region_eu_central_1: {
+            name: 'Disapproved Instance Types Region: eu-central-1',
             description: 'Checks for unapproved instances in the eu-central-1 region and triggers a failing result if any are found',
             regex: '([a-zA-Z0-9.])',
-            default: 'm1.small,m1.medium,m1.large,m1.xlarge,c1.medium,c1.xlarge,cc2.8xlarge,m2.xlarge,m2.2xlarge,m2.4xlarge,hs1.8xlarge,t1.micro,t2.nano,t2.micro,t2.small,t2.medium,t2.large,t2.xlarge,t2.2xlarge,m5.large,m5.xlarge,m5.2xlarge,m5.4xlarge,m5.12xlarge,m5.24xlarge,m4.large,m4.xlarge,m4.2xlarge,m4.4xlarge,m4.10xlarge,m4.16xlarge,c5.large,c5.xlarge,c5.2xlarge,c5.4xlarge,c5.9xlarge,c5.18xlarge,c4.large,c4.xlarge,c4.2xlarge,c4.4xlarge,c4.8xlarge,r4.large,r4.xlarge,r4.2xlarge,r4.4xlarge,r4.8xlarge,r4.16xlarge,p3.2xlarge,p3.8xlarge,p3.16xlarge,p2.xlarge,p2.8xlarge,p2.16xlarge,g3.4xlarge,g3.8xlarge,g3.16xlarge,h1.2xlarge,h1.4xlarge,h1.8xlarge,h1.16xlarge,d2.xlarge,d2.2xlarge,d2.4xlarge,d2.8xlarge,m3.medium,m3.large,m3.xlarge,m3.2xlarge,c3.large,c3.xlarge,c3.2xlarge,c3.4xlarge,c3.8xlarge,g2.2xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.xlarge,x1e.2xlarge,x1e.4xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.large,r3.xlarge,r3.2xlarge,r3.4xlarge,r3.8xlarge,i2.xlarge,i2.2xlarge,i2.4xlarge,i2.8xlarge,m5d.large,m5d.xlarge,m5d.2xlarge,m5d.4xlarge,m5d.12xlarge,m5d.24xlarge,c5d.large,c5d.xlarge,c5d.2xlarge,c5d.4xlarge,c5d.9xlarge,c5d.18xlarge,f1.2xlarge,f1.16xlarge,i3.large,i3.xlarge,i3.2xlarge,i3.4xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
+            default: 'cc2.8xlarge,hs1.8xlarge,m5.12xlarge,m5.24xlarge,m4.10xlarge,m4.16xlarge,c5.9xlarge,c5.18xlarge,c4.8xlarge,r4.8xlarge,r4.16xlarge,p3.8xlarge,p3.16xlarge,p2.8xlarge,p2.16xlarge,g3.8xlarge,g3.16xlarge,h1.8xlarge,h1.16xlarge,d2.8xlarge,c3.8xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.8xlarge,i2.8xlarge,m5d.12xlarge,m5d.24xlarge,c5d.9xlarge,c5d.18xlarge,f1.16xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
         },
-        approved_instance_types_region_eu_west_1: {
-            name: 'Approved Instance Types Region: eu-west-1',
+        disapproved_instance_types_region_eu_west_1: {
+            name: 'Disapproved Instance Types Region: eu-west-1',
             description: 'Checks for unapproved instances in the eu-west-1 region and triggers a failing result if any are found',
             regex: '([a-zA-Z0-9.])',
-            default: 'm1.small,m1.medium,m1.large,m1.xlarge,c1.medium,c1.xlarge,cc2.8xlarge,m2.xlarge,m2.2xlarge,m2.4xlarge,hs1.8xlarge,t1.micro,t2.nano,t2.micro,t2.small,t2.medium,t2.large,t2.xlarge,t2.2xlarge,m5.large,m5.xlarge,m5.2xlarge,m5.4xlarge,m5.12xlarge,m5.24xlarge,m4.large,m4.xlarge,m4.2xlarge,m4.4xlarge,m4.10xlarge,m4.16xlarge,c5.large,c5.xlarge,c5.2xlarge,c5.4xlarge,c5.9xlarge,c5.18xlarge,c4.large,c4.xlarge,c4.2xlarge,c4.4xlarge,c4.8xlarge,r4.large,r4.xlarge,r4.2xlarge,r4.4xlarge,r4.8xlarge,r4.16xlarge,p3.2xlarge,p3.8xlarge,p3.16xlarge,p2.xlarge,p2.8xlarge,p2.16xlarge,g3.4xlarge,g3.8xlarge,g3.16xlarge,h1.2xlarge,h1.4xlarge,h1.8xlarge,h1.16xlarge,d2.xlarge,d2.2xlarge,d2.4xlarge,d2.8xlarge,m3.medium,m3.large,m3.xlarge,m3.2xlarge,c3.large,c3.xlarge,c3.2xlarge,c3.4xlarge,c3.8xlarge,g2.2xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.xlarge,x1e.2xlarge,x1e.4xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.large,r3.xlarge,r3.2xlarge,r3.4xlarge,r3.8xlarge,i2.xlarge,i2.2xlarge,i2.4xlarge,i2.8xlarge,m5d.large,m5d.xlarge,m5d.2xlarge,m5d.4xlarge,m5d.12xlarge,m5d.24xlarge,c5d.large,c5d.xlarge,c5d.2xlarge,c5d.4xlarge,c5d.9xlarge,c5d.18xlarge,f1.2xlarge,f1.16xlarge,i3.large,i3.xlarge,i3.2xlarge,i3.4xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
+            default: 'cc2.8xlarge,hs1.8xlarge,m5.12xlarge,m5.24xlarge,m4.10xlarge,m4.16xlarge,c5.9xlarge,c5.18xlarge,c4.8xlarge,r4.8xlarge,r4.16xlarge,p3.8xlarge,p3.16xlarge,p2.8xlarge,p2.16xlarge,g3.8xlarge,g3.16xlarge,h1.8xlarge,h1.16xlarge,d2.8xlarge,c3.8xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.8xlarge,i2.8xlarge,m5d.12xlarge,m5d.24xlarge,c5d.9xlarge,c5d.18xlarge,f1.16xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
         },
-        approved_instance_types_region_eu_west_2: {
-            name: 'Approved Instance Types Region: eu-west-2',
+        disapproved_instance_types_region_eu_west_2: {
+            name: 'Disapproved Instance Types Region: eu-west-2',
             description: 'Checks for unapproved instances in the eu-west-2 region and triggers a failing result if any are found',
             regex: '([a-zA-Z0-9.])',
-            default: 'm1.small,m1.medium,m1.large,m1.xlarge,c1.medium,c1.xlarge,cc2.8xlarge,m2.xlarge,m2.2xlarge,m2.4xlarge,hs1.8xlarge,t1.micro,t2.nano,t2.micro,t2.small,t2.medium,t2.large,t2.xlarge,t2.2xlarge,m5.large,m5.xlarge,m5.2xlarge,m5.4xlarge,m5.12xlarge,m5.24xlarge,m4.large,m4.xlarge,m4.2xlarge,m4.4xlarge,m4.10xlarge,m4.16xlarge,c5.large,c5.xlarge,c5.2xlarge,c5.4xlarge,c5.9xlarge,c5.18xlarge,c4.large,c4.xlarge,c4.2xlarge,c4.4xlarge,c4.8xlarge,r4.large,r4.xlarge,r4.2xlarge,r4.4xlarge,r4.8xlarge,r4.16xlarge,p3.2xlarge,p3.8xlarge,p3.16xlarge,p2.xlarge,p2.8xlarge,p2.16xlarge,g3.4xlarge,g3.8xlarge,g3.16xlarge,h1.2xlarge,h1.4xlarge,h1.8xlarge,h1.16xlarge,d2.xlarge,d2.2xlarge,d2.4xlarge,d2.8xlarge,m3.medium,m3.large,m3.xlarge,m3.2xlarge,c3.large,c3.xlarge,c3.2xlarge,c3.4xlarge,c3.8xlarge,g2.2xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.xlarge,x1e.2xlarge,x1e.4xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.large,r3.xlarge,r3.2xlarge,r3.4xlarge,r3.8xlarge,i2.xlarge,i2.2xlarge,i2.4xlarge,i2.8xlarge,m5d.large,m5d.xlarge,m5d.2xlarge,m5d.4xlarge,m5d.12xlarge,m5d.24xlarge,c5d.large,c5d.xlarge,c5d.2xlarge,c5d.4xlarge,c5d.9xlarge,c5d.18xlarge,f1.2xlarge,f1.16xlarge,i3.large,i3.xlarge,i3.2xlarge,i3.4xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
+            default: 'cc2.8xlarge,hs1.8xlarge,m5.12xlarge,m5.24xlarge,m4.10xlarge,m4.16xlarge,c5.9xlarge,c5.18xlarge,c4.8xlarge,r4.8xlarge,r4.16xlarge,p3.8xlarge,p3.16xlarge,p2.8xlarge,p2.16xlarge,g3.8xlarge,g3.16xlarge,h1.8xlarge,h1.16xlarge,d2.8xlarge,c3.8xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.8xlarge,i2.8xlarge,m5d.12xlarge,m5d.24xlarge,c5d.9xlarge,c5d.18xlarge,f1.16xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
         },
-        approved_instance_types_region_eu_west_3: {
-            name: 'Approved Instance Types Region: eu-west-3',
+        disapproved_instance_types_region_eu_west_3: {
+            name: 'Disapproved Instance Types Region: eu-west-3',
             description: 'Checks for unapproved instances in the eu-west-3 region and triggers a failing result if any are found',
             regex: '([a-zA-Z0-9.])',
-            default: 'm1.small,m1.medium,m1.large,m1.xlarge,c1.medium,c1.xlarge,cc2.8xlarge,m2.xlarge,m2.2xlarge,m2.4xlarge,hs1.8xlarge,t1.micro,t2.nano,t2.micro,t2.small,t2.medium,t2.large,t2.xlarge,t2.2xlarge,m5.large,m5.xlarge,m5.2xlarge,m5.4xlarge,m5.12xlarge,m5.24xlarge,m4.large,m4.xlarge,m4.2xlarge,m4.4xlarge,m4.10xlarge,m4.16xlarge,c5.large,c5.xlarge,c5.2xlarge,c5.4xlarge,c5.9xlarge,c5.18xlarge,c4.large,c4.xlarge,c4.2xlarge,c4.4xlarge,c4.8xlarge,r4.large,r4.xlarge,r4.2xlarge,r4.4xlarge,r4.8xlarge,r4.16xlarge,p3.2xlarge,p3.8xlarge,p3.16xlarge,p2.xlarge,p2.8xlarge,p2.16xlarge,g3.4xlarge,g3.8xlarge,g3.16xlarge,h1.2xlarge,h1.4xlarge,h1.8xlarge,h1.16xlarge,d2.xlarge,d2.2xlarge,d2.4xlarge,d2.8xlarge,m3.medium,m3.large,m3.xlarge,m3.2xlarge,c3.large,c3.xlarge,c3.2xlarge,c3.4xlarge,c3.8xlarge,g2.2xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.xlarge,x1e.2xlarge,x1e.4xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.large,r3.xlarge,r3.2xlarge,r3.4xlarge,r3.8xlarge,i2.xlarge,i2.2xlarge,i2.4xlarge,i2.8xlarge,m5d.large,m5d.xlarge,m5d.2xlarge,m5d.4xlarge,m5d.12xlarge,m5d.24xlarge,c5d.large,c5d.xlarge,c5d.2xlarge,c5d.4xlarge,c5d.9xlarge,c5d.18xlarge,f1.2xlarge,f1.16xlarge,i3.large,i3.xlarge,i3.2xlarge,i3.4xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
+            default: 'cc2.8xlarge,hs1.8xlarge,m5.12xlarge,m5.24xlarge,m4.10xlarge,m4.16xlarge,c5.9xlarge,c5.18xlarge,c4.8xlarge,r4.8xlarge,r4.16xlarge,p3.8xlarge,p3.16xlarge,p2.8xlarge,p2.16xlarge,g3.8xlarge,g3.16xlarge,h1.8xlarge,h1.16xlarge,d2.8xlarge,c3.8xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.8xlarge,i2.8xlarge,m5d.12xlarge,m5d.24xlarge,c5d.9xlarge,c5d.18xlarge,f1.16xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
         },
-        approved_instance_types_region_sa_east_1: {
-            name: 'Approved Instance Types Region: sa-east-1',
+        disapproved_instance_types_region_sa_east_1: {
+            name: 'Disapproved Instance Types Region: sa-east-1',
             description: 'Checks for unapproved instances in the sa-east-1 region and triggers a failing result if any are found',
             regex: '([a-zA-Z0-9.])',
-            default: 'm1.small,m1.medium,m1.large,m1.xlarge,c1.medium,c1.xlarge,cc2.8xlarge,m2.xlarge,m2.2xlarge,m2.4xlarge,hs1.8xlarge,t1.micro,t2.nano,t2.micro,t2.small,t2.medium,t2.large,t2.xlarge,t2.2xlarge,m5.large,m5.xlarge,m5.2xlarge,m5.4xlarge,m5.12xlarge,m5.24xlarge,m4.large,m4.xlarge,m4.2xlarge,m4.4xlarge,m4.10xlarge,m4.16xlarge,c5.large,c5.xlarge,c5.2xlarge,c5.4xlarge,c5.9xlarge,c5.18xlarge,c4.large,c4.xlarge,c4.2xlarge,c4.4xlarge,c4.8xlarge,r4.large,r4.xlarge,r4.2xlarge,r4.4xlarge,r4.8xlarge,r4.16xlarge,p3.2xlarge,p3.8xlarge,p3.16xlarge,p2.xlarge,p2.8xlarge,p2.16xlarge,g3.4xlarge,g3.8xlarge,g3.16xlarge,h1.2xlarge,h1.4xlarge,h1.8xlarge,h1.16xlarge,d2.xlarge,d2.2xlarge,d2.4xlarge,d2.8xlarge,m3.medium,m3.large,m3.xlarge,m3.2xlarge,c3.large,c3.xlarge,c3.2xlarge,c3.4xlarge,c3.8xlarge,g2.2xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.xlarge,x1e.2xlarge,x1e.4xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.large,r3.xlarge,r3.2xlarge,r3.4xlarge,r3.8xlarge,i2.xlarge,i2.2xlarge,i2.4xlarge,i2.8xlarge,m5d.large,m5d.xlarge,m5d.2xlarge,m5d.4xlarge,m5d.12xlarge,m5d.24xlarge,c5d.large,c5d.xlarge,c5d.2xlarge,c5d.4xlarge,c5d.9xlarge,c5d.18xlarge,f1.2xlarge,f1.16xlarge,i3.large,i3.xlarge,i3.2xlarge,i3.4xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
+            default: 'cc2.8xlarge,hs1.8xlarge,m5.12xlarge,m5.24xlarge,m4.10xlarge,m4.16xlarge,c5.9xlarge,c5.18xlarge,c4.8xlarge,r4.8xlarge,r4.16xlarge,p3.8xlarge,p3.16xlarge,p2.8xlarge,p2.16xlarge,g3.8xlarge,g3.16xlarge,h1.8xlarge,h1.16xlarge,d2.8xlarge,c3.8xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.8xlarge,i2.8xlarge,m5d.12xlarge,m5d.24xlarge,c5d.9xlarge,c5d.18xlarge,f1.16xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
         },
-        approved_instance_types_region_ap_south_1: {
-            name: 'Approved Instance Types Region: ap-south-1',
+        disapproved_instance_types_region_ap_south_1: {
+            name: 'Disapproved Instance Types Region: ap-south-1',
             description: 'Checks for unapproved instances in the ap-south-1 region and triggers a failing result if any are found',
             regex: '([a-zA-Z0-9.])',
-            default: 'm1.small,m1.medium,m1.large,m1.xlarge,c1.medium,c1.xlarge,cc2.8xlarge,m2.xlarge,m2.2xlarge,m2.4xlarge,hs1.8xlarge,t1.micro,t2.nano,t2.micro,t2.small,t2.medium,t2.large,t2.xlarge,t2.2xlarge,m5.large,m5.xlarge,m5.2xlarge,m5.4xlarge,m5.12xlarge,m5.24xlarge,m4.large,m4.xlarge,m4.2xlarge,m4.4xlarge,m4.10xlarge,m4.16xlarge,c5.large,c5.xlarge,c5.2xlarge,c5.4xlarge,c5.9xlarge,c5.18xlarge,c4.large,c4.xlarge,c4.2xlarge,c4.4xlarge,c4.8xlarge,r4.large,r4.xlarge,r4.2xlarge,r4.4xlarge,r4.8xlarge,r4.16xlarge,p3.2xlarge,p3.8xlarge,p3.16xlarge,p2.xlarge,p2.8xlarge,p2.16xlarge,g3.4xlarge,g3.8xlarge,g3.16xlarge,h1.2xlarge,h1.4xlarge,h1.8xlarge,h1.16xlarge,d2.xlarge,d2.2xlarge,d2.4xlarge,d2.8xlarge,m3.medium,m3.large,m3.xlarge,m3.2xlarge,c3.large,c3.xlarge,c3.2xlarge,c3.4xlarge,c3.8xlarge,g2.2xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.xlarge,x1e.2xlarge,x1e.4xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.large,r3.xlarge,r3.2xlarge,r3.4xlarge,r3.8xlarge,i2.xlarge,i2.2xlarge,i2.4xlarge,i2.8xlarge,m5d.large,m5d.xlarge,m5d.2xlarge,m5d.4xlarge,m5d.12xlarge,m5d.24xlarge,c5d.large,c5d.xlarge,c5d.2xlarge,c5d.4xlarge,c5d.9xlarge,c5d.18xlarge,f1.2xlarge,f1.16xlarge,i3.large,i3.xlarge,i3.2xlarge,i3.4xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
+            default: 'cc2.8xlarge,hs1.8xlarge,m5.12xlarge,m5.24xlarge,m4.10xlarge,m4.16xlarge,c5.9xlarge,c5.18xlarge,c4.8xlarge,r4.8xlarge,r4.16xlarge,p3.8xlarge,p3.16xlarge,p2.8xlarge,p2.16xlarge,g3.8xlarge,g3.16xlarge,h1.8xlarge,h1.16xlarge,d2.8xlarge,c3.8xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.8xlarge,i2.8xlarge,m5d.12xlarge,m5d.24xlarge,c5d.9xlarge,c5d.18xlarge,f1.16xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
         },
-        approved_instance_types_region_ca_central_1: {
-            name: 'Approved Instance Types Region: ca-central-1',
+        disapproved_instance_types_region_ca_central_1: {
+            name: 'Disapproved Instance Types Region: ca-central-1',
             description: 'Checks for unapproved instances in the ca-central-1 region and triggers a failing result if any are found',
             regex: '([a-zA-Z0-9.])',
-            default: 'm1.small,m1.medium,m1.large,m1.xlarge,c1.medium,c1.xlarge,cc2.8xlarge,m2.xlarge,m2.2xlarge,m2.4xlarge,hs1.8xlarge,t1.micro,t2.nano,t2.micro,t2.small,t2.medium,t2.large,t2.xlarge,t2.2xlarge,m5.large,m5.xlarge,m5.2xlarge,m5.4xlarge,m5.12xlarge,m5.24xlarge,m4.large,m4.xlarge,m4.2xlarge,m4.4xlarge,m4.10xlarge,m4.16xlarge,c5.large,c5.xlarge,c5.2xlarge,c5.4xlarge,c5.9xlarge,c5.18xlarge,c4.large,c4.xlarge,c4.2xlarge,c4.4xlarge,c4.8xlarge,r4.large,r4.xlarge,r4.2xlarge,r4.4xlarge,r4.8xlarge,r4.16xlarge,p3.2xlarge,p3.8xlarge,p3.16xlarge,p2.xlarge,p2.8xlarge,p2.16xlarge,g3.4xlarge,g3.8xlarge,g3.16xlarge,h1.2xlarge,h1.4xlarge,h1.8xlarge,h1.16xlarge,d2.xlarge,d2.2xlarge,d2.4xlarge,d2.8xlarge,m3.medium,m3.large,m3.xlarge,m3.2xlarge,c3.large,c3.xlarge,c3.2xlarge,c3.4xlarge,c3.8xlarge,g2.2xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.xlarge,x1e.2xlarge,x1e.4xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.large,r3.xlarge,r3.2xlarge,r3.4xlarge,r3.8xlarge,i2.xlarge,i2.2xlarge,i2.4xlarge,i2.8xlarge,m5d.large,m5d.xlarge,m5d.2xlarge,m5d.4xlarge,m5d.12xlarge,m5d.24xlarge,c5d.large,c5d.xlarge,c5d.2xlarge,c5d.4xlarge,c5d.9xlarge,c5d.18xlarge,f1.2xlarge,f1.16xlarge,i3.large,i3.xlarge,i3.2xlarge,i3.4xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
+            default: 'cc2.8xlarge,hs1.8xlarge,m5.12xlarge,m5.24xlarge,m4.10xlarge,m4.16xlarge,c5.9xlarge,c5.18xlarge,c4.8xlarge,r4.8xlarge,r4.16xlarge,p3.8xlarge,p3.16xlarge,p2.8xlarge,p2.16xlarge,g3.8xlarge,g3.16xlarge,h1.8xlarge,h1.16xlarge,d2.8xlarge,c3.8xlarge,g2.8xlarge,cr1.8xlarge,x1.16xlarge,x1.32xlarge,x1e.8xlarge,x1e.16xlarge,x1e.32xlarge,r3.8xlarge,i2.8xlarge,m5d.12xlarge,m5d.24xlarge,c5d.9xlarge,c5d.18xlarge,f1.16xlarge,i3.8xlarge,i3.16xlarge,i3.metal'
         }
     },
 
     run: function(cache, settings, callback) {
         var config = {
-            approved_instance_types_global: settings.approved_instance_types_global || this.settings.approved_instance_types_global.default,
-            approved_instance_types_region_us_east_1: settings.approved_instance_types_region_us_east_1 || this.settings.approved_instance_types_region_us_east_1.default,
-            approved_instance_types_region_us_east_2: settings.approved_instance_types_region_us_east_2 || this.settings.approved_instance_types_region_us_east_2.default,
-            approved_instance_types_region_us_west_1: settings.approved_instance_types_region_us_west_1 || this.settings.approved_instance_types_region_us_west_1.default,
-            approved_instance_types_region_us_west_2: settings.approved_instance_types_region_us_west_2 || this.settings.approved_instance_types_region_us_west_2.default,
-            approved_instance_types_region_ap_northeast_1: settings.approved_instance_types_region_ap_northeast_1 || this.settings.approved_instance_types_region_ap_northeast_1.default,
-            approved_instance_types_region_ap_northeast_2: settings.approved_instance_types_region_ap_northeast_2 || this.settings.approved_instance_types_region_ap_northeast_2.default,
-            approved_instance_types_region_ap_southeast_1: settings.approved_instance_types_region_ap_southeast_1 || this.settings.approved_instance_types_region_ap_southeast_1.default,
-            approved_instance_types_region_ap_southeast_2: settings.approved_instance_types_region_ap_southeast_2 || this.settings.approved_instance_types_region_ap_southeast_2.default,
-            approved_instance_types_region_eu_central_1: settings.approved_instance_types_region_eu_central_1 || this.settings.approved_instance_types_region_eu_central_1.default,
-            approved_instance_types_region_eu_west_1: settings.approved_instance_types_region_eu_west_1 || this.settings.approved_instance_types_region_eu_west_1.default,
-            approved_instance_types_region_eu_west_2: settings.approved_instance_types_region_eu_west_2 || this.settings.approved_instance_types_region_eu_west_2.default,
-            approved_instance_types_region_eu_west_3: settings.approved_instance_types_region_eu_west_3 || this.settings.approved_instance_types_region_eu_west_3.default,
-            approved_instance_types_region_sa_east_1: settings.approved_instance_types_region_sa_east_1 || this.settings.approved_instance_types_region_sa_east_1.default,
-            approved_instance_types_region_ap_south_1: settings.approved_instance_types_region_ap_south_1 || this.settings.approved_instance_types_region_ap_south_1.default,
-            approved_instance_types_region_ca_central_1: settings.approved_instance_types_region_ca_central_1 || this.settings.approved_instance_types_region_ca_central_1.default
+            disapproved_instance_types_global: settings.disapproved_instance_types_global || this.settings.disapproved_instance_types_global.default,
+            disapproved_instance_types_region_us_east_1: settings.disapproved_instance_types_region_us_east_1 || this.settings.disapproved_instance_types_region_us_east_1.default,
+            disapproved_instance_types_region_us_east_2: settings.disapproved_instance_types_region_us_east_2 || this.settings.disapproved_instance_types_region_us_east_2.default,
+            disapproved_instance_types_region_us_west_1: settings.disapproved_instance_types_region_us_west_1 || this.settings.disapproved_instance_types_region_us_west_1.default,
+            disapproved_instance_types_region_us_west_2: settings.disapproved_instance_types_region_us_west_2 || this.settings.disapproved_instance_types_region_us_west_2.default,
+            disapproved_instance_types_region_ap_northeast_1: settings.disapproved_instance_types_region_ap_northeast_1 || this.settings.disapproved_instance_types_region_ap_northeast_1.default,
+            disapproved_instance_types_region_ap_northeast_2: settings.disapproved_instance_types_region_ap_northeast_2 || this.settings.disapproved_instance_types_region_ap_northeast_2.default,
+            disapproved_instance_types_region_ap_southeast_1: settings.disapproved_instance_types_region_ap_southeast_1 || this.settings.disapproved_instance_types_region_ap_southeast_1.default,
+            disapproved_instance_types_region_ap_southeast_2: settings.disapproved_instance_types_region_ap_southeast_2 || this.settings.disapproved_instance_types_region_ap_southeast_2.default,
+            disapproved_instance_types_region_eu_central_1: settings.disapproved_instance_types_region_eu_central_1 || this.settings.disapproved_instance_types_region_eu_central_1.default,
+            disapproved_instance_types_region_eu_west_1: settings.disapproved_instance_types_region_eu_west_1 || this.settings.disapproved_instance_types_region_eu_west_1.default,
+            disapproved_instance_types_region_eu_west_2: settings.disapproved_instance_types_region_eu_west_2 || this.settings.disapproved_instance_types_region_eu_west_2.default,
+            disapproved_instance_types_region_eu_west_3: settings.disapproved_instance_types_region_eu_west_3 || this.settings.disapproved_instance_types_region_eu_west_3.default,
+            disapproved_instance_types_region_sa_east_1: settings.disapproved_instance_types_region_sa_east_1 || this.settings.disapproved_instance_types_region_sa_east_1.default,
+            disapproved_instance_types_region_ap_south_1: settings.disapproved_instance_types_region_ap_south_1 || this.settings.disapproved_instance_types_region_ap_south_1.default,
+            disapproved_instance_types_region_ca_central_1: settings.disapproved_instance_types_region_ca_central_1 || this.settings.disapproved_instance_types_region_ca_central_1.default
         };
 
         var custom = helpers.isCustom(settings, this.settings);
@@ -134,7 +134,7 @@ module.exports = {
         var source = {};
         var instancesFound = [];
         var instanceCountGlobal = 0;
-        var globalSetting = config.approved_instance_types_global.split(",");
+        var globalSetting = config.disapproved_instance_types_global.split(",");
 
         async.each(helpers.regions.ec2, function(region, rcb){
 
@@ -150,36 +150,41 @@ module.exports = {
             }
 
             if (!describeInstances.data.length) {
-                helpers.addResult(results, 0, 'No instances found', region);
+                helpers.addResult(results, 0, 'No disapproved instances found', region);
                 return rcb();
             }
 
             var instanceCount = 0;
             var regionUnderscore = region.replace(/-/g, '_');
-            var regionSetting = config['approved_instance_types_region_'+regionUnderscore].split(",");
+            var regionSetting = config['disapproved_instance_types_region_'+regionUnderscore].split(",");
 
             for (i in describeInstances.data) {
                 for (j in describeInstances.data[i].Instances) {
                     var instance = describeInstances.data[i].Instances[j];
-                    var approvedTypeRegion = (regionSetting.indexOf(instance.InstanceType) > -1 ? true : false);
-                    var approvedTypeGlobal = (globalSetting.indexOf(instance.InstanceType) > -1 ? true : false);
+                    var disapprovedTypeRegion = (regionSetting.indexOf(instance.InstanceType) > -1 ? true : false);
+                    var disapprovedTypeGlobal = (globalSetting.indexOf(instance.InstanceType) > -1 ? true : false);
 
-                    if (instancesFound.length>0) {
-                        var instanceWithType = instancesFound.findIndex(obj => obj.instanceType == instance.InstanceType);
-                    } else {
-                        instanceWithType = -1;
-                    }
+                    if (disapprovedTypeRegion || disapprovedTypeGlobal){
+                        if (instancesFound.length>0) {
+                            var instanceWithType = instancesFound.findIndex(obj => obj.instanceType == instance.InstanceType);
+                        } else {
+                            instanceWithType = -1;
+                        }
 
-                    if (instanceWithType<0) {
-                        instancesFound.push({instanceType:instance.InstanceType,region:region,state:instance.State.Name,count:0,approvedRegion:approvedTypeRegion,approvedGlobally:approvedTypeGlobal});
-                        var instanceWithType = instancesFound.findIndex(obj => obj.instanceType == instance.InstanceType);
-                    }
+                        if (instanceWithType<0) {
+                            instancesFound.push({instanceType:instance.InstanceType,region:region,state:instance.State.Name,count:0,disapprovedRegion:disapprovedTypeRegion,disapprovedGlobally:disapprovedTypeGlobal});
+                            var instanceWithType = instancesFound.findIndex(obj => obj.instanceType == instance.InstanceType);
 
-                    instancesFound[instanceWithType].count +=1;
-                    if (!instancesFound[instanceWithType].approved) {
-                        instanceCountGlobal += 1;
-                    } else {
-                        instanceCount += 1;
+                            instancesFound[instanceWithType].count +=1;
+
+                            if (instancesFound[instanceWithType].disapprovedGlobally) {
+                                instanceCountGlobal += 1;
+                            }
+
+                            if (instancesFound[instanceWithType].disapprovedRegion) {
+                                instanceCount += 1;
+                            }
+                        }
                     }
                 }
             }
@@ -187,22 +192,14 @@ module.exports = {
             // Print region results
             if (!regionSetting) {
                 helpers.addResult(results, 3,
-                    'The region: ' + region + ' does not have approved instances type settings.', region);
+                    'The region: ' + region + ' does not have disapproved instances type settings.', region);
             } else if (instancesFound.length>0) {
                 var instancesNotApproved = instancesFound.filter(obj => {
-                        return obj.approvedRegion == false
+                        return obj.disapprovedRegion == true
                     });
                 for (i in instancesNotApproved){
                     helpers.addResult(results, 2,
-                        instancesNotApproved[i].count + ' unnaproved EC2 ' + instancesNotApproved[i].instanceType + ' instances launched in ' +
-                        region + ' region', region, null, custom);
-                }
-                var instancesApproved = instancesFound.filter(obj => {
-                        return obj.approvedRegion == true
-                    });
-                for (i in instancesApproved){
-                    helpers.addResult(results, 0,
-                        instancesApproved[i].count + ' approved EC2 ' + instancesApproved[i].instanceType + ' instances launched in ' +
+                        instancesNotApproved[i].count + ' disapproved EC2 ' + instancesNotApproved[i].instanceType + ' instances launched in ' +
                         region + ' region', region, null, custom);
                 }
             }
@@ -216,21 +213,12 @@ module.exports = {
                 'There is not a global approved instances type setting.', region);
         } else if (instancesFound.length>0) {
             var instancesNotApproved = instancesFound.filter(obj => {
-                    return obj.approvedGlobally == false
+                    return obj.disapprovedGlobally == true
                 });
             for (i in instancesNotApproved){
                 helpers.addResult(results, 2,
-                    instancesNotApproved[i].count + ' globally unnaproved EC2 ' + instancesNotApproved[i].instanceType + ' instances launched in ' +
+                    instancesNotApproved[i].count + ' globally disapproved EC2 ' + instancesNotApproved[i].instanceType + ' instances launched in ' +
                     instancesNotApproved[i].region + ' region', null, null, custom);
-            }
-
-            var instancesApproved = instancesFound.filter(obj => {
-                    return obj.approvedGlobally == true
-                });
-            for (i in instancesApproved){
-                helpers.addResult(results, 0,
-                    instancesApproved[i].count + ' globally approved EC2 ' + instancesApproved[i].instanceType + ' instances launched in ' +
-                    instancesApproved[i].region + ' region', null, null, custom);
             }
         }
 
