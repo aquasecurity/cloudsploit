@@ -272,6 +272,11 @@ var calls = {
 			property: 'QueueUrls'
 		}
 	},
+  SSM: {
+    describeParameters: {
+      property: 'Parameters'
+    }
+  },
 	STS: {
 		getCallerIdentity: {
 			property: 'Account'
