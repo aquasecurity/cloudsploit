@@ -25,29 +25,24 @@ module.exports = {
 
 			if (describeParameters.err || !describeParameters.data) {
 				helpers.addResult(results, 3,
-					'Unable to query for SSM Parameters: ' + helpers.addError(describeParameters), region);
+					'Unable to query for Parameters: ' + helpers.addError(describeParameters), region);
 				return rcb();
 			}
 
 			if (!describeParameters.data.length) {
-				helpers.addResult(results, 0, 'No SSM Parameters present', region);
+				helpers.addResult(results, 0, 'No Parameters present', region);
 				return rcb();
 			}
 
-      var nonSecureStrings = []
 
       for( i in describeParameters.data) {
-        if(describeParameters.data[i].Type != "SecureString"){
-          nonSecureStrings.push(describeParameters.data[i].Name);
-        }
-      }
+        var param = describeParameters.data[i];
 
-      if (nonSecureStrings.length > 0) {
-				helpers.addResult,(results, 2, 'Non-SecureString SSM Parameters present', region);
-				return rcb();
-      } else if (nonSecureStrings.length == 0) {
-				helpers.addResult(results, 0, 'All SSM Parameters of Type SecureString', region);
-				return rcb();
+        if(param.Type != "SecureString"){
+				  helpers.addResult(results, 2, 'Non-SecureString Parameters present', region, param.Name)
+        } else {
+				  helpers.addResult(results, 0, 'Parameter of Type SecureString', region, param.Name)
+        }
       }
 
 			rcb();
