@@ -5,12 +5,13 @@ var collector = require('./collect.js');
 var AWSConfig;
 
 // OPTION 1: Configure AWS credentials through hard-coded key and secret
-AWSConfig = {
-    accessKeyId: 'AKIAJ74H3DFLYR74BHDQ',
-    secretAccessKey: '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',
-    sessionToken: '',
-    region: 'us-east-1'
-};
+// AWSConfig = {
+//     accessKeyId: '',
+//     secretAccessKey: '',
+//     sessionToken: '',
+//     region: 'us-east-1'
+// };
+
 // OPTION 2: Import an AWS config file containing credentials
 // AWSConfig = require(__dirname + '/credentials.json');
 
