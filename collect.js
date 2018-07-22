@@ -30,6 +30,11 @@ var globalServices = [
 ];
 
 var calls = {
+	ACM: {
+		listCertificates: {
+			property: 'CertificateSummaryList'
+		}
+	},
 	AutoScaling:{
 		describeAutoScalingGroups: {
 			property: 'AutoScalingGroups'
@@ -286,6 +291,14 @@ var calls = {
 
 var postcalls = [
 	{
+	ACM: {
+		describeCertificate: {
+			reliesOnService: 'acm',
+			reliesOnCall: 'listCertificates',
+			filterKey: 'CertificateArn',
+			filterValue: 'CertificateArn'
+		}
+	},
 		CloudFront: {
             getDistribution: {
                 reliesOnService: 'cloudfront',
