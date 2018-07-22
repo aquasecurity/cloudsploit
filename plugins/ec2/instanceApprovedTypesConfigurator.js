@@ -162,7 +162,7 @@ module.exports = {
                 var customizationConfig = eval('config.disapproved_instance_types_region_'+region.replace(new RegExp('-','g'),'_').toString());
 
                 var customizationBuild = db.customization.build({
-                    setting: 'approved_instance_types_region_'+region.replace(new RegExp('-','g'),'_').toString(),
+                    setting: 'disapproved_instance_types_region_'+region.replace(new RegExp('-','g'),'_').toString(),
                     default: customizationConfig.default.toString(),
                     name: customizationConfig.name,
                     description: customizationConfig.description,
