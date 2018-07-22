@@ -1,7 +1,7 @@
 // Export all available scans
 
 module.exports = {
-    'acmValidation'		    : require(__dirname + '/plugins/acm/acmValidation.js'),
+    'acmValidation'		            : require(__dirname + '/plugins/acm/acmValidation.js'),
 
     'asgMultiAz'                    : require(__dirname + '/plugins/autoscaling/asgMultiAz.js'),
 

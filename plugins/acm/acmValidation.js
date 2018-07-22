@@ -2,10 +2,10 @@ var async = require('async');
 var helpers = require('../../helpers');
 
 module.exports = {
-    title: 'ACM certificate validation',
+    title: 'ACM Certificate Validation',
     category: 'ACM',
     description: 'ACM certificates should be configured to use DNS validation.',
-    more_info: 'With DNS validation ACM will automatically renew certificates before they expire, as long as the DNS CNAME record is in place.',
+    more_info: 'With DNS validation, ACM will automatically renew certificates before they expire, as long as the DNS CNAME record is in place.',
     link: 'https://aws.amazon.com/blogs/security/easier-certificate-validation-using-dns-with-aws-certificate-manager/',
     recommended_action: 'Configure ACM managed certificates to use DNS validation.',
     apis: ['ACM:listCertificates', 'ACM:describeCertificate'],
@@ -15,34 +15,47 @@ module.exports = {
         var source = {};
 
         async.each(helpers.regions.acm, function(region, rcb){
-            var describeCerts = helpers.addSource(cache, source,
+            var listCertificates = helpers.addSource(cache, source,
                 ['acm', 'listCertificates', region]);
 
-            if (!describeCerts) return rcb();
+            if (!listCertificates) return rcb();
 
-            if (describeCerts.err || !describeCerts.data) {
+            if (listCertificates.err || !listCertificates.data) {
                 helpers.addResult(results, 3,
-                    'Unable to list ACM certificates: ' + helpers.addError(describeCerts), region);
+                    'Unable to list ACM certificates: ' + helpers.addError(listCertificates), region);
                 return rcb();
             }
 
-            if (!describeCerts.data.length) {
+            if (!listCertificates.data.length) {
                 helpers.addResult(results, 0, 'No ACM certificates found', region);
                 return rcb();
             }
 
             // Loop through certificates
-            describeCerts.data.forEach(function(cert){
-		var certInfo = helpers.addSource(cache, source, ['acm', 'describeCertificate', region, cert.CertificateArn]);
-		certInfo.data.Certificate.DomainValidationOptions.forEach(function(domain) {
-			if(domain.ValidationStatus != 'SUCCESS') {
-				helpers.addResult(results, 2, domain.DomainName + ' has failed ' + domain.ValidationMethod + ' validation.', region, cert.CertificateArn);
-			} else if(domain.ValidationMethod != 'DNS') {
-				helpers.addResult(results, 1, domain.DomainName + ' is using ' + domain.ValidationMethod + ' validation.', region, cert.CertificateArn);
-			} else {
-				helpers.addResult(results, 0, domain.DomainName + ' is using ' + domain.ValidationMethod + ' validation.', region, cert.CertificateArn);
-			}
-		});
+            listCertificates.data.forEach(function(cert){
+                var describeCertificate = helpers.addSource(cache, source,
+                    ['acm', 'describeCertificate', region, cert.CertificateArn]);
+
+                if (!describeCertificate || describeCertificate.err || !describeCertificate.data) {
+                    helpers.addResult(results, 3,
+                        'Unable to describe ACM certificate: ' + helpers.addError(describeCertificate), region, cert.CertificateArn);
+                    rcb();
+                } else if (!describeCertificate.data.Certificate ||
+                           !describeCertificate.data.Certificate.DomainValidationOptions ||
+                           !describeCertificate.data.Certificate.DomainValidationOptions.length) {
+                    helpers.addResult(results, 2,
+                        'ACM certificate does not have DomainValidationOptions', region, cert.CertificateArn);
+                } else {
+                    describeCertificate.data.Certificate.DomainValidationOptions.forEach(function(domain) {
+                        if (!domain.ValidationStatus || domain.ValidationStatus != 'SUCCESS') {
+                            helpers.addResult(results, 2, domain.DomainName + ' has failed ' + (domain.ValidationMethod || '') + ' validation.', region, cert.CertificateArn);
+                        } else if (!domain.ValidationMethod || domain.ValidationMethod != 'DNS') {
+                            helpers.addResult(results, 1, domain.DomainName + ' is using ' + (domain.ValidationMethod || '') + ' validation.', region, cert.CertificateArn);
+                        } else {
+                            helpers.addResult(results, 0, domain.DomainName + ' is using ' + (domain.ValidationMethod || '') + ' validation.', region, cert.CertificateArn);
+                        }
+                    });
+                }
             });
             rcb();
         }, function(){
