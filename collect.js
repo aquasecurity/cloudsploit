@@ -30,11 +30,6 @@ var globalServices = [
 ];
 
 var calls = {
-	ACM: {
-		listCertificates: {
-			property: 'CertificateSummaryList'
-		}
-	},
 	AutoScaling:{
 		describeAutoScalingGroups: {
 			property: 'AutoScalingGroups'
@@ -81,6 +76,31 @@ var calls = {
 	DirectoryService: {
 		describeDirectories: {
 			property: 'DirectoryDescriptions'
+		}
+	},
+	AppStream: {
+		describeFleets: {
+			property: 'Fleets'
+		}
+	},
+	DAX: {
+		describeClusters: {
+			property: "Clusters"
+		}
+	},
+	MediaLive: {
+		listInputSecurityGroups: {
+			property: 'InputSecurityGroups'
+		}
+	},
+	Neptune: {
+		describeDBClusters: {
+			property: 'DBClusters'
+		}
+	},
+	EKS: {
+		describeCluster: {
+			property: 'cluster'
 		}
 	},
 	EC2: {
@@ -187,6 +207,12 @@ var calls = {
 	EFS: {
 		describeFileSystems: {
 			property: 'FileSystems'
+		},
+		describeMountTargets: {
+			property: 'MountTargets'
+		},
+		describeMountTargetSecurityGroups: {
+			property: 'SecurityGroups'
 		}
 	},
 	ElasticTranscoder: {
@@ -240,11 +266,22 @@ var calls = {
 		},
 		describeDBClusters: {
 			property: 'DBClusters'
+		},
+		describeDBSecurityGroups: {
+			property: 'DBSecurityGroups'
 		}
 	},
 	Redshift: {
 		describeClusters: {
 			property: 'Clusters'
+		},
+		describeClusterSecurityGroups: {
+			property: 'ClusterSecurityGroups'
+		}
+	},
+	SageMaker: {
+		describeNotebookInstance: {
+			property: 'SecurityGroups'
 		}
 	},
 	Route53Domains: {
@@ -285,20 +322,28 @@ var calls = {
 	WorkSpaces: {
 		describeWorkspaces: {
 			property: 'Workspaces'
+		},
+		describeWorkspaceDirectories: {
+			property: 'Directories'
+		}
+	},
+	ES: {
+		describeElasticsearchDomain: {
+			property: 'DomainStatus'
 		}
 	}
 };
 
 var postcalls = [
 	{
-	ACM: {
-		describeCertificate: {
-			reliesOnService: 'acm',
-			reliesOnCall: 'listCertificates',
-			filterKey: 'CertificateArn',
-			filterValue: 'CertificateArn'
-		}
-	},
+		ACM: {
+			describeCertificate: {
+				reliesOnService: 'acm',
+				reliesOnCall: 'listCertificates',
+				filterKey: 'CertificateArn',
+				filterValue: 'CertificateArn'
+			}
+		},
 		CloudFront: {
             getDistribution: {
                 reliesOnService: 'cloudfront',
