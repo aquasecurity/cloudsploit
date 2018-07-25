@@ -5,16 +5,16 @@ var regions = [
 	'us-east-2',		// Ohio
 	'us-west-1',		// Northern California
 	'us-west-2',		// Oregon
-    'ca-central-1'		// Canada (Montreal)
-    'eu-central-1',		// EU (Frankfurt)
-    'eu-west-1',		// EU (Ireland)
-    'eu-west-2',		// London
-    'eu-west-3',		// Paris
+    	'ca-central-1'		// Canada (Montreal)
+    	'eu-central-1',		// EU (Frankfurt)
+    	'eu-west-1',		// EU (Ireland)
+    	'eu-west-2',		// London
+    	'eu-west-3',		// Paris
 	'ap-northeast-1',	// Asia Pacific (Tokyo)
 	'ap-northeast-2',	// Asia Pacific (Seoul)
 	'ap-southeast-1',	// Asia Pacific (Singapore)
 	'ap-southeast-2',	// Asia Pacific (Sydney)
-    'ap-south-1',		// Asia Pacific (Mumbai)
+    	'ap-south-1',		// Asia Pacific (Mumbai)
 	'sa-east-1',		// South America (São Paulo)
 ];
 
@@ -25,7 +25,7 @@ module.exports = {
 	iam: ['us-east-1'],
 	route53: ['us-east-1'],
 	route53domains: ['us-east-1'],
-	s3: regions,
+	s3: ['us-east-1'],
 	cloudtrail: regions,
 	cloudwatchlogs: regions,
 	configservice: regions,
