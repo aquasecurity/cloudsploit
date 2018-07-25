@@ -5,7 +5,7 @@ var regions = [
 	'us-east-2',		// Ohio
 	'us-west-1',		// Northern California
 	'us-west-2',		// Oregon
-    	'ca-central-1'		// Canada (Montreal)
+    	'ca-central-1',		// Canada (Montreal)
     	'eu-central-1',		// EU (Frankfurt)
     	'eu-west-1',		// EU (Ireland)
     	'eu-west-2',		// London
@@ -15,7 +15,7 @@ var regions = [
 	'ap-southeast-1',	// Asia Pacific (Singapore)
 	'ap-southeast-2',	// Asia Pacific (Sydney)
     	'ap-south-1',		// Asia Pacific (Mumbai)
-	'sa-east-1',		// South America (São Paulo)
+	'sa-east-1'		// South America (São Paulo)
 ];
 
 module.exports = {
