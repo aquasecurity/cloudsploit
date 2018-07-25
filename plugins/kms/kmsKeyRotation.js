@@ -57,6 +57,13 @@ module.exports = {
 					return kcb();
 				}
 
+				// Skip keys that are imported into KMS
+				if (describeKeyData.KeyMetadata &&
+					describeKeyData.KeyMetadata.Origin &&
+					describeKeyData.KeyMetadata.Origin !== 'AWS_KMS') {
+					return kcb();
+				}
+
 				var keyRotationStatusData = getKeyRotationStatus.data;
 
 				if (!getKeyRotationStatus || getKeyRotationStatus.err || !getKeyRotationStatus.data) {

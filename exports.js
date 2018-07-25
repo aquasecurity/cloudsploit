@@ -1,6 +1,8 @@
 // Export all available scans
 
 module.exports = {
+    'acmValidation'		            : require(__dirname + '/plugins/acm/acmValidation.js'),
+
     'asgMultiAz'                    : require(__dirname + '/plugins/autoscaling/asgMultiAz.js'),
 
     'publicS3Origin'                : require(__dirname + '/plugins/cloudfront/publicS3Origin.js'),
