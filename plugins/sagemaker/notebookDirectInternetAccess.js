@@ -2,21 +2,21 @@ var async = require('async');
 var helpers = require('../../helpers');
 
 module.exports = {
-	title: 'Notebook Direct Internet Access',
-	category: 'SageMaker',
-	description: 'Ensure Notebook Instance is not publicly available.',
-	more_info: 'Public availability can be configured via the DirectInternetAccess attribute.',
-	recommended_action: 'DirectInternetAccess should be Disabled.',
-	link: 'https://docs.aws.amazon.com/sagemaker/latest/dg/appendix-additional-considerations.html#appendix-notebook-and-internet-access',
-	apis: ['SageMaker:listNotebookInstances', 'SageMaker:describeNotebookInstance'],
+  title: 'Notebook Direct Internet Access',
+  category: 'SageMaker',
+  description: 'Ensure Notebook Instance is not publicly available.',
+  more_info: 'Public availability can be configured via the DirectInternetAccess attribute.',
+  recommended_action: 'DirectInternetAccess should be Disabled.',
+  link: 'https://docs.aws.amazon.com/sagemaker/latest/dg/appendix-additional-considerations.html#appendix-notebook-and-internet-access',
+  apis: ['SageMaker:listNotebookInstances', 'SageMaker:describeNotebookInstance'],
 
-	run: function(cache, settings, callback) {
-		var results = [];
-		var source = {};
+  run: function(cache, settings, callback) {
+    var results = [];
+    var source = {};
 
-		async.each(helpers.regions.sagemaker, function(region, rcb){
-			var listNotebookInstances = helpers.addSource(cache, source,
-				['sagemaker', 'listNotebookInstances', region]);
+    async.each(helpers.regions.sagemaker, function(region, rcb){
+      var listNotebookInstances = helpers.addSource(cache, source,
+        ['sagemaker', 'listNotebookInstances', region]);
 
       if (!listNotebookInstances) return rcb();
 
@@ -47,8 +47,8 @@ module.exports = {
       }
 
       rcb();
-		}, function(){
-			callback(null, results, source);
-		});
-	}
+    }, function(){
+      callback(null, results, source);
+    });
+  }
 };
