@@ -257,6 +257,11 @@ var calls = {
 			property: 'Buckets'
 		}
 	},
+  SageMaker: {
+    listNotebookInstances: {
+      property: 'NotebookInstances'
+    }
+  },
 	SES: {
 		listIdentities: {
 			property: 'Identities',
@@ -438,6 +443,14 @@ var postcalls = [
 				override: true
 			}
 		},
+    SageMaker: {
+      describeNotebookInstance: {
+        reliesOnService: 'sagemaker',
+        reliesOnCall: 'listNotebookInstances',
+        filterKey: 'NotebookInstanceName',
+        filterValue: 'NotebookInstanceName'
+      }
+    },
 		SES: {
 			getIdentityDkimAttributes: {
 				reliesOnService: 'ses',
