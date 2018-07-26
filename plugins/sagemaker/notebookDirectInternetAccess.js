@@ -4,10 +4,10 @@ var helpers = require('../../helpers');
 module.exports = {
 	title: 'Notebook Direct Internet Access',
 	category: 'SageMaker',
-	description: '',
-	more_info: '',
-	recommended_action: '',
-	link: 'https://docs.aws.amazon.com/sagemaker/latest/dg/appendix-additional-considerations.html',
+	description: 'Ensure Notebook Instance is not publicly available.',
+	more_info: 'Public availability can be configured via the DirectInternetAccess attribute.',
+	recommended_action: 'DirectInternetAccess should be Disabled.',
+	link: 'https://docs.aws.amazon.com/sagemaker/latest/dg/appendix-additional-considerations.html#appendix-notebook-and-internet-access',
 	apis: ['SageMaker:listNotebookInstances', 'SageMaker:describeNotebookInstance'],
 
 	run: function(cache, settings, callback) {
@@ -20,7 +20,7 @@ module.exports = {
 
       if (!listNotebookInstances) return rcb();
 
-      if (listNotebookInstances.err || !listNotebookInstances.data) {
+      if (listNotebookInstances.err) {
         helpers.addResult(results, 3,
           'Unable to query for Notebook Instances: '
           + helpers.addError(listNotebookInstances), region);

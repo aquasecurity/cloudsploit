@@ -2,12 +2,12 @@ var async = require('async');
 var helpers = require('../../helpers');
 
 module.exports = {
-	title: 'Notebook Encyption Enabled',
+	title: 'Notebook Data Encrypted',
 	category: 'SageMaker',
-	description: '',
-	more_info: '',
-	recommended_action: '',
-	link: 'https://docs.aws.amazon.com/sagemaker/latest/dg/appendix-additional-considerations.html',
+	description: 'Ensure Notebook data is encrypted',
+	more_info: 'An optional Encryption key can be supplied durning Notebook Instance creation.',
+	recommended_action: 'An existing KMS key should be supplied durning Notebook Instance creation.',
+	link: 'https://docs.aws.amazon.com/sagemaker/latest/dg/API_CreateNotebookInstance.html#API_CreateNotebookInstance_RequestSyntax',
 	apis: ['SageMaker:listNotebookInstances', 'SageMaker:describeNotebookInstance'],
 
 	run: function(cache, settings, callback) {
@@ -20,7 +20,7 @@ module.exports = {
 
       if (!listNotebookInstances) return rcb();
 
-      if (listNotebookInstances.err || !listNotebookInstances.data) {
+      if (listNotebookInstances.err) {
         helpers.addResult(results, 3,
           'Unable to query for Notebook Instances: '
           + helpers.addError(listNotebookInstances), region);
