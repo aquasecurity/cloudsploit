@@ -1,7 +1,7 @@
 // Export all available scans
 
 module.exports = {
-    'asgMultiAz'                    : require(__dirname + '/plugins/autoscaling/asgMultiAz.js'),
+   'asgMultiAz'                    : require(__dirname + '/plugins/autoscaling/asgMultiAz.js'),
 
     'publicS3Origin'                : require(__dirname + '/plugins/cloudfront/publicS3Origin.js'),
     'secureOrigin'                  : require(__dirname + '/plugins/cloudfront/secureOrigin.js'),
@@ -82,6 +82,8 @@ module.exports = {
     'sshKeysRotated'                : require(__dirname + '/plugins/iam/sshKeysRotated.js'),
     'usersMfaEnabled'               : require(__dirname + '/plugins/iam/usersMfaEnabled.js'),
     'usersPasswordLastUsed'         : require(__dirname + '/plugins/iam/usersPasswordLastUsed.js'),
+
+    'kinesisEncrypted'              : require(__dirname + '/plugins/kinesis/kinesisEncrypted.js'),
 
     'kmsKeyRotation'                : require(__dirname + '/plugins/kms/kmsKeyRotation.js'),
     'kmsScheduledDeletion'          : require(__dirname + '/plugins/kms/kmsScheduledDeletion.js'),
