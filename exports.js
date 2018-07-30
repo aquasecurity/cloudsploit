@@ -1,8 +1,7 @@
 // Export all available scans
 
 module.exports = {
-    'acmValidation'		            : require(__dirname + '/plugins/acm/acmValidation.js'),
-
+    
     'asgMultiAz'                    : require(__dirname + '/plugins/autoscaling/asgMultiAz.js'),
 
     'publicS3Origin'                : require(__dirname + '/plugins/cloudfront/publicS3Origin.js'),
@@ -57,6 +56,7 @@ module.exports = {
     'natMultiAz'                    : require(__dirname + '/plugins/ec2/natMultiAz.js'),
     'defaultVpcInUse'               : require(__dirname + '/plugins/ec2/defaultVpcInUse.js'),
     'crossVpcPublicPrivate'         : require(__dirname + '/plugins/ec2/crossVpcPublicPrivate.js'),
+    'securityGroupUnused'           : require(__dirname + '/plugins/ec2/securityGroupUnused.js'),
 
     'insecureCiphers'               : require(__dirname + '/plugins/elb/insecureCiphers.js'),
     'elbHttpsOnly'                  : require(__dirname + '/plugins/elb/elbHttpsOnly.js'),
