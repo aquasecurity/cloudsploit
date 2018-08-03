@@ -96,6 +96,9 @@ var calls = {
 		describeVolumes: {
 			property: 'Volumes'
 		},
+        describeSnapshots: {
+            property: 'Snapshots'
+        },
 		describeInstances: {
 			property: 'Reservations',
 			params: {
