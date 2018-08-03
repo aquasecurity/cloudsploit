@@ -96,9 +96,12 @@ var calls = {
 		describeVolumes: {
 			property: 'Volumes'
 		},
-        describeSnapshots: {
-            property: 'Snapshots'
-        },
+		describeSnapshots: {
+			// This call must be overridden because the
+			// default call retrieves every snapshot
+			// available, including public ones
+			override: true
+		},
 		describeInstances: {
 			property: 'Reservations',
 			params: {

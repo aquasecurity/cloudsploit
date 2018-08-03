@@ -5,19 +5,22 @@ module.exports = {
     title: 'EBS Encrypted Snapshots',
     category: 'EC2',
     description: 'Ensures EBS snapshots are encrypted at rest',
-    more_info: 'EBS snapshots should have at-rest encryption enabled through AWS using KMS. If the volume was not encrypted and a snapshot was taken the snapshot will be unencrypted',
+    more_info: 'EBS snapshots should have at-rest encryption enabled through AWS using KMS. If the volume was not encrypted and a snapshot was taken the snapshot will be unencrypted.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSSnapshots.html#encryption-support',
-    recommended_action: 'Delete unencrypted EBS snapshots.',
-    apis: ['EC2:DescribeSnapshots'],
+    recommended_action: 'Configure volume encryption and delete unencrypted EBS snapshots.',
+    apis: ['EC2:describeSnapshots', 'STS:getCallerIdentity'],
     compliance: {
         hipaa: 'HIPAA requires that all data is encrypted, including data at rest. ' +
                 'EBS is a HIPAA-compliant solution that provides automated encryption ' +
-                'of EC2 instance data at rest.'
+                'of EC2 instance data at rest, but volumes must be configured to use ' +
+                'encryption so their snapshots are also encrypted.'
     },
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
+
+        var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', 'us-east-1', 'data']);
 
         async.each(helpers.regions.ec2, function(region, rcb){
             var describeSnapshots = helpers.addSource(cache, source,
@@ -38,17 +41,19 @@ module.exports = {
 
             var unencryptedSnapshots = [];
 
-            describeSnapshots.data.forEach(function(SnapshotId){
-                if (!SnapshotId.Encrypted){
-                    unencryptedSnapshots.push(Snapshot.SnapshotId);
+            describeSnapshots.data.forEach(function(snapshot){
+                if (!snapshot.Encrypted){
+                    // arn:aws:ec2:region:account-id:snapshot/snapshot-id
+                    var arn = 'arn:aws:ec2:' + region + ':' + snapshot.OwnerId + ':snapshot/' + snapshot.SnapshotId;
+                    unencryptedSnapshots.push(arn);
                 }
             });
 
-            if (unencryptedVolumes.length > 20) {
+            if (unencryptedSnapshots.length > 20) {
                 helpers.addResult(results, 2, 'More than 20 EBS snapshots are unencrypted', region);
-            } else if (unencryptedVolumes.length) {
-                for (u in unencryptedVolumes) {
-                    helpers.addResult(results, 2, 'EBS snapshot is unencrypted', region, unencryptedVolumes[u]);
+            } else if (unencryptedSnapshots.length) {
+                for (u in unencryptedSnapshots) {
+                    helpers.addResult(results, 2, 'EBS snapshot is unencrypted', region, unencryptedSnapshots[u]);
                 }
             } else {
                 helpers.addResult(results, 0, 'No unencrypted snapshots found', region);
