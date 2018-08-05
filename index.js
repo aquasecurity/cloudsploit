@@ -1,4 +1,6 @@
 var async = require('async');
+var plugins = require('./exports.js');
+var collector = require('./collect.js');
 
 var AWSConfig;
 
@@ -48,9 +50,6 @@ if (process.argv.join(' ').indexOf('--compliance') > -1) {
         process.exit();
     }
 }
-
-var plugins = require('./exports.js');
-var collector = require('./collect.js');
 
 // STEP 1 - Obtain API calls to make
 console.log('INFO: Determining API calls to make...');
