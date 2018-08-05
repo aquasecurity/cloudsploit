@@ -486,6 +486,8 @@ var postcalls = [
 
 // Loop through all of the top-level collectors for each service
 var collect = function(AWSConfig, settings, callback) {
+	var regions = helpers.regions(settings.govcloud);
+
 	var collection = {};
 
 	async.eachOfLimit(calls, 10, function(call, service, serviceCb){
@@ -498,7 +500,7 @@ var collect = function(AWSConfig, settings, callback) {
 			if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
 			if (!collection[serviceLower][callKey]) collection[serviceLower][callKey] = {};
 
-			async.eachLimit(helpers.regions[serviceLower], helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb){
+			async.eachLimit(regions[serviceLower], helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb){
 				if (settings.skip_regions &&
 					settings.skip_regions.indexOf(region) > -1 &&
 					globalServices.indexOf(service) === -1) return regionCb();
@@ -569,7 +571,7 @@ var collect = function(AWSConfig, settings, callback) {
 					if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
 					if (!collection[serviceLower][callKey]) collection[serviceLower][callKey] = {};
 
-					async.eachLimit(helpers.regions[serviceLower], helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb){
+					async.eachLimit(regions[serviceLower], helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb){
 						if (settings.skip_regions &&
 							settings.skip_regions.indexOf(region) > -1 &&
 							globalServices.indexOf(service) === -1) return regionCb();
@@ -588,7 +590,7 @@ var collect = function(AWSConfig, settings, callback) {
 						var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
 						if (callObj.deleteRegion) {
 							//delete LocalAWSConfig.region;
-							LocalAWSConfig.region = 'us-east-1';
+							LocalAWSConfig.region = settings.govcloud ? 'us-gov-west-1' : 'us-east-1';
 						} else {
 							LocalAWSConfig.region = region;
 						}

@@ -1,6 +1,4 @@
 var async = require('async');
-var plugins = require('./exports.js');
-var collector = require('./collect.js');
 
 var AWSConfig;
 
@@ -34,6 +32,9 @@ var skipRegions = [];   // Add any regions you wish to skip here. Ex: 'us-east-2
 // Custom settings - place plugin-specific settings here
 var settings = {};
 
+// If running in GovCloud, uncomment the following
+// settings.govcloud = true;
+
 // Determine if scan is a compliance scan
 var COMPLIANCE;
 
@@ -47,6 +48,9 @@ if (process.argv.join(' ').indexOf('--compliance') > -1) {
         process.exit();
     }
 }
+
+var plugins = require('./exports.js');
+var collector = require('./collect.js');
 
 // STEP 1 - Obtain API calls to make
 console.log('INFO: Determining API calls to make...');

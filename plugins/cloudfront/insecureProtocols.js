@@ -20,8 +20,10 @@ module.exports = {
 		var results = [];
 		var source = {};
 
+		var region = settings.govcloud ? 'us-gov-west-1' : 'us-east-1';
+
 		var listDistributions = helpers.addSource(cache, source,
-			['cloudfront', 'listDistributions', 'us-east-1']);
+			['cloudfront', 'listDistributions', region]);
 
 		if (!listDistributions) return callback(null, results, source);
 

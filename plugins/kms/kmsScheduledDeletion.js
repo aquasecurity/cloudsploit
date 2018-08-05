@@ -13,8 +13,9 @@ module.exports = {
 	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
+		var regions = helpers.regions(settings.govcloud);
 
-		async.each(helpers.regions.kms, function(region, rcb){
+		async.each(regions.kms, function(region, rcb){
 			
 			var listKeys = helpers.addSource(cache, source,
 					['kms', 'listKeys', region]);

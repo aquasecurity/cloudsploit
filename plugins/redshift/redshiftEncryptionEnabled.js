@@ -19,8 +19,9 @@ module.exports = {
 	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
+		var regions = helpers.regions(settings.govcloud);
 
-		async.each(helpers.regions.redshift, function(region, rcb){
+		async.each(regions.redshift, function(region, rcb){
 			var describeClusters = helpers.addSource(cache, source,
 				['redshift', 'describeClusters', region]);
 
