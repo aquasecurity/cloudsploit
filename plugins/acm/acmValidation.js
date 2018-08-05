@@ -14,8 +14,9 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
+        var regions = helpers.regions(settings.govcloud);
 
-        async.each(helpers.regions.acm, function(region, rcb){
+        async.each(regions.acm, function(region, rcb){
             var listCertificates = helpers.addSource(cache, source,
                 ['acm', 'listCertificates', region]);
 

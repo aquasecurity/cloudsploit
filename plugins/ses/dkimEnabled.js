@@ -13,8 +13,9 @@ module.exports = {
 	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
+		var regions = helpers.regions(settings.govcloud);
 
-		async.each(helpers.regions.ses, function(region, rcb){
+		async.each(regions.ses, function(region, rcb){
 			var listIdentities = helpers.addSource(cache, source,
 				['ses', 'listIdentities', region]);
 

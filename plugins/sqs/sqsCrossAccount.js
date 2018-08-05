@@ -53,11 +53,13 @@ module.exports = {
 	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
+		var regions = helpers.regions(settings.govcloud);
 
+		var acctRegion = settings.govcloud ? 'us-gov-west-1' : 'us-east-1';
 		var accountId = helpers.addSource(cache, source,
-			['sts', 'getCallerIdentity', 'us-east-1', 'data']);
+			['sts', 'getCallerIdentity', acctRegion, 'data']);
 
-		async.each(helpers.regions.sqs, function(region, rcb){
+		async.each(regions.sqs, function(region, rcb){
 			var listQueues = helpers.addSource(cache, source,
 				['sqs', 'listQueues', region]);
 

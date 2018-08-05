@@ -34,6 +34,9 @@ var skipRegions = [];   // Add any regions you wish to skip here. Ex: 'us-east-2
 // Custom settings - place plugin-specific settings here
 var settings = {};
 
+// If running in GovCloud, uncomment the following
+// settings.govcloud = true;
+
 // Determine if scan is a compliance scan
 var COMPLIANCE;
 

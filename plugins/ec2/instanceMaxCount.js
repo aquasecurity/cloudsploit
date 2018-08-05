@@ -105,6 +105,12 @@ module.exports = {
             description: 'Checks for the number of running instances in the ca-central-1 region and triggers a failing result if it exceeds the specified count',
             regex: '^[0-9]{1,4}$',
             default: 100
+        },
+        instance_count_region_threshold_us_gov_west_1: {
+            name: 'Instance Count Region Threshold: us-gov-west-1',
+            description: 'Checks for the number of running instances in the us-gov-west-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
         }
     },
 
@@ -138,9 +144,10 @@ module.exports = {
 
         var results = [];
         var source = {};
+        var regions = helpers.regions(settings.govcloud);
         var instanceCountGlobal = 0;
 
-        async.each(helpers.regions.ec2, function(region, rcb){
+        async.each(regions.ec2, function(region, rcb){
 
             var describeInstances = helpers.addSource(cache, source,
                 ['ec2', 'describeInstances', region]);

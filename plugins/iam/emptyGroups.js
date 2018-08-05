@@ -14,7 +14,7 @@ module.exports = {
 		var results = [];
 		var source = {};
 
-		var region = 'us-east-1';
+		var region = settings.govcloud ? 'us-gov-west-1' : 'us-east-1';
 
 		var listGroups = helpers.addSource(cache, source,
 				['iam', 'listGroups', region]);

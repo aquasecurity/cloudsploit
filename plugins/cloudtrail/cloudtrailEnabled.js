@@ -18,10 +18,11 @@ module.exports = {
 	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
+		var regions = helpers.regions(settings.govcloud);
 
 		var globalServicesMonitored = false;
 
-		async.each(helpers.regions.cloudtrail, function(region, rcb){
+		async.each(regions.cloudtrail, function(region, rcb){
 			var describeTrails = helpers.addSource(cache, source,
 				['cloudtrail', 'describeTrails', region]);
 
