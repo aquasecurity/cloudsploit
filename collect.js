@@ -230,6 +230,11 @@ var calls = {
 			override: true
 		}
 	},
+	Firehose: {
+		listDeliveryStreams: {
+			property: 'DeliveryStreamNames'
+		}
+	},
 	KMS: {
 		listKeys: {
 			property: 'Keys'
@@ -423,6 +428,21 @@ var postcalls = [
 				filterKey: 'UserName',
 				filterValue: 'UserName',
 				rateLimit: 100
+			}
+		},
+// Modified for Kinesis
+		Kinesis: {
+			describeStream: {
+				reliesOnService: 'kinesis',
+				reliesOnCall: 'listStreams',
+				override: true
+			}
+		},
+		Firehose: {
+			describeDeliveryStream: {
+				reliesOnService: 'firehose',
+				reliesOnCall: 'listDeliveryStreams',
+				override: true
 			}
 		},
 		KMS: {

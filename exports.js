@@ -1,10 +1,8 @@
 // Export all available scans
 
 module.exports = {
-    'acmValidation'		            : require(__dirname + '/plugins/acm/acmValidation.js'),
-
+    'acmValidation'		              : require(__dirname + '/plugins/acm/acmValidation.js'),
     'asgMultiAz'                    : require(__dirname + '/plugins/autoscaling/asgMultiAz.js'),
-
     'publicS3Origin'                : require(__dirname + '/plugins/cloudfront/publicS3Origin.js'),
     'secureOrigin'                  : require(__dirname + '/plugins/cloudfront/secureOrigin.js'),
     'insecureProtocols'             : require(__dirname + '/plugins/cloudfront/insecureProtocols.js'),
@@ -85,6 +83,8 @@ module.exports = {
     'sshKeysRotated'                : require(__dirname + '/plugins/iam/sshKeysRotated.js'),
     'usersMfaEnabled'               : require(__dirname + '/plugins/iam/usersMfaEnabled.js'),
     'usersPasswordLastUsed'         : require(__dirname + '/plugins/iam/usersPasswordLastUsed.js'),
+
+    'firehoseEncrypted'              : require(__dirname + '/plugins/firehose/firehoseEncrypted.js'),
 
     'kmsKeyRotation'                : require(__dirname + '/plugins/kms/kmsKeyRotation.js'),
     'kmsScheduledDeletion'          : require(__dirname + '/plugins/kms/kmsScheduledDeletion.js'),
