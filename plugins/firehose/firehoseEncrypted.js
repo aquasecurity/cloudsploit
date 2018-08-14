@@ -13,7 +13,7 @@ module.exports = {
 	apis: ['Firehose:listDeliveryStreams', 'Firehose:describeDeliveryStream'],
 	compliance: {
         hipaa: 'Firehose encryption must be used when processing any HIPAA-related data. ' +
-        		'AWS KMS encryption ensures that the firehose payload meets the ' +
+        		'AWS KMS encryption ensures that the Firehose payload meets the ' +
         		'encryption in transit and at rest requirements of HIPAA.'
     },
 
@@ -25,8 +25,7 @@ module.exports = {
 			var listDeliveryStreams = helpers.addSource(cache, source,
                 ['firehose', 'listDeliveryStreams', region]);
 
-            if (!listDeliveryStreams) 
-                return rcb();
+            if (!listDeliveryStreams) return rcb();
 
 			if (listDeliveryStreams.err) {
 				helpers.addResult(results, 3,
@@ -35,7 +34,7 @@ module.exports = {
 			}
 
 			if (!listDeliveryStreams.data || !listDeliveryStreams.data.length) {
-                helpers.addResult(results, 0, 'No firehose delivery streams found', region);
+                helpers.addResult(results, 0, 'No Firehose delivery streams found', region);
 				return rcb();
 			}
 
@@ -43,37 +42,44 @@ module.exports = {
 
 				var describeDeliveryStream = helpers.addSource(cache, source,
                     ['firehose', 'describeDeliveryStream', region, deliverystream]);
+				
 				if (!describeDeliveryStream ||
-                    (!describeDeliveryStream.err && !describeDeliveryStream.data)) 
-                    return cb();
+                    (!describeDeliveryStream.err && !describeDeliveryStream.data)) {
+					return cb();
+				}
 
-				if (describeDeliveryStream.err ||
-					!describeDeliveryStream.data){
+				if (describeDeliveryStream.err || !describeDeliveryStream.data) {
 					helpers.addResult(results, 3,
-						'Unable to query firehose for delivery streams: ' + deliverystream,
+						'Unable to query Firehose for delivery streams: ' + deliverystream,
                         region);
 					return cb();
                 }
                 
-				var DeliveryStreamARN = describeDeliveryStream.data.DeliveryStreamDescription.DeliveryStreamARN;
+                var deliveryStreamDesc = describeDeliveryStream.data.DeliveryStreamDescription;
+				var deliveryStreamARN = deliveryStreamDesc.DeliveryStreamARN;
 
 				//console.log(describeDeliveryStream.data.DeliveryStreamDescription.Destinations[0].ExtendedS3DestinationDescription.EncryptionConfiguration.KMSEncryptionConfig);
 
-				if (describeDeliveryStream.data.DeliveryStreamDescription.Destinations[0].ExtendedS3DestinationDescription.EncryptionConfiguration.KMSEncryptionConfig) {
-					if (describeDeliveryStream.data.DeliveryStreamDescription.Destinations[0].ExtendedS3DestinationDescription.EncryptionConfiguration.KMSEncryptionConfig === defaultKmsKey) {
+				if (deliveryStreamDesc &&
+					deliveryStreamDesc.Destinations &&
+					deliveryStreamDesc.Destinations[0] &&
+					deliveryStreamDesc.Destinations[0].ExtendedS3DestinationDescription &&
+					deliveryStreamDesc.Destinations[0].ExtendedS3DestinationDescription.EncryptionConfiguration &&
+					deliveryStreamDesc.Destinations[0].ExtendedS3DestinationDescription.EncryptionConfiguration.KMSEncryptionConfig) {
+					if (deliveryStreamDesc.Destinations[0].ExtendedS3DestinationDescription.EncryptionConfiguration.KMSEncryptionConfig === defaultKmsKey) {
 						helpers.addResult(results, 1,
-							'The firehose delivery stream uses the default KMS key (' + defaultKmsKey + ') for SSE',
-							region, DeliveryStreamARN);
+							'The Firehose delivery stream uses the default KMS key (' + defaultKmsKey + ') for SSE',
+							region, deliveryStreamARN);
 							//Note: Default KeyARN returns, but doesn't match the alias
 					} else {
 						helpers.addResult(results, 0,
-							'The firehose delivery stream uses a KMS key for SSE',
-                            region, DeliveryStreamARN);
+							'The Firehose delivery stream uses a KMS key for SSE',
+                            region, deliveryStreamARN);
 					}
 				} else {
 					helpers.addResult(results, 2,
-						'The firehose delivery stream does not use a KMS key for SSE',
-                        region, DeliveryStreamARN);
+						'The Firehose delivery stream does not use a KMS key for SSE',
+                        region, deliveryStreamARN);
 				}
 
 				cb();

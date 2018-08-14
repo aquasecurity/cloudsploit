@@ -233,8 +233,8 @@ var calls = {
 	Kinesis: {
 		listStreams: {
 			property: 'StreamNames'
-    }
-  },
+    	}
+	},
 	Firehose: {
 		listDeliveryStreams: {
 			property: 'DeliveryStreamNames'
@@ -307,14 +307,14 @@ var calls = {
 
 var postcalls = [
 	{
-	ACM: {
-		describeCertificate: {
-			reliesOnService: 'acm',
-			reliesOnCall: 'listCertificates',
-			filterKey: 'CertificateArn',
-			filterValue: 'CertificateArn'
-		}
-	},
+		ACM: {
+			describeCertificate: {
+				reliesOnService: 'acm',
+				reliesOnCall: 'listCertificates',
+				filterKey: 'CertificateArn',
+				filterValue: 'CertificateArn'
+			}
+		},
 		CloudFront: {
             getDistribution: {
                 reliesOnService: 'cloudfront',
@@ -435,7 +435,6 @@ var postcalls = [
 				rateLimit: 100
 			}
 		},
-// Modified for Kinesis
 		Kinesis: {
 			describeStream: {
 				reliesOnService: 'kinesis',

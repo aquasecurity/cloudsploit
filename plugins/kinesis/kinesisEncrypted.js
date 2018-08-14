@@ -13,7 +13,7 @@ module.exports = {
 	apis: ['Kinesis:listStreams', 'Kinesis:describeStream'],
 	compliance: {
         hipaa: 'Kinesis encryption must be used when processing any HIPAA-related data. ' +
-        		'AWS KMS encryption ensures that the kinesis message payload meets the ' +
+        		'AWS KMS encryption ensures that the Kinesis message payload meets the ' +
         		'encryption in transit and at rest requirements of HIPAA.'
     },
 
@@ -25,17 +25,16 @@ module.exports = {
 			var listStreams = helpers.addSource(cache, source,
                 ['kinesis', 'listStreams', region]);
 
-            if (!listStreams) 
-                return rcb();
+            if (!listStreams) return rcb();
 
 			if (listStreams.err) {
 				helpers.addResult(results, 3,
-					'Unable to query for kinesis streams: ' + helpers.addError(listStreams), region);
+					'Unable to query for Kinesis streams: ' + helpers.addError(listStreams), region);
                 return rcb();
 			}
 
 			if (!listStreams.data || !listStreams.data.length) {
-                helpers.addResult(results, 0, 'No kinesis streams found', region);
+                helpers.addResult(results, 0, 'No Kinesis streams found', region);
 				return rcb();
 			}
 
@@ -43,14 +42,15 @@ module.exports = {
 
 				var describeStream = helpers.addSource(cache, source,
                     ['kinesis', 'describeStream', region, stream]);
-				if (!describeStream ||
-                    (!describeStream.err && !describeStream.data)) 
-                    return cb();
 
-				if (describeStream.err ||
-					!describeStream.data){
+				if (!describeStream ||
+                    (!describeStream.err && !describeStream.data)) {
+					return cb();
+				}
+
+				if (describeStream.err || !describeStream.data) {
 					helpers.addResult(results, 3,
-						'Unable to query kinesis for streams: ' + stream,
+						'Unable to query Kinesis for stream: ' + stream,
                         region);
 					return cb();
                 }
@@ -60,16 +60,16 @@ module.exports = {
 				if (describeStream.data.StreamDescription.KeyId) {
 					if (describeStream.data.StreamDescription.KeyId === defaultKmsKey) {
 						helpers.addResult(results, 1,
-							'The kinesis stream uses the default KMS key (' + defaultKmsKey + ') for SSE',
+							'The Kinesis stream uses the default KMS key (' + defaultKmsKey + ') for SSE',
                             region, streamArn);
 					} else {
 						helpers.addResult(results, 0,
-							'The kinesis stream uses a KMS key for SSE',
+							'The Kinesis stream uses a KMS key for SSE',
                             region, streamArn);
 					}
 				} else {
 					helpers.addResult(results, 2,
-						'The kinesis stream does not use a KMS key for SSE',
+						'The Kinesis stream does not use a KMS key for SSE',
                         region, streamArn);
 				}
 
