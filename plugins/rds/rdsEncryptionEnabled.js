@@ -19,8 +19,9 @@ module.exports = {
 	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
+		var regions = helpers.regions(settings.govcloud);
 
-		async.each(helpers.regions.rds, function(region, rcb){
+		async.each(regions.rds, function(region, rcb){
 			var describeDBInstances = helpers.addSource(cache, source,
 				['rds', 'describeDBInstances', region]);
 

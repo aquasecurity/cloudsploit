@@ -1,9 +1,8 @@
 // Export all available scans
 
 module.exports = {
-    
+    'acmValidation'		              : require(__dirname + '/plugins/acm/acmValidation.js'),
     'asgMultiAz'                    : require(__dirname + '/plugins/autoscaling/asgMultiAz.js'),
-
     'publicS3Origin'                : require(__dirname + '/plugins/cloudfront/publicS3Origin.js'),
     'secureOrigin'                  : require(__dirname + '/plugins/cloudfront/secureOrigin.js'),
     'insecureProtocols'             : require(__dirname + '/plugins/cloudfront/insecureProtocols.js'),
@@ -57,6 +56,7 @@ module.exports = {
     'defaultVpcInUse'               : require(__dirname + '/plugins/ec2/defaultVpcInUse.js'),
     'crossVpcPublicPrivate'         : require(__dirname + '/plugins/ec2/crossVpcPublicPrivate.js'),
     'securityGroupUnused'           : require(__dirname + '/plugins/ec2/securityGroupUnused.js'),
+    'ebsEncryptedSnapshots'         : require(__dirname + '/plugins/ec2/ebsEncryptedSnapshots.js'),
 
     'insecureCiphers'               : require(__dirname + '/plugins/elb/insecureCiphers.js'),
     'elbHttpsOnly'                  : require(__dirname + '/plugins/elb/elbHttpsOnly.js'),
@@ -84,7 +84,8 @@ module.exports = {
     'sshKeysRotated'                : require(__dirname + '/plugins/iam/sshKeysRotated.js'),
     'usersMfaEnabled'               : require(__dirname + '/plugins/iam/usersMfaEnabled.js'),
     'usersPasswordLastUsed'         : require(__dirname + '/plugins/iam/usersPasswordLastUsed.js'),
-
+    'kinesisEncrypted'              : require(__dirname + '/plugins/kinesis/kinesisEncrypted.js'),
+    'firehoseEncrypted'             : require(__dirname + '/plugins/firehose/firehoseEncrypted.js'),
     'kmsKeyRotation'                : require(__dirname + '/plugins/kms/kmsKeyRotation.js'),
     'kmsScheduledDeletion'          : require(__dirname + '/plugins/kms/kmsScheduledDeletion.js'),
     'kmsKeyPolicy'                  : require(__dirname + '/plugins/kms/kmsKeyPolicy.js'),

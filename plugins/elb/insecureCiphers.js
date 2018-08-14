@@ -93,8 +93,9 @@ module.exports = {
 	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
+		var regions = helpers.regions(settings.govcloud);
 
-		async.each(helpers.regions.elb, function(region, rcb){
+		async.each(regions.elb, function(region, rcb){
 			var describeLoadBalancers = helpers.addSource(cache, source,
 				['elb', 'describeLoadBalancers', region]);
 
