@@ -13,10 +13,11 @@ module.exports = {
 	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
+		var regions = helpers.regions(settings.govcloud);
 
 		var globalServicesMonitored = false;
 
-		async.each(helpers.regions.configservice, function(region, rcb){
+		async.each(regions.configservice, function(region, rcb){
 			var describeConfigurationRecorders = helpers.addSource(cache, source,
 				['configservice', 'describeConfigurationRecorders', region]);
 

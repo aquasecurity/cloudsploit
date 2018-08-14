@@ -13,9 +13,12 @@ module.exports = {
 	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
-		var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', 'us-east-1', 'data']);
+		var regions = helpers.regions(settings.govcloud);
 
-		async.each(helpers.regions.vpc, function(region, rcb){
+		var acctRegion = settings.govcloud ? 'us-gov-west-1' : 'us-east-1';
+		var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
+
+		async.each(regions.vpc, function(region, rcb){
 			var describeVpcs = helpers.addSource(cache, source,
 				['ec2', 'describeVpcs', region]);
 

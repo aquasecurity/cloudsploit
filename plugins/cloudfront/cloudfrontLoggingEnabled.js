@@ -25,8 +25,10 @@ module.exports = {
         var results = [];
         var source = {};
 
+        var region = settings.govcloud ? 'us-gov-west-1' : 'us-east-1';
+
         var listDistributions = helpers.addSource(cache, source,
-            ['cloudfront', 'listDistributions', 'us-east-1']);
+            ['cloudfront', 'listDistributions', region]);
 
         if (!listDistributions) return callback(null, results, source);
 
@@ -43,7 +45,7 @@ module.exports = {
         // loop through Instances for every reservation
         listDistributions.data.forEach(function(Distribution){
             var getDistribution = helpers.addSource(cache, source,
-                    ['cloudfront', 'getDistribution', 'us-east-1', Distribution.Id]);
+                    ['cloudfront', 'getDistribution', region, Distribution.Id]);
 
             if (getDistribution.data &&
                 getDistribution.data.Distribution &&

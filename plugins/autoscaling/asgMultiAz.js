@@ -13,7 +13,9 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-        async.each(helpers.regions.autoscaling, function(region, rcb){
+        var regions = helpers.regions(settings.govcloud);
+
+        async.each(regions.autoscaling, function(region, rcb){
             var describeAutoScalingGroups = helpers.addSource(cache, source,
                 ['autoscaling', 'describeAutoScalingGroups', region]);
 

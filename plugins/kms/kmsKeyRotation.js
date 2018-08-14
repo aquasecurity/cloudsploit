@@ -13,8 +13,9 @@ module.exports = {
 	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
+		var regions = helpers.regions(settings.govcloud);
 
-		async.each(helpers.regions.kms, function(region, rcb){
+		async.each(regions.kms, function(region, rcb){
 			
 			var listKeys = helpers.addSource(cache, source,
 					['kms', 'listKeys', region]);
@@ -54,6 +55,13 @@ module.exports = {
 				if (describeKeyData.KeyMetadata &&
 					(describeKeyData.KeyMetadata.Description && describeKeyData.KeyMetadata.Description.indexOf('Default master key that protects my') === 0) ||
 					(describeKeyData.KeyMetadata.KeyState && describeKeyData.KeyMetadata.KeyState == 'PendingDeletion')) {
+					return kcb();
+				}
+
+				// Skip keys that are imported into KMS
+				if (describeKeyData.KeyMetadata &&
+					describeKeyData.KeyMetadata.Origin &&
+					describeKeyData.KeyMetadata.Origin !== 'AWS_KMS') {
 					return kcb();
 				}
 

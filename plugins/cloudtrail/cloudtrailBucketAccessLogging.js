@@ -17,8 +17,9 @@ module.exports = {
 	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
+		var regions = helpers.regions(settings.govcloud);
 
-		async.each(helpers.regions.cloudtrail, function(region, rcb){
+		async.each(regions.cloudtrail, function(region, rcb){
 
 			var describeTrails = helpers.addSource(cache, source,
 				['cloudtrail', 'describeTrails', region]);
@@ -39,8 +40,10 @@ module.exports = {
 			async.each(describeTrails.data, function(trail, cb){
 				if (!trail.S3BucketName) return cb();
 
+				var s3Region = settings.govcloud ? 'us-gov-west-1' : 'us-east-1';
+
 				var getBucketLogging = helpers.addSource(cache, source,
-					['s3', 'getBucketLogging', 'us-east-1', trail.S3BucketName]);
+					['s3', 'getBucketLogging', s3Region, trail.S3BucketName]);
 
 				if (!getBucketLogging || getBucketLogging.err || !getBucketLogging.data) {
 					helpers.addResult(results, 3,

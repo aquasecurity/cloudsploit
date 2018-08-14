@@ -26,11 +26,14 @@ module.exports = {
 
 		var results = [];
 		var source = {};
-		var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', 'us-east-1', 'data']);
+		var regions = helpers.regions(settings.govcloud);
+
+		var acctRegion = settings.govcloud ? 'us-gov-west-1' : 'us-east-1';
+		var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 		
 		const const_wildcard = '*'
 
-		async.each(helpers.regions.kms, function(region, rcb){
+		async.each(regions.kms, function(region, rcb){
 			var listKeys = helpers.addSource(cache, source,
 					['kms', 'listKeys', region]);
 
