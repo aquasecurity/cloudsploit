@@ -33,6 +33,7 @@ module.exports = {
 	ec2: regions,
 	elb: regions,
 	elbv2: regions,
+	kinesis: regions,
 	firehose: regions,
 	kms: regions,
 	vpc: regions,

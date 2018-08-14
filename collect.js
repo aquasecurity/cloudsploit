@@ -230,6 +230,11 @@ var calls = {
 			override: true
 		}
 	},
+	Kinesis: {
+		listStreams: {
+			property: 'StreamNames'
+    }
+  },
 	Firehose: {
 		listDeliveryStreams: {
 			property: 'DeliveryStreamNames'

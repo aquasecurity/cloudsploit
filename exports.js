@@ -83,9 +83,8 @@ module.exports = {
     'sshKeysRotated'                : require(__dirname + '/plugins/iam/sshKeysRotated.js'),
     'usersMfaEnabled'               : require(__dirname + '/plugins/iam/usersMfaEnabled.js'),
     'usersPasswordLastUsed'         : require(__dirname + '/plugins/iam/usersPasswordLastUsed.js'),
-
-    'firehoseEncrypted'              : require(__dirname + '/plugins/firehose/firehoseEncrypted.js'),
-
+    'kinesisEncrypted'              : require(__dirname + '/plugins/kinesis/kinesisEncrypted.js'),
+    'firehoseEncrypted'             : require(__dirname + '/plugins/firehose/firehoseEncrypted.js'),
     'kmsKeyRotation'                : require(__dirname + '/plugins/kms/kmsKeyRotation.js'),
     'kmsScheduledDeletion'          : require(__dirname + '/plugins/kms/kmsScheduledDeletion.js'),
     'kmsKeyPolicy'                  : require(__dirname + '/plugins/kms/kmsKeyPolicy.js'),
