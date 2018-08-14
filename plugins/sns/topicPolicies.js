@@ -13,8 +13,9 @@ module.exports = {
 	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
+		var regions = helpers.regions(settings.govcloud);
 
-		async.each(helpers.regions.sns, function(region, rcb){
+		async.each(regions.sns, function(region, rcb){
 			var listTopics = helpers.addSource(cache, source,
 				['sns', 'listTopics', region]);
 

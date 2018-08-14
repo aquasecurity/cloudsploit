@@ -1,9 +1,6 @@
 var async = require('async');
 var helpers = require('../../helpers');
 
-// SSE via KMS is only supported in some regions
-// even though SQS is supported in all regions.
-var supportedRegions = ['us-east-1', 'us-east-2', 'us-west-2'];
 var defaultKmsKey = 'alias/aws/sqs';
 
 module.exports = {
@@ -23,8 +20,9 @@ module.exports = {
 	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
+		var regions = helpers.regions(settings.govcloud);
 
-		async.each(supportedRegions, function(region, rcb){
+		async.each(regions.sqs_encrypted, function(region, rcb){
 			var listQueues = helpers.addSource(cache, source,
 				['sqs', 'listQueues', region]);
 

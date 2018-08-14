@@ -16,9 +16,12 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-        var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', 'us-east-1', 'data']);
+        var regions = helpers.regions(settings.govcloud);
 
-        async.each(helpers.regions.elb, function(region, rcb){
+        var acctRegion = settings.govcloud ? 'us-gov-west-1' : 'us-east-1';
+        var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
+
+        async.each(regions.elb, function(region, rcb){
             var describeLoadBalancers = helpers.addSource(cache, source,
                 ['elb', 'describeLoadBalancers', region]);
 

@@ -13,8 +13,9 @@ module.exports = {
 	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
+		var regions = helpers.regions(settings.govcloud);
 
-		async.each(helpers.regions.vpc, function(region, rcb){
+		async.each(regions.vpc, function(region, rcb){
 			var describeVpcs = helpers.addSource(cache, source,
 				['ec2', 'describeVpcs', region]);
 
@@ -88,7 +89,7 @@ module.exports = {
 			// Look for Lambda functions
 
 			// Skip Lambda if in unsupported region
-			if (helpers.regions.lambda.indexOf(region) > -1) {
+			if (regions.lambda.indexOf(region) > -1) {
 				var listFunctions = helpers.addSource(cache, source,
 					['lambda', 'listFunctions', region]);
 
