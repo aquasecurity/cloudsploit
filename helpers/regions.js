@@ -50,6 +50,7 @@ module.exports = {
 		'eu-west-1'],
 	sns: regions,
 	sqs: regions,
+	ssm: regions,
 	// SSE via KMS is only supported in some regions
 	// even though SQS is supported in all regions.
 	sqs_encrypted: ['us-east-1', 'us-east-2', 'us-west-2', 'us-west-1',

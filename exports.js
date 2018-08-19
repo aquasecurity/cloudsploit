@@ -111,6 +111,8 @@ module.exports = {
     'sqsCrossAccount'               : require(__dirname + '/plugins/sqs/sqsCrossAccount.js'),
     'sqsEncrypted'                  : require(__dirname + '/plugins/sqs/sqsEncrypted.js'),
 
+    'parametersEncrypted'           : require(__dirname + '/plugins/ssm/parametersEncrypted.js'),
+
     'lambdaOldRuntimes'             : require(__dirname + '/plugins/lambda/lambdaOldRuntimes.js'),
 
     'monitoringMetrics'             : require(__dirname + '/plugins/cloudwatchlogs/monitoringMetrics.js'),
