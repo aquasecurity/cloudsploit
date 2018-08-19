@@ -13,7 +13,7 @@ module.exports = {
 		var results = [];
 		var source = {};
 
-		var region = 'us-east-1';
+		var region = settings.govcloud ? 'us-gov-west-1' : 'us-east-1';
 
 		var listDomains = helpers.addSource(cache, source,
 			['route53domains', 'listDomains', region]);
@@ -33,8 +33,14 @@ module.exports = {
 
 		for (i in listDomains.data) {
 			var domain = listDomains.data[i];
+			if (!domain.DomainName) continue;
 
-			if (domain.TransferLock) {
+			// Skip .co.uk domains
+			if (domain.DomainName.indexOf('.co.uk') > -1) {
+				helpers.addResult(results, 0,
+					'Domain: ' + domain.DomainName + ' does not support transfer locks',
+					'global', domain.DomainName);
+			} else if (domain.TransferLock) {
 				helpers.addResult(results, 0,
 					'Domain: ' + domain.DomainName + ' has the transfer lock enabled',
 					'global', domain.DomainName);

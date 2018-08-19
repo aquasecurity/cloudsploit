@@ -34,9 +34,12 @@ module.exports = {
 
 		var results = [];
 		var source = {};
-		var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', 'us-east-1', 'data']);
+		var regions = helpers.regions(settings.govcloud);
 
-		async.each(helpers.regions.ec2, function(region, rcb){
+		var acctRegion = settings.govcloud ? 'us-gov-west-1' : 'us-east-1';
+		var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
+
+		async.each(regions.ec2, function(region, rcb){
 			var describeSubnets = helpers.addSource(cache, source,
 				['ec2', 'describeSubnets', region]);
 
