@@ -51,8 +51,15 @@ module.exports = {
 
 				if (describeStream.err || !describeStream.data) {
 					helpers.addResult(results, 3,
-						'Unable to query Kinesis for stream: ' + stream,
+						'Unable to query Kinesis for stream: ' + stream + ': ' + helpers.addError(describeStream),
                         region);
+					return cb();
+                }
+
+                if (!describeStream.data.StreamDescription) {
+					helpers.addResult(results, 3,
+						'Unable to query Kinesis for stream: ' + stream + ': no stream data',
+						region);
 					return cb();
                 }
                 
