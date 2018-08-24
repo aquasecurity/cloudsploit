@@ -515,6 +515,9 @@ var postcalls = [
 
 // Loop through all of the top-level collectors for each service
 var collect = function(AWSConfig, settings, callback) {
+	AWSConfig.maxRetries = 5;
+	AWSConfig.retryDelayOptions = {base: 300};
+
 	var regions = helpers.regions(settings.govcloud);
 
 	var collection = {};
