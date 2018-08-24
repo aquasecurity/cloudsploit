@@ -85,7 +85,13 @@ module.exports = {
 
 					if (!Array.isArray(principal.AWS)) continue;
 
-					totalUsers = totalUsers.concat(principal.AWS);
+					var newUsers = principal.AWS.filter(function(newUser){
+						return totalUsers.filter(function(existingUser){
+							return existingUser === newUser;
+						}).length === 0
+					});
+
+					totalUsers = totalUsers.concat(newUsers);
 
 					var conditionalCaller = null;
 
