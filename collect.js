@@ -30,6 +30,11 @@ var globalServices = [
 ];
 
 var calls = {
+	ACM: {
+		listCertificates: {
+			property: 'CertificateSummaryList'
+		}
+	},
 	AutoScaling:{
 		describeAutoScalingGroups: {
 			property: 'AutoScalingGroups'
@@ -90,6 +95,12 @@ var calls = {
 		},
 		describeVolumes: {
 			property: 'Volumes'
+		},
+		describeSnapshots: {
+			// This call must be overridden because the
+			// default call retrieves every snapshot
+			// available, including public ones
+			override: true
 		},
 		describeInstances: {
 			property: 'Reservations',
@@ -219,6 +230,16 @@ var calls = {
 			override: true
 		}
 	},
+	Kinesis: {
+		listStreams: {
+			property: 'StreamNames'
+    	}
+	},
+	Firehose: {
+		listDeliveryStreams: {
+			property: 'DeliveryStreamNames'
+		}
+	},
 	KMS: {
 		listKeys: {
 			property: 'Keys'
@@ -272,6 +293,11 @@ var calls = {
 			property: 'QueueUrls'
 		}
 	},
+  SSM: {
+    describeParameters: {
+      property: 'Parameters'
+    }
+  },
 	STS: {
 		getCallerIdentity: {
 			property: 'Account'
@@ -286,6 +312,14 @@ var calls = {
 
 var postcalls = [
 	{
+		ACM: {
+			describeCertificate: {
+				reliesOnService: 'acm',
+				reliesOnCall: 'listCertificates',
+				filterKey: 'CertificateArn',
+				filterValue: 'CertificateArn'
+			}
+		},
 		CloudFront: {
             getDistribution: {
                 reliesOnService: 'cloudfront',
@@ -406,6 +440,20 @@ var postcalls = [
 				rateLimit: 100
 			}
 		},
+		Kinesis: {
+			describeStream: {
+				reliesOnService: 'kinesis',
+				reliesOnCall: 'listStreams',
+				override: true
+			}
+		},
+		Firehose: {
+			describeDeliveryStream: {
+				reliesOnService: 'firehose',
+				reliesOnCall: 'listDeliveryStreams',
+				override: true
+			}
+		},
 		KMS: {
 			describeKey: {
 				reliesOnService: 'kms',
@@ -467,6 +515,11 @@ var postcalls = [
 
 // Loop through all of the top-level collectors for each service
 var collect = function(AWSConfig, settings, callback) {
+	AWSConfig.maxRetries = 5;
+	AWSConfig.retryDelayOptions = {base: 300};
+
+	var regions = helpers.regions(settings.govcloud);
+
 	var collection = {};
 
 	async.eachOfLimit(calls, 10, function(call, service, serviceCb){
@@ -479,7 +532,7 @@ var collect = function(AWSConfig, settings, callback) {
 			if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
 			if (!collection[serviceLower][callKey]) collection[serviceLower][callKey] = {};
 
-			async.eachLimit(helpers.regions[serviceLower], helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb){
+			async.eachLimit(regions[serviceLower], helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb){
 				if (settings.skip_regions &&
 					settings.skip_regions.indexOf(region) > -1 &&
 					globalServices.indexOf(service) === -1) return regionCb();
@@ -550,7 +603,7 @@ var collect = function(AWSConfig, settings, callback) {
 					if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
 					if (!collection[serviceLower][callKey]) collection[serviceLower][callKey] = {};
 
-					async.eachLimit(helpers.regions[serviceLower], helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb){
+					async.eachLimit(regions[serviceLower], helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb){
 						if (settings.skip_regions &&
 							settings.skip_regions.indexOf(region) > -1 &&
 							globalServices.indexOf(service) === -1) return regionCb();
@@ -569,7 +622,7 @@ var collect = function(AWSConfig, settings, callback) {
 						var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
 						if (callObj.deleteRegion) {
 							//delete LocalAWSConfig.region;
-							LocalAWSConfig.region = 'us-east-1';
+							LocalAWSConfig.region = settings.govcloud ? 'us-gov-west-1' : 'us-east-1';
 						} else {
 							LocalAWSConfig.region = region;
 						}

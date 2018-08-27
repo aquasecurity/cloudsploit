@@ -13,6 +13,7 @@ module.exports = {
 	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
+		var regions = helpers.regions(settings.govcloud);
 
 		var ports = {
 			'tcp': [22]
@@ -20,7 +21,7 @@ module.exports = {
 
 		var service = 'SSH';
 
-		async.each(helpers.regions.ec2, function(region, rcb){
+		async.each(regions.ec2, function(region, rcb){
 			var describeSecurityGroups = helpers.addSource(cache, source,
 				['ec2', 'describeSecurityGroups', region]);
 

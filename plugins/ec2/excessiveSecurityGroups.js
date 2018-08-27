@@ -34,8 +34,9 @@ module.exports = {
 
 		var results = [];
 		var source = {};
+		var regions = helpers.regions(settings.govcloud);
 
-		async.each(helpers.regions.ec2, function(region, rcb){
+		async.each(regions.ec2, function(region, rcb){
 
 			var describeSecurityGroups = helpers.addSource(cache, source,
 				['ec2', 'describeSecurityGroups', region]);
