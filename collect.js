@@ -473,6 +473,13 @@ var postcalls = [
 				override: true
 			}
 		},
+		RDS: {
+			describeOptionGroups: {
+				reliesOnService: 'rds',
+				reliesOnCall: 'describeDBInstances',
+				override: true
+			}
+		},
 		SES: {
 			getIdentityDkimAttributes: {
 				reliesOnService: 'ses',
