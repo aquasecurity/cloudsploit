@@ -105,6 +105,9 @@ module.exports = {
     'bucketVersioning'              : require(__dirname + '/plugins/s3/bucketVersioning.js'),
     'bucketLogging'                 : require(__dirname + '/plugins/s3/bucketLogging.js'),
 
+    'notebookDataEncrypted'         : require(__dirname + '/plugins/sagemaker/notebookDataEncrypted.js'),
+    'notebookDirectInternetAccess'  : require(__dirname + '/plugins/sagemaker/notebookDirectInternetAccess.js'),
+
     'dkimEnabled'                   : require(__dirname + '/plugins/ses/dkimEnabled.js'),
 
     'topicPolicies'                 : require(__dirname + '/plugins/sns/topicPolicies.js'),
