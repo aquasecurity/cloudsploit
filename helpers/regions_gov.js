@@ -31,6 +31,7 @@ module.exports = {
 	dynamodb: regions,
 	ecr: regions,
 	ecs: regions,
+	sagemaker: [],
 	ses: [],
 	sns: regions,
 	sqs: regions,

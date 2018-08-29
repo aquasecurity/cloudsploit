@@ -273,11 +273,11 @@ var calls = {
 			property: 'Buckets'
 		}
 	},
-  SageMaker: {
-    listNotebookInstances: {
-      property: 'NotebookInstances'
-    }
-  },
+	SageMaker: {
+		listNotebookInstances: {
+			property: 'NotebookInstances'
+		}
+	},
 	SES: {
 		listIdentities: {
 			property: 'Identities',
@@ -298,11 +298,11 @@ var calls = {
 			property: 'QueueUrls'
 		}
 	},
-  SSM: {
-    describeParameters: {
-      property: 'Parameters'
-    }
-  },
+	SSM: {
+		describeParameters: {
+			property: 'Parameters'
+		}
+	},
 	STS: {
 		getCallerIdentity: {
 			property: 'Account'
@@ -478,14 +478,14 @@ var postcalls = [
 				override: true
 			}
 		},
-    SageMaker: {
-      describeNotebookInstance: {
-        reliesOnService: 'sagemaker',
-        reliesOnCall: 'listNotebookInstances',
-        filterKey: 'NotebookInstanceName',
-        filterValue: 'NotebookInstanceName'
-      }
-    },
+		SageMaker: {
+			describeNotebookInstance: {
+				reliesOnService: 'sagemaker',
+				reliesOnCall: 'listNotebookInstances',
+				filterKey: 'NotebookInstanceName',
+				filterValue: 'NotebookInstanceName'
+			}
+		},
 		SES: {
 			getIdentityDkimAttributes: {
 				reliesOnService: 'ses',
