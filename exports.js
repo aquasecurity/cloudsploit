@@ -71,6 +71,7 @@ module.exports = {
     'maxPasswordAge'                : require(__dirname + '/plugins/iam/maxPasswordAge.js'),
     'minPasswordLength'             : require(__dirname + '/plugins/iam/minPasswordLength.js'),
     'noUserIamPolicies'             : require(__dirname + '/plugins/iam/noUserIamPolicies.js'),
+    'openIamRoles'                  : require(__dirname + '/plugins/iam/openIamRoles.js'),
     'passwordExpiration'            : require(__dirname + '/plugins/iam/passwordExpiration.js'),
     'passwordRequiresLowercase'     : require(__dirname + '/plugins/iam/passwordRequiresLowercase.js'),
     'passwordRequiresNumbers'       : require(__dirname + '/plugins/iam/passwordRequiresNumbers.js'),

@@ -223,6 +223,10 @@ var calls = {
 		listUsers: {
 			property: 'Users'
 		},
+		listRoles: {
+			property: 'Roles',
+			override: true
+		},
 		getAccountPasswordPolicy: {
 			property: 'PasswordPolicy'
 		},
