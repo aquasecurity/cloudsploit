@@ -19,10 +19,12 @@ module.exports = {
 	run: function(cache, settings, callback) {
 		var results = [];
 		var source = {};
+		var regions = helpers.regions(settings.govcloud);
 
-		async.each(helpers.regions.rds, function(region, rcb){
+		async.each(regions.rds, function(region, rcb){
 			var describeDBInstances = helpers.addSource(cache, source,
 				['rds', 'describeDBInstances', region]);
+
 			if (!describeDBInstances) return rcb();
 
 			if (describeDBInstances.err || !describeDBInstances.data) {
@@ -36,31 +38,28 @@ module.exports = {
 				return rcb();
 			}
 
-
 			for (i in describeDBInstances.data) {
-
 				// For resource, attempt to use the endpoint address (more specific) but fallback to the instance identifier
-				var instance = describeDBInstances.data[i];
-				var dbResource = instance.DBInstanceArn;
-				var group = instance.OptionGroupMemberships[0].OptionGroupName;
+				var db = describeDBInstances.data[i];
+				var dbResource = db.DBInstanceArn;
+				var group = db.OptionGroupMemberships[0].OptionGroupName;
 
-				// Evaluate Engine - If Oracle, check the option group for TDE
-				if (instance.Engine = 'oracle' || 'sql') {
+				if (db.Engine == 'oracle-ee' || db.Engine == 'sqlserver-ee') {
 
 					var describeOptionGroups = helpers.addSource(cache, source,
 						['rds', 'describeOptionGroups', region, group]);
+					var options = (describeOptionGroups.data.OptionGroupsList[0].Options[0]);
 
-					if (describeOptionGroups.data) {
-						helpers.addResult(results, 0, 'Encryption at rest is enabled ' + group, region, dbResource);
+					if (options) {
+						helpers.addResult(results, 0, 'Encryption at rest is enabled ', region, dbResource);
 					} else {
-						helpers.addResult(results, 2, 'Encryption at rest is not enabled ' + group, region, dbResource);
+						helpers.addResult(results, 2, 'Encryption at rest is not enabled ', region, dbResource);
 				    }
 				}
-				else if (instance.StorageEncrypted) {
+				else if (db.StorageEncrypted) {
 					helpers.addResult(results, 0, 'Encryption at rest is enabled', region, dbResource);
-				}
-				else {
-					helpers.addResult(results, 1, 'Encryption at rest is not enabled', region, dbResource);
+				} else {
+					helpers.addResult(results, 2, 'Encryption at rest is not enabled', region, dbResource);
 				}
 			}
 			

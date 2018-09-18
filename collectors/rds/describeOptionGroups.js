@@ -1,6 +1,5 @@
 var AWS = require('aws-sdk');
 var async = require('async');
-const _ = require("lodash");
 
 module.exports = function(AWSConfig, collection, callback) {
     var rds = new AWS.RDS(AWSConfig);
@@ -18,9 +17,7 @@ module.exports = function(AWSConfig, collection, callback) {
             if (err) {
                 collection.rds.describeOptionGroups[AWSConfig.region][groupName].err = err;
             }
-            
-            let encrypted = _.find(data.OptionGroupsList[0].Options, { "OptionName": "TDE" });
-            collection.rds.describeOptionGroups[AWSConfig.region][groupName].data = !encrypted ? false : true;
+            collection.rds.describeOptionGroups[AWSConfig.region][groupName].data = data
             cb();
         });
     }, function(){
