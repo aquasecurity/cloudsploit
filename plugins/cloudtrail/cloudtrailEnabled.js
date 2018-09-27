@@ -65,14 +65,15 @@ module.exports = {
 			}
 			
 			rcb();
-		}, function(){
-			if (!globalServicesMonitored) {
-				helpers.addResult(results, 2, 'CloudTrail is not monitoring global services');
-			} else {
-				helpers.addResult(results, 0, 'CloudTrail is monitoring global services');
-			}
-
-			callback(null, results, source);
 		});
+
+		// Print Global Results
+        if (!globalServicesMonitored) {
+            helpers.addResult(results, 2, 'CloudTrail is not monitoring global services');
+        } else {
+            helpers.addResult(results, 0, 'CloudTrail is monitoring global services');
+        }
+
+        callback(null, results, source);
 	}
 };
