@@ -39,19 +39,26 @@ module.exports = {
             } else {
                 // Ensure logging is enabled
                 var found;
+                var globalEnabled = false;
 
                 for (t in describeTrails.data) {
                     var trail = describeTrails.data[t];
+
+                    if (trail.IncludeGlobalServiceEvents) {
+                        globalServicesMonitored = true;
+                        globalEnabled = true;
+                    }
 
                     var getTrailStatus = helpers.addSource(cache, source,
                         ['cloudtrail', 'getTrailStatus', region, trail.TrailARN]);
 
                     if (getTrailStatus && getTrailStatus.data &&
                         getTrailStatus.data.IsLogging) {
+
                         helpers.addResult(results, 0, 'CloudTrail is enabled', region);
 
                         if (trail.IncludeGlobalServiceEvents) {
-                            globalServicesMonitored = true;
+                            helpers.addResult(results, 0, 'CloudTrail is enabled to monitor global services', region);
                         }
 
                         found = true;
@@ -61,15 +68,18 @@ module.exports = {
 
                 if (!found) {
                     helpers.addResult(results, 2, 'CloudTrail is setup but is not logging API calls', region);
+                    if (globalEnabled){
+                        helpers.addResult(results, 2, 'CloudTrail is configured for Global Monitoring in the ' + region + ' region but is not logging API calls');
+                    }
                 }
             }
 
             rcb();
         }, function(){
             if (!globalServicesMonitored) {
-                helpers.addResult(results, 2, 'CloudTrail is not monitoring global services');
+                helpers.addResult(results, 2, 'CloudTrail is not configured to monitor global services');
             } else {
-                helpers.addResult(results, 0, 'CloudTrail is monitoring global services');
+                helpers.addResult(results, 0, 'CloudTrail is configured to monitor global services');
             }
 
             callback(null, results, source);
