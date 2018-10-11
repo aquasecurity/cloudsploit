@@ -21,6 +21,7 @@ module.exports = {
         var regions = helpers.regions(settings.govcloud);
 
         var globalServicesMonitored = false;
+        var globalEnabled = false;
 
         async.each(regions.cloudtrail, function(region, rcb){
             var describeTrails = helpers.addSource(cache, source,
@@ -39,14 +40,12 @@ module.exports = {
             } else {
                 // Ensure logging is enabled
                 var found;
-                var globalEnabled = false;
 
                 for (t in describeTrails.data) {
                     var trail = describeTrails.data[t];
 
                     if (trail.IncludeGlobalServiceEvents) {
                         globalServicesMonitored = true;
-                        globalEnabled = true;
                     }
 
                     var getTrailStatus = helpers.addSource(cache, source,
@@ -55,10 +54,11 @@ module.exports = {
                     if (getTrailStatus && getTrailStatus.data &&
                         getTrailStatus.data.IsLogging) {
 
-                        helpers.addResult(results, 0, 'CloudTrail is enabled', region);
-
                         if (trail.IncludeGlobalServiceEvents) {
-                            helpers.addResult(results, 0, 'CloudTrail is enabled to monitor global services', region);
+                            globalEnabled = true;
+                            helpers.addResult(results, 0, 'CloudTrail is enabled and monitoring regional and global services', region);
+                        } else {
+                            helpers.addResult(results, 0, 'CloudTrail is enabled and monitoring regional services', region);
                         }
 
                         found = true;
@@ -67,9 +67,10 @@ module.exports = {
                 }
 
                 if (!found) {
-                    helpers.addResult(results, 2, 'CloudTrail is setup but is not logging API calls', region);
                     if (globalEnabled){
-                        helpers.addResult(results, 2, 'CloudTrail is configured for Global Monitoring in the ' + region + ' region but is not logging API calls');
+                        helpers.addResult(results, 2, 'CloudTrail is configured for global monitoring in the ' + region + ' region but is not logging API calls', region);
+                    } else {
+                        helpers.addResult(results, 2, 'CloudTrail is configured for regional monitoring but is not logging API calls', region);
                     }
                 }
             }
@@ -79,7 +80,11 @@ module.exports = {
             if (!globalServicesMonitored) {
                 helpers.addResult(results, 2, 'CloudTrail is not configured to monitor global services');
             } else {
-                helpers.addResult(results, 0, 'CloudTrail is configured to monitor global services');
+                if (globalEnabled){
+                    helpers.addResult(results, 0, 'CloudTrail is configured and enabled to monitor global services');
+                } else {
+                    helpers.addResult(results, 2, 'CloudTrail is configured but is not logging API calls for global services');
+                }
             }
 
             callback(null, results, source);
