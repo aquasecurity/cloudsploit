@@ -80,9 +80,9 @@ module.exports = {
 				for (instances in describeInstances.data){
 					for (instance in describeInstances.data[instances].Instances){
 						if (describeInstances.data[instances].Instances[instance].SpotInstanceRequestId){
-							spotInstances=+1;
+							spotInstances+=1;
 						} else {
-							ec2Instances=+1;
+							ec2Instances+=1;
 						}
 
 					}
