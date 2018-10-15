@@ -69,14 +69,28 @@ module.exports = {
 					'Unable to query for instances: ' + helpers.addError(describeInstances), region);
 				return rcb();
 			}
-			
+
+			var ec2Instances = 0;
+			var spotInstances = 0;
+
 			if (!describeInstances.data.length) {
 				helpers.addResult(results, 0, 'No instances found', region);
 				return rcb();
+			} else {
+				for (instances in describeInstances.data){
+					for (instance in describeInstances.data[instances].Instances){
+						if (describeInstances.data[instances].Instances[instance].SpotInstanceRequestId){
+							spotInstances=+1;
+						} else {
+							ec2Instances=+1;
+						}
+
+					}
+				}
 			}
 
-			var percentage = Math.ceil((describeInstances.data.length / limits['max-instances'])*100);
-			var returnMsg = 'Account contains ' + describeInstances.data.length + ' of ' + limits['max-instances'] + ' (' + percentage + '%) available instances';
+			var percentage = Math.ceil((ec2Instances / limits['max-instances'])*100);
+			var returnMsg = 'Account contains ' + ec2Instances + ' of ' + limits['max-instances'] + ' (' + percentage + '%) available instances';
 
 			if (percentage >= config.instance_limit_percentage_fail) {
 				helpers.addResult(results, 2, returnMsg, region, null, custom);
