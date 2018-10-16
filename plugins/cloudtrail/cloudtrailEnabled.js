@@ -62,7 +62,6 @@ module.exports = {
                         }
 
                         found = true;
-                        break;
                     }
                 }
 
