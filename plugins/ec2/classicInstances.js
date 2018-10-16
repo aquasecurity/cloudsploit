@@ -43,6 +43,12 @@ module.exports = {
 
 			for (i in describeInstances.data) {
 				for (j in describeInstances.data[i].Instances) {
+					// When the instance is shutting down or stopped, it no longer maintains
+					// the NetworkInterfaces property used to determine instance VPC placement
+					if (describeInstances.data[i].Instances[j].State &&
+						describeInstances.data[i].Instances[j].State.Name &&
+						describeInstances.data[i].Instances[j].State.Name !== 'running') continue;
+
 					if (!describeInstances.data[i].Instances[j].NetworkInterfaces || !describeInstances.data[i].Instances[j].NetworkInterfaces.length) {
 						// Network interfaces are only listed when the instance is in a VPC
 						// Not having interfaces indicates the instance is in classic
