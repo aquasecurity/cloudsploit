@@ -1,6 +1,8 @@
 var async = require('async');
 var plugins = require('./exports.js');
-var collector = require('./collect.js');
+var awsCollector = require('./collectAws.js');
+
+var serviceProviders = ['aws'];
 
 var AWSConfig;
 
@@ -54,33 +56,46 @@ if (process.argv.join(' ').indexOf('--compliance') > -1) {
 // STEP 1 - Obtain API calls to make
 console.log('INFO: Determining API calls to make...');
 
-var apiCalls = [];
+function getMapValue(obj, key) {
+	if (obj.hasOwnProperty(key))
+		return obj[key];
+	throw new Error("Invalid map key.");
+}
+
+var apiCalls = {'aws': []};
 
 for (p in plugins) {
-    for (a in plugins[p].apis) {
-        if (apiCalls.indexOf(plugins[p].apis[a]) === -1) {
-            if (COMPLIANCE) {
-                if (plugins[p].compliance && plugins[p].compliance[COMPLIANCE]) {
-                    apiCalls.push(plugins[p].apis[a]);
-                }
-            } else {
-                apiCalls.push(plugins[p].apis[a]);
-            }
-        }
-    }
+	for (sp in serviceProviders) {
+		var serviceProviderPlugins = getMapValue(plugins, serviceProviders[sp]);
+		var serviceProviderAPICalls = getMapValue(apiCalls, serviceProviders[sp]);
+		for (spp in serviceProviderPlugins) {
+			var plugin = getMapValue(serviceProviderPlugins, spp);
+			for (pac in plugin.apis) {
+				if (serviceProviderAPICalls.indexOf(plugin.apis[pac]) === -1) {
+					if (COMPLIANCE) {
+						if (plugin.compliance && plugin.compliance[COMPLIANCE]) {
+							serviceProviderAPICalls.push(plugin.apis[pac])
+						}
+					} else {
+						serviceProviderAPICalls.push(plugin.apis[pac]);
+					}
+				}
+			}
+		}
+	}
 }
 
 console.log('INFO: API calls determined.');
 console.log('INFO: Collecting AWS metadata. This may take several minutes...');
 
 // STEP 2 - Collect API Metadata from AWS
-collector(AWSConfig, {api_calls: apiCalls, skip_regions: skipRegions}, function(err, collection){
+awsCollector(AWSConfig, {api_calls: apiCalls['aws'], skip_regions: skipRegions}, function (err, collection) {
     if (err || !collection) return console.log('ERROR: Unable to obtain API metadata');
 
     console.log('INFO: Metadata collection complete. Analyzing...');
     console.log('INFO: Analysis complete. Scan report to follow...\n');
 
-    async.forEachOfLimit(plugins, 10, function(plugin, key, callback){
+    async.forEachOfLimit(plugins.aws, 10, function (plugin, key, callback) {
         if (COMPLIANCE && (!plugin.compliance || !plugin.compliance[COMPLIANCE])) {
             return callback();
         }
