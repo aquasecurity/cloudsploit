@@ -1,6 +1,6 @@
 var async = require('async');
 var plugins = require('./exports.js');
-var awsCollector = require('./collectAws.js');
+var awsCollector = require('./collect_aws.js');
 
 var serviceProviders = ['aws'];
 

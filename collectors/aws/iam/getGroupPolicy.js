@@ -1,6 +1,5 @@
 var AWS = require('aws-sdk');
 var async = require('async');
-var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, callback) {
 	var iam = new AWS.IAM(AWSConfig);
