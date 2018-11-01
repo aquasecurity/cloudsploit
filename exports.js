@@ -44,6 +44,7 @@ module.exports = {
 	    'openTelnet'                    : require(__dirname + '/plugins/aws/ec2/openTelnet.js'),
 	    'openVNCClient'                 : require(__dirname + '/plugins/aws/ec2/openVNCClient.js'),
 	    'openVNCServer'                 : require(__dirname + '/plugins/aws/ec2/openVNCServer.js'),
+	    'openElasticsearch'             : require(__dirname + '/plugins/aws/ec2/openElasticsearch.js'),
 	    'vpcElasticIpLimit'             : require(__dirname + '/plugins/aws/ec2/vpcElasticIpLimit.js'),
 	    'classicInstances'              : require(__dirname + '/plugins/aws/ec2/classicInstances.js'),
 	    'flowLogsEnabled'               : require(__dirname + '/plugins/aws/ec2/flowLogsEnabled.js'),
