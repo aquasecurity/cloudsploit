@@ -6,7 +6,7 @@ module.exports = {
 	description: 'Ensures password policy prevents previous password reuse',
 	more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
-	recommended_action: 'Increase the minimum previous passwords that can be reused to 24.',
+	recommended_action: 'Increase the minimum previous passwors that can be reused to 24.',
 	apis: ['IAM:getAccountPasswordPolicy'],
 	settings: {
 		password_reuse_fail: {
