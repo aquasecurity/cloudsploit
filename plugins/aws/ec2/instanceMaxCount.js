@@ -111,6 +111,12 @@ module.exports = {
             description: 'Checks for the number of running instances in the us-gov-west-1 region and triggers a failing result if it exceeds the specified count',
             regex: '^[0-9]{1,4}$',
             default: 100
+        },
+        instance_count_region_threshold_us_gov_east_1: {
+            name: 'Instance Count Region Threshold: us-gov-east-1',
+            description: 'Checks for the number of running instances in the us-gov-east-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
         }
     },
 

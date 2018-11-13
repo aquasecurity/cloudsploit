@@ -1,7 +1,8 @@
 // Source: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html
 
 var regions = [
-	'us-gov-west-1'
+	'us-gov-west-1',
+	'us-gov-east-1'
 ];
 
 module.exports = {
