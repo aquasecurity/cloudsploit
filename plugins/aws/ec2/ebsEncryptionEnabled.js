@@ -13,6 +13,9 @@ module.exports = {
         hipaa: 'HIPAA requires that all data is encrypted, including data at rest. ' +
                 'EBS is a HIPAA-compliant solution that provides automated encryption ' +
                 'of EC2 instance data at rest.'
+        pci: 'PCI requires proper encryption of cardholder data at rest. EBS ' +
+             'encryption should be enabled for all volumes storing this type ' +
+             'of data.'
     },
 
     run: function(cache, settings, callback) {
