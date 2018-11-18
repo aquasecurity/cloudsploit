@@ -17,7 +17,10 @@ module.exports = {
     compliance: {
         hipaa: 'As part of the audit control requirement for HIPAA, request logging for ' +
                 'CloudFront should be enabled and logs should be stored in a secure location ' +
-                'with proper retention policies.'
+                'with proper retention policies.',
+        pci: 'Request logging for networks hosting cardholder data is required ' +
+             'for PCI. Enable CloudFront logging to log requests sent to ' +
+             'applications in a PCI environment.'
     },
 
     run: function(cache, settings, callback) {

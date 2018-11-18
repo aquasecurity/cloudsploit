@@ -15,7 +15,9 @@ module.exports = {
         hipaa: 'HIPAA requires strict auditing controls around data access. ' +
                 'S3 logging helps ensure these controls are met by logging ' +
                 'access to all bucket objects. Logs should be stored in a ' +
-                'secure, remote location.'
+                'secure, remote location.',
+        pci: 'PCI requires logging of all network access to environments containing ' +
+             'cardholder data. Enable S3 bucket access logs to log these network requests.'
     },
 
     run: function(cache, settings, callback) {

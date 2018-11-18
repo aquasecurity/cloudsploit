@@ -11,7 +11,10 @@ module.exports = {
 	apis: ['CloudTrail:describeTrails', 'S3:getBucketLogging'],
 	compliance: {
         hipaa: 'Access logging for CloudTrail helps ensure strict integrity controls, ' +
-        		'verifying that the audit logs for the AWS environment are not modified.'
+        		'verifying that the audit logs for the AWS environment are not modified.',
+        pci: 'PCI requires tracking and monitoring of all access to environments ' +
+        	 'in which cardholder data is present. CloudTrail bucket access logging ' +
+        	 'helps audit the bucket in which these logs are stored.'
     },
 
 	run: function(cache, settings, callback) {

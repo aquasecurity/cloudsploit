@@ -17,7 +17,9 @@ module.exports = {
         hipaa: 'HIPAA requires access logging to be enabled for the auditing ' +
                 'of services serving HIPAA data. All ELBs providing this access ' +
                 'should have logging enabled to deliver logs to a secure remote ' +
-                'location.'
+                'location.',
+        pci: 'PCI requires logging of all network access to environments containing ' +
+             'cardholder data. Enable ELB logs to log these network requests.'
     },
 
     run: function(cache, settings, callback) {
