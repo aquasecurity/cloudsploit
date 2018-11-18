@@ -9,6 +9,12 @@ module.exports = {
 	recommended_action: 'Enable the AWS Config Service for all regions and resources in an account. Ensure that it is properly recording and delivering logs.',
 	link: 'https://aws.amazon.com/config/details/',
 	apis: ['ConfigService:describeConfigurationRecorders', 'ConfigService:describeConfigurationRecorderStatus'],
+	compliance: {
+		pci: 'PCI requires the development and maintenance of secure applications. ' +
+			 'While ConfigService cannot assist in developing secure applications, ' +
+			 'it can be used to detect application and environment changes that ' +
+			 'could introduce security risks.'
+	},
 
 	run: function(cache, settings, callback) {
 		var results = [];
