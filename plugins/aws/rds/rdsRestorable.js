@@ -9,6 +9,11 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_PIT.html',
 	recommended_action: 'Ensure the instance is running and configured properly. If the time drifts too far, consider opening a support ticket with AWS.',
 	apis: ['RDS:describeDBInstances', 'RDS:describeDBClusters'],
+	compliance: {
+		pci: 'PCI requires that security procedures, including restoration of ' +
+			 'compromised services, be tested frequently. RDS restorable time ' +
+			 'indicates the last known time to which the instance can be restored.'
+	},
 	settings: {
 		rds_restorable_fail: {
 			name: 'RDS Restorable Time Fail',
