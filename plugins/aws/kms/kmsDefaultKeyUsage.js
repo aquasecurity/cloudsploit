@@ -13,6 +13,12 @@ module.exports = {
 		   'S3:listBuckets', 'S3:getBucketEncryption', 'SES:describeActiveReceiptRuleSet',
 		   'Workspaces:describeWorkspaces', 'Lambda:listFunctions', 'CloudWatchLogs:describeLogGroups',
 		   'EFS:describeFileSystems', 'STS:getCallerIdentity'],
+	compliance: {
+		pci: 'PCI requires vendor defaults to be changed. While KMS keys ' +
+			 'do not fall into the same category as vendor-default ' +
+			 'passwords, it is still strongly encouraged to use a ' +
+			 'customer-provided CMK rather than the default KMS key.'
+	},
 
 	run: function(cache, settings, callback) {
 		var results = [];
