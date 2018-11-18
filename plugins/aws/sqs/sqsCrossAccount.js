@@ -49,6 +49,11 @@ module.exports = {
 	recommended_action: 'Update the SQS policy to prevent access from external accounts.',
 	link: 'http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-creating-custom-policies.html',
 	apis: ['SQS:listQueues', 'SQS:getQueueAttributes', 'STS:getCallerIdentity'],
+	compliance: {
+		pci: 'PCI requires that cardholder data can only be accessed by those with ' +
+			 'a legitimate business need. If SQS queues process this kind of data, ' +
+			 'ensure that the queue policies do not allow reads by third-party accounts.'
+	},
 
 	run: function(cache, settings, callback) {
 		var results = [];

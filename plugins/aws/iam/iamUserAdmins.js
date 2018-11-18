@@ -14,6 +14,11 @@ module.exports = {
 		   'IAM:listGroupsForUser',
 		   'IAM:listGroups', 'IAM:listGroupPolicies', 'IAM:listAttachedGroupPolicies',
 		   'IAM:getUserPolicy', 'IAM:getGroupPolicy'],
+	compliance: {
+		pci: 'PCI requires that cardholder data can only be accessed by those with ' +
+			 'a legitimate business need. Limiting the number of IAM administrators ' +
+			 'reduces the scope of users with potential access to this data.'
+	},
 	settings: {
 		iam_admin_count: {
 			name: 'IAM Admin Count',

@@ -12,7 +12,10 @@ module.exports = {
         hipaa: 'HIPAA requires strong auditing controls surrounding actions ' +
         		'taken in the environment. The root user lacks these controls ' +
         		'since it is not tied to a specific user. The root account ' +
-        		'should not be used.'
+        		'should not be used.',
+        pci: 'PCI requires that cardholder data can only be accessed by those with ' +
+			 'a legitimate business need. Restricting root access prevents access ' +
+			 'to these environments from users who may not be identified.'
     },
 	settings: {
 		root_account_in_use_days: {

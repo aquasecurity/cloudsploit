@@ -12,6 +12,11 @@ module.exports = {
 	recommended_action: 'Disable global all users policies on all S3 buckets and ensure both the bucket ACL is configured with least privileges.',
 	link: 'http://docs.aws.amazon.com/AmazonS3/latest/UG/EditingBucketPermissions.html',
 	apis: ['S3:listBuckets', 'S3:getBucketAcl'],
+	compliance: {
+		pci: 'PCI requires that cardholder data can only be accessed by those with ' +
+			 'a legitimate business need. If PCI-restricted data is stored in S3, ' +
+			 'those buckets should not enable global user access.'
+	},
 
 	run: function(cache, settings, callback) {
 		var results = [];

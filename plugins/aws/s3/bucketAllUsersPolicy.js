@@ -9,6 +9,11 @@ module.exports = {
 	recommended_action: 'Remove wildcard principals from the bucket policy statements.',
 	link: 'https://docs.aws.amazon.com/AmazonS3/latest/dev/using-iam-policies.html',
 	apis: ['S3:listBuckets', 'S3:getBucketPolicy'],
+	compliance: {
+		pci: 'PCI requires that cardholder data can only be accessed by those with ' +
+			 'a legitimate business need. If PCI-restricted data is stored in S3, ' +
+			 'those buckets should not enable global user access.'
+	},
 
 	run: function(cache, settings, callback) {
 		var results = [];
