@@ -87,7 +87,9 @@ module.exports = {
         hipaa: 'All HIPAA data should be encrypted in transit. Using secure ciphers ' +
         		'is a critical aspect of this requirement. Using outdated ciphers with ' +
         		'known vulnerabilities places all transmitted data at risk of interception ' +
-        		'and tampering.'
+        		'and tampering.',
+        pci: 'PCI requires secure transfer of cardholder data. It does not permit SSL or TLS ' +
+        	 'version 1.0. ELB listeners should be configured for TLS v1.2.'
     },
 
 	run: function(cache, settings, callback) {

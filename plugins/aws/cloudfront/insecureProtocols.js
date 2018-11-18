@@ -12,7 +12,9 @@ module.exports = {
 	compliance: {
         hipaa: 'The transmission security aspect of HIPAA requires communication containing ' +
         		'sensitive data to be transmitted over secure connections. CloudFront ' +
-        		'protocols must be up-to-date to avoid data exposure.'
+        		'protocols must be up-to-date to avoid data exposure.',
+        pci: 'PCI requires secure transfer of cardholder data. It does not permit SSL or TLS ' +
+        	 'version 1.0. CloudFront should be configured for TLS v1.2.'
     },
 
 	run: function(cache, settings, callback) {
