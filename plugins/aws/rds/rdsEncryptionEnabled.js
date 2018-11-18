@@ -13,7 +13,10 @@ module.exports = {
         hipaa: 'All data in HIPAA environments must be encrypted, including ' +
         		'data at rest. RDS encryption ensures that this HIPAA control ' +
         		'is implemented by providing KMS-backed encryption for all RDS ' +
-        		'data.'
+        		'data.',
+        pci: 'PCI requires proper encryption of cardholder data at rest. RDS ' +
+        	 'encryption should be enabled for all instances storing this type ' +
+        	 'of data.'
     },
 
 	run: function(cache, settings, callback) {

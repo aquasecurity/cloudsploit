@@ -10,7 +10,10 @@ module.exports = {
     recommended_action: 'Recreate unencrypted SSM Parameters with Type set to SecureString.',
     apis: ['SSM:describeParameters', 'STS:getCallerIdentity'],
     compliance: {
-        hipaa: 'HIPAA requires that all data is encrypted, including data at rest'
+        hipaa: 'HIPAA requires that all data is encrypted, including data at rest',
+        pci: 'PCI requires proper encryption of cardholder data at rest. SSM ' +
+             'encryption should be enabled for all parameters storing this type ' +
+             'of data.'
     },
 
     run: function(cache, settings, callback) {

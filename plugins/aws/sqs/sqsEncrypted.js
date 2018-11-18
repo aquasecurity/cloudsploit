@@ -14,7 +14,10 @@ module.exports = {
 	compliance: {
         hipaa: 'SQS encryption must be used when processing any HIPAA-related data. ' +
         		'AWS KMS encryption ensures that the SQS message payload meets the ' +
-        		'encryption in transit and at rest requirements of HIPAA.'
+        		'encryption in transit and at rest requirements of HIPAA.',
+        pci: 'PCI requires proper encryption of cardholder data at rest. SQS ' +
+        	 'encryption should be enabled for all queues processing this type ' +
+        	 'of data.'
     },
 
 	run: function(cache, settings, callback) {

@@ -9,6 +9,12 @@ module.exports = {
 	recommended_action: 'Enable yearly rotation for the KMS key',
 	link: 'http://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html',
 	apis: ['KMS:listKeys', 'KMS:describeKey', 'KMS:getKeyRotationStatus'],
+	compliance: {
+		pci: 'PCI has strict requirements regarding the use of encryption keys ' +
+			 'to protect cardholder data. These requirements include rotating ' +
+			 'the key periodically. KMS provides key rotation capabilities that ' +
+			 'should be enabled.'
+	},
 
 	run: function(cache, settings, callback) {
 		var results = [];
