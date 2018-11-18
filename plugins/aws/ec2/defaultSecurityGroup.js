@@ -9,6 +9,12 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html#default-security-group',
 	recommended_action: 'Update the rules for the default security group to deny all traffic by default',
 	apis: ['EC2:describeSecurityGroups'],
+	compliance: {
+		pci: 'PCI has strict requirements to segment networks using firewalls. ' +
+			 'Security groups are a software-layer firewall that should be used ' +
+			 'to isolate resources. Ensure default security groups to not allow ' +
+			 'unintended traffic to cross these isolation boundaries.'
+	},
 
 	run: function(cache, settings, callback) {
 		var results = [];

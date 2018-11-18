@@ -13,7 +13,10 @@ module.exports = {
         hipaa: 'HIPAA requires strict access controls to networks and services ' +
         		'processing sensitive data. Security groups are the built-in ' +
         		'method for restricting access to AWS services and should be ' +
-        		'configured to allow least-privilege access.'
+        		'configured to allow least-privilege access.',
+        pci: 'PCI has explicit requirements around firewalled access to systems. ' +
+        	 'Security groups should be properly secured to prevent access to ' +
+        	 'backend services.'
     },
 
 	run: function(cache, settings, callback) {

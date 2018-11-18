@@ -13,7 +13,10 @@ module.exports = {
 	compliance: {
         hipaa: 'AWS VPC is the recommended location for processing of HIPAA-related ' +
         		'data. All EC2 instances storing or processing HIPAA data should be ' +
-        		'launched in a VPC to avoid exposure to the public network.'
+        		'launched in a VPC to avoid exposure to the public network.',
+        pci: 'VPCs provide a firewall for compute resources that meets the network ' +
+        	 'segmentation criteria for PCI. Ensure all instances are launched ' +
+        	 'within a VPC to comply with isolation requirements.'
     },
 
 	run: function(cache, settings, callback) {

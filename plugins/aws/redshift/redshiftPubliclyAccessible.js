@@ -14,7 +14,10 @@ module.exports = {
         		'accessed through private endpoints. Exposing Redshift instances to ' +
         		'the public network may increase the risk of access from ' +
         		'disallowed parties. HIPAA requires strict access and integrity ' +
-        		'controls around sensitive data.'
+        		'controls around sensitive data.',
+        pci: 'PCI requires backend services to be properly firewalled. ' +
+        	 'Ensure Redshift instances are not accessible from the Internet ' +
+        	 'and use proper jump box access mechanisms.'
     },
 
 	run: function(cache, settings, callback) {

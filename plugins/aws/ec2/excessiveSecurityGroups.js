@@ -9,6 +9,12 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
 	recommended_action: 'Limit the number of security groups to prevent accidental authorizations',
 	apis: ['EC2:describeSecurityGroups'],
+	compliance: {
+		pci: 'PCI has strict requirements to segment networks using firewalls. ' +
+			 'Security groups are a software-layer firewall that should be used ' +
+			 'to isolate resources. Ensure the number of groups does not become ' +
+			 'unmanageable.'
+	},
 	settings: {
 		excessive_security_groups_fail: {
 			name: 'Excessive Security Groups Fail',

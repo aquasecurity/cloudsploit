@@ -9,6 +9,12 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Subnets.html',
     recommended_action: 'Remove the NACL rules allowing communication between the public and private tiers of different VPCs',
     apis: ['EC2:describeSubnets', 'EC2:describeRouteTables', 'EC2:describeVpcPeeringConnections'],
+    compliance: {
+        pci: 'VPCs provide a firewall for compute resources that meets the network ' +
+             'segmentation criteria for PCI. However, VPCs can be configured to ' +
+             'communicate across these segmented boundaries. Ensure that public ' +
+             'services in one VPC cannot communicate with the private tier of another.'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
