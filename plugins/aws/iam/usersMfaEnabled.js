@@ -12,7 +12,9 @@ module.exports = {
         hipaa: 'MFA helps provide additional assurance that the user accessing ' +
         		'the AWS is environment has been identified. HIPAA requires ' +
         		'strong controls around entity authentication which can be ' +
-        		'enhanced through the use of MFA.'
+        		'enhanced through the use of MFA.',
+        pci: 'PCI requires MFA for all access to cardholder environments. ' +
+			 'Create an MFA key for user accounts.'
     },
 
 	run: function(cache, settings, callback) {

@@ -8,6 +8,10 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
 	recommended_action: 'Increase the minimum previous passwords that can be reused to 24.',
 	apis: ['IAM:getAccountPasswordPolicy'],
+	compliance: {
+		pci: 'PCI requires that the previous 4 passwords not be reused. ' +
+			 'Restricting IAM password reuse enforces this policy.'
+	},
 	settings: {
 		password_reuse_fail: {
 			name: 'Password Reuse Fail',

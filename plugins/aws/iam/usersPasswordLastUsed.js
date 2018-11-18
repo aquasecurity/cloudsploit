@@ -11,6 +11,11 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_passwords_admin-change-user.html',
 	recommended_action: 'Delete old user accounts that allow password-based logins and have not been used recently.',
 	apis: ['IAM:generateCredentialReport'],
+	compliance: {
+		pci: 'PCI requires that all user credentials are rotated every 90 days. ' +
+        	 'If the user password has not been used in the last 90 days, the ' +
+        	 'user should be deactivated.'
+	},
 	settings: {
 		users_password_last_used_fail: {
 			name: 'Users Password Last Used Fail',

@@ -8,6 +8,10 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
 	recommended_action: 'Increase the minimum length requirement for the password policy',
 	apis: ['IAM:getAccountPasswordPolicy'],
+	compliance: {
+		pci: 'PCI requires that passwords have a minimum length of at least 7 characters. ' +
+			 'Setting an IAM password length policy enforces this requirement.'
+	},
 	settings: {
 		min_password_length_fail: {
 			name: 'Min Password Length Fail',

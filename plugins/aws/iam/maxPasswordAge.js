@@ -8,6 +8,10 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
 	recommended_action: 'Descrease the maximum allowed age of passwords for the password policy',
 	apis: ['IAM:getAccountPasswordPolicy'],
+	compliance: {
+		pci: 'PCI requires that all user credentials are rotated every 90 days. Setting ' +
+        	 'an IAM password rotation policy enforces this requirement.'
+	},
 	settings: {
 		max_password_age_fail: {
 			name: 'Max Password Age Fail',

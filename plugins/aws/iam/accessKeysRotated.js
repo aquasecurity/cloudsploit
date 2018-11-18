@@ -13,7 +13,10 @@ module.exports = {
 	compliance: {
         hipaa: 'Rotating access keys helps to ensure that those keys have note been ' +
         		'compromised. HIPAA requires strict controls around authentication of ' +
-        		'users or systems accessing HIPAA-compliant environments.'
+        		'users or systems accessing HIPAA-compliant environments.',
+        pci: 'PCI requires that all user credentials are rotated every 90 days. While ' +
+        	 'IAM roles handle rotation automatically, access keys need to be manually ' +
+        	 'rotated.'
     },
 	settings: {
 		access_keys_rotated_fail: {

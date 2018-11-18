@@ -8,6 +8,11 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/general/latest/gr/managing-aws-access-keys.html',
 	recommended_action: 'Enable an MFA device for the root account and then use an IAM user for managing services',
 	apis: ['IAM:generateCredentialReport'],
+	compliance: {
+		pci: 'PCI requires MFA for all access to cardholder environments. ' +
+			 'Create an MFA key for the root account and then lock it in ' +
+			 'a safe location for use as backup for named IAM users.'
+	},
 
 	run: function(cache, settings, callback) {
 		var results = [];

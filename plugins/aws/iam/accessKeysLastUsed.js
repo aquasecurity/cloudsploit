@@ -9,6 +9,10 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/ManagingCredentials.html',
 	recommended_action: 'Log into the IAM portal and remove the offending access key.',
 	apis: ['IAM:generateCredentialReport'],
+	compliance: {
+		pci: 'PCI requires that all users be removed if they are inactive for 90 days. ' +
+			 'If a user access key is inactive, it should be removed.'
+	},
 	settings: {
 		access_keys_last_used_fail: {
 			name: 'Access Keys Last Used Fail',

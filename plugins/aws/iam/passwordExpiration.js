@@ -8,6 +8,10 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
 	recommended_action: 'Enable password expiration for the account',
 	apis: ['IAM:getAccountPasswordPolicy'],
+	compliance: {
+		pci: 'PCI requires that user passwords are rotated every 90 days. Forcing ' +
+			 'password expirations enforces this policy.'
+	},
 
 	run: function(cache, settings, callback) {
 		var results = [];

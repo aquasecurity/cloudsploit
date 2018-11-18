@@ -8,6 +8,10 @@ module.exports = {
 	link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
 	recommended_action: 'Update the password policy to require the use of uppercase letters',
 	apis: ['IAM:getAccountPasswordPolicy'],
+	compliance: {
+		pci: 'PCI requires a strong password policy. Setting IAM password ' +
+			 'requirements enforces this policy.'
+	},
 
 	run: function(cache, settings, callback) {
 		var results = [];
