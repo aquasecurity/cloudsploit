@@ -46,9 +46,13 @@ if (process.argv.join(' ').indexOf('--compliance') > -1) {
     if (process.argv.join(' ').indexOf('--compliance=hipaa') > -1) {
         COMPLIANCE='hipaa';
         console.log('INFO: Compliance mode: HIPAA');
+    } else if (process.argv.join(' ').indexOf('--compliance=pci') > -1) {
+        COMPLIANCE='pci';
+        console.log('INFO: Compliance mode: PCI');
     } else {
         console.log('ERROR: Unsupported compliance mode. Please use one of the following:');
         console.log('       --compliance=hipaa');
+        console.log('       --compliance=pci');
         process.exit();
     }
 }

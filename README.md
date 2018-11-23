@@ -123,6 +123,7 @@ Some plugins may require additional permissions not outlined above. Since their 
 CloudSploit also supports mapping of its plugins to particular compliance policies. To run the compliance scan, use the `--compliance` flag. For example:
 ```
 node index.js --compliance=hipaa
+node index.js --compliance=pci
 ```
 
 CloudSploit currently supports the following compliance mappings:
@@ -130,6 +131,10 @@ CloudSploit currently supports the following compliance mappings:
 ### HIPAA
 
 HIPAA scans map CloudSploit plugins to the Health Insurance Portability and Accountability Act of 1996.
+
+### PCI
+
+PCI scans map CloudSploit plugins to the Payment Card Industry Data Security Standard.
 
 ## Architecture
 
