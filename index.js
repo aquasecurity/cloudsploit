@@ -49,10 +49,14 @@ if (process.argv.join(' ').indexOf('--compliance') > -1) {
     } else if (process.argv.join(' ').indexOf('--compliance=pci') > -1) {
         COMPLIANCE='pci';
         console.log('INFO: Compliance mode: PCI');
+    } else if (process.argv.join(' ').indexOf('--compliance=soc2') > -1) {
+        COMPLIANCE='soc2';
+        console.log('INFO: Compliance mode: SOC2');
     } else {
         console.log('ERROR: Unsupported compliance mode. Please use one of the following:');
         console.log('       --compliance=hipaa');
         console.log('       --compliance=pci');
+        console.log('       --compliance=soc2');
         process.exit();
     }
 }
