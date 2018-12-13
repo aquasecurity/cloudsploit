@@ -124,5 +124,11 @@ module.exports = {
 
 	    'redshiftEncryptionEnabled'     : require(__dirname + '/plugins/aws/redshift/redshiftEncryptionEnabled.js'),
 	    'redshiftPubliclyAccessible'    : require(__dirname + '/plugins/aws/redshift/redshiftPubliclyAccessible.js')
+	},
+	azure : {
+		'storageAccounts'               : require(__dirname + '/plugins/azure/storageAccounts/storageAccounts.js'),
+		'storageAccountsEncryption'     : require(__dirname + '/plugins/azure/storageAccounts/storageAccountsEncryption.js'),
+		'storageBlobService'            : require(__dirname + '/plugins/azure/storageAccounts/storageBlobService.js'),
+		'resourceGroups'                : require(__dirname + '/plugins/azure/resourceGroups/resourceGroups.js'),
 	}
 };

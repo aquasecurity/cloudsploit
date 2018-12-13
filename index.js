@@ -1,23 +1,31 @@
 var async = require('async');
 var plugins = require('./exports.js');
-var awsCollector = require('./collect_aws.js');
-
-var serviceProviders = ['aws'];
 
 var AWSConfig;
+var AzureConfig;
 
-// OPTION 1: Configure AWS credentials through hard-coded key and secret
+// OPTION 1: Configure service provider credentials through hard-coded config objects
+
 // AWSConfig = {
-//     accessKeyId: '',
-//     secretAccessKey: '',
-//     sessionToken: '',
-//     region: 'us-east-1'
+// 	accessKeyId: '',
+// 	secretAccessKey: '',
+// 	sessionToken: '',
+// 	region: 'us-east-1'
 // };
 
-// OPTION 2: Import an AWS config file containing credentials
-// AWSConfig = require(__dirname + '/credentials.json');
+// AzureConfig = {
+// 	ApplicationID: '',          // A.K.A ClientID
+// 	KeyValue: '',               // Secret
+// 	DirectoryID: '',            // A.K.A TenantID or Domain
+// 	SubscriptionID: '',
+// 	location: 'East US'
+// };
 
-// OPTION 3: ENV configuration with AWS_ env vars
+// OPTION 2: Import a service provider config file containing credentials
+// AWSConfig = require(__dirname + '/aws_credentials.json');
+// AzureConfig = require(__dirname + '/azure_credentials.json');
+
+// OPTION 3: ENV configuration with service provider env vars
 if(process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY){
     AWSConfig = {
         accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -27,11 +35,23 @@ if(process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY){
     };
 }
 
+if(process.env.AZURE_APPLICATION_ID && process.env.AZURE_KEY_VALUE){
+	AzureConfig = {
+		ApplicationID: process.env.AZURE_APPLICATION_ID,
+		KeyValue:  process.env.AZURE_KEY_VALUE,
+		DirectoryID: process.env.AZURE_DIRECTORY_ID,
+		SubscriptionID: process.env.AZURE_SUBSCRIPTION_ID,
+		region: process.env.AZURE_LOCATION || 'East US'
+	};
+}
+
 if (!AWSConfig || !AWSConfig.accessKeyId) {
     return console.log('ERROR: Invalid AWSConfig');
 }
 
-var skipRegions = [];   // Add any regions you wish to skip here. Ex: 'us-east-2'
+if (!AzureConfig || !AzureConfig.ApplicationID) {
+	return console.log('ERROR: Invalid AzureConfig');
+}
 
 // Custom settings - place plugin-specific settings here
 var settings = {};
@@ -57,6 +77,24 @@ if (process.argv.join(' ').indexOf('--compliance') > -1) {
     }
 }
 
+// Configure Service Provider Collectors
+var serviceProviders = {
+	aws : {
+		name: "aws",
+		collector: require('./collectors/aws/collector.js'),
+		config: AWSConfig,
+		apiCalls: [],
+		skipRegions: []     // Add any regions you wish to skip here. Ex: 'us-east-2'
+	},
+	azure : {
+		name: "azure",
+		collector: require('./collectors/azure/collector.js'),
+		config: AzureConfig,
+		apiCalls: [],
+		skipRegions: []     // Add any locations you wish to skip here. Ex: 'East US'
+	}
+}
+
 // STEP 1 - Obtain API calls to make
 console.log('INFO: Determining API calls to make...');
 
@@ -66,12 +104,10 @@ function getMapValue(obj, key) {
 	throw new Error("Invalid map key.");
 }
 
-var apiCalls = {'aws': []};
-
 for (p in plugins) {
 	for (sp in serviceProviders) {
-		var serviceProviderPlugins = getMapValue(plugins, serviceProviders[sp]);
-		var serviceProviderAPICalls = getMapValue(apiCalls, serviceProviders[sp]);
+		var serviceProviderPlugins = getMapValue(plugins, serviceProviders[sp].name);
+		var serviceProviderAPICalls = serviceProviders[sp].apiCalls;
 		for (spp in serviceProviderPlugins) {
 			var plugin = getMapValue(serviceProviderPlugins, spp);
 			for (pac in plugin.apis) {
@@ -90,50 +126,65 @@ for (p in plugins) {
 }
 
 console.log('INFO: API calls determined.');
-console.log('INFO: Collecting AWS metadata. This may take several minutes...');
+console.log('INFO: Collecting metadata. This may take several minutes...');
 
-// STEP 2 - Collect API Metadata from AWS
-awsCollector(AWSConfig, {api_calls: apiCalls['aws'], skip_regions: skipRegions}, function (err, collection) {
-    if (err || !collection) return console.log('ERROR: Unable to obtain API metadata');
+// STEP 2 - Collect API Metadata from Service Providers
+async.eachOf(serviceProviders, function (serviceProviderObj, serviceProviderCb) {
+	serviceProviderObj.collector(serviceProviderObj.config, {api_calls: serviceProviderObj.apiCalls, skip_regions: serviceProviderObj.skipRegions}, function (err, collection) {
+		if (err || !collection) return console.log('ERROR: Unable to obtain API metadata');
 
-    console.log('INFO: Metadata collection complete. Analyzing...');
-    console.log('INFO: Analysis complete. Scan report to follow...\n');
+		console.log('');
+		console.log('-----------------------');
+		console.log(serviceProviderObj.name.toUpperCase());
+		console.log('-----------------------');
+		console.log('');
+		console.log('');
+		console.log('INFO: Metadata collection complete. Analyzing...');
+		console.log('INFO: Analysis complete. Scan report to follow...\n');
+		console.log('');
 
-    async.forEachOfLimit(plugins.aws, 10, function (plugin, key, callback) {
-        if (COMPLIANCE && (!plugin.compliance || !plugin.compliance[COMPLIANCE])) {
-            return callback();
-        }
+		var serviceProviderPlugins = getMapValue(plugins, serviceProviderObj.name);
 
-        plugin.run(collection, settings, function(err, results){
-            if (COMPLIANCE) {
-                console.log('');
-                console.log('-----------------------');
-                console.log(plugin.title);
-                console.log('-----------------------');
-                console.log(plugin.compliance[COMPLIANCE]);
-                console.log('');
-            }
-            for (r in results) {
-                var statusWord;
-                if (results[r].status === 0) {
-                    statusWord = 'OK';
-                } else if (results[r].status === 1) {
-                    statusWord = 'WARN';
-                } else if (results[r].status === 2) {
-                    statusWord = 'FAIL';
-                } else {
-                    statusWord = 'UNKNOWN';
-                }
+		async.forEachOfLimit(serviceProviderPlugins, 10, function (plugin, key, callback) {
+			if (COMPLIANCE && (!plugin.compliance || !plugin.compliance[COMPLIANCE])) {
+				return callback();
+			}
 
-                console.log(plugin.category + '\t' + plugin.title + '\t' +
-                    (results[r].resource || 'N/A') + '\t' +
-                    (results[r].region || 'Global') + '\t\t' +
-                    statusWord + '\t' + results[r].message);
-            }
+			plugin.run(collection, settings, function(err, results){
+				if (COMPLIANCE) {
+					console.log('');
+					console.log('-----------------------');
+					console.log(plugin.title);
+					console.log('-----------------------');
+					console.log(plugin.compliance[COMPLIANCE]);
+					console.log('');
+				}
+				for (r in results) {
+					var statusWord;
+					if (results[r].status === 0) {
+						statusWord = 'OK';
+					} else if (results[r].status === 1) {
+						statusWord = 'WARN';
+					} else if (results[r].status === 2) {
+						statusWord = 'FAIL';
+					} else {
+						statusWord = 'UNKNOWN';
+					}
 
-            setTimeout(function() { callback(err); }, 0);
-        });
-    }, function(err){
-        if (err) return console.log(err);
-    });
+					console.log(plugin.category + '\t' + plugin.title + '\t' +
+						(results[r].resource || 'N/A') + '\t' +
+						(results[r].region || 'Global') + '\t\t' +
+						statusWord + '\t' + results[r].message);
+				}
+
+				setTimeout(function() { callback(err); }, 0);
+			});
+		}, function(err){
+			if (err) return console.log(err);
+		});
+	});
+
+}, function () {
+	//console.log(JSON.stringify(collection, null, 2));
+	callback(null, collection);
 });

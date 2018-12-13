@@ -18,8 +18,8 @@
 
 var AWS = require('aws-sdk');
 var async = require('async');
-var helpers = require(__dirname + '/helpers/aws');
-var collectors = require(__dirname + '/collectors/aws');
+var helpers = require(__dirname + '/../../helpers/aws');
+var collectors = require(__dirname + '/../../collectors/aws');
 
 var globalServices = [
 	'S3',
