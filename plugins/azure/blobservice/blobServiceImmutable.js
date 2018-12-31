@@ -1,14 +1,10 @@
-var util = require('util');
 var async = require('async');
 
 var helpers = require('../../../helpers/azure/');
 
-var ACL_ALL_USERS = 'http://acs.amazonaws.com/groups/global/AllUsers';
-var ACL_AUTHENTICATED_USERS = 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers';
-
 module.exports = {
-    title: 'Storage Blob Service',
-    category: 'Storage Blob Service',
+    title: 'Blob Service Immutable',
+    category: 'Blob Service',
     description: 'Ensures data immutability is properly configured in blob services to protect critical data against deletion.',
     more_info: 'Immutable storage helps financial institutions and related industries--particularly broker-dealer organizations--to store data securely. It can also be leveraged in any scenario to protect critical data against deletion.',
     recommended_action: 'In your Azure\'s storage account, select an existing container, then select access policy under container settings, and the Add Policy under Immutable Blob Storage.',
