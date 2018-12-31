@@ -7,7 +7,7 @@ var ACL_ALL_USERS = 'http://acs.amazonaws.com/groups/global/AllUsers';
 var ACL_AUTHENTICATED_USERS = 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers';
 
 module.exports = {
-    title: 'Storage Accounts',
+    title: 'Storage Accounts Encryption',
     category: 'Storage Accounts',
     description: 'Ensures encryption is properly configured in storage accounts to protect data-at-rest and meet compliance requirements.',
     more_info: 'Storage accounts can be configured to encrypt data-at-rest, by default Azure will create a set of keys to encrypt your storage account, but the recommended approach is to create your own keys using Azure\'s Key Vault.',

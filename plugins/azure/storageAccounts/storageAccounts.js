@@ -7,7 +7,7 @@ var ACL_ALL_USERS = 'http://acs.amazonaws.com/groups/global/AllUsers';
 var ACL_AUTHENTICATED_USERS = 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers';
 
 module.exports = {
-    title: 'Storage Accounts',
+    title: 'Storage Accounts HTTPS',
     category: 'Storage Accounts',
     description: 'Ensures general security is properly configured in storage accounts to meet compliance requirements.',
     more_info: 'Storage accounts have several settings to increase security for each account and undelying services, this plugin checks for compliance of each of those settings.',
