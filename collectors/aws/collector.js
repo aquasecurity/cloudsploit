@@ -300,7 +300,10 @@ var calls = {
 	},
 	SSM: {
 		describeParameters: {
-			property: 'Parameters'
+			property: 'Parameters',
+			params: {
+				MaxResults: 50
+			}
 		}
 	},
 	STS: {
