@@ -16,14 +16,17 @@
     "security"
   ],
   "author": "CloudSploit",
-  "license": "GPLv3",
+  "license": "GPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/cloudsploit/scans/issues"
   },
   "homepage": "https://cloudsploit.com",
   "dependencies": {
-    "async": "2.0.0-rc.3",
-    "aws-sdk": "^2.0.18"
+    "async": "^2.6.1",
+    "aws-sdk": "^2.379.0",
+    "ms-rest-azure": "^2.5.9",
+    "azure-arm-resource": "^7.2.1",
+    "azure-arm-storage": "^6.3.0",
+    "azure-storage": "^2.10.2"
   }
 }
-
