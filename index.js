@@ -45,14 +45,6 @@ if(process.env.AZURE_APPLICATION_ID && process.env.AZURE_KEY_VALUE){
 	};
 }
 
-if (!AWSConfig || !AWSConfig.accessKeyId) {
-    return console.log('ERROR: Invalid AWSConfig');
-}
-
-if (!AzureConfig || !AzureConfig.ApplicationID) {
-	return console.log('ERROR: Invalid AzureConfig');
-}
-
 // Custom settings - place plugin-specific settings here
 var settings = {};
 
@@ -73,19 +65,25 @@ if (process.argv.join(' ').indexOf('--compliance') > -1) {
         console.log('ERROR: Unsupported compliance mode. Please use one of the following:');
         console.log('       --compliance=hipaa');
         console.log('       --compliance=pci');
-        process.exit();
+        process.exit(1);
     }
 }
 
 // Configure Service Provider Collectors
-var serviceProviders = {
+var serviceProviders;
+var PROVIDER;
+
+var awsProvider = {
 	aws : {
 		name: "aws",
 		collector: require('./collectors/aws/collector.js'),
 		config: AWSConfig,
 		apiCalls: [],
 		skipRegions: []     // Add any regions you wish to skip here. Ex: 'us-east-2'
-	},
+	}
+    }
+
+var azureProvider = {
 	azure : {
 		name: "azure",
 		collector: require('./collectors/azure/collector.js'),
@@ -93,6 +91,34 @@ var serviceProviders = {
 		apiCalls: [],
 		skipRegions: []     // Add any locations you wish to skip here. Ex: 'East US'
 	}
+}
+
+if (process.argv.join(' ').indexOf('--provider') > -1) {
+    if (process.argv.join(' ').indexOf('--provider=aws') > -1) {
+        if (!AWSConfig || !AWSConfig.accessKeyId) {
+            return console.log('ERROR: Invalid AWSConfig');
+        }
+		PROVIDER='aws';
+        console.log('INFO: Provider: AWS');
+    } else if (process.argv.join(' ').indexOf('--provider=azure') > -1) {
+		if (!AzureConfig || !AzureConfig.ApplicationID) {
+			return console.log('ERROR: Invalid AzureConfig');
+		}	
+        PROVIDER='azure';
+        console.log('INFO: Provider: Azure');
+    }
+} else {
+        console.log('ERROR: Unsupported provider. Please use one of the following:');
+        console.log('       --provider=aws');
+        console.log('       --provider=azure');
+        process.exit(1);
+}
+
+
+if (PROVIDER == 'aws') {
+	serviceProviders = awsProvider
+} else if (PROVIDER == 'azure') {
+	serviceProviders = azureProvider
 }
 
 // STEP 1 - Obtain API calls to make
