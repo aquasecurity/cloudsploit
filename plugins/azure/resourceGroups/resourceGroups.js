@@ -1,10 +1,6 @@
-var util = require('util');
 var async = require('async');
 
 var helpers = require('../../../helpers/azure/');
-
-var ACL_ALL_USERS = 'http://acs.amazonaws.com/groups/global/AllUsers';
-var ACL_AUTHENTICATED_USERS = 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers';
 
 module.exports = {
     title: 'Resource Groups',

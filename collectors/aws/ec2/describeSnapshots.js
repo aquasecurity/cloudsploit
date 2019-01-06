@@ -34,9 +34,10 @@ module.exports = function(AWSConfig, collection, callback) {
 		ec2.describeSnapshots(params, function(err, data){
 			if (err) {
 			    collection.ec2.describeSnapshots[AWSConfig.region].err = err;
+			} else {
+				collection.ec2.describeSnapshots[AWSConfig.region].data = data.Snapshots;
 			}
-			collection.ec2.describeSnapshots[AWSConfig.region].data = data.Snapshots;
-			
+
 			callback();
 		});
 	});

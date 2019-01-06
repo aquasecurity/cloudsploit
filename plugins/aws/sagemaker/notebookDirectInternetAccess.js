@@ -42,14 +42,6 @@ module.exports = {
 				var describeNotebookInstance = helpers.addSource(cache, source,
 					['sagemaker', 'describeNotebookInstance', region, instanceName]);
 
-				if (!instance.KmsKeyId){
-					helpers.addResult(results, 2,
-						'KMS key not found for Notebook Instance', region, instanceArn);
-				} else {
-					helpers.addResult(results, 0,
-						'KMS key found for Notebook Instance', region, instanceArn);
-				}
-
 				if (instance.DirectInternetAccess &&
 					instance.DirectInternetAccess == 'Enabled'){
 					helpers.addResult(results, 2,

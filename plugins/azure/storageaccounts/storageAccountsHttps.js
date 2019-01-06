@@ -1,18 +1,14 @@
-var util = require('util');
 var async = require('async');
 
 var helpers = require('../../../helpers/azure/');
 
-var ACL_ALL_USERS = 'http://acs.amazonaws.com/groups/global/AllUsers';
-var ACL_AUTHENTICATED_USERS = 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers';
-
 module.exports = {
-    title: 'Storage Accounts',
+    title: 'Storage Accounts HTTPS',
     category: 'Storage Accounts',
-    description: 'Ensures general security is properly configured in storage accounts to meet compliance requirements.',
-    more_info: 'Storage accounts have several settings to increase security for each account and undelying services, this plugin checks for compliance of each of those settings.',
-    recommended_action: 'Go to your Storage Account, select Encryption, and check the box to use your own key, then select Key Vault, create a new vault if needed; then select Encryption key and create a new key if needed, at a minimum, set an activation date for your key to help with your key rotation policy, click Save when done.',
-    link: 'https://docs.microsoft.com/en-us/azure/storage/common/storage-security-guide?toc=%2fazure%2fstorage%2fblobs%2ftoc.json',
+    description: 'Ensures HTTPS-only traffic is allowed to storage account endpoints.',
+    more_info: 'Storage accounts can contain sensitive information and should only be accessed over HTTPS. Enabling the HTTPS-only flag ensures that Azure does not allow HTTP traffic to storage accounts.',
+    recommended_action: 'Enable the HTTPS-only option for all storage accounts.',
+    link: 'https://docs.microsoft.com/en-us/azure/governance/policy/samples/ensure-https-storage-account',
     apis: ['storageAccounts:list', 'storageAccounts:listKeys'],
 
     run: function(cache, settings, callback) {
@@ -33,7 +29,7 @@ module.exports = {
             }
 
             if (!storageAccount.data.length) {
-                helpers.addResult(results, 2, 'No existing storage accounts', location);
+                helpers.addResult(results, 0, 'No storage accounts found', location);
             } else {
                 for (acct in storageAccount.data) {
                     var account = storageAccount.data[acct];
