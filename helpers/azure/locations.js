@@ -13,10 +13,13 @@ var locations = [
 
 module.exports = {
 	all: locations,
-	resourcegroups: ['East US', 'West US'],
-	storageaccounts: ['East US', 'West US'],
-	blobservice: ['East US', 'West US'],
-	fileservice: ['East US', 'West US'],
-	queueservice: ['East US', 'West US'],
-	tableservice: ['East US', 'West US'],
+	resourceGroups: ['East US', 'West US'],
+	storageAccounts: ['East US', 'West US'],
+	blobService: ['East US', 'West US'],
+	fileService: ['East US', 'West US'],
+	queueService: ['East US', 'West US'],
+	tableService: ['East US', 'West US'],
+	virtualMachines: ['East US', 'West US'],
+	disks: ['East US', 'West US'],
+	virtualMachineExtensions: ['East US', 'West US'],
 };

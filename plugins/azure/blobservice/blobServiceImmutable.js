@@ -7,18 +7,18 @@ module.exports = {
     category: 'Blob Service',
     description: 'Ensures data immutability is properly configured in blob services to protect critical data against deletion.',
     more_info: 'Immutable storage helps financial institutions and related industries--particularly broker-dealer organizations--to store data securely. It can also be leveraged in any scenario to protect critical data against deletion.',
-    recommended_action: 'In your Azure\'s storage account, select an existing container, then select access policy under container settings, and the Add Policy under Immutable Blob Storage.',
+    recommended_action: 'In your Azure storage account, select an existing container, then select access policy under container settings, and the Add Policy under Immutable Blob Storage.',
     link: 'https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-immutable-storage#Getting-started',
-    apis: ['BlobService:listContainersSegmented'],
+    apis: ['blobService:listContainersSegmented'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
 		var locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.blobservice, function(location, rcb){
+        async.each(locations.blobService, function(location, rcb){
             var blobService = helpers.addSource(cache, source,
-                ['blobservice', 'listContainersSegmented', location]);
+                ['blobService', 'listContainersSegmented', location]);
 
             if (!blobService) return rcb();
 

@@ -16,9 +16,9 @@ module.exports = {
 		var source = {};
 		var locations = helpers.locations(settings.govcloud);
 
-		async.each(locations.resourcegroups, function(location, rcb){
+		async.each(locations.resourceGroups, function(location, rcb){
 			var resourceGroups = helpers.addSource(cache, source,
-				['resourcegroups', 'list', location]);
+				['resourceGroups', 'list', location]);
 
 			if (!resourceGroups) return rcb();
 

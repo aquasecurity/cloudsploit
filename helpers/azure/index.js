@@ -8,6 +8,7 @@ var msRestAzure = require('ms-rest-azure');
 // Azure Resource Management
 var ResourceManagementClient = require('azure-arm-resource').ResourceManagementClient;
 var StorageManagementClient = require('azure-arm-storage');
+var ComputeManagementClient = require('azure-arm-compute');
 
 // Azure Service Modules
 var StorageServiceClient = require('azure-storage');
@@ -16,7 +17,8 @@ var StorageServiceClient = require('azure-storage');
 var mapAzureApis = {
     "ResourceManagementClient" : ResourceManagementClient,
     "StorageManagementClient" : StorageManagementClient,
-	"StorageServiceClient" : StorageServiceClient
+	"StorageServiceClient" : StorageServiceClient,
+	"ComputeManagementClient": ComputeManagementClient
 }
 
 var locations = function(govcloud) {
