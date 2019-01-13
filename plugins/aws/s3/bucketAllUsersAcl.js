@@ -8,7 +8,7 @@ module.exports = {
 	title: 'S3 Bucket All Users ACL',
 	category: 'S3',
 	description: 'Ensures S3 buckets do not allow global write, delete, or read ACL permissions',
-	more_info: 'S3 buckets can be configured to allow anyone, regardless of whether they are an AWS user or not, to write objects to a bucket or delete objects. This option should not be configured unless their is a strong business requirement.',
+	more_info: 'S3 buckets can be configured to allow anyone, regardless of whether they are an AWS user or not, to write objects to a bucket or delete objects. This option should not be configured unless there is a strong business requirement.',
 	recommended_action: 'Disable global all users policies on all S3 buckets and ensure both the bucket ACL is configured with least privileges.',
 	link: 'http://docs.aws.amazon.com/AmazonS3/latest/UG/EditingBucketPermissions.html',
 	apis: ['S3:listBuckets', 'S3:getBucketAcl'],
