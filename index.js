@@ -3,6 +3,7 @@ var plugins = require('./exports.js');
 
 var AWSConfig;
 var AzureConfig;
+var GitHubConfig;
 
 // OPTION 1: Configure service provider credentials through hard-coded config objects
 
@@ -19,6 +20,11 @@ var AzureConfig;
 // 	DirectoryID: '',            // A.K.A TenantID or Domain
 // 	SubscriptionID: '',
 // 	location: 'East US'
+// };
+
+// GitHubConfig = {
+// 	token: '',						// GitHub app token
+// 	url: 'https://api.github.com'	// BaseURL if not using public GitHub
 // };
 
 // OPTION 2: Import a service provider config file containing credentials
@@ -45,12 +51,23 @@ if(process.env.AZURE_APPLICATION_ID && process.env.AZURE_KEY_VALUE){
 	};
 }
 
-if (!AWSConfig || !AWSConfig.accessKeyId) {
-    return console.log('ERROR: Invalid AWSConfig');
+if(process.env.GITHUB_TOKEN){
+	GitHubConfig = {
+		token: process.env.GITHUB_TOKEN,
+		url: process.env.GITHUB_URL || 'https://api.github.com'
+	};
 }
 
-if (!AzureConfig || !AzureConfig.ApplicationID) {
-	return console.log('ERROR: Invalid AzureConfig');
+// if (!AWSConfig || !AWSConfig.accessKeyId) {
+//     return console.log('ERROR: Invalid AWSConfig');
+// }
+
+// if (!AzureConfig || !AzureConfig.ApplicationID) {
+// 	return console.log('ERROR: Invalid AzureConfig');
+// }
+
+if (!GitHubConfig || !GitHubConfig.token) {
+	return console.log('ERROR: Invalid GitHubConfig');
 }
 
 // Custom settings - place plugin-specific settings here
@@ -79,19 +96,25 @@ if (process.argv.join(' ').indexOf('--compliance') > -1) {
 
 // Configure Service Provider Collectors
 var serviceProviders = {
-	aws : {
-		name: "aws",
-		collector: require('./collectors/aws/collector.js'),
-		config: AWSConfig,
-		apiCalls: [],
-		skipRegions: []     // Add any regions you wish to skip here. Ex: 'us-east-2'
-	},
-	azure : {
-		name: "azure",
-		collector: require('./collectors/azure/collector.js'),
-		config: AzureConfig,
-		apiCalls: [],
-		skipRegions: []     // Add any locations you wish to skip here. Ex: 'East US'
+	// aws : {
+	// 	name: "aws",
+	// 	collector: require('./collectors/aws/collector.js'),
+	// 	config: AWSConfig,
+	// 	apiCalls: [],
+	// 	skipRegions: []     // Add any regions you wish to skip here. Ex: 'us-east-2'
+	// },
+	// azure : {
+	// 	name: "azure",
+	// 	collector: require('./collectors/azure/collector.js'),
+	// 	config: AzureConfig,
+	// 	apiCalls: [],
+	// 	skipRegions: []     // Add any locations you wish to skip here. Ex: 'East US'
+	// },
+	github: {
+		name: "github",
+		collector: require('./collectors/github/collector.js'),
+		config: GitHubConfig,
+		apiCalls: []
 	}
 }
 
@@ -129,7 +152,7 @@ console.log('INFO: API calls determined.');
 console.log('INFO: Collecting metadata. This may take several minutes...');
 
 // STEP 2 - Collect API Metadata from Service Providers
-async.eachOf(serviceProviders, function (serviceProviderObj, serviceProviderCb) {
+async.eachOf(serviceProviders, function (serviceProviderObj, serviceProvider, serviceProviderCb) {
 	serviceProviderObj.collector(serviceProviderObj.config, {api_calls: serviceProviderObj.apiCalls, skip_regions: serviceProviderObj.skipRegions}, function (err, collection) {
 		if (err || !collection) return console.log('ERROR: Unable to obtain API metadata');
 
@@ -181,10 +204,11 @@ async.eachOf(serviceProviders, function (serviceProviderObj, serviceProviderCb) 
 			});
 		}, function(err){
 			if (err) return console.log(err);
+			serviceProviderCb();
 		});
-	});
 
+		console.log(JSON.stringify(collection, null, 2));
+	});
 }, function () {
-	//console.log(JSON.stringify(collection, null, 2));
-	callback(null, collection);
+	console.log('Done');
 });

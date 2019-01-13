@@ -129,6 +129,9 @@ module.exports = {
 		'storageAccountsHttps'          : require(__dirname + '/plugins/azure/storageaccounts/storageAccountsHttps.js'),
 		'storageAccountsEncryption'     : require(__dirname + '/plugins/azure/storageaccounts/storageAccountsEncryption.js'),
 		'blobServiceImmutable'          : require(__dirname + '/plugins/azure/blobservice/blobServiceImmutable.js'),
-		'resourceGroups'                : require(__dirname + '/plugins/azure/resourcegroups/resourceGroups.js'),
+		'resourceGroups'                : require(__dirname + '/plugins/azure/resourcegroups/resourceGroups.js')
+	},
+	github: {
+		'publicKeysRotated'				: require(__dirname + '/plugins/github/users/publicKeysRotated.js')
 	}
 };
