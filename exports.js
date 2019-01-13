@@ -129,7 +129,12 @@ module.exports = {
 		'storageAccountsHttps'          : require(__dirname + '/plugins/azure/storageaccounts/storageAccountsHttps.js'),
 		'storageAccountsEncryption'     : require(__dirname + '/plugins/azure/storageaccounts/storageAccountsEncryption.js'),
 		'blobServiceImmutable'          : require(__dirname + '/plugins/azure/blobservice/blobServiceImmutable.js'),
-		'resourceGroups'                : require(__dirname + '/plugins/azure/resourcegroups/resourceGroups.js')
+		'resourceGroups'                : require(__dirname + '/plugins/azure/resourcegroups/resourceGroups.js'),
+		'vmAgentEnabled'                : require(__dirname + '/plugins/azure/virtualmachines/vmAgentEnabled.js'),
+		'vmDiskOSEncryption'            : require(__dirname + '/plugins/azure/virtualmachines/vmDiskOSEncryption.js'),
+		'vmDiskDataEncryption'          : require(__dirname + '/plugins/azure/virtualmachines/vmDiskDataEncryption.js'),
+		'vmEndpointProtection'          : require(__dirname + '/plugins/azure/virtualmachines/vmEndpointProtection.js'),
+		'vmAutoUpdateEnabled'           : require(__dirname + '/plugins/azure/virtualmachines/vmAutoUpdateEnabled.js')
 	},
 	github: {
 		'publicKeysRotated'				: require(__dirname + '/plugins/github/users/publicKeysRotated.js')
