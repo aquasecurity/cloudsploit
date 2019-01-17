@@ -209,5 +209,5 @@ async.eachOf(serviceProviders, function (serviceProviderObj, serviceProvider, se
 	});
 }, function () {
 	// console.log(JSON.stringify(collection, null, 2));
-	callback(null, collection);
+	console.log('Done');
 });
