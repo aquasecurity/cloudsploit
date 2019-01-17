@@ -137,6 +137,9 @@ module.exports = {
 		'vmAutoUpdateEnabled'           : require(__dirname + '/plugins/azure/virtualmachines/vmAutoUpdateEnabled.js')
 	},
 	github: {
-		'publicKeysRotated'				: require(__dirname + '/plugins/github/users/publicKeysRotated.js')
+		'publicKeysRotated'				: require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
+		'gpgKeysRotated'				: require(__dirname + '/plugins/github/users/gpgKeysRotated.js'),
+		'userMfaEnabled'				: require(__dirname + '/plugins/github/users/userMfaEnabled.js'),
+		'userPrivateEmails'				: require(__dirname + '/plugins/github/users/userPrivateEmails.js')
 	}
 };

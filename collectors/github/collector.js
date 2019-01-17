@@ -1,21 +1,9 @@
 "use strict";
 
 /*********************
- Collector - The collector will query AWS APIs for the information required
+ Collector - The collector will query GitHub APIs for the information required
  to run the CloudSploit scans. This data will be returned in the callback
  as a JSON object.
-
- Arguments:
- - AWSConfig: If using an access key/secret, pass in the config object. Pass null if not.
- - settings: custom settings for the scan. Properties:
- - skip_locations: (Optional) List of locations to skip
- - api_calls: (Optional) If provided, will only query these APIs.
- - Example:
- {
-       "skip_locations": ["East US", "West US"],
-       "api_calls": ["EC2:describeInstances", "S3:listBuckets"]
- }
- - callback: Function to call when the collection is complete
  *********************/
 
 var async = require('async');
@@ -24,78 +12,97 @@ var util = require('util');
 var collectors = require(__dirname + '/../../collectors/github');
 
 var calls = {
-    orgs: {
-    	listForAuthenticatedUser: {
-    		params: {
-            	per_page: 100
-            }
-    	}
-    },
-    users: {
-        listPublicKeys: {
-            params: {
-            	per_page: 100
-            }
-        }
-    }
+	apps: {
+		listInstallationsForAuthenticatedUser: {
+			params: {
+				per_page: 100
+			}
+		}
+	},
+	orgs: {
+		listForAuthenticatedUser: {
+			params: {
+				per_page: 100
+			}
+		}
+	},
+	users: {
+		listPublicKeys: {
+			params: {
+				per_page: 100
+			}
+		},
+		listGpgKeys: {
+			params: {
+				per_page: 100
+			}
+		},
+		getAuthenticated: {
+			params: {}
+		},
+		listEmails: {
+			params: {
+				per_page: 100
+			}
+		}
+	}
 };
 
 var collection = {};
 
 // Loop through all of the top-level collectors for each service
 var collect = function (GitHubConfig, settings, callback) {
-    var octokit = require('@octokit/rest')({
-    	baseUrl: GitHubConfig.url
-    });
-    octokit.authenticate({
-    	type: 'token',
-    	token: GitHubConfig.token
-    });
+	var octokit = require('@octokit/rest')({
+		baseUrl: GitHubConfig.url
+	});
+	octokit.authenticate({
+		type: 'token',
+		token: GitHubConfig.token
+	});
 
-    async.eachOfLimit(calls, 10, function(call, service, serviceCb){
-    	var serviceLower = service.toLowerCase();
-    	if (!collection[serviceLower]) collection[serviceLower] = {};
+	async.eachOfLimit(calls, 10, function(call, service, serviceCb){
+		var serviceLower = service.toLowerCase();
+		if (!collection[serviceLower]) collection[serviceLower] = {};
 
-    	// Loop through each of the service's functions
-    	async.eachOfLimit(call, 10, function (callObj, callKey, callCb) {
-    		console.log(callKey);
-    	    if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
-    	    if (!collection[serviceLower][callKey]) collection[serviceLower][callKey] = {};
+		// Loop through each of the service's functions
+		async.eachOfLimit(call, 10, function (callObj, callKey, callCb) {
+			if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
+			if (!collection[serviceLower][callKey]) collection[serviceLower][callKey] = {};
 
-    	    var params = callObj.params || {};
+			var params = callObj.params || {};
 
-    	    var finish = function() {
-    	    	if (callObj.rateLimit) {
-    	    	    setTimeout(function () {
-    	    	        callCb();
-    	    	    }, callObj.rateLimit);
-    	    	} else {
-    	    	    callCb();
-    	    	}
-    	    };
+			var finish = function() {
+				if (callObj.rateLimit) {
+					setTimeout(function () {
+						callCb();
+					}, callObj.rateLimit);
+				} else {
+					callCb();
+				}
+			};
 
-    	    if (callObj.override) {
-    	    	collectors[serviceLower][callKey](octokit, collection, function () {
-				    finish();
-    	    	});
-    	    } else {
-    	    	octokit[service][callKey](params).then(function(results){
-    	    		if (results && results.data) collection[serviceLower][callKey].data = results.data;
-    	    		finish();
-    	    	}, function(err){
-    	    		if (err) collection[serviceLower][callKey].err = err;
-    	    		finish();
-    	    	});
-    	    }
-    	}, function(){
-    		serviceCb();
-    	});
-    }, function(){
-    	callback(null, collection);
-    });
-    
+			if (callObj.override) {
+				collectors[serviceLower][callKey](octokit, collection, function () {
+					finish();
+				});
+			} else {
+				octokit[service][callKey](params).then(function(results){
+					if (results && results.data) collection[serviceLower][callKey].data = results.data;
+					finish();
+				}, function(err){
+					if (err) collection[serviceLower][callKey].err = err;
+					finish();
+				});
+			}
+		}, function(){
+			serviceCb();
+		});
+	}, function(){
+		callback(null, collection);
+	});
+	
   //   async.eachOfLimit(calls, 10, function (call, service, serviceCb) {
-        
+		
 
   //       // Loop through each of the service's functions
   //       async.eachOfLimit(call, 10, function (callObj, callKey, callCb) {

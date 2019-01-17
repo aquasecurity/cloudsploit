@@ -66,9 +66,9 @@ if(process.env.GITHUB_TOKEN){
 // 	return console.log('ERROR: Invalid AzureConfig');
 // }
 
-if (!GitHubConfig || !GitHubConfig.token) {
-	return console.log('ERROR: Invalid GitHubConfig');
-}
+// if (!GitHubConfig || !GitHubConfig.token) {
+// 	return console.log('ERROR: Invalid GitHubConfig');
+// }
 
 // Custom settings - place plugin-specific settings here
 var settings = {};
@@ -96,20 +96,20 @@ if (process.argv.join(' ').indexOf('--compliance') > -1) {
 
 // Configure Service Provider Collectors
 var serviceProviders = {
-	// aws : {
-	// 	name: "aws",
-	// 	collector: require('./collectors/aws/collector.js'),
-	// 	config: AWSConfig,
-	// 	apiCalls: [],
-	// 	skipRegions: []     // Add any regions you wish to skip here. Ex: 'us-east-2'
-	// },
-	// azure : {
-	// 	name: "azure",
-	// 	collector: require('./collectors/azure/collector.js'),
-	// 	config: AzureConfig,
-	// 	apiCalls: [],
-	// 	skipRegions: []     // Add any locations you wish to skip here. Ex: 'East US'
-	// },
+	aws : {
+		name: "aws",
+		collector: require('./collectors/aws/collector.js'),
+		config: AWSConfig,
+		apiCalls: [],
+		skipRegions: []     // Add any regions you wish to skip here. Ex: 'us-east-2'
+	},
+	azure : {
+		name: "azure",
+		collector: require('./collectors/azure/collector.js'),
+		config: AzureConfig,
+		apiCalls: [],
+		skipRegions: []     // Add any locations you wish to skip here. Ex: 'East US'
+	},
 	github: {
 		name: "github",
 		collector: require('./collectors/github/collector.js'),
@@ -207,7 +207,7 @@ async.eachOf(serviceProviders, function (serviceProviderObj, serviceProvider, se
 			serviceProviderCb();
 		});
 
-		console.log(JSON.stringify(collection, null, 2));
+		// console.log(JSON.stringify(collection, null, 2));
 	});
 }, function () {
 	console.log('Done');
