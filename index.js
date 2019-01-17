@@ -206,9 +206,8 @@ async.eachOf(serviceProviders, function (serviceProviderObj, serviceProvider, se
 			if (err) return console.log(err);
 			serviceProviderCb();
 		});
-
-		// console.log(JSON.stringify(collection, null, 2));
 	});
 }, function () {
-	console.log('Done');
+	// console.log(JSON.stringify(collection, null, 2));
+	callback(null, collection);
 });
