@@ -135,5 +135,11 @@ module.exports = {
 		'vmDiskDataEncryption'          : require(__dirname + '/plugins/azure/virtualmachines/vmDiskDataEncryption.js'),
 		'vmEndpointProtection'          : require(__dirname + '/plugins/azure/virtualmachines/vmEndpointProtection.js'),
 		'vmAutoUpdateEnabled'           : require(__dirname + '/plugins/azure/virtualmachines/vmAutoUpdateEnabled.js')
+	},
+	github: {
+		'publicKeysRotated'				: require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
+		'gpgKeysRotated'				: require(__dirname + '/plugins/github/users/gpgKeysRotated.js'),
+		'userMfaEnabled'				: require(__dirname + '/plugins/github/users/userMfaEnabled.js'),
+		'userPrivateEmails'				: require(__dirname + '/plugins/github/users/userPrivateEmails.js')
 	}
 };
