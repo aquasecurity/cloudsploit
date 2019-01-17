@@ -113,29 +113,44 @@ function AzureExecutor (AzureConfig, Service) {
 				// console.log('ASM: relies on multiple services');
 				this.azure.loginWithServicePrincipalSecret(AzureConfig.ApplicationID, AzureConfig.KeyValue, AzureConfig.DirectoryID, function (err, credentials) {
 					if (err) return console.log(err);
+                    var results = [];
 
-					switch (callObj.reliesOnService.length){
-						case 1:
-							// console.log('ASM: relies on 1');
-							this.client = new mapAzureApis[callObj.api][AzureConfig.service](
-								callObj.collection[callObj.reliesOnService[0]][callObj.reliesOnCall[0]][AzureConfig.location].data[0][callObj["filterKey"][0]]
-							);
-						case 2:
-							// console.log('ASM: relies on 2');
-							this.client = new mapAzureApis[callObj.api][AzureConfig.service](
-								callObj.collection[callObj.reliesOnService[0]][callObj.reliesOnCall[0]][AzureConfig.location].data[0][callObj["filterKey"][0]],
-								callObj.collection[callObj.reliesOnService[1]][callObj.reliesOnCall[1]][AzureConfig.location].data[callObj["filterKey"][1]][0][callObj["filterValue"][1]]
-							);
-					}
+					if (callObj.reliesOnService.length>=2) {
+                        // console.log('ASM: relies on 2');
+                        this.client = new mapAzureApis[callObj.api][AzureConfig.service](
+                            callObj.collection[callObj.reliesOnService[0]][callObj.reliesOnCall[0]][AzureConfig.location].data[0][callObj["filterKey"][0]],
+                            callObj.collection[callObj.reliesOnService[1]][callObj.reliesOnCall[1]][AzureConfig.location].data[callObj["filterKey"][1]][0][callObj["filterValue"][1]]
+                        );
+                    } else {
+                            // console.log('ASM: relies on 1');
+                        this.client = new mapAzureApis[callObj.api][AzureConfig.service](
+                            callObj.collection[callObj.reliesOnService[0]][callObj.reliesOnCall[0]][AzureConfig.location].data[0][callObj["filterKey"][0]]
+                        );
+                    }
 
-					return this.client[callKey](null, function (err, result, request, response) {
-						if (err) {
-							return callback(err);
-						}
-						// console.log('\n' + util.inspect(result, {depth: null}));
-						callback(null, result);
-					});
-
+					if (callObj.reliesOnService.length>2){
+                        async.each(callObj.collection[callObj.reliesOnService[2]][callObj.reliesOnCall[2]][AzureConfig.location].data.entries, function (entry, entryCb) {
+                            this.client[callKey](entry[callObj["filterKey"][2]], function (err, result, request, response) {
+                                if (err) {
+                                    return callback(err);
+                                }
+                                // console.log('\n' + util.inspect(result, {depth: null}));
+                                results.push(result);
+                                entryCb();
+                            });
+                        }, function () {
+                            //console.log(JSON.stringify(collection, null, 2));
+                            callback(null, results);
+                        });
+                    } else {
+                        return this.client[callKey](null, function (err, result, request, response) {
+                            if (err) {
+                                return callback(err);
+                            }
+                            // console.log('\n' + util.inspect(result, {depth: null}));
+                            callback(null, result);
+                        });
+                    }
 				});
 		} else {
 			// console.log('ASM: Direct Call (no params)');

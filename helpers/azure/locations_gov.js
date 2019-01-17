@@ -12,5 +12,5 @@ var locations = [
 
 module.exports = {
 	all: locations,
-	storageaccounts: locations
+	storageAccounts: locations
 };

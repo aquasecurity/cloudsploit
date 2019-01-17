@@ -129,6 +129,7 @@ module.exports = {
 		'storageAccountsHttps'          : require(__dirname + '/plugins/azure/storageaccounts/storageAccountsHttps.js'),
 		'storageAccountsEncryption'     : require(__dirname + '/plugins/azure/storageaccounts/storageAccountsEncryption.js'),
 		'blobServiceImmutable'          : require(__dirname + '/plugins/azure/blobservice/blobServiceImmutable.js'),
+		'fileServiceAllAccessAcl'       : require(__dirname + '/plugins/azure/fileservice/fileServiceAllAccessAcl.js'),
 		'resourceGroups'                : require(__dirname + '/plugins/azure/resourcegroups/resourceGroups.js'),
 		'vmAgentEnabled'                : require(__dirname + '/plugins/azure/virtualmachines/vmAgentEnabled.js'),
 		'vmDiskOSEncryption'            : require(__dirname + '/plugins/azure/virtualmachines/vmDiskOSEncryption.js'),
