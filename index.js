@@ -118,6 +118,11 @@ var serviceProviders = {
 	}
 }
 
+// Ignore Service Providers without a Config Object
+for (provider in serviceProviders){
+	if (serviceProviders[provider].config == undefined) delete serviceProviders[provider];
+}
+
 // STEP 1 - Obtain API calls to make
 console.log('INFO: Determining API calls to make...');
 
