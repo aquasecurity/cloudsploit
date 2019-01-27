@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'File Shares can be configured to allow to read, write or delete objects from a share. This option should not be configured unless there is a strong business requirement.',
     recommended_action: 'Disable global read/write/detele policies on all File Shares and ensure both the share ACL is configured with least privileges.',
     link: 'https://docs.microsoft.com/en-us/azure/storage/files/storage-how-to-create-file-share#create-a-file-share-through-the-azure-portal',
-    apis: ['FileService:listSharesSegmented','FileService:getShareAcl'],
+    apis: ['resourceGroups:list', 'storageAccounts:list', 'storageAccounts:listKeys', 'FileService:listSharesSegmented','FileService:getShareAcl'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -22,13 +22,13 @@ module.exports = {
 
             if (!fileService) return rcb();
 
-            if (fileService.err || !fileService.data) {
+            if (fileService.err) {
                 helpers.addResult(results, 3,
                     'Unable to query File Service: ' + helpers.addError(fileService), location);
                 return rcb();
             }
 
-            if (!fileService.data.length) {
+            if (!fileService.data || !fileService.data.length) {
                 helpers.addResult(results, 0, 'No existing file services', location);
             } else {
                 for (share in fileService.data) {

@@ -9,26 +9,26 @@ module.exports = {
     more_info: 'Immutable storage helps financial institutions and related industries--particularly broker-dealer organizations--to store data securely. It can also be leveraged in any scenario to protect critical data against deletion.',
     recommended_action: 'In your Azure storage account, select an existing container, then select access policy under container settings, and the Add Policy under Immutable Blob Storage.',
     link: 'https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-immutable-storage#Getting-started',
-    apis: ['blobService:listContainersSegmented'],
+    apis: ['resourceGroups:list', 'storageAccounts:list', 'storageAccounts:listKeys', 'BlobService:listContainersSegmented'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
 		var locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.blobService, function(location, rcb){
+        async.each(locations.BlobService, function(location, rcb){
             var blobService = helpers.addSource(cache, source,
-                ['blobService', 'listContainersSegmented', location]);
+                ['BlobService', 'listContainersSegmented', location]);
 
             if (!blobService) return rcb();
 
-            if (blobService.err || !blobService.data) {
+            if (blobService.err) {
                 helpers.addResult(results, 3,
                     'Unable to query Blob Service: ' + helpers.addError(blobService), location);
                 return rcb();
             }
 
-            if (!blobService.data.entries.length) {
+            if (!blobService.data || !blobService.data.entries.length) {
                 helpers.addResult(results, 0, 'No existing blob services', location);
             } else {
                 for (srvc in blobService.data.entries) {
