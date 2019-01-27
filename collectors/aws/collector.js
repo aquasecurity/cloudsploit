@@ -83,6 +83,11 @@ var calls = {
 			property: 'DirectoryDescriptions'
 		}
 	},
+	DynamoDB: {
+		listTables: {
+			property: 'TableNames'
+		}
+	},
 	EC2: {
 		describeAccountAttributes: {
 			property: 'AccountAttributes'
@@ -341,6 +346,13 @@ var postcalls = [
 				reliesOnCall: 'describeTrails',
 				filterKey: 'Name',
 				filterValue: 'TrailARN'
+			}
+		},
+		DynamoDB: {
+			describeTable: {
+				reliesOnService: 'dynamodb',
+				reliesOnCall: 'listTables',
+				override: true
 			}
 		},
 		S3: {

@@ -17,6 +17,7 @@ module.exports = {
 	cloudtrail: regions,
 	cloudwatchlogs: regions,
 	configservice: regions,
+	dynamodb: regions,
 	ec2: regions,
 	elb: regions,
 	elbv2: regions,
