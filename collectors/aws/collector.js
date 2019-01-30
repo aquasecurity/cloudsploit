@@ -316,6 +316,14 @@ var calls = {
 			property: 'Account'
 		}
 	},
+	Transfer: {
+		listServers: {
+			property: 'Servers',
+			params: {
+				MaxResults: 1000
+			}
+		}
+	},
 	WorkSpaces: {
 		describeWorkspaces: {
 			property: 'Workspaces'

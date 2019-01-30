@@ -42,6 +42,7 @@ module.exports = {
 	// even though SQS is supported in all regions.
 	sqs_encrypted: regions,
 	sts: regions,
+	transfer: [],
 	lambda: regions,
 	directconnect: regions,
 	directoryservice: []
