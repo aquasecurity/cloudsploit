@@ -133,14 +133,14 @@ module.exports = {
     azure : {
         'storageAccountsHttps'          : require(__dirname + '/plugins/azure/storageaccounts/storageAccountsHttps.js'),
         'storageAccountsEncryption'     : require(__dirname + '/plugins/azure/storageaccounts/storageAccountsEncryption.js'),
-        'blobServiceImmutable'          : require(__dirname + '/plugins/azure/blobservice/blobServiceImmutable.js'),
+        'blobServiceImmutable'          : require(__dirname + '/plugins/azure/blobService/blobServiceImmutable.js'),
         'fileServiceAllAccessAcl'       : require(__dirname + '/plugins/azure/fileservice/fileServiceAllAccessAcl.js'),
         'resourceGroups'                : require(__dirname + '/plugins/azure/resourcegroups/resourceGroups.js'),
-        'vmAgentEnabled'                : require(__dirname + '/plugins/azure/virtualmachines/vmAgentEnabled.js'),
-        'vmDiskOSEncryption'            : require(__dirname + '/plugins/azure/virtualmachines/vmDiskOSEncryption.js'),
-        'vmDiskDataEncryption'          : require(__dirname + '/plugins/azure/virtualmachines/vmDiskDataEncryption.js'),
-        'vmEndpointProtection'          : require(__dirname + '/plugins/azure/virtualmachines/vmEndpointProtection.js'),
-        'vmAutoUpdateEnabled'           : require(__dirname + '/plugins/azure/virtualmachines/vmAutoUpdateEnabled.js')
+        'vmAgentEnabled'                : require(__dirname + '/plugins/azure/virtualMachines/vmAgentEnabled.js'),
+        'vmDiskOSEncryption'            : require(__dirname + '/plugins/azure/virtualMachines/vmDiskOSEncryption.js'),
+        'vmDiskDataEncryption'          : require(__dirname + '/plugins/azure/virtualMachines/vmDiskDataEncryption.js'),
+        'vmEndpointProtection'          : require(__dirname + '/plugins/azure/virtualMachines/vmEndpointProtection.js'),
+        'vmAutoUpdateEnabled'           : require(__dirname + '/plugins/azure/virtualMachines/vmAutoUpdateEnabled.js')
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
