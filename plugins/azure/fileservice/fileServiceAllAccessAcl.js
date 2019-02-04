@@ -61,7 +61,7 @@ module.exports = {
                             if (alertRead && alertWrite) {
                                 helpers.addResult(results, 2, 'Acl is allows both read and write access for the file share', location, fileShare.name +  ' etag:' + fileShare.etag + ' policy:' + ident);
                             } else if (alertRead && !alertWrite) {
-                                helpers.addResult(results, 1, 'Acl is allows both read access for the file share', location, fileShare.name +  ' etag:' + fileShare.etag + ' policy:' + ident);
+                                helpers.addResult(results, 1, 'Acl is allows read access for the file share', location, fileShare.name +  ' etag:' + fileShare.etag + ' policy:' + ident);
                             } else if (!alertRead && alertWrite) {
                                 helpers.addResult(results, 1, 'Acl is allows write access for the file share', location, fileShare.name +  ' etag:' + fileShare.etag + ' policy:' + ident);
                             }
