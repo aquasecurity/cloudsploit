@@ -61,6 +61,16 @@ module.exports = {
 
 				//console.log(describeDeliveryStream.data.DeliveryStreamDescription.Destinations[0].ExtendedS3DestinationDescription.EncryptionConfiguration.KMSEncryptionConfig);
 
+				if (!deliveryStreamDesc ||
+					!deliveryStreamDesc.Destinations ||
+					!deliveryStreamDesc.Destinations[0] ||
+					!deliveryStreamDesc.Destinations[0].ExtendedS3DestinationDescription) {
+					helpers.addResult(results, 0,
+						'The Firehose delivery stream does not have an S3 destination',
+                        region, deliveryStreamARN);
+					return cb();
+				}
+
 				if (deliveryStreamDesc &&
 					deliveryStreamDesc.Destinations &&
 					deliveryStreamDesc.Destinations[0] &&
