@@ -74,15 +74,26 @@ module.exports = {
 					for (s in policy.Statement) {
 						var statement = policy.Statement[s];
 
-						if (statement.Effect && statement.Effect == 'Allow' &&
-							statement.Principal && statement.Principal.AWS &&
-							(statement.Principal.AWS === '*' ||
-							 statement.Principal.AWS === 'arn:aws:iam::*') &&
-							(!statement.Condition || !statement.Condition.StringEquals ||
-							 !statement.Condition.StringEquals['AWS:SourceOwner'] ||
-							 statement.Condition.StringEquals['AWS:SourceOwner'] == '*')) {
+						// Evaluates whether the effect of the statement is to "allow" access to the SNS
+						var effectEval = (statement.Effect && statement.Effect == 'Allow' ? true : false);
 
-							
+						// Evaluates whether the principal is open to everyone/anonymous
+						var principalEval = (statement.Principal && statement.Principal.AWS &&
+											(statement.Principal.AWS === '*' || statement.Principal.AWS === 'arn:aws:iam::*') ? true : false);
+
+						// Evaluate the condition:
+						// Does the condition exist?
+						var conditionExists = (statement.Condition ? true : false);
+						// Is it a string condition (StringEquals)? Is the SourceOwner open to everyone?
+						var conditionString = ((statement.Condition && statement.Condition.StringEquals &&
+							(statement.Condition.StringEquals['AWS:SourceOwner'] || !statement.Condition.StringEquals['AWS:SourceOwner'] == '*')) ? true : false);
+						// Is it an arn condition (ArnEquals)? Is the SourceArn open to all arns?
+						var conditionArn = ((statement.Condition && statement.Condition.ArnEquals &&
+							(statement.Condition.ArnEquals['aws:SourceArn'] || !statement.Condition.StringEquals['aws:SourceArn'] == '*')) ? true : false);
+						// Summarize the condition results
+						var statementEval = ((conditionExists && (conditionString || conditionArn)) ? false : true);
+
+						if (effectEval && principalEval && statementEval) {
 							if (statement.Action && typeof statement.Action === 'string') {
 								if (actions.indexOf(statement.Action) === -1) {
 									actions.push(statement.Action);
