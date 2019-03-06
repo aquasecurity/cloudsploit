@@ -31,6 +31,7 @@
     "azure-arm-storage": "^6.3.0",
     "azure-storage": "^2.10.2",
     "jssha": "^2.3.1",
+    "csv-write-stream": "^2.0.0",
     "ms-rest-azure": "^2.5.9"
   },
   "devDependencies": {

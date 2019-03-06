@@ -3,6 +3,7 @@ var fs        	= require("fs");
 var plugins = require('./exports.js');
 var complianceControls = require('./compliance/controls.js')
 var suppress = require('./postprocess/suppress.js')
+var output = require('./postprocess/output.js')
 
 var AWSConfig;
 var AzureConfig;
@@ -121,6 +122,9 @@ if (!compliance) {
 // Initialize any suppression rules based on the the command line arguments
 var suppressionFilter = suppress.create(process.argv)
 
+// Initialize the output handler
+var outputHandler = output.create(process.argv)
+
 // The original cloudsploit always has a 0 exit code. With this option, we can have
 // the exit code depend on the results (useful for integration with CI systems)
 var useStatusExitCode = process.argv.includes('--statusExitCode')
@@ -219,15 +223,8 @@ async.map(serviceProviders, function (serviceProviderObj, serviceProviderDone) {
 
 			var maximumStatus = 0
 			plugin.run(collection, settings, function(err, results) {
-				var complianceDesc = compliance.describe(key, plugin)
-				if (complianceDesc) {
-					console.log('');
-					console.log('-----------------------');
-					console.log(plugin.title);
-					console.log('-----------------------');
-					console.log(complianceDesc);
-					console.log('');
-				}
+				outputHandler.startCompliance(plugin, key, compliance)
+
 				for (r in results) {
 					// If we have suppressed this result, then don't process it
 					// so that it doesn't affect the return code.
@@ -235,24 +232,15 @@ async.map(serviceProviders, function (serviceProviderObj, serviceProviderDone) {
 						continue;
 					}
 
-					var statusWord;
-					if (results[r].status === 0) {
-						statusWord = 'OK';
-					} else if (results[r].status === 1) {
-						statusWord = 'WARN';
-					} else if (results[r].status === 2) {
-						statusWord = 'FAIL';
-					} else {
-						statusWord = 'UNKNOWN';
-					}
+					// Write out the result (to console or elsewhere)
+					outputHandler.writeResult(results[r], plugin, key)
 
+					// Add this to our tracking fo the worst status to calculate
+					// the exit code
 					maximumStatus = Math.max(maximumStatus, results[r].status)
-
-					console.log(plugin.category + '\t' + plugin.title + '\t' +
-						(results[r].resource || 'N/A') + '\t' +
-						(results[r].region || 'Global') + '\t\t' +
-						statusWord + '\t' + results[r].message);
 				}
+
+				outputHandler.endCompliance(plugin, key, compliance)
 
 				setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
 			});
