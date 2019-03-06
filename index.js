@@ -2,6 +2,7 @@ var async = require('async');
 var fs        	= require("fs");
 var plugins = require('./exports.js');
 var complianceControls = require('./compliance/controls.js')
+var suppress = require('./postprocess/suppress.js')
 
 var AWSConfig;
 var AzureConfig;
@@ -117,6 +118,13 @@ if (!compliance) {
 	process.exit();
 }
 
+// Initialize any suppression rules based on the the command line arguments
+var suppressionFilter = suppress.create(process.argv)
+
+// The original cloudsploit always has a 0 exit code. With this option, we can have
+// the exit code depend on the results (useful for integration with CI systems)
+var useStatusExitCode = process.argv.includes('--statusExitCode')
+
 // Configure Service Provider Collectors
 var serviceProviders = {
 	aws : {
@@ -185,7 +193,7 @@ console.log('INFO: API calls determined.');
 console.log('INFO: Collecting metadata. This may take several minutes...');
 
 // STEP 2 - Collect API Metadata from Service Providers
-async.eachOf(serviceProviders, function (serviceProviderObj, serviceProvider, serviceProviderCb) {
+async.map(serviceProviders, function (serviceProviderObj, serviceProviderDone) {
 	serviceProviderObj.collector(serviceProviderObj.config, {api_calls: serviceProviderObj.apiCalls, skip_regions: serviceProviderObj.skipRegions}, function (err, collection) {
 		if (err || !collection) return console.log('ERROR: Unable to obtain API metadata');
 
@@ -201,14 +209,15 @@ async.eachOf(serviceProviders, function (serviceProviderObj, serviceProvider, se
 
 		var serviceProviderPlugins = getMapValue(plugins, serviceProviderObj.name);
 
-		async.forEachOfLimit(serviceProviderPlugins, 10, function (plugin, key, callback) {
+		async.mapValuesLimit(serviceProviderPlugins, 10, function (plugin, key, pluginDone) {
 			if (!compliance.includes(key, plugin)) {
-				return callback();
+				return pluginDone(null, 0);
 			}
 
 			// Skip GitHub plugins that do not match the run type
 			if (serviceProviderObj.name == 'github' && serviceProviderObj.config.org && !plugin.org) return callback();
 
+			var maximumStatus = 0
 			plugin.run(collection, settings, function(err, results) {
 				var complianceDesc = compliance.describe(key, plugin)
 				if (complianceDesc) {
@@ -220,6 +229,12 @@ async.eachOf(serviceProviders, function (serviceProviderObj, serviceProvider, se
 					console.log('');
 				}
 				for (r in results) {
+					// If we have suppressed this result, then don't process it
+					// so that it doesn't affect the return code.
+					if (suppressionFilter([key, results[r].region || 'any', results[r].resource || 'any'].join(':'))) {
+						continue;
+					}
+
 					var statusWord;
 					if (results[r].status === 0) {
 						statusWord = 'OK';
@@ -231,20 +246,26 @@ async.eachOf(serviceProviders, function (serviceProviderObj, serviceProvider, se
 						statusWord = 'UNKNOWN';
 					}
 
+					maximumStatus = Math.max(maximumStatus, results[r].status)
+
 					console.log(plugin.category + '\t' + plugin.title + '\t' +
 						(results[r].resource || 'N/A') + '\t' +
 						(results[r].region || 'Global') + '\t\t' +
 						statusWord + '\t' + results[r].message);
 				}
 
-				setTimeout(function() { callback(err); }, 0);
+				setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
 			});
-		}, function(err){
+		}, function(err, results){
 			if (err) return console.log(err);
-			serviceProviderCb();
+			var summaryStatus = Math.max(...Object.values(results))
+			serviceProviderDone(err, summaryStatus);
 		});
 	});
-}, function () {
+}, function (err, results) {
 	// console.log(JSON.stringify(collection, null, 2));
+	if (useStatusExitCode) {
+		process.exitCode = Math.max(results)
+	}
 	console.log('Done');
 });

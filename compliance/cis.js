@@ -182,7 +182,13 @@ var controls = {
         title: 'Ensure VPC flow logging is enabled in all VPCs'
     },
 
-    // 3.X TODO Ensure a log metric filter and alarm exist for unauthorized API calls 
+    
+    'monitoringMetrics': {
+        awsid: '3',
+        profile: 1,
+        scored: true,
+        title: 'Monitoring'
+    },
     
     'openSSH': {
         awsid: '4.1',
