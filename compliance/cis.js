@@ -2,7 +2,6 @@
 
 var controls = {
     'rootAccountInUse': {
-        // TODO Additional audit rules are required, attachment of policies recommendation
         awsid: '1.1',
         profile: 1,
         scored: true,
@@ -10,7 +9,6 @@ var controls = {
     },
 
     'usersMfaEnabled': {
-        // TODO a rule that checked if the system is setup to force IAM User Self-Registration would be good
         awsid: '1.2',
         profile: 1,
         scored: true,
@@ -102,22 +100,12 @@ var controls = {
         title: 'Ensure MFA is enabled for the "root" account'
     },
 
-    // 1.14 - TODO Ensure hardware MFA is enabled for the "root" account
-    // 1.15 - CANNOT IMPLEMENT? -  Ensure security questions are registered in the AWS account
-
     'noUserIamPolicies': {
         awsid: '1.16',
         profile: 1,
         scored: true,
         title: 'Ensure IAM policies are attached only to groups or roles'
     },
-
-    // 1.17 - CANNOT IMPLEMENT? - CONTACT INFORMATION IS UP TO DATE
-    // 1.18 - CANNOT IMPLEMENT? - SECURITY CONTACT INFORMATION IS REGISTERED
-    // 1.19 - CANNOT IMPLEMENT? - INSTANCE-BASED ROLES FOR AWS RESOURCE ACCESS
-    // 1.20 - TODO SUPPORT ROLE EXISTS INSTANCE-BASED ROLES FOR AWS RESOURCE ACCESS
-    // 1.21 - TODO ACCESS KEYS ARE ACTUALLY USED
-    // 1.22 - TODO NO USER POLICY WITH *:*
 
     'cloudtrailEnabled': {
         awsid: '2.1',
@@ -210,8 +198,6 @@ var controls = {
         scored: true,
         title: 'Ensure the default security group of every VPC restricts all traffic'
     }
-
-    // 4.4 Ensure routing tables for VPC peering are "least access"
 }
 
 var maxProfileLevel = -1
