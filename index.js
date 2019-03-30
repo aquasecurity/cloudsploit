@@ -1,9 +1,11 @@
 var async = require('async');
+var fs        	= require("fs");
 var plugins = require('./exports.js');
 
 var AWSConfig;
 var AzureConfig;
 var GitHubConfig;
+var OracleConfig;
 
 // OPTION 1: Configure service provider credentials through hard-coded config objects
 
@@ -27,9 +29,25 @@ var GitHubConfig;
 // 	url: 'https://api.github.com'	// BaseURL if not using public GitHub
 // };
 
+// Oracle Important Note:
+// Please read Oracle API's key generation instructions: config/_oracle/keys/Readme.md
+// You will want an API signing key to fill the keyFingerprint and privateKey params
+// OracleConfig = {
+// 	RESTversion: '/20160918',
+// 	tenancyId: 'ocid1.tenancy.oc1..',
+// 	compartmentId: 'ocid1.compartment.oc1..',
+// 	userId: 'ocid1.user.oc1..',
+// 	keyFingerprint: 'YOURKEYFINGERPRINT',
+// 	privateKey: fs.readFileSync(__dirname + '/config/_oracle/keys/YOURKEYNAME.pem', 'ascii'),
+// 	region: 'us-ashburn-1',
+// };
+
 // OPTION 2: Import a service provider config file containing credentials
+
 // AWSConfig = require(__dirname + '/aws_credentials.json');
 // AzureConfig = require(__dirname + '/azure_credentials.json');
+// GitHubConfig = require(__dirname + '/github_credentials.json');
+// OracleConfig = require(__dirname + '/oracle_credentials.json');
 
 // OPTION 3: ENV configuration with service provider env vars
 if(process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY){
@@ -58,17 +76,16 @@ if(process.env.GITHUB_TOKEN){
 	};
 }
 
-// if (!AWSConfig || !AWSConfig.accessKeyId) {
-//     return console.log('ERROR: Invalid AWSConfig');
-// }
-
-// if (!AzureConfig || !AzureConfig.ApplicationID) {
-// 	return console.log('ERROR: Invalid AzureConfig');
-// }
-
-// if (!GitHubConfig || !GitHubConfig.token) {
-// 	return console.log('ERROR: Invalid GitHubConfig');
-// }
+if(process.env.ORACLE_TENANCY_ID && process.env.ORACLE_USER_ID){
+	OracleConfig = {
+		RESTversion: process.env.ORACLE_REST_VERSION,
+		tenancyId: process.env.ORACLE_TENANCY_ID,
+		compartmentId: process.env.ORACLE_COMPARTMENT_ID,
+		userId:  process.env.ORACLE_USER_ID,
+		keyFingerprint: process.env.ORACLE_KEY_FINGERPRINT,
+		region: process.env.ORACLE_REGION || 'us-ashburn-1'
+	};
+}
 
 // Custom settings - place plugin-specific settings here
 var settings = {};
@@ -114,6 +131,12 @@ var serviceProviders = {
 		name: "github",
 		collector: require('./collectors/github/collector.js'),
 		config: GitHubConfig,
+		apiCalls: []
+	},
+	oracle: {
+		name: "oracle",
+		collector: require('./collectors/oracle/collector.js'),
+		config: OracleConfig,
 		apiCalls: []
 	}
 }

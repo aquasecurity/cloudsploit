@@ -35,8 +35,8 @@ module.exports = {
 			var domain = listDomains.data[i];
 			if (!domain.DomainName) continue;
 
-			// Skip .co.uk domains
-			if (domain.DomainName.indexOf('.co.uk') > -1) {
+			// Skip .uk and .co.uk domains
+			if (domain.DomainName.indexOf('.uk') > -1) {
 				helpers.addResult(results, 0,
 					'Domain: ' + domain.DomainName + ' does not support transfer locks',
 					'global', domain.DomainName);

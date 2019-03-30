@@ -4,14 +4,14 @@
  as a JSON object.
 
  Arguments:
- - AWSConfig: If using an access key/secret, pass in the config object. Pass null if not.
+ - AzureConfig: If using an access key/secret, pass in the config object. Pass null if not.
  - settings: custom settings for the scan. Properties:
  - skip_locations: (Optional) List of locations to skip
  - api_calls: (Optional) If provided, will only query these APIs.
  - Example:
  {
      "skip_locations": ["East US", "West US"],
-     "api_calls": ["EC2:describeInstances", "S3:listBuckets"]
+     "api_calls": ["storageAccounts:list", "resourceGroups:list"]
  }
  - callback: Function to call when the collection is complete
  *********************/
@@ -51,6 +51,12 @@ var calls = {
             arm: true
         }
     },
+    resources: {
+        list: {
+            api: "ResourceManagementClient",
+            arm: true
+        }
+    }
 };
 
 var postcalls = [
@@ -74,7 +80,17 @@ var postcalls = [
                 filterValue: ['name', 'name'],
                 arm: true
             }
-        }
+        },
+        activityLogAlerts: {
+            listByResourceGroup: {
+                api: "MonitorManagementClient",
+                reliesOnService: ['resourceGroups'],
+                reliesOnCall: ['list'],
+                filterKey: ['name'],
+                filterValue: ['name'],
+                arm: true
+        	}
+        },
     }
 ];
 
@@ -130,6 +146,26 @@ var postfinalcalls = [
                 api: "StorageServiceClient",
                 reliesOnService: ['storageAccounts','storageAccounts','FileService'],
                 reliesOnCall: ['list','listKeys','listSharesSegmented'],
+                filterKey: ['name','keys','name'],
+                filterValue: ['name','value','name'],
+                arm: false
+            }
+        },
+        TableService: {
+            getTableAcl: {
+                api: "StorageServiceClient",
+                reliesOnService: ['storageAccounts','storageAccounts','TableService'],
+                reliesOnCall: ['list','listKeys','listTablesSegmented'],
+                filterKey: ['name','keys','table'],
+                filterValue: ['name','value','name'],
+                arm: false
+            }
+        },
+        QueueService: {
+            getQueueAcl: {
+                api: "StorageServiceClient",
+                reliesOnService: ['storageAccounts','storageAccounts','QueueService'],
+                reliesOnCall: ['list','listKeys','listQueuesSegmented'],
                 filterKey: ['name','keys','name'],
                 filterValue: ['name','value','name'],
                 arm: false

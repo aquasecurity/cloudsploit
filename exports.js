@@ -134,19 +134,42 @@ module.exports = {
     azure : {
         'storageAccountsHttps'          : require(__dirname + '/plugins/azure/storageaccounts/storageAccountsHttps.js'),
         'storageAccountsEncryption'     : require(__dirname + '/plugins/azure/storageaccounts/storageAccountsEncryption.js'),
-        'blobServiceImmutable'          : require(__dirname + '/plugins/azure/blobService/blobServiceImmutable.js'),
+        'blobServiceImmutable'          : require(__dirname + '/plugins/azure/blobservice/blobServiceImmutable.js'),
         'fileServiceAllAccessAcl'       : require(__dirname + '/plugins/azure/fileservice/fileServiceAllAccessAcl.js'),
+        'tableServiceAllAccessAcl'      : require(__dirname + '/plugins/azure/tableservice/tableServiceAllAccessAcl.js'),
+        'queueServiceAllAccessAcl'      : require(__dirname + '/plugins/azure/queueservice/queueServiceAllAccessAcl.js'),
         'resourceGroups'                : require(__dirname + '/plugins/azure/resourcegroups/resourceGroups.js'),
-        'vmAgentEnabled'                : require(__dirname + '/plugins/azure/virtualMachines/vmAgentEnabled.js'),
-        'vmDiskOSEncryption'            : require(__dirname + '/plugins/azure/virtualMachines/vmDiskOSEncryption.js'),
-        'vmDiskDataEncryption'          : require(__dirname + '/plugins/azure/virtualMachines/vmDiskDataEncryption.js'),
-        'vmEndpointProtection'          : require(__dirname + '/plugins/azure/virtualMachines/vmEndpointProtection.js'),
-        'vmAutoUpdateEnabled'           : require(__dirname + '/plugins/azure/virtualMachines/vmAutoUpdateEnabled.js')
+        'vmAgentEnabled'                : require(__dirname + '/plugins/azure/virtualmachines/vmAgentEnabled.js'),
+        'vmDiskOSEncryption'            : require(__dirname + '/plugins/azure/virtualmachines/vmDiskOSEncryption.js'),
+        'vmDiskDataEncryption'          : require(__dirname + '/plugins/azure/virtualmachines/vmDiskDataEncryption.js'),
+        'vmEndpointProtection'          : require(__dirname + '/plugins/azure/virtualmachines/vmEndpointProtection.js'),
+        'vmAutoUpdateEnabled'           : require(__dirname + '/plugins/azure/virtualmachines/vmAutoUpdateEnabled.js'),
+        'sqlServerFirewallRuleEnabled'  : require(__dirname + '/plugins/azure/logalerts/sqlServerFirewallRuleEnabled.js'),
+        'virtualNetworkRuleEnabled'     : require(__dirname + '/plugins/azure/logalerts/virtualNetworkRuleEnabled.js')
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
         'gpgKeysRotated'                : require(__dirname + '/plugins/github/users/gpgKeysRotated.js'),
         'userMfaEnabled'                : require(__dirname + '/plugins/github/users/userMfaEnabled.js'),
         'userPrivateEmails'             : require(__dirname + '/plugins/github/users/userPrivateEmails.js')
+    },
+    oracle: {
+        'openSSH'                       : require(__dirname + '/plugins/oracle/core/openSSH.js'),
+        'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/oracle/core/openOracleAutoDataWarehouse.js'),
+        'openAllPortsProtocols'         : require(__dirname + '/plugins/oracle/core/openAllPortsProtocols.js'),
+        'openRPC'                       : require(__dirname + '/plugins/oracle/core/openRPC.js'),
+        'openRDP'                       : require(__dirname + '/plugins/oracle/core/openRDP.js'),
+        'openVNCServer'                 : require(__dirname + '/plugins/oracle/core/openVNCServer.js'),
+        'openVNCClient'                 : require(__dirname + '/plugins/oracle/core/openVNCClient.js'),
+        'openTelnet'                    : require(__dirname + '/plugins/oracle/core/openTelnet.js'),
+        'openSMBoTCP'                   : require(__dirname + '/plugins/oracle/core/openSMBoTCP.js'),
+        'openOracle'                    : require(__dirname + '/plugins/oracle/core/openOracle.js'),
+        'openPostgreSQL'                : require(__dirname + '/plugins/oracle/core/openPostgreSQL.js'),
+        'openNetBIOS'                   : require(__dirname + '/plugins/oracle/core/openNetBIOS.js'),
+        'openMySQL'                     : require(__dirname + '/plugins/oracle/core/openMySQL.js'),
+        'openFTP'                       : require(__dirname + '/plugins/oracle/core/openFTP.js'),
+        'openCIFS'                      : require(__dirname + '/plugins/oracle/core/openCIFS.js'),
+        'openDNS'                       : require(__dirname + '/plugins/oracle/core/openDNS.js'),
+        'openSQLServer'                 : require(__dirname + '/plugins/oracle/core/openSQLServer.js')
     }
 };

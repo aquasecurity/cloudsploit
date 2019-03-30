@@ -26,9 +26,11 @@
     "async": "^2.6.1",
     "aws-sdk": "^2.395.0",
     "azure-arm-compute": "^9.1.0",
+    "azure-arm-monitor": "^5.2.0",
     "azure-arm-resource": "^7.3.0",
     "azure-arm-storage": "^6.3.0",
     "azure-storage": "^2.10.2",
+    "jssha": "^2.3.1",
     "ms-rest-azure": "^2.5.9"
   }
 }

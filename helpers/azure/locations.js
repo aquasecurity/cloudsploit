@@ -22,4 +22,6 @@ module.exports = {
 	virtualMachines: ['East US', 'West US'],
 	disks: ['East US', 'West US'],
 	virtualMachineExtensions: ['East US', 'West US'],
+	activityLogAlerts: ['East US', 'West US'],
+	resources: ['East US', 'West US']
 };

@@ -9,6 +9,7 @@ var msRestAzure = require('ms-rest-azure');
 var ResourceManagementClient = require('azure-arm-resource').ResourceManagementClient;
 var StorageManagementClient = require('azure-arm-storage');
 var ComputeManagementClient = require('azure-arm-compute');
+var MonitorManagementClient = require('azure-arm-monitor');
 
 // Azure Service Modules
 var StorageServiceClient = require('azure-storage');
@@ -16,9 +17,10 @@ var StorageServiceClient = require('azure-storage');
 // Api Mapping
 var mapAzureApis = {
     "ResourceManagementClient" : ResourceManagementClient,
-    "StorageManagementClient" : StorageManagementClient,
-	"StorageServiceClient" : StorageServiceClient,
-	"ComputeManagementClient": ComputeManagementClient
+    "StorageManagementClient"  : StorageManagementClient,
+	"StorageServiceClient"     : StorageServiceClient,
+	"ComputeManagementClient"  : ComputeManagementClient,
+	"MonitorManagementClient"  : MonitorManagementClient
 }
 
 var locations = function(govcloud) {
@@ -28,18 +30,18 @@ var locations = function(govcloud) {
 
 // Azure Executor
 function AzureExecutor (AzureConfig, Service) {
-    this.azureConfig = AzureConfig;
-    this.azure = msRestAzure;
+	this.azureConfig = AzureConfig;
+	this.azure = msRestAzure;
 
-    this.client = {};
-    this.auxClient = {};
+	this.client = {};
+	this.auxClient = {};
 
-    this.runarm = function(collection, callObj, callKey, callback){
-        var AzureConfig = this.azureConfig;
+	this.runarm = function(collection, callObj, callKey, callback){
+		var AzureConfig = this.azureConfig;
 		callObj.collection = collection;
 
-        if(callObj.reliesOnService && callObj.reliesOnService.length){
-                // ßconsole.log('ARM: Relies on multiple resource managers');
+		if(callObj.reliesOnService && callObj.reliesOnService.length){
+				// ßconsole.log('ARM: Relies on multiple resource managers');
 				this.azure.loginWithServicePrincipalSecret(AzureConfig.ApplicationID, AzureConfig.KeyValue, AzureConfig.DirectoryID, function (err, credentials) {
 					if (err) return console.log(err);
 
@@ -52,7 +54,7 @@ function AzureExecutor (AzureConfig, Service) {
 					// console.log('\n-->Listing ' + AzureConfig.service + ' ' + callKey + ' in the current subscription.');
 
 					switch (callObj.reliesOnService.length){
-                        case 1:
+						case 1:
 							// console.log('ARM: relies on 1');
 							return this.client[AzureConfig.service][callKey](
 								callObj.collection[callObj.reliesOnService[0]][callObj.reliesOnCall[0]][AzureConfig.location].data[0].name,
@@ -63,7 +65,7 @@ function AzureExecutor (AzureConfig, Service) {
 									// console.log('\n' + util.inspect(result, {depth: null}));
 									callback(null, result);
 								});
-                        case 2:
+						case 2:
 							// console.log('ARM: relies on 2');
 							return this.client[AzureConfig.service][callKey](
 									callObj.collection[callObj.reliesOnService[0]][callObj.reliesOnCall[0]][AzureConfig.location].data[0][callObj["filterKey"][0]],
@@ -77,7 +79,7 @@ function AzureExecutor (AzureConfig, Service) {
 							});
 					}
 				});
-        } else {
+		} else {
 			this.azure.loginWithServicePrincipalSecret(AzureConfig.ApplicationID, AzureConfig.KeyValue, AzureConfig.DirectoryID, function (err, credentials) {
 				if (err) return console.log(err);
 				this.client = new mapAzureApis[callObj.api](credentials, AzureConfig.SubscriptionID);
@@ -102,8 +104,8 @@ function AzureExecutor (AzureConfig, Service) {
 					callback(null, finalResult);
 				});
 			});
-        }
-    }
+		}
+	}
 
 	this.runasm = function(collection, callObj, callKey, callback){
 		var AzureConfig = this.azureConfig;
@@ -113,44 +115,45 @@ function AzureExecutor (AzureConfig, Service) {
 				// console.log('ASM: relies on multiple services');
 				this.azure.loginWithServicePrincipalSecret(AzureConfig.ApplicationID, AzureConfig.KeyValue, AzureConfig.DirectoryID, function (err, credentials) {
 					if (err) return console.log(err);
-                    var results = [];
+					var results = [];
 
 					if (callObj.reliesOnService.length>=2) {
-                        // console.log('ASM: relies on 2');
-                        this.client = new mapAzureApis[callObj.api][AzureConfig.service](
-                            callObj.collection[callObj.reliesOnService[0]][callObj.reliesOnCall[0]][AzureConfig.location].data[0][callObj["filterKey"][0]],
-                            callObj.collection[callObj.reliesOnService[1]][callObj.reliesOnCall[1]][AzureConfig.location].data[callObj["filterKey"][1]][0][callObj["filterValue"][1]]
-                        );
-                    } else {
-                            // console.log('ASM: relies on 1');
-                        this.client = new mapAzureApis[callObj.api][AzureConfig.service](
-                            callObj.collection[callObj.reliesOnService[0]][callObj.reliesOnCall[0]][AzureConfig.location].data[0][callObj["filterKey"][0]]
-                        );
-                    }
+						// console.log('ASM: relies on 2');
+						this.client = new mapAzureApis[callObj.api][AzureConfig.service](
+							callObj.collection[callObj.reliesOnService[0]][callObj.reliesOnCall[0]][AzureConfig.location].data[0][callObj["filterKey"][0]],
+							callObj.collection[callObj.reliesOnService[1]][callObj.reliesOnCall[1]][AzureConfig.location].data[callObj["filterKey"][1]][0][callObj["filterValue"][1]]
+						);
+					} else {
+							// console.log('ASM: relies on 1');
+						this.client = new mapAzureApis[callObj.api][AzureConfig.service](
+							callObj.collection[callObj.reliesOnService[0]][callObj.reliesOnCall[0]][AzureConfig.location].data[0][callObj["filterKey"][0]]
+						);
+					}
 
 					if (callObj.reliesOnService.length>2){
-                        async.each(callObj.collection[callObj.reliesOnService[2]][callObj.reliesOnCall[2]][AzureConfig.location].data.entries, function (entry, entryCb) {
-                            this.client[callKey](entry[callObj["filterKey"][2]], function (err, result, request, response) {
-                                if (err) {
-                                    return callback(err);
-                                }
-                                // console.log('\n' + util.inspect(result, {depth: null}));
-                                results.push(result);
-                                entryCb();
-                            });
-                        }, function () {
-                            //console.log(JSON.stringify(collection, null, 2));
-                            callback(null, results);
-                        });
-                    } else {
-                        return this.client[callKey](null, function (err, result, request, response) {
-                            if (err) {
-                                return callback(err);
-                            }
-                            // console.log('\n' + util.inspect(result, {depth: null}));
-                            callback(null, result);
-                        });
-                    }
+						async.each(callObj.collection[callObj.reliesOnService[2]][callObj.reliesOnCall[2]][AzureConfig.location].data.entries, function (entry, entryCb) {
+							var parameter = (entry[callObj["filterKey"][2]] ? entry[callObj["filterKey"][2]] : entry);
+							this.client[callKey](parameter, function (err, result, request, response) {
+								if (err) {
+									return callback(err);
+								}
+								// console.log('\n' + util.inspect(result, {depth: null}));
+								results.push(result);
+								entryCb();
+							});
+						}, function () {
+							//console.log(JSON.stringify(collection, null, 2));
+							callback(null, results);
+						});
+					} else {
+						return this.client[callKey](null, function (err, result, request, response) {
+							if (err) {
+								return callback(err);
+							}
+							// console.log('\n' + util.inspect(result, {depth: null}));
+							callback(null, result);
+						});
+					}
 				});
 		} else {
 			// console.log('ASM: Direct Call (no params)');
@@ -169,8 +172,8 @@ function AzureExecutor (AzureConfig, Service) {
 }
 
 module.exports = {
-    locations: locations,
-    AzureExecutor: AzureExecutor,
+	locations: locations,
+	AzureExecutor: AzureExecutor,
 	functions: require('./functions.js'),
 	addResult: require('./functions.js').addResult,
 	addSource: require('./functions.js').addSource,
@@ -180,5 +183,5 @@ module.exports = {
 	findOpenPorts: require('./functions.js').findOpenPorts,
 	normalizePolicyDocument: require('./functions.js').normalizePolicyDocument,
 
-    MAX_LOCATIONS_AT_A_TIME: 6
+	MAX_LOCATIONS_AT_A_TIME: 6
 };
