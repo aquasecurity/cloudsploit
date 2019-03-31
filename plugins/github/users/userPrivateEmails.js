@@ -8,7 +8,7 @@ module.exports = {
 	more_info: 'Email addresses added to GitHub should be set to private visibility to increase privacy and prevent account reconnaissance.',
 	link: 'https://developer.github.com/v3/users/emails/#toggle-primary-email-visibility',
 	recommended_action: 'Change the visibility of GitHub email addresses to private.',
-	apis: ['users:listEmails', 'apps:listInstallationsForAuthenticatedUser'],
+	apis: ['users:listEmails'],
 
 	run: function(cache, settings, callback) {
 		var results = [];

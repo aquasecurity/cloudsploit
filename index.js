@@ -26,7 +26,10 @@ var OracleConfig;
 
 // GitHubConfig = {
 // 	token: '',						// GitHub app token
-// 	url: 'https://api.github.com'	// BaseURL if not using public GitHub
+// 	url: 'https://api.github.com',	// BaseURL if not using public GitHub
+// 	clientId: '',
+// 	clientSecret: ''
+// 	org: ''
 // };
 
 // Oracle Important Note:
@@ -72,7 +75,8 @@ if(process.env.AZURE_APPLICATION_ID && process.env.AZURE_KEY_VALUE){
 if(process.env.GITHUB_TOKEN){
 	GitHubConfig = {
 		token: process.env.GITHUB_TOKEN,
-		url: process.env.GITHUB_URL || 'https://api.github.com'
+		url: process.env.GITHUB_URL || 'https://api.github.com',
+		org: process.env.GITHUB_ORG || null
 	};
 }
 
@@ -159,8 +163,11 @@ for (p in plugins) {
 	for (sp in serviceProviders) {
 		var serviceProviderPlugins = getMapValue(plugins, serviceProviders[sp].name);
 		var serviceProviderAPICalls = serviceProviders[sp].apiCalls;
+		var serviceProviderConfig = serviceProviders[sp].config;
 		for (spp in serviceProviderPlugins) {
 			var plugin = getMapValue(serviceProviderPlugins, spp);
+			// Skip GitHub plugins that do not match the run type
+			if (sp == 'github' && serviceProviderConfig.org && !plugin.org) continue;
 			for (pac in plugin.apis) {
 				if (serviceProviderAPICalls.indexOf(plugin.apis[pac]) === -1) {
 					if (COMPLIANCE) {
@@ -200,6 +207,9 @@ async.eachOf(serviceProviders, function (serviceProviderObj, serviceProvider, se
 			if (COMPLIANCE && (!plugin.compliance || !plugin.compliance[COMPLIANCE])) {
 				return callback();
 			}
+
+			// Skip GitHub plugins that do not match the run type
+			if (serviceProviderObj.name == 'github' && serviceProviderObj.config.org && !plugin.org) return callback();
 
 			plugin.run(collection, settings, function(err, results){
 				if (COMPLIANCE) {

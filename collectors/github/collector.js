@@ -6,6 +6,7 @@
  as a JSON object.
  *********************/
 
+var Octokit = require('@octokit/rest');
 var async = require('async');
 var util = require('util');
 
@@ -14,33 +15,62 @@ var collectors = require(__dirname + '/../../collectors/github');
 var calls = {
 	apps: {
 		listInstallationsForAuthenticatedUser: {
+			type: 'token',
 			params: {
 				per_page: 100
 			}
 		}
 	},
 	orgs: {
+		get: {
+			type: 'token',
+			inject_org: true
+		},
 		listForAuthenticatedUser: {
+			type: 'token',
+			params: {
+				per_page: 100
+			}
+		},
+		listMembers: {
+			type: 'token',
+			inject_org: true,
 			params: {
 				per_page: 100
 			}
 		}
 	},
+	repos: {
+		listForOrg: {
+			type: 'token',
+			inject_org: true
+		}
+	},
+	teams: {
+		list: {
+			type: 'token',
+			inject_org: true
+		}
+	},
 	users: {
 		listPublicKeys: {
+			type: 'token',
 			params: {
 				per_page: 100
 			}
 		},
 		listGpgKeys: {
+			type: 'token',
 			params: {
 				per_page: 100
 			}
 		},
 		getAuthenticated: {
+			type: 'token',
 			params: {}
 		},
 		listEmails: {
+			type: 'token',
 			params: {
 				per_page: 100
 			}
@@ -48,28 +78,55 @@ var calls = {
 	}
 };
 
+var postcalls = [
+	{
+		orgs: {
+			getMembership: {
+				type: 'token',
+				inject_org: true,
+				reliesOnService: 'orgs',
+				reliesOnCall: 'listMembers',
+				filterKey: 'username',
+				filterValue: 'login'
+			}
+		}
+	}
+];
+
 var collection = {};
 
 // Loop through all of the top-level collectors for each service
 var collect = function (GitHubConfig, settings, callback) {
-	var octokit = require('@octokit/rest')({
-		baseUrl: GitHubConfig.url
-	});
-	octokit.authenticate({
-		type: 'token',
-		token: GitHubConfig.token
-	});
+	var octokit = {
+		token: new Octokit({
+			baseUrl: GitHubConfig.url,
+			auth: 'token ' + GitHubConfig.token,
+			previews: [
+				'hellcat-preview'
+			]
+		}),
+		// oauth: new Octokit({
+		// 	baseUrl: GitHubConfig.url,
+		// 	auth: {
+		// 		clientId: GitHubConfig.clientId,
+		// 		clientSecret: GitHubConfig.clientSecret
+		// 	},
+		// 	previews: [
+		// 		'hellcat-preview'
+		// 	]
+		// })
+	};
 
 	async.eachOfLimit(calls, 10, function(call, service, serviceCb){
-		var serviceLower = service.toLowerCase();
-		if (!collection[serviceLower]) collection[serviceLower] = {};
+		if (!collection[service]) collection[service] = {};
 
 		// Loop through each of the service's functions
 		async.eachOfLimit(call, 10, function (callObj, callKey, callCb) {
 			if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
-			if (!collection[serviceLower][callKey]) collection[serviceLower][callKey] = {};
+			if (!collection[service][callKey]) collection[service][callKey] = {};
 
 			var params = callObj.params || {};
+			if (callObj.inject_org) params.org = GitHubConfig.org;
 
 			var finish = function() {
 				if (callObj.rateLimit) {
@@ -82,15 +139,15 @@ var collect = function (GitHubConfig, settings, callback) {
 			};
 
 			if (callObj.override) {
-				collectors[serviceLower][callKey](octokit, collection, function () {
+				collectors[service][callKey](octokit, collection, function () {
 					finish();
 				});
 			} else {
-				octokit[service][callKey](params).then(function(results){
-					if (results && results.data) collection[serviceLower][callKey].data = results.data;
+				octokit[callObj.type][service][callKey](params).then(function(results){
+					if (results && results.data) collection[service][callKey].data = results.data;
 					finish();
 				}, function(err){
-					if (err) collection[serviceLower][callKey].err = err;
+					if (err) collection[service][callKey].err = err;
 					finish();
 				});
 			}
@@ -98,274 +155,83 @@ var collect = function (GitHubConfig, settings, callback) {
 			serviceCb();
 		});
 	}, function(){
-		callback(null, collection);
+		// Now loop through the follow up calls
+		async.eachSeries(postcalls, function (postcallObj, postcallCb) {
+		    async.eachOfLimit(postcallObj, 10, function (serviceObj, service, serviceCb) {
+		        if (!collection[service]) collection[service] = {};
+
+		        async.eachOfLimit(serviceObj, 1, function (callObj, callKey, callCb) {
+		            if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
+		            if (!collection[service][callKey]) collection[service][callKey] = {};
+
+		            // Ensure pre-requisites are met
+		            if (callObj.reliesOnService && !collection[callObj.reliesOnService]) return callCb();
+
+		            if (callObj.reliesOnCall &&
+		                (!collection[callObj.reliesOnService] ||
+		                !collection[callObj.reliesOnService][callObj.reliesOnCall] ||
+		                !collection[callObj.reliesOnService][callObj.reliesOnCall].data ||
+		                !collection[callObj.reliesOnService][callObj.reliesOnCall].data.length)) return callCb();
+
+		            if (callObj.override) {
+		                collectors[service][callKey](octokit, collection, function () {
+		                    if (callObj.rateLimit) {
+		                        setTimeout(function () {
+		                            callCb();
+		                        }, callObj.rateLimit);
+		                    } else {
+		                        callCb();
+		                    }
+		                });
+		            } else {
+		                if (!callObj.reliesOnService && !callObj.reliesOnCall) {
+		                	var params = callObj.params || {};
+		                	if (callObj.inject_org) params.org = GitHubConfig.org;
+
+                	    	octokit[callObj.type][service][callKey](params).then(function(results){
+								if (results && results.data) collection[service][callKey].data = results.data;
+								depCb();
+							}, function(err){
+								collection[service][callKey].err = err;
+								depCb();
+							});
+		                } else {
+		                	async.eachLimit(collection[callObj.reliesOnService][callObj.reliesOnCall].data, 10, function (dep, depCb) {
+		                	    collection[service][callKey][dep[callObj.filterValue]] = {};
+
+		                	    var filter = {};
+		                	    if (callObj.inject_org) filter.org = GitHubConfig.org;
+		                	    filter[callObj.filterKey] = dep[callObj.filterValue];
+
+                    	    	octokit[callObj.type][service][callKey](filter).then(function(results){
+    								if (results && results.data) collection[service][callKey][dep[callObj.filterValue]].data = results.data;
+    								depCb();
+    							}, function(err){
+    								collection[service][callKey][dep[callObj.filterValue]].err = err;
+    								depCb();
+    							});
+		                	}, function () {
+		                	    if (callObj.rateLimit) {
+		                	        setTimeout(function () {
+		                	            callCb();
+		                	        }, callObj.rateLimit);
+		                	    } else {
+		                	        callCb();
+		                	    }
+		                	});
+		                }
+		            }
+		        }, function () {
+		            serviceCb();
+		        });
+		    }, function () {
+		        postcallCb();
+		    });
+		}, function () {
+		    //console.log(JSON.stringify(collection, null, 2));
+		    callback(null, collection);
+		});
 	});
-	
-  //   async.eachOfLimit(calls, 10, function (call, service, serviceCb) {
-		
-
-  //       // Loop through each of the service's functions
-  //       async.eachOfLimit(call, 10, function (callObj, callKey, callCb) {
-  //           if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
-  //           if (!collection[serviceLower][callKey]) collection[serviceLower][callKey] = {};
-
-  //           async.eachLimit(locations[serviceLower], helpers.MAX_LOCATIONS_AT_A_TIME, function (location, locationCb) {
-  //               if (settings.skip_locations &&
-  //                   settings.skip_locations.indexOf(location) > -1 &&
-  //                   globalServices.indexOf(service) === -1) return locationCb();
-  //               if (!collection[serviceLower][callKey][location]) collection[serviceLower][callKey][location] = {};
-
-  //               var LocalAzureConfig = JSON.parse(JSON.stringify(AzureConfig));
-  //               LocalAzureConfig.location = location;
-  //               LocalAzureConfig.service = service;
-
-  //               if (callObj.override) {
-  //                   collectors[serviceLower][callKey](LocalAWSConfig, collection, function () {
-  //                       if (callObj.rateLimit) {
-  //                           setTimeout(function () {
-  //                               locationCb();
-  //                           }, callObj.rateLimit);
-  //                       } else {
-  //                           locationCb();
-  //                       }
-  //                   });
-  //               } else {
-  //                   var executor = new helpers.AzureExecutor(LocalAzureConfig);
-  //                   executor.runarm(collection, callObj, callKey, function(err, data){
-  //                       if (err) {
-  //                           collection[serviceLower][callKey][location].err = err;
-  //                       }
-
-  //                       if (!data) return locationCb();
-
-  //                       collection[serviceLower][callKey][location].data = data;
-
-  //                       if (callObj.rateLimit) {
-  //                           setTimeout(function(){
-  //                               locationCb();
-  //                           }, callObj.rateLimit);
-  //                       } else {
-  //                           locationCb();
-  //                       }
-  //                   });
-  //               }
-  //           }, function () {
-  //               callCb();
-  //           });
-  //       }, function () {
-  //           serviceCb();
-  //       });
-  //   }, function () {
-  //       // Now loop through the follow up calls
-  //       async.eachSeries(postcalls, function (postcallObj, postcallCb) {
-  //           async.eachOfLimit(postcallObj, 10, function (serviceObj, service, serviceCb) {
-  //               var serviceLower = service.toLowerCase();
-  //               if (!collection[serviceLower]) collection[serviceLower] = {};
-
-  //               async.eachOfLimit(serviceObj, 1, function (callObj, callKey, callCb) {
-  //                   if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
-  //                   if (!collection[serviceLower][callKey]) collection[serviceLower][callKey] = {};
-
-  //                   async.eachLimit(locations[serviceLower], helpers.MAX_LOCATIONS_AT_A_TIME, function (location, locationCb) {
-  //                       if (settings.skip_locations &&
-  //                           settings.skip_locations.indexOf(location) > -1 &&
-  //                           globalServices.indexOf(service) === -1) return locationCb();
-  //                       if (!collection[serviceLower][callKey][location]) collection[serviceLower][callKey][location] = {};
-
-		// 				if (callObj.reliesOnService.length) {
-		// 					// Ensure multiple pre-requisites are met
-  //                           for (reliedService in callObj.reliesOnService){
-		// 						if (callObj.reliesOnService[reliedService] && !collection[callObj.reliesOnService[reliedService].toLowerCase()]) return locationCb();
-
-		// 						if (callObj.reliesOnCall[reliedService] &&
-		// 							(!collection[callObj.reliesOnService[reliedService].toLowerCase()] ||
-		// 							!collection[callObj.reliesOnService[reliedService].toLowerCase()][callObj.reliesOnCall[reliedService]] ||
-		// 							!collection[callObj.reliesOnService[reliedService].toLowerCase()][callObj.reliesOnCall[reliedService]][location] ||
-		// 							!collection[callObj.reliesOnService[reliedService].toLowerCase()][callObj.reliesOnCall[reliedService]][location].data ||
-		// 							!collection[callObj.reliesOnService[reliedService].toLowerCase()][callObj.reliesOnCall[reliedService]][location].data.length)) return locationCb();
-  //                           }
-		// 				} else {
-  //                           // Ensure pre-requisites are met
-		// 					if (callObj.reliesOnService && !collection[callObj.reliesOnService.toLowerCase()]) return locationCb();
-
-		// 					if (callObj.reliesOnCall &&
-		// 						(!collection[callObj.reliesOnService.toLowerCase()] ||
-		// 						!collection[callObj.reliesOnService.toLowerCase()][callObj.reliesOnCall] ||
-		// 						!collection[callObj.reliesOnService.toLowerCase()][callObj.reliesOnCall][location] ||
-		// 						!collection[callObj.reliesOnService.toLowerCase()][callObj.reliesOnCall][location].data ||
-		// 						!collection[callObj.reliesOnService.toLowerCase()][callObj.reliesOnCall][location].data.length)) return locationCb();
-		// 				}
-
-  //                       var LocalAzureConfig = JSON.parse(JSON.stringify(AzureConfig));
-  //                       LocalAzureConfig.location = location;
-  //                       LocalAzureConfig.service = service;
-
-  //                       if (callObj.deletelocation) {
-  //                           //delete LocalAWSConfig.location;
-  //                           LocalAzureConfig.location = settings.govcloud ? 'us-gov-west-1' : 'us-east-1';
-  //                       } else {
-  //                           LocalAzureConfig.location = location;
-  //                       }
-  //                       if (callObj.signatureVersion) LocalAzureConfig.signatureVersion = callObj.signatureVersion;
-
-  //                       if (callObj.override) {
-  //                           collectors[serviceLower][callKey](LocalAzureConfig, collection, function () {
-  //                               if (callObj.rateLimit) {
-  //                                   setTimeout(function () {
-  //                                       locationCb();
-  //                                   }, callObj.rateLimit);
-  //                               } else {
-  //                                   locationCb();
-  //                               }
-  //                           });
-  //                       } else {
-  //                           var executor = new helpers.AzureExecutor(LocalAzureConfig);
-  //                           executor.runarm(collection, callObj, callKey, function(err, data){
-  //                               if (err) {
-  //                                   collection[serviceLower][callKey][location].err = err;
-  //                               }
-
-  //                               if (!data) return locationCb();
-
-  //                               collection[serviceLower][callKey][location].data = data;
-
-  //                               if (callObj.rateLimit) {
-  //                                   setTimeout(function(){
-  //                                       locationCb();
-  //                                   }, callObj.rateLimit);
-  //                               } else {
-  //                                   locationCb();
-  //                               }
-  //                           });
-  //                       }
-  //                   }, function () {
-  //                       callCb();
-  //                   });
-  //               }, function () {
-  //                   serviceCb();
-  //               });
-  //           }, function () {
-  //               postcallCb();
-  //           });
-  //       }, function () {
-		// 	// Now loop through the final calls
-		// 	async.eachSeries(finalcalls, function (finalcallObj, finalcallCb) {
-		// 		async.eachOfLimit(finalcallObj, 10, function (serviceObj, service, serviceCb) {
-		// 			var serviceLower = service.toLowerCase();
-		// 			if (!collection[serviceLower]) collection[serviceLower] = {};
-
-		// 			async.eachOfLimit(serviceObj, 1, function (callObj, callKey, callCb) {
-		// 				if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
-		// 				if (!collection[serviceLower][callKey]) collection[serviceLower][callKey] = {};
-
-		// 				async.eachLimit(locations[serviceLower], helpers.MAX_LOCATIONS_AT_A_TIME, function (location, locationCb) {
-		// 					if (settings.skip_locations &&
-		// 						settings.skip_locations.indexOf(location) > -1 &&
-		// 						globalServices.indexOf(service) === -1) return locationCb();
-		// 					if (!collection[serviceLower][callKey][location]) collection[serviceLower][callKey][location] = {};
-
-		// 					if (callObj.reliesOnService.length) {
-		// 						// Ensure multiple pre-requisites are met
-		// 						for (reliedService in callObj.reliesOnService){
-		// 							if (callObj.reliesOnService[reliedService] && !collection[callObj.reliesOnService[reliedService].toLowerCase()]) return locationCb();
-
-		// 							if (callObj.reliesOnCall[reliedService] &&
-		// 								(!collection[callObj.reliesOnService[reliedService].toLowerCase()] ||
-		// 								!collection[callObj.reliesOnService[reliedService].toLowerCase()][callObj.reliesOnCall[reliedService]] ||
-		// 								!collection[callObj.reliesOnService[reliedService].toLowerCase()][callObj.reliesOnCall[reliedService]][location] ||
-		// 								!collection[callObj.reliesOnService[reliedService].toLowerCase()][callObj.reliesOnCall[reliedService]][location].data )) return locationCb();
-		// 						}
-		// 					} else {
-		// 						// Ensure pre-requisites are met
-		// 						if (callObj.reliesOnService && !collection[callObj.reliesOnService.toLowerCase()]) return locationCb();
-
-		// 						if (callObj.reliesOnCall &&
-		// 							(!collection[callObj.reliesOnService.toLowerCase()] ||
-		// 							!collection[callObj.reliesOnService.toLowerCase()][callObj.reliesOnCall] ||
-		// 							!collection[callObj.reliesOnService.toLowerCase()][callObj.reliesOnCall][location] ||
-		// 							!collection[callObj.reliesOnService.toLowerCase()][callObj.reliesOnCall][location].data )) return locationCb();
-		// 					}
-
-		// 					var LocalAzureConfig = JSON.parse(JSON.stringify(AzureConfig));
-		// 					LocalAzureConfig.location = location;
-		// 					LocalAzureConfig.service = service;
-
-		// 					if (callObj.deletelocation) {
-		// 						//delete LocalAWSConfig.location;
-		// 						LocalAzureConfig.location = settings.govcloud ? 'us-gov-west-1' : 'us-east-1';
-		// 					} else {
-		// 						LocalAzureConfig.location = location;
-		// 					}
-		// 					if (callObj.signatureVersion) LocalAzureConfig.signatureVersion = callObj.signatureVersion;
-
-		// 					if (callObj.override) {
-		// 						collectors[serviceLower][callKey](LocalAzureConfig, collection, function () {
-		// 							if (callObj.rateLimit) {
-		// 								setTimeout(function () {
-		// 									locationCb();
-		// 								}, callObj.rateLimit);
-		// 							} else {
-		// 								locationCb();
-		// 							}
-		// 						});
-		// 					} else {
-		// 						var executor = new helpers.AzureExecutor(LocalAzureConfig);
-		// 						if (callObj.arm){
-		// 							executor.runarm(collection, callObj, callKey, function(err, data){
-		// 								if (err) {
-		// 									collection[serviceLower][callKey][location].err = err;
-		// 								}
-
-		// 								if (!data) return locationCb();
-
-		// 								collection[serviceLower][callKey][location].data = data;
-
-		// 								if (callObj.rateLimit) {
-		// 									setTimeout(function(){
-		// 										locationCb();
-		// 									}, callObj.rateLimit);
-		// 								} else {
-		// 									locationCb();
-		// 								}
-		// 							});
-		// 						} else {
-		// 							executor.runasm(collection, callObj, callKey, function(err, data){
-		// 								if (err) {
-		// 									collection[serviceLower][callKey][location].err = err;
-		// 								}
-
-		// 								if (!data) return locationCb();
-
-		// 								collection[serviceLower][callKey][location].data = data;
-
-		// 								if (callObj.rateLimit) {
-		// 									setTimeout(function(){
-		// 										locationCb();
-		// 									}, callObj.rateLimit);
-		// 								} else {
-		// 									locationCb();
-		// 								}
-		// 							});
-		// 						}
-		// 					}
-		// 				}, function () {
-		// 					callCb();
-		// 				});
-		// 			}, function () {
-		// 				serviceCb();
-		// 			});
-		// 		}, function () {
-		// 			finalcallCb();
-		// 		});
-		// 	}, function () {
-		// 		//console.log(JSON.stringify(collection, null, 2));
-		// 		callback(null, collection);
-		// 	});
-		// }, function () {
-  //           //console.log(JSON.stringify(collection, null, 2));
-  //           callback(null, collection);
-  //       });
-  //   });
 };
 
 module.exports = collect;
