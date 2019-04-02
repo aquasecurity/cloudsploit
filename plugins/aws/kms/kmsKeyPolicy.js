@@ -129,7 +129,7 @@ module.exports = {
 
 				if (wildcardTrusted) {
 					found = true;
-					helpers.addResult(results, 1, 'Key trusts ' + wildcardTrusted +
+					helpers.addResult(results, 2, 'Key trusts ' + wildcardTrusted +
 						' principals with wildcards', region, kmsKey.KeyArn, custom);
 				}
 				
