@@ -5,7 +5,7 @@ module.exports = {
 	title: 'Lambda Old Runtimes',
 	category: 'Lambda',
 	description: 'Ensures Lambda functions are not using out-of-date runtime environments.',
-	more_info: 'Lambda runtimes should be kept current with recent versions of the underlying codebase. Node.js 0.10.0 should not be used.',
+	more_info: 'Lambda runtimes should be kept current with recent versions of the underlying codebase. Deprecated runtimes should not be used.',
 	link: 'http://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html',
 	recommended_action: 'Upgrade the Lambda function runtime to use a more current version.',
 	apis: ['Lambda:listFunctions'],
