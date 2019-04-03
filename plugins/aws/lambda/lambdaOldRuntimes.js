@@ -15,6 +15,12 @@ module.exports = {
 		var source = {};
 		var regions = helpers.regions(settings.govcloud);
 
+		var deprecatedRuntimes = [
+			{ 'id':'nodejs', 'name': 'Node.js 0.10', 'endOfLifeDate': '2016-10-31' },
+			{ 'id':'nodejs4.3', 'name': 'Node.js 4.3', 'endOfLifeDate': '2018-04-30' },
+			{ 'id':'nodejs4.3-edge', 'name': 'Node.js 4.3', 'endOfLifeDate': '2018-04-30' }
+		];
+
 		async.each(regions.lambda, function(region, rcb){
 			var listFunctions = helpers.addSource(cache, source,
 				['lambda', 'listFunctions', region]);
@@ -40,11 +46,15 @@ module.exports = {
 
 				if (!lambdaFunction.Runtime) continue;
 
-				if (lambdaFunction.Runtime === 'nodejs') {
+				var deprecatedRunTime = deprecatedRuntimes.filter((d) => {
+					return d.id == lambdaFunction.Runtime;
+				});
+
+				if (deprecatedRunTime && deprecatedRunTime.length>0){
 					found = true;
 
 					helpers.addResult(results, 2,
-						'Function is using out-of-date runtime: nodejs',
+						'Function is using out-of-date runtime: ' + deprecatedRunTime[0].name + ' end of life: ' + deprecatedRunTime[0].endOfLifeDate,
 						region, lambdaFunction.FunctionArn);
 				}
 			}
