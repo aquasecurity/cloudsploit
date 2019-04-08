@@ -5,3 +5,4 @@ custom.js
 plugins_*
 output.json
 vscode/*
+.vscode/

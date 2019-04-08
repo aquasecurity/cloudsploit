@@ -1,6 +1,7 @@
 var async = require('async');
 var fs        	= require("fs");
 var plugins = require('./exports.js');
+var complianceControls = require('./compliance/controls.js')
 
 var AWSConfig;
 var AzureConfig;
@@ -98,21 +99,22 @@ var settings = {};
 // settings.govcloud = true;
 
 // Determine if scan is a compliance scan
-var COMPLIANCE;
-
-if (process.argv.join(' ').indexOf('--compliance') > -1) {
-    if (process.argv.join(' ').indexOf('--compliance=hipaa') > -1) {
-        COMPLIANCE='hipaa';
-        console.log('INFO: Compliance mode: HIPAA');
-    } else if (process.argv.join(' ').indexOf('--compliance=pci') > -1) {
-        COMPLIANCE='pci';
-        console.log('INFO: Compliance mode: PCI');
-    } else {
-        console.log('ERROR: Unsupported compliance mode. Please use one of the following:');
-        console.log('       --compliance=hipaa');
-        console.log('       --compliance=pci');
-        process.exit();
-    }
+var complianceArgs = process.argv
+	.filter(function (arg) {
+		return arg.startsWith('--compliance=')
+	})
+	.map(function (arg) {
+		return arg.substring(13)
+	})
+var compliance = complianceControls.create(complianceArgs)
+if (!compliance) {
+	console.log('ERROR: Unsupported compliance mode. Please use one of the following:');
+	console.log('       --compliance=hipaa');
+	console.log('       --compliance=pci');
+	console.log('       --compliance=cis');
+	console.log('       --compliance=cis-1');
+	console.log('       --compliance=cis-2');
+	process.exit();
 }
 
 // Configure Service Provider Collectors
@@ -168,13 +170,9 @@ for (p in plugins) {
 			var plugin = getMapValue(serviceProviderPlugins, spp);
 			// Skip GitHub plugins that do not match the run type
 			if (sp == 'github' && serviceProviderConfig.org && !plugin.org) continue;
-			for (pac in plugin.apis) {
-				if (serviceProviderAPICalls.indexOf(plugin.apis[pac]) === -1) {
-					if (COMPLIANCE) {
-						if (plugin.compliance && plugin.compliance[COMPLIANCE]) {
-							serviceProviderAPICalls.push(plugin.apis[pac])
-						}
-					} else {
+			if (compliance.includes(spp, plugin)) {
+				for (pac in plugin.apis) {
+					if (serviceProviderAPICalls.indexOf(plugin.apis[pac]) === -1) {
 						serviceProviderAPICalls.push(plugin.apis[pac]);
 					}
 				}
@@ -204,20 +202,21 @@ async.eachOf(serviceProviders, function (serviceProviderObj, serviceProvider, se
 		var serviceProviderPlugins = getMapValue(plugins, serviceProviderObj.name);
 
 		async.forEachOfLimit(serviceProviderPlugins, 10, function (plugin, key, callback) {
-			if (COMPLIANCE && (!plugin.compliance || !plugin.compliance[COMPLIANCE])) {
+			if (!compliance.includes(key, plugin)) {
 				return callback();
 			}
 
 			// Skip GitHub plugins that do not match the run type
 			if (serviceProviderObj.name == 'github' && serviceProviderObj.config.org && !plugin.org) return callback();
 
-			plugin.run(collection, settings, function(err, results){
-				if (COMPLIANCE) {
+			plugin.run(collection, settings, function(err, results) {
+				var complianceDesc = compliance.describe(key, plugin)
+				if (complianceDesc) {
 					console.log('');
 					console.log('-----------------------');
 					console.log(plugin.title);
 					console.log('-----------------------');
-					console.log(plugin.compliance[COMPLIANCE]);
+					console.log(complianceDesc);
 					console.log('');
 				}
 				for (r in results) {

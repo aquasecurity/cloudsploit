@@ -4,7 +4,7 @@
   "description": "AWS security scanning scripts",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha ./plugins/**/*.spec.js"
   },
   "repository": {
     "type": "git",
@@ -32,5 +32,9 @@
     "azure-storage": "^2.10.2",
     "jssha": "^2.3.1",
     "ms-rest-azure": "^2.5.9"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.0.2"
   }
 }
