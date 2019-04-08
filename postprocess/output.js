@@ -36,7 +36,10 @@ var consoleOutputHandler = {
 						(result.resource || 'N/A') + '\t' +
 						(result.region || 'Global') + '\t\t' +
 						statusWord + '\t' + result.message);
-    }
+    },
+
+    // For console output, we don't need to do anything to close the item
+    close: () => {}
 }
 
 module.exports = {

@@ -85,4 +85,23 @@ describe('output', function () {
             expect(buffer.cache).to.equal('category,title,resource,region,statusWord,message\n,myTitle,N/A,Global,OK,\n');
         })
     })
+
+    describe('create', function () {
+        it('should create a console output if no arguments specified', function () {
+            // We don't have any asserts for this test - but it would be nice
+            // sometime to redirect the console output.
+            var handler = output.create([])
+
+            var plugin = {}
+
+            var complianceItem = {
+                describe: (pluginKey, plugin) => { return 'Description'}
+            }
+
+            handler.startCompliance(plugin, 'pluginKey', complianceItem)
+            handler.writeResult({status: 0}, {title:'myTitle'}, 'key');
+            handler.endCompliance(plugin, 'pluginKey', complianceItem)
+            handler.close()
+        })
+    })
 })
