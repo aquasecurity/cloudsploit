@@ -43,7 +43,7 @@ describe('output', function () {
             expect(buffer.cache).to.include(' errors="0" ');
         })
 
-        it('should indicate one failure there is one failing result', function () {
+        it('should indicate one failure when there is one failing result', function () {
             var buffer = createOutputBuffer();
             var handler = output.createJunit(buffer);
             handler.writeResult({status: 2, message: 'fail message'}, {title:'myTitle'}, 'key');
@@ -55,7 +55,7 @@ describe('output', function () {
             expect(buffer.cache).to.include('fail message');
         })
 
-        it('should indicate one error there is one failing error', function () {
+        it('should indicate one error when there is one failing error', function () {
             var buffer = createOutputBuffer();
             var handler = output.createJunit(buffer);
             handler.writeResult({status: 3, message: 'error message'}, {title:'myTitle'}, 'key');
@@ -65,6 +65,27 @@ describe('output', function () {
             expect(buffer.cache).to.include(' failures="0" ');
             expect(buffer.cache).to.include(' errors="1" ');
             expect(buffer.cache).to.include('error message');
+        })
+
+        it('should escape XML output if it contains special characters', function () {
+            var buffer = createOutputBuffer();
+            var handler = output.createJunit(buffer, new Date(Date.UTC(2019, 04, 08, 16, 21, 46)));
+            handler.writeResult({status: 3, message: 'resource <> has characters'}, {title:'"special" char'}, '&key');
+            handler.close();
+
+            var expected = ('<?xml version="1.0" encoding="UTF-8" ?>\n' +
+                            '<testsuites>\n' +
+                            '\t<testsuite name="&quot;special&quot; char: " hostname="localhost" tests="1" errors="1" failures="0" timestamp="2019-05-08T16:21:46" time="0" package="&amp;key" id="0">\n' +
+                            '\t\t<properties></properties>\n' +
+                            '\t\t<testcase classname="&amp;key" name="undefined; N/A; resource &lt;&gt; has characters" time="0">\n' +
+                            '\t\t\t<failure message="resource &lt;&gt; has characters" type="none"/>\n' +
+                            '\t\t</testcase>\n' +
+                            '\t\t<system-out></system-out>\n' +
+                            '\t\t<system-err></system-err>\n' +
+                            '\t</testsuite>\n' +
+                            '</testsuites>\n')
+
+            expect(buffer.cache).to.equal(expected)
         })
     })
 

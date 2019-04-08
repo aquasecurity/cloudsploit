@@ -95,10 +95,16 @@ module.exports = {
      * 
      * @param {fs.WriteStream} stream The stream to write to or an object that
      * obeys the writeable stream contract.
+     * @param {Date} now Optional current Date for reporting the time.
      */
-    createJunit: function (stream) {
+    createJunit: function (stream, now) {
         return {
             stream: stream,
+
+            // If we have a value for now when we construct this, use that,
+            // otherwise get the current time (mostly for injecting time via
+            // tests).
+            now : now || new Date(),
         
             /**
              * The test suites are how we represent result - each test suite
@@ -122,7 +128,7 @@ module.exports = {
                     // The time to report for the tests (since we don't have
                     // time for any of them.) The expected JUnit format doesn't
                     // allow for time or MS, so omit those
-                    var time = (new Date()).toISOString();
+                    var time = this.now.toISOString();
                     time = time.substr(0, time.indexOf('.'));
 
                     this.testSuites[suiteName] = {
@@ -188,31 +194,31 @@ module.exports = {
             _writeSuite: function (testSuite, index)  {
                 var numTests = testSuite.testCases.length;
 
-                this.stream.write('\t<testsuite name="' + testSuite.name +
+                this.stream.write('\t<testsuite name="' + this._escapeXml(testSuite.name) +
                                   '" hostname="localhost" tests="' + numTests +
                                   '" errors="' + testSuite.errors +
                                   '" failures="' + testSuite.failures +
                                   '" timestamp="' + testSuite.time +
-                                  '" time="0" package="' + testSuite.package +
+                                  '" time="0" package="' + this._escapeXml(testSuite.package) +
                                   '" id="' + index + '">\n');
 
                 // The schema says we must have the properties element, but it can be empty
                 this.stream.write('\t\t<properties></properties>\n');
                 for (var testCase of testSuite.testCases) {
                     this.stream.write('\t\t<testcase classname="' +
-                                      testCase.classname +'" name="' +
-                                      testCase.name + '" time="0"');
+                        this._escapeXml(testCase.classname) +'" name="' +
+                        this._escapeXml( testCase.name) + '" time="0"');
 
                     // If we need a child, then write that, otherwise close
                     // of the test case without creating an unnecessary text
                     // element
                     if (testCase.failure) {
                         this.stream.write('>\n\t\t\t<failure message="' +
-                                          testCase.failure + '" type="none"/>\n' +
+                                          this._escapeXml(testCase.failure) + '" type="none"/>\n' +
                                           '\t\t</testcase>\n');
                     } else if (testCase.error) {
                         this.stream.write('>\n\t\t\t<failure message="' +
-                                          testCase.error + '" type="none"/>\n' +
+                                          this._escapeXml(testCase.error) + '" type="none"/>\n' +
                                           '\t\t</testcase>\n');
                     } else {
                         this.stream.write('/>\n');
@@ -226,6 +232,20 @@ module.exports = {
                 this.stream.write('\t\t<system-err></system-err>\n');
 
                 this.stream.write('\t</testsuite>\n');
+            },
+
+            /**
+             * Escapes the string value to ensure it is a valid value for XML
+             * attribute, returning an escaped string.
+             * @param {string} value The value to escape
+             * @return The escaped value.
+             */
+            _escapeXml: (value) => {
+                return value.replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&apos;');
             }
         }
     },
