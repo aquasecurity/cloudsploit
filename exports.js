@@ -128,6 +128,8 @@ module.exports = {
 
         'redshiftEncryptionEnabled'     : require(__dirname + '/plugins/aws/redshift/redshiftEncryptionEnabled.js'),
         'redshiftPubliclyAccessible'    : require(__dirname + '/plugins/aws/redshift/redshiftPubliclyAccessible.js'),
+        'wafOnALB'                      : require(__dirname + '/plugins/aws/wafregional/wafOnALB.js'),
+        'wafOnELB'                      : require(__dirname + '/plugins/aws/wafregional/wafOnELB.js')
 
         'transferLoggingEnabled'        : require(__dirname + '/plugins/aws/transfer/transferLoggingEnabled.js')
     },

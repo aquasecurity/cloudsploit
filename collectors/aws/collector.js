@@ -324,6 +324,11 @@ var calls = {
 			}
 		}
 	},
+    WAFRegional: {
+        listWebACLs: {
+            property: 'WebACLs'
+        }
+    },
 	WorkSpaces: {
 		describeWorkspaces: {
 			property: 'Workspaces'
@@ -531,7 +536,14 @@ var postcalls = [
 				reliesOnCall: 'listQueues',
 				override: true
 			}
-		}
+		},
+		WAFRegional: {
+            listALBForWebACL: {
+                reliesOnService: 'wafregional',
+                reliesOnCall: 'listWebACLs',
+                override: true
+            }
+        }
 	},
 	{
 		IAM: {
