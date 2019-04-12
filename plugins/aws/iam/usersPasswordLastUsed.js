@@ -71,7 +71,7 @@ module.exports = {
 			if (obj.user === '<root_account>') continue;
 			if (!obj.password_enabled) continue;
 
-			if (obj.password_last_used) {
+			if (obj.password_last_used && obj.password_last_used !== 'no_information') {
 				var daysAgo = helpers.functions.daysAgo(obj.password_last_used);
 
 				var returnMsg = 'User password login was last used ' +

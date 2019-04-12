@@ -1,6 +1,9 @@
 var async = require('async');
 var fs        	= require("fs");
 var plugins = require('./exports.js');
+var complianceControls = require('./compliance/controls.js')
+var suppress = require('./postprocess/suppress.js')
+var output = require('./postprocess/output.js')
 
 var AWSConfig;
 var AzureConfig;
@@ -98,22 +101,33 @@ var settings = {};
 // settings.govcloud = true;
 
 // Determine if scan is a compliance scan
-var COMPLIANCE;
-
-if (process.argv.join(' ').indexOf('--compliance') > -1) {
-    if (process.argv.join(' ').indexOf('--compliance=hipaa') > -1) {
-        COMPLIANCE='hipaa';
-        console.log('INFO: Compliance mode: HIPAA');
-    } else if (process.argv.join(' ').indexOf('--compliance=pci') > -1) {
-        COMPLIANCE='pci';
-        console.log('INFO: Compliance mode: PCI');
-    } else {
-        console.log('ERROR: Unsupported compliance mode. Please use one of the following:');
-        console.log('       --compliance=hipaa');
-        console.log('       --compliance=pci');
-        process.exit();
-    }
+var complianceArgs = process.argv
+	.filter(function (arg) {
+		return arg.startsWith('--compliance=')
+	})
+	.map(function (arg) {
+		return arg.substring(13)
+	})
+var compliance = complianceControls.create(complianceArgs)
+if (!compliance) {
+	console.log('ERROR: Unsupported compliance mode. Please use one of the following:');
+	console.log('       --compliance=hipaa');
+	console.log('       --compliance=pci');
+	console.log('       --compliance=cis');
+	console.log('       --compliance=cis-1');
+	console.log('       --compliance=cis-2');
+	process.exit();
 }
+
+// Initialize any suppression rules based on the the command line arguments
+var suppressionFilter = suppress.create(process.argv)
+
+// Initialize the output handler
+var outputHandler = output.create(process.argv)
+
+// The original cloudsploit always has a 0 exit code. With this option, we can have
+// the exit code depend on the results (useful for integration with CI systems)
+var useStatusExitCode = process.argv.includes('--statusExitCode')
 
 // Configure Service Provider Collectors
 var serviceProviders = {
@@ -168,13 +182,9 @@ for (p in plugins) {
 			var plugin = getMapValue(serviceProviderPlugins, spp);
 			// Skip GitHub plugins that do not match the run type
 			if (sp == 'github' && serviceProviderConfig.org && !plugin.org) continue;
-			for (pac in plugin.apis) {
-				if (serviceProviderAPICalls.indexOf(plugin.apis[pac]) === -1) {
-					if (COMPLIANCE) {
-						if (plugin.compliance && plugin.compliance[COMPLIANCE]) {
-							serviceProviderAPICalls.push(plugin.apis[pac])
-						}
-					} else {
+			if (compliance.includes(spp, plugin)) {
+				for (pac in plugin.apis) {
+					if (serviceProviderAPICalls.indexOf(plugin.apis[pac]) === -1) {
 						serviceProviderAPICalls.push(plugin.apis[pac]);
 					}
 				}
@@ -187,7 +197,7 @@ console.log('INFO: API calls determined.');
 console.log('INFO: Collecting metadata. This may take several minutes...');
 
 // STEP 2 - Collect API Metadata from Service Providers
-async.eachOf(serviceProviders, function (serviceProviderObj, serviceProvider, serviceProviderCb) {
+async.map(serviceProviders, function (serviceProviderObj, serviceProviderDone) {
 	serviceProviderObj.collector(serviceProviderObj.config, {api_calls: serviceProviderObj.apiCalls, skip_regions: serviceProviderObj.skipRegions}, function (err, collection) {
 		if (err || !collection) return console.log('ERROR: Unable to obtain API metadata');
 
@@ -203,49 +213,47 @@ async.eachOf(serviceProviders, function (serviceProviderObj, serviceProvider, se
 
 		var serviceProviderPlugins = getMapValue(plugins, serviceProviderObj.name);
 
-		async.forEachOfLimit(serviceProviderPlugins, 10, function (plugin, key, callback) {
-			if (COMPLIANCE && (!plugin.compliance || !plugin.compliance[COMPLIANCE])) {
-				return callback();
+		async.mapValuesLimit(serviceProviderPlugins, 10, function (plugin, key, pluginDone) {
+			if (!compliance.includes(key, plugin)) {
+				return pluginDone(null, 0);
 			}
 
 			// Skip GitHub plugins that do not match the run type
 			if (serviceProviderObj.name == 'github' && serviceProviderObj.config.org && !plugin.org) return callback();
 
-			plugin.run(collection, settings, function(err, results){
-				if (COMPLIANCE) {
-					console.log('');
-					console.log('-----------------------');
-					console.log(plugin.title);
-					console.log('-----------------------');
-					console.log(plugin.compliance[COMPLIANCE]);
-					console.log('');
-				}
+			var maximumStatus = 0
+			plugin.run(collection, settings, function(err, results) {
+				outputHandler.startCompliance(plugin, key, compliance)
+
 				for (r in results) {
-					var statusWord;
-					if (results[r].status === 0) {
-						statusWord = 'OK';
-					} else if (results[r].status === 1) {
-						statusWord = 'WARN';
-					} else if (results[r].status === 2) {
-						statusWord = 'FAIL';
-					} else {
-						statusWord = 'UNKNOWN';
+					// If we have suppressed this result, then don't process it
+					// so that it doesn't affect the return code.
+					if (suppressionFilter([key, results[r].region || 'any', results[r].resource || 'any'].join(':'))) {
+						continue;
 					}
 
-					console.log(plugin.category + '\t' + plugin.title + '\t' +
-						(results[r].resource || 'N/A') + '\t' +
-						(results[r].region || 'Global') + '\t\t' +
-						statusWord + '\t' + results[r].message);
+					// Write out the result (to console or elsewhere)
+					outputHandler.writeResult(results[r], plugin, key)
+
+					// Add this to our tracking fo the worst status to calculate
+					// the exit code
+					maximumStatus = Math.max(maximumStatus, results[r].status)
 				}
 
-				setTimeout(function() { callback(err); }, 0);
+				outputHandler.endCompliance(plugin, key, compliance)
+
+				setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
 			});
-		}, function(err){
+		}, function(err, results){
 			if (err) return console.log(err);
-			serviceProviderCb();
+			var summaryStatus = Math.max(...Object.values(results))
+			serviceProviderDone(err, summaryStatus);
 		});
 	});
-}, function () {
+}, function (err, results) {
 	// console.log(JSON.stringify(collection, null, 2));
+	if (useStatusExitCode) {
+		process.exitCode = Math.max(results)
+	}
 	console.log('Done');
 });
