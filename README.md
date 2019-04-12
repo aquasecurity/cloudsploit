@@ -136,6 +136,26 @@ HIPAA scans map CloudSploit plugins to the Health Insurance Portability and Acco
 
 PCI scans map CloudSploit plugins to the Payment Card Industry Data Security Standard.
 
+## Output Formats
+
+CloudSploit supports output in several formats for consumption by other tools.
+If you do not specify otherwise, CloudSploit writes output to standard output
+(the console). You can specify one or more output formats as follows:
+
+```
+# Output results in CSV (suppressing the console output)
+node index.js --csv=./out.csv
+
+# Output results in JUnit XML (suppressing the console output)
+node index.js --junit=./out.xml
+
+# Output results only to the console (default if omitted)
+node index.js --console
+
+# Output results in all supported formats
+node index.js --console --junit=./out.xml --csv=./out.csv
+```
+
 ## Architecture
 
 CloudSploit works in two phases. First, it queries the AWS APIs for various metadata about your account. This is known as the "collection" phase. Once all the necessary data has been collected, the result is passed to the second phase - "scanning." The scan uses the collected data to search for potential misconfigurations, risks, and other security issues. These are then provided as output.
