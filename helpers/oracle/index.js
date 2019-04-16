@@ -5,8 +5,6 @@ var async = require('async');
 var sshpk = require('sshpk');
 var assert = require('assert-plus');
 
-var logger = require(__dirname + '/../../../../helpers/logger.js');
-
 // REST Oracle
 var oci = require( '../../other_modules/oracle/oci' );
 
@@ -55,7 +53,7 @@ function OracleExecutor (OracleConfig, Service) {
 								'options.key must be a sshpk.PrivateKey');
 							(!OracleConfig.RESTversion ? OracleConfig.RESTversion = '/20160918' : false )
 						} catch (e) {
-							logger.error('Could not read the Oracle Private Key.', e);
+							console.log('Could not read the Oracle Private Key.');
 						}
 
 						oci[callObj.api][oracleService][callKey](OracleConfig, parameters, function (result) {
@@ -90,7 +88,7 @@ function OracleExecutor (OracleConfig, Service) {
 					'options.key must be a sshpk.PrivateKey');
 				(!OracleConfig.RESTversion ? OracleConfig.RESTversion = '/20160918' : false )
 			} catch (e) {
-				logger.error('Could not read the Oracle Private Key.', e);
+				console.log('Could not read the Oracle Private Key.');
 			}
 
 			return oci[callObj.api][oracleService][callKey]( OracleConfig, parameters, function (result) {

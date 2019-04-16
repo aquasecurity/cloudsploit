@@ -5,7 +5,7 @@ module.exports = {
 	title: 'Lambda Old Runtimes',
 	category: 'Lambda',
 	description: 'Ensures Lambda functions are not using out-of-date runtime environments.',
-	more_info: 'Lambda runtimes should be kept current with recent versions of the underlying codebase. Node.js 0.10.0 should not be used.',
+	more_info: 'Lambda runtimes should be kept current with recent versions of the underlying codebase. Deprecated runtimes should not be used.',
 	link: 'http://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html',
 	recommended_action: 'Upgrade the Lambda function runtime to use a more current version.',
 	apis: ['Lambda:listFunctions'],
@@ -14,6 +14,12 @@ module.exports = {
 		var results = [];
 		var source = {};
 		var regions = helpers.regions(settings.govcloud);
+
+		var deprecatedRuntimes = [
+			{ 'id':'nodejs', 'name': 'Node.js 0.10', 'endOfLifeDate': '2016-10-31' },
+			{ 'id':'nodejs4.3', 'name': 'Node.js 4.3', 'endOfLifeDate': '2018-04-30' },
+			{ 'id':'nodejs4.3-edge', 'name': 'Node.js 4.3', 'endOfLifeDate': '2018-04-30' }
+		];
 
 		async.each(regions.lambda, function(region, rcb){
 			var listFunctions = helpers.addSource(cache, source,
@@ -40,11 +46,15 @@ module.exports = {
 
 				if (!lambdaFunction.Runtime) continue;
 
-				if (lambdaFunction.Runtime === 'nodejs') {
+				var deprecatedRunTime = deprecatedRuntimes.filter((d) => {
+					return d.id == lambdaFunction.Runtime;
+				});
+
+				if (deprecatedRunTime && deprecatedRunTime.length>0){
 					found = true;
 
 					helpers.addResult(results, 2,
-						'Function is using out-of-date runtime: nodejs',
+						'Function is using out-of-date runtime: ' + deprecatedRunTime[0].name + ' end of life: ' + deprecatedRunTime[0].endOfLifeDate,
 						region, lambdaFunction.FunctionArn);
 				}
 			}

@@ -27,6 +27,10 @@ module.exports = {
 	},
 
 	run: function(cache, settings, callback) {
+		this._run(cache, settings, callback, new Date())
+	},
+
+	_run: function(cache, settings, callback, now) {
 		var config = {
 			root_account_in_use_days: settings.root_account_in_use_days || this.settings.root_account_in_use_days.default
 		};
@@ -75,11 +79,11 @@ module.exports = {
 					helpers.addResult(results, 0, 'Root account has not been used', 'global', obj.arn);
 				} else {
 					var dateToCompare = helpers.functions.mostRecentDate(accessDates);
-					var resultCode = (helpers.functions.daysAgo(dateToCompare) < config.root_account_in_use_days) ? 2: 0;
+					var resultCode = (helpers.functions.daysBetween(dateToCompare, now) < config.root_account_in_use_days) ? 2: 0;
 
 
 					helpers.addResult(results, resultCode,
-						'Root account was last used ' + helpers.functions.daysAgo(dateToCompare) + ' days ago',
+						'Root account was last used ' + helpers.functions.daysBetween(dateToCompare, now) + ' days ago',
 						'global', obj.arn, custom);
 				}
 
