@@ -10,6 +10,7 @@ var regions = [
 	'eu-west-1',		// EU (Ireland)
 	'eu-west-2',		// London
 	'eu-west-3',		// Paris
+	'eu-north-1',		// Stockholm
 	'ap-northeast-1',	// Asia Pacific (Tokyo)
 	'ap-northeast-2',	// Asia Pacific (Seoul)
 	'ap-southeast-1',	// Asia Pacific (Singapore)
@@ -58,7 +59,7 @@ module.exports = {
 	// SSE via KMS is only supported in some regions
 	// even though SQS is supported in all regions.
 	sqs_encrypted: ['us-east-1', 'us-east-2', 'us-west-2', 'us-west-1',
-					'ca-central-1', 'eu-central-1', 'eu-west-1', 'eu-west-2','eu-west-3',
+					'ca-central-1', 'eu-central-1', 'eu-west-1', 'eu-west-2', 'eu-west-3', 'eu-north-1',
 					'ap-northeast-1','ap-northeast-2','ap-northeast-3',
 					'ap-southeast-1','ap-southeast-2','ap-south-1','sa-east-1'],
 	sts: ['us-east-1'],
