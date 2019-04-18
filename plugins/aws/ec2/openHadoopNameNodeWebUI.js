@@ -6,7 +6,7 @@ module.exports = {
 	category: 'EC2',
 	description: 'Determine if TCP port 50070 and 50470 for Hadoop/HDFS NameNode WebUI service is open to the public',
 	more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Hadoop/HDFS should be restricted to known IP addresses.',
-	link: 'https://ambari.apache.org/1.2.3/installing-hadoop-using-ambari/content/reference_chap2_1.html',
+	link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
 	recommended_action: 'Restrict TCP port 50070 and 50470 to known IP addresses for Hadoop/HDFS',
 	apis: ['EC2:describeSecurityGroups'],
 
