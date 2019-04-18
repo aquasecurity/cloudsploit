@@ -6,7 +6,7 @@ module.exports = {
 	category: 'EC2',
 	description: 'Determine if TCP port 5601 for Kibana is open to the public',
 	more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Kibana should be restricted to known IP addresses.',
-	link: 'https://thehackernews.com/2019/04/kibana-data-security.html',
+	link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
 	recommended_action: 'Restrict TCP port 5601 to known IP addresses',
 	apis: ['EC2:describeSecurityGroups'],
 
