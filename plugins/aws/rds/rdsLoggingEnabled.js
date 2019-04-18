@@ -37,7 +37,7 @@ module.exports = {
 				var dbResource = db.DBInstanceArn;
 				console.log(db.EnabledCloudwatchLogsExports);
 
-				if (db.EnabledCloudwatchLogsExports) {
+				if (db.EnabledCloudwatchLogsExports && db.EnabledCloudwatchLogsExports.length) {
 					helpers.addResult(results, 0, 'Logging is enabled', region, dbResource);
 				} else {
 					helpers.addResult(results, 2, 'Logging is not enabled', region, dbResource);
