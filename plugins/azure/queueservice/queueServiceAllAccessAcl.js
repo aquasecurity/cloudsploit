@@ -36,7 +36,7 @@ module.exports = {
                     var alertWrite = false;
                     var alertRead = false;
 
-                    if (queue.signedIdentifiers) {
+                    if (queue.signedIdentifiers && Object.keys(queue.signedIdentifiers).length>0) {
                         for(ident in queue.signedIdentifiers){
                             var permissions = queue.signedIdentifiers[ident].Permissions;
                             for(i=0;i<=permissions.length;i++){

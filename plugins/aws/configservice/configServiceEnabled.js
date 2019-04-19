@@ -57,8 +57,8 @@ module.exports = {
 
 				if (crs.recording) {
 					if (crs.lastStatus &&
-						(crs.lastStatus == 'SUCCESS' ||
-						 crs.lastStatus == 'PENDING')) {
+						(crs.lastStatus.toUpperCase() == 'SUCCESS' ||
+						 crs.lastStatus.toUpperCase() == 'PENDING')) {
 						helpers.addResult(results, 0,
 							'Config Service is configured, recording, and delivering properly', region);
 					} else {

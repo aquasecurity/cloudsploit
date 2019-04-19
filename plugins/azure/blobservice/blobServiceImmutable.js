@@ -28,23 +28,25 @@ module.exports = {
                 return rcb();
             }
 
-            if (!blobService.data || !blobService.data.entries.length) {
+            if (!blobService.data || !blobService.data.length) {
                 helpers.addResult(results, 0, 'No existing blob services', location);
             } else {
-                for (srvc in blobService.data.entries) {
-                    var blob = blobService.data.entries[srvc];
+                for (srvc in blobService.data) {
+                    for (entry in blobService.data[srvc].entries) {
+                        var blob = blobService.data[srvc].entries[entry];
 
-                    if (blob.hasImmutabilityPolicy) {
-						helpers.addResult(results, 0, 'Immutability has been configured for the blob service', location, blob.name +  ' etag:' + blob.etag);
-					} else {
-						helpers.addResult(results, 2, 'Immutability has not been configured for the blob service', location, blob.name +  ' etag:' + blob.etag);
-					}
+                        if (blob.hasImmutabilityPolicy) {
+                            helpers.addResult(results, 0, 'Immutability has been configured for the blob service', location, blob.name + ' etag:' + blob.etag);
+                        } else {
+                            helpers.addResult(results, 2, 'Immutability has not been configured for the blob service', location, blob.name + ' etag:' + blob.etag);
+                        }
 
-					if (blob.hasLegalHold) {
-						helpers.addResult(results, 0, 'Legal Hold has been configured for the blob service', location, blob.name +  ' etag:' + blob.etag);
-					} else {
-						helpers.addResult(results, 2, 'Legal Hold has not configured for the blob service', location, blob.name +  ' etag:' + blob.etag);
-					}
+                        if (blob.hasLegalHold) {
+                            helpers.addResult(results, 0, 'Legal Hold has been configured for the blob service', location, blob.name + ' etag:' + blob.etag);
+                        } else {
+                            helpers.addResult(results, 2, 'Legal Hold has not configured for the blob service', location, blob.name + ' etag:' + blob.etag);
+                        }
+                    }
                 }
             }
             rcb();

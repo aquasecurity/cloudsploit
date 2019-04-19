@@ -45,72 +45,80 @@ module.exports = {
 
                     for (let res in activityLogAlerts.data) {
                         const activityLogAlertResource = activityLogAlerts.data[res];
-                        const allConditions = activityLogAlertResource.condition;
+                        if (activityLogAlertResource.error==true) {
+                            continue;
+                        }
 
-                        for (let conres in allConditions.allOf) {
-                            const condition = allConditions.allOf[conres].equals;
-                            if (condition.indexOf("Microsoft.Sql/servers/firewallRules/write") > -1) {
-                                alertCreateUpdateExists = true;
-                                alertCreateUpdateEnabled = (!alertCreateUpdateEnabled && activityLogAlertResource.enabled ? true : alertCreateUpdateEnabled);
-                            } else if (condition.indexOf("Microsoft.Sql/servers/firewallRules/delete") > -1) {
-                                alertDeleteExists = true;
-                                alertDeleteEnabled = (!alertDeleteEnabled && activityLogAlertResource.enabled ? true : alertDeleteEnabled);
+                        for (let alert in activityLogAlertResource) {
+                            const activityLogAlert = activityLogAlertResource[alert];
+                            if (activityLogAlert.type!=='Microsoft.Insights/ActivityLogAlerts') continue;
+                            const allConditions = activityLogAlert.condition;
+
+                            for (let conres in allConditions.allOf) {
+                                const condition = allConditions.allOf[conres].equals;
+                                if (condition.indexOf("Microsoft.Sql/servers/firewallRules/write") > -1) {
+                                    alertCreateUpdateExists = true;
+                                    alertCreateUpdateEnabled = (!alertCreateUpdateEnabled && activityLogAlert.enabled ? true : alertCreateUpdateEnabled);
+                                } else if (condition.indexOf("Microsoft.Sql/servers/firewallRules/delete") > -1) {
+                                    alertDeleteExists = true;
+                                    alertDeleteEnabled = (!alertDeleteEnabled && activityLogAlert.enabled ? true : alertDeleteEnabled);
+                                }
                             }
                         }
-                    }
 
-                    if (alertCreateUpdateExists && alertCreateUpdateEnabled &&
-                        alertDeleteExists && alertDeleteEnabled) {
-                        helpers.addResult(
-                            results,
-                            0,
-                            'SQL Server Firewall Rule events are being monitored for Create/Update and Delete events',
-                            location
-                        );
-                    } else {
-                        if ((!alertCreateUpdateExists) ||
-                            (alertCreateUpdateExists && !alertCreateUpdateEnabled)) {
-                            helpers.addResult(
-                                results,
-                                2,
-                                'SQL Server Firewall Rule events are not being monitored for Create/Update events',
-                                location
-                            );
-                        } else {
+                        if (alertCreateUpdateExists && alertCreateUpdateEnabled &&
+                            alertDeleteExists && alertDeleteEnabled) {
                             helpers.addResult(
                                 results,
                                 0,
-                                'SQL Server Firewall Rule events are being monitored for Create/Update events',
-                                location
-                            );
-                        }
-
-                        if ((!alertDeleteExists) ||
-                            (alertDeleteExists && !alertDeleteEnabled)) {
-                            helpers.addResult(
-                                results,
-                                2,
-                                'SQL Server Firewall Rule events are not being monitored for Delete events',
+                                'SQL Server Firewall Rule events are being monitored for Create/Update and Delete events',
                                 location
                             );
                         } else {
+                            if ((!alertCreateUpdateExists) ||
+                                (alertCreateUpdateExists && !alertCreateUpdateEnabled)) {
+                                helpers.addResult(
+                                    results,
+                                    2,
+                                    'SQL Server Firewall Rule events are not being monitored for Create/Update events',
+                                    location
+                                );
+                            } else {
+                                helpers.addResult(
+                                    results,
+                                    0,
+                                    'SQL Server Firewall Rule events are being monitored for Create/Update events',
+                                    location
+                                );
+                            }
+
+                            if ((!alertDeleteExists) ||
+                                (alertDeleteExists && !alertDeleteEnabled)) {
+                                helpers.addResult(
+                                    results,
+                                    2,
+                                    'SQL Server Firewall Rule events are not being monitored for Delete events',
+                                    location
+                                );
+                            } else {
+                                helpers.addResult(
+                                    results,
+                                    0,
+                                    'SQL Server Firewall Rule events are being monitored for Delete events',
+                                    location
+                                );
+                            }
+                        }
+
+                        if (!alertCreateUpdateExists &&
+                            !alertDeleteExists) {
                             helpers.addResult(
                                 results,
-                                0,
-                                'SQL Server Firewall Rule events are being monitored for Delete events',
+                                2,
+                                'Activity log alerts are not setup for SQL Server firewall rule events',
                                 location
                             );
                         }
-                    }
-
-                    if (!alertCreateUpdateExists &&
-                        !alertDeleteExists) {
-                        helpers.addResult(
-                            results,
-                            2,
-                            'Activity log alerts are not setup for SQL Server firewall rule events',
-                            location
-                        );
                     }
                 }
             } else {

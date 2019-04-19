@@ -50,18 +50,22 @@ module.exports = {
                     helpers.addResult(results, 3, 'Unable to query VM Extensions: ' + helpers.addError(virtualMachineExtensions), location);
                     return rcb();
                 }
-                if (!virtualMachineExtensions.data.value.length) {
+                if (!virtualMachineExtensions.data.length) {
                     helpers.addResult(results, 1, 'No existing VM Extensions', location);
                 } else {
-                    for(i in virtualMachineExtensions.data.value){
-                        if(virtualMachineExtensions.data.value[i].name &&
-                            virtualMachineExtensions.data.value[i].name.search("IaaSAntimalware") > -1){
-                            IaaSAntimalware.push({
-                                'extId': virtualMachineExtensions.data.value[i].id,
-                                'extName': virtualMachineExtensions.data.value[i].name,
-                                'extSettings': virtualMachineExtensions.data.value[i].settings.AntimalwareEnabled,
-                                'extVM': virtualMachineExtensions.data.value[i].id.split("/")[8]
-                            });
+                    for(var vm in virtualMachineExtensions.data){
+                        var virtualMachine = virtualMachineExtensions.data[vm];
+                        for(var ext in virtualMachine.value) {
+                            var extension = virtualMachine.value[ext];
+                            if (extension.name &&
+                                extension.name.search("IaaSAntimalware") > -1) {
+                                IaaSAntimalware.push({
+                                    'extId': extension.id,
+                                    'extName': extension.name,
+                                    'extSettings': extension.settings.AntimalwareEnabled,
+                                    'extVM': extension.id.split("/")[8]
+                                });
+                            }
                         }
                     }
                 }
