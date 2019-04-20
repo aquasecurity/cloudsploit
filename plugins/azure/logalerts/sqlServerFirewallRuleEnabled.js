@@ -5,7 +5,7 @@ const helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'SQL Server Firewall Rule Alerts Monitor',
-    category: 'Activity Log Alerts',
+    category: 'Log Alerts',
     description: 'Triggers alerts when SQL Server Firewall Rules are created or modified.',
     more_info: 'Monitoring SQL Server Firewall Rule events gives insight into network access changes and may reduce the risk of data breaches due to malicious alteration to firewall configuration.',
     recommended_action: 'Configure SQL Server Firewall rules to limit access exclusively to those resources that need it. Create activity log alerts to monitor changes to your SQL Server security configuration.',

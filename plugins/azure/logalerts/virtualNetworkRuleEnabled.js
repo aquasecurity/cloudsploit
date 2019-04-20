@@ -5,7 +5,7 @@ const helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Virtual Network Alerts Monitor',
-    category: 'Activity Log Alerts',
+    category: 'Log Alerts',
     description: 'Triggers alerts when Virtual Networks are created or modified.',
     more_info: 'Monitoring Virtual Network events gives insight into network access changes and may reduce the risk of breaches due to malicious configuration alteration.',
     recommended_action: 'Configure Virtual Networks to limit access exclusively to those resources that need it. Create activity log alerts to monitor changes to your Virtual Networks configuration.',
