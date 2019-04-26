@@ -88,8 +88,12 @@ module.exports = {
 						var conditionString = ((statement.Condition && statement.Condition.StringEquals &&
 							(statement.Condition.StringEquals['AWS:SourceOwner'] || !statement.Condition.StringEquals['AWS:SourceOwner'] == '*')) ? true : false);
 						// Is it an arn condition (ArnEquals)? Is the SourceArn open to all arns?
-						var conditionArn = ((statement.Condition && statement.Condition.ArnEquals &&
-							(statement.Condition.ArnEquals['aws:SourceArn'] || !statement.Condition.StringEquals['aws:SourceArn'] == '*')) ? true : false);
+						var conditionArn = false;
+						if (statement.Condition && statement.Condition.ArnEquals &&
+							statement.Condition.ArnEquals['aws:SourceArn'] &&
+							statement.Condition.ArnEquals['aws:SourceArn'] == '*') {
+							conditionArn = true;
+						}
 						// Summarize the condition results
 						var statementEval = ((conditionExists && (conditionString || conditionArn)) ? false : true);
 
