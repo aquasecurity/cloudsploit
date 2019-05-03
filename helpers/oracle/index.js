@@ -30,13 +30,10 @@ function OracleExecutor (OracleConfig, Service) {
 		if (callObj.reliesOnService) {
 			var aggregatedErrors=[];
 			var aggregatedResults=[];
-			function ociMany (callObj, OracleConfig) {
-				var services = callObj.reliesOnService;
-				services.callObj = callObj;
 
-				async.eachLimit(services, 10,function(service, serviceCb) {
-					var callObj = services.callObj;
-					var records = callObj.collection[service][callObj.reliesOnCall[services.indexOf(service)]][OracleConfig.region].data;
+			function ociMany (callObj, OracleConfig) {
+				async.eachLimit(callObj.reliesOnService, 10,function(service, serviceCb) {
+					var records = callObj.collection[service][callObj.reliesOnCall[callObj.reliesOnService.indexOf(service)]][OracleConfig.region].data;
 
 					async.eachLimit(records, 10,function(record, recordCb) {
 						for (filter in callObj.filterKey){

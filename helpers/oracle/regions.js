@@ -9,8 +9,9 @@ var regions = [
 ];
 
 module.exports = {
+	default: 'us-ashburn-1',
 	all: regions,
-	vcn: ['us-ashburn-1', 'us-phoenix-1'],
-	publicIp: ['us-ashburn-1', 'us-phoenix-1'],
-	securityList: ['us-ashburn-1', 'us-phoenix-1'],
+	vcn: regions,
+	publicIp: regions,
+	securityList: regions,
 };
