@@ -501,6 +501,14 @@ var postcalls = [
 				override: true
 			}
 		},
+		Lambda: {
+			getPolicy: {
+				reliesOnService: 'lambda',
+				reliesOnCall: 'listFunctions',
+				filterKey: 'FunctionName',
+				filterValue: 'FunctionName'
+			}
+		},
 		SageMaker: {
 			describeNotebookInstance: {
 				reliesOnService: 'sagemaker',
