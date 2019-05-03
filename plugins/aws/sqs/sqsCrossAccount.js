@@ -1,46 +1,6 @@
 var async = require('async');
 var helpers = require('../../../helpers/aws');
 
-function globalPrincipal(principal) {
-	if (typeof principal === 'string' && principal === '*') {
-		return true;
-	}
-
-	var awsPrincipals = principal.AWS;
-	if(!Array.isArray(awsPrincipals)) {
-		awsPrincipals = [awsPrincipals];
-	}
-
-	if (awsPrincipals.indexOf('*') > -1 ||
-		awsPrincipals.indexOf('arn:aws:iam::*') > -1) {
-		return true;
-	}
-
-	return false;
-}
-
-function crossAccountPrincipal(principal, accountId) {
-	if (typeof principal === 'string' &&
-	    /^[0-9]{12}$/.test(principal) &&
-	    principal !== accountId) {
-		return true;
-	}
-
-	var awsPrincipals = principal.AWS;
-	if(!Array.isArray(awsPrincipals)) {
-		awsPrincipals = [awsPrincipals];
-	}
-
-	for (a in awsPrincipals) {
-		if (/^arn:aws:iam::[0-9]{12}.*/.test(awsPrincipals[a]) &&
-			awsPrincipals[a].indexOf(accountId) === -1) {
-			return true;
-		}
-	}
-
-	return false;
-}
-
 module.exports = {
 	title: 'SQS Cross Account Access',
 	category: 'SQS',
@@ -129,7 +89,7 @@ module.exports = {
 					if (!statement.Effect || statement.Effect !== 'Allow') continue;
 					if (!statement.Principal) continue;
 
-					if (globalPrincipal(statement.Principal)) {
+					if (helpers.functions.globalPrincipal(statement.Principal)) {
 						if(!statement.Condition ||
 							(statement.Condition.StringEquals && (
 								!statement.Condition.StringEquals['AWS:SourceOwner'] ||
@@ -146,7 +106,7 @@ module.exports = {
 							}
 						}
 					} else {
-						if (crossAccountPrincipal(statement.Principal, accountId)) {
+						if (helpers.functions.crossAccountPrincipal(statement.Principal, accountId)) {
 							// Another account
 							for (a in statement.Action) {
 								if (crossAccountActions.indexOf(statement.Action[a]) === -1) {

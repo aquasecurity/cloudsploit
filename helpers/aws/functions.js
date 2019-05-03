@@ -249,6 +249,56 @@ function normalizePolicyDocument(doc) {
 	return statementsToReturn;
 }
 
+function globalPrincipal(principal) {
+	if (typeof principal === 'string' && principal === '*') {
+		return true;
+	}
+
+	var awsPrincipals = principal.AWS;
+	if(!Array.isArray(awsPrincipals)) {
+		awsPrincipals = [awsPrincipals];
+	}
+
+	if (awsPrincipals.indexOf('*') > -1 ||
+		awsPrincipals.indexOf('arn:aws:iam::*') > -1) {
+		return true;
+	}
+
+	awsPrincipals = principal.Service;
+	if(!Array.isArray(awsPrincipals)) {
+		awsPrincipals = [awsPrincipals];
+	}
+
+	if (awsPrincipals.indexOf('*') > -1 ||
+		awsPrincipals.indexOf('apigateway.amazonaws.com') > -1) {
+		return true;
+	}
+
+	return false;
+}
+
+function crossAccountPrincipal(principal, accountId) {
+	if (typeof principal === 'string' &&
+	    /^[0-9]{12}$/.test(principal) &&
+	    principal !== accountId) {
+		return true;
+	}
+
+	var awsPrincipals = principal.AWS;
+	if(!Array.isArray(awsPrincipals)) {
+		awsPrincipals = [awsPrincipals];
+	}
+
+	for (a in awsPrincipals) {
+		if (/^arn:aws:iam::[0-9]{12}.*/.test(awsPrincipals[a]) &&
+			awsPrincipals[a].indexOf(accountId) === -1) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 module.exports = {
 	daysBetween: daysBetween,
 	cidrSize: cidrSize,
@@ -260,5 +310,7 @@ module.exports = {
 	findOpenPorts: findOpenPorts,
 	waitForCredentialReport: waitForCredentialReport,
 	isCustom: isCustom,
-	normalizePolicyDocument: normalizePolicyDocument
+	normalizePolicyDocument: normalizePolicyDocument,
+	globalPrincipal: globalPrincipal,
+	crossAccountPrincipal: crossAccountPrincipal
 };
