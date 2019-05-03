@@ -264,16 +264,6 @@ function globalPrincipal(principal) {
 		return true;
 	}
 
-	awsPrincipals = principal.Service;
-	if(!Array.isArray(awsPrincipals)) {
-		awsPrincipals = [awsPrincipals];
-	}
-
-	if (awsPrincipals.indexOf('*') > -1 ||
-		awsPrincipals.indexOf('apigateway.amazonaws.com') > -1) {
-		return true;
-	}
-
 	return false;
 }
 
