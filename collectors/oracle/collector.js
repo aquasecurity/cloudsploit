@@ -183,7 +183,7 @@ var getRegionSubscription = function(OracleConfig, settings, calls, service, cal
             collection[service][callKey][region].err = err;
         }
 
-        if (!data) return regionCb();
+        if (!data) return serviceCb();
 
         collection[service][callKey][region].data = data;
 
