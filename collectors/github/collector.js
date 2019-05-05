@@ -228,7 +228,7 @@ var collect = function (GitHubConfig, settings, callback) {
 		        postcallCb();
 		    });
 		}, function () {
-		    //console.log(JSON.stringify(collection, null, 2));
+		    console.log(JSON.stringify(collection, null, 2));
 		    callback(null, collection);
 		});
 	});

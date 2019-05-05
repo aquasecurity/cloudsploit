@@ -158,7 +158,10 @@ module.exports = {
         'gpgKeysRotated'                : require(__dirname + '/plugins/github/users/gpgKeysRotated.js'),
         'userMfaEnabled'                : require(__dirname + '/plugins/github/users/userMfaEnabled.js'),
         'userPrivateEmails'             : require(__dirname + '/plugins/github/users/userPrivateEmails.js'),
-        'orgPlanLimit'                  : require(__dirname + '/plugins/github/orgs/orgPlanLimit.js')
+        'orgPlanLimit'                  : require(__dirname + '/plugins/github/orgs/orgPlanLimit.js'),
+        'orgDefaultPermission'          : require(__dirname + '/plugins/github/orgs/orgDefaultPermission.js'),
+        'orgMfaRequired'                : require(__dirname + '/plugins/github/orgs/orgMfaRequired.js'),
+        'orgExcessiveOwners'            : require(__dirname + '/plugins/github/orgs/orgExcessiveOwners.js')
     },
     oracle: {
         'openSSH'                       : require(__dirname + '/plugins/oracle/core/openSSH.js'),
