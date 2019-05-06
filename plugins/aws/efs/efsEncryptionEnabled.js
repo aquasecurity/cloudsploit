@@ -24,29 +24,21 @@ module.exports = {
         var regions = helpers.regions(settings.govcloud);
 
         async.each(regions.efs, function (region, rcb) {
+            var describeFileSystems = helpers.addSource(cache, source,
+                ['efs', 'describeFileSystems', region]);
 
-            var describeFileSystems = helpers.addSource(cache, source, ['efs', 'describeFileSystems', region]);
+            if (!describeFileSystems) return rcb();
 
-            if (!describeFileSystems || describeFileSystems.err || !describeFileSystems.data) {
+            if (describeFileSystems.err || !describeFileSystems.data) {
                 helpers.addResult(
-                    results, 
-                    3,
-                    'Unable to query for EFS file systems: ' + helpers.addError(describeFileSystems), 
-                    region
-                );
-                rcb();
-                return;
+                    results, 3,
+                    'Unable to query for EFS file systems: ' + helpers.addError(describeFileSystems), region);
+                return rcb();
             }
 
             if(describeFileSystems.data.length === 0){
-                helpers.addResult(
-                    results, 
-                    0,
-                    'No EFS file systems present',
-                    region
-                );
-                rcb();
-                return;
+                helpers.addResult(results, 0, 'No EFS file systems present', region);
+                return rcb();
             }
 
             var unencryptedEFS = [];
@@ -61,12 +53,7 @@ module.exports = {
                 helpers.addResult(results, 2, 'More than 20 EFS systems are unencrypted', region);
             } else if (unencryptedEFS.length) {
                 for (u in unencryptedEFS) {
-                    helpers.addResult(
-                        results,
-                        2,
-                        'EFS: ' + unencryptedEFS[u] + ' is unencrypted',
-                        region
-                    );
+                    helpers.addResult(results, 2, 'EFS: ' + unencryptedEFS[u] + ' is unencrypted', region);
                 }
             } else {
                 helpers.addResult(results, 0, 'No unencrypted file systems found', region);
