@@ -49,7 +49,7 @@ module.exports = {
 				if (db.StorageEncrypted) {
 					helpers.addResult(results, 0, 'Encryption at rest is enabled', region, dbResource);
 				} else {
-					helpers.addResult(results, 1, 'Encryption at rest is not enabled', region, dbResource);
+					helpers.addResult(results, 2, 'Encryption at rest is not enabled', region, dbResource);
 				}
 			}
 			
