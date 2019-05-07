@@ -45,7 +45,7 @@ module.exports = {
 
             describeFileSystems.data.forEach(function(efs){
                 if (!efs.Encrypted){
-                    unencryptedEFS.push(efs.FileSystemId);
+                    unencryptedEFS.push(efs);
                 }
             });
 
@@ -53,7 +53,9 @@ module.exports = {
                 helpers.addResult(results, 2, 'More than 20 EFS systems are unencrypted', region);
             } else if (unencryptedEFS.length) {
                 for (u in unencryptedEFS) {
-                    helpers.addResult(results, 2, 'EFS: ' + unencryptedEFS[u] + ' is unencrypted', region);
+                    // ARN: arn:aws:elasticfilesystem:region:account-id:file-system/file-system-id
+                    var arn = 'arn:aws:elasticfilesystem:' + region + ':' + unencryptedEFS[u].OwnerId + ':file-system/' + unencryptedEFS[u].FileSystemId;
+                    helpers.addResult(results, 2, 'EFS: ' + unencryptedEFS[u].FileSystemId + ' is unencrypted', region, arn);
                 }
             } else {
                 helpers.addResult(results, 0, 'No unencrypted file systems found', region);
