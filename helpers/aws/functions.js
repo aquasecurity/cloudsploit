@@ -45,7 +45,7 @@ function waitForCredentialReport(iam, callback, CREDENTIAL_DOWNLOAD_STARTED) {
 			});
 		};
 
-		async.retry({times: 10, interval: 1000}, pingCredentialReport, function(reportErr, reportData){
+		async.retry({times: 20, interval: 1000}, pingCredentialReport, function(reportErr, reportData){
 			if (reportErr || !reportData) {
 				//CREDENTIAL_REPORT_ERROR = 'Error downloading report';
 				//return callback(CREDENTIAL_REPORT_ERROR);
