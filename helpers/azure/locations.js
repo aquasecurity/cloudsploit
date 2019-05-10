@@ -32,8 +32,7 @@ var locations = [
 	'australiacentral',
 	'australiacentral2',
 	'southafricanorth',
-	'southafricawest',
-	'global'
+	'southafricawest'
 ];
 
 module.exports = {
@@ -52,6 +51,5 @@ module.exports = {
 	vaults: locations,
 	KeyVaultClient: locations,
 	blobContainers: locations,
-	policyAssignments: locations,
-	webApps: locations
+	policyAssignments:locations.concat('global')
 };

@@ -1,20 +1,19 @@
 var regLocations = require('./locations.js');
 var govLocations = require('./locations_gov.js');
 
-var msRestAzure                 = require('ms-rest-azure');
+var msRestAzure = require('ms-rest-azure');
 // Azure Resource Management
-var ResourceManagementClient    = require('azure-arm-resource').ResourceManagementClient;
-var StorageManagementClient     = require('azure-arm-storage');
-var ComputeManagementClient     = require('azure-arm-compute');
-var MonitorManagementClient     = require('azure-arm-monitor');
-var KeyVaultMangementClient     = require('azure-arm-keyvault');
-var WebSiteManagementClient     = require('azure-arm-website');
+var ResourceManagementClient = require('azure-arm-resource').ResourceManagementClient;
+var StorageManagementClient = require('azure-arm-storage');
+var ComputeManagementClient = require('azure-arm-compute');
+var MonitorManagementClient = require('azure-arm-monitor');
+var KeyVaultMangementClient = require('azure-arm-keyvault');
 
 // Azure Service Modules
-var StorageServiceClient        = require('azure-storage');
-var KeyVaultClient              = require('azure-keyvault');
-var SQLManagementClient         = require('azure-arm-sql');
-var PolicyClient                = require('azure-arm-resource').PolicyClient;
+var StorageServiceClient = require('azure-storage');
+var KeyVaultClient = require('azure-keyvault');
+var SQLManagementClient = require('azure-arm-sql');
+var PolicyClient = require('azure-arm-resource').PolicyClient;
 
 
 // Api Mapping
@@ -25,13 +24,12 @@ var mapAzureApis = {
 	"ComputeManagementClient"  : ComputeManagementClient,
 	"MonitorManagementClient"  : MonitorManagementClient,
 	"KeyVaultClient"           : KeyVaultClient,
-	"KeyVaultMangementClient"  : KeyVaultMangementClient,
-	"SQLManagementClient"      : SQLManagementClient,
-	"PolicyClient"             : PolicyClient,
-	"WebSiteManagementClient"  : WebSiteManagementClient
+    "KeyVaultMangementClient"  : KeyVaultMangementClient,
+    "SQLManagementClient"      : SQLManagementClient,
+    "PolicyClient"             : PolicyClient,
 }
 
-const UNKNOWN_LOCATION = "unknown";
+const UNKNOWN_LOCATION = 'unknown';
 
 var locations = function(govcloud) {
 	if (govcloud) return govLocations;
@@ -73,12 +71,6 @@ class AzureExecutor {
 						var err=results;
 						callback(err, null);
 					} else if (results && results.error==false){
-						results.forEach((result) => {
-						  if (result.locations) {
-							result.location = result.locations[0];
-						  }
-						});
-
 						callback(null, results);
 					}
 				});
@@ -115,19 +107,6 @@ class AzureExecutor {
 			}, Promise.resolve());
 		}
 
-		function addProperties(result,service) {
-			if (result.id == undefined) result.id = service.id;
-			if (result.location == undefined) result.location = service.location;
-			
-			//Validate where this property is used
-			//Remove if not used  
-			if (result.storageAccount == undefined) {
-				result.storageAccount = {};
-				result.storageAccount.name = service.name;
-			}
-			return result;
-		}
-
 		function executeOne(service, context) {
 			return new Promise((resolve, reject) => {
 				process.nextTick(() => {
@@ -145,14 +124,11 @@ class AzureExecutor {
 						}
 
 						if (results && results.error==false) {
-							if (Array.isArray(results)) {
-								results.forEach((r) => {
-									addProperties(r,service)
-								});
-								context.aggregatedResults = context.aggregatedResults.concat(results);
-							} else {
-								context.aggregatedResults.push(addProperties(results,service));
-							}
+							results.id = service.id;
+							results.location = service.location;
+							results.storageAccount = {};
+							results.storageAccount.name = service.name;
+							context.aggregatedResults.push(results);
 						}
 						resolve();
 					});
@@ -173,14 +149,12 @@ class AzureExecutor {
 			} else {
 				serviceCollection[callObj.reliesOnService[0]] = self.collection[callObj.reliesOnService[0]][callObj.reliesOnCall[0]];
 			}
-
 			self.serviceCollection = serviceCollection;
 		}
 
 		function loadParameters() {
 			for (var serviceName in serviceCollection) {
 				var service = serviceCollection[serviceName];
-
 				for (var location in service) {
 					if (location==UNKNOWN_LOCATION) continue;
 					var workOnServicesAtLocation = service[location].data;
@@ -325,11 +299,6 @@ class ApiCall {
 								universalResolve(err, results, request, response);
 							});
 							break;
-						case 3:
-							self.client[self.AzureConfig.service][self.callKey](self.parameters[self.callObj.filterKey[0]], self.parameters[self.callObj.filterKey[1]], self.parameters[self.callObj.filterKey[2]], self.options, function(err, results, request, response) {
-								universalResolve(err, results, request, response);
-							});
-							break;
 					}
 				} else if (self.callObj.module && self.parameters) {
 					switch (self.callObj.filterKey.length) {
@@ -340,11 +309,6 @@ class ApiCall {
 							break;
 						case 2:
 							self.client[self.callKey](self.parameters[self.callObj.filterKey[0]], self.parameters[self.callObj.filterKey[1]], function(err, results, request, response) {
-								universalResolve(err, results, request, response);
-							});
-							break;
-						case 3:
-							self.client[self.callKey](self.parameters[self.callObj.filterKey[0]], self.parameters[self.callObj.filterKey[1]], self.parameters[self.callObj.filterKey[2]], function(err, results, request, response) {
 								universalResolve(err, results, request, response);
 							});
 							break;
