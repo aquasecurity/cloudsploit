@@ -126,7 +126,7 @@ var collect = function (GitHubConfig, settings, callback) {
 			if (!collection[service][callKey]) collection[service][callKey] = {};
 
 			var params = callObj.params || {};
-			if (callObj.inject_org) params.org = GitHubConfig.org;
+			if (callObj.inject_org) params.org = GitHubConfig.login;
 
 			var finish = function() {
 				if (callObj.rateLimit) {
