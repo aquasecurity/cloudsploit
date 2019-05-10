@@ -261,6 +261,9 @@ var calls = {
 		},
 		describeDBClusters: {
 			property: 'DBClusters'
+		},
+		describeDBEngineVersions: {
+			property: 'DBEngineVersions'
 		}
 	},
 	Redshift: {
