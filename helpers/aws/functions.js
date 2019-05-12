@@ -1,4 +1,5 @@
 var async = require('async');
+var regions = require(__dirname + '/regions');
 
 var ONE_DAY = 24*60*60*1000;
 
@@ -60,13 +61,25 @@ function waitForCredentialReport(iam, callback, CREDENTIAL_DOWNLOAD_STARTED) {
 }
 
 function addResult(results, status, message, region, resource, custom){
-	results.push({
-		status: status,
-		message: message,
-		region: region || 'global',
-		resource: resource || null,
-		custom: custom || false
-	});
+	// Override unknown results for regions that are opt-in
+	if (status == 3 && region && regions.optin.indexOf(region) > -1 && message &&
+		message.indexOf('The security token included in the request is invalid.')) {
+		results.push({
+			status: 0,
+			message: 'Region is not enabled',
+			region: region,
+			resource: resource || null,
+			custom: custom || false
+		});
+	} else {
+		results.push({
+			status: status,
+			message: message,
+			region: region || 'global',
+			resource: resource || null,
+			custom: custom || false
+		});
+	}
 }
 
 function addSource(cache, source, paths){
