@@ -228,6 +228,9 @@ var calls = {
 		listUsers: {
 			property: 'Users'
 		},
+		listRoles: {
+			property: 'Roles'
+		},
 		getAccountPasswordPolicy: {
 			property: 'PasswordPolicy'
 		},
@@ -357,6 +360,11 @@ var postcalls = [
 				reliesOnCall: 'describeTrails',
 				filterKey: 'Name',
 				filterValue: 'TrailARN'
+			},
+			listTags: {
+				reliesOnService: 'cloudtrail',
+				reliesOnCall: 'describeTrails',
+				override: true
 			}
 		},
 		DynamoDB: {
@@ -388,6 +396,11 @@ var postcalls = [
 				override: true
 			},
 			getBucketEncryption: {
+				deleteRegion: true,
+				signatureVersion: 'v4',
+				override: true
+			},
+			getBucketTagging: {
 				deleteRegion: true,
 				signatureVersion: 'v4',
 				override: true
@@ -510,6 +523,12 @@ var postcalls = [
 				reliesOnCall: 'listFunctions',
 				filterKey: 'FunctionName',
 				filterValue: 'FunctionName'
+			},
+			listTags: {
+				reliesOnService: 'lambda',
+				reliesOnCall: 'listFunctions',
+				filterKey: 'Resource',
+				filterValue: 'FunctionArn'
 			}
 		},
 		SageMaker: {
