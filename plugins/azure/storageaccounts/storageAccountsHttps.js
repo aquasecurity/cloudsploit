@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Storage accounts can contain sensitive information and should only be accessed over HTTPS. Enabling the HTTPS-only flag ensures that Azure does not allow HTTP traffic to storage accounts.',
     recommended_action: 'Enable the HTTPS-only option for all storage accounts.',
     link: 'https://docs.microsoft.com/en-us/azure/governance/policy/samples/ensure-https-storage-account',
-    apis: ['storageAccounts:list', 'storageAccounts:listKeys'],
+    apis: ['storageAccounts:list', 'storageAccounts:listKeys', 'resourceGroups:list'],
 
     run: function(cache, settings, callback) {
         var results = [];

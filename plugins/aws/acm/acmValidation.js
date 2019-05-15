@@ -41,7 +41,6 @@ module.exports = {
                 if (!describeCertificate || describeCertificate.err || !describeCertificate.data) {
                     helpers.addResult(results, 3,
                         'Unable to describe ACM certificate: ' + helpers.addError(describeCertificate), region, cert.CertificateArn);
-                    rcb();
                 } else if (!describeCertificate.data.Certificate ||
                            !describeCertificate.data.Certificate.DomainValidationOptions ||
                            !describeCertificate.data.Certificate.DomainValidationOptions.length) {

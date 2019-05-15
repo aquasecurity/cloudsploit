@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Tables can be configured to allow to read, write or delete objects. This option should not be configured unless there is a strong business requirement.',
     recommended_action: 'Disable global read/write/detele policies on all Tables and ensure the ACL is configured with least privileges.',
     link: 'https://docs.microsoft.com/en-us/azure/storage/tables/table-storage-quickstart-portal',
-    apis: ['resourceGroups:list', 'storageAccounts:list', 'storageAccounts:listKeys', 'TableService:listTablesSegmented','TableService:getTableAcl'],
+    apis: ['resourceGroups:list', 'storageAccounts:list', 'storageAccounts:listKeys', 'TableService:listTablesSegmented', 'TableService:getTableAcl'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -36,7 +36,7 @@ module.exports = {
                     var alertWrite = false;
                     var alertRead = false;
 
-                    if (table.signedIdentifiers) {
+                    if (table.signedIdentifiers && Object.keys(table.signedIdentifiers).length>0) {
                         for(ident in table.signedIdentifiers){
                             var permissions = table.signedIdentifiers[ident].Permissions;
                             for(i=0;i<=permissions.length;i++){

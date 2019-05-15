@@ -36,7 +36,7 @@ module.exports = {
                     var alertWrite = false;
                     var alertRead = false;
 
-                    if (fileShare.signedIdentifiers) {
+                    if (fileShare.signedIdentifiers && Object.keys(fileShare.signedIdentifiers).length>0) {
                         for(ident in fileShare.signedIdentifiers){
                             var permissions = fileShare.signedIdentifiers[ident].Permissions;
                             for(i=0;i<=permissions.length;i++){

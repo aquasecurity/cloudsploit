@@ -26,16 +26,20 @@
     "async": "^2.6.1",
     "aws-sdk": "^2.395.0",
     "azure-arm-compute": "^9.1.0",
-    "azure-arm-monitor": "^5.2.0",
+    "azure-arm-keyvault": "^1.2.0",
+    "azure-arm-monitor": "^5.4.0",
     "azure-arm-resource": "^7.3.0",
+    "azure-arm-sql": "^5.7.0",
     "azure-arm-storage": "^6.3.0",
+    "azure-keyvault": "^3.0.4",
     "azure-storage": "^2.10.2",
+    "fast-safe-stringify": "^2.0.6",
     "jssha": "^2.3.1",
     "csv-write-stream": "^2.0.0",
     "ms-rest-azure": "^2.5.9"
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^6.0.2"
+    "mocha": "^6.1.3"
   }
 }
