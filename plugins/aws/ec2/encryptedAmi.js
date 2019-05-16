@@ -4,10 +4,10 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
 	title: 'Encrypted AMI',
 	category: 'EC2',
-	description: 'Checks for encrypted root EBS volume for AMI',
-	more_info: 'Instances that are not based on encrypted EBS root volumes pose a security threat due to potential data snooping.',
+	description: 'Checks for encrypted EBS AMI volumes',
+	more_info: 'Instances that are contain unencrypted EBS volumes pose a security threat due to potential data snooping.',
 	link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-ebs.html',
-	recommended_action: 'Create an Amazon EC2 instance backed by encrypted EBS volume.',
+	recommended_action: 'Ensure all AMIs have encrypted EBS volumes.',
 	apis: ['EC2:describeImages'],
 	compliance: {
         hipaa: 'HIPAA data should not be stored on EC2 AMIs. However, if data is ' +

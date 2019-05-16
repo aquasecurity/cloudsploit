@@ -184,11 +184,13 @@ for (p in plugins) {
 			var plugin = getMapValue(serviceProviderPlugins, spp);
 			// Skip GitHub plugins that do not match the run type
 			if (sp == 'github' && serviceProviderConfig.org && !plugin.org) continue;
-			if (compliance.includes(spp, plugin)) {
-				for (pac in plugin.apis) {
-					if (serviceProviderAPICalls.indexOf(plugin.apis[pac]) === -1) {
-						serviceProviderAPICalls.push(plugin.apis[pac]);
-					}
+			
+			// Skip if our compliance set says don't run the rule
+			if (!compliance.includes(spp, plugin)) continue;
+
+			for (pac in plugin.apis) {
+				if (serviceProviderAPICalls.indexOf(plugin.apis[pac]) === -1) {
+					serviceProviderAPICalls.push(plugin.apis[pac]);
 				}
 			}
 		}
@@ -254,6 +256,7 @@ async.map(serviceProviders, function (serviceProviderObj, serviceProviderDone) {
 	});
 }, function (err, results) {
 	// console.log(JSON.stringify(collection, null, 2));
+	outputHandler.close()
 	if (useStatusExitCode) {
 		process.exitCode = Math.max(results)
 	}

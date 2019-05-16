@@ -10,14 +10,14 @@
  - api_calls: (Optional) If provided, will only query these APIs.
  - Example:
  {
-     "skip_locations": ["East US", "West US"],
+     "skip_locations": ["eastus", "westus"],
      "api_calls": ["storageAccounts:list", "resourceGroups:list"]
  }
  - callback: Function to call when the collection is complete
  *********************/
 
 var async = require('async');
-var util = require('util');
+var jsonsafe = require('fast-safe-stringify');
 
 var helpers = require(__dirname + '/../../helpers/azure');
 var collectors = require(__dirname + '/../../collectors/azure');
@@ -36,7 +36,8 @@ var calls = {
     storageAccounts: {
         list: {
             api: "StorageManagementClient",
-            arm: true
+            arm: true,
+            module: false
         }
     },
     virtualMachines: {
@@ -51,508 +52,304 @@ var calls = {
             arm: true
         }
     },
+    vaults: {
+        list: {
+            api: "KeyVaultMangementClient",
+            arm: true,
+            module: true
+        }
+    },
     resources: {
         list: {
             api: "ResourceManagementClient",
             arm: true
         }
+    },
+    policyAssignments: {
+        list: {
+            api: "PolicyClient",
+            arm: true
+        }
     }
 };
 
-var postcalls = [
-    {
-        storageAccounts: {
-            listKeys: {
-                api: "StorageManagementClient",
-                reliesOnService: ['resourceGroups', 'storageAccounts'],
-                reliesOnCall: ['list', 'list'],
-                filterKey: ['name', 'name'],
-                filterValue: ['name', 'name'],
-                arm: true
-            },
+var postcalls = {
+    storageAccounts: {
+        listKeys: {
+            api: "StorageManagementClient",
+            reliesOnService: ['resourceGroups', 'storageAccounts'],
+            reliesOnCall: ['list', 'list'],
+            filterKey: ['resourceGroupName', 'name'],
+            filterValue: ['resourceGroupName', 'name'],
+            arm: true,
+            module: false
         },
-        virtualMachineExtensions: {
-            list: {
-                api: "ComputeManagementClient",
-                reliesOnService: ['resourceGroups', 'virtualMachines'],
-                reliesOnCall: ['list', 'listAll'],
-                filterKey: ['name', 'name'],
-                filterValue: ['name', 'name'],
-                arm: true
-            }
-        },
-        activityLogAlerts: {
-            listByResourceGroup: {
-                api: "MonitorManagementClient",
-                reliesOnService: ['resourceGroups'],
-                reliesOnCall: ['list'],
-                filterKey: ['name'],
-                filterValue: ['name'],
-                arm: true
-        	}
-        },
-    }
-];
-
-var finalcalls = [
-    {
-        BlobService: {
-            listContainersSegmented: {
-                api: "StorageServiceClient",
-                reliesOnService: ['storageAccounts','storageAccounts'],
-                reliesOnCall: ['list','listKeys'],
-                filterKey: ['name','keys'],
-                filterValue: ['name','value'],
-                arm: false
-            }
-        },
-        FileService: {
-            listSharesSegmented: {
-                api: "StorageServiceClient",
-                reliesOnService: ['storageAccounts','storageAccounts'],
-                reliesOnCall: ['list','listKeys'],
-                filterKey: ['name','keys'],
-                filterValue: ['name','value'],
-                arm: false
-            }
-        },
-        TableService: {
-            listTablesSegmented: {
-                api: "StorageServiceClient",
-                reliesOnService: ['storageAccounts','storageAccounts'],
-                reliesOnCall: ['list','listKeys'],
-                filterKey: ['name','keys'],
-                filterValue: ['name','value'],
-                arm: false
-            }
-        },
-        QueueService: {
-            listQueuesSegmented: {
-                api: "StorageServiceClient",
-                reliesOnService: ['storageAccounts','storageAccounts'],
-                reliesOnCall: ['list','listKeys'],
-                filterKey: ['name','keys'],
-                filterValue: ['name','value'],
-                arm: false
-            }
-        },
-    }
-];
-
-var postfinalcalls = [
-    {
-        FileService: {
-            getShareAcl: {
-                api: "StorageServiceClient",
-                reliesOnService: ['storageAccounts','storageAccounts','FileService'],
-                reliesOnCall: ['list','listKeys','listSharesSegmented'],
-                filterKey: ['name','keys','name'],
-                filterValue: ['name','value','name'],
-                arm: false
-            }
-        },
-        TableService: {
-            getTableAcl: {
-                api: "StorageServiceClient",
-                reliesOnService: ['storageAccounts','storageAccounts','TableService'],
-                reliesOnCall: ['list','listKeys','listTablesSegmented'],
-                filterKey: ['name','keys','table'],
-                filterValue: ['name','value','name'],
-                arm: false
-            }
-        },
-        QueueService: {
-            getQueueAcl: {
-                api: "StorageServiceClient",
-                reliesOnService: ['storageAccounts','storageAccounts','QueueService'],
-                reliesOnCall: ['list','listKeys','listQueuesSegmented'],
-                filterKey: ['name','keys','name'],
-                filterValue: ['name','value','name'],
-                arm: false
-            }
+    },
+    virtualMachineExtensions: {
+        list: {
+            api: "ComputeManagementClient",
+            reliesOnService: ['resourceGroups', 'virtualMachines'],
+            reliesOnCall: ['list', 'listAll'],
+            filterKey: ['resourceGroupName', 'name'],
+            filterValue: ['resourceGroupName', 'name'],
+            arm: true
+        }
+    },
+    activityLogAlerts: {
+        listByResourceGroup: {
+            api: "MonitorManagementClient",
+            reliesOnService: ['resourceGroups'],
+            reliesOnCall: ['list'],
+            filterKey: ['resourceGroupName'],
+            filterValue: ['resourceGroupName'],
+            arm: true,
+            module: false
+        }
+    },
+    vaults: {
+        listByResourceGroup: {
+            api: "KeyVaultMangementClient",
+            reliesOnService: ['resourceGroups'],
+            reliesOnCall: ['list'],
+            filterKey: ['resourceGroupName'],
+            filterValue: ['resourceGroupName'],
+            arm: true
+        }
+    },
+    blobContainers: {
+        list: {
+            api: "StorageManagementClient",
+            reliesOnService: ['resourceGroups', 'storageAccounts'],
+            reliesOnCall: ['list', 'list'],
+            filterKey: ['resourceGroupName', 'name'],
+            filterValue: ['resourceGroupName', 'name'],
+            arm: true
         }
     }
-];
+};
+
+var finalcalls = {
+    BlobService: {
+        listContainersSegmented: {
+            api: "StorageServiceClient",
+            reliesOnService: ['storageAccounts', 'storageAccounts'],
+            reliesOnCall: ['list', 'listKeys'],
+            filterKey: ['name', 'keys'],
+            filterValue: ['name', 'value'],
+            filterListKeys: [false, true],
+            arm: false,
+            module: true
+        }
+    },
+    FileService: {
+        listSharesSegmented: {
+            api: "StorageServiceClient",
+            reliesOnService: ['storageAccounts', 'storageAccounts'],
+            reliesOnCall: ['list', 'listKeys'],
+            filterKey: ['name', 'keys'],
+            filterValue: ['name', 'value'],
+            filterListKeys: [false, true],
+            arm: false,
+            module: true
+        }
+    },
+    TableService: {
+        listTablesSegmented: {
+            api: "StorageServiceClient",
+            reliesOnService: ['storageAccounts', 'storageAccounts'],
+            reliesOnCall: ['list', 'listKeys'],
+            filterKey: ['name', 'keys'],
+            filterValue: ['name', 'value'],
+            filterListKeys: [false, true],
+            arm: false,
+            module: true
+        }
+    },
+    QueueService: {
+        listQueuesSegmented: {
+            api: "StorageServiceClient",
+            reliesOnService: ['storageAccounts', 'storageAccounts'],
+            reliesOnCall: ['list', 'listKeys'],
+            filterKey: ['name', 'keys'],
+            filterValue: ['name', 'value'],
+            filterListKeys: [false, true],
+            arm: false,
+            module: true
+        }
+    },
+    KeyVaultClient: {
+        getSecrets: {
+            api: "KeyVaultClient",
+            reliesOnService: ['vaults'],
+            reliesOnCall: ['listByResourceGroup'],
+            filterKey: ['properties'],
+            filterValue: ['[0.{properties/vaultUri'],
+            arm: false,
+            module: true
+        }
+    }
+};
+
+var postfinalcalls = {
+    FileService: {
+        getShareAcl: {
+            api: "StorageServiceClient",
+            reliesOnService: ['storageAccounts', 'storageAccounts', 'FileService'],
+            reliesOnCall: ['list', 'listKeys', 'listSharesSegmented'],
+            filterKey: ['name', 'keys', 'name'],
+            filterValue: ['name', 'value', 'name'],
+            entryKey: ['', '', 'fileName'],
+            filterListKeys: [false, true, false],
+            arm: false,
+            module: true
+        }
+    },
+    TableService: {
+        getTableAcl: {
+            api: "StorageServiceClient",
+            reliesOnService: ['storageAccounts', 'storageAccounts', 'TableService'],
+            reliesOnCall: ['list', 'listKeys', 'listTablesSegmented'],
+            filterKey: ['name', 'keys', 'table'],
+            filterValue: ['name', 'value', 'name'],
+            entryKey: ['', '', 'tableName'],
+            filterListKeys: [false, true, false],
+            arm: false,
+            module: true
+        }
+    },
+    QueueService: {
+        getQueueAcl: {
+            api: "StorageServiceClient",
+            reliesOnService: ['storageAccounts', 'storageAccounts', 'QueueService'],
+            reliesOnCall: ['list', 'listKeys', 'listQueuesSegmented'],
+            filterKey: ['name', 'keys', 'name'],
+            filterValue: ['name', 'value', 'name'],
+            entryKey: ['', '', 'queueName'],
+            filterListKeys: [false, true, false],
+            arm: false,
+            module: true
+        }
+    }
+};
 
 var collection = {};
+
+// Loop through all of the top-level collectors for each service
+
+var processCall = function (AzureConfig, settings, locations, call, service, serviceCb) {
+    // Loop through each of the service's functions
+    async.eachOfLimit(call, 10, function (callObj, callKey, callCb) {
+        if (!collection[service][callKey]) collection[service][callKey] = {};
+
+        callObj.collection = collection;
+
+        var LocalAzureConfig = JSON.parse(JSON.stringify(AzureConfig));
+        LocalAzureConfig.service = service;
+
+        var executor = new helpers.AzureExecutor(LocalAzureConfig);
+        executor.run(collection, service, callObj, callKey, function (err, data) {
+            if ((err && err.length==undefined)==true || (err && err.length!==undefined && err.length>0)==true){
+                collection[service][callKey].err = err;
+            }
+
+            if (!data){
+                return callCb();
+            }
+
+            var locations = helpers.locations(false)[service];
+
+            for (l in locations){
+                if (!collection[service][callKey][locations[l]]) {
+                    collection[service][callKey][locations[l]] = {data:[]};
+                }
+            }
+
+            var locationsInArray = [];
+            for (var d=0; d<data.length; d++) {
+                if (data[d].location){
+	                var locationExists = locationsInArray.filter(loc => loc == data[d].location);
+	                var locationIsValid = locations.filter(loc => loc == data[d].location);
+	                if (locationExists && locationExists.length == 0 &&
+	                    locationIsValid && locationIsValid.length > 0) {
+	                    locationsInArray.push(data[d].location);
+	                }
+				} else {
+                    data[d].location = "global";
+                    locationsInArray.push(data[d].location);
+                }
+            }
+
+            if (locationsInArray && locationsInArray.length>0){
+                for (locationSelected in locationsInArray) {
+                    var dataToPush = data.filter((d) => {
+                        return d.location == locationsInArray[locationSelected];
+                    });
+                    collection[service][callKey][locationsInArray[locationSelected]].data = dataToPush;
+                }
+            } else {
+                if (data.length>0){
+                    collection[service][callKey]['unknown'] = {};
+                    collection[service][callKey]['unknown'].data = data;
+                }
+            }
+
+            callCb();
+        });
+    }, function () {
+        serviceCb();
+    });
+};
 
 // Loop through all of the top-level collectors for each service
 var collect = function (AzureConfig, settings, callback) {
     AzureConfig.maxRetries = 5;
     AzureConfig.retryDelayOptions = {base: 300};
-
+    var settings = settings;
     var locations = helpers.locations(settings.govcloud);
-    
-    async.eachOfLimit(calls, 10, function (call, service, serviceCb) {
-        var azureService = service;
-        if (!collection[azureService]) collection[azureService] = {};
 
-        // Loop through each of the service's functions
-        async.eachOfLimit(call, 10, function (callObj, callKey, callCb) {
-            if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
-            if (!collection[azureService][callKey]) collection[azureService][callKey] = {};
+    async.eachOfLimit(calls, 10, function (call, service, serviceCbcall) {
+        var service = service;
+        if (settings.api_calls && settings.api_calls.indexOf(service + ':' + Object.keys(call)[0]) === -1) return serviceCbcall();
+        if (!collection[service]) collection[service] = {};
 
-            async.eachLimit(locations[azureService], helpers.MAX_LOCATIONS_AT_A_TIME, function (location, locationCb) {
-                if (settings.skip_locations &&
-                    settings.skip_locations.indexOf(location) > -1 &&
-                    globalServices.indexOf(service) === -1) return locationCb();
-                if (!collection[azureService][callKey][location]) collection[azureService][callKey][location] = {};
-
-                var LocalAzureConfig = JSON.parse(JSON.stringify(AzureConfig));
-                LocalAzureConfig.location = location;
-                LocalAzureConfig.service = service;
-
-                if (callObj.override) {
-                    collectors[azureService][callKey](LocalAWSConfig, collection, function () {
-                        if (callObj.rateLimit) {
-                            setTimeout(function () {
-                                locationCb();
-                            }, callObj.rateLimit);
-                        } else {
-                            locationCb();
-                        }
-                    });
-                } else {
-                    var executor = new helpers.AzureExecutor(LocalAzureConfig);
-                    executor.runarm(collection, callObj, callKey, function(err, data){
-                        if (err) {
-                            collection[azureService][callKey][location].err = err;
-                        }
-
-                        if (!data) return locationCb();
-
-                        collection[azureService][callKey][location].data = data;
-
-                        if (callObj.rateLimit) {
-                            setTimeout(function(){
-                                locationCb();
-                            }, callObj.rateLimit);
-                        } else {
-                            locationCb();
-                        }
-                    });
-                }
-            }, function () {
-                callCb();
-            });
-        }, function () {
-            serviceCb();
+        processCall(AzureConfig, settings, locations, call, service, function () {
+            serviceCbcall();
         });
     }, function () {
         // Now loop through the follow up calls
-        async.eachSeries(postcalls, function (postcallObj, postcallCb) {
-            async.eachOfLimit(postcallObj, 10, function (serviceObj, service, serviceCb) {
-                var azureService = service;
-                if (!collection[azureService]) collection[azureService] = {};
+        async.eachOfLimit(postcalls, 10, function (postCall, service, serviceCbpostCall) {
+            var service = service;
+            if (settings.api_calls && settings.api_calls.indexOf(service + ':' + Object.keys(postCall)[0]) === -1) return serviceCbpostCall();
+            if (!collection[service]) collection[service] = {};
 
-                async.eachOfLimit(serviceObj, 1, function (callObj, callKey, callCb) {
-                    if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
-                    if (!collection[azureService][callKey]) collection[azureService][callKey] = {};
-
-                    async.eachLimit(locations[azureService], helpers.MAX_LOCATIONS_AT_A_TIME, function (location, locationCb) {
-                        if (settings.skip_locations &&
-                            settings.skip_locations.indexOf(location) > -1 &&
-                            globalServices.indexOf(service) === -1) return locationCb();
-                        if (!collection[azureService][callKey][location]) collection[azureService][callKey][location] = {};
-
-                        if (callObj.reliesOnService.length) {
-                            // Ensure multiple pre-requisites are met
-                            for (reliedService in callObj.reliesOnService){
-                                if (callObj.reliesOnService[reliedService] && !collection[callObj.reliesOnService[reliedService]]) return locationCb();
-
-                                if (callObj.reliesOnService[reliedService] &&
-                                    (!collection[callObj.reliesOnService[reliedService]] ||
-                                    !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]] ||
-                                    !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][location] ||
-                                    !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][location].data ||
-                                    !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][location].data.length)) return locationCb();
-                                    
-                            }
-                        } else {
-                            // Ensure pre-requisites are met
-                            if (callObj.reliesOnService && !collection[callObj.reliesOnService]) return locationCb();
-
-                            if (callObj.reliesOnCall &&
-                                (!collection[callObj.reliesOnService] ||
-                                !collection[callObj.reliesOnService][callObj.reliesOnCall] ||
-                                !collection[callObj.reliesOnService][callObj.reliesOnCall][location] ||
-                                !collection[callObj.reliesOnService][callObj.reliesOnCall][location].data ||
-                                !collection[callObj.reliesOnService][callObj.reliesOnCall][location].data.length)) return locationCb();
-                        }
-
-                        var LocalAzureConfig = JSON.parse(JSON.stringify(AzureConfig));
-                        LocalAzureConfig.location = location;
-                        LocalAzureConfig.service = service;
-
-                        if (callObj.deletelocation) {
-                            //delete LocalAWSConfig.location;
-                            LocalAzureConfig.location = settings.govcloud ? 'us-gov-west-1' : 'us-east-1';
-                        } else {
-                            LocalAzureConfig.location = location;
-                        }
-                        if (callObj.signatureVersion) LocalAzureConfig.signatureVersion = callObj.signatureVersion;
-
-                        if (callObj.override) {
-                            collectors[azureService][callKey](LocalAzureConfig, collection, function () {
-                                if (callObj.rateLimit) {
-                                    setTimeout(function () {
-                                        locationCb();
-                                    }, callObj.rateLimit);
-                                } else {
-                                    locationCb();
-                                }
-                            });
-                        } else {
-                            var executor = new helpers.AzureExecutor(LocalAzureConfig);
-                            executor.runarm(collection, callObj, callKey, function(err, data){
-                                if (err) {
-                                    collection[azureService][callKey][location].err = err;
-                                }
-
-                                if (!data) return locationCb();
-
-                                collection[azureService][callKey][location].data = data;
-
-                                if (callObj.rateLimit) {
-                                    setTimeout(function(){
-                                        locationCb();
-                                    }, callObj.rateLimit);
-                                } else {
-                                    locationCb();
-                                }
-                            });
-                        }
-                    }, function () {
-                        callCb();
-                    });
-                }, function () {
-                    serviceCb();
-                });
-            }, function () {
-                postcallCb();
+            processCall(AzureConfig, settings, locations, postCall, service, function () {
+                serviceCbpostCall();
             });
         }, function () {
-            // Now loop through the final calls
-            async.eachSeries(finalcalls, function (finalcallObj, finalcallCb) {
-                async.eachOfLimit(finalcallObj, 10, function (serviceObj, service, serviceCb) {
-                    var azureService = service;
-                    if (!collection[azureService]) collection[azureService] = {};
+            // Now loop through the follow up calls
+            async.eachOfLimit(finalcalls, 10, function (finalCall, service, serviceCbfinalCall) {
+                var service = service;
+                if (settings.api_calls && settings.api_calls.indexOf(service + ':' + Object.keys(finalCall)[0]) === -1) return serviceCbfinalCall();
+                if (!collection[service]) collection[service] = {};
 
-                    async.eachOfLimit(serviceObj, 1, function (callObj, callKey, callCb) {
-                        if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
-                        if (!collection[azureService][callKey]) collection[azureService][callKey] = {};
-
-                        async.eachLimit(locations[azureService], helpers.MAX_LOCATIONS_AT_A_TIME, function (location, locationCb) {
-                            if (settings.skip_locations &&
-                                settings.skip_locations.indexOf(location) > -1 &&
-                                globalServices.indexOf(service) === -1) return locationCb();
-                            if (!collection[azureService][callKey][location]) collection[azureService][callKey][location] = {};
-
-                            if (callObj.reliesOnService.length) {
-                                // Ensure multiple pre-requisites are met
-                                for (reliedService in callObj.reliesOnService){
-                                    if (callObj.reliesOnService[reliedService] && !collection[callObj.reliesOnService[reliedService]]) return locationCb();
-
-                                    if (callObj.reliesOnCall[reliedService] &&
-                                        (!collection[callObj.reliesOnService[reliedService]] ||
-                                            !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]] ||
-                                            !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][location] ||
-                                            !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][location].data )) return locationCb();
-                                }
-                            } else {
-                                // Ensure pre-requisites are met
-                                if (callObj.reliesOnService && !collection[callObj.reliesOnService]) return locationCb();
-
-                                if (callObj.reliesOnCall &&
-                                    (!collection[callObj.reliesOnService] ||
-                                        !collection[callObj.reliesOnService][callObj.reliesOnCall] ||
-                                        !collection[callObj.reliesOnService][callObj.reliesOnCall][location] ||
-                                        !collection[callObj.reliesOnService][callObj.reliesOnCall][location].data )) return locationCb();
-                            }
-
-                            var LocalAzureConfig = JSON.parse(JSON.stringify(AzureConfig));
-                            LocalAzureConfig.location = location;
-                            LocalAzureConfig.service = service;
-
-                            if (callObj.deletelocation) {
-                                //delete LocalAWSConfig.location;
-                                LocalAzureConfig.location = settings.govcloud ? 'us-gov-west-1' : 'us-east-1';
-                            } else {
-                                LocalAzureConfig.location = location;
-                            }
-                            if (callObj.signatureVersion) LocalAzureConfig.signatureVersion = callObj.signatureVersion;
-
-                            if (callObj.override) {
-                                collectors[azureService][callKey](LocalAzureConfig, collection, function () {
-                                    if (callObj.rateLimit) {
-                                        setTimeout(function () {
-                                            locationCb();
-                                        }, callObj.rateLimit);
-                                    } else {
-                                        locationCb();
-                                    }
-                                });
-                            } else {
-                                var executor = new helpers.AzureExecutor(LocalAzureConfig);
-                                if (callObj.arm){
-                                    executor.runarm(collection, callObj, callKey, function(err, data){
-                                        if (err) {
-                                            collection[azureService][callKey][location].err = err;
-                                        }
-
-                                        if (!data) return locationCb();
-
-                                        collection[azureService][callKey][location].data = data;
-
-                                        if (callObj.rateLimit) {
-                                            setTimeout(function(){
-                                                locationCb();
-                                            }, callObj.rateLimit);
-                                        } else {
-                                            locationCb();
-                                        }
-                                    });
-                                } else {
-                                    executor.runasm(collection, callObj, callKey, function(err, data){
-                                        if (err) {
-                                            collection[azureService][callKey][location].err = err;
-                                        }
-
-                                        if (!data) return locationCb();
-
-                                        collection[azureService][callKey][location].data = data;
-
-                                        if (callObj.rateLimit) {
-                                            setTimeout(function(){
-                                                locationCb();
-                                            }, callObj.rateLimit);
-                                        } else {
-                                            locationCb();
-                                        }
-                                    });
-                                }
-                            }
-                        }, function () {
-                            callCb();
-                        });
-                    }, function () {
-                        serviceCb();
-                    });
-                }, function () {
-                    finalcallCb();
+                processCall(AzureConfig, settings, locations, finalCall, service, function () {
+                    serviceCbfinalCall();
                 });
+
             }, function () {
-                // Now loop through the postfinal calls
-                async.eachSeries(postfinalcalls, function (postfinalcallObj, postfinalcallCb) {
-                    async.eachOfLimit(postfinalcallObj, 10, function (serviceObj, service, serviceCb) {
-                        var azureService = service;
-                        if (!collection[azureService]) collection[azureService] = {};
+                // Now loop through the follow up calls
+                async.eachOfLimit(postfinalcalls, 10, function (postFinalCall, service, serviceCbpostFinalCall) {
+                    var service = service;
+                    if (settings.api_calls && settings.api_calls.indexOf(service + ':' + Object.keys(postFinalCall)[0]) === -1) return serviceCbpostFinalCall();
+                    if (!collection[service]) collection[service] = {};
 
-                        async.eachOfLimit(serviceObj, 1, function (callObj, callKey, callCb) {
-                            if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
-                            if (!collection[azureService][callKey]) collection[azureService][callKey] = {};
-
-                            async.eachLimit(locations[azureService], helpers.MAX_LOCATIONS_AT_A_TIME, function (location, locationCb) {
-                                if (settings.skip_locations &&
-                                    settings.skip_locations.indexOf(location) > -1 &&
-                                    globalServices.indexOf(service) === -1) return locationCb();
-                                if (!collection[azureService][callKey][location]) collection[azureService][callKey][location] = {};
-
-                                if (callObj.reliesOnService.length) {
-                                    // Ensure multiple pre-requisites are met
-                                    for (reliedService in callObj.reliesOnService){
-                                        if (callObj.reliesOnService[reliedService] && !collection[callObj.reliesOnService[reliedService]]) return locationCb();
-
-                                        if (callObj.reliesOnCall[reliedService] &&
-                                            (!collection[callObj.reliesOnService[reliedService]] ||
-                                                !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]] ||
-                                                !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][location] ||
-                                                !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][location].data )) return locationCb();
-                                    }
-                                } else {
-                                    // Ensure pre-requisites are met
-                                    if (callObj.reliesOnService && !collection[callObj.reliesOnService]) return locationCb();
-
-                                    if (callObj.reliesOnCall &&
-                                        (!collection[callObj.reliesOnService] ||
-                                            !collection[callObj.reliesOnService][callObj.reliesOnCall] ||
-                                            !collection[callObj.reliesOnService][callObj.reliesOnCall][location] ||
-                                            !collection[callObj.reliesOnService][callObj.reliesOnCall][location].data )) return locationCb();
-                                }
-
-                                var LocalAzureConfig = JSON.parse(JSON.stringify(AzureConfig));
-                                LocalAzureConfig.location = location;
-                                LocalAzureConfig.service = service;
-
-                                if (callObj.deletelocation) {
-                                    //delete LocalAWSConfig.location;
-                                    LocalAzureConfig.location = settings.govcloud ? 'us-gov-west-1' : 'us-east-1';
-                                } else {
-                                    LocalAzureConfig.location = location;
-                                }
-                                if (callObj.signatureVersion) LocalAzureConfig.signatureVersion = callObj.signatureVersion;
-
-                                if (callObj.override) {
-                                    collectors[azureService][callKey](LocalAzureConfig, collection, function () {
-                                        if (callObj.rateLimit) {
-                                            setTimeout(function () {
-                                                locationCb();
-                                            }, callObj.rateLimit);
-                                        } else {
-                                            locationCb();
-                                        }
-                                    });
-                                } else {
-                                    var executor = new helpers.AzureExecutor(LocalAzureConfig);
-                                    if (callObj.arm){
-                                        executor.runarm(collection, callObj, callKey, function(err, data){
-                                            if (err) {
-                                                collection[azureService][callKey][location].err = err;
-                                            }
-
-                                            if (!data) return locationCb();
-
-                                            collection[azureService][callKey][location].data = data;
-
-                                            if (callObj.rateLimit) {
-                                                setTimeout(function(){
-                                                    locationCb();
-                                                }, callObj.rateLimit);
-                                            } else {
-                                                locationCb();
-                                            }
-                                        });
-                                    } else {
-                                        executor.runasm(collection, callObj, callKey, function(err, data){
-                                            if (err) {
-                                                collection[azureService][callKey][location].err = err;
-                                            }
-
-                                            if (!data) return locationCb();
-
-                                            collection[azureService][callKey][location].data = data;
-
-                                            if (callObj.rateLimit) {
-                                                setTimeout(function(){
-                                                    locationCb();
-                                                }, callObj.rateLimit);
-                                            } else {
-                                                locationCb();
-                                            }
-                                        });
-                                    }
-                                }
-                            }, function () {
-                                callCb();
-                            });
-                        }, function () {
-                            serviceCb();
-                        });
-                    }, function () {
-                        postfinalcallCb();
+                    processCall(AzureConfig, settings, locations, postFinalCall, service, function () {
+                        serviceCbpostFinalCall();
                     });
+
                 }, function () {
                     //console.log(JSON.stringify(collection, null, 2));
+                    collection = JSON.parse(jsonsafe(collection));
                     callback(null, collection);
                 });
             }, function () {
@@ -563,7 +360,11 @@ var collect = function (AzureConfig, settings, callback) {
             //console.log(JSON.stringify(collection, null, 2));
             callback(null, collection);
         });
+    }, function () {
+        //console.log(JSON.stringify(collection, null, 2));
+        callback(null, collection);
     });
+
 };
 
 module.exports = collect;

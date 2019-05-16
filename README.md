@@ -1,5 +1,7 @@
 [![CloudSploit](https://cloudsploit.com/img/logo-big-text-100.png "CloudSploit")](https://cloudsploit.com)
 
+[![Build Status](https://travis-ci.org/cloudsploit/scans.svg?branch=master)](https://travis-ci.org/cloudsploit/scans)
+
 CloudSploit Scans
 =================
 
@@ -135,6 +137,26 @@ HIPAA scans map CloudSploit plugins to the Health Insurance Portability and Acco
 ### PCI
 
 PCI scans map CloudSploit plugins to the Payment Card Industry Data Security Standard.
+
+## Output Formats
+
+CloudSploit supports output in several formats for consumption by other tools.
+If you do not specify otherwise, CloudSploit writes output to standard output
+(the console). You can specify one or more output formats as follows:
+
+```
+# Output results in CSV (suppressing the console output)
+node index.js --csv=./out.csv
+
+# Output results in JUnit XML (suppressing the console output)
+node index.js --junit=./out.xml
+
+# Output results only to the console (default if omitted)
+node index.js --console
+
+# Output results in all supported formats
+node index.js --console --junit=./out.xml --csv=./out.csv
+```
 
 ## Architecture
 

@@ -33,6 +33,9 @@ module.exports = {
         'openCIFS'                      : require(__dirname + '/plugins/aws/ec2/openCIFS.js'),
         'openDNS'                       : require(__dirname + '/plugins/aws/ec2/openDNS.js'),
         'openFTP'                       : require(__dirname + '/plugins/aws/ec2/openFTP.js'),
+        'openHadoopNameNode'            : require(__dirname + '/plugins/aws/ec2/openHadoopNameNode.js'),
+        'openHadoopNameNodeWebUI'       : require(__dirname + '/plugins/aws/ec2/openHadoopNameNodeWebUI.js'),
+        'openKibana'                    : require(__dirname + '/plugins/aws/ec2/openKibana.js'),
         'openMySQL'                     : require(__dirname + '/plugins/aws/ec2/openMySQL.js'),
         'openOracle'                    : require(__dirname + '/plugins/aws/ec2/openOracle.js'),
         'openNetBIOS'                   : require(__dirname + '/plugins/aws/ec2/openNetBIOS.js'),
@@ -60,6 +63,8 @@ module.exports = {
         'defaultVpcInUse'               : require(__dirname + '/plugins/aws/ec2/defaultVpcInUse.js'),
         'crossVpcPublicPrivate'         : require(__dirname + '/plugins/aws/ec2/crossVpcPublicPrivate.js'),
         'ebsEncryptedSnapshots'         : require(__dirname + '/plugins/aws/ec2/ebsEncryptedSnapshots.js'),
+
+        'efsEncryptionEnabled'          : require(__dirname + '/plugins/aws/efs/efsEncryptionEnabled.js'),
 
         'insecureCiphers'               : require(__dirname + '/plugins/aws/elb/insecureCiphers.js'),
         'elbHttpsOnly'                  : require(__dirname + '/plugins/aws/elb/elbHttpsOnly.js'),
@@ -97,6 +102,7 @@ module.exports = {
 
         'rdsAutomatedBackups'           : require(__dirname + '/plugins/aws/rds/rdsAutomatedBackups.js'),
         'rdsEncryptionEnabled'          : require(__dirname + '/plugins/aws/rds/rdsEncryptionEnabled.js'),
+        'rdsLoggingEnabled'             : require(__dirname + '/plugins/aws/rds/rdsLoggingEnabled.js'),
         'rdsPubliclyAccessible'         : require(__dirname + '/plugins/aws/rds/rdsPubliclyAccessible.js'),
         'rdsRestorable'                 : require(__dirname + '/plugins/aws/rds/rdsRestorable.js'),
         'rdsMultiAz'                    : require(__dirname + '/plugins/aws/rds/rdsMultiAz.js'),
@@ -123,6 +129,7 @@ module.exports = {
 
         'lambdaOldRuntimes'             : require(__dirname + '/plugins/aws/lambda/lambdaOldRuntimes.js'),
         'lambdaVpcConfig'               : require(__dirname + '/plugins/aws/lambda/lambdaVpcConfig.js'),
+        'lambdaPublicAccess'            : require(__dirname + '/plugins/aws/lambda/lambdaPublicAccess.js'),
 
         'monitoringMetrics'             : require(__dirname + '/plugins/aws/cloudwatchlogs/monitoringMetrics.js'),
 
@@ -145,14 +152,18 @@ module.exports = {
         'vmEndpointProtection'          : require(__dirname + '/plugins/azure/virtualmachines/vmEndpointProtection.js'),
         'vmAutoUpdateEnabled'           : require(__dirname + '/plugins/azure/virtualmachines/vmAutoUpdateEnabled.js'),
         'sqlServerFirewallRuleEnabled'  : require(__dirname + '/plugins/azure/logalerts/sqlServerFirewallRuleEnabled.js'),
-        'virtualNetworkRuleEnabled'     : require(__dirname + '/plugins/azure/logalerts/virtualNetworkRuleEnabled.js')
+        'virtualNetworkRuleEnabled'     : require(__dirname + '/plugins/azure/logalerts/virtualNetworkRuleEnabled.js'),
+        'monitorDiskEncryption'         : require(__dirname + '/plugins/azure/securitycenter/monitorDiskEncryption.js')
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
         'gpgKeysRotated'                : require(__dirname + '/plugins/github/users/gpgKeysRotated.js'),
         'userMfaEnabled'                : require(__dirname + '/plugins/github/users/userMfaEnabled.js'),
         'userPrivateEmails'             : require(__dirname + '/plugins/github/users/userPrivateEmails.js'),
-        'orgPlanLimit'                  : require(__dirname + '/plugins/github/orgs/orgPlanLimit.js')
+        'orgPlanLimit'                  : require(__dirname + '/plugins/github/orgs/orgPlanLimit.js'),
+        'orgDefaultPermission'          : require(__dirname + '/plugins/github/orgs/orgDefaultPermission.js'),
+        'orgMfaRequired'                : require(__dirname + '/plugins/github/orgs/orgMfaRequired.js'),
+        'orgExcessiveOwners'            : require(__dirname + '/plugins/github/orgs/orgExcessiveOwners.js')
     },
     oracle: {
         'openSSH'                       : require(__dirname + '/plugins/oracle/core/openSSH.js'),
