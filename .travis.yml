@@ -1,3 +1,40 @@
 language: node_js
 node_js:
   - "stable"
+
+# Deployment of cloudsploit is setup to work nicely both for the master repo
+# any forks. That is, a fork can also publish to NPM to a custom scope. To do
+# this, you need to do the following in the Travis CI settings for your account
+#
+# 1. Add an environment variable with the name NPM_SCOPE and a value like
+#
+#    @yourname\/
+#
+#  Note the @ symbol and slash are all important and shoud not be changed.
+#
+# 2. Add an environment variable with the name NPM_EMAIL and the email
+#    associated with your NPM account.
+#
+# 3. Add an environment variable with the name NPM_API_KEY containing your
+#    npm token.
+#
+# Finally, publishing only happens on tagged commits - so if you want to
+# publish to your scoped package, then you need to create a tag (and of course
+# publish it with git push --tags).
+#
+# Handling version numbers is ugly now and you'll still have to update
+# package.json. Sorry, but I haven't yet figured out a better way. :(
+before_deploy:
+  # You need to create a variable in your Travis CI settings to provide the
+  # npm package scope. This allows forks to publish under their own name.
+  - sed -i 's#"cloudsploit"#"'$NPM_SCOPE'cloudsploit"#g' package.json
+deploy:
+  # We modify package.json to change the package name automatically, so
+  # don't to cleanup otherwise that would revert the package name change.
+  skip_cleanup: true
+  provider: npm
+  email: $NPM_EMAIL
+  api_key: $NPM_API_KEY
+  on:
+    # Only try to publish when a tag was pushed.
+    tags: true

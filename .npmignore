@@ -1,0 +1,10 @@
+# Exclude all tests when publishing to NPM.
+*.spec.js
+._*
+credentials.json
+node_modules/
+custom.js
+plugins_*
+output.json
+vscode/*
+.vscode/
