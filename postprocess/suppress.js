@@ -16,16 +16,16 @@ module.exports = {
             .map(function (expr) {
                 return [
                     expr,
-                    new RegExp("^" + expr.split("*").join(".*") + "$")
+                    new RegExp('^' + expr.split('*').join('.*') + '$')
                 ];
             });
 
         return function (result) {
             var match = expressions.find(function (expression) {
                 return expression[1].test(result);
-            })
+            });
 
             return match && match[0];
-        }
+        };
     }
-}
+};
