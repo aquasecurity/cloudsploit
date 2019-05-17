@@ -1,4 +1,6 @@
-[![CloudSploit](https://cloudsploit.com/img/logo-big-text-100.png "CloudSploit")](https://cloudsploit.com)
+[<img src="https://cloudsploit.com/images/logos/text-color-black-png.png" height="130">](https://cloudsploit.com)
+
+[![Build Status](https://travis-ci.org/cloudsploit/scans.svg?branch=master)](https://travis-ci.org/cloudsploit/scans)
 
 CloudSploit Scans
 =================
