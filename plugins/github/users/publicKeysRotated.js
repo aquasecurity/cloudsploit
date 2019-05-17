@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/github');
 module.exports = {
 	title: 'Public Keys Rotated',
 	category: 'Users',
+	types: ['user'],
 	description: 'Ensures GitHub user keys are rotated frequently.',
 	more_info: 'GitHub keys provide full access to repositories within an account and should be rotated every 180 days.',
 	link: 'https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/',
@@ -55,7 +56,6 @@ module.exports = {
 			var key = listPublicKeys.data[p];
 			var keyName = key.title || 'unnamed';
 			var keyResourceName = key.url || 'unknown';
-			keyResourceName += ':' + keyName;
 
 			if (key.created_at) {
 				var returnMsg = 'User public key ' + keyName + ' was last rotated ' + helpers.functions.daysAgo(key.created_at) + ' days ago';

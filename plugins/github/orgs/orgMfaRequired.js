@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/github');
 
 module.exports = {
 	title: 'Org MFA Required',
-	org: true,
+	types: ['org'],
 	category: 'Orgs',
 	description: 'Checks whether multi-factor authentication is required at the org-level.',
 	more_info: 'MFA should be enabled and enforced for all users of an organization.',

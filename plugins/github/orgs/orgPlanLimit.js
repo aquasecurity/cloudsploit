@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/github');
 
 module.exports = {
 	title: 'Org Plan Limit',
-	org: true,
+	types: ['org'],
 	category: 'Orgs',
 	description: 'Checks that the number of seats is not close to the limit of available licensed seats.',
 	more_info: 'Running out of licenses will prevent developers from adding new users.',

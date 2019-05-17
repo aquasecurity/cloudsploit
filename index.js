@@ -30,9 +30,8 @@ var OracleConfig;
 // GitHubConfig = {
 // 	token: '',						// GitHub app token
 // 	url: 'https://api.github.com',	// BaseURL if not using public GitHub
-// 	clientId: '',
-// 	clientSecret: ''
-// 	org: ''
+// 	organization: false,			// Set to true if the login is an organization
+//  login: ''						// The login id for the user or organization
 // };
 
 // Oracle Important Note:
@@ -75,11 +74,11 @@ if(process.env.AZURE_APPLICATION_ID && process.env.AZURE_KEY_VALUE){
 	};
 }
 
-if(process.env.GITHUB_TOKEN){
+if(process.env.GITHUB_LOGIN){
 	GitHubConfig = {
-		token: process.env.GITHUB_TOKEN,
 		url: process.env.GITHUB_URL || 'https://api.github.com',
-		org: process.env.GITHUB_ORG || null
+		login: process.env.GITHUB_LOGIN,
+		organization: process.env.GITHUB_ORG ? true : false
 	};
 }
 
@@ -221,7 +220,7 @@ async.map(serviceProviders, function (serviceProviderObj, serviceProviderDone) {
 			}
 
 			// Skip GitHub plugins that do not match the run type
-			if (serviceProviderObj.name == 'github' && serviceProviderObj.config.org && !plugin.org) return callback();
+			if (serviceProviderObj.name == 'github' && !serviceProviderObj.config.organization && plugin.org) return pluginDone();
 
 			var maximumStatus = 0
 			plugin.run(collection, settings, function(err, results) {

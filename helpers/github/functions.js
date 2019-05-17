@@ -88,6 +88,16 @@ function isCustom(providedSettings, pluginSettings) {
 	return isCustom;
 }
 
+function getResource(obj) {
+	// Returns a unique resource name given an object
+	if (obj.url) {
+		// Parse URL into resource
+
+	} else {
+		return null;
+	}
+}
+
 module.exports = {
 	daysBetween: daysBetween,
 	daysAgo: daysAgo,
@@ -95,5 +105,6 @@ module.exports = {
 	addResult: addResult,
 	addSource: addSource,
 	addError: addError,
-	isCustom: isCustom
+	isCustom: isCustom,
+	getResource: getResource
 };

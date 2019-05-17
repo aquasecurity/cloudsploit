@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/github');
 module.exports = {
 	title: 'User Private Emails',
 	category: 'Users',
+	types: ['user'],
 	description: 'Checks that the primary email addresse associated with a GitHub account is set to private visibility.',
 	more_info: 'Email addresses added to GitHub should be set to private visibility to increase privacy and prevent account reconnaissance.',
 	link: 'https://developer.github.com/v3/users/emails/#toggle-primary-email-visibility',

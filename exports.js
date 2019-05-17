@@ -163,7 +163,8 @@ module.exports = {
         'orgPlanLimit'                  : require(__dirname + '/plugins/github/orgs/orgPlanLimit.js'),
         'orgDefaultPermission'          : require(__dirname + '/plugins/github/orgs/orgDefaultPermission.js'),
         'orgMfaRequired'                : require(__dirname + '/plugins/github/orgs/orgMfaRequired.js'),
-        'orgExcessiveOwners'            : require(__dirname + '/plugins/github/orgs/orgExcessiveOwners.js')
+        'orgExcessiveOwners'            : require(__dirname + '/plugins/github/orgs/orgExcessiveOwners.js'),
+        // 'repoDeployKeysRotated'         : require(__dirname + '/plugins/github/repos/repoDeployKeysRotated.js')
     },
     oracle: {
         'openSSH'                       : require(__dirname + '/plugins/oracle/core/openSSH.js'),
