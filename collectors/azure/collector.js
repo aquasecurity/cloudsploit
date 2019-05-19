@@ -70,6 +70,12 @@ var calls = {
             api: "PolicyClient",
             arm: true
         }
+    },
+    webApps: {
+        list: {
+            api: "WebSiteManagementClient",
+            arm: true
+        }
     }
 };
 
@@ -120,6 +126,16 @@ var postcalls = {
         list: {
             api: "StorageManagementClient",
             reliesOnService: ['resourceGroups', 'storageAccounts'],
+            reliesOnCall: ['list', 'list'],
+            filterKey: ['resourceGroupName', 'name'],
+            filterValue: ['resourceGroupName', 'name'],
+            arm: true
+        }
+    },
+    webApps: {
+        get: {
+            api: "WebSiteManagementClient",
+            reliesOnService: ['webApps', 'webApps'],
             reliesOnCall: ['list', 'list'],
             filterKey: ['resourceGroupName', 'name'],
             filterValue: ['resourceGroupName', 'name'],
@@ -241,6 +257,14 @@ var processCall = function (AzureConfig, settings, locations, call, service, ser
     async.eachOfLimit(call, 10, function (callObj, callKey, callCb) {
         if (!collection[service][callKey]) collection[service][callKey] = {};
 
+        var locations = helpers.locations(false)[service];
+
+        for (l in locations) {
+            if (!collection[service][callKey][locations[l]]) {
+                collection[service][callKey][locations[l]] = { data: [] };
+            }
+        }
+
         callObj.collection = collection;
 
         var LocalAzureConfig = JSON.parse(JSON.stringify(AzureConfig));
@@ -248,25 +272,26 @@ var processCall = function (AzureConfig, settings, locations, call, service, ser
 
         var executor = new helpers.AzureExecutor(LocalAzureConfig);
         executor.run(collection, service, callObj, callKey, function (err, data) {
-            if ((err && err.length==undefined)==true || (err && err.length!==undefined && err.length>0)==true){
-                collection[service][callKey].err = err;
-            }
-
-            if (!data){
-                return callCb();
-            }
-
-            var locations = helpers.locations(false)[service];
-
-            for (l in locations){
-                if (!collection[service][callKey][locations[l]]) {
-                    collection[service][callKey][locations[l]] = {data:[]};
+            if ((err && err.length == undefined) == true || (err && err.length !== undefined && err.length > 0) == true) {
+                for (l in locations) {
+                    if (err.body && err.body.message) {
+                        collection[service][callKey][locations[l]].err = err.body.message;
+                    } else if (err.body && err.body.error && err.body.error.message) {
+                        collection[service][callKey][locations[l]].err = err.body.error.message;
+                    } else {
+                        collection[service][callKey][locations[l]].err = "An error ocurred while retrieving service data";
+                    }
                 }
             }
 
+            if (!data) {
+                return callCb();
+            }
+
             var locationsInArray = [];
-            for (var d=0; d<data.length; d++) {
-                if (data[d].location){
+            for (var d = 0; d < data.length; d++) {
+                if (data[d].location) {
+                    data[d].location = data[d].location.replace(/ /g, "").toLowerCase();
 	                var locationExists = locationsInArray.filter(loc => loc == data[d].location);
 	                var locationIsValid = locations.filter(loc => loc == data[d].location);
 	                if (locationExists && locationExists.length == 0 &&
@@ -279,15 +304,20 @@ var processCall = function (AzureConfig, settings, locations, call, service, ser
                 }
             }
 
-            if (locationsInArray && locationsInArray.length>0){
+            if (locationsInArray && locationsInArray.length > 0) {
                 for (locationSelected in locationsInArray) {
                     var dataToPush = data.filter((d) => {
                         return d.location == locationsInArray[locationSelected];
                     });
+
+                    if (collection[service][callKey][locationsInArray[locationSelected]] == undefined) {
+                        collection[service][callKey][locationsInArray[locationSelected]] = {};
+                    }
+
                     collection[service][callKey][locationsInArray[locationSelected]].data = dataToPush;
                 }
             } else {
-                if (data.length>0){
+                if (data.length > 0) {
                     collection[service][callKey]['unknown'] = {};
                     collection[service][callKey]['unknown'].data = data;
                 }
@@ -303,7 +333,7 @@ var processCall = function (AzureConfig, settings, locations, call, service, ser
 // Loop through all of the top-level collectors for each service
 var collect = function (AzureConfig, settings, callback) {
     AzureConfig.maxRetries = 5;
-    AzureConfig.retryDelayOptions = {base: 300};
+    AzureConfig.retryDelayOptions = { base: 300 };
     var settings = settings;
     var locations = helpers.locations(settings.govcloud);
 
