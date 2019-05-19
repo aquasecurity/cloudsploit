@@ -92,7 +92,7 @@ function getResource(obj) {
 	// Returns a unique resource name given an object
 	if (obj.url) {
 		// Parse URL into resource
-
+		return obj.url;
 	} else {
 		return null;
 	}

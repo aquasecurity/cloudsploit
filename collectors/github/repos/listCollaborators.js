@@ -5,7 +5,7 @@ module.exports = function(GitHubConfig, octokit, collection, callback) {
         !collection.apps.listRepos ||
         !collection.apps.listRepos.data ||
         !collection.apps.listRepos.data.repositories) {
-        collection.repos.listDeployKeys = {};
+        collection.repos.listCollaborators = {};
         return callback();
     }
 
@@ -14,13 +14,13 @@ module.exports = function(GitHubConfig, octokit, collection, callback) {
 
     async.eachLimit(repos, 15, function(repoObj, cb){
         var repo = repoObj.name;
-        collection.repos.listDeployKeys[repo] = {};
+        collection.repos.listCollaborators[repo] = {};
 
-        octokit['repos']['listDeployKeys']({owner, repo}).then(function(results){
-            if (results && results.data) collection.repos.listDeployKeys[repo].data = results.data;
+        octokit['repos']['listCollaborators']({owner, repo}).then(function(results){
+            if (results && results.data) collection.repos.listCollaborators[repo].data = results.data;
             cb();
         }, function(err){
-            if (err) collection.repos.listDeployKeys[repo].err = err;
+            if (err) collection.repos.listCollaborators[repo].err = err;
             cb();
         });
     }, function(){

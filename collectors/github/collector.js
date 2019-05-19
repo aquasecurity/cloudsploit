@@ -87,7 +87,12 @@ var postcalls = [
 		},
 		repos: {
 			listDeployKeys: {
-				override: true
+				override: true,
+				type: 'server'
+			},
+			listCollaborators: {
+				override: true,
+				type: 'server'
 			}
 		}
 	}

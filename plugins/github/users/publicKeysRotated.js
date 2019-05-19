@@ -58,7 +58,7 @@ module.exports = {
 			var keyResourceName = key.url || 'unknown';
 
 			if (key.created_at) {
-				var returnMsg = 'User public key ' + keyName + ' was last rotated ' + helpers.functions.daysAgo(key.created_at) + ' days ago';
+				var returnMsg = 'User public key: ' + keyName + ' was last rotated ' + helpers.functions.daysAgo(key.created_at) + ' days ago';
 				var returnCode = 0;
 
 				if (helpers.functions.daysAgo(key.created_at) > config.github_public_keys_rotated_fail) {
