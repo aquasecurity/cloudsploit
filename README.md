@@ -8,6 +8,12 @@ CloudSploit Scans
 ## Background
 CloudSploit scans is an open-source project designed to allow detection of security risks in an AWS account. These scripts are designed to run against an AWS account and return a series of potential misconfigurations and security risks.
 
+## SaaS Product
+
+CloudSploit provides free and paid hosted versions of the cloud security scanner with numerous additional features:
+
+[<img src="https://cloudsploit.com/images/pricing.png">](https://console.cloudsploit.com/signup)
+
 ## Installation
 Ensure that NodeJS is installed. If not, install it from [here](https://nodejs.org/download/).
 
