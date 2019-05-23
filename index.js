@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var async = require('async');
 var fs        	= require("fs");
 var plugins = require('./exports.js');
