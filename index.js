@@ -70,7 +70,7 @@ if(process.env.AZURE_APPLICATION_ID && process.env.AZURE_KEY_VALUE){
 		KeyValue:  process.env.AZURE_KEY_VALUE,
 		DirectoryID: process.env.AZURE_DIRECTORY_ID,
 		SubscriptionID: process.env.AZURE_SUBSCRIPTION_ID,
-		region: process.env.AZURE_LOCATION || 'East US'
+		region: process.env.AZURE_LOCATION || 'eastus'
 	};
 }
 
@@ -180,7 +180,11 @@ for (p in plugins) {
 		for (spp in serviceProviderPlugins) {
 			var plugin = getMapValue(serviceProviderPlugins, spp);
 			// Skip GitHub plugins that do not match the run type
-			if (sp == 'github' && serviceProviderConfig.org && !plugin.org) continue;
+			if (sp == 'github' && serviceProviderConfig.organization &&
+				plugin.types.indexOf('org') === -1) continue;
+
+			if (sp == 'github' && !serviceProviderConfig.organization &&
+				plugin.types.indexOf('user') === -1) continue;
 			
 			// Skip if our compliance set says don't run the rule
 			if (!compliance.includes(spp, plugin)) continue;
@@ -220,7 +224,13 @@ async.map(serviceProviders, function (serviceProviderObj, serviceProviderDone) {
 			}
 
 			// Skip GitHub plugins that do not match the run type
-			if (serviceProviderObj.name == 'github' && !serviceProviderObj.config.organization && plugin.org) return pluginDone();
+			if (serviceProviderObj.name == 'github' &&
+				serviceProviderObj.config.organization &&
+				plugin.types.indexOf('org') === -1) return pluginDone(null, 0);
+
+			if (serviceProviderObj.name == 'github' &&
+				!serviceProviderObj.config.organization &&
+				plugin.types.indexOf('user') === -1) return pluginDone(null, 0);
 
 			var maximumStatus = 0
 			plugin.run(collection, settings, function(err, results) {

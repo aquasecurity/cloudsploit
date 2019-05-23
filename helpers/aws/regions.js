@@ -17,7 +17,7 @@ var regions = [
 	'ap-southeast-2',	// Asia Pacific (Sydney)
 	'ap-south-1',		// Asia Pacific (Mumbai)
 	'sa-east-1',		// South America (São Paulo)
-	//'ap-east-1'			// Asia Pacific (Hong Kong)
+	'ap-east-1'			// Asia Pacific (Hong Kong)
 ];
 
 module.exports = {

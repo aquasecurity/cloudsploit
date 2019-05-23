@@ -3,21 +3,22 @@ var async = require('async');
 module.exports = function(GitHubConfig, octokit, collection, callback) {
     if (!collection.apps ||
         !collection.apps.listRepos ||
-        !collection.apps.listRepos.data ||
-        !collection.apps.listRepos.data.repositories) {
+        !collection.apps.listRepos.data) {
         collection.repos.listCollaborators = {};
         return callback();
     }
 
-    var repos = collection.apps.listRepos.data.repositories;
+    var repos = collection.apps.listRepos.data;
     var owner = GitHubConfig.login;
 
     async.eachLimit(repos, 15, function(repoObj, cb){
         var repo = repoObj.name;
         collection.repos.listCollaborators[repo] = {};
 
-        octokit['repos']['listCollaborators']({owner, repo}).then(function(results){
-            if (results && results.data) collection.repos.listCollaborators[repo].data = results.data;
+        var options = octokit['repos']['listCollaborators'].endpoint.merge({owner, repo});
+        
+        octokit.paginate(options).then(function(results){
+            if (results) collection.repos.listCollaborators[repo].data = results;
             cb();
         }, function(err){
             if (err) collection.repos.listCollaborators[repo].err = err;

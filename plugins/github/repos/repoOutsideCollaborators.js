@@ -33,7 +33,7 @@ module.exports = {
 			return callback(null, results, source);
 		}
 
-		if (!listRepos.data.repositories || !listRepos.data.repositories.length) {
+		if (!listRepos.data.length) {
 			helpers.addResult(results, 0, 'No repositories found.');
 			return callback(null, results, source);
 		}
@@ -50,8 +50,8 @@ module.exports = {
 			orgMembers.push(listMembers.data[m].login);
 		}
 
-		for (r in listRepos.data.repositories) {
-			var repo = listRepos.data.repositories[r];
+		for (r in listRepos.data) {
+			var repo = listRepos.data[r];
 			var resource = helpers.getResource(repo);
 
 			var listCollaborators = helpers.addSource(cache, source,

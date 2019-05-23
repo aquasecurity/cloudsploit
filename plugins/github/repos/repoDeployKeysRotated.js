@@ -45,13 +45,13 @@ module.exports = {
 			return callback(null, results, source);
 		}
 
-		if (!listRepos.data.repositories || !listRepos.data.repositories.length) {
+		if (!listRepos.data.length) {
 			helpers.addResult(results, 0, 'No repositories found.');
 			return callback(null, results, source);
 		}
 
-		for (r in listRepos.data.repositories) {
-			var repo = listRepos.data.repositories[r];
+		for (r in listRepos.data) {
+			var repo = listRepos.data[r];
 			var resource = helpers.getResource(repo);
 
 			var listDeployKeys = helpers.addSource(cache, source,

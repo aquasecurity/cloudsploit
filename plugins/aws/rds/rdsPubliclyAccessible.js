@@ -48,7 +48,7 @@ module.exports = {
 				var dbResource = db.DBInstanceArn;
 
 				if (db.PubliclyAccessible) {
-					helpers.addResult(results, 1, 'RDS instance is publicly accessible', region, dbResource);
+					helpers.addResult(results, 2, 'RDS instance is publicly accessible', region, dbResource);
 				} else {
 					helpers.addResult(results, 0, 'RDS instance is not publicly accessible', region, dbResource);
 				}

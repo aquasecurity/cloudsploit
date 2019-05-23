@@ -26,8 +26,6 @@ module.exports = {
 			return callback(null, results, source);
 		}
 
-		console.log(listMembers);
-
 		var count = {admin: 0, users: 0};
 
 		for (m in listMembers.data) {

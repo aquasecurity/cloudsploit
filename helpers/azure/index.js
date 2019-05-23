@@ -9,13 +9,12 @@ var ComputeManagementClient     = require('azure-arm-compute');
 var MonitorManagementClient     = require('azure-arm-monitor');
 var KeyVaultMangementClient     = require('azure-arm-keyvault');
 var WebSiteManagementClient     = require('azure-arm-website');
+var SQLManagementClient         = require('azure-arm-sql');
+var PolicyClient                = require('azure-arm-resource').PolicyClient;
 
 // Azure Service Modules
 var StorageServiceClient        = require('azure-storage');
 var KeyVaultClient              = require('azure-keyvault');
-var SQLManagementClient         = require('azure-arm-sql');
-var PolicyClient                = require('azure-arm-resource').PolicyClient;
-
 
 // Api Mapping
 var mapAzureApis = {
@@ -25,10 +24,10 @@ var mapAzureApis = {
 	"ComputeManagementClient"  : ComputeManagementClient,
 	"MonitorManagementClient"  : MonitorManagementClient,
 	"KeyVaultClient"           : KeyVaultClient,
-	"KeyVaultMangementClient"  : KeyVaultMangementClient,
-	"SQLManagementClient"      : SQLManagementClient,
-	"PolicyClient"             : PolicyClient,
-	"WebSiteManagementClient"  : WebSiteManagementClient
+    "KeyVaultMangementClient"  : KeyVaultMangementClient,
+    "SQLManagementClient"      : SQLManagementClient,
+    "PolicyClient"             : PolicyClient,
+	"WebSiteManagementClient"  : WebSiteManagementClient,
 }
 
 const UNKNOWN_LOCATION = "unknown";
@@ -191,8 +190,9 @@ class AzureExecutor {
 
 						serviceArray.push(serviceAtLocation);
 
-						if (serviceAtLocation.id && serviceAtLocation.id.indexOf('/resourceGroups/') && serviceName!=='resourceGroups') {
-							var resourceGroupIndex = serviceAtLocation.id.indexOf('/resourceGroups/') + '/resourceGroups/'.length;
+                        if (serviceAtLocation.id && ( serviceAtLocation.id.indexOf('/resourceGroups/') > -1 || serviceAtLocation.id.indexOf('/resourcegroups/') > -1 ) && serviceName!=='resourceGroups') {
+                            let resourceGroupInitIndex = serviceAtLocation.id.indexOf('/resourceGroups/') > -1 ? serviceAtLocation.id.indexOf('/resourceGroups/') : serviceAtLocation.id.indexOf('/resourcegroups/');
+                            var resourceGroupIndex = resourceGroupInitIndex + '/resourceGroups/'.length;
 							var resourceGroupEndIndex = serviceAtLocation.id.indexOf('/', resourceGroupIndex);
 							var resourceGroupName = serviceAtLocation.id.substring(resourceGroupIndex, resourceGroupEndIndex);
 							var resourceGroupId = serviceAtLocation.id.substring(0, resourceGroupEndIndex);
@@ -220,6 +220,17 @@ class AzureExecutor {
 									}
 								}
 							} else {
+                                // databaseName handling
+                                if (callObj.filterKey[filter] == 'databaseName'
+                                    && serviceAtLocation.type == 'Microsoft.Sql/servers/databases'
+                                    && callObj.filterKey.find(key => key == 'serverName')) {
+
+                                    var idSplits = serviceAtLocation.id.split('/');
+                                    var serverName = idSplits[idSplits.length - 3];
+
+                                    serviceAtLocation.parameters['serverName'] = serverName;
+                                    serviceAtLocation.parameters['databaseName'] = serviceAtLocation.name;
+                                } else {
 								serviceAtLocation.parameters[callObj.filterKey[filter]] = serviceAtLocation[callObj.filterValue[filter]];
 							}
 						}
@@ -227,6 +238,7 @@ class AzureExecutor {
 				}
 			}
 		}
+        }
 
 		function loadEntryArray() {
 			var entryServices = [];
