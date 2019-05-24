@@ -1,5 +1,5 @@
 /*********************
- Collector - The collector will query AWS APIs for the information required
+ Collector - The collector will query Azure APIs for the information required
  to run the CloudSploit scans. This data will be returned in the callback
  as a JSON object.
 
@@ -71,6 +71,12 @@ var calls = {
             arm: true
         }
     },
+    networkSecurityGroups: {
+        listAll: {
+            api: "NetworkManagementClient",
+              arm: true
+        }
+    },
     webApps: {
         list: {
             api: "WebSiteManagementClient",
@@ -133,6 +139,13 @@ var postcalls = {
         }
     },
     webApps: {
+        listConfigurations: {
+            api: "WebSiteManagementClient",
+            reliesOnService: ['webApps', 'webApps'],
+            reliesOnCall: ['list', 'list'],
+            filterKey: ['resourceGroup', 'name'],
+            filterValue: ['resourceGroup', 'name'],
+		},
         get: {
             api: "WebSiteManagementClient",
             reliesOnService: ['webApps', 'webApps'],

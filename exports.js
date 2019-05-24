@@ -143,21 +143,47 @@ module.exports = {
     azure : {
         'storageAccountsHttps'          : require(__dirname + '/plugins/azure/storageaccounts/storageAccountsHttps.js'),
         'storageAccountsEncryption'     : require(__dirname + '/plugins/azure/storageaccounts/storageAccountsEncryption.js'),
+
         'blobServiceImmutable'          : require(__dirname + '/plugins/azure/blobservice/blobServiceImmutable.js'),
         'fileServiceAllAccessAcl'       : require(__dirname + '/plugins/azure/fileservice/fileServiceAllAccessAcl.js'),
         'tableServiceAllAccessAcl'      : require(__dirname + '/plugins/azure/tableservice/tableServiceAllAccessAcl.js'),
         'queueServiceAllAccessAcl'      : require(__dirname + '/plugins/azure/queueservice/queueServiceAllAccessAcl.js'),
+
         'resourceGroups'                : require(__dirname + '/plugins/azure/resourcegroups/resourceGroups.js'),
+
         'vmAgentEnabled'                : require(__dirname + '/plugins/azure/virtualmachines/vmAgentEnabled.js'),
         'vmDiskOSEncryption'            : require(__dirname + '/plugins/azure/virtualmachines/vmDiskOSEncryption.js'),
         'vmDiskDataEncryption'          : require(__dirname + '/plugins/azure/virtualmachines/vmDiskDataEncryption.js'),
         'vmEndpointProtection'          : require(__dirname + '/plugins/azure/virtualmachines/vmEndpointProtection.js'),
         'vmAutoUpdateEnabled'           : require(__dirname + '/plugins/azure/virtualmachines/vmAutoUpdateEnabled.js'),
+
         'sqlServerFirewallRuleEnabled'  : require(__dirname + '/plugins/azure/logalerts/sqlServerFirewallRuleEnabled.js'),
         'virtualNetworkRuleEnabled'     : require(__dirname + '/plugins/azure/logalerts/virtualNetworkRuleEnabled.js'),
+
         'monitorDiskEncryption'         : require(__dirname + '/plugins/azure/securitycenter/monitorDiskEncryption.js'),
+
+        'openSMTP'                      : require(__dirname + '/plugins/azure/networksecuritygroups/openSMTP.js'),
+        'openOracle'                    : require(__dirname + '/plugins/azure/networksecuritygroups/openOracle.js'),
+        'openKibana'                    : require(__dirname + '/plugins/azure/networksecuritygroups/openKibana.js'),
+        'openHadoopNameNode'            : require(__dirname + '/plugins/azure/networksecuritygroups/openHadoopNameNode.js'),
+        'openHadoopNameNodeWebUI'       : require(__dirname + '/plugins/azure/networksecuritygroups/openHadoopNameNodeWebUI.js'),
+        'openFTP'                       : require(__dirname + '/plugins/azure/networksecuritygroups/openFTP.js'),
+        'openSSH'                       : require(__dirname + '/plugins/azure/networksecuritygroups/openSSH.js'),
+        'openCIFS'                      : require(__dirname + '/plugins/azure/networksecuritygroups/openCIFS.js'),
+        'openDNS'                       : require(__dirname + '/plugins/azure/networksecuritygroups/openDNS.js'),
+        'openRDP'                       : require(__dirname + '/plugins/azure/networksecuritygroups/openRDP.js'),
+        'openTelnet'                    : require(__dirname + '/plugins/azure/networksecuritygroups/openTelnet.js'),
+        'openVNCServer'                 : require(__dirname + '/plugins/azure/networksecuritygroups/openVNCServer.js'),
+        'openVNCClient'                 : require(__dirname + '/plugins/azure/networksecuritygroups/openVNCClient.js'),
+        'openMySQL'                     : require(__dirname + '/plugins/azure/networksecuritygroups/openMySQL.js'),
+        'openNetBIOS'                   : require(__dirname + '/plugins/azure/networksecuritygroups/openNetBIOS.js'),
+        'openPostgreSQL'                : require(__dirname + '/plugins/azure/networksecuritygroups/openPostgreSQL.js'),
+        'openRPC'                       : require(__dirname + '/plugins/azure/networksecuritygroups/openRPC.js'),
+        'openSMBoTCP'                   : require(__dirname + '/plugins/azure/networksecuritygroups/openSMBoTCP.js'),
+        'openSQLServer'                 : require(__dirname + '/plugins/azure/networksecuritygroups/openSQLServer.js'),
+
         'identityEnabled'               : require(__dirname + '/plugins/azure/appservice/identityEnabled.js'),
-		'httpsOnlyEnabled'              : require(__dirname + '/plugins/azure/appservice/httpsOnlyEnabled.js')
+        'httpsOnlyEnabled'              : require(__dirname + '/plugins/azure/appservice/httpsOnlyEnabled.js')
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),

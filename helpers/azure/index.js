@@ -11,7 +11,7 @@ var KeyVaultMangementClient     = require('azure-arm-keyvault');
 var WebSiteManagementClient     = require('azure-arm-website');
 var SQLManagementClient         = require('azure-arm-sql');
 var PolicyClient                = require('azure-arm-resource').PolicyClient;
-
+var NetworkManagementClient     = require('azure-arm-network');
 // Azure Service Modules
 var StorageServiceClient        = require('azure-storage');
 var KeyVaultClient              = require('azure-keyvault');
@@ -28,6 +28,7 @@ var mapAzureApis = {
     "SQLManagementClient"      : SQLManagementClient,
     "PolicyClient"             : PolicyClient,
 	"WebSiteManagementClient"  : WebSiteManagementClient,
+	"NetworkManagementClient"  : NetworkManagementClient,
 }
 
 const UNKNOWN_LOCATION = "unknown";

@@ -98,45 +98,48 @@ function addSource(cache, source, paths){
     return original;
 }
 
-function findOpenPorts(groups, ports, service, region, results) {
-    var found = false;
+function findOpenPorts(ngs, protocols, service, location, results) {
+    let found = false;
 
-    for (g in groups) {
-        var strings = [];
-        var resource = 'arn:aws:ec2:' + region + ':' +
-            groups[g].OwnerId + ':security-group/' +
-            groups[g].GroupId;
+    for (let sgroups of ngs) {
+        let strings = [];
+        let resource = sgroups.id;
+        let securityRules = sgroups.securityRules;
+        for (let securityRule of securityRules) {
+            let sourceAddressPrefix = securityRule['sourceAddressPrefix'];
 
-        for (p in groups[g].IpPermissions) {
-            var permission = groups[g].IpPermissions[p];
+            for (let protocol in protocols) {
+                let ports = protocols[protocol];
 
-            for (k in permission.IpRanges) {
-                var range = permission.IpRanges[k];
+                for (let port of ports) {
+                    if (securityRule['access'] === 'Allow'
+                        && securityRule['direction'] === 'Inbound'
+                        && securityRule['protocol'] === protocol
+                        && (sourceAddressPrefix === '*' || sourceAddressPrefix === '' || sourceAddressPrefix === '0.0.0.0' || sourceAddressPrefix === '<nw>/0' || sourceAddressPrefix === '/0' || sourceAddressPrefix === 'internet')) {
 
-                if (range.CidrIp === '0.0.0.0/0' && ports[permission.IpProtocol]) {
-                    for (portIndex in ports[permission.IpProtocol]) {
-                        var port = ports[permission.IpProtocol][portIndex];
+                        sourcefilter = (sourceAddressPrefix == '*' ? 'any IP' : sourceAddressPrefix);
 
-                        if (permission.FromPort <= port && permission.ToPort >= port) {
-                            var string = permission.IpProtocol.toUpperCase() +
-                                ' port ' + port + ' open to 0.0.0.0/0';
+                        if (securityRule['destinationPortRange']) {
+                            if (securityRule['destinationPortRange'].toString().indexOf("-") > -1) {
+                                let portRange = securityRule['destinationPortRange'].split("-");
+                                let startPort = portRange[0];
+                                let endPort = portRange[1];
+                                if (parseInt(startPort) === port || parseInt(endPort) === port) {
+                                    var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol == '*' ? `All protocols` : protocol.toUpperCase()) +
+                                        ` port ` + ports + ` open to ` + sourcefilter; strings.push(string);
                             if (strings.indexOf(string) === -1) strings.push(string);
                             found = true;
                         }
+                            } else if (securityRule['destinationPortRange'].toString().indexOf(port) > -1) {
+                                var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol == '*' ? `All protocols` : protocol.toUpperCase()) +
+                                    ` port ` + ports + ` open to ` + sourcefilter;
+                                if (strings.indexOf(string) === -1) strings.push(string);
+                            found = true;
                     }
-                }
-            }
 
-            for (k in permission.Ipv6Ranges) {
-                var range = permission.Ipv6Ranges[k];
-
-                if (range.CidrIpv6 === '::/0' && ports[permission.IpProtocol]) {
-                    for (portIndex in ports[permission.IpProtocol]) {
-                        var port = ports[permission.IpProtocol][portIndex];
-
-                        if (permission.FromPort <= port && permission.ToPort >= port) {
-                            var string = permission.IpProtocol.toUpperCase() +
-                                ' port ' + port + ' open to ::/0';
+                        } else if (securityRule['destinationPortRanges'].toString().indexOf(port) > -1) {
+                            var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol == '*' ? `All protocols` : protocol.toUpperCase()) +
+                                ` port ` + ports + ` open to ` + sourcefilter;
                             if (strings.indexOf(string) === -1) strings.push(string);
                             found = true;
                         }
@@ -144,18 +147,16 @@ function findOpenPorts(groups, ports, service, region, results) {
                 }
             }
         }
-
         if (strings.length) {
             addResult(results, 2,
-                'Security group: ' + groups[g].GroupId +
-                ' (' + groups[g].GroupName +
-                ') has ' + service + ': ' + strings.join(' and '), region,
+                'Security group:(' + sgroups.name +
+                ') has ' + service + ': ' + strings.join(' and '), location,
                 resource);
         }
     }
 
     if (!found) {
-        addResult(results, 0, 'No public open ports found', region);
+        addResult(results, 0, 'No public open ports found', location);
     }
 
     return;

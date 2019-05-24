@@ -53,5 +53,6 @@ module.exports = {
 	KeyVaultClient: locations,
 	blobContainers: locations,
 	policyAssignments: locations,
-	webApps: locations
+	webApps: locations,
+	networkSecurityGroups: locations,
 };

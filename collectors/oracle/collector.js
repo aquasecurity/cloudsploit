@@ -10,7 +10,7 @@
  - api_calls: (Optional) If provided, will only query these APIs.
  - Example:
  {
-     "skip_regions": ["East US", "West US"],
+     "skip_regions": ["", ""],
      "api_calls": ["EC2:describeInstances", "S3:listBuckets"]
  }
  - callback: Function to call when the collection is complete
