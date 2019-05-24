@@ -35,6 +35,14 @@ var calls = {
 			property: 'CertificateSummaryList'
 		}
 	},
+	Athena: {
+		listWorkGroups: {
+			property: 'WorkGroups',
+			params: {
+				MaxResults: 50
+			}
+		}
+	},
 	AutoScaling: {
 		describeAutoScalingGroups: {
 			property: 'AutoScalingGroups'
@@ -345,6 +353,14 @@ var postcalls = [
 				reliesOnCall: 'listCertificates',
 				filterKey: 'CertificateArn',
 				filterValue: 'CertificateArn'
+			}
+		},
+		Athena: {
+			getWorkGroup: {
+				reliesOnService: 'athena',
+				reliesOnCall: 'listWorkGroups',
+				filterKey: 'WorkGroup',
+				filterValue: 'Name'
 			}
 		},
 		CloudFront: {

@@ -8,6 +8,7 @@ var regions = [
 module.exports = {
 	all: regions,
 	acm: regions,
+	athena: ['us-gov-west-1'],
 	cloudfront: [],
 	autoscaling: regions,
 	iam: regions,

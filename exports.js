@@ -4,6 +4,8 @@ module.exports = {
     aws : {
         'acmValidation'                 : require(__dirname + '/plugins/aws/acm/acmValidation.js'),
         'asgMultiAz'                    : require(__dirname + '/plugins/aws/autoscaling/asgMultiAz.js'),
+        'workgroupEncrypted'            : require(__dirname + '/plugins/aws/athena/workgroupEncrypted.js'),
+        'workgroupEnforceConfiguration' : require(__dirname + '/plugins/aws/athena/workgroupEnforceConfiguration.js'),
         'publicS3Origin'                : require(__dirname + '/plugins/aws/cloudfront/publicS3Origin.js'),
         'secureOrigin'                  : require(__dirname + '/plugins/aws/cloudfront/secureOrigin.js'),
         'insecureProtocols'             : require(__dirname + '/plugins/aws/cloudfront/insecureProtocols.js'),
