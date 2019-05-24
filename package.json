@@ -28,7 +28,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@octokit/app": "^2.2.5",
+    "@octokit/app": "^3.0.0",
     "@octokit/request": "^3.0.3",
     "@octokit/rest": "^16.3.2",
     "async": "^2.6.1",
