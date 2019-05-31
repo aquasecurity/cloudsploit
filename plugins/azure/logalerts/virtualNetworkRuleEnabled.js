@@ -17,114 +17,114 @@ module.exports = {
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        function networkResourceExists(resourceList){
-            return JSON.stringify(resourceList).indexOf('Microsoft.Network') > -1
+        const activityLogAlerts = helpers.addSource(
+            cache, source, ['activityLogAlerts', 'listByResourceGroup', 'global']
+        );
+
+        if (!activityLogAlerts) return rcb();
+
+        if (activityLogAlerts.err) {
+            helpers.addResult(results, 3,
+                'Unable to query activity log alerts: ' + helpers.addError(activityLogAlerts), location);
+            return rcb();
         }
 
-        async.each(locations.activityLogAlerts, function(location, rcb){
-            const activityLogAlerts = helpers.addSource(
-                cache, source, ['activityLogAlerts', 'listByResourceGroup', location]
-            );
+        if (!activityLogAlerts.data || !activityLogAlerts.data.length) {
+            helpers.addResult(results, 2,
+                'Activity log alerts are not setup', location);
+        }
 
+        async.each(locations.resources, function(location, rcb) {
             var resourceList = helpers.addSource(cache, source, ['resources', 'list', location]);
 
-            if(networkResourceExists(resourceList)){
-                if (!activityLogAlerts) return rcb();
+            var virtualNetworkResourceList = resourceList.data.filter((d) => {
+                return d.type == 'Microsoft.Network/virtualNetworks';
+            });
 
-                if (activityLogAlerts.err) {
-                    helpers.addResult(results, 3, 'Unable to query activity log alerts: ' + helpers.addError(activityLogAlerts), location);
-                    return rcb();
-                }
-                if (!activityLogAlerts.data || !activityLogAlerts.data.length) {
-                    helpers.addResult(results, 2, 'Activity log alerts are not setup for this location', location);
-                } else {
-                    let alertCreateUpdateExists = false;
-                    let alertCreateUpdateEnabled = false;
-                    let alertDeleteExists = false;
-                    let alertDeleteEnabled = false;
+            if (virtualNetworkResourceList &&
+                virtualNetworkResourceList.length &&
+                virtualNetworkResourceList.length>0) {
 
-                    for (let res in activityLogAlerts.data) {
-                        const activityLogAlertResource = activityLogAlerts.data[res];
-                        if (activityLogAlertResource.error == true) {
-                            continue;
-                        }
+                let alertCreateUpdateExists = false;
+                let alertCreateUpdateEnabled = false;
+                let alertDeleteExists = false;
+                let alertDeleteEnabled = false;
 
-                        for (let alert in activityLogAlertResource) {
-                            const activityLogAlert = activityLogAlertResource[alert];
-                            if (activityLogAlert.type !== 'Microsoft.Insights/ActivityLogAlerts') continue;
-                            const allConditions = activityLogAlert.condition;
+                for (let res in activityLogAlerts.data) {
+                    const activityLogAlertResource = activityLogAlerts.data[res];
 
-                            for (let conres in allConditions.allOf) {
-                                const condition = allConditions.allOf[conres].equals;
-                                if (condition.indexOf("Microsoft.Network/virtualNetworks/write") > -1) {
-                                    alertCreateUpdateExists = true;
-                                    alertCreateUpdateEnabled = (!alertCreateUpdateEnabled && activityLogAlertResource.enabled ? true : alertCreateUpdateEnabled);
-                                } else if (condition.indexOf("Microsoft.Network/virtualNetworks/delete") > -1) {
-                                    alertDeleteExists = true;
-                                    alertDeleteEnabled = (!alertDeleteEnabled && activityLogAlertResource.enabled ? true : alertDeleteEnabled);
-                                }
+                    if (activityLogAlertResource.type !== 'Microsoft.Insights/ActivityLogAlerts') continue;
+
+                    const allConditions = activityLogAlertResource.condition;
+
+                    var conditionOperation = allConditions.allOf.filter((d) => {
+                        return d.field == 'operationName';
+                    });
+
+                    if (conditionOperation && conditionOperation.length) {
+                        for (c in conditionOperation) {
+                            var condition = conditionOperation[c];
+                            if (condition.equals.indexOf("Microsoft.Network/virtualNetworks/write") > -1) {
+                                alertCreateUpdateExists = true;
+                                alertCreateUpdateEnabled = (!alertCreateUpdateEnabled && activityLogAlertResource.enabled ? true : alertCreateUpdateEnabled);
+                            } else if (condition.equals.indexOf("Microsoft.Network/virtualNetworks/delete") > -1) {
+                                alertDeleteExists = true;
+                                alertDeleteEnabled = (!alertDeleteEnabled && activityLogAlertResource.enabled ? true : alertDeleteEnabled);
                             }
-                        }
-
-                        if (alertCreateUpdateExists && alertCreateUpdateEnabled &&
-                            alertDeleteExists && alertDeleteEnabled) {
-                            helpers.addResult(
-                                results,
-                                0,
-                                'Virtual Network events are being monitored for Create/Update and Delete events',
-                                location
-                            );
-                        } else {
-                            if ((!alertCreateUpdateExists) ||
-                                (alertCreateUpdateExists && !alertCreateUpdateEnabled)) {
-                                helpers.addResult(
-                                    results,
-                                    2,
-                                    'Virtual Network events are not being monitored for Create/Update events',
-                                    location
-                                );
-                            } else {
-                                helpers.addResult(
-                                    results,
-                                    0,
-                                    'Virtual Network events are being monitored for Create/Update events',
-                                    location
-                                );
-                            }
-
-                            if ((!alertDeleteExists) ||
-                                (alertDeleteExists && !alertDeleteEnabled)) {
-                                helpers.addResult(
-                                    results,
-                                    2,
-                                    'Virtual Network events are not being monitored for Delete events',
-                                    location
-                                );
-                            } else {
-                                helpers.addResult(
-                                    results,
-                                    0,
-                                    'Virtual Network events are being monitored for Delete events',
-                                    location
-                                );
-                            }
-                        }
-
-                        if (!alertCreateUpdateExists &&
-                            !alertDeleteExists) {
-                            helpers.addResult(
-                                results,
-                                2,
-                                'Activity log alerts are not setup for Virtual Network events',
-                                location
-                            );
                         }
                     }
                 }
+
+                if (alertCreateUpdateExists &&
+                    alertCreateUpdateEnabled &&
+                    alertDeleteExists &&
+                    alertDeleteEnabled) {
+                    helpers.addResult(
+                        results,
+                        0,
+                        'Virtual Network events are being monitored for Create/Update and Delete events',
+                        location
+                    );
+                } else {
+                    if ((!alertCreateUpdateExists) ||
+                        (alertCreateUpdateExists &&
+                            !alertCreateUpdateEnabled)) {
+                        helpers.addResult(results, 2,
+                            'Virtual Network events are not being monitored for Create/Update events',
+                            location
+                        );
+                    } else {
+                        helpers.addResult(results, 0,
+                            'Virtual Network events are being monitored for Create/Update events',
+                            location
+                        );
+                    }
+
+                    if ((!alertDeleteExists) ||
+                        (alertDeleteExists &&
+                            !alertDeleteEnabled)) {
+                        helpers.addResult(results, 2,
+                            'Virtual Network events are not being monitored for Delete events',
+                            location
+                        );
+                    } else {
+                        helpers.addResult(results, 0,
+                            'Virtual Network events are being monitored for Delete events',
+                            location
+                        );
+                    }
+                }
+
+                if (!alertCreateUpdateExists &&
+                    !alertDeleteExists) {
+                    helpers.addResult(results, 2,
+                        'Activity log alerts are not setup for Virtual Network events',
+                        location
+                    );
+                }
+
             } else {
-                helpers.addResult(
-                    results,
-                    0,
+                helpers.addResult(results, 0,
                     'No matching resources found, ignoring monitoring requirement',
                     location
                 );

@@ -12,6 +12,7 @@ var WebSiteManagementClient     = require('azure-arm-website');
 var SQLManagementClient         = require('azure-arm-sql');
 var PolicyClient                = require('azure-arm-resource').PolicyClient;
 var NetworkManagementClient     = require('azure-arm-network');
+
 // Azure Service Modules
 var StorageServiceClient        = require('azure-storage');
 var KeyVaultClient              = require('azure-keyvault');

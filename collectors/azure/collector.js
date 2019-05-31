@@ -139,12 +139,21 @@ var postcalls = {
         }
     },
     webApps: {
+        getAuthSettings: {
+            api: "WebSiteManagementClient",
+            reliesOnService: ['webApps', 'webApps'],
+            reliesOnCall: ['list', 'list'],
+            filterKey: ['resourceGroup', 'name'],
+            filterValue: ['resourceGroup', 'name'],
+            arm: true
+        },
         listConfigurations: {
             api: "WebSiteManagementClient",
             reliesOnService: ['webApps', 'webApps'],
             reliesOnCall: ['list', 'list'],
             filterKey: ['resourceGroup', 'name'],
             filterValue: ['resourceGroup', 'name'],
+            arm: true
 		},
         get: {
             api: "WebSiteManagementClient",
@@ -269,6 +278,7 @@ var processCall = function (AzureConfig, settings, locations, call, service, ser
     // Loop through each of the service's functions
     async.eachOfLimit(call, 10, function (callObj, callKey, callCb) {
         if (!collection[service][callKey]) collection[service][callKey] = {};
+        if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
 
         var locations = helpers.locations(false)[service];
 
@@ -291,6 +301,14 @@ var processCall = function (AzureConfig, settings, locations, call, service, ser
                         collection[service][callKey][locations[l]].err = err.body.message;
                     } else if (err.body && err.body.error && err.body.error.message) {
                         collection[service][callKey][locations[l]].err = err.body.error.message;
+                    } else if (data && data.length && data.length>0 && err.length && err.length>0) {
+                        var errorsReturned;
+                        for (e in err){
+                          if (err[e].statusCode != 404){
+                             errorsReturned += err[e].message + '; '
+                          }
+                        }
+                        if (errorsReturned) collection[service][callKey][locations[l]].err = errorsReturned;
                     } else {
                         collection[service][callKey][locations[l]].err = "An error ocurred while retrieving service data";
                     }
@@ -352,7 +370,6 @@ var collect = function (AzureConfig, settings, callback) {
 
     async.eachOfLimit(calls, 10, function (call, service, serviceCbcall) {
         var service = service;
-        if (settings.api_calls && settings.api_calls.indexOf(service + ':' + Object.keys(call)[0]) === -1) return serviceCbcall();
         if (!collection[service]) collection[service] = {};
 
         processCall(AzureConfig, settings, locations, call, service, function () {
@@ -362,7 +379,6 @@ var collect = function (AzureConfig, settings, callback) {
         // Now loop through the follow up calls
         async.eachOfLimit(postcalls, 10, function (postCall, service, serviceCbpostCall) {
             var service = service;
-            if (settings.api_calls && settings.api_calls.indexOf(service + ':' + Object.keys(postCall)[0]) === -1) return serviceCbpostCall();
             if (!collection[service]) collection[service] = {};
 
             processCall(AzureConfig, settings, locations, postCall, service, function () {
@@ -372,7 +388,6 @@ var collect = function (AzureConfig, settings, callback) {
             // Now loop through the follow up calls
             async.eachOfLimit(finalcalls, 10, function (finalCall, service, serviceCbfinalCall) {
                 var service = service;
-                if (settings.api_calls && settings.api_calls.indexOf(service + ':' + Object.keys(finalCall)[0]) === -1) return serviceCbfinalCall();
                 if (!collection[service]) collection[service] = {};
 
                 processCall(AzureConfig, settings, locations, finalCall, service, function () {
@@ -383,7 +398,6 @@ var collect = function (AzureConfig, settings, callback) {
                 // Now loop through the follow up calls
                 async.eachOfLimit(postfinalcalls, 10, function (postFinalCall, service, serviceCbpostFinalCall) {
                     var service = service;
-                    if (settings.api_calls && settings.api_calls.indexOf(service + ':' + Object.keys(postFinalCall)[0]) === -1) return serviceCbpostFinalCall();
                     if (!collection[service]) collection[service] = {};
 
                     processCall(AzureConfig, settings, locations, postFinalCall, service, function () {

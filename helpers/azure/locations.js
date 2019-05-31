@@ -48,7 +48,7 @@ module.exports = {
 	virtualMachines: locations,
 	disks: locations,
 	virtualMachineExtensions: locations,
-	activityLogAlerts: locations,
+	activityLogAlerts: ['global'],
 	vaults: locations,
 	KeyVaultClient: locations,
 	blobContainers: locations,

@@ -141,9 +141,11 @@ module.exports = {
         'transferLoggingEnabled'        : require(__dirname + '/plugins/aws/transfer/transferLoggingEnabled.js')
     },
     azure : {
+        'networkAccessDefaultAction'    : require(__dirname + '/plugins/azure/storageaccounts/networkAccessDefaultAction.js'),
         'storageAccountsHttps'          : require(__dirname + '/plugins/azure/storageaccounts/storageAccountsHttps.js'),
         'storageAccountsEncryption'     : require(__dirname + '/plugins/azure/storageaccounts/storageAccountsEncryption.js'),
 
+        'blobContainersPrivateAccess'   : require(__dirname + '/plugins/azure/blobservice/blobContainersPrivateAccess.js'),	
         'blobServiceImmutable'          : require(__dirname + '/plugins/azure/blobservice/blobServiceImmutable.js'),
         'fileServiceAllAccessAcl'       : require(__dirname + '/plugins/azure/fileservice/fileServiceAllAccessAcl.js'),
         'tableServiceAllAccessAcl'      : require(__dirname + '/plugins/azure/tableservice/tableServiceAllAccessAcl.js'),
@@ -182,7 +184,12 @@ module.exports = {
         'openSMBoTCP'                   : require(__dirname + '/plugins/azure/networksecuritygroups/openSMBoTCP.js'),
         'openSQLServer'                 : require(__dirname + '/plugins/azure/networksecuritygroups/openSQLServer.js'),
 
+        'pythonVersion'                 : require(__dirname + '/plugins/azure/appservice/pythonVersion.js'),
+        'clientCertEnabled'             : require(__dirname + '/plugins/azure/appservice/clientCertEnabled.js'),
+        'netFrameworkVersion'       	  : require(__dirname + '/plugins/azure/appservice/netFrameworkVersion.js'),
+        'authEnabled'                   : require(__dirname + '/plugins/azure/appservice/authEnabled.js'),
         'identityEnabled'               : require(__dirname + '/plugins/azure/appservice/identityEnabled.js'),
+        'http20Enabled'                 : require(__dirname + '/plugins/azure/appservice/http20Enabled.js'),
         'httpsOnlyEnabled'              : require(__dirname + '/plugins/azure/appservice/httpsOnlyEnabled.js')
     },
     github: {

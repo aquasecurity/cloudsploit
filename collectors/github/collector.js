@@ -18,7 +18,7 @@ var calls = {
     apps: {
         listRepos: {
             type: 'server',
-            paginate: 'repositories',
+            paginate: 'self',
             params: {
                 per_page: 100
             }
