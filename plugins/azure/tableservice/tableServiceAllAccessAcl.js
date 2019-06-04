@@ -16,7 +16,7 @@ module.exports = {
         var source = {};
 		var locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.FileService, function(location, rcb){
+        async.each(locations.TableService, function(location, rcb){
             var tableService = helpers.addSource(cache, source,
                 ['TableService', 'getTableAcl', location]);
 
@@ -24,7 +24,7 @@ module.exports = {
 
             if (tableService.err) {
                 helpers.addResult(results, 3,
-                    'Unable to query File Service: ' + helpers.addError(tableService), location);
+                    'Unable to query Table Service: ' + helpers.addError(tableService), location);
                 return rcb();
             }
 

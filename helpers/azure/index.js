@@ -2,34 +2,35 @@ var regLocations = require('./locations.js');
 var govLocations = require('./locations_gov.js');
 
 var msRestAzure                 = require('ms-rest-azure');
+
 // Azure Resource Management
-var ResourceManagementClient    = require('azure-arm-resource').ResourceManagementClient;
-var StorageManagementClient     = require('azure-arm-storage');
 var ComputeManagementClient     = require('azure-arm-compute');
-var MonitorManagementClient     = require('azure-arm-monitor');
 var KeyVaultMangementClient     = require('azure-arm-keyvault');
-var WebSiteManagementClient     = require('azure-arm-website');
-var SQLManagementClient         = require('azure-arm-sql');
-var PolicyClient                = require('azure-arm-resource').PolicyClient;
+var MonitorManagementClient     = require('azure-arm-monitor');
 var NetworkManagementClient     = require('azure-arm-network');
+var PolicyClient                = require('azure-arm-resource').PolicyClient;
+var ResourceManagementClient    = require('azure-arm-resource').ResourceManagementClient;
+var SQLManagementClient         = require('azure-arm-sql');
+var StorageManagementClient     = require('azure-arm-storage');
+var WebSiteManagementClient     = require('azure-arm-website');
 
 // Azure Service Modules
-var StorageServiceClient        = require('azure-storage');
 var KeyVaultClient              = require('azure-keyvault');
+var StorageServiceClient        = require('azure-storage');
 
 // Api Mapping
 var mapAzureApis = {
-	"ResourceManagementClient" : ResourceManagementClient,
-	"StorageManagementClient"  : StorageManagementClient,
-	"StorageServiceClient"     : StorageServiceClient,
-	"ComputeManagementClient"  : ComputeManagementClient,
-	"MonitorManagementClient"  : MonitorManagementClient,
-	"KeyVaultClient"           : KeyVaultClient,
-    "KeyVaultMangementClient"  : KeyVaultMangementClient,
-    "SQLManagementClient"      : SQLManagementClient,
-    "PolicyClient"             : PolicyClient,
-	"WebSiteManagementClient"  : WebSiteManagementClient,
-	"NetworkManagementClient"  : NetworkManagementClient,
+	"ComputeManagementClient"   : ComputeManagementClient,
+	"KeyVaultClient"            : KeyVaultClient,
+	"KeyVaultMangementClient"   : KeyVaultMangementClient,
+	"MonitorManagementClient"   : MonitorManagementClient,
+	"NetworkManagementClient"   : NetworkManagementClient,
+	"PolicyClient"              : PolicyClient,
+	"ResourceManagementClient"  : ResourceManagementClient,
+	"SQLManagementClient"       : SQLManagementClient,
+	"StorageManagementClient"   : StorageManagementClient,
+	"StorageServiceClient"      : StorageServiceClient,
+	"WebSiteManagementClient"   : WebSiteManagementClient,
 }
 
 const UNKNOWN_LOCATION = "unknown";

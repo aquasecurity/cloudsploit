@@ -21,20 +21,21 @@ module.exports = {
             cache, source, ['activityLogAlerts', 'listByResourceGroup', 'global']
         );
 
-        if (!activityLogAlerts) return rcb();
+        if (!activityLogAlerts) return callback();
 
         if (activityLogAlerts.err) {
             helpers.addResult(results, 3,
-                'Unable to query activity log alerts: ' + helpers.addError(activityLogAlerts), location);
-            return rcb();
+                'Unable to query activity log alerts: ' + helpers.addError(activityLogAlerts), 'global');
+            return callback();
         }
 
         if (!activityLogAlerts.data || !activityLogAlerts.data.length) {
             helpers.addResult(results, 2,
-                'Activity log alerts are not setup', location);
+                'Activity log alerts are not setup', 'global');
         }
 
         async.each(locations.resources, function(location, rcb) {
+
             var resourceList = helpers.addSource(cache, source, ['resources', 'list', location]);
 
             var virtualNetworkResourceList = resourceList.data.filter((d) => {

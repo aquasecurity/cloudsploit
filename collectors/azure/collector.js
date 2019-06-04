@@ -304,9 +304,9 @@ var processCall = function (AzureConfig, settings, locations, call, service, ser
                     } else if (data && data.length && data.length>0 && err.length && err.length>0) {
                         var errorsReturned;
                         for (e in err){
-                          if (err[e].statusCode != 404){
-                             errorsReturned += err[e].message + '; '
-                          }
+                            if (err[e].statusCode != 404){
+                                errorsReturned += err[e].message + '; '
+                            }
                         }
                         if (errorsReturned) collection[service][callKey][locations[l]].err = errorsReturned;
                     } else {

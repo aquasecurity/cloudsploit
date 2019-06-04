@@ -17,115 +17,116 @@ module.exports = {
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        function sqlResourceExists(resourceList){
-            return JSON.stringify(resourceList).indexOf('Microsoft.Sql') > -1
+        const activityLogAlerts = helpers.addSource(
+            cache, source, ['activityLogAlerts', 'listByResourceGroup', 'global']
+        );
+
+        if (!activityLogAlerts) return callback();
+
+        if (activityLogAlerts.err) {
+            helpers.addResult(results, 3,
+                'Unable to query activity log alerts: ' + helpers.addError(activityLogAlerts), 'global');
+            return callback();
         }
 
-        async.each(locations.activityLogAlerts, function(location, rcb){
-            const activityLogAlerts = helpers.addSource(
-                cache, source, ['activityLogAlerts', 'listByResourceGroup', location]
-            );
+        if (!activityLogAlerts.data || !activityLogAlerts.data.length) {
+            helpers.addResult(results, 2,
+                'Activity log alerts are not setup', 'global');
+        }
+
+        async.each(locations.resources, function(location, rcb) {
 
             var resourceList = helpers.addSource(cache, source, ['resources', 'list', location]);
 
-            if(sqlResourceExists(resourceList)){
-                if (!activityLogAlerts) return rcb();
+            var sqlServerResourceList = resourceList.data.filter((d) => {
+                return d.type == 'Microsoft.Sql/servers';
+            });
 
-                if (activityLogAlerts.err) {
-                    helpers.addResult(results, 3, 'Unable to query activity log alerts: ' + helpers.addError(activityLogAlerts), location);
-                    return rcb();
-                }
-                if (!activityLogAlerts.data || !activityLogAlerts.data.length) {
-                    helpers.addResult(results, 2, 'Activity log alerts are not setup for this location', location);
-                } else {
-                    let alertCreateUpdateExists = false;
-                    let alertCreateUpdateEnabled = false;
-                    let alertDeleteExists = false;
-                    let alertDeleteEnabled = false;
+            if (sqlServerResourceList &&
+                sqlServerResourceList.length &&
+                sqlServerResourceList.length>0) {
 
-                    for (let res in activityLogAlerts.data) {
-                        const activityLogAlertResource = activityLogAlerts.data[res];
-                        if (activityLogAlertResource.error==true) {
-                            continue;
-                        }
+                let alertCreateUpdateExists = false;
+                let alertCreateUpdateEnabled = false;
+                let alertDeleteExists = false;
+                let alertDeleteEnabled = false;
 
-                        for (let alert in activityLogAlertResource) {
-                            const activityLogAlert = activityLogAlertResource[alert];
-                            if (activityLogAlert.type!=='Microsoft.Insights/ActivityLogAlerts') continue;
-                            const allConditions = activityLogAlert.condition;
+                for (let res in activityLogAlerts.data) {
+                    const activityLogAlertResource = activityLogAlerts.data[res];
 
-                            for (let conres in allConditions.allOf) {
-                                const condition = allConditions.allOf[conres].equals;
-                                if (condition.indexOf("Microsoft.Sql/servers/firewallRules/write") > -1) {
-                                    alertCreateUpdateExists = true;
-                                    alertCreateUpdateEnabled = (!alertCreateUpdateEnabled && activityLogAlert.enabled ? true : alertCreateUpdateEnabled);
-                                } else if (condition.indexOf("Microsoft.Sql/servers/firewallRules/delete") > -1) {
-                                    alertDeleteExists = true;
-                                    alertDeleteEnabled = (!alertDeleteEnabled && activityLogAlert.enabled ? true : alertDeleteEnabled);
-                                }
+                    if (activityLogAlertResource.type !== 'Microsoft.Insights/ActivityLogAlerts') continue;
+
+                    const allConditions = activityLogAlertResource.condition;
+
+                    var conditionOperation = allConditions.allOf.filter((d) => {
+                        return d.field == 'operationName';
+                    });
+
+                    if (conditionOperation && conditionOperation.length) {
+                        for (c in conditionOperation) {
+                            var condition = conditionOperation[c];
+                            if (condition.equals.indexOf("Microsoft.Sql/servers/firewallRules/write") > -1) {
+                                alertCreateUpdateExists = true;
+                                alertCreateUpdateEnabled = (!alertCreateUpdateEnabled && activityLogAlertResource.enabled ? true : alertCreateUpdateEnabled);
+                            } else if (condition.equals.indexOf("Microsoft.Sql/servers/firewallRules/delete") > -1) {
+                                alertDeleteExists = true;
+                                alertDeleteEnabled = (!alertDeleteEnabled && activityLogAlertResource.enabled ? true : alertDeleteEnabled);
                             }
-                        }
-
-                        if (alertCreateUpdateExists && alertCreateUpdateEnabled &&
-                            alertDeleteExists && alertDeleteEnabled) {
-                            helpers.addResult(
-                                results,
-                                0,
-                                'SQL Server Firewall Rule events are being monitored for Create/Update and Delete events',
-                                location
-                            );
-                        } else {
-                            if ((!alertCreateUpdateExists) ||
-                                (alertCreateUpdateExists && !alertCreateUpdateEnabled)) {
-                                helpers.addResult(
-                                    results,
-                                    2,
-                                    'SQL Server Firewall Rule events are not being monitored for Create/Update events',
-                                    location
-                                );
-                            } else {
-                                helpers.addResult(
-                                    results,
-                                    0,
-                                    'SQL Server Firewall Rule events are being monitored for Create/Update events',
-                                    location
-                                );
-                            }
-
-                            if ((!alertDeleteExists) ||
-                                (alertDeleteExists && !alertDeleteEnabled)) {
-                                helpers.addResult(
-                                    results,
-                                    2,
-                                    'SQL Server Firewall Rule events are not being monitored for Delete events',
-                                    location
-                                );
-                            } else {
-                                helpers.addResult(
-                                    results,
-                                    0,
-                                    'SQL Server Firewall Rule events are being monitored for Delete events',
-                                    location
-                                );
-                            }
-                        }
-
-                        if (!alertCreateUpdateExists &&
-                            !alertDeleteExists) {
-                            helpers.addResult(
-                                results,
-                                2,
-                                'Activity log alerts are not setup for SQL Server firewall rule events',
-                                location
-                            );
                         }
                     }
                 }
+
+                if (alertCreateUpdateExists &&
+                    alertCreateUpdateEnabled &&
+                    alertDeleteExists &&
+                    alertDeleteEnabled) {
+                    helpers.addResult(
+                        results,
+                        0,
+                        'SQL Server Firewall Rule  events are being monitored for Create/Update and Delete events',
+                        location
+                    );
+                } else {
+                    if ((!alertCreateUpdateExists) ||
+                        (alertCreateUpdateExists &&
+                            !alertCreateUpdateEnabled)) {
+                        helpers.addResult(results, 2,
+                            'SQL Server Firewall Rule  events are not being monitored for Create/Update events',
+                            location
+                        );
+                    } else {
+                        helpers.addResult(results, 0,
+                            'SQL Server Firewall Rule  events are being monitored for Create/Update events',
+                            location
+                        );
+                    }
+
+                    if ((!alertDeleteExists) ||
+                        (alertDeleteExists &&
+                            !alertDeleteEnabled)) {
+                        helpers.addResult(results, 2,
+                            'SQL Server Firewall Rule  events are not being monitored for Delete events',
+                            location
+                        );
+                    } else {
+                        helpers.addResult(results, 0,
+                            'SQL Server Firewall Rule  events are being monitored for Delete events',
+                            location
+                        );
+                    }
+                }
+
+                if (!alertCreateUpdateExists &&
+                    !alertDeleteExists) {
+                    helpers.addResult(results, 2,
+                        'Activity log alerts are not setup for SQL Server Firewall Rule  events',
+                        location
+                    );
+                }
+
             } else {
-                helpers.addResult(
-                    results,
-                    0,
-                    'No SQL Server Resources found, ignoring monitoring requirement',
+                helpers.addResult(results, 0,
+                    'No matching resources found, ignoring monitoring requirement',
                     location
                 );
             }
