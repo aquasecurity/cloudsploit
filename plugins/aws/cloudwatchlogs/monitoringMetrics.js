@@ -4,15 +4,15 @@ var helpers = require('../../../helpers/aws');
 var filterPatterns = [
 	{
 		name: 'Unauthorized API Calls',
-		pattern: '{ ($.errorCode = \"*UnauthorizedOperation\") || ($.errorCode = \"AccessDenied*\") }'
+		pattern: '{ ($.errorCode = *UnauthorizedOperation) || ($.errorCode = AccessDenied*) }'
 	},
 	{
 		name: 'Sign In Without MFA',
-		pattern: '{ ($.eventName = "ConsoleLogin") && ($.additionalEventData.MFAUsed != "Yes") }'
+		pattern: '{ ($.eventName = ConsoleLogin) && ($.additionalEventData.MFAUsed != Yes) }'
 	},
 	{
 		name: 'Root Account Usage',
-		pattern: '{ $.userIdentity.type = \"Root\" && $.userIdentity.invokedBy NOT EXISTS && $.eventType != \"AwsServiceEvent\" }'
+		pattern: '{ $.userIdentity.type = Root && $.userIdentity.invokedBy NOT EXISTS && $.eventType != AwsServiceEvent }'
 	},
 	{
 		name: 'IAM Policy Changes',
@@ -28,7 +28,7 @@ var filterPatterns = [
 	},
 	{
 		name: 'Disabled CMKs',
-		pattern: '{($.eventSource = kms.amazonaws.com) && (($.eventName=DisableKey)||($.eventName=ScheduleKeyDeletion))} }'
+		pattern: '{($.eventSource = kms.amazonaws.com) && (($.eventName=DisableKey)||($.eventName=ScheduleKeyDeletion)) }'
 	},
 	{
 		name: 'S3 Policy Changes',
@@ -56,7 +56,7 @@ var filterPatterns = [
 	},
 	{
 		name: 'VPC Changes',
-		pattern: '"{ ($.eventName = CreateVpc) || ($.eventName = DeleteVpc) || ($.eventName = ModifyVpcAttribute) || ($.eventName = AcceptVpcPeeringConnection) || ($.eventName = CreateVpcPeeringConnection) || ($.eventName = DeleteVpcPeeringConnection) || ($.eventName = RejectVpcPeeringConnection) || ($.eventName = AttachClassicLinkVpc) || ($.eventName = DetachClassicLinkVpc) || ($.eventName = DisableVpcClassicLink) || ($.eventName = EnableVpcClassicLink) }'
+		pattern: '{ ($.eventName = CreateVpc) || ($.eventName = DeleteVpc) || ($.eventName = ModifyVpcAttribute) || ($.eventName = AcceptVpcPeeringConnection) || ($.eventName = CreateVpcPeeringConnection) || ($.eventName = DeleteVpcPeeringConnection) || ($.eventName = RejectVpcPeeringConnection) || ($.eventName = AttachClassicLinkVpc) || ($.eventName = DetachClassicLinkVpc) || ($.eventName = DisableVpcClassicLink) || ($.eventName = EnableVpcClassicLink) }'
 	}
 ];
 
@@ -146,18 +146,20 @@ module.exports = {
 
 				// If there is a filter setup, check for all strings.
 				for (p in filterPatterns) {
+					var found = false
 					var pattern = filterPatterns[p];
+					var patternSearch = pattern.pattern.replace(/\s+/g, '').toLowerCase()
 
 					for (f in filters) {
 						var filter = filters[f];
 
-						if (filter.indexOf(pattern.pattern.replace(/\s+/g, '').toLowerCase()) > - 1) {
-							pattern.found = true;
+						if (filter.indexOf(patternSearch) > - 1) {
+							found = true;
 							break;
 						}
 					}
 
-					if (!pattern.found) {
+					if (!found) {
 						missing.push(pattern.name);
 					}
 				}
