@@ -23,7 +23,7 @@ module.exports = {
             if (!authSettings) return rcb();
 
             if (authSettings.err || !authSettings.data) {
-                helpers.addResult(results, 3, 'Unable to query App Service: ' + helpers.addError(webApps), location);
+                helpers.addResult(results, 3, 'Unable to query App Service: ' + helpers.addError(authSettings), location);
                 return rcb();
             }
             if (!authSettings.data.length) {
