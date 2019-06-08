@@ -147,10 +147,13 @@ module.exports = {
             instance_count_region_threshold_eu_west_1: settings.instance_count_region_threshold_eu_west_1 || this.settings.instance_count_region_threshold_eu_west_1.default,
             instance_count_region_threshold_eu_west_2: settings.instance_count_region_threshold_eu_west_2 || this.settings.instance_count_region_threshold_eu_west_2.default,
             instance_count_region_threshold_eu_west_3: settings.instance_count_region_threshold_eu_west_3 || this.settings.instance_count_region_threshold_eu_west_3.default,
+            instance_count_region_threshold_eu_north_1: settings.instance_count_region_threshold_eu_north_1 || this.settings.instance_count_region_threshold_eu_north_1.default,
             instance_count_region_threshold_sa_east_1: settings.instance_count_region_threshold_sa_east_1 || this.settings.instance_count_region_threshold_sa_east_1.default,
             instance_count_region_threshold_ap_south_1: settings.instance_count_region_threshold_ap_south_1 || this.settings.instance_count_region_threshold_ap_south_1.default,
             instance_count_region_threshold_ap_east_1: settings.instance_count_region_threshold_ap_east_1 || this.settings.instance_count_region_threshold_ap_east_1.default,
-            instance_count_region_threshold_ca_central_1: settings.instance_count_region_threshold_ca_central_1 || this.settings.instance_count_region_threshold_ca_central_1.default
+            instance_count_region_threshold_ca_central_1: settings.instance_count_region_threshold_ca_central_1 || this.settings.instance_count_region_threshold_ca_central_1.default,
+            instance_count_region_threshold_us_gov_west_1: settings.instance_count_region_threshold_us_gov_west_1 || this.settings.instance_count_region_threshold_us_gov_west_1.default,
+            instance_count_region_threshold_us_gov_east_1: settings.instance_count_region_threshold_us_gov_east_1 || this.settings.instance_count_region_threshold_us_gov_east_1.default
         };
 
         for (c in config) {

@@ -11,7 +11,7 @@ module.exports = function(GitHubConfig, octokit, collection, callback) {
     var repos = collection.apps.listRepos.data;
     var owner = GitHubConfig.login;
 
-    async.eachLimit(repos, 15, function(repoObj, cb){
+    async.eachLimit(repos, 5, function(repoObj, cb){
         var repo = repoObj.name;
         collection.repos.listDeployKeys[repo] = {};
 

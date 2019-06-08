@@ -4,5 +4,6 @@ module.exports = {
 	addSource: require('./functions.js').addSource,
 	addError: require('./functions.js').addError,
 	isCustom: require('./functions.js').isCustom,
-	getResource: require('./functions.js').getResource
+	getResource: require('./functions.js').getResource,
+	cleanCollection: require('./functions.js').cleanCollection
 };

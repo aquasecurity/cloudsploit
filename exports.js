@@ -147,6 +147,7 @@ module.exports = {
 
         'blobContainersPrivateAccess'   : require(__dirname + '/plugins/azure/blobservice/blobContainersPrivateAccess.js'),	
         'blobServiceImmutable'          : require(__dirname + '/plugins/azure/blobservice/blobServiceImmutable.js'),
+
         'fileServiceAllAccessAcl'       : require(__dirname + '/plugins/azure/fileservice/fileServiceAllAccessAcl.js'),
         'tableServiceAllAccessAcl'      : require(__dirname + '/plugins/azure/tableservice/tableServiceAllAccessAcl.js'),
         'queueServiceAllAccessAcl'      : require(__dirname + '/plugins/azure/queueservice/queueServiceAllAccessAcl.js'),
@@ -162,7 +163,11 @@ module.exports = {
         'sqlServerFirewallRuleEnabled'  : require(__dirname + '/plugins/azure/logalerts/sqlServerFirewallRuleEnabled.js'),
         'virtualNetworkRuleEnabled'     : require(__dirname + '/plugins/azure/logalerts/virtualNetworkRuleEnabled.js'),
 
+        'monitorVMVulnerability'        : require(__dirname + '/plugins/azure/securitycenter/monitorVMVulnerability.js'),
+        'monitorSQLEncryption'          : require(__dirname + '/plugins/azure/securitycenter/monitorSqlEncryption.js'),
+        'monitorSQLAuditing'            : require(__dirname + '/plugins/azure/securitycenter/monitorSqlAuditing.js'),
         'monitorDiskEncryption'         : require(__dirname + '/plugins/azure/securitycenter/monitorDiskEncryption.js'),
+        'appWhitelistingEnabled'        : require(__dirname + '/plugins/azure/securitycenter/appWhitelistingEnabled.js'),
 
         'openSMTP'                      : require(__dirname + '/plugins/azure/networksecuritygroups/openSMTP.js'),
         'openOracle'                    : require(__dirname + '/plugins/azure/networksecuritygroups/openOracle.js'),

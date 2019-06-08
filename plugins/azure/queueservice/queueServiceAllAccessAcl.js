@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures Queues do not allow full write, delete, or read ACL permissions',
     more_info: 'Queues can be configured to allow to read, write or delete objects. This option should not be configured unless there is a strong business requirement.',
     recommended_action: 'Disable global read/write/detele policies on all Queues and ensure the ACL is configured with least privileges.',
-    link: 'httphttps://docs.microsoft.com/en-us/azure/storage/queues/storage-quickstart-queues-portal',
+    link: 'https://docs.microsoft.com/en-us/azure/storage/queues/storage-quickstart-queues-portal',
     apis: ['resourceGroups:list', 'storageAccounts:list', 'storageAccounts:listKeys', 'QueueService:listQueuesSegmented','QueueService:getQueueAcl'],
 
     run: function(cache, settings, callback) {

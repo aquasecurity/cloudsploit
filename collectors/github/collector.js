@@ -13,6 +13,7 @@ var async = require('async');
 var util = require('util');
 
 var collectors = require(__dirname + '/../../collectors/github');
+var helpers = require(__dirname + '/../../helpers/github');
 
 var calls = {
     apps: {
@@ -313,6 +314,7 @@ var collect = function (GitHubConfig, settings, callback) {
                     });
                 }, function () {
                     //console.log(JSON.stringify(collection, null, 2));
+                    helpers.cleanCollection(collection);
                     callback(null, collection);
                 });
             });

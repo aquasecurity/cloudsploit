@@ -183,6 +183,13 @@ class AzureExecutor {
 			for (var serviceName in serviceCollection) {
 				var service = serviceCollection[serviceName];
 
+				if (callObj.reliesOnService &&
+					callObj.reliesOnService.length &&
+					callObj.reliesOnService.length >= 3 &&
+					callObj.reliesOnService[2] != serviceName) {
+					continue;
+				}
+
 				for (var location in service) {
 					if (location==UNKNOWN_LOCATION) continue;
 					var workOnServicesAtLocation = service[location].data;
@@ -193,7 +200,10 @@ class AzureExecutor {
 
 						serviceArray.push(serviceAtLocation);
 
-                        if (serviceAtLocation.id && ( serviceAtLocation.id.indexOf('/resourceGroups/') > -1 || serviceAtLocation.id.indexOf('/resourcegroups/') > -1 ) && serviceName!=='resourceGroups') {
+                        if (serviceAtLocation.id &&
+							( serviceAtLocation.id.indexOf('/resourceGroups/') > -1 ||
+								serviceAtLocation.id.indexOf('/resourcegroups/') > -1 ) &&
+							serviceName!=='resourceGroups') {
                             let resourceGroupInitIndex = serviceAtLocation.id.indexOf('/resourceGroups/') > -1 ? serviceAtLocation.id.indexOf('/resourceGroups/') : serviceAtLocation.id.indexOf('/resourcegroups/');
                             var resourceGroupIndex = resourceGroupInitIndex + '/resourceGroups/'.length;
 							var resourceGroupEndIndex = serviceAtLocation.id.indexOf('/', resourceGroupIndex);
@@ -222,9 +232,7 @@ class AzureExecutor {
 										serviceAtLocation.parameters[callObj.filterKey[filter]] = keyList[0].keys[0].value;
 									}
 								}
-							} else {
-                                // databaseName handling
-                                if (callObj.filterKey[filter] == 'databaseName'
+							} else if (callObj.filterKey[filter] == 'databaseName'
                                     && serviceAtLocation.type == 'Microsoft.Sql/servers/databases'
                                     && callObj.filterKey.find(key => key == 'serverName')) {
 
@@ -233,34 +241,32 @@ class AzureExecutor {
 
                                     serviceAtLocation.parameters['serverName'] = serverName;
                                     serviceAtLocation.parameters['databaseName'] = serviceAtLocation.name;
-                                } else {
+							} else if (serviceAtLocation.entries) {
+								if (callObj.reliesOnService[filter]=='storageAccounts' && callObj.filterKey[filter]=='name' ) {
+									serviceAtLocation.parameters[callObj.filterKey[filter]] = serviceAtLocation.storageAccount.name;
+								}
+							} else {
 								serviceAtLocation.parameters[callObj.filterKey[filter]] = serviceAtLocation[callObj.filterValue[filter]];
 							}
 						}
 					}
 				}
 			}
-		}
         }
 
 		function loadEntryArray() {
 			var entryServices = [];
 			for (var s = 0; s < serviceArray.length; s++) {
 				var service = serviceArray[s];
-				entryServices = callObj.collection[callObj.reliesOnService[2]][callObj.reliesOnCall[2]][service.location].data;
-				for (var e = 0; e < entryServices.length; e++) {
-					var entries = entryServices[e].entries;
-					if (entries.length == 0) {
-						continue;
-					}
-					for (var i = 0; i < entries.length; i++) {
-						var parameter = (entries[i][callObj["filterKey"][2]] ? entries[i][callObj["filterKey"][2]] : entries[i]);
-
-						service.parameters[callObj["entryKey"][2]] = parameter;
-						service.entry = entries[i];
-						entryArray.push(service);
-						//TO DO: Limit queries per entry based on the storageAccount
-					}
+				var entries = serviceArray[s].entries;
+				if (entries.length == 0) {
+					continue;
+				}
+				for (var i = 0; i < entries.length; i++) {
+					var parameter = (entries[i][callObj["filterKey"][2]] ? entries[i][callObj["filterKey"][2]] : entries[i]);
+					service.parameters[callObj["entryKey"][2]] = parameter;
+					service.entry = entries[i];
+					entryArray.push(service);
 				}
 			}
 		}

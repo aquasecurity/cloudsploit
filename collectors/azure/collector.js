@@ -308,7 +308,9 @@ var processCall = function (AzureConfig, settings, locations, call, service, ser
                                 errorsReturned += err[e].message + '; '
                             }
                         }
-                        if (errorsReturned) collection[service][callKey][locations[l]].err = errorsReturned;
+                        if (errorsReturned) {
+                            collection[service][callKey][locations[l]].err = errorsReturned;
+                        }
                     } else {
                         collection[service][callKey][locations[l]].err = "An error ocurred while retrieving service data";
                     }

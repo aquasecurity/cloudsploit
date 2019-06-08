@@ -9,7 +9,7 @@ module.exports = {
     description: 'Triggers alerts when Virtual Networks are created or modified.',
     more_info: 'Monitoring Virtual Network events gives insight into network access changes and may reduce the risk of breaches due to malicious configuration alteration.',
     recommended_action: 'Configure Virtual Networks to limit access exclusively to those resources that need it. Create activity log alerts to monitor changes to your Virtual Networks configuration.',
-    link: 'https://docs.microsoft.com/en-us/azure/virtual-network/security-overview, https://docs.microsoft.com/en-us/azure/azure-monitor/platform/alerts-activity-log',
+    link: 'https://docs.microsoft.com/en-us/azure/virtual-network/security-overview',
     apis: ['resourceGroups:list','activityLogAlerts:listByResourceGroup','resources:list'],
 
     run: function (cache, settings, callback) {
