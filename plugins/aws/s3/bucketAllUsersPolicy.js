@@ -91,11 +91,11 @@ module.exports = {
                                         if (statement.Principal.Service &&
                                             statement.Principal.Service === '*') {
                                             starPrincipal = true;
-                                        } else if (statement.Principal.length &&
-                                            statement.Principal.indexOf('*') > -1) {
-                                            starPrincipal = true;
                                         } else if (statement.Principal.AWS &&
                                             statement.Principal.AWS === '*') {
+                                            starPrincipal = true;
+                                        } else if (statement.Principal.length &&
+                                            statement.Principal.indexOf('*') > -1) {
                                             starPrincipal = true;
                                         }
                                     }
