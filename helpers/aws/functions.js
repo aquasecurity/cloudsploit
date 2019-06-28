@@ -17,14 +17,14 @@ function waitForCredentialReport(iam, callback, CREDENTIAL_DOWNLOAD_STARTED) {
         var pingCredentialReport = function(pingCb, pingResults) {
             iam.getCredentialReport(function(getErr, getData) {
                 if (getErr || !getData || !getData.Content) {
-                    return pingCb('Waiting for credential report');
+                    return pingCb('Error waiting for credential report: ' + (getErr ? getErr : 'No data returned from AWS after 60 seconds.'));
                 }
 
                 pingCb(null, getData);
             });
         };
 
-        async.retry({times: 20, interval: 1000}, pingCredentialReport, function(reportErr, reportData){
+        async.retry({times: 20, interval: 3000}, pingCredentialReport, function(reportErr, reportData){
             if (reportErr || !reportData) {
                 //CREDENTIAL_REPORT_ERROR = 'Error downloading report';
                 //return callback(CREDENTIAL_REPORT_ERROR);
