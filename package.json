@@ -1,6 +1,6 @@
 {
   "name": "cloudsploit",
-  "version": "0.0.1-dev3",
+  "version": "0.0.1-dev5",
   "description": "AWS security scanning scripts",
   "main": "index.js",
   "scripts": {
@@ -50,6 +50,6 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^6.1.3"
+    "mocha": "^6.1.4"
   }
 }
