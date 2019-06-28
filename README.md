@@ -1,7 +1,7 @@
 [<img src="https://cloudsploit.com/images/logos/text-color-black-png.png" height="130">](https://cloudsploit.com)
 
 [![Build Status](https://travis-ci.org/cloudsploit/scans.svg?branch=master)](https://travis-ci.org/cloudsploit/scans)
-[![DepShield Badge](https://depshield.sonatype.org/badges/cloudsploit/scans/depshield.svg)](https://depshield.github.io)
+[![Known Vulnerabilities](https://snyk.io/test/github/cloudsploit/scans/badge.svg)](https://snyk.io/test/github/cloudsploit/scans)
 
 CloudSploit Scans
 =================
