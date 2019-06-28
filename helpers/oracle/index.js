@@ -28,6 +28,8 @@ function OracleExecutor (OracleConfig, Service) {
 
         callObj.collection = collection;
 
+        if (callObj.restVersion) OracleConfig.RESTversion = callObj.restVersion;
+
         if (callObj.reliesOnService) {
             var aggregatedErrors=[];
             var aggregatedResults=[];

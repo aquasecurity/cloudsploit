@@ -102,10 +102,9 @@ var postcalls = [
     }
 ];
 
-var collection = {};
-
 // Loop through all of the top-level collectors for each service
 var collect = function (GitHubConfig, settings, callback) {
+    var collection = {};
     var appConfig = { id: GitHubConfig.application_id, privateKey: GitHubConfig.private_key };
     if (GitHubConfig.url) appConfig.baseUrl = GitHubConfig.url;
 

@@ -152,8 +152,6 @@ module.exports = {
         'tableServiceAllAccessAcl'      : require(__dirname + '/plugins/azure/tableservice/tableServiceAllAccessAcl.js'),
         'queueServiceAllAccessAcl'      : require(__dirname + '/plugins/azure/queueservice/queueServiceAllAccessAcl.js'),
 
-        'resourceGroups'                : require(__dirname + '/plugins/azure/resourcegroups/resourceGroups.js'),
-
         'vmAgentEnabled'                : require(__dirname + '/plugins/azure/virtualmachines/vmAgentEnabled.js'),
         'vmDiskOSEncryption'            : require(__dirname + '/plugins/azure/virtualmachines/vmDiskOSEncryption.js'),
         'vmDiskDataEncryption'          : require(__dirname + '/plugins/azure/virtualmachines/vmDiskDataEncryption.js'),
@@ -241,6 +239,8 @@ module.exports = {
         'minPasswordLength'             : require(__dirname + '/plugins/oracle/identity/minPasswordLength.js'),
         'emptyGroups'                   : require(__dirname + '/plugins/oracle/identity/emptyGroups.js'),
 
-        'defaultSecurityList'           : require(__dirname + '/plugins/oracle/networking/defaultSecurityList.js')
+        'defaultSecurityList'           : require(__dirname + '/plugins/oracle/networking/defaultSecurityList.js'),
+        'lbHttpsOnly'                   : require(__dirname + '/plugins/oracle/networking/lbHttpsOnly.js'),
+        'lbNoInstances'                 : require(__dirname + '/plugins/oracle/networking/lbNoInstances.js'),
     }
 };

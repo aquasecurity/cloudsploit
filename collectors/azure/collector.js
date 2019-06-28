@@ -296,11 +296,8 @@ var postfinalcalls = {
     }
 };
 
-var collection = {};
-
 // Loop through all of the top-level collectors for each service
-
-var processCall = function (AzureConfig, settings, locations, call, service, serviceCb) {
+var processCall = function (AzureConfig, collection, settings, locations, call, service, serviceCb) {
     // Loop through each of the service's functions
     async.eachOfLimit(call, 10, function (callObj, callKey, callCb) {
         if (!collection[service][callKey]) collection[service][callKey] = {};
@@ -321,7 +318,7 @@ var processCall = function (AzureConfig, settings, locations, call, service, ser
 
         var executor = new helpers.AzureExecutor(LocalAzureConfig);
         executor.run(collection, service, callObj, callKey, function (err, data) {
-            errorHandling(err, data, locations, service, callKey);
+            errorHandling(err, data, collection, locations, service, callKey);
 
             if (!data) {
                 return callCb();
@@ -371,6 +368,8 @@ var processCall = function (AzureConfig, settings, locations, call, service, ser
 
 // Loop through all of the top-level collectors for each service
 var collect = function (AzureConfig, settings, callback) {
+    var collection = {};
+
     AzureConfig.maxRetries = 5;
     AzureConfig.retryDelayOptions = { base: 300 };
     var settings = settings;
@@ -380,7 +379,7 @@ var collect = function (AzureConfig, settings, callback) {
         var service = service;
         if (!collection[service]) collection[service] = {};
 
-        processCall(AzureConfig, settings, locations, call, service, function () {
+        processCall(AzureConfig, collection, settings, locations, call, service, function () {
             serviceCbcall();
         });
     }, function () {
@@ -389,7 +388,7 @@ var collect = function (AzureConfig, settings, callback) {
             var service = service;
             if (!collection[service]) collection[service] = {};
 
-            processCall(AzureConfig, settings, locations, postCall, service, function () {
+            processCall(AzureConfig, collection, settings, locations, postCall, service, function () {
                 serviceCbpostCall();
             });
         }, function () {
@@ -398,7 +397,7 @@ var collect = function (AzureConfig, settings, callback) {
                 var service = service;
                 if (!collection[service]) collection[service] = {};
 
-                processCall(AzureConfig, settings, locations, finalCall, service, function () {
+                processCall(AzureConfig, collection, settings, locations, finalCall, service, function () {
                     serviceCbfinalCall();
                 });
 
@@ -408,7 +407,7 @@ var collect = function (AzureConfig, settings, callback) {
                     var service = service;
                     if (!collection[service]) collection[service] = {};
 
-                    processCall(AzureConfig, settings, locations, postFinalCall, service, function () {
+                    processCall(AzureConfig, collection, settings, locations, postFinalCall, service, function () {
                         serviceCbpostFinalCall();
                     });
 
@@ -432,7 +431,7 @@ var collect = function (AzureConfig, settings, callback) {
 
 };
 
-function errorHandling(err, data, locations, service, callKey) {
+function errorHandling(err, data, collection, locations, service, callKey) {
     if ((err && err.length == undefined) == true || (err && err.length !== undefined && err.length > 0) == true) {
         for (l in locations) {
             if (err.body && err.body.message) {

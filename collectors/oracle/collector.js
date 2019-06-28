@@ -56,6 +56,14 @@ var calls = {
             filterValue: ['compartmentId'],
         }
     },
+    loadBalancer: {
+        list: {
+            api: "loadBalance",
+            restVersion: "/20170115",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId']
+        }
+    },
     user: {
         list: {
             api: 'iam',
@@ -120,13 +128,7 @@ var postcalls = {
     }
 };
 
-var finalcalls = {};
-
-var postfinalcalls = {};
-
-var collection = {};
-
-var processCall = function(OracleConfig, settings, regions, call, service, serviceCb) {
+var processCall = function(OracleConfig, collection, settings, regions, call, service, serviceCb) {
     // Loop through each of the service's functions
     async.eachOfLimit(call, 10, function (callObj, callKey, callCb) {
         if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
@@ -197,7 +199,7 @@ var processCall = function(OracleConfig, settings, regions, call, service, servi
     });
 };
 
-var getRegionSubscription = function(OracleConfig, settings, calls, service, callKey, region, serviceCb) {
+var getRegionSubscription = function(OracleConfig, collection, settings, calls, service, callKey, region, serviceCb) {
 
     var LocalOracleConfig = JSON.parse(JSON.stringify(OracleConfig));
     LocalOracleConfig.region = region;
@@ -223,18 +225,20 @@ var getRegionSubscription = function(OracleConfig, settings, calls, service, cal
 
 // Loop through all of the top-level collectors for each service
 var collect = function (OracleConfig, settings, callback) {
+    var collection = {};
+
     OracleConfig.maxRetries = 5;
     OracleConfig.retryDelayOptions = {base: 300};
 
     var settings = settings;
     var regions = helpers.regions(settings.govcloud);
 
-    getRegionSubscription(OracleConfig, settings, calls, regionSubscriptionService.name, regionSubscriptionService.call, regionSubscriptionService.region, function () {
+    getRegionSubscription(OracleConfig, collection, settings, calls, regionSubscriptionService.name, regionSubscriptionService.call, regionSubscriptionService.region, function () {
         async.eachOfLimit(calls, 10, function (call, service, serviceCb) {
             var service = service;
             if (!collection[service]) collection[service] = {};
 
-            processCall(OracleConfig, settings, regions, call, service, function () {
+            processCall(OracleConfig, collection, settings, regions, call, service, function () {
                 serviceCb();
             });
         }, function () {
@@ -243,7 +247,7 @@ var collect = function (OracleConfig, settings, callback) {
                 var service = service;
                 if (!collection[service]) collection[service] = {};
 
-                processCall(OracleConfig, settings, regions, postCall, service, function () {
+                processCall(OracleConfig, collection, settings, regions, postCall, service, function () {
                     serviceCb();
                 });
             }, function () {

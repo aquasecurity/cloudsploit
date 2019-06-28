@@ -15,6 +15,7 @@ module.exports = {
     group: regions,
     publicIp: regions,
     securityList: regions,
+    loadBalancer: regions,
     user: regions,
     userGroupMembership: regions,
     authenticationPolicy: regions,
