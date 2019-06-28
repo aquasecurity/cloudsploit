@@ -1,11 +1,13 @@
 var availabilityDomain = require( './iam/availabilityDomain.js' );
 var apiKey = require( './iam/apiKey.js' );
+var authenticationPolicy = require( './iam/authenticationPolicy.js' );
 var authToken = require( './iam/authToken.js' );
 var compartment = require( './iam/compartment.js' );
 var customerSecretKey = require( './iam/customerSecretKey.js' );
 var customerSecretKeySummary = require( './iam/customerSecretKeySummary.js' );
 var dynamicGroup = require( './iam/dynamicGroup.js' );
 var faultDomain = require( './iam/faultDomain.js' );
+var group = require( './iam/group.js' );
 var identityProvider = require( './iam/identityProvider.js' );
 var idpGroupMapping = require( './iam/idpGroupMapping.js' );
 var policy = require( './iam/policy.js' );
@@ -26,12 +28,14 @@ var userGroupMembership = require( './iam/userGroupMembership.js' );
 module.exports = {
     availabilityDomain: availabilityDomain,
     apiKey: apiKey,
+    authenticationPolicy: authenticationPolicy,
     authToken: authToken,
     compartment: compartment,
     customerSecretKey: customerSecretKey,
     customerSecretKeySummary: customerSecretKeySummary,
     dynamicGroup: dynamicGroup,
     faultDomain: faultDomain,
+    group: group,
     identityProvider: identityProvider,
     idpGroupMapping: idpGroupMapping,
     policy: policy,

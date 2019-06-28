@@ -2,9 +2,9 @@ var AWS = require('aws-sdk');
 var async = require('async');
 
 module.exports = function(AWSConfig, collection, callback) {
-	var firehose = new AWS.Firehose(AWSConfig);
+    var firehose = new AWS.Firehose(AWSConfig);
 
-	async.eachLimit(collection.firehose.listDeliveryStreams[AWSConfig.region].data, 15, function(deliverystream, cb){
+    async.eachLimit(collection.firehose.listDeliveryStreams[AWSConfig.region].data, 15, function(deliverystream, cb){
         collection.firehose.describeDeliveryStream[AWSConfig.region][deliverystream] = {};
 
         var params = {

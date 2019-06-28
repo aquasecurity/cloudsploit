@@ -14,7 +14,7 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-		var locations = helpers.locations(settings.govcloud);
+        var locations = helpers.locations(settings.govcloud);
 
         async.each(locations.storageAccounts, function(location, rcb){
             var storageAccount = helpers.addSource(cache, source,
@@ -35,10 +35,10 @@ module.exports = {
                     var account = storageAccount.data[acct];
 
                     if (account.enableHttpsTrafficOnly) {
-						helpers.addResult(results, 0, 'Storage Account is configured with HTTPS traffic only', location, account.id);
-					} else {
-						helpers.addResult(results, 2, 'Storage Account is not configured with HTTPS traffic only', location, account.id);
-					}
+                        helpers.addResult(results, 0, 'Storage Account is configured with HTTPS traffic only', location, account.id);
+                    } else {
+                        helpers.addResult(results, 2, 'Storage Account is not configured with HTTPS traffic only', location, account.id);
+                    }
                 }
             }
             rcb();

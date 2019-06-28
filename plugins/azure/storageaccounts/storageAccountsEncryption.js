@@ -14,7 +14,7 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-		var locations = helpers.locations(settings.govcloud);
+        var locations = helpers.locations(settings.govcloud);
 
         async.each(locations.storageAccounts, function(location, rcb){
             var storageAccount = helpers.addSource(cache, source,
@@ -36,13 +36,13 @@ module.exports = {
 
                     if (account.encryption && account.encryption.keySource &&
                         account.encryption.keySource == "Microsoft.Keyvault") {
-						helpers.addResult(results, 0, 'Storage Account Encryption is configured with Microsoft Key vault', location, account.id);
-					} else if (account.encryption && account.encryption.keySource &&
+                        helpers.addResult(results, 0, 'Storage Account Encryption is configured with Microsoft Key vault', location, account.id);
+                    } else if (account.encryption && account.encryption.keySource &&
                         account.encryption.keySource == "Microsoft.Storage") {
-						helpers.addResult(results, 1, 'Storage Account Encryption is configured using Microsoft Default Storage Keys', location, account.id);
-					} else {
+                        helpers.addResult(results, 1, 'Storage Account Encryption is configured using Microsoft Default Storage Keys', location, account.id);
+                    } else {
                         helpers.addResult(results, 2, 'Storage Account is not configured for data at rest encryption', location, account.id);
-					}
+                    }
                 }
             }
             rcb();

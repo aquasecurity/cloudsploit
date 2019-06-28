@@ -55,6 +55,27 @@ var calls = {
             filterKey: ['compartmentId'],
             filterValue: ['compartmentId'],
         }
+    },
+    user: {
+        list: {
+            api: 'iam',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    authenticationPolicy: {
+        get: {
+            api: "iam",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    group: {
+        list: {
+            api: "iam",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
     }
 };
 
@@ -86,6 +107,15 @@ var postcalls = {
             filterKey: ['compartmentId', 'vcnId'],
             filterValue: ['compartmentId', 'id'],
             filterConfig: [true, false],
+        }
+    },
+    userGroupMembership: {
+        list: {
+            api: "iam",
+            reliesOnService: ['group'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'groupId'],
+            filterValue: ['compartmentId', 'id'],
         }
     }
 };

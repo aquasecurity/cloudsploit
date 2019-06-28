@@ -12,39 +12,39 @@ module.exports = {
     apis: ['resourceGroups:list'],
 
     run: function(cache, settings, callback) {
-		var results = [];
-		var source = {};
-		var locations = helpers.locations(settings.govcloud);
+        var results = [];
+        var source = {};
+        var locations = helpers.locations(settings.govcloud);
 
-		async.each(locations.resourceGroups, function(location, rcb){
-			var resourceGroups = helpers.addSource(cache, source,
-				['resourceGroups', 'list', location]);
+        async.each(locations.resourceGroups, function(location, rcb){
+            var resourceGroups = helpers.addSource(cache, source,
+                ['resourceGroups', 'list', location]);
 
-			if (!resourceGroups) return rcb();
+            if (!resourceGroups) return rcb();
 
-			if (resourceGroups.err || !resourceGroups.data) {
-				helpers.addResult(results, 3,
-					'Unable to query Resource Groups: ' + helpers.addError(resourceGroups), location);
-				return rcb();
-			}
+            if (resourceGroups.err || !resourceGroups.data) {
+                helpers.addResult(results, 3,
+                    'Unable to query Resource Groups: ' + helpers.addError(resourceGroups), location);
+                return rcb();
+            }
 
-			if (!resourceGroups.data.length) {
-				helpers.addResult(results, 2, 'No existing resource groups', location);
-			} else {
-				for (res in resourceGroups.data) {
-					var resourceGroup = resourceGroups.data[res];
+            if (!resourceGroups.data.length) {
+                helpers.addResult(results, 2, 'No existing resource groups', location);
+            } else {
+                for (res in resourceGroups.data) {
+                    var resourceGroup = resourceGroups.data[res];
 
-					if (resourceGroup.properties.provisioningState=="Succeeded") {
-						helpers.addResult(results, 0, 'The resource group is properly provisioned', location, resourceGroup.id);
-					} else {
-						helpers.addResult(results, 2, 'This resource group is not provisioned', location, resourceGroup.id);
-					}
-				}
-			}
-			rcb();
-		}, function(){
-			// Global checking goes here
-			callback(null, results, source);
-		});
+                    if (resourceGroup.properties.provisioningState=="Succeeded") {
+                        helpers.addResult(results, 0, 'The resource group is properly provisioned', location, resourceGroup.id);
+                    } else {
+                        helpers.addResult(results, 2, 'This resource group is not provisioned', location, resourceGroup.id);
+                    }
+                }
+            }
+            rcb();
+        }, function(){
+            // Global checking goes here
+            callback(null, results, source);
+        });
     }
 };

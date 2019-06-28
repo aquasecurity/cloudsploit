@@ -5,7 +5,7 @@ var helpers = require('../../../helpers/oracle');
 module.exports = {
     title: 'Open MySQL',
     category: 'Virtual Cloud Network',
-	description: 'Determine if TCP port 4333 or 3306 for MySQL is open to the public',
+    description: 'Determine if TCP port 4333 or 3306 for MySQL is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as MySQL should be restricted to known IP addresses.',
     recommended_action: 'Restrict TCP ports 4333 and 3306 to known IP addresses',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Network/Concepts/securitylists.htm',
@@ -15,7 +15,7 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-		var regions = helpers.regions(settings.govcloud);
+        var regions = helpers.regions(settings.govcloud);
 
         async.each(regions.vcn, function(region, rcb){
             var vcn = helpers.addSource(cache, source,

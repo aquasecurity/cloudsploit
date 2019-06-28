@@ -12,8 +12,8 @@ module.exports = {
     apis: ['disks:list'],
 
     run: function(cache, settings, callback) {
-		var results = [];
-		var source = {};
+        var results = [];
+        var source = {};
         var locations = helpers.locations(settings.govcloud);
 
         async.each(locations.disks, function(location, rcb){
@@ -22,20 +22,22 @@ module.exports = {
 
             if (!disks) return rcb();
 
-			if (disks.err || !disks.data) {
-				helpers.addResult(results, 3,
-					'Unable to query Disks: ' + helpers.addError(disks), location);
-				return rcb();
+            if (disks.err || !disks.data) {
+                helpers.addResult(results, 3,
+                    'Unable to query Disks: ' + helpers.addError(disks), location);
+                return rcb();
             }
             if (!disks.data.length) {
-				helpers.addResult(results, 0, 'No existing disks', location);
-			} else {
+                helpers.addResult(results, 0, 'No existing disks', location);
+            } else {
                 var reg = 0;
                 for(i in disks.data){
                     if(disks.data[i].name &&
                         disks.data[i].name.search("OsDisk") === -1){
-                        if(!disks.data[i].encryptionSettings || (disks.data[i].encryptionSettings &&
-                            !disks.data[i].encryptionSettings.enabled)){
+                        if(!disks.data[i].encryptionSettings ||
+                            (disks.data[i].encryptionSettings &&
+                            !disks.data[i].encryptionSettings.enabled)
+                        ){
                             helpers.addResult(results, 2, "Data disk encryption is not enabled", location, disks.data[i].id);
                             reg++;
                         }
@@ -48,7 +50,7 @@ module.exports = {
 
             rcb();
         }, function(){
-			// Global checking goes here
+            // Global checking goes here
             callback(null, results, source);
         });
     }

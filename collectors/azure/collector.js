@@ -82,6 +82,12 @@ var calls = {
             api: "WebSiteManagementClient",
             arm: true
         }
+    },
+    profiles: {
+        list: {
+            api: "CdnManagementClient",
+            arm: true
+        }
     }
 };
 
@@ -154,12 +160,22 @@ var postcalls = {
             filterKey: ['resourceGroup', 'name'],
             filterValue: ['resourceGroup', 'name'],
             arm: true
-		},
+        },
         get: {
             api: "WebSiteManagementClient",
             reliesOnService: ['webApps', 'webApps'],
             reliesOnCall: ['list', 'list'],
             filterKey: ['resourceGroupName', 'name'],
+            filterValue: ['resourceGroupName', 'name'],
+            arm: true
+        }
+    },
+    endpoints: {
+        listByProfile: {
+            api: "CdnManagementClient",
+            reliesOnService: ['resourceGroups', 'profiles'],
+            reliesOnCall: ['list', 'list'],
+            filterKey: ['resourceGroupName', 'profileName'],
             filterValue: ['resourceGroupName', 'name'],
             arm: true
         }
@@ -224,6 +240,16 @@ var finalcalls = {
             filterValue: ['[0.{properties/vaultUri'],
             arm: false,
             module: true
+        }
+    },
+    origins: {
+        listByEndpoint: {
+            api: "CdnManagementClient",
+            reliesOnService: ['resourceGroups', 'profiles', 'endpoints'],
+            reliesOnCall: ['list', 'list', 'listByProfile'],
+            filterKey: ['resourceGroupName', 'profileName', 'endpointName'],
+            filterValue: ['resourceGroupName', 'profileName', 'name'],
+            arm: true,
         }
     }
 };
@@ -295,27 +321,7 @@ var processCall = function (AzureConfig, settings, locations, call, service, ser
 
         var executor = new helpers.AzureExecutor(LocalAzureConfig);
         executor.run(collection, service, callObj, callKey, function (err, data) {
-            if ((err && err.length == undefined) == true || (err && err.length !== undefined && err.length > 0) == true) {
-                for (l in locations) {
-                    if (err.body && err.body.message) {
-                        collection[service][callKey][locations[l]].err = err.body.message;
-                    } else if (err.body && err.body.error && err.body.error.message) {
-                        collection[service][callKey][locations[l]].err = err.body.error.message;
-                    } else if (data && data.length && data.length>0 && err.length && err.length>0) {
-                        var errorsReturned;
-                        for (e in err){
-                            if (err[e].statusCode != 404){
-                                errorsReturned += err[e].message + '; '
-                            }
-                        }
-                        if (errorsReturned) {
-                            collection[service][callKey][locations[l]].err = errorsReturned;
-                        }
-                    } else {
-                        collection[service][callKey][locations[l]].err = "An error ocurred while retrieving service data";
-                    }
-                }
-            }
+            errorHandling(err, data, locations, service, callKey);
 
             if (!data) {
                 return callCb();
@@ -325,13 +331,13 @@ var processCall = function (AzureConfig, settings, locations, call, service, ser
             for (var d = 0; d < data.length; d++) {
                 if (data[d].location) {
                     data[d].location = data[d].location.replace(/ /g, "").toLowerCase();
-	                var locationExists = locationsInArray.filter(loc => loc == data[d].location);
-	                var locationIsValid = locations.filter(loc => loc == data[d].location);
-	                if (locationExists && locationExists.length == 0 &&
-	                    locationIsValid && locationIsValid.length > 0) {
-	                    locationsInArray.push(data[d].location);
-	                }
-				} else {
+                    var locationExists = locationsInArray.filter(loc => loc == data[d].location);
+                    var locationIsValid = locations.filter(loc => loc == data[d].location);
+                    if (locationExists && locationExists.length == 0 &&
+                        locationIsValid && locationIsValid.length > 0) {
+                        locationsInArray.push(data[d].location);
+                    }
+                } else {
                     data[d].location = "global";
                     locationsInArray.push(data[d].location);
                 }
@@ -425,5 +431,29 @@ var collect = function (AzureConfig, settings, callback) {
     });
 
 };
+
+function errorHandling(err, data, locations, service, callKey) {
+    if ((err && err.length == undefined) == true || (err && err.length !== undefined && err.length > 0) == true) {
+        for (l in locations) {
+            if (err.body && err.body.message) {
+                collection[service][callKey][locations[l]].err = err.body.message;
+            } else if (err.body && err.body.error && err.body.error.message) {
+                collection[service][callKey][locations[l]].err = err.body.error.message;
+            } else if (data && data.length && data.length>0 && err.length && err.length>0) {
+                var errorsReturned;
+                for (e in err){
+                    if (![404, 403].includes(err[e].statusCode)){
+                        errorsReturned += err[e].message + '; ';
+                    }
+                }
+                if (errorsReturned) {
+                    collection[service][callKey][locations[l]].err = errorsReturned;
+                }
+            } else {
+                collection[service][callKey][locations[l]].err = "An error ocurred while retrieving service data";
+            }
+        }
+    }
+}
 
 module.exports = collect;

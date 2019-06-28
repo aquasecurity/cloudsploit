@@ -33,9 +33,9 @@ var consoleOutputHandler = {
         }
 
         console.log(plugin.category + '\t' + plugin.title + '\t' +
-						(result.resource || 'N/A') + '\t' +
-						(result.region || 'Global') + '\t\t' +
-						statusWord + '\t' + result.message);
+                        (result.resource || 'N/A') + '\t' +
+                        (result.region || 'Global') + '\t\t' +
+                        statusWord + '\t' + result.message);
     },
 
     close: function() {}

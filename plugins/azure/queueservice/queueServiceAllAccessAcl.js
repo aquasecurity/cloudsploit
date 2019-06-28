@@ -14,7 +14,7 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-		var locations = helpers.locations(settings.govcloud);
+        var locations = helpers.locations(settings.govcloud);
 
         async.each(locations.QueueService, function(location, rcb){
             var queueService = helpers.addSource(cache, source,

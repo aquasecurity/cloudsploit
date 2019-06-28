@@ -12,8 +12,8 @@ module.exports = {
     apis: ['virtualMachines:listAll'],
 
     run: function(cache, settings, callback) {
-		var results = [];
-		var source = {};
+        var results = [];
+        var source = {};
         var locations = helpers.locations(settings.govcloud);
 
         async.each(locations.virtualMachines, function(location, rcb){
@@ -22,20 +22,25 @@ module.exports = {
 
             if (!virtualMachines) return rcb();
 
-			if (virtualMachines.err || !virtualMachines.data) {
-				helpers.addResult(results, 3, 'Unable to query Virtual Machines: ' + helpers.addError(virtualMachines), location);
-				return rcb();
+            if (virtualMachines.err || !virtualMachines.data) {
+                helpers.addResult(results, 3, 'Unable to query Virtual Machines: ' + helpers.addError(virtualMachines), location);
+                return rcb();
             }
             if (!virtualMachines.data.length) {
-				helpers.addResult(results, 0, 'No existing virtual machines', location);
-			} else {
+                helpers.addResult(results, 0, 'No existing virtual machines', location);
+            } else {
                 var reg = 0;
                 for(i in virtualMachines.data){
-                    var VMConfig = Object.keys(virtualMachines.data[i].osProfile)[2];
-                    if(virtualMachines.data[i].osProfile && !virtualMachines.data[i].osProfile[VMConfig].provisionVMAgent){
-                        helpers.addResult(results, 2, 'VM agent is not enabled for this VM '+virtualMachines.data[i].name, location, virtualMachines.data[i].id);
-                        reg++;
-                    } 
+                    if (virtualMachines.data[i].osProfile &&
+                        Object.keys(virtualMachines.data[i].osProfile) &&
+                        Object.keys(virtualMachines.data[i].osProfile).length>1
+                    ) {
+                        var VMConfig = Object.keys(virtualMachines.data[i].osProfile)[2];
+                        if(!virtualMachines.data[i].osProfile[VMConfig].provisionVMAgent){
+                            helpers.addResult(results, 2, 'VM agent is not enabled for this VM '+virtualMachines.data[i].name, location, virtualMachines.data[i].id);
+                            reg++;
+                        }
+                    }
                 }
                 if(!reg){
                     helpers.addResult(results, 0, 'VM agent is enabled', location);
@@ -44,7 +49,7 @@ module.exports = {
             }
             rcb();
         }, function(){
-			// Global checking goes here
+            // Global checking goes here
             callback(null, results, source);
         });
     }

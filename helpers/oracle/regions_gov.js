@@ -5,6 +5,6 @@ var regions = [
 ];
 
 module.exports = {
-	all: regions,
-	vcn: regions
+    all: regions,
+    vcn: regions
 };

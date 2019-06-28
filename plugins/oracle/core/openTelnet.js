@@ -3,18 +3,18 @@ var async = require('async');
 var helpers = require('../../../helpers/oracle');
 
 module.exports = {
-	title: 'Open Telnet',
+    title: 'Open Telnet',
     category: 'Virtual Cloud Network',
-	description: 'Determine if TCP port 23 for Telnet is open to the public',
-	more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Telnet should be restricted to known IP addresses.',
-	recommended_action: 'Restrict TCP port 23 to known IP addresses',
+    description: 'Determine if TCP port 23 for Telnet is open to the public',
+    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Telnet should be restricted to known IP addresses.',
+    recommended_action: 'Restrict TCP port 23 to known IP addresses',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Network/Concepts/securitylists.htm',
     apis: ['vcn:list', 'vcn:get', 'publicIp:list', 'securityList:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-		var regions = helpers.regions(settings.govcloud);
+        var regions = helpers.regions(settings.govcloud);
 
         async.each(regions.vcn, function(region, rcb){
             var vcn = helpers.addSource(cache, source,

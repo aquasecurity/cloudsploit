@@ -10,5 +10,5 @@ var locations = [
 ];
 
 module.exports = {
-	all: locations
+    all: locations
 };

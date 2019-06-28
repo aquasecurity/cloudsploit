@@ -25,19 +25,21 @@ module.exports = {
             if (!virtualMachines) return rcb();
 
             if (virtualMachines.err || !virtualMachines.data) {
-				helpers.addResult(results, 3, 'Unable to query Virtual Machines: ' + helpers.addError(virtualMachines), location);
-				return rcb();
+                helpers.addResult(results, 3, 'Unable to query Virtual Machines: ' + helpers.addError(virtualMachines), location);
+                return rcb();
             }
 
             if (!virtualMachines.data.length) {
-				helpers.addResult(results, 0, 'No existing Virtual Machines', location);
-			} else {
+                helpers.addResult(results, 0, 'No existing Virtual Machines', location);
+            } else {
                 for(i in virtualMachines.data){
-                    VMs.push({
-                        'vmId': virtualMachines.data[i].id,
-                        'vmName': virtualMachines.data[i].name,
-                        'protected': false
-                    });
+                    if (virtualMachines.data[i]) {
+                        VMs.push({
+                            'vmId': (virtualMachines.data[i].id ? virtualMachines.data[i].id : 'VM Id Not Found'),
+                            'vmName': (virtualMachines.data[i].name ? virtualMachines.data[i].name : 'VM Name Not Found'),
+                            'protected': false
+                        });
+                    }
                 }
 
                 var virtualMachineExtensions = helpers.addSource(cache, source, ['virtualMachineExtensions', 'list', location]);
@@ -54,17 +56,20 @@ module.exports = {
                     helpers.addResult(results, 1, 'No existing VM Extensions', location);
                 } else {
                     for(var vm in virtualMachineExtensions.data){
-                        var virtualMachine = virtualMachineExtensions.data[vm];
-                        for(var ext in virtualMachine.value) {
-                            var extension = virtualMachine.value[ext];
-                            if (extension.name &&
-                                extension.name.search("IaaSAntimalware") > -1) {
-                                IaaSAntimalware.push({
-                                    'extId': extension.id,
-                                    'extName': extension.name,
-                                    'extSettings': extension.settings.AntimalwareEnabled,
-                                    'extVM': extension.id.split("/")[8]
-                                });
+                        if (virtualMachineExtensions.data[vm]) {
+                            var virtualMachine = virtualMachineExtensions.data[vm];
+                            for(var ext in virtualMachine.value) {
+                                var extension = virtualMachine.value[ext];
+                                if (extension.name &&
+                                    extension.name.search("IaaSAntimalware") > -1
+                                ) {
+                                    IaaSAntimalware.push({
+                                        'extId': (extension.id ? extension.id : 'Ext Id Not Found'),
+                                        'extName': (extension.name ? extension.name : 'Ext Name Not Found'),
+                                        'extSettings':(extension.settings && extension.settings.AntimalwareEnabled ? extension.settings.AntimalwareEnabled : 'Ext Settings Not Found'),
+                                        'extVM': (extension.id && extension.id.split("/").length>7 ? extension.id.split("/")[8] : 'Could not read extVM'),
+                                    });
+                                }
                             }
                         }
                     }
@@ -72,7 +77,8 @@ module.exports = {
 
                 for(i in VMs){
                     for(j in IaaSAntimalware){
-                        if(VMs[i].vmName === IaaSAntimalware[j].extVM && IaaSAntimalware[j].extSettings == 'true'){
+                        if(VMs[i].vmName === IaaSAntimalware[j].extVM
+                            && IaaSAntimalware[j].extSettings == 'true') {
                             VMs[i].protected = true;
                         }
                     }

@@ -14,7 +14,7 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-		var locations = helpers.locations(settings.govcloud);
+        var locations = helpers.locations(settings.govcloud);
 
         async.each(locations.TableService, function(location, rcb){
             var tableService = helpers.addSource(cache, source,
@@ -59,11 +59,11 @@ module.exports = {
                                 }
                             }
                             if (alertRead && alertWrite) {
-                                helpers.addResult(results, 2, 'Acl is allows both read and write access for the table ', location, table.name +  ' etag:' + table.etag + ' policy:' + ident);
+                                helpers.addResult(results, 2, 'Acl is allows both read and write access for the table ', location, table.name + (table.etag ? ' etag:' + table.etag : '') + (ident ? ' policy:' + ident : ''));
                             } else if (alertRead && !alertWrite) {
-                                helpers.addResult(results, 1, 'Acl is allows both read access for the table ', location, table.name +  ' etag:' + table.etag + ' policy:' + ident);
+                                helpers.addResult(results, 1, 'Acl is allows both read access for the table ', location, table.name + (table.etag ? ' etag:' + table.etag : '') + (ident ? ' policy:' + ident : ''));
                             } else if (!alertRead && alertWrite) {
-                                helpers.addResult(results, 1, 'Acl is allows write access for the table ', location, table.name +  ' etag:' + table.etag + ' policy:' + ident);
+                                helpers.addResult(results, 1, 'Acl is allows write access for the table ', location, table.name + (table.etag ? ' etag:' + table.etag : '') + (ident ? ' policy:' + ident : ''));
                             }
                         }
                     } else {

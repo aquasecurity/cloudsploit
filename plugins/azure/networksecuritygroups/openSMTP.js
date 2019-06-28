@@ -2,13 +2,13 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-	title: 'Open SMTP',
-	category: 'Network Security Groups',
-	description: 'Determine if TCP port 25 for SMTP is open to the public',
-	more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as SMTP should be restricted to known IP addresses.',
+    title: 'Open SMTP',
+    category: 'Network Security Groups',
+    description: 'Determine if TCP port 25 for SMTP is open to the public',
+    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as SMTP should be restricted to known IP addresses.',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
-	recommended_action: 'Restrict TCP port 25 to known IP addresses',
-	apis: ['networkSecurityGroups:listAll'],
+    recommended_action: 'Restrict TCP port 25 to known IP addresses',
+    apis: ['networkSecurityGroups:listAll'],
 
     run: function (cache, settings, callback) {
         var results = [];

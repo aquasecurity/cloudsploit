@@ -169,6 +169,9 @@ module.exports = {
         'monitorDiskEncryption'         : require(__dirname + '/plugins/azure/securitycenter/monitorDiskEncryption.js'),
         'appWhitelistingEnabled'        : require(__dirname + '/plugins/azure/securitycenter/appWhitelistingEnabled.js'),
 
+        'defaultSecurityGroup'          : require(__dirname + '/plugins/azure/networksecuritygroups/defaultSecurityGroup.js'),
+
+        'openAllPorts'                  : require(__dirname + '/plugins/azure/networksecuritygroups/openAllPorts.js'),
         'openSMTP'                      : require(__dirname + '/plugins/azure/networksecuritygroups/openSMTP.js'),
         'openOracle'                    : require(__dirname + '/plugins/azure/networksecuritygroups/openOracle.js'),
         'openKibana'                    : require(__dirname + '/plugins/azure/networksecuritygroups/openKibana.js'),
@@ -191,11 +194,13 @@ module.exports = {
 
         'pythonVersion'                 : require(__dirname + '/plugins/azure/appservice/pythonVersion.js'),
         'clientCertEnabled'             : require(__dirname + '/plugins/azure/appservice/clientCertEnabled.js'),
-        'netFrameworkVersion'       	  : require(__dirname + '/plugins/azure/appservice/netFrameworkVersion.js'),
+        'netFrameworkVersion'           : require(__dirname + '/plugins/azure/appservice/netFrameworkVersion.js'),
         'authEnabled'                   : require(__dirname + '/plugins/azure/appservice/authEnabled.js'),
         'identityEnabled'               : require(__dirname + '/plugins/azure/appservice/identityEnabled.js'),
         'http20Enabled'                 : require(__dirname + '/plugins/azure/appservice/http20Enabled.js'),
-        'httpsOnlyEnabled'              : require(__dirname + '/plugins/azure/appservice/httpsOnlyEnabled.js')
+        'httpsOnlyEnabled'              : require(__dirname + '/plugins/azure/appservice/httpsOnlyEnabled.js'),
+        
+        'detectInsecureCustomOrigin'    : require(__dirname + '/plugins/azure/cdn/detectInsecureCustomOrigin.js'),
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
@@ -226,6 +231,16 @@ module.exports = {
         'openFTP'                       : require(__dirname + '/plugins/oracle/core/openFTP.js'),
         'openCIFS'                      : require(__dirname + '/plugins/oracle/core/openCIFS.js'),
         'openDNS'                       : require(__dirname + '/plugins/oracle/core/openDNS.js'),
-        'openSQLServer'                 : require(__dirname + '/plugins/oracle/core/openSQLServer.js')
+        'openSQLServer'                 : require(__dirname + '/plugins/oracle/core/openSQLServer.js'),
+
+        'usersMfaEnabled'               : require(__dirname + '/plugins/oracle/identity/usersMfaEnabled.js'),
+        'passwordRequiresLowercase'     : require(__dirname + '/plugins/oracle/identity/passwordRequiresLowercase.js'),
+        'passwordRequiresNumbers'       : require(__dirname + '/plugins/oracle/identity/passwordRequiresNumbers.js'),
+        'passwordRequiresSymbols'       : require(__dirname + '/plugins/oracle/identity/passwordRequiresSymbols.js'),
+        'passwordRequiresUppercase'     : require(__dirname + '/plugins/oracle/identity/passwordRequiresUppercase.js'),
+        'minPasswordLength'             : require(__dirname + '/plugins/oracle/identity/minPasswordLength.js'),
+        'emptyGroups'                   : require(__dirname + '/plugins/oracle/identity/emptyGroups.js'),
+
+        'defaultSecurityList'           : require(__dirname + '/plugins/oracle/networking/defaultSecurityList.js')
     }
 };

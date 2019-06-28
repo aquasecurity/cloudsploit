@@ -12,8 +12,8 @@ module.exports = {
     apis: ['disks:list'],
 
     run: function(cache, settings, callback) {
-		var results = [];
-		var source = {};
+        var results = [];
+        var source = {};
         var locations = helpers.locations(settings.govcloud);
 
         async.each(locations.disks, function(location, rcb){
@@ -22,21 +22,28 @@ module.exports = {
 
             if (!disks) return rcb();
 
-			if (disks.err || !disks.data) {
-				helpers.addResult(results, 3,
-					'Unable to query Disks: ' + helpers.addError(disks), location);
-				return rcb();
+            if (disks.err || !disks.data) {
+                helpers.addResult(results, 3,
+                    'Unable to query Disks: ' + helpers.addError(disks), location);
+                return rcb();
             }
             if (!disks.data.length) {
-				helpers.addResult(results, 0, 'No existing disks', location);
-			} else {
+                helpers.addResult(results, 0, 'No existing disks', location);
+            } else {
                 var reg = 0;
                 for(i in disks.data){
-                    var diskType = disks.data[i].name.split("_")[1];
-                    if(diskType === "OsDisk"){
-                        if(!disks.data[i].encryptionSettings || (disks.data[i].encryptionSettings && !disks.data[i].encryptionSettings.enabled)){
-                            helpers.addResult(results, 2, "OS disk encryption is not enabled", location, disks.data[i].id);
-                            reg++;
+                    if (disks.data[i].name &&
+                        disks.data[i].name.length>0
+                    ) {
+                        var diskType = disks.data[i].name.split("_")[1];
+                        if (diskType === "OsDisk") {
+                            if (!disks.data[i].encryptionSettings ||
+                                (disks.data[i].encryptionSettings &&
+                                    !disks.data[i].encryptionSettings.enabled)
+                            ) {
+                                helpers.addResult(results, 2, "OS disk encryption is not enabled", location, disks.data[i].id);
+                                reg++;
+                            }
                         }
                     }
                 }
@@ -47,7 +54,7 @@ module.exports = {
 
             rcb();
         }, function(){
-			// Global checking goes here
+            // Global checking goes here
             callback(null, results, source);
         });
     }
