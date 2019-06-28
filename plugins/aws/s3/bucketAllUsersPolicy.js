@@ -94,6 +94,9 @@ module.exports = {
                                         } else if (statement.Principal.length &&
                                             statement.Principal.indexOf('*') > -1) {
                                             starPrincipal = true;
+                                        } else if (statement.Principal.AWS &&
+                                            statement.Principal.AWS === '*') {
+                                            starPrincipal = true;
                                         }
                                     }
 
