@@ -4,7 +4,7 @@
   "description": "AWS security scanning scripts",
   "main": "index.js",
   "scripts": {
-    "test": "mocha ./**/*.spec.js"
+    "test": "mocha './**/*.spec.js'"
   },
   "bin": {
     "cloudsploit-scan": "./index.js"
