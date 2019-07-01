@@ -32,12 +32,14 @@ var globalServices = [
 var calls = {
     ACM: {
         listCertificates: {
-            property: 'CertificateSummaryList'
+            property: 'CertificateSummaryList',
+            paginate: 'NextToken'
         }
     },
     Athena: {
         listWorkGroups: {
             property: 'WorkGroups',
+            paginate: 'NextToken',
             params: {
                 MaxResults: 50
             }
@@ -45,10 +47,15 @@ var calls = {
     },
     AutoScaling: {
         describeAutoScalingGroups: {
-            property: 'AutoScalingGroups'
+            property: 'AutoScalingGroups',
+            paginate: 'NextToken',
+            params: {
+                MaxRecords: 100
+            }
         }
     },
     CloudFront: {
+        // TODO: Pagination is using an older format
         listDistributions: {
             property: 'DistributionList',
             secondProperty: 'Items'
@@ -62,12 +69,14 @@ var calls = {
     CloudWatchLogs: {
         describeLogGroups: {
             property: 'logGroups',
+            paginate: 'nextToken',
             params: {
                 limit: 50
             }
         },
         describeMetricFilters: {
             property: 'metricFilters',
+            paginate: 'nextToken',
             params: {
                 limit: 50 // The max available
             }
@@ -83,15 +92,18 @@ var calls = {
     },
     DirectConnect: {
         describeDirectConnectGateways: {
-            property: 'directConnectGateways'
+            property: 'directConnectGateways',
+            paginate: 'nextToken'
         }
     },
     DirectoryService: {
         describeDirectories: {
-            property: 'DirectoryDescriptions'
+            property: 'DirectoryDescriptions',
+            paginate: 'NextToken'
         }
     },
     DynamoDB: {
+        // TODO: DynamoDB pagination uses a table reference via "ExclusiveStartTableName"
         listTables: {
             property: 'TableNames'
         }
@@ -101,7 +113,8 @@ var calls = {
             property: 'AccountAttributes'
         },
         describeSubnets: {
-            property: 'Subnets'
+            property: 'Subnets',
+            paginate: 'NextToken'
         },
         describeAddresses: {
             property: 'Addresses'
@@ -117,7 +130,9 @@ var calls = {
         },
         describeInstances: {
             property: 'Reservations',
+            paginate: 'NextToken',
             params: {
+                MaxResults: 1000,
                 Filters: [
                     {
                         Name: 'instance-state-name',
@@ -136,7 +151,8 @@ var calls = {
             property: 'SecurityGroups'
         },
         describeVpcs: {
-            property: 'Vpcs'
+            property: 'Vpcs',
+            paginate: 'NextToken'
         },
         describeFlowLogs: {
             // TODO: override bc flowlogs are not available in all regions?
@@ -160,6 +176,7 @@ var calls = {
         },
         describeNatGateways: {
             property: 'NatGateways',
+            paginate: 'NextToken',
             params: {
                 Filter: [
                     {
@@ -173,6 +190,7 @@ var calls = {
         },
         describeVpcPeeringConnections: {
             property: 'VpcPeeringConnections',
+            paginate: 'NextToken',
             params: {
                 Filters: [
                     {
@@ -200,44 +218,60 @@ var calls = {
             }
         },
         describeRouteTables: {
-            property: 'RouteTables'
+            property: 'RouteTables',
+            paginate: 'NextToken'
         }
     },
     EFS: {
         describeFileSystems: {
-            property: 'FileSystems'
+            property: 'FileSystems',
+            paginate: 'NextMarker',
+            paginateReqProp: 'Marker'
         }
     },
     ElasticTranscoder: {
+        // TODO: Pagination via NextPageToken and PageToken
         listPipelines: {
-            property: 'Pipelines'
+            property: 'Pipelines',
+            paginate: 'NextPageToken',
+            paginateReqProp: 'PageToken'
         }
     },
     ELB: {
         describeLoadBalancers: {
-            property: 'LoadBalancerDescriptions'
+            property: 'LoadBalancerDescriptions',
+            paginate: 'NextMarker',
+            paginateReqProp: 'Marker'
         }
     },
     ELBv2: {
         describeLoadBalancers: {
-            property: 'LoadBalancers'
+            property: 'LoadBalancers',
+            paginate: 'NextMarker',
+            paginateReqProp: 'Marker'
         },
         describeTargetGroups: {
-            property: 'TargetGroups'
+            property: 'TargetGroups',
+            paginate: 'NextMarker',
+            paginateReqProp: 'Marker'
         }
     },
     IAM: {
         listServerCertificates: {
-            property: 'ServerCertificateMetadataList'
+            property: 'ServerCertificateMetadataList',
+            paginate: 'Marker'
         },
         listGroups: {
-            property: 'Groups'
+            property: 'Groups',
+            paginate: 'Marker'
         },
         listUsers: {
-            property: 'Users'
+            property: 'Users',
+            paginate: 'Marker'
         },
         listRoles: {
-            property: 'Roles'
+            property: 'Roles',
+            paginate: 'Marker'
         },
         getAccountPasswordPolicy: {
             property: 'PasswordPolicy'
@@ -258,33 +292,46 @@ var calls = {
     },
     KMS: {
         listKeys: {
-            property: 'Keys'
+            property: 'Keys',
+            paginate: 'NextMarker',
+            paginateReqProp: 'Marker',
+            params: {
+                Limit: 1000
+            }
         },
     },
     Lambda: {
         listFunctions: {
-            property: 'Functions'
+            property: 'Functions',
+            paginate: 'NextMarker',
+            paginateReqProp: 'Marker'
         }
     },
     RDS: {
         describeDBInstances: {
-            property: 'DBInstances'
+            property: 'DBInstances',
+            paginate: 'Marker'
         },
         describeDBClusters: {
-            property: 'DBClusters'
+            property: 'DBClusters',
+            paginate: 'Marker'
         },
         describeDBEngineVersions: {
-            property: 'DBEngineVersions'
+            property: 'DBEngineVersions',
+            paginate: 'Marker'
         }
     },
     Redshift: {
         describeClusters: {
-            property: 'Clusters'
+            property: 'Clusters',
+            paginate: 'Marker'
         }
     },
     Route53Domains: {
         listDomains: {
-            property: 'Domains'
+            property: 'Domains',
+            paginate: 'NextPageMarker',
+            paginateReqProp: 'Marker'
         }
     },
     S3: {
@@ -294,13 +341,18 @@ var calls = {
     },
     SageMaker: {
         listNotebookInstances: {
-            property: 'NotebookInstances'
+            property: 'NotebookInstances',
+            paginate: 'NextToken'
         }
     },
     SES: {
         listIdentities: {
             property: 'Identities',
-            params: {IdentityType: 'Domain'},   // TODO: maybe don't filter these?
+            paginate: 'NextToken',
+            params: {
+                IdentityType: 'Domain', // TODO: maybe don't filter these?
+                MaxItems: 1000
+            },
             rateLimit: 1000 // ms to rate limit between regions
         },
         describeActiveReceiptRuleSet: {
@@ -309,7 +361,8 @@ var calls = {
     },
     SNS: {
         listTopics: {
-            property: 'Topics'
+            property: 'Topics',
+            paginate: 'NextToken'
         }
     },
     SQS: {
@@ -322,7 +375,8 @@ var calls = {
             property: 'Parameters',
             params: {
                 MaxResults: 50
-            }
+            },
+            paginate: 'NextToken'
         }
     },
     STS: {
@@ -333,6 +387,7 @@ var calls = {
     Transfer: {
         listServers: {
             property: 'Servers',
+            paginate: 'NextToken',
             params: {
                 MaxResults: 1000
             }
@@ -340,7 +395,8 @@ var calls = {
     },
     WorkSpaces: {
         describeWorkspaces: {
-            property: 'Workspaces'
+            property: 'Workspaces',
+            paginate: 'NextToken'
         }
     }
 };
@@ -635,21 +691,28 @@ var collect = function (AWSConfig, settings, callback) {
                     });
                 } else {
                     var executor = new AWS[service](LocalAWSConfig);
+                    var paginating = false;
                     var executorCb = function (err, data) {
-                        if (err) {
-                            collection[serviceLower][callKey][region].err = err;
-                        }
+                        if (err) collection[serviceLower][callKey][region].err = err;
 
-                        // TODO: pagination
-                        // TODO: handle s3 region fixes (possibly use an override)
                         if (!data) return regionCb();
                         if (callObj.property && !data[callObj.property]) return regionCb();
                         if (callObj.secondProperty && !data[callObj.secondProperty]) return regionCb();
 
-                        if (callObj.secondProperty) {
-                            collection[serviceLower][callKey][region].data = data[callObj.property][callObj.secondProperty];
+                        var dataToAdd = callObj.secondProperty ? data[callObj.property][callObj.secondProperty] : data[callObj.property];
+
+                        if (paginating) {
+                            collection[serviceLower][callKey][region].data = collection[serviceLower][callKey][region].data.concat(dataToAdd);
                         } else {
-                            collection[serviceLower][callKey][region].data = data[callObj.property];
+                            collection[serviceLower][callKey][region].data = dataToAdd;
+                        }
+
+                        // If a "paginate" property is set, e.g. NextToken
+                        var nextToken = callObj.paginate;
+                        if (settings.paginate && nextToken && data[nextToken]) {
+                            paginating = true;
+                            var paginateProp = callObj.paginateReqProp ? callObj.paginateReqProp : nextToken;
+                            return execute([paginateProp, data[nextToken]]);
                         }
 
                         if (callObj.rateLimit) {
@@ -661,12 +724,19 @@ var collect = function (AWSConfig, settings, callback) {
                         }
                     };
 
-                    if (callObj.params) {
-                        executor[callKey](callObj.params, executorCb);
-                    } else {
-                        executor[callKey](executorCb);
+                    function execute(nextTokens) {
+                        // Each region needs its own local copy of callObj.params
+                        // so that the injection of the NextToken doesn't break other calls
+                        var localParams = JSON.parse(JSON.stringify(callObj.params || {}));
+                        if (nextTokens) localParams[nextTokens[0]] = nextTokens[1];
+                        if (callObj.params || nextTokens) {
+                            executor[callKey](localParams, executorCb);
+                        } else {
+                            executor[callKey](executorCb);
+                        }
                     }
 
+                    execute();
                 }
             }, function () {
                 callCb();
