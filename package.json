@@ -33,6 +33,7 @@
     "@octokit/rest": "^16.3.2",
     "async": "^2.6.1",
     "aws-sdk": "^2.395.0",
+    "azure-arm-cdn": "^4.2.0",
     "azure-arm-compute": "^9.1.0",
     "azure-arm-keyvault": "^1.2.0",
     "azure-arm-monitor": "^5.4.0",
