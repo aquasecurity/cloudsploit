@@ -9,6 +9,14 @@ module.exports = {
     recommended_action: '1. Navigate to CDN profiles. 2. Select a profile. 3. Select an endpoint. 4. Select Settings > Origin. 5. Turn off HTTP and make sure HTTPS is turned on.',
     link: 'https://docs.microsoft.com/en-us/azure/cdn/cdn-create-endpoint-how-to',
     apis: ['resourceGroups:list', 'profiles:list', 'endpoints:listByProfile', 'origins:listByEndpoint'],
+    compliance: {
+        hipaa: 'HIPAA requires all data to be transmitted over secure channels. ' +
+                'Secure CDN origins should be used to ensure traffic between ' +
+                'the Azure CDN and backend service is encrypted.',
+        pci: 'All card holder data must be transmitted over secure channels. ' +
+                'Secure CDN origins should be used to ensure traffic between ' +
+                'the Azure CDN and backend service is encrypted.'
+    },
 
     run: function (cache, settings, callback) {
         const results = [];

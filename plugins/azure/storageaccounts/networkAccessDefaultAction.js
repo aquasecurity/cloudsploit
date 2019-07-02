@@ -9,6 +9,13 @@ module.exports = {
   recommended_action: 'Go to your Storage Account, select "Firewalls and virtual networks", ensure that allow access from all networks is not selected.',
   link: 'https://docs.microsoft.com/en-us/azure/storage/common/storage-network-security',
   apis: ['storageAccounts:list'],
+  compliance: {
+      pci: 'PCI requires data access to be configured to use a firewall. Removing the ' +
+            'default network access action enables a more granular level of access controls.',
+      hipaa: 'HIPAA access controls require data access to be restricted to known sources. ' +
+            'Preventing default storage account access behavior enables a more granular level ' +
+            'of access controls.'
+  },
 
   run: function (cache, settings, callback) {
     const results = [];

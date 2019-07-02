@@ -10,6 +10,14 @@ module.exports = {
     recommended_action: 'In your App Service go to SSL Settings > HTTPS Only and set it to "On" (Enabled).',
     link: 'https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-ssl#enforce-https',
     apis: ['webApps:list'],
+    compliance: {
+        hipaa: 'HIPAA requires all data to be transmitted over secure channels. ' +
+                'App Service HTTPS redirection should be used to ensure site visitors ' +
+                'are always connecting over a secure channel.',
+        pci: 'All card holder data must be transmitted over secure channels. ' +
+                'App Service HTTPS redirection should be used to ensure site visitors ' +
+                'are always connecting over a secure channel.'
+    },
 
     run: function (cache, settings, callback) {
         const results = [];

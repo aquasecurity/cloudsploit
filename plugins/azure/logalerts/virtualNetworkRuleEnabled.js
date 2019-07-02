@@ -11,6 +11,13 @@ module.exports = {
     recommended_action: 'Configure Virtual Networks to limit access exclusively to those resources that need it. Create activity log alerts to monitor changes to your Virtual Networks configuration.',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-network/security-overview',
     apis: ['resourceGroups:list','activityLogAlerts:listByResourceGroup','resources:list'],
+    compliance: {
+        hipaa: 'HIPAA requires the auditing of changes to access controls for network ' +
+                'resources.',
+        pci: 'PCI requires the use of firewalls to protect cardholder data. Configuring ' +
+                'a monitor for changes to Virtual Networks ensures the integrity of those ' +
+                'firewalls.'
+    },
 
     run: function (cache, settings, callback) {
         const results = [];

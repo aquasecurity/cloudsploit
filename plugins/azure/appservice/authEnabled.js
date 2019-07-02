@@ -9,6 +9,11 @@ module.exports = {
     recommended_action: 'In your App Service go to Authentication / Authorization > Set App Service Authentication to "On" (Enabled)',
     link: 'https://docs.microsoft.com/en-us/azure/app-service/overview-authentication-authorization',
     apis: ['webApps:list', 'webApps:getAuthSettings'],
+    compliance: {
+        hipaa: 'HIPAA requires all application access to be restricted to known users ' +
+               'for auditing and security controls.',
+        pci: 'Access to system components must be restricted to known users.'
+    },
 
     run: function (cache, settings, callback) {
         const results = [];

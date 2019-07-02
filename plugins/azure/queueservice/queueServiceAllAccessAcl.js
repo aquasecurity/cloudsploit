@@ -10,6 +10,12 @@ module.exports = {
     recommended_action: 'Disable global read/write/detele policies on all Queues and ensure the ACL is configured with least privileges.',
     link: 'https://docs.microsoft.com/en-us/azure/storage/queues/storage-quickstart-queues-portal',
     apis: ['resourceGroups:list', 'storageAccounts:list', 'storageAccounts:listKeys', 'QueueService:listQueuesSegmented','QueueService:getQueueAcl'],
+    compliance: {
+        hipaa: 'HIPAA access controls require data to be secured with least-privileged ' +
+                'ACLs. Queue Service ACLs enable granular permissions for data access.',
+        pci: 'PCI data must be secured via least-privileged ACLs. Queue Service ACLs ' +
+                'enable granular permissions for data access.'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

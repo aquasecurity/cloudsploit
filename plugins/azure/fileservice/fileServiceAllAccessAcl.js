@@ -10,6 +10,12 @@ module.exports = {
     recommended_action: 'Disable global read/write/detele policies on all File Shares and ensure both the share ACL is configured with least privileges.',
     link: 'https://docs.microsoft.com/en-us/azure/storage/files/storage-how-to-create-file-share#create-a-file-share-through-the-azure-portal',
     apis: ['resourceGroups:list', 'storageAccounts:list', 'storageAccounts:listKeys', 'FileService:listSharesSegmented','FileService:getShareAcl'],
+    compliance: {
+        hipaa: 'HIPAA access controls require data to be secured with least-privileged ' +
+                'ACLs. File Service ACLs enable granular permissions for data access.',
+        pci: 'PCI data must be secured via least-privileged ACLs. File Service ACLs ' +
+                'enable granular permissions for data access.'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

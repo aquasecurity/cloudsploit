@@ -10,6 +10,10 @@ module.exports = {
     recommended_action: 'In your Azure storage account, select an existing container, then select access policy under container settings, and the Add Policy under Immutable Blob Storage.',
     link: 'https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-immutable-storage#Getting-started',
     apis: ['resourceGroups:list', 'storageAccounts:list', 'storageAccounts:listKeys', 'BlobService:listContainersSegmented'],
+    compliance: {
+      hipaa: 'Blob immutability preserves the integrity of stored data and protects against ' +
+              'accidental or malicious destruction.'
+  },
 
     run: function(cache, settings, callback) {
         var results = [];

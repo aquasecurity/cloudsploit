@@ -10,6 +10,10 @@ module.exports = {
     recommended_action: 'Install endpoint protection on your Azure systems',
     link: 'https://docs.microsoft.com/en-us/azure/security-center/security-center-install-endpoint-protection',
     apis: ['resourceGroups:list', 'virtualMachines:listAll', 'virtualMachineExtensions:list'],
+    compliance: {
+        pci: 'PCI requires the use of anti-virus and anti-malware solutions. Enabling ' +
+                'VM endpoint protection provides real-time VM monitoring for malicious activity.'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

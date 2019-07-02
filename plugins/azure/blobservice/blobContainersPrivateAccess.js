@@ -9,6 +9,13 @@ module.exports = {
   recommended_action: 'Create blob container with public access level.',
   link: 'https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blobs-introduction',
   apis: ['storageAccounts:list', 'blobContainers:list', 'resources:list'],
+  compliance: {
+      hipaa: 'Strict access controls to all data is a core requirement for HIPAA. ' +
+              'Restricting anonymous blob access ensures all access is limited to those ' +
+              'with explicit approval.',
+      pci: 'PCI requires all access to be restricted and identified. Limiting public blob ' +
+            'access ensures compliance.'
+  },
 
   run: function (cache, settings, callback) {
     const results = [];

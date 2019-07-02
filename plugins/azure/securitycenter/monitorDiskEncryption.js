@@ -10,6 +10,10 @@ module.exports = {
     recommended_action: '1. Go to Azure Security Center 2. Click On the security policy to Open Policy Management Blade. 3. Click Subscription View 4. Click on Subscription Name to open Security Policy Blade for the Subscription. 5. Expand Compute And Apps 6. Ensure that Disk Encryption is not set to Disabled',
     link: 'https://docs.microsoft.com/en-us/azure/security-center/security-center-policy-definitions',
     apis: ['policyAssignments:list','disks:list'],
+    compliance: {
+        hipaa: 'HIPAA requires data to be encrypted at rest. Enabling disk encryption ' +
+                'monitoring ensures this configuration is not modified undetected.'
+    },
 
     run: function (cache, settings, callback) {
         const results = [];

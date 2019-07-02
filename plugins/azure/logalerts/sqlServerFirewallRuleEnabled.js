@@ -11,6 +11,13 @@ module.exports = {
     recommended_action: 'Configure SQL Server Firewall rules to limit access exclusively to those resources that need it. Create activity log alerts to monitor changes to your SQL Server security configuration.',
     link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-firewall-configure',
     apis: ['resourceGroups:list','activityLogAlerts:listByResourceGroup','resources:list'],
+    compliance: {
+        hipaa: 'HIPAA requires the auditing of changes to access controls for network ' +
+                'resources.',
+        pci: 'PCI requires the use of firewalls to protect cardholder data. Configuring ' +
+                'a monitor for SQL Server firewall rules ensures the integrity of those ' +
+                'firewalls.'
+    },
 
     run: function (cache, settings, callback) {
         const results = [];

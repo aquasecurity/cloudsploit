@@ -10,6 +10,14 @@ module.exports = {
     recommended_action: 'Enable the HTTPS-only option for all storage accounts.',
     link: 'https://docs.microsoft.com/en-us/azure/governance/policy/samples/ensure-https-storage-account',
     apis: ['storageAccounts:list', 'storageAccounts:listKeys', 'resourceGroups:list'],
+    compliance: {
+        hipaa: 'HIPAA requires all data to be transmitted over secure channels. ' +
+                'Storage Account HTTPS should be used to ensure all data access ' +
+                'connects over a secure channel.',
+        pci: 'All card holder data must be transmitted over secure channels. ' +
+                'Storage Account HTTPS should be used to ensure all data access ' +
+                'connects over a secure channel.'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

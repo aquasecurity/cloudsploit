@@ -9,6 +9,10 @@ module.exports = {
     recommended_action: '1. Go to Azure Security Center 2. Click on Security policy 3. Click on your Subscription Name 4. Look for the "Monitor SQL encryption" setting. 5. Ensure that it is not set to Disabled',
     link: 'https://docs.microsoft.com/en-us/azure/security-center/security-center-policy-definitions',
     apis: ['policyAssignments:list'],
+    compliance: {
+        hipaa: 'HIPAA requires data to be encrypted at rest. Enabling SQL encryption ' +
+                'monitoring ensures this configuration is not modified undetected.'
+    },
 
     run: function (cache, settings, callback) {
         const results = [];

@@ -10,6 +10,13 @@ module.exports = {
     recommended_action: 'Enable VM OS Disk Encryption on all virtual machines',
     link: 'https://docs.microsoft.com/en-us/azure/security-center/security-center-apply-disk-encryption',
     apis: ['disks:list'],
+    compliance: {
+        hipaa: 'HIPAA requires that all data is encrypted, including data at rest. ' +
+                'Enabling encryption of VM OS data helps to protect this data.',
+        pci: 'PCI requires proper encryption of cardholder data at rest. ' +
+             'Encryption should be enabled for all VM OS disks storing this ' +
+             'type of data.'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

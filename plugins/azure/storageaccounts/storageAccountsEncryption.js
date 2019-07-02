@@ -10,6 +10,13 @@ module.exports = {
     recommended_action: 'Go to your Storage Account, select Encryption, and check the box to use your own key, then select Key Vault, create a new vault if needed; then select Encryption key and create a new key if needed, at a minimum, set an activation date for your key to help with your key rotation policy, click Save when done.',
     link: 'https://docs.microsoft.com/en-us/azure/storage/common/storage-service-encryption-customer-managed-keys',
     apis: ['storageAccounts:list', 'storageAccounts:listKeys', 'resourceGroups:list'],
+    compliance: {
+        hipaa: 'HIPAA requires that all data is encrypted, including data at rest. ' +
+                'Enabling encryption of storage account data helps to protect this data.',
+        pci: 'PCI requires proper encryption of cardholder data at rest. ' +
+             'Encryption should be enabled for all storage accounts storing this ' +
+             'type of data.'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
