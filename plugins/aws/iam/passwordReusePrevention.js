@@ -62,7 +62,7 @@ module.exports = {
         var passwordPolicy = getAccountPasswordPolicy.data;
 
         if (!passwordPolicy.PasswordReusePrevention) {
-            helpers.addResult(results, 2, 'Password policy does not previous previous password reuse');
+            helpers.addResult(results, 2, 'Password policy does not prevent reusing previous passwords');
         } else if (passwordPolicy.PasswordReusePrevention < config.password_reuse_fail) {
             helpers.addResult(results, 2,
                 'Maximum password reuse of: ' + passwordPolicy.PasswordReusePrevention + ' passwords is less than ' + config.password_reuse_fail, 'global', null, custom);
