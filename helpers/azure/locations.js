@@ -55,7 +55,16 @@ module.exports = {
     policyAssignments: locations,
     webApps: locations,
     networkSecurityGroups: locations,
+    servers: {
+        locations,
+        mysql: locations,
+        sql: locations,
+    },
+    encryptionProtectors: locations,
+    logProfiles: locations,
     profiles: locations,
     endpoints: locations,
     origins: locations,
+    transparentDataEncryptions: locations,
+    databases: locations
 };

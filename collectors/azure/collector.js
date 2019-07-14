@@ -20,11 +20,6 @@ var async = require('async');
 var jsonsafe = require('fast-safe-stringify');
 
 var helpers = require(__dirname + '/../../helpers/azure');
-var collectors = require(__dirname + '/../../collectors/azure');
-
-var globalServices = [
-    'storageManagement'
-];
 
 var calls = {
     resourceGroups: {
@@ -65,7 +60,28 @@ var calls = {
             arm: true
         }
     },
+    servers: {
+        sql: {
+            list: {
+                api: "SQLManagementClient",
+                arm: true
+            }
+        },
+        mysql: {
+            list: {
+                api: "MySQLManagementClient",
+                arm: true
+            }
+        },
+        manyApi: true
+    },
     policyAssignments: {
+        list: {
+            api: "PolicyClient",
+            arm: true
+        }
+    },
+    policyDefinitions: {
         list: {
             api: "PolicyClient",
             arm: true
@@ -74,7 +90,7 @@ var calls = {
     networkSecurityGroups: {
         listAll: {
             api: "NetworkManagementClient",
-              arm: true
+            arm: true
         }
     },
     webApps: {
@@ -83,12 +99,18 @@ var calls = {
             arm: true
         }
     },
+    logProfiles: {
+        list: {
+            api: "MonitorManagementClient",
+            arm: true
+        }
+    },
     profiles: {
         list: {
             api: "CdnManagementClient",
             arm: true
         }
-    }
+    },
 };
 
 var postcalls = {
@@ -102,6 +124,40 @@ var postcalls = {
             arm: true,
             module: false
         },
+    },
+    autoscaleSettings: {
+        listByResourceGroup: {
+            api: "MonitorManagementClient",
+            reliesOnService: ['resourceGroups'],
+            reliesOnCall: ['list'],
+            filterKey: ['resourceGroupName'],
+            filterValue: ['resourceGroupName'],
+            arm: true,
+        }
+    },
+    serverBlobAuditingPolicies: {
+        get: {
+            api: "SQLManagementClient",
+            reliesOnService: ['resourceGroups', 'servers'],
+            reliesOnSubService: [undefined, 'sql'],
+            reliesOnCall: ['list', 'list'],
+            filterKey: ['resourceGroupName', 'name'],
+            filterValue: ['resourceGroupName', 'name'],
+            arm: true,
+        }
+    },
+    diagnosticSettingsOperations: {
+        nsg: {
+            list: {
+                api: "MonitorManagementClient",
+                reliesOnService: ['networkSecurityGroups'],
+                reliesOnCall: ['listAll'],
+                filterKey: ['id'],
+                filterValue: ['id'],
+                arm: true
+            },
+        },
+        manyApi: true
     },
     virtualMachineExtensions: {
         list: {
@@ -144,6 +200,17 @@ var postcalls = {
             arm: true
         }
     },
+    encryptionProtectors: {
+        get: {
+            api: "SQLManagementClient",
+            reliesOnService: ['resourceGroups', 'servers'],
+            reliesOnSubService: [undefined, 'sql'],
+            reliesOnCall: ['list', 'list'],
+            filterKey: ['resourceGroupName', 'name'],
+            filterValue: ['resourceGroupName', 'name'],
+            arm: true,
+        },
+    },
     webApps: {
         getAuthSettings: {
             api: "WebSiteManagementClient",
@@ -170,6 +237,17 @@ var postcalls = {
             arm: true
         }
     },
+    servers: {
+        listByResourceGroup: {
+            api: "SQLManagementClient",
+            reliesOnService: ['resourceGroups'],
+            reliesOnCall: ['list'],
+            filterKey: ['resourceGroupName'],
+            filterValue: ['resourceGroupName'],
+            arm: true,
+            module: false,
+        }
+    },
     endpoints: {
         listByProfile: {
             api: "CdnManagementClient",
@@ -179,6 +257,17 @@ var postcalls = {
             filterValue: ['resourceGroupName', 'name'],
             arm: true
         }
+    },
+    databases: {
+        listByServer: {
+            api: "SQLManagementClient",
+            reliesOnService: ['resourceGroups','servers'],
+            reliesOnSubService: [undefined, 'sql'],
+            reliesOnCall: ['list','list'],
+            filterKey: ['resourceGroupName','serverName'],
+            filterValue: ['resourceGroupName','name'],
+            arm: true
+        },
     }
 };
 
@@ -242,6 +331,17 @@ var finalcalls = {
             module: true
         }
     },
+    serverSecurityAlertPolicies: {
+        listByServer: {
+            api: "SQLManagementClient",
+            reliesOnService: ['resourceGroups', 'servers'],
+            reliesOnCall: ['list', 'listByResourceGroup'],
+            filterKey: ['resourceGroupName', 'serverName'],
+            filterValue: ['resourceGroupName', 'name'],
+            arm: true,
+            module: false,
+        }
+    },
     origins: {
         listByEndpoint: {
             api: "CdnManagementClient",
@@ -250,6 +350,17 @@ var finalcalls = {
             filterKey: ['resourceGroupName', 'profileName', 'endpointName'],
             filterValue: ['resourceGroupName', 'profileName', 'name'],
             arm: true,
+        }
+    },
+    transparentDataEncryptions: {
+        get: {
+            api: "SQLManagementClient",
+            reliesOnService: ['resourceGroups', 'servers', 'databases'],
+            reliesOnSubService: [undefined, 'sql', undefined],
+            reliesOnCall: ['list', 'list', 'listByServer'],
+            filterKey: ['resourceGroupName', 'serverName', 'databaseName'],
+            filterValue: ['resourceGroupName', 'name', 'name'],
+            arm: true
         }
     }
 };
@@ -298,71 +409,97 @@ var postfinalcalls = {
 
 // Loop through all of the top-level collectors for each service
 var processCall = function (AzureConfig, collection, settings, locations, call, service, serviceCb) {
-    // Loop through each of the service's functions
-    async.eachOfLimit(call, 10, function (callObj, callKey, callCb) {
-        if (!collection[service][callKey]) collection[service][callKey] = {};
-        if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
+    // Initialize collection service and locations
+    if (!collection[service]) collection[service] = {};
 
-        var locations = helpers.locations(false)[service];
+    var locations = helpers.locations[service];
 
-        for (l in locations) {
-            if (!collection[service][callKey][locations[l]]) {
-                collection[service][callKey][locations[l]] = { data: [] };
+    if (!call.manyApi) {
+        async.eachOfLimit(call, 10, function (callObj, callKey, callCb) {
+            if (!collection[service][callKey]) collection[service][callKey] = {};
+            if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
+
+            executeCall(AzureConfig, collection, collection[service][callKey], service, callObj, callKey, locations, callCb);
+
+        }, function () {
+            serviceCb();
+        });
+    } else {
+        async.eachOfLimit(call, 10, function (callInt, item, itemsCb) {
+            var myEngine = item;
+            async.eachOfLimit(callInt, 10, function(callObj, callKey, callCb) {
+                if (settings.api_calls && settings.api_calls.indexOf(service + ':' + myEngine + ':' + callKey) === -1) return callCb();
+                if (!collection[service][myEngine]) collection[service][myEngine] = {};
+                if (!collection[service][myEngine][callKey]) collection[service][myEngine][callKey] = {};
+
+                executeCall(AzureConfig, collection, collection[service][myEngine][callKey], service, callObj, callKey, locations, callCb);
+
+            }, function () {
+                itemsCb();
+            })
+        }, function () {
+            serviceCb();
+        });
+    }
+};
+
+var executeCall = function(AzureConfig, collection, collectionObject, service, callObj, callKey, locations, executeCallCb){
+    for (l in locations) {
+        if (!collectionObject[locations[l]]) {
+            collectionObject[locations[l]] = { data: [] };
+        }
+    }
+
+    var LocalAzureConfig = JSON.parse(JSON.stringify(AzureConfig));
+    LocalAzureConfig.service = service;
+
+    var executor = new helpers.AzureExecutor(LocalAzureConfig);
+    executor.run(collection, service, callObj, callKey, function (err, data) {
+        errorHandling(err, data, collectionObject, locations);
+
+        if (!data) {
+            return executeCallCb();
+        }
+
+        var locationsInArray = [];
+        for (var d = 0; d < data.length; d++) {
+            if (data[d].location &&
+                locations &&
+                locations.length &&
+                locations.length > 0) {
+                data[d].location = data[d].location.replace(/ /g, "").toLowerCase();
+                var locationExists = locationsInArray.filter(loc => loc == data[d].location);
+                var locationIsValid = locations.filter(loc => loc == data[d].location);
+                if (locationExists && locationExists.length == 0 &&
+                    locationIsValid && locationIsValid.length > 0) {
+                    locationsInArray.push(data[d].location);
+                }
+            } else {
+                data[d].location = "global";
+                locationsInArray.push(data[d].location);
             }
         }
 
-        callObj.collection = collection;
+        if (locationsInArray &&
+            locationsInArray.length > 0) {
+            for (locationSelected in locationsInArray) {
+                var dataToPush = data.filter((d) => {
+                    return d.location == locationsInArray[locationSelected];
+                });
 
-        var LocalAzureConfig = JSON.parse(JSON.stringify(AzureConfig));
-        LocalAzureConfig.service = service;
-
-        var executor = new helpers.AzureExecutor(LocalAzureConfig);
-        executor.run(collection, service, callObj, callKey, function (err, data) {
-            errorHandling(err, data, collection, locations, service, callKey);
-
-            if (!data) {
-                return callCb();
-            }
-
-            var locationsInArray = [];
-            for (var d = 0; d < data.length; d++) {
-                if (data[d].location) {
-                    data[d].location = data[d].location.replace(/ /g, "").toLowerCase();
-                    var locationExists = locationsInArray.filter(loc => loc == data[d].location);
-                    var locationIsValid = locations.filter(loc => loc == data[d].location);
-                    if (locationExists && locationExists.length == 0 &&
-                        locationIsValid && locationIsValid.length > 0) {
-                        locationsInArray.push(data[d].location);
-                    }
-                } else {
-                    data[d].location = "global";
-                    locationsInArray.push(data[d].location);
+                if (collectionObject[locationsInArray[locationSelected]] == undefined) {
+                    collectionObject[locationsInArray[locationSelected]] = {};
                 }
+
+                collectionObject[locationsInArray[locationSelected]].data = dataToPush;
             }
-
-            if (locationsInArray && locationsInArray.length > 0) {
-                for (locationSelected in locationsInArray) {
-                    var dataToPush = data.filter((d) => {
-                        return d.location == locationsInArray[locationSelected];
-                    });
-
-                    if (collection[service][callKey][locationsInArray[locationSelected]] == undefined) {
-                        collection[service][callKey][locationsInArray[locationSelected]] = {};
-                    }
-
-                    collection[service][callKey][locationsInArray[locationSelected]].data = dataToPush;
-                }
-            } else {
-                if (data.length > 0) {
-                    collection[service][callKey]['unknown'] = {};
-                    collection[service][callKey]['unknown'].data = data;
-                }
+        } else {
+            if (data.length > 0) {
+                collectionObject['unknown'] = {};
+                collectionObject['unknown'].data = data;
             }
-
-            callCb();
-        });
-    }, function () {
-        serviceCb();
+        }
+        executeCallCb();
     });
 };
 
@@ -372,8 +509,9 @@ var collect = function (AzureConfig, settings, callback) {
 
     AzureConfig.maxRetries = 5;
     AzureConfig.retryDelayOptions = { base: 300 };
+
     var settings = settings;
-    var locations = helpers.locations(settings.govcloud);
+    var locations = helpers.locations;
 
     async.eachOfLimit(calls, 10, function (call, service, serviceCbcall) {
         var service = service;
@@ -428,28 +566,27 @@ var collect = function (AzureConfig, settings, callback) {
         //console.log(JSON.stringify(collection, null, 2));
         callback(null, collection);
     });
-
 };
 
-function errorHandling(err, data, collection, locations, service, callKey) {
+function errorHandling(err, data, collectionObject, locations) {
     if ((err && err.length == undefined) == true || (err && err.length !== undefined && err.length > 0) == true) {
         for (l in locations) {
             if (err.body && err.body.message) {
-                collection[service][callKey][locations[l]].err = err.body.message;
+                collectionObject[locations[l]].err = err.body.message;
             } else if (err.body && err.body.error && err.body.error.message) {
-                collection[service][callKey][locations[l]].err = err.body.error.message;
+                collectionObject[locations[l]].err = err.body.error.message;
             } else if (data && data.length && data.length>0 && err.length && err.length>0) {
                 var errorsReturned;
                 for (e in err){
-                    if (![404, 403].includes(err[e].statusCode)){
+                    if (![404, 403, 400].includes(err[e].statusCode)){
                         errorsReturned += err[e].message + '; ';
                     }
                 }
                 if (errorsReturned) {
-                    collection[service][callKey][locations[l]].err = errorsReturned;
+                    collectionObject[locations[l]].err = errorsReturned;
                 }
             } else {
-                collection[service][callKey][locations[l]].err = "An error ocurred while retrieving service data";
+                collectionObject[locations[l]].err = "An error ocurred while retrieving service data";
             }
         }
     }

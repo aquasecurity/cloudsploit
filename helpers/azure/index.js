@@ -16,6 +16,7 @@ var SQLManagementClient         = require('azure-arm-sql');
 var StorageManagementClient     = require('azure-arm-storage');
 var WebSiteManagementClient     = require('azure-arm-website');
 var CdnManagementClient         = require('azure-arm-cdn');
+var MySQLManagementClient       = require('azure-arm-mysql');
 
 // Azure Service Modules
 var KeyVaultClient              = require('azure-keyvault');
@@ -35,6 +36,7 @@ var mapAzureApis = {
     "StorageServiceClient"      : StorageServiceClient,
     "WebSiteManagementClient"   : WebSiteManagementClient,
     "CdnManagementClient"       : CdnManagementClient,
+    "MySQLManagementClient"     : MySQLManagementClient,
 }
 
 const UNKNOWN_LOCATION = "unknown";
@@ -177,9 +179,17 @@ class AzureExecutor {
             if (callObj.reliesOnService.length &&
                 callObj.reliesOnService.length>1){
                 for (var reliedService in callObj.reliesOnService) {
-                    if (callObj.reliesOnService[reliedService] !== 'resourceGroups') {
+                    if (callObj.reliesOnService[reliedService] !== 'resourceGroups' &&
+                        (!callObj.reliesOnSubService ||
+                            !callObj.reliesOnSubService[reliedService])) {
                         if (!serviceCollection[callObj.reliesOnService[reliedService]]) {
                             serviceCollection[callObj.reliesOnService[reliedService]] = self.collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]];
+                        }
+                    } else if (callObj.reliesOnService[reliedService] !== 'resourceGroups' &&
+                                callObj.reliesOnSubService &&
+                                callObj.reliesOnSubService[reliedService]) {
+                        if (!serviceCollection[callObj.reliesOnService[reliedService]]) {
+                            serviceCollection[callObj.reliesOnService[reliedService]] = self.collection[callObj.reliesOnService[reliedService]][callObj.reliesOnSubService[reliedService]][callObj.reliesOnCall[reliedService]];
                         }
                     }
                 }

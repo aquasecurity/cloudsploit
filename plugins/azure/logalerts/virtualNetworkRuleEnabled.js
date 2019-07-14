@@ -39,11 +39,20 @@ module.exports = {
         if (!activityLogAlerts.data || !activityLogAlerts.data.length) {
             helpers.addResult(results, 2,
                 'Activity log alerts are not setup', 'global');
+            return callback();
         }
 
         async.each(locations.resources, function(location, rcb) {
 
             var resourceList = helpers.addSource(cache, source, ['resources', 'list', location]);
+
+            if (!resourceList || resourceList.err || !resourceList.data) {
+                helpers.addResult(results, 3,
+                    'Unable to obtain resource list data: ' + helpers.addError(resourceList),
+                    location
+                );
+                return rcb();
+            }
 
             var virtualNetworkResourceList = resourceList.data.filter((d) => {
                 return d.type == 'Microsoft.Network/virtualNetworks';
