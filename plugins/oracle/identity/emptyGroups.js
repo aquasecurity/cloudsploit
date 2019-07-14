@@ -38,7 +38,7 @@ module.exports = {
                 userGroups.err.length &&
                 userGroups.err.length > 0) || !userGroups.data)) {
             helpers.addResult(results, 3,
-                'Unable to query user groups: ' + helpers.addError(userGroups), region);
+                'Unable to query user groups: ' + helpers.addError(userGroups));
             return callback();
         }
 
