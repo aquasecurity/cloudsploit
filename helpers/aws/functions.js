@@ -41,7 +41,8 @@ function waitForCredentialReport(iam, callback, CREDENTIAL_DOWNLOAD_STARTED) {
 function addResult(results, status, message, region, resource, custom){
     // Override unknown results for regions that are opt-in
     if (status == 3 && region && regions.optin.indexOf(region) > -1 && message &&
-        message.indexOf('The security token included in the request is invalid.')) {
+        (message.indexOf('AWS was not able to validate the provided access credentials') > -1 ||
+         message.indexOf('The security token included in the request is invalid') > -1)) {
         results.push({
             status: 0,
             message: 'Region is not enabled',
