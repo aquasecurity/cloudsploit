@@ -359,6 +359,17 @@ var calls = {
             property: 'Rules'
         }
     },
+    Shield: {
+        describeSubscription: {
+            property: 'Subscription'
+        },
+        describeEmergencyContactSettings: {
+            property: 'EmergencyContactList'
+        },
+        listProtections: {
+            property: 'Protections'
+        }
+    },
     SNS: {
         listTopics: {
             property: 'Topics',

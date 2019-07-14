@@ -138,7 +138,11 @@ module.exports = {
         'redshiftEncryptionEnabled'     : require(__dirname + '/plugins/aws/redshift/redshiftEncryptionEnabled.js'),
         'redshiftPubliclyAccessible'    : require(__dirname + '/plugins/aws/redshift/redshiftPubliclyAccessible.js'),
 
-        'transferLoggingEnabled'        : require(__dirname + '/plugins/aws/transfer/transferLoggingEnabled.js')
+        'transferLoggingEnabled'        : require(__dirname + '/plugins/aws/transfer/transferLoggingEnabled.js'),
+
+        'shieldAdvancedEnabled'         : require(__dirname + '/plugins/aws/shield/shieldAdvancedEnabled.js'),
+        'shieldEmergencyContacts'       : require(__dirname + '/plugins/aws/shield/shieldEmergencyContacts.js'),
+        'shieldProtections'             : require(__dirname + '/plugins/aws/shield/shieldProtections.js')
     },
     azure : {
         'networkAccessDefaultAction'    : require(__dirname + '/plugins/azure/storageaccounts/networkAccessDefaultAction.js'),
