@@ -1,0 +1,51 @@
+var async = require('async');
+var helpers = require('../../../helpers/google');
+
+module.exports = {
+    title: 'Bucket Versioning',
+    category: 'Storage',
+    description: 'Ensures object versioning is enabled on storage buckets',
+    more_info: 'Object versioning can help protect against the overwriting of objects or data loss in the event of a compromise.',
+    link: 'https://cloud.google.com/storage/docs/using-object-versioning',
+    recommended_action: 'Bucket Versioning can only be enabled by using the Command Line Interface, use this command to enable Versioning: gsutil versioning set on gs://[BUCKET_NAME]',
+    apis: ['buckets:list'],
+  
+
+    run: function(cache, settings, callback) {
+        var results = [];
+        var source = {};
+        var regions = helpers.regions();
+
+        async.each(regions.buckets, function(region, rcb){
+            let buckets = helpers.addSource(
+                cache, source, ['buckets', 'list', region]);
+
+            if (!buckets) return rcb();
+
+            if (buckets.err || !buckets.data) {
+                helpers.addResult(results, 3, 'Unable to query Storage Buckets: ' + helpers.addError(buckets), region);
+                return rcb();
+            }
+
+            if (!buckets.data.length) {
+                helpers.addResult(results, 0, 'No Storage Buckets present', region);
+                return rcb();
+            }
+            buckets.data.forEach(bucket => {
+                if (bucket.versioning &&
+                    bucket.versioning.enabled) {
+                        helpers.addResult(results, 0, 'Bucket Versioning Enabled', region, bucket.id);
+                } else if ((bucket.versioning &&
+                        !bucket.versioning.enabled) || 
+                        !bucket.versioning){
+                            helpers.addResult(results, 2, 'Bucket Versioning not Enabled', region, bucket.id);
+                }
+            })
+
+            rcb();
+        }, function(){
+            // Global checking goes here
+            callback(null, results, source);
+        });
+    }
+}

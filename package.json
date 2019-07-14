@@ -32,7 +32,7 @@
     "@octokit/request": "^3.0.3",
     "@octokit/rest": "^16.3.2",
     "async": "^2.6.1",
-    "aws-sdk": "^2.395.0",
+    "aws-sdk": "^2.437.0",
     "azure-arm-cdn": "^4.2.0",
     "azure-arm-compute": "^9.1.0",
     "azure-arm-keyvault": "^1.2.0",
@@ -46,6 +46,7 @@
     "azure-storage": "^2.10.2",
     "csv-write-stream": "^2.0.0",
     "fast-safe-stringify": "^2.0.6",
+    "googleapis": "^40.0.1",
     "jssha": "^2.3.1",
     "ms-rest-azure": "^2.5.9"
   },

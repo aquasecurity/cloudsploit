@@ -11,9 +11,11 @@ var output = require('./postprocess/output.js')
  * @param AzureConfig The configuration for Azure. If undefined, then don't run.
  * @param GitHubConfig The configuration for Github. If undefined, then don't run.
  * @param OracleConfig The configuration for Oracle. If undefined, then don't run.
+ * @param GoogleConfig The configuration for Google. If undefined, then don't run.
+
  * @param settings General purpose settings.
  */
-var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, settings) {
+var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, GoogleConfig, settings) {
     // Determine if scan is a compliance scan
     var complianceArgs = process.argv
         .filter(function (arg) {
@@ -69,6 +71,12 @@ var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, setti
             name: "oracle",
             collector: require('./collectors/oracle/collector.js'),
             config: OracleConfig,
+            apiCalls: []
+        },
+        google: {
+            name: "google",
+            collector: require('./collectors/google/collector.js'),
+            config: GoogleConfig,
             apiCalls: []
         }
     }

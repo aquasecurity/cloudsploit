@@ -6,6 +6,7 @@ var AWSConfig;
 var AzureConfig;
 var GitHubConfig;
 var OracleConfig;
+var GoogleConfig;
 
 // OPTION 1: Configure service provider credentials through hard-coded config objects
 
@@ -40,8 +41,15 @@ var OracleConfig;
 //  compartmentId: 'ocid1.compartment.oc1..',
 //  userId: 'ocid1.user.oc1..',
 //  keyFingerprint: 'YOURKEYFINGERPRINT',
-//  privateKey: fs.readFileSync(__dirname + '/config/_oracle/keys/YOURKEYNAME.pem', 'ascii'),
+//  keyValue: "-----BEGIN PRIVATE KEY-----\nYOUR-PRIVATE-KEY-GOES-HERE\n-----END PRIVATE KEY-----\n",
 //  region: 'us-ashburn-1',
+// };
+
+// GoogleConfig = {
+//     "type": "service_account",
+//     "project": "your-project-name",
+//     "client_email": "cloudsploit@your-project-name.iam.gserviceaccount.com",
+//     "private_key": "-----BEGIN PRIVATE KEY-----\nYOUR-PRIVATE-KEY-GOES-HERE\n-----END PRIVATE KEY-----\n",
 // };
 
 // OPTION 2: Import a service provider config file containing credentials
@@ -50,6 +58,7 @@ var OracleConfig;
 // AzureConfig = require(__dirname + '/azure_credentials.json');
 // GitHubConfig = require(__dirname + '/github_credentials.json');
 // OracleConfig = require(__dirname + '/oracle_credentials.json');
+// GoogleConfig = require(__dirname + '/google_credentials.json');
 
 // OPTION 3: ENV configuration with service provider env vars
 if(process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY){
@@ -90,6 +99,15 @@ if(process.env.ORACLE_TENANCY_ID && process.env.ORACLE_USER_ID){
     };
 }
 
+if(process.env.GOOGLE_PROJECT_ID && process.env.GOOGLE_API_KEY){
+    GoogleConfig = {
+        project: process.env.GOOGLE_PROJECT_ID,
+        API_KEY:  process.env.GOOGLE_API_KEY,
+        serviceId: process.env.GOOGLE_SERVICE_ID,
+        region: process.env.GOOGLE_DEFAULT_REGION || 'us-east1'
+    };
+}
+
 // Custom settings - place plugin-specific settings here
 var settings = {};
 
@@ -100,4 +118,4 @@ var settings = {};
 settings.paginate = true;
 
 // Now execute the scans using the defined configuration information.
-engine(AWSConfig, AzureConfig, GitHubConfig, OracleConfig, settings);
+engine(AWSConfig, AzureConfig, GitHubConfig, OracleConfig, GoogleConfig, settings);

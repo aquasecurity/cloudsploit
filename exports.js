@@ -242,5 +242,44 @@ module.exports = {
         'defaultSecurityList'           : require(__dirname + '/plugins/oracle/networking/defaultSecurityList.js'),
         'lbHttpsOnly'                   : require(__dirname + '/plugins/oracle/networking/lbHttpsOnly.js'),
         'lbNoInstances'                 : require(__dirname + '/plugins/oracle/networking/lbNoInstances.js'),
+    },
+    google: {
+        'openDNS'                       : require(__dirname + '/plugins/google/vpcnetwork/openDNS.js'),
+        'openSSH'                       : require(__dirname + '/plugins/google/vpcnetwork/openSSH.js'),
+        'openCIFS'                      : require(__dirname + '/plugins/google/vpcnetwork/openCIFS.js'),
+        'openFTP'                       : require(__dirname + '/plugins/google/vpcnetwork/openFTP.js'),
+        'openHadoopNameNode'            : require(__dirname + '/plugins/google/vpcnetwork/openHadoopNameNode.js'),
+        'openHadoopNameNodeWebUI'       : require(__dirname + '/plugins/google/vpcnetwork/openHadoopNameNodeWebUI.js'),
+        'openKibana'                    : require(__dirname + '/plugins/google/vpcnetwork/openKibana.js'),
+        'openMySQL'                     : require(__dirname + '/plugins/google/vpcnetwork/openMySQL.js'),
+        'openNetBIOS'                   : require(__dirname + '/plugins/google/vpcnetwork/openNetBIOS.js'),
+        'openOracle'                    : require(__dirname + '/plugins/google/vpcnetwork/openOracle.js'),
+        'openPostgreSQL'                : require(__dirname + '/plugins/google/vpcnetwork/openPostgreSQL.js'),
+        'openRDP'                       : require(__dirname + '/plugins/google/vpcnetwork/openRDP.js'),
+        'openRPC'                       : require(__dirname + '/plugins/google/vpcnetwork/openRPC.js'),
+        'openSMBoTCP'                   : require(__dirname + '/plugins/google/vpcnetwork/openSMBoTCP.js'),
+        'openSMTP'                      : require(__dirname + '/plugins/google/vpcnetwork/openSMTP.js'),
+        'openSQLServer'                 : require(__dirname + '/plugins/google/vpcnetwork/openSQLServer.js'),
+        'openTelnet'                    : require(__dirname + '/plugins/google/vpcnetwork/openTelnet.js'),
+        'openVNCClient'                 : require(__dirname + '/plugins/google/vpcnetwork/openVNCClient.js'),
+        'openVNCServer'                 : require(__dirname + '/plugins/google/vpcnetwork/openVNCServer.js'),
+        'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/google/vpcnetwork/openOracleAutoDataWarehouse.js'),   
+        'multipleSubnets'               : require(__dirname + '/plugins/google/vpcnetwork/multipleSubnets.js'),
+        'defaultVpcInUse'               : require(__dirname + '/plugins/google/vpcnetwork/defaultVpcInUse.js'),
+
+        'instanceMaxCount'              : require(__dirname + '/plugins/google/compute/instanceMaxCount.js'),
+        'instancesMultiAz'              : require(__dirname + '/plugins/google/compute/instancesMultiAz.js'),
+
+        'keyRotation'                   : require(__dirname + '/plugins/google/cryptographickeys/keyRotation.js'),
+
+        'dbRestorable'                  : require(__dirname + '/plugins/google/sql/dbRestorable.js'),
+        'dbAutomatedBackups'            : require(__dirname + '/plugins/google/sql/dbAutomatedBackups.js'),
+        'dbMultiAz'                     : require(__dirname + '/plugins/google/sql/dbMultiAz.js'),
+        'dbPubliclyAccessible'          : require(__dirname + '/plugins/google/sql/dbPubliclyAccessible.js'),
+
+        'bucketVersioning'              : require(__dirname + '/plugins/google/storage/bucketVersioning.js'),
+        'bucketLogging'                 : require(__dirname + '/plugins/google/storage/bucketLogging.js'),
+        
+        'clbHttpsOnly'                  : require(__dirname + '/plugins/google/clb/clbHttpsOnly.js'),
     }
 };
