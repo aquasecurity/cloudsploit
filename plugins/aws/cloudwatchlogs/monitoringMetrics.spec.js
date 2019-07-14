@@ -51,7 +51,6 @@ describe('monitoringMetrics', function () {
 
         it('should not give missing metric for a metric that is defined', function (done) {
             const callback = (err, results) => {
-                console.log(results)
                 expect(results.length).to.equal(1)
                 expect(results[0].message).to.not.include('Disabled CMKs')
                 done()
