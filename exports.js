@@ -148,8 +148,10 @@ module.exports = {
         'networkAccessDefaultAction'    : require(__dirname + '/plugins/azure/storageaccounts/networkAccessDefaultAction.js'),
         'storageAccountsHttps'          : require(__dirname + '/plugins/azure/storageaccounts/storageAccountsHttps.js'),
         'storageAccountsEncryption'     : require(__dirname + '/plugins/azure/storageaccounts/storageAccountsEncryption.js'),
+        'logStorageEncryption'          : require(__dirname + '/plugins/azure/storageaccounts/logStorageEncryption.js'),
+        'logContainerPublicAccess'      : require(__dirname + '/plugins/azure/storageaccounts/logContainerPublicAccess.js'),
 
-        'blobContainersPrivateAccess'   : require(__dirname + '/plugins/azure/blobservice/blobContainersPrivateAccess.js'),	
+        'blobContainersPrivateAccess'   : require(__dirname + '/plugins/azure/blobservice/blobContainersPrivateAccess.js'),
         'blobServiceImmutable'          : require(__dirname + '/plugins/azure/blobservice/blobServiceImmutable.js'),
 
         'fileServiceAllAccessAcl'       : require(__dirname + '/plugins/azure/fileservice/fileServiceAllAccessAcl.js'),
@@ -162,6 +164,10 @@ module.exports = {
         'vmEndpointProtection'          : require(__dirname + '/plugins/azure/virtualmachines/vmEndpointProtection.js'),
         'vmAutoUpdateEnabled'           : require(__dirname + '/plugins/azure/virtualmachines/vmAutoUpdateEnabled.js'),
 
+        'autoscaleEnabled'              : require(__dirname + '/plugins/azure/monitor/autoscaleEnabled.js'),
+        'nsgLogAnalyticsEnabled'        : require(__dirname + '/plugins/azure/monitor/nsgLogAnalyticsEnabled.js'),
+        'logProfileArchiveData'         : require(__dirname + '/plugins/azure/monitor/logProfileArchiveData.js'),
+
         'sqlServerFirewallRuleEnabled'  : require(__dirname + '/plugins/azure/logalerts/sqlServerFirewallRuleEnabled.js'),
         'virtualNetworkRuleEnabled'     : require(__dirname + '/plugins/azure/logalerts/virtualNetworkRuleEnabled.js'),
 
@@ -170,9 +176,14 @@ module.exports = {
         'monitorSQLAuditing'            : require(__dirname + '/plugins/azure/securitycenter/monitorSqlAuditing.js'),
         'monitorDiskEncryption'         : require(__dirname + '/plugins/azure/securitycenter/monitorDiskEncryption.js'),
         'appWhitelistingEnabled'        : require(__dirname + '/plugins/azure/securitycenter/appWhitelistingEnabled.js'),
+        'securityConfigMonitoring'      : require(__dirname + '/plugins/azure/securitycenter/securityConfigMonitoring.js'),
+
+        'resourceAllowedLocations'      : require(__dirname + '/plugins/azure/policyservice/resourceAllowedLocations.js'),
+        'resourceLocationMatch'         : require(__dirname + '/plugins/azure/policyservice/resourceLocationMatch.js'),
+
+        'enforceSSLConnection'          : require(__dirname + '/plugins/azure/mysqlserver/enforceSSLConnection.js'),
 
         'defaultSecurityGroup'          : require(__dirname + '/plugins/azure/networksecuritygroups/defaultSecurityGroup.js'),
-
         'openAllPorts'                  : require(__dirname + '/plugins/azure/networksecuritygroups/openAllPorts.js'),
         'openSMTP'                      : require(__dirname + '/plugins/azure/networksecuritygroups/openSMTP.js'),
         'openOracle'                    : require(__dirname + '/plugins/azure/networksecuritygroups/openOracle.js'),
@@ -194,6 +205,8 @@ module.exports = {
         'openSMBoTCP'                   : require(__dirname + '/plugins/azure/networksecuritygroups/openSMBoTCP.js'),
         'openSQLServer'                 : require(__dirname + '/plugins/azure/networksecuritygroups/openSQLServer.js'),
 
+        'tdeProtectorEncrypted'         : require(__dirname + '/plugins/azure/sqlserver/tdeProtectorEncrypted.js'),
+  
         'pythonVersion'                 : require(__dirname + '/plugins/azure/appservice/pythonVersion.js'),
         'clientCertEnabled'             : require(__dirname + '/plugins/azure/appservice/clientCertEnabled.js'),
         'netFrameworkVersion'           : require(__dirname + '/plugins/azure/appservice/netFrameworkVersion.js'),
@@ -201,7 +214,7 @@ module.exports = {
         'identityEnabled'               : require(__dirname + '/plugins/azure/appservice/identityEnabled.js'),
         'http20Enabled'                 : require(__dirname + '/plugins/azure/appservice/http20Enabled.js'),
         'httpsOnlyEnabled'              : require(__dirname + '/plugins/azure/appservice/httpsOnlyEnabled.js'),
-        
+
         'detectInsecureCustomOrigin'    : require(__dirname + '/plugins/azure/cdn/detectInsecureCustomOrigin.js'),
     },
     github: {
@@ -267,7 +280,7 @@ module.exports = {
         'openTelnet'                    : require(__dirname + '/plugins/google/vpcnetwork/openTelnet.js'),
         'openVNCClient'                 : require(__dirname + '/plugins/google/vpcnetwork/openVNCClient.js'),
         'openVNCServer'                 : require(__dirname + '/plugins/google/vpcnetwork/openVNCServer.js'),
-        'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/google/vpcnetwork/openOracleAutoDataWarehouse.js'),   
+        'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/google/vpcnetwork/openOracleAutoDataWarehouse.js'),
         'multipleSubnets'               : require(__dirname + '/plugins/google/vpcnetwork/multipleSubnets.js'),
         'defaultVpcInUse'               : require(__dirname + '/plugins/google/vpcnetwork/defaultVpcInUse.js'),
 
@@ -283,7 +296,7 @@ module.exports = {
 
         'bucketVersioning'              : require(__dirname + '/plugins/google/storage/bucketVersioning.js'),
         'bucketLogging'                 : require(__dirname + '/plugins/google/storage/bucketLogging.js'),
-        
+
         'clbHttpsOnly'                  : require(__dirname + '/plugins/google/clb/clbHttpsOnly.js'),
     }
 };

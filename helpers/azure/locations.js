@@ -48,11 +48,13 @@ module.exports = {
     virtualMachines: locations,
     disks: locations,
     virtualMachineExtensions: locations,
+    autoscaleSettings: locations,
     activityLogAlerts: ['global'],
     vaults: locations,
     KeyVaultClient: locations,
     blobContainers: locations,
     policyAssignments: locations,
+    policyDefinitions: locations,
     webApps: locations,
     networkSecurityGroups: locations,
     servers: {
@@ -60,11 +62,24 @@ module.exports = {
         mysql: locations,
         sql: locations,
     },
+    autoscaleSettings: locations,
     encryptionProtectors: locations,
     logProfiles: locations,
     profiles: locations,
     endpoints: locations,
     origins: locations,
+    diagnosticSettingsOperations: {
+        locations,
+        nsg: locations
+    },
     transparentDataEncryptions: locations,
-    databases: locations
+    databases: locations,
+    policyDefinitions: locations,
+    autoscaleSettings: locations,
+    diagnosticSettingsOperations: {
+        locations,
+        nsg: locations
+    },
+    serverBlobAuditingPolicies: locations,
+    serverSecurityAlertPolicies: locations
 };

@@ -408,11 +408,11 @@ var postfinalcalls = {
 };
 
 // Loop through all of the top-level collectors for each service
-var processCall = function (AzureConfig, collection, settings, locations, call, service, serviceCb) {
+var processCall = function (AzureConfig, collection, settings, call, service, serviceCb) {
     // Initialize collection service and locations
     if (!collection[service]) collection[service] = {};
 
-    var locations = helpers.locations[service];
+    var locations = helpers.locations(false)[service].locations ? helpers.locations(false)[service].locations : helpers.locations(false)[service];
 
     if (!call.manyApi) {
         async.eachOfLimit(call, 10, function (callObj, callKey, callCb) {
@@ -511,13 +511,12 @@ var collect = function (AzureConfig, settings, callback) {
     AzureConfig.retryDelayOptions = { base: 300 };
 
     var settings = settings;
-    var locations = helpers.locations;
 
     async.eachOfLimit(calls, 10, function (call, service, serviceCbcall) {
         var service = service;
         if (!collection[service]) collection[service] = {};
 
-        processCall(AzureConfig, collection, settings, locations, call, service, function () {
+        processCall(AzureConfig, collection, settings, call, service, function () {
             serviceCbcall();
         });
     }, function () {
@@ -526,7 +525,7 @@ var collect = function (AzureConfig, settings, callback) {
             var service = service;
             if (!collection[service]) collection[service] = {};
 
-            processCall(AzureConfig, collection, settings, locations, postCall, service, function () {
+            processCall(AzureConfig, collection, settings, postCall, service, function () {
                 serviceCbpostCall();
             });
         }, function () {
@@ -535,7 +534,7 @@ var collect = function (AzureConfig, settings, callback) {
                 var service = service;
                 if (!collection[service]) collection[service] = {};
 
-                processCall(AzureConfig, collection, settings, locations, finalCall, service, function () {
+                processCall(AzureConfig, collection, settings, finalCall, service, function () {
                     serviceCbfinalCall();
                 });
 
@@ -545,7 +544,7 @@ var collect = function (AzureConfig, settings, callback) {
                     var service = service;
                     if (!collection[service]) collection[service] = {};
 
-                    processCall(AzureConfig, collection, settings, locations, postFinalCall, service, function () {
+                    processCall(AzureConfig, collection, settings, postFinalCall, service, function () {
                         serviceCbpostFinalCall();
                     });
 
