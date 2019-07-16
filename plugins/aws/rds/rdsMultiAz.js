@@ -38,6 +38,10 @@ module.exports = {
                     helpers.addResult(results, 0,
                         'RDS Aurora instances are multi-AZ',
                         region, Rds.DBInstanceArn);
+                } else if (Rds.Engine === 'docdb') {
+                    helpers.addResult(results, 0,
+                        'RDS DocDB instances multi-AZ property is not supported in this context',
+                        region, Rds.DBInstanceArn);
                 } else if (Rds.MultiAZ){
                     helpers.addResult(results, 0,
                         'RDS instance has multi-AZ enabled',
