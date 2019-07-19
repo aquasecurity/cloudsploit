@@ -215,11 +215,25 @@ function crossAccountPrincipal(principal, accountId) {
     return false;
 }
 
+function defaultRegion(settings) {
+    if (settings.govcloud) return 'us-gov-west-1';
+    if (settings.china) return 'cn-north-1';
+    return 'us-east-1';
+}
+
+function defaultPartition(settings) {
+    if (settings.govcloud) return 'aws-us-gov';
+    if (settings.china) return 'aws-cn';
+    return 'aws';
+}
+
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
     waitForCredentialReport: waitForCredentialReport,
     normalizePolicyDocument: normalizePolicyDocument,
     globalPrincipal: globalPrincipal,
-    crossAccountPrincipal: crossAccountPrincipal
+    crossAccountPrincipal: crossAccountPrincipal,
+    defaultRegion: defaultRegion,
+    defaultPartition: defaultPartition
 };

@@ -13,10 +13,10 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-        var regions = helpers.regions(settings.govcloud);
+        var regions = helpers.regions(settings);
 
-        var acctRegion = settings.govcloud ? 'us-gov-west-1' : 'us-east-1';
-        var awsOrGov = settings.govcloud ? 'aws-us-gov' : 'aws';
+        var acctRegion = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
         async.each(regions.athena, function(region, rcb){

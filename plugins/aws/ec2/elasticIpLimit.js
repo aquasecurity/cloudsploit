@@ -34,7 +34,7 @@ module.exports = {
 
         var results = [];
         var source = {};
-        var regions = helpers.regions(settings.govcloud);
+        var regions = helpers.regions(settings);
 
         async.each(regions.ec2, function(region, rcb){
             var describeAccountAttributes = helpers.addSource(cache, source,
@@ -54,7 +54,11 @@ module.exports = {
 
             // Loop through response to assign custom limits
             for (i in describeAccountAttributes.data) {
-                if (limits[describeAccountAttributes.data[i].AttributeName]) {
+                if (describeAccountAttributes.data[i].AttributeName &&
+                    limits[describeAccountAttributes.data[i].AttributeName] &&
+                    describeAccountAttributes.data[i].AttributeValues &&
+                    describeAccountAttributes.data[i].AttributeValues[0] &&
+                    describeAccountAttributes.data[i].AttributeValues[0].AttributeValue) {
                     limits[describeAccountAttributes.data[i].AttributeName] = describeAccountAttributes.data[i].AttributeValues[0].AttributeValue;
                 }
             }

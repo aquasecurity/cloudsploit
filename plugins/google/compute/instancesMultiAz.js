@@ -52,7 +52,7 @@ module.exports = {
                     if (!instances) return lcb();
 
                     if (instances.err || !instances.data) {
-                        helpers.addResult(results, 3, 'Unable to query instances: ' + helpers.addError(instances), loc);
+                        helpers.addResult(results, 3, 'Unable to query instances: ' + helpers.addError(instances), location);
                         return lcb();
                     };
         
@@ -68,7 +68,7 @@ module.exports = {
                         instanceName = instanceName.join('-');
 
                         if (!groupName.includes(instanceName)) {
-                            helpers.addResult(results, 2, 'The instance is only available in one zone' , loc, instance.id);
+                            helpers.addResult(results, 2, 'The instance is only available in one zone' , location, instance.id);
                             instancesInRegion++;
                         } else {
                             regionExists = true;

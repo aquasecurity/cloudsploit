@@ -26,7 +26,7 @@ module.exports = {
         var results = [];
         var source = {};
 
-        var region = settings.govcloud ? 'us-gov-west-1' : 'us-east-1';
+        var region = helpers.defaultRegion(settings);
 
         if (!config.canary_user ||
             !config.canary_user.length) return callback(null, results, source);

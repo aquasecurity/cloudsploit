@@ -129,6 +129,18 @@ module.exports = {
             description: 'Checks for the number of running instances in the us-gov-east-1 region and triggers a failing result if it exceeds the specified count',
             regex: '^[0-9]{1,4}$',
             default: 100
+        },
+        instance_count_region_threshold_cn_north_1: {
+            name: 'Instance Count Region Threshold: cn-north-1',
+            description: 'Checks for the number of running instances in the cn-north-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_cn_northwest_1: {
+            name: 'Instance Count Region Threshold: cn-northwest-1',
+            description: 'Checks for the number of running instances in the cn-northwest-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
         }
     },
 
@@ -153,7 +165,9 @@ module.exports = {
             instance_count_region_threshold_ap_east_1: settings.instance_count_region_threshold_ap_east_1 || this.settings.instance_count_region_threshold_ap_east_1.default,
             instance_count_region_threshold_ca_central_1: settings.instance_count_region_threshold_ca_central_1 || this.settings.instance_count_region_threshold_ca_central_1.default,
             instance_count_region_threshold_us_gov_west_1: settings.instance_count_region_threshold_us_gov_west_1 || this.settings.instance_count_region_threshold_us_gov_west_1.default,
-            instance_count_region_threshold_us_gov_east_1: settings.instance_count_region_threshold_us_gov_east_1 || this.settings.instance_count_region_threshold_us_gov_east_1.default
+            instance_count_region_threshold_us_gov_east_1: settings.instance_count_region_threshold_us_gov_east_1 || this.settings.instance_count_region_threshold_us_gov_east_1.default,
+            instance_count_region_threshold_cn_north_1: settings.instance_count_region_threshold_cn_north_1 || this.settings.instance_count_region_threshold_cn_north_1.default,
+            instance_count_region_threshold_cn_northwest_1: settings.instance_count_region_threshold_cn_northwest_1 || this.settings.instance_count_region_threshold_cn_northwest_1.default
         };
 
         for (c in config) {
@@ -166,7 +180,7 @@ module.exports = {
 
         var results = [];
         var source = {};
-        var regions = helpers.regions(settings.govcloud);
+        var regions = helpers.regions(settings);
         var instanceCountGlobal = 0;
 
         async.each(regions.ec2, function(region, rcb){

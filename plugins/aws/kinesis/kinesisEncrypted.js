@@ -20,7 +20,7 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-        var regions = helpers.regions(settings.govcloud);
+        var regions = helpers.regions(settings);
 
         async.each(regions.kinesis, function(region, rcb){
             var listStreams = helpers.addSource(cache, source,

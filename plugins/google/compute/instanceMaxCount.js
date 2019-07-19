@@ -217,7 +217,7 @@ module.exports = {
 
                 if (instances.err || !instances.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for instances: ' + helpers.addError(instances), zone);
+                        'Unable to query for instances: ' + helpers.addError(instances), region);
                     return zcb();
                 }
 

@@ -13,7 +13,7 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-        var regions = helpers.regions(settings.govcloud);
+        var regions = helpers.regions(settings);
 
         async.each(regions.sns, function(region, rcb){
             var listTopics = helpers.addSource(cache, source,

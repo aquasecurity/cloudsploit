@@ -2,9 +2,11 @@ var shared = require(__dirname + '/../shared.js');
 var functions = require('./functions.js');
 var regRegions = require('./regions.js');
 var govRegions = require('./regions_gov.js');
+var chinaRegions = require('./regions_china.js');
 
-var regions = function(govcloud) {
-    if (govcloud) return govRegions;
+var regions = function(settings) {
+    if (settings.govcloud) return govRegions;
+    if (settings.china) return chinaRegions;
     return regRegions;
 };
 

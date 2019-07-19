@@ -667,7 +667,7 @@ var collect = function (AWSConfig, settings, callback) {
     AWSConfig.maxRetries = 8;
     AWSConfig.retryDelayOptions = {base: 100};
 
-    var regions = helpers.regions(settings.govcloud);
+    var regions = helpers.regions(settings);
 
     var collection = {};
 
@@ -785,7 +785,7 @@ var collect = function (AWSConfig, settings, callback) {
                         var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
                         if (callObj.deleteRegion) {
                             //delete LocalAWSConfig.region;
-                            LocalAWSConfig.region = settings.govcloud ? 'us-gov-west-1' : 'us-east-1';
+                            LocalAWSConfig.region = settings.govcloud ? 'us-gov-west-1' : settings.china ? 'cn-north-1' : 'us-east-1';
                         } else {
                             LocalAWSConfig.region = region;
                         }

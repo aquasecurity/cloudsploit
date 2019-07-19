@@ -23,7 +23,7 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-        var regions = helpers.regions(settings.govcloud);
+        var regions = helpers.regions(settings);
 
         async.each(regions.sqs_encrypted, function(region, rcb){
             var listQueues = helpers.addSource(cache, source,

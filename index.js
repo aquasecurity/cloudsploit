@@ -114,6 +114,9 @@ var settings = {};
 // If running in GovCloud, uncomment the following
 // settings.govcloud = true;
 
+// If running in AWS China, uncomment the following
+// settings.china = true;
+
 // If you want to disable AWS pagination, set the setting to false here
 settings.paginate = true;
 

@@ -40,7 +40,7 @@ module.exports = {
 
         var results = [];
         var source = {};
-        var regions = helpers.regions(settings.govcloud);
+        var regions = helpers.regions(settings);
 
         async.each(regions.ec2, function(region, rcb){
 

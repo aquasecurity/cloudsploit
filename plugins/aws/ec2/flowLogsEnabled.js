@@ -21,7 +21,7 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-        var regions = helpers.regions(settings.govcloud);
+        var regions = helpers.regions(settings);
 
         async.each(regions.flowlogs, function(region, rcb){
             var describeVpcs = helpers.addSource(cache, source,
