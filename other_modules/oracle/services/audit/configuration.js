@@ -14,7 +14,7 @@ function update( auth, parameters, callback ) {
                      headers : headers,
                      body : parameters.body },
                    callback );
-};
+}
 
 function get( auth, parameters, callback ) {
   var possibleHeaders = [];
@@ -28,7 +28,7 @@ function get( auth, parameters, callback ) {
                      headers : headers,
                      method : 'GET' },
                     callback );
-};
+}
 
 module.exports = {
     update: update,

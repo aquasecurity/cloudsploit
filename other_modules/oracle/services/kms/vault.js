@@ -23,7 +23,7 @@ function update( auth, parameters, callback ) {
                      headers : headers,
                      body : parameters.body },
                    callback );
-};
+}
 
 function get( auth, parameters, callback ) {
   var possibleHeaders = ['opc-request-id'];
@@ -34,7 +34,7 @@ function get( auth, parameters, callback ) {
                      headers : headers,
                      method : 'GET' },
                     callback );
-};
+}
 
 function scheduleDeletion( auth, parameters, callback ){
   var possibleHeaders = ['opc-request-id', 'opc-retry-token', 'if-match'];

@@ -23,7 +23,7 @@ function update( auth, parameters, callback ) {
                      headers : headers,
                      body : parameters.body },
                    callback );
-};
+}
 
 function get( auth, parameters, callback ) {
   var possibleHeaders = ['opc-request-id'];
@@ -34,7 +34,7 @@ function get( auth, parameters, callback ) {
                      headers : headers,
                      method : 'GET' },
                     callback );
-};
+}
 
 function disable( auth, parameters, callback ) {
   var possibleHeaders = ['opc-request-id', 'opc-retry-token', 'if-match'];
@@ -47,7 +47,7 @@ function disable( auth, parameters, callback ) {
                      headers : headers,
                      method : 'POST' },
                     callback );
-};
+}
 
 function enable( auth, parameters, callback ) {
   var possibleHeaders = ['opc-request-id', 'opc-retry-token', 'if-match'];
@@ -60,7 +60,7 @@ function enable( auth, parameters, callback ) {
                      headers : headers,
                      method : 'POST' },
                     callback );
-};
+}
 
 
 module.exports = {

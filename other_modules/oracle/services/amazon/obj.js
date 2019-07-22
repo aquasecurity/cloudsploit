@@ -14,7 +14,7 @@ function abortMultipartUpload( auth, parameters, callback ) {
                      method : 'DELETE',
                      headers : headers },
                    callback );
-};
+}
 
 function completeMultipartUpload( auth, parameters, callback ) {
   var possibleHeaders = [];
@@ -30,7 +30,7 @@ function completeMultipartUpload( auth, parameters, callback ) {
                      body : parameters.body,
                      headers : headers },
                    callback );
-};
+}
 
 
 function drop( auth, parameters, callback ) {
@@ -43,7 +43,7 @@ function drop( auth, parameters, callback ) {
                      method : 'DELETE',
                      headers : headers },
                    callback );
-};
+}
 
 function get( auth, parameters, callback ) {
   var possibleHeaders = ['If-Match', 'If-None-Match', 'If-Modified-Since', 'If-Unmodified-Since', 'range', 'x-amz-date'];
@@ -55,7 +55,7 @@ function get( auth, parameters, callback ) {
                      method : 'GET',
                      headers : headers },
                    callback );
-};
+}
 
 function head( auth, parameters, callback ) {
   var possibleHeaders = ['If-Match', 'If-None-Match', 'If-Modified-Since', 'If-Unmodified-Since', 'range', 'x-amz-date'];
@@ -67,7 +67,7 @@ function head( auth, parameters, callback ) {
                      method : 'HEAD',
                      headers : headers },
                    callback );
-};
+}
 
 function initiateMultipartUpload( auth, parameters, callback ) {
   var possibleHeaders = [];
@@ -80,7 +80,7 @@ function initiateMultipartUpload( auth, parameters, callback ) {
                      method : 'POST',
                      headers : headers },
                    callback );
-};
+}
 
 function listParts( auth, parameters, callback ) {
   var possibleHeaders = [];
@@ -95,7 +95,7 @@ function listParts( auth, parameters, callback ) {
                      method : 'GET',
                      headers : headers },
                    callback );
-};
+}
 
 function listUploads( auth, parameters, callback ) {
   var possibleHeaders = [];
@@ -110,7 +110,7 @@ function listUploads( auth, parameters, callback ) {
                      method : 'GET',
                      headers : headers },
                    callback );
-};
+}
 
 function put( auth, parameters, callback ) {
   var possibleHeaders = ['Expect', 'Content-Length', 'Content-MD5', 'Content-Type', 'Content-Encoding'];
@@ -124,7 +124,7 @@ function put( auth, parameters, callback ) {
                      uploadFile : true,
                      headers : headers },
                    callback );
-};
+}
 
 function restoreObjects( auth, parameters, callback ) {
   var possibleHeaders = [];
@@ -138,7 +138,7 @@ function restoreObjects( auth, parameters, callback ) {
                      body : body,
                      headers : headers },
                    callback );
-};
+}
 
 function uploadPart( auth, parameters, callback ) {
   var possibleQueryStrings = ['upload-Id'];
@@ -155,7 +155,7 @@ function uploadPart( auth, parameters, callback ) {
                      uploadFile : true,
                      headers : headers },
                    callback );
-};
+}
 
 
 module.exports = {

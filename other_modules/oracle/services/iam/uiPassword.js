@@ -13,7 +13,7 @@ function createOrReset( auth, parameters, callback ) {
                        body : parameters.body,
                        headers : headers },
                       callback )
-  };
+  }
 
   module.exports={
       createOrReset: createOrReset

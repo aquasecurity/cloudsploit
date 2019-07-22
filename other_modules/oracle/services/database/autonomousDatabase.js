@@ -24,7 +24,7 @@ function drop( auth, parameters, callback ) {
                      method : 'DELETE',
                      headers : headers },
                     callback )
-};
+}
 
 function get( auth, parameters, callback ) {
   var possibleHeaders = ['opc-request-id'];
@@ -36,7 +36,7 @@ function get( auth, parameters, callback ) {
                      headers : headers,
                      method : 'GET' },
                     callback );
-};
+}
 
 function list( auth, parameters, callback ) {
   var possibleHeaders = ['opc-client-response'];
@@ -50,7 +50,7 @@ function list( auth, parameters, callback ) {
                      headers : headers,
                      method : 'GET' }, 
                    callback );
-};
+}
 
 function restore( auth, parameters, callback ) {
   var possibleHeaders = ['if-match'];
@@ -64,7 +64,7 @@ function restore( auth, parameters, callback ) {
                      headers : headers,
                      body : parameters.body },
                    callback );
-};
+}
 
 function start( auth, parameters, callback ) {
   var possibleHeaders = ['if-match'];
@@ -77,7 +77,7 @@ function start( auth, parameters, callback ) {
                      headers : headers,
                      method : 'POST' },
                     callback );
-};
+}
 
 function stop( auth, parameters, callback ) {
   var possibleHeaders = ['if-match', 'opc-request-id'];
@@ -90,7 +90,7 @@ function stop( auth, parameters, callback ) {
                      host : endpoint.service.database[auth.region],
                      method : 'POST' },
                     callback );
-};
+}
 
 function update( auth, parameters, callback ) {
   var possibleHeaders = ['if-match', 'opc-request-id'];
@@ -103,7 +103,7 @@ function update( auth, parameters, callback ) {
                      headers : headers,
                      body : parameters.body },
                    callback );
-};
+}
 
 function generateWallet( auth, parameters, callback ) {
   var possibleHeaders = ['opc-request-id, opc-retry-token'];
@@ -117,7 +117,7 @@ function generateWallet( auth, parameters, callback ) {
                      body : parameters.body,
                      method : 'POST' },
                     callback );
-};
+}
 
 module.exports = {
     list: list,

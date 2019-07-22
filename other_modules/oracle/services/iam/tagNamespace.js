@@ -11,7 +11,7 @@ function create( auth, parameters, callback ) {
                        body : parameters.body,
                        headers : headers },
                       callback )
-  };
+  }
 
 function get( auth, parameters, callback ) {
   var possibleHeaders = [];
@@ -23,7 +23,7 @@ function get( auth, parameters, callback ) {
                        headers : headers,
                        method : 'GET' }, 
                      callback );
-  };
+  }
 
 function update( auth, parameters, callback ) {
   var possibleHeaders = [];
@@ -36,7 +36,7 @@ function update( auth, parameters, callback ) {
                        body : parameters.body,
                        method : 'PUT' }, 
                      callback );
-  };
+  }
   
   module.exports={
       update: update,

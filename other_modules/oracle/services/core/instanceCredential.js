@@ -12,7 +12,7 @@ function get( auth, parameters, callback ) {
                        headers : headers,
                        method : 'GET' }, 
                      callback );
-  };
+  }
 
 function getWindowInitial( auth, parameters, callback ) {
     var possibleHeaders = [];
@@ -25,7 +25,7 @@ function getWindowInitial( auth, parameters, callback ) {
                        headers : headers,
                        method : 'GET' }, 
                      callback );
-  };
+  }
 
   module.exports={
       get: get,

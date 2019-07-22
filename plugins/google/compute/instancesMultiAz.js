@@ -28,7 +28,7 @@ module.exports = {
             if (!Object.keys(instanceGroups.data).length) {
                 helpers.addResult(results, 0, 'No Instance Groups Found', loc);
                 return lcb();
-            };
+            }
 
             var groupName = [];
             async.each(instanceGroups.data, function (instanceGroup, icb) {
@@ -36,11 +36,11 @@ module.exports = {
                     instanceGroup.instanceGroups.forEach(group => {
                         if (group.region) {
                             groupName.push(group.name);
-                        };
+                        }
                     });
                 } else {
                     icb();
-                };
+                }
             });
             async.each(regions.instances.compute, function(location, loccb) {
                 var instancesInRegion = 0;
@@ -54,7 +54,7 @@ module.exports = {
                     if (instances.err || !instances.data) {
                         helpers.addResult(results, 3, 'Unable to query instances: ' + helpers.addError(instances), location);
                         return lcb();
-                    };
+                    }
         
                 //Looping by zone, ignoring the results
                    if (!instances.data.length) {

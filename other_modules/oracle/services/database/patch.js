@@ -12,7 +12,7 @@ function getDbHome( auth, parameters, callback ) {
                      headers : headers,
                      method : 'GET' },
                    callback );
-  };
+  }
 
 function getDbSystem( auth, parameters, callback ) {
   var possibleHeaders = [];
@@ -25,7 +25,7 @@ function getDbSystem( auth, parameters, callback ) {
                      headers : headers,
                      method : 'GET' },
                    callback );
-  };
+  }
 
 
 function listDbSystem( auth, parameters, callback ) {
@@ -41,7 +41,7 @@ function listDbSystem( auth, parameters, callback ) {
                      headers : headers,
                      method : 'GET' },
                    callback );
-  };
+  }
 
 function listDbHome( auth, parameters, callback ) {
   var possibleHeaders = [];
@@ -56,7 +56,7 @@ function listDbHome( auth, parameters, callback ) {
                      headers : headers,
                      method : 'GET' },
                    callback );
-  };
+  }
 
 
 module.exports = {

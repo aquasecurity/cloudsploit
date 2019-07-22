@@ -12,7 +12,7 @@ function list( auth, parameters, callback ) {
                        headers : headers,
                        method : 'GET' }, 
                      callback );
-  };
+  }
 
 function update( auth, parameters, callback ) {
     var possibleHeaders = ['if-match'];
@@ -26,7 +26,7 @@ function update( auth, parameters, callback ) {
                        body : parameters.body,
                        method : 'PUT' }, 
                      callback );
-  };
+  }
   
   module.exports={
       list: list,

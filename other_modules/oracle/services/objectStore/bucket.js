@@ -25,7 +25,7 @@ function update( auth, parameters, callback ) {
                      headers : headers,
                      body : parameters.body },
                    callback );
-};
+}
 
 function get( auth, parameters, callback ) {
   var possibleHeaders = ['opc-client-request-id', 'if-match', 'if-match-none'];
@@ -37,7 +37,7 @@ function get( auth, parameters, callback ) {
                      headers : headers,
                      method : 'GET' },
                     callback );
-};
+}
 
 function head( auth, parameters, callback ) {
   var possibleHeaders = ['opc-client-request-id', 'if-match', 'if-match-none'];
@@ -49,7 +49,7 @@ function head( auth, parameters, callback ) {
                      headers : headers,
                      method : 'HEAD' },
                     callback );
-};
+}
 
 function drop( auth, parameters, callback ) {
   var possibleHeaders = ['opc-client-request-id', 'if-match' ];
@@ -60,7 +60,7 @@ function drop( auth, parameters, callback ) {
                      host : endpoint.service.objectStore[auth.region],
                      method : 'DELETE' },
                     callback );
-};
+}
 
 function list( auth, parameters, callback ) {
   var possibleHeaders = ['opc-client-request-id' ];
@@ -74,7 +74,7 @@ function list( auth, parameters, callback ) {
                      headers : headers,
                      method : 'GET' },
                     callback );
-};
+}
 
 module.exports = {
     list: list,

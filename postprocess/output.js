@@ -1,3 +1,4 @@
+/* eslint no-console: "off"*/
 var csvWriter = require('csv-write-stream');
 var fs = require('fs');
 
@@ -38,10 +39,13 @@ var consoleOutputHandler = {
                         statusWord + '\t' + result.message);
     },
 
-    close: function() {}
+    close: function() {
+        // Nothing here since we just write to the console.
+    }
 }
 
 module.exports = {
+
     /**
      * Creates an output handler that writes output in the CSV format.
      * @param {fs.WriteSteam} stream The stream to write to or an object that
@@ -56,9 +60,11 @@ module.exports = {
             writer: writer,
         
             startCompliance: function(plugin, pluginKey, compliance) {
+                // Not required for console.
             },
         
             endCompliance: function(plugin, pluginKey, compliance) {
+                // Not required for console.
             },
         
             writeResult: function (result, plugin, pluginKey) {
@@ -107,9 +113,11 @@ module.exports = {
             testSuites: {},
 
             startCompliance: function(plugin, pluginKey, compliance) {
+                // Not supported by JUnit XML.
             },
         
             endCompliance: function(plugin, pluginKey, compliance) {
+                // Not supported by JUnit XML.
             },
         
             /**
@@ -250,16 +258,16 @@ module.exports = {
             return arg.startsWith('--csv=');
         })
         if (addCsvOutput) {
-            var stream = fs.createWriteStream(addCsvOutput.substr(6));
-            outputs.push(this.createCsv(stream));
+            var csvStream = fs.createWriteStream(addCsvOutput.substr(6));
+            outputs.push(this.createCsv(csvStream));
         }
 
         var addJunitOutput = argv.find(function (arg) {
             return arg.startsWith('--junit=');
         })
         if (addJunitOutput) {
-            var stream = fs.createWriteStream(addJunitOutput.substr(8));
-            outputs.push(this.createJunit(stream));
+            var junitStream = fs.createWriteStream(addJunitOutput.substr(8));
+            outputs.push(this.createJunit(junitStream));
         }
 
         var addConsoleOutput = argv.find(function (arg) {

@@ -13,7 +13,7 @@ function create( auth, parameters, callback ) {
                        method : 'POST',
                        body : parameters.body },
                       callback )
-  };
+  }
 
 function drop( auth, parameters, callback ) {
     var possibleHeaders = ['if-match'];
@@ -26,7 +26,7 @@ function drop( auth, parameters, callback ) {
                        headers : headers,
                        method : 'DELETE' },
                       callback )
-  };
+  }
 
   module.exports={
       create: create,

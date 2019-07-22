@@ -27,15 +27,15 @@ module.exports = {
                 helpers.addResult(results, 3,
                 'Unable to query Log Profiles: ' + helpers.addError(logProfiles), location);
                 continue;
-            };
+            }
                 
             if (!logProfiles.data.length) {
                 continue;
             } else {
                 logProfile = logProfiles.data;
                 break;
-            };
-        };
+            }
+        }
         
         async.each(locations.logProfiles, (loc, lcb) => {
             if (!logProfile) return lcb();
@@ -52,11 +52,11 @@ module.exports = {
                 helpers.addResult(results, 1,
                 'Log Profile is not archiving data in the region.', loc);
                 lcb();
-            };
+            }
         }, function() {
             if (!logProfile) {
                 helpers.addResult(results, 2, 'No Log Profile Enabled.', 'global');
-            };
+            }
             callback(null, results, source);
         });
     }

@@ -10,7 +10,7 @@ function drop( auth, parameters, callback ) {
                      method : 'DELETE',
                      headers : headers },
                    callback );
-};
+}
 
 function get( auth, parameters, callback ) {
   var possibleHeaders = ['x-amz-date'];
@@ -21,7 +21,7 @@ function get( auth, parameters, callback ) {
                      method : 'GET',
                      headers : headers },
                    callback );
-};
+}
 
 function put( auth, parameters, callback ) {
   var possibleHeaders = ['x-amz-date'];
@@ -33,7 +33,7 @@ function put( auth, parameters, callback ) {
                      body : parameters.body,
                      headers : headers },
                    callback );
-};
+}
 
 
 module.exports = {

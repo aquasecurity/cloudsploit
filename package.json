@@ -4,7 +4,9 @@
   "description": "AWS security scanning scripts",
   "main": "index.js",
   "scripts": {
-    "test": "mocha './**/*.spec.js'"
+    "lint": "./node_modules/.bin/eslint ./",
+    "unittest": "npx mocha './**/*.spec.js'",
+    "test": "npm run lint && npm run unittest"
   },
   "bin": {
     "cloudsploit-scan": "./index.js"
@@ -53,6 +55,8 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "eslint": "^6.1.0",
+    "eslint-plugin-jasmine": "^2.10.1",
     "mocha": "^6.1.4"
   }
 }

@@ -11,7 +11,7 @@ function get( auth, parameters, callback ) {
                        method : 'GET',
                        headers : headers },
                       callback )
-  };
+  }
 
 function list( auth, parameters, callback ) {
   var possibleHeaders = [];
@@ -24,7 +24,7 @@ function list( auth, parameters, callback ) {
                        headers : headers,
                        method : 'GET' }, 
                      callback );
-  };
+  }
 
 function listVirtualCircuitBandwidthShapes( auth, parameters, callback ) {
   var possibleHeaders = [];
@@ -39,7 +39,7 @@ function listVirtualCircuitBandwidthShapes( auth, parameters, callback ) {
                        headers : headers,
                        method : 'GET' }, 
                      callback );
-  };
+  }
 
 
   module.exports={

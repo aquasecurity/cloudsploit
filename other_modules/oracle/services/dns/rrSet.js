@@ -18,7 +18,7 @@ function update( auth, parameters, callback ) {
                      headers : headers,
                      body : parameters.body },
                    callback );
-};
+}
 
 function get( auth, parameters, callback ) {
   var possibleHeaders = ['if-none-match','if-unmodified-since'];
@@ -35,7 +35,7 @@ function get( auth, parameters, callback ) {
                      headers : headers,
                      method : 'GET' },
                     callback );
-};
+}
 
 function patch( auth, parameters, callback ) {
   var possibleHeaders = ['if-match','if-unmodified-since'];
@@ -53,7 +53,7 @@ function patch( auth, parameters, callback ) {
                      body: parameters.body,
                      method : 'PATCH' },
                     callback );
-};
+}
 
 
 function drop( auth, parameters, callback ) {
@@ -71,7 +71,7 @@ function drop( auth, parameters, callback ) {
                      headers : headers,
                      method : 'DELETE' },
                     callback );
-};
+}
 
 module.exports = {
     update: update,

@@ -1,10 +1,12 @@
 var assert = require('assert');
 var expect = require('chai').expect;
-var output = require('./output')
+var output = require('./output');
 
 /**
  * Creates an object that looks like an output stream that we can write
- * to (but is actually just a buffer caching the data)
+ * to (but is actually just a buffer caching the data).
+ * 
+ * @returns a simplified output buffer to record results.
  */
 var createOutputBuffer = function () {
     return {
@@ -14,10 +16,18 @@ var createOutputBuffer = function () {
             this.cache += data;
         },
 
-        end: function () {},
-        on: function (event, fn) {},
-        once: function(event, fn) {},
-        emit: function(even, fn) {}
+        end: function () {
+            // Do nothing
+        },
+        on: function (event, fn) {
+            // Do nothing
+        },
+        once: function(event, fn) {
+            // Do nothing
+        },
+        emit: function(even, fn) {
+            // Do nothing
+        }
     }
 }
 

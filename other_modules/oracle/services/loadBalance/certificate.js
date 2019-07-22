@@ -26,7 +26,7 @@ function drop( auth, parameters, callback ) {
                      headers : headers,
                      method : 'DELETE' },
                     callback );
-};
+}
 
 function list( auth, parameters, callback ) {
   var possibleHeaders = ['opc-request-id'];
@@ -39,7 +39,7 @@ function list( auth, parameters, callback ) {
                      headers : headers,
                      method : 'GET' },
                     callback );
-};
+}
 
 module.exports = {
     list: list,

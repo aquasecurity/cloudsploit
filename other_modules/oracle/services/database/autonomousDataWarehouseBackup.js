@@ -11,7 +11,7 @@ var headers = ocirest.buildHeaders( possibleHeaders, parameters );
                        headers : headers,
                        body : parameters.body }, 
                      callback );
- };
+ }
 
  function get( auth, parameters, callback ) {
     var possibleHeaders = [];
@@ -23,7 +23,7 @@ var headers = ocirest.buildHeaders( possibleHeaders, parameters );
                        headers : headers,
                        method : 'POST' },
                       callback );
-  };
+  }
 
   function list( auth, parameters, callback ) {
     var possibleHeaders = [];
@@ -37,7 +37,7 @@ var headers = ocirest.buildHeaders( possibleHeaders, parameters );
                        headers : headers,
                        method : 'GET' },
                       callback );
-  };
+  }
 
   module.exports = {
       get: get,

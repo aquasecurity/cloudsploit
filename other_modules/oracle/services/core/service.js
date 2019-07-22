@@ -9,7 +9,7 @@ function get( auth, parameters, callback ) {
                        host : endpoint.service.core[auth.region],
                        method : 'GET' }, 
                      callback );
-  };
+  }
 
 function list( auth, parameters, callback ) {
   var possibleHeaders = [];
@@ -22,7 +22,7 @@ function list( auth, parameters, callback ) {
                        headers : headers,
                        method : 'GET' }, 
                      callback );
-  };
+  }
 
   module.exports={
     list: list,

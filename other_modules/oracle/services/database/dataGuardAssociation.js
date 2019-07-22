@@ -13,7 +13,7 @@ function create( auth, parameters, callback ) {
                        headers : headers,
                        body : parameters.body },
                      callback );
-  };
+  }
 
 function failover( auth, parameters, callback ) {
   var possibleHeaders = ['if-match'];
@@ -29,7 +29,7 @@ function failover( auth, parameters, callback ) {
                        headers : headers,
                        body : parameters.body },
                      callback );
-  };
+  }
 
 function get( auth, parameters, callback ) {
   var possibleHeaders = [];
@@ -45,7 +45,7 @@ function get( auth, parameters, callback ) {
                        method : 'GET',
                        },
                      callback );
-  };
+  }
 
 function list( auth, parameters, callback ) {
   var possibleHeaders = [];
@@ -61,7 +61,7 @@ function list( auth, parameters, callback ) {
                        headers : headers,
                        method : 'GET' },
                      callback );
-  };
+  }
 
 function reinstate( auth, parameters, callback ) {
   var possibleHeaders = ['if-match'];
@@ -77,7 +77,7 @@ function reinstate( auth, parameters, callback ) {
                      method : 'POST',
                      body : parameters.body },
                    callback );
-  };
+  }
 
 function switchOver( auth, parameters, callback ) {
   var possibleHeaders = ['if-match'];
@@ -93,7 +93,7 @@ function switchOver( auth, parameters, callback ) {
                      method : 'POST',
                      body : parameters.body },
                    callback );
-  };
+  }
 
 
   module.exports = {

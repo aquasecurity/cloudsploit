@@ -11,7 +11,7 @@ function get( auth, parameters, callback ) {
                      headers : headers,
                      method : 'GET' },
                     callback );
-};
+}
 
 function drop( auth, parameters, callback ) {
   var possibleHeaders = ['if-match', 'opc-request-id'];
@@ -22,7 +22,7 @@ function drop( auth, parameters, callback ) {
                      headers : headers,
                      method : 'DELETE' },
                     callback );
-};
+}
 
 module.exports = {
     get: get,

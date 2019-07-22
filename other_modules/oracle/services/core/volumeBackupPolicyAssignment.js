@@ -24,7 +24,7 @@ function getAsset( auth, parameters, callback ) {
                      headers : headers,
                      method : 'GET' },
                     callback );
-};
+}
 
 function get( auth, parameters, callback ) {
   var possibleHeaders = [];
@@ -36,7 +36,7 @@ function get( auth, parameters, callback ) {
                      headers : headers,
                      method : 'GET' },
                     callback );
-};
+}
 
 
 function drop( auth, parameters, callback ) {
@@ -48,7 +48,7 @@ function drop( auth, parameters, callback ) {
                      headers : headers,
                      method : 'DELETE' },
                     callback );
-};
+}
 
 module.exports = {
     getAsset: getAsset,

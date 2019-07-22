@@ -15,7 +15,7 @@ function update( auth, parameters, callback ) {
                      'opc-request-id' : parameters['opc-request-id'],
                      body : parameters.body },
                    callback );
-};
+}
 
 function get( auth, parameters, callback ) {
   var possibleHeaders = ['opc-request-id'];
@@ -29,7 +29,7 @@ function get( auth, parameters, callback ) {
                      headers : headers,
                      method : 'GET' },
                     callback );
-};
+}
 
 module.exports = {
     update: update,

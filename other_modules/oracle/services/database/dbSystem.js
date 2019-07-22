@@ -11,7 +11,7 @@ function launch( auth, parameters, callback ) {
                      headers : headers,
                      body : parameters.body },
                    callback );
-  };
+  }
 
 function get( auth, parameters, callback ) {
   var possibleHeaders = [];
@@ -22,7 +22,7 @@ function get( auth, parameters, callback ) {
                      headers : headers,
                      method : 'GET' },
                    callback );
-  };
+  }
 
 function terminate( auth, parameters, callback ) {
   var possibleHeaders = ['if-match'];
@@ -33,7 +33,7 @@ function terminate( auth, parameters, callback ) {
                      headers : headers,
                      method : 'DELETE' },
                    callback );
-  };
+  }
 function update( auth, parameters, callback ) {
   var possibleHeaders = ['if-match'];
   var headers = ocirest.buildHeaders( possibleHeaders, parameters );
@@ -44,7 +44,7 @@ function update( auth, parameters, callback ) {
                      method : 'PUT',
                      body : parameters.body },
                    callback );
-  };
+  }
 
 
 function list( auth, parameters, callback ) {
@@ -60,7 +60,7 @@ function list( auth, parameters, callback ) {
                        headers : headers,
                        method : 'GET' },
                      callback );
-  };
+  }
 
 module.exports = {
     get: get,

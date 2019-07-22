@@ -22,7 +22,7 @@ function get( auth, parameters, callback ) {
                      headers : headers,
                      method : 'GET' },
                     callback );
-};
+}
 
 function drop( auth, parameters, callback ) {
   var possibleHeaders = [];
@@ -33,7 +33,7 @@ function drop( auth, parameters, callback ) {
                      headers : headers,
                      method : 'DELETE' },
                     callback );
-};
+}
 
 module.exports = {
     get: get,

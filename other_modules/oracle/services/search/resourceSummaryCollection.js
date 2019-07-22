@@ -13,7 +13,7 @@ function search( auth, parameters, callback ) {
                      body : parameters.body,
                      method : 'POST' },
                     callback );
-};
+}
 
 module.exports = {
     search: search

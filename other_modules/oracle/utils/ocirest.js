@@ -49,7 +49,7 @@ function sign( auth, request, body ) {
 
   var newAuthHeaderValue = request.getHeader("Authorization").replace("Signature ", "Signature version=\"1\",");
   request.setHeader("Authorization", newAuthHeaderValue);
-};
+}
 
 // generates a function to handle the https.request response object
 function handleResponse( callback ) {
@@ -79,7 +79,7 @@ function handleResponse( callback ) {
     });
 
   }
-};
+}
 
 
 function buildHeaders( possibleHeaders, options, bString ){
@@ -90,7 +90,7 @@ function buildHeaders( possibleHeaders, options, bString ){
       if ( possibleHeaders[i].toLowerCase() in options )
         headers[possibleHeaders[i].toLowerCase()] = options[possibleHeaders[i]];
   return headers;
-};
+}
 
 function buildQueryString( possibleQuery, options ){
   var query = '';
@@ -98,7 +98,7 @@ function buildQueryString( possibleQuery, options ){
     if ( possibleQuery[i] in options )
       query += (query=='' ? '?' : '&' ) + possibleQuery[i] + '=' + encodeURIComponent(options[possibleQuery[i]]);
   return query;
-};
+}
 
 module.exports = {
   process: process,

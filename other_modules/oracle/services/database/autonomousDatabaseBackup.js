@@ -11,7 +11,7 @@ function create( auth, parameters, callback ){
                        headers : headers,
                        body : parameters.body }, 
                      callback );
- };
+ }
 
  function get( auth, parameters, callback ) {
   var possibleHeaders = ['opc-eresponst-id'];
@@ -23,7 +23,7 @@ function create( auth, parameters, callback ){
                        headers : headers,
                        method : 'POST' },
                       callback );
-  };
+  }
 
   function list( auth, parameters, callback ) {
     var possibleHeaders = ['opc-request-id'];
@@ -37,7 +37,7 @@ function create( auth, parameters, callback ){
                        headers : headers,
                        method : 'GET' },
                       callback );
-  };
+  }
 
   module.exports = {
       get: get,

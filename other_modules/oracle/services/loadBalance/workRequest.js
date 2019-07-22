@@ -12,7 +12,7 @@ function get( auth, parameters, callback ) {
                      headers : headers,
                      method : 'GET' },
                     callback );
-};
+}
 
 function list( auth, parameters, callback ) {
   var possibleHeaders = ['opc-request-id'];
@@ -27,7 +27,7 @@ function list( auth, parameters, callback ) {
                      headers : headers,
                      method : 'GET' },
                     callback );
-};
+}
 
 module.exports = {
     list: list,

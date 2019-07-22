@@ -73,7 +73,7 @@ module.exports = {
                 } else {
                     helpers.addResult(results, 0,
                         'Activity Logs container for the storage account is encrypted with BYOK', loc, storageAccount.id);
-                };
+                }
             });
             cb();
         }, function(){

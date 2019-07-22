@@ -14,7 +14,7 @@ function drop( auth, parameters, callback ) {
                      headers : headers,
                      method : 'DELETE' },
                     callback );
-};
+}
 
 function get( auth, parameters, callback ) {
   var possibleHeaders = ['x-id-tenant-name'];
@@ -29,7 +29,7 @@ function get( auth, parameters, callback ) {
                      headers : headers,
                      method : 'GET' },
                     callback );
-};
+}
 
 function put( auth, parameters, callback ) {
   var possibleHeaders = [];
@@ -45,7 +45,7 @@ function put( auth, parameters, callback ) {
                      body : parameters.body,
                      method : 'PUT' },
                     callback );
-};
+}
 
 
 

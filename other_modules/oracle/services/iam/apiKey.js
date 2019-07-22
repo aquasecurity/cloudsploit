@@ -12,7 +12,7 @@ function drop( auth, parameters, callback ) {
                        headers : headers,
                        method : 'DELETE' },
                       callback )
-  };
+  }
 
 function list( auth, parameters, callback ) {
     var possibleHeaders = [];
@@ -25,7 +25,7 @@ function list( auth, parameters, callback ) {
                        headers : headers,
                        method : 'GET' }, 
                      callback );
-  };
+  }
 
 function upload( auth, parameters, callback ) {
     var possibleHeaders = ['opc-retry-token'];
@@ -39,7 +39,7 @@ function upload( auth, parameters, callback ) {
                        body : parameters.body,
                        method : 'POST' }, 
                      callback );
-  };
+  }
 
 
   

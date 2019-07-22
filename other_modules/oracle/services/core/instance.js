@@ -13,7 +13,7 @@ function terminate( auth, parameters, callback ) {
                        method : 'DELETE',
                        headers : headers },
                       callback )
-  };
+  }
 
 function action( auth, parameters, callback ) {
   var possibleHeaders = ['if-match','opc-retry-token'];
@@ -26,7 +26,7 @@ function action( auth, parameters, callback ) {
                        method : 'POST',
                        headers : headers },
                       callback )
-  };
+  }
 
 function launch( auth, parameters, callback ) {
   var possibleHeaders = ['opc-retry-token'];
@@ -38,7 +38,7 @@ function launch( auth, parameters, callback ) {
                        body : parameters.body,
                        headers : headers },
                       callback )
-  };
+  }
 
 
 function get( auth, parameters, callback ) {
@@ -50,7 +50,7 @@ function get( auth, parameters, callback ) {
                        headers : headers,
                        method : 'GET' }, 
                      callback );
-  };
+  }
 
 function list( auth, parameters, callback ) {
   var possibleHeaders = [];
@@ -63,7 +63,7 @@ function list( auth, parameters, callback ) {
                        headers : headers,
                        method : 'GET' }, 
                      callback );
-  };
+  }
 
 function update( auth, parameters, callback ) {
   var possibleHeaders = ['opc-retry-token', 'if-match'];
@@ -76,7 +76,7 @@ function update( auth, parameters, callback ) {
                        body : parameters.body,
                        method : 'PUT' }, 
                      callback );
-  };
+  }
   
   module.exports={
       list: list,

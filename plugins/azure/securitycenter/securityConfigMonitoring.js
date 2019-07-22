@@ -27,11 +27,11 @@ module.exports = {
                 helpers.addResult(results,3,
                     'Unable to query PolicyAssignments: ' + helpers.addError(policyAssignments), location);
                 return rcb();
-            };
+            }
 
             if (!policyAssignments.data.length) {
                 return rcb();
-            };
+            }
             
             for (var policyAssignment of policyAssignments.data) {
                 if (policyAssignment !== undefined && 
@@ -47,8 +47,8 @@ module.exports = {
                 } else if (policyAssignment.displayName.indexOf("ASC Default") > -1) {
                     policyId = policyAssignment.id;
                     break;
-                };
-            };
+                }
+            }
             
             rcb();
         }, function(){
@@ -59,7 +59,7 @@ module.exports = {
             } else {
                 helpers.addResult(results, 0,
                     'Security configuration Policy Assignment is Enabled',  'global', policyId);        
-            };
+            }
             callback(null, results, source);
         });
     }

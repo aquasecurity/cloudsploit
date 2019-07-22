@@ -10,7 +10,7 @@ function get( auth, parameters, callback ) {
                      method : 'GET',
                      headers : headers },
                    callback );
-};
+}
 
 module.exports = {
   get: get

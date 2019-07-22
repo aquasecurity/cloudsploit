@@ -10,7 +10,7 @@ function drop( auth, parameters, callback ) {
                      method : 'DELETE',
                      headers : headers },
                    callback );
-};
+}
 
 function head( auth, parameters, callback ) {
   var possibleHeaders = ['x-amz-date'];
@@ -21,7 +21,7 @@ function head( auth, parameters, callback ) {
                      method : 'HEAD',
                      headers : headers },
                    callback );
-};
+}
 
 function list( auth, parameters, callback ) {
   var possibleHeaders = ['x-amz-date'];
@@ -34,7 +34,7 @@ function list( auth, parameters, callback ) {
                      method : 'GET',
                      headers : headers },
                    callback );
-};
+}
 
 function put( auth, parameters, callback ) {
   var possibleHeaders = ['x-amz-date'];
@@ -45,7 +45,7 @@ function put( auth, parameters, callback ) {
                      method : 'PUT',
                      headers : headers },
                    callback );
-};
+}
 
 module.exports = {
   drop: drop,

@@ -14,7 +14,7 @@ function get( auth, parameters, callback ) {
                      headers : headers,
                      method : 'GET' },
                     callback );
-};
+}
 
 function post( auth, parameters, callback ) {
   var possibleHeaders = [];
@@ -30,7 +30,7 @@ function post( auth, parameters, callback ) {
                      body : parameters.body,
                      method : 'POST' },
                     callback );
-};
+}
 
 
 module.exports = {

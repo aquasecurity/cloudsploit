@@ -22,7 +22,7 @@ function get( auth, parameters, callback ) {
                      headers : headers,
                      method : 'GET' },
                     callback );
-};
+}
 
 function detatch( auth, parameters, callback ) {
   var possibleHeaders = ['if-match'];
@@ -33,7 +33,7 @@ function detatch( auth, parameters, callback ) {
                      headers : headers,
                      method : 'DELETE' },
                     callback );
-};
+}
 
 function list( auth, parameters, callback ) {
   var possibleHeaders = [];
@@ -46,7 +46,7 @@ function list( auth, parameters, callback ) {
                      headers : headers,
                      method : 'GET' },
                     callback );
-};
+}
 
 module.exports = {
     list: list,

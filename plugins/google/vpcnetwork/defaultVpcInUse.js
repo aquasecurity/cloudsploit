@@ -52,8 +52,8 @@ module.exports = {
                     if (!instances || instances.err || !instances.data) {
                     } else if (instances.data.length) {
                         instances.data.forEach(instance => {
-                            instance.networkInterfaces.forEach(interface => {
-                                if (interface.network = vpcUrl) {
+                            instance.networkInterfaces.forEach(networkInterface => {
+                                if (networkInterface.network = vpcUrl) {
                                     numInstances += 1;
                                 }
                             })
