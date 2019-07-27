@@ -50,13 +50,18 @@ var calls = {
     vaults: {
         list: {
             api: "KeyVaultMangementClient",
-            arm: true,
-            module: true
+            arm: true
         }
     },
     resources: {
         list: {
             api: "ResourceManagementClient",
+            arm: true
+        }
+    },
+    managedClusters: {
+        list: {
+            api: "ContainerServiceClient",     
             arm: true
         }
     },
@@ -256,6 +261,17 @@ var postcalls = {
             filterKey: ['resourceGroupName', 'profileName'],
             filterValue: ['resourceGroupName', 'name'],
             arm: true
+        },
+    },
+    KeyVaultClient: {
+        getKeys: {
+            api: "KeyVaultClient",
+            reliesOnService: ['vaults'],
+            reliesOnCall: ['list'],
+            filterKey: ['name'],
+            filterValue: ['name'],
+            arm: false,
+            keyVault: true
         }
     },
     databases: {

@@ -15,6 +15,7 @@ var ResourceManagementClient    = require('azure-arm-resource').ResourceManageme
 var SQLManagementClient         = require('azure-arm-sql');
 var StorageManagementClient     = require('azure-arm-storage');
 var WebSiteManagementClient     = require('azure-arm-website');
+var ContainerServiceClient      =  require('azure-arm-containerservice');
 var CdnManagementClient         = require('azure-arm-cdn');
 var MySQLManagementClient       = require('azure-arm-mysql');
 
@@ -35,6 +36,7 @@ var mapAzureApis = {
     "StorageManagementClient"   : StorageManagementClient,
     "StorageServiceClient"      : StorageServiceClient,
     "WebSiteManagementClient"   : WebSiteManagementClient,
+    "ContainerServiceClient"    : ContainerServiceClient, 
     "CdnManagementClient"       : CdnManagementClient,
     "MySQLManagementClient"     : MySQLManagementClient,
 }
@@ -411,38 +413,47 @@ class ApiCall {
                     });
                 }
             } else {
-                if (self.parameters) {
-                    switch (self.callObj.filterKey.length) {
-                        case 1:
-                            self.client = new mapAzureApis[self.callObj.api][self.AzureConfig.service](self.parameters[self.callObj.filterKey[0]]);
-                            return self.client[self.callKey](null, function(err, results, request, response) {
-                                universalResolve(err, results, request, response);
-                            });
-                            break;
-                        case 2:
-                            if (self.parameters[self.callObj.filterKey[0]] && self.parameters[self.callObj.filterKey[1]]) {
-                                self.client = new mapAzureApis[self.callObj.api][self.AzureConfig.service](self.parameters[self.callObj.filterKey[0]], self.parameters[self.callObj.filterKey[1]]);
-                                self.client[self.callKey](null, self.options, function(err, results, request, response) {
+                if(!self.callObj.keyVault) {
+                    if (self.parameters) {
+                        switch (self.callObj.filterKey.length) {
+                            case 1:
+                                self.client = new mapAzureApis[self.callObj.api][self.AzureConfig.service](self.parameters[self.callObj.filterKey[0]]);
+                                return self.client[self.callKey](null, function(err, results, request, response) {
                                     universalResolve(err, results, request, response);
                                 });
-                            } else {
-                                universalResolve({"message":"Error: Parameters not supplied"} );
-                            }
-                            break;
-                        case 3:
-                            if (self.parameters[self.callObj.filterKey[0]] && self.parameters[self.callObj.filterKey[1]] && self.parameters[self.callObj.entryKey[2]]) {
-                                self.client = new mapAzureApis[self.callObj.api][self.AzureConfig.service](self.parameters[self.callObj.filterKey[0]], self.parameters[self.callObj.filterKey[1]]);
-                                self.client[self.callKey](self.parameters[self.callObj.entryKey[2]], self.options, function(err, results, request, response) {
-                                    universalResolve(err, results, request, response);
-                                });
-                            } else {
-                                universalResolve({"message":"Error: Parameters not supplied"} );
-                            }
-                        default:
-                            break;
+                                break;
+                            case 2:
+                                if (self.parameters[self.callObj.filterKey[0]] && self.parameters[self.callObj.filterKey[1]]) {
+                                    self.client = new mapAzureApis[self.callObj.api][self.AzureConfig.service](self.parameters[self.callObj.filterKey[0]], self.parameters[self.callObj.filterKey[1]]);
+                                    self.client[self.callKey](null, self.options, function(err, results, request, response) {
+                                        universalResolve(err, results, request, response);
+                                    });
+                                } else {
+                                    universalResolve({"message":"Error: Parameters not supplied"} );
+                                }
+                                break;
+                            case 3:
+                                if (self.parameters[self.callObj.filterKey[0]] && self.parameters[self.callObj.filterKey[1]] && self.parameters[self.callObj.entryKey[2]]) {
+                                    self.client = new mapAzureApis[self.callObj.api][self.AzureConfig.service](self.parameters[self.callObj.filterKey[0]], self.parameters[self.callObj.filterKey[1]]);
+                                    self.client[self.callKey](self.parameters[self.callObj.entryKey[2]], self.options, function(err, results, request, response) {
+                                        universalResolve(err, results, request, response);
+                                    });
+                                } else {
+                                    universalResolve({"message":"Error: Parameters not supplied"} );
+                                }
+                            default:
+                                break;
+                        }
                     }
-                }
-            }
+                } else {
+                    if (self.parameters) {
+                        self.client = new mapAzureApis[self.callObj.api][self.AzureConfig.service](self.credentials);
+                        return self.client[self.callKey](`https://${self.parameters[self.callObj.filterKey[0]]}.vault.azure.net`, function(err, results, request, response) {
+                            universalResolve(err, results, request, response);
+                        });
+                    };
+                };
+            };
         });
     }
 }

@@ -76,10 +76,12 @@ module.exports = {
     databases: locations,
     policyDefinitions: locations,
     autoscaleSettings: locations,
+    serverBlobAuditingPolicies: locations,
     diagnosticSettingsOperations: {
         locations,
         nsg: locations
     },
     serverBlobAuditingPolicies: locations,
-    serverSecurityAlertPolicies: locations
+    serverSecurityAlertPolicies: locations,
+    managedClusters: locations,
 };
