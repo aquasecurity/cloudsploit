@@ -68,6 +68,11 @@ module.exports = {
 
         'efsEncryptionEnabled'          : require(__dirname + '/plugins/aws/efs/efsEncryptionEnabled.js'),
 
+        'eksKubernetesVersion'          : require(__dirname + '/plugins/aws/eks/eksKubernetesVersion.js'),
+        'eksLoggingEnabled'             : require(__dirname + '/plugins/aws/eks/eksLoggingEnabled.js'),
+        'eksPrivateEndpoint'            : require(__dirname + '/plugins/aws/eks/eksPrivateEndpoint.js'),
+        'eksSecurityGroups'             : require(__dirname + '/plugins/aws/eks/eksSecurityGroups.js'),
+
         'insecureCiphers'               : require(__dirname + '/plugins/aws/elb/insecureCiphers.js'),
         'elbHttpsOnly'                  : require(__dirname + '/plugins/aws/elb/elbHttpsOnly.js'),
         'elbLoggingEnabled'             : require(__dirname + '/plugins/aws/elb/elbLoggingEnabled.js'),

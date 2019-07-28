@@ -229,6 +229,12 @@ var calls = {
             paginateReqProp: 'Marker'
         }
     },
+    EKS: {
+        listClusters: {
+            property: 'clusters',
+            paginate: 'nextToken'
+        }
+    },
     ElasticTranscoder: {
         // TODO: Pagination via NextPageToken and PageToken
         listPipelines: {
@@ -493,6 +499,13 @@ var postcalls = [
             describeSubnets: {
                 reliesOnService: 'ec2',
                 reliesOnCall: 'describeVpcs',
+                override: true
+            }
+        },
+        EKS: {
+            describeCluster: {
+                reliesOnService: 'eks',
+                reliesOnCall: 'listClusters',
                 override: true
             }
         },
