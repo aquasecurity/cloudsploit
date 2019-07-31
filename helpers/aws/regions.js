@@ -17,12 +17,13 @@ var regions = [
     'ap-southeast-2',   // Asia Pacific (Sydney)
     'ap-south-1',       // Asia Pacific (Mumbai)
     'sa-east-1',        // South America (São Paulo)
-    'ap-east-1'         // Asia Pacific (Hong Kong)
+    'ap-east-1',        // Asia Pacific (Hong Kong)
+    'me-south-1'        // Middle East (Bahrain)
 ];
 
 module.exports = {
     all: regions,
-    optin: ['ap-east-1'],   // Regions that AWS disables by default
+    optin: ['ap-east-1', 'me-south-1'],   // Regions that AWS disables by default
     acm: regions,
     athena: ['us-east-1', 'us-east-2', 'us-west-2', 'ca-central-1',
              'eu-west-1', 'eu-central-1', 'eu-west-2', 'ap-southeast-1',
@@ -55,7 +56,6 @@ module.exports = {
     redshift: regions,
     apigateway: regions,
     cloudwatch: regions,
-    dynamodb: regions,
     ecr: regions,
     ecs: regions,
     sagemaker: [

@@ -257,6 +257,10 @@ module.exports = {
         'openCIFS'                      : require(__dirname + '/plugins/oracle/core/openCIFS.js'),
         'openDNS'                       : require(__dirname + '/plugins/oracle/core/openDNS.js'),
         'openSQLServer'                 : require(__dirname + '/plugins/oracle/core/openSQLServer.js'),
+        'openHadoopNameNode'            : require(__dirname + '/plugins/oracle/core/openHadoopNameNode.js'),
+        'openHadoopNameNodeWebUI'       : require(__dirname + '/plugins/oracle/core/openHadoopNameNodeWebUI.js'),
+        'openKibana'                    : require(__dirname + '/plugins/oracle/core/openKibana.js'),
+        'openSMTP'                      : require(__dirname + '/plugins/oracle/core/openSMTP.js'),
 
         'usersMfaEnabled'               : require(__dirname + '/plugins/oracle/identity/usersMfaEnabled.js'),
         'passwordRequiresLowercase'     : require(__dirname + '/plugins/oracle/identity/passwordRequiresLowercase.js'),
@@ -269,6 +273,8 @@ module.exports = {
         'defaultSecurityList'           : require(__dirname + '/plugins/oracle/networking/defaultSecurityList.js'),
         'lbHttpsOnly'                   : require(__dirname + '/plugins/oracle/networking/lbHttpsOnly.js'),
         'lbNoInstances'                 : require(__dirname + '/plugins/oracle/networking/lbNoInstances.js'),
+
+        'bucketPublicAccessType'        : require(__dirname + '/plugins/oracle/objectstore/bucketPublicAccessType.js'),
     },
     google: {
         'openDNS'                       : require(__dirname + '/plugins/google/vpcnetwork/openDNS.js'),

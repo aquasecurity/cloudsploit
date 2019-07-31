@@ -97,5 +97,9 @@ module.exports = {
             resource: resource || null,
             custom: custom || false
         });
+    },
+
+    objectFirstKey: function(object) {
+        return Object.keys(object)[0];
     }
 };
