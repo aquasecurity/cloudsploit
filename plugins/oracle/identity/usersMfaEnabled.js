@@ -24,33 +24,38 @@ module.exports = {
         var regions = helpers.regions(settings.govcloud);
 
         async.each(regions.user, function (region, rcb) {
-            var users = helpers.addSource(cache, source,
-                ['user', 'list', region]);
 
-            if (!users) return rcb();
+            if (helpers.checkRegionSubscription(cache, source, results, region)) {
 
-            if (users.err || !users.data) {
-                helpers.addResult(results, 3,
-                    'Unable to query for user MFA status: ' + helpers.addError(users));
-                return rcb();
-            }
+                var users = helpers.addSource(cache, source,
+                    ['user', 'list', region]);
 
-            if (users.data.length === 1) {
-                helpers.addResult(results, 0, 'No user accounts found');
-                return rcb();
-            }
+                if (!users) return rcb();
 
-            for (u in users.data) {
-                var user = users.data[u];
+                if (users.err || !users.data) {
+                    helpers.addResult(results, 3,
+                        'Unable to query for user MFA status: ' + helpers.addError(users));
+                    return rcb();
+                }
 
-                if (user.isMfaActivated) {
-                    helpers.addResult(results, 0,
-                        'User: ' + user.name + ' has an MFA device', 'global', user.id);
-                } else {
-                    helpers.addResult(results, 1,
-                        'User: ' + user.name + ' does not have an MFA device enabled', 'global', user.id);
+                if (users.data.length === 1) {
+                    helpers.addResult(results, 0, 'No user accounts found');
+                    return rcb();
+                }
+
+                for (u in users.data) {
+                    var user = users.data[u];
+
+                    if (user.isMfaActivated) {
+                        helpers.addResult(results, 0,
+                            'User: ' + user.name + ' has an MFA device', 'global', user.id);
+                    } else {
+                        helpers.addResult(results, 1,
+                            'User: ' + user.name + ' does not have an MFA device enabled', 'global', user.id);
+                    }
                 }
             }
+
             rcb();
         }, function () {
             // Global checking goes here

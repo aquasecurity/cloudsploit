@@ -22,52 +22,56 @@ module.exports = {
         var regions = helpers.regions(settings.govcloud);
 
         async.each(regions.vcn, function (region, rcb) {
-            var vcn = helpers.addSource(cache, source,
-                ['vcn', 'list', region]);
 
-            if (!vcn) return rcb();
+            if (helpers.checkRegionSubscription(cache, source, results, region)) {
 
-            if (vcn.err) {
-                helpers.addResult(results, 3,
-                    vcn.err.code + ": " + helpers.addError(vcn), region);
-                return rcb();
-            }
+                var vcn = helpers.addSource(cache, source,
+                    ['vcn', 'list', region]);
 
-            var getSecurityLists = helpers.addSource(cache, source,
-                ['securityList', 'list', region]);
+                if (!vcn) return rcb();
 
-            if (!getSecurityLists) return rcb();
+                if (vcn.err) {
+                    helpers.addResult(results, 3,
+                        vcn.err.code + ": " + helpers.addError(vcn), region);
+                    return rcb();
+                }
 
-            if (getSecurityLists.err && getSecurityLists.err.length > 0) {
-                helpers.addResult(results, 3,
-                    'Unable to query for security lists: ' + helpers.addError(getSecurityLists), region);
-                return rcb();
-            }
+                var getSecurityLists = helpers.addSource(cache, source,
+                    ['securityList', 'list', region]);
 
-            if (!getSecurityLists.data || !getSecurityLists.data.length > 0) {
-                helpers.addResult(results, 0, 'No security lists present', region);
-                return rcb();
-            }
+                if (!getSecurityLists) return rcb();
 
-            for (s in getSecurityLists.data) {
-                var sl = getSecurityLists.data[s];
-                for (l in sl) {
-                    isl = sl[l]
-                    displayNameArr = isl.displayName.split(" ");
-                    if (displayNameArr[0] === 'Default') {
-                        if (isl.egressSecurityRules.length ||
-                            isl.ingressSecurityRules) {
-                            helpers.addResult(results, 2,
-                                'Default security list has ' + (isl.egressSecurityRules.length || '0') + ' inbound and ' + (isl.ingressSecurityRules.length || '0') + ' outbound rules',
-                                region, isl.vcnId);
-                        } else {
-                            helpers.addResult(results, 0,
-                                'Default security list does not have inbound or outbound rules',
-                                region, isl.vcnId);
+                if (getSecurityLists.err && getSecurityLists.err.length > 0) {
+                    helpers.addResult(results, 3,
+                        'Unable to query for security lists: ' + helpers.addError(getSecurityLists), region);
+                    return rcb();
+                }
+
+                if (!getSecurityLists.data || !getSecurityLists.data.length > 0) {
+                    helpers.addResult(results, 0, 'No security lists present', region);
+                    return rcb();
+                }
+
+                for (s in getSecurityLists.data) {
+                    var sl = getSecurityLists.data[s];
+                    for (l in sl) {
+                        displayNameArr = sl.displayName.split(" ");
+                        if (displayNameArr[0] === 'Default') {
+                            if (sl.egressSecurityRules.length ||
+                                sl.ingressSecurityRules) {
+                                helpers.addResult(results, 2,
+                                    'Default security list has ' + (sl.egressSecurityRules.length || '0') + ' inbound and ' + (sl.ingressSecurityRules.length || '0') + ' outbound rules',
+                                    region, sl.vcnId);
+                            } else {
+                                helpers.addResult(results, 0,
+                                    'Default security list does not have inbound or outbound rules',
+                                    region, sl.vcnId);
+                            }
                         }
                     }
                 }
             }
+
             rcb();
         }, function () {
             // Global checking goes here

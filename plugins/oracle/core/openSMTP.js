@@ -1,13 +1,12 @@
 var async = require('async');
-
-var helpers = require('../../../helpers/oracle/');
+var helpers = require('../../../helpers/oracle');
 
 module.exports = {
-    title: 'Open RDP',
+    title: 'Open SMTP',
     category: 'Virtual Cloud Network',
-    description: 'Determine if TCP port 3389 for RDP is open to the public',
-    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as RDP should be restricted to known IP addresses.',
-    recommended_action: 'Restrict TCP port 3389 to known IP addresses',
+    description: 'Determine if TCP port 25 for SMTP is open to the public',
+    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as SMTP should be restricted to known IP addresses.',
+    recommended_action: 'Restrict TCP port 25 to known IP addresses',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Network/Concepts/securitylists.htm',
     apis: ['vcn:list', 'vcn:get', 'publicIp:list', 'securityList:list'],
 
@@ -32,10 +31,10 @@ module.exports = {
                 }
 
                 var ports = {
-                    'tcp': [3389]
+                    'tcp': [25]
                 };
 
-                var service = 'RDP';
+                var service = 'SMTP';
 
                 var getSecurityLists = helpers.addSource(cache, source,
                     ['securityList', 'list', region]);

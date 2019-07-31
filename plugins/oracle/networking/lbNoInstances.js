@@ -19,33 +19,38 @@ module.exports = {
 		var regions = helpers.regions(settings.govcloud);
 
         async.each(regions.loadBalancer, function(region, rcb){
-            var loadBalancers = helpers.addSource(cache, source,
-                ['loadBalancer', 'list', region]);
 
-            if (!loadBalancers) return rcb();
+            if (helpers.checkRegionSubscription(cache, source, results, region)) {
 
-            if (loadBalancers.err || !loadBalancers.data) {
-                helpers.addResult(results, 3,
-                    'Unable to query for load balancers: ' + helpers.addError(loadBalancers), region);
-                return rcb();
-            }
+                var loadBalancers = helpers.addSource(cache, source,
+                    ['loadBalancer', 'list', region]);
 
-            if (!loadBalancers.data.length) {
-                helpers.addResult(results, 0, 'No load balancers present', region);
-                return rcb();
-            }
+                if (!loadBalancers) return rcb();
 
-            async.each(loadBalancers.data, function(lb, cb) {
-                lbBackend = lb.backendSets['bs_' + lb.displayName];
-                if (lbBackend &&
-                    lbBackend.backends &&
-                    lbBackend.backends.length) {
-                    helpers.addResult(results, 0, 'ELB has ' + lb[lb.displayName].backends.length + ' backend instances', region, lb.id);
-                }else{
-                    helpers.addResult(results, 1, 'ELB does not have backend instances', region, lb.id);
+                if (loadBalancers.err || !loadBalancers.data) {
+                    helpers.addResult(results, 3,
+                        'Unable to query for load balancers: ' + helpers.addError(loadBalancers), region);
+                    return rcb();
                 }
-                cb();
-            })
+
+                if (!loadBalancers.data.length) {
+                    helpers.addResult(results, 0, 'No load balancers present', region);
+                    return rcb();
+                }
+
+                async.each(loadBalancers.data, function (lb, cb) {
+                    lbBackend = lb.backendSets['bs_' + lb.displayName];
+                    if (lbBackend &&
+                        lbBackend.backends &&
+                        lbBackend.backends.length) {
+                        helpers.addResult(results, 0, 'ELB has ' + lb[lb.displayName].backends.length + ' backend instances', region, lb.id);
+                    } else {
+                        helpers.addResult(results, 1, 'ELB does not have backend instances', region, lb.id);
+                    }
+                    cb();
+                })
+            }
+
             rcb();
         }, function(){
             // Global checking goes here

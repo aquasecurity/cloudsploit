@@ -1,13 +1,12 @@
 var async = require('async');
-
 var helpers = require('../../../helpers/oracle/');
 
 module.exports = {
-    title: 'Open RDP',
+    title: 'Open Hadoop HDFS NameNode WebUI',
     category: 'Virtual Cloud Network',
-    description: 'Determine if TCP port 3389 for RDP is open to the public',
-    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as RDP should be restricted to known IP addresses.',
-    recommended_action: 'Restrict TCP port 3389 to known IP addresses',
+    description: 'Determine if TCP port 50070 and 50470 for Hadoop/HDFS NameNode WebUI service is open to the public',
+    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Hadoop/HDFS should be restricted to known IP addresses.',
+    recommended_action: 'Restrict TCP port 50070 and 50470 to known IP addresses for Hadoop/HDFS',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Network/Concepts/securitylists.htm',
     apis: ['vcn:list', 'vcn:get', 'publicIp:list', 'securityList:list'],
 
@@ -32,23 +31,23 @@ module.exports = {
                 }
 
                 var ports = {
-                    'tcp': [3389]
+                    'tcp': [50070, 50470]
                 };
 
-                var service = 'RDP';
+                var service = 'NameNodeWebUI';
 
                 var getSecurityLists = helpers.addSource(cache, source,
                     ['securityList', 'list', region]);
 
                 if (!getSecurityLists) return rcb();
 
-                if (getSecurityLists.err && getSecurityLists.err.length>0)  {
+                if (getSecurityLists.err && getSecurityLists.err.length > 0) {
                     helpers.addResult(results, 3,
                         'Unable to query for security lists: ' + helpers.addError(getSecurityLists), region);
                     return rcb();
                 }
 
-                if (!getSecurityLists.data || !getSecurityLists.data.length>0) {
+                if (!getSecurityLists.data || !getSecurityLists.data.length > 0) {
                     helpers.addResult(results, 0, 'No security lists present', region);
                     return rcb();
                 }

@@ -136,7 +136,25 @@ function findOpenPortsAll(groups, ports, service, region, results) {
     return;
 }
 
+function checkRegionSubscription (cache, source, results, region) {
+    var regionSubscription = shared.addSource(cache, source,
+        ['regionSubscription', 'list', shared.objectFirstKey(cache['regionSubscription']['list'])]);
+
+    var subscribedToRegion = regionSubscription.data.find(function(rs){
+        return rs.regionName == region;
+    });
+
+    if (!subscribedToRegion) {
+        shared.addResult(results, 0,
+            'Not subscribed to region', region);
+        return false;
+    } else {
+        return true;
+    }
+}
+
 module.exports = {
     findOpenPorts: findOpenPorts,
-    findOpenPortsAll: findOpenPortsAll
+    findOpenPortsAll: findOpenPortsAll,
+    checkRegionSubscription: checkRegionSubscription
 };

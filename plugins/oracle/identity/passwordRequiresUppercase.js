@@ -21,7 +21,7 @@ module.exports = {
         if (cache.authenticationPolicy.get &&
             Object.keys(cache.authenticationPolicy.get).length &&
             Object.keys(cache.authenticationPolicy.get).length > 0) {
-            defaultRegion = Object.keys(cache.authenticationPolicy.get)[0];
+            defaultRegion = helpers.objectFirstKey(cache.authenticationPolicy.get);
         } else {
             return callback();
         }

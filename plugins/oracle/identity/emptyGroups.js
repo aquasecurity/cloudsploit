@@ -18,7 +18,7 @@ module.exports = {
         if (cache.group.list &&
             Object.keys(cache.group.list).length &&
             Object.keys(cache.group.list).length>0){
-            defaultRegion = Object.keys(cache.group.list)[0];
+            defaultRegion = helpers.objectFirstKey(cache.group.list);
         } else {
             return callback();
         }
@@ -50,12 +50,10 @@ module.exports = {
         for (g in groups.data) {
             var group = groups.data[g];
 
-            for (ug in userGroups.data) {
-                var users = userGroups.data[ug].filter((u) => {
-                    return u.groupId == group.id;
-                });
-                if (users.length && users.length > 0) break;
-            }
+            var users = userGroups.data.filter((u) => {
+                return u.groupId == group.id;
+            });
+            if (users.length && users.length > 0) break;
 
             if (users &&
                 users.length &&

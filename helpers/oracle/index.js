@@ -61,7 +61,16 @@ function OracleExecutor (OracleConfig, Service) {
                                 aggregatedErrors.push(result);
                             }
                             //console.log('\n' + require('util').inspect(result, {depth: null}));
-                            aggregatedResults.push(result);
+                            if (result &&
+                                result.length &&
+                                Object.prototype.toString.call(result) == "[object Array]") {
+                                result.forEach(function(listItem){
+                                    aggregatedResults.push(listItem);
+                                });
+                            } else if (Object.prototype.toString.call(result) == "[object Object]") {
+                                aggregatedResults.push(result);
+                            }
+
                             recordCb();
                         });
                     }, function(){
