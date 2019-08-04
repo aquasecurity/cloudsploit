@@ -32,7 +32,7 @@ module.exports = {
                 return rcb();
             }
 
-            if (!describeVpcs.data.length > 1) {
+            if (describeVpcs.data.length > 1) {
                 helpers.addResult(results, 0,
                     'Multiple (' + describeVpcs.data.length + ') VPCs are used.', region);
                 return rcb();

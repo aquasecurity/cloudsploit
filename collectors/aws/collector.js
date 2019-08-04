@@ -222,6 +222,15 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    ECR: {
+        describeRepositories: {
+            property: 'repositories',
+            paginate: 'nextToken',
+            params: {
+                maxResults: 1000
+            }
+        }
+    },
     EFS: {
         describeFileSystems: {
             property: 'FileSystems',
@@ -500,6 +509,14 @@ var postcalls = [
                 reliesOnService: 'ec2',
                 reliesOnCall: 'describeVpcs',
                 override: true
+            }
+        },
+        ECR: {
+            getRepositoryPolicy: {
+                reliesOnService: 'ecr',
+                reliesOnCall: 'describeRepositories',
+                filterKey: 'repositoryName',
+                filterValue: 'repositoryName'
             }
         },
         EKS: {

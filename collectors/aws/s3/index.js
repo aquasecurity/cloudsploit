@@ -50,7 +50,7 @@ module.exports = function(callKey, forceCloudTrail, AWSConfig, collection, callb
                         if (locData.LocationConstraint == 'EU') locData.LocationConstraint = 'eu-west-1';
                         
                         var altAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
-                        altAWSConfig.region = data.LocationConstraint;
+                        altAWSConfig.region = locData.LocationConstraint;
                         var s3Alt = new AWS.S3(altAWSConfig);
 
                         s3Alt[callKey]({Bucket:bucket}, function(altErr, altData){

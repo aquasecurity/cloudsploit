@@ -57,7 +57,7 @@ module.exports = {
                 helpers.addResult(results, 2,
                     'More than 20% of organization users are owners: ' + msg);
             } else {
-                helpers.addResult(results, 2,
+                helpers.addResult(results, 0,
                     'Less than 20% of organization users are owners: ' + msg);
             }
         }

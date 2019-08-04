@@ -34,6 +34,12 @@ module.exports = {
         var plan = getOrg.data.plan;
 
         if (typeof(plan.filled_seats) !== 'undefined' && typeof(plan.seats) !== 'undefined') {
+            // Handle grandfathered plans that didn't assign seats
+            if (plan.seats == 0) {
+                helpers.addResult(results, 0, 'GitHub plan is grandfathered into unlimited seats');
+                return callback(null, results, source);
+            }
+
             var percentUsed = Math.ceil((plan.filled_seats/plan.seats)*100);
             var result = 0;
             

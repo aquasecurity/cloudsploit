@@ -20,6 +20,7 @@ module.exports = {
     configservice: regions,
     dynamodb: regions,
     ec2: regions,
+    ecr: regions,
     eks: [],
     elb: regions,
     elbv2: regions,

@@ -159,15 +159,14 @@ function normalizePolicyDocument(doc) {
         var statement = doc.Statement[s];
 
         if (!statement.Effect || !statement.Effect.length ||
-            !statement.Action || !statement.Action.length ||
-            !statement.Resource || !statement.Resource.length) {
+            !statement.Action || !statement.Action.length) {
             break;
         }
 
         if (typeof statement.Effect !== 'string') break;
 
         if (!Array.isArray(statement.Action)) statement.Action = [statement.Action];
-        if (!Array.isArray(statement.Resource)) statement.Resource = [statement.Resource];
+        if (statement.Resource && !Array.isArray(statement.Resource)) statement.Resource = [statement.Resource];
 
         statementsToReturn.push(statement);
     }
