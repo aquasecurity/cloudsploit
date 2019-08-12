@@ -6,7 +6,7 @@ module.exports = {
     category: 'Security Center',
     description: 'Ensure that Security Center Monitor Adaptive Application Whitelisting is enabled.',
     more_info: 'Adaptive application controls work in conjunction with machine learning to analyze processes running in a VM and helps control which applications can run in the VM. This helps harden those VMs against malware.',
-    recommended_action: '1. Go to Azure Security Center 2. Click on Security policy 3. Click on your Subscription Name 4. Look for the "Monitor application whitelisting" setting. 5. Ensure that it is not set to Disabled',
+    recommended_action: '1. Go to Azure Security Center 2. Click on Security policy 3. Click on your Subscription 4. Click on ASC Default 5. Look for the Adaptive Application Controls should be enabled on virtual machines setting. 6. Ensure that it is set to AuditIfNotExists',
     link: 'https://docs.microsoft.com/en-us/azure/security-center/security-center-adaptiveapplication',
     apis: ['policyAssignments:list'],
 
@@ -34,8 +34,10 @@ module.exports = {
             }
 
             const policyAssignment = policyAssignments.data.find((policyAssignment) => {
-                return policyAssignment.displayName.includes("ASC Default")
-                    || policyAssignment.displayName.includes("ASC default")
+                return (policyAssignment.displayName &&
+                    policyAssignment.displayName.includes("ASC Default")) ||
+                    (policyAssignment.displayName &&
+                        policyAssignment.displayName.includes("ASC default"));
             });
 
             if (!policyAssignment) {
@@ -46,16 +48,14 @@ module.exports = {
 
             if (policyAssignment.parameters &&
                 policyAssignment.parameters.adaptiveApplicationControlsMonitoringEffect &&
+                policyAssignment.parameters.adaptiveApplicationControlsMonitoringEffect.value &&
                 policyAssignment.parameters.adaptiveApplicationControlsMonitoringEffect.value == 'Disabled') {
 
                 helpers.addResult(results, 2,
                     'Monitor Adaptive Application Whitelisting is disabled', location);
-
             } else {
-
                 helpers.addResult(results, 0,
                     'Monitor Adaptive Application Whitelisting is enabled', location);
-
             }
 
             rcb();

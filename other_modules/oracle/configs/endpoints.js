@@ -150,6 +150,16 @@ var service =
             'ap-mumbai-1': 'objectstorage.ap-mumbai-1.oraclecloud.com',
             'ap-seoul-1': 'objectstorage.ap-seoul-1.oraclecloud.com',
             'ap-tokyo-1': 'objectstorage.ap-tokyo-1.oraclecloud.com'
+        },
+        waas: {
+            'us-phoenix-1': 'waas.us-phoenix-1.oraclecloud.com',
+            'us-ashburn-1': 'waas.us-ashburn-1.oraclecloud.com',
+            'eu-frankfurt-1': 'waas.eu-frankfurt-1.oraclecloud.com',
+            'uk-london-1': 'waas.uk-london-1.oraclecloud.com',
+            'ca-toronto-1': 'waas.ca-toronto-1.oraclecloud.com',
+            'ap-mumbai-1': 'waas.ap-mumbai-1.oraclecloud.com',
+            'ap-seoul-1': 'waas.ap-seoul-1.oraclecloud.com',
+            'ap-tokyo-1': 'waas.ap-tokyo-1.oraclecloud.com'
         }
     };
 

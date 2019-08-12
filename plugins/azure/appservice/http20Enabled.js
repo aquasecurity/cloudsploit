@@ -6,7 +6,7 @@ module.exports = {
     category: 'App Service',
     description: 'Ensures the latest HTTP version is enabled for the App Service.',
     more_info: 'Enabling HTTP2.0 ensures that the App Service has the latest technology which includes security enhancements and additional functionality.',
-    recommended_action: 'In your App Service go to configuration > go to the General Settings tab  > select in "Http Version" version 2.0',
+    recommended_action: 'In your App Service go to configuration > go to the General Settings tab  > select in Http Version version 2.0',
     link: 'https://azure.microsoft.com/en-us/blog/announcing-http-2-support-in-azure-app-service/',
     apis: ['webApps:list', 'webApps:listConfigurations'],
 

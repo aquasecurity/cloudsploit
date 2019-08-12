@@ -160,7 +160,7 @@ module.exports = {
 
         'keyExpirationEnabled'          : require(__dirname + '/plugins/azure/keyvaults/keyExpirationEnabled.js'),
 
-        'blobContainersPrivateAccess'   : require(__dirname + '/plugins/azure/blobservice/blobContainersPrivateAccess.js'),	
+        'blobContainersPrivateAccess'   : require(__dirname + '/plugins/azure/blobservice/blobContainersPrivateAccess.js'),
         'blobServiceImmutable'          : require(__dirname + '/plugins/azure/blobservice/blobServiceImmutable.js'),
 
         'fileServiceAllAccessAcl'       : require(__dirname + '/plugins/azure/fileservice/fileServiceAllAccessAcl.js'),
@@ -173,13 +173,13 @@ module.exports = {
         'vmEndpointProtection'          : require(__dirname + '/plugins/azure/virtualmachines/vmEndpointProtection.js'),
         'vmAutoUpdateEnabled'           : require(__dirname + '/plugins/azure/virtualmachines/vmAutoUpdateEnabled.js'),
 
-        'autoscaleEnabled'              : require(__dirname + '/plugins/azure/monitor/autoscaleEnabled.js'),
         'nsgLogAnalyticsEnabled'        : require(__dirname + '/plugins/azure/monitor/nsgLogAnalyticsEnabled.js'),
         'logProfileArchiveData'         : require(__dirname + '/plugins/azure/monitor/logProfileArchiveData.js'),
 
         'sqlServerFirewallRuleEnabled'  : require(__dirname + '/plugins/azure/logalerts/sqlServerFirewallRuleEnabled.js'),
         'virtualNetworkRuleEnabled'     : require(__dirname + '/plugins/azure/logalerts/virtualNetworkRuleEnabled.js'),
 
+        'monitorEndpointProtection'     : require(__dirname + '/plugins/azure/securitycenter/monitorEndpointProtection.js'),
         'monitorBlobEncryption'         : require(__dirname + '/plugins/azure/securitycenter/monitorBlobEncryption.js'),
         'monitorVMVulnerability'        : require(__dirname + '/plugins/azure/securitycenter/monitorVMVulnerability.js'),
         'monitorSQLEncryption'          : require(__dirname + '/plugins/azure/securitycenter/monitorSqlEncryption.js'),
@@ -216,7 +216,7 @@ module.exports = {
         'openSQLServer'                 : require(__dirname + '/plugins/azure/networksecuritygroups/openSQLServer.js'),
 
         'tdeProtectorEncrypted'         : require(__dirname + '/plugins/azure/sqlserver/tdeProtectorEncrypted.js'),
-  
+
         'pythonVersion'                 : require(__dirname + '/plugins/azure/appservice/pythonVersion.js'),
         'clientCertEnabled'             : require(__dirname + '/plugins/azure/appservice/clientCertEnabled.js'),
         'netFrameworkVersion'           : require(__dirname + '/plugins/azure/appservice/netFrameworkVersion.js'),
@@ -226,8 +226,9 @@ module.exports = {
         'httpsOnlyEnabled'              : require(__dirname + '/plugins/azure/appservice/httpsOnlyEnabled.js'),
 
         'rbacEnabled'                   : require(__dirname + '/plugins/azure/kubernetesservice/rbacEnabled.js'),
-        
-        'detectInsecureCustomOrigin'    : require(__dirname + '/plugins/azure/cdn/detectInsecureCustomOrigin.js'),
+
+        'endpointLoggingEnabled'        : require(__dirname + '/plugins/azure/cdnprofiles/endpointLoggingEnabled.js'),
+        'detectInsecureCustomOrigin'    : require(__dirname + '/plugins/azure/cdnprofiles/detectInsecureCustomOrigin.js'),
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
@@ -271,17 +272,24 @@ module.exports = {
         'passwordRequiresUppercase'     : require(__dirname + '/plugins/oracle/identity/passwordRequiresUppercase.js'),
         'minPasswordLength'             : require(__dirname + '/plugins/oracle/identity/minPasswordLength.js'),
         'emptyGroups'                   : require(__dirname + '/plugins/oracle/identity/emptyGroups.js'),
+        'excessivePolicies'             : require(__dirname + '/plugins/oracle/identity/excessivePolicies.js'),
+        'excessivePolicyStatements'     : require(__dirname + '/plugins/oracle/identity/excessivePolicyStatements.js'),
 
         'defaultSecurityList'           : require(__dirname + '/plugins/oracle/networking/defaultSecurityList.js'),
         'lbHttpsOnly'                   : require(__dirname + '/plugins/oracle/networking/lbHttpsOnly.js'),
         'lbNoInstances'                 : require(__dirname + '/plugins/oracle/networking/lbNoInstances.js'),
+        'wafPublicIpEnabled'            : require(__dirname + '/plugins/oracle/networking/wafPublicIpEnabled.js'),
 
         'bucketPublicAccessType'        : require(__dirname + '/plugins/oracle/objectstore/bucketPublicAccessType.js'),
+        
+        'nfsPublicAccess'               : require(__dirname + '/plugins/oracle/filestorage/nfsPublicAccess.js'),
     },
     google: {
+        'excessiveFirewallRules'        : require(__dirname + '/plugins/google/vpcnetwork/excessiveFirewallRules.js'),
         'openDNS'                       : require(__dirname + '/plugins/google/vpcnetwork/openDNS.js'),
         'openSSH'                       : require(__dirname + '/plugins/google/vpcnetwork/openSSH.js'),
         'openCIFS'                      : require(__dirname + '/plugins/google/vpcnetwork/openCIFS.js'),
+        'openAllPorts'                  : require(__dirname + '/plugins/google/vpcnetwork/openAllPorts.js'),
         'openFTP'                       : require(__dirname + '/plugins/google/vpcnetwork/openFTP.js'),
         'openHadoopNameNode'            : require(__dirname + '/plugins/google/vpcnetwork/openHadoopNameNode.js'),
         'openHadoopNameNodeWebUI'       : require(__dirname + '/plugins/google/vpcnetwork/openHadoopNameNodeWebUI.js'),
@@ -316,5 +324,6 @@ module.exports = {
         'bucketLogging'                 : require(__dirname + '/plugins/google/storage/bucketLogging.js'),
 
         'clbHttpsOnly'                  : require(__dirname + '/plugins/google/clb/clbHttpsOnly.js'),
+        'clbNoInstances'                : require(__dirname + '/plugins/google/clb/clbNoInstances.js'),
     }
 };

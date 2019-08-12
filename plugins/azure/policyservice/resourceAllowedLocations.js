@@ -65,12 +65,11 @@ module.exports = {
             });
         }
 
-        if (allowedLocationsPolicyAssignment &&
-            (allowedLocationsPolicyAssignment.parameters == undefined ||
-                allowedLocationsPolicyAssignment.parameters.listOfAllowedLocations == undefined ||
-                allowedLocationsPolicyAssignment.parameters.listOfAllowedLocations.value == undefined ||
-                allowedLocationsPolicyAssignment.parameters.listOfAllowedLocations.value.length == 0)
-        ) {
+        if (!allowedLocationsPolicyAssignment ||
+            !allowedLocationsPolicyAssignment.parameters ||
+            !allowedLocationsPolicyAssignment.parameters.listOfAllowedLocations ||
+            !allowedLocationsPolicyAssignment.parameters.listOfAllowedLocations.value ||
+            !allowedLocationsPolicyAssignment.parameters.listOfAllowedLocations.value.length) {
             helpers.addResult(results, 1,
                 'No existing allowed locations for resource groups Policy Assignments', 'global');
         } else {

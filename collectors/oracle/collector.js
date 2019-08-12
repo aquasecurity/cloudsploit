@@ -89,6 +89,14 @@ var calls = {
             filterValue: ['compartmentId'],
         }
     },
+    exportSummary: {
+        list: {
+            api: "fileStorage",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+            restVersion: "/20171215",
+        }
+    },
     // Do not use compartment:get in Plugins
     // It will be loaded automatically by the
     // Oracle Collector
@@ -99,6 +107,21 @@ var calls = {
             filterValue: ['compartmentId'],
         }
     },
+    waasPolicy: {
+        list: {
+            api: "waas",
+            restVersion: "/20181116",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    policy: {
+        list: {
+            api: "iam",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    }
 };
 
 // Important Note: All relies must be passed in an array format []
@@ -152,6 +175,17 @@ var postcalls = {
             filterConfig: [true, false],
         }
     },
+    waasPolicy: {
+        get: {
+            api: "waas",
+            restVersion: "/20181116",
+            reliesOnService: ['waasPolicy'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'waasPolicyId'],
+            filterValue: ['compartmentId', 'id'],
+            filterConfig: [true, false],
+        }
+    }
 };
 
 // Important Note: All relies must be passed in an array format []
@@ -163,6 +197,17 @@ var finalcalls = {
             reliesOnCall: ['list'],
             filterKey: ['namespaceName', 'bucketName'],
             filterValue: ['namespace', 'name'],
+        }
+    },
+    exprt: {
+        get: {
+            api: "fileStorage",
+            reliesOnService: ['exportSummary'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'exportId'],
+            filterValue: ['compartmentId', 'id'],
+            filterConfig: [true, false],
+            restVersion: "/20171215",
         }
     },
 };

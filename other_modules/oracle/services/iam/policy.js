@@ -43,8 +43,7 @@ function list( auth, parameters, callback ) {
   var headers = ocirest.buildHeaders( possibleHeaders, parameters );
   var queryString = ocirest.buildQueryString( possibleQueryStrings, parameters );
     ocirest.process( auth, 
-                     { path : auth.RESTversion + '/policies/' + encodeURIComponent(parameters.policyId) + 
-                              queryString,
+                     { path : auth.RESTversion + '/policies' + queryString,
                        host : endpoint.service.iam[auth.region],
                        headers : headers,
                        method : 'GET' }, 

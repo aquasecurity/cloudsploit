@@ -2,9 +2,9 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: "TDE Protector Encrypted",
+    title: 'TDE Protector Encrypted',
     category: 'SQL Server',
-    description: "Ensure SQL server's TDE protector is encrypted with BYOK (Use your own key)",
+    description: 'Ensure SQL server TDE protector is encrypted with BYOK (Use your own key)',
     more_info: 'Enabling BYOK in the TDE protector allows for greater control and transparency, as well as increasing security by having full control of the encryption keys.',
     recommended_action: '1. Enter the SQL Server category in the Azure portal. 2. Choose the sql server. 3. Enter the Transparent Data Encryption blade. 4. Enable Use Your Own Key. 5. Select an existing key or create one.',
     link: 'https://docs.microsoft.com/en-us/azure/sql-database/transparent-data-encryption-byok-azure-sql',

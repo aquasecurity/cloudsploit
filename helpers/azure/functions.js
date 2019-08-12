@@ -26,7 +26,7 @@ function findOpenPorts(ngs, protocols, service, location, results) {
                                 let portRange = securityRule['destinationPortRange'].split("-");
                                 let startPort = portRange[0];
                                 let endPort = portRange[1];
-                                if (parseInt(startPort) === port || parseInt(endPort) === port) {
+                                if (parseInt(startPort) < port && parseInt(endPort) > port) {
                                     var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol == '*' ? `All protocols` : protocol.toUpperCase()) +
                                         ` port ` + ports + ` open to ` + sourcefilter; strings.push(string);
                             if (strings.indexOf(string) === -1) strings.push(string);

@@ -22,6 +22,10 @@ module.exports = {
     user: regions,
     userGroupMembership: regions,
     authenticationPolicy: regions,
+    exprt: regions,
+    exportSummary: regions,
     compartment: regions,
     bucket: regions,
+    waasPolicy: regions,
+    policy: regions,
 };

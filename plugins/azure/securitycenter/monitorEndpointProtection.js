@@ -2,22 +2,22 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Security Configuration Monitoring',
+    title: 'Monitor Endpoint Protection',
     category: 'Security Center',
-    description: 'Ensure that Security Configuration Monitoring is set to audit on the Default Policy',
-    more_info: 'By enabling audit on Security Configuration Monitoring, Security Vulnerabilities on machines can be detected, keeping security up to date and following security best practices.',
-    recommended_action: '1. Go to Azure Security Center 2. Click on Security policy 3. Click on your Subscription 4. Click on ASC Default 5. Look for the Vulnerabilities in security configuration on your machines should be remediated setting. 6. Ensure that it is set to AuditIfNotExists',
-    link: 'https://docs.microsoft.com/en-us/azure/governance/policy/overview',
+    description: 'Ensures Endpoint Protection monitoring is enabled in Security Center.',
+    more_info: 'When this setting is enabled, Security Center audits the Endpoint Proction in all Vms to enhance data protection at rest.',
+    recommended_action: '1. Go to Azure Security Center 2. Click on Security policy 3. Click on your Subscription 4. Click on ASC Default 5. Look for the Monitor missing Endpoint Protection in Azure Security Center setting. 6. Ensure that it is set to AuditIfNotExists',
+    link: 'https://docs.microsoft.com/en-us/azure/security-center/security-center-policy-definitions',
     apis: ['policyAssignments:list'],
 
-    run: function(cache, settings, callback) {
+    run: function (cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.policyAssignments, function (location, rcb) {
+        async.each(locations.policyAssignments, (location, rcb) => {
 
-            const policyAssignments = helpers.addSource(cache, source,
+            const policyAssignments = helpers.addSource(cache, source, 
                 ['policyAssignments', 'list', location]);
 
             if (!policyAssignments) return rcb();
@@ -43,19 +43,19 @@ module.exports = {
             if (!policyAssignment) {
                 helpers.addResult(results, 0, 'There are no existing ASC Default Policy Assignments.', location);
                 return rcb();
-            }
+            };
 
-            if (policyAssignment.parameters &&
-                policyAssignment.parameters.systemConfigurationsMonitoringEffect &&
-                policyAssignment.parameters.systemConfigurationsMonitoringEffect.value &&
-                policyAssignment.parameters.systemConfigurationsMonitoringEffect.value === 'Disabled') {
-
+            if (policyAssignment.parameters && 
+                policyAssignment.parameters.endpointProtectionMonitoringEffect && 
+                policyAssignment.parameters.endpointProtectionMonitoringEffect.value &&
+                policyAssignment.parameters.endpointProtectionMonitoringEffect.value === 'Disabled') {
                 helpers.addResult(results, 2,
-                    'Security configuration Policy Assignment is Disabled.', location);
+                    'Monitor Endpoint Protection is Disabled', location);
             } else {
                 helpers.addResult(results, 0,
-                    'Security configuration Policy Assignment is Enabled.', location);
-            }
+                    'Monitor Endpoint Protection is Enabled.', location);
+            };
+
             rcb();
         }, function () {
             // Global checking goes here

@@ -347,6 +347,16 @@ var finalcalls = {
             module: true
         }
     },
+    diagnosticSettingsOperations: {
+        list: {
+            api: "MonitorManagementClient",
+            reliesOnService: ['endpoints'],
+            reliesOnCall: ['listByProfile'],
+            filterKey: ['id'],
+            filterValue: ['id'],
+            arm: true
+        }
+    },
     serverSecurityAlertPolicies: {
         listByServer: {
             api: "SQLManagementClient",
@@ -591,13 +601,13 @@ function errorHandling(err, data, collectionObject, locations) {
             } else if (err.body && err.body.error && err.body.error.message) {
                 collectionObject[locations[l]].err = err.body.error.message;
             } else if (data && data.length && data.length>0 && err.length && err.length>0) {
-                var errorsReturned;
+                var errorsReturned = '';
                 for (e in err){
                     if (![404, 403, 400].includes(err[e].statusCode)){
                         errorsReturned += err[e].message + '; ';
                     }
                 }
-                if (errorsReturned) {
+                if (errorsReturned.length) {
                     collectionObject[locations[l]].err = errorsReturned;
                 }
             } else {

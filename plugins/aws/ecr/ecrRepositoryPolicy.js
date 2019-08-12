@@ -42,6 +42,13 @@ module.exports = {
                 var getRepositoryPolicy = helpers.addSource(cache, source,
                     ['ecr', 'getRepositoryPolicy', region, name]);
 
+                if (getRepositoryPolicy && getRepositoryPolicy.err &&
+                    getRepositoryPolicy.err.code &&
+                    getRepositoryPolicy.err.code == 'RepositoryPolicyNotFoundException') {
+                    helpers.addResult(results, 0, 'ECR registry does not have a custom policy', region, arn);
+                    continue;
+                }
+
                 if (!getRepositoryPolicy || getRepositoryPolicy.err ||
                     !getRepositoryPolicy.data || !getRepositoryPolicy.data.policyText) {
                     helpers.addResult(

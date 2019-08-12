@@ -6,7 +6,7 @@ module.exports = {
     category: 'App Service',
     description: 'Ensures Authentication is enabled for your App services, redirecting unauthenticated users to the login page.',
     more_info: 'Enabling authentication will redirect all unauthenticated requests to the login page. Also handles authentication of users with specified provider (Azure Active Directory, Facebook, Google, Microsoft Account, and Twitter)',
-    recommended_action: 'In your App Service go to Authentication / Authorization > Set App Service Authentication to "On" (Enabled)',
+    recommended_action: 'In your App Service go to Authentication / Authorization > Set App Service Authentication to On (Enabled)',
     link: 'https://docs.microsoft.com/en-us/azure/app-service/overview-authentication-authorization',
     apis: ['webApps:list', 'webApps:getAuthSettings'],
     compliance: {

@@ -7,7 +7,7 @@ module.exports = {
     category: 'App Service',
     description: 'Ensures HTTPS Only is enabled for your App services, redirecting all HTTP traffic to HTTPS.',
     more_info: 'Enabling HTTPS Only traffic will redirect all non-secure HTTP requests to HTTPS. HTTPS uses the SSL/TLS protocol to provide a secure connection.',
-    recommended_action: 'In your App Service go to SSL Settings > HTTPS Only and set it to "On" (Enabled).',
+    recommended_action: 'In your App Service go to SSL Settings > HTTPS Only and set it to On (Enabled).',
     link: 'https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-ssl#enforce-https',
     apis: ['webApps:list'],
     compliance: {

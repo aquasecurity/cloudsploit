@@ -12,7 +12,8 @@ var kms = require( './services/kms.js' );
 var loadBalance = require( './services/loadBalance.js' );
 var search = require( './services/search.js' );
 var containerEngine = require( './services/containerEngine.js' );
-var myServices = require( './services/myServices.js')
+var myServices = require( './services/myServices.js');
+var waas = require( './services/waas.js');
 
 module.exports = {
     amazon: amazon,
@@ -29,5 +30,6 @@ module.exports = {
     kms: kms,
     loadBalance: loadBalance,
     search: search,
-    containerEngine: containerEngine
+    containerEngine: containerEngine,
+    waas: waas
 }

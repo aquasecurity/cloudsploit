@@ -6,7 +6,7 @@ module.exports = {
     category: 'App Service',
     description: 'Ensures Client Certificates are enabled for your App Service, only allowing clients with valid certificates to reach the app',
     more_info: 'Enabling Client Certificates will block all clients who do not have a valid certificate from accessing the app.',
-    recommended_action: 'In your App Service go to SSL Settings > Incoming client certificates and set it to "On" (Enabled).',
+    recommended_action: 'In your App Service go to SSL Settings > Incoming client certificates and set it to On (Enabled).',
     link: 'https://docs.microsoft.com/en-us/azure/app-service/app-service-web-configure-tls-mutual-auth#enable-client-certificates',
     apis: ['webApps:list'],
 

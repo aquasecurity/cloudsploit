@@ -6,7 +6,7 @@ module.exports = {
     title: 'VM Data Disk Encryption',
     category: 'Virtual Machines',
     description: 'Ensure that VM Data Disk Encryption is enabled',
-    more_info: "Encrypting your IaaS VM Data disks (non-boot volume) ensures that its entire content is fully unrecoverable without a key and thus protects the volume from unwarranted reads",
+    more_info: 'Encrypting your IaaS VM Data disks (non-boot volume) ensures that its entire content is fully unrecoverable without a key and thus protects the volume from unwarranted reads',
     recommended_action: 'Enable VM Data Disk Encryption on all virtual machines',
     link: 'https://docs.microsoft.com/en-us/azure/security-center/security-center-apply-disk-encryption',
     apis: ['disks:list'],

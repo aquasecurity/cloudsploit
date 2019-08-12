@@ -131,6 +131,7 @@ module.exports = {
 
                             if (statement.Effect === 'Allow' &&
                                 statement.Action.indexOf('*') > -1 &&
+                                statement.Resource &&
                                 statement.Resource.indexOf('*') > -1) {
                                 userAdmins.push({name: user.UserName, arn: user.Arn});
                                 return cb();

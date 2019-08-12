@@ -6,7 +6,7 @@ module.exports = {
     title: 'VM Auto Update Enabled',
     category: 'Virtual Machines',
     description: 'Ensure that VM Auto Update is enabled',
-    more_info: "Enabling auto update for the VMs will reduce the security risk of missing security patches",
+    more_info: 'Enabling auto update for the VMs will reduce the security risk of missing security patches',
     recommended_action: 'Enable VM auto update on all virtual machines',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/windows-or-linux/maintenance-and-updates',
     apis: ['virtualMachines:listAll'],

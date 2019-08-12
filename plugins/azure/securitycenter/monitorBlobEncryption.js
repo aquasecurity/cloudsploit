@@ -6,7 +6,7 @@ module.exports = {
     category: 'Security Center',
     description: 'Ensures that Blob Storage Encryption monitoring is enabled.',
     more_info: 'When this setting is enabled, Security Center audits blob encryption in all storage accounts to enhance data at rest protection.',
-    recommended_action: '1. Go to Azure Security Center 2. Click on Security policy 3. Click on your Subscription Name 4. Look for the "Audit missing blob encryption for storage accounts." setting. 5. Ensure that it is not set to Disabled',
+    recommended_action: '1. Go to Azure Security Center 2. Click on Security policy 3. Click on your Subscription 4. Click on ASC Default 5. Look for the Audit missing blob encryption for storage accounts setting. 6. Ensure that it is set to AuditIfNotExists',
     link: 'https://docs.microsoft.com/en-us/azure/security-center/security-center-policies',
     apis: ['policyAssignments:list'],
 
@@ -34,8 +34,10 @@ module.exports = {
             }
 
             const policyAssignment = policyAssignments.data.find((policyAssignment) => {
-                return policyAssignment.displayName.includes("ASC Default") ||
-                 policyAssignment.displayName.includes("ASC default")
+                return (policyAssignment.displayName &&
+                    policyAssignment.displayName.includes("ASC Default")) ||
+                    (policyAssignment.displayName &&
+                        policyAssignment.displayName.includes("ASC default"));
             });
 
             if (!policyAssignment) {
@@ -43,13 +45,15 @@ module.exports = {
                 return rcb();
             }
 
-            if (policyAssignment.parameters && policyAssignment.parameters.storageEncryptionMonitoringEffect &&
+            if (policyAssignment.parameters &&
+                policyAssignment.parameters.storageEncryptionMonitoringEffect &&
+                policyAssignment.parameters.storageEncryptionMonitoringEffect.value &&
                 policyAssignment.parameters.storageEncryptionMonitoringEffect.value === 'Disabled') {
                 helpers.addResult(results, 2,
-                    'ASC Default policy setting Monitor Storage Blob Encryption is Disabled', location);
+                    'Monitor Storage Blob Encryption is Disabled', location);
             } else {
                 helpers.addResult( results, 0,
-                    'ASC Default policy setting Monitor Storage Blob Encryption is Enabled.',location);
+                    'Monitor Storage Blob Encryption is Enabled.',location);
             }
 
             rcb();
