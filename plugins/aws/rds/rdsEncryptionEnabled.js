@@ -45,9 +45,10 @@ module.exports = {
                 // For resource, attempt to use the endpoint address (more specific) but fallback to the instance identifier
                 var db = describeDBInstances.data[i];
                 var dbResource = db.DBInstanceArn;
+                var kmsKey = db.KmsKeyId;
 
                 if (db.StorageEncrypted) {
-                    helpers.addResult(results, 0, 'Encryption at rest is enabled', region, dbResource);
+                    helpers.addResult(results, 0, 'Encryption at rest is enabled via KMS key: ' + (kmsKey || 'Unknown'), region, dbResource);
                 } else {
                     helpers.addResult(results, 2, 'Encryption at rest is not enabled', region, dbResource);
                 }
