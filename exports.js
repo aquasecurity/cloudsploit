@@ -87,6 +87,7 @@ module.exports = {
         'certificateExpiry'             : require(__dirname + '/plugins/aws/iam/certificateExpiry.js'),
         'emptyGroups'                   : require(__dirname + '/plugins/aws/iam/emptyGroups.js'),
         'iamUserAdmins'                 : require(__dirname + '/plugins/aws/iam/iamUserAdmins.js'),
+        'iamRolePolicies'               : require(__dirname + '/plugins/aws/iam/iamRolePolicies.js'),
         'maxPasswordAge'                : require(__dirname + '/plugins/aws/iam/maxPasswordAge.js'),
         'minPasswordLength'             : require(__dirname + '/plugins/aws/iam/minPasswordLength.js'),
         'noUserIamPolicies'             : require(__dirname + '/plugins/aws/iam/noUserIamPolicies.js'),

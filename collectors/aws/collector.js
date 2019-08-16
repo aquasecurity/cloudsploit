@@ -565,6 +565,12 @@ var postcalls = [
                 filterKey: 'GroupName',
                 filterValue: 'GroupName'
             },
+            listAttachedRolePolicies: {
+                reliesOnService: 'iam',
+                reliesOnCall: 'listRoles',
+                filterKey: 'RoleName',
+                filterValue: 'RoleName'
+            },
             listUserPolicies: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listUsers',
@@ -576,6 +582,12 @@ var postcalls = [
                 reliesOnCall: 'listGroups',
                 filterKey: 'GroupName',
                 filterValue: 'GroupName'
+            },
+            listRolePolicies: {
+                reliesOnService: 'iam',
+                reliesOnCall: 'listRoles',
+                filterKey: 'RoleName',
+                filterValue: 'RoleName'
             },
             listSSHPublicKeys: {
                 reliesOnService: 'iam',
@@ -686,6 +698,11 @@ var postcalls = [
             getGroupPolicy: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listGroups',
+                override: true
+            },
+            getRolePolicy: {
+                reliesOnService: 'iam',
+                reliesOnCall: 'listRoles',
                 override: true
             }
         }
