@@ -60,7 +60,7 @@ module.exports = {
                 });
                 if (non_https_listner){
                     //helpers.addResult(results, 2, non_https_listner.join(', '), region);
-                    msg = "The following listeners are not HTTPS-only: ";
+                    msg = "The following listeners are not using HTTPS only: ";
                     helpers.addResult(
                         results, 2, msg + non_https_listner.join(', '), region, elbArn
                     );
