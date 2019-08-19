@@ -62,8 +62,15 @@ module.exports = {
                     helpers.addResult(results, 3,
                         'Unable to describe ACM certificate: ' + helpers.addError(describeCertificate), region, cert.CertificateArn);
                 } else if (!describeCertificate.data.Certificate || !describeCertificate.data.Certificate.NotAfter) {
-                    helpers.addResult(results, 3,
-                        'ACM certificate does not have an expiration date configured', region, cert.CertificateArn);
+                    if (describeCertificate.data.Certificate &&
+                        describeCertificate.data.Certificate.RenewalEligibility &&
+                        describeCertificate.data.Certificate.RenewalEligibility == 'INELIGIBLE') {
+                        helpers.addResult(results, 1,
+                            'ACM certificate is not eligible for renewal', region, cert.CertificateArn);
+                    } else {
+                        helpers.addResult(results, 3,
+                            'ACM certificate does not have an expiration date configured', region, cert.CertificateArn);
+                    }
                 } else {
                     var certificate = describeCertificate.data.Certificate;
 
