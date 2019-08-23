@@ -13,6 +13,7 @@ var drgAttachment = require( './core/drgAttachment.js' );
 var fastConnectProviderServices = require( './core/fastConnectProviderServices.js' );
 var image = require( './core/image.js' );
 var instance = require( './core/instance.js' );
+var instancePool = require( './core/instancePool.js' );
 var instanceConsoleConnection = require( './core/instanceConsoleConnection.js' );
 var instanceCredential = require( './core/instanceCredential.js' );
 var internetGateway = require( './core/internetGateway.js' );
@@ -61,6 +62,7 @@ module.exports = {
     fastConnectProviderServices: fastConnectProviderServices,
     image: image,
     instance: instance,
+    instancePool: instancePool,
     instanceConsoleConnection: instanceConsoleConnection,
     instanceCredential: instanceCredential,
     internetGateway: internetGateway,

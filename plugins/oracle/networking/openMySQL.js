@@ -1,15 +1,16 @@
 var async = require('async');
 
-var helpers = require('../../../helpers/oracle/');
+var helpers = require('../../../helpers/oracle');
 
 module.exports = {
-    title: 'Open CIFS',
-    category: 'Virtual Cloud Network',
-    description: 'Determine if UDP port 445 for CIFS is open to the public',
-    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as CIFS should be restricted to known IP addresses.',
-    recommended_action: 'Restrict UDP port 445 to known IP addresses',
+    title: 'Open MySQL',
+    category: 'Networking',
+    description: 'Determine if TCP port 4333 or 3306 for MySQL is open to the public',
+    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as MySQL should be restricted to known IP addresses.',
+    recommended_action: 'Restrict TCP ports 4333 and 3306 to known IP addresses',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Network/Concepts/securitylists.htm',
     apis: ['vcn:list', 'vcn:get', 'publicIp:list', 'securityList:list'],
+
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -32,10 +33,10 @@ module.exports = {
                 }
 
                 var ports = {
-                    'udp': [445]
+                    'tcp': [3306, 4333]
                 };
 
-                var service = 'CIFS';
+                var service = 'MySQL';
 
                 var getSecurityLists = helpers.addSource(cache, source,
                     ['securityList', 'list', region]);

@@ -1,15 +1,24 @@
 var async = require('async');
 
-var helpers = require('../../../helpers/oracle');
+var helpers = require('../../../helpers/oracle/');
 
 module.exports = {
-    title: 'Open VNC Client',
-    category: 'Virtual Cloud Network',
-    description: 'Determine if TCP port 5500 for VNC Client is open to the public',
-    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as VNC Client should be restricted to known IP addresses.',
-    recommended_action: 'Restrict TCP port 5500 to known IP addresses',
+    title: 'Open All Ports Protocols',
+    category: 'Networking',
+    description: 'Determine if security list has all ports or protocols open to the public',
+    more_info: 'Security lists should be created on a per-service basis and avoid allowing all ports or protocols.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Network/Concepts/securitylists.htm',
+    recommended_action: 'Modify the security list to specify a specific port and protocol to allow.',
     apis: ['vcn:list', 'vcn:get', 'publicIp:list', 'securityList:list'],
+    compliance: {
+        hipaa: 'HIPAA requires strict access controls to networks and services ' +
+            'processing sensitive data. security lists are the built-in ' +
+            'method for restricting access to AWS services and should be ' +
+            'configured to allow least-privilege access.',
+        pci: 'PCI has explicit requirements around firewalled access to systems. ' +
+            'security lists should be properly secured to prevent access to ' +
+            'backend services.'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -32,10 +41,10 @@ module.exports = {
                 }
 
                 var ports = {
-                    'tcp': [5500]
+                    'all': []
                 };
 
-                var service = 'VNC Client';
+                var service = 'All Ports';
 
                 var getSecurityLists = helpers.addSource(cache, source,
                     ['securityList', 'list', region]);
@@ -53,7 +62,7 @@ module.exports = {
                     return rcb();
                 }
 
-                helpers.findOpenPorts(getSecurityLists.data, ports, service, region, results);
+                helpers.findOpenPortsAll(getSecurityLists.data, ports, service, region, results);
             }
 
             rcb();

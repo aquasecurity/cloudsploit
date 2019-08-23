@@ -1,12 +1,13 @@
 var async = require('async');
-var helpers = require('../../../helpers/oracle/');
+
+var helpers = require('../../../helpers/oracle');
 
 module.exports = {
-    title: 'Open Kibana',
-    category: 'Virtual Cloud Network',
-    description:  'Determine if TCP port 5601 for Kibana is open to the public',
-    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Kibana should be restricted to known IP addresses.',
-    recommended_action: 'Restrict TCP port 5601 to known IP addresses',
+    title: 'Open RPC',
+    category: 'Networking',
+    description: 'Determine if TCP port 135 for RPC is open to the public',
+    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as RPC should be restricted to known IP addresses.',
+    recommended_action: 'Restrict TCP port 135 to known IP addresses',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Network/Concepts/securitylists.htm',
     apis: ['vcn:list', 'vcn:get', 'publicIp:list', 'securityList:list'],
 
@@ -31,23 +32,23 @@ module.exports = {
                 }
 
                 var ports = {
-                    'tcp': [5601]
+                    'tcp': [135]
                 };
 
-                var service = 'Kibana';
+                var service = 'RPC';
 
                 var getSecurityLists = helpers.addSource(cache, source,
                     ['securityList', 'list', region]);
 
                 if (!getSecurityLists) return rcb();
 
-                if (getSecurityLists.err && getSecurityLists.err.length > 0) {
+                if (getSecurityLists.err && getSecurityLists.err.length>0)  {
                     helpers.addResult(results, 3,
                         'Unable to query for security lists: ' + helpers.addError(getSecurityLists), region);
                     return rcb();
                 }
 
-                if (!getSecurityLists.data || !getSecurityLists.data.length > 0) {
+                if (!getSecurityLists.data || !getSecurityLists.data.length>0) {
                     helpers.addResult(results, 0, 'No security lists present', region);
                     return rcb();
                 }

@@ -28,4 +28,10 @@ module.exports = {
     bucket: regions,
     waasPolicy: regions,
     policy: regions,
+    subnet: regions,
+    dbHome: regions,
+    database: regions,
+    instance: regions,
+    instancePool: regions,
+    autoscaleConfiguration: regions,
 };

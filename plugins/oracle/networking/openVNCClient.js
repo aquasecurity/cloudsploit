@@ -3,14 +3,13 @@ var async = require('async');
 var helpers = require('../../../helpers/oracle');
 
 module.exports = {
-    title: 'Open MySQL',
-    category: 'Virtual Cloud Network',
-    description: 'Determine if TCP port 4333 or 3306 for MySQL is open to the public',
-    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as MySQL should be restricted to known IP addresses.',
-    recommended_action: 'Restrict TCP ports 4333 and 3306 to known IP addresses',
+    title: 'Open VNC Client',
+    category: 'Networking',
+    description: 'Determine if TCP port 5500 for VNC Client is open to the public',
+    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as VNC Client should be restricted to known IP addresses.',
+    recommended_action: 'Restrict TCP port 5500 to known IP addresses',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Network/Concepts/securitylists.htm',
     apis: ['vcn:list', 'vcn:get', 'publicIp:list', 'securityList:list'],
-
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -33,10 +32,10 @@ module.exports = {
                 }
 
                 var ports = {
-                    'tcp': [3306, 4333]
+                    'tcp': [5500]
                 };
 
-                var service = 'MySQL';
+                var service = 'VNC Client';
 
                 var getSecurityLists = helpers.addSource(cache, source,
                     ['securityList', 'list', region]);

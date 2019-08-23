@@ -3,11 +3,11 @@ var async = require('async');
 var helpers = require('../../../helpers/oracle/');
 
 module.exports = {
-    title: 'Open Autonomous Data Warehouse',
-    category: 'Virtual Cloud Network',
-    description: 'Determine if TCP port 1522 for Autonomous Data Warehouse is open to the public',
-    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Autonomous Data Warehouse should be restricted to known IP addresses.',
-    recommended_action: 'Restrict TCP port 1522 to known IP addresses',
+    title: 'Open SSH',
+    category: 'Networking',
+    description: 'Determine if TCP port 22 for SSH is open to the public',
+    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as SSH should be restricted to known IP addresses.',
+    recommended_action: 'Restrict TCP port 22 to known IP addresses',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Network/Concepts/securitylists.htm',
     apis: ['vcn:list', 'vcn:get', 'publicIp:list', 'securityList:list'],
 
@@ -32,10 +32,10 @@ module.exports = {
                 }
 
                 var ports = {
-                    'tcp': [1522]
+                    'tcp': [22]
                 };
 
-                var service = 'Autonomous Data Warehouse';
+                var service = 'SSH';
 
                 var getSecurityLists = helpers.addSource(cache, source,
                     ['securityList', 'list', region]);

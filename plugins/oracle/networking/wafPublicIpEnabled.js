@@ -73,7 +73,7 @@ module.exports = {
                     helpers.addResult(results, 2,
                         'The following Public IPs do not have WAF enabled: ' + allIps.join(', '));
                 } else {
-                    helpers.addResult(results, 2,
+                    helpers.addResult(results, 0,
                         'All Public IPs have WAF enabled');
                 };
                 callback(null, results, source);

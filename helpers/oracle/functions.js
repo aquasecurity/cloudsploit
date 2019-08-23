@@ -140,13 +140,17 @@ function checkRegionSubscription (cache, source, results, region) {
     var regionSubscription = shared.addSource(cache, source,
         ['regionSubscription', 'list', shared.objectFirstKey(cache['regionSubscription']['list'])]);
 
+    if (!regionSubscription || !regionSubscription.data) {
+        shared.addResult(results, 0, 'Not subscribed to region', region);
+        return false;
+    }
+
     var subscribedToRegion = regionSubscription.data.find(function(rs){
         return rs.regionName == region;
     });
 
     if (!subscribedToRegion) {
-        shared.addResult(results, 0,
-            'Not subscribed to region', region);
+        shared.addResult(results, 0, 'Not subscribed to region', region);
         return false;
     } else {
         return true;

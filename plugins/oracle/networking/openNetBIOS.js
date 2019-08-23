@@ -3,11 +3,11 @@ var async = require('async');
 var helpers = require('../../../helpers/oracle');
 
 module.exports = {
-    title: 'Open VNC Server',
-    category: 'Virtual Cloud Network',
-    description: 'Determine if TCP port 5900 for VNC Server is open to the public',
-    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as VNC Server should be restricted to known IP addresses.',
-    recommended_action: 'Restrict TCP port 5900 to known IP addresses',
+    title: 'Open NetBIOS',
+    category: 'Networking',
+    description: 'Determine if UDP port 137 or 138 for NetBIOS is open to the public',
+    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as NetBIOS should be restricted to known IP addresses.',
+    recommended_action: 'Restrict UDP ports 137 and 138 to known IP addresses',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Network/Concepts/securitylists.htm',
     apis: ['vcn:list', 'vcn:get', 'publicIp:list', 'securityList:list'],
 
@@ -32,10 +32,10 @@ module.exports = {
                 }
 
                 var ports = {
-                    'tcp': [5900]
+                    'udp': [137, 138]
                 };
 
-                var service = 'VNC Server';
+                var service = 'NetBIOS';
 
                 var getSecurityLists = helpers.addSource(cache, source,
                     ['securityList', 'list', region]);

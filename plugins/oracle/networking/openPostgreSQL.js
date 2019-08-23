@@ -3,11 +3,11 @@ var async = require('async');
 var helpers = require('../../../helpers/oracle');
 
 module.exports = {
-    title: 'Open SQLServer',
-    category: 'Virtual Cloud Network',
-    description: 'Determine if TCP port 1433 or UDP port 1434 for SQL Server is open to the public',
-    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as SQL server should be restricted to known IP addresses.',
-    recommended_action: 'Restrict TCP port 1433 and UDP port 1434 to known IP addresses',
+    title: 'Open PostgreSQL',
+    category: 'Networking',
+    description: 'Determine if TCP port 5432 for PostgreSQL is open to the public',
+    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as PostgreSQL should be restricted to known IP addresses.',
+    recommended_action: 'Restrict TCP port 5432 to known IP addresses',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Network/Concepts/securitylists.htm',
     apis: ['vcn:list', 'vcn:get', 'publicIp:list', 'securityList:list'],
 
@@ -32,11 +32,10 @@ module.exports = {
                 }
 
                 var ports = {
-                    'tcp': [1433],
-                    'udp': [1434]
+                    'tcp': [5432]
                 };
 
-                var service = 'SQL Server';
+                var service = 'PostgreSQL';
 
                 var getSecurityLists = helpers.addSource(cache, source,
                     ['securityList', 'list', region]);

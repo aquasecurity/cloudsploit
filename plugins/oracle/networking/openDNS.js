@@ -1,13 +1,13 @@
 var async = require('async');
 
-var helpers = require('../../../helpers/oracle');
+var helpers = require('../../../helpers/oracle/');
 
 module.exports = {
-    title: 'Open Oracle',
-    category: 'Virtual Cloud Network',
-    description: 'Determine if TCP port 1521 for Oracle is open to the public',
-    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Oracle should be restricted to known IP addresses.',
-    recommended_action: 'Restrict TCP ports 1521 to known IP addresses',
+    title: 'Open DNS',
+    category: 'Networking',
+    description: 'Determine if TCP or UDP port 53 for DNS is open to the public',
+    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as DNS should be restricted to known IP addresses.',
+    recommended_action: 'Restrict TCP and UDP port 53 to known IP addresses',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Network/Concepts/securitylists.htm',
     apis: ['vcn:list', 'vcn:get', 'publicIp:list', 'securityList:list'],
 
@@ -32,10 +32,11 @@ module.exports = {
                 }
 
                 var ports = {
-                    'tcp': [1521]
+                    'udp': [53],
+                    'tcp': [53]
                 };
 
-                var service = 'Oracle';
+                var service = 'DNS';
 
                 var getSecurityLists = helpers.addSource(cache, source,
                     ['securityList', 'list', region]);

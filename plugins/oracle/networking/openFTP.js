@@ -1,13 +1,14 @@
+
 var async = require('async');
 
-var helpers = require('../../../helpers/oracle');
+var helpers = require('../../../helpers/oracle/');
 
 module.exports = {
-    title: 'Open RPC',
-    category: 'Virtual Cloud Network',
-    description: 'Determine if TCP port 135 for RPC is open to the public',
-    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as RPC should be restricted to known IP addresses.',
-    recommended_action: 'Restrict TCP port 135 to known IP addresses',
+    title: 'Open FTP',
+    category: 'Networking',
+    description:  'Determine if TCP port 20 or 21 for FTP is open to the public',
+    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as FTP should be restricted to known IP addresses.',
+    recommended_action: 'Restrict TCP port 20 or 21 to known IP addresses',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Network/Concepts/securitylists.htm',
     apis: ['vcn:list', 'vcn:get', 'publicIp:list', 'securityList:list'],
 
@@ -32,10 +33,10 @@ module.exports = {
                 }
 
                 var ports = {
-                    'tcp': [135]
+                    'tcp': [20, 21]
                 };
 
-                var service = 'RPC';
+                var service = 'FTP';
 
                 var getSecurityLists = helpers.addSource(cache, source,
                     ['securityList', 'list', region]);

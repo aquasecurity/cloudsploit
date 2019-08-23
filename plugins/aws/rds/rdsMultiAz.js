@@ -34,7 +34,9 @@ module.exports = {
 
             // loop through Rds Instances
             describeDBInstances.data.forEach(function(Rds){
-                if (Rds.Engine === 'aurora' || Rds.Engine === 'aurora-postgresql') {
+                if (Rds.Engine === 'aurora' ||
+                    Rds.Engine === 'aurora-postgresql' ||
+                    Rds.Engine === 'aurora-mysql') {
                     helpers.addResult(results, 0,
                         'RDS Aurora instances are multi-AZ',
                         region, Rds.DBInstanceArn);

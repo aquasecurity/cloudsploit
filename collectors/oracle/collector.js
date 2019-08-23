@@ -121,6 +121,28 @@ var calls = {
             filterKey: ['compartmentId'],
             filterValue: ['compartmentId'],
         }
+    },
+    dbHome: {
+        list: {
+            api: "database",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    instancePool: {
+        list: {
+            api: "core",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    autoscaleConfiguration: {
+        list: {
+            api: "autoscale",
+            restVersion: "/20181001",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
     }
 };
 
@@ -182,6 +204,17 @@ var postcalls = {
             reliesOnService: ['waasPolicy'],
             reliesOnCall: ['list'],
             filterKey: ['compartmentId', 'waasPolicyId'],
+            filterValue: ['compartmentId', 'id'],
+            filterConfig: [true, false],
+        }
+    },
+    database: {
+        list: {
+            api: "database",
+            restVersion: "/20160918",
+            reliesOnService: ['dbHome'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'dbHomeId'],
             filterValue: ['compartmentId', 'id'],
             filterConfig: [true, false],
         }

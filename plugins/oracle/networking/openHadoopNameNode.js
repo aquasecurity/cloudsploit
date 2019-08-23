@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/oracle/');
 
 module.exports = {
     title: 'Open Hadoop HDFS NameNode Metadata Service',
-    category: 'Virtual Cloud Network',
+    category: 'Networking',
     description: 'Determine if TCP port 8020 for HDFS NameNode metadata service is open to the public.',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Hadoop/HDFS should be restricted to known IP addresses.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Network/Concepts/securitylists.htm',

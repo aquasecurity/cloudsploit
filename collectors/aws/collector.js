@@ -334,6 +334,10 @@ var calls = {
         describeDBEngineVersions: {
             property: 'DBEngineVersions',
             paginate: 'Marker'
+        },
+        describeDBSnapshots: {
+            property: 'DBSnapshots',
+            paginate: 'Marker'
         }
     },
     Redshift: {
