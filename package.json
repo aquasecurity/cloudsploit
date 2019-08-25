@@ -49,7 +49,6 @@
     "csv-write-stream": "^2.0.0",
     "fast-safe-stringify": "^2.0.6",
     "googleapis": "^40.0.1",
-    "jssha": "^2.3.1",
     "ms-rest-azure": "^2.5.9"
   },
   "devDependencies": {

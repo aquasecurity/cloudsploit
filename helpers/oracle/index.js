@@ -8,7 +8,7 @@ var sshpk = require('sshpk');
 var assert = require('assert-plus');
 
 // REST Oracle
-var oci = require( '../../other_modules/oracle/oci' );
+var oci = require( '../../other_modules/oci' );
 
 var regions = function(govcloud) {
     if (govcloud) return govLocations;
@@ -56,7 +56,7 @@ function OracleExecutor (OracleConfig, Service) {
                             console.log('Could not read the Oracle Private Key.');
                         }
 
-                        oci[callObj.api][oracleService][callKey](OracleConfig, parameters, function (result) {
+                        oci(callObj.api, oracleService, callKey, OracleConfig, parameters, function(result) {
                             if (result.code) {
                                 aggregatedErrors.push(result);
                             }
@@ -100,7 +100,7 @@ function OracleExecutor (OracleConfig, Service) {
                 console.log('Could not read the Oracle Private Key.');
             }
 
-            return oci[callObj.api][oracleService][callKey]( OracleConfig, parameters, function (result) {
+            return oci(callObj.api, oracleService, callKey, OracleConfig, parameters, function(result) {
                 if (result.code) {
                     return callback(result);
                 }
