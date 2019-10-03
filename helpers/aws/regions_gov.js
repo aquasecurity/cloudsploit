@@ -6,6 +6,7 @@ var regions = [
 ];
 
 module.exports = {
+    default: ['us-gov-west-1'],
     all: regions,
     acm: regions,
     athena: ['us-gov-west-1'],

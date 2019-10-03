@@ -15,6 +15,9 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
 
+        var describeDBEngineVersions = helpers.addSource(cache, source,
+            ['rds', 'describeDBEngineVersions', regions.default[0]]);
+
         async.each(regions.rds, function(region, rcb) {
             var describeDBInstances = helpers.addSource(cache, source,
                 ['rds', 'describeDBInstances', region]);
@@ -29,9 +32,8 @@ module.exports = {
                 return rcb();
             }
 
-            var describeDBEngineVersions = helpers.addSource(cache, source,
-                ['rds', 'describeDBEngineVersions', region]);
             if (!describeDBEngineVersions) return rcb();
+
             if (describeDBEngineVersions.err || !describeDBEngineVersions.data) {
                 helpers.addResult(results, 3,
                     'Unable to query for RDS engine versions: ' + helpers.addError(describeDBEngineVersions), region);

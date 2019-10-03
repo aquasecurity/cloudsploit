@@ -14,7 +14,40 @@ function call(OracleConfig, options, callback) {
         });
 
         response.on('end', function() {
-            callback(JSON.parse(respBody));
+            var parentOcidArr = options.path.split('/');
+
+            try {
+                respBody = JSON.parse(respBody);
+            } catch (e) {
+                return callback({code:'Invalid Response'});
+            }
+
+            if (parentOcidArr.length > 3 &&
+                parentOcidArr.length % 2 == 1) {
+                var parentOcidName = parentOcidArr[parentOcidArr.length-3];
+                var parentOcidVal = parentOcidArr[parentOcidArr.length-2];
+
+                if (respBody.length) {
+                    respBody.forEach(resp => {
+                        resp[parentOcidName] = parentOcidVal
+                    });
+                } else {
+                    respBody[parentOcidName] = parentOcidVal
+                }
+            } else if (parentOcidArr.length > 3 &&
+                parentOcidArr.length % 2 == 0) {
+                var parentOcidName = parentOcidArr[parentOcidArr.length-2];
+                var parentOcidVal = parentOcidArr[parentOcidArr.length-1];
+
+                if (respBody.length) {
+                    respBody.forEach(resp => {
+                        resp[parentOcidName] = parentOcidVal
+                    });
+                } else {
+                    respBody[parentOcidName] = parentOcidVal
+                }
+            }
+            callback(respBody);
         });
     });
 

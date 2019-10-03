@@ -112,5 +112,51 @@ describe('rdsMultiAz', function () {
 
             rds.run(cache, {}, callback);
         })
+
+        it('should give failing result if non-multi-AZ RDS read replicas are found', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1)
+                expect(results[0].status).to.equal(2)
+                expect(results[0].message).to.include('RDS instance does not have multi-AZ enabled')
+                done()
+            };
+
+            const cache = createCache(
+                null,
+                [
+                    {
+                        Engine: 'mysql',
+                        MultiAZ: false,
+                        DBInstanceArn: 'arn:rds:example',
+                        ReadReplicaSourceDBInstanceIdentifier: 'mysource'
+                    }
+                ]
+            );
+
+            rds.run(cache, {rds_multi_az_ignore_replicas: 'false'}, callback);
+        })
+
+        it('should give passing result if non-multi-AZ RDS read replicas are found with override', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1)
+                expect(results[0].status).to.equal(0)
+                expect(results[0].message).to.include('RDS instance does not have multi-AZ enabled but is a read replica')
+                done()
+            };
+
+            const cache = createCache(
+                null,
+                [
+                    {
+                        Engine: 'mysql',
+                        MultiAZ: false,
+                        DBInstanceArn: 'arn:rds:example',
+                        ReadReplicaSourceDBInstanceIdentifier: 'mysource'
+                    }
+                ]
+            );
+
+            rds.run(cache, {rds_multi_az_ignore_replicas: 'true'}, callback);
+        })
     })
 })

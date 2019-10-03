@@ -40,7 +40,7 @@ module.exports = {
             });
             if (!defVPC)  {
                 helpers.addResult(results, 0, 'No default VPC present', 'global');
-                rcb();
+                return rcb();
             }
             var numInstances = 0;
 
@@ -72,7 +72,6 @@ module.exports = {
                 return rcb();
             }
 
-            rcb();
         }, function(){
             // Global checking goes here
             callback(null, results, source);

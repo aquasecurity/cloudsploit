@@ -173,7 +173,11 @@ var run = function (GoogleConfig, collection, settings, service, callObj, callKe
 };
 
 var addParent = function(GoogleConfig, region) {
-    return `projects/${GoogleConfig.project}/locations/${region}`
+    if (region == 'global') {
+        return `projects/${GoogleConfig.project}/locations/-`
+    } else {
+        return `projects/${GoogleConfig.project}/locations/${region}`
+    }
 };
 
 var execute = function (LocalGoogleConfig, collection, service, callObj, callKey, region, regionCb, options, myEngine) {
@@ -183,7 +187,7 @@ var execute = function (LocalGoogleConfig, collection, service, callObj, callKey
             if (err) {
                 collection[service][myEngine][callKey][region].err = err;
             }
-            
+
             if (!data) return regionCb();
             if (callObj.property && !data[callObj.property]) return regionCb();
             if (callObj.secondProperty && !data[callObj.secondProperty]) return regionCb();
@@ -211,7 +215,7 @@ var execute = function (LocalGoogleConfig, collection, service, callObj, callKey
             if (err) {
                 collection[service][callKey][region].err = err;
             }
-            
+
             if (!data) return regionCb();
             if (callObj.property && !data[callObj.property]) return regionCb();
             if (callObj.secondProperty && !data[callObj.secondProperty]) return regionCb();
@@ -223,6 +227,9 @@ var execute = function (LocalGoogleConfig, collection, service, callObj, callKey
                     collection[service][callKey][region].data = data.data.items;
                 } else if (data.data[service]) {
                     collection[service][callKey][region].data = data.data[service]
+                } else if (data.data &&
+                        data.data.id) { 
+                    collection[service][callKey][region].data.push(data.data);
                 } else {
                     collection[service][callKey][region].data = [];
                 }
@@ -237,11 +244,11 @@ var execute = function (LocalGoogleConfig, collection, service, callObj, callKey
             }
         }
     };
-    
-    if (callObj.kms && callObj.parent){
+
+    if (callObj.nested && callObj.parent) {
         myParams = {auth: callObj.params.auth, parent: callObj.params.parent};
         executor['projects']['locations'][service][callKey](myParams, LocalGoogleConfig, executorCb);
-    } else if(callObj.kms) {
+    } else if(callObj.nested) {
         myParams = {auth: callObj.params.auth, parent: callObj.params.parent};
         executor['projects']['locations']['keyRings'][service][callKey](myParams, LocalGoogleConfig, executorCb);
     } else if (callObj.params) {

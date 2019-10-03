@@ -80,7 +80,7 @@ describe('multipleSubnets', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('The Subnet in the VCN is Regional')
+                expect(results[0].message).to.include('The Subnets in the VCN are Regional')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -116,7 +116,7 @@ describe('multipleSubnets', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('The Subnet in the VCN is not Regional')
+                expect(results[0].message).to.include('Subnets in the VCN are not Regional')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };

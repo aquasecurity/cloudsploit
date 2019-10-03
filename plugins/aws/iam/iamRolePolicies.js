@@ -12,8 +12,22 @@ module.exports = {
     recommended_action: 'Ensure that all IAM roles are scoped to specific services and API calls.',
     apis: ['IAM:listRoles', 'IAM:listRolePolicies', 'IAM:listAttachedRolePolicies',
            'IAM:getPolicy', 'IAM:getRolePolicy'],
+    settings: {
+        iam_role_policies_ignore_path: {
+            name: 'IAM Role Policies Ignore Path',
+            description: 'Ignores roles that contain the provided exact-match path',
+            regex: '^[0-9A-Za-z/._-]{3,512}$',
+            default: false
+        }
+    },
 
     run: function(cache, settings, callback) {
+        var config = {
+            iam_role_policies_ignore_path: settings.iam_role_policies_ignore_path || this.settings.iam_role_policies_ignore_path.default
+        };
+
+        var custom = helpers.isCustom(settings, this.settings);
+
         var results = [];
         var source = {};
         
@@ -37,6 +51,14 @@ module.exports = {
 
         async.each(listRoles.data, function(role, cb){
             if (!role.RoleName) return cb();
+
+            // Skip roles with user-defined paths
+            if (config.iam_role_policies_ignore_path &&
+                config.iam_role_policies_ignore_path.length &&
+                role.Path &&
+                role.Path.indexOf(config.iam_role_policies_ignore_path) > -1) {
+                return cb();
+            }
 
             // Get managed policies attached to role
             var listAttachedRolePolicies = helpers.addSource(cache, source,

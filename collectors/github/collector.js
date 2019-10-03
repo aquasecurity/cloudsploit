@@ -318,6 +318,8 @@ var collect = function (GitHubConfig, settings, callback) {
                 });
             });
         });
+    }).catch(function(err){
+        callback(err);
     });
 };
 

@@ -76,7 +76,7 @@ var calls = {
             version: 'v1',
             location: 'region',
             parent: true,
-            kms: true,
+            nested: true,
         }
     },
     networks: {
@@ -113,6 +113,36 @@ var calls = {
             version: 'v1',
             location: 'global'
         }
+    },
+    autoscalers: {
+        aggregatedList: {
+            api: 'compute',
+            version: 'v1',
+            location: 'null'
+			}
+    },
+    subnetworks: {
+        list: {
+            api: 'compute',
+            version: 'v1',
+            location: 'region',
+        }
+    },
+    projects: {
+        get: {
+            api: 'compute',
+            version: 'v1',
+            location: null
+        }
+    },
+    clusters: {
+        list: {
+            api: 'container',
+            version: 'v1beta1',
+            location: 'regions',
+            parent: true,
+            nested: true,
+        }
     }
 };
 
@@ -137,7 +167,7 @@ var postcalls = {
             reliesOnCall: ['list'],
             filterKey: ['parent'],
             filterValue: ['name'],
-            kms: true,
+            nested: true,
         }
     },
 

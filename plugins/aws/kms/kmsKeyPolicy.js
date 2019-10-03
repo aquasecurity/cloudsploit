@@ -14,15 +14,36 @@ module.exports = {
             description: 'Return a failing result when KMS key policies contain more than this many trusted users',
             regex: '^[1-9]{1}[0-9]{0,3}$',
             default: 10
+        },
+        kms_key_policy_max_third_parties_count: {
+            name: 'KMS Key Policy Max Third Parties Count',
+            description: 'Return a warning result when KMS key policies contain more than this many trusted third parties',
+            regex: '^[0-9]{0,3}$',
+            default: 0
+        },
+        kms_key_policy_whitelisted_account_ids: {
+            name: 'KMS Key Policy Whitelisted Account IDs',
+            description: 'A comma-delimited list of known third-party AWS account IDs that should be trusted',
+            regex: '^\d{12}(?:,\d{12})*$',
+            default: ''
         }
     },
 
     run: function(cache, settings, callback) {
         var config = {
-            kms_key_policy_max_user_count: settings.kms_key_policy_max_user_count || this.settings.kms_key_policy_max_user_count.default
+            kms_key_policy_max_user_count: settings.kms_key_policy_max_user_count || this.settings.kms_key_policy_max_user_count.default,
+            kms_key_policy_max_third_parties_count: settings.kms_key_policy_max_third_parties_count || this.settings.kms_key_policy_max_third_parties_count.default,
+            kms_key_policy_whitelisted_account_ids: settings.kms_key_policy_whitelisted_account_ids || this.settings.kms_key_policy_whitelisted_account_ids.default
         };
 
+        if (config.kms_key_policy_whitelisted_account_ids && config.kms_key_policy_whitelisted_account_ids.length) {
+            config.kms_key_policy_whitelisted_account_ids = config.kms_key_policy_whitelisted_account_ids.split(',');
+        } else {
+            config.kms_key_policy_whitelisted_account_ids = [];
+        }
+
         var custom = helpers.isCustom(settings, this.settings);
+        if (config.kms_key_policy_whitelisted_account_ids.length) custom = true;
 
         var results = [];
         var source = {};
@@ -104,12 +125,24 @@ module.exports = {
                     // Check for wildcards without condition
                     if (principal.AWS.indexOf('*') > -1 && !conditionalCaller) {
                         wildcardTrusted += 1;
-                    } else if (conditionalCaller && conditionalCaller !== accountId) {
+                    } else if (conditionalCaller &&
+                        conditionalCaller !== accountId &&
+                        config.kms_key_policy_whitelisted_account_ids.indexOf(conditionalCaller) === -1) {
                         thirdPartyTrusted += 1;
                     } else if (!conditionalCaller) {
                         for (u in principal.AWS) {
-                            if (principal.AWS[u] !== '*' && principal.AWS[u].indexOf(accountId) === -1) {
-                                thirdPartyTrusted += 1;
+                            if (principal.AWS[u] !== '*' &&
+                                principal.AWS[u].indexOf(accountId) === -1  &&
+                                config.kms_key_policy_whitelisted_account_ids.indexOf(principal.AWS[u]) === -1) {
+                                // Loop through whitelisted account IDs to ensure trusted account
+                                // is not whitelisted by user.
+                                var wlFound = false;
+                                for (i in config.kms_key_policy_whitelisted_account_ids) {
+                                    if (principal.AWS[u].indexOf(config.kms_key_policy_whitelisted_account_ids[i]) > -1) {
+                                        wlFound = true;
+                                    }
+                                }
+                                if (!wlFound) thirdPartyTrusted += 1;
                             }
                         }
                     }
@@ -121,7 +154,7 @@ module.exports = {
                         ' users', region, kmsKey.KeyArn, custom);
                 }
 
-                if (thirdPartyTrusted) {
+                if (thirdPartyTrusted > config.kms_key_policy_max_third_parties_count) {
                     found = true;
                     helpers.addResult(results, 1, 'Key trusts ' + thirdPartyTrusted +
                         ' third parties', region, kmsKey.KeyArn, custom);

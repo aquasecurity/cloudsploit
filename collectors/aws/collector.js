@@ -26,7 +26,8 @@ var globalServices = [
     'IAM',
     'CloudFront',
     'Route53',
-    'Route53Domains'
+    'Route53Domains',
+    'WAFRegional'
 ];
 
 var calls = {
@@ -333,7 +334,8 @@ var calls = {
         },
         describeDBEngineVersions: {
             property: 'DBEngineVersions',
-            paginate: 'Marker'
+            paginate: 'Marker',
+            default: true
         },
         describeDBSnapshots: {
             property: 'DBSnapshots',
@@ -421,6 +423,12 @@ var calls = {
             params: {
                 MaxResults: 1000
             }
+        }
+    },
+    WAFRegional: {
+        listWebACLs: {
+            property: 'WebACLs',
+            paginate: 'NextMarker'
         }
     },
     WorkSpaces: {
@@ -690,6 +698,16 @@ var postcalls = [
                 reliesOnCall: 'listQueues',
                 override: true
             }
+        },
+        WAFRegional: {
+            listResourcesForWebACL: {
+                reliesOnService: 'wafregional',
+                reliesOnCall: 'listWebACLs',
+                filterKey: 'WebACLId',
+                filterValue: 'WebACLId',
+                checkMultiple: ["APPLICATION_LOAD_BALANCER", "API_GATEWAY"],
+                checkMultipleKey: 'ResourceType'
+            }
         }
     },
     {
@@ -721,6 +739,9 @@ var collect = function (AWSConfig, settings, callback) {
     var regions = helpers.regions(settings);
 
     var collection = {};
+    var myDate = new Date();
+    var callsTime = myDate.getTime();
+    var debugTime = settings.debugTime;
 
     async.eachOfLimit(calls, 10, function (call, service, serviceCb) {
         var serviceLower = service.toLowerCase();
@@ -732,7 +753,15 @@ var collect = function (AWSConfig, settings, callback) {
             if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
             if (!collection[serviceLower][callKey]) collection[serviceLower][callKey] = {};
 
-            async.eachLimit(regions[serviceLower], helpers.MAX_REGIONS_AT_A_TIME, function (region, regionCb) {
+            var callRegions;
+
+            if (callObj.default) {
+                callRegions = regions.default;
+            }  else {
+                callRegions = regions[serviceLower];
+            }
+
+            async.eachLimit(callRegions, helpers.MAX_REGIONS_AT_A_TIME, function (region, regionCb) {
                 if (settings.skip_regions &&
                     settings.skip_regions.indexOf(region) > -1 &&
                     globalServices.indexOf(service) === -1) return regionCb();
@@ -755,6 +784,14 @@ var collect = function (AWSConfig, settings, callback) {
                     var executor = new AWS[service](LocalAWSConfig);
                     var paginating = false;
                     var executorCb = function (err, data) {
+                        if (debugTime) {
+                            var innerDate = new Date();
+                            var callInnerTime = innerDate.getTime();
+                            var thisTime = callInnerTime - callsTime;
+
+                            console.log(`${callKey} - ${thisTime}`);
+                        }
+
                         if (err) collection[serviceLower][callKey][region].err = err;
 
                         if (!data) return regionCb();
@@ -787,10 +824,12 @@ var collect = function (AWSConfig, settings, callback) {
                     };
 
                     function execute(nextTokens) {
+
                         // Each region needs its own local copy of callObj.params
                         // so that the injection of the NextToken doesn't break other calls
                         var localParams = JSON.parse(JSON.stringify(callObj.params || {}));
                         if (nextTokens) localParams[nextTokens[0]] = nextTokens[1];
+
                         if (callObj.params || nextTokens) {
                             executor[callKey](localParams, executorCb);
                         } else {
@@ -861,20 +900,57 @@ var collect = function (AWSConfig, settings, callback) {
                             }
 
                             async.eachLimit(collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region].data, 10, function (dep, depCb) {
-                                collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]] = {};
+                                if (callObj.checkMultiple) {
+                                    async.each(callObj.checkMultiple, function(thisCheck, tcCb){
+                                        collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]] = {};
 
-                                var filter = {};
-                                filter[callObj.filterKey] = dep[callObj.filterValue];
+                                        var filter = {};
+                                        filter[callObj.filterKey] = dep[callObj.filterValue];
+                                        filter[callObj.checkMultipleKey] = thisCheck;
 
-                                executor[callKey](filter, function (err, data) {
-                                    if (err) {
-                                        collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = err;
+                                        executor[callKey](filter, function (err, data) {
+                                            if (debugTime) {
+                                                var innerDate = new Date();
+                                                var callInnerTime = innerDate.getTime();
+                                                var thisTime = callInnerTime - callsTime;
+
+                                                console.log(`${callKey} - ${thisTime}`);
+                                            }
+                                            if (err) {
+                                                collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = err;
+                                            }
+                                            if (data) {
+                                                if (!collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data) {
+                                                    collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = data;
+                                                }
+                                            }
+                                            tcCb();
+                                        });
+                                    }, function() {
                                         depCb();
-                                    } else {
-                                        collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = data;
-                                        depCb();
-                                    }
-                                });
+                                    });
+                                } else {
+                                    collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]] = {};
+
+                                    var filter = {};
+                                    filter[callObj.filterKey] = dep[callObj.filterValue];
+                                    executor[callKey](filter, function (err, data) {
+                                        if (debugTime) {
+                                            var innerDate = new Date();
+                                            var callInnerTime = innerDate.getTime();
+                                            var thisTime = callInnerTime - callsTime;
+
+                                            console.log(`${callKey} - ${thisTime}`);
+                                        }
+                                        if (err) {
+                                            collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = err;
+                                            depCb();
+                                        } else {
+                                            collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = data;
+                                            depCb();
+                                        }
+                                    });
+                                }
                             }, function () {
                                 if (callObj.rateLimit) {
                                     setTimeout(function () {

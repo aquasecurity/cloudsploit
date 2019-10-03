@@ -120,5 +120,7 @@ var settings = {};
 // If you want to disable AWS pagination, set the setting to false here
 settings.paginate = true;
 
+settings.debugTime = false;
+
 // Now execute the scans using the defined configuration information.
 engine(AWSConfig, AzureConfig, GitHubConfig, OracleConfig, GoogleConfig, settings);

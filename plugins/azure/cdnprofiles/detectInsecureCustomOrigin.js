@@ -3,7 +3,7 @@ const helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Detect Insecure Custom Origin',
-    category: 'CDN profiles',
+    category: 'CDN Profiles',
     description: 'Ensure that HTTPS is enabled when creating a new CDN endpoint with a Custom Origin.',
     more_info: 'Detects if HTTPS is disabled for CDN endpoint of custom origins.',
     recommended_action: '1. Navigate to CDN profiles. 2. Select a profile. 3. Select an endpoint. 4. Select Settings > Origin. 5. Turn off HTTP and make sure HTTPS is turned on.',

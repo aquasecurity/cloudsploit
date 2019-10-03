@@ -7,7 +7,7 @@ var msRestAzure                 = require('ms-rest-azure');
 
 // Azure Resource Management
 var ComputeManagementClient     = require('azure-arm-compute');
-var KeyVaultMangementClient     = require('azure-arm-keyvault');
+var KeyVaultManagementClient     = require('azure-arm-keyvault');
 var MonitorManagementClient     = require('azure-arm-monitor');
 var NetworkManagementClient     = require('azure-arm-network');
 var PolicyClient                = require('azure-arm-resource').PolicyClient;
@@ -17,7 +17,10 @@ var StorageManagementClient     = require('azure-arm-storage');
 var WebSiteManagementClient     = require('azure-arm-website');
 var ContainerServiceClient      =  require('azure-arm-containerservice');
 var CdnManagementClient         = require('azure-arm-cdn');
+var ManagementLockClient        = require('azure-arm-resource').ManagementLockClient;
 var MySQLManagementClient       = require('azure-arm-mysql');
+var SecurityCenterClient        = require('azure-arm-security');
+var SubscriptionClient          = require('azure-arm-resource').SubscriptionClient
 
 // Azure Service Modules
 var KeyVaultClient              = require('azure-keyvault');
@@ -27,7 +30,7 @@ var StorageServiceClient        = require('azure-storage');
 var mapAzureApis = {
     "ComputeManagementClient"   : ComputeManagementClient,
     "KeyVaultClient"            : KeyVaultClient,
-    "KeyVaultMangementClient"   : KeyVaultMangementClient,
+    "KeyVaultManagementClient"  : KeyVaultManagementClient,
     "MonitorManagementClient"   : MonitorManagementClient,
     "NetworkManagementClient"   : NetworkManagementClient,
     "PolicyClient"              : PolicyClient,
@@ -38,7 +41,10 @@ var mapAzureApis = {
     "WebSiteManagementClient"   : WebSiteManagementClient,
     "ContainerServiceClient"    : ContainerServiceClient, 
     "CdnManagementClient"       : CdnManagementClient,
+    "ManagementLockClient"      : ManagementLockClient,
     "MySQLManagementClient"     : MySQLManagementClient,
+    "SecurityCenterClient"      : SecurityCenterClient,
+    "SubscriptionClient"        : SubscriptionClient,
 }
 
 const UNKNOWN_LOCATION = "unknown";
@@ -367,7 +373,11 @@ class ApiCall {
             if (self.callObj.arm) {
                 if (self.callObj.module) {
                     self.client = new mapAzureApis[self.callObj.api][self.AzureConfig.service](self.credentials);
-                } else {
+                } else if (self.callObj.ascLoc) {
+                    self.client = new mapAzureApis[self.callObj.api](self.credentials, self.AzureConfig.SubscriptionID, self.AzureConfig.location);
+                } else if (self.callObj.noSubscription) {
+                    self.client = new mapAzureApis[self.callObj.api](self.credentials);
+                }else {
                     self.client = new mapAzureApis[self.callObj.api](self.credentials, self.AzureConfig.SubscriptionID);
                 }
 
@@ -407,6 +417,10 @@ class ApiCall {
                             });
                             break;
                     }
+                } else if (self.AzureConfig.service == "subscriptions") {
+                    return self.client[self.AzureConfig.service][self.callKey](self.AzureConfig.SubscriptionID,self.AzureConfig, function(err, results, request, response) {
+                        universalResolve(err, results, request, response);
+                    });
                 } else {
                     return self.client[self.AzureConfig.service][self.callKey](self.AzureConfig, function(err, results, request, response) {
                         universalResolve(err, results, request, response);

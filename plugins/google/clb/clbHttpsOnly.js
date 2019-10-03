@@ -32,13 +32,14 @@ module.exports = {
             }
             var non_https_listener = [];
             httpProxies.data.forEach(httpProxy => {
-                var urlMap = httpProxy.urlMap.split('/');
-                var lbName = urlMap[urlMap.length-1]
-                non_https_listener.push(lbName);
+                if (httpProxy.urlMap) {
+                    var urlMap = httpProxy.urlMap.split('/');
+                    var lbName = urlMap[urlMap.length-1];
+                    non_https_listener.push(lbName);
+                }
             });
             
-            if (non_https_listener){
-                //helpers.addResult(results, 2, non_https_listner.join(', '), region);
+            if (non_https_listener.length){
                 msg = "The following Load Balancers are not HTTPS-only: ";
                 helpers.addResult(
                     results, 2, msg + non_https_listener.join(', '), region, null);

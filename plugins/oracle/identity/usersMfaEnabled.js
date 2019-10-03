@@ -22,43 +22,41 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings.govcloud);
+        var noMFAUsers = [];
 
         async.each(regions.user, function (region, rcb) {
+            var users = helpers.addSource(cache, source,
+                ['user', 'list', region]);
 
-            if (helpers.checkRegionSubscription(cache, source, results, region)) {
+            if (!users) return rcb();
 
-                var users = helpers.addSource(cache, source,
-                    ['user', 'list', region]);
-
-                if (!users) return rcb();
-
-                if (users.err || !users.data) {
-                    helpers.addResult(results, 3,
-                        'Unable to query for user MFA status: ' + helpers.addError(users));
-                    return rcb();
-                }
-
-                if (users.data.length === 1) {
-                    helpers.addResult(results, 0, 'No user accounts found');
-                    return rcb();
-                }
-
-                for (u in users.data) {
-                    var user = users.data[u];
-
-                    if (user.isMfaActivated) {
-                        helpers.addResult(results, 0,
-                            'User: ' + user.name + ' has an MFA device', 'global', user.id);
-                    } else {
-                        helpers.addResult(results, 1,
-                            'User: ' + user.name + ' does not have an MFA device enabled', 'global', user.id);
-                    }
-                }
+            if (users.err || !users.data) {
+                helpers.addResult(results, 3,
+                    'Unable to query for user MFA status: ' + helpers.addError(users));
+                return rcb();
             }
+
+            if (users.data.length < 2) {
+                helpers.addResult(results, 0, 'No user accounts found');
+                return rcb();
+            }
+
+            users.data.forEach(user => {
+                if (!user.isMfaActivated) {
+                    noMFAUsers.push(user.name)
+                }
+            });
 
             rcb();
         }, function () {
             // Global checking goes here
+            if (noMFAUsers) {
+                var noMFAUserStr = noMFAUsers.join(', ');
+                helpers.addResult(results, 2,
+                    `The following accounts do not have an MFA device enabled: ${noMFAUserStr}`, 'global');
+            } else {
+                helpers.addResult(results, 0, 'All accounts have MFA enabled.', 'global');
+            };
             callback(null, results, source);
         });
     }

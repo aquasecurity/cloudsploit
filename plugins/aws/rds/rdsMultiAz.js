@@ -9,8 +9,24 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html',
     recommended_action: 'Modify the RDS instance to enable scaling across multiple availability zones.',
     apis: ['RDS:describeDBInstances'],
+    settings: {
+        rds_multi_az_ignore_replicas: {
+            name: 'RDS Multiple AZ Ignore Replicas',
+            description: 'When true RDS read replicas will not require multi-AZ configuration',
+            regex: '^(true|false)$',
+            default: 'false'
+        }
+    },
 
     run: function(cache, settings, callback) {
+        var config = {
+            rds_multi_az_ignore_replicas: settings.rds_multi_az_ignore_replicas || this.settings.rds_multi_az_ignore_replicas.default
+        };
+
+        config.rds_multi_az_ignore_replicas = (config.rds_multi_az_ignore_replicas == 'true');
+
+        var custom = helpers.isCustom(settings, this.settings);
+
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
@@ -49,9 +65,16 @@ module.exports = {
                         'RDS instance has multi-AZ enabled',
                         region, Rds.DBInstanceArn);
                 } else {
-                    helpers.addResult(results, 2,
-                        'RDS instance does not have multi-AZ enabled',
-                        region, Rds.DBInstanceArn);
+                    if (config.rds_multi_az_ignore_replicas &&
+                        Rds.ReadReplicaSourceDBInstanceIdentifier) {
+                        helpers.addResult(results, 0,
+                            'RDS instance does not have multi-AZ enabled but is a read replica',
+                            region, Rds.DBInstanceArn, custom);
+                    } else {
+                        helpers.addResult(results, 2,
+                            'RDS instance does not have multi-AZ enabled',
+                            region, Rds.DBInstanceArn, custom);
+                    }
                 }
             });
             rcb();

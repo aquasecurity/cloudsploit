@@ -20,8 +20,8 @@ var async = require('async');
 
 var helpers = require(__dirname + '/../../helpers/oracle');
 
-const compartmentService = { name: 'compartment', call: 'get', region: helpers.regions(false).default };
-const regionSubscriptionService = { name: 'regionSubscription', call: 'list', region: helpers.regions(false).default };
+const compartmentService = {name: 'compartment', call: 'get', region: helpers.regions(false).default};
+const regionSubscriptionService = {name: 'regionSubscription', call: 'list', region: helpers.regions(false).default};
 
 var globalServices = [
     'core'
@@ -143,6 +143,90 @@ var calls = {
             filterKey: ['compartmentId'],
             filterValue: ['compartmentId'],
         }
+    },
+    bootVolume: {
+        list: {
+            api: 'core',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    volume: {
+        list: {
+            api: 'core',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    availabilityDomain: {
+        list: {
+            api: "iam",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    bootVolumeBackup: {
+        list: {
+            api: 'core',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    volumeBackup: {
+        list: {
+            api: 'core',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    bootVolumeAttachment: {
+        list: {
+            api: "core",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        },
+    },
+    volumeBackupPolicy: {
+        list: {
+            api: "core",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    volumeGroup: {
+        list: {
+            api: 'core',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    volumeGroupBackup: {
+        list: {
+            api: 'core',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    configuration: {
+        get: {
+            api: 'audit',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    networkSecurityGroup: {
+        list: {
+            api: 'core',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    dbSystem: {
+        list: {
+            api: "database",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
     }
 };
 
@@ -195,6 +279,7 @@ var postcalls = {
             filterKey: ['compartmentId', 'namespaceName'],
             filterValue: ['compartmentId', 'name'],
             filterConfig: [true, false],
+            restVersion: ""
         }
     },
     waasPolicy: {
@@ -218,6 +303,34 @@ var postcalls = {
             filterValue: ['compartmentId', 'id'],
             filterConfig: [true, false],
         }
+    },
+    securityRule: {
+        list: {
+            api: "core",
+            reliesOnService: ['networkSecurityGroup'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'networkSecurityGroupId'],
+            filterValue: ['compartmentId', 'id'],
+            filterConfig: [true, false],
+        }
+    },
+    volumeBackupPolicyAssignment: {
+        volume: {
+            api: "core",
+            reliesOnService: ['volume'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'assetId'],
+            filterValue: ['compartmentId', 'id'],
+            filterConfig: [true, false],
+        },
+        bootVolume: {
+            api: "core",
+            reliesOnService: ['bootVolume'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'assetId'],
+            filterValue: ['compartmentId', 'id'],
+            filterConfig: [true, false],
+        }
     }
 };
 
@@ -230,6 +343,7 @@ var finalcalls = {
             reliesOnCall: ['list'],
             filterKey: ['namespaceName', 'bucketName'],
             filterValue: ['namespace', 'name'],
+            restVersion: ""
         }
     },
     exprt: {
@@ -243,10 +357,20 @@ var finalcalls = {
             restVersion: "/20171215",
         }
     },
+    preAuthenticatedRequest: {
+        list: {
+            api: "objectStore",
+            reliesOnService: ['bucket'],
+            reliesOnCall: ['list'],
+            filterKey: ['namespaceName', 'bucketName'],
+            filterValue: ['namespace', 'name'],
+            restVersion: ""
+        }
+    }
 };
 
 
-var processCall = function(OracleConfig, collection, settings, regions, call, service, serviceCb) {
+var processCall = function (OracleConfig, collection, settings, regions, call, service, serviceCb) {
     // Loop through each of the service's functions
     async.eachOfLimit(call, 10, function (callObj, callKey, callCb) {
         if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
@@ -263,10 +387,10 @@ var processCall = function(OracleConfig, collection, settings, regions, call, se
                 collection[regionSubscriptionService.name][regionSubscriptionService.call][regionSubscriptionService.region] &&
                 collection[regionSubscriptionService.name][regionSubscriptionService.call][regionSubscriptionService.region].data &&
                 collection[regionSubscriptionService.name][regionSubscriptionService.call][regionSubscriptionService.region].data.filter(
-                    r=>r.regionName==region) &&
+                    r => r.regionName == region) &&
                 collection[regionSubscriptionService.name][regionSubscriptionService.call][regionSubscriptionService.region].data.filter(
-                    r=>r.regionName==region).length==0
-            ){
+                    r => r.regionName == region).length == 0
+            ) {
                 return regionCb();
             }
 
@@ -275,14 +399,14 @@ var processCall = function(OracleConfig, collection, settings, regions, call, se
             if (callObj.reliesOnService) {
                 if (!callObj.reliesOnService.length) return regionCb();
                 // Ensure multiple pre-requisites are met
-                for (reliedService in callObj.reliesOnService){
+                for (reliedService in callObj.reliesOnService) {
                     if (callObj.reliesOnService[reliedService] && !collection[callObj.reliesOnService[reliedService]]) return regionCb();
 
                     if (callObj.reliesOnService[reliedService] &&
                         (!collection[callObj.reliesOnService[reliedService]] ||
                             !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]] ||
                             !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][region] ||
-                            !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][region].data )) return regionCb();
+                            !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][region].data)) return regionCb();
                 }
             }
 
@@ -290,18 +414,18 @@ var processCall = function(OracleConfig, collection, settings, regions, call, se
             LocalOracleConfig.region = region;
             LocalOracleConfig.service = service;
 
+
             var executor = new helpers.OracleExecutor(LocalOracleConfig);
-            executor.run(collection, service, callObj, callKey, function(err, data){
+            executor.run(collection, service, callObj, callKey, function (err, data) {
                 if (err) {
                     collection[service][callKey][region].err = err;
                 }
 
                 if (!data) return regionCb();
-
                 collection[service][callKey][region].data = data;
 
                 if (callObj.rateLimit) {
-                    setTimeout(function(){
+                    setTimeout(function () {
                         regionCb();
                     }, callObj.rateLimit);
                 } else {
@@ -316,7 +440,7 @@ var processCall = function(OracleConfig, collection, settings, regions, call, se
     });
 };
 
-var getRegionSubscription = function(OracleConfig, collection, settings, calls, service, callKey, region, serviceCb) {
+var getRegionSubscription = function (OracleConfig, collection, settings, calls, service, callKey, region, serviceCb) {
 
     var LocalOracleConfig = JSON.parse(JSON.stringify(OracleConfig));
     LocalOracleConfig.region = region;
@@ -327,7 +451,7 @@ var getRegionSubscription = function(OracleConfig, collection, settings, calls, 
     if (!collection[service][callKey][region]) collection[service][callKey][region] = {};
 
     var executor = new helpers.OracleExecutor(LocalOracleConfig);
-    executor.run(collection, service, calls[service][callKey], callKey, function(err, data){
+    executor.run(collection, service, calls[service][callKey], callKey, function (err, data) {
         if (err) {
             collection[service][callKey][region].err = err;
         }
@@ -340,13 +464,13 @@ var getRegionSubscription = function(OracleConfig, collection, settings, calls, 
     });
 };
 
-var getCompartment = function(OracleConfig, collection, settings, calls, service, callKey, region, serviceCb) {
+var getCompartment = function (OracleConfig, collection, settings, calls, service, callKey, region, serviceCb) {
 
     var LocalOracleConfig = JSON.parse(JSON.stringify(OracleConfig));
     LocalOracleConfig.region = region;
     LocalOracleConfig.service = service;
 
-    helpers.regions(false)[service].forEach(function(region){
+    helpers.regions(false)[service].forEach(function (region) {
         if (!collection[service]) collection[service] = {};
         if (!collection[service][callKey]) collection[service][callKey] = {};
         if (!collection[service][callKey][region]) collection[service][callKey][region] = {};
@@ -354,14 +478,14 @@ var getCompartment = function(OracleConfig, collection, settings, calls, service
     })
 
     var executor = new helpers.OracleExecutor(LocalOracleConfig);
-    executor.run(collection, service, calls[service][callKey], callKey, function(err, data){
+    executor.run(collection, service, calls[service][callKey], callKey, function (err, data) {
         if (err) {
             collection[service][callKey][region].err = err;
         }
 
         if (!data) return serviceCb();
 
-        helpers.regions(false)[service].forEach(function(region){
+        helpers.regions(false)[service].forEach(function (region) {
             collection[service][callKey][region].data.push(data);
         })
 

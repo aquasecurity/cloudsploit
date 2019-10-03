@@ -6,6 +6,7 @@ var regions = [
 ];
 
 module.exports = {
+    default: ['cn-north-1'],
     all: regions,
     acm: [],
     athena: [],

@@ -26,16 +26,18 @@ module.exports = {
                 helpers.addResult(results, 3,
                     'Unable to query Diagnostic Settings: ' + helpers.addError(diagnosticSettingsResources), location);
                 return rcb();
-            }
+            };
+
             if (!diagnosticSettingsResources.data || !diagnosticSettingsResources.data.length) {
                 helpers.addResult(results, 0, 'No Network Security Groups', location);
                 return rcb();
-            }
+            };
 
             diagnosticSettingsResources.data.forEach(networkGroupSettings => {
                 var isWorkspace = networkGroupSettings.value.filter((d) => {
                     return d.hasOwnProperty('workspaceId') == true;
-                })
+                });
+
                 if (!networkGroupSettings.value.length) {
                     helpers.addResult(results, 2,
                         'Diagnostic Settings are not configured for the Network Security Group', location, networkGroupSettings.id);
@@ -46,9 +48,10 @@ module.exports = {
                     } else {
                         helpers.addResult(results, 1,
                             'Send to Log Analytics is not configured for the Network Security Group', location, networkGroupSettings.id);
-                    }
-                }
-            })
+                    };
+                };
+            });
+
             rcb();
         }, function () {
             // Global checking goes here

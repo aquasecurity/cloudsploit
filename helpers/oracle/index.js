@@ -55,6 +55,10 @@ function OracleExecutor (OracleConfig, Service) {
                         } catch (e) {
                             console.log('Could not read the Oracle Private Key.');
                         }
+                        if (callObj.restVersion ||
+                            callObj.restVersion == '') {
+                            OracleConfig.RESTversion = callObj.restVersion;
+                        };
 
                         oci(callObj.api, oracleService, callKey, OracleConfig, parameters, function(result) {
                             if (result.code) {
@@ -96,9 +100,14 @@ function OracleExecutor (OracleConfig, Service) {
                 assert.ok(sshpk.PrivateKey.isPrivateKey(OracleConfig.privateKey, [1, 2]),
                     'options.key must be a sshpk.PrivateKey');
                 (!OracleConfig.RESTversion ? OracleConfig.RESTversion = '/20160918' : false )
+
             } catch (e) {
                 console.log('Could not read the Oracle Private Key.');
             }
+            if (callObj.restVersion ||
+                callObj.restVersion == '') {
+                OracleConfig.RESTversion = callObj.restVersion;
+            };
 
             return oci(callObj.api, oracleService, callKey, OracleConfig, parameters, function(result) {
                 if (result.code) {

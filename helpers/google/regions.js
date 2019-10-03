@@ -65,5 +65,9 @@ module.exports = {
     backendServices: ['global'],
     healthChecks: ['global'],
     targetHttpProxies: ['global'],
-    instanceGroups: ['global']
+    instanceGroups: ['global'],
+    autoscalers: ['global'],
+    subnetworks: regions,
+    projects: ['global'],
+    clusters: ['global']
 };

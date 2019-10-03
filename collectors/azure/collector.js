@@ -28,11 +28,23 @@ var calls = {
             arm: true
         }
     },
+    activityLogAlerts: {
+        listBySubscriptionId: {
+            api: "MonitorManagementClient",
+            arm: true
+        }
+    },
     storageAccounts: {
         list: {
             api: "StorageManagementClient",
             arm: true,
             module: false
+        }
+    },
+    virtualNetworks: {
+        listAll: {
+            api: "NetworkManagementClient",
+            arm: true
         }
     },
     virtualMachines: {
@@ -47,9 +59,21 @@ var calls = {
             arm: true
         }
     },
+    networkSecurityGroups: {
+        listAll: {
+            api: "NetworkManagementClient",
+            arm: true
+        }
+    },
+    activityLogAlerts: {
+        listBySubscriptionId: {
+            api: "MonitorManagementClient",
+            arm: true
+        }
+    },
     vaults: {
         list: {
-            api: "KeyVaultMangementClient",
+            api: "KeyVaultManagementClient",
             arm: true
         }
     },
@@ -62,6 +86,12 @@ var calls = {
     managedClusters: {
         list: {
             api: "ContainerServiceClient",     
+            arm: true
+        }
+    },
+    networkWatchers: {
+        listAll: {
+            api: "NetworkManagementClient",
             arm: true
         }
     },
@@ -92,12 +122,6 @@ var calls = {
             arm: true
         }
     },
-    networkSecurityGroups: {
-        listAll: {
-            api: "NetworkManagementClient",
-            arm: true
-        }
-    },
     webApps: {
         list: {
             api: "WebSiteManagementClient",
@@ -116,6 +140,44 @@ var calls = {
             arm: true
         }
     },
+    managementLocks: {
+        listAtSubscriptionLevel: {
+            api: "ManagementLockClient",
+            arm: true
+        }
+    },
+    loadBalancers: {
+        listAll: {
+            api: "NetworkManagementClient",
+            arm: true
+        }
+    },
+    securityContacts: {
+        list: {
+            api: "SecurityCenterClient",
+            arm: true,
+            ascLoc: true
+        }
+    },
+    subscriptions: {
+        listLocations: {
+            api: "SubscriptionClient",
+            arm: true,
+            noSubscription: true
+        }
+    },
+    managementLocks: {
+        listAtSubscriptionLevel: {
+            api: "ManagementLockClient",
+            arm: true
+        }
+    },
+    loadBalancers: {
+        listAll: {
+            api: "NetworkManagementClient",
+            arm: true
+        }
+    }
 };
 
 var postcalls = {
@@ -130,6 +192,16 @@ var postcalls = {
             module: false
         },
     },
+    availabilitySets: {
+        list: {
+            api: "ComputeManagementClient",
+            reliesOnService: ['resourceGroups'],
+            reliesOnCall: ['list'],
+            filterKey: ['resourceGroupName'],
+            filterValue: ['resourceGroupName'],
+            arm: true,
+        }
+    },
     autoscaleSettings: {
         listByResourceGroup: {
             api: "MonitorManagementClient",
@@ -137,7 +209,27 @@ var postcalls = {
             reliesOnCall: ['list'],
             filterKey: ['resourceGroupName'],
             filterValue: ['resourceGroupName'],
-            arm: true,
+            arm: true
+        }
+    },
+    networkSecurityGroups: {
+        list: {
+            api: "NetworkManagementClient",
+            reliesOnService: ['resourceGroups'],
+            reliesOnCall: ['list'],
+            filterKey: ['resourceGroupName'],
+            filterValue: ['resourceGroupName'],
+            arm: true
+        }
+    },
+    networkSecurityGroups: {
+        list: {
+            api: "NetworkManagementClient",
+            reliesOnService: ['resourceGroups'],
+            reliesOnCall: ['list'],
+            filterKey: ['resourceGroupName'],
+            filterValue: ['resourceGroupName'],
+            arm: true
         }
     },
     serverBlobAuditingPolicies: {
@@ -157,10 +249,30 @@ var postcalls = {
                 api: "MonitorManagementClient",
                 reliesOnService: ['networkSecurityGroups'],
                 reliesOnCall: ['listAll'],
+                filterKey: ['resourceUri'],
+                filterValue: ['id'],
+                arm: true
+            },
+        },
+        lb: {
+            list: {
+                api: "MonitorManagementClient",
+                reliesOnService: ['loadBalancers'],
+                reliesOnCall: ['listAll'],
                 filterKey: ['id'],
                 filterValue: ['id'],
                 arm: true
             },
+        },
+        kv: {
+            list: {
+                api: "MonitorManagementClient",
+                reliesOnService: ['vaults'],
+                reliesOnCall: ['list'],
+                filterKey: ['id'],
+                filterValue: ['id'],
+                arm: true
+            }
         },
         manyApi: true
     },
@@ -187,7 +299,7 @@ var postcalls = {
     },
     vaults: {
         listByResourceGroup: {
-            api: "KeyVaultMangementClient",
+            api: "KeyVaultManagementClient",
             reliesOnService: ['resourceGroups'],
             reliesOnCall: ['list'],
             filterKey: ['resourceGroupName'],
@@ -211,7 +323,7 @@ var postcalls = {
             reliesOnService: ['resourceGroups', 'servers'],
             reliesOnSubService: [undefined, 'sql'],
             reliesOnCall: ['list', 'list'],
-            filterKey: ['resourceGroupName', 'name'],
+            filterKey: ['resourceGroupName', 'serverName'],
             filterValue: ['resourceGroupName', 'name'],
             arm: true,
         },
@@ -274,6 +386,16 @@ var postcalls = {
             keyVault: true
         }
     },
+    loadBalancers: {
+        list: {
+            api: "NetworkManagementClient",
+            reliesOnService: ['resourceGroups'],
+            reliesOnCall: ['list'],
+            filterKey: ['resourceGroupName'],
+            filterValue: ['resourceGroupName'],
+            arm: true
+        }
+    },
     databases: {
         listByServer: {
             api: "SQLManagementClient",
@@ -284,10 +406,41 @@ var postcalls = {
             filterValue: ['resourceGroupName','name'],
             arm: true
         },
+    },
+    usages: {
+        list: {
+            api: "NetworkManagementClient",
+            reliesOnService: ['subscriptions'],
+            reliesOnCall: ['listLocations'],
+            filterKey: ['name'],
+            filterValue: ['name'],
+            arm: true
+        }
+    },
+    firewallRules: {
+        listByServer: {
+            api: "SQLManagementClient",
+            reliesOnService: ['resourceGroups','servers'],
+            reliesOnSubService: [undefined, 'sql'],
+            reliesOnCall: ['list', 'list'],
+            filterKey: ['resourceGroupName', 'serverName'],
+            filterValue: ['resourceGroupName', 'name'],
+            arm: true
+        }
     }
 };
 
 var finalcalls = {
+    securityRules: {
+        list: {
+            api: "NetworkManagementClient",
+            reliesOnService: ['resourceGroups', 'networkSecurityGroups'],
+            reliesOnCall: ['list', 'list'],
+            filterKey: ['resourceGroupName', 'networkSecurityGroupName'],
+            filterValue: ['resourceGroupName','name'],
+            arm: true
+        }
+    },
     BlobService: {
         listContainersSegmented: {
             api: "StorageServiceClient",
@@ -363,7 +516,7 @@ var finalcalls = {
             reliesOnService: ['resourceGroups', 'servers'],
             reliesOnCall: ['list', 'listByResourceGroup'],
             filterKey: ['resourceGroupName', 'serverName'],
-            filterValue: ['resourceGroupName', 'name'],
+            filterValue: ['resourceGroupName', 'serverName'],
             arm: true,
             module: false,
         }
@@ -378,6 +531,27 @@ var finalcalls = {
             arm: true,
         }
     },
+    databaseBlobAuditingPolicies: {
+        get: {
+            api: "SQLManagementClient",
+            reliesOnService: ['resourceGroups', 'servers', 'databases'],
+            reliesOnSubService: [undefined, 'sql', undefined],
+            reliesOnCall: ['list', 'list', 'listByServer'],
+            filterKey: ['resourceGroupName', 'serverName', 'databaseName'],
+            filterValue: ['resourceGroupName', 'serverName', 'name'],
+            arm: true
+        }
+    },
+	vaults: {
+        get: {
+            api: "KeyVaultManagementClient",
+            reliesOnService: ['resourceGroups','vaults'],
+            reliesOnCall: ['list','listByResourceGroup'],
+            filterKey: ['resourceGroupName','name'],
+            filterValue: ['resourceGroupName','name'],
+            arm: true
+        }
+    },
     transparentDataEncryptions: {
         get: {
             api: "SQLManagementClient",
@@ -385,7 +559,7 @@ var finalcalls = {
             reliesOnSubService: [undefined, 'sql', undefined],
             reliesOnCall: ['list', 'list', 'listByServer'],
             filterKey: ['resourceGroupName', 'serverName', 'databaseName'],
-            filterValue: ['resourceGroupName', 'name', 'name'],
+            filterValue: ['resourceGroupName', 'serverName', 'name'],
             arm: true
         }
     }
@@ -535,6 +709,7 @@ var collect = function (AzureConfig, settings, callback) {
 
     AzureConfig.maxRetries = 5;
     AzureConfig.retryDelayOptions = { base: 300 };
+    AzureConfig.location = AzureConfig.location ? AzureConfig.location : 'global';
 
     var settings = settings;
 

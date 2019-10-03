@@ -13,7 +13,7 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-		var regions = helpers.regions(settings.govcloud);
+        var regions = helpers.regions(settings.govcloud);
 
         async.each(regions.loadBalancer, function(region, rcb){
 
@@ -35,15 +35,35 @@ module.exports = {
                     return rcb();
                 };
 
+                badSubnetObj = {};
+                goodSubnetObj = {};
+
                 subnets.data.forEach(subnet  => {
-                    if (!subnet.availabilityDomain) {
-                        helpers.addResult(results, 0, 'The Subnet in the VCN is Regional', region, subnet.vcnId);
+                    if (subnet.availabilityDomain) {
+                        if(!badSubnetObj[subnet.vcnId]) {
+                            badSubnetObj[subnet.vcnId] = 1;
+                        } else {
+                            badSubnetObj[subnet.vcnId]++
+                        };
                     } else {
-                        helpers.addResult(results, 2, 'The Subnet in the VCN is not Regional', region, subnet.vcnId);
+                        if(!goodSubnetObj[subnet.vcnId]) {
+                            goodSubnetObj[subnet.vcnId] = 1;
+                        } else {
+                            goodSubnetObj[subnet.vcnId]++
+                        };
                     };
                 });
-            };
-
+                if (Object.keys(badSubnetObj).length > 0) {
+                    for (var bad in badSubnetObj) {
+                        helpers.addResult(results, 2, `${badSubnetObj[bad]} Subnets in the VCN are not Regional`, region, bad);
+                    }
+                }
+                if (Object.keys(goodSubnetObj).length > 0) {
+                    for (var good in goodSubnetObj) {
+                        helpers.addResult(results, 0, 'The Subnets in the VCN are Regional', region, good);
+                    }
+                }
+            }
             rcb();
         }, function(){
             // Global checking goes here

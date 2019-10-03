@@ -18,9 +18,11 @@ module.exports = function(api, service, key, OracleConfig, parameters, callback)
     }
 
     if (localService.secondaryEncodedGet) {
-        suffix += ('/' + encodeURIComponent(parameters[localService.secondaryEncodedGet]) + '/');
+        suffix += ('/' + encodeURIComponent(parameters[localService.secondaryEncodedGet]));
     }
-
+    if (localService.tertiaryPath) {
+        suffix += ('/' + localService.tertiaryPath);
+    }
     if (localService.allowedQueryStrings) {
         suffix += helpers.buildQueryString(localService.allowedQueryStrings, parameters);
     }

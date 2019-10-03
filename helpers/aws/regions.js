@@ -22,6 +22,7 @@ var regions = [
 ];
 
 module.exports = {
+    default: ['us-east-1'],
     all: regions,
     optin: ['ap-east-1', 'me-south-1'],   // Regions that AWS disables by default
     acm: regions,
@@ -86,5 +87,6 @@ module.exports = {
                        'ap-southeast-1', 'ap-northeast-1', 'ap-southeast-2', 'ap-northeast-2',
                        'ap-south-1'],
     efs: [ 'eu-west-2', 'eu-west-1', 'ap-northeast-2', 'ap-northeast-1', 'ap-southeast-1',
-        'ap-southeast-2', 'eu-central-1', 'us-east-1', 'us-east-2', 'us-west-1', 'us-west-2']
+        'ap-southeast-2', 'eu-central-1', 'us-east-1', 'us-east-2', 'us-west-1', 'us-west-2'],
+    wafregional: ['us-east-1']
 };
