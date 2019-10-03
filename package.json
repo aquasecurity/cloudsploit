@@ -41,6 +41,7 @@
     "azure-arm-mysql": "^3.2.0",
     "azure-arm-network": "^13.0.0",
     "azure-arm-resource": "^7.3.0",
+    "azure-arm-security": "^1.2.0-preview",
     "azure-arm-sql": "^5.7.0",
     "azure-arm-storage": "^6.3.0",
     "azure-arm-website": "^5.7.0",
