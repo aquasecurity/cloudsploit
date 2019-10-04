@@ -76,7 +76,7 @@ describe('flowLogsEnabled', function () {
                         "securityListIds": [
                             "ocid1.securitylist.oc1.iad.aaaaaaaazhtqkhrkifh7h2jherpmogcofcfvs2i6aeaqnzdueyhhxwjgrlma"
                         ],
-                        "timeCreated": "2019-02-28T18:19:38.677Z",
+                        "creationTimestamp": "2019-02-28T18:19:38.677Z",
                         "vcnId": "ocid1.vcn.oc1.iad.aaaaaaaaihl7n5qajssmue7fse6g2wkmtsbihpad7rhqcxqwnuu5sriv3wfq",
                         "virtualRouterIp": "10.0.1.1",
                         "virtualRouterMac": "00:00:17:33:E4:A0"
@@ -113,7 +113,7 @@ describe('flowLogsEnabled', function () {
                         "securityListIds": [
                             "ocid1.securitylist.oc1.iad.aaaaaaaazhtqkhrkifh7h2jherpmogcofcfvs2i6aeaqnzdueyhhxwjgrlma"
                         ],
-                        "timeCreated": "2019-02-28T18:19:38.677Z",
+                        "creationTimestamp": "2019-02-28T18:19:38.677Z",
                         "vcnId": "ocid1.vcn.oc1.iad.aaaaaaaaihl7n5qajssmue7fse6g2wkmtsbihpad7rhqcxqwnuu5sriv3wfq",
                         "virtualRouterIp": "10.0.1.1",
                         "virtualRouterMac": "00:00:17:33:E4:A0"

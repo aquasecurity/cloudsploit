@@ -32,19 +32,25 @@ module.exports = {
             };
             
             var badSubnets = [];
+            var regionSubnets = false;
             subnetworks.data.forEach(subnet => {
-                if (!subnet.enableFlowLogs) {
+                if (subnet.creationTimestamp &&
+                    !subnet.enableFlowLogs) {
                     badSubnets.push(subnet.id);
-                };
+                } else if (subnet.creationTimestamp) {
+                    regionSubnets = true
+                }
             });
 
             if (badSubnets.length) {
                 var badSubnetStr = badSubnets.join(', ');
                 helpers.addResult(results, 2,
                      `The following Subnets do not have Flow Logs enabled: ${badSubnetStr}`, region);
-            } else {
+            } else if (regionSubnets) {
                 helpers.addResult(results, 0, 'All Subnets in the Region have Flow Logs enabled', region);
-            };
+            } else {
+                helpers.addResult(results, 0, 'No subnetworks present', region);
+            }
 
             rcb();
         }, function(){
