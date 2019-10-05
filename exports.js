@@ -104,6 +104,7 @@ module.exports = {
         'rootMfaEnabled'                : require(__dirname + '/plugins/aws/iam/rootMfaEnabled.js'),
         'sshKeysRotated'                : require(__dirname + '/plugins/aws/iam/sshKeysRotated.js'),
         'usersMfaEnabled'               : require(__dirname + '/plugins/aws/iam/usersMfaEnabled.js'),
+        'usersPasswordAndKeys'          : require(__dirname + '/plugins/aws/iam/usersPasswordAndKeys.js'),
         'usersPasswordLastUsed'         : require(__dirname + '/plugins/aws/iam/usersPasswordLastUsed.js'),
         'canaryKeysUsed'                : require(__dirname + '/plugins/aws/iam/canaryKeysUsed.js'),
         'kinesisEncrypted'              : require(__dirname + '/plugins/aws/kinesis/kinesisEncrypted.js'),
