@@ -84,7 +84,6 @@ module.exports = {
             }
 
             var roleFailures = [];
-            var roleWarnings = [];
 
             // See if role has admin managed policy
             if (listAttachedRolePolicies &&
@@ -125,13 +124,12 @@ module.exports = {
                             if (statement.Effect === 'Allow' &&
                                 !statement.Condition) {
                                 var failMsg;
-                                var warnMsg;
                                 if (statement.Action.indexOf('*') > -1 &&
                                     statement.Resource &&
                                     statement.Resource.indexOf('*') > -1) {
                                     failMsg = 'Role inline policy allows all actions on all resources';
                                 } else if (statement.Action.indexOf('*') > -1) {
-                                    warnMsg = 'Role inline policy allows all actions on selected resources';
+                                    failMsg = 'Role inline policy allows all actions on selected resources';
                                 } else if (statement.Action && statement.Action.length) {
                                     // Check each action for wildcards
                                     var wildcards = [];
@@ -140,11 +138,10 @@ module.exports = {
                                             wildcards.push(statement.Action[a]);
                                         }
                                     }
-                                    if (wildcards.length) warnMsg = 'Role inline policy allows wildcard actions: ' + wildcards.join(', ');
+                                    if (wildcards.length) failMsg = 'Role inline policy allows wildcard actions: ' + wildcards.join(', ');
                                 }
 
                                 if (failMsg && roleFailures.indexOf(failMsg) === -1) roleFailures.push(failMsg);
-                                if (warnMsg && roleWarnings.indexOf(warnMsg) === -1) roleWarnings.push(warnMsg);
                             }
                         }
                     }
@@ -154,10 +151,6 @@ module.exports = {
             if (roleFailures.length) {
                 helpers.addResult(results, 2,
                     roleFailures.join(', '),
-                    'global', role.Arn);
-            } else if (roleWarnings.length) {
-                helpers.addResult(results, 1,
-                    roleWarnings.join(', '),
                     'global', role.Arn);
             } else {
                 helpers.addResult(results, 0,
