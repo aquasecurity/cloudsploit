@@ -42,6 +42,11 @@ const createCache = (err, data) => {
     }
 };
 
+var firstDay = new Date();
+var nextWeek = new Date(firstDay.getTime() + 7 * 24 * 60 * 60 * 1000);
+nextWeek = nextWeek.toISOString();
+firstDay = firstDay.toISOString();
+
 describe('preAuthRequestsAccess', function () {
     describe('run', function () {
         it('should give unknown result if an requests error is passed or no data is present', function (done) {
@@ -118,8 +123,8 @@ describe('preAuthRequestsAccess', function () {
                         "name": "par-object-20190729-1710",
                         "accessType": "ObjectRead",
                         "objectName": "Screen Shot 2019-07-24 at 5.12.12 PM.png",
-                        "timeCreated": "2019-07-29T22:10:50.075Z",
-                        "timeExpires": "2019-10-05T22:10:42.491Z"
+                        "timeCreated": firstDay,
+                        "timeExpires": nextWeek
                     }
                 ]
             );
@@ -143,8 +148,8 @@ describe('preAuthRequestsAccess', function () {
                         "name": "par-object-20190729-1710",
                         "accessType": "ObjectReadWrite",
                         "objectName": "Screen Shot 2019-07-24 at 5.12.12 PM.png",
-                        "timeCreated": "2019-07-29T22:10:50.075Z",
-                        "timeExpires": "2019-10-05T22:10:42.491Z"
+                        "timeCreated": firstDay,
+                        "timeExpires": nextWeek
                     }
                 ]
             );
@@ -168,8 +173,8 @@ describe('preAuthRequestsAccess', function () {
                         "name": "par-object-20190729-1710",
                         "accessType": "AnyObjectWrite",
                         "objectName": "Screen Shot 2019-07-24 at 5.12.12 PM.png",
-                        "timeCreated": "2019-07-29T22:10:50.075Z",
-                        "timeExpires": "2019-10-05T22:10:42.491Z"
+                        "timeCreated": firstDay,
+                        "timeExpires": nextWeek
                     }
                 ]
             );

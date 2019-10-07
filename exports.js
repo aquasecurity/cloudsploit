@@ -101,6 +101,7 @@ module.exports = {
         'passwordReusePrevention'       : require(__dirname + '/plugins/aws/iam/passwordReusePrevention.js'),
         'rootAccessKeys'                : require(__dirname + '/plugins/aws/iam/rootAccessKeys.js'),
         'rootAccountInUse'              : require(__dirname + '/plugins/aws/iam/rootAccountInUse.js'),
+        'rootHardwareMfa'               : require(__dirname + '/plugins/aws/iam/rootHardwareMfa.js'),
         'rootMfaEnabled'                : require(__dirname + '/plugins/aws/iam/rootMfaEnabled.js'),
         'sshKeysRotated'                : require(__dirname + '/plugins/aws/iam/sshKeysRotated.js'),
         'usersMfaEnabled'               : require(__dirname + '/plugins/aws/iam/usersMfaEnabled.js'),

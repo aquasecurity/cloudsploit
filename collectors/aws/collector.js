@@ -289,8 +289,15 @@ var calls = {
             property: 'Roles',
             paginate: 'Marker'
         },
+        listVirtualMFADevices: {
+            property: 'VirtualMFADevices',
+            paginate: 'Marker'
+        },
         getAccountPasswordPolicy: {
             property: 'PasswordPolicy'
+        },
+        getAccountSummary: {
+            property: 'SummaryMap'
         },
         generateCredentialReport: {
             override: true
