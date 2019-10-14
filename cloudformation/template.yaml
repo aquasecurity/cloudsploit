@@ -71,8 +71,6 @@ Resources:
       CodeUri: ..
       Environment:
         Variables:
-          LogsTargetBucket: !Ref BucketName
-          LogsTargetKey: CloudSploit
           DEFAULT_ROLE_NAME: !Ref DefaultRoleName
           RESULT_BUCKET: !Ref BucketName
           RESULT_PREFIX: !Ref BucketPrefix
@@ -90,7 +88,7 @@ Resources:
                 - s3:GetBucketLocation
               Effect: Allow
               Resource: '*'
-            - Effect: Allow
+            - Effect: Allow # TODO - why is this necessary?
               Action: ses:*
               Resource: '*'
             - Effect: Allow
