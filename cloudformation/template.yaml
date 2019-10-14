@@ -65,7 +65,7 @@ Resources:
       FunctionName: !Sub ${AWS::StackName}-scanner
       Description: Execute a CloudSploit Scan on the specific AWS account
       Timeout: 300
-      MemorySize: 3008 # TODO - Refine?
+      MemorySize: 3008
       Handler: lambda_index.handler
       Runtime: nodejs8.10
       CodeUri: ..
@@ -137,8 +137,3 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Ref BucketName
-
-
-Outputs:
-  StackName:
-    Value: !Ref AWS::StackName
