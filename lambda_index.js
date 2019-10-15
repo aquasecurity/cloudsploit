@@ -93,6 +93,9 @@ exports.handler = (event, context, callback) => {
     if ('settings' in configurations) {
         settings = configurations.settings;
     }
+    if(!s3Config in settings) {
+        settings.s3Config = {"key": key, "bucket": bucket}
+    }
 
     /*  This is just a possible way to include alternate configurations in the main lambda that invokes another role. 
         if('aws' in configurations) {
