@@ -247,7 +247,7 @@ module.exports = {
             if (myError[region] &&
                 zones[region] &&
                 (myError[region].join(',') === zones[region].join(','))) {
-                helpers.addResult(results, 3, 'Unable to query Instance Groups: ' + helpers.addError(instanceGroups), region);
+                helpers.addResult(results, 3, 'Unable to query Instances', region);
 
             } else if (noInstances[region] &&
                 zones[region] &&
