@@ -1,3 +1,4 @@
+var AWS = require('aws-sdk');
 var csvWriter = require('csv-write-stream');
 var fs = require('fs');
 
@@ -229,6 +230,43 @@ module.exports = {
         }
     },
 
+    createS3Json: function (s3Config) {
+        return {
+            s3Confg: s3Config,
+            jsonObject: {},
+            startCompliance: function(plugin, pluginKey, compliance) {
+            },
+        
+            endCompliance: function(plugin, pluginKey, compliance) {
+            },
+
+            writeResult: function (result, plugin, pluginKey) {
+                if(!plugin.title in s3Config) {
+                    s3Config[plugin.title] = []
+                }
+                s3Config[plugin.title].push(result)
+            }, 
+
+            close: function () {
+                var s3 = new AWS.S3({apiVersion: 'latest'});
+                if('key' in s3Config && 'bucket' in s3Config) {
+                    var dt = new Date();
+                    var objectName = [ dt.getFullYear(), dt.getMonth() + 1, dt.getDate() + '.json' ].join( '-' );
+                    var key = [ s3Config.key, objectName ].join( '/' );
+                    var results = JSON.stringify(jsonObject, null, 2);
+
+                    s3.putObject( { Bucket: s3Config.bucket, Key: key, Body: results }, function(err,data){
+                        if( err ) {} //handle error
+                    });
+                    var latestKey = [ s3Config.key, "latest.json" ].join( '/' );
+                    s3.putObject( { Bucket: s3Config.bucket, Key: latestKey, Body: results }, function(err,data){
+                        if( err ) {} //handle error
+                    });
+                }
+            }
+        }
+    },
+
     /**
      * Creates an output handler depending on the arguments list as expected
      * in the command line format. If multiple output handlers are specified
@@ -242,7 +280,7 @@ module.exports = {
      * one output handler or one that forwards function calls to a group of
      * output handlers.
      */
-    create: function (argv) {
+    create: function (argv, s3Config) {
         var outputs = [];
 
         // Creates the handlers for writing output.
@@ -260,6 +298,10 @@ module.exports = {
         if (addJunitOutput) {
             var stream = fs.createWriteStream(addJunitOutput.substr(8));
             outputs.push(this.createJunit(stream));
+        }
+
+        if(s3Config) {
+            outputs.push(this.createS3Json(s3Config))
         }
 
         var addConsoleOutput = argv.find(function (arg) {

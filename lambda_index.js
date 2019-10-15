@@ -1,6 +1,24 @@
 var AWS = require('aws-sdk');
 var engine = require('./engine');
 
+function getSecret(secretManagerKey, region) {
+    var secretManager = new AWS.SecretsManager({region: region});
+    var secret;
+    secretManager.getSecretValue({SecretId: secretManagerKey}, function(err, data) {
+        if (err) {
+            //handle error
+        } else {
+            if ('SecretString' in data) {
+                secret = data.SecretString;
+            } else {
+                let buff = new Buffer(data.SecretBinary, 'base64');
+                secret = buff.toString('ascii');
+            }
+        }
+    });
+    return secret;
+}
+
 function parseInput(event, context) {
     var eventJSON = JSON.parse(event);
     var incomingConfig;
@@ -17,17 +35,17 @@ function parseInput(event, context) {
     };
 
     if('Records' in eventJSON && 'Sns' in eventJSON.Records[0]) {
-        incomingConfig = eventJSON.Records[0].Sns.Message
+        incomingConfig = eventJSON.Records[0].Sns.Message;
     } else if('detail' in eventJSON && 'aws' in eventJSON.detail) {
-        incomingConfig = eventJSON.detail
-    };
+        incomingConfig = eventJSON.detail;
+    }
 
     for (service in incomingConfig) {
-        output[service] = {}
+        output[service] = {};
         if(service == 'aws') {
             if('externalId' in incomingConfig.aws) {
                 output.awsSts.externalId = incomingConfig.aws.externalId;
-            };
+            }
             
             //If someone simply passes in configuration information for AWS identical to AWSConfig with info in secrets manager, then this will be excluded. 
             if('roleArn' in incomingConfig.aws && incomingConfig.aws.roleArn ) {
@@ -37,7 +55,7 @@ function parseInput(event, context) {
                 var partition = context.invokedFunctionArn.split(':')[1];
                 output.awsSts.roleArn = ["arn",partition,"iam","",incomingConfig.aws.account_id,("role/" + defaultRoleName)].join(':');
                 continue;
-            };
+            }
         }
         if(service in secrets) {
             for(config in service) {
@@ -45,14 +63,15 @@ function parseInput(event, context) {
                     //is it value found at secret location or the key??
                     //var secretsManagerKey = [secretPrefix, service, config].join('/');
                     var secretsManagerKey = [secretPrefix, service, incomingConfig[service][config]].join('/');
-                    var foundSecret = '' //lookup key
-                    output[service][config] = foundSecret
+                    //making an assumption that secrets are in the initiating account and that theyre in the same region as the lambda. 
+                    var foundSecret = getSecret(secretsManagerKey,context.invokedFunctionArn.split(':')[3]); 
+                    output[service][config] = foundSecret;
                 } else {
-                    output[service][config] = incomingConfig[service][config]
+                    output[service][config] = incomingConfig[service][config];
                 }
             }
         } else {
-            output[service] = incomingConfig[service]
+            output[service] = incomingConfig[service];
         }
     }
 
@@ -66,16 +85,16 @@ exports.handler = (event, context, callback) => {
     var GitHubConfig;
     var OracleConfig;
     var GoogleConfig;
-    var settings = {}
+    var settings = {};
     var bucket = process.env.RESULT_BUCKET;
     var key = process.env.RESULT_PREFIX;
 
     var configurations = parseInput(event, context);
     if ('settings' in configurations) {
-        settings = configurations.settings
+        settings = configurations.settings;
     }
 
-    /*    
+    /*  This is just a possible way to include alternate configurations in the main lambda that invokes another role. 
         if('aws' in configurations) {
             AWSConfig = configurations.aws
         }
@@ -97,7 +116,7 @@ exports.handler = (event, context, callback) => {
         var roleArn = configurations.awsSts.roleArn;
         var externalId = configurations.awsSts.externalId;
 
-        var sts = AWS.STS({apiVersion: 'latest'});
+        var sts = new AWS.STS({apiVersion: 'latest'});
         var params = {
             'RoleArn': roleArn,
             'RoleSessionName': 'cloudSploit',
@@ -107,28 +126,32 @@ exports.handler = (event, context, callback) => {
             params.ExternalId = externalId;
         }
 
-        sts.assumeRole(params, function(err, data){
-            AWSConfig = { 
-                'accessKeyId' : data.Credentials.AccessKeyId,
-                'secretAccessKey' : data.Credentials.SecretAccessKey,
-                'sessionToken' : data.Credentials.SessionToken,
-                //'region' : ''
-            };
-            engine(AWSConfig, AzureConfig, GitHubConfig, OracleConfig, GoogleConfig, settings);
-            //where should I handle output? updates engine.js with possible settings ammendment to include bucket info?
+        sts.assumeRole(params, function(err, data){ 
+            if (err) {
+                //handle error
+            } else {
+                AWSConfig = { 
+                    'accessKeyId' : data.Credentials.AccessKeyId,
+                    'secretAccessKey' : data.Credentials.SecretAccessKey,
+                    'sessionToken' : data.Credentials.SessionToken,
+                    //'region' : ''
+                };
+                engine(AWSConfig, AzureConfig, GitHubConfig, OracleConfig, GoogleConfig, settings);
+                //where should I handle output? updates engine.js with possible settings ammendment to include bucket info?
+            }
         });
     } else {
         //technically with this implementation, we could run against all the others here - but we chose only one. So i am implmenting it that way. 
         if('aws' in configurations) {
-            AWSConfig = configurations.aws
+            AWSConfig = configurations.aws;
         } else if('azure' in configurations) {
-            AzureConfig = configurations.azure
+            AzureConfig = configurations.azure;
         } else if('gcp' in configurations) {
-            GoogleConfig = configurations.gcp
+            GoogleConfig = configurations.gcp;
         } else if('github' in configurations) {
-            GitHubConfig = configurations.github
+            GitHubConfig = configurations.github;
         } else if('oracle' in configurations) {
-            OracleConfig = configurations.oracle
+            OracleConfig = configurations.oracle;
         }
         engine(AWSConfig, AzureConfig, GitHubConfig, OracleConfig, GoogleConfig, settings);
     }
