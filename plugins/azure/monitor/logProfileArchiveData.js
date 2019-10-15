@@ -4,9 +4,9 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Log Profile Archive Data',
     category: 'Monitor',
-    description: 'The Log Profile should be configured to export all activities from the control/management plane in all active locations.',
-    more_info: 'Enabling logging of all activities in a log profile ensures that cloud security best practices, as well as compliance and monitoring standards are followed.',
-    recommended_action: '1. Enter the Monitor category. 2. Select Activity Log from the left hand menu. 3. On the top of activity log select Export to Event Hub to enable activity log archiving and select the storage account or event hub to send the data to.' ,
+    description: 'Ensures the Log Profile is configured to export all activities from the control and management planes in all active locations',
+    more_info: 'Exporting log activity for control plane activity allows for audited access to the Azure account with event data in the case of a security incident.',
+    recommended_action: 'Ensure that all activity is logged to the Event Hub or storage account for archiving.' ,
     link: 'https://docs.microsoft.com/en-us/azure/azure-monitor/platform/archive-activity-log',
     apis: ['logProfiles:list'],
 
@@ -27,15 +27,15 @@ module.exports = {
                 helpers.addResult(results, 3,
                 'Unable to query Log Profiles: ' + helpers.addError(logProfiles), location);
                 continue;
-            };
+            }
                 
             if (!logProfiles.data.length) {
                 continue;
             } else {
                 logProfile = logProfiles.data;
                 break;
-            };
-        };
+            }
+        }
         
         async.each(locations.logProfiles, (loc, lcb) => {
             if (!logProfile) return lcb();
@@ -49,14 +49,14 @@ module.exports = {
                 'Log Profile is archiving all activities in the region.', loc);
                 lcb();
             } else {
-                helpers.addResult(results, 1,
+                helpers.addResult(results, 2,
                 'Log Profile is not archiving data in the region.', loc);
                 lcb();
-            };
+            }
         }, function() {
             if (!logProfile) {
-                helpers.addResult(results, 2, 'No Log Profile Enabled.', 'global');
-            };
+                helpers.addResult(results, 2, 'No Log Profile enabled.', 'global');
+            }
             callback(null, results, source);
         });
     }

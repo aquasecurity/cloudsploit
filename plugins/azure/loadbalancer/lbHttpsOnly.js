@@ -4,15 +4,10 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'LB HTTPS Only',
     category: 'Load Balancer',
-    description: 'Ensures LBs are configured to only accept' + 
-                 ' connections on HTTPS ports.',
-    more_info: 'For maximum security, LBs can be configured to only'+
-                ' accept HTTPS connections. Standard HTTP connections '+
-                ' will be blocked. This should only be done if the '+
-                ' client application is configured to query HTTPS '+
-                ' directly and not rely on a redirect from HTTP.',
+    description: 'Ensures load balancers are configured to only accept connections on HTTPS ports',
+    more_info: 'For maximum security, load balancers can be configured to only accept HTTPS connections. Standard HTTP connections will be blocked. This should only be done if the client application is configured to query HTTPS directly and not rely on a redirect from HTTP.',
     link: 'https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-overview',
-    recommended_action: '1. Go to Load Balancers. 2. Select the Load Balancer. 3. Select the Load Balancing Rule blade of Settings. 4. Ensure that only 1 rule is enabled and that the port is 443. 5. Go back and select the Inbound NAT Rules blade under settings. 6. ensure that only one rule is enabled and the port of the rule is 443.',
+    recommended_action: 'Ensure that each load balancer only accepts connections on port 443.',
     apis: ['resourceGroups:list', 'loadBalancers:list'],
 
     run: function (cache, settings, callback) {
@@ -34,7 +29,7 @@ module.exports = {
             };
 
             if (!loadBalancers.data.length) {
-                helpers.addResult(results, 0, 'No existing Load Balancers', location);
+                helpers.addResult(results, 0, 'No existing Load Balancers found', location);
                 return rcb();
             };
 
@@ -63,17 +58,17 @@ module.exports = {
                 };
 
                 if (notHTTPSRules && isHTTPS) {
-                    helpers.addResult(results, 1,
-                        'HTTPS is configured but other ports are open.', location, loadBalancer.id);
+                    helpers.addResult(results, 2,
+                        'HTTPS is configured but other ports are open', location, loadBalancer.id);
                 } else if (notHTTPSRules && !isHTTPS) {
                     helpers.addResult(results, 2,
-                        'HTTPS is not configured and other ports are open.', location, loadBalancer.id);
+                        'HTTPS is not configured and other ports are open', location, loadBalancer.id);
                 } else if (isHTTPS) {
                     helpers.addResult(results, 0,
-                        'Only HTTPS is configured.', location, loadBalancer.id);
+                        'Only HTTPS is configured', location, loadBalancer.id);
                 } else {
                     helpers.addResult(results, 0,
-                        'No inbound rules.', location, loadBalancer.id);
+                        'No inbound rules found', location, loadBalancer.id);
                 };
             });
             rcb();

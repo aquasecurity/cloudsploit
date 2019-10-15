@@ -11,6 +11,14 @@ var locations = [
     'southcentralus',
     'northeurope',
     'westeurope',
+    'germanycentral',
+    'germanynortheast',
+    'germanywestcentral',
+    'germanynorth',
+    'switzerlandnorth',
+    'switzerlandwest',
+    'norwaywest',
+    'norwayeast',
     'japanwest',
     'japaneast',
     'brazilsouth',
@@ -33,6 +41,8 @@ var locations = [
     'australiacentral2',
     'southafricanorth',
     'southafricawest',
+    'uaenorth',
+    'uaecentral',
     'global'
 ];
 
@@ -61,6 +71,7 @@ module.exports = {
         locations,
         mysql: locations,
         sql: locations,
+        postgres: locations
     },
     encryptionProtectors: locations,
     logProfiles: locations,
@@ -84,7 +95,8 @@ module.exports = {
     serverBlobAuditingPolicies: locations,
     serverSecurityAlertPolicies: locations,
     managedClusters: locations,
-    loadBalancers: locations,
+    virtualMachineScaleSets: locations,
+    autoProvisioningSettings: ['global'],
     securityContacts: ['global'],
     usages: ['global'],
     subscriptions: ['global'],
@@ -92,4 +104,5 @@ module.exports = {
     loadBalancers: locations,
     availabilitySets: locations,
     virtualNetworks: locations,
+    configurations: locations
 };

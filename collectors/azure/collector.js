@@ -108,6 +108,12 @@ var calls = {
                 arm: true
             }
         },
+        postgres: {
+            list: {
+                api: "PostgresClient",
+                arm: true
+            }
+        },
         manyApi: true
     },
     policyAssignments: {
@@ -140,16 +146,11 @@ var calls = {
             arm: true
         }
     },
-    managementLocks: {
-        listAtSubscriptionLevel: {
-            api: "ManagementLockClient",
-            arm: true
-        }
-    },
-    loadBalancers: {
-        listAll: {
-            api: "NetworkManagementClient",
-            arm: true
+    autoProvisioningSettings: {
+        list: {
+            api: "SecurityCenterClient",
+            arm: true,
+            ascLoc: true
         }
     },
     securityContacts: {
@@ -178,6 +179,7 @@ var calls = {
             arm: true
         }
     }
+
 };
 
 var postcalls = {
@@ -241,6 +243,18 @@ var postcalls = {
             filterKey: ['resourceGroupName', 'name'],
             filterValue: ['resourceGroupName', 'name'],
             arm: true,
+        }
+    },
+    configurations: {
+        listByServer: {
+            api: "PostgresClient",
+            reliesOnService: ['resourceGroups', 'servers'],
+            reliesOnSubService: [undefined, 'postgres'],
+            reliesOnCall: ['list', 'list'],
+            filterKey: ['resourceGroupName', 'name'],
+            filterValue: ['resourceGroupName', 'name'],
+            arm: true,
+
         }
     },
     diagnosticSettingsOperations: {
@@ -407,6 +421,16 @@ var postcalls = {
             arm: true
         },
     },
+	virtualMachineScaleSets: {
+        list: {
+            api: "ComputeManagementClient",
+            reliesOnService: ['resourceGroups'],
+            reliesOnCall: ['list'],
+            filterKey: ['resourceGroupName'],
+            filterValue: ['resourceGroupName'],
+            arm: true
+        }
+    },
     usages: {
         list: {
             api: "NetworkManagementClient",
@@ -516,7 +540,7 @@ var finalcalls = {
             reliesOnService: ['resourceGroups', 'servers'],
             reliesOnCall: ['list', 'listByResourceGroup'],
             filterKey: ['resourceGroupName', 'serverName'],
-            filterValue: ['resourceGroupName', 'serverName'],
+            filterValue: ['resourceGroupName', 'name'],
             arm: true,
             module: false,
         }

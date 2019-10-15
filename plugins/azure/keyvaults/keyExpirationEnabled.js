@@ -23,13 +23,13 @@ module.exports = {
             if (!keys) return rcb();
 
             if (keys.err || !keys.data) {
-                helpers.addResult(results, 3, 
-                    'Unable to query Keys: ' + helpers.addError(keys), location);
+                helpers.addResult(results, 1, 'No Key Vault Permissions Configured', location);
                 return rcb();
             };
 
             if (!keys.data.length) {
                 helpers.addResult(results, 0, 'No Keys found', location);
+                return rcb();
             };
             
             keys.data.forEach(key => {

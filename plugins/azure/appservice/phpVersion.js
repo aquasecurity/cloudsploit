@@ -4,45 +4,63 @@ var helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'PHP Version',
     category: 'App Service',
-    description: 'Ensure the latest version of PHP is installed on all App Services.',
+    description: 'Ensures the latest version of PHP is installed for all App Services',
     more_info: 'Installing the latest version of PHP will reduce the security risk of missing security patches.',
-    recommended_action: '1. Enter App Services. 2. Select the App Service. 3. Select the Configuration blade under Settings. 4. Choose the General Settings Tab. 5. Select the PHP Stack and ensure that Version is the latest Version.',
+    recommended_action: 'Select the latest version of PHP for all PHP-based App Services',
     link: 'https://docs.microsoft.com/en-us/azure/app-service/web-sites-php-configure',
     apis: ['webApps:list', 'webApps:listConfigurations'],
-
+    settings: {
+        latestPhpVersion: {
+            name: 'Latest PHP Version',
+            default: 7.3
+        }
+    },
     run: function (cache, settings, callback) {
+        const config = {
+            latestPhpVersion: settings.latestPhpVersion || this.settings.latestPhpVersion.default
+        };
+
+        var custom = helpers.isCustom(settings, this.settings);
+
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
         async.each(locations.webApps, function (location, rcb) {
-
             var webApps = helpers.addSource(cache, source, 
                 ['webApps', 'listConfigurations', location]);
 
             if (!webApps) return rcb();
 
             if (webApps.err || !webApps.data) {
-                helpers.addResult(results, 3, 'Unable to query App Service: ' + helpers.addError(webApps), location);
+                helpers.addResult(results, 3, 'Unable to query App Services: ' + helpers.addError(webApps), location);
                 return rcb();
-            };
+            }
 
             if (!webApps.data.length) {
-                helpers.addResult(results, 0, 'No existing App Service', location);
+                helpers.addResult(results, 0, 'No existing App Services found', location);
                 return rcb();
-            };
+            }
+
+            var found = false;
 
             webApps.data.forEach(webApp => {
-                if (!webApp.phpVersion || webApp.phpVersion == "") {
-                    helpers.addResult(results, 0, 'No PHP version set', location, webApp.id);
-                } else if (parseFloat(webApp.phpVersion) >= 7.3) {
-                    helpers.addResult(results, 0, 
-                        `The PHP version (${webApp.phpVersion}) is the latest version`, location, webApp.id);
-                } else {
-                    helpers.addResult(results, 2, 
-                        `The PHP version (${webApp.phpVersion}) is not the latest version`, location, webApp.id);
-                };
+                if (webApp.phpVersion && webApp.phpVersion !== "") {
+                    found = true;
+
+                    if (parseFloat(webApp.phpVersion) >= config.latestphpVersion) {
+                        helpers.addResult(results, 0, 
+                            `The PHP version (${parseFloat(webApp.phpVersion)}) is the latest version`, location, webApp.id, custom);
+                    } else {
+                        helpers.addResult(results, 2, 
+                            `The PHP version (${parseFloat(webApp.phpVersion)}) is not the latest version`, location, webApp.id, custom);
+                    }
+                }
             });
+
+            if (!found) {
+                helpers.addResult(results, 0, 'No App Services with PHP found', location);
+            }
 
             rcb();
         }, function () {

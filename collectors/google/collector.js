@@ -143,6 +143,13 @@ var calls = {
             parent: true,
             nested: true,
         }
+    },
+    managedZones: {
+        list: {
+            api: 'dns',
+            version: 'v1',
+            location: null
+        }
     }
 };
 
@@ -167,9 +174,20 @@ var postcalls = {
             reliesOnCall: ['list'],
             filterKey: ['parent'],
             filterValue: ['name'],
-            nested: true,
+            nested: true
         }
     },
+    buckets: {
+        getIamPolicy: {
+            api: 'storage',
+            version: 'v1',
+            location: null,
+            reliesOnService: ['buckets'],
+            reliesOnCall: ['list'],
+            filterKey: ['bucket'],
+            filterValue: ['name'],
+        }
+    }
 
 };
 

@@ -1,32 +1,32 @@
 const async = require('async');
 const helpers = require('../../../helpers/azure');
-'Keeping .NET framework versions up to date ensures you have the security updates and additional functionality.'
+
 module.exports = {
     title: '.NET Framework Version',
     category: 'App Service',
-    description: 'Ensure .NET Framework is up to date for all App Services.',
-    more_info: 'Keeping your .NET framework up to date will reduce the security risk vulnerabilities due to missing security patches.',
-    recommended_action: 'Update .NET framwork version on all .NET App Services.',
+    description: 'Ensures the latest version of the .NET Framework is installed for all App Services.',
+    more_info: 'Installing the latest version of the .NET framework will reduce the security risk of missing security patches.',
+    recommended_action: 'Select the latest version of the .NET framework for all .NET-based App Services',
     link: 'https://docs.microsoft.com/en-us/azure/app-service/web-sites-configure',
     apis: ['webApps:list', 'webApps:listConfigurations'],
     settings: {
         latestNetFrameworkVersion: {
-            name: 'Latest .NET Framework',
+            name: 'Latest .NET Framework Version',
             default: 4.0
         }
     },
     run: function (cache, settings, callback) {
-
-        const configuration = {
+        const config = {
             latestNetFrameworkVersion: settings.latestNetFrameworkVersion || this.settings.latestNetFrameworkVersion.default
         };
+
+        var custom = helpers.isCustom(settings, this.settings);
 
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
         async.each(locations.webApps, function (location, rcb) {
-
             const webApps = helpers.addSource(
                 cache, source, ['webApps', 'listConfigurations', location]
             );
@@ -35,31 +35,33 @@ module.exports = {
 
             if (webApps.err || !webApps.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query App services: ' + helpers.addError(webApps), location);
+                    'Unable to query App Services: ' + helpers.addError(webApps), location);
                 return rcb();
             }
 
             if (!webApps.data.length) {
-                helpers.addResult(results, 0, 'No existing App services', location);
+                helpers.addResult(results, 0, 'No existing App Services found', location);
                 return rcb();
             }
 
-            var netFrameworkCheck = [];
+            var found = false;
 
-            webApps.data.forEach(function(webApp){
-                if (parseFloat(webApp.netFrameworkVersion.substr(1)) < configuration.latestNetFrameworkVersion) {
-                    netFrameworkCheck.push({'id':webApp.id, 'version':webApp.netFrameworkVersion});
+            webApps.data.forEach(webApp => {
+                if (webApp.netFrameworkVersion && webApp.netFrameworkVersion !== "") {
+                    found = true;
+
+                    if (parseFloat(webApp.netFrameworkVersion.substr(1)) >= config.latestNetFrameworkVersion) {
+                        helpers.addResult(results, 0, 
+                            `The .NET framework version (${parseFloat(webApp.netFrameworkVersion)}) is the latest version`, location, webApp.id, custom);
+                    } else {
+                        helpers.addResult(results, 2, 
+                            `The .NET framework version (${parseFloat(webApp.netFrameworkVersion)}) is not the latest version`, location, webApp.id, custom);
+                    }
                 }
             });
 
-            if (netFrameworkCheck.length > 20) {
-                helpers.addResult(results, 2, 'More than 20 App services have an outdated .NET Framework', location);
-            } else if (netFrameworkCheck.length) {
-                for (app in netFrameworkCheck) {
-                    helpers.addResult(results, 2, `.NET Framework version is outdated (${netFrameworkCheck[app].version})`, location, netFrameworkCheck[app].id);
-                }
-            } else {
-                helpers.addResult(results, 0, 'All .NET App services are running on the latest framework version', location);
+            if (!found) {
+                helpers.addResult(results, 0, 'No App Services with the .NET framework found', location);
             }
 
             rcb();

@@ -161,8 +161,11 @@ var run = function (GoogleConfig, collection, settings, service, callObj, callKe
                 async.eachLimit(records, 10, function(record, recordCb) {
                     for (filter in callObj.filterKey) {
                         callObj.params[callObj.filterKey[filter]] = record[callObj.filterValue[filter]]
+                        options.version = callObj.version;
                     }
-                    execute(LocalGoogleConfig, collection, service, callObj, callKey, region, regionCb, options);
+                    execute(LocalGoogleConfig, collection, service, callObj, callKey, region, recordCb, options);
+                }, function() {
+                    regionCb();
                 })
             }
             callObj.params[callObj.filterKey[reliedService]] = [callObj.filterValue[reliedService]]
@@ -224,12 +227,25 @@ var execute = function (LocalGoogleConfig, collection, service, callObj, callKey
                 collection[service][callKey][region].data = data[callObj.property][callObj.secondProperty];
             } else {
                 if (data.data.items) {
-                    collection[service][callKey][region].data = data.data.items;
+                    if (data.data.items.constructor.name === 'Array') {
+                        collection[service][callKey][region].data = collection[service][callKey][region].data.concat(data.data.items);
+                    } else {
+                        collection[service][callKey][region].data = data.data.items
+                    }
                 } else if (data.data[service]) {
-                    collection[service][callKey][region].data = data.data[service]
-                } else if (data.data &&
-                        data.data.id) { 
-                    collection[service][callKey][region].data.push(data.data);
+                    if (data.data[service].constructor.name === 'Array') {
+                        collection[service][callKey][region].data = collection[service][callKey][region].data.concat(data.data[service]);
+                    } else {
+                        collection[service][callKey][region].data.push(data.data[service])
+                    }
+                } else if (data.data) {
+                    if (data.data.constructor.name === 'Array') {
+                        collection[service][callKey][region].data.concat(data.data);
+                    } else if (Object.keys(data.data).length){
+                        collection[service][callKey][region].data.push(data.data);
+                    } else {
+                        collection[service][callKey][region].data = [];
+                    }
                 } else {
                     collection[service][callKey][region].data = [];
                 }

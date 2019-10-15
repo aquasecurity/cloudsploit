@@ -40,6 +40,7 @@
     "azure-arm-monitor": "^5.4.0",
     "azure-arm-mysql": "^3.2.0",
     "azure-arm-network": "^13.0.0",
+    "azure-arm-postgresql": "^4.3.0",
     "azure-arm-resource": "^7.3.0",
     "azure-arm-security": "^1.2.0-preview",
     "azure-arm-sql": "^5.7.0",

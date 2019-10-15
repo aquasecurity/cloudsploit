@@ -7,7 +7,7 @@ var msRestAzure                 = require('ms-rest-azure');
 
 // Azure Resource Management
 var ComputeManagementClient     = require('azure-arm-compute');
-var KeyVaultManagementClient     = require('azure-arm-keyvault');
+var KeyVaultManagementClient    = require('azure-arm-keyvault');
 var MonitorManagementClient     = require('azure-arm-monitor');
 var NetworkManagementClient     = require('azure-arm-network');
 var PolicyClient                = require('azure-arm-resource').PolicyClient;
@@ -20,7 +20,8 @@ var CdnManagementClient         = require('azure-arm-cdn');
 var ManagementLockClient        = require('azure-arm-resource').ManagementLockClient;
 var MySQLManagementClient       = require('azure-arm-mysql');
 var SecurityCenterClient        = require('azure-arm-security');
-var SubscriptionClient          = require('azure-arm-resource').SubscriptionClient
+var SubscriptionClient          = require('azure-arm-resource').SubscriptionClient;
+var PostgresClient              = require('azure-arm-postgresql');
 
 // Azure Service Modules
 var KeyVaultClient              = require('azure-keyvault');
@@ -45,6 +46,7 @@ var mapAzureApis = {
     "MySQLManagementClient"     : MySQLManagementClient,
     "SecurityCenterClient"      : SecurityCenterClient,
     "SubscriptionClient"        : SubscriptionClient,
+    "PostgresClient"            : PostgresClient
 }
 
 const UNKNOWN_LOCATION = "unknown";

@@ -4,10 +4,10 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Deny SSH Access',
     category: 'Network Security Groups',
-    description: 'Ensure that all of Network Security Groups Security Rules deny public SSH access.',
-    more_info: 'In order to deny ssh access to a Virtual Machine, inbound security rules must be configured to exclude public ssh access to the Virtual Machine.',
+    description: 'Ensures that all Network Security Group Security Rules deny public SSH access',
+    more_info: 'Inbound security group rules should prohibit inbound SSH access from the global address.',
     link: 'https://docs.microsoft.com/en-us/azure/security-center/security-center-restrict-access-through-internet-facing-endpoints',
-    recommended_action: '1. Enter Network Security Groups. 2. Select the Network Security Group in question. 3. Enter the inbound rules blade. 4. Remove the rule that allows SSH.',
+    recommended_action: 'For each Network Security Group attached to a Virtual Machine instance, ensure that the inbound SSH port is appropriately restricted.',
     apis: ['resourceGroups:list', 'networkSecurityGroups:list', 'securityRules:list'],
 
     run: function(cache, settings, callback) {
@@ -28,7 +28,7 @@ module.exports = {
             }
 
             if (!securityRules.data.length) {
-                helpers.addResult(results, 0, 'No existing Security Rules', location);
+                helpers.addResult(results, 0, 'No Security Rules found', location);
                 return rcb();
             }
 
@@ -61,16 +61,16 @@ module.exports = {
 
                             isExists = true;
                             helpers.addResult(results, 2,
-                            'the Security Rule allows public SSH access.', location, securityRule.id);
-                        };
-                    }; 
-                };
+                                'Security Rule allows public SSH access', location, securityRule.id);
+                        }
+                    }
+                }
             });
                 
             if(!isExists) {
                 helpers.addResult(results, 0,
-                    'There is no Security Rule that allows public SSH access.', location);
-            };
+                    'There are no Security Rules that allow public SSH access', location);
+            }
 
             rcb();
         }, function(){

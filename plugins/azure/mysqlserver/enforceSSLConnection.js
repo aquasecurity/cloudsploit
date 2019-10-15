@@ -4,9 +4,9 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Enforce SSL Connection Enabled',
     category: 'MySQL Server',
-    description: 'Ensures SSL connection is set on MySQL Servers.',
-    more_info: 'SSL prevents infiltration attacks by encrypting the data stream between the server and app. By ensuring that SSL is enabled, security best practices are followed.',
-    recommended_action: '1. Login to Azure Portal. 2. Go to Azure Database for MySQL server. 3. For each database, click on Connection security. 4. In SSL settings, Ensure Enforce SSL connection is set to Enabled.',
+    description: 'Ensures SSL connection is enforced on MySQL servers',
+    more_info: 'MySQL servers should be set to use SSL for data transmission to ensure all data is encrypted in transit.',
+    recommended_action: 'Ensure the connection security of each Azure Database for MySQL is configured to enforce SSL connections.',
     link: 'https://docs.microsoft.com/en-us/azure/mysql/concepts-ssl-connection-security',
     apis: ['servers:mysql:list'],
 
@@ -24,12 +24,12 @@ module.exports = {
 
             if (servers.err || !servers.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query MySQL Server: ' + helpers.addError(servers), location);
+                    'Unable to query for MySQL servers: ' + helpers.addError(servers), location);
                 return rcb();
             }
 
             if (!servers.data.length) {
-                helpers.addResult(results, 0, 'No existing MySQL Server', location);
+                helpers.addResult(results, 0, 'No existing MySQL servers found', location);
                 return rcb();
             }
 
@@ -41,13 +41,13 @@ module.exports = {
                 if (mySQLServer.sslEnforcement && 
                     mySQLServer.sslEnforcement !== 'Enabled') {
                     helpers.addResult(results, 2,
-                        'The MySQL Server is not enforced with SSL connection.', location, mySQLServer.name);
+                        'The MySQL server does not enforce SSL connections', location, mySQLServer.name);
                     allSslEnforced = false;
                 }
             }
 
             if (allSslEnforced) {
-                helpers.addResult(results, 0, 'All MySQL Servers are enforced with SSL connection.', location);
+                helpers.addResult(results, 0, 'All MySQL servers enforce SSL connections', location);
             }
             rcb();
         }, function () {

@@ -4,9 +4,9 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'NSG Log Analytics Enabled',
     category: 'Monitor',
-    description: 'Ensures Network Security Groups logs are sent to the Log Analytics workspace.',
-    more_info: 'Enabling Log Analytics ensures that logs are shipped to a central repository that can be queried and audited, following cloud security best practices.',
-    recommended_action: '1. Go to Azure Monitor. 2. Select Diagnostic setting from the settings tab on the list to the left. 3. Choose the resource. 4. If no diagnostic setting defined, add diagnostic setting and enable Send to Log Analytics, if diagnostic setting are defined, edit the setting to enable Send to Log Analytics.',
+    description: 'Ensures Network Security Group logs are sent to the Log Analytics workspace',
+    more_info: 'Enabling Log Analytics for Network Security Groups ensures that logs are shipped to a central repository that can be queried and audited.',
+    recommended_action: 'Enable sending of logs to Log Analytics for each Network Security Group resource in the Azure Monitor.',
     link: 'https://docs.microsoft.com/en-us/azure/azure-monitor/platform/collect-activity-logs',
     apis: ['networkSecurityGroups:listAll', 'diagnosticSettingsOperations:nsg:list'],
 
@@ -22,16 +22,16 @@ module.exports = {
 
             if (!diagnosticSettingsResources) return rcb();
 
-            if (diagnosticSettingsResources.err) {
+            if (diagnosticSettingsResources.err || !diagnosticSettingsResources.data) {
                 helpers.addResult(results, 3,
                     'Unable to query Diagnostic Settings: ' + helpers.addError(diagnosticSettingsResources), location);
                 return rcb();
-            };
+            }
 
-            if (!diagnosticSettingsResources.data || !diagnosticSettingsResources.data.length) {
-                helpers.addResult(results, 0, 'No Network Security Groups', location);
+            if (!diagnosticSettingsResources.data.length) {
+                helpers.addResult(results, 0, 'No Network Security Groups found', location);
                 return rcb();
-            };
+            }
 
             diagnosticSettingsResources.data.forEach(networkGroupSettings => {
                 var isWorkspace = networkGroupSettings.value.filter((d) => {
@@ -46,10 +46,10 @@ module.exports = {
                         helpers.addResult(results, 0,
                             'Send to Log Analytics is configured for the Network Security Group', location, networkGroupSettings.id);
                     } else {
-                        helpers.addResult(results, 1,
+                        helpers.addResult(results, 2,
                             'Send to Log Analytics is not configured for the Network Security Group', location, networkGroupSettings.id);
-                    };
-                };
+                    }
+                }
             });
 
             rcb();

@@ -69,5 +69,6 @@ module.exports = {
     autoscalers: ['global'],
     subnetworks: regions,
     projects: ['global'],
-    clusters: ['global']
+    clusters: ['global'],
+    managedZones: ['global']
 };

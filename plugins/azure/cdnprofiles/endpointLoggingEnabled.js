@@ -4,9 +4,9 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
 	title: 'Endpoint Logging Enabled',
 	category: 'CDN Profiles',
-	description: 'Ensures that endpoint requests are being logged properly.',
-	more_info: 'Enabling Endpoint Logging records all requests on a CDN endpoint, following compliance standards and ensuring that security best practices are being followed.',
-	recommended_action: '1. Navigate to CDN profiles. 2. Select a profile. 3. Select an endpoint. 4. Select the Diagnostics Logs blade under Monitoring. 5. Ensure at least one of the log settings is selected to enable logging on the endpoint.',
+	description: 'Ensures that endpoint requests are being logged for CDN endpoints',
+	more_info: 'Endpoint Logging ensures that all requests to a CDN endpoint are logged.',
+	recommended_action: 'Ensure that diagnostic logging is enabled for each CDN endpoint for each CDN profile',
 	link: 'https://docs.microsoft.com/en-us/azure/cdn/cdn-azure-diagnostic-logs',
 	apis: ['resourceGroups:list', 'diagnosticSettingsOperations:list', 'profiles:list', 'endpoints:listByProfile'],
 
@@ -32,7 +32,7 @@ module.exports = {
 			}
 
 			if (!endpoints.data.length) {
-				helpers.addResult(results, 0, 'No existing CDN Endpoints', location);
+				helpers.addResult(results, 0, 'No existing CDN endpoints found', location);
 				return rcb();
 			}
 
@@ -40,12 +40,12 @@ module.exports = {
 
 			if (diagnosticSettings.err || !diagnosticSettings.data) {
 				helpers.addResult(results, 3,
-					'Unable to query Diagnostics settings: ' + helpers.addError(diagnosticSettings),location);
+					'Unable to query diagnostics settings: ' + helpers.addError(diagnosticSettings),location);
 				return rcb();
 			}
 
 			if (!diagnosticSettings.data.length) {
-				helpers.addResult(results, 0, 'No existing Diagnostics settings', location);
+				helpers.addResult(results, 0, 'No existing diagnostics settings', location);
 				return rcb();
 			}
 
@@ -77,12 +77,12 @@ module.exports = {
 					diagSettingFound += 1;
 				} else {
 					helpers.addResult(results, 2,
-						'Request Logging is not Enabled on Endpoint', location, endpoint.name);
+						'Request logging is not enabled for endpoint: ' + endpoint.name, location, endPointId);
 				}
 			});
 
 			if (diagSettingFound === endpoints.data.length) {
-				helpers.addResult(results, 0, 'Request Logging is Enabled on All Endpoints', location);
+				helpers.addResult(results, 0, 'Request logging is enabled on all endpoints', location);
 			}
 
 			rcb();
