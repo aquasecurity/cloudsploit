@@ -423,6 +423,12 @@ var calls = {
             property: 'Account'
         }
     },
+    Support: {
+        describeTrustedAdvisorChecks: {
+            property: 'checks',
+            params: { language: 'en' },
+        },
+    },
     Transfer: {
         listServers: {
             property: 'Servers',
@@ -705,6 +711,14 @@ var postcalls = [
                 reliesOnCall: 'listQueues',
                 override: true
             }
+        },
+        Support: {
+            describeTrustedAdvisorCheckResult: {
+                reliesOnService: 'support',
+                reliesOnCall: 'describeTrustedAdvisorChecks',
+                filterKey: 'checkId',
+                filterValue: 'id'
+            },
         },
         WAFRegional: {
             listResourcesForWebACL: {
