@@ -20,7 +20,7 @@ module.exports = {
         var results = [];
         var source = {};
 
-        var usernameRegex = RegExp('^.*$');
+        var usernameRegex = RegExp(this.settings.iam_username_regex.default);
         try {
             var usernameRegex = RegExp(settings.iam_username_regex || this.settings.iam_username_regex.default);
         } catch (err) {
