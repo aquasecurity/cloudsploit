@@ -20,11 +20,11 @@ module.exports = {
         var results = [];
         var source = {};
 
+        var usernameRegex = RegExp('^.*$');
         try {
             var usernameRegex = RegExp(settings.iam_username_regex || this.settings.iam_username_regex.default);
         } catch (err) {
             helpers.addResult(results, 3, err.message, 'global', this.settings.iam_username_regex.name);
-            var usernameRegex = RegExp('^.*$');
         }
 
         var region = helpers.defaultRegion(settings);
