@@ -58,6 +58,6 @@ module.exports = {
             return cb();
         }, function() {
             callback(null, results, source);
-        }); // todo bind this or use defaultRegex in context ?
+        });
     }
 };
