@@ -14,7 +14,7 @@ module.exports = {
             name: 'CloudTrail Bucket Regex',
             description: 'Ignore if the cloudtrail bucket matches this regex',
             regex: '^.*$',
-            default: null
+            default: '^$',
         },
     },
 
@@ -22,6 +22,13 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+
+        var bucketRegex = RegExp(this.settings.cloudtrail_bucket_regex.default);
+        try {
+            var bucketRegex = RegExp(settings.cloudtrail_bucket_regex || this.settings.cloudtrail_bucket_regex.default);
+        } catch (err) {
+            helpers.addResult(results, 3, err.message, 'global', this.settings.cloudtrail_bucket_regex.name);
+        }
 
         async.each(regions.cloudtrail, function(region, rcb){
 
@@ -42,7 +49,7 @@ module.exports = {
             }
 
             async.each(describeTrails.data, function(trail, cb){
-                if (!trail.S3BucketName || RegExp(settings.cloudtrail_bucket_regex).test(trail.S3BucketName))
+                if (!trail.S3BucketName || bucketRegex.test(trail.S3BucketName))
                     return cb();
                 var s3Region = helpers.defaultRegion(settings);
 
