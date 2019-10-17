@@ -67,7 +67,7 @@ Resources:
       Timeout: 300
       MemorySize: 3008
       Handler: lambda_index.handler
-      Runtime: nodejs8.10
+      Runtime: nodejs10.x
       CodeUri: ..
       Environment:
         Variables:
