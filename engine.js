@@ -15,8 +15,9 @@ var output = require('./postprocess/output.js')
 
  * @param settings General purpose settings.
  */
-var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, GoogleConfig, settings) {
-    // Determine if scan is a compliance scan
+//add parameter for output handler
+var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, GoogleConfig, settings, outputHandler, callback) {
+    var pluginCollector
     var complianceArgs = process.argv
         .filter(function (arg) {
             return arg.startsWith('--compliance=')
@@ -39,11 +40,7 @@ var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, Googl
     var suppressionFilter = suppress.create(process.argv)
 
     // Initialize the output handler
-    if(s3Config in settings) {
-        var outputHandler = output.create(process.argv, settings.s3Config)
-    } else {
-        var outputHandler = output.create(process.argv)
-    }    
+    outputHandler = outputHandler ? outputHandler : output.create(process.argv)
 
     // The original cloudsploit always has a 0 exit code. With this option, we can have
     // the exit code depend on the results (useful for integration with CI systems)
@@ -133,6 +130,8 @@ var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, Googl
         serviceProviderObj.collector(serviceProviderObj.config, {api_calls: serviceProviderObj.apiCalls, skip_regions: serviceProviderObj.skipRegions}, function (err, collection) {
             if (err || !collection) return console.log('ERROR: Unable to obtain API metadata');
 
+            pluginCollector = collection
+
             console.log('');
             console.log('-----------------------');
             console.log(serviceProviderObj.name.toUpperCase());
@@ -191,6 +190,7 @@ var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, Googl
     }, function (err, results) {
         // console.log(JSON.stringify(collection, null, 2));
         outputHandler.close()
+        callback(pluginCollector)
         if (useStatusExitCode) {
             process.exitCode = Math.max(results)
         }
