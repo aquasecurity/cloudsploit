@@ -12,10 +12,11 @@ var output = require('./postprocess/output.js')
  * @param GitHubConfig The configuration for Github. If undefined, then don't run.
  * @param OracleConfig The configuration for Oracle. If undefined, then don't run.
  * @param GoogleConfig The configuration for Google. If undefined, then don't run.
-
+ *
  * @param settings General purpose settings.
+ * @param outputHandler Optional custom handler for result collection.
+ * @param callback callback to be ran upon completion.
  */
-//add parameter for output handler
 var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, GoogleConfig, settings, outputHandler, callback) {
     var pluginCollector
     var complianceArgs = process.argv
