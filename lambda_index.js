@@ -1,6 +1,6 @@
 var AWS = require('aws-sdk');
 var engine = require('./engine.js');
-var output = require('./postprocess/json_output.js')
+var output = require('./postprocess/json_output.js');
 
 /***
  * Finds a secret from Secrets Manager given a key and a region. 
@@ -10,13 +10,14 @@ var output = require('./postprocess/json_output.js')
  * 
  * @param {String} region The region where the secret is stored. 
  * 
- * @returns A JSON object with the secret(s) found in secret manager. * 
+ * @returns A JSON object with the secret(s) found in secret manager. 
  */
 async function getSecret(secretManagerKey, region) {
     var secretManager = new AWS.SecretsManager({region: region});
+    //TODO: handle errors
     var data = await secretManager.getSecretValue({SecretId: secretManagerKey}).promise();
 
-    return data.SecretString ? JSON.parse(data.SecretString) : {}
+    return data.SecretString ? JSON.parse(data.SecretString) : {};
 }
 
 /***
@@ -45,8 +46,9 @@ async function parseInput(event, partition, region) {
         'gcp': [],
         'github': [],
         'oracle': []
-    }
+    };
 
+    //Expected events are SNS and Cloudwatch, could add other events here if needed.
     if(eventJSON.Records && eventJSON.Records[0].Sns) {
         allConfigurations = eventJSON.Records[0].Sns.Message;
     } else if(eventJSON.detail) {
@@ -57,53 +59,52 @@ async function parseInput(event, partition, region) {
     for (service in allConfigurations) {
         if(service in expectedServices) {
             serviceCount++;
-            if(serviceCount > 1) {
-                throw (new Error("Multiple Services in Incoming Event."));
-            }
+            if(serviceCount > 1) throw (new Error("Multiple Services in Incoming Event."));
             if(service == 'aws') {
-                if(allConfigurations.aws.roleArn ) {
-                    allConfigurations.awsSts.roleArn = allConfigurations.aws.roleArn;
-                } else if (allConfigurations.aws.account_id) {
-                    allConfigurations.awsSts.roleArn = ["arn",partition,"iam","",allConfigurations.aws.account_id,("role/" + defaultRoleName)].join(':');
+                //If account_id in aws config, then replace it with roleArn. 
+                if (allConfigurations.aws.account_id) {
+                    allConfigurations.aws.roleArn = ["arn",partition,"iam","",allConfigurations.aws.account_id,("role/" + defaultRoleName)].join(':');
+                    delete allConfigurations.aws.account_id;
                 }
-                delete allConfigurations.aws
-            } else  if(allConfigurations[service].credentialId) {
+            } else if(allConfigurations[service].credentialId) {
                 for (config in allConfigurations[service]) {
-                    if (config in expectedServices[service]) {
-                        throw (new Error("Configuration passed in through event which must be in Secrets Manager."));
-                    }
+                    if (config in expectedServices[service]) throw (new Error("Configuration passed in through event which must be in Secrets Manager."));
                 }
                 var secretsManagerKey = [secretPrefix, service, allConfigurations[service].credentialId].join('/');
-                secret = await getSecret(secretsManagerKey, region) 
-                delete allConfigurations[service].credentialId
-                Object.assign(allConfigurations[service], secret)
+                secret = await getSecret(secretsManagerKey, region);
+                delete allConfigurations[service].credentialId;
+                Object.assign(allConfigurations[service], secret);
             }
         }
     }
 
-    if(serviceCount == 0) {
-        throw (new Error("No services provided in Incoming Event."));
-    }
-
-    return allConfigurations
+    if(serviceCount == 0) throw (new Error("No services provided in Incoming Event."));
+    return allConfigurations;
 }
 
 /***
- * Uses STS to obtain credentials for AWS Config.
+ * Uses STS to obtain credentials for AWS Config. 
+ * It is expected that AWSConfig is only obtainable via assuming a role. 
  * 
  * @param {String} roleArn The ARN for the role to get credentials for. 
  * 
  * @returns The configuration for AWSConfig. 
+ * 
+ * @throws If roleArn is not defined, throw an error. 
  */
 function getCredentials(roleArn) {
-    AWS.config.credentials = new AWS.ChainableTemporaryCredentials({params:{RoleArn: roleArn}})
-    
-    config = {
-        'accessKeyId' : AWS.config.credentials.AccessKeyId,
-        'secretAccessKey' : AWS.config.credentials.SecretAccessKey,
-        'sessionToken' : AWS.config.credentials.SessionToken
+    if(roleArn) {
+        AWS.config.credentials = new AWS.ChainableTemporaryCredentials({params:{RoleArn: roleArn}});
+        
+        config = {
+            'accessKeyId' : AWS.config.credentials.AccessKeyId,
+            'secretAccessKey' : AWS.config.credentials.SecretAccessKey,
+            'sessionToken' : AWS.config.credentials.SessionToken
+        };
+        return config;
+    } else {
+        throw (new Error("roleArn is not defined from incoming event."));
     }
-    return config;
 }
 
 /***
@@ -125,6 +126,7 @@ async function writeToS3(bucket, prefix, resultsToWrite) {
         var latestKey = [prefix, "latest.json"].join('/');
         var results = JSON.stringify(resultsToWrite, null, 2);
 
+        //TODO: handle errors
         await s3.putObject({Bucket: bucket, Key: key, Body: results}).promise();
         await s3.putObject({Bucket: bucket, Key: latestKey, Body: results}).promise();
     }
@@ -132,13 +134,13 @@ async function writeToS3(bucket, prefix, resultsToWrite) {
 
 exports.handler = async function(event, context) {
     //TODO: Logging
-    //TODO: Error Handling
 
     //Object Initialization//
     var partition = context.invokedFunctionArn.split(':')[1];
     var region = context.invokedFunctionArn.split(':')[3];
+    //TODO: Get errors thrown from promise
     var configurations = await parseInput(event, partition, region);
-    var outputHandler = output.create()
+    var outputHandler = output.create();
     
     //Settings Configuration//
     var settings = configurations.settings ? configurations.settings : {};
@@ -150,7 +152,7 @@ exports.handler = async function(event, context) {
     //TODO: consider supporting supression based on incoming settings. 
 
     //Config Gathering//
-    var AWSConfig = configurations.awsSts ? getCredentials(configurations.awsSts.roleArn) : null
+    var AWSConfig = configurations.aws ? getCredentials(configurations.aws.roleArn) : null;
     var AzureConfig = configurations.azure ? configurations.azure : null;
     var GoogleConfig = configurations.gcp ? configurations.gcp : null;
     var GitHubConfig = configurations.github ? configurations.github : null;
@@ -158,9 +160,9 @@ exports.handler = async function(event, context) {
 
     //Run Primary Cloudspoit Engine//
     engine(AWSConfig, AzureConfig, GitHubConfig, OracleConfig, GoogleConfig, settings, outputHandler, (collectionData) => {
-        var resultCollector = {}
+        var resultCollector = {};
         resultCollector.collectionData = collectionData;
         resultCollector.ResultsData = outputHandler.outputCollector;
-        await writeToS3(process.env.RESULT_BUCKET, process.env.RESULT_PREFIX, resultCollector)
+        await writeToS3(process.env.RESULT_BUCKET, process.env.RESULT_PREFIX, resultCollector);
     });
 }
