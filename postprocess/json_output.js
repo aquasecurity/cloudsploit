@@ -1,6 +1,5 @@
 module.exports = {
     create: function () {
-        //because of the callback on engine, this isn't entirely needed since both callbacks would be called at the same time (and do the same thing).
         return {
             outputCollector: {},
 
@@ -11,10 +10,10 @@ module.exports = {
             },
 
             writeResult: function (result, plugin, pluginKey) {
-                if(!plugin.title in outputCollector) {
-                    outputCollector[plugin.title] = []
+                if(!this.outputCollector[plugin.title]) {
+                    this.outputCollector[plugin.title] = []
                 }
-                outputCollector[plugin.title].push(result)
+                this.outputCollector[plugin.title].push(result)
             },
 
             close: function () {

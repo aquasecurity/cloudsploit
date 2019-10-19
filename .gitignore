@@ -7,3 +7,4 @@ output.json
 vscode/*
 .vscode/
 .idea
+.local

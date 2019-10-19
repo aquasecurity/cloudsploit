@@ -1,6 +1,11 @@
 #!/bin/bash
 set -euxo pipefail
 
+if [[ -z "${CREATE_BUCKET}" ]]; then
+  CREATE_BUCKET="no"
+else
+  CREATE_BUCKET="yes"
+fi
 # TODO - this should be broken into separate build and deploy steps
 
 npm install
@@ -20,7 +25,7 @@ aws cloudformation deploy \
     SecretsManagerPrefix=${SECRETS_MANAGER_PREFIX} \
     BucketName=${BUCKET_NAME} \
     BucketPrefix=${BUCKET_PREFIX} \
-    CreateBucket=${} \
+    CreateBucket=${CREATE_BUCKET} \
     SNSTopic=${SNS_TOPIC} \
     Schedule=${SCHEDULE} \
     ScheduledAccountId=${SCHEDULED_ACCOUNT_ID} \

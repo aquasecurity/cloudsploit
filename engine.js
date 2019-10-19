@@ -110,7 +110,7 @@ var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, Googl
 
                 if (sp == 'github' && !serviceProviderConfig.organization &&
                     plugin.types.indexOf('user') === -1) continue;
-                
+
                 // Skip if our compliance set says don't run the rule
                 if (!compliance.includes(spp, plugin)) continue;
 
@@ -128,7 +128,8 @@ var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, Googl
 
     // STEP 2 - Collect API Metadata from Service Providers
     async.map(serviceProviders, function (serviceProviderObj, serviceProviderDone) {
-        serviceProviderObj.collector(serviceProviderObj.config, {api_calls: serviceProviderObj.apiCalls, skip_regions: serviceProviderObj.skipRegions}, function (err, collection) {
+        //Note that this is technically a bug in their implementation- the settings being passed in do not actually include the real settings file which made it pretty useless.
+        serviceProviderObj.collector(serviceProviderObj.config, Object.assign({api_calls: serviceProviderObj.apiCalls, skip_regions: serviceProviderObj.skipRegions}, settings), function (err, collection) {
             if (err || !collection) return console.log('ERROR: Unable to obtain API metadata');
 
             pluginCollector = collection
@@ -191,7 +192,7 @@ var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, Googl
     }, function (err, results) {
         // console.log(JSON.stringify(collection, null, 2));
         outputHandler.close()
-        callback(pluginCollector)
+        callback(null, pluginCollector)
         if (useStatusExitCode) {
             process.exitCode = Math.max(results)
         }
