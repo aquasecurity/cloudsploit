@@ -51,7 +51,7 @@ async function parseInput(event, partition, region) {
 
     //Expected events are SNS and Cloudwatch, could add other events here if needed.
     if(event.Records && event.Records[0].Sns) {
-        allConfigurations = event.Records[0].Sns.Message;
+        allConfigurations = JSON.parse(event.Records[0].Sns.Message);
     } else if(event.detail) {
         allConfigurations = event.detail;
     }
@@ -172,6 +172,7 @@ exports.handler = async function(event, context) {
         var OracleConfig = configurations.oracle ? configurations.oracle : null;
     } catch(err) {
         console.log(err)
+        throw(err)
     }
 
     //Run Primary Cloudspoit Engine//
