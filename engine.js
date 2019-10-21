@@ -14,8 +14,8 @@ var output = require('./postprocess/output.js')
  * @param GoogleConfig The configuration for Google. If undefined, then don't run.
  *
  * @param settings General purpose settings.
- * @param outputHandler Optional custom handler for result collection.
- * @param callback callback to be ran upon completion.
+ * @param [outputHandler] Optional custom handler for result collection.
+ * @param [callback] callback to be ran upon completion.
  */
 var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, GoogleConfig, settings, outputHandler, callback) {
     var serviceCollection = {}

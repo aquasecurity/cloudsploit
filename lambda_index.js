@@ -94,6 +94,8 @@ async function parseInput(event, partition, region) {
  *
  * @param {String} roleArn The ARN for the role to get credentials for.
  *
+ * @param {String} region The region where the credentials are located.
+ *
  * @returns Promise containing the requested AWS Configuration.
  *
  * @throws If roleArn is not defined, rejects with an error.
@@ -123,13 +125,13 @@ async function getCredentials(roleArn, region) {
  *
  * @param {String} bucket The bucket where files will be written to.
  *
- * @param {String} prefix The prefix for the file in the assocaited bucket.
- *
  * @param {JSON} resultsToWrite The results to be persisted in S3.
+ *
+ * @param {String} [prefix] The prefix for the file in the assocaited bucket.
  *
  * @returns a list or promises for write to S3.
  */
-async function writeToS3(bucket, prefix, resultsToWrite) {
+async function writeToS3(bucket, resultsToWrite, prefix) {
     var s3 = new AWS.S3({apiVersion: 'latest'});
     var bucketPrefix = prefix || ""
     if(bucket && resultsToWrite) {
