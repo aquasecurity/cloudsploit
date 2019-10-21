@@ -18,7 +18,7 @@ var output = require('./postprocess/output.js')
  * @param callback callback to be ran upon completion.
  */
 var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, GoogleConfig, settings, outputHandler, callback) {
-    var serviceCollection
+    var serviceCollection = {}
     var complianceArgs = process.argv
         .filter(function (arg) {
             return arg.startsWith('--compliance=')

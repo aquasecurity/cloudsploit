@@ -5,23 +5,23 @@ module.exports = {
         return {
             outputCollector: {},
 
-            startCompliance: (plugin, pluginKey, compliance) => {
+            startCompliance: function(plugin, pluginKey, compliance) {
             },
 
-            endCompliance: (plugin, pluginKey, compliance) => {
+            endCompliance: function(plugin, pluginKey, compliance) {
             },
 
-            writeResult: (result, plugin, pluginKey) => {
+            writeResult: function (result, plugin, pluginKey) {
                 if(!this.outputCollector[plugin.title]) {
                     this.outputCollector[plugin.title] = []
                 }
                 this.outputCollector[plugin.title].push(result)
             },
 
-            close: () => {
+            close: function () {
             },
 
-            getOutput: () => {
+            getOutput: function() {
                 return this.outputCollector
             }
         }
