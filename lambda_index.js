@@ -176,19 +176,19 @@ exports.handler = async function(event, context) {
 
     //Run Primary Cloudspoit Engine//
     console.log("-Begin Calling Main Engine-")
-    var promise = Promise.fromCallback((callback) => {
+    var enginePromise = Promise.fromCallback((callback) => {
         engine(AWSConfig, AzureConfig, GitHubConfig, OracleConfig, GoogleConfig, settings, outputHandler, callback)
     })
 
-    return promise.then((collectionData) => {
+    return enginePromise.then((collectionData) => {
         var resultCollector = {};
         resultCollector.collectionData = collectionData;
         resultCollector.ResultsData = outputHandler.outputCollector;
         console.assert(resultCollector.collectionData, "No Collection Data found.")
         console.assert(resultCollector.ResultsData, "No Results Data found.")
 
-        var promises = writeToS3(process.env.RESULT_BUCKET, process.env.RESULT_PREFIX, resultCollector);
-        return Promise.all(promises)
+        var outputPromises = writeToS3(process.env.RESULT_BUCKET, process.env.RESULT_PREFIX, resultCollector);
+        return Promise.all(outputPromises)
     }).catch((error)=> {
         console.log(error)
     })
