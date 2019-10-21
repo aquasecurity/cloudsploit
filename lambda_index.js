@@ -16,7 +16,6 @@ const Promise = require('bluebird');
 async function getSecret(secretManagerKey, region) {
     var secretManager = new AWS.SecretsManager({region: region});
     var data = await secretManager.getSecretValue({SecretId: secretManagerKey}).promise();
-    console.log("parsing: " + data.SecretString )
     return data.SecretString ? JSON.parse(data.SecretString) : {};
 }
 
@@ -36,7 +35,7 @@ async function getSecret(secretManagerKey, region) {
  * @throws Any misconfiguration will result in an error being thrown.
  */
 async function parseInput(event, partition, region) {
-    console.log("--Begin Parsing of Incoming Event--")
+    console.log("--Begin Parsing of Incoming Event--");
     var allConfigurations;
     var secretPrefix = process.env.SECRET_PREFIX;
     var defaultRoleName = process.env.DEFAULT_ROLE_NAME;
@@ -52,18 +51,18 @@ async function parseInput(event, partition, region) {
 
     //Expected events are SNS and Cloudwatch, could add other events here if needed.
     if(event.Records && event.Records[0].Sns) {
-        console.log("---SNS Event Trigger---")
+        console.log("---SNS Event Trigger---");
         allConfigurations = JSON.parse(event.Records[0].Sns.Message);
     } else if(event.detail) {
-        console.log("---CloudWatch Event Trigger---")
+        console.log("---CloudWatch Event Trigger---");
         allConfigurations = event.detail;
     }
-    console.assert(allConfigurations, "Configurations not found from incoming Event.")
+    console.assert(allConfigurations, "Configurations not found from incoming Event.");
 
     var serviceCount = 0;
     for (service in allConfigurations) {
         if(service in expectedServices) {
-            console.log("---Found Service ",service.toUpperCase() ,"---")
+            console.log("---Found Service ",service.toUpperCase() ,"---");
             serviceCount++;
             if(serviceCount > 1) throw (new Error("Multiple Services in Incoming Event."));
             if(service === 'aws') {
@@ -96,26 +95,33 @@ async function parseInput(event, partition, region) {
  *
  * @param {String} region The region where the credentials are located.
  *
+ * @param {String} [externalID] The externalID used for role assumption.
+ *
  * @returns Promise containing the requested AWS Configuration.
  *
  * @throws If roleArn is not defined, rejects with an error.
  */
-async function getCredentials(roleArn, region) {
-    console.log("---Getting Credentials for AWS Configuration---")
+async function getCredentials(roleArn, region, externalId) {
+    console.log("---Getting Credentials for AWS Configuration---");
     return new Promise(function(resolve, reject) {
-        if(roleArn) {
-            var creds = new AWS.ChainableTemporaryCredentials({params:{RoleArn: roleArn}});
-
-            config = {
-                'accessKeyId' : creds.service.config.credentials.accessKeyId,
-                'secretAccessKey' : creds.service.config.credentials.secretAccessKey,
-                'sessionToken' : creds.service.config.credentials.sessionToken,
-                'region': region
-            };
-            resolve(config)
-        } else {
+        if(!roleArn) {
             reject(new Error("roleArn is not defined from incoming event."));
         }
+        var STSParams = {
+            RoleArn: roleArn
+        };
+        if(externalId) {
+            STSParams.ExternalId = externalId
+        };
+        var creds = new AWS.ChainableTemporaryCredentials({params:STSParams});
+
+        var config = {
+            'accessKeyId' : creds.service.config.credentials.accessKeyId,
+            'secretAccessKey' : creds.service.config.credentials.secretAccessKey,
+            'sessionToken' : creds.service.config.credentials.sessionToken,
+            'region': region
+        };
+        resolve(config);
     })
 }
 
@@ -133,25 +139,25 @@ async function getCredentials(roleArn, region) {
  */
 async function writeToS3(bucket, resultsToWrite, prefix) {
     var s3 = new AWS.S3({apiVersion: 'latest'});
-    var bucketPrefix = prefix || ""
+    var bucketPrefix = prefix || "";
     if(bucket && resultsToWrite) {
-        console.log("-Writing Output to S3-")
+        console.log("-Writing Output to S3-");
         var dt = new Date();
         var objectName = [dt.getFullYear(), dt.getMonth() + 1, dt.getDate() + '.json'].join( '-' );
         var key = [bucketPrefix, objectName].join('/');
         var latestKey = [bucketPrefix, "latest.json"].join('/');
         var results = JSON.stringify(resultsToWrite, null, 2);
 
-        var promises = []
+        var promises = [];
         promises.push(s3.putObject({Bucket: bucket, Key: key, Body: results}).promise());
         promises.push(s3.putObject({Bucket: bucket, Key: latestKey, Body: results}).promise());
 
-        return promises
+        return promises;
     }
 }
 
 exports.handler = async function(event, context) {
-    console.log("-Begin CloudSploit Lambda-")
+    console.log("-Begin CloudSploit Lambda-");
     try {
         //Object Initialization//
         var partition = context.invokedFunctionArn.split(':')[1];
@@ -160,7 +166,7 @@ exports.handler = async function(event, context) {
         var outputHandler = output.create();
 
         //Settings Configuration//
-        console.log("--Configuring Settings--")
+        console.log("--Configuring Settings--");
         var settings = configurations.settings || {};
         settings.china = partition==='aws-cn';
         settings.govcloud = partition==='aws-us-gov';
@@ -170,34 +176,38 @@ exports.handler = async function(event, context) {
         //TODO: consider supporting supression based on incoming settings.
 
         //Config Gathering//
-        console.log("--Gathering Configurations--")
-        var AWSConfig = configurations.aws.roleArn ? await getCredentials(configurations.aws.roleArn, region) : null;
+        console.log("--Gathering Configurations--");
+        var AWSConfig = configurations.aws.roleArn
+            ? (configurations.aws.externalId
+            ? await getCredentials(configurations.aws.roleArn, region, configurations.aws.externalId)
+            : await getCredentials(configurations.aws.roleArn, region))
+            : null;
         var AzureConfig = configurations.azure || null;
         var GoogleConfig = configurations.gcp || null;
         var GitHubConfig = configurations.github || null;
         var OracleConfig = configurations.oracle || null;
     } catch(err) {
         //This is mainly here in the case of implementing more robust error handling.
-        console.log(err)
-        throw(err)
+        console.log(err);
+        throw(err);
     }
 
     //Run Primary Cloudspoit Engine//
     console.log("-Begin Calling Main Engine-")
     var enginePromise = Promise.fromCallback((callback) => {
-        engine(AWSConfig, AzureConfig, GitHubConfig, OracleConfig, GoogleConfig, settings, outputHandler, callback)
+        engine(AWSConfig, AzureConfig, GitHubConfig, OracleConfig, GoogleConfig, settings, outputHandler, callback);
     })
 
     return enginePromise.then((collectionData) => {
         var resultCollector = {};
         resultCollector.collectionData = collectionData;
         resultCollector.ResultsData = outputHandler.getOutput();
-        console.assert(resultCollector.collectionData, "No Collection Data found.")
-        console.assert(resultCollector.ResultsData, "No Results Data found.")
+        console.assert(resultCollector.collectionData, "No Collection Data found.");
+        console.assert(resultCollector.ResultsData, "No Results Data found.");
 
-        var outputPromises = writeToS3(process.env.RESULT_BUCKET, process.env.RESULT_PREFIX, resultCollector);
-        return Promise.all(outputPromises)
+        var outputPromises = writeToS3(process.env.RESULT_BUCKET, resultCollector, process.env.RESULT_PREFIX);
+        return Promise.all(outputPromises);
     }).catch((error)=> {
-        console.log(error)
-    })
+        console.log(error);
+    });
 }
