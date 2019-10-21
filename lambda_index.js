@@ -40,19 +40,22 @@ async function parseInput(event, partition, region) {
     var allConfigurations;
     var secretPrefix = process.env.SECRET_PREFIX;
     var defaultRoleName = process.env.DEFAULT_ROLE_NAME;
+
     //Anything in these arrays will be required to be found in the CredentialID Secret Manager.
     var expectedServices = {
         'aws' : [],
-        'azure': [],
-        'gcp': [],
+        'azure': ["KeyValue"],
+        'gcp': ["private_key"],
         'github': [],
-        'oracle': []
+        'oracle': ["keyValue","keyFingerprint"]
     };
 
     //Expected events are SNS and Cloudwatch, could add other events here if needed.
     if(event.Records && event.Records[0].Sns) {
+        console.log("---SNS Event Trigger---")
         allConfigurations = JSON.parse(event.Records[0].Sns.Message);
     } else if(event.detail) {
+        console.log("---CloudWatch Event Trigger---")
         allConfigurations = event.detail;
     }
     console.assert(allConfigurations, "Configurations not found from incoming Event.")
@@ -63,7 +66,7 @@ async function parseInput(event, partition, region) {
             console.log("---Found Service ",service.toUpperCase() ,"---")
             serviceCount++;
             if(serviceCount > 1) throw (new Error("Multiple Services in Incoming Event."));
-            if(service == 'aws') {
+            if(service === 'aws') {
                 //If account_id in aws config, then replace it with roleArn.
                 if (allConfigurations.aws.account_id) {
                     allConfigurations.aws.roleArn = ["arn",partition,"iam","",allConfigurations.aws.account_id,("role/" + defaultRoleName)].join(':');
@@ -81,7 +84,7 @@ async function parseInput(event, partition, region) {
         }
     }
 
-    if(serviceCount == 0) throw (new Error("No services provided in Incoming Event."));
+    if(serviceCount === 0) throw (new Error("No services provided in Incoming Event."));
     return allConfigurations;
 }
 
@@ -128,12 +131,13 @@ async function getCredentials(roleArn, region) {
  */
 async function writeToS3(bucket, prefix, resultsToWrite) {
     var s3 = new AWS.S3({apiVersion: 'latest'});
-    if(prefix && bucket && resultsToWrite) {
+    var bucketPrefix = prefix ? prefix : ""
+    if(bucket && resultsToWrite) {
         console.log("-Writing Output to S3-")
         var dt = new Date();
         var objectName = [dt.getFullYear(), dt.getMonth() + 1, dt.getDate() + '.json'].join( '-' );
-        var key = [prefix, objectName].join('/');
-        var latestKey = [prefix, "latest.json"].join('/');
+        var key = [bucketPrefix, objectName].join('/');
+        var latestKey = [bucketPrefix, "latest.json"].join('/');
         var results = JSON.stringify(resultsToWrite, null, 2);
 
         var promises = []
@@ -156,8 +160,8 @@ exports.handler = async function(event, context) {
         //Settings Configuration//
         console.log("--Configuring Settings--")
         var settings = configurations.settings ? configurations.settings : {};
-        settings.china = partition=='aws-cn';
-        settings.govcloud = partition=='aws-us-gov';
+        settings.china = partition==='aws-cn';
+        settings.govcloud = partition==='aws-us-gov';
         settings.paginate = settings.paginate ? settings.paginate : true;
         settings.debugTime = settings.debugTime ? settings.debugTime : false;
 
@@ -184,7 +188,7 @@ exports.handler = async function(event, context) {
     return enginePromise.then((collectionData) => {
         var resultCollector = {};
         resultCollector.collectionData = collectionData;
-        resultCollector.ResultsData = outputHandler.outputCollector;
+        resultCollector.ResultsData = outputHandler.getOutput();
         console.assert(resultCollector.collectionData, "No Collection Data found.")
         console.assert(resultCollector.ResultsData, "No Results Data found.")
 

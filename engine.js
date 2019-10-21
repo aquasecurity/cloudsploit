@@ -18,7 +18,7 @@ var output = require('./postprocess/output.js')
  * @param callback callback to be ran upon completion.
  */
 var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, GoogleConfig, settings, outputHandler, callback) {
-    var pluginCollector
+    var serviceCollector
     var complianceArgs = process.argv
         .filter(function (arg) {
             return arg.startsWith('--compliance=')
@@ -132,7 +132,7 @@ var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, Googl
         serviceProviderObj.collector(serviceProviderObj.config, Object.assign({api_calls: serviceProviderObj.apiCalls, skip_regions: serviceProviderObj.skipRegions}, settings), function (err, collection) {
             if (err || !collection) return console.log('ERROR: Unable to obtain API metadata');
 
-            pluginCollector = collection
+            serviceCollector = collection
 
             console.log('');
             console.log('-----------------------');
@@ -192,7 +192,9 @@ var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, Googl
     }, function (err, results) {
         // console.log(JSON.stringify(collection, null, 2));
         outputHandler.close()
-        callback(null, pluginCollector)
+        if(callback) {
+            callback(null, serviceCollector)
+        }
         if (useStatusExitCode) {
             process.exitCode = Math.max(results)
         }
