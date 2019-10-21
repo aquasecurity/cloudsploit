@@ -41,7 +41,7 @@ var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, Googl
     var suppressionFilter = suppress.create(process.argv)
 
     // Initialize the output handler
-    outputHandler = outputHandler ? outputHandler : output.create(process.argv)
+    outputHandler = outputHandler || output.create(process.argv)
 
     // The original cloudsploit always has a 0 exit code. With this option, we can have
     // the exit code depend on the results (useful for integration with CI systems)

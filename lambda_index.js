@@ -131,7 +131,7 @@ async function getCredentials(roleArn, region) {
  */
 async function writeToS3(bucket, prefix, resultsToWrite) {
     var s3 = new AWS.S3({apiVersion: 'latest'});
-    var bucketPrefix = prefix ? prefix : ""
+    var bucketPrefix = prefix || ""
     if(bucket && resultsToWrite) {
         console.log("-Writing Output to S3-")
         var dt = new Date();
@@ -159,22 +159,23 @@ exports.handler = async function(event, context) {
 
         //Settings Configuration//
         console.log("--Configuring Settings--")
-        var settings = configurations.settings ? configurations.settings : {};
+        var settings = configurations.settings || {};
         settings.china = partition==='aws-cn';
         settings.govcloud = partition==='aws-us-gov';
-        settings.paginate = settings.paginate ? settings.paginate : true;
-        settings.debugTime = settings.debugTime ? settings.debugTime : false;
+        settings.paginate = settings.paginate || true;
+        settings.debugTime = settings.debugTime || false;
 
         //TODO: consider supporting supression based on incoming settings.
 
         //Config Gathering//
         console.log("--Gathering Configurations--")
-        var AWSConfig = configurations.aws ? await getCredentials(configurations.aws.roleArn, region) : null;
-        var AzureConfig = configurations.azure ? configurations.azure : null;
-        var GoogleConfig = configurations.gcp ? configurations.gcp : null;
-        var GitHubConfig = configurations.github ? configurations.github : null;
-        var OracleConfig = configurations.oracle ? configurations.oracle : null;
+        var AWSConfig = configurations.aws.roleArn ? await getCredentials(configurations.aws.roleArn, region) : null;
+        var AzureConfig = configurations.azure || null;
+        var GoogleConfig = configurations.gcp || null;
+        var GitHubConfig = configurations.github || null;
+        var OracleConfig = configurations.oracle || null;
     } catch(err) {
+        //This is mainly here in the case of implementing more robust error handling.
         console.log(err)
         throw(err)
     }
