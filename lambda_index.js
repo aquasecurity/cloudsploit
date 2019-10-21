@@ -15,7 +15,6 @@ const Promise = require('bluebird');
  */
 async function getSecret(secretManagerKey, region) {
     var secretManager = new AWS.SecretsManager({region: region});
-    //TODO: handle errors
     var data = await secretManager.getSecretValue({SecretId: secretManagerKey}).promise();
     console.log("parsing: " + data.SecretString )
     return data.SecretString ? JSON.parse(data.SecretString) : {};
@@ -37,10 +36,11 @@ async function getSecret(secretManagerKey, region) {
  * @throws Any misconfiguration will result in an error being thrown.
  */
 async function parseInput(event, partition, region) {
-    console.log("starting parse")
+    console.log("--Begin Parsing of Incoming Event--")
     var allConfigurations;
     var secretPrefix = process.env.SECRET_PREFIX;
     var defaultRoleName = process.env.DEFAULT_ROLE_NAME;
+    //Anything in these arrays will be required to be found in the CredentialID Secret Manager.
     var expectedServices = {
         'aws' : [],
         'azure': [],
@@ -55,10 +55,12 @@ async function parseInput(event, partition, region) {
     } else if(event.detail) {
         allConfigurations = event.detail;
     }
+    console.assert(allConfigurations, "Configurations not found from incoming Event.")
 
     var serviceCount = 0;
     for (service in allConfigurations) {
         if(service in expectedServices) {
+            console.log("---Found Service ",service.toUpperCase() ,"---")
             serviceCount++;
             if(serviceCount > 1) throw (new Error("Multiple Services in Incoming Event."));
             if(service == 'aws') {
@@ -89,24 +91,27 @@ async function parseInput(event, partition, region) {
  *
  * @param {String} roleArn The ARN for the role to get credentials for.
  *
- * @returns The configuration for AWSConfig.
+ * @returns Promise containing the requested AWS Configuration.
  *
- * @throws If roleArn is not defined, throw an error.
+ * @throws If roleArn is not defined, rejects with an error.
  */
-function getCredentials(roleArn, region) {
-    if(roleArn) {
-        var creds = new AWS.ChainableTemporaryCredentials({params:{RoleArn: roleArn}});
+async function getCredentials(roleArn, region) {
+    console.log("---Getting Credentials for AWS Configuration---")
+    return new Promise(function(resolve, reject) {
+        if(roleArn) {
+            var creds = new AWS.ChainableTemporaryCredentials({params:{RoleArn: roleArn}});
 
-        config = {
-            'accessKeyId' : creds.service.config.credentials.accessKeyId,
-            'secretAccessKey' : creds.service.config.credentials.secretAccessKey,
-            'sessionToken' : creds.service.config.credentials.sessionToken,
-            'region': region
-        };
-        return config;
-    } else {
-        throw (new Error("roleArn is not defined from incoming event."));
-    }
+            config = {
+                'accessKeyId' : creds.service.config.credentials.accessKeyId,
+                'secretAccessKey' : creds.service.config.credentials.secretAccessKey,
+                'sessionToken' : creds.service.config.credentials.sessionToken,
+                'region': region
+            };
+            resolve(config)
+        } else {
+            reject(new Error("roleArn is not defined from incoming event."));
+        }
+    })
 }
 
 /***
@@ -118,18 +123,19 @@ function getCredentials(roleArn, region) {
  * @param {String} prefix The prefix for the file in the assocaited bucket.
  *
  * @param {JSON} resultsToWrite The results to be persisted in S3.
+ *
+ * @returns a list or promises for write to S3.
  */
 async function writeToS3(bucket, prefix, resultsToWrite) {
     var s3 = new AWS.S3({apiVersion: 'latest'});
     if(prefix && bucket && resultsToWrite) {
-        console.log("---writing output to S3---")
+        console.log("-Writing Output to S3-")
         var dt = new Date();
         var objectName = [dt.getFullYear(), dt.getMonth() + 1, dt.getDate() + '.json'].join( '-' );
         var key = [prefix, objectName].join('/');
         var latestKey = [prefix, "latest.json"].join('/');
         var results = JSON.stringify(resultsToWrite, null, 2);
 
-        //TODO: handle errors
         var promises = []
         promises.push(s3.putObject({Bucket: bucket, Key: key, Body: results}).promise());
         promises.push(s3.putObject({Bucket: bucket, Key: latestKey, Body: results}).promise());
@@ -139,41 +145,48 @@ async function writeToS3(bucket, prefix, resultsToWrite) {
 }
 
 exports.handler = async function(event, context) {
-    //TODO: Logging
+    console.log("-Begin CloudSploit Lambda-")
+    try {
+        //Object Initialization//
+        var partition = context.invokedFunctionArn.split(':')[1];
+        var region = context.invokedFunctionArn.split(':')[3];
+        var configurations = await parseInput(event, partition, region);
+        var outputHandler = output.create();
 
-    //Object Initialization//
-    var partition = context.invokedFunctionArn.split(':')[1];
-    var region = context.invokedFunctionArn.split(':')[3];
-    //TODO: Get errors thrown from promise
-    var configurations = await parseInput(event, partition, region);
-    var outputHandler = output.create();
+        //Settings Configuration//
+        console.log("--Configuring Settings--")
+        var settings = configurations.settings ? configurations.settings : {};
+        settings.china = partition=='aws-cn';
+        settings.govcloud = partition=='aws-us-gov';
+        settings.paginate = settings.paginate ? settings.paginate : true;
+        settings.debugTime = settings.debugTime ? settings.debugTime : false;
 
-    //Settings Configuration//
-    var settings = configurations.settings ? configurations.settings : {};
-    settings.china = partition=='aws-cn';
-    settings.govcloud = partition=='aws-us-gov';
-    settings.paginate = settings.paginate ? settings.paginate : true;
-    settings.debugTime = settings.debugTime ? settings.debugTime : false;
+        //TODO: consider supporting supression based on incoming settings.
 
-    //TODO: consider supporting supression based on incoming settings.
-
-    //Config Gathering//
-    var AWSConfig = configurations.aws ? getCredentials(configurations.aws.roleArn, region) : null;
-    var AzureConfig = configurations.azure ? configurations.azure : null;
-    var GoogleConfig = configurations.gcp ? configurations.gcp : null;
-    var GitHubConfig = configurations.github ? configurations.github : null;
-    var OracleConfig = configurations.oracle ? configurations.oracle : null;
+        //Config Gathering//
+        console.log("--Gathering Configurations--")
+        var AWSConfig = configurations.aws ? await getCredentials(configurations.aws.roleArn, region) : null;
+        var AzureConfig = configurations.azure ? configurations.azure : null;
+        var GoogleConfig = configurations.gcp ? configurations.gcp : null;
+        var GitHubConfig = configurations.github ? configurations.github : null;
+        var OracleConfig = configurations.oracle ? configurations.oracle : null;
+    } catch(err) {
+        console.log(err)
+    }
 
     //Run Primary Cloudspoit Engine//
+    console.log("-Begin Calling Main Engine-")
     var promise = Promise.fromCallback((callback) => {
         engine(AWSConfig, AzureConfig, GitHubConfig, OracleConfig, GoogleConfig, settings, outputHandler, callback)
     })
 
     return promise.then((collectionData) => {
-        console.log("writing!!")
         var resultCollector = {};
         resultCollector.collectionData = collectionData;
         resultCollector.ResultsData = outputHandler.outputCollector;
+        console.assert(resultCollector.collectionData, "No Collection Data found.")
+        console.assert(resultCollector.ResultsData, "No Results Data found.")
+
         var promises = writeToS3(process.env.RESULT_BUCKET, process.env.RESULT_PREFIX, resultCollector);
         return Promise.all(promises)
     }).catch((error)=> {
