@@ -177,11 +177,10 @@ exports.handler = async function(event, context) {
 
         //Config Gathering//
         console.log("--Gathering Configurations--");
-        var AWSConfig = configurations.aws.roleArn
-            ? (configurations.aws.externalId
-            ? await getCredentials(configurations.aws.roleArn, region, configurations.aws.externalId)
-            : await getCredentials(configurations.aws.roleArn, region))
-            : null;
+        var AWSConfig
+        if(configurations.aws.roleArn) {
+            var AWSConfig = configurations.aws.externalId ? await getCredentials(configurations.aws.roleArn, region, configurations.aws.externalId) : await getCredentials(configurations.aws.roleArn, region);
+        }
         var AzureConfig = configurations.azure || null;
         var GoogleConfig = configurations.gcp || null;
         var GitHubConfig = configurations.github || null;

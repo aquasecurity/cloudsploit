@@ -73,7 +73,7 @@ Resources:
       MemorySize: 3008
       Handler: lambda_index.handler
       Runtime: nodejs10.x
-      CodeUri: s3://trek10-sam/b9d43be73d3d5a2eaf3b03e96ce4009c
+      CodeUri: s3://trek10-sam/35ca577dd130bddd5110511241fb34ed
       Environment:
         Variables:
           DEFAULT_ROLE_NAME:
