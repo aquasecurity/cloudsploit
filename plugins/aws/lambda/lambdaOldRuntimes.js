@@ -18,8 +18,11 @@ module.exports = {
         var deprecatedRuntimes = [
             { 'id':'nodejs', 'name': 'Node.js 0.10', 'endOfLifeDate': '2016-10-31' },
             { 'id':'nodejs4.3', 'name': 'Node.js 4.3', 'endOfLifeDate': '2018-04-30' },
-            { 'id':'nodejs4.3-edge', 'name': 'Node.js 4.3', 'endOfLifeDate': '2018-04-30' },
-            { 'id':'dotnetcore2.0', 'name': '.Net Core 2.0', 'endOfLifeDate': '2018-10-01' }
+            { 'id':'nodejs4.3-edge', 'name': 'Node.js 4.3 Edge', 'endOfLifeDate': '2018-04-30' },
+            { 'id':'nodejs6.10', 'name': 'Node.js 6.10', 'endOfLifeDate': '2019-04-30' },
+            { 'id':'nodejs8.10', 'name': 'Node.js 8.10', 'endOfLifeDate': '2019-12-31' },
+            { 'id':'dotnetcore2.0', 'name': '.Net Core 2.0', 'endOfLifeDate': '2019-04-30' },
+            { 'id':'dotnetcore1.0', 'name': '.Net Core 1.0', 'endOfLifeDate': '2019-06-27' }
         ];
 
         async.each(regions.lambda, function(region, rcb){
