@@ -179,7 +179,7 @@ exports.handler = async function(event, context) {
         console.log("--Gathering Configurations--");
         var AWSConfig
         if(configurations.aws.roleArn) {
-            var AWSConfig = configurations.aws.externalId ? await getCredentials(configurations.aws.roleArn, region, configurations.aws.externalId) : await getCredentials(configurations.aws.roleArn, region);
+            AWSConfig = configurations.aws.externalId ? await getCredentials(configurations.aws.roleArn, region, configurations.aws.externalId) : await getCredentials(configurations.aws.roleArn, region);
         }
         var AzureConfig = configurations.azure || null;
         var GoogleConfig = configurations.gcp || null;
