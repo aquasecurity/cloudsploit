@@ -22,7 +22,12 @@ module.exports = {
             { 'id':'nodejs6.10', 'name': 'Node.js 6.10', 'endOfLifeDate': '2019-04-30' },
             { 'id':'nodejs8.10', 'name': 'Node.js 8.10', 'endOfLifeDate': '2019-12-31' },
             { 'id':'dotnetcore2.0', 'name': '.Net Core 2.0', 'endOfLifeDate': '2019-04-30' },
-            { 'id':'dotnetcore1.0', 'name': '.Net Core 1.0', 'endOfLifeDate': '2019-06-27' }
+            { 'id':'dotnetcore1.0', 'name': '.Net Core 1.0', 'endOfLifeDate': '2019-06-27' },
+            { 'id':'python2.7', 'name': 'Python 2.7', 'endOfLifeDate': '2020-01-01' },
+            { 'id':'python3.5', 'name': 'Python 3.5', 'endOfLifeDate': '2020-09-13' },
+            { 'id':'python3.6', 'name': 'Python 3.6', 'endOfLifeDate': '2021-12-23' },
+            { 'id':'python3.7', 'name': 'Python 3.7', 'endOfLifeDate': '2023-06-27' },
+            { 'id':'python3.8', 'name': 'Python 3.8', 'endOfLifeDate': '2024-10-01' },
         ];
 
         async.each(regions.lambda, function(region, rcb){
