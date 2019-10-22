@@ -1,0 +1,415 @@
+{
+   "audit": {
+       "configuration": {
+           "get": {
+               "allowedQueryStrings": [
+                   "compartmentId"
+               ],
+               "method": "GET",
+               "path": "configuration",
+               "endpoint": "audit.{{region}}.oraclecloud.com"
+           }
+       }
+   },
+    "autoscale": {
+        "autoscaleConfiguration": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId", "displayName", "limit", "page", "sortBy", "sortOrder", "lifecycleState"
+                ],
+                "method": "GET",
+                "path": "autoScalingConfigurations",
+                "endpoint": "autoscaling.{{region}}.oci.oraclecloud.com"
+            }
+        }
+    },
+    "core": {
+        "instance": {
+            "list": {
+                "allowedQueryStrings": [
+                    "availabilityDomain", "compartmentId", "displayName", "limit", "page", "sortBy", "sortOrder", "lifecycleState"
+                ],
+                "method": "GET",
+                "path": "instances",
+                "endpoint": "iaas.{{region}}.oraclecloud.com"
+            }
+        },
+        "instancePool": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId", "displayName", "limit", "page", "sortBy", "sortOrder", "lifecycleState"
+                ],
+                "method": "GET",
+                "path": "instancePools",
+                "endpoint": "iaas.{{region}}.oraclecloud.com"
+            }
+        },
+        "publicIp": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId", "availabilityDomain", "limit", "page", "scope", "lifetime"
+                ],
+                "method": "GET",
+                "path": "publicIps",
+                "endpoint": "iaas.{{region}}.oraclecloud.com"
+            }
+        },
+        "securityList": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId", "vcnId", "limit", "page", "displayName", "sortBy", "sortOrder", "lifecycleState"
+                ],
+                "method": "GET",
+                "path": "securityLists",
+                "endpoint": "iaas.{{region}}.oraclecloud.com"
+            }
+        },
+        "subnet": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId", "vcnId", "limit", "page", "displayName", "sortBy", "sortOrder", "lifecycleState"
+                ],
+                "method": "GET",
+                "path": "subnets",
+                "endpoint": "iaas.{{region}}.oraclecloud.com"
+            }
+        },
+        "vcn": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId", "displayname", "limit", "page", "sortBy", "sortOrder", "lifecycleState"
+                ],
+                "method": "GET",
+                "path": "vcns",
+                "endpoint": "iaas.{{region}}.oraclecloud.com"
+            },
+            "get": {
+                "encodedGet": "vcnId",
+                "method": "GET",
+                "path": "vcns",
+                "endpoint": "iaas.{{region}}.oraclecloud.com"
+            }
+        },
+        "networkSecurityGroup": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId", "vcnId", "displayName", "sortBy", "sortOrder", "lifecycleState", "page", "limit"
+                ],
+                "method": "GET",
+                "path": "networkSecurityGroups",
+                "endpoint": "iaas.{{region}}.oraclecloud.com"
+            }
+        },
+        "securityRule": {
+            "list": {
+                "encodedGet": "networkSecurityGroupId",
+                "method": "GET",
+                "path": "networkSecurityGroups",
+                "secondaryPath": "securityRules",
+                "endpoint": "iaas.{{region}}.oraclecloud.com"
+            }
+        },
+        "bootVolume": {
+            "list": {
+                "allowedQueryStrings": [
+                    "availabilityDomain","compartmentId", "displayName", "limit", "page", "sortBy", "sortOrder", "lifecycleState", "volumeGroupId"
+                ],
+                "method": "GET",
+                "path": "bootVolumes",
+                "endpoint": "iaas.{{region}}.oraclecloud.com"
+            }
+        },
+        "volume": {
+            "list": {
+                "allowedQueryStrings": [
+                    "availabilityDomain","compartmentId", "displayName", "limit", "page", "sortBy", "sortOrder", "lifecycleState", "volumeGroupId"
+                ],
+                "method": "GET",
+                "path": "volumes",
+                "endpoint": "iaas.{{region}}.oraclecloud.com"
+            }
+        },
+        "volumeBackup": {
+            "list": {
+                "allowedQueryStrings": [
+                    "volumeId", "compartmentId", "displayName", "limit", "page", "sortBy", "sortOrder", "lifecycleState", "sourceVolumeBackupId"
+                ],
+                "method": "GET",
+                "path": "volumeBackups",
+                "endpoint": "iaas.{{region}}.oraclecloud.com"
+                }
+        },
+        "bootVolumeAttachment": {
+            "list": {
+                "allowedQueryStrings": [
+                    "availabilityDomain", "compartmentId", "limit", "page", "instanceId", "volumeId"
+                ],
+                "method": "GET",
+                "path": "bootVolumeAttachments",
+                "endpoint": "iaas.{{region}}.oraclecloud.com"
+            }
+        },
+        "bootVolumeBackup": {
+            "list": {
+                "allowedQueryStrings": [
+                    "displayName", "compartmentId", "limit", "page", "instanceId", "sortOrder", "sortBy", "bootVolumeId", "lifecycleState"
+                ],
+                "method": "GET",
+                "path": "bootVolumeBackups",
+                "endpoint": "iaas.{{region}}.oraclecloud.com"
+            }
+        },
+        "volumeBackupPolicy": {
+            "list": {
+                "allowedQueryStrings": [
+                    "limit", "page"
+                ],
+                "method": "GET",
+                "path": "volumeBackupPolicies",
+                "endpoint": "iaas.{{region}}.oraclecloud.com"
+            }
+        },
+        "volumeBackupPolicyAssignment": {
+            "volume": {
+                "allowedQueryStrings": [
+                    "limit", "page", "assetId"
+                ],
+                "method": "GET",
+                "path": "volumeBackupPolicyAssignments",
+                "endpoint": "iaas.{{region}}.oraclecloud.com"
+            },
+            "bootVolume": {
+                "allowedQueryStrings": [
+                    "limit", "page", "assetId"
+                ],
+                "method": "GET",
+                "path": "volumeBackupPolicyAssignments",
+                "endpoint": "iaas.{{region}}.oraclecloud.com"
+			}
+        },
+        "volumeGroup": {
+            "list": {
+                "allowedQueryStrings": [
+                    "availabilityDomain","compartmentId", "displayName", "limit", "page", "sortBy", "sortOrder", "lifecycleState"
+                ],
+                "method": "GET",
+                "path": "volumeGroups",
+                "endpoint": "iaas.{{region}}.oraclecloud.com"
+            }
+        },
+        "volumeGroupBackup": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId",
+                    "displayName",
+                    "limit",
+                    "page",
+                    "sortBy",
+                    "sortOrder",
+                    "volumeGroupId"
+                ],
+                "method": "GET",
+                "path": "volumeGroupBackups",
+                "endpoint": "iaas.{{region}}.oraclecloud.com"
+            }
+        }
+    },
+    "database": {
+        "database": {
+            "list": {
+                "allowedQueryStrings": [
+                    "dbHomeId", "compartmentId", "limit", "page", "sortBy", "sortOrder", "lifecycleState"
+                ],
+                "method": "GET",
+                "path": "databases",
+                "endpoint": "database.{{region}}.oraclecloud.com"
+            }
+        },
+        "dbHome": {
+            "list": {
+                "allowedQueryStrings": [
+                    "dbSystemId", "compartmentId", "limit", "page", "sortBy", "sortOrder", "lifecycleState", "displayName"
+                ],
+                "method": "GET",
+                "path": "dbHomes",
+                "endpoint": "database.{{region}}.oraclecloud.com"
+            }
+        },
+        "dbSystem": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId", "limit", "page", "backupId", "sortBy", "sortOrder", "lifecycleState", "availabilityDomain","displayName"
+                ],
+                "method": "GET",
+                "path": "dbSystems",
+                "endpoint": "database.{{region}}.oraclecloud.com"
+            }
+        }
+    },
+    "fileStorage": {
+        "exprt": {
+            "get": {
+                "encodedGet": "exportId",
+                "method": "GET",
+                "path": "exports",
+                "endpoint": "filestorage.{{region}}.oraclecloud.com"
+            }
+        },
+        "exportSummary": {
+            "list": {
+                "allowedQueryStrings": [
+                    "exportSetId", "fileSystemId", "id", "compartmentId", "limit", "page", "sortBy", "sortOrder", "lifecycleState"
+                ],
+                "method": "GET",
+                "path": "exports",
+                "endpoint": "filestorage.{{region}}.oraclecloud.com"
+            }
+        }
+    },
+    "iam": {
+        "availabilityDomain": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId"
+                ],
+                "method": "GET",
+                "path": "availabilityDomains",
+                "endpoint": "identity.{{region}}.oraclecloud.com"
+            }
+        },
+        "authenticationPolicy": {
+            "get": {
+                "encodedGet": "compartmentId",
+                "method": "GET",
+                "path": "authenticationPolicies",
+                "endpoint": "identity.{{region}}.oraclecloud.com"
+            }
+        },
+        "compartment": {
+            "get": {
+                "encodedGet": "compartmentId",
+                "method": "GET",
+                "path": "compartments",
+                "endpoint": "identity.{{region}}.oraclecloud.com"
+            }
+        },
+        "group": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId", "page", "limit"
+                ],
+                "method": "GET",
+                "path": "groups",
+                "endpoint": "identity.{{region}}.oraclecloud.com"
+            }
+        },
+        "policy": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId", "page", "limit"
+                ],
+                "method": "GET",
+                "path": "policies",
+                "endpoint": "identity.{{region}}.oraclecloud.com"
+            }
+        },
+        "regionSubscription": {
+            "list": {
+                "encodedGet": "tenancyId",
+                "method": "GET",
+                "path": "tenancies",
+                "secondaryPath": "regionSubscriptions",
+                "endpoint": "identity.{{region}}.oraclecloud.com"
+            }
+        },
+        "user": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId", "page", "limit"
+                ],
+                "method": "GET",
+                "path": "users",
+                "endpoint": "identity.{{region}}.oraclecloud.com"
+            }
+        },
+        "userGroupMembership": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId", "userId", "groupId", "page", "limit"
+                ],
+                "method": "GET",
+                "path": "userGroupMemberships",
+                "endpoint": "identity.{{region}}.oraclecloud.com"
+            }
+        }
+    },
+    "loadBalance": {
+        "loadBalancer": {
+            "list": {
+                "allowedHeaders": ["opc-request-id"],
+                "allowedQueryStrings": [
+                    "compartmentId", "limit", "page", "detail", "sortBy", "sortOrder", "displayName", "lifecycleState"
+                ],
+                "method": "GET",
+                "path": "loadBalancers",
+                "endpoint": "iaas.{{region}}.oraclecloud.com"
+            }
+        }
+    },
+    "objectStore": {
+        "bucket": {
+            "list": {
+                "allowedHeaders": ["opc-client-request-id"],
+                "allowedQueryStrings": [
+                    "compartmentId", "fields", "limit", "page"
+                ],
+                "method": "GET",
+                "path": "n",
+                "encodedGet": "namespaceName",
+                "secondaryPath": "b/",
+                "endpoint": "objectstorage.{{region}}.oraclecloud.com"
+            },
+            "get": {
+                "allowedHeaders": ["opc-client-request-id", "if-match", "if-match-none"],
+                "method": "GET",
+                "path": "n",
+                "encodedGet": "namespaceName",
+                "secondaryPath": "b",
+                "secondaryEncodedGet": "bucketName",
+                "endpoint": "objectstorage.{{region}}.oraclecloud.com"
+            }
+        },
+        "preAuthenticatedRequest": {
+            "list": {
+                "allowedHeaders": ["opc-client-request-id", "if-match", "if-match-none"],
+                "method": "GET",
+                "path": "n",
+                "encodedGet": "namespaceName",
+                "secondaryPath": "b",
+                "secondaryEncodedGet": "bucketName",
+                "tertiaryPath": "p",
+                "endpoint": "objectstorage.{{region}}.oraclecloud.com"
+            }
+        }
+    },
+    "waas": {
+        "waasPolicy": {
+            "list": {
+                "allowedHeaders": ["opc-request-id"],
+                "allowedQueryStrings": [
+                    "compartmentId", "limit", "page", "sortBy", "sortOrder", "id","timeCreatedGreaterThanOrEqualTo","timeCreatedLessThan", "displayName", "lifecycleState"
+                ],
+                "method": "GET",
+                "path": "waasPolicies",
+                "endpoint": "waas.{{region}}.oraclecloud.com"
+            },
+            "get": {
+                "allowedHeaders": ["opc-request-id"],
+                "encodedGet": "waasPolicyId",
+                "method": "GET",
+                "path": "waasPolicies",
+                "endpoint": "waas.{{region}}.oraclecloud.com"
+            }
+        }
+    }
+}

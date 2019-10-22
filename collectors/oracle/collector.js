@@ -10,7 +10,7 @@
  - api_calls: (Optional) If provided, will only query these APIs.
  - Example:
  {
-     "skip_regions": ["East US", "West US"],
+     "skip_regions": ["", ""],
      "api_calls": ["EC2:describeInstances", "S3:listBuckets"]
  }
  - callback: Function to call when the collection is complete
@@ -20,11 +20,24 @@ var async = require('async');
 
 var helpers = require(__dirname + '/../../helpers/oracle');
 
+const compartmentService = {name: 'compartment', call: 'get', region: helpers.regions(false).default};
+const regionSubscriptionService = {name: 'regionSubscription', call: 'list', region: helpers.regions(false).default};
+
 var globalServices = [
     'core'
 ];
 
 var calls = {
+    // Do not use regionSubscription in Plugins
+    // It will be loaded automatically by the
+    // Oracle Collector
+    regionSubscription: {
+        list: {
+            api: "iam",
+            filterKey: ['tenancyId'],
+            filterValue: ['tenancyId'],
+        }
+    },
     vcn: {
         list: {
             api: "core",
@@ -43,6 +56,174 @@ var calls = {
     instance: {
         list: {
             api: "core",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    loadBalancer: {
+        list: {
+            api: "loadBalance",
+            restVersion: "/20170115",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId']
+        }
+    },
+    user: {
+        list: {
+            api: 'iam',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    authenticationPolicy: {
+        get: {
+            api: "iam",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    group: {
+        list: {
+            api: "iam",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    exportSummary: {
+        list: {
+            api: "fileStorage",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+            restVersion: "/20171215",
+        }
+    },
+    // Do not use compartment:get in Plugins
+    // It will be loaded automatically by the
+    // Oracle Collector
+    compartment: {
+        get: {
+            api: "iam",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    waasPolicy: {
+        list: {
+            api: "waas",
+            restVersion: "/20181116",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    policy: {
+        list: {
+            api: "iam",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    dbHome: {
+        list: {
+            api: "database",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    instancePool: {
+        list: {
+            api: "core",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    autoscaleConfiguration: {
+        list: {
+            api: "autoscale",
+            restVersion: "/20181001",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    bootVolume: {
+        list: {
+            api: 'core',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    volume: {
+        list: {
+            api: 'core',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    availabilityDomain: {
+        list: {
+            api: "iam",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    bootVolumeBackup: {
+        list: {
+            api: 'core',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    volumeBackup: {
+        list: {
+            api: 'core',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    bootVolumeAttachment: {
+        list: {
+            api: "core",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        },
+    },
+    volumeBackupPolicy: {
+        list: {
+            api: "core",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    volumeGroup: {
+        list: {
+            api: 'core',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    volumeGroupBackup: {
+        list: {
+            api: 'core',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    configuration: {
+        get: {
+            api: 'audit',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    networkSecurityGroup: {
+        list: {
+            api: 'core',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    dbSystem: {
+        list: {
+            api: "database",
             filterKey: ['compartmentId'],
             filterValue: ['compartmentId'],
         }
@@ -67,6 +248,7 @@ var postcalls = {
             reliesOnCall: ['list'],
             filterKey: ['compartmentId', 'vcnId'],
             filterValue: ['compartmentId', 'id'],
+            filterConfig: [true, false],
         }
     },
     securityList: {
@@ -78,16 +260,117 @@ var postcalls = {
             filterValue: ['compartmentId', 'id'],
             filterConfig: [true, false],
         }
+    },
+    userGroupMembership: {
+        list: {
+            api: "iam",
+            reliesOnService: ['group'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'groupId'],
+            filterValue: ['compartmentId', 'id'],
+            filterConfig: [true, false],
+        }
+    },
+    bucket: {
+        list: {
+            api: "objectStore",
+            reliesOnService: ['compartment'],
+            reliesOnCall: ['get'],
+            filterKey: ['compartmentId', 'namespaceName'],
+            filterValue: ['compartmentId', 'name'],
+            filterConfig: [true, false],
+            restVersion: ""
+        }
+    },
+    waasPolicy: {
+        get: {
+            api: "waas",
+            restVersion: "/20181116",
+            reliesOnService: ['waasPolicy'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'waasPolicyId'],
+            filterValue: ['compartmentId', 'id'],
+            filterConfig: [true, false],
+        }
+    },
+    database: {
+        list: {
+            api: "database",
+            restVersion: "/20160918",
+            reliesOnService: ['dbHome'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'dbHomeId'],
+            filterValue: ['compartmentId', 'id'],
+            filterConfig: [true, false],
+        }
+    },
+    securityRule: {
+        list: {
+            api: "core",
+            reliesOnService: ['networkSecurityGroup'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'networkSecurityGroupId'],
+            filterValue: ['compartmentId', 'id'],
+            filterConfig: [true, false],
+        }
+    },
+    volumeBackupPolicyAssignment: {
+        volume: {
+            api: "core",
+            reliesOnService: ['volume'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'assetId'],
+            filterValue: ['compartmentId', 'id'],
+            filterConfig: [true, false],
+        },
+        bootVolume: {
+            api: "core",
+            reliesOnService: ['bootVolume'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'assetId'],
+            filterValue: ['compartmentId', 'id'],
+            filterConfig: [true, false],
+        }
     }
 };
 
-var finalcalls = {};
+// Important Note: All relies must be passed in an array format []
+var finalcalls = {
+    bucket: {
+        get: {
+            api: "objectStore",
+            reliesOnService: ['bucket'],
+            reliesOnCall: ['list'],
+            filterKey: ['namespaceName', 'bucketName'],
+            filterValue: ['namespace', 'name'],
+            restVersion: ""
+        }
+    },
+    exprt: {
+        get: {
+            api: "fileStorage",
+            reliesOnService: ['exportSummary'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'exportId'],
+            filterValue: ['compartmentId', 'id'],
+            filterConfig: [true, false],
+            restVersion: "/20171215",
+        }
+    },
+    preAuthenticatedRequest: {
+        list: {
+            api: "objectStore",
+            reliesOnService: ['bucket'],
+            reliesOnCall: ['list'],
+            filterKey: ['namespaceName', 'bucketName'],
+            filterValue: ['namespace', 'name'],
+            restVersion: ""
+        }
+    }
+};
 
-var postfinalcalls = {};
 
-var collection = {};
-
-var processCall = function(OracleConfig, settings, regions, call, service, serviceCb) {
+var processCall = function (OracleConfig, collection, settings, regions, call, service, serviceCb) {
     // Loop through each of the service's functions
     async.eachOfLimit(call, 10, function (callObj, callKey, callCb) {
         if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
@@ -97,20 +380,33 @@ var processCall = function(OracleConfig, settings, regions, call, service, servi
             if (settings.skip_regions &&
                 settings.skip_regions.indexOf(region) > -1 &&
                 globalServices.indexOf(service) === -1) return regionCb();
+
+            // Ignore regions we are not subscribed to
+            if (collection[regionSubscriptionService.name] &&
+                collection[regionSubscriptionService.name][regionSubscriptionService.call] &&
+                collection[regionSubscriptionService.name][regionSubscriptionService.call][regionSubscriptionService.region] &&
+                collection[regionSubscriptionService.name][regionSubscriptionService.call][regionSubscriptionService.region].data &&
+                collection[regionSubscriptionService.name][regionSubscriptionService.call][regionSubscriptionService.region].data.filter(
+                    r => r.regionName == region) &&
+                collection[regionSubscriptionService.name][regionSubscriptionService.call][regionSubscriptionService.region].data.filter(
+                    r => r.regionName == region).length == 0
+            ) {
+                return regionCb();
+            }
+
             if (!collection[service][callKey][region]) collection[service][callKey][region] = {};
 
             if (callObj.reliesOnService) {
                 if (!callObj.reliesOnService.length) return regionCb();
                 // Ensure multiple pre-requisites are met
-                for (reliedService in callObj.reliesOnService){
+                for (reliedService in callObj.reliesOnService) {
                     if (callObj.reliesOnService[reliedService] && !collection[callObj.reliesOnService[reliedService]]) return regionCb();
 
                     if (callObj.reliesOnService[reliedService] &&
                         (!collection[callObj.reliesOnService[reliedService]] ||
                             !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]] ||
                             !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][region] ||
-                            !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][region].data ||
-                            !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][region].data.length)) return regionCb();
+                            !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][region].data)) return regionCb();
                 }
             }
 
@@ -118,18 +414,18 @@ var processCall = function(OracleConfig, settings, regions, call, service, servi
             LocalOracleConfig.region = region;
             LocalOracleConfig.service = service;
 
+
             var executor = new helpers.OracleExecutor(LocalOracleConfig);
-            executor.run(collection, service, callObj, callKey, function(err, data){
+            executor.run(collection, service, callObj, callKey, function (err, data) {
                 if (err) {
                     collection[service][callKey][region].err = err;
                 }
 
                 if (!data) return regionCb();
-
                 collection[service][callKey][region].data = data;
 
                 if (callObj.rateLimit) {
-                    setTimeout(function(){
+                    setTimeout(function () {
                         regionCb();
                     }, callObj.rateLimit);
                 } else {
@@ -144,37 +440,109 @@ var processCall = function(OracleConfig, settings, regions, call, service, servi
     });
 };
 
+var getRegionSubscription = function (OracleConfig, collection, settings, calls, service, callKey, region, serviceCb) {
+
+    var LocalOracleConfig = JSON.parse(JSON.stringify(OracleConfig));
+    LocalOracleConfig.region = region;
+    LocalOracleConfig.service = service;
+
+    if (!collection[service]) collection[service] = {};
+    if (!collection[service][callKey]) collection[service][callKey] = {};
+    if (!collection[service][callKey][region]) collection[service][callKey][region] = {};
+
+    var executor = new helpers.OracleExecutor(LocalOracleConfig);
+    executor.run(collection, service, calls[service][callKey], callKey, function (err, data) {
+        if (err) {
+            collection[service][callKey][region].err = err;
+        }
+
+        if (!data) return serviceCb();
+
+        collection[service][callKey][region].data = data;
+
+        serviceCb();
+    });
+};
+
+var getCompartment = function (OracleConfig, collection, settings, calls, service, callKey, region, serviceCb) {
+
+    var LocalOracleConfig = JSON.parse(JSON.stringify(OracleConfig));
+    LocalOracleConfig.region = region;
+    LocalOracleConfig.service = service;
+
+    helpers.regions(false)[service].forEach(function (region) {
+        if (!collection[service]) collection[service] = {};
+        if (!collection[service][callKey]) collection[service][callKey] = {};
+        if (!collection[service][callKey][region]) collection[service][callKey][region] = {};
+        if (!collection[service][callKey][region].data) collection[service][callKey][region].data = [];
+    })
+
+    var executor = new helpers.OracleExecutor(LocalOracleConfig);
+    executor.run(collection, service, calls[service][callKey], callKey, function (err, data) {
+        if (err) {
+            collection[service][callKey][region].err = err;
+        }
+
+        if (!data) return serviceCb();
+
+        helpers.regions(false)[service].forEach(function (region) {
+            collection[service][callKey][region].data.push(data);
+        })
+
+        serviceCb();
+    });
+};
+
 // Loop through all of the top-level collectors for each service
 var collect = function (OracleConfig, settings, callback) {
+    var collection = {};
+
     OracleConfig.maxRetries = 5;
     OracleConfig.retryDelayOptions = {base: 300};
 
     var settings = settings;
     var regions = helpers.regions(settings.govcloud);
 
-    async.eachOfLimit(calls, 10, function (call, service, serviceCb) {
-        var service = service;
-        if (!collection[service]) collection[service] = {};
-
-        processCall(OracleConfig, settings, regions, call, service, function () {
-            serviceCb();
-        });
-    }, function () {
-            // Now loop through the follow up calls
-            async.eachOfLimit(postcalls, 10, function (postCall, service, serviceCb) {
+    getRegionSubscription(OracleConfig, collection, settings, calls, regionSubscriptionService.name, regionSubscriptionService.call, regionSubscriptionService.region, function () {
+        getCompartment(OracleConfig, collection, settings, calls, compartmentService.name, compartmentService.call, compartmentService.region, function () {
+            async.eachOfLimit(calls, 10, function (call, service, serviceCb) {
                 var service = service;
                 if (!collection[service]) collection[service] = {};
 
-                processCall(OracleConfig, settings, regions, postCall, service, function () {
+                processCall(OracleConfig, collection, settings, regions, call, service, function () {
                     serviceCb();
                 });
-        }, function () {
-            //console.log(JSON.stringify(collection, null, 2));
-            callback(null, collection);
+            }, function () {
+                // Now loop through the follow up calls
+                async.eachOfLimit(postcalls, 10, function (postCall, service, serviceCb) {
+                    var service = service;
+                    if (!collection[service]) collection[service] = {};
+
+                    processCall(OracleConfig, collection, settings, regions, postCall, service, function () {
+                        serviceCb();
+                    });
+                }, function () {
+                    // Now loop through the follow up calls
+                    async.eachOfLimit(finalcalls, 10, function (finalCall, service, serviceCb) {
+                        var service = service;
+                        if (!collection[service]) collection[service] = {};
+
+                        processCall(OracleConfig, collection, settings, regions, finalCall, service, function () {
+                            serviceCb();
+                        });
+                    }, function () {
+                        //console.log(JSON.stringify(collection, null, 2));
+                        callback(null, collection);
+                    });
+                }, function () {
+                    //console.log(JSON.stringify(collection, null, 2));
+                    callback(null, collection);
+                });
+            }, function () {
+                //console.log(JSON.stringify(collection, null, 2));
+                callback(null, collection);
+            });
         });
-    }, function () {
-        //console.log(JSON.stringify(collection, null, 2));
-        callback(null, collection);
     });
 };
 

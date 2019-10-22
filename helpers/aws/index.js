@@ -1,21 +1,21 @@
+var shared = require(__dirname + '/../shared.js');
+var functions = require('./functions.js');
 var regRegions = require('./regions.js');
 var govRegions = require('./regions_gov.js');
+var chinaRegions = require('./regions_china.js');
 
-var regions = function(govcloud) {
-	if (govcloud) return govRegions;
-	return regRegions;
+var regions = function(settings) {
+    if (settings.govcloud) return govRegions;
+    if (settings.china) return chinaRegions;
+    return regRegions;
 };
 
-module.exports = {
-	functions: require('./functions.js'),
-	regions: regions,
-	addResult: require('./functions.js').addResult,
-	addSource: require('./functions.js').addSource,
-	addError: require('./functions.js').addError,
-	isCustom: require('./functions.js').isCustom,
-	cidrSize: require('./functions.js').cidrSize,
-	findOpenPorts: require('./functions.js').findOpenPorts,
-	normalizePolicyDocument: require('./functions.js').normalizePolicyDocument,
-
-	MAX_REGIONS_AT_A_TIME: 6
+var helpers = {
+    regions: regions,
+    MAX_REGIONS_AT_A_TIME: 6
 };
+
+for (s in shared) helpers[s] = shared[s];
+for (f in functions) helpers[f] = functions[f];
+
+module.exports = helpers;

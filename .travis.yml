@@ -1,0 +1,76 @@
+language: node_js
+node_js:
+  - "stable"
+  
+install: npm install
+
+# Define jobs that run after install and running tests. Note that we have to
+# publish the NPM package before building the docker image so that we install
+# the right version from NPM.
+jobs:
+  include:
+    - stage: NPM test
+      script: npm test
+    - stage: NPM release
+      # Deployment of cloudsploit is setup to work nicely both for the master repo
+      # any forks. That is, a fork can also publish to NPM to a custom scope. To do
+      # this, you need to do the following in the Travis CI settings for your account
+      #
+      # 1. Add an environment variable with the name NPM_SCOPE and a value like
+      #
+      #    @yourname\/
+      #
+      #  Note the @ symbol and slash are all important and should not be changed.
+      #
+      # 2. Add an environment variable with the name NPM_EMAIL and the email
+      #    associated with your NPM account.
+      #
+      # 3. Add an environment variable with the name NPM_API_KEY containing your
+      #    npm token.
+      #
+      # Finally, publishing only happens on tagged commits - so if you want to
+      # publish to your scoped package, then you need to create a tag (and of course
+      # publish it with git push --tags).
+      #
+      # Handling version numbers is ugly now and you'll still have to update
+      # package.json. Sorry, but I haven't yet figured out a better way. :(
+      if: tag IS present AND env(NPM_EMAIL) AND ENV(NPM_API_KEY)
+      node_js: "stable"
+      script: echo "Deploying to npm..."
+      before_deploy:
+        # You need to create a variable in your Travis CI settings to provide the
+        # npm package scope. This allows forks to publish under their own name.
+        - sed -i 's#"cloudsploit"#"'$NPM_SCOPE'cloudsploit"#g' package.json
+      deploy:
+        # We modify package.json to change the package name automatically, so
+        # don't to cleanup otherwise that would revert the package name change.
+        skip_cleanup: true
+        provider: npm
+        email: $NPM_EMAIL
+        api_key: $NPM_API_KEY
+
+    - stage: Build docker image
+      # Building a docker image is setup to work nicely for both the master and forks.
+      # To use this, you need to do the following in the Travis CI settings for your account
+      # otherwise this build will skip building the image
+      #
+      # 1. Add an environment variable with the name DOCKER_USERNAME containing your
+      #    docker user name
+      #
+      # 2. Similarly, add an environment variable with your DOCKER_PASSWORD
+      #
+      # 3. If you want to install a different version of cloudsploit in the container
+      #    (for example because you are building a fork), then set DOCKER_NPMPACKAGENAME
+      #    to the name of NPM package you want to install, for example @myscope/cloudsploit
+      #
+      # There is probably a strong relationship between NPM_SCOPE and DOCKER_NPMPACKAGENAME
+      # but that's up for you in Travis CI to define.
+      if: env(DOCKER_USERNAME) AND env(DOCKER_PASSWORD)
+      script:
+      - DOCKER_BUILD_NPMPACKAGENAME="${DOCKER_NPMPACKAGENAME:-cloudsploit}"
+      - echo "Creating docker image from NPM package ${DOCKER_NPMPACKAGENAME}"
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - docker build --build-arg PACKAGENAME=$DOCKER_BUILD_NPMPACKAGENAME -t cloudsploit-scans .
+      - docker images
+      - docker tag cloudsploit-scans $DOCKER_USERNAME/cloudsploit-scans
+      - docker push $DOCKER_USERNAME/cloudsploit-scans

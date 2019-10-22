@@ -5,16 +5,20 @@ var helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'Blob Service Immutable',
     category: 'Blob Service',
-    description: 'Ensures data immutability is properly configured in blob services to protect critical data against deletion.',
-    more_info: 'Immutable storage helps financial institutions and related industries--particularly broker-dealer organizations--to store data securely. It can also be leveraged in any scenario to protect critical data against deletion.',
-    recommended_action: 'In your Azure storage account, select an existing container, then select access policy under container settings, and the Add Policy under Immutable Blob Storage.',
+    description: 'Ensures data immutability is properly configured for blob services to protect critical data against deletion',
+    more_info: 'Immutable storage helps store data securely by protecting critical data against deletion.',
+    recommended_action: 'Enable a data immutability policy for all storage containers in the Azure storage account.',
     link: 'https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-immutable-storage#Getting-started',
     apis: ['resourceGroups:list', 'storageAccounts:list', 'storageAccounts:listKeys', 'BlobService:listContainersSegmented'],
+    compliance: {
+        hipaa: 'Blob immutability preserves the integrity of stored data and protects against ' +
+            'accidental or malicious destruction.'
+  },
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-		var locations = helpers.locations(settings.govcloud);
+        var locations = helpers.locations(settings.govcloud);
 
         async.each(locations.BlobService, function(location, rcb){
             var blobService = helpers.addSource(cache, source,
@@ -28,23 +32,25 @@ module.exports = {
                 return rcb();
             }
 
-            if (!blobService.data || !blobService.data.entries.length) {
+            if (!blobService.data || !blobService.data.length) {
                 helpers.addResult(results, 0, 'No existing blob services', location);
             } else {
-                for (srvc in blobService.data.entries) {
-                    var blob = blobService.data.entries[srvc];
+                for (srvc in blobService.data) {
+                    for (entry in blobService.data[srvc].entries) {
+                        var blob = blobService.data[srvc].entries[entry];
 
-                    if (blob.hasImmutabilityPolicy) {
-						helpers.addResult(results, 0, 'Immutability has been configured for the blob service', location, blob.name +  ' etag:' + blob.etag);
-					} else {
-						helpers.addResult(results, 2, 'Immutability has not been configured for the blob service', location, blob.name +  ' etag:' + blob.etag);
-					}
+                        if (blob.hasImmutabilityPolicy) {
+                            helpers.addResult(results, 0, 'Immutability has been configured for the blob service', location, blob.name + ' etag:' + blob.etag);
+                        } else {
+                            helpers.addResult(results, 2, 'Immutability has not been configured for the blob service', location, blob.name + ' etag:' + blob.etag);
+                        }
 
-					if (blob.hasLegalHold) {
-						helpers.addResult(results, 0, 'Legal Hold has been configured for the blob service', location, blob.name +  ' etag:' + blob.etag);
-					} else {
-						helpers.addResult(results, 2, 'Legal Hold has not configured for the blob service', location, blob.name +  ' etag:' + blob.etag);
-					}
+                        // if (blob.hasLegalHold) {
+                        //     helpers.addResult(results, 0, 'Legal Hold has been configured for the blob service', location, blob.name + ' etag:' + blob.etag);
+                        // } else {
+                        //     helpers.addResult(results, 2, 'Legal Hold has not configured for the blob service', location, blob.name + ' etag:' + blob.etag);
+                        // }
+                    }
                 }
             }
             rcb();

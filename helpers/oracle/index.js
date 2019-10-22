@@ -1,3 +1,5 @@
+var shared = require(__dirname + '/../shared.js');
+var functions = require('./functions.js');
 var regLocations = require('./regions.js');
 var govLocations = require('./regions_gov.js');
 
@@ -6,12 +8,11 @@ var sshpk = require('sshpk');
 var assert = require('assert-plus');
 
 // REST Oracle
-var oci = require( '../../other_modules/oracle/oci' );
-
+var oci = require( '../../other_modules/oci' );
 
 var regions = function(govcloud) {
-	if (govcloud) return govLocations;
-	return regLocations;
+    if (govcloud) return govLocations;
+    return regLocations;
 };
 
 // Oracle Executor
@@ -25,95 +26,107 @@ function OracleExecutor (OracleConfig, Service) {
         var OracleConfig = this.oracleConfig;
         var parameters = {};
 
-		callObj.collection = collection;
+        callObj.collection = collection;
 
-		if (callObj.reliesOnService) {
-			var aggregatedErrors=[];
-			var aggregatedResults=[];
-			function ociMany (callObj, OracleConfig) {
-				var services = callObj.reliesOnService;
-				services.callObj = callObj;
+        if (callObj.restVersion) OracleConfig.RESTversion = callObj.restVersion;
 
-				async.eachLimit(services, 10,function(service, serviceCb) {
-					var callObj = services.callObj;
-					var records = callObj.collection[service][callObj.reliesOnCall[services.indexOf(service)]][OracleConfig.region].data;
+        if (callObj.reliesOnService) {
+            var aggregatedErrors=[];
+            var aggregatedResults=[];
 
-					async.eachLimit(records, 10,function(record, recordCb) {
-						for (filter in callObj.filterKey){
-							if(callObj.filterConfig && callObj.filterConfig[filter]) {
-								parameters[callObj.filterKey[filter]] = OracleConfig[callObj.filterValue[filter]];
-							} else {
-								parameters[callObj.filterKey[filter]] = record[callObj.filterValue[filter]];
-							}
-						}
+            function ociMany (callObj, OracleConfig) {
+                async.eachLimit(callObj.reliesOnService, 10,function(service, serviceCb) {
+                    var records = callObj.collection[service][callObj.reliesOnCall[callObj.reliesOnService.indexOf(service)]][OracleConfig.region].data;
 
-						try {
-							OracleConfig.privateKey = sshpk.parsePrivateKey(OracleConfig.keyValue, 'pem');
-							assert.ok(sshpk.PrivateKey.isPrivateKey(OracleConfig.privateKey, [1, 2]),
-								'options.key must be a sshpk.PrivateKey');
-							(!OracleConfig.RESTversion ? OracleConfig.RESTversion = '/20160918' : false )
-						} catch (e) {
-							console.log('Could not read the Oracle Private Key.');
-						}
+                    async.eachLimit(records, 10,function(record, recordCb) {
+                        for (filter in callObj.filterKey){
+                            if(callObj.filterConfig && callObj.filterConfig[filter]) {
+                                parameters[callObj.filterKey[filter]] = OracleConfig[callObj.filterValue[filter]];
+                            } else {
+                                parameters[callObj.filterKey[filter]] = record[callObj.filterValue[filter]];
+                            }
+                        }
 
-						oci[callObj.api][oracleService][callKey](OracleConfig, parameters, function (result) {
-							if (result.code) {
-								aggregatedErrors.push(result);
-							}
-							//console.log('\n' + require('util').inspect(result, {depth: null}));
-							aggregatedResults.push(result);
-							recordCb();
-						});
-					}, function(){
-						serviceCb();
-					});
-				}, function() {
-					callback(aggregatedErrors, aggregatedResults);
-				});
-			}
+                        try {
+                            OracleConfig.privateKey = sshpk.parsePrivateKey(OracleConfig.keyValue, 'pem');
+                            assert.ok(sshpk.PrivateKey.isPrivateKey(OracleConfig.privateKey, [1, 2]),
+                                'options.key must be a sshpk.PrivateKey');
+                            (!OracleConfig.RESTversion ? OracleConfig.RESTversion = '/20160918' : false )
+                        } catch (e) {
+                            console.log('Could not read the Oracle Private Key.');
+                        }
+                        if (callObj.restVersion ||
+                            callObj.restVersion == '') {
+                            OracleConfig.RESTversion = callObj.restVersion;
+                        };
 
-			ociMany(callObj, OracleConfig);
-		} else {
-			for (filter in callObj.filterKey){
-				if(callObj.filterLiteral && callObj.filterLiteral[filter]) {
-					parameters[callObj.filterKey[filter]] = callObj.filterValue[filter];
-				} else {
-					parameters[callObj.filterKey[filter]] = OracleConfig[callObj.filterValue[filter]];
-				}
-			}
+                        oci(callObj.api, oracleService, callKey, OracleConfig, parameters, function(result) {
+                            if (result.code) {
+                                aggregatedErrors.push(result);
+                            }
+                            //console.log('\n' + require('util').inspect(result, {depth: null}));
+                            if (result &&
+                                result.length &&
+                                Object.prototype.toString.call(result) == "[object Array]") {
+                                result.forEach(function(listItem){
+                                    aggregatedResults.push(listItem);
+                                });
+                            } else if (Object.prototype.toString.call(result) == "[object Object]") {
+                                aggregatedResults.push(result);
+                            }
 
-			try {
-				OracleConfig.privateKey = sshpk.parsePrivateKey(OracleConfig.keyValue, 'pem');
-				assert.ok(sshpk.PrivateKey.isPrivateKey(OracleConfig.privateKey, [1, 2]),
-					'options.key must be a sshpk.PrivateKey');
-				(!OracleConfig.RESTversion ? OracleConfig.RESTversion = '/20160918' : false )
-			} catch (e) {
-				console.log('Could not read the Oracle Private Key.');
-			}
+                            recordCb();
+                        });
+                    }, function(){
+                        serviceCb();
+                    });
+                }, function() {
+                    callback(aggregatedErrors, aggregatedResults);
+                });
+            }
 
-			return oci[callObj.api][oracleService][callKey]( OracleConfig, parameters, function (result) {
-				if (result.code) {
-					return callback(result);
-				}
-				//console.log('\n' + require('util').inspect(result, {depth: null}));
-				callback(null, result);
-			});
-		}
+            ociMany(callObj, OracleConfig);
+        } else {
+            for (filter in callObj.filterKey){
+                if(callObj.filterLiteral && callObj.filterLiteral[filter]) {
+                    parameters[callObj.filterKey[filter]] = callObj.filterValue[filter];
+                } else {
+                    parameters[callObj.filterKey[filter]] = OracleConfig[callObj.filterValue[filter]];
+                }
+            }
+
+            try {
+                OracleConfig.privateKey = sshpk.parsePrivateKey(OracleConfig.keyValue, 'pem');
+                assert.ok(sshpk.PrivateKey.isPrivateKey(OracleConfig.privateKey, [1, 2]),
+                    'options.key must be a sshpk.PrivateKey');
+                (!OracleConfig.RESTversion ? OracleConfig.RESTversion = '/20160918' : false )
+
+            } catch (e) {
+                console.log('Could not read the Oracle Private Key.');
+            }
+            if (callObj.restVersion ||
+                callObj.restVersion == '') {
+                OracleConfig.RESTversion = callObj.restVersion;
+            };
+
+            return oci(callObj.api, oracleService, callKey, OracleConfig, parameters, function(result) {
+                if (result.code) {
+                    return callback(result);
+                }
+                //console.log('\n' + require('util').inspect(result, {depth: null}));
+                callback(null, result);
+            });
+        }
     }
 }
 
-module.exports = {
+var helpers = {
     regions: regions,
     OracleExecutor: OracleExecutor,
-	functions: require('./functions.js'),
-	addResult: require('./functions.js').addResult,
-	addSource: require('./functions.js').addSource,
-	addError: require('./functions.js').addError,
-	isCustom: require('./functions.js').isCustom,
-	cidrSize: require('./functions.js').cidrSize,
-	findOpenPorts: require('./functions.js').findOpenPorts,
-	findOpenPortsAll: require('./functions.js').findOpenPortsAll,
-	normalizePolicyDocument: require('./functions.js').normalizePolicyDocument,
-
     MAX_REGIONS_AT_A_TIME: 6
 };
+
+for (s in shared) helpers[s] = shared[s];
+for (f in functions) helpers[f] = functions[f];
+
+module.exports = helpers;

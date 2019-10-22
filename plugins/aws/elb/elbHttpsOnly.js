@@ -18,9 +18,9 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-        var regions = helpers.regions(settings.govcloud);
+        var regions = helpers.regions(settings);
         
-        var acctRegion = settings.govcloud ? 'us-gov-west-1' : 'us-east-1';
+        var acctRegion = helpers.defaultRegion(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
         async.each(regions.elb, function(region, rcb){
@@ -60,7 +60,7 @@ module.exports = {
                 });
                 if (non_https_listner){
                     //helpers.addResult(results, 2, non_https_listner.join(', '), region);
-                    msg = "The following listeners are not HTTPS-only: ";
+                    msg = "The following listeners are not using HTTPS-only: ";
                     helpers.addResult(
                         results, 2, msg + non_https_listner.join(', '), region, elbArn
                     );

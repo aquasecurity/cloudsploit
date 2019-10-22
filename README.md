@@ -1,10 +1,19 @@
-[![CloudSploit](https://cloudsploit.com/img/logo-big-text-100.png "CloudSploit")](https://cloudsploit.com)
+[<img src="https://cloudsploit.com/images/logos/text-color-black-png.png" height="130">](https://cloudsploit.com)
+
+[![Build Status](https://travis-ci.org/cloudsploit/scans.svg?branch=master)](https://travis-ci.org/cloudsploit/scans)
+[![Known Vulnerabilities](https://snyk.io/test/github/cloudsploit/scans/badge.svg)](https://snyk.io/test/github/cloudsploit/scans)
 
 CloudSploit Scans
 =================
 
 ## Background
 CloudSploit scans is an open-source project designed to allow detection of security risks in an AWS account. These scripts are designed to run against an AWS account and return a series of potential misconfigurations and security risks.
+
+## SaaS Product
+
+CloudSploit provides free and paid hosted versions of the cloud security scanner with numerous additional features:
+
+[<img src="https://cloudsploit.com/images/pricing.png">](https://console.cloudsploit.com/signup)
 
 ## Installation
 Ensure that NodeJS is installed. If not, install it from [here](https://nodejs.org/download/).
@@ -57,7 +66,7 @@ To configure the managed policy:
 
 If you'd prefer to be more restrictive, the following IAM policy contains the exact permissions used by the scan.
 
-WARNING: This policy will likely change as more plugins are written. If a test returns "UNKNOWN" it is likely missing a required permission. The preferred method is to use the "Security Audit" policy.
+WARNING: This policy will likely change as more plugins are written. If a test returns "UNKNOWN" it is likely missing a required permission. The preferred method is to use the "SecurityAudit" policy.
 
 ```
 {
@@ -65,39 +74,86 @@ WARNING: This policy will likely change as more plugins are written. If a test r
   "Statement": [
     {
       "Action": [
-            "cloudfront:ListDistributions",
-            "cloudtrail:DescribeTrails",
-            "configservice:DescribeConfigurationRecorders",
-            "configservice:DescribeConfigurationRecorderStatus",
-            "ec2:DescribeInstances",
-            "ec2:DescribeSecurityGroups",
-            "ec2:DescribeAccountAttributes",
-            "ec2:DescribeAddresses",
-            "ec2:DescribeVpcs",
-            "ec2:DescribeFlowLogs",
-            "ec2:DescribeSubnets",
-            "elasticloadbalancing:DescribeLoadBalancerPolicies",
-            "elasticloadbalancing:DescribeLoadBalancers",
-            "iam:GenerateCredentialReport",
-            "iam:ListServerCertificates",
-            "iam:ListGroups",
-            "iam:GetGroup",
-            "iam:GetAccountPasswordPolicy",
-            "iam:ListUsers",
-            "iam:ListUserPolicies",
-            "iam:ListAttachedUserPolicies",
-            "kms:ListKeys",
-            "kms:DescribeKey",
-            "kms:GetKeyRotationStatus",
-            "rds:DescribeDBInstances",
-            "rds:DescribeDBClusters",
-            "route53domains:ListDomains",
-            "s3:GetBucketVersioning",
-            "s3:GetBucketLogging",
-            "s3:GetBucketAcl",
-            "s3:ListBuckets",
-            "ses:ListIdentities",
-            "ses:getIdentityDkimAttributes"
+        "acm:DescribeCertificate",
+        "acm:ListCertificates",
+        "athena:GetWorkGroup",
+        "athena:ListWorkGroups",
+        "autoscaling:DescribeAutoScalingGroups",
+        "cloudfront:GetDistribution",
+        "cloudfront:ListDistributions",
+        "cloudtrail:DescribeTrails",
+        "cloudtrail:GetTrailStatus",
+        "cloudwatchlogs:DescribeLogGroups",
+        "cloudwatchlogs:DescribeMetricFilters",
+        "config:DescribeConfigurationRecorderStatus",
+        "config:DescribeConfigurationRecorders",
+        "dynamodb:DescribeTable",
+        "dynamodb:ListTables",
+        "ec2:DescribeAccountAttributes",
+        "ec2:DescribeAddresses",
+        "ec2:DescribeFlowLogs",
+        "ec2:DescribeImages",
+        "ec2:DescribeInstances",
+        "ec2:DescribeNatGateways",
+        "ec2:DescribeRouteTables",
+        "ec2:DescribeSecurityGroups",
+        "ec2:DescribeSnapshots",
+        "ec2:DescribeSubnets",
+        "ec2:DescribeVolumes",
+        "ec2:DescribeVpcPeeringConnections",
+        "ec2:DescribeVpcs",
+        "efs:DescribeFileSystems",
+        "elastictranscoder:ListPipelines",
+        "elb:DescribeLoadBalancerAttributes",
+        "elb:DescribeLoadBalancerPolicies",
+        "elasticloadbalancing:DescribeLoadBalancers",
+        "firehose:DescribeDeliveryStream",
+        "firehose:ListDeliveryStreams",
+        "iam:GenerateCredentialReport",
+        "iam:GetAccountPasswordPolicy",
+        "iam:GetGroup",
+        "iam:GetGroupPolicy",
+        "iam:GetUserPolicy",
+        "iam:ListAttachedGroupPolicies",
+        "iam:ListAttachedUserPolicies",
+        "iam:ListGroupPolicies",
+        "iam:ListGroups",
+        "iam:ListGroupsForUser",
+        "iam:ListServerCertificates",
+        "iam:ListUserPolicies",
+        "iam:ListUsers",
+        "kinesis:DescribeStream",
+        "kinesis:ListStreams",
+        "kms:DescribeKey",
+        "kms:GetKeyPolicy",
+        "kms:GetKeyRotationStatus",
+        "kms:ListKeys",
+        "lambda:GetPolicy",
+        "lambda:ListFunctions",
+        "rds:DescribeDBClusters",
+        "rds:DescribeDBEngineVersions",
+        "rds:DescribeDBInstances",
+        "redshift:DescribeClusters",
+        "route53domains:ListDomains",
+        "s3:GetBucketAcl",
+        "s3:GetBucketEncryption",
+        "s3:GetBucketLogging",
+        "s3:GetBucketPolicy",
+        "s3:GetBucketVersioning",
+        "s3:ListBuckets",
+        "sagemaker:DescribeNotebookInstance",
+        "sagemaker:ListNotebookInstances",
+        "ses:DescribeActiveReceiptRuleSet",
+        "ses:GetIdentityDkimAttributes",
+        "ses:ListIdentities",
+        "sns:GetTopicAttributes",
+        "sns:ListTopics",
+        "sqs:GetQueueAttributes",
+        "sqs:ListQueues",
+        "ssm:DescribeParameters",
+        "sts:GetCallerIdentity",
+        "transfer:ListServers",
+        "workspaces:DescribeWorkspaces"
       ],
       "Effect": "Allow",
       "Resource": "*"
@@ -135,6 +191,26 @@ HIPAA scans map CloudSploit plugins to the Health Insurance Portability and Acco
 ### PCI
 
 PCI scans map CloudSploit plugins to the Payment Card Industry Data Security Standard.
+
+## Output Formats
+
+CloudSploit supports output in several formats for consumption by other tools.
+If you do not specify otherwise, CloudSploit writes output to standard output
+(the console). You can specify one or more output formats as follows:
+
+```
+# Output results in CSV (suppressing the console output)
+node index.js --csv=./out.csv
+
+# Output results in JUnit XML (suppressing the console output)
+node index.js --junit=./out.xml
+
+# Output results only to the console (default if omitted)
+node index.js --console
+
+# Output results in all supported formats
+node index.js --console --junit=./out.xml --csv=./out.csv
+```
 
 ## Architecture
 

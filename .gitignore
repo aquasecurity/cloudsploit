@@ -6,3 +6,4 @@ plugins_*
 output.json
 vscode/*
 .vscode/
+.idea

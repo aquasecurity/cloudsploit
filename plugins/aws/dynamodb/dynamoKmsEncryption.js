@@ -16,11 +16,11 @@ module.exports = {
         var results = [];
         var source = {};
 
-        var acctRegion = settings.govcloud ? 'us-gov-west-1' : 'us-east-1';
-        var awsOrGov = settings.govcloud ? 'aws-us-gov' : 'aws';
+        var acctRegion = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
-        var regions = helpers.regions(settings.govcloud);
+        var regions = helpers.regions(settings);
 
         async.each(regions.dynamodb, function(region, rcb){
             var listTables = helpers.addSource(cache, source,

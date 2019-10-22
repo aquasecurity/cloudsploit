@@ -14,7 +14,7 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-        var regions = helpers.regions(settings.govcloud);
+        var regions = helpers.regions(settings);
 
         async.each(regions.acm, function(region, rcb){
             var listCertificates = helpers.addSource(cache, source,
@@ -41,7 +41,11 @@ module.exports = {
                 if (!describeCertificate || describeCertificate.err || !describeCertificate.data) {
                     helpers.addResult(results, 3,
                         'Unable to describe ACM certificate: ' + helpers.addError(describeCertificate), region, cert.CertificateArn);
-                    rcb();
+                } else if (describeCertificate.data.Certificate &&
+                           describeCertificate.data.Certificate.Type &&
+                           describeCertificate.data.Certificate.Type !== 'AMAZON_ISSUED') {
+                    helpers.addResult(results, 0,
+                        'Non AWS-issued certificates do not support AWS DNS validation', region, cert.CertificateArn);
                 } else if (!describeCertificate.data.Certificate ||
                            !describeCertificate.data.Certificate.DomainValidationOptions ||
                            !describeCertificate.data.Certificate.DomainValidationOptions.length) {

@@ -1,0 +1,52 @@
+var async = require('async');
+var helpers = require('../../../helpers/oracle');
+
+module.exports = {
+	title: 'Password Requires Lowercase',
+	category: 'Identity',
+	description: 'Ensures password policy requires at least one lowercase letter.',
+	more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage.',
+	link: 'https://docs.oracle.com/cd/E17904_01/admin.1111/e10029/pwdpolicies.htm#OIDAG2472',
+	recommended_action: 'Update the password policy to require the use of lowercase letters.',
+	apis: ['authenticationPolicy:get'],
+	compliance: {
+		pci: 'PCI requires a strong password policy. Setting Identity password ' +
+			 'requirements enforces this policy.'
+	},
+    run: function(cache, settings, callback) {
+        var results = [];
+        var source = {};
+        var defaultRegion = '';
+
+        if (cache.authenticationPolicy.get &&
+            Object.keys(cache.authenticationPolicy.get).length &&
+            Object.keys(cache.authenticationPolicy.get).length > 0) {
+            defaultRegion = helpers.objectFirstKey(cache.authenticationPolicy.get);
+        } else {
+            return callback();
+        }
+
+        var authenticationPolicy = helpers.addSource(cache, source,
+            ['authenticationPolicy', 'get', defaultRegion]);
+
+        if (!authenticationPolicy) return callback();
+
+        if (authenticationPolicy.err || !authenticationPolicy.data) {
+            helpers.addResult(results, 3,
+                'Unable to query for password policy status: ' + helpers.addError(authenticationPolicy));
+            return callback();
+        }
+
+        var passwordPolicy = authenticationPolicy.data.passwordPolicy;
+
+        if (!passwordPolicy.isLowercaseCharactersRequired) {
+            helpers.addResult(results, 1,
+                'Password policy does not require lowercase characters', defaultRegion, authenticationPolicy.data.compartmentId);
+        } else {
+            helpers.addResult(results, 0,
+                'Password policy requires lowercase characters', defaultRegion, authenticationPolicy.data.compartmentId);
+        }
+
+        callback(null, results, source);
+    }
+};

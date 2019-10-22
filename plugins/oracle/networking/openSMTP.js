@@ -1,0 +1,84 @@
+var async = require('async');
+var helpers = require('../../../helpers/oracle/');
+
+module.exports = {
+    title: 'Open SMTP',
+    category: 'Networking',
+    description: 'Determine if TCP port 25 for SMTP is open to the public',
+    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as SMTP should be restricted to known IP addresses.',
+    recommended_action: 'Restrict TCP port 25 to known IP addresses',
+    link: 'https://docs.cloud.oracle.com/iaas/Content/Network/Concepts/securitylists.htm',
+    apis: ['vcn:list', 'securityList:list','networkSecurityGroup:list','securityRule:list'],
+
+    run: function(cache, settings, callback) {
+        var results = [];
+        var source = {};
+        var regions = helpers.regions(settings.govcloud);
+        var isSecurityRule = false;
+
+        async.each(regions.securityList, function(region, rcb){
+
+            if (helpers.checkRegionSubscription(cache, source, results, region)) {
+                var ruleEmpty = false;
+                var listEmpty = false;
+
+                var ports = {
+                    'tcp': [25]
+                };
+
+                var service = 'SMTP';
+
+                var getSecurityLists = helpers.addSource(cache, source,
+                    ['securityList', 'list', region]);
+
+                if (getSecurityLists &&
+                    getSecurityLists.err &&
+                    getSecurityLists.err.length>0)  {
+                    helpers.addResult(results, 3,
+                        'Unable to query for security lists: ' + helpers.addError(getSecurityLists), region);
+
+                } else if (getSecurityLists &&
+                    (!getSecurityLists.data || !getSecurityLists.data.length > 0)) {
+                    listEmpty = true;
+
+                } else if (getSecurityLists) {
+                    helpers.findOpenPorts(getSecurityLists.data, ports, service, region, results, isSecurityRule);
+                };
+
+                var getSecurityRules = helpers.addSource(cache, source,
+                    ['securityRule', 'list', region]);
+
+                if (getSecurityRules &&
+                    getSecurityRules.err &&
+                    getSecurityRules.err.length>0)  {
+                    helpers.addResult(results, 3,
+                        'Unable to query for security rules: ' + helpers.addError(getSecurityRules), region);
+                    return rcb();
+
+                } else if (getSecurityRules &&
+                    (!getSecurityRules.data || !getSecurityRules.data.length > 0)) {
+                    ruleEmpty = true;
+
+                } else if (getSecurityRules) {
+                    var getSecurityGroups = helpers.addSource(cache, source,
+                        ['networkSecurityGroup', 'list', region]);
+                    isSecurityRule = true;
+                    helpers.findOpenPorts(getSecurityRules.data, ports, service, region, results, isSecurityRule, getSecurityGroups);
+                };
+
+                if (ruleEmpty && listEmpty) {
+                    helpers.addResult(results, 0, 'No security rules or lists present', region);
+                } else if (ruleEmpty) {
+                    helpers.addResult(results, 0, 'No security rules present', region);
+                } else if (listEmpty) {
+                    helpers.addResult(results, 0, 'No security lists present', region);
+                };
+            }
+
+            rcb();
+        }, function(){
+            // Global checking goes here
+            callback(null, results, source);
+        });
+    }
+};

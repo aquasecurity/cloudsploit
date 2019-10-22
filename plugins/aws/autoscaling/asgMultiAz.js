@@ -13,7 +13,7 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-        var regions = helpers.regions(settings.govcloud);
+        var regions = helpers.regions(settings);
 
         async.each(regions.autoscaling, function(region, rcb){
             var describeAutoScalingGroups = helpers.addSource(cache, source,
