@@ -13,7 +13,7 @@ CloudSploit scans is an open-source project designed to allow detection of secur
 
 CloudSploit provides free and paid hosted versions of the cloud security scanner with numerous additional features:
 
-[<img src="https://cloudsploit.com/images/pricing.png">](https://console.cloudsploit.com/signup)
+[<img src="https://cloudsploit.com/images/pricing-new.png">](https://console.cloudsploit.com/signup)
 
 ## Installation
 Ensure that NodeJS is installed. If not, install it from [here](https://nodejs.org/download/).
