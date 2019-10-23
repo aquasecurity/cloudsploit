@@ -101,28 +101,26 @@ async function parseInput(event, partition, region) {
  *
  * @throws If roleArn is not defined, rejects with an error.
  */
-async function getCredentials(roleArn, region, externalId) {
+function getCredentials(roleArn, region, externalId) {
     console.log("---Getting Credentials for AWS Configuration---");
-    return new Promise(function(resolve, reject) {
-        if(!roleArn) {
-            reject(new Error("roleArn is not defined from incoming event."));
-        }
-        var STSParams = {
-            RoleArn: roleArn
-        };
-        if(externalId) {
-            STSParams.ExternalId = externalId
-        };
-        var creds = new AWS.ChainableTemporaryCredentials({params:STSParams});
+    if(!roleArn) {
+        throw new Error("roleArn is not defined from incoming event.");
+    }
+    var STSParams = {
+        RoleArn: roleArn
+    };
+    if(externalId) {
+        STSParams.ExternalId = externalId
+    };
+    var creds = new AWS.ChainableTemporaryCredentials({params:STSParams});
 
-        var config = {
-            'accessKeyId' : creds.service.config.credentials.accessKeyId,
-            'secretAccessKey' : creds.service.config.credentials.secretAccessKey,
-            'sessionToken' : creds.service.config.credentials.sessionToken,
-            'region': region
-        };
-        resolve(config);
-    })
+    var config = {
+        'accessKeyId' : creds.service.config.credentials.accessKeyId,
+        'secretAccessKey' : creds.service.config.credentials.secretAccessKey,
+        'sessionToken' : creds.service.config.credentials.sessionToken,
+        'region': region
+    };
+    return config;
 }
 
 /***
@@ -168,8 +166,8 @@ exports.handler = async function(event, context) {
         //Settings Configuration//
         console.log("--Configuring Settings--");
         var settings = configurations.settings || {};
-        settings.china = partition==='aws-cn';
-        settings.govcloud = partition==='aws-us-gov';
+        settings.china = partition === 'aws-cn';
+        settings.govcloud = partition === 'aws-us-gov';
         settings.paginate = settings.paginate || true;
         settings.debugTime = settings.debugTime || false;
 
@@ -177,10 +175,7 @@ exports.handler = async function(event, context) {
 
         //Config Gathering//
         console.log("--Gathering Configurations--");
-        var AWSConfig
-        if(configurations.aws.roleArn) {
-            AWSConfig = configurations.aws.externalId ? await getCredentials(configurations.aws.roleArn, region, configurations.aws.externalId) : await getCredentials(configurations.aws.roleArn, region);
-        }
+        var AWSConfig = configurations.aws.roleArn ? getCredentials(configurations.aws.roleArn, region, configurations.aws.externalId) : null;
         var AzureConfig = configurations.azure || null;
         var GoogleConfig = configurations.gcp || null;
         var GitHubConfig = configurations.github || null;
