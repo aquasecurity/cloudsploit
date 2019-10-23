@@ -774,8 +774,7 @@ var collect = function (AWSConfig, settings, callback) {
                     globalServices.indexOf(service) === -1) return regionCb();
                 if (!collection[serviceLower][callKey][region]) collection[serviceLower][callKey][region] = {};
 
-                var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
-                LocalAWSConfig.region = region;
+                var LocalAWSConfig = Object.assign({}, AWSConfig, {region: region});
 
                 if (callObj.override) {
                     collectors[serviceLower][callKey](LocalAWSConfig, collection, function () {
