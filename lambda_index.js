@@ -83,7 +83,7 @@ async function parseInput(event, partition, region) {
         }
     }
 
-    if(serviceCount === 0) throw (new Error("No services provided in Incoming Event."));
+    if(serviceCount === 0) throw (new Error("No services provided or provided services are malformed in Incoming Event."));
     return allConfigurations;
 }
 
