@@ -94,24 +94,23 @@ describe('configs', () => {
 
     describe('getConfigurations', () => {
         var partition = "aws"
-        var region = "us-east-1"
         it('Gets aws configurations from SNS with RoleArn', () => {
-            expect(configs.getConfigurations(configs.parseEvent(sns_event), partition, region)).to.equal(expected_outcome)
+            expect(configs.getConfigurations(configs.parseEvent(sns_event), partition)).to.equal(expected_outcome)
         })
         it('Gets aws configurations from Cloudwatch with RoleArn', () => {
-            expect(configs.getConfigurations(configs.parseEvent(cloudwatch_event), partition, region)).to.equal(expected_outcome)
+            expect(configs.getConfigurations(configs.parseEvent(cloudwatch_event), partition)).to.equal(expected_outcome)
         })
         it('Gets aws configurations contianing Account ID', () => {
-            expect(configs.getConfigurations(config_with_account_id, partition, region)).to.equal(expected_config_from_account_id)
+            expect(configs.getConfigurations(config_with_account_id, partition)).to.equal(expected_config_from_account_id)
         })
         it('Should throw an error when given a key that must be credentialed', () => {
-            expect(configs.getConfigurations(not_credentialed_configuration, partition, region)).to.throw("Configuration passed in through event which must be in Secrets Manager.")
+            expect(configs.getConfigurations(not_credentialed_configuration, partition)).to.throw("Configuration passed in through event which must be in Secrets Manager.")
         })
         it('Should throw an error when given a configuration without a valid service', () => {
-            expect(configs.getConfigurations(no_service_provided, partition, region)).to.throw("No services provided or provided services are malformed in Incoming Event.")
+            expect(configs.getConfigurations(no_service_provided, partition)).to.throw("No services provided or provided services are malformed in Incoming Event.")
         })
         it('Should throw an error when given a configuration with multiple services', () => {
-            expect(configs.getConfigurations(multiple_services_provided, partition, region)).to.throw("Multiple Services in Incoming Event.")
+            expect(configs.getConfigurations(multiple_services_provided, partition)).to.throw("Multiple Services in Incoming Event.")
         })
     })
 })
