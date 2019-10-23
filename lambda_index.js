@@ -59,24 +59,22 @@ exports.handler = async function(event, context) {
         var GitHubConfig = configurations.github || null;
         var OracleConfig = configurations.oracle || null;
 
-    //Run Primary Cloudspoit Engine//
-    console.log("Begin Calling Main Engine")
-    var enginePromise = Promise.fromCallback((callback) => {
-        engine(AWSConfig, AzureConfig, GitHubConfig, OracleConfig, GoogleConfig, settings, outputHandler, callback);
-    })
+        //Run Primary Cloudspoit Engine//
+        console.log("Begin Calling Main Engine")
+        var enginePromise = Promise.fromCallback((callback) => {
+            engine(AWSConfig, AzureConfig, GitHubConfig, OracleConfig, GoogleConfig, settings, outputHandler, callback);
+        })
 
-    const collectionData = await enginePromise;
-    var resultCollector = {};
-    resultCollector.collectionData = collectionData;
-    resultCollector.ResultsData = outputHandler.getOutput();
-    console.assert(resultCollector.collectionData, "No Collection Data found.");
-    console.assert(resultCollector.ResultsData, "No Results Data found.");
-    console.error(JSON.stringify(resultCollector));
-    var outputPromises = writeToS3(process.env.RESULT_BUCKET, resultCollector, process.env.RESULT_PREFIX);
-    await Promise.all(outputPromises);
-    return 'Ok';
+        const collectionData = await enginePromise;
+        var resultCollector = {};
+        resultCollector.collectionData = collectionData;
+        resultCollector.ResultsData = outputHandler.getOutput();
+        console.assert(resultCollector.collectionData, "No Collection Data found.");
+        console.assert(resultCollector.ResultsData, "No Results Data found.");
+        var outputPromises = writeToS3(process.env.RESULT_BUCKET, resultCollector, process.env.RESULT_PREFIX);
+        await Promise.all(outputPromises);
+        return 'Ok';
     } catch(err) {
-        //This is mainly here in the case of implementing more robust error handling.
         console.log(err);
         throw(err);
     }
