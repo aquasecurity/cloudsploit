@@ -44,8 +44,7 @@ function parseEvent(event) {
  * Enforces that exactly 1 expected service is found in the event.
  * Any other data will be passed through untouched.
  *
- * @param {String} event The initializing event for the lambda.
- *
+ * @param {String} parsedEvent A parsed event sources from an AWS initiating event.
  * @param {String} partition The AWS partition (at current, aws, aws-cn, or aws-us-govt)
  *
  * @param {String} region The region which the Lambda is running in.
@@ -54,8 +53,8 @@ function parseEvent(event) {
  *
  * @throws Any misconfiguration will result in an error being thrown.
  */
-async function getConfigurations(allConfigurations, partition, region) {
-    console.log("--Begin Parsing of Incoming Event--");
+async function getConfigurations(parsedEvent, partition) {
+    console.log("Begin Parsing of Incoming Event");
     var secretPrefix = process.env.SECRET_PREFIX;
     var defaultRoleName = process.env.DEFAULT_ROLE_NAME;
 
@@ -69,31 +68,31 @@ async function getConfigurations(allConfigurations, partition, region) {
     };
 
     var serviceCount = 0;
-    for (service in allConfigurations) {
+    for (service in parsedEvent) {
         if(service in expectedServices) {
             console.log("---Found Service ",service.toUpperCase() ,"---");
             serviceCount++;
             if(serviceCount > 1) throw (new Error("Multiple Services in Incoming Event."));
             if(service === 'aws') {
                 //If account_id in aws config, then replace it with roleArn.
-                if (allConfigurations.aws.account_id) {
-                    allConfigurations.aws.roleArn = ["arn",partition,"iam","",allConfigurations.aws.account_id,("role/" + defaultRoleName)].join(':');
-                    delete allConfigurations.aws.account_id;
+                if (parsedEvent.aws.account_id) {
+                    parsedEvent.aws.roleArn = ["arn", partition, "iam", "", parsedEvent.aws.account_id, "role/" + defaultRoleName].join(':');
+                    delete parsedEvent.aws.account_id;
                 }
-            } else if(allConfigurations[service].credentialId) {
-                for (config in allConfigurations[service]) {
+            } else if(parsedEvent[service].credentialId) {
+                for (config in parsedEvent[service]) {
                     if (config in expectedServices[service]) throw (new Error("Configuration passed in through event which must be in Secrets Manager."));
                 }
-                var secretsManagerKey = [secretPrefix, service, allConfigurations[service].credentialId].join('/');
-                secret = await getSecret(secretsManagerKey, region);
-                delete allConfigurations[service].credentialId;
-                Object.assign(allConfigurations[service], secret);
+                var secretsManagerKey = [secretPrefix, service, parsedEvent[service].credentialId].join('/');
+                secret = await getSecret(secretsManagerKey); // eslint-disable-line  no-await-in-loop
+                delete parsedEvent[service].credentialId;
+                Object.assign(parsedEvent[service], secret);
             }
         }
     }
 
     if(serviceCount === 0) throw (new Error("No services provided or provided services are malformed in Incoming Event."));
-    return allConfigurations;
+    return parsedEvent;
 }
 
 /***
