@@ -32,6 +32,7 @@ async function writeToS3(bucket, resultsToWrite, prefix) {
 
         return promises;
     }
+    return []
 }
 
 exports.handler = async function(event, context) {

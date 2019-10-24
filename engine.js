@@ -190,15 +190,15 @@ var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, Googl
             });
         });
     }, function (err, results) {
-        // console.log(JSON.stringify(collection, null, 2));
+        //console.log(JSON.stringify(serviceCollection, null, 2));
         outputHandler.close()
-        if(callback) {
-            callback(null, serviceCollection)
-        }
         if (useStatusExitCode) {
             process.exitCode = Math.max(results)
         }
         console.log('Done');
+        if(callback) {
+            callback(err, serviceCollection)
+        }
     });
 };
 

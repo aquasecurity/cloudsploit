@@ -124,5 +124,6 @@ describe('configs', function () {
             var input = configs.getConfigurations(multipleServicesProvided, partition)
             expect(input).to.be.rejectedWith("Multiple Services in Incoming Event.")
         })
+        //need to find a way to test credentialedId.
     })
 })
