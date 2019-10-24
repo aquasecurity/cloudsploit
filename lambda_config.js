@@ -73,6 +73,9 @@ async function getConfigurations(parsedEvent, partition) {
             console.log("---Found Service ",service.toUpperCase() ,"---");
             serviceCount++;
             if(serviceCount > 1) throw (new Error("Multiple Services in Incoming Event."));
+            expectedServices[service].forEach((config) => {
+                if (config in parsedEvent[service]) throw (new Error("Configuration passed in through event which must be in Secrets Manager."));
+            })
             if(service === 'aws') {
                 //If account_id in aws config, then replace it with roleArn.
                 if (parsedEvent.aws.account_id) {
@@ -80,9 +83,6 @@ async function getConfigurations(parsedEvent, partition) {
                     delete parsedEvent.aws.account_id;
                 }
             } else if(parsedEvent[service].credentialId) {
-                for (config in parsedEvent[service]) {
-                    if (config in expectedServices[service]) throw (new Error("Configuration passed in through event which must be in Secrets Manager."));
-                }
                 var secretsManagerKey = [secretPrefix, service, parsedEvent[service].credentialId].join('/');
                 secret = await getSecret(secretsManagerKey); // eslint-disable-line  no-await-in-loop
                 delete parsedEvent[service].credentialId;
