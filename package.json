@@ -48,7 +48,6 @@
     "azure-keyvault": "^3.0.4",
     "azure-storage": "^2.10.2",
     "bluebird": "^3.7.1",
-    "chai-as-promised": "^7.1.1",
     "csv-write-stream": "^2.0.0",
     "deep-equal-in-any-order": "^1.0.21",
     "fast-safe-stringify": "^2.0.6",
@@ -57,6 +56,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
     "mocha": "^6.1.4"
   }
 }
