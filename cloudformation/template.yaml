@@ -64,7 +64,7 @@ Resources:
     Properties:
       FunctionName: !Sub ${AWS::StackName}-scanner
       Description: Execute a CloudSploit Scan on the specific AWS account
-      Timeout: 300
+      Timeout: 900
       MemorySize: 3008
       Handler: lambda_index.handler
       Runtime: nodejs10.x
@@ -78,19 +78,11 @@ Resources:
       Policies:
         - Version: '2012-10-17'
           Statement:
-            - Action: s3:*
+            - Action: s3:PutObject
               Effect: Allow
               Resource:
                 - !Sub arn:aws:s3:::${BucketName}/*
                 - !Sub arn:aws:s3:::${BucketName}
-            - Action: # TODO - why is this necessary?
-                - s3:ListAllMyBuckets
-                - s3:GetBucketLocation
-              Effect: Allow
-              Resource: '*'
-            - Effect: Allow # TODO - why is this necessary?
-              Action: ses:*
-              Resource: '*'
             - Effect: Allow
               Action: sts:AssumeRole
               Resource: '*'
