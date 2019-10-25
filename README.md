@@ -7,7 +7,7 @@ CloudSploit Scans
 =================
 
 ## Background
-CloudSploit scans is an open-source project designed to allow detection of security risks in an AWS account. These scripts are designed to run against an AWS account and return a series of potential misconfigurations and security risks.
+CloudSploit scans is an open-source project designed to allow detection of security risks in cloud infrastructure accounts. These scripts are designed to return a series of potential misconfigurations and security risks.
 
 ## SaaS Product
 
@@ -26,140 +26,62 @@ git clone git@github.com:cloudsploit/scans.git
 npm install
 ```
 
-## Setup
-To begin using the scanner, edit the `index.js` file with your AWS key, secret, and optionally (for temporary credentials), a session token. You can also set a file containing credentials. To determine the permissions associated with your credentials, see the [permissions section below](#permissions). In the list of plugins in the `exports.js` file, comment out any plugins you do not wish to run. You can also skip entire regions by modifying the `skipRegions` array.
+## Configuration
+To begin using the scanner, edit the `index.js` file with the corresponding settings. You can use any of these three options:
+ * Enter your settings [inline](https://github.com/cloudsploit/scans/blob/master/index.js#L13-L53).
+ * Create a json [file](https://github.com/cloudsploit/scans/blob/master/index.js#L57-L61).
+ * Use [environment variables](https://github.com/cloudsploit/scans/blob/master/index.js#L64-L109). 
 
-You can also set the typical environment variables expected by the aws sdks, namely `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_SESSION_TOKEN`.
+Cloud Infrastructure configuration steps:
 
-### Cross Account Roles
-When using the [hosted scanner](https://cloudsploit.com/scan), you'll need to create a cross-account IAM role. Cross-account roles enable you to share access to your account with another AWS account using the same policy model that you're used to. The advantage is that cross-account roles are much more secure than key-based access, since an attacker who steals a cross-account role ARN still can't make API calls unless they also infiltrate the authorized AWS account.
+* [AWS](#aws)
+* [Azure](#azure) 
 
-To create a cross-account role:
+#### AWS
 
-1. Navigate to the [IAM console](https://console.aws.amazon.com/iam/home).
-2. Click "Roles" and then "Create New Role".
-3. Provide a role name (suggested "cloudsploit").
-4. Select the "Role for Cross-Account Access" radio button.
-5. Click the "Select" button next to "Allows IAM users from a 3rd party AWS account to access this account."
-6. Enter `057012691312` for the account ID (this is the ID of CloudSploit's AWS account).
-7. Copy the auto-generated external ID from the CloudSploit web page and paste it into the AWS IAM console textbox.
-8. Ensure that "Require MFA" is _not_ selected.
-9. Click "Next Step".
-10. Select the "Security Audit" policy. Then click "Next Step" again.
-11. Click through to create the role.
-
-## Permissions
-The scans require read-only permissions to your account. This can be done by adding the "Security Audit" AWS managed policy to your IAM user or role.
-
-### Security Audit Managed Policy (Recommended)
-
-To configure the managed policy:
-
-1. Open the [IAM Console](https://console.aws.amazon.com/iam/home).
-2. Find your user or role.
-3. Click the "Permissions" tab.
-4. Under "Managed Policy", click "Attach policy".
-5. In the filter box, enter "Security Audit"
-6. Select the "Security Audit" policy and save.
-
-### Inline Policy (Not Recommended)
-
-If you'd prefer to be more restrictive, the following IAM policy contains the exact permissions used by the scan.
-
-WARNING: This policy will likely change as more plugins are written. If a test returns "UNKNOWN" it is likely missing a required permission. The preferred method is to use the "SecurityAudit" policy.
+Create a "cloudsploit" user, with the `SecurityAudit` policy.
 
 ```
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "acm:DescribeCertificate",
-        "acm:ListCertificates",
-        "athena:GetWorkGroup",
-        "athena:ListWorkGroups",
-        "autoscaling:DescribeAutoScalingGroups",
-        "cloudfront:GetDistribution",
-        "cloudfront:ListDistributions",
-        "cloudtrail:DescribeTrails",
-        "cloudtrail:GetTrailStatus",
-        "cloudwatchlogs:DescribeLogGroups",
-        "cloudwatchlogs:DescribeMetricFilters",
-        "config:DescribeConfigurationRecorderStatus",
-        "config:DescribeConfigurationRecorders",
-        "dynamodb:DescribeTable",
-        "dynamodb:ListTables",
-        "ec2:DescribeAccountAttributes",
-        "ec2:DescribeAddresses",
-        "ec2:DescribeFlowLogs",
-        "ec2:DescribeImages",
-        "ec2:DescribeInstances",
-        "ec2:DescribeNatGateways",
-        "ec2:DescribeRouteTables",
-        "ec2:DescribeSecurityGroups",
-        "ec2:DescribeSnapshots",
-        "ec2:DescribeSubnets",
-        "ec2:DescribeVolumes",
-        "ec2:DescribeVpcPeeringConnections",
-        "ec2:DescribeVpcs",
-        "efs:DescribeFileSystems",
-        "elastictranscoder:ListPipelines",
-        "elb:DescribeLoadBalancerAttributes",
-        "elb:DescribeLoadBalancerPolicies",
-        "elasticloadbalancing:DescribeLoadBalancers",
-        "firehose:DescribeDeliveryStream",
-        "firehose:ListDeliveryStreams",
-        "iam:GenerateCredentialReport",
-        "iam:GetAccountPasswordPolicy",
-        "iam:GetGroup",
-        "iam:GetGroupPolicy",
-        "iam:GetUserPolicy",
-        "iam:ListAttachedGroupPolicies",
-        "iam:ListAttachedUserPolicies",
-        "iam:ListGroupPolicies",
-        "iam:ListGroups",
-        "iam:ListGroupsForUser",
-        "iam:ListServerCertificates",
-        "iam:ListUserPolicies",
-        "iam:ListUsers",
-        "kinesis:DescribeStream",
-        "kinesis:ListStreams",
-        "kms:DescribeKey",
-        "kms:GetKeyPolicy",
-        "kms:GetKeyRotationStatus",
-        "kms:ListKeys",
-        "lambda:GetPolicy",
-        "lambda:ListFunctions",
-        "rds:DescribeDBClusters",
-        "rds:DescribeDBEngineVersions",
-        "rds:DescribeDBInstances",
-        "redshift:DescribeClusters",
-        "route53domains:ListDomains",
-        "s3:GetBucketAcl",
-        "s3:GetBucketEncryption",
-        "s3:GetBucketLogging",
-        "s3:GetBucketPolicy",
-        "s3:GetBucketVersioning",
-        "s3:ListBuckets",
-        "sagemaker:DescribeNotebookInstance",
-        "sagemaker:ListNotebookInstances",
-        "ses:DescribeActiveReceiptRuleSet",
-        "ses:GetIdentityDkimAttributes",
-        "ses:ListIdentities",
-        "sns:GetTopicAttributes",
-        "sns:ListTopics",
-        "sqs:GetQueueAttributes",
-        "sqs:ListQueues",
-        "ssm:DescribeParameters",
-        "sts:GetCallerIdentity",
-        "transfer:ListServers",
-        "workspaces:DescribeWorkspaces"
-      ],
-      "Effect": "Allow",
-      "Resource": "*"
-    }
-  ]
-}
+1. Navigate to the [IAM console](https://console.aws.amazon.com/iam/home).
+2. Go to Users 
+2. Create a new user (Add user) 
+3. Set the username to "cloudsploit" 
+4. Set the access type to "Programmatic access", click Next.
+5. Select one of your preferred options, if you have a group with SecurityAudit role assign the new user to that group.
+6. If not select the "Attach existing policies directly" and select the SecurityAudit policy, click Next.
+7. Set tags as needed and then click on "Create user".
+8. Make sure you safely store the Access key ID and Secret access key.
+9. Paste them into the corresponding AWS credentials section of the `index.js` file.
+```
+ 
+If using environment variables, the same ones expected by the aws sdks, namely `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_SESSION_TOKEN`, can be used.
+
+For more information on using our hosted scanner, [click here](#other-notes)
+
+#### Azure
+```
+1. Log into your Azure Portal and navigate to the Azure Active Directory service.
+2. Select App registrations and then click on New registration.
+3. Enter "CloudSploit" and/or a descriptive name in the Name field, take note of it, it will be used again in step 3.
+4. Leave the "Supported account types" default: "Accounts in this organizational directory only (YOURDIRECTORYNAME)".
+5. Click on Register.
+6. Copy the Application ID and Paste it below.
+7. Copy the Directory ID and Paste it below.
+8. Click on Certificates & secrets.
+9. Under Client secrets, click on New client secret.
+10. Enter a Description (i.e. Cloudsploit-2019) and select Expires "In 1 year".
+11. Click on Add.
+12. The Client secret value appears only once, make sure you store it safely.
+13. Navigate to Subscriptions.
+14. Click on the relevant Subscription ID, copy and paste the ID below.
+15. Click on "Access Control (IAM)".
+16. Go to the Role assignments tab.
+17. Click on "Add", then "Add role assignment".
+18. In the "Role" drop-down, select "Security Reader".
+19. Leave the "Assign access to" default value.
+20. In the "Select" drop-down, type the name of the app registration (e.g. "CloudSploit") you created and select it.
+21. Click "Save".
+22. Repeat the process for the role "Log Analytics Reader"
 ```
 
 ## Running
@@ -170,9 +92,8 @@ To run a standard scan, showing all outputs and results, simply run:
 node index.js
 ```
 
-## Optional Plugins
+In the list of plugins in the `exports.js` file, comment out any plugins you do not wish to run. You can also skip entire regions by modifying the `skipRegions` array.
 
-Some plugins may require additional permissions not outlined above. Since their required IAM permissions are not included in the `SecurityAudit` managed policy, these plugins are not included in the `exports.js` file by default. To enable these plugins, uncomment them from the `exports.js` file, if applicable, add the policies required to an inline IAM policy, and re-run the scan.
 
 ## Compliance
 
@@ -214,11 +135,22 @@ node index.js --console --junit=./out.xml --csv=./out.csv
 
 ## Architecture
 
-CloudSploit works in two phases. First, it queries the AWS APIs for various metadata about your account. This is known as the "collection" phase. Once all the necessary data has been collected, the result is passed to the second phase - "scanning." The scan uses the collected data to search for potential misconfigurations, risks, and other security issues. These are then provided as output.
+CloudSploit works in two phases. First, it queries the cloud infrastructure APIs for various metadata about your account, namely the "collection" phase. Once all the necessary data is collected, the result is passed to the "scanning" phase. The scan uses the collected data to search for potential misconfigurations, risks, and other security issues, which are the resulting output.
+## Writing a Plugin  
 
-## Writing a Plugin
-### Collection Phase
-To write a plugin, you must understand what AWS API calls your scan makes. These must be added to the `collect.js` file. This file determines the AWS API calls and the order in which they are made. For example:
+### Collection Phase  
+
+To write a plugin, you want to understand which data is needed and how your cloud infrastructure provides them via their API calls. Once you have identified the API calls needed, you can add them to the collect.js file for your cloud infrastructure provider. This file determines the cloud infrastructure API calls and their run-order.
+
+### Collectors
+
+* [AWS Collecttion](#aws-collection)
+* [Azure Collecttion](#azure-collection)
+
+#### AWS Collection
+
+The following declaration tells the CloudSploit collection engine to query the CloudFront service using the `listDistributions` call and then save the results returned under `DistributionList.Items`.
+
 ```
 CloudFront: {
   listDistributions: {
@@ -227,11 +159,11 @@ CloudFront: {
   }
 },
 ```
-This declaration tells the CloudSploit collection engine to query the CloudFront service using the `listDistributions` call and then save the results returned under `DistributionList.Items`.
 
-The second section in `collect.js` is `postcalls`, which is an array of objects defining API calls that rely on other calls being returned first. For example, if you need to first query for all EC2 instances, and then loop through each instance and run a more detailed call, you would add the `EC2:DescribeInstances` call in the first `calls` section and then add the more detailed call in `postCalls` setting it to rely on the output of `DescribeInstances`.
+The second section in `collect.js` is `postcalls`, which is an array of objects defining API calls that rely on other calls first returned. For example, if you need to query for all `CloudFront distributions`, and then loop through each one and run a more detailed call, you would add the `CloudFront:listDistributions` call in the [`calls`](https://github.com/cloudsploit/scans/blob/master/collectors/aws/collector.js#L58-L64) section and then the more detailed call in [`postcalls`](https://github.com/cloudsploit/scans/blob/master/collectors/aws/collector.js#L467-L473), setting it to rely on the output of `listDistributions` call.
 
-An example:
+An example:  
+
 ```
 getGroup: {
   reliesOnService: 'iam',
@@ -240,17 +172,51 @@ getGroup: {
   filterValue: 'GroupName'
 },
 ```
+
 This section tells CloudSploit to wait until the `IAM:listGroups` call has been made, and then loop through the data that is returned. The `filterKey` tells CloudSploit the name of the key from the original response, while `filterValue` tells it which property to set in the `getGroup` call filter. For example: `iam.getGroup({GroupName:abc})` where `abc` is the `GroupName` from the returned list. CloudSploit will loop through each response, re-invoking `getGroup` for each element.
 
+You can find the [AWS Collector here.](https://github.com/cloudsploit/scans/blob/master/collectors/aws/collector.js)
+
+#### Azure Collection
+
+The following declaration tells the Cloudsploit collection engine to query the Compute Management Service using the virtualMachines:listAll call.
+
+```
+virtualMachines: {
+  listAll: {
+    api: "ComputeManagementClient",
+    arm: true
+  }
+},
+```
+
+The second section in `collect.js` is `postcalls`, which is an array of objects defining API calls that rely on other calls first returned. For example, if you need to query for all `Virtual Machine instances`, and then loop through each one and run a more detailed call, you would add the `virtualMachines:listAll` call in the [`calls`](https://github.com/cloudsploit/scans/blob/master/collectors/azure/collector.js#L50-L55) section and then the more detailed call in [`postcalls`](https://github.com/cloudsploit/scans/blob/master/collectors/azure/collector.js#L293-L302), setting it to rely on the output of `listDistributions` call.
+
+```
+virtualMachineExtensions: {
+  list: {
+    api: "ComputeManagementClient",
+    reliesOnService: ['resourceGroups', 'virtualMachines'],
+    reliesOnCall: ['list', 'listAll'],
+    filterKey: ['resourceGroupName', 'name'],
+    filterValue: ['resourceGroupName', 'name'],
+    arm: true
+  }
+},
+```
+
+You can find the [Azure Collector here.](https://github.com/cloudsploit/scans/blob/master/collectors/azure/collector.js)
+
 ### Scanning Phase
+
 After the data has been collected, it is passed to the scanning engine when the results are analyzed for risks. Each plugin must export the following:
 
 * Exports the following:
   * ```title``` (string): a user-friendly title for the plugin
-  * ```category``` (string): the AWS category (EC2, RDS, ELB, etc.)
+  * ```category``` (string): the cloud infrastructure category (i.e.: **_AWS:_** EC2, RDS, ELB, etc. **_Azure:_** )
   * ```description``` (string): a description of what the plugin does
   * ```more_info``` (string): a more detailed description of the risk being tested for
-  * ```link``` (string): an AWS help URL describing the service or risk, preferably with mitigation methods
+  * ```link``` (string): an cloud infrastructure help URL describing the service or risk, preferably with mitigation methods
   * ```recommended_action``` (string): what the user should do to mitigate the risk found
   * ```run``` (function): a function that runs the test (see below)
 * Accepts a ```collection``` object via the run function containing the full collection object obtained in the first phase.
@@ -266,14 +232,14 @@ Each test has a result code that is used to determine if the test was successful
 
 ### Tips for Writing Plugins
 * Many security risks can be detected using the same API calls. To minimize the number of API calls being made, utilize the `cache` helper function to cache the results of an API call made in one test for future tests. For example, two plugins: "s3BucketPolicies" and "s3BucketPreventDelete" both call APIs to list every S3 bucket. These can be combined into a single plugin "s3Buckets" which exports two tests called "bucketPolicies" and "preventDelete". This way, the API is called once, but multiple tests are run on the same results.
-* Ensure AWS API calls are being used optimally. For example, call describeInstances with empty parameters to get all instances, instead of calling describeInstances multiple times looping through each instance name.
+* Ensure cloud infrastructure API calls are being used optimally. For example, call describeInstances with empty parameters to get all instances, instead of calling describeInstances multiple times looping through each instance name.
 * Use async.eachLimit to reduce the number of simultaneous API calls. Instead of using a for loop on 100 requests, spread them out using async's each limit.
 
 ### Example
+#### AWS
 To more clearly illustrate writing a new plugin, let's consider the "IAM Empty Groups" plugin. First, we know that we will need to query for a list of groups via `listGroups`, then loop through each group and query for the more detailed set of data via `getGroup`.
 
 We'll add these API calls to `collect.js`. First, under `calls` add:
-
 ```
 IAM: {
   listGroups: {
@@ -319,7 +285,7 @@ Now, we can write the plugin functionality by checking for the data relevant to 
 if (!getGroup || getGroup.err || !getGroup.data || !getGroup.data.Users) {
   helpers.addResult(results, 3, 'Unable to query for group: ' + group.GroupName, 'global', group.Arn);
 } else if (!getGroup.data.Users.length) {
-  helpers.addResult(results, 1, 'Group: ' + group.GroupName + ' does not contain any users', 'global', group.Arn);
+  helpers.addResult(results, 0, 'Group: ' + group.GroupName + ' does not contain any users', 'global', group.Arn);
   return cb();
 } else {
   helpers.addResult(results, 0, 'Group: ' + group.GroupName + ' contains ' + getGroup.data.Users.length + ' user(s)', 'global', group.Arn);
@@ -330,3 +296,380 @@ The `addResult` function ensures we are adding the results to the `results` arra
 (results array, score, message, region, resource)
 ```
 The `resource` is optional, and the `score` must be between 0 and 3 to indicate PASS, WARN, FAIL, or UNKNOWN.
+
+#### Azure
+To more clearly illustrate writing a new plugin, let us consider the Virtual Machines VM Endpoint Protection plugin `plugins/azure/virtualmachines/vmEndpointProtection.js` . First, we know that we will need to query for a list of virtual machines via `virtualMachines:listAll`, then loop through each group and query for the more detailed set of data via `virtualMachineExtensions:list`.
+
+We'll add these API calls to `collect.js`. First, under `calls` add:
+
+```
+virtualMachines: {
+  listAll: {
+    api: "ComputeManagementClient",
+    arm: true
+  }
+},
+```
+
+Then, under `postcalls`, add:
+```
+virtualMachineExtensions: {
+  list: {
+    api: "ComputeManagementClient",
+    reliesOnService: ['resourceGroups', 'virtualMachines'],
+    reliesOnCall: ['list', 'listAll'],
+    filterKey: ['resourceGroupName', 'name'],
+    filterValue: ['resourceGroupName', 'name'],
+    arm: true
+  }
+},
+```
+CloudSploit will first get the list of virtual machines, then, it will loop through each one, using the virtual machine name to get more detailed info via `virtualMachineExtensions`.
+
+Next, we'll write the plugin. Create a new file in the `plugins/virtualmachines` folder called `vmEndpointProtection.js` (this plugin already exists, but you can create a similar one for the purposes of this example).
+
+In the file, we'll be sure to export the plugin's title, category, description, link, and more information about it. Additionally, we will add any API calls it makes:
+```
+apis: ['resourceGroups:list', 'virtualMachines:listAll', 'virtualMachineExtensions:list'],
+```
+In the `run` function, we can obtain the output of the collection phase from earlier by doing:
+```
+var virtualMachines = helpers.addSource(cache, source, 
+        ['virtualMachines', 'listAll', location]);
+```
+Then, we can loop through each of the results and do:
+```
+var virtualMachineExtensions = helpers.addSource(cache, source,     ['virtualMachineExtensions', 'list', location]);
+```
+The `helpers` function ensures that the proper results are returned from the collection and that they are saved into a "source" variable which can be returned with the results.
+
+Now, we can write the plugin functionality by checking for the data relevant to our requirements:
+```
+if (virtualMachineExtensions.err || !virtualMachineExtensions.data) {
+    helpers.addResult(results, 3, 
+        Unable to query for VM Extensions: ' + helpers.addError(virtualMachineExtensions), location);
+                return rcb();
+}
+if (!virtualMachineExtensions.data.length) {
+    helpers.addResult(results, 0, 'No VM Extensions found', location);
+}
+```
+The `addResult` function ensures we are adding the results to the `results` array in the proper format. This function accepts the following:
+```
+(results array, score, message, region, resource)
+```
+The `resource` is optional, and the `score` must be between 0 and 3 to indicate PASS, WARN, FAIL, or UNKNOWN.
+
+## Other Notes
+
+When using the [hosted scanner](https://cloudsploit.com/scan), you will be able to see an intuitive visual representation of the scan results. In CloudSploit's console, printable scan results look as folllows:
+
+[<img src="https://github.com/cloudsploit/scans/blob/readme-updates/assets/img/cloudsploit-printable-reports.png">](https://console.cloudsploit.com/signup)
+
+### Cross-account IAM role
+
+Cross-account roles enable you to share access to your account with another AWS account using the same policy model that you're used to within AWS services' scope.
+ 
+The advantage is that cross-account roles are much more secure than key-based access, since an attacker who steals a cross-account role ARN still cannot make API calls unless he/she also infiltrates the AWS account that has been authorized to use the role in question.
+
+To create a cross-account role:
+
+```
+1. Navigate to the [IAM console](https://console.aws.amazon.com/iam/home).
+2. Log into your AWS account and navigate to the IAM console.
+3. Create a new IAM role.
+4. When prompted for a trusted entity select: "Another AWS account".
+5. Enter "057012691312" for the account to trust (Account ID).
+6. Check the box to "Require external ID" and enter the external ID displayed below.
+7. Ensure that MFA token is not selected.
+8. Select the "SecurityAudit" managed policy.
+9. Enter a memorable role name and create the role.
+10. Then click on the role name and copy the role ARN for use in the next step.
+```
+
+### AWS Inline Policy (Not Recommended)
+
+If you'd prefer to be more restrictive, the following IAM policy contains the exact permissions used by the scan.
+
+**WARNING:** This policy will likely change as more plugins are written. If a test returns "UNKNOWN" it is likely missing a required permission. The preferred method is to use the "SecurityAudit" policy.
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Resource": "*",
+            "Action": [
+                "acm:Describe*",
+                "acm:List*",
+                "application-autoscaling:Describe*",
+                "appmesh:Describe*",
+                "appmesh:List*",
+                "appsync:List*",
+                "athena:List*",
+                "autoscaling:Describe*",
+                "batch:DescribeComputeEnvironments",
+                "batch:DescribeJobDefinitions",
+                "chime:List*",
+                "cloud9:Describe*",
+                "cloud9:ListEnvironments",
+                "clouddirectory:ListDirectories",
+                "cloudformation:DescribeStack*",
+                "cloudformation:GetTemplate",
+                "cloudformation:ListStack*",
+                "cloudformation:GetStackPolicy",
+                "cloudfront:Get*",
+                "cloudfront:List*",
+                "cloudhsm:ListHapgs",
+                "cloudhsm:ListHsms",
+                "cloudhsm:ListLunaClients",
+                "cloudsearch:DescribeDomains",
+                "cloudsearch:DescribeServiceAccessPolicies",
+                "cloudtrail:DescribeTrails",
+                "cloudtrail:GetEventSelectors",
+                "cloudtrail:GetTrailStatus",
+                "cloudtrail:ListTags",
+                "cloudtrail:LookupEvents",
+                "cloudwatch:Describe*",
+                "codebuild:ListProjects",
+                "codecommit:BatchGetRepositories",
+                "codecommit:GetBranch",
+                "codecommit:GetObjectIdentifier",
+                "codecommit:GetRepository",
+                "codecommit:List*",
+                "codedeploy:Batch*",
+                "codedeploy:Get*",
+                "codedeploy:List*",
+                "codepipeline:ListPipelines",
+                "codestar:Describe*",
+                "codestar:List*",
+                "cognito-identity:ListIdentityPools",
+                "cognito-idp:ListUserPools",
+                "cognito-sync:Describe*",
+                "cognito-sync:List*",
+                "comprehend:Describe*",
+                "comprehend:List*",
+                "config:BatchGetAggregateResourceConfig",
+                "config:BatchGetResourceConfig",
+                "config:Deliver*",
+                "config:Describe*",
+                "config:Get*",
+                "config:List*",
+                "datapipeline:DescribeObjects",
+                "datapipeline:DescribePipelines",
+                "datapipeline:EvaluateExpression",
+                "datapipeline:GetPipelineDefinition",
+                "datapipeline:ListPipelines",
+                "datapipeline:QueryObjects",
+                "datapipeline:ValidatePipelineDefinition",
+                "datasync:Describe*",
+                "datasync:List*",
+                "dax:Describe*",
+                "dax:ListTags",
+                "directconnect:Describe*",
+                "dms:Describe*",
+                "dms:ListTagsForResource",
+                "ds:DescribeDirectories",
+                "dynamodb:DescribeContinuousBackups",
+                "dynamodb:DescribeGlobalTable",
+                "dynamodb:DescribeTable",
+                "dynamodb:DescribeTimeToLive",
+                "dynamodb:ListBackups",
+                "dynamodb:ListGlobalTables",
+                "dynamodb:ListStreams",
+                "dynamodb:ListTables",
+                "ec2:Describe*",
+                "ecr:DescribeRepositories",
+                "ecr:GetRepositoryPolicy",
+                "ecs:Describe*",
+                "ecs:List*",
+                "eks:DescribeCluster",
+                "eks:ListClusters",
+                "elasticache:Describe*",
+                "elasticbeanstalk:Describe*",
+                "elasticfilesystem:DescribeFileSystems",
+                "elasticfilesystem:DescribeMountTargetSecurityGroups",
+                "elasticfilesystem:DescribeMountTargets",
+                "elasticloadbalancing:Describe*",
+                "elasticmapreduce:Describe*",
+                "elasticmapreduce:ListClusters",
+                "elasticmapreduce:ListInstances",
+                "es:Describe*",
+                "es:ListDomainNames",
+                "events:Describe*",
+                "events:List*",
+                "firehose:Describe*",
+                "firehose:List*",
+                "fms:ListComplianceStatus",
+                "fms:ListPolicies",
+                "fsx:Describe*",
+                "fsx:List*",
+                "gamelift:ListBuilds",
+                "gamelift:ListFleets",
+                "glacier:DescribeVault",
+                "glacier:GetVaultAccessPolicy",
+                "glacier:ListVaults",
+                "globalaccelerator:Describe*",
+                "globalaccelerator:List*",
+                "greengrass:List*",
+                "guardduty:Get*",
+                "guardduty:List*",
+                "iam:GenerateCredentialReport",
+                "iam:GenerateServiceLastAccessedDetails",
+                "iam:Get*",
+                "iam:List*",
+                "iam:SimulateCustomPolicy",
+                "iam:SimulatePrincipalPolicy",
+                "inspector:Describe*",
+                "inspector:Get*",
+                "inspector:List*",
+                "inspector:Preview*",
+                "iot:Describe*",
+                "iot:GetPolicy",
+                "iot:GetPolicyVersion",
+                "iot:List*",
+                "kinesis:DescribeStream",
+                "kinesis:ListStreams",
+                "kinesis:ListTagsForStream",
+                "kinesisanalytics:ListApplications",
+                "kms:Describe*",
+                "kms:Get*",
+                "kms:List*",
+                "lambda:GetAccountSettings",
+                "lambda:GetFunctionConfiguration",
+                "lambda:GetLayerVersionPolicy",
+                "lambda:GetPolicy",
+                "lambda:List*",
+                "license-manager:List*",
+                "lightsail:GetInstances",
+                "lightsail:GetLoadBalancers",
+                "logs:Describe*",
+                "logs:ListTagsLogGroup",
+                "machinelearning:DescribeMLModels",
+                "mediaconnect:Describe*",
+                "mediaconnect:List*",
+                "mediastore:GetContainerPolicy",
+                "mediastore:ListContainers",
+                "opsworks:DescribeStacks",
+                "opsworks-cm:DescribeServers",
+                "organizations:List*",
+                "organizations:Describe*",
+                "quicksight:Describe*",
+                "quicksight:List*",
+                "ram:List*",
+                "rds:Describe*",
+                "rds:DownloadDBLogFilePortion",
+                "rds:ListTagsForResource",
+                "redshift:Describe*",
+                "rekognition:Describe*",
+                "rekognition:List*",
+                "robomaker:Describe*",
+                "robomaker:List*",
+                "route53:Get*",
+                "route53:List*",
+                "route53domains:GetDomainDetail",
+                "route53domains:GetOperationDetail",
+                "route53domains:ListDomains",
+                "route53domains:ListOperations",
+                "route53domains:ListTagsForDomain",
+                "route53resolver:List*",
+                "route53resolver:Get*",
+                "s3:GetAccelerateConfiguration",
+                "s3:GetAccountPublicAccessBlock",
+                "s3:GetAnalyticsConfiguration",
+                "s3:GetBucket*",
+                "s3:GetEncryptionConfiguration",
+                "s3:GetInventoryConfiguration",
+                "s3:GetLifecycleConfiguration",
+                "s3:GetMetricsConfiguration",
+                "s3:GetObjectAcl",
+                "s3:GetObjectVersionAcl",
+                "s3:GetReplicationConfiguration",
+                "s3:ListAllMyBuckets",
+                "sagemaker:Describe*",
+                "sagemaker:List*",
+                "sdb:DomainMetadata",
+                "sdb:ListDomains",
+                "secretsmanager:GetResourcePolicy",
+                "secretsmanager:ListSecrets",
+                "secretsmanager:ListSecretVersionIds",
+                "securityhub:Describe*",
+                "securityhub:Get*",
+                "securityhub:List*",
+                "serverlessrepo:GetApplicationPolicy",
+                "serverlessrepo:List*",
+                "ses:GetIdentityDkimAttributes",
+                "ses:GetIdentityPolicies",
+                "ses:GetIdentityVerificationAttributes",
+                "ses:ListIdentities",
+                "ses:ListIdentityPolicies",
+                "ses:ListVerifiedEmailAddresses",
+                "shield:Describe*",
+                "shield:List*",
+                "snowball:ListClusters",
+                "snowball:ListJobs",
+                "sns:GetTopicAttributes",
+                "sns:ListSubscriptionsByTopic",
+                "sns:ListTopics",
+                "sqs:GetQueueAttributes",
+                "sqs:ListDeadLetterSourceQueues",
+                "sqs:ListQueues",
+                "sqs:ListQueueTags",
+                "ssm:Describe*",
+                "ssm:GetAutomationExecution",
+                "ssm:ListDocuments",
+                "sso:DescribePermissionsPolicies",
+                "sso:List*",
+                "states:ListStateMachines",
+                "storagegateway:DescribeBandwidthRateLimit",
+                "storagegateway:DescribeCache",
+                "storagegateway:DescribeCachediSCSIVolumes",
+                "storagegateway:DescribeGatewayInformation",
+                "storagegateway:DescribeMaintenanceStartTime",
+                "storagegateway:DescribeNFSFileShares",
+                "storagegateway:DescribeSnapshotSchedule",
+                "storagegateway:DescribeStorediSCSIVolumes",
+                "storagegateway:DescribeTapeArchives",
+                "storagegateway:DescribeTapeRecoveryPoints",
+                "storagegateway:DescribeTapes",
+                "storagegateway:DescribeUploadBuffer",
+                "storagegateway:DescribeVTLDevices",
+                "storagegateway:DescribeWorkingStorage",
+                "storagegateway:List*",
+                "tag:GetResources",
+                "tag:GetTagKeys",
+                "transfer:Describe*",
+                "transfer:List*",
+                "translate:List*",
+                "trustedadvisor:Describe*",
+                "waf:ListWebACLs",
+                "waf-regional:ListWebACLs",
+                "workspaces:Describe*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "apigateway:GET"
+            ],
+            "Resource": [
+                "arn:aws:apigateway:*::/apis",
+                "arn:aws:apigateway:*::/apis/*/stages",
+                "arn:aws:apigateway:*::/apis/*/stages/*",
+                "arn:aws:apigateway:*::/apis/*/routes",
+                "arn:aws:apigateway:*::/restapis",
+                "arn:aws:apigateway:*::/restapis/*/authorizers",
+                "arn:aws:apigateway:*::/restapis/*/authorizers/*",
+                "arn:aws:apigateway:*::/restapis/*/documentation/versions",
+                "arn:aws:apigateway:*::/restapis/*/resources",
+                "arn:aws:apigateway:*::/restapis/*/resources/*",
+                "arn:aws:apigateway:*::/restapis/*/resources/*/methods/*",
+                "arn:aws:apigateway:*::/restapis/*/stages",
+                "arn:aws:apigateway:*::/restapis/*/stages/*",
+                "arn:aws:apigateway:*::/vpclinks"
+            ]
+        }
+    ]
+}
+```
