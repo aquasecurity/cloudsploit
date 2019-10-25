@@ -8,3 +8,4 @@ vscode/*
 .vscode/
 .idea
 .local
+template.packaged.yaml

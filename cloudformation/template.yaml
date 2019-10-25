@@ -86,6 +86,9 @@ Resources:
             - Effect: Allow
               Action: sts:AssumeRole
               Resource: '*'
+            - Effect: Allow
+              Action: secretsmanager:GetSecretValue
+              Resource: !Sub arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:${SecretsManagerPrefix}/*
 
   CloudsploitScannerSchedule:
     Condition: CreateSchedule
