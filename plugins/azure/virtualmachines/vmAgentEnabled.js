@@ -28,28 +28,30 @@ module.exports = {
             }
             if (!virtualMachines.data.length) {
                 helpers.addResult(results, 0, 'No existing virtual machines found', location);
-            } else {
-                var reg = 0;
-                for(i in virtualMachines.data){
-                    if (virtualMachines.data[i].osProfile &&
-                        Object.keys(virtualMachines.data[i].osProfile) &&
-                        Object.keys(virtualMachines.data[i].osProfile).length>1
-                    ) {
-                        var VMConfig = Object.keys(virtualMachines.data[i].osProfile)[2];
-                        if(!virtualMachines.data[i].osProfile[VMConfig].provisionVMAgent){
-                            helpers.addResult(results, 2, 'VM Agent is not enabled for this virtual machine: ' + virtualMachines.data[i].name, location, virtualMachines.data[i].id);
-                            reg++;
-                        }
-                    }
-                }
-                if(!reg){
-                    helpers.addResult(results, 0, 'VM agent is enabled on all virtual machines', location);
-                }
+                return rcb();
             }
+            var noVMAgent = false;
+            virtualMachines.data.forEach(virtualMachine => {
+                if (virtualMachine.osProfile &&
+                    virtualMachine.osProfile.linuxConfiguration &&
+                    !virtualMachine.osProfile.linuxConfiguration.provisionVMAgent) {
+                    helpers.addResult(results, 2, 'VM Agent is not enabled for this virtual machine: ' + virtualMachine.name, location, virtualMachine.id);
+                    noVMAgent = true;
+                } else if (virtualMachine.osProfile &&
+                    virtualMachine.osProfile.windowsConfiguration &&
+                    !virtualMachine.osProfile.windowsConfiguration.provisionVMAgent) {
+                    helpers.addResult(results, 2, 'VM Agent is not enabled for this virtual machine: ' + virtualMachine.name, location, virtualMachine.id);
+                    noVMAgent = true;
+                }
+            });
+            if (!noVMAgent) {
+                helpers.addResult(results, 0, 'VM agent is enabled on all virtual machines', location);
+            }
+
             rcb();
-        }, function(){
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });
     }
-}
+};
