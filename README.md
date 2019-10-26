@@ -41,48 +41,48 @@ Cloud Infrastructure configuration steps:
 
 Create a "cloudsploit" user, with the `SecurityAudit` policy.
 
-```
+
 1. Navigate to the [IAM console](https://console.aws.amazon.com/iam/home).
-2. Go to Users 
-2. Create a new user (Add user) 
-3. Set the username to "cloudsploit" 
-4. Set the access type to "Programmatic access", click Next.
-5. Select one of your preferred options, if you have a group with SecurityAudit role assign the new user to that group.
-6. If not select the "Attach existing policies directly" and select the SecurityAudit policy, click Next.
-7. Set tags as needed and then click on "Create user".
-8. Make sure you safely store the Access key ID and Secret access key.
-9. Paste them into the corresponding AWS credentials section of the `index.js` file.
-```
+1. Go to Users 
+1. Create a new user (Add user) 
+1. Set the username to "cloudsploit" 
+1. Set the access type to "Programmatic access", click Next.
+1. Select one of your preferred options, if you have a group with SecurityAudit role assign the new user to that group.
+1. If not select the "Attach existing policies directly" and select the SecurityAudit policy, click Next.
+1. Set tags as needed and then click on "Create user".
+1. Make sure you safely store the Access key ID and Secret access key.
+1. Paste them into the corresponding AWS credentials section of the `index.js` file.
+
  
 If using environment variables, the same ones expected by the aws sdks, namely `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_SESSION_TOKEN`, can be used.
 
 For more information on using our hosted scanner, [click here](#other-notes)
 
 #### Azure
-```
+
 1. Log into your Azure Portal and navigate to the Azure Active Directory service.
-2. Select App registrations and then click on New registration.
-3. Enter "CloudSploit" and/or a descriptive name in the Name field, take note of it, it will be used again in step 3.
-4. Leave the "Supported account types" default: "Accounts in this organizational directory only (YOURDIRECTORYNAME)".
-5. Click on Register.
-6. Copy the Application ID and Paste it below.
-7. Copy the Directory ID and Paste it below.
-8. Click on Certificates & secrets.
-9. Under Client secrets, click on New client secret.
-10. Enter a Description (i.e. Cloudsploit-2019) and select Expires "In 1 year".
-11. Click on Add.
-12. The Client secret value appears only once, make sure you store it safely.
-13. Navigate to Subscriptions.
-14. Click on the relevant Subscription ID, copy and paste the ID below.
-15. Click on "Access Control (IAM)".
-16. Go to the Role assignments tab.
-17. Click on "Add", then "Add role assignment".
-18. In the "Role" drop-down, select "Security Reader".
-19. Leave the "Assign access to" default value.
-20. In the "Select" drop-down, type the name of the app registration (e.g. "CloudSploit") you created and select it.
-21. Click "Save".
-22. Repeat the process for the role "Log Analytics Reader"
-```
+1. Select App registrations and then click on New registration.
+1. Enter "CloudSploit" and/or a descriptive name in the Name field, take note of it, it will be used again in step 3.
+1. Leave the "Supported account types" default: "Accounts in this organizational directory only (YOURDIRECTORYNAME)".
+1. Click on Register.
+1. Copy the Application ID and Paste it below.
+1. Copy the Directory ID and Paste it below.
+1. Click on Certificates & secrets.
+1. Under Client secrets, click on New client secret.
+1. Enter a Description (i.e. Cloudsploit-2019) and select Expires "In 1 year".
+1. Click on Add.
+1. The Client secret value appears only once, make sure you store it safely.
+1. Navigate to Subscriptions.
+1. Click on the relevant Subscription ID, copy and paste the ID below.
+1. Click on "Access Control (IAM)".
+1. Go to the Role assignments tab.
+1. Click on "Add", then "Add role assignment".
+1. In the "Role" drop-down, select "Security Reader".
+1. Leave the "Assign access to" default value.
+1. In the "Select" drop-down, type the name of the app registration (e.g. "CloudSploit") you created and select it.
+1. Click "Save".
+1. Repeat the process for the role "Log Analytics Reader"
+
 
 ## Running
 
@@ -225,7 +225,7 @@ After the data has been collected, it is passed to the scanning engine when the 
 ### Result Codes
 Each test has a result code that is used to determine if the test was successful and its risk level. The following codes are used:
 
-* 0: OKAY: No risks
+* 0: PASS: No risks
 * 1: WARN: The result represents a potential misconfiguration or issue but is not an immediate risk
 * 2: FAIL: The result presents an immediate risk to the security of the account
 * 3: UNKNOWN: The results could not be determined (API failure, wrong permissions, etc.)
@@ -364,7 +364,7 @@ The `resource` is optional, and the `score` must be between 0 and 3 to indicate 
 
 When using the [hosted scanner](https://cloudsploit.com/scan), you will be able to see an intuitive visual representation of the scan results. In CloudSploit's console, printable scan results look as folllows:
 
-[<img src="https://github.com/cloudsploit/scans/blob/readme-updates/assets/img/cloudsploit-printable-reports.png">](https://console.cloudsploit.com/signup)
+[<img src="https://cloudsploit.com/images/pricing-new.png">](https://console.cloudsploit.com/signup)
 
 ### Cross-account IAM role
 
