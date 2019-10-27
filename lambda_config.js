@@ -33,8 +33,10 @@ function parseEvent(event) {
     } else if(event.detail) {
         console.log("---CloudWatch Event Trigger---");
         allConfigurations = event.detail;
+    } else {
+        allConfigurations = event;
     }
-    console.assert(allConfigurations, "Configurations not found from incoming Event.");
+    // console.assert(allConfigurations, "Configurations not found from incoming Event.");
 
     return allConfigurations
 }
