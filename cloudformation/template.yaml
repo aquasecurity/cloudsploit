@@ -135,3 +135,6 @@ Resources:
 Outputs:
   CloudsploutLambdaArn:
     Value: !GetAtt CloudsploitScanner.Arn
+
+  CloudsploutLambdaName:
+    Value: !Ref CloudsploitScanner
