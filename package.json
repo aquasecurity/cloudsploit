@@ -47,6 +47,7 @@
     "azure-arm-sql": "^5.7.0",
     "azure-arm-storage": "^6.3.0",
     "azure-arm-website": "^5.7.0",
+    "azure-graph": "^4.3.0",
     "azure-keyvault": "^3.0.4",
     "azure-storage": "^2.10.2",
     "csv-write-stream": "^2.0.0",
