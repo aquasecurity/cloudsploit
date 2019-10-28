@@ -25,6 +25,7 @@ module.exports = {
     eks: [],
     elb: regions,
     elbv2: regions,
+    es: regions,
     kinesis: [],
     firehose: regions,
     kms: regions,

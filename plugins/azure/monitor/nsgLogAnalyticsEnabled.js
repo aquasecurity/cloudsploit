@@ -9,6 +9,15 @@ module.exports = {
     recommended_action: 'Enable sending of logs to Log Analytics for each Network Security Group resource in the Azure Monitor.',
     link: 'https://docs.microsoft.com/en-us/azure/azure-monitor/platform/collect-activity-logs',
     apis: ['networkSecurityGroups:listAll', 'diagnosticSettingsOperations:nsg:list'],
+    compliance: {
+        pci: 'PCI requires monitoring and logging of all network traffic. ' +
+            'These include malicious attempts to access services within the ' +
+            'infrastructure.',
+        hipaa: 'HIPAA requires monitoring and logging of all network traffic. ' +
+            'These include malicious attempts to access services within the ' +
+            'infrastructure.'
+    },
+
 
     run: function (cache, settings, callback) {
         const results = [];

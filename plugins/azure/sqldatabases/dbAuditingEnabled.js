@@ -9,6 +9,11 @@ module.exports = {
     recommended_action: 'Ensure that auditing is enabled for each SQL database.',
     link: 'https://docs.microsoft.com/en-us/azure/security-center/security-center-enable-auditing-on-sql-databases',
     apis: ['servers:sql:list', 'databases:listByServer', 'databaseBlobAuditingPolicies:get'],
+    compliance: {
+        hipaa: 'HIPAA requires that a secure audit record for ' +
+            'write read and delete is created for all ' +
+            'activities in the system.'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

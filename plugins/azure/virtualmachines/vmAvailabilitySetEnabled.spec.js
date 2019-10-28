@@ -63,7 +63,7 @@ describe('vmAvailabilitySetEnabled', function () {
                 null,
                 [
                     {
-                        "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/DEFAULT-ACTIVITYLOGALERTS/providers/Microsoft.Compute/virtualMachines/test1",
+                        "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/DEFAULT-ACTIVITYLOGALERTS/providers/Microsoft.Compute/virtualMachines/test1",
                         "name": "test1",
                         "type": "Microsoft.Compute/virtualMachines",
                         "location": "eastus",
@@ -84,7 +84,7 @@ describe('vmAvailabilitySetEnabled', function () {
                                 "createOption": "FromImage",
                                 "diskSizeGB": 30,
                                 "managedDisk": {
-                                    "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Compute/disks/test1_OsDisk_1_e7fb8ef5859f4c63ae6549467739cb43",
+                                    "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Compute/disks/test1_OsDisk_1_e7fb8ef5859f4c63ae6549467739cb43",
                                     "storageAccountType": "Premium_LRS"
                                 }
                             },
@@ -103,7 +103,7 @@ describe('vmAvailabilitySetEnabled', function () {
                         "networkProfile": {
                             "networkInterfaces": [
                                 {
-                                    "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Network/networkInterfaces/test1210"
+                                    "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Network/networkInterfaces/test1210"
                                 }
                             ]
                         },
@@ -114,7 +114,7 @@ describe('vmAvailabilitySetEnabled', function () {
                             }
                         },
                         "availabilitySet": {
-                            "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/DEFAULT-ACTIVITYLOGALERTS/providers/Microsoft.Compute/availabilitySets/ASTEST1"
+                            "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/DEFAULT-ACTIVITYLOGALERTS/providers/Microsoft.Compute/availabilitySets/ASTEST1"
                         },
                         "provisioningState": "Succeeded",
                         "vmId": "9a2a3cb4-ebaa-4836-b16a-50e7496a8eaa"
@@ -137,7 +137,7 @@ describe('vmAvailabilitySetEnabled', function () {
                 null,
                 [
                     {
-                        "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/DEFAULT-ACTIVITYLOGALERTS/providers/Microsoft.Compute/virtualMachines/gioNoAS1",
+                        "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/DEFAULT-ACTIVITYLOGALERTS/providers/Microsoft.Compute/virtualMachines/gioNoAS1",
                         "name": "gioNoAS1",
                         "type": "Microsoft.Compute/virtualMachines",
                         "location": "eastus",
@@ -158,7 +158,7 @@ describe('vmAvailabilitySetEnabled', function () {
                                 "createOption": "FromImage",
                                 "diskSizeGB": 30,
                                 "managedDisk": {
-                                    "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Compute/disks/gioNoAS1_disk1_060a0d44fe0b4ded94bd6e6d63c33ab7",
+                                    "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Compute/disks/gioNoAS1_disk1_060a0d44fe0b4ded94bd6e6d63c33ab7",
                                     "storageAccountType": "Premium_LRS"
                                 }
                             },
@@ -177,7 +177,7 @@ describe('vmAvailabilitySetEnabled', function () {
                         "networkProfile": {
                             "networkInterfaces": [
                                 {
-                                    "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Network/networkInterfaces/gionoas182"
+                                    "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Network/networkInterfaces/gionoas182"
                                 }
                             ]
                         },

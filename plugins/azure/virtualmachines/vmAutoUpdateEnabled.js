@@ -9,6 +9,10 @@ module.exports = {
     recommended_action: 'Enable VM auto update on all virtual machines',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/windows-or-linux/maintenance-and-updates',
     apis: ['virtualMachines:listAll'],
+    compliance: {
+        pci: 'PCI requires all system components have the latest updates ' +
+            'and patches installed within a month of release.'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

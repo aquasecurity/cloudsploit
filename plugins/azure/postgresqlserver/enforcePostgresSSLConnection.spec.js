@@ -1,6 +1,6 @@
 var assert = require('assert');
 var expect = require('chai').expect;
-var auth = require('./enforceSSLConnection');
+var auth = require('./enforcePostgresSSLConnection');
 
 const createCache = (err, data) => {
     return {
@@ -17,7 +17,7 @@ const createCache = (err, data) => {
     }
 };
 
-describe('enforceSSLConnection', function () {
+describe('enforcePostgresSSLConnection', function () {
     describe('run', function () {
         it('should give passing result if no servers', function (done) {
             const callback = (err, results) => {
@@ -49,7 +49,7 @@ describe('enforceSSLConnection', function () {
                 null,
                 [
                     {
-                        "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.DBforPostgreSQL/servers/gioservertest1",
+                        "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.DBforPostgreSQL/servers/gioservertest1",
                         "name": "gioservertest1",
                         "type": "Microsoft.DBforPostgreSQL/servers",
                         "location": "ukwest",
@@ -95,7 +95,7 @@ describe('enforceSSLConnection', function () {
                 null,
                 [
                     {
-                        "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.DBforPostgreSQL/servers/gioservertest1",
+                        "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.DBforPostgreSQL/servers/gioservertest1",
                         "name": "gioservertest1",
                         "type": "Microsoft.DBforPostgreSQL/servers",
                         "location": "ukwest",

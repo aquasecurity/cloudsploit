@@ -9,6 +9,12 @@ module.exports = {
     recommended_action: 'Set the minimum TLS version to 1.2 for all App Services.',
     link: 'https://azure.microsoft.com/en-in/updates/app-service-and-functions-hosted-apps-can-now-update-tls-versions/',
     apis: ['webApps:list', 'webApps:listConfigurations'],
+    compliance: {
+        pci: 'PCI requires all web applications encrypt data ' +
+            'in transit. This includes using the latest TLS ' +
+            'version.'
+    },
+
 
     run: function (cache, settings, callback) {
         var results = [];

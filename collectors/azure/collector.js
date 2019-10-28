@@ -178,8 +178,20 @@ var calls = {
             api: "NetworkManagementClient",
             arm: true
         }
+    },
+    users: {
+        list: {
+            api: "AzureGraphClient",
+            arm: true,
+            ad: true
+        }
+    },
+    registries: {
+        list: {
+            api: "ContainerRegistryClient",
+            arm: true
+        }
     }
-
 };
 
 var postcalls = {
@@ -449,6 +461,16 @@ var postcalls = {
             reliesOnCall: ['list', 'list'],
             filterKey: ['resourceGroupName', 'serverName'],
             filterValue: ['resourceGroupName', 'name'],
+            arm: true
+        }
+    },
+    managedClusters: {
+        getUpgradeProfile: {
+            api: "ContainerServiceClient",
+            reliesOnService: ['resourceGroups', 'managedClusters'],
+            reliesOnCall: ['list', 'list'],
+            filterKey: ['resourceGroupName', 'recourceName'],
+            filterValue: ['resourceGroupName','name'],
             arm: true
         }
     }

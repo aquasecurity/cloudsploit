@@ -9,6 +9,14 @@ module.exports = {
     recommended_action: 'Ensure that all activity is logged to the Event Hub or storage account for archiving.' ,
     link: 'https://docs.microsoft.com/en-us/azure/azure-monitor/platform/archive-activity-log',
     apis: ['logProfiles:list'],
+    compliance: {
+        hipaa: 'HIPAA has clearly defined audit requirements for environments ' +
+            'containing sensitive data. Log Profiles are the recommended ' +
+            'logging and auditing solution for Azure since it is tightly ' +
+            'integrated into most Azure services and APIs.',
+        pci: 'Log profiles satisfy the PCI requirement to log all account activity ' +
+            'within environments containing cardholder data.'
+    },
 
     run: function(cache, settings, callback) {
         const results = [];

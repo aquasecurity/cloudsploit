@@ -9,6 +9,11 @@ module.exports = {
     recommended_action: 'Ensure the server parameters for each PostgreSQL server have the log_checkpoints setting enabled.',
     link: 'https://docs.microsoft.com/en-us/azure/postgresql/howto-configure-server-parameters-using-portal',
     apis: ['servers:postgres:list', 'configurations:listByServer'],
+    compliance: {
+        hipaa: 'HIPAA requires that a secure audit log record for ' +
+            'write read and delete is created for all ' +
+            'activities in the system.'
+    },
 
     run: function (cache, settings, callback) {
         const results = [];

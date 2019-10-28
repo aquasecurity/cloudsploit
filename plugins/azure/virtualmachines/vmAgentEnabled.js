@@ -10,6 +10,11 @@ module.exports = {
     recommended_action: 'Enable the VM agent for all virtual machines.',
     link: 'https://docs.microsoft.com/en-us/azure/security-center/security-center-enable-vm-agent',
     apis: ['virtualMachines:listAll'],
+    compliance: {
+        hipaa: 'HIPAA requires the logging of all activity ' +
+                'including access and all actions taken. VM ' +
+                'agent is needed to provide the necessary logs.'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

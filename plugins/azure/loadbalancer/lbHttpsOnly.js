@@ -9,6 +9,11 @@ module.exports = {
     link: 'https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-overview',
     recommended_action: 'Ensure that each load balancer only accepts connections on port 443.',
     apis: ['resourceGroups:list', 'loadBalancers:list'],
+    compliance: {
+        hipaa: 'HIPAA requires all data to be transmitted over secure channels. ' +
+                'App Service HTTPS redirection should be used to ensure site visitors ' +
+                'are always connecting over a secure channel.',
+    },
 
     run: function (cache, settings, callback) {
         const results = [];

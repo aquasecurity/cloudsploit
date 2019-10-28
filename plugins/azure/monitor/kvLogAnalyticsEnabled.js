@@ -9,6 +9,11 @@ module.exports = {
     recommended_action: 'Send all diagnostic logs for Key Vault from the Azure Monitor service to Log Analytics.',
     link: 'https://docs.microsoft.com/en-us/azure/azure-monitor/platform/collect-activity-logs',
     apis: ['vaults:list', 'diagnosticSettingsOperations:kv:list'],
+    compliance: {
+        hipaa: 'HIPAA requires that a secure audit record for ' +
+                'write read and delete is created for all ' +
+                'activities in the system.'
+    },
 
     run: function (cache, settings, callback) {
         const results = [];

@@ -47,7 +47,7 @@ describe('serverAuditingEnabled', function () {
                 null,
                 [
                     {
-                        "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/devresourcegroup/providers/Microsoft.Sql/servers/giotestserver1/auditingSettings/Default",
+                        "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/devresourcegroup/providers/Microsoft.Sql/servers/giotestserver1/auditingSettings/Default",
                         "name": "Default",
                         "type": "Microsoft.Sql/servers/auditingSettings",
                         "state": "Disabled",
@@ -82,7 +82,7 @@ describe('serverAuditingEnabled', function () {
                 null,
                 [
                     {
-                        "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/devresourcegroup/providers/Microsoft.Sql/servers/giotestserver1/auditingSettings/Default",
+                        "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/devresourcegroup/providers/Microsoft.Sql/servers/giotestserver1/auditingSettings/Default",
                         "name": "Default",
                         "type": "Microsoft.Sql/servers/auditingSettings",
                         "state": "Enabled",

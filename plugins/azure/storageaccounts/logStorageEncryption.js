@@ -9,6 +9,10 @@ module.exports = {
     recommended_action: 'Ensure the Storage Account used by Activity Logs is configured with a BYOK key.',
     link: 'https://docs.microsoft.com/en-us/azure/storage/common/storage-service-encryption-customer-managed-keys',
     apis: ['storageAccounts:list', 'logProfiles:list'],
+    compliance: {
+        hipaa: 'HIPAA requires that all data is encrypted, including data at rest. ' +
+                'Enabling encryption of log storage data helps to protect this data.',
+    },
 
     run: function(cache, settings, callback) {
         const results = [];

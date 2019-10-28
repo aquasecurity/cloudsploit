@@ -104,5 +104,7 @@ module.exports = {
     loadBalancers: locations,
     availabilitySets: locations,
     virtualNetworks: locations,
-    configurations: locations
+    configurations: locations,
+    users: ['global'],
+    registries: locations
 };

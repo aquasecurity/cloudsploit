@@ -88,7 +88,7 @@ describe('scaleSetAutoscaleEnabled', function () {
                 null,
                 [
                     {
-                        "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Compute/virtualMachineScaleSets/gioScaleSet1",
+                        "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Compute/virtualMachineScaleSets/gioScaleSet1",
                         "name": "gioScaleSet1",
                         "type": "Microsoft.Compute/virtualMachineScaleSets",
                         "location": "eastus",
@@ -138,7 +138,7 @@ describe('scaleSetAutoscaleEnabled', function () {
                                             {
                                                 "name": "gioScaleSet1IpConfig",
                                                 "subnet": {
-                                                    "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Network/virtualNetworks/gioVNtest1/subnets/subnettest1"
+                                                    "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Network/virtualNetworks/gioVNtest1/subnets/subnettest1"
                                                 },
                                                 "privateIPAddressVersion": "IPv4"
                                             }
@@ -164,7 +164,7 @@ describe('scaleSetAutoscaleEnabled', function () {
                 ],
                 [
                     {
-                        "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/microsoft.insights/autoscalesettings/ASP-devresourcegroup-b56f-Autoscale-931",
+                        "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/microsoft.insights/autoscalesettings/ASP-devresourcegroup-b56f-Autoscale-931",
                         "name": "ASP-devresourcegroup-b56f-Autoscale-931",
                         "type": "Microsoft.Insights/autoscaleSettings",
                         "location": "eastus",
@@ -183,7 +183,7 @@ describe('scaleSetAutoscaleEnabled', function () {
                                     {
                                         "metricTrigger": {
                                             "metricName": "CpuPercentage",
-                                            "metricResourceUri": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/devresourcegroup/providers/Microsoft.Web/serverFarms/ASP-devresourcegroup-b56f",
+                                            "metricResourceUri": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/devresourcegroup/providers/Microsoft.Web/serverFarms/ASP-devresourcegroup-b56f",
                                             "timeGrain": "PT1M",
                                             "statistic": "Average",
                                             "timeWindow": "PT10M",
@@ -228,13 +228,13 @@ describe('scaleSetAutoscaleEnabled', function () {
                         ],
                         "enabled": true,
                         "autoscaleSettingResourceName": "ASP-devresourcegroup-b56f-Autoscale-931",
-                        "targetResourceUri": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Compute/virtualMachineScaleSets/gioScaleSet1",
+                        "targetResourceUri": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Compute/virtualMachineScaleSets/gioScaleSet1",
                         "storageAccount": {
                             "name": "Default-ActivityLogAlerts"
                         }
                     },
                     {
-                        "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/dev2vnresourcegroup/providers/microsoft.insights/autoscalesettings/cpuautoscaleaztest1tp",
+                        "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/dev2vnresourcegroup/providers/microsoft.insights/autoscalesettings/cpuautoscaleaztest1tp",
                         "name": "cpuautoscaleaztest1tp",
                         "type": "Microsoft.Insights/autoscaleSettings",
                         "location": "eastus",
@@ -253,7 +253,7 @@ describe('scaleSetAutoscaleEnabled', function () {
                                     {
                                         "metricTrigger": {
                                             "metricName": "Percentage CPU",
-                                            "metricResourceUri": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/dev2vnresourcegroup/providers/Microsoft.Compute/virtualMachineScaleSets/aztest1",
+                                            "metricResourceUri": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/dev2vnresourcegroup/providers/Microsoft.Compute/virtualMachineScaleSets/aztest1",
                                             "timeGrain": "PT1M",
                                             "statistic": "Average",
                                             "timeWindow": "PT5M",
@@ -271,7 +271,7 @@ describe('scaleSetAutoscaleEnabled', function () {
                                     {
                                         "metricTrigger": {
                                             "metricName": "Percentage CPU",
-                                            "metricResourceUri": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/dev2vnresourcegroup/providers/Microsoft.Compute/virtualMachineScaleSets/aztest1",
+                                            "metricResourceUri": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/dev2vnresourcegroup/providers/Microsoft.Compute/virtualMachineScaleSets/aztest1",
                                             "timeGrain": "PT1M",
                                             "statistic": "Average",
                                             "timeWindow": "PT5M",
@@ -291,7 +291,7 @@ describe('scaleSetAutoscaleEnabled', function () {
                         ],
                         "enabled": true,
                         "autoscaleSettingResourceName": "cpuautoscaleaztest1tp",
-                        "targetResourceUri": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/dev2vnresourcegroup/providers/Microsoft.Compute/virtualMachineScaleSets/aztest1",
+                        "targetResourceUri": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/dev2vnresourcegroup/providers/Microsoft.Compute/virtualMachineScaleSets/aztest1",
                         "storageAccount": {
                             "name": "dev2vnresourcegroup"
                         }
@@ -315,7 +315,7 @@ describe('scaleSetAutoscaleEnabled', function () {
                 null,
                 [
                     {
-                        "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Compute/virtualMachineScaleSets/gioScaleSet1",
+                        "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Compute/virtualMachineScaleSets/gioScaleSet1",
                         "name": "gioScaleSet1",
                         "type": "Microsoft.Compute/virtualMachineScaleSets",
                         "location": "eastus",
@@ -365,7 +365,7 @@ describe('scaleSetAutoscaleEnabled', function () {
                                             {
                                                 "name": "gioScaleSet1IpConfig",
                                                 "subnet": {
-                                                    "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Network/virtualNetworks/gioVNtest1/subnets/subnettest1"
+                                                    "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Network/virtualNetworks/gioVNtest1/subnets/subnettest1"
                                                 },
                                                 "privateIPAddressVersion": "IPv4"
                                             }
@@ -391,7 +391,7 @@ describe('scaleSetAutoscaleEnabled', function () {
                 ],
                 [
                     {
-                        "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/microsoft.insights/autoscalesettings/ASP-devresourcegroup-b56f-Autoscale-931",
+                        "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/microsoft.insights/autoscalesettings/ASP-devresourcegroup-b56f-Autoscale-931",
                         "name": "ASP-devresourcegroup-b56f-Autoscale-931",
                         "type": "Microsoft.Insights/autoscaleSettings",
                         "location": "eastus",
@@ -410,7 +410,7 @@ describe('scaleSetAutoscaleEnabled', function () {
                                     {
                                         "metricTrigger": {
                                             "metricName": "CpuPercentage",
-                                            "metricResourceUri": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/devresourcegroup/providers/Microsoft.Web/serverFarms/ASP-devresourcegroup-b56f",
+                                            "metricResourceUri": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/devresourcegroup/providers/Microsoft.Web/serverFarms/ASP-devresourcegroup-b56f",
                                             "timeGrain": "PT1M",
                                             "statistic": "Average",
                                             "timeWindow": "PT10M",
@@ -455,13 +455,13 @@ describe('scaleSetAutoscaleEnabled', function () {
                         ],
                         "enabled": false,
                         "autoscaleSettingResourceName": "ASP-devresourcegroup-b56f-Autoscale-931",
-                        "targetResourceUri": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/devresourcegroup/providers/Microsoft.Web/serverFarms/ASP-devresourcegroup-b56f",
+                        "targetResourceUri": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/devresourcegroup/providers/Microsoft.Web/serverFarms/ASP-devresourcegroup-b56f",
                         "storageAccount": {
                             "name": "Default-ActivityLogAlerts"
                         }
                     },
                     {
-                        "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/dev2vnresourcegroup/providers/microsoft.insights/autoscalesettings/cpuautoscaleaztest1tp",
+                        "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/dev2vnresourcegroup/providers/microsoft.insights/autoscalesettings/cpuautoscaleaztest1tp",
                         "name": "cpuautoscaleaztest1tp",
                         "type": "Microsoft.Insights/autoscaleSettings",
                         "location": "eastus",
@@ -480,7 +480,7 @@ describe('scaleSetAutoscaleEnabled', function () {
                                     {
                                         "metricTrigger": {
                                             "metricName": "Percentage CPU",
-                                            "metricResourceUri": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/dev2vnresourcegroup/providers/Microsoft.Compute/virtualMachineScaleSets/aztest1",
+                                            "metricResourceUri": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/dev2vnresourcegroup/providers/Microsoft.Compute/virtualMachineScaleSets/aztest1",
                                             "timeGrain": "PT1M",
                                             "statistic": "Average",
                                             "timeWindow": "PT5M",
@@ -498,7 +498,7 @@ describe('scaleSetAutoscaleEnabled', function () {
                                     {
                                         "metricTrigger": {
                                             "metricName": "Percentage CPU",
-                                            "metricResourceUri": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/dev2vnresourcegroup/providers/Microsoft.Compute/virtualMachineScaleSets/aztest1",
+                                            "metricResourceUri": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/dev2vnresourcegroup/providers/Microsoft.Compute/virtualMachineScaleSets/aztest1",
                                             "timeGrain": "PT1M",
                                             "statistic": "Average",
                                             "timeWindow": "PT5M",
@@ -518,7 +518,7 @@ describe('scaleSetAutoscaleEnabled', function () {
                         ],
                         "enabled": false,
                         "autoscaleSettingResourceName": "cpuautoscaleaztest1tp",
-                        "targetResourceUri": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/dev2vnresourcegroup/providers/Microsoft.Compute/virtualMachineScaleSets/aztest1",
+                        "targetResourceUri": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/dev2vnresourcegroup/providers/Microsoft.Compute/virtualMachineScaleSets/aztest1",
                         "storageAccount": {
                             "name": "dev2vnresourcegroup"
                         }

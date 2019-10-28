@@ -22,6 +22,8 @@ var MySQLManagementClient       = require('azure-arm-mysql');
 var SecurityCenterClient        = require('azure-arm-security');
 var SubscriptionClient          = require('azure-arm-resource').SubscriptionClient;
 var PostgresClient              = require('azure-arm-postgresql');
+var AzureGraphClient            = require('azure-graph');
+var ContainerRegistryClient     = require('azure-arm-containerregistry');
 
 // Azure Service Modules
 var KeyVaultClient              = require('azure-keyvault');
@@ -46,7 +48,9 @@ var mapAzureApis = {
     "MySQLManagementClient"     : MySQLManagementClient,
     "SecurityCenterClient"      : SecurityCenterClient,
     "SubscriptionClient"        : SubscriptionClient,
-    "PostgresClient"            : PostgresClient
+    "PostgresClient"            : PostgresClient,
+    "AzureGraphClient"          : AzureGraphClient,
+    "ContainerRegistryClient"   : ContainerRegistryClient,
 }
 
 const UNKNOWN_LOCATION = "unknown";
@@ -67,8 +71,11 @@ class AzureExecutor {
     run (collection, azureService, callObj, callKey, callback) {
         this.collection = collection;
         var self = this;
+        var tokenAudience;
 
-        this.azure.loginWithServicePrincipalSecret(this.azureConfig.ApplicationID, this.azureConfig.KeyValue, this.azureConfig.DirectoryID, function (err, credentials) {
+        tokenAudience = callObj.ad ? { tokenAudience: 'graph' } : null;
+
+        this.azure.loginWithServicePrincipalSecret(this.azureConfig.ApplicationID, this.azureConfig.KeyValue, this.azureConfig.DirectoryID, tokenAudience, function (err, credentials) {
             if (err){
                 if (err.message &&
                     err.message.indexOf("unauthorized_client")>0) {
@@ -108,7 +115,6 @@ class AzureExecutor {
                     }
                 });
             }
-
             // console.log('Azure :::... Session Closed');
         });
     }
@@ -379,7 +385,9 @@ class ApiCall {
                     self.client = new mapAzureApis[self.callObj.api](self.credentials, self.AzureConfig.SubscriptionID, self.AzureConfig.location);
                 } else if (self.callObj.noSubscription) {
                     self.client = new mapAzureApis[self.callObj.api](self.credentials);
-                }else {
+                } else if (self.callObj.ad) {
+                    self.client = new mapAzureApis[self.callObj.api](self.credentials, self.AzureConfig.DirectoryID);
+                } else {
                     self.client = new mapAzureApis[self.callObj.api](self.credentials, self.AzureConfig.SubscriptionID);
                 }
 
@@ -460,6 +468,8 @@ class ApiCall {
                             default:
                                 break;
                         }
+                    } else {
+
                     }
                 } else {
                     if (self.parameters) {

@@ -35,6 +35,7 @@
     "aws-sdk": "^2.437.0",
     "azure-arm-cdn": "^4.2.0",
     "azure-arm-compute": "^9.1.0",
+    "azure-arm-containerregistry": "^5.1.0",
     "azure-arm-containerservice": "^8.0.0",
     "azure-arm-keyvault": "^1.2.0",
     "azure-arm-monitor": "^5.4.0",

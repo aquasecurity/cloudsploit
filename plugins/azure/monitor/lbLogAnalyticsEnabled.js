@@ -9,6 +9,11 @@ module.exports = {
     recommended_action: 'Send all diagnostic logs for Load Balancers from the Azure Monitor service to Log Analytics.',
     link: 'https://docs.microsoft.com/en-us/azure/azure-monitor/platform/collect-activity-logs',
     apis: ['loadBalancers:listAll', 'diagnosticSettingsOperations:lb:list'],
+    compliance: {
+        hipaa: 'HIPAA requires that a secure audit log record for ' +
+            'write read and delete is created for all ' +
+            'activities in the system.'
+    },
 
     run: function (cache, settings, callback) {
         const results = [];

@@ -2,13 +2,18 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Enforce SSL Connection Enabled',
+    title: 'Enforce PostgreSQL SSL Connection',
     category: 'PostgreSQL Server',
     description: 'Ensures SSL connections are enforced on PostgreSQL Servers',
     more_info: 'SSL prevents infiltration attacks by encrypting the data stream between the server and application.',
     recommended_action: 'Ensure the connection security settings of each PostgreSQL server are configured to enforce SSL connections.',
     link: 'https://docs.microsoft.com/en-us/azure/postgresql/concepts-ssl-connection-security',
     apis: ['servers:postgres:list'],
+    compliance: {
+        hipaa: 'HIPAA requires all data to be transmitted over secure channels. ' +
+            'PostgreSQL SSL connection should be used to ensure internal ' +
+            'services are always connecting over a secure channel.',
+    },
 
     run: function (cache, settings, callback) {
         const results = [];

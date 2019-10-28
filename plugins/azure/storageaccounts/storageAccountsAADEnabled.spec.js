@@ -47,7 +47,7 @@ describe('storageAccountsAADEnabled', function () {
                 null,
                 [
                     {
-                        "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Storage/storageAccounts/defaultactivitylogale920",
+                        "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Storage/storageAccounts/defaultactivitylogale920",
                         "name": "defaultactivitylogale920",
                         "type": "Microsoft.Storage/storageAccounts",
                         "tags": {},
@@ -107,7 +107,7 @@ describe('storageAccountsAADEnabled', function () {
                 null,
                 [
                     {
-                        "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/devresourcegroup/providers/Microsoft.Storage/storageAccounts/devstoragecloudsploit",
+                        "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/devresourcegroup/providers/Microsoft.Storage/storageAccounts/devstoragecloudsploit",
                         "name": "devstoragecloudsploit",
                         "type": "Microsoft.Storage/storageAccounts",
                         "tags": {

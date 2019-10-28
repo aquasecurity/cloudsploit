@@ -9,6 +9,10 @@ module.exports = {
     recommended_action: 'Ensure System Update monitoring is configured for virtual machines from the Azure Security Center.',
     link: 'https://docs.microsoft.com/en-us/azure/security-center/security-center-policy-definitions',
     apis: ['policyAssignments:list'],
+    compliance: {
+        pci: 'PCI requires all system components have the latest updates ' +
+             'and patches installed within a month of release.'
+    },
 
     run: function(cache, settings, callback) {
         const results = [];

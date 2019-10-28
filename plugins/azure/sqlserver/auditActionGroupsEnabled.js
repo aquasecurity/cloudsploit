@@ -9,6 +9,11 @@ module.exports = {
     recommended_action: 'If SQL Server Audit Action and Groups is not configured properly when enabling Auditing, these settings must be configured in Powershell.',
     link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-auditing',
     apis: ['servers:sql:list', 'serverBlobAuditingPolicies:get'],
+    compliance: {
+        hipaa: 'HIPAA requires that a secure audit record for ' +
+            'write read and delete is created for all ' +
+            'activities in the system.'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
