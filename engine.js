@@ -161,28 +161,35 @@ var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, Googl
                     plugin.types.indexOf('user') === -1) return pluginDone(null, 0);
 
                 var maximumStatus = 0
-                plugin.run(collection, settings, function(err, results) {
-                    outputHandler.startCompliance(plugin, key, compliance)
+                try {
+                    plugin.run(collection, settings, function(err, results) {
+                        outputHandler.startCompliance(plugin, key, compliance)
 
-                    for (r in results) {
-                        // If we have suppressed this result, then don't process it
-                        // so that it doesn't affect the return code.
-                        if (suppressionFilter([key, results[r].region || 'any', results[r].resource || 'any'].join(':'))) {
-                            continue;
+                        for (r in results) {
+                            // If we have suppressed this result, then don't process it
+                            // so that it doesn't affect the return code.
+                            if (suppressionFilter([key, results[r].region || 'any', results[r].resource || 'any'].join(':'))) {
+                                continue;
+                            }
+
+                            // Write out the result (to console or elsewhere)
+                            outputHandler.writeResult(results[r], plugin, key)
+
+                            // Add this to our tracking fo the worst status to calculate
+                            // the exit code
+                            maximumStatus = Math.max(maximumStatus, results[r].status)
                         }
 
-                        // Write out the result (to console or elsewhere)
-                        outputHandler.writeResult(results[r], plugin, key)
+                        outputHandler.endCompliance(plugin, key, compliance)
 
-                        // Add this to our tracking fo the worst status to calculate
-                        // the exit code
-                        maximumStatus = Math.max(maximumStatus, results[r].status)
-                    }
-
-                    outputHandler.endCompliance(plugin, key, compliance)
-
-                    setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
-                });
+                        setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
+                    });
+                } catch (err) {
+                    outputHandler.writeResult({
+                        status: 4,
+                        message: err
+                    }, plugin, key)
+                }
             }, function(err, results){
                 if (err) return console.log(err);
                 var summaryStatus = Math.max(...Object.values(results))
