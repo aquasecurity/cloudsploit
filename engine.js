@@ -1,9 +1,10 @@
-
 var async = require('async');
-var plugins = require('./exports.js');
 var complianceControls = require('./compliance/controls.js')
-var suppress = require('./postprocess/suppress.js')
+var helpers = require('./helpers/shared')
+var once = require('lodash.once');
 var output = require('./postprocess/output.js')
+var plugins = require('./exports.js');
+var suppress = require('./postprocess/suppress.js')
 
 /**
  * The main function to execute CloudSploit scans.
@@ -161,6 +162,8 @@ var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, Googl
                     plugin.types.indexOf('user') === -1) return pluginDone(null, 0);
 
                 var maximumStatus = 0
+                // ensure callback is only called once, since plugin.run could throw after triggering the callback
+                pluginDone = once(pluginDone);
                 try {
                     plugin.run(collection, settings, function(err, results) {
                         outputHandler.startCompliance(plugin, key, compliance)
@@ -179,16 +182,19 @@ var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, Googl
                             // the exit code
                             maximumStatus = Math.max(maximumStatus, results[r].status)
                         }
-
                         outputHandler.endCompliance(plugin, key, compliance)
-
                         setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
                     });
-                } catch (err) {
+                } catch (error) {
                     outputHandler.writeResult({
-                        status: 4,
-                        message: err
+                        status: 3,
+                        region: 'unknown',
+                        resource: null,
+                        custom: false,
+                        message: helpers.addError(error)
                     }, plugin, key)
+                    maximumStatus = 3;
+                    setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
                 }
             }, function(err, results){
                 if (err) return console.log(err);

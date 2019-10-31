@@ -52,6 +52,7 @@
     "deep-equal-in-any-order": "^1.0.21",
     "fast-safe-stringify": "^2.0.6",
     "googleapis": "^40.0.1",
+    "lodash.once": "^4.1.1",
     "ms-rest-azure": "^2.5.9"
   },
   "devDependencies": {
