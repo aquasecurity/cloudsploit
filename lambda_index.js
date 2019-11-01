@@ -1,5 +1,4 @@
 var AWS = require('aws-sdk');
-var secretManager = new AWS.SecretsManager();
 var engine = require('./engine.js');
 var jsonOutput = require('./postprocess/json_output.js');
 var configs = require('./lambda_config.js')
@@ -41,10 +40,8 @@ exports.handler = async function(event, context) {
     try {
         //Object Initialization//
         var partition = context.invokedFunctionArn.split(':')[1];
-
         var configurations = await configs.getConfigurations(configs.parseEvent(event), partition);
         var outputHandler = jsonOutput.create();
-
         //Settings Configuration//
         console.log("Configuring Settings");
         var settings = configurations.settings || {};
@@ -55,7 +52,7 @@ exports.handler = async function(event, context) {
 
         //Config Gathering//
         console.log("Gathering Configurations");
-        var AWSConfig = configurations.aws.roleArn ? configs.getCredentials(configurations.aws.roleArn, configurations.aws.externalId) : null;
+        var AWSConfig = configurations.aws.roleArn ? { credentials: await configs.getCredentials(configurations.aws.roleArn, configurations.aws.externalId) } : null;
         var AzureConfig = configurations.azure || null;
         var GoogleConfig = configurations.gcp || null;
         var GitHubConfig = configurations.github || null;
@@ -80,5 +77,4 @@ exports.handler = async function(event, context) {
         console.log(err);
         throw(err);
     }
-
 }
