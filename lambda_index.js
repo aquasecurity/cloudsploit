@@ -14,15 +14,15 @@ const Promise = require('bluebird');
  *
  * @returns a list or promises for write to S3.
  */
-async function writeToS3(bucket, resultsToWrite, prefix) {
+async function writeToS3(bucket, resultsToWrite, prefix, accountId) {
     var s3 = new AWS.S3({apiVersion: 'latest'});
     var bucketPrefix = prefix || "";
     if (bucket && resultsToWrite) {
         console.log("Writing Output to S3");
         var dt = new Date();
         var objectName = [dt.getFullYear(), dt.getMonth() + 1, dt.getDate() + '.json'].join( '-' );
-        var key = [bucketPrefix, objectName].join('/');
-        var latestKey = [bucketPrefix, "latest.json"].join('/');
+        var key = [bucketPrefix, accountId, objectName].join('/');
+        var latestKey = [bucketPrefix, accountId, "latest.json"].join('/');
         var results = JSON.stringify(resultsToWrite, null, 2);
 
         var promises = [
@@ -70,7 +70,7 @@ exports.handler = async function(event, context) {
         resultCollector.ResultsData = outputHandler.getOutput();
         console.assert(resultCollector.collectionData, "No Collection Data found.");
         console.assert(resultCollector.ResultsData, "No Results Data found.");
-        await writeToS3(process.env.RESULT_BUCKET, resultCollector, process.env.RESULT_PREFIX);
+        await writeToS3(process.env.RESULT_BUCKET, resultCollector, process.env.RESULT_PREFIX, configurations.accountId);
         return 'Ok';
     } catch(err) {
         // Just log the error and re-throw so we have a lambda error metric
