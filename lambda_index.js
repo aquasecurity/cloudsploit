@@ -10,20 +10,25 @@ const Promise = require('bluebird');
  *
  * @param {String} bucket The bucket where files will be written to.
  * @param {JSON} resultsToWrite The results to be persisted in S3.
- * @param {String} [prefix] The prefix for the file in the assocaited bucket.
+ * @param {String} [templatePrefix] The prefix for the file in the assocaited bucket.
  *
  * @returns a list or promises for write to S3.
  */
-async function writeToS3(bucket, resultsToWrite, prefix, accountId) {
+async function writeToS3(bucket, resultsToWrite, templatePrefix, s3Prefix) {
     var s3 = new AWS.S3({apiVersion: 'latest'});
-    var bucketPrefix = prefix || "";
+    var bucketPrefix;
+    bucketPrefix = templatePrefix ? (`${templatePrefix}/`) : "";
+    bucketPrefix = s3Prefix ? (`${bucketPrefix}${s3Prefix}/`) : bucketPrefix;
     if (bucket && resultsToWrite) {
         console.log("Writing Output to S3");
         var dt = new Date();
         var objectName = [dt.getFullYear(), dt.getMonth() + 1, dt.getDate() + '.json'].join( '-' );
-        var key = [bucketPrefix, accountId, objectName].join('/');
-        var latestKey = [bucketPrefix, accountId, "latest.json"].join('/');
+        var key = bucketPrefix + objectName;
+        var latestKey = bucketPrefix + "latest.json";
         var results = JSON.stringify(resultsToWrite, null, 2);
+        console.log(`Files written to:`)
+        console.log(`s3://${bucket}/${key}`)
+        console.log(`s3://${bucket}/${latestKey}`)
 
         var promises = [
             s3.putObject({Bucket: bucket, Key: latestKey, Body: results}).promise(),
@@ -70,7 +75,7 @@ exports.handler = async function(event, context) {
         resultCollector.ResultsData = outputHandler.getOutput();
         console.assert(resultCollector.collectionData, "No Collection Data found.");
         console.assert(resultCollector.ResultsData, "No Results Data found.");
-        await writeToS3(process.env.RESULT_BUCKET, resultCollector, process.env.RESULT_PREFIX, configurations.accountId);
+        await writeToS3(process.env.RESULT_BUCKET, resultCollector, process.env.RESULT_PREFIX, configurations.s3Prefix);
         return 'Ok';
     } catch(err) {
         // Just log the error and re-throw so we have a lambda error metric
