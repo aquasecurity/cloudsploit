@@ -19,8 +19,8 @@ const Promise = require('bluebird');
  */
 async function writeToS3(bucket, resultsToWrite, templatePrefix, s3Prefix) {
     var s3 = new AWS.S3({apiVersion: 'latest'});
-    var bucketPrefix = templatePrefix ? (`${templatePrefix}/`) : "";
-    bucketPrefix = s3Prefix ? (`${bucketPrefix}${s3Prefix}/`) : bucketPrefix;
+    var bucketPrefix = templatePrefix ? `${templatePrefix}/` : "";
+    bucketPrefix = s3Prefix ? `${bucketPrefix}${s3Prefix}/` : bucketPrefix;
     if (bucket && resultsToWrite) {
         console.log("Writing Output to S3");
         var dt = new Date();
@@ -28,9 +28,8 @@ async function writeToS3(bucket, resultsToWrite, templatePrefix, s3Prefix) {
         var key = bucketPrefix + objectName;
         var latestKey = bucketPrefix + "latest.json";
         var results = JSON.stringify(resultsToWrite, null, 2);
-        console.log(`Files written to:`)
-        console.log(`s3://${bucket}/${key}`)
-        console.log(`s3://${bucket}/${latestKey}`)
+        console.log(`Writing results to s3://${bucket}/${key}`)
+        console.log(`Writing results to s3://${bucket}/${latestKey}`)
 
         var promises = [
             s3.putObject({Bucket: bucket, Key: latestKey, Body: results}).promise(),
