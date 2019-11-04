@@ -7,17 +7,19 @@ const Promise = require('bluebird');
 /***
  * Writes the output to S3, it writes two files.
  * First file is a file with the current date the second file is 'latest'. Both json files.
+ * The full path looks like this where two files are created, one with latest and one with the date:
+ * s3://bucket/[templateprefix/][s3Prefix/][date && latest].json
  *
  * @param {String} bucket The bucket where files will be written to.
  * @param {JSON} resultsToWrite The results to be persisted in S3.
- * @param {String} [templatePrefix] The prefix for the file in the assocaited bucket.
+ * @param {String} [templatePrefix] The prefix for the file in the associated bucket passed in through environment information.
+ * @param {String} [s3Prefix] The prefix for the file in the associated bucket passed in through the event.
  *
  * @returns a list or promises for write to S3.
  */
 async function writeToS3(bucket, resultsToWrite, templatePrefix, s3Prefix) {
     var s3 = new AWS.S3({apiVersion: 'latest'});
-    var bucketPrefix;
-    bucketPrefix = templatePrefix ? (`${templatePrefix}/`) : "";
+    var bucketPrefix = templatePrefix ? (`${templatePrefix}/`) : "";
     bucketPrefix = s3Prefix ? (`${bucketPrefix}${s3Prefix}/`) : bucketPrefix;
     if (bucket && resultsToWrite) {
         console.log("Writing Output to S3");
