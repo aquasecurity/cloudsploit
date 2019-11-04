@@ -52,7 +52,7 @@ exports.handler = async function(event, context) {
 
         //Config Gathering//
         console.log("Gathering Configurations");
-        var AWSConfig = configurations.aws.roleArn ? { credentials: await configs.getCredentials(configurations.aws.roleArn, configurations.aws.externalId) } : null;
+        var AWSConfig = configurations.aws.roleArn ? await configs.getCredentials(configurations.aws.roleArn, configurations.aws.externalId) : null;
         var AzureConfig = configurations.azure || null;
         var GoogleConfig = configurations.gcp || null;
         var GitHubConfig = configurations.github || null;
@@ -73,7 +73,7 @@ exports.handler = async function(event, context) {
         await writeToS3(process.env.RESULT_BUCKET, resultCollector, process.env.RESULT_PREFIX);
         return 'Ok';
     } catch(err) {
-        // Just log the error and throw so we have a lambda error metr
+        // Just log the error and re-throw so we have a lambda error metric
         console.log(err);
         throw(err);
     }

@@ -99,7 +99,6 @@ async function getConfigurations(parsedEvent, partition) {
  * @param {String} [externalID] The externalID used for role assumption.
  * @returns AWS Configuration for cloudsploit engine.
  *
- * @throws If roleArn is not defined, rejects with an error.
  */
 
 async function getCredentials(roleArn, externalId) {
@@ -113,7 +112,9 @@ async function getCredentials(roleArn, externalId) {
     };
     let credentials = new AWS.ChainableTemporaryCredentials({ params: STSParams });
 
-    return credentials.getPromise();
+    return credentials.getPromise().then(() => {
+        return { credentials }
+    });
 }
 
 module.exports = {getConfigurations, parseEvent, getCredentials}

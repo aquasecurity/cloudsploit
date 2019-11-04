@@ -878,7 +878,7 @@ var collect = function (AWSConfig, settings, callback) {
                             !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data ||
                             !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data.length)) return regionCb();
 
-                        var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+                        var LocalAWSConfig = Object.assign({}, AWSConfig);
                         if (callObj.deleteRegion) {
                             //delete LocalAWSConfig.region;
                             LocalAWSConfig.region = settings.govcloud ? 'us-gov-west-1' : settings.china ? 'cn-north-1' : 'us-east-1';
