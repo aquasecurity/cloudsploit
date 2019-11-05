@@ -1,8 +1,6 @@
 var async = require('async');
 var helpers = require('../../../helpers/aws');
 
-var defaultKmsKey = 'alias/aws/firehose';
-
 module.exports = {
     title: 'GuardDuty is Enabled',
     category: 'GuardDuty',
