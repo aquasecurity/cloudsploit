@@ -156,7 +156,10 @@ module.exports = {
 
         'shieldAdvancedEnabled'         : require(__dirname + '/plugins/aws/shield/shieldAdvancedEnabled.js'),
         'shieldEmergencyContacts'       : require(__dirname + '/plugins/aws/shield/shieldEmergencyContacts.js'),
-        'shieldProtections'             : require(__dirname + '/plugins/aws/shield/shieldProtections.js')
+        'shieldProtections'             : require(__dirname + '/plugins/aws/shield/shieldProtections.js'),
+
+        'guardDutyEnabled'               : require(__dirname + '/plugins/aws/guardduty/guarddutyEnabled.js'),
+        'guardDutyMaster'               : require(__dirname + '/plugins/aws/guardduty/guarddutyMaster.js'),
     },
     azure : {
         'fileServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/fileServiceEncryption.js'),

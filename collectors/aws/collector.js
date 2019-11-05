@@ -727,7 +727,12 @@ var postcalls = [
                 reliesOnService: 'guardduty',
                 reliesOnCall: 'listDetectors',
                 override: true,
-            }
+            },
+            getMasterAccount: {
+                reliesOnService: 'guardduty',
+                reliesOnCall: 'listDetectors',
+                override: true,
+            },
         },
     },
     {
