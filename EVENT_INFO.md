@@ -12,35 +12,6 @@ There are three ways to invoke the lambda.
 * If a service contains a key for something that is required to be a secret, the scan will fail.
 * Any information found in `secretsmanager` will be added directly to the configuration object and the` credentialID` value will be deleted. Examples of minimum expected values in secrets Manager can be found in the examples below.
 
-### S3 Output
-The output is placed in an S3 bucket in the same account where the Lambda is run. The format for the bucket is:
-```
-s3://<CreateBucket>/<BucketPrefix>/<s3Prefix>/<date>.json
-```
-
-Where:
-* CreateBucket: Required parameter passed in through Cloudformation via the Lambda environment variables.
-* BucketPrefix: Optional parameter passed in through Cloudformation via the Lambda environment variables.
-* s3Prefix: Optional value passed in through the event invokation at root (an example provided below.)
-* date: Date is generated based on the day of the run.
-
-Note: An additional file is always created alongside the date file in the same path where the file name is latest:
-```
-s3://<CreateBucket>/<BucketPrefix>/<s3Prefix>/latest.json
-```
-
-Example Event with s3Prefix:
-```
-{
-  aws: {
-    accountId: 1234567890,
-    externalId: '' // optional
-  },
-  settings: {...},
-  s3Prefix: "My/File/Prefix"
-}
-```
-
 ## AWS
 The aws event accepts either a full role arn or an account ID for which it can find the provided default_role set in the environment variables.
 
@@ -159,5 +130,34 @@ Minimum Required information in SecretsManager:
 {
   "keyValue": "value",
   "keyFingerprint" : "value"
+}
+```
+
+## S3 Output
+The output is placed in an S3 bucket in the same account where the Lambda is run. The format for the bucket is:
+```
+s3://<CreateBucket>/<BucketPrefix>/<s3Prefix>/<date>.json
+```
+
+Where:
+* CreateBucket: Required parameter passed in through Cloudformation via the Lambda environment variables.
+* BucketPrefix: Optional parameter passed in through Cloudformation via the Lambda environment variables.
+* s3Prefix: Optional value passed in through the event invokation at root (an example provided below.)
+* date: Date is generated based on the day of the run.
+
+Note: An additional file is always created alongside the date file in the same path where the file name is latest:
+```
+s3://<CreateBucket>/<BucketPrefix>/<s3Prefix>/latest.json
+```
+
+Example Event with s3Prefix:
+```
+{
+  aws: {
+    accountId: 1234567890,
+    externalId: '' // optional
+  },
+  settings: {...},
+  s3Prefix: "My/File/Prefix"
 }
 ```
