@@ -443,7 +443,13 @@ var calls = {
             property: 'Workspaces',
             paginate: 'NextToken'
         }
-    }
+    },
+    GuardDuty: {
+        listDetectors: {
+            property: 'DetectorIds',
+            paginate: 'NextToken',
+        }
+    },
 };
 
 var postcalls = [
@@ -715,7 +721,14 @@ var postcalls = [
                 checkMultiple: ["APPLICATION_LOAD_BALANCER", "API_GATEWAY"],
                 checkMultipleKey: 'ResourceType'
             }
-        }
+        },
+        GuardDuty: {
+            getDetector: {
+                reliesOnService: 'guardduty',
+                reliesOnCall: 'listDetectors',
+                override: true,
+            }
+        },
     },
     {
         IAM: {
