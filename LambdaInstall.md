@@ -52,3 +52,5 @@ The Lambda can be triggered by a StepFunction or via the AWS CLI using the follo
 }
 ```
 Substitute the appropriate values for ACCOUNTID, ROLENAME and PREFIX_FOR_FINDINGS_FROM_THIS_SPECIFIC_INVOCATION
+
+More details on Lambda Invocation options are in the lambda_event_details.md file
