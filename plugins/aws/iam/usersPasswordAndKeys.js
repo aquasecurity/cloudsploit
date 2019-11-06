@@ -9,6 +9,9 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/ManagingCredentials.html',
     recommended_action: 'Remove access keys from all users with console access.',
     apis: ['IAM:generateCredentialReport'],
+    settings: {
+        // add service username regex here
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
