@@ -2,7 +2,7 @@
 There are three ways to invoke the lambda.
 1. Publish event to SNS topic that the lambda is subscribed to.
 2. Setup a CloudWatch Event. The Event must be in the details section.
-3. Directly invocate the lambda, with the event as the payload
+3. Directly invoke the lambda with the event as the payload
 
 ### Important Notes
 * If neither SNS nor Cloudwatch events are identified, it is assumed to be a direct invocation.
@@ -133,22 +133,18 @@ Minimum Required information in SecretsManager:
 }
 ```
 
-## S3 Output
-The output is placed in an S3 bucket in the same account where the Lambda is run. The format for the bucket is:
+# S3 Output
+Two objects are created the S3 bucket specified in the template parameters. The format for the object keys are:
 ```
-s3://<CreateBucket>/<BucketPrefix>/<s3Prefix>/<date>.json
+s3://<BucketName>/<BucketPrefix>/<s3Prefix>/<date>.json
+s3://<BucketName>/<BucketPrefix>/<s3Prefix>/latest.json
 ```
 
 Where:
-* CreateBucket: Required parameter passed in through Cloudformation via the Lambda environment variables.
+* BucketName: Required parameter passed in through Cloudformation via the Lambda environment variables.
 * BucketPrefix: Optional parameter passed in through Cloudformation via the Lambda environment variables.
 * s3Prefix: Optional value passed in through the event invokation at root (an example provided below.)
 * date: Date is generated based on the day of the run.
-
-Note: An additional file is always created alongside the date file in the same path where the file name is latest:
-```
-s3://<CreateBucket>/<BucketPrefix>/<s3Prefix>/latest.json
-```
 
 Example Event with s3Prefix:
 ```
