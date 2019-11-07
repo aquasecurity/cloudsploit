@@ -25,7 +25,8 @@ Example events:
     accountId: 1234567890,
     externalId: '' // optional
   },
-  settings: {...}
+  settings: {...},
+  "s3Prefix": "PREFIX_FOR_FINDINGS_FROM_THIS_SPECIFIC_INVOCATION"
 }
 ```
 or
