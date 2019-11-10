@@ -106,5 +106,8 @@ module.exports = {
     virtualNetworks: locations,
     configurations: locations,
     users: ['global'],
-    registries: locations
+    registries: locations,
+    serverAzureADAdministrators: locations,
+    pricings: ['global'],
+    roleDefinitions: ['global']
 };

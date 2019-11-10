@@ -47,7 +47,7 @@ describe('aksLatestVersion', function () {
                 null,
                 [
                     {
-                        "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourcegroups/gionewfunctiontest/providers/Microsoft.ContainerService/managedClusters/kubtest3/upgradeprofiles/default",
+                        "id": "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a/resourcegroups/gionewfunctiontest/providers/Microsoft.ContainerService/managedClusters/kubtest3/upgradeprofiles/default",
                         "name": "default",
                         "type": "Microsoft.ContainerService/managedClusters/upgradeprofiles",
                         "controlPlaneProfile": {
@@ -93,7 +93,7 @@ describe('aksLatestVersion', function () {
                 null,
                 [
                     {
-                        "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourcegroups/gionewfunctiontest/providers/Microsoft.ContainerService/managedClusters/kubtest3/upgradeprofiles/default",
+                        "id": "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a/resourcegroups/gionewfunctiontest/providers/Microsoft.ContainerService/managedClusters/kubtest3/upgradeprofiles/default",
                         "name": "default",
                         "type": "Microsoft.ContainerService/managedClusters/upgradeprofiles",
                         "controlPlaneProfile": {

@@ -48,14 +48,26 @@ module.exports = {
         async.each(locations.logProfiles, (loc, lcb) => {
             if (!logProfile) return lcb();
             
-            var logProfileMatch = logProfile.filter((d) => {
+            var logProfileMatch = logProfile.find((d) => {
                 return d.locations.includes(loc);
             });
 
-            if (logProfileMatch.length > 0) {
+            if (logProfileMatch &&
+                logProfileMatch.categories &&
+                logProfileMatch.categories.length &&
+                logProfileMatch.categories.length === 3) {
                 helpers.addResult(results, 0,
                 'Log Profile is archiving all activities in the region.', loc);
                 lcb();
+            } else if (logProfileMatch &&
+                logProfileMatch.categories &&
+                logProfileMatch.categories.length &&
+                logProfileMatch.categories.length < 3) {
+                var categories = logProfileMatch.categories.join(' and ');
+                helpers.addResult(results, 2,
+                    `Log Profile is only archiving ${categories} in the region.`, loc);
+                lcb();
+
             } else {
                 helpers.addResult(results, 2,
                 'Log Profile is not archiving data in the region.', loc);

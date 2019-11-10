@@ -31,24 +31,23 @@ module.exports = {
             }
             if (!virtualMachines.data.length) {
                 helpers.addResult(results, 0, 'No existing virtual machines found', location);
-            } else {
-                var reg = 0;
-                for(i in virtualMachines.data){
-                    if (virtualMachines.data[i].osProfile &&
-                        Object.keys(virtualMachines.data[i].osProfile) &&
-                        Object.keys(virtualMachines.data[i].osProfile).length>1
-                    ) {
-                        var VMConfig = Object.keys(virtualMachines.data[i].osProfile)[2];
-                        if (!virtualMachines.data[i].osProfile[VMConfig].enableAutomaticUpdates) {
-                            helpers.addResult(results, 2, 'VM Auto Update is not enabled for this virtual machine: ' + virtualMachines.data[i].name, location, virtualMachines.data[i].id);
-                            reg++;
-                        }
-                    }
-                }
-                if(!reg){
-                    helpers.addResult(results, 0, 'VM Auto Update is enabled for all virtual machines', location);
-                }
+                return rcb();
             }
+
+            var noAutoUpdates = false;
+            virtualMachines.data.forEach(virtualMachine => {
+                if (virtualMachine.osProfile &&
+                    virtualMachine.osProfile.windowsConfiguration &&
+                    !virtualMachine.osProfile.windowsConfiguration.enableAutomaticUpdates) {
+                    helpers.addResult(results, 2, 'Automatic updates are not enabled for this virtual machine: ' + virtualMachine.name, location, virtualMachine.id);
+                    noAutoUpdates = true;
+                }
+            });
+
+            if (!noAutoUpdates) {
+                helpers.addResult(results, 0, 'Automatic updates are enabled on all windows virtual machines', location);
+            }
+
             rcb();
         }, function(){
             callback(null, results, source);

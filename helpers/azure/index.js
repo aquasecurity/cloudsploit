@@ -24,6 +24,7 @@ var SubscriptionClient          = require('azure-arm-resource').SubscriptionClie
 var PostgresClient              = require('azure-arm-postgresql');
 var AzureGraphClient            = require('azure-graph');
 var ContainerRegistryClient     = require('azure-arm-containerregistry');
+var AuthorizationClient         = require('azure-arm-authorization');
 
 // Azure Service Modules
 var KeyVaultClient              = require('azure-keyvault');
@@ -51,7 +52,8 @@ var mapAzureApis = {
     "PostgresClient"            : PostgresClient,
     "AzureGraphClient"          : AzureGraphClient,
     "ContainerRegistryClient"   : ContainerRegistryClient,
-}
+    "AuthorizationClient"       : AuthorizationClient,
+};
 
 const UNKNOWN_LOCATION = "unknown";
 
@@ -429,6 +431,10 @@ class ApiCall {
                     }
                 } else if (self.AzureConfig.service == "subscriptions") {
                     return self.client[self.AzureConfig.service][self.callKey](self.AzureConfig.SubscriptionID,self.AzureConfig, function(err, results, request, response) {
+                        universalResolve(err, results, request, response);
+                    });
+                } else if (self.callObj.subscription) {
+                    return self.client[self.AzureConfig.service][self.callKey]('subscriptions/' + self.AzureConfig.SubscriptionID, self.AzureConfig, function(err, results, request, response) {
                         universalResolve(err, results, request, response);
                     });
                 } else {

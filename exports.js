@@ -209,6 +209,8 @@ module.exports = {
         'sqlServerFirewallRuleEnabled'  : require(__dirname + '/plugins/azure/logalerts/sqlServerFirewallRuleEnabled.js'),
         'virtualNetworkRuleEnabled'     : require(__dirname + '/plugins/azure/logalerts/virtualNetworkRuleEnabled.js'),
         'securitySolutionLogging'       : require(__dirname + '/plugins/azure/logalerts/securitySolutionLogging.js'),
+        'nsgRuleLoggingEnabled'         : require(__dirname + '/plugins/azure/logalerts/nsgRuleLoggingEnabled.js'),
+        'policyAssignmentLogging'       : require(__dirname + '/plugins/azure/logalerts/policyAssignmentLogging.js'),
 
         'monitorEndpointProtection'     : require(__dirname + '/plugins/azure/securitycenter/monitorEndpointProtection.js'),
         'monitorBlobEncryption'         : require(__dirname + '/plugins/azure/securitycenter/monitorBlobEncryption.js'),
@@ -224,6 +226,8 @@ module.exports = {
         'adminSecurityAlertsEnabled'    : require(__dirname + '/plugins/azure/securitycenter/adminSecurityAlertsEnabled.js'),
         'securityContactsEnabled'       : require(__dirname + '/plugins/azure/securitycenter/securityContactsEnabled.js'),
         'monitorNsgEnabled'             : require(__dirname + '/plugins/azure/securitycenter/monitorNsgEnabled.js'),
+        'highSeverityAlertsEnabled'     : require(__dirname + '/plugins/azure/securitycenter/highSeverityAlertsEnabled.js'),
+        'standardPricingEnabled'        : require(__dirname + '/plugins/azure/securitycenter/standardPricingEnabled.js'),
 
         'resourceAllowedLocations'      : require(__dirname + '/plugins/azure/policyservice/resourceAllowedLocations.js'),
         'resourceLocationMatch'         : require(__dirname + '/plugins/azure/policyservice/resourceLocationMatch.js'),
@@ -274,6 +278,8 @@ module.exports = {
         'auditRetentionPolicy'          : require(__dirname + '/plugins/azure/sqlserver/auditRetentionPolicy.js'),
         'auditActionGroupsEnabled'      : require(__dirname + '/plugins/azure/sqlserver/auditActionGroupsEnabled.js'),
         'serverAuditingEnabled'         : require(__dirname + '/plugins/azure/sqlserver/serverAuditingEnabled.js'),
+        'azureADAdminEnabled'           : require(__dirname + '/plugins/azure/sqlserver/azureADAdminEnabled.js'),
+
 
         'javaVersion'                   : require(__dirname + '/plugins/azure/appservice/javaVersion.js'),
         'phpVersion'                    : require(__dirname + '/plugins/azure/appservice/phpVersion.js'),
@@ -289,7 +295,7 @@ module.exports = {
         'rbacEnabled'                   : require(__dirname + '/plugins/azure/kubernetesservice/rbacEnabled.js'),
         'aksLatestVersion'              : require(__dirname + '/plugins/azure/kubernetesservice/aksLatestVersion.js'),
 
-        'acrAdminUser'                   : require(__dirname + '/plugins/azure/containerregistry/acrAdminUser.js'),
+        'acrAdminUser'                  : require(__dirname + '/plugins/azure/containerregistry/acrAdminUser.js'),
 
         'endpointLoggingEnabled'        : require(__dirname + '/plugins/azure/cdnprofiles/endpointLoggingEnabled.js'),
         'detectInsecureCustomOrigin'    : require(__dirname + '/plugins/azure/cdnprofiles/detectInsecureCustomOrigin.js'),
@@ -300,6 +306,7 @@ module.exports = {
         'passwordRequiresUppercase'     : require(__dirname + '/plugins/azure/activedirectory/passwordRequiresUppercase.js'),
         'minPasswordLength'             : require(__dirname + '/plugins/azure/activedirectory/minPasswordLength.js'),
         'ensureNoGuestUser'             : require(__dirname + '/plugins/azure/activedirectory/ensureNoGuestUser.js'),
+        'noCustomOwnerRoles'            : require(__dirname + '/plugins/azure/activedirectory/noCustomOwnerRoles.js'),
 
         'dbAuditingEnabled'             : require(__dirname + '/plugins/azure/sqldatabases/dbAuditingEnabled.js'),
         'sqlDbMultiAz'                  : require(__dirname + '/plugins/azure/sqldatabases/sqlDbMultiAz.js'),
@@ -310,6 +317,7 @@ module.exports = {
 
         'kvRecoveryEnabled'             : require(__dirname + '/plugins/azure/keyvaults/kvRecoveryEnabled.js'),
         'keyExpirationEnabled'          : require(__dirname + '/plugins/azure/keyvaults/keyExpirationEnabled.js'),
+        'secretExpirationEnabled'       : require(__dirname + '/plugins/azure/keyvaults/secretExpirationEnabled.js'),
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),

@@ -167,6 +167,13 @@ var calls = {
             noSubscription: true
         }
     },
+    roleDefinitions: {
+        list: {
+            api: "AuthorizationClient",
+            arm: true,
+            subscription: true
+        }
+    },
     managementLocks: {
         listAtSubscriptionLevel: {
             api: "ManagementLockClient",
@@ -190,6 +197,13 @@ var calls = {
         list: {
             api: "ContainerRegistryClient",
             arm: true
+        }
+    },
+    pricings: {
+        list: {
+            api: "SecurityCenterClient",
+            arm: true,
+            ascLoc: true
         }
     }
 };
@@ -410,6 +424,15 @@ var postcalls = {
             filterValue: ['name'],
             arm: false,
             keyVault: true
+        },
+        getSecrets: {
+            api: "KeyVaultClient",
+            reliesOnService: ['vaults'],
+            reliesOnCall: ['list'],
+            filterKey: ['name'],
+            filterValue: ['name'],
+            arm: false,
+            keyVault: true
         }
     },
     loadBalancers: {
@@ -432,6 +455,17 @@ var postcalls = {
             filterValue: ['resourceGroupName','name'],
             arm: true
         },
+    },
+    serverAzureADAdministrators: {
+        listByServer: {
+            api: "SQLManagementClient",
+            reliesOnService: ['resourceGroups','servers'],
+            reliesOnSubService: [undefined, 'sql'],
+            reliesOnCall: ['list','list'],
+            filterKey: ['resourceGroupName','serverName'],
+            filterValue: ['resourceGroupName','name'],
+            arm: true
+        }
     },
 	virtualMachineScaleSets: {
         list: {
