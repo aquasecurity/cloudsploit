@@ -48,5 +48,6 @@ module.exports = {
     transfer: [],
     lambda: regions,
     directconnect: regions,
-    directoryservice: []
+    directoryservice: [],
+    organizations: ['cn-north-1'],
 };

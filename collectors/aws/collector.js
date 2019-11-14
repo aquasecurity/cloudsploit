@@ -330,6 +330,14 @@ var calls = {
             paginateReqProp: 'Marker'
         }
     },
+    Organizations: {
+        describeOrganization: {
+            property: 'Organization',
+        },
+        listHandshakesForAccount: {
+            property: 'Handshakes',
+        },
+    },
     RDS: {
         describeDBInstances: {
             property: 'DBInstances',
