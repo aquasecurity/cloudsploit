@@ -46,20 +46,27 @@ module.exports = {
                         'Unable to query for ES domain config: ' + helpers.addError(describeElasticsearchDomain), region);
                 } else {
                     var localDomain = describeElasticsearchDomain.data.DomainStatus;
+                    var logSources = Object.keys(localDomain.LogPublishingOptions || {})
 
-                    if (localDomain.LogPublishingOptions &&
-                        localDomain.LogPublishingOptions.Enabled) {
-                        if (!localDomain.LogPublishingOptions.CloudWatchLogsLogGroupArn) {
-                            helpers.addResult(results, 2,
-                                'ES domain logging is enabled but logs are not configured to be sent to CloudWatch', region, localDomain.ARN);
-                        } else {
-                            helpers.addResult(results, 0,
-                                'ES domain logging is enabled and sending logs to CloudWatch', region, localDomain.ARN);
-                        }
-                    } else {
+                    if (!logSources.length) {
                         helpers.addResult(results, 2,
                             'ES domain logging is not enabled', region, localDomain.ARN);
                     }
+
+                    logSources.forEach(function(source){
+                        var logConfiguration = localDomain.LogPublishingOptions[source]
+
+                        if (!logConfiguration.Enabled) {
+                            helpers.addResult(results, 2,
+                                'ES domain logging is disabled for ' + source, region, localDomain.ARN);
+                        } else if (!logConfiguration.CloudWatchLogsLogGroupArn) {
+                            helpers.addResult(results, 2,
+                                'ES domain logging is enabled for ' + source + ' but logs are not configured to be sent to CloudWatch', region, localDomain.ARN);
+                        } else {
+                            helpers.addResult(results, 0,
+                                'ES domain logging is enabled for ' + source + ' and sending logs to CloudWatch', region, localDomain.ARN);
+                        }
+                    });
                 }
             });
 
