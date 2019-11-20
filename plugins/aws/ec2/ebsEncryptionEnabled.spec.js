@@ -18,7 +18,7 @@ const createCache = (volumes, keys) => {
     };
 };
 
-describe.only('ebsEncryptionEnabled', function () {
+describe('ebsEncryptionEnabled', function () {
     describe('run', function () {
         it('should FAIL if volume is not encrypted', function (done) {
             const cache = createCache([{
