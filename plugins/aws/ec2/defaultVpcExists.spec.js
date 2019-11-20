@@ -37,7 +37,7 @@ const createNullCache = () => {
     };
 };
 
-describe.only('defaultVpcExists', function () {
+describe('defaultVpcExists', function () {
     describe('run', function () {
         it('should FAIL if a default vpc is detected', function (done) {
             const cache = createCache([{ IsDefault: false }, { IsDefault: true }]);
