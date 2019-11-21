@@ -521,7 +521,12 @@ var postcalls = [
                 deleteRegion: true,
                 signatureVersion: 'v4',
                 override: true
-            }
+            },
+            getPublicAccessBlock: {
+                deleteRegion: true,
+                signatureVersion: 'v4',
+                override: true
+            },
         },
         EC2: {
             describeSubnets: {
