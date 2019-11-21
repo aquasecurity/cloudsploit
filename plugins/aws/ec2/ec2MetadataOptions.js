@@ -25,36 +25,30 @@ module.exports = {
                 return rcb();
             }
 
-            if (!describeInstances.data.length) {
-                helpers.addResult(results, 0, 'No instances found', region);
-                return rcb();
-            }
-
-            if (!describeInstances.data.length) {
-                helpers.addResult(results, 0, 'No instances reservations found', region);
-                return rcb();
-            }
-
+            var foundInstances = false;
             for (reservation of describeInstances.data) {
-                if (!reservation.Instances.length) {
-                    helpers.addResult(results, 0, 'No instances found', region);
-                    return rcb();
-                }
                 for (instance of reservation.Instances) {
+                    foundInstances = true;
                     if (!instance.MetadataOptions) {
                         helpers.addResult(results, 3, `Unable to get instance metadata options`, region, instance.InstanceId);
                         continue;
                     }
 
                     if (instance.MetadataOptions.HttpTokens === 'required' || instance.MetadataOptions.HttpEndpoint === 'disabled') {
-                        helpers.addResult(results, 0, `Instance metadata options require HttpTokens or disable HttpEndpoint entirely`, region, instance.InstanceId);
+                        var message = instance.MetadataOptions.HttpTokens === 'required'
+                            ? 'HttpTokens are required'
+                            : 'HttpEndpoint is disabled';
+                        helpers.addResult(results, 0, `Instance metadata ${message}`, region, instance.InstanceId);
                         continue;
                     }
 
                     helpers.addResult(results, 2, `Insecure instance metadata options: doesn't require HttpTokens while HttpEndpoint enabled`, region, instance.InstanceId);
                 }
             }
-            rcb();
+            if (!foundInstances) {
+                helpers.addResult(results, 0, 'No instances found', region);
+            }
+            return rcb();
         }, function(){
             callback(null, results, source);
         });
