@@ -441,6 +441,7 @@ module.exports = {
         'ipForwardingDisabled'          : require(__dirname + '/plugins/google/compute/ipForwardingDisabled.js'),
         'connectSerialPortsDisabled'    : require(__dirname + '/plugins/google/compute/connectSerialPortsDisabled.js'),
         'csekEncryptionEnabled'         : require(__dirname + '/plugins/google/compute/csekEncryptionEnabled.js'),
+        'osLoginEnabled'                : require(__dirname + '/plugins/google/compute/osLoginEnabled.js'),
 
         'keyRotation'                   : require(__dirname + '/plugins/google/cryptographickeys/keyRotation.js'),
 
@@ -448,6 +449,7 @@ module.exports = {
         'dbAutomatedBackups'            : require(__dirname + '/plugins/google/sql/dbAutomatedBackups.js'),
         'dbMultiAz'                     : require(__dirname + '/plugins/google/sql/dbMultiAz.js'),
         'dbPubliclyAccessible'          : require(__dirname + '/plugins/google/sql/dbPubliclyAccessible.js'),
+        'dbSSLEnabled'                  : require(__dirname + '/plugins/google/sql/dbSSLEnabled.js'),
 
         'bucketVersioning'              : require(__dirname + '/plugins/google/storage/bucketVersioning.js'),
         'bucketLogging'                 : require(__dirname + '/plugins/google/storage/bucketLogging.js'),
@@ -459,10 +461,24 @@ module.exports = {
         'clbCDNEnabled'                 : require(__dirname + '/plugins/google/clb/clbCDNEnabled.js'),
 
         'serviceLimits'                 : require(__dirname + '/plugins/google/iam/serviceLimits.js'),
+        'serviceAccountKeyRotation'     : require(__dirname + '/plugins/google/iam/serviceAccountKeyRotation.js'),
+        'serviceAccountManagedKeys'     : require(__dirname + '/plugins/google/iam/serviceAccountManagedKeys.js'),
 
         'privateEndpoint'               : require(__dirname + '/plugins/google/kubernetes/privateEndpoint.js'),
         'monitoringEnabled'             : require(__dirname + '/plugins/google/kubernetes/monitoringEnabled.js'),
+        'clusterLeastPrivilege'         : require(__dirname + '/plugins/google/kubernetes/clusterLeastPrivilege.js'),
+        'loggingEnabled'                : require(__dirname + '/plugins/google/kubernetes/loggingEnabled.js'),
 
         'dnsSecEnabled'                 : require(__dirname + '/plugins/google/dns/dnsSecEnabled.js'),
+        'dnsSecSigningAlgorithm'        : require(__dirname + '/plugins/google/dns/dnsSecSigningAlgorithm.js'),
+
+        'projectOwnershipLogging'       : require(__dirname + '/plugins/google/logging/projectOwnershipLogging.js'),
+        'storagePermissionsLogging'     : require(__dirname + '/plugins/google/logging/storagePermissionsLogging.js'),
+        'sqlConfigurationLogging'       : require(__dirname + '/plugins/google/logging/sqlConfigurationLogging.js'),
+        'auditConfigurationLogging'     : require(__dirname + '/plugins/google/logging/auditConfigurationLogging.js'),
+        'customRoleLogging'             : require(__dirname + '/plugins/google/logging/customRoleLogging.js'),
+        'vpcFirewallRuleLogging'        : require(__dirname + '/plugins/google/logging/vpcFirewallRuleLogging.js'),
+        'vpcNetworkRouteLogging'        : require(__dirname + '/plugins/google/logging/vpcNetworkRouteLogging.js'),
+        'vpcNetworkLogging'             : require(__dirname + '/plugins/google/logging/vpcNetworkLogging.js'),
     }
 };
