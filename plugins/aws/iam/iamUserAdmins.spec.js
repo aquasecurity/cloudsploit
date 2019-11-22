@@ -48,6 +48,7 @@ describe('iamUserAdmins', function () {
 
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
+                expect(results[0].status).to.equal(0)
                 done()
             }
 
