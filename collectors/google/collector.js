@@ -139,7 +139,7 @@ var calls = {
         list: {
             api: 'container',
             version: 'v1beta1',
-            location: 'regions',
+            location: 'global',
             parent: true,
             nested: true,
         }
@@ -149,6 +149,27 @@ var calls = {
             api: 'dns',
             version: 'v1',
             location: null
+        }
+    },
+    metrics: {
+        list: {
+            api: 'logging',
+            version: 'v2',
+            parent: true
+        }
+    },
+    alertPolicies: {
+        list: {
+            api: 'monitoring',
+            version: 'v3',
+            parent: 'name'
+        }
+    },
+    serviceAccounts: {
+        list: {
+            api: 'iam',
+            version: 'v1',
+            parent: 'name'
         }
     }
 };
@@ -186,6 +207,18 @@ var postcalls = {
             reliesOnCall: ['list'],
             filterKey: ['bucket'],
             filterValue: ['name'],
+        }
+    },
+    keys: {
+        list: {
+            api: 'iam',
+            version: 'v1',
+            parent: 'name',
+            serviceAccount: true,
+            reliesOnService: ['serviceAccounts'],
+            reliesOnCall: ['list'],
+            filterKey: ['id'],
+            filterValue: ['uniqueId'],
         }
     }
 

@@ -48,7 +48,11 @@ module.exports = {
                         subnetRegion = splitSubnet[8];
 
                         if (subnetRegions.hasOwnProperty(subnetRegion) && subnetName != 'default') {
-                            myRegions[subnetRegion] = 1;
+                            if (!myRegions[subnetRegion]) {
+                                myRegions[subnetRegion] = 1;
+                            } else {
+                                myRegions[subnetRegion] += 1;
+                            }
 
                         } else if (subnetRegions.hasOwnProperty(subnetRegion) && subnetName == 'default') {
                             myRegions[subnetRegion] = 0.5;

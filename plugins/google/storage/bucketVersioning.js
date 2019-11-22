@@ -32,13 +32,18 @@ module.exports = {
                 return rcb();
             }
             buckets.data.forEach(bucket => {
-                if (bucket.versioning &&
-                    bucket.versioning.enabled) {
+                if (bucket.id) {
+                    if (bucket.versioning &&
+                        bucket.versioning.enabled) {
                         helpers.addResult(results, 0, 'Bucket Versioning Enabled', region, bucket.id);
-                } else if ((bucket.versioning &&
-                        !bucket.versioning.enabled) || 
+                    } else if ((bucket.versioning &&
+                        !bucket.versioning.enabled) ||
                         !bucket.versioning){
-                            helpers.addResult(results, 2, 'Bucket Versioning not Enabled', region, bucket.id);
+                        helpers.addResult(results, 2, 'Bucket Versioning not Enabled', region, bucket.id);
+                    }
+                } else {
+                    helpers.addResult(results, 0, 'No Storage Buckets present', region);
+                    return
                 }
             })
 

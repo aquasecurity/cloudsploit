@@ -6,7 +6,7 @@ module.exports = {
     category: 'DNS',
     description: 'Ensures that DNS Security is enabled on all managed zones.',
     more_info: 'DNS Security is a feature that authenticates all responses to domain name lookups. This prevents attackers from committing DNS hijacking or man in the middle attacks.',
-    link: 'https://cloud.google.com/dns/docs/dnssec?hl=en_US&_ga=2.190155811.-922741565.1560964300',
+    link: 'https://cloud.google.com/dns/docs/dnssec',
     recommended_action: '1. Enter the Cloud DNS Service. 2. Select the Managed Zone in question. 3. Enable DNSSEC.',
     apis: ['managedZones:list'],
 

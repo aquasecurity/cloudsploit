@@ -163,6 +163,9 @@ var run = function (GoogleConfig, collection, settings, service, callObj, callKe
                         callObj.params[callObj.filterKey[filter]] = record[callObj.filterValue[filter]]
                         options.version = callObj.version;
                     }
+                    if (callObj.parent) {
+                        callObj.params.parent = addParent(GoogleConfig, region, callObj);
+                    }
                     execute(LocalGoogleConfig, collection, service, callObj, callKey, region, recordCb, options);
                 }, function() {
                     regionCb();
@@ -175,11 +178,15 @@ var run = function (GoogleConfig, collection, settings, service, callObj, callKe
     }
 };
 
-var addParent = function(GoogleConfig, region) {
-    if (region == 'global') {
+var addParent = function(GoogleConfig, region, callObj) {
+    if (callObj.location && callObj.location == 'global') {
         return `projects/${GoogleConfig.project}/locations/-`
-    } else {
+    } else if (callObj.location && callObj.location == 'region') {
         return `projects/${GoogleConfig.project}/locations/${region}`
+    } else if (callObj.serviceAccount) {
+        return `projects/${GoogleConfig.project}/serviceAccounts/${callObj.params.id}`
+    } else {
+        return `projects/${GoogleConfig.project}`
     }
 };
 
@@ -238,6 +245,13 @@ var execute = function (LocalGoogleConfig, collection, service, callObj, callKey
                     } else {
                         collection[service][callKey][region].data.push(data.data[service])
                     }
+                }
+                else if (data.data.accounts) {
+                    if (data.data.accounts.constructor.name === 'Array') {
+                        collection[service][callKey][region].data = collection[service][callKey][region].data.concat(data.data.accounts);
+                    } else {
+                        collection[service][callKey][region].data.push(data.data.accounts)
+                    }
                 } else if (data.data) {
                     if (data.data.constructor.name === 'Array') {
                         collection[service][callKey][region].data.concat(data.data);
@@ -260,13 +274,22 @@ var execute = function (LocalGoogleConfig, collection, service, callObj, callKey
             }
         }
     };
-
+    var parentParams;
     if (callObj.nested && callObj.parent) {
-        myParams = {auth: callObj.params.auth, parent: callObj.params.parent};
-        executor['projects']['locations'][service][callKey](myParams, LocalGoogleConfig, executorCb);
+        parentParams = {auth: callObj.params.auth, parent: callObj.params.parent};
+        executor['projects']['locations'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
     } else if(callObj.nested) {
-        myParams = {auth: callObj.params.auth, parent: callObj.params.parent};
-        executor['projects']['locations']['keyRings'][service][callKey](myParams, LocalGoogleConfig, executorCb);
+        parentParams = {auth: callObj.params.auth, parent: callObj.params.parent};
+        executor['projects']['locations']['keyRings'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
+    } else if (callObj.serviceAccount) {
+        myParams = {auth: callObj.params.auth, name: callObj.params.parent};
+        executor['projects']['serviceAccounts'][service][callKey](myParams, LocalGoogleConfig, executorCb);
+    } else if (callObj.parent && callObj.parent === 'name') {
+        parentParams = {auth: callObj.params.auth, name: callObj.params.parent};
+        executor['projects'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
+    } else if (callObj.parent) {
+        parentParams = {auth: callObj.params.auth, parent: callObj.params.parent};
+        executor['projects'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
     } else if (callObj.params) {
         executor[service][callKey](callObj.params, LocalGoogleConfig, executorCb);
     } else {
