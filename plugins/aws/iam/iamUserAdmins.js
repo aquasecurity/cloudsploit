@@ -20,17 +20,24 @@ module.exports = {
              'reduces the scope of users with potential access to this data.'
     },
     settings: {
-        iam_admin_count: {
-            name: 'IAM Admin Count',
-            description: 'The number of IAM user admins to require in the account',
+        iam_admin_count_minimum: {
+            name: 'IAM Admin Count Minimum',
+            description: 'The minimum number of IAM user admins to require in the account',
             regex: '^[1-9]{1}[0-9]{0,3}$',
-            default: 2
+            default: 1
+        },
+        iam_admin_count_maximum: {
+            name: 'IAM Admin Count Maximum',
+            description: 'The maximum number of IAM user admins to require in the account',
+            regex: '^[1-9]{1}[0-9]{0,3}$',
+            default: 9
         }
     },
 
     run: function(cache, settings, callback) {
         var config = {
-            iam_admin_count: settings.iam_admin_count || this.settings.iam_admin_count.default
+            iam_admin_count_minimum: settings.iam_admin_count_minimum || this.settings.iam_admin_count_minimum.default,
+            iam_admin_count_maximum: settings.iam_admin_count_maximum || this.settings.iam_admin_count_maximum
         };
 
         var custom = helpers.isCustom(settings, this.settings);
@@ -212,18 +219,18 @@ module.exports = {
             cb();
         }, function(){
             // Use admins array
-            if (userAdmins.length < config.iam_admin_count) {
+            if (userAdmins.length < config.iam_admin_count_minimum) {
                 helpers.addResult(results, 1,
-                    'There are fewer than ' + config.iam_admin_count + ' IAM user administrators',
+                    'There are fewer than the minimum ' + config.iam_admin_count_minimum + ' IAM user administrators',
                     'global', null, custom);
-            } else if (userAdmins.length == config.iam_admin_count) {
+            } else if (userAdmins.length >= config.iam_admin_count_minimum && userAdmins.length <= config.iam_admin_count_maximum) {
                 helpers.addResult(results, 0,
-                    'There are ' + config.iam_admin_count + ' IAM user administrators',
+                    'There are ' + userAdmins.length + ' IAM user administrators',
                     'global', null, custom);
             } else {
                 for (u in userAdmins) {
                     helpers.addResult(results, 2,
-                        'User: ' + userAdmins[u].name + ' is one of ' + userAdmins.length + ' IAM user administrators, which exceeds the expected value of: ' + config.iam_admin_count,
+                        'User: ' + userAdmins[u].name + ' is one of ' + userAdmins.length + ' IAM user administrators, which exceeds the expected value of: ' + config.iam_admin_count_maximum,
                         'global', userAdmins[u].arn, custom);
                 }
             }
