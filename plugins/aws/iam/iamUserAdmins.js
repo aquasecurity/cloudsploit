@@ -24,13 +24,13 @@ module.exports = {
             name: 'IAM Admin Count Minimum',
             description: 'The minimum number of IAM user admins to require in the account',
             regex: '^[1-9]{1}[0-9]{0,3}$',
-            default: 1
+            default: 2
         },
         iam_admin_count_maximum: {
             name: 'IAM Admin Count Maximum',
             description: 'The maximum number of IAM user admins to require in the account',
             regex: '^[1-9]{1}[0-9]{0,3}$',
-            default: 9
+            default: 2
         }
     },
 
