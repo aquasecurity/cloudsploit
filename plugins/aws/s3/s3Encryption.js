@@ -42,7 +42,7 @@ module.exports = {
         var desiredEncryptionLevel = encryptionLevelMap[desiredEncryptionLevelString]
         var currentEncryptionLevelString, currentEncryptionLevel
         if(!desiredEncryptionLevel) {
-            helpers.addResult(results, 3, 'Settings misconfigured for SSM Encryption Level.');
+            helpers.addResult(results, 3, 'Settings misconfigured for S3 Encryption Level.');
             return callback(null, results, source);
         }
 
