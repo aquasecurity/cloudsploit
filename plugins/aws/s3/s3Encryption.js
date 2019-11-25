@@ -38,9 +38,13 @@ module.exports = {
             cloudhsm: 5
         };
 
-        var desiredEncryptionLevelString = settings.s3_encryption_level || this.settings.s3_encryption_level
+        var desiredEncryptionLevelString = settings.s3_encryption_level || this.settings.s3_encryption_level.default
         var desiredEncryptionLevel = encryptionLevelMap[desiredEncryptionLevelString]
         var currentEncryptionLevelString, currentEncryptionLevel
+        if(!desiredEncryptionLevel) {
+            helpers.addResult(results, 3, 'Settings misconfigured for SSM Encryption Level.');
+            return callback(null, results, source);
+        }
 
         var region = helpers.defaultRegion(settings);
         var listBuckets = helpers.addSource(cache, source,

@@ -963,5 +963,147 @@ describe('bucketDefaultEncryptionSensitive', function () {
                 process.nextTick(() => { defaultEncryption.run(cache, {s3_encryption_level: 'cloudhsm'}, callback) })
             })
         })
+
+        describe('misconfiguredSettings', function () {
+            it('should FAIL when no buckets exist.', function (done) {
+                const cache = createCache({data: []},
+                    {},
+                    {})
+
+                const callback = (err, results) => {
+                    expect(results.length).to.equal(1)
+                    expect(results[0].status).to.equal(3)
+                    done()
+                }
+
+                process.nextTick(() => { defaultEncryption.run(cache, {s3_encryption_level: 'DNE'}, callback) })
+            })
+
+            it('should FAIL when the bucket has \`sse\` encryption enabled.', function (done) {
+                const cache = createCache({data: [exampleBucket]},
+                    createDataHolder(bucketName, {data: aes256Encryption}),
+                    {})
+
+                const callback = (err, results) => {
+                    expect(results.length).to.equal(1)
+                    expect(results[0].status).to.equal(3)
+                    done()
+                }
+
+                process.nextTick(() => { defaultEncryption.run(cache, {s3_encryption_level: 'DNE'}, callback) })
+            })
+
+            it('should FAIL when the bucket \`awskms\` encryption enabled.', function (done) {
+                const cache = createCache({data: [exampleBucket]},
+                    createDataHolder(bucketName, {data: awsKMSEncryption}),
+                    createDataHolder(awsKey, {data: awsKMSKey}))
+
+                const callback = (err, results) => {
+                    expect(results.length).to.equal(1)
+                    expect(results[0].status).to.equal(3)
+                    done()
+                }
+
+                process.nextTick(() => { defaultEncryption.run(cache, {s3_encryption_level: 'DNE'}, callback) })
+            })
+
+            it('should FAIL when the bucket \`awscmk\` encryption enabled.', function (done) {
+                const cache = createCache({data: [exampleBucket]},
+                    createDataHolder(bucketName, {data: awsKMSEncryption}),
+                    createDataHolder(awsKey, {data: awsCustomerKey}))
+
+                const callback = (err, results) => {
+                    expect(results.length).to.equal(1)
+                    expect(results[0].status).to.equal(3)
+                    done()
+                }
+
+                process.nextTick(() => { defaultEncryption.run(cache, {s3_encryption_level: 'DNE'}, callback) })
+            })
+
+            it('should FAIL when the bucket \`externalcmk\` encryption enabled.', function (done) {
+                const cache = createCache({data: [exampleBucket]},
+                    createDataHolder(bucketName, {data: awsKMSEncryption}),
+                    createDataHolder(awsKey, {data: awsExternalKey}))
+
+                const callback = (err, results) => {
+                    expect(results.length).to.equal(1)
+                    expect(results[0].status).to.equal(3)
+                    done()
+                }
+
+                process.nextTick(() => { defaultEncryption.run(cache, {s3_encryption_level: 'DNE'}, callback) })
+            })
+
+            it('should FAIL when the bucket \`cloudhsm\` encryption enabled.', function (done) {
+                const cache = createCache({data: [exampleBucket]},
+                    createDataHolder(bucketName, {data: awsKMSEncryption}),
+                    createDataHolder(awsKey, {data: awsHSMKey}))
+
+                const callback = (err, results) => {
+                    expect(results.length).to.equal(1)
+                    expect(results[0].status).to.equal(3)
+                    done()
+                }
+
+                process.nextTick(() => { defaultEncryption.run(cache, {s3_encryption_level: 'DNE'}, callback) })
+            })
+
+            it('should FAIL when describeKey has an error.', function (done) {
+                const cache = createCache({data: [exampleBucket]},
+                    createDataHolder(bucketName, {data: awsKMSEncryption}),
+                    createDataHolder(awsKey, exampleAccessDeniedError))
+
+                const callback = (err, results) => {
+                    expect(results.length).to.equal(1)
+                    expect(results[0].status).to.equal(3)
+                    done()
+                }
+
+                process.nextTick(() => { defaultEncryption.run(cache, {s3_encryption_level: 'DNE'}, callback) })
+            })
+
+            it('should FAIL when that bucket has no encryption enabled.', function (done) {
+                const cache = createCache({data: [exampleBucket]},
+                    createDataHolder(bucketName, exampleNoBucketEncryption),
+                    {})
+
+                const callback = (err, results) => {
+                    expect(results.length).to.equal(1)
+                    expect(results[0].status).to.equal(3)
+                    done()
+                }
+
+                process.nextTick(() => { defaultEncryption.run(cache, {s3_encryption_level: 'DNE'}, callback) })
+            })
+
+            it('should FAIL when that bucket has an error.', function (done) {
+                const cache = createCache(exampleAccessDeniedError,
+                    {},
+                    {})
+
+                const callback = (err, results) => {
+                    expect(results.length).to.equal(1)
+                    expect(results[0].status).to.equal(3)
+                    done()
+                }
+
+                process.nextTick(() => { defaultEncryption.run(cache, {s3_encryption_level: 'DNE'}, callback) })
+            })
+
+            it('should FAIL when bucket encryption returns an error.', function (done) {
+                const cache = createCache({data: [exampleBucket]},
+                    createDataHolder(bucketName, exampleAccessDeniedError),
+                    {})
+
+                const callback = (err, results) => {
+                    expect(results.length).to.equal(1)
+                    expect(results[0].status).to.equal(3)
+                    done()
+                }
+
+                process.nextTick(() => { defaultEncryption.run(cache, {s3_encryption_level: 'DNE'}, callback) })
+            })
+        })
     })
 })
