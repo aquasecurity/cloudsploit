@@ -51,9 +51,9 @@ module.exports = {
     settings: {
         ebs_encryption_level: {
             name: 'EBS Minimum Encryption Level',
-            description: 'In order (lowest to highest) sse=Server-Side Encryption; awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
-            regex: '^(sse|awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'sse',
+            description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
+            regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
+            default: 'awskms',
         },
         ebs_result_limit: {
             name: 'EBS Result Limit',
