@@ -156,7 +156,10 @@ module.exports = {
 
         'shieldAdvancedEnabled'         : require(__dirname + '/plugins/aws/shield/shieldAdvancedEnabled.js'),
         'shieldEmergencyContacts'       : require(__dirname + '/plugins/aws/shield/shieldEmergencyContacts.js'),
-        'shieldProtections'             : require(__dirname + '/plugins/aws/shield/shieldProtections.js')
+        'shieldProtections'             : require(__dirname + '/plugins/aws/shield/shieldProtections.js'),
+
+        'enableAllFeatures'             : require(__dirname + '/plugins/aws/organizations/enableAllFeatures.js'),
+        'organizationInvite'             : require(__dirname + '/plugins/aws/organizations/organizationInvite.js'),
     },
     azure : {
         'fileServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/fileServiceEncryption.js'),
@@ -414,7 +417,5 @@ module.exports = {
 
 module.exports = {
     aws : {
-        'enableAllFeatures'             : require(__dirname + '/plugins/aws/organizations/enableAllFeatures.js'),
-        'organizationInvite'             : require(__dirname + '/plugins/aws/organizations/organizationInvite.js'),
     },
 };
