@@ -414,8 +414,3 @@ module.exports = {
         'monitoringEnabled'             : require(__dirname + '/plugins/google/kubernetes/monitoringEnabled.js'),
     }
 };
-
-module.exports = {
-    aws : {
-    },
-};
