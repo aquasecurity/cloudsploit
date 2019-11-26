@@ -123,6 +123,5 @@ describe('iamUserAdmins', function () {
             iamUserAdmins.run(cache, settings, callback)
         })
 
-    
     })
 })

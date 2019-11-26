@@ -37,7 +37,7 @@ module.exports = {
     run: function(cache, settings, callback) {
         var config = {
             iam_admin_count_minimum: settings.iam_admin_count_minimum || this.settings.iam_admin_count_minimum.default,
-            iam_admin_count_maximum: settings.iam_admin_count_maximum || this.settings.iam_admin_count_maximum
+            iam_admin_count_maximum: settings.iam_admin_count_maximum || this.settings.iam_admin_count_maximum.default
         };
 
         var custom = helpers.isCustom(settings, this.settings);
