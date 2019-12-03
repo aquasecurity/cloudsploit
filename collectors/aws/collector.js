@@ -272,6 +272,11 @@ var calls = {
             paginateReqProp: 'Marker'
         }
     },
+    ES: {
+        listDomainNames: {
+            property: 'DomainNames'
+        }
+    },
     IAM: {
         listServerCertificates: {
             property: 'ServerCertificateMetadataList',
@@ -489,6 +494,14 @@ var postcalls = [
                 reliesOnService: 'dynamodb',
                 reliesOnCall: 'listTables',
                 override: true
+            }
+        },
+        ES: {
+            describeElasticsearchDomain: {
+                reliesOnService: 'es',
+                reliesOnCall: 'listDomainNames',
+                filterKey: 'DomainName',
+                filterValue: 'DomainName'
             }
         },
         S3: {

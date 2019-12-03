@@ -43,11 +43,11 @@ module.exports = {
                 };
             });
             async.each(regions.instances.compute, function(location, loccb) {
-                var instancesInRegion = 0;
+                var instancesInRegion= [];
                 var regionExists = false;
                 async.each(regions.zones[location], function (loc, lcb) {
                     let instances = helpers.addSource(
-                        cache, source, ['instances', 'compute', 'list', loc]);    
+                        cache, source, ['instances', 'compute', 'list', loc]);
 
                     if (!instances) return lcb();
 
@@ -55,30 +55,33 @@ module.exports = {
                         helpers.addResult(results, 3, 'Unable to query instances: ' + helpers.addError(instances), location);
                         return lcb();
                     };
-        
-                //Looping by zone, ignoring the results
-                   if (!instances.data.length) {
-                    // helpers.addResult(results, 0, 'No Instances Found', loc);
-                    return lcb();
-                   }
-                    
+
+                    //Looping by zone, ignoring the results
+                    if (!instances.data.length) {
+                        // helpers.addResult(results, 0, 'No Instances Found', loc);
+                        return lcb();
+                    }
+
                     async.each(instances.data, function(instance, incb) {
                         var instanceName = instance.name.split('-');
                         instanceName.splice(instanceName.length-1, 1);
                         instanceName = instanceName.join('-');
 
                         if (!groupName.includes(instanceName)) {
-                            helpers.addResult(results, 2, 'The instance is only available in one zone' , location, instance.id);
-                            instancesInRegion++;
+                            instancesInRegion.push(instance.id);
                         } else {
                             regionExists = true;
                         }
                         incb();
                     })
                 })
-                if (!instancesInRegion && regionExists) {
+                if (instancesInRegion.length) {
+                    var myInstancesStr = instancesInRegion.join(', ');
+                    helpers.addResult(results, 2,
+                        `These instances are only available in one zone: ${myInstancesStr}` , location,);
+                } else if (!instancesInRegion.length && regionExists) {
                     helpers.addResult(results, 0, 'The instance Groups in the region are Highly Available' , location);
-                } else if (!instancesInRegion && !regionExists) {
+                } else if (!instancesInRegion.length && !regionExists) {
                     helpers.addResult(results, 0, 'No instances found in the region' , location);
                 }
                 loccb();

@@ -4,9 +4,9 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Resource Location Matches Resource Group',
     category: 'Azure Policy',
-    description: 'Ensures deployed resources match the resource groups they are in, as well as ensuring the Audit resource location matches resource group location policy is assigned.',
-    more_info: 'Monitoring changes to resources follows Security and Compliance best practices. Being able to track resource location changes adds a level of accountability.',
-    recommended_action: '1. Navigate to the Policy service. 2. Select the Assignments blade. 3. Click on Assign Policy. 4. Click to search a Policy definition, search for and select: Audit resource location matches resource group location. 5. Under Parameters, select your Allowed locations. 6. Click on Assign.',
+    description: 'Ensures a policy is configured to audit that deployed resource locations match their resource group locations',
+    more_info: 'Using Azure Policy to monitor resource location compliance helps ensure that new resources are not launched into locations that do not match their resource group.',
+    recommended_action: 'Enable the built-in Azure Policy definition: Audit resource location matches resource group location',
     link: 'https://docs.microsoft.com/en-us/azure/governance/policy/assign-policy-portal',
     apis: ['policyAssignments:list', 'resourceGroups:list', 'resources:list'],
 
@@ -57,12 +57,12 @@ module.exports = {
 
         if (!policyAssignments || policyAssignments.err || !policyAssignments.data) {
             helpers.addResult(results, 3,
-                'Unable to query Policy Assignments: ' + helpers.addError(policyAssignments), 'global');
+                'Unable to query for Policy Assignments: ' + helpers.addError(policyAssignments), 'global');
             return callback();
         }
 
         if (!policyAssignments.data.length) {
-            helpers.addResult(results, 1, 'No existing Policy Assignments', 'global');
+            helpers.addResult(results, 2, 'No existing Policy Assignments found', 'global');
             return callback();
         }
 
@@ -86,10 +86,10 @@ module.exports = {
                         resources.data[r].resourceGroupLocation = resG.location;
                         if (resources.data[r].resourceGroupLocation != resources.data[r].location && resources.data[r].location!='global') {
                             helpers.addResult(results, 2,
-                                "The resource: " + resources.data[r].name + " is located at: " + resources.data[r].location + " not matching the resource group: " + resources.data[r].resourceGroupName + " located at: " + resources.data[r].resourceGroupLocation + '.', resources.data[r].location, resources.data[r].id);
+                                "The resource: " + resources.data[r].name + " is located at: " + resources.data[r].location + " not matching the resource group: " + resources.data[r].resourceGroupName + " located at: " + resources.data[r].resourceGroupLocation, resources.data[r].location, resources.data[r].id);
                         } else if (resources.data[r].location!='global') {
                             helpers.addResult(results, 0,
-                                "The resource: " + resources.data[r].name + " is located at: " + resources.data[r].location + " matching the resource group location.", resources.data[r].location, resources.data[r].id);
+                                "The resource: " + resources.data[r].name + " is located at: " + resources.data[r].location + " matching the resource group location", resources.data[r].location, resources.data[r].id);
                         }
                     }
                 }
@@ -98,7 +98,7 @@ module.exports = {
             helpers.addResult(results, 0,
                 'The policy to audit matching resource location to resource group location is assigned', 'global');
         } else {
-            helpers.addResult(results, 1,
+            helpers.addResult(results, 2,
                 'No existing assignment for the resource location matches resource group location policy', 'global');
         }
 

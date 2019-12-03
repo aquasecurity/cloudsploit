@@ -161,8 +161,14 @@ var run = function (GoogleConfig, collection, settings, service, callObj, callKe
                 async.eachLimit(records, 10, function(record, recordCb) {
                     for (filter in callObj.filterKey) {
                         callObj.params[callObj.filterKey[filter]] = record[callObj.filterValue[filter]]
+                        options.version = callObj.version;
                     }
-                    execute(LocalGoogleConfig, collection, service, callObj, callKey, region, regionCb, options);
+                    if (callObj.parent) {
+                        callObj.params.parent = addParent(GoogleConfig, region, callObj);
+                    }
+                    execute(LocalGoogleConfig, collection, service, callObj, callKey, region, recordCb, options);
+                }, function() {
+                    regionCb();
                 })
             }
             callObj.params[callObj.filterKey[reliedService]] = [callObj.filterValue[reliedService]]
@@ -172,11 +178,15 @@ var run = function (GoogleConfig, collection, settings, service, callObj, callKe
     }
 };
 
-var addParent = function(GoogleConfig, region) {
-    if (region == 'global') {
+var addParent = function(GoogleConfig, region, callObj) {
+    if (callObj.location && callObj.location == 'global') {
         return `projects/${GoogleConfig.project}/locations/-`
-    } else {
+    } else if (callObj.location && callObj.location == 'region') {
         return `projects/${GoogleConfig.project}/locations/${region}`
+    } else if (callObj.serviceAccount) {
+        return `projects/${GoogleConfig.project}/serviceAccounts/${callObj.params.id}`
+    } else {
+        return `projects/${GoogleConfig.project}`
     }
 };
 
@@ -224,12 +234,32 @@ var execute = function (LocalGoogleConfig, collection, service, callObj, callKey
                 collection[service][callKey][region].data = data[callObj.property][callObj.secondProperty];
             } else {
                 if (data.data.items) {
-                    collection[service][callKey][region].data = data.data.items;
+                    if (data.data.items.constructor.name === 'Array') {
+                        collection[service][callKey][region].data = collection[service][callKey][region].data.concat(data.data.items);
+                    } else {
+                        collection[service][callKey][region].data = data.data.items
+                    }
                 } else if (data.data[service]) {
-                    collection[service][callKey][region].data = data.data[service]
-                } else if (data.data &&
-                        data.data.id) { 
-                    collection[service][callKey][region].data.push(data.data);
+                    if (data.data[service].constructor.name === 'Array') {
+                        collection[service][callKey][region].data = collection[service][callKey][region].data.concat(data.data[service]);
+                    } else {
+                        collection[service][callKey][region].data.push(data.data[service])
+                    }
+                }
+                else if (data.data.accounts) {
+                    if (data.data.accounts.constructor.name === 'Array') {
+                        collection[service][callKey][region].data = collection[service][callKey][region].data.concat(data.data.accounts);
+                    } else {
+                        collection[service][callKey][region].data.push(data.data.accounts)
+                    }
+                } else if (data.data) {
+                    if (data.data.constructor.name === 'Array') {
+                        collection[service][callKey][region].data.concat(data.data);
+                    } else if (Object.keys(data.data).length){
+                        collection[service][callKey][region].data.push(data.data);
+                    } else {
+                        collection[service][callKey][region].data = [];
+                    }
                 } else {
                     collection[service][callKey][region].data = [];
                 }
@@ -244,13 +274,22 @@ var execute = function (LocalGoogleConfig, collection, service, callObj, callKey
             }
         }
     };
-
+    var parentParams;
     if (callObj.nested && callObj.parent) {
-        myParams = {auth: callObj.params.auth, parent: callObj.params.parent};
-        executor['projects']['locations'][service][callKey](myParams, LocalGoogleConfig, executorCb);
+        parentParams = {auth: callObj.params.auth, parent: callObj.params.parent};
+        executor['projects']['locations'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
     } else if(callObj.nested) {
-        myParams = {auth: callObj.params.auth, parent: callObj.params.parent};
-        executor['projects']['locations']['keyRings'][service][callKey](myParams, LocalGoogleConfig, executorCb);
+        parentParams = {auth: callObj.params.auth, parent: callObj.params.parent};
+        executor['projects']['locations']['keyRings'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
+    } else if (callObj.serviceAccount) {
+        myParams = {auth: callObj.params.auth, name: callObj.params.parent};
+        executor['projects']['serviceAccounts'][service][callKey](myParams, LocalGoogleConfig, executorCb);
+    } else if (callObj.parent && callObj.parent === 'name') {
+        parentParams = {auth: callObj.params.auth, name: callObj.params.parent};
+        executor['projects'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
+    } else if (callObj.parent) {
+        parentParams = {auth: callObj.params.auth, parent: callObj.params.parent};
+        executor['projects'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
     } else if (callObj.params) {
         executor[service][callKey](callObj.params, LocalGoogleConfig, executorCb);
     } else {

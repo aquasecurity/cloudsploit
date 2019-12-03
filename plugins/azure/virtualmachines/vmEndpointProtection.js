@@ -5,14 +5,16 @@ var helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'VM Endpoint Protection',
     category: 'Virtual Machines',
-    description: 'Ensure that the VM Endpoint Protection is installed for all VMs',
-    more_info: 'Installing endpoint protection systems (like Antimalware for Azure) provides for real-time protection capability that helps identify and remove viruses, spyware, and other malicious software, with configurable alerts when known malicious or unwanted software attempts to install itself or run on your Azure systems',
-    recommended_action: 'Install endpoint protection on your Azure systems',
+    description: 'Ensures that VM Endpoint Protection is enabled for all virtual machines',
+    more_info: 'Installing endpoint protection systems provides for real-time protection capabilities that help identify and remove viruses, spyware, and other malicious software, with configurable alerts for malicious or unwanted software.',
+    recommended_action: 'Install endpoint protection on all virtual machines.',
     link: 'https://docs.microsoft.com/en-us/azure/security-center/security-center-install-endpoint-protection',
     apis: ['resourceGroups:list', 'virtualMachines:listAll', 'virtualMachineExtensions:list'],
     compliance: {
         pci: 'PCI requires the use of anti-virus and anti-malware solutions. Enabling ' +
-                'VM endpoint protection provides real-time VM monitoring for malicious activity.'
+                'VM endpoint protection provides real-time VM monitoring for malicious activity.',
+        hipaa: 'HIPAA requires protection of all network systems, including monitoring ' +
+                'all network traffic for malicious, inappropriate or unusual traffic.'
     },
 
     run: function(cache, settings, callback) {
@@ -29,12 +31,12 @@ module.exports = {
             if (!virtualMachines) return rcb();
 
             if (virtualMachines.err || !virtualMachines.data) {
-                helpers.addResult(results, 3, 'Unable to query Virtual Machines: ' + helpers.addError(virtualMachines), location);
+                helpers.addResult(results, 3, 'Unable to query for Virtual Machines: ' + helpers.addError(virtualMachines), location);
                 return rcb();
             }
 
             if (!virtualMachines.data.length) {
-                helpers.addResult(results, 0, 'No existing Virtual Machines', location);
+                helpers.addResult(results, 0, 'No existing Virtual Machines found', location);
             } else {
                 for(i in virtualMachines.data){
                     if (virtualMachines.data[i]) {
@@ -53,11 +55,11 @@ module.exports = {
                 if (!virtualMachineExtensions) return rcb();
 
                 if (virtualMachineExtensions.err || !virtualMachineExtensions.data) {
-                    helpers.addResult(results, 3, 'Unable to query VM Extensions: ' + helpers.addError(virtualMachineExtensions), location);
+                    helpers.addResult(results, 3, 'Unable to query for VM Extensions: ' + helpers.addError(virtualMachineExtensions), location);
                     return rcb();
                 }
                 if (!virtualMachineExtensions.data.length) {
-                    helpers.addResult(results, 1, 'No existing VM Extensions', location);
+                    helpers.addResult(results, 2, 'No VM Extensions found', location);
                 } else {
                     for(var vm in virtualMachineExtensions.data){
                         if (virtualMachineExtensions.data[vm]) {
@@ -91,13 +93,13 @@ module.exports = {
                 var reg = 0;
                 for(i in VMs){
                     if(!VMs[i].protected){
-                        helpers.addResult(results, 2, 'Endpoint protection is not installed on this VM', location, VMs[i].vmId);
+                        helpers.addResult(results, 2, 'Endpoint protection is not installed on this virtual machine', location, VMs[i].vmId);
                         reg++;
                     }
                 }
 
                 if(!reg){
-                    helpers.addResult(results, 0, 'Endpoint protection is installed', location);
+                    helpers.addResult(results, 0, 'Endpoint protection is installed on all virtual machines', location);
                 }
             }
 

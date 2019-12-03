@@ -108,6 +108,12 @@ var calls = {
                 arm: true
             }
         },
+        postgres: {
+            list: {
+                api: "PostgresClient",
+                arm: true
+            }
+        },
         manyApi: true
     },
     policyAssignments: {
@@ -140,16 +146,11 @@ var calls = {
             arm: true
         }
     },
-    managementLocks: {
-        listAtSubscriptionLevel: {
-            api: "ManagementLockClient",
-            arm: true
-        }
-    },
-    loadBalancers: {
-        listAll: {
-            api: "NetworkManagementClient",
-            arm: true
+    autoProvisioningSettings: {
+        list: {
+            api: "SecurityCenterClient",
+            arm: true,
+            ascLoc: true
         }
     },
     securityContacts: {
@@ -166,6 +167,13 @@ var calls = {
             noSubscription: true
         }
     },
+    roleDefinitions: {
+        list: {
+            api: "AuthorizationClient",
+            arm: true,
+            subscription: true
+        }
+    },
     managementLocks: {
         listAtSubscriptionLevel: {
             api: "ManagementLockClient",
@@ -176,6 +184,26 @@ var calls = {
         listAll: {
             api: "NetworkManagementClient",
             arm: true
+        }
+    },
+    users: {
+        list: {
+            api: "AzureGraphClient",
+            arm: true,
+            ad: true
+        }
+    },
+    registries: {
+        list: {
+            api: "ContainerRegistryClient",
+            arm: true
+        }
+    },
+    pricings: {
+        list: {
+            api: "SecurityCenterClient",
+            arm: true,
+            ascLoc: true
         }
     }
 };
@@ -241,6 +269,18 @@ var postcalls = {
             filterKey: ['resourceGroupName', 'name'],
             filterValue: ['resourceGroupName', 'name'],
             arm: true,
+        }
+    },
+    configurations: {
+        listByServer: {
+            api: "PostgresClient",
+            reliesOnService: ['resourceGroups', 'servers'],
+            reliesOnSubService: [undefined, 'postgres'],
+            reliesOnCall: ['list', 'list'],
+            filterKey: ['resourceGroupName', 'name'],
+            filterValue: ['resourceGroupName', 'name'],
+            arm: true,
+
         }
     },
     diagnosticSettingsOperations: {
@@ -384,6 +424,15 @@ var postcalls = {
             filterValue: ['name'],
             arm: false,
             keyVault: true
+        },
+        getSecrets: {
+            api: "KeyVaultClient",
+            reliesOnService: ['vaults'],
+            reliesOnCall: ['list'],
+            filterKey: ['name'],
+            filterValue: ['name'],
+            arm: false,
+            keyVault: true
         }
     },
     loadBalancers: {
@@ -407,6 +456,27 @@ var postcalls = {
             arm: true
         },
     },
+    serverAzureADAdministrators: {
+        listByServer: {
+            api: "SQLManagementClient",
+            reliesOnService: ['resourceGroups','servers'],
+            reliesOnSubService: [undefined, 'sql'],
+            reliesOnCall: ['list','list'],
+            filterKey: ['resourceGroupName','serverName'],
+            filterValue: ['resourceGroupName','name'],
+            arm: true
+        }
+    },
+	virtualMachineScaleSets: {
+        list: {
+            api: "ComputeManagementClient",
+            reliesOnService: ['resourceGroups'],
+            reliesOnCall: ['list'],
+            filterKey: ['resourceGroupName'],
+            filterValue: ['resourceGroupName'],
+            arm: true
+        }
+    },
     usages: {
         list: {
             api: "NetworkManagementClient",
@@ -425,6 +495,16 @@ var postcalls = {
             reliesOnCall: ['list', 'list'],
             filterKey: ['resourceGroupName', 'serverName'],
             filterValue: ['resourceGroupName', 'name'],
+            arm: true
+        }
+    },
+    managedClusters: {
+        getUpgradeProfile: {
+            api: "ContainerServiceClient",
+            reliesOnService: ['resourceGroups', 'managedClusters'],
+            reliesOnCall: ['list', 'list'],
+            filterKey: ['resourceGroupName', 'recourceName'],
+            filterValue: ['resourceGroupName','name'],
             arm: true
         }
     }
@@ -516,7 +596,7 @@ var finalcalls = {
             reliesOnService: ['resourceGroups', 'servers'],
             reliesOnCall: ['list', 'listByResourceGroup'],
             filterKey: ['resourceGroupName', 'serverName'],
-            filterValue: ['resourceGroupName', 'serverName'],
+            filterValue: ['resourceGroupName', 'name'],
             arm: true,
             module: false,
         }

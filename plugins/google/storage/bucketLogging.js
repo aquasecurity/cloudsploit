@@ -32,13 +32,19 @@ module.exports = {
                 return rcb();
             }
             buckets.data.forEach(bucket => {
-                if (bucket.logging &&
-                    bucket.logging.logObjectPrefix == 'AccessLog') {
+                if (bucket.id) {
+                    if (bucket.logging &&
+                        bucket.logging.logObjectPrefix == 'AccessLog') {
                         helpers.addResult(results, 0, 'Bucket Logging Enabled', region, bucket.id);
-                } else {
+                    } else {
                         helpers.addResult(results, 2, 'Bucket Logging not Enabled', region, bucket.id);
+                    }
+                } else {
+                    helpers.addResult(results, 0, 'No Storage Buckets present', region);
+                    return;
                 }
-            })
+
+            });
 
             rcb();
         }, function(){

@@ -89,20 +89,22 @@ module.exports = {
             }    
 
             // For ElasticTranscoder
-            var listPipelines = helpers.addSource(cache, source, ['elastictranscoder', 'listPipelines', region]);
+            if (region in regions.elastictranscoder) {
+                var listPipelines = helpers.addSource(cache, source, ['elastictranscoder', 'listPipelines', region]);
 
-            if (listPipelines) {
-                if (listPipelines.err || !listPipelines.data) {
-                    helpers.addResult(results, 3,
-                        'Unable to query for ElasticTranscoder pipelines: ' + helpers.addError(listPipelines), region);
-                } else {
-                    for (i in listPipelines.data){
-                        if (listPipelines.data[i].AwsKmsKeyArn) {
-                            services.push({
-                                serviceName: 'ElasticTranscoder',
-                                resource: listPipelines.data[i].Arn,
-                                KMSKey: listPipelines.data[i].AwsKmsKeyArn
-                            });
+                if (listPipelines) {
+                    if (listPipelines.err || !listPipelines.data) {
+                        helpers.addResult(results, 3,
+                            'Unable to query for ElasticTranscoder pipelines: ' + helpers.addError(listPipelines), region);
+                    } else {
+                        for (i in listPipelines.data){
+                            if (listPipelines.data[i].AwsKmsKeyArn) {
+                                services.push({
+                                    serviceName: 'ElasticTranscoder',
+                                    resource: listPipelines.data[i].Arn,
+                                    KMSKey: listPipelines.data[i].AwsKmsKeyArn
+                                });
+                            }
                         }
                     }
                 }
@@ -150,23 +152,25 @@ module.exports = {
             }
 
             // For SES
-            var describeActiveReceiptRuleSet = helpers.addSource(cache, source, ['ses', 'describeActiveReceiptRuleSet', region]);
+            if (region in regions.ses) {
+                var describeActiveReceiptRuleSet = helpers.addSource(cache, source, ['ses', 'describeActiveReceiptRuleSet', region]);
 
-            if (describeActiveReceiptRuleSet) {
-                if (describeActiveReceiptRuleSet.err || !describeActiveReceiptRuleSet.data) {
-                    helpers.addResult(results, 3,
-                        'Unable to query for SES: ' + helpers.addError(describeActiveReceiptRuleSet), region);
-                } else {
-                    for (i in describeActiveReceiptRuleSet.data){
-                        if (describeActiveReceiptRuleSet.data[i].Actions) {
-                            for (j in describeActiveReceiptRuleSet.data[i].Actions){
-                                if (describeActiveReceiptRuleSet.data[i].Actions[j].S3Action &&
-                                    describeActiveReceiptRuleSet.data[i].Actions[j].S3Action.KmsKeyArn) {
-                                    services.push({
-                                        serviceName: 'SES',
-                                        resource: 'SES ruleset',
-                                        KMSKey: describeActiveReceiptRuleSet.data[i].Actions[j].S3Action.KmsKeyArn
-                                    });
+                if (describeActiveReceiptRuleSet) {
+                    if (describeActiveReceiptRuleSet.err) {
+                        helpers.addResult(results, 3,
+                            'Unable to query for SES: ' + helpers.addError(describeActiveReceiptRuleSet), region);
+                    } else if (describeActiveReceiptRuleSet.data) {
+                        for (i in describeActiveReceiptRuleSet.data){
+                            if (describeActiveReceiptRuleSet.data[i].Actions) {
+                                for (j in describeActiveReceiptRuleSet.data[i].Actions){
+                                    if (describeActiveReceiptRuleSet.data[i].Actions[j].S3Action &&
+                                        describeActiveReceiptRuleSet.data[i].Actions[j].S3Action.KmsKeyArn) {
+                                        services.push({
+                                            serviceName: 'SES',
+                                            resource: 'SES ruleset',
+                                            KMSKey: describeActiveReceiptRuleSet.data[i].Actions[j].S3Action.KmsKeyArn
+                                        });
+                                    }
                                 }
                             }
                         }
@@ -175,20 +179,22 @@ module.exports = {
             }
 
             // For Workspaces
-            var describeWorkspaces = helpers.addSource(cache, source, ['workspaces', 'describeWorkspaces', region]);
+            if (region in regions.workspaces) {
+                var describeWorkspaces = helpers.addSource(cache, source, ['workspaces', 'describeWorkspaces', region]);
 
-            if (describeWorkspaces) {
-                if (describeWorkspaces.err || !describeWorkspaces.data) {
-                    helpers.addResult(results, 3,
-                        'Unable to query for workspaces: ' + helpers.addError(describeWorkspaces), region);
-                } else {
-                    for (i in describeWorkspaces.data){
-                        if (describeWorkspaces.data[i].VolumeEncryptionKey) {
-                            services.push({
-                                serviceName: 'Workspaces',
-                                resource: 'arn:aws:workspaces:' + region + ':' + accountId + ':workspace/' + describeWorkspaces.data[i].WorkspaceId,
-                                KMSKey: describeWorkspaces.data[i].VolumeEncryptionKey
-                            });
+                if (describeWorkspaces) {
+                    if (describeWorkspaces.err || !describeWorkspaces.data) {
+                        helpers.addResult(results, 3,
+                            'Unable to query for workspaces: ' + helpers.addError(describeWorkspaces), region);
+                    } else {
+                        for (i in describeWorkspaces.data){
+                            if (describeWorkspaces.data[i].VolumeEncryptionKey) {
+                                services.push({
+                                    serviceName: 'Workspaces',
+                                    resource: 'arn:aws:workspaces:' + region + ':' + accountId + ':workspace/' + describeWorkspaces.data[i].WorkspaceId,
+                                    KMSKey: describeWorkspaces.data[i].VolumeEncryptionKey
+                                });
+                            }
                         }
                     }
                 }
@@ -235,20 +241,22 @@ module.exports = {
             }
 
             // For EFS
-            var describeFileSystems = helpers.addSource(cache, source, ['efs', 'describeFileSystems', region]);
+            if (region in regions.efs) {
+                var describeFileSystems = helpers.addSource(cache, source, ['efs', 'describeFileSystems', region]);
 
-            if (describeFileSystems) {
-                if (describeFileSystems.err || !describeFileSystems.data) {
-                    helpers.addResult(results, 3,
-                        'Unable to query for EFS file systems: ' + helpers.addError(describeFileSystems), region);
-                } else {
-                    for (i in describeFileSystems.data){
-                        if (describeFileSystems.data[i].KmsKeyId) {
-                            services.push({
-                                serviceName: 'EFS',
-                                resource: 'arn:aws:elasticfilesystem:' + region + ':' + accountId + ':file-system/' + describeFileSystems.data[i].FileSystemId,
-                                KMSKey: describeFileSystems.data[i].KmsKeyId
-                            });
+                if (describeFileSystems) {
+                    if (describeFileSystems.err || !describeFileSystems.data) {
+                        helpers.addResult(results, 3,
+                            'Unable to query for EFS file systems: ' + helpers.addError(describeFileSystems), region);
+                    } else {
+                        for (i in describeFileSystems.data){
+                            if (describeFileSystems.data[i].KmsKeyId) {
+                                services.push({
+                                    serviceName: 'EFS',
+                                    resource: 'arn:aws:elasticfilesystem:' + region + ':' + accountId + ':file-system/' + describeFileSystems.data[i].FileSystemId,
+                                    KMSKey: describeFileSystems.data[i].KmsKeyId
+                                });
+                            }
                         }
                     }
                 }
