@@ -27,7 +27,7 @@ const createErrorCache = (code) => {
     };
 };
 
-describe.only('enableAllFeatures', function () {
+describe('enableAllFeatures', function () {
     describe('run', function () {
         it('should FAIL when not all features enabled', function (done) {
             const cache = createCache({

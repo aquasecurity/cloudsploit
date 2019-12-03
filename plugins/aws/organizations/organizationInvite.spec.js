@@ -1,12 +1,12 @@
 var expect = require('chai').expect;
 var organizationInvite = require('./organizationInvite')
 
-const createCache = (handshake) => {
+const createCache = (handshakes) => {
     return {
         organizations: {
             listHandshakesForAccount: {
                 'us-east-1': {
-                    data: [handshake],
+                    data: handshakes,
                 },
             },
         },
@@ -27,26 +27,35 @@ const createErrorCache = (code) => {
     };
 };
 
-describe.only('organizationInvite', function () {
+describe('organizationInvite', function () {
     describe('run', function () {
         it('should FAIL when there is an OPEN INVITE handshake', function (done) {
-            const cache = createCache({
-                State: 'OPEN',
-                Action: 'INVITE',
-            });
+            const cache = createCache([
+                {
+                    State: 'OPEN',
+                    Action: 'INVITE',
+                    Arn: 'arn:aws:organizations::111111111111:handshake/o-exampleorgid/invite/h-examplehandshakeid111'
+                },{
+                    State: 'OPEN',
+                    Action: 'INVITE',
+                    Arn: 'arn:aws:organizations::222222222222:handshake/o-exampleorgid/invite/h-examplehandshakeid222'
+                }
+            ]);
 
             organizationInvite.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
+                expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(2, 'bad status');
+                expect(results[1].status).to.equal(2, 'bad status');
                 done();
             });
         });
 
-        it('should PASS when all features enabled', function (done) {
-            const cache = createCache({
+        it('should PASS when there are no open invites', function (done) {
+            const cache = createCache([{
                 State: 'DECLINED',
                 Action: 'INVITE',
-            });
+                Arn: 'arn:aws:organizations::111111111111:handshake/o-exampleorgid/invite/h-examplehandshakeid111'
+            }]);
 
             organizationInvite.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);

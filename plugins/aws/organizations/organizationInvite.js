@@ -25,7 +25,9 @@ module.exports = {
         if (!invalidHandshakes.length) {
             helpers.addResult(results, 0, 'No pending organization invitations', 'global');
         } else {
-            helpers.addResult(results, 2, 'Unaccepted pending organization invitations', 'global');
+            for (let invalidHandshake of invalidHandshakes) {
+                helpers.addResult(results, 2, 'Unaccepted pending organization invitations', 'global', invalidHandshake.Arn);
+            }
         }
 
         callback(null, results, source);
