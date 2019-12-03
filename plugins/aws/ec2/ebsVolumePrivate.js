@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'EBS Volume Private',
+    title: 'EBS Volume Snapshot Public',
     category: 'EC2',
     description: 'Ensures EBS volume snapshots are private',
     more_info: '',
