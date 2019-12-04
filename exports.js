@@ -233,7 +233,6 @@ module.exports = {
         'resourceAllowedLocations'      : require(__dirname + '/plugins/azure/policyservice/resourceAllowedLocations.js'),
         'resourceLocationMatch'         : require(__dirname + '/plugins/azure/policyservice/resourceLocationMatch.js'),
 
-        'enforceSSLConnection'          : require(__dirname + '/plugins/azure/mysqlserver/enforceSSLConnection.js'),
         'enforceMySQLSSLConnection'     : require(__dirname + '/plugins/azure/mysqlserver/enforceMySQLSSLConnection.js'),
 
         'logRetentionDays'              : require(__dirname + '/plugins/azure/postgresqlserver/logRetentionDays.js'),
@@ -272,9 +271,6 @@ module.exports = {
         'resourceUsageLimit'            : require(__dirname + '/plugins/azure/resources/resourceUsageLimit.js'),
         'managementLockEnabled'         : require(__dirname + '/plugins/azure/resources/managementLockEnabled.js'),
 
-        'advancedDataSecurityEnabled'   : require(__dirname + '/plugins/azure/sqlserver/advancedDataSecurityEnabled.js'),
-        'tdeProtectorEncrypted'         : require(__dirname + '/plugins/azure/sqlserver/tdeProtectorEncrypted.js'),
-        'noPublicAccess'                : require(__dirname + '/plugins/azure/sqlserver/noPublicAccess.js'),
         'emailAccountAdminsEnabled'     : require(__dirname + '/plugins/azure/sqlserver/emailAccountAdminsEnabled.js'),
         'sendAlertsEnabled'             : require(__dirname + '/plugins/azure/sqlserver/sendAlertsEnabled.js'),
         'advancedDataSecurityEnabled'   : require(__dirname + '/plugins/azure/sqlserver/advancedDataSecurityEnabled.js'),
@@ -303,8 +299,6 @@ module.exports = {
 
         'endpointLoggingEnabled'        : require(__dirname + '/plugins/azure/cdnprofiles/endpointLoggingEnabled.js'),
         'detectInsecureCustomOrigin'    : require(__dirname + '/plugins/azure/cdnprofiles/detectInsecureCustomOrigin.js'),
-
-        'unmanagedDiskEncryption'       : require(__dirname + '/plugins/azure/disks/unmanagedDiskEncryption.js'),
 
         'passwordRequiresLowercase'     : require(__dirname + '/plugins/azure/activedirectory/passwordRequiresLowercase.js'),
         'passwordRequiresNumbers'       : require(__dirname + '/plugins/azure/activedirectory/passwordRequiresNumbers.js'),
