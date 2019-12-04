@@ -67,6 +67,7 @@ module.exports = {
         'defaultVpcInUse'               : require(__dirname + '/plugins/aws/ec2/defaultVpcInUse.js'),
         'crossVpcPublicPrivate'         : require(__dirname + '/plugins/aws/ec2/crossVpcPublicPrivate.js'),
         'ebsEncryptedSnapshots'         : require(__dirname + '/plugins/aws/ec2/ebsEncryptedSnapshots.js'),
+        'ec2MetadataOptions'             : require(__dirname + '/plugins/aws/ec2/ec2MetadataOptions.js'),
 
         'efsEncryptionEnabled'          : require(__dirname + '/plugins/aws/efs/efsEncryptionEnabled.js'),
 
@@ -279,7 +280,6 @@ module.exports = {
         'auditActionGroupsEnabled'      : require(__dirname + '/plugins/azure/sqlserver/auditActionGroupsEnabled.js'),
         'serverAuditingEnabled'         : require(__dirname + '/plugins/azure/sqlserver/serverAuditingEnabled.js'),
         'azureADAdminEnabled'           : require(__dirname + '/plugins/azure/sqlserver/azureADAdminEnabled.js'),
-
 
         'javaVersion'                   : require(__dirname + '/plugins/azure/appservice/javaVersion.js'),
         'phpVersion'                    : require(__dirname + '/plugins/azure/appservice/phpVersion.js'),
