@@ -87,8 +87,9 @@ describe('ec2MetadataOptions', function () {
         it('should UNKNOWN if MetadataOptions are not found', function (done) {
             const cache = createCache([{}]);
             ec2MetadataOptions.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
+                expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(3);
+                expect(results[1].status).to.equal(0);
                 done();
             });
         });
