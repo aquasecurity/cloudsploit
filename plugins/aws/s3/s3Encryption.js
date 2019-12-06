@@ -1,8 +1,18 @@
 var async = require('async');
 var helpers = require('../../../helpers/aws');
+const encryptionLevelMap = {
+    sse: 1,
+    awskms: 2,
+    awscmk: 3,
+    externalcmk: 4,
+    cloudhsm: 5
+};
 
-var ACL_ALL_USERS = 'http://acs.amazonaws.com/groups/global/AllUsers';
-var ACL_AUTHENTICATED_USERS = 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers';
+function getEncryptionLevel(kmsKey) {
+    return kmsKey.Origin === 'AWS_CLOUDHSM' ? 'cloudhsm' :
+           kmsKey.Origin === 'EXTERNAL' ? 'externalcmk' :
+           kmsKey.KeyManager === 'CUSTOMER' ? 'awscmk' : 'awskms'
+}
 
 module.exports = {
     title: 'S3 Encryption',
@@ -30,22 +40,15 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-        const encryptionLevelMap = {
-            sse: 1,
-            awskms: 2,
-            awscmk: 3,
-            externalcmk: 4,
-            cloudhsm: 5
-        };
 
         var desiredEncryptionLevelString = settings.s3_encryption_level || this.settings.s3_encryption_level.default
-        var desiredEncryptionLevel = encryptionLevelMap[desiredEncryptionLevelString]
-        var currentEncryptionLevelString, currentEncryptionLevel
-        if(!desiredEncryptionLevel) {
+        if(!desiredEncryptionLevelString.match(this.settings.s3_encryption_level.regex)) {
             helpers.addResult(results, 3, 'Settings misconfigured for S3 Encryption Level.');
             return callback(null, results, source);
         }
 
+        var desiredEncryptionLevel = encryptionLevelMap[desiredEncryptionLevelString]
+        var currentEncryptionLevelString, currentEncryptionLevel
         var region = helpers.defaultRegion(settings);
         var listBuckets = helpers.addSource(cache, source,
             ['s3', 'listBuckets', region]);
@@ -98,9 +101,7 @@ module.exports = {
                         helpers.addResult(results, 3, 'Unable to query for KMS Key: ' + helpers.addError(describeKey), region);
                         return bcb();
                     }
-                    currentEncryptionLevelString =  describeKey.data.KeyMetadata.Origin === 'AWS_CLOUDHSM' ? 'cloudhsm' :
-                                                    describeKey.data.KeyMetadata.Origin === 'EXTERNAL' ? 'externalcmk' :
-                                                    describeKey.data.KeyMetadata.KeyManager === 'CUSTOMER' ? 'awscmk' : 'awskms'
+                    currentEncryptionLevelString = getEncryptionLevel(describeKey.data.KeyMetadata)
                 } else {
                     currentEncryptionLevelString = 'sse'
                 }
