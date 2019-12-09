@@ -32,7 +32,7 @@ module.exports = {
             for (v in describeVpcs.data) {
                 var vpc = describeVpcs.data[v];
                 if (vpc.IsDefault) {
-                    helpers.addResult(results, 2, 'Default VPC present', region);
+                    helpers.addResult(results, 2, 'Default VPC present', region, vpc.VpcId);
                     return rcb();
                 }
             }
