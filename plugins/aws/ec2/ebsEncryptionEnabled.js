@@ -67,7 +67,6 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
-        require('fs').writeFileSync('out.json', JSON.stringify(cache, null, 2));
         var targetEncryptionLevel = encryptionLevelMap[settings.ebs_encryption_level || this.settings.ebs_encryption_level.default];
         var ebsResultLimit = parseInt(settings.ebs_result_limit || this.settings.ebs_result_limit.default);
 
