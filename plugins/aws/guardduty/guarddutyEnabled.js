@@ -16,8 +16,10 @@ module.exports = {
         async.each(regions.guardduty, function(region, rcb) {
             var listDetectors = helpers.addSource(cache, source, ['guardduty', 'listDetectors', region]);
             if (!listDetectors) return rcb();
-            if (listDetectors.err) {
-                helpers.addResult(results, 3, 'Unable to query GuardDuty', region);
+            if (listDetectors.err || !listDetectors.data) {
+                helpers.addResult(results, 3,
+                    'Unable to list guardduty detectors: ' + helpers.addError(listDetectors), region);
+                return rcb();
             } else if (!listDetectors.data.length) {
                 helpers.addResult(results, 2, 'GuardDuty not enabled', region);
             } else {
