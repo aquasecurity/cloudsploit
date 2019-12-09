@@ -65,7 +65,7 @@ describe('serviceLimits', function () {
                         "kind": "compute#project",
                         "id": "2548647434039838416",
                         "creationTimestamp": "2019-06-19T11:00:31.059-07:00",
-                        "name": "psyched-silicon-244217",
+                        "name": "frost-forest-281330",
                         "commonInstanceMetadata": {
                             "kind": "compute#metadata",
                             "fingerprint": "bur0P6caU8Y="
@@ -227,7 +227,7 @@ describe('serviceLimits', function () {
                                 "usage": 0
                             }
                         ],
-                        "selfLink": "https://www.googleapis.com/compute/v1/projects/psyched-silicon-244217",
+                        "selfLink": "https://www.googleapis.com/compute/v1/projects/frost-forest-281330",
                         "defaultServiceAccount": "845005677082-compute@developer.gserviceaccount.com",
                         "xpnProjectStatus": "UNSPECIFIED_XPN_PROJECT_STATUS",
                         "defaultNetworkTier": "PREMIUM"
@@ -253,7 +253,7 @@ describe('serviceLimits', function () {
                         "kind": "compute#project",
                         "id": "2548647434039838416",
                         "creationTimestamp": "2019-06-19T11:00:31.059-07:00",
-                        "name": "psyched-silicon-244217",
+                        "name": "frost-forest-281330",
                         "commonInstanceMetadata": {
                             "kind": "compute#metadata",
                             "fingerprint": "bur0P6caU8Y="
@@ -415,7 +415,7 @@ describe('serviceLimits', function () {
                                 "usage": 0
                             }
                         ],
-                        "selfLink": "https://www.googleapis.com/compute/v1/projects/psyched-silicon-244217",
+                        "selfLink": "https://www.googleapis.com/compute/v1/projects/frost-forest-281330",
                         "defaultServiceAccount": "845005677082-compute@developer.gserviceaccount.com",
                         "xpnProjectStatus": "UNSPECIFIED_XPN_PROJECT_STATUS",
                         "defaultNetworkTier": "PREMIUM"
@@ -441,7 +441,7 @@ describe('serviceLimits', function () {
                         "kind": "compute#project",
                         "id": "2548647434039838416",
                         "creationTimestamp": "2019-06-19T11:00:31.059-07:00",
-                        "name": "psyched-silicon-244217",
+                        "name": "frost-forest-281330",
                         "commonInstanceMetadata": {
                             "kind": "compute#metadata",
                             "fingerprint": "bur0P6caU8Y="
@@ -603,7 +603,7 @@ describe('serviceLimits', function () {
                                 "usage": 14
                             }
                         ],
-                        "selfLink": "https://www.googleapis.com/compute/v1/projects/psyched-silicon-244217",
+                        "selfLink": "https://www.googleapis.com/compute/v1/projects/frost-forest-281330",
                         "defaultServiceAccount": "845005677082-compute@developer.gserviceaccount.com",
                         "xpnProjectStatus": "UNSPECIFIED_XPN_PROJECT_STATUS",
                         "defaultNetworkTier": "PREMIUM"

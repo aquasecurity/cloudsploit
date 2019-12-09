@@ -67,6 +67,7 @@ module.exports = {
         'defaultVpcInUse'               : require(__dirname + '/plugins/aws/ec2/defaultVpcInUse.js'),
         'crossVpcPublicPrivate'         : require(__dirname + '/plugins/aws/ec2/crossVpcPublicPrivate.js'),
         'ebsEncryptedSnapshots'         : require(__dirname + '/plugins/aws/ec2/ebsEncryptedSnapshots.js'),
+        'ec2MetadataOptions'             : require(__dirname + '/plugins/aws/ec2/ec2MetadataOptions.js'),
 
         'efsEncryptionEnabled'          : require(__dirname + '/plugins/aws/efs/efsEncryptionEnabled.js'),
 
@@ -280,7 +281,6 @@ module.exports = {
         'serverAuditingEnabled'         : require(__dirname + '/plugins/azure/sqlserver/serverAuditingEnabled.js'),
         'azureADAdminEnabled'           : require(__dirname + '/plugins/azure/sqlserver/azureADAdminEnabled.js'),
 
-
         'javaVersion'                   : require(__dirname + '/plugins/azure/appservice/javaVersion.js'),
         'phpVersion'                    : require(__dirname + '/plugins/azure/appservice/phpVersion.js'),
         'pythonVersion'                 : require(__dirname + '/plugins/azure/appservice/pythonVersion.js'),
@@ -468,6 +468,17 @@ module.exports = {
         'monitoringEnabled'             : require(__dirname + '/plugins/google/kubernetes/monitoringEnabled.js'),
         'clusterLeastPrivilege'         : require(__dirname + '/plugins/google/kubernetes/clusterLeastPrivilege.js'),
         'loggingEnabled'                : require(__dirname + '/plugins/google/kubernetes/loggingEnabled.js'),
+        'aliasIpRangesEnabled'          : require(__dirname + '/plugins/google/kubernetes/aliasIpRangesEnabled.js'),
+        'legacyAuthorizationDisabled'   : require(__dirname + '/plugins/google/kubernetes/legacyAuthorizationDisabled.js'),
+        'masterAuthorizedNetwork'       : require(__dirname + '/plugins/google/kubernetes/masterAuthorizedNetwork.js'),
+        'clusterLabelsAdded'            : require(__dirname + '/plugins/google/kubernetes/clusterLabelsAdded.js'),
+        'webDashboardDisabled'          : require(__dirname + '/plugins/google/kubernetes/webDashboardDisabled.js'),
+        'defaultServiceAccount'         : require(__dirname + '/plugins/google/kubernetes/defaultServiceAccount.js'),
+        'cosImageEnabled'               : require(__dirname + '/plugins/google/kubernetes/cosImageEnabled.js'),
+        'autoNodeRepairEnabled'         : require(__dirname + '/plugins/google/kubernetes/autoNodeRepairEnabled.js'),
+        'autoNodeUpgradesEnabled'       : require(__dirname + '/plugins/google/kubernetes/autoNodeUpgradesEnabled.js'),
+        'networkPolicyEnabled'          : require(__dirname + '/plugins/google/kubernetes/networkPolicyEnabled.js'),
+        'podSecurityPolicyEnabled'      : require(__dirname + '/plugins/google/kubernetes/podSecurityPolicyEnabled.js'),
 
         'dnsSecEnabled'                 : require(__dirname + '/plugins/google/dns/dnsSecEnabled.js'),
         'dnsSecSigningAlgorithm'        : require(__dirname + '/plugins/google/dns/dnsSecSigningAlgorithm.js'),

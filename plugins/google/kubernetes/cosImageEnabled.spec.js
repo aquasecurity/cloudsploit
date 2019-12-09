@@ -1,6 +1,6 @@
 var assert = require('assert');
 var expect = require('chai').expect;
-var plugin = require('./privateEndpoint');
+var plugin = require('./cosImageEnabled');
 
 const createCache = (err, data) => {
     return {
@@ -15,14 +15,14 @@ const createCache = (err, data) => {
     }
 };
 
-describe('privateEndpoint', function () {
+describe('cosImageEnabled', function () {
     describe('run', function () {
         it('should give unknown result if a clusters error is passed or no data is present', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.above(0)
-                expect(results[0].status).to.equal(3)
-                expect(results[0].message).to.include('Unable to query Kubernetes Clusters')
-                expect(results[0].region).to.equal('global')
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query Kubernetes clusters');
+                expect(results[0].region).to.equal('global');
                 done()
             };
 
@@ -32,13 +32,14 @@ describe('privateEndpoint', function () {
             );
 
             plugin.run(cache, {}, callback);
-        })
+        });
+
         it('should give passing result if no clusters are found', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.above(0)
-                expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No Kubernetes Clusters present')
-                expect(results[0].region).to.equal('global')
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No Kubernetes clusters found');
+                expect(results[0].region).to.equal('global');
                 done()
             };
 
@@ -48,13 +49,14 @@ describe('privateEndpoint', function () {
             );
 
             plugin.run(cache, {}, callback);
-        })
-        it('should give passing result if cluster private endpoint is enabled', function (done) {
+        });
+
+        it('should give passing result if Container-Optimized OS is enabled for the node pool of the cluster', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.above(0)
-                expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('has private endpoint enable')
-                expect(results[0].region).to.equal('global')
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Container-Optimized OS is enabled for the node pool of the cluster');
+                expect(results[0].region).to.equal('global');
                 done()
             };
 
@@ -85,7 +87,7 @@ describe('privateEndpoint', function () {
                             "clusterCaCertificate": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURERENDQWZTZ0F3SUJBZ0lSQU45TDJYVGNUZmFBS1ZxS1YwNGJhend3RFFZSktvWklodmNOQVFFTEJRQXcKTHpFdE1Dc0dBMVVFQXhNa1ltSm1NMlF3WmpNdE16SmxNeTAwT0RKa0xUaGlOR0V0WXpKbU5HTTVObUprT0RGagpNQjRYRFRFNU1EZ3lNREU1TWpFME5Gb1hEVEkwTURneE9ESXdNakUwTkZvd0x6RXRNQ3NHQTFVRUF4TWtZbUptCk0yUXdaak10TXpKbE15MDBPREprTFRoaU5HRXRZekptTkdNNU5tSmtPREZqTUlJQklqQU5CZ2txaGtpRzl3MEIKQVFFRkFBT0NBUThBTUlJQkNnS0NBUUVBNnh2UVpuK3YyeGZ3d2crR0lXT0Fjb0p2L24wQy9BczB6UXJXSWJoVgp3NDVRa2d4SW9nNmJGZVdBQkdiUHpTbnM5NlFMRUdYbDl3YUhvb081emZINVRwYzhOWkRyVmg0aS9mV3NiWHRSCjJvczNaSURCSStNai9rZmYra1Fjb3ZoMEc4YmxEUWRBaDVQbG1oYXpJS0FDdUFBZCtqRjJMTU96K3BvdHhkdWMKTEdXWmVQalBUWGxZaXFmQlQ0b3BubzhvN3FqRlo5WC93dkR6dlpyL3JIWGJVMGNmTm9SQ2p0RjRoMVVvU3V4OAp2NUNXN3Q1T1dDcUlSYjhNbDY0V3dZVmxxTDJRQ1FwWU9TMExEQ2JJTFB1LzdzSkFHN2t5SGk2SDU0TklESHl5CmJsMXhGeXFIV2cyNUlkVzhmbVhQK2Fkc0hiY3JvNDJWNmQvSkRNQzJCZG5PYXdJREFRQUJveU13SVRBT0JnTlYKSFE4QkFmOEVCQU1DQWdRd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBTkJna3Foa2lHOXcwQkFRc0ZBQU9DQVFFQQpaQzNpdzFOb0YxK0xueWN6U2doakthcWkvQlRndzVxTlMxN3M1R2FVdEJ2OU4zenBMMHRMVzZuZHlmWTJ4MHZKCjlGK2hkOUhTTXEzT2JhZE9tM3JZODZYb1B3NG0vQS9iYm5QZ2IxbXN5aFJOd3BtNHhzMFhyM24xajZVZFhCUWIKbmNEdDdBU0hXMXQ2OWNqejFTYUhlR2VudFRubmFDOXpxWSsxZnI2QmNoSTNDZGJibW84NC9OOGZHZ1N6VjRYVAp5TkZzRXBRZ1Nvbnk3bHhMU2xqME8yb1Z4Z0YxK1E0VEp6cjRFS0xwVFpGTDltMmZ2b2xZZUNSKzIzMEVEQXM2ClNYOVpZdW9mMVlxaE44MnBNTnRsYUpOUkNRRlVDZ29UQ3Q2azZOdnVjWDZSdG5VN2F1eFoycUpRN3BibERReXcKbmtPc21EcWx3TjJCalhuWG4rOGRpQT09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K"
                         },
                         "loggingService": "logging.googleapis.com",
-                        "monitoringService": "none",
+                        "monitoringService": "monitoring.googleapis.com",
                         "network": "default",
                         "clusterIpv4Cidr": "10.4.0.0/14",
                         "addonsConfig": {
@@ -206,13 +208,14 @@ describe('privateEndpoint', function () {
             );
 
             plugin.run(cache, {}, callback);
-        })
-        it('should give failing result if cluster private endpoint is disabled', function (done) {
+        });
+
+        it('should give failing result if Container-Optimized OS disabled for the node pool of the cluster', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.above(0)
-                expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('does not have private endpoint enabled')
-                expect(results[0].region).to.equal('global')
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('Container-Optimized OS disabled for the node pool of the cluster');
+                expect(results[0].region).to.equal('global');
                 done()
             };
 
@@ -277,7 +280,6 @@ describe('privateEndpoint', function () {
                                     "metadata": {
                                         "disable-legacy-endpoints": "true"
                                     },
-                                    "imageType": "COS",
                                     "serviceAccount": "default",
                                     "diskType": "pd-standard"
                                 },
@@ -288,8 +290,8 @@ describe('privateEndpoint', function () {
                                     "maxNodeCount": 3
                                 },
                                 "management": {
-                                    "autoUpgrade": true,
-                                    "autoRepair": true
+                                    "autoUpgrade": false,
+                                    "autoRepair": false
                                 },
                                 "maxPodsConstraint": {
                                     "maxPodsPerNode": "110"
