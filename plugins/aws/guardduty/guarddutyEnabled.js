@@ -38,7 +38,7 @@ module.exports = {
             } else {
                 const enabledDetectors = detectors.filter(detector => detector.Status === 'ENABLED');
                 const badDetectors = detectors.filter(detector => detector.Status !== 'ENABLED');
-                if (enabledDetectors.length) {
+                if (enabledDetectors.length >= 1) {
                     enabledDetectors.forEach(detector => {
                         helpers.addResult(results, 0, 'GuardDuty is enabled', region, detector.detectorId);
                     });
