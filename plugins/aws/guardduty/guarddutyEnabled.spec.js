@@ -1,4 +1,3 @@
-var assert = require('assert');
 var expect = require('chai').expect;
 var guarddutyEnabled = require('./guarddutyEnabled')
 
@@ -28,6 +27,15 @@ describe('guarddutyEnabled', function () {
                     listDetectors: {
                         'us-east-1': {
                             data: ['id123'],
+                        },
+                    },
+                    getDetector: {
+                        'us-east-1': {
+                            id123: {
+                                data: {
+                                    Status: 'ENABLED',
+                                },
+                            },
                         },
                     },
                 },
