@@ -76,7 +76,7 @@ const createCacheNoBuckets = () => {
     };
 };
 
-describe.only('bucketEncryptionInTransit', function () {
+describe('bucketEncryptionInTransit', function () {
     describe('run', function () {
         it('should FAIL when there are no bucket policy', function (done) {
             const cache = createCacheNoBucketPolicy();
@@ -105,32 +105,15 @@ describe.only('bucketEncryptionInTransit', function () {
             });
         });
 
-        // todo do error-based bucket policy tests
-
-
         it('should PASS when there is a statement that denies insecure requests', function (done) {
             const cache = createCache({
                 Effect: 'Deny',
                 Principal: '*',
-                Action: 's3:GetObject',
-                Resource: 'arn:aws:s3:::mybucket/*',
-                Condition: {
-                    Bool: { 'aws:SecureTransport': 'false' },
-                },
-            });
-            bucketEncryptionInTransit.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                done();
-            });
-        });
-
-        it('should PASS if explicit deny all with secure condition', function (done) {
-            const cache = createCache({
-                Effect: 'Deny',
-                Principal: '*',
-                Action: ['s3:GetObject'],
-                Resource: ['arn:aws:s3:::mybucket/*'],
+                Action: 's3:*',
+                Resource: [
+                    'arn:aws:s3:::mybucket/*',
+                    'arn:aws:s3:::mybucket',
+                ],
                 Condition: {
                     Bool: { 'aws:SecureTransport': 'false' },
                 },

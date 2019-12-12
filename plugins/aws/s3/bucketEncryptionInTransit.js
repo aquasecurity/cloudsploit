@@ -1,4 +1,3 @@
-var minimatch = require('minimatch');
 var helpers = require('../../../helpers/aws');
 
 function statementDeniesInsecureTransport(statement, bucketResource) {
@@ -6,13 +5,12 @@ function statementDeniesInsecureTransport(statement, bucketResource) {
     return (statement.Effect === 'Deny') &&
         (statement.Principal === '*') &&
         (Array.isArray(statement.Action)
-            ? statement.Action.find(action => minimatch('s3:GetObject', action))
-            : minimatch('s3:GetObject', statement.Action)
-        ) &&
-        (Array.isArray(statement.Resource)
-            ? statement.Resource.find(resource => resource === `${bucketResource}/*`)
-            : statement.Resource === `${bucketResource}/*`
-        ) && (
+            ? statement.Action.find(action => action === '*' || action === 's3:*')
+            : (statement.Action === '*' || statement.Action === 's3:*')) &&
+        Array.isArray(statement.Resource) &&
+        statement.Resource.find(resource => resource === `${bucketResource}/*`) &&
+        statement.Resource.find(resource => resource === bucketResource) &&
+        (
             statement.Condition &&
             statement.Condition.Bool &&
             statement.Condition.Bool['aws:SecureTransport'] &&
@@ -23,7 +21,8 @@ function statementDeniesInsecureTransport(statement, bucketResource) {
 module.exports = {
     title: 'S3 Bucket Encryption In Transit',
     category: 'S3',
-    description: 'All statements in all S3 bucket policies must have a condition that requires encryption in transit',
+    recommended_action: 'Add statement to bucket policy that denies all s3 actions. Resources must be list of bucket arn and bucket arn/*. The condition must equal { "Bool": { "aws:SecureTransport": "false" }',
+    description: 'S3 bucket must have bucket policy statement the denies insecure transport (http)',
     apis: ['S3:listBuckets', 'S3:getBucketPolicy'],
 
     run: function(cache, settings, callback) {
