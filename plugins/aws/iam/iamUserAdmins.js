@@ -23,28 +23,32 @@ module.exports = {
         iam_admin_count_minimum: {
             name: 'IAM Admin Count Minimum',
             description: 'The minimum number of IAM user admins to require in the account',
-            regex: '^[1-9]{1}[0-9]{0,3}$',
+            regex: '^[0-9]{0,4}$',
             default: 2
         },
         iam_admin_count_maximum: {
             name: 'IAM Admin Count Maximum',
             description: 'The maximum number of IAM user admins to require in the account',
-            regex: '^[1-9]{1}[0-9]{0,3}$',
+            regex: '^[0-9]{0,4}$',
             default: 2
         }
     },
 
     run: function(cache, settings, callback) {
         var config = {
-            iam_admin_count_minimum: settings.iam_admin_count_minimum || this.settings.iam_admin_count_minimum.default,
-            iam_admin_count_maximum: settings.iam_admin_count_maximum || this.settings.iam_admin_count_maximum.default
+            // using the `in` operator because 0 is a valid setting
+            iam_admin_count_minimum: 'iam_admin_count_minimum' in settings
+                ? parseInt(settings.iam_admin_count_minimum)
+                : this.settings.iam_admin_count_minimum.default,
+            iam_admin_count_maximum: 'iam_admin_count_maximum' in settings
+                ? parseInt(settings.iam_admin_count_maximum)
+                : this.settings.iam_admin_count_maximum.default,
         };
-
         var custom = helpers.isCustom(settings, this.settings);
 
         var results = [];
         var source = {};
-        
+
         var region = helpers.defaultRegion(settings);
 
         var listUsers = helpers.addSource(cache, source,
@@ -124,7 +128,7 @@ module.exports = {
                     var policy = listUserPolicies.data.PolicyNames[p];
 
                     if (getUserPolicy &&
-                        getUserPolicy[policy] && 
+                        getUserPolicy[policy] &&
                         getUserPolicy[policy].data &&
                         getUserPolicy[policy].data.PolicyDocument) {
 
@@ -163,7 +167,7 @@ module.exports = {
                     // Get inline policies attached to group
                     var listGroupPolicies = helpers.addSource(cache, source,
                             ['iam', 'listGroupPolicies', region, group.GroupName]);
-                    
+
                     var getGroupPolicy = helpers.addSource(cache, source,
                             ['iam', 'getGroupPolicy', region, group.GroupName]);
 
@@ -191,7 +195,7 @@ module.exports = {
                             var policy = listGroupPolicies.data.PolicyNames[p];
 
                             if (getGroupPolicy &&
-                                getGroupPolicy[policy] && 
+                                getGroupPolicy[policy] &&
                                 getGroupPolicy[policy].data &&
                                 getGroupPolicy[policy].data.PolicyDocument) {
 

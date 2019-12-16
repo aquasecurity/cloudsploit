@@ -71,7 +71,7 @@ describe('iamUserAdmins', function () {
             }
 
             const cache = [{}];
-            
+
 
             const callback = (err, results) => {
                 expect(results.length).to.equal(0)
@@ -97,8 +97,8 @@ describe('iamUserAdmins', function () {
 
         it('should FAIL when there are too many users', function (done) {
             const settings = {
-                iam_admin_count_minimum: 1,
-                iam_admin_count_maximum: 1
+                iam_admin_count_minimum: 0,
+                iam_admin_count_maximum: 0
             }
 
             const callback = (err, results) => {
@@ -122,6 +122,5 @@ describe('iamUserAdmins', function () {
 
             iamUserAdmins.run(cache, settings, callback)
         })
-
     })
 })
