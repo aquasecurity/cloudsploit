@@ -2,33 +2,46 @@ var minimatch = require('minimatch');
 var helpers = require('../../../helpers/aws');
 
 const encryptionLevelMap = {
-    sse: 1,
-    awskms: 2,
-    awscmk: 3,
-    externalcmk: 4,
-    cloudhsm: 5
+    off: 0,
+    sse: 1, // // x-amz-server-side-encryption:AES256
+    awskms: 2, // x-amz-server-side-encryption:aws:kms without x-amz-server-side-encryption-aws-kms-key-id
+    awscmk: 3, // x-amz-server-side-encryption:aws:kms with x-amz-server-side-encryption-aws-kms-key-id, but key is aws managed
+    externalcmk: 4, // x-amz-server-side-encryption:aws:kms with x-amz-server-side-encryption-aws-kms-key-id, but key is externalcmk
+    cloudhsm: 5, // x-amz-server-side-encryption:aws:kms with x-amz-server-side-encryption-aws-kms-key-id, but key is cloudhsm
 };
 
-function statementDeniesUnencryptedObjects(statement, bucketResource) {
-    if (!statement) return false;
-    return (statement.Effect === 'Deny') &&
-        (statement.Principal === '*') &&
-        (Array.isArray(statement.Action)
-            ? statement.Action.find(action => minimatch('s3:GetObject', action))
-            : minimatch('s3:GetObject', statement.Action)
-        ) &&
-        (Array.isArray(statement.Resource)
-            ? statement.Resource.find(resource => resource === `${bucketResource}/*`)
-            : statement.Resource === `${bucketResource}/*`
-        ) && (
-            statement.Condition &&
-            statement.Condition.Bool &&
-            statement.Condition.Bool['aws:SecureTransport'] &&
-            statement.Condition.Bool['aws:SecureTransport'] === 'false'
-        );
+function statementTargetsAction(statement, targetAction) {
+    return Array.isArray(statement.Action)
+        ? statement.Action.find(action => minimatch(targetAction, action))
+        : minimatch(targetAction, statement.Action)
 }
 
-function getEncryptionLevel(kmsKey) {
+/**
+ * Return the encryption level for the satement
+ * If multiple conditions in StringNotEquals, return the least-restrictive condition found first (sse)
+ */
+function getEncryptionLevel(statement) {
+    if (statement) {
+        if (statement.Effect === 'Deny' && statement.Principal === '*') {
+            if (statementTargetsAction(statement, 's3:PutObject')) {
+                if (statement.Condition && statement.Condition.StringNotEquals) {
+                    if (statement.Condition.StringNotEquals['s3:x-amz-server-side-encryption'] === 'AES256') {
+                        return { level: 'sse' };
+                    }
+                    if (statement.Condition.StringNotEquals['s3:x-amz-server-side-encryption'] === 'aws:kms') {
+                        return { level: 'awskms' };
+                    }
+                    if (statement.Condition.StringNotEquals['s3:x-amz-server-side-encryption-aws-kms-key-id']) {
+                        return { key: statement.Condition.StringNotEquals['s3:x-amz-server-side-encryption-aws-kms-key-id'] };
+                    }
+                }
+            }
+        }
+    }
+    return { level: 'off' }; // no encryption requirements on all s3:PutObject calls from everyone
+}
+
+function getKeyEncryptionLevel(kmsKey) {
     return kmsKey.Origin === 'AWS_CLOUDHSM' ? 'cloudhsm' :
            kmsKey.Origin === 'EXTERNAL' ? 'externalcmk' :
            kmsKey.KeyManager === 'CUSTOMER' ? 'awscmk' : 'awskms'
@@ -38,9 +51,11 @@ module.exports = {
     title: 'S3 Bucket Encryption Enforcement',
     category: 'S3',
     description: 'All statements in all S3 bucket policies must have a condition that requires encryption at a certain level',
-    apis: ['S3:listBuckets', 'S3:getBucketPolicy'],
+    recommended_action: 'Configure a bucket policy to enforce encryption',
+    link: 'https://aws.amazon.com/blogs/security/how-to-prevent-uploads-of-unencrypted-objects-to-amazon-s3/',
+    apis: ['S3:listBuckets', 'S3:getBucketPolicy', 'KMS:listKeys', 'KMS:describeKey'],
     settings: {
-        s3_encryption_level: {
+        s3_required_encryption_level: {
             name: 'S3 Minimum Default Encryption Level',
             description: 'In order (lowest to highest) \
                 sse=Server-Side Encryption; \
@@ -56,6 +71,12 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
+
+        var desiredEncryptionLevelString = settings.s3_required_encryption_level || this.settings.s3_required_encryption_level.default
+        if(!desiredEncryptionLevelString.match(this.settings.s3_required_encryption_level.regex)) {
+            helpers.addResult(results, 3, 'Settings misconfigured for S3 Encryption Enforcement.');
+            return callback(null, results, source);
+        }
 
         var region = helpers.defaultRegion(settings);
 
@@ -77,7 +98,7 @@ module.exports = {
 
             var getBucketPolicy = helpers.addSource(cache, source, ['s3', 'getBucketPolicy', region, bucket.Name]);
             if (getBucketPolicy && getBucketPolicy.err && getBucketPolicy.err.code && getBucketPolicy.err.code === 'NoSuchBucketPolicy') {
-                helpers.addResult(results, 2, 'No bucket policy found; encryption in transit not enforced', 'global', bucketResource);
+                helpers.addResult(results, 2, 'No bucket policy found; encryption not enforced', 'global', bucketResource);
                 continue;
             }
             if (!getBucketPolicy || getBucketPolicy.err || !getBucketPolicy.data || !getBucketPolicy.data.Policy) {
@@ -96,14 +117,32 @@ module.exports = {
                 continue;
             }
             if (!policyJson.Statement.length) {
-                helpers.addResult(results, 2, 'Bucket policy does not contain any statements; encryption in transit not enforced', 'global', bucketResource);
+                helpers.addResult(results, 2, 'Bucket policy does not contain any statements; encryption not enforced', 'global', bucketResource);
                 continue;
             }
 
-            if (policyJson.Statement.find(statement => statementDeniesUnencryptedObjects(statement, bucketResource))) {
-                helpers.addResult(results, 0, 'Bucket policy enforces encryption in transit', 'global', bucketResource);
+            statementEncryptionLevels = policyJson.Statement.map(statement => {
+                const encryptionLevel = getEncryptionLevel(statement);
+                if (encryptionLevel.level) return encryptionLevel.level;
+                if (encryptionLevel.key) {
+                    const keyId = encryptionLevel.key.split('/')[1]
+                    const describeKey = helpers.addSource(cache, source, ['kms', 'describeKey', region, keyId]);
+                    if (!describeKey || describeKey.err || !describeKey.data) {
+                        helpers.addResult(results, 3, `Unable to query for KMS Key: ${helpers.addError(describeKey)}`, region, keyId);
+                        return 0;
+                    }
+                    return getKeyEncryptionLevel(describeKey.data.KeyMetadata);
+                }
+                return 0;
+            });
+
+            // get max encryption level string
+            const currentEncryptionLevel = statementEncryptionLevels.reduce((max, level) => encryptionLevelMap[level] > encryptionLevelMap[max] ? level : max, 'off');
+
+            if (encryptionLevelMap[currentEncryptionLevel] < encryptionLevelMap[desiredEncryptionLevelString]) {
+                helpers.addResult(results, 2, `Bucket does not enforce encryption to ${desiredEncryptionLevelString}, current enforcement: ${currentEncryptionLevel}`, 'global', bucketResource);
             } else {
-                helpers.addResult(results, 2, `Bucket does not enforce encryption in transit`, 'global', bucketResource);
+                helpers.addResult(results, 0, `Bucket policy enforces encryption to ${currentEncryptionLevel}, current enforcement: ${currentEncryptionLevel}`, 'global', bucketResource);
             }
         }
         callback(null, results, source);

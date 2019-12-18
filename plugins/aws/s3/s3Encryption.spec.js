@@ -1,7 +1,7 @@
 var expect = require('chai').expect;
 var s3Encryption = require('./s3Encryption');
 
-const createCache = (statement) => {
+const createCacheNoEncryption = () => {
     return {
         s3: {
             listBuckets: {
@@ -17,7 +17,12 @@ const createCache = (statement) => {
                         data: {
                             Policy: JSON.stringify({
                                 Version: '2008-10-17',
-                                Statement: statement ? [statement] : [],
+                                Statement: [{
+                                    Effect: 'Deny',
+                                    Principal: '*',
+                                    Action: 's3:PutObject',
+                                    Resource: 'arn:aws:s3:::mybucket/*',
+                                }],
                             }),
                         },
                     },
@@ -27,7 +32,7 @@ const createCache = (statement) => {
     };
 };
 
-const createCacheNoBucketPolicy = () => {
+const createCacheSSE = () => {
     return {
         s3: {
             listBuckets: {
@@ -40,8 +45,21 @@ const createCacheNoBucketPolicy = () => {
             getBucketPolicy: {
                 'us-east-1': {
                     mybucket: {
-                        err: {
-                            code: 'NoSuchBucketPolicy',
+                        data: {
+                            Policy: JSON.stringify({
+                                Version: '2008-10-17',
+                                Statement: [{
+                                    Effect: 'Deny',
+                                    Principal: '*',
+                                    Action: 's3:PutObject',
+                                    Resource: 'arn:aws:s3:::mybucket/*',
+                                    Condition: {
+                                        StringNotEquals: {
+                                            's3:x-amz-server-side-encryption': 'AES256',
+                                        },
+                                    },
+                                }],
+                            }),
                         },
                     },
                 },
@@ -50,13 +68,198 @@ const createCacheNoBucketPolicy = () => {
     };
 };
 
-const createCacheErrorListBuckets = () => {
+const createCacheAWSKMS = () => {
     return {
         s3: {
             listBuckets: {
                 'us-east-1': {
-                    err: {
-                        message: 'bad error',
+                    data: [{
+                        Name: 'mybucket',
+                    }],
+                },
+            },
+            getBucketPolicy: {
+                'us-east-1': {
+                    mybucket: {
+                        data: {
+                            Policy: JSON.stringify({
+                                Version: '2008-10-17',
+                                Statement: [{
+                                    Effect: 'Deny',
+                                    Principal: '*',
+                                    Action: 's3:PutObject',
+                                    Resource: 'arn:aws:s3:::mybucket/*',
+                                    Condition: {
+                                        StringNotEquals: {
+                                            's3:x-amz-server-side-encryption-aws-kms-key-id': ':aws:kms:us-east-1:111111111111:key/mykey',
+                                        },
+                                    },
+                                }],
+                            }),
+                        },
+                    },
+                },
+            },
+        },
+        kms: {
+            describeKey: {
+                'us-east-1': {
+                    mykey: {
+                        data: {
+                            KeyMetadata: {
+                                Origin: 'AWS_KMS',
+                                KeyManager: 'AWS',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    };
+};
+
+const createCacheAWSCMK = () => {
+    return {
+        s3: {
+            listBuckets: {
+                'us-east-1': {
+                    data: [{
+                        Name: 'mybucket',
+                    }],
+                },
+            },
+            getBucketPolicy: {
+                'us-east-1': {
+                    mybucket: {
+                        data: {
+                            Policy: JSON.stringify({
+                                Version: '2008-10-17',
+                                Statement: [{
+                                    Effect: 'Deny',
+                                    Principal: '*',
+                                    Action: 's3:PutObject',
+                                    Resource: 'arn:aws:s3:::mybucket/*',
+                                    Condition: {
+                                        StringNotEquals: {
+                                            's3:x-amz-server-side-encryption-aws-kms-key-id': ':aws:kms:us-east-1:111111111111:key/mykey',
+                                        },
+                                    },
+                                }],
+                            }),
+                        },
+                    },
+                },
+            },
+        },
+        kms: {
+            describeKey: {
+                'us-east-1': {
+                    mykey: {
+                        data: {
+                            KeyMetadata: {
+                                Origin: 'AWS_KMS',
+                                KeyManager: 'CUSTOMER',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    };
+};
+
+const createCacheExternalCMK = () => {
+    return {
+        s3: {
+            listBuckets: {
+                'us-east-1': {
+                    data: [{
+                        Name: 'mybucket',
+                    }],
+                },
+            },
+            getBucketPolicy: {
+                'us-east-1': {
+                    mybucket: {
+                        data: {
+                            Policy: JSON.stringify({
+                                Version: '2008-10-17',
+                                Statement: [{
+                                    Effect: 'Deny',
+                                    Principal: '*',
+                                    Action: 's3:PutObject',
+                                    Resource: 'arn:aws:s3:::mybucket/*',
+                                    Condition: {
+                                        StringNotEquals: {
+                                            's3:x-amz-server-side-encryption-aws-kms-key-id': ':aws:kms:us-east-1:111111111111:key/mykey',
+                                        },
+                                    },
+                                }],
+                            }),
+                        },
+                    },
+                },
+            },
+        },
+        kms: {
+            describeKey: {
+                'us-east-1': {
+                    mykey: {
+                        data: {
+                            KeyMetadata: {
+                                Origin: 'EXTERNAL',
+                                KeyManager: 'CUSTOMER',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    };
+};
+
+const createCacheHSM = () => {
+    return {
+        s3: {
+            listBuckets: {
+                'us-east-1': {
+                    data: [{
+                        Name: 'mybucket',
+                    }],
+                },
+            },
+            getBucketPolicy: {
+                'us-east-1': {
+                    mybucket: {
+                        data: {
+                            Policy: JSON.stringify({
+                                Version: '2008-10-17',
+                                Statement: [{
+                                    Effect: 'Deny',
+                                    Principal: '*',
+                                    Action: 's3:PutObject',
+                                    Resource: 'arn:aws:s3:::mybucket/*',
+                                    Condition: {
+                                        StringNotEquals: {
+                                            's3:x-amz-server-side-encryption-aws-kms-key-id': ':aws:kms:us-east-1:111111111111:key/mykey',
+                                        },
+                                    },
+                                }],
+                            }),
+                        },
+                    },
+                },
+            },
+        },
+        kms: {
+            describeKey: {
+                'us-east-1': {
+                    mykey: {
+                        data: {
+                            KeyMetadata: {
+                                Origin: 'AWS_CLOUDHSM',
+                            },
+                        },
                     },
                 },
             },
@@ -76,26 +279,8 @@ const createCacheNoBuckets = () => {
     };
 };
 
-describe.only('s3Encryption', function () {
+describe('s3Encryption', function () {
     describe('run', function () {
-        it('should FAIL when there are no bucket policy', function (done) {
-            const cache = createCacheNoBucketPolicy();
-            s3Encryption.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                done();
-            });
-        });
-
-        it('should UNKNOWN when there is an error listing buckets', function (done) {
-            const cache = createCacheErrorListBuckets();
-            s3Encryption.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(3);
-                done();
-            });
-        });
-
         it('should PASS when there are no buckets', function (done) {
             const cache = createCacheNoBuckets();
             s3Encryption.run(cache, {}, (err, results) => {
@@ -105,119 +290,63 @@ describe.only('s3Encryption', function () {
             });
         });
 
-        // todo do error-based bucket policy tests
-
-
-        it('should PASS when there is a statement that denies insecure requests', function (done) {
-            const cache = createCache({
-                Effect: 'Deny',
-                Principal: '*',
-                Action: 's3:GetObject',
-                Resource: 'arn:aws:s3:::mybucket/*',
-                Condition: {
-                    Bool: { 'aws:SecureTransport': 'false' },
-                },
+        it('should FAIL when the bucket policy does not enforce encryption (below configured level)', function (done) {
+            const cache = createCacheNoEncryption();
+            s3Encryption.run(cache, { s3_required_encryption_level: 'awskms' }, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                done();
             });
-            s3Encryption.run(cache, {}, (err, results) => {
+        });
+
+        it('should PASS BucketPolicy=SSE, Configured=SSE', function (done) {
+            const cache = createCacheSSE();
+            s3Encryption.run(cache, { s3_required_encryption_level: 'sse' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
             });
         });
 
-        it('should PASS if explicit deny all with secure condition', function (done) {
-            const cache = createCache({
-                Effect: 'Deny',
-                Principal: '*',
-                Action: ['s3:GetObject'],
-                Resource: ['arn:aws:s3:::mybucket/*'],
-                Condition: {
-                    Bool: { 'aws:SecureTransport': 'false' },
-                },
-            });
-            s3Encryption.run(cache, {}, (err, results) => {
+        it('should PASS BucketPolicy=AWSKMS, Configured=AWSKMS', function (done) {
+            const cache = createCacheAWSKMS();
+            s3Encryption.run(cache, { s3_required_encryption_level: 'awskms' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
             });
         });
 
-        it('should FAIL if no deny', function (done) {
-            const cache = createCache({
-                Effect: 'Allow',
-                Principal: '*',
-                Action: '*',
-                Resource: '*',
-            });
-            s3Encryption.run(cache, {}, (err, results) => {
+        it('should PASS BucketPolicy=AWSCMK, Configured=AWSCMK', function (done) {
+            const cache = createCacheAWSCMK();
+            s3Encryption.run(cache, { s3_required_encryption_level: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
+                expect(results[0].status).to.equal(0);
                 done();
             });
         });
 
-        it('should FAIL if explicit deny all with secure condition but no * principal', function (done) {
-            const cache = createCache({
-                Effect: 'Deny',
-                Principal: { Service: 'ec2.amazonaws.com' },
-                Action: ['s3:GetObject'],
-                Resource: ['arn:aws:s3:::mybucket/*'],
-                Condition: {
-                    Bool: { 'aws:SecureTransport': 'false' },
-                },
-            });
-            s3Encryption.run(cache, {}, (err, results) => {
+        it('should PASS BucketPolicy=EXTERNAL, Configured=EXTERNAL', function (done) {
+            const cache = createCacheExternalCMK();
+            s3Encryption.run(cache, { s3_required_encryption_level: 'externalcmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
+                expect(results[0].status).to.equal(0);
                 done();
             });
         });
 
-        it('should FAIL if explicit deny all with secure condition but not on s3:GetObject', function (done) {
-            const cache = createCache({
-                Effect: 'Deny',
-                Principal: '*',
-                Action: ['s3:PutObject'],
-                Resource: ['arn:aws:s3:::mybucket/*'],
-                Condition: {
-                    Bool: { 'aws:SecureTransport': 'false' },
-                },
-            });
-            s3Encryption.run(cache, {}, (err, results) => {
+        it('should PASS BucketPolicy=HSM, Configured=HSM', function (done) {
+            const cache = createCacheHSM();
+            s3Encryption.run(cache, { s3_required_encryption_level: 'cloudhsm' }, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
+                expect(results[0].status).to.equal(0);
                 done();
             });
         });
 
-        it('should FAIL if explicit deny all with secure condition but not on all objects', function (done) {
-            const cache = createCache({
-                Effect: 'Deny',
-                Principal: '*',
-                Action: ['s3:GetObject'],
-                Resource: ['arn:aws:s3:::mybucket/mypath/*'],
-                Condition: {
-                    Bool: { 'aws:SecureTransport': 'false' },
-                },
-            });
-            s3Encryption.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                done();
-            });
-        });
-
-        it('should FAIL if explicit deny all with reversed condition', function (done) {
-            const cache = createCache({
-                Effect: 'Deny',
-                Principal: '*',
-                Action: ['s3:GetObject'],
-                Resource: ['arn:aws:s3:::mybucket/*'],
-                Condition: {
-                    Bool: { 'aws:SecureTransport': 'true' },
-                },
-            });
-            s3Encryption.run(cache, {}, (err, results) => {
+        it('should FAIL BucketPolicy=AWSKMS, Configured=AWSCMK', function (done) {
+            const cache = createCacheAWSKMS();
+            s3Encryption.run(cache, { s3_required_encryption_level: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
