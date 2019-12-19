@@ -2,10 +2,10 @@ var minimatch = require('minimatch');
 var helpers = require('../../../helpers/aws');
 
 const encryptionLevelMap = {
-    off: 0,
+    none: 0,
     sse: 1, // // x-amz-server-side-encryption:AES256
-    awskms: 2, // x-amz-server-side-encryption:aws:kms without x-amz-server-side-encryption-aws-kms-key-id
-    awscmk: 3, // x-amz-server-side-encryption:aws:kms with x-amz-server-side-encryption-aws-kms-key-id, but key is aws managed
+    awskms: 2, // x-amz-server-side-encryption:aws:kms without x-amz-server-side-encryption-aws-kms-key-id, implies any KMS key
+    awscmk: 3, // x-amz-server-side-encryption:aws:kms with x-amz-server-side-encryption-aws-kms-key-id, but key is customer managed
     externalcmk: 4, // x-amz-server-side-encryption:aws:kms with x-amz-server-side-encryption-aws-kms-key-id, but key is externalcmk
     cloudhsm: 5, // x-amz-server-side-encryption:aws:kms with x-amz-server-side-encryption-aws-kms-key-id, but key is cloudhsm
 };
@@ -73,6 +73,7 @@ module.exports = {
         var source = {};
 
         var desiredEncryptionLevelString = settings.s3_required_encryption_level || this.settings.s3_required_encryption_level.default
+        console.log(desiredEncryptionLevelString)
         if(!desiredEncryptionLevelString.match(this.settings.s3_required_encryption_level.regex)) {
             helpers.addResult(results, 3, 'Settings misconfigured for S3 Encryption Enforcement.');
             return callback(null, results, source);
@@ -137,12 +138,12 @@ module.exports = {
             });
 
             // get max encryption level string
-            const currentEncryptionLevel = statementEncryptionLevels.reduce((max, level) => encryptionLevelMap[level] > encryptionLevelMap[max] ? level : max, 'off');
+            const currentEncryptionLevel = statementEncryptionLevels.reduce((max, level) => encryptionLevelMap[level] > encryptionLevelMap[max] ? level : max, 'none');
 
             if (encryptionLevelMap[currentEncryptionLevel] < encryptionLevelMap[desiredEncryptionLevelString]) {
-                helpers.addResult(results, 2, `Bucket does not enforce encryption to ${desiredEncryptionLevelString}, current enforcement: ${currentEncryptionLevel}`, 'global', bucketResource);
+                helpers.addResult(results, 2, `Bucket policy does not enforce encryption to ${desiredEncryptionLevelString}, policy currently enforces: ${currentEncryptionLevel}`, 'global', bucketResource);
             } else {
-                helpers.addResult(results, 0, `Bucket policy enforces encryption to ${currentEncryptionLevel}, current enforcement: ${currentEncryptionLevel}`, 'global', bucketResource);
+                helpers.addResult(results, 0, `Bucket policy enforces encryption to ${desiredEncryptionLevelString}, policy currently enforces: ${currentEncryptionLevel}`, 'global', bucketResource);
             }
         }
         callback(null, results, source);
