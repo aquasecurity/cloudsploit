@@ -1,6 +1,31 @@
 var expect = require('chai').expect;
 var bucketEncryptionInTransit = require('./bucketEncryptionInTransit');
 
+const createCacheUnparsed = (statement) => {
+    return {
+        s3: {
+            listBuckets: {
+                'us-east-1': {
+                    data: [{
+                        Name: 'mybucket',
+                    }],
+                },
+            },
+            getBucketPolicy: {
+                'us-east-1': {
+                    mybucket: {
+                        data: {
+                            Policy: {
+                                Version: '2008-10-17',
+                                Statement: statement ? [statement] : [],
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    };
+}
 const createCache = (statement) => {
     return {
         s3: {
@@ -107,6 +132,26 @@ describe('bucketEncryptionInTransit', function () {
 
         it('should PASS when there is a statement that denies insecure requests', function (done) {
             const cache = createCache({
+                Effect: 'Deny',
+                Principal: '*',
+                Action: 's3:*',
+                Resource: [
+                    'arn:aws:s3:::mybucket/*',
+                    'arn:aws:s3:::mybucket',
+                ],
+                Condition: {
+                    Bool: { 'aws:SecureTransport': 'false' },
+                },
+            });
+            bucketEncryptionInTransit.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
+
+        it('should PASS when there is a statement that denies insecure requests when the policy is parsed', function (done) {
+            const cache = createCacheUnparsed({
                 Effect: 'Deny',
                 Principal: '*',
                 Action: 's3:*',

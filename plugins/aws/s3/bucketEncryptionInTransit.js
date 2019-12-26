@@ -46,6 +46,7 @@ module.exports = {
 
         for (let bucket of listBuckets.data) {
             var bucketResource = `arn:aws:s3:::${bucket.Name}`;
+            console.log(JSON.stringify(getBucketPolicy, null, 2))
 
             var getBucketPolicy = helpers.addSource(cache, source, ['s3', 'getBucketPolicy', region, bucket.Name]);
             if (getBucketPolicy && getBucketPolicy.err && getBucketPolicy.err.code && getBucketPolicy.err.code === 'NoSuchBucketPolicy') {
@@ -56,11 +57,15 @@ module.exports = {
                 helpers.addResult(results, 3, `Error querying for bucket policy on bucket: ${bucket.Name}: ${helpers.addError(getBucketPolicy)}`, 'global', bucketResource);
                 continue;
             }
-
             try {
-                var policyJson = JSON.parse(getBucketPolicy.data.Policy);
+                // Parse the policy if it hasn't be parsed and replaced by another plugin....
+                if (typeof getBucketPolicy.data.Policy === 'string') {
+                    var policyJson = JSON.parse(getBucketPolicy.data.Policy);
+                } else {
+                    var policyJson = getBucketPolicy.data.Policy
+                }
             } catch(e) {
-                helpers.addResult(results, 3, `Bucket policy on bucket [${bucket.Name}] could not be parsed.`, 'global', bucketResource);
+                helpers.addResult(results, 3, `Bucket policy on bucket ${bucket.Name} could not be parsed.`, 'global', bucketResource);
                 continue;
             }
             if (!policyJson || !policyJson.Statement) {
