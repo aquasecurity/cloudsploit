@@ -108,7 +108,12 @@ module.exports = {
             }
 
             try {
-                var policyJson = JSON.parse(getBucketPolicy.data.Policy);
+                // Parse the policy if it hasn't been parsed and replaced by another plugin....
+                if (typeof getBucketPolicy.data.Policy === 'string') {
+                    var policyJson = JSON.parse(getBucketPolicy.data.Policy);
+                } else {
+                    var policyJson = getBucketPolicy.data.Policy
+                }
             } catch(e) {
                 helpers.addResult(results, 3, `Bucket policy on bucket [${bucket.Name}] could not be parsed.`, 'global', bucketResource);
                 continue;
