@@ -140,6 +140,7 @@ module.exports = {
         'bucketVersioning'              : require(__dirname + '/plugins/aws/s3/bucketVersioning.js'),
         'bucketLogging'                 : require(__dirname + '/plugins/aws/s3/bucketLogging.js'),
         'bucketEncryption'              : require(__dirname + '/plugins/aws/s3/bucketEncryption.js'),
+        'bucketWebsiteEnabled'          : require(__dirname + '/plugins/aws/s3/bucketWebsiteEnabled.js'),
 
         'notebookDataEncrypted'         : require(__dirname + '/plugins/aws/sagemaker/notebookDataEncrypted.js'),
         'notebookDirectInternetAccess'  : require(__dirname + '/plugins/aws/sagemaker/notebookDirectInternetAccess.js'),
@@ -468,7 +469,8 @@ module.exports = {
         'kmsUserSeparation'             : require(__dirname + '/plugins/google/iam/kmsUserSeparation.js'),
         'serviceAccountKeyRotation'     : require(__dirname + '/plugins/google/iam/serviceAccountKeyRotation.js'),
         'serviceAccountManagedKeys'     : require(__dirname + '/plugins/google/iam/serviceAccountManagedKeys.js'),
-        
+        'corporateEmailsOnly'           : require(__dirname + '/plugins/google/iam/corporateEmailsOnly.js'),
+
         'privateEndpoint'               : require(__dirname + '/plugins/google/kubernetes/privateEndpoint.js'),
         'monitoringEnabled'             : require(__dirname + '/plugins/google/kubernetes/monitoringEnabled.js'),
         'clusterLeastPrivilege'         : require(__dirname + '/plugins/google/kubernetes/clusterLeastPrivilege.js'),
@@ -484,10 +486,12 @@ module.exports = {
         'autoNodeUpgradesEnabled'       : require(__dirname + '/plugins/google/kubernetes/autoNodeUpgradesEnabled.js'),
         'networkPolicyEnabled'          : require(__dirname + '/plugins/google/kubernetes/networkPolicyEnabled.js'),
         'podSecurityPolicyEnabled'      : require(__dirname + '/plugins/google/kubernetes/podSecurityPolicyEnabled.js'),
+        'privateClusterEnabled'         : require(__dirname + '/plugins/google/kubernetes/privateClusterEnabled.js'),
+        'basicAuthenticationDisabled'   : require(__dirname + '/plugins/google/kubernetes/basicAuthenticationDisabled.js'),
 
         'dnsSecEnabled'                 : require(__dirname + '/plugins/google/dns/dnsSecEnabled.js'),
         'dnsSecSigningAlgorithm'        : require(__dirname + '/plugins/google/dns/dnsSecSigningAlgorithm.js'),
-        
+
         'auditLoggingEnabled'           : require(__dirname + '/plugins/google/logging/auditLoggingEnabled.js'),
         'projectOwnershipLogging'       : require(__dirname + '/plugins/google/logging/projectOwnershipLogging.js'),
         'storagePermissionsLogging'     : require(__dirname + '/plugins/google/logging/storagePermissionsLogging.js'),

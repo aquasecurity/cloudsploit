@@ -9,6 +9,13 @@ module.exports = {
     link: 'https://cloud.google.com/sql/docs/mysql/instance-settings',
     recommended_action: 'Ensure that SSL is enabled on all SQL databases',
     apis: ['instances:sql:list'],
+    compliance: {
+        pci: 'PCI requires strong cryptographic and security protocols ' +
+             'when transmitting user data, this includes using SSL.',
+        hipaa: 'HIPAA requires all data to be transmitted over secure channels. ' +
+            'Database SSL should be used to ensure SQL databases ' +
+            'are always connecting through secure encryption.',
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

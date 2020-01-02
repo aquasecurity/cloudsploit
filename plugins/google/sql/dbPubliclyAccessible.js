@@ -9,6 +9,16 @@ module.exports = {
     link: 'https://cloud.google.com/sql/docs/mysql/instance-settings',
     recommended_action: '1. Enter the SQL category of the Google Console. 2. Select the instance. 3. Select the Replicas tab. 4. Select Create Failover Replica and follow the prompts.',
     apis: ['instances:sql:list'],
+    compliance: {
+        hipaa: 'SQL instances should only be launched in VPC environments and ' +
+            'accessed through private endpoints. Exposing SQL instances to ' +
+            'the public network may increase the risk of access from ' +
+            'disallowed parties. HIPAA requires strict access and integrity ' +
+            'controls around sensitive data.',
+        pci: 'PCI requires backend services to be properly firewalled. ' +
+            'Ensure SQL instances are not accessible from the Internet ' +
+            'and use proper jump box access mechanisms.'
+    },
   
 
     run: function(cache, settings, callback) {

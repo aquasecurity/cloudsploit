@@ -9,6 +9,13 @@ module.exports = {
     link: 'https://cloud.google.com/vpc/docs/using-flow-logs',
     recommended_action: 'Enable VPC flow logs for each VPC Subnetwork',
     apis: ['subnetworks:list'],
+    compliance: {
+        hipaa: 'VPC Flow Logs provide a detailed traffic log of a VPC network ' +
+            'containing HIPAA data. Flow Logs should be enabled to satisfy ' +
+            'the audit controls of the HIPAA framework.',
+        pci: 'PCI requires logging of all network access to environments containing ' +
+            'cardholder data. Enable VPC flow logs to log these network requests.'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

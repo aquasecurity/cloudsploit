@@ -9,6 +9,13 @@ module.exports = {
     link: 'https://cloud.google.com/compute/docs/disks/customer-supplied-encryption',
     recommended_action: 'CSEK can only be configured when creating a disk, Delete the disk in question and redeploy with CSEK.',
     apis: ['disks:list'],
+    compliance: {
+        hipaa: 'HIPAA requires that all data is encrypted, including data at rest. ' +
+            'Enabling encryption of disk data helps to protect this data.',
+        pci: 'PCI requires proper encryption of cardholder data at rest. ' +
+            'Encryption should be enabled for all disks storing this ' +
+            'type of data.'
+    },
 
     run: function(cache, settings, callback) {
 

@@ -9,6 +9,10 @@ module.exports = {
     link: 'https://cloud.google.com/logging/docs/logs-based-metrics/',
     recommended_action: 'Ensure that log alerts exist for VPC network route changes.',
     apis: ['metrics:list', 'alertPolicies:list'],
+    compliance: {
+        hipaa: 'HIPAA requires the logging of all activity ' +
+            'including access and all actions taken.'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

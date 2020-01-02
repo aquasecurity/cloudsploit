@@ -9,6 +9,11 @@ module.exports = {
     link: 'https://cloud.google.com/compute/docs/instances/managing-instance-access',
     recommended_action: 'Set enable-oslogin in project-wide metadata so that it applies to all of the instances in the project.',
     apis: ['projects:get'],
+    compliance: {
+        pci: 'PCI recommends implementing additional security features for ' +
+            'any required service. This includes using secured technologies ' +
+            'such as SSH.'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

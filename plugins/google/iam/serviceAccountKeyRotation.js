@@ -9,6 +9,18 @@ module.exports = {
     link: 'https://cloud.google.com/iam/docs/creating-managing-service-account-keys',
     recommended_action: 'Rotate service account keys that have not been rotated in over 90 days.',
     apis: ['serviceAccounts:list','keys:list'],
+    compliance: {
+        hipaa: 'Rotating access keys helps to ensure that those keys have note been ' +
+              'compromised. HIPAA requires strict controls around authentication of ' +
+              'users or systems accessing HIPAA-compliant environments.',
+        pci: 'PCI requires that all user credentials are rotated every 90 days. While ' +
+             'IAM roles handle rotation automatically, access keys need to be manually ' +
+             'rotated.',
+        hipaa: 'Rotating service account keys helps to ensure that those keys have not ' +
+            'been compromised. HIPAA requires strict controls around authentication of ' +
+            'users or systems accessing HIPAA-compliant environments.',
+        pci: 'PCI requires that all user credentials are rotated every 90 days.'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

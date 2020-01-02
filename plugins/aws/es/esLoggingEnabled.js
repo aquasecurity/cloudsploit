@@ -46,15 +46,34 @@ module.exports = {
                         'Unable to query for ES domain config: ' + helpers.addError(describeElasticsearchDomain), region);
                 } else {
                     var localDomain = describeElasticsearchDomain.data.DomainStatus;
-
+                    var logSelectionArr = ['SEARCH_SLOW_LOGS', 'INDEX_SLOW_LOGS', 'ES_APPLICATION_LOGS'];
+                    var cloudWatchDisabled = [];
                     if (localDomain.LogPublishingOptions &&
-                        localDomain.LogPublishingOptions.Enabled) {
-                        if (!localDomain.LogPublishingOptions.CloudWatchLogsLogGroupArn) {
-                            helpers.addResult(results, 2,
-                                'ES domain logging is enabled but logs are not configured to be sent to CloudWatch', region, localDomain.ARN);
-                        } else {
+                        Object.keys(localDomain.LogPublishingOptions).length) {
+                        for (let LogPublishingOptions in localDomain.LogPublishingOptions) {
+                            let logGroups = localDomain.LogPublishingOptions[LogPublishingOptions];
+                            if (!logGroups.CloudWatchLogsLogGroupArn &&
+                                logGroups.Enabled) {
+                                cloudWatchDisabled.push(LogPublishingOptions);
+                            } else if (logGroups.CloudWatchLogsLogGroupArn &&
+                                logGroups.Enabled) {
+                                if (logSelectionArr.indexOf(LogPublishingOptions) > -1) {
+                                    logSelectionArr.splice(logSelectionArr.indexOf(LogPublishingOptions), 1);
+                                }
+                            }
+                        }
+                        if (!logSelectionArr.length) {
                             helpers.addResult(results, 0,
                                 'ES domain logging is enabled and sending logs to CloudWatch', region, localDomain.ARN);
+                        } else if (cloudWatchDisabled.length) {
+                            let logStr = cloudWatchDisabled.join(', ').replace(/_/g, ' ');
+                            helpers.addResult(results, 2,
+                                `ES domain logging is enabled but logs are not configured to be sent to CloudWatch for: ${logStr}`, region, localDomain.ARN);
+                        }
+                        else {
+                            let logStr = logSelectionArr.join(', ').replace(/_/g, ' ');
+                            helpers.addResult(results, 2,
+                                `The following logs are not configured for the ES domain: ${logStr}`, region, localDomain.ARN);
                         }
                     } else {
                         helpers.addResult(results, 2,

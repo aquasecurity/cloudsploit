@@ -7,13 +7,17 @@ module.exports = {
     description: 'Ensures Cryptographic keys are set to rotate on a regular schedule',
     more_info: 'All Cryptographic keys should have key rotation enabled. Google will handle the rotation of the encryption key itself, as well as storage of previous keys, so previous data does not need to be re-encrypted before the rotation occurs.',
     link: 'https://cloud.google.com/vpc/docs/using-cryptoKeys',
-    recommended_action: 'Restrict TCP port 5900 to known IP addresses',
+    recommended_action: 'Ensure that Cryptographic keys are set to rotate.',
     apis: ['keyRings:list','cryptoKeys:list'],
     compliance: {
         pci: 'PCI has strict requirements regarding the use of encryption keys ' +
              'to protect cardholder data. These requirements include rotating ' +
              'the key periodically. Cryptographic Keys provides key rotation capabilities that ' +
-             'should be enabled.'
+             'should be enabled.',
+        hipaa: 'Rotating keys helps to ensure that those keys have not been ' +
+            'compromised. HIPAA requires strict controls around authentication of ' +
+            'users or systems accessing HIPAA-compliant environments.',
+
     },
 
     run: function(cache, settings, callback) {

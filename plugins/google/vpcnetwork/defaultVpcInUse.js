@@ -9,6 +9,12 @@ module.exports = {
     link: 'https://cloud.google.com/vpc/docs/vpc',
     recommended_action: 'Move resources from the default VPC to a new VPC created for that application or resource group.',
     apis: ['networks:list', 'instances:compute:list'],
+    compliance: {
+        pci: 'PCI has explicit requirements around default accounts and ' +
+            'resources. PCI recommends removing all default accounts, ' +
+            'only enabling necessary services as required for the function ' +
+            'of the system'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

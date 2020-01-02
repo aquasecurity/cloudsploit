@@ -9,6 +9,12 @@ module.exports = {
     link: 'https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances',
     recommended_action: 'In Service Account Section, ensure Allow full access to all Cloud APIs is not selected if selecting the default service account.',
     apis: ['instances:compute:list'],
+    compliance: {
+        pci: 'PCI has explicit requirements around default accounts and ' +
+            'resources. PCI recommends removing all default accounts, ' +
+            'only enabling necessary services as required for the function ' +
+            'of the system'
+    },
 
     run: function(cache, settings, callback) {
 

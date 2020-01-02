@@ -5,10 +5,18 @@ module.exports = {
     title: 'Storage Permissions Logging',
     category: 'Logging',
     description: 'Ensures that logging and log alerts exist for storage permission changes.',
-    more_info: 'Project Ownership is the highest level of privilege on a project, any changes in storage permissions should be heavily monitored to prevent unauthorized changes.',
+    more_info: 'Storage permissions include access to the buckets that store the logs, any changes in storage permissions should be heavily monitored to prevent unauthorized changes.',
     link: 'https://cloud.google.com/logging/docs/logs-based-metrics/',
     recommended_action: 'Ensure that log alerts exist for storage permission changes.',
     apis: ['metrics:list', 'alertPolicies:list'],
+    compliance: {
+        pci: 'PCI requires tracking and monitoring of all access to environments ' +
+            'in which cardholder data is present. Storage permissions logging ' +
+            'helps ensure that any storage permissions changes, including permissions .' +
+            'in the log storage bucket, are recorded.',
+        hipaa: 'HIPAA requires the logging of all activity ' +
+            'including access and all actions taken.'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

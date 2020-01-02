@@ -9,7 +9,10 @@ module.exports = {
     link: 'https://cloud.google.com/storage/docs/access-logs',
     recommended_action: 'Bucket Logging can only be enabled by using the Command Line Interface and the log bucket must already be created. Use this command to enable Logging: gsutil logging set on -b gs://[LOG_BUCKET_NAME] -o AccessLog \ gs://[BUCKET_NAME]',
     apis: ['buckets:list'],
-  
+    compliance: {
+        hipaa: 'HIPAA requires the logging of all activity ' +
+            'including access and all actions taken.'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

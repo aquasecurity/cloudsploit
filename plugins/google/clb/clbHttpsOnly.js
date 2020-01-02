@@ -9,6 +9,14 @@ module.exports = {
     link: 'https://cloud.google.com/vpc/docs/vpc',
     recommended_action: 'Remove non-HTTPS listeners from load balancer.',
     apis: ['targetHttpProxies:list'],
+    compliance: {
+        pci: 'PCI requires strong cryptographic and security protocols ' +
+            'when transmitting user data over open, public networks, ' +
+            'this includes only using TLS or SSL.',
+        hipaa: 'HIPAA requires all data to be transmitted over secure channels. ' +
+            'load balancer HTTPS redirection should be used to ensure site visitors ' +
+            'are always connecting over a secure channel.',
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

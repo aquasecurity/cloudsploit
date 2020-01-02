@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Network Watcher helps locate, diagnose, and gain insights into Azure networks. Enabling Network Watcher in all locations ensures that no resources are being used in locations that are not authorized.',
     recommended_action: 'Enable the Network Watcher service in all locations.',
     link: 'https://docs.microsoft.com/en-us/azure/network-watcher/network-watcher-monitoring-overview',
-    apis: ['networkWatchers:listAll'],
+    apis: ['networkWatchers:listAll', 'virtualNetworks:listAll'],
 
     run: function(cache, settings, callback) {
         const results = [];
@@ -19,17 +19,22 @@ module.exports = {
             const networkWatchers = helpers.addSource(cache, source,
                 ['networkWatchers', 'listAll', location]);
 
-            if (!networkWatchers) return rcb();
+            const virtualNetworks = helpers.addSource(cache, source,
+                ['virtualNetworks', 'listAll', location]);
 
-            if (networkWatchers.err || !networkWatchers.data) {
+            if (!networkWatchers || !virtualNetworks) return rcb();
+
+            if (networkWatchers.err || !networkWatchers.data || !virtualNetworks.data) {
                 helpers.addResult(results, 3,
                     'Unable to query for Network Watcher: ' + helpers.addError(networkWatchers), location);
                 return rcb();
             }
 
-            if (!networkWatchers.data.length) {
+            if (!networkWatchers.data.length && virtualNetworks.data.length) {
                 helpers.addResult(results, 2, 'Network Watcher is not enabled in the region', location);
-            };
+            } else if (!networkWatchers.data.length && !virtualNetworks.data.length) {
+                helpers.addResult(results, 0, 'No Virtual Networks or Network Watchers in the region', location);
+            }
 
             networkWatchers.data.forEach((networkWatcher) => {
                 if (networkWatcher.provisioningState &&

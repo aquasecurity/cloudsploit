@@ -9,6 +9,13 @@ module.exports = {
     link: 'https://cloud.google.com/logging/docs/logs-based-metrics/',
     recommended_action: 'Ensure that log alerts exist for VPC network changes.',
     apis: ['metrics:list', 'alertPolicies:list'],
+    compliance: {
+        pci: 'PCI requires tracking and monitoring of all access to environments ' +
+            'in which cardholder data is present. VPC network logging ' +
+            'helps audit all network changes.',
+        hipaa: 'HIPAA requires the logging of all activity ' +
+            'including access and all actions taken.'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
