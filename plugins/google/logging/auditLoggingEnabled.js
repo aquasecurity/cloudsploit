@@ -61,7 +61,6 @@ module.exports = {
             });
             if (!foundLoggingConfig) {
                 helpers.addResult(results, 2, 'Audit logging is not enabled on the project', region);
-
             }
 
             rcb();
