@@ -27,7 +27,7 @@ module.exports = {
             }
 
             if (!iamPolicies.data.length) {
-                helpers.addResult(results, 0, 'no IAM policies found', region);
+                helpers.addResult(results, 0, 'No IAM policies found', region);
                 return rcb();
             }
 
@@ -58,13 +58,14 @@ module.exports = {
                     }).concat(notSeparated);
                 }
             });
+
             if (notSeparated.length) {
                 notSeparated = [...new Set(notSeparated)];
                 var notSeparatedStr = notSeparated.join(', ');
                 helpers.addResult(results, 2,
                     `The following accounts have the KMS admin role and one or more CryptoKey roles: ${notSeparatedStr}`, region);
             } else {
-                helpers.addResult(results, 0, 'No accounts have a KMS admin role and a CryptoKey key role', region);
+                helpers.addResult(results, 0, 'No accounts have a KMS admin role or a CryptoKey key role', region);
             }
 
             rcb();

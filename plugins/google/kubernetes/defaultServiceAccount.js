@@ -47,7 +47,6 @@ module.exports = {
                     })
                 } else {
                     helpers.addResult(results, 0, 'No node pools found', region, cluster.name);
-
                 }
             });
 

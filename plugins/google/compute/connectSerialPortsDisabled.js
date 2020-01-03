@@ -4,10 +4,10 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Connect Serial Ports Disabled',
     category: 'Compute',
-    description: 'Ensure Enable Connecting to Serial Ports is not enabled for VM Instance',
-    more_info: 'The Serial Console does not allow restricting IP Addresses, which allows any IP address to connect to instance.',
+    description: 'Ensures connecting to serial ports is not enabled for VM instances',
+    more_info: 'The serial console does not allow restricting IP Addresses, which allows any IP address to connect to instance and should therefore be disabled.',
     link: 'https://cloud.google.com/compute/docs/instances/interacting-with-serial-console',
-    recommended_action: '1.Enter the Compute Service. 2. Select the Instance. 3. Select Edit then deselect Enable Connecting to Serial Ports.',
+    recommended_action: 'Ensure the Enable Connecting to Serial Ports option is disabled for all compute instances.',
     apis: ['instances:compute:list'],
 
     run: function(cache, settings, callback) {
@@ -71,7 +71,7 @@ module.exports = {
             } else if (badInstances.length) {
                 var myInstanceStr = badInstances.join(", ");
                 helpers.addResult(results, 2,
-                    `Connecting to Serial Ports is Enabled for the following instances: ${myInstanceStr}`, region);
+                    `Connecting to Serial Ports is enabled for the following instances: ${myInstanceStr}`, region);
             } else if (!badInstances.length) {
                 helpers.addResult(results, 0,
                     'Connecting to Serial Ports is disabled for all instances in the region', region);

@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'COS Image Enabled',
     category: 'Kubernetes',
-    description: 'Ensures all Kubernetes cluster nodes have Container-Optimized OS enabled.',
+    description: 'Ensures all Kubernetes cluster nodes have Container-Optimized OS enabled',
     more_info: 'Container-Optimized OS is optimized to enhance node security. It is backed by a team at Google that can quickly patch it.',
     link: 'https://cloud.google.com/container-optimized-os/',
     recommended_action: 'Enable Container-Optimized OS on all Kubernetes cluster nodes',
@@ -47,7 +47,6 @@ module.exports = {
                     })
                 } else {
                     helpers.addResult(results, 0, 'No node pools found', region, cluster.name);
-
                 }
             });
 

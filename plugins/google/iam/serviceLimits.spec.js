@@ -21,7 +21,7 @@ describe('serviceLimits', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(3)
-                expect(results[0].message).to.include('Unable to query Projects:')
+                expect(results[0].message).to.include('Unable to query projects:')
                 expect(results[0].region).to.equal('global')
                 done()
             };
@@ -37,7 +37,7 @@ describe('serviceLimits', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No Project found')
+                expect(results[0].message).to.include('No projects found')
                 expect(results[0].region).to.equal('global')
                 done()
             };
@@ -241,7 +241,7 @@ describe('serviceLimits', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(1)
-                expect(results[0].message).to.include('The following Services are over the 75%')
+                expect(results[0].message).to.include('The following services are over the 75%')
                 expect(results[0].region).to.equal('global')
                 done()
             };
@@ -429,7 +429,7 @@ describe('serviceLimits', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('The following Services are over the 90%')
+                expect(results[0].message).to.include('The following services are over the 90%')
                 expect(results[0].region).to.equal('global')
                 done()
             };

@@ -4,10 +4,10 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Legacy Authorization Disabled',
     category: 'Kubernetes',
-    description: 'Ensure legacy authorization is set to disabled on Kubernetes clusters.',
+    description: 'Ensure legacy authorization is set to disabled on Kubernetes clusters',
     more_info: 'The legacy authorizer in Kubernetes grants broad, statically defined permissions.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster',
-    recommended_action: 'Disable legacy authorization on all clusters',
+    recommended_action: 'Disable legacy authorization on all clusters.',
     apis: ['clusters:list'],
 
     run: function(cache, settings, callback) {

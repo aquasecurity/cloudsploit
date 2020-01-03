@@ -27,7 +27,7 @@ module.exports = {
             }
 
             if (!iamPolicies.data.length) {
-                helpers.addResult(results, 0, 'no IAM policies found', region);
+                helpers.addResult(results, 0, 'No IAM policies found', region);
                 return rcb();
             }
 
@@ -47,7 +47,6 @@ module.exports = {
             } else {
                 helpers.addResult(results, 0, 'No accounts have service account user roles', region);
             }
-
 
             rcb();
         }, function(){

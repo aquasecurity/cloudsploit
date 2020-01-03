@@ -21,7 +21,7 @@ describe('dnsSecSigningAlgorithm', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query DNS Managed Zones');
+                expect(results[0].message).to.include('Unable to query DNS managed zones');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -38,7 +38,7 @@ describe('dnsSecSigningAlgorithm', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No DNS Managed Zones present');
+                expect(results[0].message).to.include('No DNS managed zones found');
                 expect(results[0].region).to.equal('global');
                 done()
             };

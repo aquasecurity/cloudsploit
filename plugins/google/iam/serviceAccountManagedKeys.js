@@ -5,7 +5,7 @@ module.exports = {
     title: 'Service Account Managed Keys',
     category: 'IAM',
     description: 'Ensures that service account keys are being managed by Google.',
-    more_info: 'Service account keys should be managed by Google to ensure that they are as secure as possible, including key rotations and restrictions to the accessibility of the keys..',
+    more_info: 'Service account keys should be managed by Google to ensure that they are as secure as possible, including key rotations and restrictions to the accessibility of the keys.',
     link: 'https://cloud.google.com/iam/docs/creating-managing-service-account-keys',
     recommended_action: 'Ensure all user service account keys are being managed by Google.',
     apis: ['serviceAccounts:list','keys:list'],
@@ -45,7 +45,6 @@ module.exports = {
                     helpers.addResult(results, 0, 'The user service account key is being managed by Google', region, key.name);
                 }
             });
-
 
             rcb();
         }, function(){

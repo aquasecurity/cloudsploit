@@ -7,7 +7,7 @@ module.exports = {
     description: 'Ensures SQL instances can be restored to a recent point',
     more_info: 'Google will maintain a point to which the database can be restored. This point should not drift too far into the past, or else the risk of irrecoverable data loss may occur.',
     link: 'https://cloud.google.com/sql/docs/mysql/instance-settings',
-    recommended_action: '1. Enter the SQL category of the Google Console. 2. Select the instance. 3. Select Edit at the top of the section. 4. Enter the Enable auto Backups and ensure that Enable Binary Logging is checked.',
+    recommended_action: 'Ensure all database instances are configured with automatic backups and can be restored to a recent point with binary logging enabled.',
     apis: ['instances:sql:list'],
     compliance: {
         pci: 'PCI requires that security procedures, including restoration of ' +
@@ -27,12 +27,12 @@ module.exports = {
             if (!sqlInstances) return rcb();
 
             if (sqlInstances.err || !sqlInstances.data) {
-                helpers.addResult(results, 3, 'Unable to query SQL Instances: ' + helpers.addError(sqlInstances), region);
+                helpers.addResult(results, 3, 'Unable to query SQL instances: ' + helpers.addError(sqlInstances), region);
                 return rcb();
             }
 
             if (!sqlInstances.data.length) {
-                helpers.addResult(results, 0, 'No SQL Instances present', region);
+                helpers.addResult(results, 0, 'No SQL instances found', region);
                 return rcb();
             }
 
@@ -46,7 +46,7 @@ module.exports = {
                     helpers.addResult(results, 2, 
                         'SQL instance does not have point-in-time recovery enabled', region, sqlInstance.name);
                 }
-            })
+            });
 
             rcb();
         }, function(){

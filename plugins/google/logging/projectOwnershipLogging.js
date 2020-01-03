@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Project Ownership Logging',
     category: 'Logging',
-    description: 'Ensures that logging and log alerts exist for project ownership assignments and changes.',
+    description: 'Ensures that logging and log alerts exist for project ownership assignments and changes',
     more_info: 'Project Ownership is the highest level of privilege on a project, any changes in project ownership should be heavily monitored to prevent unauthorized changes.',
     link: 'https://cloud.google.com/logging/docs/logs-based-metrics/',
     recommended_action: 'Ensure that log alerts exist for project ownership assignments and changes.',
@@ -102,7 +102,7 @@ module.exports = {
                                 var conditionFilter = condition.conditionThreshold.filter.split('"')[1];
                                 if (conditionFilter === metricName) {
                                     conditionFound = true;
-                                    helpers.addResult(results, 0, 'Log Alert for project ownership changes is enabled', region, alertPolicy.name);
+                                    helpers.addResult(results, 0, 'Log alert for project ownership changes is enabled', region, alertPolicy.name);
                                 }
                             }
                         })
@@ -110,7 +110,7 @@ module.exports = {
                 });
 
                 if (!conditionFound) {
-                    helpers.addResult(results, 2, 'Log Alert for project ownership changes not found', region);
+                    helpers.addResult(results, 2, 'Log alert for project ownership changes not found', region);
                 }
             } else {
                 helpers.addResult(results, 2, 'Log metric for project ownership changes not found', region);

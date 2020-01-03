@@ -37,7 +37,6 @@ module.exports = {
                     helpers.addResult(results, 0, 'Network policy is enabled for the Kubernetes cluster', region, cluster.name);
                 } else {
                     helpers.addResult(results, 2, 'Network policy is disabled for the Kubernetes cluster', region, cluster.name);
-
                 }
             });
 

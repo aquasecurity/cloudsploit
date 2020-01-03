@@ -4,10 +4,10 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Service Account Admin',
     category: 'IAM',
-    description: 'Ensures that user managed service accounts do not have any admin, owner or write privileges.',
-    more_info: 'Service accounts are primarily used for api access to Google. It is recommended to not use admin access for service accounts.',
+    description: 'Ensures that user managed service accounts do not have any admin, owner, or write privileges.',
+    more_info: 'Service accounts are primarily used for API access to Google. It is recommended to not use admin access for service accounts.',
     link: 'https://cloud.google.com/iam/docs/overview',
-    recommended_action: 'Ensure that no service accounts have admin, owner or write privileges.',
+    recommended_action: 'Ensure that no service accounts have admin, owner, or write privileges.',
     apis: ['projects:get','projects:getIamPolicy'],
 
     run: function(cache, settings, callback) {
@@ -100,7 +100,6 @@ module.exports = {
             if (!serviceAccountExists) {
                 helpers.addResult(results, 0, 'All service accounts have least access', region);
             }
-
 
             rcb();
         }, function(){

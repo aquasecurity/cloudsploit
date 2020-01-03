@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Pod Security Policy Enabled',
     category: 'Kubernetes',
-    description: 'Ensures pod security policy is enabled for all Kubernetes clusters.',
+    description: 'Ensures pod security policy is enabled for all Kubernetes clusters',
     more_info: 'Kubernetes pod security policy is a resource that controls security sensitive aspects of the pod configuration.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/pod-security-policies',
     recommended_action: 'Ensure that all Kubernetes clusters have pod security policy enabled.',
@@ -40,7 +40,6 @@ module.exports = {
                 } else {
                     helpers.addResult(results, 2, 'Pod security policy config is disabled', region);
                 }
-
             });
             rcb();
         }, function() {

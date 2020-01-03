@@ -21,7 +21,7 @@ describe('kmsUserSeparation', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('no IAM policies found');
+                expect(results[0].message).to.include('No IAM policies found');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -38,7 +38,7 @@ describe('kmsUserSeparation', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No accounts have a KMS admin role and a CryptoKey key role');
+                expect(results[0].message).to.include('No accounts have a KMS admin role or a CryptoKey key role');
                 expect(results[0].region).to.equal('global');
                 done()
             };

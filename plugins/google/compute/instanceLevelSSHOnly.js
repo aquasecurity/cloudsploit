@@ -4,10 +4,10 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Instance Level SSH Only',
     category: 'Compute',
-    description: 'Ensure that instances are not configured to allow Project Wide SSH keys.',
-    more_info: 'To support principle of least privileges and prevent potential privilege escalation it is recommended that instances are not accessible from project wide SSH keys. These keys are accessible through metadata and can become comprimised.',
+    description: 'Ensures that instances are not configured to allow project-wide SSH keys',
+    more_info: 'To support the principle of least privilege and prevent potential privilege escalation it is recommended that instances are not give access to project-wide SSH keys through instance metadata.',
     link: 'https://cloud.google.com/compute/docs/instances/adding-removing-ssh-keys',
-    recommended_action: '1. Enter the Compute Service. 2. Select the Instance in question. 3. Select Edit at the top of the page. 4. Under SSH Keys ensure that Block Project-Wide SSH Keys is enabled.',
+    recommended_action: 'Ensure project-wide SSH keys are blocked for all instances.',
     apis: ['instances:compute:list'],
 
     run: function(cache, settings, callback) {
@@ -68,10 +68,10 @@ module.exports = {
             } else if (notBlockedProjectSSHKey.length) {
                 var myInstanceStr = notBlockedProjectSSHKey.join(", ");
                 helpers.addResult(results, 2,
-                    `Block Project-wide SSH Keys is Disabled for the following instances: ${myInstanceStr}`, region);
+                    `Block project-wide SSH keys is disabled for the following instances: ${myInstanceStr}`, region);
             } else if (!notBlockedProjectSSHKey.length) {
                 helpers.addResult(results, 0,
-                    'Block Project-wide SSH Keys is enabled for all instances in the region', region);
+                    'Block project-wide SSH keys is enabled for all instances in the region', region);
             }
 
             rcb();

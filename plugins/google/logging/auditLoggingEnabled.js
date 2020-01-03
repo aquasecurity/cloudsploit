@@ -51,7 +51,7 @@ module.exports = {
 
                     foundLoggingConfig = true;
                     if (auditLogConfigs.length < 3) {
-                        helpers.addResult(results, 2, 'Audit logging is not properly configured on the project.', region);
+                        helpers.addResult(results, 2, 'Audit logging is not properly configured on the project', region);
                     } else if (exemptedMembers.length) {
                         helpers.addResult(results, 2, 'Default audit configuration has exempted members', region);
                     } else {
@@ -60,8 +60,7 @@ module.exports = {
                 }
             });
             if (!foundLoggingConfig) {
-                helpers.addResult(results, 2, 'Audit logging is not enabled on the project.', region);
-
+                helpers.addResult(results, 2, 'Audit logging is not enabled on the project', region);
             }
 
             rcb();

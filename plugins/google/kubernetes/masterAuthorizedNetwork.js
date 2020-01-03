@@ -4,10 +4,10 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Master Authorized Network',
     category: 'Kubernetes',
-    description: 'Ensure master authorized networks is set to enabled on Kubernetes clusters.',
+    description: 'Ensures master authorized networks is set to enabled on Kubernetes clusters',
     more_info: 'Authorized networks are a way of specifying a restricted range of IP addresses that are permitted to access your container clusters Kubernetes master endpoint.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/authorized-networks',
-    recommended_action: 'Enable master authorized networks on all clusters',
+    recommended_action: 'Enable master authorized networks on all clusters.',
     apis: ['clusters:list'],
 
     run: function(cache, settings, callback) {

@@ -7,9 +7,8 @@ module.exports = {
     description: 'Ensures Storage bucket policies do not allow global write, delete, or read permissions',
     more_info: 'Storage buckets can be configured to allow the global principal to access the bucket via the bucket policy. This policy should be restricted only to known users or accounts.',
     link: 'https://cloud.google.com/storage/docs/access-control/iam',
-    recommended_action: '1. Enter the Storage Service. 2. Select the ... next to the Bucket and choose Edit Bucket Permissions. 3. In each Permission, ensure that no member is allUsers or allAuthenticatedUsers ',
+    recommended_action: 'Ensure that each storage bucket is configured so that no member is set to allUsers or allAuthenticatedUsers.',
     apis: ['buckets:list','buckets:getIamPolicy'],
-
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -28,7 +27,7 @@ module.exports = {
             }
 
             if (!bucketPolicyPolicies.data.length) {
-                helpers.addResult(results, 0, 'No storage buckets present', region);
+                helpers.addResult(results, 0, 'No storage buckets found', region);
                 return rcb();
             }
             var badBuckets = [];

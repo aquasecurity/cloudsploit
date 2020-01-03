@@ -36,6 +36,7 @@ Cloud Infrastructure configuration steps:
 
 * [AWS](#aws)
 * [Azure](#azure) 
+* [GCP](#gcp) 
 
 #### AWS
 
@@ -83,6 +84,23 @@ For more information on using our hosted scanner, [click here](#other-notes)
 1. Click "Save".
 1. Repeat the process for the role "Log Analytics Reader"
 
+#### GCP
+
+1. Log into your Google Cloud console and navigate to IAM Admin > Service Accounts.
+1. Click on "Create Service Account".
+1. Enter "CloudSploit" in the "Service account name", then enter "CloudSploit API Access" in the description.
+1. Click on Continue.
+1. Select the role: Project > Viewer.
+1. Click on Continue.
+1. Click on "Create Key".
+1. Leave the default JSON selected.
+1. Click on "Create".
+1. The key will be downloaded to your machine.
+1. Open the JSON key file, in a text editor and copy the Project Id, Client Email and Private Key values into the `index.js` file.
+1. Enter the APIs & Services category.
+1. Select Enable APIS & SERVICES at the top of the page
+1. Search for DNS, then Select the option that appears and Enable it.
+1. Enable all the APIs used to run scans, they are as follows: Stackdriver Monitoring, Stackdriver Logging, Compute, Cloud Key Management, Cloud SQL Admin, Kubernetes, Service Management, and Service Networking.
 
 ## Running
 
@@ -146,6 +164,7 @@ To write a plugin, you want to understand which data is needed and how your clou
 
 * [AWS Collection](#aws-collection)
 * [Azure Collection](#azure-collection)
+* [GCP Collection](#gcp-collection)
 
 #### AWS Collection
 
@@ -206,6 +225,38 @@ virtualMachineExtensions: {
 ```
 
 You can find the [Azure Collector here.](https://github.com/cloudsploit/scans/blob/master/collectors/azure/collector.js)
+
+#### GCP Collection
+
+The following declaration tells the Cloudsploit collection engine to query the Compute Management Service using the buckets:list call.
+
+```
+buckets: {
+  list: {
+    api: 'storage',
+    version: 'v1',
+    location: null,
+  }
+},
+```
+
+The second section in `collect.js` is `postcalls`, which is an array of objects defining API calls that rely on other calls first returned. For example, if you need to query for all `Storage Buckets`, and then loop through each one and run a more detailed call, you would add the `buckets:list` call in the [`calls`](https://github.com/cloudsploit/scans/blob/master/collectors/google/collector.js#L103-L109) section and then the more detailed call in [`postcalls`](https://github.com/cloudsploit/scans/blob/master/collectors/google/collector.js#L213-L223), setting it to rely on the output of `getIamPolicy` call.
+
+```
+buckets: {
+  getIamPolicy: {
+    api: 'storage',
+    version: 'v1',
+    location: null,
+    reliesOnService: ['buckets'],
+    reliesOnCall: ['list'],
+    filterKey: ['bucket'],
+    filterValue: ['name'],
+  }
+},
+```
+
+You can find the [GCP Collector here.](https://github.com/cloudsploit/scans/blob/master/collectors/google/collector.js)
 
 ### Scanning Phase
 
@@ -352,6 +403,68 @@ if (virtualMachineExtensions.err || !virtualMachineExtensions.data) {
 }
 if (!virtualMachineExtensions.data.length) {
     helpers.addResult(results, 0, 'No VM Extensions found', location);
+}
+```
+The `addResult` function ensures we are adding the results to the `results` array in the proper format. This function accepts the following:
+```
+(results array, score, message, region, resource)
+```
+The `resource` is optional, and the `score` must be between 0 and 3 to indicate PASS, WARN, FAIL, or UNKNOWN.
+
+#### GCP
+To more clearly illustrate writing a new plugin, let us consider the Storage Bucket All Users Policy plugin `plugins/google/storage/bucketAllUsersPolicy.js` . First, we know that we will need to query for a list of buckets via `buckets:lis`, then loop through each group and query for the more detailed set of data via `buckets:getIamPolicy`.
+
+We'll add these API calls to `collect.js`. First, under `calls` add:
+
+```
+buckets: {
+  list: {
+    api: 'storage',
+    version: 'v1',
+    location: null,
+  }
+},
+```
+
+Then, under `postcalls`, add:
+```
+buckets: {
+  getIamPolicy: {
+    api: 'storage',
+    version: 'v1',
+    location: null,
+    reliesOnService: ['buckets'],
+    reliesOnCall: ['list'],
+    filterKey: ['bucket'],
+    filterValue: ['name'],
+  }
+},
+```
+CloudSploit will first get the list of buckets, then, it will loop through each one, using the bucket name to get more detailed info via `getIamPolicy`.
+
+Next, we'll write the plugin. Create a new file in the `plugins/google/storage` folder called `bucketAllUsersPolicy.js` (this plugin already exists, but you can create a similar one for the purposes of this example).
+
+In the file, we'll be sure to export the plugin's title, category, description, link, and more information about it. Additionally, we will add any API calls it makes:
+```
+apis: ['buckets:list', 'buckets:getIamPolicy'],
+```
+In the `run` function, we can obtain the output of the collection phase from earlier by doing:
+```
+let bucketPolicyPolicies = helpers.addSource(cache, source, 
+            ['buckets', 'getIamPolicy', region]);
+```
+The `helpers` function ensures that the proper results are returned from the collection and that they are saved into a "source" variable which can be returned with the results.
+
+Now, we can write the plugin functionality by checking for the data relevant to our requirements:
+```
+if (bucketPolicyPolicies.err || !bucketPolicyPolicies.data) {
+  helpers.addResult(results, 3, 'Unable to query storage buckets: ' + helpers.addError(bucketPolicyPolicies), region);
+  return rcb();
+}
+
+if (!bucketPolicyPolicies.data.length) {
+  helpers.addResult(results, 0, 'No storage buckets found', region);
+  return rcb();
 }
 ```
 The `addResult` function ensures we are adding the results to the `results` array in the proper format. This function accepts the following:
