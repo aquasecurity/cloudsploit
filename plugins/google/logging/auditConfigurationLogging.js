@@ -9,6 +9,12 @@ module.exports = {
     link: 'https://cloud.google.com/logging/docs/logs-based-metrics/',
     recommended_action: 'Ensure that log alerts exist for audit configuration changes.',
     apis: ['metrics:list', 'alertPolicies:list'],
+    compliance: {
+        hipaa: 'HIPAA has clearly defined audit requirements for environments ' +
+            'containing sensitive data.',
+        pci: 'PCI has a strict requirement to log all account activity ' +
+             'within environments containing cardholder data.',
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -80,7 +86,7 @@ module.exports = {
                                 var conditionFilter = condition.conditionThreshold.filter.split('"')[1];
                                 if (conditionFilter === metricName) {
                                     conditionFound = true;
-                                    helpers.addResult(results, 0, 'Log Alert for audit configuration changes is enabled', region, alertPolicy.name);
+                                    helpers.addResult(results, 0, 'Log alert for audit configuration changes is enabled', region, alertPolicy.name);
                                 }
                             }
                         })
@@ -88,7 +94,7 @@ module.exports = {
                 });
 
                 if (!conditionFound) {
-                    helpers.addResult(results, 2, 'Log Alert for audit configuration changes not found', region);
+                    helpers.addResult(results, 2, 'Log alert for audit configuration changes not found', region);
                 }
             } else {
                 helpers.addResult(results, 2, 'Log metric for audit configuration changes not found', region);

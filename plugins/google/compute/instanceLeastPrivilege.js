@@ -2,13 +2,19 @@ var async   = require('async');
 var helpers = require('../../../helpers/google');
 
 module.exports = {
-    title: 'VM Instances with No Access',
+    title: 'VM Instances Least Privilege',
     category: 'Compute',
-    description: 'Ensure that instances are not configured to use the default service account with full access to all Cloud APIs.',
-    more_info: 'To support principle of least privileges and prevent potential privilege escalation it is recommended that instances are not assigned to default service account Compute Engine default service account with Scope Allow full access to all Cloud APIs.',
+    description: 'Ensures that instances are not configured to use the default service account with full access to all cloud APIs',
+    more_info: 'To support the principle of least privilege and prevent potential privilege escalation, it is recommended that instances are not assigned to the default service account, Compute Engine default service account with a scope allowing full access to all cloud APIs.',
     link: 'https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances',
-    recommended_action: 'In Service Account Section, ensure Allow full access to all Cloud APIs is not selected if selecting the default service account.',
+    recommended_action: 'For all instances, if the default service account is used, ensure full access to all cloud APIs is not configured.',
     apis: ['instances:compute:list'],
+    compliance: {
+        pci: 'PCI has explicit requirements around default accounts and ' +
+            'resources. PCI recommends removing all default accounts, ' +
+            'only enabling necessary services as required for the function ' +
+            'of the system'
+    },
 
     run: function(cache, settings, callback) {
 
@@ -70,7 +76,7 @@ module.exports = {
             } else if (myFullAccessScopes[region].length) {
                 var myScopesStr = myFullAccessScopes[region].join(', ');
                 helpers.addResult(results, 2,
-                    `The following Service Accounts have full access: ${myScopesStr}` , region);
+                    `The following service accounts have full access: ${myScopesStr}` , region);
 
             } else if (!myFullAccessScopes[region].length){
                 helpers.addResult(results, 0,

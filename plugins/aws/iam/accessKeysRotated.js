@@ -57,8 +57,8 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        if (generateCredentialReport.data.length <= 2) {
-            helpers.addResult(results, 0, 'No users using access keys found');
+        if (generateCredentialReport.data.length == 1) {
+            helpers.addResult(results, 0, 'No IAM user accounts found');
             return callback(null, results, source);
         }
 
@@ -98,7 +98,7 @@ module.exports = {
             cb();
         }, function(){
             if (!found) {
-                helpers.addResult(results, 0, 'No users using access keys found');
+                helpers.addResult(results, 0, 'No IAM user accounts using access keys found');
             }
 
             callback(null, results, source);

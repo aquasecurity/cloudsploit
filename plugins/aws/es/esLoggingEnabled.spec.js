@@ -45,7 +45,7 @@ describe('esLoggingEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('ES domain logging is not enabled')
+                expect(results[0].message).to.include('The following logs are not configured for the ES domain')
                 done()
             };
 
@@ -56,14 +56,16 @@ describe('esLoggingEnabled', function () {
                   }
                 ],
                 {
-                  DomainStatus: {
+                DomainStatus: {
                     DomainName: 'mydomain',
-                    ARN: 'arn:1234',
-                    LogPublishingOptions: {
-                        Enabled: false
-                    }
-                  }
+                        LogPublishingOptions: [{
+                        SEARCH_SLOW_LOGS: {
+                            CloudWatchLogsLogGroupArn: 'arn:1234',
+                            Enabled: false
+                        }
+                    }]
                 }
+            }
             );
 
             es.run(cache, {}, callback);
@@ -71,7 +73,6 @@ describe('esLoggingEnabled', function () {
 
         it('should give failing result if ES logging is enabled without CloudWatch', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(2)
                 expect(results[0].message).to.include('ES domain logging is enabled but logs are not configured to be sent to CloudWatch')
                 done()
@@ -85,11 +86,18 @@ describe('esLoggingEnabled', function () {
                 ],
                 {
                   DomainStatus: {
-                    DomainName: 'mydomain',
-                    ARN: 'arn:1234',
-                    LogPublishingOptions: {
-                        Enabled: true
-                    }
+                      DomainName: 'mydomain',
+                      LogPublishingOptions: {
+                          SEARCH_SLOW_LOGS: {
+                              Enabled: true
+                          },
+                          INDEX_SLOW_LOGS: {
+                              Enabled: true
+                          },
+                          ES_APPLICATION_LOGS: {
+                              Enabled: true
+                          }
+                      }
                   }
                 }
             );
@@ -112,14 +120,23 @@ describe('esLoggingEnabled', function () {
                   }
                 ],
                 {
-                  DomainStatus: {
-                    DomainName: 'mydomain',
-                    ARN: 'arn:1234',
-                    LogPublishingOptions: {
-                        Enabled: true,
-                        CloudWatchLogsLogGroupArn: 'arn:1234'
+                    DomainStatus: {
+                        DomainName: 'mydomain',
+                        LogPublishingOptions: {
+                            SEARCH_SLOW_LOGS: {
+                                CloudWatchLogsLogGroupArn: 'arn:1234',
+                                Enabled: true
+                            },
+                            INDEX_SLOW_LOGS: {
+                                CloudWatchLogsLogGroupArn: 'arn:1234',
+                                Enabled: true
+                            },
+                            ES_APPLICATION_LOGS: {
+                                CloudWatchLogsLogGroupArn: 'arn:1234',
+                                Enabled: true
+                            }
+                        }
                     }
-                  }
                 }
             );
 

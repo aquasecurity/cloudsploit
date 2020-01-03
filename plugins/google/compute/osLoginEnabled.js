@@ -4,11 +4,16 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'OS Login Enabled',
     category: 'Compute',
-    description: 'Ensure OS login is enabled for a project.',
+    description: 'Ensures OS login is enabled for the project',
     more_info: 'Enabling OS login ensures that SSH keys used to connect to instances are mapped with IAM users.',
     link: 'https://cloud.google.com/compute/docs/instances/managing-instance-access',
     recommended_action: 'Set enable-oslogin in project-wide metadata so that it applies to all of the instances in the project.',
     apis: ['projects:get'],
+    compliance: {
+        pci: 'PCI recommends implementing additional security features for ' +
+            'any required service. This includes using secured technologies ' +
+            'such as SSH.'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

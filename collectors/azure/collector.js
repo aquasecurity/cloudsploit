@@ -626,7 +626,7 @@ var finalcalls = {
         get: {
             api: "KeyVaultManagementClient",
             reliesOnService: ['resourceGroups','vaults'],
-            reliesOnCall: ['list','listByResourceGroup'],
+            reliesOnCall: ['list','list'],
             filterKey: ['resourceGroupName','name'],
             filterValue: ['resourceGroupName','name'],
             arm: true

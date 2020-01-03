@@ -74,5 +74,7 @@ module.exports = {
     metrics: ['global'],
     alertPolicies: ['global'],
     serviceAccounts: ['global'],
-    keys: ['global']
+    keys: ['global'],
+    sinks: ['global'],
+    users: ['global']
 };

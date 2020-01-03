@@ -22,11 +22,11 @@ module.exports = {
             if (!instanceGroups) return rcb();
 
             if (instanceGroups.err || !instanceGroups.data) {
-                helpers.addResult(results, 3, 'Unable to query Instance Groups: ' + helpers.addError(instanceGroups), region);
+                helpers.addResult(results, 3, 'Unable to query instance groups: ' + helpers.addError(instanceGroups), region);
                 return rcb();
             }
             if (!Object.keys(instanceGroups.data).length) {
-                helpers.addResult(results, 0, 'No Instance Groups Found', loc);
+                helpers.addResult(results, 0, 'No instance groups found', loc);
                 return lcb();
             };
 
@@ -54,7 +54,7 @@ module.exports = {
                     if (instances.err || !instances.data) {
                         helpers.addResult(results, 3, 'Unable to query instances: ' + helpers.addError(instances), location);
                         return lcb();
-                    };
+                    }
 
                     //Looping by zone, ignoring the results
                     if (!instances.data.length) {
@@ -73,19 +73,19 @@ module.exports = {
                             regionExists = true;
                         }
                         incb();
-                    })
-                })
+                    });
+                });
                 if (instancesInRegion.length) {
                     var myInstancesStr = instancesInRegion.join(', ');
                     helpers.addResult(results, 2,
                         `These instances are only available in one zone: ${myInstancesStr}` , location,);
                 } else if (!instancesInRegion.length && regionExists) {
-                    helpers.addResult(results, 0, 'The instance Groups in the region are Highly Available' , location);
+                    helpers.addResult(results, 0, 'The instance groups in the region are highly available' , location);
                 } else if (!instancesInRegion.length && !regionExists) {
                     helpers.addResult(results, 0, 'No instances found in the region' , location);
                 }
                 loccb();
-            })
+            });
             rcb();
         }, function(){
             // Global checking goes here

@@ -84,19 +84,21 @@ var run = function (GoogleConfig, collection, settings, service, callObj, callKe
     var LocalGoogleConfig = JSON.parse(JSON.stringify(GoogleConfig));
         LocalGoogleConfig[callObj.location] = region;
         LocalGoogleConfig.service = service;
+        LocalGoogleConfig.auth = client;
 
     if (callObj.parent && !callObj.reliesOnService) {
         if (!callObj.params) callObj.params = {};
         callObj.params.parent = addParent(GoogleConfig, region, callObj);
     }
-    
+
     callObj.params = JSON.parse(JSON.stringify(GoogleConfig));
     callObj.params[callObj.location] = region;
     callObj.params.service = service;
 
-    if (callObj.params) {
-        callObj.params.auth = client;
-    } 
+
+    callObj.params.auth = client;
+    callObj.auth = client;
+
     var options = {
         version: callObj.version,
         params : {}
@@ -144,7 +146,8 @@ var run = function (GoogleConfig, collection, settings, service, callObj, callKe
             if (!callObj.params) callObj.params = {};
             callObj.params.parent = addParent(GoogleConfig, region, callObj);
         }
-        if (callObj.reliesOnService) {
+        if (callObj.reliesOnService &&
+            !callObj.reliesOnSubService) {
             if (!callObj.reliesOnService.length) return regionCb();
             // Ensure multiple pre-requisites are met
             for (reliedService in callObj.reliesOnService) {
@@ -172,6 +175,32 @@ var run = function (GoogleConfig, collection, settings, service, callObj, callKe
                 })
             }
             callObj.params[callObj.filterKey[reliedService]] = [callObj.filterValue[reliedService]]
+        } else if (callObj.reliesOnService &&
+            callObj.reliesOnSubService) {
+            if (!callObj.reliesOnService.length) return regionCb();
+            // Ensure multiple pre-requisites are met
+            for (reliedService in callObj.reliesOnService) {
+                if (callObj.reliesOnService[reliedService] && !collection[callObj.reliesOnService[reliedService]]) return regionCb();
+
+                if (callObj.reliesOnService[reliedService] &&
+                    (!collection[callObj.reliesOnService[reliedService]] ||
+                        !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnSubService[reliedService]][callObj.reliesOnCall[reliedService]] ||
+                        !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnSubService[reliedService]][callObj.reliesOnCall[reliedService]][region] ||
+                        !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnSubService[reliedService]][callObj.reliesOnCall[reliedService]][region].data ||
+                        !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnSubService[reliedService]][callObj.reliesOnCall[reliedService]][region].data.length)) return regionCb();
+
+                var records = collection[callObj.reliesOnService[reliedService]][callObj.reliesOnSubService[reliedService]][callObj.reliesOnCall[reliedService]][region].data;
+                async.eachLimit(records, 10, function(record, recordCb) {
+                    for (filter in callObj.filterKey) {
+                        callObj.params[callObj.filterKey[filter]] = record[callObj.filterValue[filter]]
+                        options.version = callObj.version;
+                    }
+                    execute(LocalGoogleConfig, collection, service, callObj, callKey, region, recordCb, options);
+                }, function() {
+                    regionCb();
+                })
+            }
+
         } else {
             execute(LocalGoogleConfig, collection, service, callObj, callKey, region, regionCb, options);
         }
@@ -179,7 +208,9 @@ var run = function (GoogleConfig, collection, settings, service, callObj, callKe
 };
 
 var addParent = function(GoogleConfig, region, callObj) {
-    if (callObj.location && callObj.location == 'global') {
+    if (!callObj.location) {
+        return `projects/${GoogleConfig.project}`
+    } else if (callObj.location && callObj.location == 'global') {
         return `projects/${GoogleConfig.project}/locations/-`
     } else if (callObj.location && callObj.location == 'region') {
         return `projects/${GoogleConfig.project}/locations/${region}`
@@ -281,9 +312,12 @@ var execute = function (LocalGoogleConfig, collection, service, callObj, callKey
     } else if(callObj.nested) {
         parentParams = {auth: callObj.params.auth, parent: callObj.params.parent};
         executor['projects']['locations']['keyRings'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
+    } else if (callObj.resource) {
+        parentParams = {auth: callObj.auth, resource_: LocalGoogleConfig.project};
+        executor[service][callKey](parentParams, LocalGoogleConfig, executorCb);
     } else if (callObj.serviceAccount) {
-        myParams = {auth: callObj.params.auth, name: callObj.params.parent};
-        executor['projects']['serviceAccounts'][service][callKey](myParams, LocalGoogleConfig, executorCb);
+        parentParams = {auth: callObj.params.auth, name: callObj.params.parent};
+        executor['projects']['serviceAccounts'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
     } else if (callObj.parent && callObj.parent === 'name') {
         parentParams = {auth: callObj.params.auth, name: callObj.params.parent};
         executor['projects'][service][callKey](parentParams, LocalGoogleConfig, executorCb);

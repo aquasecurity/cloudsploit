@@ -9,6 +9,13 @@ module.exports = {
     link: 'https://cloud.google.com/vpc/docs/using-flow-logs',
     recommended_action: 'Enable VPC flow logs for each VPC Subnetwork',
     apis: ['subnetworks:list'],
+    compliance: {
+        hipaa: 'VPC Flow Logs provide a detailed traffic log of a VPC network ' +
+            'containing HIPAA data. Flow Logs should be enabled to satisfy ' +
+            'the audit controls of the HIPAA framework.',
+        pci: 'PCI requires logging of all network access to environments containing ' +
+            'cardholder data. Enable VPC flow logs to log these network requests.'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -27,7 +34,7 @@ module.exports = {
             };
 
             if (!subnetworks.data.length) {
-                helpers.addResult(results, 0, 'No subnetworks present', region);
+                helpers.addResult(results, 0, 'No subnetworks found', region);
                 return rcb();
             };
             
@@ -45,11 +52,11 @@ module.exports = {
             if (badSubnets.length) {
                 var badSubnetStr = badSubnets.join(', ');
                 helpers.addResult(results, 2,
-                     `The following Subnets do not have Flow Logs enabled: ${badSubnetStr}`, region);
+                     `The following subnets do not have Flow Logs enabled: ${badSubnetStr}`, region);
             } else if (regionSubnets) {
-                helpers.addResult(results, 0, 'All Subnets in the Region have Flow Logs enabled', region);
+                helpers.addResult(results, 0, 'All subnets in the region have Flow Logs enabled', region);
             } else {
-                helpers.addResult(results, 0, 'No subnetworks present', region);
+                helpers.addResult(results, 0, 'No subnetworks found', region);
             }
 
             rcb();

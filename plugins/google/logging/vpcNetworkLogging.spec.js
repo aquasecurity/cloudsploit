@@ -67,7 +67,7 @@ describe('vpcNetworkLogging', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Log Alert for VPC network changes is enabled');
+                expect(results[0].message).to.include('Log alert for VPC network changes is enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };

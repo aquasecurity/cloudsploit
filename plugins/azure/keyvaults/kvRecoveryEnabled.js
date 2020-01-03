@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Purge Protection and Soft Delete are features that safeguard losing key access. With these setting enabled, key vaults have recovery actions available to restore deleted or compromised key vaults.',
     recommended_action: 'Once Key Vaults are created, the Azure CLI must be used to update the vault Soft Delete and Purge Protection settings.',
     link: 'https://docs.microsoft.com/en-us/azure/key-vault/key-vault-ovw-soft-delete',
-    apis: ['resourceGroups:list', 'vaults:listByResourceGroup', 'vaults:get'],
+    apis: ['resourceGroups:list', 'vaults:list', 'vaults:get'],
     compliance: {
         hipaa: 'HIPAA requires that all encryption mechanisms be protected against ' +
                 'modifications or loss.'
@@ -33,6 +33,7 @@ module.exports = {
 
             if (!vaults.data.length) {
                 helpers.addResult(results, 0, 'No existing Key Vaults found', location);
+                return rcb();
             }
             
             vaults.data.forEach(vault => {

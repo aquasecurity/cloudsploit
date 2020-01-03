@@ -23,7 +23,7 @@ describe('dbSSLEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query SQL Instances');
+                expect(results[0].message).to.include('Unable to query SQL instances');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -40,7 +40,7 @@ describe('dbSSLEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No SQL Instances found');
+                expect(results[0].message).to.include('No SQL instances found');
                 expect(results[0].region).to.equal('global');
                 done()
             };

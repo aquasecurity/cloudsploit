@@ -133,6 +133,11 @@ var calls = {
             api: 'compute',
             version: 'v1',
             location: null
+        },
+        getIamPolicy: {
+            api: 'cloudresourcemanager',
+            version: 'v1',
+            resource: true
         }
     },
     clusters: {
@@ -171,7 +176,14 @@ var calls = {
             version: 'v1',
             parent: 'name'
         }
-    }
+    },
+    sinks: {
+        list: {
+            api: 'logging',
+            version: 'v2',
+            parent: true
+        }
+    },
 };
 
 var postcalls = {
@@ -220,7 +232,20 @@ var postcalls = {
             filterKey: ['id'],
             filterValue: ['uniqueId'],
         }
+    },
+    users: {
+        list: {
+            api: 'sqladmin',
+            version: 'v1beta4',
+            location: null,
+            reliesOnService: ['instances'],
+            reliesOnSubService: ['sql'],
+            reliesOnCall: ['list'],
+            filterKey: ['instance'],
+            filterValue: ['name'],
+        }
     }
+
 
 };
 

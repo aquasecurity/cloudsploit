@@ -4,11 +4,18 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'CSEK Encryption Enabled',
     category: 'Compute',
-    description: 'Ensure Customer Supplied Encryption Key Encryption is enabled on Disks',
-    more_info: 'Google encrypts all disks at rest by default. By using CSEK only the users with the key can access the disk. Anyone else, including Google, cannot access the disk ensuring maximum security on the disk.',
+    description: 'Ensures Customer Supplied Encryption Key Encryption is enabled on disks',
+    more_info: 'Google encrypts all disks at rest by default. By using CSEK only the users with the key can access the disk. Anyone else, including Google, cannot access the disk data.',
     link: 'https://cloud.google.com/compute/docs/disks/customer-supplied-encryption',
-    recommended_action: 'CSEK can only be configured when creating a disk, Delete the disk in question and redeploy with CSEK.',
+    recommended_action: 'CSEK can only be configured when creating a disk. Delete the disk and redeploy with CSEK.',
     apis: ['disks:list'],
+    compliance: {
+        hipaa: 'HIPAA requires that all data is encrypted, including data at rest. ' +
+            'Enabling encryption of disk data helps to protect this data.',
+        pci: 'PCI requires proper encryption of cardholder data at rest. ' +
+            'Encryption should be enabled for all disks storing this ' +
+            'type of data.'
+    },
 
     run: function(cache, settings, callback) {
 
