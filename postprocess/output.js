@@ -85,6 +85,52 @@ module.exports = {
         }
     },
 
+    /**
+     * Creates an output handler that writes output in the JSON format.
+     * @param {fs.WriteSteam} stream The stream to write to or an object that
+     * obeys the writeable stream contract.
+     */
+    createJson: function (stream) {
+      var results = [];
+      return {
+          stream: stream,
+      
+          startCompliance: function(plugin, pluginKey, compliance) {
+          },
+      
+          endCompliance: function(plugin, pluginKey, compliance) {
+          },
+      
+          writeResult: function (result, plugin, pluginKey) {
+              var statusWord;
+              if (result.status === 0) {
+                  statusWord = 'OK';
+              } else if (result.status === 1) {
+                  statusWord = 'WARN';
+              } else if (result.status === 2) {
+                  statusWord = 'FAIL';
+              } else {
+                  statusWord = 'UNKNOWN';
+              }
+              
+              results.push({
+                plugin: pluginKey,
+                category: plugin.category,
+                title: plugin.title,
+                resource: result.resource || 'N/A',
+                region: result.region || 'Global',
+                status: statusWord,
+                message: result.message
+              })
+          },
+      
+          close: function () {
+            this.stream.write(JSON.stringify(results));              
+            this.stream.end();
+          }
+      }
+  },
+
     /***
      * Creates an output handler that writes output in the JUnit XML format.
      * 
