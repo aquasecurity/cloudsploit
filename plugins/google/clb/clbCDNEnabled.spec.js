@@ -21,7 +21,7 @@ describe('clbCDNEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query Backend Services');
+                expect(results[0].message).to.include('Unable to query backend services');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -37,7 +37,7 @@ describe('clbCDNEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No Load Balancers')
+                expect(results[0].message).to.include('No load balancers found')
                 expect(results[0].region).to.equal('global')
                 done()
             };
@@ -53,7 +53,7 @@ describe('clbCDNEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('CDN is enabled on the Backend Service')
+                expect(results[0].message).to.include('CDN is enabled on the backend service')
                 expect(results[0].region).to.equal('global')
                 done()
             };
@@ -94,7 +94,7 @@ describe('clbCDNEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('CDN is disabled on the Backend Service')
+                expect(results[0].message).to.include('CDN is disabled on the backend service')
                 expect(results[0].region).to.equal('global')
                 done()
             };

@@ -37,7 +37,7 @@ describe('flowLogsEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No subnetworks present')
+                expect(results[0].message).to.include('No subnetworks found')
                 expect(results[0].region).to.equal('us-east1')
                 done()
             };
@@ -53,7 +53,7 @@ describe('flowLogsEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('All Subnets in the Region have Flow Logs enabled')
+                expect(results[0].message).to.include('All subnets in the region have Flow Logs enabled')
                 expect(results[0].region).to.equal('us-east1')
                 done()
             };
@@ -90,7 +90,7 @@ describe('flowLogsEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('The following Subnets do not have Flow Logs enabled')
+                expect(results[0].message).to.include('The following subnets do not have Flow Logs enabled')
                 expect(results[0].region).to.equal('us-east1')
                 done()
             };

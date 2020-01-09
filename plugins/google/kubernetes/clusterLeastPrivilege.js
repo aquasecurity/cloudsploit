@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Cluster Least Privilege',
     category: 'Kubernetes',
-    description: 'Ensures Kubernetes clusters are created with limited service account access scopes.',
+    description: 'Ensures Kubernetes clusters are created with limited service account access scopes',
     more_info: 'Kubernetes service accounts should be limited in scope to the services necessary to operate the clusters.',
     link: 'https://cloud.google.com/compute/docs/access/service-accounts',
     recommended_action: 'Ensure that all Kubernetes clusters are created with limited access scope.',
@@ -60,7 +60,7 @@ module.exports = {
                         if (sameExist == false) {
                             otherScope = true;
                         }
-                    })
+                    });
                 }
                 if (otherScope == true) {
                     helpers.addResult(results, 2, 'No minimal access is allowed on Kubernetes cluster', region, cluster.name);

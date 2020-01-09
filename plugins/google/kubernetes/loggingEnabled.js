@@ -4,10 +4,10 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Logging Enabled',
     category: 'Kubernetes',
-    description: 'Ensures all Kubernetes clusters have logging enabled.',
-    more_info: 'This setting should be enabled to ensure Kubernetes control plane logs are properly recorded',
+    description: 'Ensures all Kubernetes clusters have logging enabled',
+    more_info: 'This setting should be enabled to ensure Kubernetes control plane logs are properly recorded.',
     link: 'https://cloud.google.com/monitoring/kubernetes-engine/legacy-stackdriver/logging',
-    recommended_action: 'Ensure that logging is enabled on all Kubernetes clusters',
+    recommended_action: 'Ensure that logging is enabled on all Kubernetes clusters.',
     apis: ['clusters:list'],
     compliance: {
         hipaa: 'HIPAA requires the logging of all activity ' +
@@ -32,7 +32,7 @@ module.exports = {
             }
 
             if (!clusters.data.length) {
-                helpers.addResult(results, 0, 'No Kubernetes clusters present', region);
+                helpers.addResult(results, 0, 'No Kubernetes clusters found', region);
                 return rcb();
             }
 

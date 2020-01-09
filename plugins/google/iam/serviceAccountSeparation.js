@@ -57,7 +57,6 @@ module.exports = {
                 helpers.addResult(results, 0, 'No accounts have both the service account user and admin roles', region);
             }
 
-
             rcb();
         }, function(){
             // Global checking goes here

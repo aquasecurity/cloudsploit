@@ -4,10 +4,10 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Security Policy Enabled',
     category: 'CLB',
-    description: 'Ensure that All Backend Services have an attached Security Policy',
-    more_info: 'Security Policies on Backend Services control the traffic on the load balancer. This creates edge security and can deny or allow specified IP addresses.',
+    description: 'Ensures all backend services have an attached security policy',
+    more_info: 'Security policies on backend services control the traffic on the load balancer. This creates edge security and can deny or allow specified IP addresses.',
     link: 'https://cloud.google.com/armor/docs/security-policy-concepts',
-    recommended_action: '1. Enter the Network Security Service. 2. Select Cloud Armor and create a new policy. 3. Attach the newly created policy to the backend.',
+    recommended_action: 'Ensure all load balancers have an attached Cloud Armor security policy.',
     apis: ['backendServices:list'],
 
     run: function(cache, settings, callback) {
@@ -23,22 +23,22 @@ module.exports = {
 
             if (backendServices.err || !backendServices.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query Backend Services: ' + helpers.addError(backendServices), region);
+                    'Unable to query backend services: ' + helpers.addError(backendServices), region);
                 return rcb();
             }
 
             if (!backendServices.data.length) {
-                helpers.addResult(results, 0, 'No Load Balancers', region);
+                helpers.addResult(results, 0, 'No load balancers found', region);
                 return rcb();
             }
 
             backendServices.data.forEach(backend => {
                 if (backend.securityPolicy) {
                     helpers.addResult(results, 0,
-                        'The backend service has an attached Security Policy', region, backend.id);
+                        'The backend service has an attached security policy', region, backend.id);
                 } else {
                     helpers.addResult(results, 2,
-                        'The backend service does not have an attached Security Policy', region, backend.id);
+                        'The backend service does not have an attached security policy', region, backend.id);
                 }
             });
 

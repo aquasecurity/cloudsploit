@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Service Limits',
     category: 'IAM',
-    description: 'Determine if the number of resources is close to the per-account limit.',
+    description: 'Determines if the number of resources is close to the per-account limit.',
     more_info: 'Google limits accounts to certain numbers of resources. Exceeding those limits could prevent resources from launching.',
     link: 'https://cloud.google.com/resource-manager/docs/limits',
     recommended_action: 'Contact GCP support to increase the number of resources available',
@@ -43,18 +43,18 @@ module.exports = {
             if (!projects) return rcb();
 
             if (projects.err || !projects.data) {
-                helpers.addResult(results, 3, 'Unable to query Projects: ' + helpers.addError(projects), region);
+                helpers.addResult(results, 3, 'Unable to query projects: ' + helpers.addError(projects), region);
                 return rcb();
             };
 
             if (!projects.data.length) {
-                helpers.addResult(results, 0, 'No Project found', region);
+                helpers.addResult(results, 0, 'No projects found', region);
                 return rcb();
             };
 
             projects.data.forEach(project => {
-                var warnReturnMsg = `The following Services are over the ${config.service_limit_percentage_warn}% limit: `;
-                var failReturnMsg = `The following Services are over the ${config.service_limit_percentage_fail}% limit: `;
+                var warnReturnMsg = `The following services are over the ${config.service_limit_percentage_warn}% limit: `;
+                var failReturnMsg = `The following services are over the ${config.service_limit_percentage_fail}% limit: `;
                 var warnTrigger = false;
                 var failTrigger = false;
 

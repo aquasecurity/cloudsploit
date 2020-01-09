@@ -7,7 +7,7 @@ module.exports = {
     description: 'Ensures SQL databases have SSL enabled',
     more_info: 'Enabling SSL ensures that the sensitive data being transferred from the database is encrypted.',
     link: 'https://cloud.google.com/sql/docs/mysql/instance-settings',
-    recommended_action: 'Ensure that SSL is enabled on all SQL databases',
+    recommended_action: 'Ensure that SSL is enabled on all SQL databases.',
     apis: ['instances:sql:list'],
     compliance: {
         pci: 'PCI requires strong cryptographic and security protocols ' +
@@ -29,12 +29,12 @@ module.exports = {
             if (!sqlInstances) return rcb();
 
             if (sqlInstances.err || !sqlInstances.data) {
-                helpers.addResult(results, 3, 'Unable to query SQL Instances: ' + helpers.addError(sqlInstances), region);
+                helpers.addResult(results, 3, 'Unable to query SQL instances: ' + helpers.addError(sqlInstances), region);
                 return rcb();
             }
 
             if (!sqlInstances.data.length) {
-                helpers.addResult(results, 0, 'No SQL Instances found', region);
+                helpers.addResult(results, 0, 'No SQL instances found', region);
                 return rcb();
             }
 

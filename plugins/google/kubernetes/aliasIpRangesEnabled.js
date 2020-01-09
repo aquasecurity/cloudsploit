@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Alias IP Ranges Enabled',
     category: 'Kubernetes',
-    description: 'Ensures all Kubernetes clusters have alias IP ranges enabled.',
+    description: 'Ensures all Kubernetes clusters have alias IP ranges enabled',
     more_info: 'Alias IP ranges allow users to assign ranges of internal IP addresses as alias to a network interface.',
     link: 'https://cloud.google.com/monitoring/kubernetes-engine/',
     recommended_action: 'Ensure that Kubernetes clusters have alias IP ranges enabled.',
@@ -24,7 +24,7 @@ module.exports = {
             if (clusters.err || !clusters.data) {
                 helpers.addResult(results, 3, 'Unable to query Kubernetes clusters: ' + helpers.addError(clusters), region);
                 return rcb();
-            };
+            }
 
             if (!clusters.data.length) {
                 helpers.addResult(results, 0, 'No clusters found', region);
@@ -40,7 +40,6 @@ module.exports = {
 
                 }
             });
-
 
             rcb();
         }, function(){

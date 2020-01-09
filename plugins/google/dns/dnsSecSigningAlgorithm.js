@@ -4,10 +4,10 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'DNS Security Signing Algorithm',
     category: 'DNS',
-    description: 'Ensures that DNS Security is not using the RSASHA1 algorithm for key or zone signing.',
+    description: 'Ensures that DNS Security is not using the RSASHA1 algorithm for key or zone signing',
     more_info: 'DNS Security is a feature that authenticates all responses to domain name lookups. This prevents attackers from committing DNS hijacking or man in the middle attacks.',
     link: 'https://cloud.google.com/dns/docs/dnssec',
-    recommended_action: 'Ensures that all DNS using DNSSEC is not using the RSASHA1 algorithm for key or zone signing.',
+    recommended_action: 'Ensure that all managed zones using DNSSEC are not using the RSASHA1 algorithm for key or zone signing.',
     apis: ['managedZones:list'],
 
     run: function(cache, settings, callback) {
@@ -23,12 +23,12 @@ module.exports = {
 
             if (managedZones.err || !managedZones.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query DNS Managed Zones: ' + helpers.addError(managedZones), region);
+                    'Unable to query DNS managed zones: ' + helpers.addError(managedZones), region);
                 return rcb();
             }
 
             if (!managedZones.data.length) {
-                helpers.addResult(results, 0, 'No DNS Managed Zones present', region);
+                helpers.addResult(results, 0, 'No DNS managed zones found', region);
                 return rcb();
             }
 
@@ -60,7 +60,7 @@ module.exports = {
                         }
                     });
                     helpers.addResult(results, 2,
-                        'DNSSEC is not enabled on the Managed Zone', region, managedZone.id);
+                        'DNSSEC is not enabled on the managed zone', region, managedZone.id);
 
                 }
             });

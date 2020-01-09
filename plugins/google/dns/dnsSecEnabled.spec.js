@@ -21,7 +21,7 @@ describe('dnsSecEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query DNS Managed Zones');
+                expect(results[0].message).to.include('Unable to query DNS managed zones');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -37,7 +37,7 @@ describe('dnsSecEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No DNS Managed Zones present');
+                expect(results[0].message).to.include('No DNS managed zones found');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -53,7 +53,7 @@ describe('dnsSecEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('All DNS Managed Zones have DNS Security Enabled');
+                expect(results[0].message).to.include('All DNS managed zones have DNS Security enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -104,7 +104,7 @@ describe('dnsSecEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('The following Managed Zones do not have DNS Security Enabled');
+                expect(results[0].message).to.include('The following managed zones do not have DNS Security enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };

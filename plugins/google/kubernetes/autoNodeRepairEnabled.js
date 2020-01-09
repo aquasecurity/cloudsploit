@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Automatic Node Repair Enabled',
     category: 'Kubernetes',
-    description: 'Ensures all Kubernetes cluster nodes have automatic repair enabled.',
+    description: 'Ensures all Kubernetes cluster nodes have automatic repair enabled',
     more_info: 'When automatic repair on nodes is enabled, the Kubernetes engine performs health checks on all nodes, automatically repairing nodes that fail health checks. This ensures that the Kubernetes environment stays optimal.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair',
     recommended_action: 'Ensure that automatic node repair is enabled on all node pools in Kubernetes clusters',
@@ -46,7 +46,6 @@ module.exports = {
                     })
                 } else {
                     helpers.addResult(results, 0, 'No node pools found', region, cluster.name);
-
                 }
             });
 

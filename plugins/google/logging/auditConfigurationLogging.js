@@ -14,8 +14,6 @@ module.exports = {
             'containing sensitive data.',
         pci: 'PCI has a strict requirement to log all account activity ' +
              'within environments containing cardholder data.',
-        hipaa: 'HIPAA requires the logging of all activity ' +
-            'including access and all actions taken.'
     },
 
     run: function(cache, settings, callback) {
@@ -88,7 +86,7 @@ module.exports = {
                                 var conditionFilter = condition.conditionThreshold.filter.split('"')[1];
                                 if (conditionFilter === metricName) {
                                     conditionFound = true;
-                                    helpers.addResult(results, 0, 'Log Alert for audit configuration changes is enabled', region, alertPolicy.name);
+                                    helpers.addResult(results, 0, 'Log alert for audit configuration changes is enabled', region, alertPolicy.name);
                                 }
                             }
                         })
@@ -96,7 +94,7 @@ module.exports = {
                 });
 
                 if (!conditionFound) {
-                    helpers.addResult(results, 2, 'Log Alert for audit configuration changes not found', region);
+                    helpers.addResult(results, 2, 'Log alert for audit configuration changes not found', region);
                 }
             } else {
                 helpers.addResult(results, 2, 'Log metric for audit configuration changes not found', region);

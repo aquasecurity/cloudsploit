@@ -21,7 +21,7 @@ describe('clbSecurityPolicyEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query Backend Services');
+                expect(results[0].message).to.include('Unable to query backend services');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -37,7 +37,7 @@ describe('clbSecurityPolicyEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No Load Balancers')
+                expect(results[0].message).to.include('No load balancers found')
                 expect(results[0].region).to.equal('global')
                 done()
             };
@@ -53,7 +53,7 @@ describe('clbSecurityPolicyEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('The backend service has an attached Security Policy')
+                expect(results[0].message).to.include('The backend service has an attached security policy')
                 expect(results[0].region).to.equal('global')
                 done()
             };
@@ -94,7 +94,7 @@ describe('clbSecurityPolicyEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('The backend service does not have an attached Security Policy')
+                expect(results[0].message).to.include('The backend service does not have an attached security policy')
                 expect(results[0].region).to.equal('global')
                 done()
             };
