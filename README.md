@@ -141,6 +141,9 @@ If you do not specify otherwise, CloudSploit writes output to standard output
 # Output results in CSV (suppressing the console output)
 node index.js --csv=./out.csv
 
+# Output results in JSON (suppressing the console output)
+node index.js --json=./out.json
+
 # Output results in JUnit XML (suppressing the console output)
 node index.js --junit=./out.xml
 
