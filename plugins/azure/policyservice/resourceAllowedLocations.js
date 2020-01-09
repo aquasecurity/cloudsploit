@@ -61,7 +61,8 @@ module.exports = {
         if (policyAssignments &&
             policyAssignments.data) {
             allowedLocationsPolicyAssignment = policyAssignments.data.find((policyAssignment) => {
-                return policyAssignment.displayName.includes("Allowed locations for resource groups");
+                if (policyAssignment.displayName) return policyAssignment.displayName.includes("Allowed locations for resource groups");
+
             });
         }
 
