@@ -32,33 +32,35 @@ module.exports = {
             }
 
             var iamPolicy = iamPolicies.data[0];
-            var foundLoggingConfig;
+            var foundLoggingConfig = false;
+            if (iamPolicy &&
+                iamPolicy.auditConfigs) {
+                iamPolicy.auditConfigs.forEach(auditConfig => {
+                    if (foundLoggingConfig) return;
+                    if (auditConfig.service &&
+                        auditConfig.service === "allServices" &&
+                        auditConfig.auditLogConfigs &&
+                        auditConfig.auditLogConfigs.length) {
 
-            iamPolicy.auditConfigs.forEach(auditConfig => {
-                if (foundLoggingConfig) return;
-                if (auditConfig.service &&
-                    auditConfig.service === "allServices" &&
-                    auditConfig.auditLogConfigs &&
-                    auditConfig.auditLogConfigs.length) {
+                        var auditLogConfigs = auditConfig.auditLogConfigs.filter(auditLogConfig => {
+                            return (['ADMIN_READ', 'DATA_READ', 'DATA_WRITE'].indexOf(auditLogConfig.logType) > - 1);
+                        });
 
-                    var auditLogConfigs = auditConfig.auditLogConfigs.filter(auditLogConfig => {
-                        return (['ADMIN_READ', 'DATA_READ', 'DATA_WRITE'].indexOf(auditLogConfig.logType) > - 1);
-                    });
+                        var exemptedMembers = auditConfig.auditLogConfigs.filter(auditLogConfig => {
+                            return (auditLogConfig.exemptedMembers && auditLogConfig.exemptedMembers.length);
+                        });
 
-                    var exemptedMembers = auditConfig.auditLogConfigs.filter(auditLogConfig => {
-                        return (auditLogConfig.exemptedMembers && auditLogConfig.exemptedMembers.length);
-                    });
-
-                    foundLoggingConfig = true;
-                    if (auditLogConfigs.length < 3) {
-                        helpers.addResult(results, 2, 'Audit logging is not properly configured on the project', region);
-                    } else if (exemptedMembers.length) {
-                        helpers.addResult(results, 2, 'Default audit configuration has exempted members', region);
-                    } else {
-                        helpers.addResult(results, 0, 'Audit logging is enabled on the project', region);
+                        foundLoggingConfig = true;
+                        if (auditLogConfigs.length < 3) {
+                            helpers.addResult(results, 2, 'Audit logging is not properly configured on the project', region);
+                        } else if (exemptedMembers.length) {
+                            helpers.addResult(results, 2, 'Default audit configuration has exempted members', region);
+                        } else {
+                            helpers.addResult(results, 0, 'Audit logging is enabled on the project', region);
+                        }
                     }
-                }
-            });
+                });
+            }
             if (!foundLoggingConfig) {
                 helpers.addResult(results, 2, 'Audit logging is not enabled on the project', region);
             }

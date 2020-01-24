@@ -19,10 +19,10 @@ describe('flowLogsEnabled', function () {
     describe('run', function () {
         it('should give unknown result if a subnetwork error is passed or no data is present', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.above(0)
-                expect(results[0].status).to.equal(3)
-                expect(results[0].message).to.include('Unable to query subnetworks')
-                expect(results[0].region).to.equal('us-east1')
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query subnets');
+                expect(results[0].region).to.equal('us-east1');
                 done()
             };
 
@@ -35,10 +35,10 @@ describe('flowLogsEnabled', function () {
         })
         it('should give passing result if no subnetwork records are found', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.above(0)
-                expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No subnetworks found')
-                expect(results[0].region).to.equal('us-east1')
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No subnets found');
+                expect(results[0].region).to.equal('us-east1');
                 done()
             };
 
@@ -51,10 +51,10 @@ describe('flowLogsEnabled', function () {
         })
         it('should give passing result if the subnetwork has flow logs enabled', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.above(0)
-                expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('All subnets in the region have Flow Logs enabled')
-                expect(results[0].region).to.equal('us-east1')
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('The subnet has flow logs enabled');
+                expect(results[0].region).to.equal('us-east1');
                 done()
             };
 
@@ -88,10 +88,10 @@ describe('flowLogsEnabled', function () {
         })
         it('should give failing result if the subnet does not have flow logs enabled', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.above(0)
-                expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('The following subnets do not have Flow Logs enabled')
-                expect(results[0].region).to.equal('us-east1')
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('The subnet does not have flow logs enabled');
+                expect(results[0].region).to.equal('us-east1');
                 done()
             };
 

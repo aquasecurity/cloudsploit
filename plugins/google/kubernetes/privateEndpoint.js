@@ -33,9 +33,9 @@ module.exports = {
             clusters.data.forEach(cluster => {
                 if (cluster.privateClusterConfig &&
                     cluster.privateClusterConfig.privateEndpoint) {
-                    helpers.addResult(results, 0, `Kubernetes cluster: ${cluster.name} has private endpoint enabled`, region);
+                    helpers.addResult(results, 0, 'Kubernetes cluster has private endpoint enabled', region, cluster.name);
                 } else {
-                    helpers.addResult(results, 2, `Kubernetes cluster: ${cluster.name} does not have private endpoint enabled`, region);
+                    helpers.addResult(results, 2, 'Kubernetes cluster does not have private endpoint enabled', region, cluster.name);
                 }
             });
 

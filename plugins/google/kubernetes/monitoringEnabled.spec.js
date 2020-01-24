@@ -19,10 +19,10 @@ describe('monitoringEnabled', function () {
     describe('run', function () {
         it('should give unknown result if a clusters error is passed or no data is present', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.above(0)
-                expect(results[0].status).to.equal(3)
-                expect(results[0].message).to.include('Unable to query Kubernetes clusters')
-                expect(results[0].region).to.equal('global')
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query Kubernetes clusters');
+                expect(results[0].region).to.equal('global');
                 done()
             };
 
@@ -35,10 +35,10 @@ describe('monitoringEnabled', function () {
         })
         it('should give passing result if no clusters are found', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.above(0)
-                expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No Kubernetes clusters found')
-                expect(results[0].region).to.equal('global')
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No Kubernetes clusters found');
+                expect(results[0].region).to.equal('global');
                 done()
             };
 
@@ -51,10 +51,10 @@ describe('monitoringEnabled', function () {
         })
         it('should give passing result if Monitoring is enabled', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.above(0)
-                expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('Monitoring is enabled on all clusters')
-                expect(results[0].region).to.equal('global')
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Monitoring is enabled on the Kubernetes cluster');
+                expect(results[0].region).to.equal('global');
                 done()
             };
 
@@ -209,10 +209,10 @@ describe('monitoringEnabled', function () {
         })
         it('should give failing result if monitoring is disabled', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.above(0)
-                expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('No monitoring is enabled on the Kubernetes cluster')
-                expect(results[0].region).to.equal('global')
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('Monitoring is disabled on the Kubernetes cluster');
+                expect(results[0].region).to.equal('global');
                 done()
             };
 

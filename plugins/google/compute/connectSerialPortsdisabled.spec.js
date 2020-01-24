@@ -285,4 +285,4 @@ describe('connectSerialPortsDisabled', function () {
         })
 
     })
-})
+});

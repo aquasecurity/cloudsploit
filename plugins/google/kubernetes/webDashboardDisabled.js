@@ -36,10 +36,10 @@ module.exports = {
                     cluster.addonsConfig.kubernetesDashboard &&
                     cluster.addonsConfig.kubernetesDashboard.disabled) {
                     helpers.addResult(results, 0,
-                        'The web dashboard is disabled for the cluster', region, cluster.name);
+                        'The web dashboard is disabled for the Kubernetes cluster', region, cluster.name);
                 } else {
                     helpers.addResult(results, 2,
-                        'The web dashboard is enabled for the cluster', region, cluster.name);
+                        'The web dashboard is enabled for the Kubernetes cluster', region, cluster.name);
                 }
             });
 

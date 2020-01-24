@@ -36,9 +36,9 @@ module.exports = {
             clusters.data.forEach(cluster => {
                 if (cluster.podSecurityPolicyConfig &&
                     cluster.podSecurityPolicyConfig.enabled) {
-                    helpers.addResult(results, 0, 'Pod security policy config is enabled', region);
+                    helpers.addResult(results, 0, 'Pod security policy config is enabled', region, cluster.name);
                 } else {
-                    helpers.addResult(results, 2, 'Pod security policy config is disabled', region);
+                    helpers.addResult(results, 2, 'Pod security policy config is disabled', region, cluster.name);
                 }
             });
             rcb();

@@ -52,5 +52,6 @@ module.exports = {
     lambda: regions,
     directconnect: regions,
     directoryservice: [],
-    workspaces: ['us-gov-west-1']
+    workspaces: ['us-gov-west-1'],
+    xray: []
 };

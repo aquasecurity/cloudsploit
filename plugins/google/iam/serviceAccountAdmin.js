@@ -39,9 +39,7 @@ module.exports = {
             }
 
             var serviceAccountCheck = `${projectName}.iam.gserviceaccount.com`;
-            var serviceAccountAdmins = [];
-            var serviceAccountOwners = [];
-            var serviceAccountEditors = [];
+            var serviceAccountObj = {};
             var iamPolicy = iamPolicies.data[0];
 
             iamPolicy.bindings.forEach(roleBinding => {
@@ -54,51 +52,45 @@ module.exports = {
                         roleBinding.members.forEach(member => {
                             var memberStrArr = member.split('@');
                             if (memberStrArr[1] === serviceAccountCheck) {
-                                serviceAccountAdmins.push(member);
+                                if (!serviceAccountObj[member]) {
+                                    serviceAccountObj[member] = [];
+                                }
+                                serviceAccountObj[member].push(roleBinding.role)
+
                             }
                         })
                     } else if (roleBinding.role === 'roles/editor') {
                         roleBinding.members.forEach(member => {
                             var memberStrArr = member.split('@');
                             if (memberStrArr[1] === serviceAccountCheck) {
-                                serviceAccountEditors.push(member);
+                                if (!serviceAccountObj[member]) {
+                                    serviceAccountObj[member] = [];
+                                }
+                                serviceAccountObj[member].push('editor')
                             }
                         })
                     } else if (roleBinding.role === 'roles/owner') {
                         roleBinding.members.forEach(member => {
                             var memberStrArr = member.split('@');
                             if (memberStrArr[1] === serviceAccountCheck) {
-                                serviceAccountOwners.push(member);
+                                if (!serviceAccountObj[member]) {
+                                    serviceAccountObj[member] = [];
+                                }
+                                serviceAccountObj[member].push('owner')
                             }
                         })
                     }
                 }
             });
-            var serviceAccountExists = false;
 
-            if (serviceAccountAdmins.length) {
-                serviceAccountExists = true;
-                var serviceAccountAdminsStr = serviceAccountAdmins.join(', ');
-                helpers.addResult(results, 2,
-                    `The following service accounts have admin privileges: ${serviceAccountAdminsStr}`, region);
-            }
-
-            if (serviceAccountOwners.length) {
-                serviceAccountExists = true;
-                var serviceAccountOwnersStr = serviceAccountOwners.join(', ');
-                helpers.addResult(results, 2,
-                    `The following service accounts have owner privileges: ${serviceAccountOwnersStr}`, region);
-            }
-
-            if (serviceAccountEditors.length) {
-                serviceAccountExists = true;
-                var serviceAccountEditorsStr = serviceAccountEditors.join(', ');
-                helpers.addResult(results, 2,
-                    `The following service accounts have editor privileges: ${serviceAccountEditorsStr}`, region);
-            }
-
-            if (!serviceAccountExists) {
+            if (!Object.keys(serviceAccountObj).length) {
                 helpers.addResult(results, 0, 'All service accounts have least access', region);
+            } else {
+                for (let member in serviceAccountObj) {
+                    var permissionStr = serviceAccountObj[member].join(', ');
+                    helpers.addResult(results, 2,
+                        `The Service account has the following permissions: ${permissionStr}`, region, member);
+                }
             }
 
             rcb();

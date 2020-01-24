@@ -35,9 +35,9 @@ module.exports = {
 
             clusters.data.forEach(cluster => {
                 if (cluster.privateCluster) {
-                    helpers.addResult(results, 0, 'Private cluster is enabled on the Kubernetes cluster', region);
+                    helpers.addResult(results, 0, 'Private cluster is enabled on the Kubernetes cluster', region, cluster.name);
                 } else {
-                    helpers.addResult(results, 2, 'Private cluster is disabled on the Kubernetes cluster', region);
+                    helpers.addResult(results, 2, 'Private cluster is disabled on the Kubernetes cluster', region, cluster.name);
                 }
 
             });

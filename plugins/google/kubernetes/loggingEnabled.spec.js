@@ -55,7 +55,7 @@ describe('loggingEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Logging is enabled on all clusters');
+                expect(results[0].message).to.include('Logging is enabled on the cluster');
                 expect(results[0].region).to.equal('global');
                 done()
             };

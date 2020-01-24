@@ -36,20 +36,16 @@ module.exports = {
                 return rcb();
             }
 
-            var badClusters = false;
             clusters.data.forEach(cluster => {
                 if (!cluster.loggingService ||
                     (cluster.loggingService &&
                     cluster.loggingService === 'none')) {
-                    badClusters = true;
                     helpers.addResult(results, 2,
-                        `Logging is disabled on the Kubernetes cluster: ${cluster.name}`, region);
+                        'Logging is disabled on the Kubernetes cluster', region, cluster.name);
+                } else {
+                    helpers.addResult(results, 0, 'Logging is enabled on the cluster', region, cluster.name);
                 }
             });
-
-            if (!badClusters) {
-                helpers.addResult(results, 0, 'Logging is enabled on all clusters', region);
-            }
 
             rcb();
         }, function(){
@@ -57,4 +53,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

@@ -35,13 +35,11 @@ module.exports = {
                 if (cluster.monitoringService &&
                     cluster.monitoringService == 'none') {
                     badClusters = true;
-                    helpers.addResult(results, 2, `No monitoring is enabled on the Kubernetes cluster: ${cluster.name}`, region);
+                    helpers.addResult(results, 2, 'Monitoring is disabled on the Kubernetes cluster', region, cluster.name);
+                } else {
+                    helpers.addResult(results, 0, 'Monitoring is enabled on the Kubernetes cluster', region, cluster.name);
                 }
             });
-
-            if (!badClusters) {
-                helpers.addResult(results, 0, 'Monitoring is enabled on all clusters', region);
-            }
 
             rcb();
         }, function(){

@@ -53,7 +53,7 @@ describe('dnsSecEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('All DNS managed zones have DNS Security enabled');
+                expect(results[0].message).to.include('The managed zone has DNS security enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -104,7 +104,7 @@ describe('dnsSecEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('The following managed zones do not have DNS Security enabled');
+                expect(results[0].message).to.include('The managed zone does not have DNS security enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };

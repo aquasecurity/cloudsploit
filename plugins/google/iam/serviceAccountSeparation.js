@@ -33,7 +33,7 @@ module.exports = {
 
             var iamPolicy = iamPolicies.data[0];
             var serviceAccountUsers = [];
-            var notSeparated = [];
+            var notSeparated = {};
             iamPolicy.bindings.forEach(roleBinding => {
                 if (roleBinding.role === 'roles/iam.serviceAccountUser') {
                     serviceAccountUsers = serviceAccountUsers.concat(roleBinding.members)
@@ -45,15 +45,18 @@ module.exports = {
                     roleBinding.members) {
                     notSeparated = roleBinding.members.filter(member => {
                         return (serviceAccountUsers.indexOf(member) > -1)
-                    })
+                    });
+
+                    if (notSeparated && notSeparated.length) {
+                        notSeparated.forEach(member => {
+                            helpers.addResult(results, 2,
+                                'The account has both the service account user and admin role', region, member);
+                        })
+                    }
                 }
             });
 
-            if (notSeparated.length) {
-                var notSeparatedStr = notSeparated.join(', ');
-                helpers.addResult(results, 2,
-                    `The following accounts have both the service account user and admin role: ${notSeparatedStr}`, region);
-            } else {
+            if (!notSeparated.length) {
                 helpers.addResult(results, 0, 'No accounts have both the service account user and admin roles', region);
             }
 

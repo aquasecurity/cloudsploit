@@ -32,13 +32,14 @@ describe('clbSecurityPolicyEnabled', function () {
             );
 
             plugin.run(cache, {}, callback);
-        })
+        });
+
         it('should give passing result if no backend services are found', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.above(0)
-                expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No load balancers found')
-                expect(results[0].region).to.equal('global')
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No load balancers found');
+                expect(results[0].region).to.equal('global');
                 done()
             };
 
@@ -48,13 +49,14 @@ describe('clbSecurityPolicyEnabled', function () {
             );
 
             plugin.run(cache, {}, callback);
-        })
+        });
+
         it('should give passing result if Security Policy is Attached to a backend service', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.above(0)
-                expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('The backend service has an attached security policy')
-                expect(results[0].region).to.equal('global')
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('The backend service has an attached security policy');
+                expect(results[0].region).to.equal('global');
                 done()
             };
 
@@ -89,13 +91,14 @@ describe('clbSecurityPolicyEnabled', function () {
             );
 
             plugin.run(cache, {}, callback);
-        })
+        });
+
         it('should give passing result if Security Policy is not Attached to a backend service', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.above(0)
-                expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('The backend service does not have an attached security policy')
-                expect(results[0].region).to.equal('global')
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('The backend service does not have an attached security policy');
+                expect(results[0].region).to.equal('global');
                 done()
             };
 
@@ -131,4 +134,4 @@ describe('clbSecurityPolicyEnabled', function () {
             plugin.run(cache, {}, callback);
         })
     })
-})
+});

@@ -132,7 +132,7 @@ describe('serviceAccountUser', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('The following accounts have a service account user role');
+                expect(results[0].message).to.include('The account has a service account user role');
                 expect(results[0].region).to.equal('global');
                 done()
             };

@@ -758,7 +758,8 @@ If you'd prefer to be more restrictive, the following IAM policy contains the ex
                 "trustedadvisor:Describe*",
                 "waf:ListWebACLs",
                 "waf-regional:ListWebACLs",
-                "workspaces:Describe*"
+                "workspaces:Describe*",
+                "xray:Get*"
             ]
         },
         {

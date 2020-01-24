@@ -42,7 +42,7 @@ module.exports = {
 
                  if (!metaData || !metaData.items || !metaData.items.length) {
                      helpers.addResult(results, 0, 'OS login is enabled by default', region);
-                     return rcb();
+                     return;
                  }
 
                  let isEnabled = false;

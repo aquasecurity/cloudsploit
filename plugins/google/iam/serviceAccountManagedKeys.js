@@ -22,7 +22,7 @@ module.exports = {
             if (!keys) return rcb();
 
             if (keys.err || !keys.data) {
-                helpers.addResult(results, 3, 'Unable to query service account keys: ' + helpers.addError(keys), region);
+                helpers.addResult(results, 3, 'Unable to query service account keys, check permissions.', region);
                 return rcb();
             };
 
@@ -30,7 +30,6 @@ module.exports = {
                 helpers.addResult(results, 0, 'No service account keys found', region);
                 return rcb();
             }
-            var keysNotManaged = [];
             keys.data.forEach(key => {
                 if (key.keyType &&
                     key.keyType === 'USER_MANAGED') {

@@ -104,9 +104,10 @@ var calls = {
         }
     },
     DynamoDB: {
-        // TODO: DynamoDB pagination uses a table reference via "ExclusiveStartTableName"
         listTables: {
-            property: 'TableNames'
+            property: 'TableNames',
+            paginate: 'LastEvaluatedTableName',
+            paginateReqProp: 'ExclusiveStartTableName'
         }
     },
     EC2: {
@@ -378,6 +379,15 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    ServiceQuotas: {
+        listServiceQuotas: {
+            property: 'Quotas',
+            paginate: 'NextToken',
+            params: {
+                ServiceCode: 'ec2'
+            },
+        }
+    },
     SES: {
         listIdentities: {
             property: 'Identities',
@@ -415,6 +425,13 @@ var calls = {
         }
     },
     SSM: {
+        describeInstanceInformation: {
+            property: 'InstanceInformationList',
+            params: {
+                MaxResults: 50
+            },
+            paginate: 'NextToken'
+        },
         describeParameters: {
             property: 'Parameters',
             params: {
@@ -447,6 +464,11 @@ var calls = {
         describeWorkspaces: {
             property: 'Workspaces',
             paginate: 'NextToken'
+        }
+    },
+    XRay: {
+        getEncryptionConfig: {
+            property: 'EncryptionConfig'
         }
     }
 };

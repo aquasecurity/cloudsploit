@@ -30,26 +30,19 @@ module.exports = {
                 helpers.addResult(results, 0, 'No DNS managed zones found', region);
                 return rcb();
             }
-            var badManagedZones = [];
+
             managedZones.data.forEach(managedZone => {
                if (!managedZone.dnssecConfig ||
                     (managedZone.dnssecConfig &&
                         (!managedZone.dnssecConfig.state ||
                             (managedZone.dnssecConfig.state &&
                              managedZone.dnssecConfig.state !== 'on')))) {
-
-                   badManagedZones.push(managedZone.name)
+                   helpers.addResult(results, 2,
+                       `The managed zone does not have DNS security enabled`, region, managedZone.id);
+               } else {
+                   helpers.addResult(results, 0, 'The managed zone has DNS security enabled', region, managedZone.id);
                }
             });
-
-            if (badManagedZones.length) {
-                var badManagedZonesStr = badManagedZones.join(', ');
-                helpers.addResult(results, 2,
-                    `The following managed zones do not have DNS Security enabled: ${badManagedZonesStr}`, region);
-            } else {
-                helpers.addResult(results, 0, 'All DNS managed zones have DNS Security enabled', region);
-            }
-
 
             rcb();
         }, function(){
