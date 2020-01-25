@@ -4,9 +4,9 @@ var helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'Network Security Groups Logging Enabled',
     category: 'Log Alerts',
-    description: 'Ensure an Activity Log Alert for the Create or Update and Delete Network Security Group Rule event is enabled.',
-    more_info: 'Monitoring for Create or Update and Delete Network Security Group events gives insight into network access changes and may reduce the time it takes to detect suspicious activity.',
-    recommended_action: '1. Enter the Alerts service. 2. Select the Add Activity Log Alert button at the top of the page. 3. In Criteria, Select Security in the Event Category and Create or Update Network Security groups next to Operation Name, then add Delete Network Security Groups logging.',
+    description: 'Ensures Activity Log alerts for the create or update and delete Network Security Group events are enabled',
+    more_info: 'Monitoring for create or update and delete Network Security Group events gives insight into network access changes and may reduce the time it takes to detect suspicious activity.',
+    recommended_action: 'Add a new log alert to the Alerts service that monitors for Network Security Group create or update and delete events.',
     link: 'https://docs.microsoft.com/en-us/azure/azure-monitor/platform/activity-log-alerts',
     apis: ['activityLogAlerts:listBySubscriptionId'],
 
@@ -24,12 +24,12 @@ module.exports = {
 
             if (activityAlerts.err || !activityAlerts.data) {
                 helpers.addResult(results, 3, 
-                    'Unable to query Activity Alerts: ' + helpers.addError(activityAlerts), location);
+                    'Unable to query for Activity Alerts: ' + helpers.addError(activityAlerts), location);
                 return rcb();
             };
 
             if (!activityAlerts.data.length) {
-                helpers.addResult(results, 1, 'No existing Activity Alerts', location);
+                helpers.addResult(results, 2, 'No existing Activity Alerts found', location);
             };
             
             var deleteAlertExists = false;
@@ -45,26 +45,26 @@ module.exports = {
                         condition.equals.indexOf('Microsoft.Network/networkSecurityGroups/write') > -1 &&
                         !writeAlertExists) {
                         helpers.addResult(results, 0, 
-                            'Log Alert for Writing to Network Security Groups is enabled', location, activityAlert.id);
+                            'Log alert for Network Security Groups write is enabled', location, activityAlert.id);
                         writeAlertExists = true;
                     } else if (condition.equals &&
                         condition.equals.indexOf("microsoft.network/networksecuritygroups/delete") > -1 &&
                         !deleteAlertExists) {
                         helpers.addResult(results, 0, 
-                            'Log Alert for Deleting Network Security Groups is enabled', location, activityAlert.id);
+                            'Log alert for Network Security Groups delete is enabled', location, activityAlert.id);
                         deleteAlertExists = true;
                     };
                 });
             });
             
             if (!writeAlertExists) {
-                helpers.addResult(results, 1, 
-                    'Log Alert for Writing to Network Security Groups does not exist', location);
+                helpers.addResult(results, 2, 
+                    'Log alert for Network Security Groups write does not exist', location);
             };
 
             if (!deleteAlertExists) {
-                helpers.addResult(results, 1, 
-                    'Log Alert for Deleting Network Security Groups does not exist', location);
+                helpers.addResult(results, 2, 
+                    'Log Alert for Network Security Groups delete does not exist', location);
             };
             
             rcb();

@@ -4,11 +4,17 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Default VPC In Use',
     category: 'VPC Network',
-    description: 'Determines whether the default VPC is being used for launching VM instances.',
+    description: 'Determines whether the default VPC is being used for launching VM instances',
     more_info: 'The default VPC should not be used in order to avoid launching multiple services in the same network which may not require connectivity. Each application, or network tier, should use its own VPC.',
     link: 'https://cloud.google.com/vpc/docs/vpc',
     recommended_action: 'Move resources from the default VPC to a new VPC created for that application or resource group.',
     apis: ['networks:list', 'instances:compute:list'],
+    compliance: {
+        pci: 'PCI has explicit requirements around default accounts and ' +
+            'resources. PCI recommends removing all default accounts, ' +
+            'only enabling necessary services as required for the function ' +
+            'of the system'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -27,7 +33,7 @@ module.exports = {
             }
 
             if (!networks.data.length) {
-                helpers.addResult(results, 0, 'No networks present', region);
+                helpers.addResult(results, 0, 'No networks found', region);
                 return rcb();
             }
             var defVPC = false;
@@ -39,7 +45,7 @@ module.exports = {
                } 
             });
             if (!defVPC)  {
-                helpers.addResult(results, 0, 'No default VPC present', 'global');
+                helpers.addResult(results, 0, 'No default VPC found', 'global');
                 return rcb();
             }
             var numInstances = 0;
@@ -56,13 +62,13 @@ module.exports = {
                                 if (interface.network = vpcUrl) {
                                     numInstances += 1;
                                 }
-                            })
-                        })
+                            });
+                        });
                     }
                 }, function() {
                     icb();
-                })
-            })
+                });
+            });
             if (!numInstances) {
                 helpers.addResult(results, 0, 'Default VPC is not in use', region);
                 return rcb();

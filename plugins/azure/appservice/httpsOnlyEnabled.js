@@ -5,9 +5,9 @@ const helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'HTTPS Only Enabled',
     category: 'App Service',
-    description: 'Ensures HTTPS Only is enabled for your App services, redirecting all HTTP traffic to HTTPS.',
+    description: 'Ensures HTTPS Only is enabled for App Services, redirecting all HTTP traffic to HTTPS',
     more_info: 'Enabling HTTPS Only traffic will redirect all non-secure HTTP requests to HTTPS. HTTPS uses the SSL/TLS protocol to provide a secure connection.',
-    recommended_action: 'In your App Service go to SSL Settings > HTTPS Only and set it to On (Enabled).',
+    recommended_action: 'Enable HTTPS Only support SSL settings for all App Services',
     link: 'https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-ssl#enforce-https',
     apis: ['webApps:list'],
     compliance: {
@@ -34,31 +34,29 @@ module.exports = {
 
             if (webApps.err || !webApps.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query App services: ' + helpers.addError(webApps), location);
+                    'Unable to query App Services: ' + helpers.addError(webApps), location);
                 return rcb();
             }
 
             if (!webApps.data.length) {
-                helpers.addResult(results, 0, 'No existing App services', location);
+                helpers.addResult(results, 0, 'No existing App Services found', location);
                 return rcb();
             }
 
             var noWebAppHttps = [];
 
             webApps.data.forEach(function (webApp) {
-                if (!webApp.httpsOnly) {
-                    noWebAppHttps.push(webApp.id);
-                }
+                if (!webApp.httpsOnly) noWebAppHttps.push(webApp.id);
             });
 
             if (noWebAppHttps.length > 20) {
                 helpers.addResult(results, 2, 'More than 20 App Services do not have HTTPS Only enabled', location);
             } else if (noWebAppHttps.length) {
                 for (app in noWebAppHttps) {
-                    helpers.addResult(results, 2, 'App service does not have HTTPS Only enabled', location, noWebAppHttps[app]);
+                    helpers.addResult(results, 2, 'App Service does not have HTTPS Only enabled', location, noWebAppHttps[app]);
                 }
             } else {
-                helpers.addResult(results, 0, 'All App services have HTTPS Only enabled', location);
+                helpers.addResult(results, 0, 'All App Services have HTTPS Only enabled', location);
             }
 
             rcb();

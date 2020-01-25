@@ -4,10 +4,10 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Open DNS',
     category: 'VPC Network',
-    description: 'Determine if TCP or UDP port 53 for DNS is open to the public',
+    description: 'Determines if TCP or UDP port 53 for DNS is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as DNS should be restricted to known IP addresses.',
     link: 'https://cloud.google.com/vpc/docs/using-firewalls',
-    recommended_action: 'Restrict TCP and UDP port 53 to known IP addresses',
+    recommended_action: 'Restrict TCP and UDP port 53 to known IP addresses.',
     apis: ['firewalls:list'],
 
     run: function(cache, settings, callback) {
@@ -27,7 +27,7 @@ module.exports = {
             }
 
             if (!firewalls.data.length) {
-                helpers.addResult(results, 0, 'No firewall rules present', region);
+                helpers.addResult(results, 0, 'No firewall rules found', region);
                 return rcb();
             }
 

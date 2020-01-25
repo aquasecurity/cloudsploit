@@ -104,9 +104,10 @@ var calls = {
         }
     },
     DynamoDB: {
-        // TODO: DynamoDB pagination uses a table reference via "ExclusiveStartTableName"
         listTables: {
-            property: 'TableNames'
+            property: 'TableNames',
+            paginate: 'LastEvaluatedTableName',
+            paginateReqProp: 'ExclusiveStartTableName'
         }
     },
     EC2: {
@@ -272,6 +273,11 @@ var calls = {
             paginateReqProp: 'Marker'
         }
     },
+    ES: {
+        listDomainNames: {
+            property: 'DomainNames'
+        }
+    },
     IAM: {
         listServerCertificates: {
             property: 'ServerCertificateMetadataList',
@@ -373,6 +379,15 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    ServiceQuotas: {
+        listServiceQuotas: {
+            property: 'Quotas',
+            paginate: 'NextToken',
+            params: {
+                ServiceCode: 'ec2'
+            },
+        }
+    },
     SES: {
         listIdentities: {
             property: 'Identities',
@@ -410,6 +425,13 @@ var calls = {
         }
     },
     SSM: {
+        describeInstanceInformation: {
+            property: 'InstanceInformationList',
+            params: {
+                MaxResults: 50
+            },
+            paginate: 'NextToken'
+        },
         describeParameters: {
             property: 'Parameters',
             params: {
@@ -442,6 +464,11 @@ var calls = {
         describeWorkspaces: {
             property: 'Workspaces',
             paginate: 'NextToken'
+        }
+    },
+    XRay: {
+        getEncryptionConfig: {
+            property: 'EncryptionConfig'
         }
     }
 };
@@ -491,6 +518,14 @@ var postcalls = [
                 override: true
             }
         },
+        ES: {
+            describeElasticsearchDomain: {
+                reliesOnService: 'es',
+                reliesOnCall: 'listDomainNames',
+                filterKey: 'DomainName',
+                filterValue: 'DomainName'
+            }
+        },
         S3: {
             getBucketLogging: {
                 deleteRegion: true,
@@ -518,6 +553,11 @@ var postcalls = [
                 override: true
             },
             getBucketTagging: {
+                deleteRegion: true,
+                signatureVersion: 'v4',
+                override: true
+            },
+            getBucketWebsite: {
                 deleteRegion: true,
                 signatureVersion: 'v4',
                 override: true
@@ -666,7 +706,8 @@ var postcalls = [
                 reliesOnService: 'lambda',
                 reliesOnCall: 'listFunctions',
                 filterKey: 'FunctionName',
-                filterValue: 'FunctionName'
+                filterValue: 'FunctionName',
+                rateLimit: 100, // it's not documented but experimentially 10/second works.
             },
             listTags: {
                 reliesOnService: 'lambda',
