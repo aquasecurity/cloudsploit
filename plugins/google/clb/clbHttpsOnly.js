@@ -4,11 +4,19 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'CLB HTTPS Only',
     category: 'CLB',
-    description: 'Ensures CLBs are configured to only accept connections on HTTPS ports.',
+    description: 'Ensures CLBs are configured to only accept connections on HTTPS ports',
     more_info: 'For maximum security, CLBs can be configured to only accept HTTPS connections. Standard HTTP connections will be blocked. This should only be done if the client application is configured to query HTTPS directly and not rely on a redirect from HTTP.',
     link: 'https://cloud.google.com/vpc/docs/vpc',
-    recommended_action: 'Remove non-HTTPS listeners from load balancer.',
+    recommended_action: 'Remove non-HTTPS listeners from the load balancer.',
     apis: ['targetHttpProxies:list'],
+    compliance: {
+        pci: 'PCI requires strong cryptographic and security protocols ' +
+            'when transmitting user data over open, public networks, ' +
+            'this includes only using TLS or SSL.',
+        hipaa: 'HIPAA requires all data to be transmitted over secure channels. ' +
+            'load balancer HTTPS redirection should be used to ensure site visitors ' +
+            'are always connecting over a secure channel.',
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -27,7 +35,7 @@ module.exports = {
             }
 
             if (!httpProxies.data.length) {
-                helpers.addResult(results, 0, 'No firewall rules present', region);
+                helpers.addResult(results, 0, 'No firewall rules found', region);
                 return rcb();
             }
             var non_https_listener = [];
@@ -39,11 +47,11 @@ module.exports = {
                 }
             });
             
-            if (non_https_listener.length){
+            if (non_https_listener.length) {
                 msg = "The following Load Balancers are not HTTPS-only: ";
                 helpers.addResult(
                     results, 2, msg + non_https_listener.join(', '), region, null);
-            }else{
+            } else{
                 helpers.addResult(results, 0, 'No listeners found', region, null);
             }
             rcb();

@@ -56,7 +56,7 @@ module.exports = {
                 helpers.addResult(results, 0,
                     'User: ' + obj.user + ' has an MFA device', 'global', obj.arn);
             } else {
-                helpers.addResult(results, 1,
+                helpers.addResult(results, 2,
                     'User: ' + obj.user + ' does not have an MFA device enabled', 'global', obj.arn);
             }
         }

@@ -48,5 +48,6 @@ module.exports = {
     volumeBackupPolicyAssignment: regions,
     preAuthenticatedRequest: regions,
     configuration: ['us-ashburn-1'],
-    dbSystem: regions
+    dbSystem: regions,
+    mountTarget: regions
 };
