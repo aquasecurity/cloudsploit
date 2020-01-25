@@ -78,9 +78,14 @@ class AzureExecutor {
         tokenAudience = callObj.ad ? { tokenAudience: 'graph' } : null;
 
         this.azure.loginWithServicePrincipalSecret(this.azureConfig.ApplicationID, this.azureConfig.KeyValue, this.azureConfig.DirectoryID, tokenAudience, function (err, credentials) {
-            if (err){
-                if (err.message &&
+            if (err || !credentials || !Object.keys(credentials).length){
+                if (err &&
+                    err.message &&
                     err.message.indexOf("unauthorized_client")>0) {
+                    err.body = {};
+                    err.body.message = "Unauthorized Client: Failed to acquire token for application with the provided secret. Unable to authenticate into Azure Account.";
+                } else {
+                    var err = {};
                     err.body = {};
                     err.body.message = "Unauthorized Client: Failed to acquire token for application with the provided secret. Unable to authenticate into Azure Account.";
                 }
