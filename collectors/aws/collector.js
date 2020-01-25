@@ -319,6 +319,12 @@ var calls = {
             property: 'DeliveryStreamNames'
         }
     },
+    GuardDuty: {
+        listDetectors: {
+            property: 'DetectorIds',
+            paginate: 'NextToken',
+        }
+    },
     KMS: {
         listKeys: {
             property: 'Keys',
@@ -756,7 +762,19 @@ var postcalls = [
                 checkMultiple: ["APPLICATION_LOAD_BALANCER", "API_GATEWAY"],
                 checkMultipleKey: 'ResourceType'
             }
-        }
+        },
+        GuardDuty: {
+            getDetector: {
+                reliesOnService: 'guardduty',
+                reliesOnCall: 'listDetectors',
+                override: true,
+            },
+            getMasterAccount: {
+                reliesOnService: 'guardduty',
+                reliesOnCall: 'listDetectors',
+                override: true,
+            },
+        },
     },
     {
         IAM: {
