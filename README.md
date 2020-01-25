@@ -135,7 +135,11 @@ PCI scans map CloudSploit plugins to the Payment Card Industry Data Security Sta
 
 CloudSploit supports output in several formats for consumption by other tools.
 If you do not specify otherwise, CloudSploit writes output to standard output
-(the console). You can specify one or more output formats as follows:
+(the console). 
+
+You can ignore results from output that return an OK status by passing a `--ignore-ok` commandline argument.
+
+You can specify one or more output formats as follows:
 
 ```
 # Output results in CSV (suppressing the console output)
@@ -152,7 +156,12 @@ node index.js --console
 
 # Output results in all supported formats
 node index.js --console --junit=./out.xml --csv=./out.csv
+
+# Output results in all supported formats for any test that is not OK.
+node index.js --console --junit=./out.xml --csv=./out.csv --ignore-ok
 ```
+
+
 
 ## Architecture
 

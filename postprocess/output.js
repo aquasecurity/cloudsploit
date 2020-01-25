@@ -317,6 +317,11 @@ module.exports = {
             outputs.push(consoleOutputHandler);
         }
 
+        // Ignore any "OK" results - only report issues
+        var ignoreOkStatus = argv.find(function (arg) {
+            return arg.startsWith('--ignore-ok');
+        })
+
         // This creates a multiplexer-like object that forwards the
         // call onto any output handler that has been defined. This
         // allows us to simply send the output to multiple handlers
@@ -336,7 +341,9 @@ module.exports = {
 
             writeResult: function (result, plugin, pluginKey) {
                 for (var output of outputs) {
-                    output.writeResult(result, plugin, pluginKey);
+                    if (!(ignoreOkStatus && result.status === 0)) {
+                        output.writeResult(result, plugin, pluginKey);
+                    }
                 }
             },
 
