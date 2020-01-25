@@ -7,11 +7,16 @@ module.exports = {
     description: 'Determines whether the default VPC exists.',
     more_info: 'The default VPC should not be used in order to avoid launching multiple services in the same network which may not require connectivity. Each application, or network tier, should use its own VPC.',
     recommended_action: 'Move resources from the default VPC to a new VPC created for that application or resource group.',
-    apis: ['EC2:describeVpcs'],
+    apis: ['EC2:describeVpcs', 'STS:getCallerIdentity'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
+
+        var acctRegion = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
+        var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
+
         var regions = helpers.regions(settings);
 
         async.each(regions.vpc, function(region, rcb){
@@ -31,8 +36,10 @@ module.exports = {
 
             for (v in describeVpcs.data) {
                 var vpc = describeVpcs.data[v];
+                // arn:${Partition}:ec2:${Region}:${Account}:vpc/${VpcId}
+                var arn = 'arn:' + awsOrGov + ':ec2:' + region + ':' + accountId + ':vpc/' + vpc.VpcId;
                 if (vpc.IsDefault) {
-                    helpers.addResult(results, 2, 'Default VPC present', region, vpc.VpcId);
+                    helpers.addResult(results, 2, 'Default VPC present', region, arn);
                     return rcb();
                 }
             }

@@ -6,18 +6,23 @@ module.exports = {
     category: 'GuardDuty',
     description: 'Ensures GuardDuty is enabled',
     link: 'https://docs.aws.amazon.com/guardduty/latest/ug/what-is-guardduty.html',
-    apis: ['GuardDuty:listDetectors', 'GuardDuty:getDetector'],
+    apis: ['GuardDuty:listDetectors', 'GuardDuty:getDetector', 'STS:getCallerIdentity'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
+
+        var acctRegion = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
+        var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
+
         var regions = helpers.regions(settings);
 
         async.each(regions.guardduty, function(region, rcb) {
             var listDetectors = helpers.addSource(cache, source, ['guardduty', 'listDetectors', region]);
             if (!listDetectors) return rcb();
             if (listDetectors.err || !listDetectors.data) {
-                helpers.addResult(results, 3, 'Unable to list guardduty detectors: ' + helpers.addError(listDetectors), region);
+                helpers.addResult(results, 3, 'Unable to list GuardDuty detectors: ' + helpers.addError(listDetectors), region);
                 return rcb();
             }
 
@@ -27,7 +32,7 @@ module.exports = {
                     const getDetector = helpers.addSource(cache, source, ['guardduty', 'getDetector', region, detectorId]);
                     if (!getDetector) return { Status: 'unknown' };
                     if (getDetector.err || !getDetector.data) {
-                        helpers.addResult(results, 3, `Unable to get guardduty detector: ${helpers.addError(listDetectors)}`, region, detectorId);
+                        helpers.addResult(results, 3, `Unable to get GuardDuty detector: ${helpers.addError(listDetectors)}`, region, detectorId);
                         return { Status: 'unknown' };
                     }
                     return { detectorId, ...getDetector.data};
@@ -40,11 +45,14 @@ module.exports = {
                 const badDetectors = detectors.filter(detector => detector.Status !== 'ENABLED');
                 if (enabledDetectors.length >= 1) {
                     enabledDetectors.forEach(detector => {
-                        helpers.addResult(results, 0, 'GuardDuty is enabled', region, detector.detectorId);
+                        // arn:${Partition}:guardduty:${Region}:${Account}:detector/${DetectorId}
+                        var arn = 'arn:' + awsOrGov + ':guardduty:' + region + ':' + accountId + ':detector/' + detector.detectorId;
+                        helpers.addResult(results, 0, 'GuardDuty is enabled', region, arn);
                     });
                 } else {
                     badDetectors.forEach(detector => {
-                        helpers.addResult(results, 2, `GuardDuty detector is ${detector.Status}`, region, detector.detectorId);
+                        var arn = 'arn:' + awsOrGov + ':guardduty:' + region + ':' + accountId + ':detector/' + detector.detectorId;
+                        helpers.addResult(results, 2, `GuardDuty detector is ${detector.Status}`, region, arn);
                     });
                 }
             }

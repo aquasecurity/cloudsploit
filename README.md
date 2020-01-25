@@ -1,4 +1,4 @@
-[<img src="https://cloudsploit.com/images/logos/text-color-black-png.png" height="130">](https://cloudsploit.com)
+[<img src="https://cloudsploit.com/images/logos/cloudsploit_by_aqua_A02.png" height="130">](https://cloudsploit.com)
 
 [![Build Status](https://travis-ci.org/cloudsploit/scans.svg?branch=master)](https://travis-ci.org/cloudsploit/scans)
 [![Known Vulnerabilities](https://snyk.io/test/github/cloudsploit/scans/badge.svg)](https://snyk.io/test/github/cloudsploit/scans)

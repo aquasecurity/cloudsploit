@@ -31,20 +31,20 @@ module.exports = {
             var getPublicAccessBlock = helpers.addSource(cache, source, ['s3', 'getPublicAccessBlock', region, bucket]);
             if (!getPublicAccessBlock) continue;
             if (getPublicAccessBlock.err && getPublicAccessBlock.err.code === 'NoSuchPublicAccessBlockConfiguration') {
-                helpers.addResult(results, 2, 'Public Access Block not enabled', 'global', bucket);
+                helpers.addResult(results, 2, 'Public Access Block not enabled', 'global', 'arn:aws:s3:::' + bucket);
                 continue;
             }
             if (getPublicAccessBlock.err || !getPublicAccessBlock.data) {
-                helpers.addResult(results, 3, `Error: ${helpers.addError(getPublicAccessBlock)}`, 'global', bucket);
+                helpers.addResult(results, 3, `Error: ${helpers.addError(getPublicAccessBlock)}`, 'global', 'arn:aws:s3:::' + bucket);
                 continue;
             }
             var config = getPublicAccessBlock.data.PublicAccessBlockConfiguration;
             var missingBlocks = Object.keys(config).filter(k => !config[k]);
             if (missingBlocks.length) {
-                helpers.addResult(results, 2, `Missing public access blocks: ${missingBlocks.join(', ')}`, 'global', bucket);
+                helpers.addResult(results, 2, `Missing public access blocks: ${missingBlocks.join(', ')}`, 'global', 'arn:aws:s3:::' + bucket);
                 continue;
             }
-            helpers.addResult(results, 0, `Public access block fully enabled`, 'global', bucket);
+            helpers.addResult(results, 0, `Public access block fully enabled`, 'global', 'arn:aws:s3:::' + bucket);
         }
 
         callback(null, results, source);
