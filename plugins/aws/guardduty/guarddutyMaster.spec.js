@@ -2,7 +2,7 @@ var assert = require('assert');
 var expect = require('chai').expect;
 var guarddutyMaster = require('./guarddutyMaster')
 
-describe.only('guarddutyMaster', function () {
+describe('guarddutyMaster', function () {
     describe('run', function () {
         it('should FAIL when guard duty master is incorrect', function () {
             const settings = {
