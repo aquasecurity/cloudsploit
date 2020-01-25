@@ -23,12 +23,12 @@ module.exports = {
             if (!virtualNetworks) return rcb();
 
             if (virtualNetworks.err || !virtualNetworks.data) {
-                helpers.addResult(results, 3, 'Unable to query Virtual Networks: ' + helpers.addError(virtualNetworks), location);
+                helpers.addResult(results, 3, 'Unable to query for Virtual Networks: ' + helpers.addError(virtualNetworks), location);
                 return rcb();
             }
 
             if (!virtualNetworks.data.length) {
-                helpers.addResult(results, 0, 'No existing Virtual Networks', location);
+                helpers.addResult(results, 0, 'No existing Virtual Networks found', location);
             } 
                 
             virtualNetworks.data.forEach(virtualNetwork => {
@@ -36,14 +36,14 @@ module.exports = {
                     virtualNetwork.subnets.length > 1) {
                     helpers.addResult(results, 0,
                         'There are ' + virtualNetwork.subnets.length + 
-                        ' different subnets used in the Virtual Network.',location, virtualNetwork.id);
+                        ' different subnets used in the Virtual Network', location, virtualNetwork.id);
                 } else if (virtualNetwork.subnets.length == 1) {
                     helpers.addResult(results, 2,
-                        'Only one subnet in the Virtual Network is used.', location, virtualNetwork.id);
+                        'Only one subnet in the Virtual Network is used', location, virtualNetwork.id);
                 } else {
                     helpers.addResult(results, 0,
                         'The Virtual Network does not have any subnets', location, virtualNetwork.id);
-                };
+                }
             });
             rcb();
         }, function(){

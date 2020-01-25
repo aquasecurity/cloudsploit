@@ -4,11 +4,15 @@ var helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'Log Storage Encryption',
     category: 'Storage Accounts',
-    description: 'Ensures BYOK encryption is properly configured in the Activity Log Storage Account.',
-    more_info: 'Storage accounts can be configured to encrypt data-at-rest, by default Azure will create a set of keys to encrypt your storage account, but the recommended approach is to create your own keys using Azure Key Vault.',
-    recommended_action: '1. Enter the activity log service. 2. Choose the export option. 3. Note the storage container in use. 4. Enter the storage account in use by navigating to the storage accounts service. 5. Navigate to encryption and enable Use Your Own Key.',
+    description: 'Ensures BYOK encryption is properly configured in the Activity Log Storage Account',
+    more_info: 'Storage accounts can be configured to encrypt data-at-rest. By default Azure will create a set of keys to encrypt the storage account, but the recommended approach is to create your own keys using Azure Key Vault.',
+    recommended_action: 'Ensure the Storage Account used by Activity Logs is configured with a BYOK key.',
     link: 'https://docs.microsoft.com/en-us/azure/storage/common/storage-service-encryption-customer-managed-keys',
     apis: ['storageAccounts:list', 'logProfiles:list'],
+    compliance: {
+        hipaa: 'HIPAA requires that all data is encrypted, including data at rest. ' +
+                'Enabling encryption of log storage data helps to protect this data.',
+    },
 
     run: function(cache, settings, callback) {
         const results = [];
@@ -26,7 +30,7 @@ module.exports = {
 
             if (logProfiles.err || !logProfiles.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query Log Profiles: ' + helpers.addError(logProfiles), location);
+                    'Unable to query for Log Profiles: ' + helpers.addError(logProfiles), location);
                 continue;
             }
 
@@ -40,10 +44,10 @@ module.exports = {
 
         if (!logProfile) {
             helpers.addResult(results, 2,
-                'No Log Profile Enabled.', 'global');
+                'No Log Profile enabled', 'global');
         } else {
             helpers.addResult(results, 0,
-                'Log Profile is Enabled.', 'global', logProfile.id);
+                'Log Profile is enabled', 'global', logProfile.id);
         }
 
         async.each(locations.storageAccounts, (loc, cb) => {
@@ -55,11 +59,11 @@ module.exports = {
 
             if (storageAccounts.err || !storageAccounts.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query Storage Accounts: ' + helpers.addError(storageAccounts), loc);
+                    'Unable to query for Storage Accounts: ' + helpers.addError(storageAccounts), loc);
             }
 
             if (!storageAccounts.data.length) {
-                helpers.addResult(results, 0, 'No existing Storage Accounts', loc);
+                helpers.addResult(results, 0, 'No existing Storage Accounts found', loc);
                 return cb();
             }
 
@@ -73,7 +77,7 @@ module.exports = {
                 } else {
                     helpers.addResult(results, 0,
                         'Activity Logs container for the storage account is encrypted with BYOK', loc, storageAccount.id);
-                };
+                }
             });
             cb();
         }, function(){

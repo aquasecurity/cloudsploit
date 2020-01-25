@@ -7,7 +7,7 @@ module.exports = {
     description: 'Ensures automated backups are enabled for SQL instances',
     more_info: 'Google provides a simple method of backing up SQL instances at a regular interval. This should be enabled to provide an option for restoring data in the event of a database compromise or hardware failure.',
     link: 'https://cloud.google.com/sql/docs/mysql/instance-settings',
-    recommended_action: '1. Enter the SQL category of the Google Console. 2. Select the instance. 3. Select Edit at the top of the section. 4. Enter the Enable auto Backups and ensure automate backups is checked.',
+    recommended_action: 'Ensure that all database instances are configured with automatic backups enabled.',
     apis: ['instances:sql:list'],
 
     run: function(cache, settings, callback) {
@@ -22,12 +22,12 @@ module.exports = {
             if (!sqlInstances) return rcb();
 
             if (sqlInstances.err || !sqlInstances.data) {
-                helpers.addResult(results, 3, 'Unable to query SQL Instances: ' + helpers.addError(sqlInstances), region);
+                helpers.addResult(results, 3, 'Unable to query SQL instances: ' + helpers.addError(sqlInstances), region);
                 return rcb();
             }
 
             if (!sqlInstances.data.length) {
-                helpers.addResult(results, 0, 'No SQL Instances present', region);
+                helpers.addResult(results, 0, 'No SQL instances found', region);
                 return rcb();
             }
 
@@ -43,7 +43,7 @@ module.exports = {
                     helpers.addResult(results, 2, 
                         'Automated backups are not enabled', region, sqlInstance.name);
                 }
-            })
+            });
 
             rcb();
         }, function(){

@@ -4,13 +4,25 @@ var helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'Java Version',
     category: 'App Service',
-    description: 'Ensure the latest version of Java is installed on all App Services.',
+    description: 'Ensures the latest version of Java is installed for all App Services',
     more_info: 'Installing the latest version of Java will reduce the security risk of missing security patches.',
-    recommended_action: '1. Enter App Services. 2. Select the App Service. 3. Select the Configuration blade under Settings. 4. Choose the General Settings Tab. 5. Select the Java Stack and ensure that Version is the latest Version.',
+    recommended_action: 'Select the latest version of Java for all Java-based App Services',
     link: 'https://docs.microsoft.com/en-us/azure/app-service/app-service-web-get-started-java',
     apis: ['webApps:list', 'webApps:listConfigurations'],
+    settings: {
+        latestJavaVersion: {
+            name: 'Latest Java Version',
+            default: 1.8
+        }
+    },
 
     run: function (cache, settings, callback) {
+        const config = {
+            latestJavaVersion: settings.latestJavaVersion || this.settings.latestJavaVersion.default
+        };
+
+        var custom = helpers.isCustom(settings, this.settings);
+
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
@@ -22,25 +34,33 @@ module.exports = {
             if (!webApps) return rcb();
 
             if (webApps.err || !webApps.data) {
-                helpers.addResult(results, 3, 'Unable to query App Service: ' + helpers.addError(webApps), location);
+                helpers.addResult(results, 3, 'Unable to query App Services: ' + helpers.addError(webApps), location);
                 return rcb();
-            };
+            }
 
             if (!webApps.data.length) {
-                helpers.addResult(results, 0, 'No existing App Service', location);
-            };
+                helpers.addResult(results, 0, 'No existing App Services found', location);
+                return rcb();
+            }
+
+            var found = false;
 
             webApps.data.forEach(webApp => {
-                if (!webApp.javaVersion || webApp.javaVersion == "") {
-                    helpers.addResult(results, 0, 'Java not configured', location, webApp.id);
-                } else if (parseFloat(webApp.javaVersion) >= 1.8) {
-                    helpers.addResult(results, 0, 
-                        `The Java version (${parseFloat(webApp.javaVersion)}) is the latest version`, location, webApp.id);
-                } else {
-                    helpers.addResult(results, 2, 
-                        `The Java version (${parseFloat(webApp.javaVersion)}) is not latest version`, location, webApp.id);
-                };
+                if (webApp.javaVersion && webApp.javaVersion !== "") {
+                    found = true;
+                    if (parseFloat(webApp.javaVersion) >= config.latestJavaVersion) {
+                        helpers.addResult(results, 0, 
+                            `The Java version (${parseFloat(webApp.javaVersion)}) is the latest version`, location, webApp.id, custom);
+                    } else {
+                        helpers.addResult(results, 2, 
+                            `The Java version (${parseFloat(webApp.javaVersion)}) is not the latest version`, location, webApp.id, custom);
+                    }
+                }
             });
+
+            if (!found) {
+                helpers.addResult(results, 0, 'No App Services with Java found', location);
+            }
             
             rcb();
         }, function () {
