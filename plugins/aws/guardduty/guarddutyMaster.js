@@ -13,7 +13,7 @@ module.exports = {
         guardduty_master_account: {
             name: 'GuardDuty Master Account ID',
             description: 'Return a failing result when the GuardDuty master account is not this account. Leave blank to allow all.',
-            regex: '^.*$',
+            regex: '^([0-9]{12}|[0-9]{0})$',
             default: '',
         },
     },

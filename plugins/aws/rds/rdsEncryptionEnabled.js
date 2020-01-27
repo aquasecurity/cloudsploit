@@ -8,7 +8,15 @@ module.exports = {
     more_info: 'AWS provides at-read encryption for RDS instances which should be enabled to ensure the integrity of data stored within the databases.',
     link: 'http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html',
     recommended_action: 'RDS does not currently allow modifications to encryption after the instance has been launched, so a new instance will need to be created with encryption enabled.',
-    apis: ['RDS:describeDBInstances'],
+    apis: ['RDS:describeDBInstances', 'KMS:listAliases'],
+    settings: {
+        rds_encryption_kms_alias: {
+            name: 'RDS Encryption KMS Alias',
+            description: 'If set, RDS encryption must be configured using the KMS key alias specified. Be sure to include the alias/ prefix.',
+            regex: '^alias/[a-zA-Z0-9_/-]{0,256}$',
+            default: false
+        }
+    },
     compliance: {
         hipaa: 'All data in HIPAA environments must be encrypted, including ' +
                 'data at rest. RDS encryption ensures that this HIPAA control ' +
@@ -20,6 +28,12 @@ module.exports = {
     },
 
     run: function(cache, settings, callback) {
+        var config = {
+            rds_encryption_kms_alias: settings.rds_encryption_kms_alias || this.settings.rds_encryption_kms_alias.default,
+        };
+
+        var custom = helpers.isCustom(settings, this.settings);
+
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
@@ -41,6 +55,34 @@ module.exports = {
                 return rcb();
             }
 
+            var listAliases = helpers.addSource(cache, source,
+                ['kms', 'listAliases', region]);
+
+            var aliasId;
+            if (config.rds_encryption_kms_alias) {
+                if (!listAliases || listAliases.err ||
+                    !listAliases.data) {
+                    helpers.addResult(results, 3, 'RDS KMS alias setting is configured but KMS aliases could not be obtained: ' + helpers.addError(listAliases), region, null, custom);
+                    return rcb();
+                }
+
+                if (!listAliases.data.length) {
+                    helpers.addResult(results, 2, 'RDS KMS alias setting is configured but there are no KMS aliases.', region, null, custom);
+                    return rcb();
+                }
+
+                listAliases.data.forEach(function(alias){
+                    if (alias.AliasName == config.rds_encryption_kms_alias) {
+                        aliasId = alias.AliasArn.replace(/:alias\/.*/, ':key/' + alias.TargetKeyId);
+                    }
+                });
+
+                if (!aliasId) {
+                    helpers.addResult(results, 2, 'RDS KMS alias setting is configured but the specified alias (' + config.rds_encryption_kms_alias + ') was not found.', region, null, custom);
+                    return rcb();
+                }
+            }
+
             for (i in describeDBInstances.data) {
                 // For resource, attempt to use the endpoint address (more specific) but fallback to the instance identifier
                 var db = describeDBInstances.data[i];
@@ -48,7 +90,15 @@ module.exports = {
                 var kmsKey = db.KmsKeyId;
 
                 if (db.StorageEncrypted) {
-                    helpers.addResult(results, 0, 'Encryption at rest is enabled via KMS key: ' + (kmsKey || 'Unknown'), region, dbResource);
+                    if (config.rds_encryption_kms_alias) {
+                        if (aliasId == kmsKey) {
+                            helpers.addResult(results, 0, 'Encryption at rest is enabled via expected KMS key: ' + (kmsKey || 'Unknown'), region, dbResource, custom);
+                        } else {
+                            helpers.addResult(results, 2, 'Encryption at rest is enabled, but is not using expected KMS key: ' + aliasId + '. Using key: ' + (kmsKey || 'Unknown'), region, dbResource, custom);
+                        }
+                    } else {
+                        helpers.addResult(results, 0, 'Encryption at rest is enabled via KMS key: ' + (kmsKey || 'Unknown'), region, dbResource);
+                    }
                 } else {
                     helpers.addResult(results, 2, 'Encryption at rest is not enabled', region, dbResource);
                 }
