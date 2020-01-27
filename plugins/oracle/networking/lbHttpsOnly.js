@@ -21,7 +21,6 @@ module.exports = {
 		var regions = helpers.regions(settings.govcloud);
 
         async.each(regions.loadBalancer, function(region, rcb){
-
             if (helpers.checkRegionSubscription(cache, source, results, region)) {
 
                 var loadBalancers = helpers.addSource(cache, source,
@@ -69,7 +68,6 @@ module.exports = {
                             }
                         } else if (listener.port === 443) {
                             helpers.addResult(results, 0, `The listener: ${listener.name} is HTTPS only`, region, lb.id);
-
                         }
                     }
 
@@ -84,6 +82,8 @@ module.exports = {
                 }, function() {
                     rcb();
                 });
+            } else {
+                rcb();
             }
         }, function(){
             // Global checking goes here

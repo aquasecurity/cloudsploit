@@ -16,7 +16,6 @@ module.exports = {
         var regions = helpers.regions(settings.govcloud);
 
         async.each(regions.exprt, function(region, rcb){
-
             if (helpers.checkRegionSubscription(cache, source, results, region)) {
 
                 var fileSystems = helpers.addSource(cache, source,
@@ -34,6 +33,7 @@ module.exports = {
                     helpers.addResult(results, 0, 'No File Systems present', region);
                     return rcb();
                 }
+
                 var publicFileSystem = {};
                 var mountSubnets = {};
                 fileSystems.data.forEach(fileSystem => {
@@ -48,55 +48,58 @@ module.exports = {
                         });
                     }
                 });
-                var publicExportSets = Object.keys(publicFileSystem);
-                 if (publicExportSets.length) {
-                     var mountTargets = helpers.addSource(cache, source,
-                         ['mountTarget', 'list', region]);
 
-                     if ((mountTargets.err && mountTargets.err.length) || !mountTargets.data || !mountTargets.data.length) {
-                         var publicFileSystemStr = Object.values(publicFileSystem).join(', ');
-                         helpers.addResult(results, 2, `The following NFS allow public access: ${publicFileSystemStr}`, region);
-                     } else {
-                         mountTargets.data.forEach(mountTarget => {
-                             if (publicExportSets > 1) {
+                var publicExportSets = Object.keys(publicFileSystem);
+                if (publicExportSets.length) {
+                    var mountTargets = helpers.addSource(cache, source,
+                        ['mountTarget', 'list', region]);
+
+                    if ((mountTargets.err && mountTargets.err.length) || !mountTargets.data || !mountTargets.data.length) {
+                        var publicFileSystemStr = Object.values(publicFileSystem).join(', ');
+                        helpers.addResult(results, 2, `The following NFS allow public access: ${publicFileSystemStr}`, region);
+                        return rcb();
+                    } else {
+                        mountTargets.data.forEach(mountTarget => {
+                            if (publicExportSets > 1) {
                                 if (publicExportSets.indexOf(mountTarget.exportSetId) > -1) {
                                     mountSubnets[mountTarget.subnetId] = publicFileSystem[mountTarget.exportSetId];
                                 }
-                             } else {
+                            } else {
                                 if (publicExportSets[0] === mountTarget.exportSetId) {
                                     mountSubnets[mountTarget.subnetId] = publicFileSystem[mountTarget.exportSetId];
                                 }
                              }
-                         });
-                         var subnetsToCheck = Object.keys(mountSubnets);
-                         if (subnetsToCheck.length) {
+                        });
 
-                             var subnets = helpers.addSource(cache, source,
-                                 ['subnet', 'list', region]);
+                        var subnetsToCheck = Object.keys(mountSubnets);
+                        if (subnetsToCheck.length) {
+                            var subnets = helpers.addSource(cache, source,
+                                ['subnet', 'list', region]);
 
-                             if ((subnets.err && subnets.err.length) || !subnets.data || !subnets.data.length) {
-                                 helpers.addResult(results, 3,
-                                 'Unable to query for Subnets: ' + helpers.addError(subnets))
-                             } else {
-                                 subnets.data.forEach(subnet => {
-                                     if (subnetsToCheck.indexOf(subnet.id) > -1) {
-                                         if (subnet.prohibitPublicIpOnVnic) {
-                                             helpers.addResult(results, 0, 'NFS is in a private subnet and does not allow public access', region, mountSubnets[subnet.id]);
-                                         } else {
-                                             helpers.addResult(results, 2, 'NFS allows public access', region, mountSubnets[subnet.id]);
-                                         }
-                                     }
-                                 })
-                             }
-                         } else {
-                             var publicFileSystemStr = Object.values(publicFileSystem).join(', ');
-                             helpers.addResult(results, 2, `The following NFS allow public access: ${publicFileSystemStr}`, region);
-                         }
-                     }
-                 }
-
+                            if ((subnets.err && subnets.err.length) || !subnets.data || !subnets.data.length) {
+                                helpers.addResult(results, 3,
+                                    'Unable to query for Subnets: ' + helpers.addError(subnets))
+                            } else {
+                                subnets.data.forEach(subnet => {
+                                    if (subnetsToCheck.indexOf(subnet.id) > -1) {
+                                        if (subnet.prohibitPublicIpOnVnic) {
+                                            helpers.addResult(results, 0, 'NFS is in a private subnet and does not allow public access', region, mountSubnets[subnet.id]);
+                                        } else {
+                                            helpers.addResult(results, 2, 'NFS allows public access', region, mountSubnets[subnet.id]);
+                                        }
+                                    }
+                                });
+                            }
+                        } else {
+                            var publicFileSystemStr = Object.values(publicFileSystem).join(', ');
+                            helpers.addResult(results, 2, `The following NFS allow public access: ${publicFileSystemStr}`, region);
+                        }
+                    }
+                }
             }
+            rcb();
+        }, function(){
+            callback(null, results, source);
         });
-        callback(null, results, source);
     }
 };

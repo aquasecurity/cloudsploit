@@ -5,6 +5,8 @@ module.exports = {
     title: 'S3 Bucket Public Access Block',
     category: 'S3',
     description: 'Ensures S3 public access block is enabled on all buckets',
+    more_info: 'Blocking S3 public access at the bucket-level ensures objects are not accidentally exposed.',
+    recommended_action: 'Enable the S3 public access block on all S3 buckets.',
     link: 'https://docs.aws.amazon.com/AmazonS3/latest/dev/access-control-block-public-access.html',
     apis: ['S3:listBuckets', 'S3:getPublicAccessBlock'],
 

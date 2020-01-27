@@ -5,7 +5,9 @@ module.exports = {
     title: 'GuardDuty Master Account',
     category: 'GuardDuty',
     description: 'Ensures GuardDuty master account is correct',
+    more_info: 'Organizations with large numbers of AWS accounts should configure GuardDuty findings from all member accounts to be sent to a consistent master account.',
     link: 'https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_accounts.html#guardduty_master',
+    recommended_action: 'Configure the member account to send GuardDuty findings to a known master account.',
     apis: ['GuardDuty:getMasterAccount', 'GuardDuty:listDetectors'],
     settings: {
         guardduty_master_account: {
