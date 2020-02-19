@@ -9,8 +9,16 @@ CloudSploit Scans
 ## Background
 CloudSploit scans is an open-source project designed to allow detection of security risks in cloud infrastructure accounts. These scripts are designed to return a series of potential misconfigurations and security risks.
 
-## Cloud Security Posture Management 
-CloudSploit provides free and paid hosted versions of the cloud security scanner with numerous additional features, please visit https://www.aquasec.com/products/cspm
+## Deploy your way
+CloudSploit is available in two deployment options:
+
+### Self-hosted
+Follow the instructions below to deploy the open-source version of CloudSploit on your machine in just a few simple steps.
+
+### Hosted at AquaCloud
+CloudSploit, by Aqua, hosted in the Aqua Cloud, is a fully managed service maintained and updated by the cloud security experts at Aqua. Our hosted scanner handles the scheduling and running of background scans, aggregation of data into dashboards, tools, and visualizations, and integrates with popular third-party services for alerts.
+
+Sign up to [AquaCloud](https://cloud.aquasec.com/signup) today!
 
 ## Installation
 Ensure that NodeJS is installed. If not, install it from [here](https://nodejs.org/download/).
