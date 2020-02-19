@@ -9,11 +9,8 @@ CloudSploit Scans
 ## Background
 CloudSploit scans is an open-source project designed to allow detection of security risks in cloud infrastructure accounts. These scripts are designed to return a series of potential misconfigurations and security risks.
 
-## SaaS Product
-
-CloudSploit provides free and paid hosted versions of the cloud security scanner with numerous additional features:
-
-[<img src="https://cloudsploit.com/images/pricing-new.png">](https://console.cloudsploit.com/signup)
+## Cloud Security Posture Management 
+CloudSploit provides free and paid hosted versions of the cloud security scanner with numerous additional features, please visit https://www.aquasec.com/products/cspm
 
 ## Installation
 Ensure that NodeJS is installed. If not, install it from [here](https://nodejs.org/download/).
@@ -33,6 +30,7 @@ To begin using the scanner, edit the `index.js` file with the corresponding sett
  * Use [environment variables](https://github.com/cloudsploit/scans/blob/master/index.js#L64-L109). 
 
 Cloud Infrastructure configuration steps:
+
 
 * [AWS](#aws)
 * [Azure](#azure) 
@@ -512,6 +510,29 @@ To create a cross-account role:
 10. Then click on the role name and copy the role ARN for use in the next step.
 ```
 
+### CloudSploit Supplemental Policy
+Allows read only accesss to services not included in the SecurityAudit AWS Managed policy but that are also tested by the CSPM scans.
+
+```$xslt
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "ses:DescribeActiveReceiptRuleSet",
+                "athena:GetWorkGroup",
+                "logs:DescribeLogGroups",
+                "logs:DescribeMetricFilters",
+                "elastictranscoder:ListPipelines",
+                "elasticfilesystem:DescribeFileSystems",
+                "servicequotas:ListServiceQuotas"
+            ],
+            "Resource": "*",
+            "Effect": "Allow"
+        }
+    ]
+}
+```
 ### AWS Inline Policy (Not Recommended)
 
 If you'd prefer to be more restrictive, the following IAM policy contains the exact permissions used by the scan.
@@ -533,6 +554,7 @@ If you'd prefer to be more restrictive, the following IAM policy contains the ex
                 "appmesh:List*",
                 "appsync:List*",
                 "athena:List*",
+                "athena:GetWorkGroup",
                 "autoscaling:Describe*",
                 "batch:DescribeComputeEnvironments",
                 "batch:DescribeJobDefinitions",
@@ -620,6 +642,7 @@ If you'd prefer to be more restrictive, the following IAM policy contains the ex
                 "elasticmapreduce:Describe*",
                 "elasticmapreduce:ListClusters",
                 "elasticmapreduce:ListInstances",
+                "elastictranscoder:ListPipelines",
                 "es:Describe*",
                 "es:ListDomainNames",
                 "events:Describe*",
@@ -724,12 +747,14 @@ If you'd prefer to be more restrictive, the following IAM policy contains the ex
                 "securityhub:List*",
                 "serverlessrepo:GetApplicationPolicy",
                 "serverlessrepo:List*",
+                "servicequotas:ListServiceQuotas",
                 "ses:GetIdentityDkimAttributes",
                 "ses:GetIdentityPolicies",
                 "ses:GetIdentityVerificationAttributes",
                 "ses:ListIdentities",
                 "ses:ListIdentityPolicies",
                 "ses:ListVerifiedEmailAddresses",
+                "ses:DescribeActiveReceiptRuleSet",
                 "shield:Describe*",
                 "shield:List*",
                 "snowball:ListClusters",
