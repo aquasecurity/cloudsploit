@@ -5,14 +5,16 @@ var helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'VM Endpoint Protection',
     category: 'Virtual Machines',
-    description: 'Ensures that VM Endpoint Protection is enabled for all virutal machines',
+    description: 'Ensures that VM Endpoint Protection is enabled for all virtual machines',
     more_info: 'Installing endpoint protection systems provides for real-time protection capabilities that help identify and remove viruses, spyware, and other malicious software, with configurable alerts for malicious or unwanted software.',
     recommended_action: 'Install endpoint protection on all virtual machines.',
     link: 'https://docs.microsoft.com/en-us/azure/security-center/security-center-install-endpoint-protection',
     apis: ['resourceGroups:list', 'virtualMachines:listAll', 'virtualMachineExtensions:list'],
     compliance: {
         pci: 'PCI requires the use of anti-virus and anti-malware solutions. Enabling ' +
-                'VM endpoint protection provides real-time VM monitoring for malicious activity.'
+                'VM endpoint protection provides real-time VM monitoring for malicious activity.',
+        hipaa: 'HIPAA requires protection of all network systems, including monitoring ' +
+                'all network traffic for malicious, inappropriate or unusual traffic.'
     },
 
     run: function(cache, settings, callback) {

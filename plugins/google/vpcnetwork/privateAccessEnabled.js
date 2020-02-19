@@ -9,6 +9,11 @@ module.exports = {
     link: 'https://cloud.google.com/vpc/docs/configure-private-google-access',
     recommended_action: '1. Enter the VPC Network service. 2. Enter the VPC. 3. Select the subnet in question. 4. Edit the subnet and enable Private Google Access.',
     apis: ['subnetworks:list'],
+    compliance: {
+        pci: 'PCI recommends implementing additional security features for ' +
+            'any required service. This includes using secured technologies ' +
+            'such as Private Google Access.'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

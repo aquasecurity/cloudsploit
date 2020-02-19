@@ -62,7 +62,7 @@ describe('scaleSetMultiAz', function () {
                 null,
                 [
                     {
-                        "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Compute/virtualMachineScaleSets/gioScaleSet1",
+                        "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Compute/virtualMachineScaleSets/gioScaleSet1",
                         "name": "gioScaleSet1",
                         "type": "Microsoft.Compute/virtualMachineScaleSets",
                         "location": "eastus",
@@ -112,7 +112,7 @@ describe('scaleSetMultiAz', function () {
                                             {
                                                 "name": "gioScaleSet1IpConfig",
                                                 "subnet": {
-                                                    "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Network/virtualNetworks/gioVNtest1/subnets/subnettest1"
+                                                    "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Network/virtualNetworks/gioVNtest1/subnets/subnettest1"
                                                 },
                                                 "privateIPAddressVersion": "IPv4"
                                             }
@@ -154,7 +154,7 @@ describe('scaleSetMultiAz', function () {
                 null,
                 [
                     {
-                        "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Compute/virtualMachineScaleSets/gioScaleSet1",
+                        "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Compute/virtualMachineScaleSets/gioScaleSet1",
                         "name": "gioScaleSet1",
                         "type": "Microsoft.Compute/virtualMachineScaleSets",
                         "location": "eastus",
@@ -204,7 +204,7 @@ describe('scaleSetMultiAz', function () {
                                             {
                                                 "name": "gioScaleSet1IpConfig",
                                                 "subnet": {
-                                                    "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Network/virtualNetworks/gioVNtest1/subnets/subnettest1"
+                                                    "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Network/virtualNetworks/gioVNtest1/subnets/subnettest1"
                                                 },
                                                 "privateIPAddressVersion": "IPv4"
                                             }

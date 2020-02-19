@@ -2,14 +2,13 @@ var async = require('async');
 var helpers = require('../../../helpers/google');
 
 module.exports = {
-    title: 'DB Multiple Az',
+    title: 'DB Multiple AZ',
     category: 'SQL',
-    description: 'Ensures that SQL instances have a failover replica to be cross-AZ for high availability.',
+    description: 'Ensures that SQL instances have a failover replica to be cross-AZ for high availability',
     more_info: 'Creating SQL instances in with a single AZ creates a single point of failure for all systems relying on that database. All SQL instances should be created in multiple AZs to ensure proper failover.',
     link: 'https://cloud.google.com/sql/docs/mysql/instance-settings',
-    recommended_action: '1. Enter the SQL category of the Google Console. 2. Select the instance. 3. Select the Replicas tab. 4. Select Create Failover Replica and follow the prompts.',
+    recommended_action: 'Ensure that all database instances have a DB replica enabled in a secondary AZ.',
     apis: ['instances:sql:list'],
-  
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -23,12 +22,12 @@ module.exports = {
             if (!sqlInstances) return rcb();
 
             if (sqlInstances.err || !sqlInstances.data) {
-                helpers.addResult(results, 3, 'Unable to query SQL Instances: ' + helpers.addError(sqlInstances), region);
+                helpers.addResult(results, 3, 'Unable to query SQL instances: ' + helpers.addError(sqlInstances), region);
                 return rcb();
             }
 
             if (!sqlInstances.data.length) {
-                helpers.addResult(results, 0, 'No SQL Instances present', region);
+                helpers.addResult(results, 0, 'No SQL instances found', region);
                 return rcb();
             }
 

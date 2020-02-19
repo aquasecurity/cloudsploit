@@ -37,7 +37,7 @@ describe('bucketAllUsersPolicy', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No storage buckets present');
+                expect(results[0].message).to.include('No storage buckets found');
                 expect(results[0].region).to.equal('global');
                 done()
             };

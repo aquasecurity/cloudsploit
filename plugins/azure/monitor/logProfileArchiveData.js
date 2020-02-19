@@ -9,6 +9,14 @@ module.exports = {
     recommended_action: 'Ensure that all activity is logged to the Event Hub or storage account for archiving.' ,
     link: 'https://docs.microsoft.com/en-us/azure/azure-monitor/platform/archive-activity-log',
     apis: ['logProfiles:list'],
+    compliance: {
+        hipaa: 'HIPAA has clearly defined audit requirements for environments ' +
+            'containing sensitive data. Log Profiles are the recommended ' +
+            'logging and auditing solution for Azure since it is tightly ' +
+            'integrated into most Azure services and APIs.',
+        pci: 'Log profiles satisfy the PCI requirement to log all account activity ' +
+            'within environments containing cardholder data.'
+    },
 
     run: function(cache, settings, callback) {
         const results = [];
@@ -40,14 +48,26 @@ module.exports = {
         async.each(locations.logProfiles, (loc, lcb) => {
             if (!logProfile) return lcb();
             
-            var logProfileMatch = logProfile.filter((d) => {
+            var logProfileMatch = logProfile.find((d) => {
                 return d.locations.includes(loc);
             });
 
-            if (logProfileMatch.length > 0) {
+            if (logProfileMatch &&
+                logProfileMatch.categories &&
+                logProfileMatch.categories.length &&
+                logProfileMatch.categories.length === 3) {
                 helpers.addResult(results, 0,
                 'Log Profile is archiving all activities in the region.', loc);
                 lcb();
+            } else if (logProfileMatch &&
+                logProfileMatch.categories &&
+                logProfileMatch.categories.length &&
+                logProfileMatch.categories.length < 3) {
+                var categories = logProfileMatch.categories.join(' and ');
+                helpers.addResult(results, 2,
+                    `Log Profile is only archiving ${categories} in the region.`, loc);
+                lcb();
+
             } else {
                 helpers.addResult(results, 2,
                 'Log Profile is not archiving data in the region.', loc);

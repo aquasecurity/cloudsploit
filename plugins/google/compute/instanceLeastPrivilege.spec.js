@@ -71,7 +71,7 @@ describe('instanceLeastPrivilege', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[4].status).to.equal(2);
-                expect(results[4].message).to.include('The following Service Accounts have full access');
+                expect(results[4].message).to.include('The following service accounts have full access');
                 expect(results[4].region).to.equal('us-central1');
                 done()
             };

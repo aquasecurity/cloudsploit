@@ -3,12 +3,17 @@ var helpers = require('../../../helpers/azure/');
 
 module.exports = {
     title: 'Server Auditing Enabled',
-    category: 'SQL Servers',
+    category: 'SQL Server',
     description: 'Ensures that SQL Server Auditing is enabled for SQL servers',
     more_info: 'Enabling SQL Server Auditing ensures that all activities are being logged properly, including potentially-malicious activity.',
     recommended_action: 'Ensure that auditing is enabled for each SQL server.',
     link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-auditing',
     apis: ['servers:sql:list', 'serverBlobAuditingPolicies:get'],
+    compliance: {
+        hipaa: 'HIPAA requires that a secure audit record for ' +
+            'write read and delete is created for all ' +
+            'activities in the system.'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

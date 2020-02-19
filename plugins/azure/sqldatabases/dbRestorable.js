@@ -9,6 +9,10 @@ module.exports = {
     link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-recovery-using-backups',
     recommended_action: 'Ensure that each SQL database has automated backups configured with a sufficient retention period and that the last known backup operation completes successfully.',
     apis: ['resourceGroups:list', 'servers:sql:list', 'databases:listByServer'],
+    compliance: {
+        hipaa: 'HIPAA requires backups of all user data ' +
+            'and inventory to ensure future availability.'
+    },
 
     run: function (cache, settings, callback) {
         const results = [];

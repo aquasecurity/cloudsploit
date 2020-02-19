@@ -48,10 +48,12 @@ module.exports = {
                         helpers.addResult(results, 1, 'ELB does not have backend instances', region, lb.id);
                     }
                     cb();
-                })
+                }, function(){
+                    rcb();
+                });
+            } else {
+                rcb();
             }
-
-            rcb();
         }, function(){
             // Global checking goes here
             callback(null, results, source);

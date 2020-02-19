@@ -70,5 +70,11 @@ module.exports = {
     subnetworks: regions,
     projects: ['global'],
     clusters: ['global'],
-    managedZones: ['global']
+    managedZones: ['global'],
+    metrics: ['global'],
+    alertPolicies: ['global'],
+    serviceAccounts: ['global'],
+    keys: ['global'],
+    sinks: ['global'],
+    users: ['global']
 };

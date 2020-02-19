@@ -22,6 +22,9 @@ var MySQLManagementClient       = require('azure-arm-mysql');
 var SecurityCenterClient        = require('azure-arm-security');
 var SubscriptionClient          = require('azure-arm-resource').SubscriptionClient;
 var PostgresClient              = require('azure-arm-postgresql');
+var AzureGraphClient            = require('azure-graph');
+var ContainerRegistryClient     = require('azure-arm-containerregistry');
+var AuthorizationClient         = require('azure-arm-authorization');
 
 // Azure Service Modules
 var KeyVaultClient              = require('azure-keyvault');
@@ -46,8 +49,11 @@ var mapAzureApis = {
     "MySQLManagementClient"     : MySQLManagementClient,
     "SecurityCenterClient"      : SecurityCenterClient,
     "SubscriptionClient"        : SubscriptionClient,
-    "PostgresClient"            : PostgresClient
-}
+    "PostgresClient"            : PostgresClient,
+    "AzureGraphClient"          : AzureGraphClient,
+    "ContainerRegistryClient"   : ContainerRegistryClient,
+    "AuthorizationClient"       : AuthorizationClient,
+};
 
 const UNKNOWN_LOCATION = "unknown";
 
@@ -67,11 +73,19 @@ class AzureExecutor {
     run (collection, azureService, callObj, callKey, callback) {
         this.collection = collection;
         var self = this;
+        var tokenAudience;
 
-        this.azure.loginWithServicePrincipalSecret(this.azureConfig.ApplicationID, this.azureConfig.KeyValue, this.azureConfig.DirectoryID, function (err, credentials) {
-            if (err){
-                if (err.message &&
+        tokenAudience = callObj.ad ? { tokenAudience: 'graph' } : null;
+
+        this.azure.loginWithServicePrincipalSecret(this.azureConfig.ApplicationID, this.azureConfig.KeyValue, this.azureConfig.DirectoryID, tokenAudience, function (err, credentials) {
+            if (err || !credentials || !Object.keys(credentials).length){
+                if (err &&
+                    err.message &&
                     err.message.indexOf("unauthorized_client")>0) {
+                    err.body = {};
+                    err.body.message = "Unauthorized Client: Failed to acquire token for application with the provided secret. Unable to authenticate into Azure Account.";
+                } else {
+                    var err = {};
                     err.body = {};
                     err.body.message = "Unauthorized Client: Failed to acquire token for application with the provided secret. Unable to authenticate into Azure Account.";
                 }
@@ -108,7 +122,6 @@ class AzureExecutor {
                     }
                 });
             }
-
             // console.log('Azure :::... Session Closed');
         });
     }
@@ -379,7 +392,9 @@ class ApiCall {
                     self.client = new mapAzureApis[self.callObj.api](self.credentials, self.AzureConfig.SubscriptionID, self.AzureConfig.location);
                 } else if (self.callObj.noSubscription) {
                     self.client = new mapAzureApis[self.callObj.api](self.credentials);
-                }else {
+                } else if (self.callObj.ad) {
+                    self.client = new mapAzureApis[self.callObj.api](self.credentials, self.AzureConfig.DirectoryID);
+                } else {
                     self.client = new mapAzureApis[self.callObj.api](self.credentials, self.AzureConfig.SubscriptionID);
                 }
 
@@ -423,6 +438,10 @@ class ApiCall {
                     return self.client[self.AzureConfig.service][self.callKey](self.AzureConfig.SubscriptionID,self.AzureConfig, function(err, results, request, response) {
                         universalResolve(err, results, request, response);
                     });
+                } else if (self.callObj.subscription) {
+                    return self.client[self.AzureConfig.service][self.callKey]('subscriptions/' + self.AzureConfig.SubscriptionID, self.AzureConfig, function(err, results, request, response) {
+                        universalResolve(err, results, request, response);
+                    });
                 } else {
                     return self.client[self.AzureConfig.service][self.callKey](self.AzureConfig, function(err, results, request, response) {
                         universalResolve(err, results, request, response);
@@ -460,6 +479,8 @@ class ApiCall {
                             default:
                                 break;
                         }
+                    } else {
+
                     }
                 } else {
                     if (self.parameters) {

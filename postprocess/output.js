@@ -85,6 +85,52 @@ module.exports = {
         }
     },
 
+    /**
+     * Creates an output handler that writes output in the JSON format.
+     * @param {fs.WriteSteam} stream The stream to write to or an object that
+     * obeys the writeable stream contract.
+     */
+    createJson: function (stream) {
+      var results = [];
+      return {
+          stream: stream,
+      
+          startCompliance: function(plugin, pluginKey, compliance) {
+          },
+      
+          endCompliance: function(plugin, pluginKey, compliance) {
+          },
+      
+          writeResult: function (result, plugin, pluginKey) {
+              var statusWord;
+              if (result.status === 0) {
+                  statusWord = 'OK';
+              } else if (result.status === 1) {
+                  statusWord = 'WARN';
+              } else if (result.status === 2) {
+                  statusWord = 'FAIL';
+              } else {
+                  statusWord = 'UNKNOWN';
+              }
+              
+              results.push({
+                plugin: pluginKey,
+                category: plugin.category,
+                title: plugin.title,
+                resource: result.resource || 'N/A',
+                region: result.region || 'Global',
+                status: statusWord,
+                message: result.message
+              })
+          },
+      
+          close: function () {
+            this.stream.write(JSON.stringify(results));              
+            this.stream.end();
+          }
+      }
+  },
+
     /***
      * Creates an output handler that writes output in the JUnit XML format.
      * 
@@ -262,6 +308,14 @@ module.exports = {
             outputs.push(this.createJunit(stream));
         }
 
+        var addJsonOutput = argv.find(function (arg) {
+            return arg.startsWith('--json=');
+        })
+        if (addJsonOutput) {
+            var stream = fs.createWriteStream(addJsonOutput.substr(7));
+            outputs.push(this.createJson(stream));
+        }
+
         var addConsoleOutput = argv.find(function (arg) {
             return arg.startsWith('--console');
         })
@@ -270,6 +324,11 @@ module.exports = {
         if (addConsoleOutput || outputs.length == 0) {
             outputs.push(consoleOutputHandler);
         }
+
+        // Ignore any "OK" results - only report issues
+        var ignoreOkStatus = argv.find(function (arg) {
+            return arg.startsWith('--ignore-ok');
+        })
 
         // This creates a multiplexer-like object that forwards the
         // call onto any output handler that has been defined. This
@@ -290,7 +349,9 @@ module.exports = {
 
             writeResult: function (result, plugin, pluginKey) {
                 for (var output of outputs) {
-                    output.writeResult(result, plugin, pluginKey);
+                    if (!(ignoreOkStatus && result.status === 0)) {
+                        output.writeResult(result, plugin, pluginKey);
+                    }
                 }
             },
 

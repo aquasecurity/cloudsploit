@@ -167,6 +167,13 @@ var calls = {
             noSubscription: true
         }
     },
+    roleDefinitions: {
+        list: {
+            api: "AuthorizationClient",
+            arm: true,
+            subscription: true
+        }
+    },
     managementLocks: {
         listAtSubscriptionLevel: {
             api: "ManagementLockClient",
@@ -178,8 +185,27 @@ var calls = {
             api: "NetworkManagementClient",
             arm: true
         }
+    },
+    users: {
+        list: {
+            api: "AzureGraphClient",
+            arm: true,
+            ad: true
+        }
+    },
+    registries: {
+        list: {
+            api: "ContainerRegistryClient",
+            arm: true
+        }
+    },
+    pricings: {
+        list: {
+            api: "SecurityCenterClient",
+            arm: true,
+            ascLoc: true
+        }
     }
-
 };
 
 var postcalls = {
@@ -398,6 +424,15 @@ var postcalls = {
             filterValue: ['name'],
             arm: false,
             keyVault: true
+        },
+        getSecrets: {
+            api: "KeyVaultClient",
+            reliesOnService: ['vaults'],
+            reliesOnCall: ['list'],
+            filterKey: ['name'],
+            filterValue: ['name'],
+            arm: false,
+            keyVault: true
         }
     },
     loadBalancers: {
@@ -420,6 +455,17 @@ var postcalls = {
             filterValue: ['resourceGroupName','name'],
             arm: true
         },
+    },
+    serverAzureADAdministrators: {
+        listByServer: {
+            api: "SQLManagementClient",
+            reliesOnService: ['resourceGroups','servers'],
+            reliesOnSubService: [undefined, 'sql'],
+            reliesOnCall: ['list','list'],
+            filterKey: ['resourceGroupName','serverName'],
+            filterValue: ['resourceGroupName','name'],
+            arm: true
+        }
     },
 	virtualMachineScaleSets: {
         list: {
@@ -449,6 +495,16 @@ var postcalls = {
             reliesOnCall: ['list', 'list'],
             filterKey: ['resourceGroupName', 'serverName'],
             filterValue: ['resourceGroupName', 'name'],
+            arm: true
+        }
+    },
+    managedClusters: {
+        getUpgradeProfile: {
+            api: "ContainerServiceClient",
+            reliesOnService: ['resourceGroups', 'managedClusters'],
+            reliesOnCall: ['list', 'list'],
+            filterKey: ['resourceGroupName', 'recourceName'],
+            filterValue: ['resourceGroupName','name'],
             arm: true
         }
     }
@@ -570,7 +626,7 @@ var finalcalls = {
         get: {
             api: "KeyVaultManagementClient",
             reliesOnService: ['resourceGroups','vaults'],
-            reliesOnCall: ['list','listByResourceGroup'],
+            reliesOnCall: ['list','list'],
             filterKey: ['resourceGroupName','name'],
             filterValue: ['resourceGroupName','name'],
             arm: true

@@ -69,7 +69,7 @@ module.exports = {
         if (policyAssignments &&
             policyAssignments.data) {
             resourceLocationPolicyAssignment = policyAssignments.data.find((policyAssignment) => {
-                return policyAssignment.displayName.includes("Audit resource location matches resource group location");
+                if (policyAssignment.displayName) return policyAssignment.displayName.includes("Audit resource location matches resource group location");
             });
         }
 

@@ -72,7 +72,7 @@ describe('connectSerialPortsDisabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(1);
                 expect(results[4].status).to.equal(2);
-                expect(results[4].message).to.include('Connecting to Serial Ports is Enabled for the following instances');
+                expect(results[4].message).to.include('Connecting to Serial Ports is enabled for the following instances');
                 expect(results[4].region).to.equal('us-central1');
                 done()
             };
@@ -285,4 +285,4 @@ describe('connectSerialPortsDisabled', function () {
         })
 
     })
-})
+});

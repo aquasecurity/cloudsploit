@@ -78,9 +78,6 @@ module.exports = {
                 };
                 callback(null, results, source);
             });
-            
-        }, function(){
-            callback(null, results, source);
         });
     }
 };

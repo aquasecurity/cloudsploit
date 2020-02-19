@@ -15,12 +15,19 @@ module.exports = {
             description: 'When set to true S3 encryption using default KMS keys or AES will be marked as failing',
             regex: '^(true|false)$',
             default: 'false'
+        },
+        s3_encryption_allow_pattern: {
+            name: 'S3 Encryption Allow Pattern',
+            description: 'When set, whitelists buckets matching the given pattern. Useful for overriding buckets outside the account control.',
+            regex: '^.{1,255}$',
+            default: false
         }
     },
 
     run: function(cache, settings, callback) {
         var config = {
-            s3_encryption_require_cmk: settings.s3_encryption_require_cmk || this.settings.s3_encryption_require_cmk.default
+            s3_encryption_require_cmk: settings.s3_encryption_require_cmk || this.settings.s3_encryption_require_cmk.default,
+            s3_encryption_allow_pattern: settings.s3_encryption_allow_pattern || this.settings.s3_encryption_allow_pattern.default
         };
 
         config.s3_encryption_require_cmk = (config.s3_encryption_require_cmk == 'true');
@@ -93,42 +100,51 @@ module.exports = {
                 return callback(null, results, source);
             }
 
+            var allowRegex = (config.s3_encryption_allow_pattern &&
+                config.s3_encryption_allow_pattern.length) ? new RegExp(config.s3_encryption_allow_pattern) : false;
+
             listBuckets.data.forEach(function(bucket){
-                var getBucketEncryption = helpers.addSource(cache, source,
-                    ['s3', 'getBucketEncryption', region, bucket.Name]);
-
-                if (getBucketEncryption && getBucketEncryption.err &&
-                    getBucketEncryption.err.code && getBucketEncryption.err.code == 'ServerSideEncryptionConfigurationNotFoundError') {
-                    helpers.addResult(results, 2,
-                        'Bucket: ' + bucket.Name + ' has encryption disabled',
-                        'global', 'arn:aws:s3:::' + bucket.Name);
-                } else if (!getBucketEncryption || getBucketEncryption.err || !getBucketEncryption.data) {
-                    helpers.addResult(results, 3,
-                        'Error querying bucket encryption for: ' + bucket.Name +
-                        ': ' + helpers.addError(getBucketEncryption),
-                        'global', 'arn:aws:s3:::' + bucket.Name);
-                } else if (getBucketEncryption.data.ServerSideEncryptionConfiguration &&
-                        getBucketEncryption.data.ServerSideEncryptionConfiguration.Rules &&
-                        getBucketEncryption.data.ServerSideEncryptionConfiguration.Rules[0] &&
-                        getBucketEncryption.data.ServerSideEncryptionConfiguration.Rules[0].ApplyServerSideEncryptionByDefault &&
-                        getBucketEncryption.data.ServerSideEncryptionConfiguration.Rules[0].ApplyServerSideEncryptionByDefault.SSEAlgorithm) {
-                    var algo = getBucketEncryption.data.ServerSideEncryptionConfiguration.Rules[0].ApplyServerSideEncryptionByDefault.SSEAlgorithm;
-                    var keyArn = getBucketEncryption.data.ServerSideEncryptionConfiguration.Rules[0].ApplyServerSideEncryptionByDefault.KMSMasterKeyID;
-
-                    if (config.s3_encryption_require_cmk &&
-                        (algo == 'AES256' || (algo == 'aws:kms' && defaultKeyIds.indexOf(keyArn) > -1))) {
-                        helpers.addResult(results, 2,
-                            'Bucket: ' + bucket.Name + ' has ' + algo + ' encryption enabled but is not using a CMK',
-                            'global', 'arn:aws:s3:::' + bucket.Name, custom);
-                    } else {
-                        helpers.addResult(results, 0,
-                            'Bucket: ' + bucket.Name + ' has ' + algo + ' encryption enabled',
-                            'global', 'arn:aws:s3:::' + bucket.Name, custom);
-                    }
+                if (allowRegex && allowRegex.test(bucket.Name)) {
+                    helpers.addResult(results, 0,
+                        'Bucket: ' + bucket.Name + ' is whitelisted via custom setting.',
+                        'global', 'arn:aws:s3:::' + bucket.Name, custom);
                 } else {
-                    helpers.addResult(results, 2,
-                        'Bucket: ' + bucket.Name + ' has encryption disabled',
-                        'global', 'arn:aws:s3:::' + bucket.Name);
+                    var getBucketEncryption = helpers.addSource(cache, source,
+                        ['s3', 'getBucketEncryption', region, bucket.Name]);
+
+                    if (getBucketEncryption && getBucketEncryption.err &&
+                        getBucketEncryption.err.code && getBucketEncryption.err.code == 'ServerSideEncryptionConfigurationNotFoundError') {
+                        helpers.addResult(results, 2,
+                            'Bucket: ' + bucket.Name + ' has encryption disabled',
+                            'global', 'arn:aws:s3:::' + bucket.Name);
+                    } else if (!getBucketEncryption || getBucketEncryption.err || !getBucketEncryption.data) {
+                        helpers.addResult(results, 3,
+                            'Error querying bucket encryption for: ' + bucket.Name +
+                            ': ' + helpers.addError(getBucketEncryption),
+                            'global', 'arn:aws:s3:::' + bucket.Name);
+                    } else if (getBucketEncryption.data.ServerSideEncryptionConfiguration &&
+                            getBucketEncryption.data.ServerSideEncryptionConfiguration.Rules &&
+                            getBucketEncryption.data.ServerSideEncryptionConfiguration.Rules[0] &&
+                            getBucketEncryption.data.ServerSideEncryptionConfiguration.Rules[0].ApplyServerSideEncryptionByDefault &&
+                            getBucketEncryption.data.ServerSideEncryptionConfiguration.Rules[0].ApplyServerSideEncryptionByDefault.SSEAlgorithm) {
+                        var algo = getBucketEncryption.data.ServerSideEncryptionConfiguration.Rules[0].ApplyServerSideEncryptionByDefault.SSEAlgorithm;
+                        var keyArn = getBucketEncryption.data.ServerSideEncryptionConfiguration.Rules[0].ApplyServerSideEncryptionByDefault.KMSMasterKeyID;
+
+                        if (config.s3_encryption_require_cmk &&
+                            (algo == 'AES256' || (algo == 'aws:kms' && defaultKeyIds.indexOf(keyArn) > -1))) {
+                            helpers.addResult(results, 2,
+                                'Bucket: ' + bucket.Name + ' has ' + algo + ' encryption enabled but is not using a CMK',
+                                'global', 'arn:aws:s3:::' + bucket.Name, custom);
+                        } else {
+                            helpers.addResult(results, 0,
+                                'Bucket: ' + bucket.Name + ' has ' + algo + ' encryption enabled',
+                                'global', 'arn:aws:s3:::' + bucket.Name, custom);
+                        }
+                    } else {
+                        helpers.addResult(results, 2,
+                            'Bucket: ' + bucket.Name + ' has encryption disabled',
+                            'global', 'arn:aws:s3:::' + bucket.Name);
+                    }
                 }
             });
 

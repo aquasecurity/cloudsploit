@@ -9,6 +9,12 @@ module.exports = {
     recommended_action: 'Ensure the access level for the storage account containing Activity Log data is set to private.',
     link: 'https://docs.microsoft.com/en-us/azure/storage/blobs/storage-manage-access-to-resources',
     apis: ['storageAccounts:list', 'blobContainers:list'],
+    compliance: {
+        hipaa: 'HIPAA requires that all systems used for storing ' +
+                'covered and user data must deny-all activity by ' +
+                'default, along with keeping all data private ' +
+                'and secure.'
+    },
 
     run: function (cache, settings, callback) {
         const results = [];

@@ -4,10 +4,10 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'DNS Security Enabled',
     category: 'DNS',
-    description: 'Ensures that DNS Security is enabled on all managed zones.',
+    description: 'Ensures that DNS Security is enabled on all managed zones',
     more_info: 'DNS Security is a feature that authenticates all responses to domain name lookups. This prevents attackers from committing DNS hijacking or man in the middle attacks.',
-    link: 'https://cloud.google.com/dns/docs/dnssec?hl=en_US&_ga=2.190155811.-922741565.1560964300',
-    recommended_action: '1. Enter the Cloud DNS Service. 2. Select the Managed Zone in question. 3. Enable DNSSEC.',
+    link: 'https://cloud.google.com/dns/docs/dnssec',
+    recommended_action: 'Ensure DNSSEC is enabled for all managed zones in the cloud DNS service.',
     apis: ['managedZones:list'],
 
     run: function(cache, settings, callback) {
@@ -22,34 +22,27 @@ module.exports = {
             if (!managedZones) return rcb();
 
             if (managedZones.err || !managedZones.data) {
-                helpers.addResult(results, 3, 'Unable to query DNS Managed Zones: ' + helpers.addError(managedZones), region);
-                return rcb();
-            };
-
-            if (!managedZones.data.length) {
-                helpers.addResult(results, 0, 'No DNS Managed Zones present', region);
+                helpers.addResult(results, 3, 'Unable to query DNS managed zones: ' + helpers.addError(managedZones), region);
                 return rcb();
             }
-            var badManagedZones = [];
+
+            if (!managedZones.data.length) {
+                helpers.addResult(results, 0, 'No DNS managed zones found', region);
+                return rcb();
+            }
+
             managedZones.data.forEach(managedZone => {
                if (!managedZone.dnssecConfig ||
                     (managedZone.dnssecConfig &&
                         (!managedZone.dnssecConfig.state ||
                             (managedZone.dnssecConfig.state &&
                              managedZone.dnssecConfig.state !== 'on')))) {
-
-                   badManagedZones.push(managedZone.name)
+                   helpers.addResult(results, 2,
+                       `The managed zone does not have DNS security enabled`, region, managedZone.id);
+               } else {
+                   helpers.addResult(results, 0, 'The managed zone has DNS security enabled', region, managedZone.id);
                }
             });
-
-            if (badManagedZones.length) {
-                var badManagedZonesStr = badManagedZones.join(', ');
-                helpers.addResult(results, 2,
-                    `The following Managed Zones do not have DNS Security Enabled: ${badManagedZonesStr}`, region);
-            } else {
-                helpers.addResult(results, 0, 'All DNS Managed Zones have DNS Security Enabled', region);
-            }
-
 
             rcb();
         }, function(){

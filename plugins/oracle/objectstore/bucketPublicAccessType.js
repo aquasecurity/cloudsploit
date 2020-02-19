@@ -65,8 +65,9 @@ module.exports = {
                     });
                 }
             }
+            rcb();
+        }, function(){
+            callback(null, results, source);
         });
-
-        callback(null, results, source);
     }
 };

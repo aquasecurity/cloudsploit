@@ -143,6 +143,36 @@ describe('bucketEncryption', function () {
             s3.run(cache, {}, callback);
         })
 
+        it('should give passing result if unencrypted S3 bucket matches whitelist', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1)
+                expect(results[0].status).to.equal(0)
+                expect(results[0].message).to.include('is whitelisted via custom setting')
+                done()
+            };
+
+            const cache = createCache(false, true, false, false);
+
+            s3.run(cache, {
+              s3_encryption_allow_pattern: '^bucket1$'
+            }, callback);
+        })
+
+        it('should give failing result if unencrypted S3 bucket does not match whitelist', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1)
+                expect(results[0].status).to.equal(2)
+                expect(results[0].message).to.include('has encryption disabled')
+                done()
+            };
+
+            const cache = createCache(false, true, false, false);
+
+            s3.run(cache, {
+              s3_encryption_allow_pattern: '^bucket2$'
+            }, callback);
+        })
+
         it('should give failing result if S3 bucket has AES encryption with opt-out', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)

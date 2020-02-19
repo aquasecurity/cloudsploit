@@ -2,13 +2,14 @@ var async = require('async');
 var helpers = require('../../../helpers/google');
 
 module.exports = {
-    title: 'Ip Forwarding Disabled',
+    title: 'IP Forwarding Disabled',
     category: 'Compute',
-    description: 'Ensure that IP forwarding is disabled on all Instances',
+    description: 'Ensures that IP forwarding is disabled on all instances',
     more_info: 'Disabling IP forwarding ensures that the instance only sends and receives packets with matching destination or source IPs.',
     link: 'https://cloud.google.com/vpc/docs/using-routes',
-    recommended_action: 'IP Forwarding settings can only be chosen when creating a new instance, Delete the affected instances and redeploy with IP Forwarding disabled',
+    recommended_action: 'IP forwarding settings can only be chosen when creating a new instance. Delete the affected instances and redeploy with IP forwarding disabled.',
     apis: ['instances:compute:list'],
+    
     run: function(cache, settings, callback) {
 
         var results = [];
@@ -59,10 +60,10 @@ module.exports = {
             } else if (badInstances.length) {
                 var myInstanceStr = badInstances.join(", ");
                 helpers.addResult(results, 2,
-                    `Instance IP Forwarding is Enabled for the following instances: ${myInstanceStr}`, region);
+                    `Instance IP forwarding is enabled for the following instances: ${myInstanceStr}`, region);
             } else if (!badInstances.length) {
                 helpers.addResult(results, 0,
-                    'Instance IP Forwarding is disabled for all instances in the region', region);
+                    'Instance IP forwarding is disabled for all instances in the region', region);
             }
             rcb();
         }, function() {

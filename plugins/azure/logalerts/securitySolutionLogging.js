@@ -40,12 +40,12 @@ module.exports = {
 
             for (var allCondition of allConditions.allOf) {
                 const condition = allCondition.equals;
-                if (condition.indexOf("microsoft.security/securitysolutions/write") > -1) {
+                if (condition && condition.indexOf("microsoft.security/securitysolutions/write") > -1) {
                     helpers.addResult(results, 0,
                         'Log Alert for Security Solution write is enabled', location, activityLogAlertResource.id);
                     writeExists = true;
                 }
-                if (condition.indexOf("microsoft.security/securitysolutions/delete") > -1) {
+                if (condition && condition.indexOf("microsoft.security/securitysolutions/delete") > -1) {
                     helpers.addResult(results, 0,
                         'Log Alert for Security Solution delete is enabled', location, activityLogAlertResource.id);
                     deleteExists = true;

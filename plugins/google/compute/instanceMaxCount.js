@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'VM Max Instances',
     category: 'Compute',
-    description: 'Ensures the total number of VM instances does not exceed a set threshold.',
+    description: 'Ensures the total number of VM instances does not exceed a set threshold',
     more_info: 'The number of running VM instances should be carefully audited, especially in unused regions, to ensure only approved applications are consuming compute resources. Many compromised Google accounts see large numbers of VM instances launched.',
     link: 'https://cloud.google.com/compute/docs/instances/',
     recommended_action: 'Ensure that the number of running VM instances matches the expected count. If instances are launched above the threshold, investigate to ensure they are legitimate.',
