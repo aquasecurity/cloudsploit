@@ -4,9 +4,9 @@ var helpers = require('../../../helpers/oracle/');
 module.exports = {
     title: 'WAF Public IP Enabled',
     category: 'Networking',
-    description: 'Determine if Public IPs have WAF enabled',
+    description: 'Ensures all public IPs have WAF enabled',
     more_info: 'Every Public IP address should have a firewall enabled to control access to the endpoints. Enabling a Web Application Firewall follows security best practices and helps prevent malicious attempts to access the network.',
-    recommended_action: '1. Enter the WAF Policies service under Security. 2. Create a new WAF Policy with the unprotected public IP address.',
+    recommended_action: 'Ensure all Public IPs have WAF enabled',
     link: 'https://docs.cloud.oracle.com/iaas/Content/WAF/Concepts/gettingstarted.htm',
     apis: ['publicIp:list', 'waasPolicy:list', 'waasPolicy:get'],
 
@@ -26,19 +26,19 @@ module.exports = {
 
                 if (publicIps.err || !publicIps.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for Public IPs: ' + helpers.addError(publicIps), region);
+                        'Unable to query for public IPs: ' + helpers.addError(publicIps), region);
                     return rcb();
                 }
 
                 if (!publicIps.data.length) {
-                    helpers.addResult(results, 0, 'No Public IPs present', region);
+                    helpers.addResult(results, 0, 'No public IPs present', region);
                     return rcb();
-                };
+                }
                 
                 publicIps.data.forEach(publicIp => {
                     allIps.push(publicIp.ipAddress);
                 });
-            };
+            }
 
             rcb();
         }, function(){
@@ -50,32 +50,37 @@ module.exports = {
 
                 if ((waasPolicies.err && waasPolicies.err.length) || !waasPolicies.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for waas Policies: ' + helpers.addError(waasPolicies), region);
+                        'Unable to query for waas policies: ' + helpers.addError(waasPolicies), region);
                     return lcb();
                 }
 
                 if (!waasPolicies.data.length) {
-                    helpers.addResult(results, 0, 'No waas Policies present', region);
+                    helpers.addResult(results, 0, 'No waas policies found', region);
                     return lcb();
                 }
                 waasPolicies.data.forEach(waasPolicy => {
-                    for (var x in waasPolicy.origins) {
-                        var origin = waasPolicy.origins[x];
-                        if (allIps.indexOf(origin.uri) > -1) {
-                            allIps.splice(allIps.indexOf(origin.uri),1);
-                        };
-                    };
+                    if (waasPolicy.origins &&
+                        waasPolicy.origins.length) {
+                        for (var x in waasPolicy.origins) {
+                            var origin = waasPolicy.origins[x];
+
+                            if (origin.uri &&
+                                allIps.indexOf(origin.uri) > -1) {
+                                allIps.splice(allIps.indexOf(origin.uri),1);
+                            }
+                        }
+                    }
                 });
 
                 lcb();
             }, function(){
                 if (allIps.length) {
                     helpers.addResult(results, 2,
-                        'The following Public IPs do not have WAF enabled: ' + allIps.join(', '));
+                        'The following public IPs do not have WAF enabled: ' + allIps.join(', '));
                 } else {
                     helpers.addResult(results, 0,
-                        'All Public IPs have WAF enabled');
-                };
+                        'All public IPs have WAF enabled');
+                }
                 callback(null, results, source);
             });
         });

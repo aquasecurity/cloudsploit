@@ -4,8 +4,8 @@ var helpers = require('../../../helpers/oracle/');
 module.exports = {
     title: 'Instance Pool Multiple AD',
     category: 'Compute',
-    description: 'Determines if Instance Pools are launched in Multiple Availability Domains.',
-    more_info: 'Launching Instance Pools in multiple availability domains follows best practices by creating highly available resources.',
+    description: 'Ensures instance pools are launched in multiple availability domains.',
+    more_info: 'Launching instance pools in multiple availability domains follows best practices by creating highly available resources.',
     recommended_action: 'When launching instance pools, Add multiple availability domains.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm',
     apis: ['instancePool:list'],
@@ -26,30 +26,30 @@ module.exports = {
 
                 if (instancePools.err || !instancePools.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for Instance Pools: ' + helpers.addError(instancePools), region);
+                        'Unable to query for instance pools: ' + helpers.addError(instancePools), region);
                     return rcb();
-                };
+                }
 
                 if (!instancePools.data.length) {
-                    helpers.addResult(results, 0, 'No Instance Pools present', region);
+                    helpers.addResult(results, 0, 'No instance pools found', region);
                     return rcb();
-                };
+                }
 
                 instancePools.data.forEach(instancePool => {
                     if (instancePool.availabilityDomains &&
-                        instancePool.availabilityDomains.length == 1) {
-                            var myADs = Object.values(instancePool.availabilityDomains).join(', ');
+                        instancePool.availabilityDomains.length === 1) {
+                            var availabilityDomains = Object.values(instancePool.availabilityDomains).join(', ');
                             helpers.addResult(results, 2, 
-                                `Instance Pool is only in one Availability Domain: ${myADs}`, region, instancePool.id);
+                                `Instance pool is only in one availability domain: ${availabilityDomains}`, region, instancePool.id);
                     } else if (instancePool.availabilityDomains &&
                         instancePool.availabilityDomains.length > 1) {
-                            var myADs = Object.values(instancePool.availabilityDomains).join(', ');
+                            var availabilityDomains = Object.values(instancePool.availabilityDomains).join(', ');
                             helpers.addResult(results, 0, 
-                                `Instance Pool is in multiple Availability Domains: ${myADs}`, region, instancePool.id);
+                                `Instance pool is in multiple availability domains: ${availabilityDomains}`, region, instancePool.id);
                     } else {
                         helpers.addResult(results, 0, 
-                            'No Availability Domains', region, instancePool.id);
-                    };
+                            'No availability domains', region, instancePool.id);
+                    }
                 });
             }
             rcb();

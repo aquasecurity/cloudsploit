@@ -4,11 +4,17 @@ var helpers = require('../../../helpers/oracle/');
 module.exports = {
     title: 'Boot Volume Transit Encryption',
     category: 'Compute',
-    description: 'Determine if in-transit data encryption is enabled on boot volumes.',
-    more_info: 'Enabling Boot Volume in-transit data encryption ensures that Boot Volume data is secured and follows Oracle security best practices.',
-    recommended_action: 'Boot Volume Transit Encryption can only be configured when creating a new instance. Recreate the instance with in-transit encryption enabled.',
+    description: 'Ensures in-transit data encryption is enabled on boot volumes.',
+    more_info: 'Enabling boot volume in-transit data encryption ensures that boot volume data is secured and follows Oracle security best practices.',
+    recommended_action: 'boot volume transit encryption can only be configured when creating a new instance. Recreate the instance with in-transit encryption enabled.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Block/Concepts/bootvolumes.htm',
     apis: ['bootVolumeAttachment:list'],
+    compliance: {
+        pci: 'PCI requires strong cryptographic and security protocols ' +
+            'when transmitting user data over open, public networks.',
+        hipaa: 'HIPAA requires all data to be transmitted over secure channels. ' +
+            'boot volume transit encryption should be used.',
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -26,22 +32,22 @@ module.exports = {
 
                 if ((bootVolumeAttachments.err && bootVolumeAttachments.err.length) || !bootVolumeAttachments.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for Boot Volume Attachments: ' + helpers.addError(bootVolumeAttachments), region);
+                        'Unable to query for boot volume attachments: ' + helpers.addError(bootVolumeAttachments), region);
                     return rcb();
-                };
+                }
 
                 if (!bootVolumeAttachments.data.length) {
-                    helpers.addResult(results, 0, 'No Boot Volume Attachments present', region);
+                    helpers.addResult(results, 0, 'No boot volume attachments found', region);
                     return rcb();
-                };
+                }
 
                 bootVolumeAttachments.data.forEach(bootVolumeAttachment => {
                     if (bootVolumeAttachment.isPvEncryptionInTransitEnabled &&
-                        bootVolumeAttachment.isPvEncryptionInTransitEnabled == true) {
-                        helpers.addResult(results, 0, 'Boot Volume Transit Encryption is enabled', region, bootVolumeAttachment.bootVolumeId);
+                        bootVolumeAttachment.isPvEncryptionInTransitEnabled === true) {
+                        helpers.addResult(results, 0, 'boot volume transit encryption is enabled', region, bootVolumeAttachment.bootVolumeId);
                     } else {
-                        helpers.addResult(results, 2, 'Boot Volume Transit Encryption is disabled', region, bootVolumeAttachment.bootVolumeId);
-                    };
+                        helpers.addResult(results, 2, 'boot volume transit encryption is disabled', region, bootVolumeAttachment.bootVolumeId);
+                    }
                 });
             }
             rcb();

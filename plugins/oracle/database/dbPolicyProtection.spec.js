@@ -160,7 +160,7 @@ describe('dbPolicyProtection', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('All policies have Database delete protection enabled')
+                expect(results[0].message).to.include('All policies have database delete protection enabled')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };

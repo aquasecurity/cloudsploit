@@ -14,6 +14,12 @@ module.exports = {
     link: 'https://docs.cloud.oracle.com/iaas/Content/Balance/Tasks/managinglisteners.htm',
     recommended_action: 'Remove non-HTTPS listeners from load balancer.',
     apis: ['loadBalancer:list'],
+    compliance: {
+        hipaa: 'HIPAA requires that all patient information is ' +
+            'encrypted at rest and in transit.',
+        pci: 'PCI requires that all cardholder data is encrypted ' +
+            'at rest and in transit.'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -35,7 +41,7 @@ module.exports = {
                 }
 
                 if (!loadBalancers.data.length) {
-                    helpers.addResult(results, 0, 'No load balancers present', region);
+                    helpers.addResult(results, 0, 'No load balancers found', region);
                     return rcb();
                 }
 

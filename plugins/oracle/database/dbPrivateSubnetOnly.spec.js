@@ -55,7 +55,7 @@ describe('dbPrivateSubnetOnly', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(3)
-                expect(results[0].message).to.include('Unable to query for database Systems:')
+                expect(results[0].message).to.include('Unable to query for database systems:')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -110,7 +110,7 @@ describe('dbPrivateSubnetOnly', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No subnets present')
+                expect(results[0].message).to.include('No subnets found')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -129,7 +129,7 @@ describe('dbPrivateSubnetOnly', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No database systems present')
+                expect(results[0].message).to.include('No database systems found')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -148,7 +148,7 @@ describe('dbPrivateSubnetOnly', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('The following DB Systems use the public subnet')
+                expect(results[0].message).to.include('The following db systems use the public subnet')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -462,7 +462,7 @@ describe('dbPrivateSubnetOnly', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('All DB Systems are in private subnets')
+                expect(results[0].message).to.include('All db systems are in private subnets')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };

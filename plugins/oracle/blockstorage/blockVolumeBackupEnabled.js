@@ -4,9 +4,9 @@ var helpers = require('../../../helpers/oracle/');
 module.exports = {
     title: 'Block Volume Backup Enabled',
     category: 'Block Storage',
-    description: 'Determine if Block Volumes have backups enabled.',
-    more_info: 'Enabling Block Volume backup policies ensures that the block volume can be restored following in the event of data loss.',
-    recommended_action: '1. Enter the Block Volume Service. 2. Select the Block Volume in question. 3. Select Assign next to Backup Policy. 4. Select the best policy for your services.',
+    description: 'Ensures block volumes have backups enabled.',
+    more_info: 'Enabling block volume backup policies ensures that the block volume can be restored following in the event of data loss.',
+    recommended_action: 'Enable backups on each block volume.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Block/Concepts/blockvolumebackups.htm',
     apis: ['volume:list','volumeBackupPolicyAssignment:volume'],
 
@@ -26,19 +26,19 @@ module.exports = {
 
                 if ((blockVolumes.err && blockVolumes.err.length) || !blockVolumes.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for Block Volumes: ' + helpers.addError(blockVolumes), region);
+                        'Unable to query for block volumes: ' + helpers.addError(blockVolumes), region);
                     return rcb();
-                };
+                }
 
                 if (!blockVolumes.data.length) {
-                    helpers.addResult(results, 0, 'No Block Volumes present', region);
+                    helpers.addResult(results, 0, 'No block volumes found', region);
                     return rcb();
-                };
+                }
 
 
-                var myBlockVolumes = [];
+                var badBlockVolumes = [];
                 blockVolumes.data.forEach(blockVolume => {
-                    myBlockVolumes.push(blockVolume.id);
+                    badBlockVolumes.push(blockVolume.id);
                 });
 
                 var blockVolumeBackupPolicies = helpers.addSource(cache, source,
@@ -48,27 +48,27 @@ module.exports = {
 
                 if ((blockVolumeBackupPolicies.err && blockVolumeBackupPolicies.err.length) || !blockVolumeBackupPolicies.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for Block Volume Backups: ' + helpers.addError(blockVolumeBackupPolicies), region);
+                        'Unable to query for block volume backups: ' + helpers.addError(blockVolumeBackupPolicies), region);
                     return rcb();
-                };
+                }
 
                 blockVolumeBackupPolicies.data.forEach(blockVolumeBackupPolicy => {
-                    var bootIdx = myBlockVolumes.indexOf(blockVolumeBackupPolicy.assetId)
+                    var bootIdx = badBlockVolumes.indexOf(blockVolumeBackupPolicy.assetId);
 
                     if (bootIdx > -1) {
-                        myBlockVolumes.splice(bootIdx, 1);
-                    };
+                        badBlockVolumes.splice(bootIdx, 1);
+                    }
                 });
 
-                if (myBlockVolumes.length) {
-                    var myBlockVolumesStr = myBlockVolumes.join(', ');
+                if (badBlockVolumes.length) {
+                    var badBlockVolumesStr = badBlockVolumes.join(', ');
                     helpers.addResult(results, 2,
-                        `The following Block Volumes do not have a backup policy enabled: ${myBlockVolumesStr}`, region);
+                        `The following block volumes do not have a backup policy enabled: ${badBlockVolumesStr}`, region);
                 } else {
                     helpers.addResult(results, 0,
-                        'All Block Volumes have a backup policy enabled', region);
-                };
-            };
+                        'All block volumes have a backup policy enabled', region);
+                }
+            }
             rcb();
         }, function(){
             // Global checking goes here
