@@ -2,8 +2,9 @@ var assert = require('assert');
 var expect = require('chai').expect;
 var s3 = require('./bucketEncryption');
 
-const createCache = (cmk, bucketErr, sseAes, kms) => {
+const createCache = (cmk, bucketErr, sseAes, kms, cfMatching) => {
     var bucketObj = {};
+    var cfobject = {};
 
     if (bucketErr) {
         bucketObj = {
@@ -43,6 +44,24 @@ const createCache = (cmk, bucketErr, sseAes, kms) => {
         };
     }
 
+    if (cfMatching) {
+      cfobject = {
+        "Id": "S3-bucket1",
+        "DomainName": "bucket1.s3.amazonaws.com",
+        "S3OriginConfig": {
+          "OriginAccessIdentity": "origin-access-identity/cloudfront/ABCDEF123"
+        }
+      };
+    } else {
+      cfobject = {
+        "Id": "S3-bucket2",
+        "DomainName": "bucket2.s3.amazonaws.com",
+        "S3OriginConfig": {
+          "OriginAccessIdentity": "origin-access-identity/cloudfront/ABCDEF123"
+        }
+      };
+    }
+
     return {
       "kms": {
         "listKeys": {
@@ -68,6 +87,17 @@ const createCache = (cmk, bucketErr, sseAes, kms) => {
               }
             }
           }
+        },
+        "listAliases": {
+          "us-east-1": {
+            "data": [
+              {
+                "AliasName": "alias/my-alias",
+                "AliasArn": "arn:aws:kms:us-east-1:0123456789101:alias/my-alias",
+                "TargetKeyId": "abc0123"
+              }
+            ]
+          }
         }
       },
       "s3": {
@@ -85,8 +115,23 @@ const createCache = (cmk, bucketErr, sseAes, kms) => {
             "bucket1": bucketObj
           }
         }
+      },
+      "cloudfront": {
+        "listDistributions": {
+          "us-east-1": {
+            "data": [
+              {
+                "Origins": {
+                  "Items": [
+                    cfobject
+                  ]
+                }
+              }
+            ]
+          }
+        }
       }
-    };
+    }
 };
 
 describe('bucketEncryption', function () {
@@ -210,6 +255,80 @@ describe('bucketEncryption', function () {
             const cache = createCache(true, false, false, true);
 
             s3.run(cache, {s3_encryption_require_cmk: 'true'}, callback);
+        })
+
+        it('should give passing result if S3 bucket has CMK KMS encryption with provided alias', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1)
+                expect(results[0].status).to.equal(0)
+                expect(results[0].message).to.include('has aws:kms encryption enabled using required KMS key')
+                done()
+            };
+
+            const cache = createCache(true, false, false, true);
+
+            s3.run(cache, {s3_encryption_kms_alias: 'alias/my-alias'}, callback);
+        })
+
+        it('should give failing result if S3 bucket has CMK KMS encryption without provided alias', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1)
+                expect(results[0].status).to.equal(2)
+                expect(results[0].message).to.include('but matching KMS key alias alias/my-unknown-alias could not be found in the account')
+                done()
+            };
+
+            const cache = createCache(true, false, false, true);
+
+            s3.run(cache, {s3_encryption_kms_alias: 'alias/my-unknown-alias'}, callback);
+        })
+
+        it('should give passing result if S3 bucket requires CMK but has AES256 KMS encryption as a CloudFront origin', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1)
+                expect(results[0].status).to.equal(0)
+                expect(results[0].message).to.include('has AES256 encryption enabled without a CMK but is a CloudFront origin')
+                done()
+            };
+
+            const cache = createCache(false, false, true, false, true);
+
+            s3.run(cache, {
+              s3_encryption_require_cmk: 'true',
+              s3_encryption_allow_cloudfront: 'true'
+            }, callback);
+        })
+
+        it('should give passing result if S3 bucket requires alias but has AES256 KMS encryption as a CloudFront origin', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1)
+                expect(results[0].status).to.equal(0)
+                expect(results[0].message).to.include('has AES256 encryption enabled but is a CloudFront origin')
+                done()
+            };
+
+            const cache = createCache(false, false, true, false, true);
+
+            s3.run(cache, {
+              s3_encryption_kms_alias: 'alias/my-alias',
+              s3_encryption_allow_cloudfront: 'true'
+            }, callback);
+        })
+
+        it('should give failing result if S3 bucket requires alias but has AES256 KMS encryption not as a CloudFront origin', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1)
+                expect(results[0].status).to.equal(2)
+                expect(results[0].message).to.include('encryption (AES256) is not configured to use required KMS key')
+                done()
+            };
+
+            const cache = createCache(false, false, true, false, false);
+
+            s3.run(cache, {
+              s3_encryption_kms_alias: 'alias/my-alias',
+              s3_encryption_allow_cloudfront: 'true'
+            }, callback);
         })
     })
 });

@@ -64,7 +64,7 @@ describe('logRetentionPeriod', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No audit configurations present')
+                expect(results[0].message).to.include('No audit configurations found')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
