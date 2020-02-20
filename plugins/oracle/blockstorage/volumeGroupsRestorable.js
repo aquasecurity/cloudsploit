@@ -4,9 +4,9 @@ var helpers = require('../../../helpers/oracle/');
 module.exports = {
     title: 'Volume Groups Restorable',
     category: 'Block Storage',
-    description: 'Determine if Volume Groups can be restored to a recent point.',
-    more_info: 'Enabling Volume Groups backups ensures that the volume group can be restored following in the event of data loss.',
-    recommended_action: '1. Enter the Volume Groups Service. 2. Select the Volume Group in question. 3. Select the backups blade on the lower left side. 4. Create a backup.',
+    description: 'Ensures volume groups can be restored to a recent point.',
+    more_info: 'Enabling volume groups backups ensures that the volume group can be restored following in the event of data loss.',
+    recommended_action: 'Ensure volume groups can be restored to a recent point.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Block/Concepts/volumegroups.htm',
     apis: ['volumeGroup:list','volumeGroupBackup:list'],
 
@@ -26,19 +26,19 @@ module.exports = {
 
                 if ((volumeGroups.err && volumeGroups.err.length) || !volumeGroups.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for Volume Groups: ' + helpers.addError(volumeGroups), region);
+                        'Unable to query for volume groups: ' + helpers.addError(volumeGroups), region);
                     return rcb();
-                };
+                }
 
                 if (!volumeGroups.data.length) {
-                    helpers.addResult(results, 0, 'No Volume Groups present', region);
+                    helpers.addResult(results, 0, 'No volume groups found', region);
                     return rcb();
-                };
+                }
 
 
-                var myVolumeGroups = [];
+                var badVolumeGroups = [];
                 volumeGroups.data.forEach(volumeGroup => {
-                    myVolumeGroups.push(volumeGroup.id);
+                    badVolumeGroups.push(volumeGroup.id);
                 });
 
                 var volumeGroupBackups = helpers.addSource(cache, source,
@@ -48,29 +48,30 @@ module.exports = {
 
                 if ((volumeGroupBackups.err && volumeGroupBackups.err.length) || !volumeGroupBackups.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for Volume Group Backups: ' + helpers.addError(volumeGroupBackups), region);
+                        'Unable to query for volume group backups: ' + helpers.addError(volumeGroupBackups), region);
                     return rcb();
-                };
+                }
 
                 volumeGroupBackups.data.forEach(volumeGroupBackup => {
-                    var bootIdx = myVolumeGroups.indexOf(volumeGroupBackup.volumeGroupId)
+                    var bootIdx = badVolumeGroups.indexOf(volumeGroupBackup.volumeGroupId);
+
                     if (volumeGroupBackup.lifecycleState &&
-                        volumeGroupBackup.lifecycleState == 'TERMINATED') {
-                        return
+                        volumeGroupBackup.lifecycleState === 'TERMINATED') {
+                        return;
                     } else if (bootIdx > -1) {
-                        myVolumeGroups.splice(bootIdx, 1);
-                    };
+                        badVolumeGroups.splice(bootIdx, 1);
+                    }
                 });
 
-                if (myVolumeGroups.length) {
-                    var myVolumeGroupsStr = myVolumeGroups.join(', ');
+                if (badVolumeGroups.length) {
+                    var badVolumeGroupsStr = badVolumeGroups.join(', ');
                     helpers.addResult(results, 2,
-                        `The following Volume Groups are not actively restorable: ${myVolumeGroupsStr}`, region);
+                        `The following volume groups are not actively restorable: ${badVolumeGroupsStr}`, region);
                 } else {
                     helpers.addResult(results, 0,
-                        'All Volume Groups are restorable', region);
-                };
-            };
+                        'All volume groups are restorable', region);
+                }
+            }
             rcb();
         }, function(){
             // Global checking goes here

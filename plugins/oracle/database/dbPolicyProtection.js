@@ -4,10 +4,10 @@ var helpers = require('../../../helpers/oracle');
 module.exports = {
     title: 'Database Policy Protection',
     category: 'Database',
-    description: 'Ensure Policy statements have deletion protection for Database Systems, Databases, and Database Homes unless it is an administrator group.',
-    more_info: 'Adding deletion protection to Oracle Database policies mitigates unintended deletion of Database Services by unauthorized users or groups.',
+    description: 'Ensures policy statements have deletion protection for database systems, databases, and database homes unless it is an administrator group.',
+    more_info: 'Adding deletion protection to Oracle database policies mitigates unintended deletion of database services by unauthorized users or groups.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Security/Reference/dbaas_security.htm',
-    recommended_action: 'When writing policies, avoid blanket statements, and add a where statement with the line request.permission != {DB_SYSTEM_DELETE, DATABASE_DELETE, DB_HOME_DELETE} .',
+    recommended_action: 'Ensure policy statements have deletion protection for Database Systems, databases, and Database Homes unless it is an administrator group.',
     apis: ['policy:list'],
     settings: {
         policy_group_admins: {
@@ -24,7 +24,6 @@ module.exports = {
         var regions = helpers.regions(settings.govcloud);
         var config = {
             policy_group_admins: settings.policy_group_admins || this.settings.policy_group_admins.default
-
         };
 
         async.each(regions.default, function (region, rcb) {
@@ -90,12 +89,12 @@ module.exports = {
                             }
 
                             helpers.addResult(results, mySeverity,
-                                `${groupType} ${groupName} has the ability to delete all Database Services in ${compartment} ${compartmentName}`, region, policy.id);
+                                `${groupType} ${groupName} has the ability to delete all database services in ${compartment} ${compartmentName}`, region, policy.id);
                         }
                     });
 
                     if (policyProtection) {
-                        helpers.addResult(results, 0, 'All policies have Database delete protection enabled', region);
+                        helpers.addResult(results, 0, 'All policies have database delete protection enabled', region);
                     }
                 }
             });

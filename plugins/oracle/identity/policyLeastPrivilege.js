@@ -9,6 +9,14 @@ module.exports = {
     link: 'https://docs.cloud.oracle.com/iaas/Content/Security/Reference/iam_security.htm',
     recommended_action: 'When writing policies, avoid blanket statements, and instead give full permissions only to Service-level admins, all other groups should have least access to services.',
     apis: ['policy:list'],
+    compliance: {
+        hipaa: 'MFA helps provide additional assurance that the user accessing ' +
+            'the cloud environment has been identified. HIPAA requires ' +
+            'strong controls around entity authentication which can be ' +
+            'enhanced through the use of MFA.',
+        pci: 'PCI requires MFA for all access to cardholder environments. ' +
+            'Create an MFA key for user accounts.'
+    },
     settings: {
         policy_group_admins: {
             name: 'Service-level Admins.',
@@ -46,7 +54,8 @@ module.exports = {
             var policyProtection = true;
 
             policies.data.forEach(policy => {
-                if (policy.statements) {
+                if (policy.statements &&
+                    policy.statements.length) {
                     policy.statements.forEach(statement => {
 
                         const statementLower = statement.toLowerCase();
@@ -61,34 +70,34 @@ module.exports = {
 
                             policyProtection = false;
                             var statementArr = statementLower.split(' ');
-                            var mySeverity = 2;
+                            var severity = 2;
 
                             if (statementArr[1] === 'any-user') {
                                 var groupName = statementArr[2] === 'to' ? '' : statementArr[2];
-                                var myResourceType = statementArr[4];
+                                var resourceType = statementArr[4];
                                 var compartment = statementArr[6] === 'tenancy' ? 'tenancy' : statementArr[6];
                                 var compartmentName = statementArr[7] === 'tenancy' ? '' : statementArr[7];
                                 var groupType = statementArr[1];
-                                var myVerb = statementArr[3];
+                                var verb = statementArr[3];
                             } else {
                                 var groupName = statementArr[2] === 'to' ? '' : statementArr[2];
-                                var myResourceType = statementArr[5];
+                                var resourceType = statementArr[5];
                                 var compartment = statementArr[7] === 'tenancy' ? 'tenancy' : statementArr[7];
                                 var compartmentName = statementArr[7] === 'tenancy' ? '' : statementArr[8];
                                 var groupType = statementArr[1];
-                                var myVerb = statementArr[4];
+                                var verb = statementArr[4];
                             }
 
-                            var myAdminsArr = config.policy_group_admins.toLowerCase().replace(' ', '').split(',');
+                            var adminsArr = config.policy_group_admins.toLowerCase().replace(' ', '').split(',');
 
-                            if (myAdminsArr.indexOf(groupName) > -1) return;
+                            if (adminsArr.indexOf(groupName) > -1) return;
                             if (statementArr.indexOf('request.user.name') > -1) {
                                 groupType = 'User';
                                 groupName = statementArr[statementArr.length - 1];
-                                mySeverity = 1;
+                                severity = 1;
                             }
-                            helpers.addResult(results, mySeverity,
-                                `${groupType} ${groupName} has the ability to ${myVerb} ${myResourceType} in ${compartment} ${compartmentName}`, region, policy.id);
+                            helpers.addResult(results, severity,
+                                `${groupType} ${groupName} has the ability to ${verb} ${resourceType} in ${compartment} ${compartmentName}`, region, policy.id);
                         }
                     });
 

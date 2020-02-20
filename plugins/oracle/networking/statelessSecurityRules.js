@@ -5,9 +5,10 @@ module.exports = {
     title: 'Stateless Security Rules',
     category: 'Networking',
     description: 'Ensure all security rules are stateless.',
-    more_info: 'Stateless security rules are one-way-rules that help mitigate DDoS attacks as well as speeding up network traffic.',
+    more_info: 'Stateless security rules are one-way-rules that help mitigate ' +
+        'DDoS attacks as well as speeding up network traffic.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Network/Concepts/securityrules.htm',
-    recommended_action: 'Update all Security Rules to be stateless.',
+    recommended_action: 'Update all security rules to be stateless.',
     apis: ['vcn:list', 'securityList:list','networkSecurityGroup:list','securityRule:list'],
 
     run: function (cache, settings, callback) {
@@ -26,12 +27,14 @@ module.exports = {
 
                 if (securityLists &&
                     securityLists.err &&
-                    securityLists.err.length>0)  {
+                    securityLists.err.length)  {
+
                     helpers.addResult(results, 3,
-                        'Unable to query for security lists: ' + helpers.addError(securityLists), region);
+                        'Unable to query for security lists: ' +
+                        helpers.addError(securityLists), region);
 
                 } else if (securityLists &&
-                    (!securityLists.data || !securityLists.data.length > 0)) {
+                    (!securityLists.data || !securityLists.data.length)) {
                     listEmpty = true;
 
                 } else if (securityLists) {
@@ -39,7 +42,8 @@ module.exports = {
                     securityLists.data.forEach(securityList =>  {
                         var isStateless = true;
                         var statelessInt = 0;
-                        if (securityList.ingressSecurityRules) {
+                        if (securityList.ingressSecurityRules &&
+                            securityList.ingressSecurityRules.length) {
                             securityList.ingressSecurityRules.forEach(securityRule => {
                                 if (!securityRule.isStateless) {
                                     isStateless = false;
@@ -50,7 +54,9 @@ module.exports = {
 
                         if (!isStateless) {
                             helpers.addResult(results, 2,
-                                `The security list has ${statelessInt} stateful security rules`, region, securityList.id);
+                                `The security list has ${statelessInt} stateful security rules`,
+                                region, securityList.id);
+
                             securityListStateless = false;
                         }
                     });
@@ -65,28 +71,29 @@ module.exports = {
 
                 if (securityRules &&
                     securityRules.err &&
-                    securityRules.err.length>0)  {
+                    securityRules.err.length)  {
                     helpers.addResult(results, 3,
-                        'Unable to query for security rules: ' + helpers.addError(securityRules), region);
+                        'Unable to query for security rules: ' +
+                        helpers.addError(securityRules), region);
                     return rcb();
 
                 } else if (securityRules &&
-                    (!securityRules.data || !securityRules.data.length > 0)) {
+                    (!securityRules.data || !securityRules.data.length)) {
                     ruleEmpty = true;
 
                 } else if (securityRules) {
                     var statefulNSGId = [];
-
+                    var securityGroupName;
                     securityRules.data.forEach(securityRule => {
                         if (securityGroups &&
-                            securityGroups.data.find(group=> group.id == securityRule.networkSecurityGroups)) {
-                            var securityGroupName = securityGroups.data.find(group=> group.id == securityRule.networkSecurityGroups).displayName;
+                            securityGroups.data.find(group => group.id === securityRule.networkSecurityGroups)) {
+                            securityGroupName = securityGroups.data.find(group=> group.id === securityRule.networkSecurityGroups).displayName;
                         }
 
                         if(!securityRule.isStateless) {
                             if (statefulNSGId.indexOf(securityRule.networkSecurityGroups) < 0) {
                                 helpers.addResult(results, 2,
-                                    'The Network Security Group' + (securityGroupName ? ': ' + securityGroupName : ' ') + ' has stateful security rules', region, securityRule.networkSecurityGroups);
+                                    'The network security group' + (securityGroupName ? ': ' + securityGroupName : ' ') + ' has stateful security rules', region, securityRule.networkSecurityGroups);
                                 statefulNSGId.push(securityRule.networkSecurityGroups);
                             }
                         }
@@ -94,25 +101,25 @@ module.exports = {
 
                     if (!statefulNSGId.length && securityListStateless) {
                         helpers.addResult(results, 0,
-                            'All Network Security Groups and Security Lists have stateless security rules', region);
+                            'All network security groups and security lists have stateless security rules', region);
                     } else if (!statefulNSGId.length) {
                         helpers.addResult(results, 0,
-                            'All Network Security Groups have stateless security rules', region);
+                            'All network security groups have stateless security rules', region);
                     } else if (securityListStateless) {
                         helpers.addResult(results, 0,
-                            'All Security Lists have stateless security rules', region);
-                    };
+                            'All security lists have stateless security rules', region);
+                    }
 
 
-                };
+                }
                 if (ruleEmpty && listEmpty) {
-                    helpers.addResult(results, 0, 'No security rules or lists present', region);
+                    helpers.addResult(results, 0, 'No security rules or lists found', region);
                 } else if (ruleEmpty) {
-                    helpers.addResult(results, 0, 'No security rules present', region);
+                    helpers.addResult(results, 0, 'No security rules found', region);
                 } else if (listEmpty) {
-                    helpers.addResult(results, 0, 'No security lists present', region);
-                };
-            };
+                    helpers.addResult(results, 0, 'No security lists found', region);
+                }
+            }
             rcb();
         }, function () {
             // Global checking goes here

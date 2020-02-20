@@ -4,8 +4,8 @@ var helpers = require('../../../helpers/oracle');
 module.exports = {
     title: 'Block Storage Policy Protection',
     category: 'Block Storage',
-    description: 'Ensure Policy statements have deletion protection for Block Volumes unless it is an administrator group.',
-    more_info: 'Adding deletion protection to Oracle Block Volume policies mitigates unintended deletion of block and boot volumes by unauthorized users or groups.',
+    description: 'Ensure policy statements have deletion protection for block volumes unless it is an administrator group.',
+    more_info: 'Adding deletion protection to Oracle block volume policies mitigates unintended deletion of block and boot volumes by unauthorized users or groups.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Security/Reference/iam_security.htm',
     recommended_action: 'When writing policies, avoid blanket statements, and add a where statement with the line request.permission != {VOLUME_DELETE, VOLUME_BACKUP_DELETE, VOLUME_ATTACHMENT_DELETE}.',
     apis: ['policy:list'],
@@ -47,7 +47,8 @@ module.exports = {
             var policyProtection = true;
 
             policies.data.forEach(policy => {
-                if (policy.statements) {
+                if (policy.statements &&
+                    policy.statements.length) {
                     policy.statements.forEach(statement => {
 
                         const statementLower = statement.toLowerCase();
@@ -69,7 +70,7 @@ module.exports = {
 
                             policyProtection = false;
                             var statementArr = statementLower.split(' ');
-                            var mySeverity = 2;
+                            var severity = 2;
 
                             if (statementArr[1] === 'any-user') {
                                 var groupName = statementArr[2] === 'to' ? '' : statementArr[2];
@@ -87,16 +88,16 @@ module.exports = {
                             if (statementArr.indexOf('request.user.name') > -1) {
                                 groupType = 'The user';
                                 groupName = statementArr[statementArr.length - 1];
-                                mySeverity = 1;
+                                severity = 1;
                             }
 
-                            helpers.addResult(results, mySeverity,
-                                `${groupType} ${groupName} has the ability to delete all Block Storage Volumes in ${compartment} ${compartmentName}`, region, policy.id);
+                            helpers.addResult(results, severity,
+                                `${groupType} ${groupName} has the ability to delete all block storage volumes in ${compartment} ${compartmentName}`, region, policy.id);
                         }
                     });
 
                     if (policyProtection) {
-                        helpers.addResult(results, 0, 'All policies have Block Volume delete protection enabled', region);
+                        helpers.addResult(results, 0, 'All policies have block volume delete protection enabled', region);
                     }
                 }
             });
