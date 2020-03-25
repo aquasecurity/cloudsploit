@@ -33,30 +33,32 @@ module.exports = {
                     helpers.addResult(results, 3,
                         'Unable to query for security lists: ' + helpers.addError(securityLists), region);
                     return rcb();
-                };
+                }
 
-                if (!securityLists.data.length > 0) {
-                    helpers.addResult(results, 0, 'No security lists present', region);
+                if (!securityLists.data.length) {
+                    helpers.addResult(results, 0, 'No security lists found', region);
                     return rcb();
-                };
+                }
 
                 securityLists.data.forEach(securityList =>  {
-                    var displayNameArr = securityList.displayName.split(" ");
-                    if (displayNameArr[0] === 'Default') {
-                        if ((securityList.egressSecurityRules &&
-                            securityList.egressSecurityRules.length) ||
-                            securityList.ingressSecurityRules) {
-                            helpers.addResult(results, 2,
-                                'Default security list has ' + (securityList.egressSecurityRules.length || '0') + ' inbound and ' + (securityList.ingressSecurityRules.length || '0') + ' outbound rules',
-                                region, securityList.vcnId);
-                        } else {
-                            helpers.addResult(results, 0,
-                                'Default security list does not have inbound or outbound rules',
-                                region, securityList.vcnId);
-                        };
-                    };
+                    if (securityList.displayName) {
+                        var displayNameArr = securityList.displayName.split(" ");
+                        if (displayNameArr[0] === 'Default') {
+                            if ((securityList.egressSecurityRules &&
+                                securityList.egressSecurityRules.length) ||
+                                securityList.ingressSecurityRules) {
+                                helpers.addResult(results, 2,
+                                    'Default security list has ' + (securityList.egressSecurityRules.length || '0') + ' inbound and ' + (securityList.ingressSecurityRules.length || '0') + ' outbound rules',
+                                    region, securityList.vcnId);
+                            } else {
+                                helpers.addResult(results, 0,
+                                    'Default security list does not have inbound or outbound rules',
+                                    region, securityList.vcnId);
+                            }
+                        }
+                    }
                 });
-            };
+            }
             rcb();
         }, function () {
             // Global checking goes here

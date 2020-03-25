@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'VM Max Instances',
     category: 'Compute',
-    description: 'Ensures the total number of VM instances does not exceed a set threshold.',
+    description: 'Ensures the total number of VM instances does not exceed a set threshold',
     more_info: 'The number of running VM instances should be carefully audited, especially in unused regions, to ensure only approved applications are consuming compute resources. Many compromised Google accounts see large numbers of VM instances launched.',
     link: 'https://cloud.google.com/compute/docs/instances/',
     recommended_action: 'Ensure that the number of running VM instances matches the expected count. If instances are launched above the threshold, investigate to ensure they are legitimate.',
@@ -182,7 +182,7 @@ module.exports = {
             instance_count_region_threshold_asia_southeast1: settings.instance_count_region_threshold_asia_southeast1 || this.settings.instance_count_region_threshold_asia_southeast1.default,
 
             instance_count_region_threshold_asia_east1: settings.instance_count_region_threshold_asia_east1 || this.settings.instance_count_region_threshold_asia_east1.default,
-            
+
             instance_count_region_threshold_asia_east2: settings.instance_count_region_threshold_asia_east2 || this.settings.instance_count_region_threshold_asia_east2.default,
 
             instance_count_region_threshold_asia_northeast1: settings.instance_count_region_threshold_asia_northeast1 || this.settings.instance_count_region_threshold_asia_northeast1.default,
@@ -195,7 +195,7 @@ module.exports = {
         };
         for (c in config) {
             if (settings.hasOwnProperty(c)) {
-                config[c] = settings[c];    
+                config[c] = settings[c];
             }
         }
 
@@ -209,6 +209,9 @@ module.exports = {
         async.each(regions.instances.compute, function(region, rcb){
             var zones = regions.zones;
             var instanceCount = 0;
+            var myError = {};
+            var noInstances = {};
+
             async.each(zones[region], function(zone, zcb) {
                 var instances = helpers.addSource(cache, source,
                     ['instances', 'compute','list', zone]);
@@ -216,28 +219,42 @@ module.exports = {
                 if (!instances) return zcb();
 
                 if (instances.err || !instances.data) {
-                    helpers.addResult(results, 3,
-                        'Unable to query for instances: ' + helpers.addError(instances), region);
+                    if (!myError[region]) {
+                        myError[region] = [];
+                    }
+                    myError[region].push(zone);
                     return zcb();
                 }
 
                 if (!instances.data.length) {
-                    // helpers.addResult(results, 0, 'No instances found', zone);
+                    if (!noInstances[region]) {
+                        noInstances[region] = [];
+                    }
+                    noInstances[region].push(zone);
                     return zcb();
                 }
-
                 instances.data.forEach(instance => {
                     if (instance.status && instance.status == "RUNNING") {
                         instanceCountGlobal +=1;
                         instanceCount +=1;
                     }
                 })
-            })
-                // Print region results
+            });
+            // Print region results
             var regionUnderscore = region.replace(/-/g, '_');
             var regionThreshold = config['instance_count_region_threshold_'+regionUnderscore];
 
-            if (!regionThreshold) {
+            if (myError[region] &&
+                zones[region] &&
+                (myError[region].join(',') === zones[region].join(','))) {
+                helpers.addResult(results, 3, 'Unable to query Instances', region);
+
+            } else if (noInstances[region] &&
+                zones[region] &&
+                (noInstances[region].join(',') === zones[region].join(','))) {
+                helpers.addResult(results, 0, 'No instances found in the region' , region);
+
+            } else if (!regionThreshold) {
                 helpers.addResult(results, 3,
                     'The region: ' + region + ' does not have a maximum instances count setting.', region);
             } else if (instanceCount > regionThreshold) {

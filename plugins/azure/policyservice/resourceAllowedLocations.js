@@ -4,9 +4,9 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Resources Allowed Locations',
     category: 'Azure Policy',
-    description: 'Ensures deployed resources and resource groups belong to the list set in the Allowed locations for resource groups policy.',
-    more_info: 'Monitoring changes to resources follows Security and Compliance best practices. Being able to track resource location changes adds a level of accountability.',
-    recommended_action: '1. Navigate to the Policy service. 2. Select the Assignments blade. 3. Click on Assign Policy. 4. Click to search a Policy definition, search for and select: Allowed locations for resource groups. 5. Under Parameters, select your Allowed locations. 6. Click on Assign.',
+    description: 'Ensures deployed resources and resource groups belong to the list set in the allowed locations for resource groups policy',
+    more_info: 'Setting allowed locations for a service helps ensure the service can only be deployed in expected locations.',
+    recommended_action: 'Ensure that all services contain policy definitions that defined allowed locations.',
     link: 'https://docs.microsoft.com/en-us/azure/governance/policy/assign-policy-portal',
     apis: ['policyAssignments:list', 'resourceGroups:list', 'resources:list'],
 
@@ -49,19 +49,20 @@ module.exports = {
 
         if (policyAssignments.err || !policyAssignments.data) {
             helpers.addResult(results, 3,
-                'Unable to query Policy Assignments: ' + helpers.addError(policyAssignments), 'global');
+                'Unable to query for Policy Assignments: ' + helpers.addError(policyAssignments), 'global');
             return callback();
         }
 
         if (!policyAssignments.data.length) {
-            helpers.addResult(results, 1, 'No existing Policy Assignments', 'global');
+            helpers.addResult(results, 2, 'No existing Policy Assignments found', 'global');
             return callback();
         }
 
         if (policyAssignments &&
             policyAssignments.data) {
             allowedLocationsPolicyAssignment = policyAssignments.data.find((policyAssignment) => {
-                return policyAssignment.displayName.includes("Allowed locations for resource groups");
+                if (policyAssignment.displayName) return policyAssignment.displayName.includes("Allowed locations for resource groups");
+
             });
         }
 
@@ -70,7 +71,7 @@ module.exports = {
             !allowedLocationsPolicyAssignment.parameters.listOfAllowedLocations ||
             !allowedLocationsPolicyAssignment.parameters.listOfAllowedLocations.value ||
             !allowedLocationsPolicyAssignment.parameters.listOfAllowedLocations.value.length) {
-            helpers.addResult(results, 1,
+            helpers.addResult(results, 2,
                 'No existing allowed locations for resource groups Policy Assignments', 'global');
         } else {
             allowedLocations = allowedLocationsPolicyAssignment.parameters.listOfAllowedLocations.value;
@@ -90,18 +91,18 @@ module.exports = {
 
         if (resourceLocationsNotAllowed != '') {
             helpers.addResult(results, 2,
-                'The following un-allowed locations have resources deployed: ' + resourceLocationsNotAllowed.slice(0, -10) + '.', 'global');
+                'The following un-allowed locations have resources deployed: ' + resourceLocationsNotAllowed.slice(0, -10), 'global');
         } else {
             helpers.addResult(results, 0,
-                'All deployed resources belong to allowed locations per policy.', 'global');
+                'All deployed resources belong to allowed locations per policy', 'global');
         }
 
         if (resourceGroupsLocationsNotAllowed != '') {
             helpers.addResult(results, 2,
-                'The following un-allowed locations have resource groups deployed: ' + resourceGroupsLocationsNotAllowed.slice(0, -2) + '.', 'global');
+                'The following un-allowed locations have resource groups deployed: ' + resourceGroupsLocationsNotAllowed.slice(0, -2), 'global');
         } else {
             helpers.addResult(results, 0,
-                'All deployed resource groups belong to allowed locations per policy.', 'global');
+                'All deployed resource groups belong to allowed locations per policy', 'global');
         }
 
         callback(null, results, source);

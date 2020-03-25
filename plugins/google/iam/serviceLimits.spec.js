@@ -21,7 +21,7 @@ describe('serviceLimits', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(3)
-                expect(results[0].message).to.include('Unable to query Projects:')
+                expect(results[0].message).to.include('Unable to query projects:')
                 expect(results[0].region).to.equal('global')
                 done()
             };
@@ -37,7 +37,7 @@ describe('serviceLimits', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No Project found')
+                expect(results[0].message).to.include('No projects found')
                 expect(results[0].region).to.equal('global')
                 done()
             };
@@ -65,7 +65,7 @@ describe('serviceLimits', function () {
                         "kind": "compute#project",
                         "id": "2548647434039838416",
                         "creationTimestamp": "2019-06-19T11:00:31.059-07:00",
-                        "name": "psyched-silicon-244217",
+                        "name": "frost-forest-281330",
                         "commonInstanceMetadata": {
                             "kind": "compute#metadata",
                             "fingerprint": "bur0P6caU8Y="
@@ -227,7 +227,7 @@ describe('serviceLimits', function () {
                                 "usage": 0
                             }
                         ],
-                        "selfLink": "https://www.googleapis.com/compute/v1/projects/psyched-silicon-244217",
+                        "selfLink": "https://www.googleapis.com/compute/v1/projects/frost-forest-281330",
                         "defaultServiceAccount": "845005677082-compute@developer.gserviceaccount.com",
                         "xpnProjectStatus": "UNSPECIFIED_XPN_PROJECT_STATUS",
                         "defaultNetworkTier": "PREMIUM"
@@ -241,7 +241,7 @@ describe('serviceLimits', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(1)
-                expect(results[0].message).to.include('The following Services are over the 75%')
+                expect(results[0].message).to.include('The following services are over the 75%')
                 expect(results[0].region).to.equal('global')
                 done()
             };
@@ -253,7 +253,7 @@ describe('serviceLimits', function () {
                         "kind": "compute#project",
                         "id": "2548647434039838416",
                         "creationTimestamp": "2019-06-19T11:00:31.059-07:00",
-                        "name": "psyched-silicon-244217",
+                        "name": "frost-forest-281330",
                         "commonInstanceMetadata": {
                             "kind": "compute#metadata",
                             "fingerprint": "bur0P6caU8Y="
@@ -415,7 +415,7 @@ describe('serviceLimits', function () {
                                 "usage": 0
                             }
                         ],
-                        "selfLink": "https://www.googleapis.com/compute/v1/projects/psyched-silicon-244217",
+                        "selfLink": "https://www.googleapis.com/compute/v1/projects/frost-forest-281330",
                         "defaultServiceAccount": "845005677082-compute@developer.gserviceaccount.com",
                         "xpnProjectStatus": "UNSPECIFIED_XPN_PROJECT_STATUS",
                         "defaultNetworkTier": "PREMIUM"
@@ -429,7 +429,7 @@ describe('serviceLimits', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('The following Services are over the 90%')
+                expect(results[0].message).to.include('The following services are over the 90%')
                 expect(results[0].region).to.equal('global')
                 done()
             };
@@ -441,7 +441,7 @@ describe('serviceLimits', function () {
                         "kind": "compute#project",
                         "id": "2548647434039838416",
                         "creationTimestamp": "2019-06-19T11:00:31.059-07:00",
-                        "name": "psyched-silicon-244217",
+                        "name": "frost-forest-281330",
                         "commonInstanceMetadata": {
                             "kind": "compute#metadata",
                             "fingerprint": "bur0P6caU8Y="
@@ -603,7 +603,7 @@ describe('serviceLimits', function () {
                                 "usage": 14
                             }
                         ],
-                        "selfLink": "https://www.googleapis.com/compute/v1/projects/psyched-silicon-244217",
+                        "selfLink": "https://www.googleapis.com/compute/v1/projects/frost-forest-281330",
                         "defaultServiceAccount": "845005677082-compute@developer.gserviceaccount.com",
                         "xpnProjectStatus": "UNSPECIFIED_XPN_PROJECT_STATUS",
                         "defaultNetworkTier": "PREMIUM"

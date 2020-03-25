@@ -27,7 +27,7 @@ module.exports = {
             }
 
             if (!networks.data.length) {
-                helpers.addResult(results, 0, 'No networks present', region);
+                helpers.addResult(results, 0, 'No networks found', region);
                 return rcb();
             }
             var subnetRegions;
@@ -48,7 +48,11 @@ module.exports = {
                         subnetRegion = splitSubnet[8];
 
                         if (subnetRegions.hasOwnProperty(subnetRegion) && subnetName != 'default') {
-                            myRegions[subnetRegion] = 1;
+                            if (!myRegions[subnetRegion]) {
+                                myRegions[subnetRegion] = 1;
+                            } else {
+                                myRegions[subnetRegion] += 1;
+                            }
 
                         } else if (subnetRegions.hasOwnProperty(subnetRegion) && subnetName == 'default') {
                             myRegions[subnetRegion] = 0.5;
@@ -69,7 +73,7 @@ module.exports = {
                             }
 
                         }
-                    })
+                    });
                 }
                 for (var sub in myRegions) {
                     if (Math.floor(myRegions[sub]) > 1) {
@@ -80,29 +84,29 @@ module.exports = {
                         warnNetworks.push(sub);
                     } else if(myRegions[sub] == 0) {
                         noNetworks.push(sub);
-                    };
-                };
+                    }
+                }
 
                 if (passNetworks.length) {
                     var msg = 'There are ' + myRegions[sub] + ' different subnets used in these regions: ';
                     helpers.addResult(results, 0,
                         msg + passNetworks.join(', '), null, network.id);
-                };
+                }
                 if (failNetworks.length) {
                     var msg = 'Only one subnet in these regions is used: ';
                     helpers.addResult(results, 2,
                         msg + failNetworks.join(', '), null, network.id);
-                };
+                }
                 if (warnNetworks.length) {
-                    var msg = 'Only the Default subnet in these regions is used: ';
-                    helpers.addResult(results, 1,
+                    var msg = 'Only the default subnet in these regions is used: ';
+                    helpers.addResult(results, 2,
                         msg + warnNetworks.join(', '), null, network.id);
-                };
+                }
                 if (noNetworks.length) {
                     var msg = 'The VPC does not have any subnets in these regions: ';
                     helpers.addResult(results, 0,
                         msg + noNetworks.join(', '), null, network.id);
-                };
+                }
             });
 
             rcb();

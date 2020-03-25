@@ -4,9 +4,9 @@ const helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'HTTP 2.0 Enabled',
     category: 'App Service',
-    description: 'Ensures the latest HTTP version is enabled for the App Service.',
-    more_info: 'Enabling HTTP2.0 ensures that the App Service has the latest technology which includes security enhancements and additional functionality.',
-    recommended_action: 'In your App Service go to configuration > go to the General Settings tab  > select in Http Version version 2.0',
+    description: 'Ensures the latest HTTP version is enabled for App Services',
+    more_info: 'Enabling HTTP2.0 ensures that the App Service has the latest technology which improves server performance',
+    recommended_action: 'Enable HTTP 2.0 support in the general settings for all App Services',
     link: 'https://azure.microsoft.com/en-us/blog/announcing-http-2-support-in-azure-app-service/',
     apis: ['webApps:list', 'webApps:listConfigurations'],
 
@@ -25,21 +25,19 @@ module.exports = {
 
             if (webApps.err || !webApps.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query App services: ' + helpers.addError(webApps), location);
+                    'Unable to query App Service: ' + helpers.addError(webApps), location);
                 return rcb();
             }
 
             if (!webApps.data.length) {
-                helpers.addResult(results, 0, 'No existing App services', location);
+                helpers.addResult(results, 0, 'No existing App Services found', location);
                 return rcb();
             }
 
             let noWebAppHttp20 = [];
 
             webApps.data.forEach(function (webApp) {
-                if (!webApp.http20Enabled) {
-                    noWebAppHttp20.push(webApp.id);
-                }
+                if (!webApp.http20Enabled) noWebAppHttp20.push(webApp.id);
             });
 
             if (noWebAppHttp20.length > 20) {

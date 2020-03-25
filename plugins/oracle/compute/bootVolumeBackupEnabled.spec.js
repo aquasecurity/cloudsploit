@@ -55,7 +55,7 @@ describe('bootVolumeBackupEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(1)
                 expect(results[0].status).to.equal(3)
-                expect(results[0].message).to.include('Unable to query for Boot Volume Attachments')
+                expect(results[0].message).to.include('Unable to query for boot volume attachments')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -72,7 +72,7 @@ describe('bootVolumeBackupEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(1)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No Boot Volumes present')
+                expect(results[0].message).to.include('No boot volumes found')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -89,7 +89,7 @@ describe('bootVolumeBackupEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(1)
                 expect(results[0].status).to.equal(3)
-                expect(results[0].message).to.include('Unable to query for Boot Volume Backups')
+                expect(results[0].message).to.include('Unable to query for boot volume backups')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -108,7 +108,7 @@ describe('bootVolumeBackupEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(1)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('The following Boot Volumes do not have a backup policy')
+                expect(results[0].message).to.include('The following boot volumes do not have a backup policy')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -169,7 +169,7 @@ describe('bootVolumeBackupEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(1)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('All Boot Volumes have a backup policy')
+                expect(results[0].message).to.include('All boot volumes have a backup policy')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };

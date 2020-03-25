@@ -4,13 +4,10 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'LB No Instances',
     category: 'Load Balancer',
-    description: 'Detects LBs that have no backend instances attached',
-    more_info: 'All LBs should have backend server resources.' +
-               ' Those without any are consuming costs without providing' +
-               ' any functionality. Additionally, old LBs with no instances' +
-               ' present a security concern if new instances are accidentally attached.',
+    description: 'Detects load balancers that have no backend instances attached',
+    more_info: 'All load balancers should have backend server resources. Those without any are consuming costs without providing any functionality. Additionally, old load balancers with no instances pose a security concern if new instances are accidentally attached.',
     link: 'https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-overview',
-    recommended_action: 'Delete old LBs that no longer have backend resources.',
+    recommended_action: 'Delete old load balancers that no longer have backend resources.',
     apis: ['resourceGroups:list', 'loadBalancers:list'],
 
     run: function (cache, settings, callback) {
@@ -42,7 +39,7 @@ module.exports = {
                 if (!loadBalancer.backendAddressPools ||
                     (loadBalancer.backendAddressPools &&
                     !loadBalancer.backendAddressPools.length)) {
-                    helpers.addResult(results, 1, 
+                    helpers.addResult(results, 2, 
                         'Load Balancer does not have any backend instances', location, loadBalancer.id);
                 } else {
                     loadBalancer.backendAddressPools.forEach(backendAddressPool => {
@@ -55,7 +52,7 @@ module.exports = {
                         helpers.addResult(results, 0, 
                             'Load Balancer has ' + backendAmt + ' backend ' + (backendAmt > 1 ? 'instances' : 'instance'), location, loadBalancer.id);    
                     } else {
-                        helpers.addResult(results, 1, 
+                        helpers.addResult(results, 2, 
                             'Load Balancer does not have any backend instances', location, loadBalancer.id);
                     };
                 };  

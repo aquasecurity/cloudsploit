@@ -4,9 +4,9 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Detect Insecure Custom Origin',
     category: 'CDN Profiles',
-    description: 'Ensure that HTTPS is enabled when creating a new CDN endpoint with a Custom Origin.',
-    more_info: 'Detects if HTTPS is disabled for CDN endpoint of custom origins.',
-    recommended_action: '1. Navigate to CDN profiles. 2. Select a profile. 3. Select an endpoint. 4. Select Settings > Origin. 5. Turn off HTTP and make sure HTTPS is turned on.',
+    description: 'Ensures that HTTPS is enabled for CDN endpoints with a custom origin',
+    more_info: 'All Azure CDN endpoints should enable HTTPS to secure traffic to the backend custom origin.',
+    recommended_action: 'Enable HTTPS and disable HTTP for each custom origin endpoint for each CDN profile.',
     link: 'https://docs.microsoft.com/en-us/azure/cdn/cdn-create-endpoint-how-to',
     apis: ['resourceGroups:list', 'profiles:list', 'endpoints:listByProfile', 'origins:listByEndpoint'],
     compliance: {
@@ -32,12 +32,12 @@ module.exports = {
 
             if (origins.err || !origins.data) {
                 helpers.addResult(results, 0,
-                    'Unable to query CDN Profile Endpoint Origins');
+                    'Unable to query CDN Profile endpoint origins');
                 return rcb();
             }
 
             if (!origins.data.length) {
-                helpers.addResult(results, 0, 'No existing CDN Profile Endpoint Origins', location);
+                helpers.addResult(results, 0, 'No existing CDN Profile endpoint origins found', location);
                 return rcb();
             }
 
@@ -49,16 +49,15 @@ module.exports = {
                     && Origin.hostName.indexOf("blob.core.windows.net") == -1
                     && Origin.hostName.indexOf("cloudapp.net") == -1
                     && Origin.hostName.indexOf("azurewebsites.net") == -1) {
-
                     isInsecureCustomOrigin = true
                     helpers.addResult(results, 2,
-                        `The Custom Origin has HTTPS disabled.`, location, Origin.hostName);
+                        'The Custom Origin has HTTPS disabled', location, Origin.hostName);
                 }
             }
 
-            if (isInsecureCustomOrigin != true) {
+            if (!isInsecureCustomOrigin) {
                 helpers.addResult(results, 0,
-                    'All custom origins have HTTPS enabled.', location);
+                    'All custom origins have HTTPS enabled', location);
             }
             rcb();
         }, function () {

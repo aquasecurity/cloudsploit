@@ -22,20 +22,20 @@ module.exports = {
             if (!clusters) return rcb();
 
             if (clusters.err || !clusters.data) {
-                helpers.addResult(results, 3, 'Unable to query Kubernetes Clusters: ' + helpers.addError(clusters), region);
+                helpers.addResult(results, 3, 'Unable to query Kubernetes clusters: ' + helpers.addError(clusters), region);
                 return rcb();
             };
 
             if (!clusters.data.length) {
-                helpers.addResult(results, 0, 'No Kubernetes Clusters present', region);
+                helpers.addResult(results, 0, 'No Kubernetes clusters found', region);
                 return rcb();
             };
             clusters.data.forEach(cluster => {
                 if (cluster.privateClusterConfig &&
                     cluster.privateClusterConfig.privateEndpoint) {
-                    helpers.addResult(results, 0, `kubernetes cluster: ${cluster.name} has private endpoint enabled`, region);
+                    helpers.addResult(results, 0, 'Kubernetes cluster has private endpoint enabled', region, cluster.name);
                 } else {
-                    helpers.addResult(results, 2, `kubernetes cluster: ${cluster.name} does not have private endpoint enabled`, region);
+                    helpers.addResult(results, 2, 'Kubernetes cluster does not have private endpoint enabled', region, cluster.name);
                 }
             });
 

@@ -48,7 +48,7 @@ describe('instancePoolMultiAD', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(3)
-                expect(results[0].message).to.include('Unable to query for Instance Pools')
+                expect(results[0].message).to.include('Unable to query for instance pools')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -64,7 +64,7 @@ describe('instancePoolMultiAD', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No Instance Pools present')
+                expect(results[0].message).to.include('No instance pools found')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -80,7 +80,7 @@ describe('instancePoolMultiAD', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('Instance Pool is in multiple Availability Domains')
+                expect(results[0].message).to.include('Instance pool is in multiple availability domains')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -114,7 +114,7 @@ describe('instancePoolMultiAD', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('Instance Pool is only in one Availability Domain')
+                expect(results[0].message).to.include('Instance pool is only in one availability domain')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -146,7 +146,7 @@ describe('instancePoolMultiAD', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No Availability Domains')
+                expect(results[0].message).to.include('No availability domains')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
