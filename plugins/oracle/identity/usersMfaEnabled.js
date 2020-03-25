@@ -6,7 +6,7 @@ module.exports = {
     category: 'Identity',
     description: 'Ensures a multi-factor authentication device is enabled for all users within the account.',
     more_info: 'User accounts should have an MFA device setup to enable two-factor authentication.',
-    link: 'https://docs.oracle.com/en/cloud/paas/identity-cloud/uaids/enable-multi-factor-authentication-security-oracle-cloud.html',
+    link: 'https://docs.cloud.oracle.com/iaas/Content/Identity/Tasks/usingmfa.htm',
     recommended_action: 'Enable an MFA device for the user account.',
     apis: ['user:list'],
     compliance: {
@@ -50,13 +50,13 @@ module.exports = {
             rcb();
         }, function () {
             // Global checking goes here
-            if (noMFAUsers) {
+            if (noMFAUsers.length) {
                 var noMFAUserStr = noMFAUsers.join(', ');
                 helpers.addResult(results, 2,
                     `The following accounts do not have an MFA device enabled: ${noMFAUserStr}`, 'global');
             } else {
                 helpers.addResult(results, 0, 'All accounts have MFA enabled.', 'global');
-            };
+            }
             callback(null, results, source);
         });
     }

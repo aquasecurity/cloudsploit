@@ -4,25 +4,26 @@ var helpers = require('../../../helpers/oracle/');
 module.exports = {
     title: 'Pre-Authenticated Requests Expiry',
     category: 'Object Store',
-    description: 'Ensure that Pre-Authenticated Requests expire within a certain time.',
-    more_info: 'Pre-Authenticated requests allow for users who are not in the tenancy to access buckets, having a short expiration time-frame ensures that access does not last longer than intended.',
-    recommended_action: 'When creating Pre-Authenticated Requests, ensure the expiration date-time is limited to the minimum time possible.',
+    description: 'Ensure that pre-authenticated requests expire within a certain time.',
+    more_info: 'Pre-authenticated requests allow for users who are not in the tenancy to access buckets, having a short expiration time-frame ensures that access does not last longer than intended.',
+    recommended_action: 'When creating pre-authenticated Requests, ensure the expiration date-time is limited to the minimum time possible.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Object/Tasks/usingPre-Authenticatedrequests.htm',
     apis: ['bucket:list','preAuthenticatedRequest:list'],
     settings: {
         preauthorization_expiration_date_warn: {
-            name: 'PreAuthorization Request Expiration Date Warning',
-            description: 'Return a warning result when PreAuthorization Expiration date passes threshold',
+            name: 'Pre-Authorization Request Expiration Date Warning',
+            description: 'Return a warning result when pre-authorization Expiration date passes threshold',
             regex: '^(365|[1-9][1-9][0-9]?)$',
             default: 10
         },
         preauthorization_expiration_date_fail: {
-            name: 'PreAuthorization Request Expiration Date Fail',
-            description: 'Return a failing result when PreAuthorization Expiration date passes threshold',
+            name: 'Pre-Authorization Request Expiration Date Fail',
+            description: 'Return a failing result when pre-authorization Expiration date passes threshold',
             regex: '^(365|[1-9][1-9][0-9]?)$',
             default: 30
         },
     },
+    
     run: function(cache, settings, callback) {
         var config = {
             preauthorization_expiration_date_warn: settings.preauthorization_expiration_date_warn || this.settings.preauthorization_expiration_date_warn.default,
@@ -43,43 +44,45 @@ module.exports = {
 
                 if ((requests.err && requests.err.length) || !requests.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for Pre-Authenticated requests: ' + helpers.addError(requests), region);
+                        'Unable to query for pre-authenticated requests: ' + helpers.addError(requests), region);
                     return rcb();
-                };
+                }
 
                 if (!requests.data.length) {
-                    helpers.addResult(results, 0, 'No Pre-Authenticated requests present', region);
+                    helpers.addResult(results, 0, 'No pre-authenticated requests found', region);
                     return rcb();
-                };
+                }
 
                 var expiredRequests = true;
                 var shortExpiry = true;
                 requests.data.forEach(request => {
-                    var ONE_DAY = 24*60*60*1000;
-                    var myTimeExpires = request.timeExpires.split("T")[0];
+                    if (request.timeExpires) {
+                        var ONE_DAY = 24*60*60*1000;
+                        var timeExpires = request.timeExpires.split("T")[0];
 
-                    myTimeExpires = Math.ceil((new Date(myTimeExpires).getTime() - new Date(new Date()).getTime())/(ONE_DAY));
+                        timeExpires = Math.ceil((new Date(timeExpires).getTime() - new Date(new Date()).getTime())/(ONE_DAY));
 
-                    if (myTimeExpires < 0) return;
+                        if (timeExpires < 0) return;
 
-                    expiredRequests = false;
-                    if (myTimeExpires > config.preauthorization_expiration_date_fail) {
+                        expiredRequests = false;
+                    }
+                    if (timeExpires > config.preauthorization_expiration_date_fail) {
                         helpers.addResult(results, 2,
-                            `Pre-Authenticated request expires in ${myTimeExpires} days`, region, request.id);
+                            `pre-authenticated request expires in ${timeExpires} days`, region, request.id);
                         shortExpiry = false;
-                    } else if (myTimeExpires > config.preauthorization_expiration_date_warn) {
+                    } else if (timeExpires > config.preauthorization_expiration_date_warn) {
                         helpers.addResult(results, 1,
-                            `Pre-Authenticated request expires in ${myTimeExpires} days`, region, request.id);
+                            `pre-authenticated request expires in ${timeExpires} days`, region, request.id);
                         shortExpiry = false;
-                    };
+                    }
                 });
                 if (expiredRequests) {
-                    helpers.addResult(results, 0, 'No active Pre-Authenticated requests', region);
+                    helpers.addResult(results, 0, 'No active pre-authenticated requests', region);
                 } else if (shortExpiry) {
                     helpers.addResult(results, 0,
-                        `All Pre-Authenticated requests are set to expire in less than ${config.preauthorization_expiration_date_warn} days`, region);
+                        `All pre-authenticated requests are set to expire in less than ${config.preauthorization_expiration_date_warn} days`, region);
                 }
-            };
+            }
             rcb();
         }, function(){
             // Global checking goes here

@@ -19,10 +19,10 @@ describe('monitoringEnabled', function () {
     describe('run', function () {
         it('should give unknown result if a clusters error is passed or no data is present', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.above(0)
-                expect(results[0].status).to.equal(3)
-                expect(results[0].message).to.include('Unable to query Kubernetes Clusters')
-                expect(results[0].region).to.equal('global')
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query Kubernetes clusters');
+                expect(results[0].region).to.equal('global');
                 done()
             };
 
@@ -35,10 +35,10 @@ describe('monitoringEnabled', function () {
         })
         it('should give passing result if no clusters are found', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.above(0)
-                expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No Kubernetes Clusters present')
-                expect(results[0].region).to.equal('global')
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No Kubernetes clusters found');
+                expect(results[0].region).to.equal('global');
                 done()
             };
 
@@ -51,10 +51,10 @@ describe('monitoringEnabled', function () {
         })
         it('should give passing result if Monitoring is enabled', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.above(0)
-                expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('Monitoring is enabled on all clusters')
-                expect(results[0].region).to.equal('global')
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Monitoring is enabled on the Kubernetes cluster');
+                expect(results[0].region).to.equal('global');
                 done()
             };
 
@@ -136,10 +136,10 @@ describe('monitoringEnabled', function () {
                                 "locations": [
                                     "us-central1-a"
                                 ],
-                                "selfLink": "https://container.googleapis.com/v1beta1/projects/psyched-silicon-244217/zones/us-central1-a/clusters/standard-cluster-2/nodePools/default-pool",
+                                "selfLink": "https://container.googleapis.com/v1beta1/projects/frost-forest-281330/zones/us-central1-a/clusters/standard-cluster-2/nodePools/default-pool",
                                 "version": "1.12.8-gke.10",
                                 "instanceGroupUrls": [
-                                    "https://www.googleapis.com/compute/v1/projects/psyched-silicon-244217/zones/us-central1-a/instanceGroupManagers/gke-standard-cluster-2-default-pool-941e601d-grp"
+                                    "https://www.googleapis.com/compute/v1/projects/frost-forest-281330/zones/us-central1-a/instanceGroupManagers/gke-standard-cluster-2-default-pool-941e601d-grp"
                                 ],
                                 "status": "RUNNING"
                             }
@@ -164,8 +164,8 @@ describe('monitoringEnabled', function () {
                         },
                         "maintenancePolicy": {},
                         "networkConfig": {
-                            "network": "projects/psyched-silicon-244217/global/networks/default",
-                            "subnetwork": "projects/psyched-silicon-244217/regions/us-central1/subnetworks/default"
+                            "network": "projects/frost-forest-281330/global/networks/default",
+                            "subnetwork": "projects/frost-forest-281330/regions/us-central1/subnetworks/default"
                         },
                         "privateCluster": true,
                         "masterIpv4CidrBlock": "10.127.0.0/28",
@@ -187,7 +187,7 @@ describe('monitoringEnabled', function () {
                         "tierSettings": {
                             "tier": "STANDARD"
                         },
-                        "selfLink": "https://container.googleapis.com/v1beta1/projects/psyched-silicon-244217/zones/us-central1-a/clusters/standard-cluster-2",
+                        "selfLink": "https://container.googleapis.com/v1beta1/projects/frost-forest-281330/zones/us-central1-a/clusters/standard-cluster-2",
                         "zone": "us-central1-a",
                         "endpoint": "10.127.0.2",
                         "initialClusterVersion": "1.12.8-gke.10",
@@ -197,7 +197,7 @@ describe('monitoringEnabled', function () {
                         "status": "RUNNING",
                         "servicesIpv4Cidr": "10.70.0.0/20",
                         "instanceGroupUrls": [
-                            "https://www.googleapis.com/compute/v1/projects/psyched-silicon-244217/zones/us-central1-a/instanceGroupManagers/gke-standard-cluster-2-default-pool-941e601d-grp"
+                            "https://www.googleapis.com/compute/v1/projects/frost-forest-281330/zones/us-central1-a/instanceGroupManagers/gke-standard-cluster-2-default-pool-941e601d-grp"
                         ],
                         "currentNodeCount": 3,
                         "location": "us-central1-a"
@@ -209,10 +209,10 @@ describe('monitoringEnabled', function () {
         })
         it('should give failing result if monitoring is disabled', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.above(0)
-                expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('No Monitoring is enabled on the kubernetes cluster')
-                expect(results[0].region).to.equal('global')
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('Monitoring is disabled on the Kubernetes cluster');
+                expect(results[0].region).to.equal('global');
                 done()
             };
 
@@ -300,12 +300,12 @@ describe('monitoringEnabled', function () {
                                     "us-east1-c",
                                     "us-east1-d"
                                 ],
-                                "selfLink": "https://container.googleapis.com/v1beta1/projects/psyched-silicon-244217/locations/us-east1/clusters/standard-cluster-1/nodePools/default-pool",
+                                "selfLink": "https://container.googleapis.com/v1beta1/projects/frost-forest-281330/locations/us-east1/clusters/standard-cluster-1/nodePools/default-pool",
                                 "version": "1.12.8-gke.10",
                                 "instanceGroupUrls": [
-                                    "https://www.googleapis.com/compute/v1/projects/psyched-silicon-244217/zones/us-east1-b/instanceGroupManagers/gke-standard-cluster-1-default-pool-60ff7186-grp",
-                                    "https://www.googleapis.com/compute/v1/projects/psyched-silicon-244217/zones/us-east1-c/instanceGroupManagers/gke-standard-cluster-1-default-pool-f7958043-grp",
-                                    "https://www.googleapis.com/compute/v1/projects/psyched-silicon-244217/zones/us-east1-d/instanceGroupManagers/gke-standard-cluster-1-default-pool-51806d28-grp"
+                                    "https://www.googleapis.com/compute/v1/projects/frost-forest-281330/zones/us-east1-b/instanceGroupManagers/gke-standard-cluster-1-default-pool-60ff7186-grp",
+                                    "https://www.googleapis.com/compute/v1/projects/frost-forest-281330/zones/us-east1-c/instanceGroupManagers/gke-standard-cluster-1-default-pool-f7958043-grp",
+                                    "https://www.googleapis.com/compute/v1/projects/frost-forest-281330/zones/us-east1-d/instanceGroupManagers/gke-standard-cluster-1-default-pool-51806d28-grp"
                                 ],
                                 "status": "RUNNING"
                             }
@@ -330,8 +330,8 @@ describe('monitoringEnabled', function () {
                         "masterAuthorizedNetworksConfig": {},
                         "maintenancePolicy": {},
                         "networkConfig": {
-                            "network": "projects/psyched-silicon-244217/global/networks/default",
-                            "subnetwork": "projects/psyched-silicon-244217/regions/us-east1/subnetworks/default"
+                            "network": "projects/frost-forest-281330/global/networks/default",
+                            "subnetwork": "projects/frost-forest-281330/regions/us-east1/subnetworks/default"
                         },
                         "defaultMaxPodsConstraint": {
                             "maxPodsPerNode": "110"
@@ -344,7 +344,7 @@ describe('monitoringEnabled', function () {
                         "tierSettings": {
                             "tier": "STANDARD"
                         },
-                        "selfLink": "https://container.googleapis.com/v1beta1/projects/psyched-silicon-244217/locations/us-east1/clusters/standard-cluster-1",
+                        "selfLink": "https://container.googleapis.com/v1beta1/projects/frost-forest-281330/locations/us-east1/clusters/standard-cluster-1",
                         "zone": "us-east1",
                         "endpoint": "35.231.28.40",
                         "initialClusterVersion": "1.12.8-gke.10",
@@ -354,9 +354,9 @@ describe('monitoringEnabled', function () {
                         "status": "RUNNING",
                         "servicesIpv4Cidr": "10.114.0.0/20",
                         "instanceGroupUrls": [
-                            "https://www.googleapis.com/compute/v1/projects/psyched-silicon-244217/zones/us-east1-b/instanceGroupManagers/gke-standard-cluster-1-default-pool-60ff7186-grp",
-                            "https://www.googleapis.com/compute/v1/projects/psyched-silicon-244217/zones/us-east1-c/instanceGroupManagers/gke-standard-cluster-1-default-pool-f7958043-grp",
-                            "https://www.googleapis.com/compute/v1/projects/psyched-silicon-244217/zones/us-east1-d/instanceGroupManagers/gke-standard-cluster-1-default-pool-51806d28-grp"
+                            "https://www.googleapis.com/compute/v1/projects/frost-forest-281330/zones/us-east1-b/instanceGroupManagers/gke-standard-cluster-1-default-pool-60ff7186-grp",
+                            "https://www.googleapis.com/compute/v1/projects/frost-forest-281330/zones/us-east1-c/instanceGroupManagers/gke-standard-cluster-1-default-pool-f7958043-grp",
+                            "https://www.googleapis.com/compute/v1/projects/frost-forest-281330/zones/us-east1-d/instanceGroupManagers/gke-standard-cluster-1-default-pool-51806d28-grp"
                         ],
                         "currentNodeCount": 5,
                         "location": "us-east1"

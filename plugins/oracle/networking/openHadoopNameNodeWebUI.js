@@ -4,8 +4,11 @@ var helpers = require('../../../helpers/oracle/');
 module.exports = {
     title: 'Open Hadoop HDFS NameNode WebUI',
     category: 'Networking',
-    description: 'Determine if TCP port 50070 and 50470 for Hadoop/HDFS NameNode WebUI service is open to the public',
-    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Hadoop/HDFS should be restricted to known IP addresses.',
+    description: 'Determine if TCP port 50070 and 50470 for Hadoop/HDFS NameNode ' +
+        'WebUI service is open to the public',
+    more_info: 'While some ports such as HTTP and HTTPS are required to be open to ' +
+        'the public to function properly, more sensitive services such as Hadoop/HDFS ' +
+        'should be restricted to known IP addresses.',
     recommended_action: 'Restrict TCP port 50070 and 50470 to known IP addresses for Hadoop/HDFS',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Network/Concepts/securitylists.htm',
     apis: ['vcn:list', 'securityList:list','networkSecurityGroup:list','securityRule:list'],
@@ -15,6 +18,7 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings.govcloud);
         var isSecurityRule = false;
+
 
         async.each(regions.securityList, function(region, rcb){
 
@@ -33,63 +37,54 @@ module.exports = {
 
                 if (getSecurityLists &&
                     getSecurityLists.err &&
-                    getSecurityLists.err.length>0)  {
+                    getSecurityLists.err.length) {
+
                     helpers.addResult(results, 3,
-                        'Unable to query for security lists: ' + helpers.addError(getSecurityLists), region);
+                        'Unable to query for security lists: ' +
+                        helpers.addError(getSecurityLists), region);
 
                 } else if (getSecurityLists &&
-                    (!getSecurityLists.data || !getSecurityLists.data.length > 0)) {
-                    helpers.addResult(results, 0, 'No security lists present', region);
-
-                } else if (getSecurityRules) {
-                    helpers.findOpenPorts(getSecurityLists.data, ports, service, region, results, isSecurityRule);
-                }
-
-                var getSecurityRules = helpers.addSource(cache, source,
-                    ['securityRule', 'list', region]);
-
-                if (getSecurityLists &&
-                    getSecurityLists.err &&
-                    getSecurityLists.err.length>0)  {
-                    helpers.addResult(results, 3,
-                        'Unable to query for security lists: ' + helpers.addError(getSecurityLists), region);
-
-                } else if (getSecurityLists &&
-                    (!getSecurityLists.data || !getSecurityLists.data.length > 0)) {
+                    (!getSecurityLists.data || !getSecurityLists.data.length)) {
                     listEmpty = true;
 
                 } else if (getSecurityLists) {
-                    helpers.findOpenPorts(getSecurityLists.data, ports, service, region, results, isSecurityRule);
-                };
+                    helpers.findOpenPorts(getSecurityLists.data, ports,
+                        service, region, results, isSecurityRule);
+                }
 
                 var getSecurityRules = helpers.addSource(cache, source,
                     ['securityRule', 'list', region]);
 
                 if (getSecurityRules &&
                     getSecurityRules.err &&
-                    getSecurityRules.err.length>0)  {
+                    getSecurityRules.err.length)  {
+
                     helpers.addResult(results, 3,
-                        'Unable to query for security rules: ' + helpers.addError(getSecurityRules), region);
-                    return rcb();
+                        'Unable to query for security rules: ' +
+                        helpers.addError(getSecurityRules), region);
 
                 } else if (getSecurityRules &&
-                    (!getSecurityRules.data || !getSecurityRules.data.length > 0)) {
+                    (!getSecurityRules.data || !getSecurityRules.data.length)) {
                     ruleEmpty = true;
 
                 } else if (getSecurityRules) {
                     var getSecurityGroups = helpers.addSource(cache, source,
                         ['networkSecurityGroup', 'list', region]);
+
                     isSecurityRule = true;
-                    helpers.findOpenPorts(getSecurityRules.data, ports, service, region, results, isSecurityRule, getSecurityGroups);
-                };
+
+                    helpers.findOpenPorts(getSecurityRules.data, ports,
+                        service, region, results, isSecurityRule, getSecurityGroups);
+                }
 
                 if (ruleEmpty && listEmpty) {
-                    helpers.addResult(results, 0, 'No security rules or lists present', region);
+                    helpers.addResult(results, 0,
+                        'No security rules or lists found', region);
                 } else if (ruleEmpty) {
-                    helpers.addResult(results, 0, 'No security rules present', region);
+                    helpers.addResult(results, 0, 'No security rules found', region);
                 } else if (listEmpty) {
-                    helpers.addResult(results, 0, 'No security lists present', region);
-                };
+                    helpers.addResult(results, 0, 'No security lists found', region);
+                }
             }
 
             rcb();

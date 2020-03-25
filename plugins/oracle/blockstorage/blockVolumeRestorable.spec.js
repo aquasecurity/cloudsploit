@@ -55,7 +55,7 @@ describe('blockVolumeRestorable', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(1)
                 expect(results[0].status).to.equal(3)
-                expect(results[0].message).to.include('Unable to query for Block Volumes')
+                expect(results[0].message).to.include('Unable to query for block volumes')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -72,7 +72,7 @@ describe('blockVolumeRestorable', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(1)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No Block Volumes present')
+                expect(results[0].message).to.include('No block volumes found')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -89,7 +89,7 @@ describe('blockVolumeRestorable', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(1)
                 expect(results[0].status).to.equal(3)
-                expect(results[0].message).to.include('Unable to query for Block Volume Backups')
+                expect(results[0].message).to.include('Unable to query for block volume backups')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -108,7 +108,7 @@ describe('blockVolumeRestorable', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(1)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('The following Block Volumes are not actively restorable')
+                expect(results[0].message).to.include('The following block volumes are not actively restorable')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -169,7 +169,7 @@ describe('blockVolumeRestorable', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(1)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('All Block Volumes are restorable.')
+                expect(results[0].message).to.include('All block volumes are restorable.')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };

@@ -20,24 +20,35 @@ module.exports = {
              'reduces the scope of users with potential access to this data.'
     },
     settings: {
-        iam_admin_count: {
-            name: 'IAM Admin Count',
-            description: 'The number of IAM user admins to require in the account',
-            regex: '^[1-9]{1}[0-9]{0,3}$',
+        iam_admin_count_minimum: {
+            name: 'IAM Admin Count Minimum',
+            description: 'The minimum number of IAM user admins to require in the account',
+            regex: '^[0-9]{0,4}$',
+            default: 2
+        },
+        iam_admin_count_maximum: {
+            name: 'IAM Admin Count Maximum',
+            description: 'The maximum number of IAM user admins to require in the account',
+            regex: '^[0-9]{0,4}$',
             default: 2
         }
     },
 
     run: function(cache, settings, callback) {
         var config = {
-            iam_admin_count: settings.iam_admin_count || this.settings.iam_admin_count.default
+            // using the `in` operator because 0 is a valid setting
+            iam_admin_count_minimum: 'iam_admin_count_minimum' in settings
+                ? parseInt(settings.iam_admin_count_minimum)
+                : this.settings.iam_admin_count_minimum.default,
+            iam_admin_count_maximum: 'iam_admin_count_maximum' in settings
+                ? parseInt(settings.iam_admin_count_maximum)
+                : this.settings.iam_admin_count_maximum.default,
         };
-
         var custom = helpers.isCustom(settings, this.settings);
 
         var results = [];
         var source = {};
-        
+
         var region = helpers.defaultRegion(settings);
 
         var listUsers = helpers.addSource(cache, source,
@@ -117,7 +128,7 @@ module.exports = {
                     var policy = listUserPolicies.data.PolicyNames[p];
 
                     if (getUserPolicy &&
-                        getUserPolicy[policy] && 
+                        getUserPolicy[policy] &&
                         getUserPolicy[policy].data &&
                         getUserPolicy[policy].data.PolicyDocument) {
 
@@ -156,7 +167,7 @@ module.exports = {
                     // Get inline policies attached to group
                     var listGroupPolicies = helpers.addSource(cache, source,
                             ['iam', 'listGroupPolicies', region, group.GroupName]);
-                    
+
                     var getGroupPolicy = helpers.addSource(cache, source,
                             ['iam', 'getGroupPolicy', region, group.GroupName]);
 
@@ -184,7 +195,7 @@ module.exports = {
                             var policy = listGroupPolicies.data.PolicyNames[p];
 
                             if (getGroupPolicy &&
-                                getGroupPolicy[policy] && 
+                                getGroupPolicy[policy] &&
                                 getGroupPolicy[policy].data &&
                                 getGroupPolicy[policy].data.PolicyDocument) {
 
@@ -212,18 +223,18 @@ module.exports = {
             cb();
         }, function(){
             // Use admins array
-            if (userAdmins.length < config.iam_admin_count) {
+            if (userAdmins.length < config.iam_admin_count_minimum) {
                 helpers.addResult(results, 1,
-                    'There are fewer than ' + config.iam_admin_count + ' IAM user administrators',
+                    'There are fewer than the minimum ' + config.iam_admin_count_minimum + ' IAM user administrators',
                     'global', null, custom);
-            } else if (userAdmins.length == config.iam_admin_count) {
+            } else if (userAdmins.length >= config.iam_admin_count_minimum && userAdmins.length <= config.iam_admin_count_maximum) {
                 helpers.addResult(results, 0,
-                    'There are ' + config.iam_admin_count + ' IAM user administrators',
+                    'There are ' + userAdmins.length + ' IAM user administrators',
                     'global', null, custom);
             } else {
                 for (u in userAdmins) {
                     helpers.addResult(results, 2,
-                        'User: ' + userAdmins[u].name + ' is one of ' + userAdmins.length + ' IAM user administrators, which exceeds the expected value of: ' + config.iam_admin_count,
+                        'User: ' + userAdmins[u].name + ' is one of ' + userAdmins.length + ' IAM user administrators, which exceeds the expected value of: ' + config.iam_admin_count_maximum,
                         'global', userAdmins[u].arn, custom);
                 }
             }

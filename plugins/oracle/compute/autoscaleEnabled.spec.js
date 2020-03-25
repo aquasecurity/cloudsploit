@@ -55,7 +55,7 @@ describe('autoscaleEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(3)
-                expect(results[0].message).to.include('Unable to query for instance Pools')
+                expect(results[0].message).to.include('Unable to query for instance pools')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -74,7 +74,7 @@ describe('autoscaleEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No Instance Pool found')
+                expect(results[0].message).to.include('No instance pool found')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -89,12 +89,12 @@ describe('autoscaleEnabled', function () {
             plugin.run(cache, {}, callback);
         })
 
-        it('should give unknown result if a autoscale error is passed or no data is present', function (done) {
+        it('should give unknown result if a autoscaling error is passed or no data is present', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
-                expect(results[5].status).to.equal(3)
-                expect(results[5].message).to.include('Unable to query for Autoscale Configurations')
-                expect(results[5].region).to.equal('us-ashburn-1')
+                expect(results[9].status).to.equal(3)
+                expect(results[9].message).to.include('Unable to query for autoscaling configurations')
+                expect(results[9].region).to.equal('us-ashburn-1')
                 done()
             };
 
@@ -124,11 +124,11 @@ describe('autoscaleEnabled', function () {
 
             plugin.run(cache, {}, callback);
         })
-        it('should give passing result all instance pools have autoscale enabled', function (done) {
+        it('should give passing result all instance pools have autoscaling enabled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[results.length-1].status).to.equal(0)
-                expect(results[results.length-1].message).to.include('All Instance Pools have Autoscale Configured')
+                expect(results[results.length-1].message).to.include('All instance pools have autoscaling configured')
                 done()
             };
 
@@ -172,11 +172,11 @@ describe('autoscaleEnabled', function () {
 
             plugin.run(cache, {}, callback);
         })
-        it('should give failing result if instance pools do not have autoscale enabled', function (done) {
+        it('should give failing result if instance pools do not have autoscaling enabled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[results.length-1].status).to.equal(2)
-                expect(results[results.length-1].message).to.include('These Instance Pools do not have Autoscale Configured')
+                expect(results[results.length-1].message).to.include('The following instance pools do not have autoscaling configured')
                 done()
             };
 

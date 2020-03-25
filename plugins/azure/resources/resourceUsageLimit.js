@@ -1,13 +1,12 @@
 const async = require('async');
-
 const helpers = require('../../../helpers/azure/');
 
 module.exports = {
-    title: 'Resources Max Instances',
+    title: 'Resources Usage Limits',
     category: 'Resources',
-    description: 'Determine if resources are close to the Azure per-account limit',
+    description: 'Determines if resources are close to the Azure per-account limit',
     more_info: 'Azure limits accounts to certain numbers of resources. Exceeding those limits could prevent resources from launching.',
-    recommended_action: 'Check if resources are rclose to limit to avoid resource launching',
+    recommended_action: 'Check if resources are close to the account limit to avoid resource launch failures',
     link: 'https://docs.microsoft.com/en-us/azure/azure-subscription-service-limits',
     apis: ['subscriptions:listLocations','usages:list'],
 
@@ -25,12 +24,12 @@ module.exports = {
 
             if (usages.err || !usages.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query Resource Usages: ' + helpers.addError(usages), location);
+                    'Unable to query for Resource Usages: ' + helpers.addError(usages), location);
                 return rcb();
             }
 
             if (!usages.data.length) {
-                helpers.addResult(results, 3, 'No Usage Data Found', location)
+                helpers.addResult(results, 3, 'No Resource Usage data found', location)
                 return rcb();
             }
 
@@ -50,7 +49,7 @@ module.exports = {
                     region = resourceLoc;
                 } else if (resourceLoc != region) {
                     if (!locFlag) {
-                        helpers.addResult(results, 0, 'No Resources in the region are close to the max limit.', region);
+                        helpers.addResult(results, 0, 'No resources in the region are close to the max limit', region);
                     };
                     region = resourceLoc;
                     locFlag = false;
