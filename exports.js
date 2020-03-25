@@ -31,6 +31,7 @@ module.exports = {
         'subnetIpAvailability'          : require(__dirname + '/plugins/aws/ec2/subnetIpAvailability.js'),
         'excessiveSecurityGroups'       : require(__dirname + '/plugins/aws/ec2/excessiveSecurityGroups.js'),
         'instanceLimit'                 : require(__dirname + '/plugins/aws/ec2/instanceLimit.js'),
+        'instanceVcpusLimit'            : require(__dirname + '/plugins/aws/ec2/instanceVcpusLimit.js'),
         'instanceMaxCount'              : require(__dirname + '/plugins/aws/ec2/instanceMaxCount.js'),
         'instanceKeyBasedLogin'         : require(__dirname + '/plugins/aws/ec2/instanceKeyBasedLogin.js'),
         'openAllPortsProtocols'         : require(__dirname + '/plugins/aws/ec2/openAllPortsProtocols.js'),
@@ -65,12 +66,15 @@ module.exports = {
         'ebsEncryptionEnabled'          : require(__dirname + '/plugins/aws/ec2/ebsEncryptionEnabled.js'),
         'natMultiAz'                    : require(__dirname + '/plugins/aws/ec2/natMultiAz.js'),
         'defaultVpcInUse'               : require(__dirname + '/plugins/aws/ec2/defaultVpcInUse.js'),
+        'defaultVpcExists'               : require(__dirname + '/plugins/aws/ec2/defaultVpcExists.js'),
         'crossVpcPublicPrivate'         : require(__dirname + '/plugins/aws/ec2/crossVpcPublicPrivate.js'),
         'ebsEncryptedSnapshots'         : require(__dirname + '/plugins/aws/ec2/ebsEncryptedSnapshots.js'),
+        'ec2MetadataOptions'             : require(__dirname + '/plugins/aws/ec2/ec2MetadataOptions.js'),
 
         'efsEncryptionEnabled'          : require(__dirname + '/plugins/aws/efs/efsEncryptionEnabled.js'),
 
         'ecrRepositoryPolicy'           : require(__dirname + '/plugins/aws/ecr/ecrRepositoryPolicy.js'),
+        'ecrRepositoryTagImmutability'  : require(__dirname + '/plugins/aws/ecr/ecrRepositoryTagImmutability.js'),
 
         'eksKubernetesVersion'          : require(__dirname + '/plugins/aws/eks/eksKubernetesVersion.js'),
         'eksLoggingEnabled'             : require(__dirname + '/plugins/aws/eks/eksLoggingEnabled.js'),
@@ -82,6 +86,13 @@ module.exports = {
         'elbLoggingEnabled'             : require(__dirname + '/plugins/aws/elb/elbLoggingEnabled.js'),
         'elbNoInstances'                : require(__dirname + '/plugins/aws/elb/elbNoInstances.js'),
         'elbWafEnabled'                 : require(__dirname + '/plugins/aws/elb/elbWafEnabled.js'),
+
+        'esPublicEndpoint'              : require(__dirname + '/plugins/aws/es/esPublicEndpoint.js'),
+        'esEncryptedDomain'             : require(__dirname + '/plugins/aws/es/esEncryptedDomain.js'),
+        'esNodeToNodeEncryption'        : require(__dirname + '/plugins/aws/es/esNodeToNodeEncryption.js'),
+        'esLoggingEnabled'              : require(__dirname + '/plugins/aws/es/esLoggingEnabled.js'),
+        'esUpgradeAvailable'            : require(__dirname + '/plugins/aws/es/esUpgradeAvailable.js'),
+        'esHttpsOnly'                   : require(__dirname + '/plugins/aws/es/esHttpsOnly.js'),
 
         'accessKeysExtra'               : require(__dirname + '/plugins/aws/iam/accessKeysExtra.js'),
         'accessKeysLastUsed'            : require(__dirname + '/plugins/aws/iam/accessKeysLastUsed.js'),
@@ -131,6 +142,9 @@ module.exports = {
         'bucketAllUsersAcl'             : require(__dirname + '/plugins/aws/s3/bucketAllUsersAcl.js'),
         'bucketVersioning'              : require(__dirname + '/plugins/aws/s3/bucketVersioning.js'),
         'bucketLogging'                 : require(__dirname + '/plugins/aws/s3/bucketLogging.js'),
+        'bucketPublicAccessBlock'       : require(__dirname + '/plugins/aws/s3/bucketPublicAccessBlock.js'),
+        'bucketEncryption'              : require(__dirname + '/plugins/aws/s3/bucketEncryption.js'),
+        'bucketWebsiteEnabled'          : require(__dirname + '/plugins/aws/s3/bucketWebsiteEnabled.js'),
 
         'notebookDataEncrypted'         : require(__dirname + '/plugins/aws/sagemaker/notebookDataEncrypted.js'),
         'notebookDirectInternetAccess'  : require(__dirname + '/plugins/aws/sagemaker/notebookDirectInternetAccess.js'),
@@ -142,6 +156,8 @@ module.exports = {
         'sqsEncrypted'                  : require(__dirname + '/plugins/aws/sqs/sqsEncrypted.js'),
 
         'ssmEncryptedParameters'        : require(__dirname + '/plugins/aws/ssm/ssmEncryptedParameters.js'),
+        'ssmActiveOnAllInstances'       : require(__dirname + '/plugins/aws/ssm/ssmActiveOnAllInstances.js'),
+        'ssmAgentLatestVersion'         : require(__dirname + '/plugins/aws/ssm/ssmAgentLatestVersion.js'),
 
         'lambdaOldRuntimes'             : require(__dirname + '/plugins/aws/lambda/lambdaOldRuntimes.js'),
         'lambdaVpcConfig'               : require(__dirname + '/plugins/aws/lambda/lambdaVpcConfig.js'),
@@ -156,7 +172,12 @@ module.exports = {
 
         'shieldAdvancedEnabled'         : require(__dirname + '/plugins/aws/shield/shieldAdvancedEnabled.js'),
         'shieldEmergencyContacts'       : require(__dirname + '/plugins/aws/shield/shieldEmergencyContacts.js'),
-        'shieldProtections'             : require(__dirname + '/plugins/aws/shield/shieldProtections.js')
+        'shieldProtections'             : require(__dirname + '/plugins/aws/shield/shieldProtections.js'),
+
+        'guardDutyEnabled'              : require(__dirname + '/plugins/aws/guardduty/guarddutyEnabled.js'),
+        'guardDutyMaster'               : require(__dirname + '/plugins/aws/guardduty/guarddutyMaster.js'),
+
+        'xrayEncryptionEnabled'         : require(__dirname + '/plugins/aws/xray/xrayEncryptionEnabled.js')
     },
     azure : {
         'fileServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/fileServiceEncryption.js'),
@@ -165,22 +186,19 @@ module.exports = {
         'storageAccountsEncryption'     : require(__dirname + '/plugins/azure/storageaccounts/storageAccountsEncryption.js'),
         'logStorageEncryption'          : require(__dirname + '/plugins/azure/storageaccounts/logStorageEncryption.js'),
         'logContainerPublicAccess'      : require(__dirname + '/plugins/azure/storageaccounts/logContainerPublicAccess.js'),
+        'storageAccountsAADEnabled'     : require(__dirname + '/plugins/azure/storageaccounts/storageAccountsAADEnabled.js'),
         'blobServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/blobServiceEncryption.js'),
         'trustedMsAccessEnabled'        : require(__dirname + '/plugins/azure/storageaccounts/trustedMsAccessEnabled.js'),
 
-        'keyExpirationEnabled'          : require(__dirname + '/plugins/azure/keyvaults/keyExpirationEnabled.js'),
-
         'blobContainersPrivateAccess'   : require(__dirname + '/plugins/azure/blobservice/blobContainersPrivateAccess.js'),
         'blobServiceImmutable'          : require(__dirname + '/plugins/azure/blobservice/blobServiceImmutable.js'),
-
-        'managementLockEnabled'         : require(__dirname + '/plugins/azure/resources/managementLockEnabled.js'),
 
         'fileServiceAllAccessAcl'       : require(__dirname + '/plugins/azure/fileservice/fileServiceAllAccessAcl.js'),
         'tableServiceAllAccessAcl'      : require(__dirname + '/plugins/azure/tableservice/tableServiceAllAccessAcl.js'),
         'queueServiceAllAccessAcl'      : require(__dirname + '/plugins/azure/queueservice/queueServiceAllAccessAcl.js'),
 
         'multipleSubnets'               : require(__dirname + '/plugins/azure/virtualnetworks/multipleSubnets.js'),
-       
+
         'vmInstanceLimit'               : require(__dirname + '/plugins/azure/virtualmachines/vmInstanceLimit.js'),
         'classicInstances'              : require(__dirname + '/plugins/azure/virtualmachines/classicInstances.js'),
         'vmAgentEnabled'                : require(__dirname + '/plugins/azure/virtualmachines/vmAgentEnabled.js'),
@@ -188,6 +206,9 @@ module.exports = {
         'vmDiskDataEncryption'          : require(__dirname + '/plugins/azure/virtualmachines/vmDiskDataEncryption.js'),
         'vmEndpointProtection'          : require(__dirname + '/plugins/azure/virtualmachines/vmEndpointProtection.js'),
         'vmAutoUpdateEnabled'           : require(__dirname + '/plugins/azure/virtualmachines/vmAutoUpdateEnabled.js'),
+        'vmAvailabilitySetEnabled'      : require(__dirname + '/plugins/azure/virtualmachines/vmAvailabilitySetEnabled.js'),
+        'scaleSetMultiAz'               : require(__dirname + '/plugins/azure/virtualmachines/scaleSetMultiAz.js'),
+        'scaleSetAutoscaleEnabled'      : require(__dirname + '/plugins/azure/virtualmachines/scaleSetAutoscaleEnabled.js'),
         'vmAvailabilitySetLimit'        : require(__dirname + '/plugins/azure/virtualmachines/vmAvailabilitySetLimit.js'),
 
         'lbLogAnalyticsEnabled'         : require(__dirname + '/plugins/azure/monitor/lbLogAnalyticsEnabled.js'),
@@ -201,11 +222,12 @@ module.exports = {
         'sqlServerFirewallRuleEnabled'  : require(__dirname + '/plugins/azure/logalerts/sqlServerFirewallRuleEnabled.js'),
         'virtualNetworkRuleEnabled'     : require(__dirname + '/plugins/azure/logalerts/virtualNetworkRuleEnabled.js'),
         'securitySolutionLogging'       : require(__dirname + '/plugins/azure/logalerts/securitySolutionLogging.js'),
+        'nsgRuleLoggingEnabled'         : require(__dirname + '/plugins/azure/logalerts/nsgRuleLoggingEnabled.js'),
+        'policyAssignmentLogging'       : require(__dirname + '/plugins/azure/logalerts/policyAssignmentLogging.js'),
 
         'monitorEndpointProtection'     : require(__dirname + '/plugins/azure/securitycenter/monitorEndpointProtection.js'),
         'monitorBlobEncryption'         : require(__dirname + '/plugins/azure/securitycenter/monitorBlobEncryption.js'),
         'monitorSystemUpdates'          : require(__dirname + '/plugins/azure/securitycenter/monitorSystemUpdates.js'),
-        
         'monitorJitNetworkAccess'       : require(__dirname + '/plugins/azure/securitycenter/monitorJitNetworkAccess.js'),
         'monitorVMVulnerability'        : require(__dirname + '/plugins/azure/securitycenter/monitorVMVulnerability.js'),
         'monitorSQLEncryption'          : require(__dirname + '/plugins/azure/securitycenter/monitorSqlEncryption.js'),
@@ -213,19 +235,28 @@ module.exports = {
         'monitorDiskEncryption'         : require(__dirname + '/plugins/azure/securitycenter/monitorDiskEncryption.js'),
         'appWhitelistingEnabled'        : require(__dirname + '/plugins/azure/securitycenter/appWhitelistingEnabled.js'),
         'securityConfigMonitoring'      : require(__dirname + '/plugins/azure/securitycenter/securityConfigMonitoring.js'),
+        'autoProvisioningEnabled'       : require(__dirname + '/plugins/azure/securitycenter/autoProvisioningEnabled.js'),
         'adminSecurityAlertsEnabled'    : require(__dirname + '/plugins/azure/securitycenter/adminSecurityAlertsEnabled.js'),
         'securityContactsEnabled'       : require(__dirname + '/plugins/azure/securitycenter/securityContactsEnabled.js'),
         'monitorNsgEnabled'             : require(__dirname + '/plugins/azure/securitycenter/monitorNsgEnabled.js'),
-
-        'securitySolutionLogging'       : require(__dirname + '/plugins/azure/logalerts/securitySolutionLogging.js'),
+        'highSeverityAlertsEnabled'     : require(__dirname + '/plugins/azure/securitycenter/highSeverityAlertsEnabled.js'),
+        'standardPricingEnabled'        : require(__dirname + '/plugins/azure/securitycenter/standardPricingEnabled.js'),
 
         'resourceAllowedLocations'      : require(__dirname + '/plugins/azure/policyservice/resourceAllowedLocations.js'),
         'resourceLocationMatch'         : require(__dirname + '/plugins/azure/policyservice/resourceLocationMatch.js'),
 
-        'enforceSSLConnection'          : require(__dirname + '/plugins/azure/mysqlserver/enforceSSLConnection.js'),
-        
+        'enforceMySQLSSLConnection'     : require(__dirname + '/plugins/azure/mysqlserver/enforceMySQLSSLConnection.js'),
+
+        'logRetentionDays'              : require(__dirname + '/plugins/azure/postgresqlserver/logRetentionDays.js'),
+        'connectionThrottlingEnabled'   : require(__dirname + '/plugins/azure/postgresqlserver/connectionThrottlingEnabled.js'),
+        'logDurationEnabled'            : require(__dirname + '/plugins/azure/postgresqlserver/logDurationEnabled.js'),
+        'logDisconnectionsEnabled'      : require(__dirname + '/plugins/azure/postgresqlserver/logDisconnectionsEnabled.js'),
+        'logConnectionsEnabled'         : require(__dirname + '/plugins/azure/postgresqlserver/logConnectionsEnabled.js'),
+        'logCheckpointsEnabled'         : require(__dirname + '/plugins/azure/postgresqlserver/logCheckpointsEnabled.js'),
+        'enforcePostgresSSLConnection'  : require(__dirname + '/plugins/azure/postgresqlserver/enforcePostgresSSLConnection.js'),
+
+        'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/azure/networksecuritygroups/openOracleAutoDataWarehouse.js'),
         'networkWatcherEnabled'         : require(__dirname + '/plugins/azure/networksecuritygroups/networkWatcherEnabled.js'),
-        'denySSHAccess'                 : require(__dirname + '/plugins/azure/networksecuritygroups/denySSHAccess.js'),
         'excessiveSecurityGroups'       : require(__dirname + '/plugins/azure/networksecuritygroups/excessiveSecurityGroups.js'),
         'defaultSecurityGroup'          : require(__dirname + '/plugins/azure/networksecuritygroups/defaultSecurityGroup.js'),
         'openAllPorts'                  : require(__dirname + '/plugins/azure/networksecuritygroups/openAllPorts.js'),
@@ -248,13 +279,20 @@ module.exports = {
         'openRPC'                       : require(__dirname + '/plugins/azure/networksecuritygroups/openRPC.js'),
         'openSMBoTCP'                   : require(__dirname + '/plugins/azure/networksecuritygroups/openSMBoTCP.js'),
         'openSQLServer'                 : require(__dirname + '/plugins/azure/networksecuritygroups/openSQLServer.js'),
-        
+
         'resourceUsageLimit'            : require(__dirname + '/plugins/azure/resources/resourceUsageLimit.js'),
-        
+        'managementLockEnabled'         : require(__dirname + '/plugins/azure/resources/managementLockEnabled.js'),
+
+        'emailAccountAdminsEnabled'     : require(__dirname + '/plugins/azure/sqlserver/emailAccountAdminsEnabled.js'),
+        'sendAlertsEnabled'             : require(__dirname + '/plugins/azure/sqlserver/sendAlertsEnabled.js'),
         'advancedDataSecurityEnabled'   : require(__dirname + '/plugins/azure/sqlserver/advancedDataSecurityEnabled.js'),
         'tdeProtectorEncrypted'         : require(__dirname + '/plugins/azure/sqlserver/tdeProtectorEncrypted.js'),
         'noPublicAccess'                : require(__dirname + '/plugins/azure/sqlserver/noPublicAccess.js'),
-        
+        'auditRetentionPolicy'          : require(__dirname + '/plugins/azure/sqlserver/auditRetentionPolicy.js'),
+        'auditActionGroupsEnabled'      : require(__dirname + '/plugins/azure/sqlserver/auditActionGroupsEnabled.js'),
+        'serverAuditingEnabled'         : require(__dirname + '/plugins/azure/sqlserver/serverAuditingEnabled.js'),
+        'azureADAdminEnabled'           : require(__dirname + '/plugins/azure/sqlserver/azureADAdminEnabled.js'),
+
         'javaVersion'                   : require(__dirname + '/plugins/azure/appservice/javaVersion.js'),
         'phpVersion'                    : require(__dirname + '/plugins/azure/appservice/phpVersion.js'),
         'pythonVersion'                 : require(__dirname + '/plugins/azure/appservice/pythonVersion.js'),
@@ -265,21 +303,33 @@ module.exports = {
         'http20Enabled'                 : require(__dirname + '/plugins/azure/appservice/http20Enabled.js'),
         'httpsOnlyEnabled'              : require(__dirname + '/plugins/azure/appservice/httpsOnlyEnabled.js'),
         'tlsVersionCheck'               : require(__dirname + '/plugins/azure/appservice/tlsVersionCheck.js'),
-        
+
         'rbacEnabled'                   : require(__dirname + '/plugins/azure/kubernetesservice/rbacEnabled.js'),
-        
+        'aksLatestVersion'              : require(__dirname + '/plugins/azure/kubernetesservice/aksLatestVersion.js'),
+
+        'acrAdminUser'                  : require(__dirname + '/plugins/azure/containerregistry/acrAdminUser.js'),
+
         'endpointLoggingEnabled'        : require(__dirname + '/plugins/azure/cdnprofiles/endpointLoggingEnabled.js'),
         'detectInsecureCustomOrigin'    : require(__dirname + '/plugins/azure/cdnprofiles/detectInsecureCustomOrigin.js'),
-        
-        'unmanagedDiskEncryption'       : require(__dirname + '/plugins/azure/disks/unmanagedDiskEncryption.js'),
-        
+
+        'passwordRequiresLowercase'     : require(__dirname + '/plugins/azure/activedirectory/passwordRequiresLowercase.js'),
+        'passwordRequiresNumbers'       : require(__dirname + '/plugins/azure/activedirectory/passwordRequiresNumbers.js'),
+        'passwordRequiresSymbols'       : require(__dirname + '/plugins/azure/activedirectory/passwordRequiresSymbols.js'),
+        'passwordRequiresUppercase'     : require(__dirname + '/plugins/azure/activedirectory/passwordRequiresUppercase.js'),
+        'minPasswordLength'             : require(__dirname + '/plugins/azure/activedirectory/minPasswordLength.js'),
+        'ensureNoGuestUser'             : require(__dirname + '/plugins/azure/activedirectory/ensureNoGuestUser.js'),
+        'noCustomOwnerRoles'            : require(__dirname + '/plugins/azure/activedirectory/noCustomOwnerRoles.js'),
+
         'dbAuditingEnabled'             : require(__dirname + '/plugins/azure/sqldatabases/dbAuditingEnabled.js'),
         'sqlDbMultiAz'                  : require(__dirname + '/plugins/azure/sqldatabases/sqlDbMultiAz.js'),
         'dbRestorable'                  : require(__dirname + '/plugins/azure/sqldatabases/dbRestorable.js'),
+
         'lbHttpsOnly'                   : require(__dirname + '/plugins/azure/loadbalancer/lbHttpsOnly.js'),
         'lbNoInstances'                 : require(__dirname + '/plugins/azure/loadbalancer/lbNoInstances.js'),
 
-    'kvRecoveryEnabled'             : require(__dirname + '/plugins/azure/keyvault/kvRecoveryEnabled.js'),
+        'kvRecoveryEnabled'             : require(__dirname + '/plugins/azure/keyvaults/kvRecoveryEnabled.js'),
+        'keyExpirationEnabled'          : require(__dirname + '/plugins/azure/keyvaults/keyExpirationEnabled.js'),
+        'secretExpirationEnabled'       : require(__dirname + '/plugins/azure/keyvaults/secretExpirationEnabled.js'),
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
@@ -301,6 +351,7 @@ module.exports = {
         'bootVolumeTransitEncryption'   : require(__dirname + '/plugins/oracle/compute/bootVolumeTransitEncryption.js'),
         'bootVolumeRestorable'          : require(__dirname + '/plugins/oracle/compute/bootVolumeRestorable.js'),
         'bootVolumeBackupEnabled'       : require(__dirname + '/plugins/oracle/compute/bootVolumeBackupEnabled.js'),
+        'instancePolicyProtection'      : require(__dirname + '/plugins/oracle/compute/instancePolicyProtection.js'),
 
         'usersMfaEnabled'               : require(__dirname + '/plugins/oracle/identity/usersMfaEnabled.js'),
         'passwordRequiresLowercase'     : require(__dirname + '/plugins/oracle/identity/passwordRequiresLowercase.js'),
@@ -311,7 +362,8 @@ module.exports = {
         'emptyGroups'                   : require(__dirname + '/plugins/oracle/identity/emptyGroups.js'),
         'excessivePolicies'             : require(__dirname + '/plugins/oracle/identity/excessivePolicies.js'),
         'excessivePolicyStatements'     : require(__dirname + '/plugins/oracle/identity/excessivePolicyStatements.js'),
-
+        'policyLeastPrivilege'          : require(__dirname + '/plugins/oracle/identity/policyLeastPrivilege.js'),
+        
         'openSSH'                       : require(__dirname + '/plugins/oracle/networking/openSSH.js'),
         'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/oracle/networking/openOracleAutoDataWarehouse.js'),
         'openAllPortsProtocols'         : require(__dirname + '/plugins/oracle/networking/openAllPortsProtocols.js'),
@@ -348,16 +400,20 @@ module.exports = {
         'bucketPublicAccessType'        : require(__dirname + '/plugins/oracle/objectstore/bucketPublicAccessType.js'),
         'preAuthRequestsExpiry'         : require(__dirname + '/plugins/oracle/objectstore/preAuthRequestsExpiry.js'),
         'preAuthRequestsAccess'         : require(__dirname + '/plugins/oracle/objectstore/preAuthRequestsAccess.js'),
+        'objectPolicyProtection'        : require(__dirname + '/plugins/oracle/objectstore/objectPolicyProtection.js'),
 
         'nfsPublicAccess'               : require(__dirname + '/plugins/oracle/filestorage/nfsPublicAccess.js'),
+        'nfsPolicyProtection'           : require(__dirname + '/plugins/oracle/filestorage/nfsPolicyProtection.js'),
 
         'dbBackupEnabled'               : require(__dirname + '/plugins/oracle/database/dbBackupEnabled.js'),
         'dbPrivateSubnetOnly'           : require(__dirname + '/plugins/oracle/database/dbPrivateSubnetOnly.js'),
         'dbNSGEnabled'                  : require(__dirname + '/plugins/oracle/database/dbNSGEnabled.js'),
+        'dbPolicyProtection'            : require(__dirname + '/plugins/oracle/database/dbPolicyProtection.js'),
 
         'blockVolumeRestorable'         : require(__dirname + '/plugins/oracle/blockstorage/blockVolumeRestorable.js'),
         'blockVolumeBackupEnabled'      : require(__dirname + '/plugins/oracle/blockstorage/blockVolumeBackupEnabled.js'),
         'volumeGroupsRestorable'        : require(__dirname + '/plugins/oracle/blockstorage/volumeGroupsRestorable.js'),
+        'blockPolicyProtection'         : require(__dirname + '/plugins/oracle/blockstorage/blockPolicyProtection.js'),
 
         'logRetentionPeriod'            : require(__dirname + '/plugins/oracle/audit/logRetentionPeriod.js'),
     },
@@ -387,10 +443,17 @@ module.exports = {
         'multipleSubnets'               : require(__dirname + '/plugins/google/vpcnetwork/multipleSubnets.js'),
         'defaultVpcInUse'               : require(__dirname + '/plugins/google/vpcnetwork/defaultVpcInUse.js'),
         'flowLogsEnabled'               : require(__dirname + '/plugins/google/vpcnetwork/flowLogsEnabled.js'),
+        'privateAccessEnabled'          : require(__dirname + '/plugins/google/vpcnetwork/privateAccessEnabled.js'),
 
         'instanceMaxCount'              : require(__dirname + '/plugins/google/compute/instanceMaxCount.js'),
         'instancesMultiAz'              : require(__dirname + '/plugins/google/compute/instancesMultiAz.js'),
         'autoscaleEnabled'              : require(__dirname + '/plugins/google/compute/autoscaleEnabled.js'),
+        'instanceLevelSSHOnly'          : require(__dirname + '/plugins/google/compute/instanceLevelSSHOnly.js'),
+        'instanceLeastPrivilege'        : require(__dirname + '/plugins/google/compute/instanceLeastPrivilege.js'),
+        'ipForwardingDisabled'          : require(__dirname + '/plugins/google/compute/ipForwardingDisabled.js'),
+        'connectSerialPortsDisabled'    : require(__dirname + '/plugins/google/compute/connectSerialPortsDisabled.js'),
+        'csekEncryptionEnabled'         : require(__dirname + '/plugins/google/compute/csekEncryptionEnabled.js'),
+        'osLoginEnabled'                : require(__dirname + '/plugins/google/compute/osLoginEnabled.js'),
 
         'keyRotation'                   : require(__dirname + '/plugins/google/cryptographickeys/keyRotation.js'),
 
@@ -398,16 +461,57 @@ module.exports = {
         'dbAutomatedBackups'            : require(__dirname + '/plugins/google/sql/dbAutomatedBackups.js'),
         'dbMultiAz'                     : require(__dirname + '/plugins/google/sql/dbMultiAz.js'),
         'dbPubliclyAccessible'          : require(__dirname + '/plugins/google/sql/dbPubliclyAccessible.js'),
+        'dbSSLEnabled'                  : require(__dirname + '/plugins/google/sql/dbSSLEnabled.js'),
+        'anyHostRootAccess'             : require(__dirname + '/plugins/google/sql/anyHostRootAccess.js'),
 
         'bucketVersioning'              : require(__dirname + '/plugins/google/storage/bucketVersioning.js'),
         'bucketLogging'                 : require(__dirname + '/plugins/google/storage/bucketLogging.js'),
+        'bucketAllUsersPolicy'          : require(__dirname + '/plugins/google/storage/bucketAllUsersPolicy.js'),
 
         'clbHttpsOnly'                  : require(__dirname + '/plugins/google/clb/clbHttpsOnly.js'),
         'clbNoInstances'                : require(__dirname + '/plugins/google/clb/clbNoInstances.js'),
-		
+        'clbSecurityPolicyEnabled'      : require(__dirname + '/plugins/google/clb/clbSecurityPolicyEnabled.js'),
+        'clbCDNEnabled'                 : require(__dirname + '/plugins/google/clb/clbCDNEnabled.js'),
+
         'serviceLimits'                 : require(__dirname + '/plugins/google/iam/serviceLimits.js'),
+        'serviceAccountAdmin'           : require(__dirname + '/plugins/google/iam/serviceAccountAdmin.js'),
+        'serviceAccountUser'            : require(__dirname + '/plugins/google/iam/serviceAccountUser.js'),
+        'serviceAccountSeparation'      : require(__dirname + '/plugins/google/iam/serviceAccountSeparation.js'),
+        'kmsUserSeparation'             : require(__dirname + '/plugins/google/iam/kmsUserSeparation.js'),
+        'serviceAccountKeyRotation'     : require(__dirname + '/plugins/google/iam/serviceAccountKeyRotation.js'),
+        'serviceAccountManagedKeys'     : require(__dirname + '/plugins/google/iam/serviceAccountManagedKeys.js'),
+        'corporateEmailsOnly'           : require(__dirname + '/plugins/google/iam/corporateEmailsOnly.js'),
 
         'privateEndpoint'               : require(__dirname + '/plugins/google/kubernetes/privateEndpoint.js'),
         'monitoringEnabled'             : require(__dirname + '/plugins/google/kubernetes/monitoringEnabled.js'),
+        'clusterLeastPrivilege'         : require(__dirname + '/plugins/google/kubernetes/clusterLeastPrivilege.js'),
+        'loggingEnabled'                : require(__dirname + '/plugins/google/kubernetes/loggingEnabled.js'),
+        'aliasIpRangesEnabled'          : require(__dirname + '/plugins/google/kubernetes/aliasIpRangesEnabled.js'),
+        'legacyAuthorizationDisabled'   : require(__dirname + '/plugins/google/kubernetes/legacyAuthorizationDisabled.js'),
+        'masterAuthorizedNetwork'       : require(__dirname + '/plugins/google/kubernetes/masterAuthorizedNetwork.js'),
+        'clusterLabelsAdded'            : require(__dirname + '/plugins/google/kubernetes/clusterLabelsAdded.js'),
+        'webDashboardDisabled'          : require(__dirname + '/plugins/google/kubernetes/webDashboardDisabled.js'),
+        'defaultServiceAccount'         : require(__dirname + '/plugins/google/kubernetes/defaultServiceAccount.js'),
+        'cosImageEnabled'               : require(__dirname + '/plugins/google/kubernetes/cosImageEnabled.js'),
+        'autoNodeRepairEnabled'         : require(__dirname + '/plugins/google/kubernetes/autoNodeRepairEnabled.js'),
+        'autoNodeUpgradesEnabled'       : require(__dirname + '/plugins/google/kubernetes/autoNodeUpgradesEnabled.js'),
+        'networkPolicyEnabled'          : require(__dirname + '/plugins/google/kubernetes/networkPolicyEnabled.js'),
+        'podSecurityPolicyEnabled'      : require(__dirname + '/plugins/google/kubernetes/podSecurityPolicyEnabled.js'),
+        'privateClusterEnabled'         : require(__dirname + '/plugins/google/kubernetes/privateClusterEnabled.js'),
+        'basicAuthenticationDisabled'   : require(__dirname + '/plugins/google/kubernetes/basicAuthenticationDisabled.js'),
+
+        'dnsSecEnabled'                 : require(__dirname + '/plugins/google/dns/dnsSecEnabled.js'),
+        'dnsSecSigningAlgorithm'        : require(__dirname + '/plugins/google/dns/dnsSecSigningAlgorithm.js'),
+
+        'auditLoggingEnabled'           : require(__dirname + '/plugins/google/logging/auditLoggingEnabled.js'),
+        'projectOwnershipLogging'       : require(__dirname + '/plugins/google/logging/projectOwnershipLogging.js'),
+        'storagePermissionsLogging'     : require(__dirname + '/plugins/google/logging/storagePermissionsLogging.js'),
+        'sqlConfigurationLogging'       : require(__dirname + '/plugins/google/logging/sqlConfigurationLogging.js'),
+        'auditConfigurationLogging'     : require(__dirname + '/plugins/google/logging/auditConfigurationLogging.js'),
+        'customRoleLogging'             : require(__dirname + '/plugins/google/logging/customRoleLogging.js'),
+        'vpcFirewallRuleLogging'        : require(__dirname + '/plugins/google/logging/vpcFirewallRuleLogging.js'),
+        'vpcNetworkRouteLogging'        : require(__dirname + '/plugins/google/logging/vpcNetworkRouteLogging.js'),
+        'vpcNetworkLogging'             : require(__dirname + '/plugins/google/logging/vpcNetworkLogging.js'),
+        'logSinksEnabled'               : require(__dirname + '/plugins/google/logging/logSinksEnabled.js'),
     }
 };

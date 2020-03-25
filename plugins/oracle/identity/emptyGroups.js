@@ -17,10 +17,10 @@ module.exports = {
 
         if (cache.group.list &&
             Object.keys(cache.group.list).length &&
-            Object.keys(cache.group.list).length>0){
+            Object.keys(cache.group.list).length > 0){
             defaultRegion = helpers.objectFirstKey(cache.group.list);
         } else {
-            return callback();
+            return callback(null, results, source);
         }
 
         var groups = helpers.addSource(cache, source,
@@ -29,35 +29,31 @@ module.exports = {
         var userGroups = helpers.addSource(cache, source,
             ['userGroupMembership', 'list', defaultRegion]);
 
-        if (!groups || !userGroups) return callback();
+        if (!groups || !userGroups) return callback(null, results, source);
 
         if (((groups.err &&
-            groups.err.length &&
-            groups.err.length > 0) || !groups.data) ||
+            groups.err.length) || !groups.data) ||
             ((userGroups.err &&
-                userGroups.err.length &&
-                userGroups.err.length > 0) || !userGroups.data)) {
+                userGroups.err.length) || !userGroups.data)) {
             helpers.addResult(results, 3,
                 'Unable to query user groups: ' + helpers.addError(userGroups));
-            return callback();
+            return callback(null, results, source);
         }
 
         if (!groups.data.length || !userGroups.data.length) {
             helpers.addResult(results, 0, 'No groups found');
-            return callback();
+            return callback(null, results, source);
         }
 
         for (g in groups.data) {
             var group = groups.data[g];
 
             var users = userGroups.data.filter((u) => {
-                return u.groupId == group.id;
+                if (u.groupId) return u.groupId === group.id;
             });
-            if (users.length && users.length > 0) break;
 
             if (users &&
-                users.length &&
-                users.length > 0) {
+                users.length) {
                 helpers.addResult(results, 0, 'Group contains ' + users.length + ' user(s)', defaultRegion, group.name + ' - ' + group.id);
             } else {
                 helpers.addResult(results, 1, 'Group does not contain any users', defaultRegion, group.name + ' - ' + group.id)

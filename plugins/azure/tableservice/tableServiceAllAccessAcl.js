@@ -1,13 +1,12 @@
 var async = require('async');
-
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Table Service All Access ACL',
     category: 'Table Service',
-    description: 'Ensures Tables do not allow full write, delete, or read ACL permissions',
-    more_info: 'Tables can be configured to allow to read, write or delete objects. This option should not be configured unless there is a strong business requirement.',
-    recommended_action: 'Disable global read/write/detele policies on all Tables and ensure the ACL is configured with least privileges.',
+    description: 'Ensures tables do not allow full write, delete, or read ACL permissions',
+    more_info: 'Table Service tables can be configured to allow to read, write or delete on objects. This option should not be configured unless there is a strong business requirement.',
+    recommended_action: 'Disable global read, write, and delete policies on all tables and ensure the ACL is configured with least privileges.',
     link: 'https://docs.microsoft.com/en-us/azure/storage/tables/table-storage-quickstart-portal',
     apis: ['resourceGroups:list', 'storageAccounts:list', 'storageAccounts:listKeys', 'TableService:listTablesSegmented', 'TableService:getTableAcl'],
     compliance: {
@@ -35,7 +34,7 @@ module.exports = {
             }
 
             if (!tableService.data || !tableService.data.length) {
-                helpers.addResult(results, 0, 'No existing table services', location);
+                helpers.addResult(results, 0, 'No existing table services found', location);
             } else {
                 for (t in tableService.data) {
                     var table = tableService.data[t];
@@ -65,15 +64,17 @@ module.exports = {
                                 }
                             }
                             if (alertRead && alertWrite) {
-                                helpers.addResult(results, 2, 'Acl is allows both read and write access for the table ', location, table.name + (table.etag ? ' etag:' + table.etag : '') + (ident ? ' policy:' + ident : ''));
+                                helpers.addResult(results, 2, 'ACL allows both read and write access for the table', location, table.id);
                             } else if (alertRead && !alertWrite) {
-                                helpers.addResult(results, 1, 'Acl is allows both read access for the table ', location, table.name + (table.etag ? ' etag:' + table.etag : '') + (ident ? ' policy:' + ident : ''));
+                                helpers.addResult(results, 2, 'ACL allows read access for the table', location, table.id);
                             } else if (!alertRead && alertWrite) {
-                                helpers.addResult(results, 1, 'Acl is allows write access for the table ', location, table.name + (table.etag ? ' etag:' + table.etag : '') + (ident ? ' policy:' + ident : ''));
+                                helpers.addResult(results, 2, 'ACL allows write access for the table', location, table.id);
+                            } else {
+                                helpers.addResult(results, 0, 'ACL restricts read and write access for the table', location, table.id);
                             }
                         }
                     } else {
-                        helpers.addResult(results, 2, 'Acl has not been configured for the table ', location, table.name +  ' etag:' + table.etag);
+                        helpers.addResult(results, 2, 'ACL has not been configured for the table', location, table.id);
                     }
                 }
             }

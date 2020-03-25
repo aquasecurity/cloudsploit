@@ -129,8 +129,11 @@ var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, Googl
 
     // STEP 2 - Collect API Metadata from Service Providers
     async.map(serviceProviders, function (serviceProviderObj, serviceProviderDone) {
-        //Note that this is technically a bug in their implementation- the settings being passed in do not actually include the real settings file which made it pretty useless.
-        serviceProviderObj.collector(serviceProviderObj.config, Object.assign({api_calls: serviceProviderObj.apiCalls, skip_regions: serviceProviderObj.skipRegions}, settings), function (err, collection) {
+
+        settings.api_calls = serviceProviderObj.apiCalls;
+        settings.skip_regions = serviceProviderObj.skipRegions;
+
+        serviceProviderObj.collector(serviceProviderObj.config, settings, function (err, collection) {
             if (err || !collection) return console.log('ERROR: Unable to obtain API metadata');
 
             serviceCollection[serviceProviderObj.name] = {collection}

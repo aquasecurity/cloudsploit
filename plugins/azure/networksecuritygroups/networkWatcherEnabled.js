@@ -4,11 +4,11 @@ const helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'Network Watcher Enabled',
     category: 'Network Security Groups',
-    description: 'Ensure that Network Watcher is Enabled on all locations.',
-    more_info: 'Network Watchers help you understand, diagnose, and gain insights into the Azure networks. Enabling Network Watchers on all locations ensures that no resources are being used in locations that are not authorized by the company.',
-    recommended_action: '1. Enter the Network Watcher Service. 2. Click the ... next to the Subscription name and Select Enable Network Watcher In All Regions.',
+    description: 'Ensures Network Watcher is enabled in all locations',
+    more_info: 'Network Watcher helps locate, diagnose, and gain insights into Azure networks. Enabling Network Watcher in all locations ensures that no resources are being used in locations that are not authorized.',
+    recommended_action: 'Enable the Network Watcher service in all locations.',
     link: 'https://docs.microsoft.com/en-us/azure/network-watcher/network-watcher-monitoring-overview',
-    apis: ['networkWatchers:listAll'],
+    apis: ['networkWatchers:listAll', 'virtualNetworks:listAll'],
 
     run: function(cache, settings, callback) {
         const results = [];
@@ -19,24 +19,29 @@ module.exports = {
             const networkWatchers = helpers.addSource(cache, source,
                 ['networkWatchers', 'listAll', location]);
 
-            if (!networkWatchers) return rcb();
+            const virtualNetworks = helpers.addSource(cache, source,
+                ['virtualNetworks', 'listAll', location]);
 
-            if (networkWatchers.err || !networkWatchers.data) {
+            if (!networkWatchers || !virtualNetworks) return rcb();
+
+            if (networkWatchers.err || !networkWatchers.data || !virtualNetworks.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query Network Watcher: ' + helpers.addError(networkWatchers), location);
+                    'Unable to query for Network Watcher: ' + helpers.addError(networkWatchers), location);
                 return rcb();
-            };
+            }
 
-            if (!networkWatchers.data.length) {
-                helpers.addResult(results, 1, 'Network Watcher is not enabled in the region', location);
-            };
+            if (!networkWatchers.data.length && virtualNetworks.data.length) {
+                helpers.addResult(results, 2, 'Network Watcher is not enabled in the region', location);
+            } else if (!networkWatchers.data.length && !virtualNetworks.data.length) {
+                helpers.addResult(results, 0, 'No Virtual Networks or Network Watchers in the region', location);
+            }
 
             networkWatchers.data.forEach((networkWatcher) => {
                 if (networkWatcher.provisioningState &&
                     networkWatcher.provisioningState == "Succeeded") {
                     helpers.addResult(results, 0, 'Network Watcher is enabled', location, networkWatcher.id);
                 } else {
-                    helpers.addResult(results, 2, 'Network Watcher is not enabled in the region', location, networkWatcher.id);
+                    helpers.addResult(results, 2, 'Network Watcher is not successfully provisioned for the region', location, networkWatcher.id);
                 };
             });
 

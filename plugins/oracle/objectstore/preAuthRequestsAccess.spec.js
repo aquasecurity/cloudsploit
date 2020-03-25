@@ -53,7 +53,7 @@ describe('preAuthRequestsAccess', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(3)
-                expect(results[0].message).to.include('Unable to query for Pre-Authenticated requests')
+                expect(results[0].message).to.include('Unable to query for pre-authenticated requests')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -69,7 +69,7 @@ describe('preAuthRequestsAccess', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No Pre-Authenticated requests present')
+                expect(results[0].message).to.include('No pre-authenticated requests found')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -85,7 +85,7 @@ describe('preAuthRequestsAccess', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No active Pre-Authenticated requests')
+                expect(results[0].message).to.include('No active pre-authenticated requests')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -110,7 +110,7 @@ describe('preAuthRequestsAccess', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('All Pre-Authenticated requests have least access')
+                expect(results[0].message).to.include('All pre-authenticated requests have least access')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -135,7 +135,7 @@ describe('preAuthRequestsAccess', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(1)
-                expect(results[0].message).to.include('Pre-Authenticated request allows write access to')
+                expect(results[0].message).to.include('pre-authenticated request allows write access to')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -160,7 +160,7 @@ describe('preAuthRequestsAccess', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('Pre-Authenticated request allows write access to all objects')
+                expect(results[0].message).to.include('pre-authenticated request allows write access to all objects')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };

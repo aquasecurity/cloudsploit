@@ -12,7 +12,7 @@ module.exports = {
     compliance: {
         hipaa: 'HIPAA requires strict access controls to networks and services ' +
             'processing sensitive data. security lists are the built-in ' +
-            'method for restricting access to AWS services and should be ' +
+            'method for restricting access to OCI services and should be ' +
             'configured to allow least-privilege access.',
         pci: 'PCI has explicit requirements around firewalled access to systems. ' +
             'security lists should be properly secured to prevent access to ' +
@@ -33,9 +33,10 @@ module.exports = {
 
                 if (!vcn) return rcb();
 
-                if (vcn.err) {
+                if (vcn.err || !vcn.data) {
                     helpers.addResult(results, 3,
-                        vcn.err.code + ": " + helpers.addError(vcn), region);
+                        'Unable to query for VCNs: ' +
+                        helpers.addError(vcn), region);
                     return rcb();
                 }
 
@@ -50,18 +51,21 @@ module.exports = {
 
                 if (!getSecurityLists) return rcb();
 
-                if (getSecurityLists.err && getSecurityLists.err.length>0)  {
+                if (getSecurityLists.err && getSecurityLists.err.length)  {
                     helpers.addResult(results, 3,
-                        'Unable to query for security lists: ' + helpers.addError(getSecurityLists), region);
+                        'Unable to query for security lists: ' +
+                        helpers.addError(getSecurityLists), region);
                     return rcb();
                 }
 
-                if (!getSecurityLists.data || !getSecurityLists.data.length>0) {
-                    helpers.addResult(results, 0, 'No security lists present', region);
+                if (!getSecurityLists.data || !getSecurityLists.data.length) {
+                    helpers.addResult(results, 0,
+                        'No security lists found', region);
                     return rcb();
                 }
 
-                helpers.findOpenPortsAll(getSecurityLists.data, ports, service, region, results);
+                helpers.findOpenPortsAll(getSecurityLists.data, ports,
+                    service, region, results);
             }
 
             rcb();

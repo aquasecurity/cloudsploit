@@ -27,18 +27,18 @@ module.exports = {
                     helpers.addResult(results, 3,
                         'Unable to query for VCNs: ' + helpers.addError(vcns), region);
                     return rcb();
-                };
+                }
 
                 if (!vcns.data.length) {
                     helpers.addResult(results, 0, 'No VCNs found', region);
                     return rcb();
-                };
+                }
 
                 if (vcns.data.length > 1) {
                     helpers.addResult(results, 0,
                         'Multiple (' + vcns.data.length + ') VCNs are used.', region);
                     return rcb();
-                };
+                }
 
                 // Looks like we have only one VCN
                 var vcnId = vcns.data[0].id;
@@ -46,7 +46,7 @@ module.exports = {
                 if (!vcnId) {
                     helpers.addResult(results, 3, 'Unable to query for subnets for VCN.', region);
                     return rcb();
-                };
+                }
 
                 var subnets = helpers.addSource(cache, source,
                     ['subnet', 'list', region]);
@@ -56,10 +56,10 @@ module.exports = {
                     helpers.addResult(results, 3,
                         'Unable to query for subnets: ' + helpers.addError(subnets), region);
                     return rcb();
-                };
+                }
 
-                vcnSubnets = subnets.data.filter(subnet => {
-                    return subnet.vcnId == vcnId;
+                var vcnSubnets = subnets.data.filter(subnet => {
+                    if (subnet.vcnId) return subnet.vcnId === vcnId;
                 });
 
                 if (vcnSubnets.length > 1) {
@@ -71,8 +71,8 @@ module.exports = {
                 } else {
                     helpers.addResult(results, 0,
                         'The VCN does not have any subnets', region, vcnId);
-                };
-            };
+                }
+            }
             rcb();
         }, function(){
             callback(null, results, source);

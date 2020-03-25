@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Excessive Firewall Rules',
     category: 'VPC Network',
-    description: 'Determine if there are an excessive number of firewall rules in the account',
+    description: 'Determines if there are an excessive number of firewall rules in the account',
     more_info: 'Keeping the number of firewall rules to a minimum helps reduce the attack surface of an account. Rather than creating new rules with the same rules for each project, common rules should be grouped under the same firewall rule. For example, instead of adding port 22 from a known IP to every firewall rule, create a single "SSH" firewall rule which can be used on multiple instances.',
     link: 'https://cloud.google.com/vpc/docs/using-firewalls',
     recommended_action: 'Limit the number of firewall rules to prevent accidental authorizations',
@@ -51,12 +51,12 @@ module.exports = {
             if (firewalls.err || !firewalls.data) {
                 helpers.addResult(results, 3, 'Unable to query firewall rules: ' + helpers.addError(firewalls), region);
                 return rcb();
-            };
+            }
 
             if (!firewalls.data.length) {
-                helpers.addResult(results, 0, 'No firewall rules present', region);
+                helpers.addResult(results, 0, 'No firewall rules found', region);
                 return rcb();
-            };
+            }
 
             var returnMsg = ' number of firewall rules: ' + firewalls.data.length + ' rules present';
 
@@ -66,7 +66,7 @@ module.exports = {
                 helpers.addResult(results, 1, 'Large' + returnMsg, region, null, custom);
             } else {
                 helpers.addResult(results, 0, 'Acceptable' + returnMsg, region, null, custom);
-            };
+            }
 
             rcb();
         }, function(){
