@@ -4,9 +4,9 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Admin Security Alerts Enabled',
     category: 'Security Center',
-    description: 'Ensure that security alerts are sent to admins.',
-    more_info: 'By enabling Security alerts to admins, any vulnerabilities are sent to the subscription admins, ensuring quick remediation on any security vulnerabilities and following security best practices.',
-    recommended_action: '1. Go to Azure Security Center 2. Select the Pricing & Settings Blade. 3. Click on the Subscription Name 4. Select the Email Notifications Blade 5. Ensure that Also send email notification to subscription owners is enabled.',
+    description: 'Ensures that security alerts are configured to be sent to admins',
+    more_info: 'Enabling security alerts to be sent to admins ensures that detected vulnerabilities and security issues are sent to the subscription admins for quick remediation.',
+    recommended_action: 'Ensure that security alerts are configured to be sent to subscription owners.',
     link: 'https://docs.microsoft.com/en-us/azure/security-center/security-center-provide-security-contact-details',
     apis: ['securityContacts:list'],
 
@@ -24,14 +24,14 @@ module.exports = {
 
             if (securityContacts.err || !securityContacts.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query security contacts: ' + helpers.addError(securityContacts), location);
+                    'Unable to query for security contacts: ' + helpers.addError(securityContacts), location);
                 return rcb();
-            };
+            }
 
             if (!securityContacts.data.length) {
                 helpers.addResult(results, 2, 'No existing security contacts', location);
                 return rcb();
-            };
+            }
 
             let alertExists = false;
             
@@ -42,15 +42,14 @@ module.exports = {
 
                 if (securityContact.alertsToAdmins == 'On') {
                     alertExists = true;
-                };
+                }
             });
 
             if (alertExists) {
-                helpers.addResult(results, 0, 'Security alerts to admin for Subscription is enabled', location, subId);
+                helpers.addResult(results, 0, 'Security alerts for the subscription are configured to be sent to admins', location, subId);
             } else {
-                helpers.addResult(results, 2, 'Security alerts to admin for Subscription is not enabled', location, subId);
-            };
-            
+                helpers.addResult(results, 2, 'Security alerts for the subscription are not configured to be sent to admins', location, subId);
+            }
 
             rcb();
         }, function(){

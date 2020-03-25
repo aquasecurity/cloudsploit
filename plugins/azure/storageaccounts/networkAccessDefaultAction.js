@@ -4,9 +4,9 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
   title: 'Network Access Default Action',
   category: 'Storage Accounts',
-  description: 'Ensure that Storage Account access is restricted to trusted networks.',
-  more_info: 'Storage Accounts should be configured to accept traffic only from trusted networks. By default, all networks are selected but can be changed when creating a new storage account or in firewall settings.',
-  recommended_action: 'Go to your Storage Account, select Firewalls and virtual networks, ensure that allow access from all networks is not selected.',
+  description: 'Ensures that Storage Account access is restricted to trusted networks',
+  more_info: 'Storage Accounts should be configured to accept traffic only from trusted networks. By default, all networks are selected but can be changed when creating a new storage account or in the firewall settings.',
+  recommended_action: 'Configure the firewall of each Storage Account to allow access only from known virtual networks.',
   link: 'https://docs.microsoft.com/en-us/azure/storage/common/storage-network-security',
   apis: ['storageAccounts:list'],
   compliance: {
@@ -31,9 +31,8 @@ module.exports = {
 
       if (storageAccount.err || !storageAccount.data) {
         helpers.addResult(results, 3,
-          'Unable to query Storage Accounts: ' + helpers.addError(storageAccount),
-          location
-        );
+          'Unable to query for Storage Accounts: ' + helpers.addError(storageAccount),
+          location);
         return rcb();
       }
 

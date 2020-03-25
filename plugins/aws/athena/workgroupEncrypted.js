@@ -50,16 +50,17 @@ module.exports = {
                 } else if (getWorkGroup.data.WorkGroup &&
                            getWorkGroup.data.WorkGroup.Configuration &&
                            getWorkGroup.data.WorkGroup.Configuration.ResultConfiguration &&
-                           getWorkGroup.data.WorkGroup.Configuration.ResultConfiguration.EncryptionOption) {
+                           getWorkGroup.data.WorkGroup.Configuration.ResultConfiguration.EncryptionConfiguration &&
+                           getWorkGroup.data.WorkGroup.Configuration.ResultConfiguration.EncryptionConfiguration.EncryptionOption) {
                     helpers.addResult(results, 0,
-                        'Athena workgroup is using ' + getWorkGroup.data.WorkGroup.Configuration.ResultConfiguration.EncryptionOption + ' encryption', region, arn);
+                        'Athena workgroup is using ' + getWorkGroup.data.WorkGroup.Configuration.ResultConfiguration.EncryptionConfiguration.EncryptionOption + ' encryption', region, arn);
                 } else {
                     // Check for empty primary workgroups
                     if (wg.Name == 'primary' &&
-                        (!getWorkGroup.data.Workgroup ||
-                         !getWorkGroup.data.Workgroup.Configuration ||
-                         !getWorkGroup.data.Workgroup.Configuration.ResultConfiguration ||
-                         !getWorkGroup.data.Workgroup.Configuration.ResultConfiguration.OutputLocation)) {
+                        (!getWorkGroup.data.WorkGroup ||
+                         !getWorkGroup.data.WorkGroup.Configuration ||
+                         !getWorkGroup.data.WorkGroup.Configuration.ResultConfiguration ||
+                         !getWorkGroup.data.WorkGroup.Configuration.ResultConfiguration.OutputLocation)) {
                         helpers.addResult(results, 0, 'Athena primary workgroup does not have encryption enabled but is not in use.', region, arn);
                     } else {
                         helpers.addResult(results, 2, 'Athena workgroup is not using encryption', region, arn);

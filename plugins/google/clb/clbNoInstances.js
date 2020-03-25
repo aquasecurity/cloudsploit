@@ -7,7 +7,7 @@ module.exports = {
     description: 'Detects CLBs that have no backend instances attached',
     more_info: 'GCP does not allow for Load Balancers to be configured without backend instances attached.',
     link: 'https://cloud.google.com/load-balancing/docs/load-balancing-overview',
-    recommended_action: 'This Security misconfiguration is Covered by GCP. No actions necessary.',
+    recommended_action: 'This security misconfiguration is covered by GCP. No action is necessary.',
     apis: ['backendServices:list'],
 
     run: function(cache, settings, callback) {
@@ -23,16 +23,16 @@ module.exports = {
 
             if (backendServices.err || !backendServices.data) {
                 helpers.addResult(results, 3, 
-                    'Unable to query Backend Services: ' + helpers.addError(backendServices), region);
+                    'Unable to query backend services: ' + helpers.addError(backendServices), region);
                 return rcb();
-            };
+            }
 
             if (!backendServices.data.length) {
-                helpers.addResult(results, 0, 'No Load Balancers', region);
+                helpers.addResult(results, 0, 'No load balancers found', region);
                 return rcb();
-            };
+            }
 
-            helpers.addResult(results, 0, 'All Load Balancers have Backend Services.', region, null);
+            helpers.addResult(results, 0, 'All load balancers have backend services.', region);
 
             rcb();
         }, function(){

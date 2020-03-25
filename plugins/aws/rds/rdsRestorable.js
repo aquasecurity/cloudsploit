@@ -82,6 +82,10 @@ module.exports = {
                     } else {
                         helpers.addResult(results, 0, returnMsg, region, dbResource);
                     }
+                } else if (db.Engine && db.Engine === 'docdb') {
+                    helpers.addResult(results, 0, 'DocumentDB engine uses incremental backups, backups can be restored at any point in the backup retention period.',
+                        region, dbResource);
+
                 } else if (!db.ReadReplicaSourceDBInstanceIdentifier) {
                     // Apply rule to everything else except Read replicas
                     helpers.addResult(results, 2, 'RDS instance does not have a restorable time',
