@@ -4,10 +4,10 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Default Security Group',
     category: 'Network Security Groups',
-    description: 'Ensure the default security groups block all traffic by default.',
-    more_info: 'The default security group is often used for resources launched without a defined security group. For this reason, the default rules should be to block all traffic to prevent an accidental exposure.',
+    description: 'Ensures that default security groups block all traffic by default',
+    more_info: 'The default security group is often used for resources launched without a defined security group. For this reason, the default rules should be set to block all traffic to prevent an accidental exposure.',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
-    recommended_action: 'Update the rules for the default security group to deny all traffic by default.',
+    recommended_action: 'Update the rules for the default security group to deny all traffic by default',
     apis: ['networkSecurityGroups:listAll'],
     compliance: {
         pci: 'PCI has strict requirements to segment networks using firewalls. ' +
@@ -31,12 +31,12 @@ module.exports = {
 
             if (networkSecurityGroups.err || !networkSecurityGroups.data) {
                 helpers.addResult(results, 3, 
-                    'Unable to query Network Security Groups: ' + helpers.addError(networkSecurityGroups), location);
+                    'Unable to query for Network Security Groups: ' + helpers.addError(networkSecurityGroups), location);
                 return rcb();
             }
 
             if (!networkSecurityGroups.data.length) {
-                helpers.addResult(results, 0, 'No security groups present', location);
+                helpers.addResult(results, 0, 'No security groups found', location);
                 return rcb();
             }
 
@@ -55,12 +55,19 @@ module.exports = {
 
                     for (rule in denyRules){
                         if (
+                            denyRules[rule].destinationAddressPrefix &&
                             denyRules[rule].destinationAddressPrefix == "*" &&
+                            denyRules[rule].destinationPortRange &&
                             denyRules[rule].destinationPortRange == "*" &&
+                            denyRules[rule].protocol &&
                             denyRules[rule].protocol == "*" &&
+                            denyRules[rule].provisioningState &&
                             denyRules[rule].provisioningState == "Succeeded" &&
+                            denyRules[rule].sourceAddressPrefix &&
                             denyRules[rule].sourceAddressPrefix == "*" &&
-                            denyRules[rule].sourcePortRange == "*"
+                            denyRules[rule].sourcePortRange &&
+                            denyRules[rule].sourcePortRange == "*" &&
+                            denyRules[rule].direction
                         )
                         {
                             if (denyRules[rule].direction=='Inbound') denyRuleInbound = true;
@@ -73,17 +80,17 @@ module.exports = {
                         denyRuleOutbound
                     ) {
                         helpers.addResult(results, 0,
-                            'The security group: ' + sg.name +' does have all the required default inbound and outbound rules. ',
-                            location);
+                            'The security group: ' + sg.name + ' has all required default inbound and outbound rules',
+                            location, sg.id);
                     } else {
                         helpers.addResult(results, 2,
-                            'Default rules for the security group: ' + sg.name +' are incomplete. ' + (denyRuleInbound ? 'Inbound: OK. ' : 'Outbound: Fail. ') + (denyRuleOutbound ? 'Outbound: OK.' : 'Outbound: Fail.'),
-                            location);
+                            'The security group: ' + sg.name +' does not have required default inbound and outbound rules: ' + (denyRuleInbound ? 'Inbound: OK; ' : 'Inbound: FAIL; ') + (denyRuleOutbound ? 'Outbound: OK' : 'Outbound: FAIL'),
+                            location, sg.id);
                     }
                 } else {
                     helpers.addResult(results, 2,
-                        'Default security group for '+ sg.name +' is missing one or more default inbound or outbound rules',
-                        location);
+                        'Default security group for: ' + sg.name + ' is missing one or more default inbound or outbound rules',
+                        location, sg.id);
                 }
             }
             rcb();

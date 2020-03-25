@@ -24,12 +24,12 @@ module.exports = {
             if (!networkSecurityGroups) return rcb();
 
             if (networkSecurityGroups.err || !networkSecurityGroups.data) {
-                helpers.addResult(results, 3, 'Unable to query Network Security Groups: ' + helpers.addError(networkSecurityGroups), location);
+                helpers.addResult(results, 3, 'Unable to query for Network Security Groups: ' + helpers.addError(networkSecurityGroups), location);
                 return rcb();
             }
 
             if (!networkSecurityGroups.data.length) {
-                helpers.addResult(results, 0, 'No security groups present', location);
+                helpers.addResult(results, 0, 'No security groups found', location);
                 return rcb();
             }
             

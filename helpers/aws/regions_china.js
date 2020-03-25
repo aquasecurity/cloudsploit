@@ -23,8 +23,10 @@ module.exports = {
     ec2: regions,
     ecr: regions,
     eks: [],
+    elastictranscoder: [],
     elb: regions,
     elbv2: regions,
+    es: regions,
     kinesis: [],
     firehose: regions,
     kms: regions,
@@ -50,4 +52,7 @@ module.exports = {
     directconnect: regions,
     directoryservice: [],
     organizations: ['cn-north-1'],
+    guardduty: [],
+    workspaces: ['cn-northwest-1'],
+    xray: regions
 };

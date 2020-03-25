@@ -4,9 +4,9 @@ var helpers = require('../../../helpers/oracle/');
 module.exports = {
     title: 'Block Volume Restorable',
     category: 'Block Storage',
-    description: 'Determine if Block Volumes can be restored to a recent point.',
-    more_info: 'Ensuring that Block Volumes have an active backup prevents data loss in the case of a catastrophe.',
-    recommended_action: '1. Enter the Block Volume Service. 2. Select the Block Volume in question. 3. Select Block Volume Backups from the lower left blade. 4. Create a manual backup.',
+    description: 'Ensures block volumes can be restored to a recent point.',
+    more_info: 'Having recent backups on block volumes prevents data loss in the case of a catastrophe.',
+    recommended_action: 'Ensure block volumes have recent backups to prevent data loss.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Block/Concepts/blockvolumebackups.htm',
     apis: ['volume:list','volumeBackup:list'],
 
@@ -26,19 +26,19 @@ module.exports = {
 
                 if ((blockVolumes.err && blockVolumes.err.length) || !blockVolumes.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for Block Volumes: ' + helpers.addError(blockVolumes), region);
+                        'Unable to query for block volumes: ' + helpers.addError(blockVolumes), region);
                     return rcb();
-                };
+                }
 
                 if (!blockVolumes.data.length) {
-                    helpers.addResult(results, 0, 'No Block Volumes present', region);
+                    helpers.addResult(results, 0, 'No block volumes found', region);
                     return rcb();
-                };
+                }
 
 
-                var myBlockVolumes = [];
+                var badBlockVolumes = [];
                 blockVolumes.data.forEach(blockVolume => {
-                    myBlockVolumes.push(blockVolume.id);
+                    badBlockVolumes.push(blockVolume.id);
                 });
 
                 var blockVolumeBackups = helpers.addSource(cache, source,
@@ -48,30 +48,30 @@ module.exports = {
 
                 if ((blockVolumeBackups.err && blockVolumeBackups.err.length) || !blockVolumeBackups.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for Block Volume Backups: ' + helpers.addError(blockVolumeBackups), region);
+                        'Unable to query for block volume backups: ' + helpers.addError(blockVolumeBackups), region);
                     return rcb();
-                };
+                }
 
                 blockVolumeBackups.data.forEach(blockVolumeBackup => {
-                    var bootIdx = myBlockVolumes.indexOf(blockVolumeBackup.volumeId)
+                    var bootIdx = badBlockVolumes.indexOf(blockVolumeBackup.volumeId);
 
                     if (blockVolumeBackup.lifecycleState &&
-                        blockVolumeBackup.lifecycleState == 'TERMINATED') {
-                        return
+                        blockVolumeBackup.lifecycleState === 'TERMINATED') {
+                        return;
                     } else if (bootIdx > -1) {
-                        myBlockVolumes.splice(bootIdx, 1);
-                    };
+                        badBlockVolumes.splice(bootIdx, 1);
+                    }
                 });
 
-                if (myBlockVolumes.length) {
-                    var myBlockVolumesStr = myBlockVolumes.join(', ');
+                if (badBlockVolumes.length) {
+                    var badBlockVolumesStr = badBlockVolumes.join(', ');
                     helpers.addResult(results, 2,
-                        `The following Block Volumes are not actively restorable: ${myBlockVolumesStr}`, region);
+                        `The following block volumes are not actively restorable: ${badBlockVolumesStr}`, region);
                 } else {
                     helpers.addResult(results, 0,
-                        'All Block Volumes are restorable.', region);
-                };
-            };
+                        'All block volumes are restorable.', region);
+                }
+            }
             rcb();
         }, function(){
             // Global checking goes here

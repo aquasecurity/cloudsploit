@@ -264,6 +264,16 @@
                 "path": "exports",
                 "endpoint": "filestorage.{{region}}.oraclecloud.com"
             }
+        },
+        "mountTarget": {
+            "list": {
+                "allowedQueryStrings": [
+                    "opc-request-id", "displayName", "availabilityDomain", "exportSetId", "id", "compartmentId", "limit", "page", "sortBy", "sortOrder", "lifecycleState"
+                ],
+                "method": "GET",
+                "path": "mountTargets",
+                "endpoint": "filestorage.{{region}}.oraclecloud.com"
+            }
         }
     },
     "iam": {

@@ -9,8 +9,30 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonECR/latest/userguide/RepositoryPolicyExamples.html',
     recommended_action: 'Update the repository policy to limit access to known IAM entities.',
     apis: ['ECR:describeRepositories', 'ECR:getRepositoryPolicy'],
+    settings: {
+        ecr_check_global_principal: {
+            name: 'ECR Check Global Principal',
+            description: 'When set to true ECR repositories with a global principal will be marked as failing',
+            regex: '^(true|false)$',
+            default: 'true'
+        },
+        ecr_check_cross_account_principal: {
+            name: 'ECR Check Cross-Account Principal',
+            description: 'When set to true ECR repositories with a cross account principal will be marked as failing',
+            regex: '^(true|false)$',
+            default: 'true'
+        }
+    },
 
     run: function (cache, settings, callback) {
+        var config = {
+            ecr_check_global_principal: settings.ecr_check_global_principal || this.settings.ecr_check_global_principal.default,
+            ecr_check_cross_account_principal: settings.ecr_check_cross_account_principal || this.settings.ecr_check_cross_account_principal.default
+        };
+
+        config.ecr_check_global_principal = (config.ecr_check_global_principal == 'true');
+        config.ecr_check_cross_account_principal = (config.ecr_check_cross_account_principal == 'true');
+
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
@@ -69,6 +91,7 @@ module.exports = {
 
                 var found = [];
                 var result = 0;
+
                 for (s in policy) {
                     var statement = policy[s];
 
@@ -81,14 +104,14 @@ module.exports = {
                             if (Array.isArray(srcAcct) && srcAcct.length == 1 && srcAcct[0] == registryId) continue;
                         }
 
-                        if (helpers.globalPrincipal(statement.Principal)) {
+                        if (helpers.globalPrincipal(statement.Principal) && config.ecr_check_global_principal) {
                             // Check for global access
                             found.push('Repository allows global access for actions: ' + statement.Action.join(', ') + '.');
                             if (result < 2) result = 2;
-                        } else if (helpers.crossAccountPrincipal(statement.Principal, registryId)) {
+                        } else if (helpers.crossAccountPrincipal(statement.Principal, registryId) && config.ecr_check_cross_account_principal) {
                             // Check for cross-account access
                             found.push('Repository allows cross-account access for actions: ' + statement.Action.join(', ') + '.');
-                            if (result < 1) result = 1;
+                            if (result < 2) result = 2;
                         }
                     }
                 }

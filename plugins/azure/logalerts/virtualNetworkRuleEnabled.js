@@ -1,16 +1,14 @@
 const async = require('async');
-
 const helpers = require('../../../helpers/azure');
-
 
 module.exports = {
     title: 'Virtual Network Alerts Monitor',
     category: 'Log Alerts',
-    description: 'Triggers alerts when Virtual Networks are created or modified.',
-    more_info: 'Monitoring Virtual Network events gives insight into network access changes and may reduce the risk of breaches due to malicious configuration alteration.',
-    recommended_action: 'Configure Virtual Networks to limit access exclusively to those resources that need it. Create activity log alerts to monitor changes to your Virtual Networks configuration.',
+    description: 'Ensures Activity Log Alerts for the create or update and delete Virtual Networks events are enabled',
+    more_info: 'Monitoring for create or update and delete Virtual Networks events gives insight into event changes and may reduce the time it takes to detect suspicious activity.',
+    recommended_action: 'Add a new log alert to the Alerts service that monitors for Virtual Networks create or update and delete events.',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-network/security-overview',
-    apis: ['resourceGroups:list','activityLogAlerts:listByResourceGroup','resources:list'],
+    apis: ['resourceGroups:list', 'activityLogAlerts:listByResourceGroup', 'resources:list'],
     compliance: {
         hipaa: 'HIPAA requires the auditing of changes to access controls for network ' +
                 'resources.',
@@ -30,15 +28,15 @@ module.exports = {
 
         if (!activityLogAlerts) return callback();
 
-        if (activityLogAlerts.err) {
+        if (activityLogAlerts.err || !activityLogAlerts.data) {
             helpers.addResult(results, 3,
-                'Unable to query activity log alerts: ' + helpers.addError(activityLogAlerts), 'global');
+                'Unable to query for Log Alerts: ' + helpers.addError(activityLogAlerts), 'global');
             return callback();
         }
 
-        if (!activityLogAlerts.data || !activityLogAlerts.data.length) {
+        if (!activityLogAlerts.data.length) {
             helpers.addResult(results, 2,
-                'Activity log alerts are not setup', 'global');
+                'No existing Log Alerts found', 'global');
             return callback();
         }
 
@@ -99,7 +97,7 @@ module.exports = {
                     helpers.addResult(
                         results,
                         0,
-                        'Virtual Network events are being monitored for Create/Update and Delete events',
+                        'Log Alert for Virtual Networks create or update and delete is enabled',
                         location
                     );
                 } else {
@@ -107,12 +105,12 @@ module.exports = {
                         (alertCreateUpdateExists &&
                             !alertCreateUpdateEnabled)) {
                         helpers.addResult(results, 2,
-                            'Virtual Network events are not being monitored for Create/Update events',
+                            'Log Alert for Virtual Networks create or update is not enabled',
                             location
                         );
                     } else {
                         helpers.addResult(results, 0,
-                            'Virtual Network events are being monitored for Create/Update events',
+                            'Log Alert for Virtual Networks create or update is enabled',
                             location
                         );
                     }
@@ -121,12 +119,12 @@ module.exports = {
                         (alertDeleteExists &&
                             !alertDeleteEnabled)) {
                         helpers.addResult(results, 2,
-                            'Virtual Network events are not being monitored for Delete events',
+                            'Log Alert for Virtual Networks delete is not enabled',
                             location
                         );
                     } else {
                         helpers.addResult(results, 0,
-                            'Virtual Network events are being monitored for Delete events',
+                            'Log Alert for Virtual Networks delete is enabled',
                             location
                         );
                     }
@@ -135,14 +133,14 @@ module.exports = {
                 if (!alertCreateUpdateExists &&
                     !alertDeleteExists) {
                     helpers.addResult(results, 2,
-                        'Activity log alerts are not setup for Virtual Network events',
+                        'Log Alert for Virtual Networks is not enabled',
                         location
                     );
                 }
 
             } else {
                 helpers.addResult(results, 0,
-                    'No matching resources found, ignoring monitoring requirement',
+                    'No Virtual Networks resources found',
                     location
                 );
             }

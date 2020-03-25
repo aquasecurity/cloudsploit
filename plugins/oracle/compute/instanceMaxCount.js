@@ -63,6 +63,30 @@ module.exports = {
             description: 'Checks for the number of running instances in the ap-tokyo-1 region and triggers a failing result if it exceeds the specified count',
             regex: '^[0-9]{1,4}$',
             default: 50
+        },
+        instance_count_region_threshold_ap_sydney_1: {
+            name: 'Instance Count Region Threshold: ap-sydney-1',
+            description: 'Checks for the number of running instances in the ap-sydney-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 50
+        },
+        instance_count_region_threshold_sa_saopaulo_1: {
+            name: 'Instance Count Region Threshold: sa-saopaulo-1',
+            description: 'Checks for the number of running instances in the sa-saopaulo-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 50
+        },
+        instance_count_region_threshold_ap_osaka_1: {
+            name: 'Instance Count Region Threshold: ap-osaka-1',
+            description: 'Checks for the number of running instances in the ap-osaka-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 50
+        },
+        instance_count_region_threshold_eu_zurich_1: {
+            name: 'Instance Count Region Threshold: eu-zurich-1',
+            description: 'Checks for the number of running instances in the eu-zurich-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 50
         }
     },
 
@@ -76,15 +100,19 @@ module.exports = {
             instance_count_region_threshold_ca_toronto_1: settings.instance_count_region_threshold_ca_toronto_1 || this.settings.instance_count_region_threshold_ca_toronto_1.default,
             instance_count_region_threshold_ap_mumbai_1: settings.instance_count_region_threshold_ap_mumbai_1 || this.settings.instance_count_region_threshold_ap_mumbai_1.default,
             instance_count_region_threshold_ap_seoul_1: settings.instance_count_region_threshold_ap_seoul_1 || this.settings.instance_count_region_threshold_ap_seoul_1.default,
-            instance_count_region_threshold_ap_tokyo_1: settings.instance_count_region_threshold_ap_tokyo_1 || this.settings.instance_count_region_threshold_ap_tokyo_1.default
+            instance_count_region_threshold_ap_tokyo_1: settings.instance_count_region_threshold_ap_tokyo_1 || this.settings.instance_count_region_threshold_ap_tokyo_1.default,
+            instance_count_region_threshold_ap_sydney_1: settings.instance_count_region_threshold_ap_sydney_1 || this.settings.instance_count_region_threshold_ap_sydney_1.default,
+            instance_count_region_threshold_sa_saopaulo_1: settings.instance_count_region_threshold_sa_saopaulo_1 || this.settings.instance_count_region_threshold_sa_saopaulo_1.default,
+            instance_count_region_threshold_ap_osaka_1: settings.instance_count_region_threshold_ap_osaka_1 || this.settings.instance_count_region_threshold_ap_osaka_1.default,
+            instance_count_region_threshold_eu_zurich_1: settings.instance_count_region_threshold_eu_zurich_1 || this.settings.instance_count_region_threshold_eu_zurich_1.default,
 
         };
 
         for (c in config) {
             if (settings.hasOwnProperty(c)) {
                 config[c] = settings[c];
-            };
-        };
+            }
+        }
 
         var custom = helpers.isCustom(settings, this.settings);
         
@@ -106,21 +134,21 @@ module.exports = {
                     helpers.addResult(results, 3,
                         'Unable to query for instances: ' + helpers.addError(instances), region);
                     return rcb();
-                };
+                }
 
                 if (!instances.data.length) {
-                    helpers.addResult(results, 0, 'No instances present', region);
+                    helpers.addResult(results, 0, 'No instances found', region);
                     return rcb();
-                };
+                }
 
                 var instanceCount = 0;
 
                 instances.data.forEach(instance => {
                     if (instance.lifecycleState &&
-                        instance.lifecycleState == 'RUNNING') {
+                        instance.lifecycleState === 'RUNNING') {
                         instanceCountGlobal +=1;
                         instanceCount +=1;
-                    };
+                    }
                 });
 
                 var regionUnderscore = region.replace(/-/g, '_');
@@ -137,8 +165,8 @@ module.exports = {
                 } else {
                     helpers.addResult(results, 0,
                         instanceCount + ' instances in the region are within the regional expected count of: ' + regionThreshold, region, null, custom);
-                };
-            };
+                }
+            }
 
             rcb();
         }, function(){
@@ -151,7 +179,7 @@ module.exports = {
             } else {
                 helpers.addResult(results, 0,
                 instanceCountGlobal + ' instances in the account are within the global expected count of: ' + globalThreshold, null, null, custom);
-            };
+            }
 
             callback(null, results, source);
         });

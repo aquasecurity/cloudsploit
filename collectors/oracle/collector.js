@@ -97,6 +97,14 @@ var calls = {
             restVersion: "/20171215",
         }
     },
+    mountTarget: {
+        list: {
+            api: "fileStorage",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+            restVersion: "/20171215",
+        }
+    },
     // Do not use compartment:get in Plugins
     // It will be loaded automatically by the
     // Oracle Collector
@@ -331,7 +339,7 @@ var postcalls = {
             filterValue: ['compartmentId', 'id'],
             filterConfig: [true, false],
         }
-    }
+    },
 };
 
 // Important Note: All relies must be passed in an array format []
@@ -366,7 +374,7 @@ var finalcalls = {
             filterValue: ['namespace', 'name'],
             restVersion: ""
         }
-    }
+    },
 };
 
 

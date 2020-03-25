@@ -4,11 +4,15 @@ var helpers = require('../../../helpers/oracle/');
 module.exports = {
     title: 'Pre-Authenticated Requests Access',
     category: 'Object Store',
-    description: 'Ensure that Pre-Authenticated Requests have least privilege access.',
-    more_info: 'PreAuthenticated requests allow for users who are not in the tenancy to access buckets, ensuring least access prevents malicious entities from leveraging this type of access to edit or delete objects in a bucket.',
-    recommended_action: 'When creating Pre-Authenticated Requests, ensure only ObjectRead permissions are selected.',
+    description: 'Ensure that pre-authenticated requests have least privilege access.',
+    more_info: 'Pre-authenticated requests allow for users who are not in the tenancy to access buckets, ensuring least access prevents malicious entities from leveraging this type of access to edit or delete objects in a bucket.',
+    recommended_action: 'When creating pre-authenticated Requests, ensure only object read permissions are selected.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Object/Tasks/usingpreauthenticatedrequests.htm',
     apis: ['bucket:list','preAuthenticatedRequest:list'],
+    compliance: {
+        hipaa: 'HIPAA requires all services that contain user information to be ' +
+            'protected from accidental deletion or modification.'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -26,45 +30,47 @@ module.exports = {
 
                 if ((requests.err && requests.err.length) || !requests.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for Pre-Authenticated requests: ' + helpers.addError(requests), region);
+                        'Unable to query for pre-authenticated requests: ' + helpers.addError(requests), region);
                     return rcb();
-                };
+                }
 
                 if (!requests.data.length) {
-                    helpers.addResult(results, 0, 'No Pre-Authenticated requests present', region);
+                    helpers.addResult(results, 0, 'No pre-authenticated requests found', region);
                     return rcb();
-                };
+                }
 
                 var expiredRequests = true;
                 var leastAccess = true;
                 requests.data.forEach(request => {
                     var ONE_DAY = 24*60*60*1000;
-                    var myTimeExpires = request.timeExpires.split("T")[0];
+                    if (request.timeExpires) {
+                        var timeExpires = request.timeExpires.split("T")[0];
 
-                    myTimeExpires = Math.ceil((new Date(myTimeExpires).getTime() - new Date(new Date()).getTime())/(ONE_DAY));
+                        timeExpires = Math.ceil((new Date(timeExpires).getTime() - new Date(new Date()).getTime())/(ONE_DAY));
 
-                    if (myTimeExpires < 0) return;
+                        if (timeExpires < 0) return;
 
-                    expiredRequests = false;
+                        expiredRequests = false;
+                    }
 
                     if (request.accessType &&
-                        ((request.accessType == 'AnyObjectWrite'))) {
+                        ((request.accessType === 'AnyObjectWrite'))) {
                         helpers.addResult(results, 2,
-                            'Pre-Authenticated request allows write access to all objects', region, request.id);
+                            'pre-authenticated request allows write access to all objects', region, request.id);
                         leastAccess = false;
                     } else if (request.accessType &&
-                            (!(request.accessType == 'ObjectRead'))) {
+                            (!(request.accessType === 'ObjectRead'))) {
                         helpers.addResult(results, 1,
-                            `Pre-Authenticated request allows write access to ${request.objectName}`, region, request.id);
+                            `pre-authenticated request allows write access to ${request.objectName}`, region, request.id);
                         leastAccess = false;
-                    };
+                    }
                 });
                 if (expiredRequests) {
-                    helpers.addResult(results, 0, 'No active Pre-Authenticated requests', region);
+                    helpers.addResult(results, 0, 'No active pre-authenticated requests', region);
                 } else if (leastAccess) {
-                    helpers.addResult(results, 0, 'All Pre-Authenticated requests have least access', region);
+                    helpers.addResult(results, 0, 'All pre-authenticated requests have least access', region);
                 }
-            };
+            }
             rcb();
         }, function(){
             // Global checking goes here

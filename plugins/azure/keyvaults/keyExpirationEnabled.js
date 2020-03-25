@@ -3,13 +3,18 @@ var helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Key Expiration Enabled',
-    category: 'Key Vault',
+    category: 'Key Vaults',
     description: 'Ensure that all Keys in Azure Key Vault have an expiry time set.',
     more_info: 'Setting an expiry time on all keys forces key rotation and removes unused and forgotten keys from being used.',
-    recommended_action: '1. Go to Key vaults. 2. For each Key vault, click on Keys. 3. Ensure that each key in the vault has EXPIRATION DATE set as appropriate.',
+    recommended_action: 'Ensure each Key Vault has an expiry time set that provides for sufficient rotation.',
     link: 'https://docs.microsoft.com/en-us/azure/key-vault/about-keys-secrets-and-certificates',
     apis: ['vaults:list', 'KeyVaultClient:getKeys'],
-
+    compliance: {
+        pci: 'PCI has strict requirements regarding the use of encryption keys ' +
+            'to protect cardholder data. These requirements include rotating ' +
+            'the Key periodically. Key Vaults provides Key expiration capabilities that ' +
+            'should be enabled.'
+    },
     run: function (cache, settings, callback) {
         var results = [];
         var source = {};
@@ -23,14 +28,14 @@ module.exports = {
             if (!keys) return rcb();
 
             if (keys.err || !keys.data) {
-                helpers.addResult(results, 3, 
-                    'Unable to query Keys: ' + helpers.addError(keys), location);
+                helpers.addResult(results, 3, 'Unable to query for Keys: ' + helpers.addError(keys), location);
                 return rcb();
-            };
+            }
 
             if (!keys.data.length) {
                 helpers.addResult(results, 0, 'No Keys found', location);
-            };
+                return rcb();
+            }
             
             keys.data.forEach(key => {
                 if (key.attributes) {
@@ -41,7 +46,7 @@ module.exports = {
                     } else {
                         helpers.addResult(results, 2, 
                             'Expiry date is not set for the key', location, key.kid);
-                    };
+                    }
                 } else {
                     helpers.addResult(results, 2, 
                         'Expiry date is not set for the key', location, key.kid);

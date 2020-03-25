@@ -92,7 +92,7 @@ describe('statelessSecurityRules', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[1].status).to.equal(0)
-                expect(results[1].message).to.include('No security lists present')
+                expect(results[1].message).to.include('No security lists found')
                 expect(results[1].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -111,7 +111,7 @@ describe('statelessSecurityRules', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No security rules present')
+                expect(results[0].message).to.include('No security rules found')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -129,7 +129,7 @@ describe('statelessSecurityRules', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No security rules or lists present')
+                expect(results[0].message).to.include('No security rules or lists found')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -147,7 +147,7 @@ describe('statelessSecurityRules', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[1].status).to.equal(0)
-                expect(results[1].message).to.include('All Security Lists have stateless security')
+                expect(results[1].message).to.include('All security lists have stateless security')
                 expect(results[1].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -174,7 +174,7 @@ describe('statelessSecurityRules', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[1].status).to.equal(0)
-                expect(results[1].message).to.include('All Network Security Groups have stateless security rules')
+                expect(results[1].message).to.include('All network security groups have stateless security rules')
                 expect(results[1].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -203,7 +203,7 @@ describe('statelessSecurityRules', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('All Network Security Groups and Security Lists have stateless security rules')
+                expect(results[0].message).to.include('All network security groups and security lists have stateless security rules')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };

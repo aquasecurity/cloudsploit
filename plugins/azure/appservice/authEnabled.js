@@ -4,9 +4,9 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Authentication Enabled',
     category: 'App Service',
-    description: 'Ensures Authentication is enabled for your App services, redirecting unauthenticated users to the login page.',
-    more_info: 'Enabling authentication will redirect all unauthenticated requests to the login page. Also handles authentication of users with specified provider (Azure Active Directory, Facebook, Google, Microsoft Account, and Twitter)',
-    recommended_action: 'In your App Service go to Authentication / Authorization > Set App Service Authentication to On (Enabled)',
+    description: 'Ensures Authentication is enabled for App Services, redirecting unauthenticated users to the login page.',
+    more_info: 'Enabling authentication will redirect all unauthenticated requests to the login page. It also handles authentication of users with specific providers (Azure Active Directory, Facebook, Google, Microsoft Account, and Twitter).',
+    recommended_action: 'Enable App Service Authentication for all App Services.',
     link: 'https://docs.microsoft.com/en-us/azure/app-service/overview-authentication-authorization',
     apis: ['webApps:list', 'webApps:getAuthSettings'],
     compliance: {
@@ -33,16 +33,14 @@ module.exports = {
             }
             if (!authSettings.data.length) {
                 helpers.addResult(
-                    results, 0, 'No existing App Service', location);
+                    results, 0, 'No existing App Services found', location);
                 return rcb();
             }
 
             var noWebAppAuthEnabled = [];
 
             authSettings.data.forEach(function(settings){
-                if (!settings.enabled){
-                    noWebAppAuthEnabled.push(settings.id);
-                }
+                if (!settings.enabled) noWebAppAuthEnabled.push(settings.id);
             });
 
             if (noWebAppAuthEnabled.length > 20) {
