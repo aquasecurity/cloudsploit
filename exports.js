@@ -131,7 +131,11 @@ module.exports = {
         'bucketAllUsersAcl'             : require(__dirname + '/plugins/aws/s3/bucketAllUsersAcl.js'),
         'bucketVersioning'              : require(__dirname + '/plugins/aws/s3/bucketVersioning.js'),
         'bucketLogging'                 : require(__dirname + '/plugins/aws/s3/bucketLogging.js'),
+<<<<<<< HEAD
         's3Encryption'                 : require(__dirname + '/plugins/aws/s3/s3Encryption.js'),
+=======
+        's3Encryption'                  : require(__dirname + '/plugins/aws/s3/s3Encryption.js'),
+>>>>>>> 50fcd6efd141b484db3d586bd8f8f1d5bc08af34
 
         'notebookDataEncrypted'         : require(__dirname + '/plugins/aws/sagemaker/notebookDataEncrypted.js'),
         'notebookDirectInternetAccess'  : require(__dirname + '/plugins/aws/sagemaker/notebookDirectInternetAccess.js'),
