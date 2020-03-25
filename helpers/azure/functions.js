@@ -64,6 +64,46 @@ function findOpenPorts(ngs, protocols, service, location, results) {
     return;
 }
 
+function checkPolicyAssignment(policyAssignments, param, text, results, location) {
+    if (!policyAssignments) return;
+
+    if (policyAssignments.err || !policyAssignments.data) {
+        shared.addResult(results, 3,
+            'Unable to query for Policy Assignments: ' + shared.addError(policyAssignments), location);
+        return;
+    }
+
+    if (!policyAssignments.data.length) {
+        shared.addResult(results, 0, 'No existing Policy Assignments found', location);
+        return;
+    }
+
+    const policyAssignment = policyAssignments.data.find((policyAssignment) => {
+        return (policyAssignment.displayName &&
+            policyAssignment.displayName.includes("ASC Default")) ||
+            (policyAssignment.displayName &&
+                policyAssignment.displayName.includes("ASC default"));
+    });
+
+    if (!policyAssignment) {
+        shared.addResult(results, 0,
+            'There are no ASC Default Policy Assignments', location);
+        return;
+    }
+
+    if (policyAssignment.parameters &&
+        policyAssignment.parameters[param] &&
+        policyAssignment.parameters[param].value &&
+        policyAssignment.parameters[param].value == 'AuditIfNotExists') {
+        shared.addResult(results, 0,
+            text + ' is enabled', location, policyAssignment.id);
+    } else {
+        shared.addResult(results, 2,
+            text + ' is disabled', location, policyAssignment.id);
+    }
+}
+
 module.exports = {
-    findOpenPorts: findOpenPorts
+    findOpenPorts: findOpenPorts,
+    checkPolicyAssignment: checkPolicyAssignment
 };

@@ -16,8 +16,23 @@ module.exports = {
         pci: 'PCI requires secure transfer of cardholder data. It does not permit SSL or TLS ' +
              'version 1.0. CloudFront should be configured for TLS v1.2.'
     },
+    settings: {
+        insecure_cloudfront_ignore_default: {
+            name: 'Insecure CloudFront Protocol Ignore Default Certificate',
+            description: 'When set to true, the use of the default CloudFront certificate is ignored, despite using an insecure TLS protocol.',
+            regex: '^(true|false)$',
+            default: 'true'
+        }
+    },
 
     run: function(cache, settings, callback) {
+        var config = {
+            insecure_cloudfront_ignore_default: settings.insecure_cloudfront_ignore_default || this.settings.insecure_cloudfront_ignore_default.default
+        };
+
+        config.insecure_cloudfront_ignore_default = (config.insecure_cloudfront_ignore_default == 'true');
+
+        var custom = helpers.isCustom(settings, this.settings);
 
         var results = [];
         var source = {};
@@ -50,8 +65,13 @@ module.exports = {
             // Treat the default certificate as secure
             // IAM/ACM certificates should be analyzed for protocol version
             if (distribution.ViewerCertificate.CloudFrontDefaultCertificate) {
-                helpers.addResult(results, 0, 'Distribution is using secure default certificate',
-                        'global', distribution.ARN);
+                if (config.insecure_cloudfront_ignore_default) {
+                    helpers.addResult(results, 0, 'Distribution is using secure default certificate',
+                        'global', distribution.ARN, custom);
+                } else {
+                    helpers.addResult(results, 2, 'Distribution is using the insecure default CloudFront TLS certificate',
+                        'global', distribution.ARN, custom);
+                }
             } else if (distribution.ViewerCertificate.MinimumProtocolVersion === 'SSLv3') {
                 helpers.addResult(results, 1, 'Distribution is using insecure SSLv3',
                         'global', distribution.ARN);

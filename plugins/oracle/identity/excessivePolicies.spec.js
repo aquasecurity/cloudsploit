@@ -47,7 +47,7 @@ describe('excessivePolicies', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(3)
-                expect(results[0].message).to.include('Unable to query for Policies')
+                expect(results[0].message).to.include('Unable to query for policies')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -64,7 +64,7 @@ describe('excessivePolicies', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No Policies present')
+                expect(results[0].message).to.include('No policies found')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };

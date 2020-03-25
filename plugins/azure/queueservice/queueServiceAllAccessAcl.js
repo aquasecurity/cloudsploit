@@ -5,9 +5,9 @@ var helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Queue Service All Access ACL',
     category: 'Queue Service',
-    description: 'Ensures Queues do not allow full write, delete, or read ACL permissions',
-    more_info: 'Queues can be configured to allow to read, write or delete objects. This option should not be configured unless there is a strong business requirement.',
-    recommended_action: 'Disable global read/write/detele policies on all Queues and ensure the ACL is configured with least privileges.',
+    description: 'Ensures queues do not allow full write, delete, or read ACL permissions',
+    more_info: 'Queues can be configured to allow object read, write or delete. This option should not be configured unless there is a strong business requirement.',
+    recommended_action: 'Disable global read, write, delete policies on all queues and ensure the ACL is configured with least privileges.',
     link: 'https://docs.microsoft.com/en-us/azure/storage/queues/storage-quickstart-queues-portal',
     apis: ['resourceGroups:list', 'storageAccounts:list', 'storageAccounts:listKeys', 'QueueService:listQueuesSegmented','QueueService:getQueueAcl'],
     compliance: {
@@ -28,14 +28,14 @@ module.exports = {
 
             if (!queueService) return rcb();
 
-            if (queueService.err) {
+            if (queueService.err || !queueService.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query Queue Service: ' + helpers.addError(queueService), location);
+                    'Unable to query for Queue Service: ' + helpers.addError(queueService), location);
                 return rcb();
             }
 
-            if (!queueService.data || !queueService.data.length) {
-                helpers.addResult(results, 0, 'No existing Queue Services', location);
+            if (!queueService.data.length) {
+                helpers.addResult(results, 0, 'No existing Queue Services found', location);
             } else {
                 for (q in queueService.data) {
                     var queue = queueService.data[q];
@@ -65,15 +65,17 @@ module.exports = {
                                 }
                             }
                             if (alertRead && alertWrite) {
-                                helpers.addResult(results, 2, 'Acl is allows both read and write access for the queue', location, queue.name +  ' etag:' + queue.etag + ' policy:' + ident);
+                                helpers.addResult(results, 2, 'ACL allows both read and write access for the queue', location, queue.id);
                             } else if (alertRead && !alertWrite) {
-                                helpers.addResult(results, 1, 'Acl is allows both read access for the queue', location, queue.name +  ' etag:' + queue.etag + ' policy:' + ident);
+                                helpers.addResult(results, 2, 'ACL allows read access for the queue', location, queue.id);
                             } else if (!alertRead && alertWrite) {
-                                helpers.addResult(results, 1, 'Acl is allows write access for the queue', location, queue.name +  ' etag:' + queue.etag + ' policy:' + ident);
+                                helpers.addResult(results, 2, 'ACL allows write access for the queue', location, queue.id);
+                            } else {
+                                helpers.addResult(results, 0, 'ACL restricts read and write access for the queue', location, queue.id);
                             }
                         }
                     } else {
-                        helpers.addResult(results, 2, 'Acl has not been configured for the queue', location, queue.name +  ' etag:' + queue.etag);
+                        helpers.addResult(results, 2, 'ACL has not been configured for the queue', location, queue.id);
                     }
                 }
             }

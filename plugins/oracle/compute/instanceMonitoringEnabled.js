@@ -4,8 +4,8 @@ var helpers = require('../../../helpers/oracle/');
 module.exports = {
     title: 'Instance Monitoring Enabled',
     category: 'Compute',
-    description: 'Determine if monitoring is enabled for instances.',
-    more_info: 'Enabling instance monitoring allows for metrics to be collected on the instance. Following Security best practices. ',
+    description: 'Ensures monitoring is enabled for instances.',
+    more_info: 'Enabling instance monitoring allows for metrics to be collected on the instance. Following security best practices. ',
     recommended_action: 'When creating a new instance, ensure monitoring is enabled under advanced settings.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Compute/Tasks/enablingmonitoring.htm',
     apis: ['instance:list'],
@@ -28,20 +28,20 @@ module.exports = {
                     helpers.addResult(results, 3,
                         'Unable to query for instances: ' + helpers.addError(instances), region);
                     return rcb();
-                };
+                }
 
                 if (!instances.data.length) {
-                    helpers.addResult(results, 0, 'No instances present', region);
+                    helpers.addResult(results, 0, 'No instances found', region);
                     return rcb();
-                };
+                }
 
                 instances.data.forEach(instance => {
                     if (!instance.agentConfig ||
                         (instance.agentConfig &&
                         instance.agentConfig.isMonitoringDisabled)) {
-                        helpers.addResult(results, 2, 'Instance Monitoring is Disabled', region, instance.id);
+                        helpers.addResult(results, 2, 'Instance monitoring is disabled', region, instance.id);
                     } else {
-                        helpers.addResult(results, 0, 'Instance Monitoring is Enabled', region, instance.id);
+                        helpers.addResult(results, 0, 'Instance monitoring is enabled', region, instance.id);
                     }
                 });
             }

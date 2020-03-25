@@ -48,15 +48,15 @@ module.exports = {
                     helpers.addResult(results, 3,
                         'Unable to query for security lists: ' + helpers.addError(securityLists), region);
                     return rcb();
-                };
+                }
 
                 if (!securityLists.data.length > 0) {
-                    helpers.addResult(results, 0, 'No security lists present', region);
+                    helpers.addResult(results, 0, 'No security lists found', region);
                     return rcb();
-                };
+                }
 
                 var returnMsg = ' number of security lists: ' +
-                    securityLists.data.length + ' groups present';
+                    securityLists.data.length + ' groups found';
 
                 if (securityLists.data.length > config.excessive_security_lists_fail) {
                     helpers.addResult(results, 2, 'Excessive' + returnMsg, region, null);
@@ -64,10 +64,10 @@ module.exports = {
                     helpers.addResult(results, 1, 'Large' + returnMsg, region, null);
                 } else {
                     helpers.addResult(results, 0, 'Acceptable' + returnMsg, region, null);
-                };
+                }
 
 
-            };
+            }
             rcb();
         }, function () {
             // Global checking goes here
