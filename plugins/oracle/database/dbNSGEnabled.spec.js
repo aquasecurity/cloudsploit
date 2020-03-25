@@ -64,7 +64,7 @@ describe('dbNSGEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No database systems present')
+                expect(results[0].message).to.include('No database systems found')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -81,7 +81,7 @@ describe('dbNSGEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('The database system does not have network security groups enabled')
+                expect(results[0].message).to.include('The database system has network security groups disabled')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };

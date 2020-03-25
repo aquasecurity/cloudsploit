@@ -4,9 +4,9 @@ var helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'Security Policy Alerts Enabled',
     category: 'Log Alerts',
-    description: 'Ensure an Activity Log Alert for the Create or Update Security Policy Rule event is enabled.',
-    more_info: 'Monitoring for Create or Update Network Security Group events gives insight into network access changes and may reduce the time it takes to detect suspicious activity.',
-    recommended_action: '1. Enter the Alerts service. 2. Select the Add Activity Log Alert button at the top of the page. 3. In Criteria, Select Security in the Event Category and Create or Update Security Policy next to Operation Name',
+    description: 'Ensures Activity Log alerts for create or update Security Policy Rule events are enabled',
+    more_info: 'Monitoring for create or update Security Policy Rule events gives insight into policy changes and may reduce the time it takes to detect suspicious activity.',
+    recommended_action: 'Add a new log alert to the Alerts service that monitors for Security Policy Rule create or update events.',
     link: 'https://docs.microsoft.com/en-us/azure/azure-monitor/platform/activity-log-alerts',
     apis: ['resourceGroups:list','activityLogAlerts:listBySubscriptionId'],
 
@@ -24,11 +24,11 @@ module.exports = {
 
             if (activityAlerts.err || !activityAlerts.data) {
                 helpers.addResult(results, 3, 
-                    'Unable to query Activity Alerts: ' + helpers.addError(activityAlerts), location);
+                    'Unable to query for Activity Alerts: ' + helpers.addError(activityAlerts), location);
                 return rcb();
             }
             if (!activityAlerts.data.length) {
-                helpers.addResult(results, 1, 'No existing Activity Alerts', location);
+                helpers.addResult(results, 2, 'No existing Activity Alerts found', location);
             }
             var alertExists = false;
             activityAlerts.data.forEach(activityAlert => {                
@@ -42,14 +42,14 @@ module.exports = {
                         condition.equals.indexOf("microsoft.security/policies/write") > -1 &&
                         !alertExists) {
                         helpers.addResult(results, 0, 
-                            'Write alert for Security Policy exists', location, activityAlert.id);
+                            'Log alert for Security Policy write exists', location, activityAlert.id);
                         alertExists = true;
                     };
                 });
             });
             if (!alertExists) {
-                helpers.addResult(results, 1, 
-                    'Write alert for Security Policy does not exist', location);
+                helpers.addResult(results, 2, 
+                    'Log alert for Security Policy write does not exist', location);
             };
             
             rcb();

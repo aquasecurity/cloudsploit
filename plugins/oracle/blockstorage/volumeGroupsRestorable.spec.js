@@ -55,7 +55,7 @@ describe('volumeGroupsRestorable', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(1)
                 expect(results[0].status).to.equal(3)
-                expect(results[0].message).to.include('Unable to query for Volume Groups')
+                expect(results[0].message).to.include('Unable to query for volume groups')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -72,7 +72,7 @@ describe('volumeGroupsRestorable', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(1)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No Volume Groups present')
+                expect(results[0].message).to.include('No volume groups found')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -89,7 +89,7 @@ describe('volumeGroupsRestorable', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(1)
                 expect(results[0].status).to.equal(3)
-                expect(results[0].message).to.include('Unable to query for Volume Group Backups')
+                expect(results[0].message).to.include('Unable to query for volume group backups')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -108,7 +108,7 @@ describe('volumeGroupsRestorable', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(1)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('The following Volume Groups are not actively restorable')
+                expect(results[0].message).to.include('The following volume groups are not actively restorable')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -169,7 +169,7 @@ describe('volumeGroupsRestorable', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(1)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('All Volume Groups are restorable')
+                expect(results[0].message).to.include('All volume groups are restorable')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };

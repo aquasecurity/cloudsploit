@@ -67,7 +67,7 @@ module.exports = {
             // Loop through VPCs and add results
             for (v in vpcMap) {
                 if (!vpcMap[v].length) {
-                    helpers.addResult(results, 1, 'VPC flow logs are not enabled', region, v);
+                    helpers.addResult(results, 2, 'VPC flow logs are not enabled', region, v);
                 } else {
                     var activeLogs = false;
 
@@ -81,7 +81,7 @@ module.exports = {
                     if (activeLogs) {
                         helpers.addResult(results, 0, 'VPC flow logs are enabled', region, v);
                     } else {
-                        helpers.addResult(results, 1, 'VPC flow logs are enabled, but not active', region, v);
+                        helpers.addResult(results, 2, 'VPC flow logs are enabled, but not active', region, v);
                     }
                 }
             }

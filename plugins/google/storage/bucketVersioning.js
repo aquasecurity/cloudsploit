@@ -23,24 +23,29 @@ module.exports = {
             if (!buckets) return rcb();
 
             if (buckets.err || !buckets.data) {
-                helpers.addResult(results, 3, 'Unable to query Storage Buckets: ' + helpers.addError(buckets), region);
+                helpers.addResult(results, 3, 'Unable to query storage buckets: ' + helpers.addError(buckets), region);
                 return rcb();
             }
 
             if (!buckets.data.length) {
-                helpers.addResult(results, 0, 'No Storage Buckets present', region);
+                helpers.addResult(results, 0, 'No storage buckets found', region);
                 return rcb();
             }
             buckets.data.forEach(bucket => {
-                if (bucket.versioning &&
-                    bucket.versioning.enabled) {
-                        helpers.addResult(results, 0, 'Bucket Versioning Enabled', region, bucket.id);
-                } else if ((bucket.versioning &&
-                        !bucket.versioning.enabled) || 
+                if (bucket.id) {
+                    if (bucket.versioning &&
+                        bucket.versioning.enabled) {
+                        helpers.addResult(results, 0, 'Bucket versioning Enabled', region, bucket.id);
+                    } else if ((bucket.versioning &&
+                        !bucket.versioning.enabled) ||
                         !bucket.versioning){
-                            helpers.addResult(results, 2, 'Bucket Versioning not Enabled', region, bucket.id);
+                        helpers.addResult(results, 2, 'Bucket versioning not Enabled', region, bucket.id);
+                    }
+                } else {
+                    helpers.addResult(results, 0, 'No storage buckets found', region);
+                    return
                 }
-            })
+            });
 
             rcb();
         }, function(){

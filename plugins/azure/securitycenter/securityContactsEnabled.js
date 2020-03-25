@@ -4,9 +4,9 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Security Contacts Enabled',
     category: 'Security Center',
-    description: 'Ensure that security contact phone number and email address is set.',
-    more_info: 'By enabling Security Contacts, any vulnerabilities are sent to the contact on file, ensuring quick remediation on any security vulnerabilities and following security best practices.',
-    recommended_action: '1. Go to Azure Security Center 2. Select the Pricing & Settings Blade. 3. Click on the Subscription Name 4. Select the Email Notifications Blade 5. Enter the contact information and ensure that Send Email Notification is enabled.',
+    description: 'Ensures that security contact phone number and email address are set',
+    more_info: 'Setting security contacts ensures that any security incidents detected by Azure are sent to a security team equipped to handle the incident.',
+    recommended_action: 'Ensure that email notifications are configured for the subscription from the Security Center.',
     link: 'https://docs.microsoft.com/en-us/azure/security-center/security-center-provide-security-contact-details',
     apis: ['securityContacts:list'],
 
@@ -24,14 +24,14 @@ module.exports = {
 
             if (securityContacts.err || !securityContacts.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query security contacts: ' + helpers.addError(securityContacts), location);
+                    'Unable to query for security contacts: ' + helpers.addError(securityContacts), location);
                 return rcb();
-            };
+            }
 
             if (!securityContacts.data.length) {
                 helpers.addResult(results, 2, 'No existing security contacts', location);
                 return rcb();
-            };
+            }
 
             let phoneExists = false;
             let emailExists = false;
@@ -44,23 +44,23 @@ module.exports = {
 
                 if (securityContact.phone) {
                     phoneExists = true;
-                };
+                }
                 if (securityContact.email) {
                     emailExists = true;
-                };
+                }
             });
 
             if (phoneExists) {
-                helpers.addResult(results, 0, 'Security Contact Phone number is set on the Subscription.', location, subId);
+                helpers.addResult(results, 0, 'Security Contact phone number is set on the subscription', location, subId);
             } else {
-                helpers.addResult(results, 2, 'Security Contact Phone number is not set on the Subscription', location, subId);
-            };
-            if (emailExists) {
-                helpers.addResult(results, 0, 'Security Contact Email Address is set on the Subscription.', location, subId);
-            } else {
-                helpers.addResult(results, 2, 'Security Contact Email Address is not set on the Subscription', location, subId);
-            };
+                helpers.addResult(results, 2, 'Security Contact phone number is not set on the subscription', location, subId);
+            }
 
+            if (emailExists) {
+                helpers.addResult(results, 0, 'Security Contact email address is set on the subscription', location, subId);
+            } else {
+                helpers.addResult(results, 2, 'Security Contact email address is not set on the subscription', location, subId);
+            }
 
             rcb();
         }, function(){

@@ -9,6 +9,16 @@ module.exports = {
     link: 'https://cloud.google.com/sql/docs/mysql/instance-settings',
     recommended_action: '1. Enter the SQL category of the Google Console. 2. Select the instance. 3. Select the Replicas tab. 4. Select Create Failover Replica and follow the prompts.',
     apis: ['instances:sql:list'],
+    compliance: {
+        hipaa: 'SQL instances should only be launched in VPC environments and ' +
+            'accessed through private endpoints. Exposing SQL instances to ' +
+            'the public network may increase the risk of access from ' +
+            'disallowed parties. HIPAA requires strict access and integrity ' +
+            'controls around sensitive data.',
+        pci: 'PCI requires backend services to be properly firewalled. ' +
+            'Ensure SQL instances are not accessible from the Internet ' +
+            'and use proper jump box access mechanisms.'
+    },
   
 
     run: function(cache, settings, callback) {
@@ -23,12 +33,12 @@ module.exports = {
             if (!sqlInstances) return rcb();
 
             if (sqlInstances.err || !sqlInstances.data) {
-                helpers.addResult(results, 3, 'Unable to query SQL Instances: ' + helpers.addError(sqlInstances), region);
+                helpers.addResult(results, 3, 'Unable to query SQL instances: ' + helpers.addError(sqlInstances), region);
                 return rcb();
             }
 
             if (!sqlInstances.data.length) {
-                helpers.addResult(results, 0, 'No SQL Instances present', region);
+                helpers.addResult(results, 0, 'No SQL instances found', region);
                 return rcb();
             }
             var myIpConfig = {};
@@ -50,10 +60,10 @@ module.exports = {
                                     })
                                     if (openNetwork) {
                                         helpers.addResult(results, 2, 
-                                            'SQL Instance is publicly accessible by all ip addresses', region, sqlInstance.name);
+                                            'SQL Instance is publicly accessible by all IP addresses', region, sqlInstance.name);
                                     } else if (myIpConfig.authorizedNetworks.length){
                                         helpers.addResult(results, 1, 
-                                            'SQL Instance is publicly accessible by specific ip addresses', region, sqlInstance.name);
+                                            'SQL Instance is publicly accessible by specific IP addresses', region, sqlInstance.name);
                                     } else {
                                         helpers.addResult(results, 0, 
                                             'SQL Instance is not publicly accessible', region, sqlInstance.name);

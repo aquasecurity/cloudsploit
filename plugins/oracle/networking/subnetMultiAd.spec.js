@@ -48,7 +48,7 @@ describe('multipleSubnets', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(3)
-                expect(results[0].message).to.include('Unable to query for Subnets')
+                expect(results[0].message).to.include('Unable to query for subnets')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -64,7 +64,7 @@ describe('multipleSubnets', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No Subnets present')
+                expect(results[0].message).to.include('No subnets found')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -80,7 +80,7 @@ describe('multipleSubnets', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('The Subnets in the VCN are Regional')
+                expect(results[0].message).to.include('The subnets in the VCN are regional')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -116,7 +116,7 @@ describe('multipleSubnets', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('Subnets in the VCN are not Regional')
+                expect(results[0].message).to.include('subnets in the VCN are not regional')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };

@@ -81,8 +81,24 @@ describe('output', function () {
             var handler = output.createCsv(buffer);
             handler.writeResult({status: 0}, {title:'myTitle'}, 'key');
             handler.close();
-
             expect(buffer.cache).to.equal('category,title,resource,region,statusWord,message\n,myTitle,N/A,Global,OK,\n');
+        })
+    })
+
+    describe('json', function () {
+        it('should generate empty array if no results', function () {
+            var buffer = createOutputBuffer();
+            var handler = output.createJson(buffer);
+            handler.close();
+            expect(buffer.cache).to.equal('[]');
+        })
+
+        it('should indicate one pass there is one passing result', function () {
+            var buffer = createOutputBuffer();
+            var handler = output.createJson(buffer);
+            handler.writeResult({status: 0}, {title:'myTitle'}, 'key');
+            handler.close();
+            expect(buffer.cache).to.equal('[{"plugin":"key","title":"myTitle","resource":"N/A","region":"Global","status":"OK"}]');
         })
     })
 

@@ -1,16 +1,14 @@
 const async = require('async');
-
 const helpers = require('../../../helpers/azure');
-
 
 module.exports = {
     title: 'SQL Server Firewall Rule Alerts Monitor',
     category: 'Log Alerts',
-    description: 'Triggers alerts when SQL Server Firewall Rules are created or modified.',
-    more_info: 'Monitoring SQL Server Firewall Rule events gives insight into network access changes and may reduce the risk of data breaches due to malicious alteration to firewall configuration.',
-    recommended_action: 'Configure SQL Server Firewall rules to limit access exclusively to those resources that need it. Create activity log alerts to monitor changes to your SQL Server security configuration.',
+    description: 'Ensures Activity Log Alerts for the create or update and delete SQL Server Firewall Rules events are enabled',
+    more_info: 'Monitoring for create or update and delete SQL Server Firewall Rules events gives insight into event changes and may reduce the time it takes to detect suspicious activity.',
+    recommended_action: 'Add a new log alert to the Alerts service that monitors for SQL Server Firewall Rules create or update and delete events.',
     link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-firewall-configure',
-    apis: ['resourceGroups:list','activityLogAlerts:listByResourceGroup','resources:list'],
+    apis: ['resourceGroups:list', 'activityLogAlerts:listByResourceGroup', 'resources:list'],
     compliance: {
         hipaa: 'HIPAA requires the auditing of changes to access controls for network ' +
                 'resources.',
@@ -30,15 +28,15 @@ module.exports = {
 
         if (!activityLogAlerts) return callback();
 
-        if (activityLogAlerts.err) {
+        if (activityLogAlerts.err || !activityLogAlerts.data) {
             helpers.addResult(results, 3,
-                'Unable to query activity log alerts: ' + helpers.addError(activityLogAlerts), 'global');
+                'Unable to query for Log Alerts: ' + helpers.addError(activityLogAlerts), 'global');
             return callback();
         }
 
-        if (!activityLogAlerts.data || !activityLogAlerts.data.length) {
+        if (!activityLogAlerts.data.length) {
             helpers.addResult(results, 2,
-                'Activity log alerts are not setup', 'global');
+                'No existing Log Alerts found', 'global');
 
             return callback();
         }
@@ -100,7 +98,7 @@ module.exports = {
                     helpers.addResult(
                         results,
                         0,
-                        'SQL Server Firewall Rule  events are being monitored for Create/Update and Delete events',
+                        'Log Alert for SQL Server Firewall Rule write and delete is enabled',
                         location
                     );
                 } else {
@@ -108,12 +106,12 @@ module.exports = {
                         (alertCreateUpdateExists &&
                             !alertCreateUpdateEnabled)) {
                         helpers.addResult(results, 2,
-                            'SQL Server Firewall Rule  events are not being monitored for Create/Update events',
+                            'Log Alert for SQL Server Firewall Rule write and delete is not enabled',
                             location
                         );
                     } else {
                         helpers.addResult(results, 0,
-                            'SQL Server Firewall Rule  events are being monitored for Create/Update events',
+                            'Log Alert for SQL Server Firewall Rule write is enabled',
                             location
                         );
                     }
@@ -122,12 +120,12 @@ module.exports = {
                         (alertDeleteExists &&
                             !alertDeleteEnabled)) {
                         helpers.addResult(results, 2,
-                            'SQL Server Firewall Rule  events are not being monitored for Delete events',
+                            'Log Alert for SQL Server Firewall Rule delete is not enabled',
                             location
                         );
                     } else {
                         helpers.addResult(results, 0,
-                            'SQL Server Firewall Rule  events are being monitored for Delete events',
+                            'Log Alert for SQL Server Firewall Rule delete is enabled',
                             location
                         );
                     }
@@ -136,14 +134,14 @@ module.exports = {
                 if (!alertCreateUpdateExists &&
                     !alertDeleteExists) {
                     helpers.addResult(results, 2,
-                        'Activity log alerts are not setup for SQL Server Firewall Rule  events',
+                        'Log Alert for SQL Server Firewall Rule is not enabled',
                         location
                     );
                 }
 
             } else {
                 helpers.addResult(results, 0,
-                    'No matching resources found, ignoring monitoring requirement',
+                    'No SQL Server resources found',
                     location
                 );
             }
