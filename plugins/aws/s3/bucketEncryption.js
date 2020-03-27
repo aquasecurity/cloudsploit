@@ -63,7 +63,7 @@ module.exports = {
         var defaultKeyDesc = 'Default master key that protects my S3 objects';
 
         async.series([
-            // Lookup the default master key for S3 if required 
+            // Lookup the default master key for S3 if required
             function(cb) {
                 if (!config.s3_encryption_require_cmk) return cb();
                 async.each(regions.kms, function(region, rcb) {
@@ -111,6 +111,7 @@ module.exports = {
                         ['kms', 'listAliases', region]);
 
                     var aliasIds = [];
+
                     if (!listAliases || listAliases.err ||
                         !listAliases.data) {
                         return rcb();
@@ -127,6 +128,7 @@ module.exports = {
                     });
 
                     if (aliasIds.length) aliasKeyIds = aliasKeyIds.concat(aliasIds);
+
                     rcb();
                 }, function(){
                     cb();
@@ -367,6 +369,5 @@ module.exports = {
                 return callback(null, action);
             }
         });
-
     }
 };
