@@ -138,6 +138,7 @@ module.exports = {
         'domainExpiry'                  : require(__dirname + '/plugins/aws/route53/domainExpiry.js'),
         'domainTransferLock'            : require(__dirname + '/plugins/aws/route53/domainTransferLock.js'),
 
+        'bucketEncryptionInTransit'     : require(__dirname + '/plugins/aws/s3/bucketEncryptionInTransit.js'),
         'bucketAllUsersPolicy'          : require(__dirname + '/plugins/aws/s3/bucketAllUsersPolicy.js'),
         'bucketAllUsersAcl'             : require(__dirname + '/plugins/aws/s3/bucketAllUsersAcl.js'),
         'bucketVersioning'              : require(__dirname + '/plugins/aws/s3/bucketVersioning.js'),
@@ -364,7 +365,7 @@ module.exports = {
         'excessivePolicies'             : require(__dirname + '/plugins/oracle/identity/excessivePolicies.js'),
         'excessivePolicyStatements'     : require(__dirname + '/plugins/oracle/identity/excessivePolicyStatements.js'),
         'policyLeastPrivilege'          : require(__dirname + '/plugins/oracle/identity/policyLeastPrivilege.js'),
-        
+
         'openSSH'                       : require(__dirname + '/plugins/oracle/networking/openSSH.js'),
         'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/oracle/networking/openOracleAutoDataWarehouse.js'),
         'openAllPortsProtocols'         : require(__dirname + '/plugins/oracle/networking/openAllPortsProtocols.js'),
