@@ -7,7 +7,7 @@ module.exports = {
     description: 'Detects LBs that have no backend instances attached',
     more_info: 'All LBs should have backend server resources. ' +
                'Those without any are consuming costs without providing ' +
-               'any functionality. Additionally, old ELBs with no instances ' +
+               'any functionality. Additionally, old LBs with no instances ' +
                'present a security concern if new instances are accidentally attached.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/GSG/Tasks/loadbalancing.htm',
     recommended_action: 'Delete old LBs that no longer have backend resources.',
@@ -19,7 +19,6 @@ module.exports = {
 		var regions = helpers.regions(settings.govcloud);
 
         async.each(regions.loadBalancer, function(region, rcb){
-
             if (helpers.checkRegionSubscription(cache, source, results, region)) {
 
                 var loadBalancers = helpers.addSource(cache, source,
@@ -34,19 +33,24 @@ module.exports = {
                 }
 
                 if (!loadBalancers.data.length) {
-                    helpers.addResult(results, 0, 'No load balancers present', region);
+                    helpers.addResult(results, 0, 'No load balancers found', region);
                     return rcb();
                 }
 
                 async.each(loadBalancers.data, function (lb, cb) {
-                    lbBackend = lb.backendSets['bs_' + lb.displayName];
-                    if (lbBackend &&
-                        lbBackend.backends &&
-                        lbBackend.backends.length) {
-                        helpers.addResult(results, 0, 'ELB has ' + lb[lb.displayName].backends.length + ' backend instances', region, lb.id);
+                    if (lb.backendSets) {
+                        var lbBackend = lb.backendSets['bs_' + lb.displayName];
+                        if (lbBackend &&
+                            lbBackend.backends &&
+                            lbBackend.backends.length) {
+                            helpers.addResult(results, 0, 'LB has ' + lb[lb.displayName].backends.length + ' backend instances', region, lb.id);
+                        } else {
+                            helpers.addResult(results, 1, 'LB does not have backend instances', region, lb.id);
+                        }
                     } else {
-                        helpers.addResult(results, 1, 'ELB does not have backend instances', region, lb.id);
+                        helpers.addResult(results, 1, 'LB does not have backend instances', region, lb.id);
                     }
+
                     cb();
                 }, function(){
                     rcb();

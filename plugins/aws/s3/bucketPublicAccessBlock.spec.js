@@ -194,6 +194,17 @@ describe('bucketPublicAccessBlock', function () {
             });
         });
 
+        it('should PASS if public access block not found but whitelisted', function (done) {
+            const cache = createCacheNoPublicAccessBlock();
+            bucketPublicAccessBlock.run(cache, {
+                s3_public_access_block_allow_pattern: 'mybucket'
+            }, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
+
         it('should do nothing if null getPublicAccessBlock', function (done) {
             const cache = createCacheNullGetPublicAccessBlock();
             bucketPublicAccessBlock.run(cache, {}, (err, results) => {

@@ -31,7 +31,8 @@ module.exports = {
                 helpers.addResult(results, 0, 'No existing SQL Server Firewall Rules found', location);
                 return rcb();
             }
-
+            var badServerIdArr = [];
+            var serverIdArr = [];
             firewallRules.data.forEach(firewallRule => {
                 const startIpAddr = firewallRule['startIpAddress'];
                 const endIpAddr = firewallRule['endIpAddress'];
@@ -39,13 +40,24 @@ module.exports = {
                 serverIdArr.length = serverIdArr.length - 2;
                 var serverId = serverIdArr.join('/');
 
-                if (startIpAddr.toString().indexOf('0.0.0.0') > -1 || endIpAddr.toString().indexOf('0.0.0.0') > -1) {
-                    helpers.addResult(results, 2, 'The SQL Server is open to outside traffic', location, serverId);
-                } else {
-                    helpers.addResult(results, 0, 'The SQL server is protected from outside traffic', location, serverId);
+                if ((startIpAddr.toString().indexOf('0.0.0.0') > -1 || endIpAddr.toString().indexOf('0.0.0.0') > -1) && (serverIdArr.indexOf(serverId) === -1)) {
+                    badServerIdArr.push(serverId);
+                } else if (serverIdArr.indexOf(serverId) === -1) {
+                    serverIdArr.push(serverId)
                 }
             });
-            
+            if (badServerIdArr.length) {
+                badServerIdArr.forEach(serverId => {
+                    helpers.addResult(results, 2, 'The SQL Server is open to outside traffic', location, serverId);
+                })
+            }
+            if (serverIdArr.length) {
+                serverIdArr.forEach(serverId => {
+                    helpers.addResult(results, 0, 'The SQL server is protected from outside traffic', location, serverId);
+                })
+            }
+
+
             rcb();
         }, function(){
             // Global checking goes here

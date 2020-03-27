@@ -4,12 +4,19 @@ var helpers = require('../../../helpers/oracle');
 module.exports = {
     title: 'NFS Public Access',
     category: 'File Storage',
-    description: 'Ensures that all File Systems do not have public access.',
-    more_info: 'All Network File Systems should be configured to only allow access from trusted sources.',
+    description: 'Ensures that all file systems do not have public access.',
+    more_info: 'All network file systems should be configured to only allow access from trusted sources.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/File/Tasks/exportoptions.htm',
-    recommended_action: '1. Enter the File Storage service. 2. Enter the File System service 3. Select the File System. 4. Select the export. 5. Ensure that the source is not 0.0.0.0/0, if so edit the NFS Export Options to not allow public access.',
-    apis: ['exportSummary:list','exprt:get','mountTarget:list', 'vcn:list', 'subnet:list'],
-
+    recommended_action: 'Ensure that all file systems do not have public access.',
+    apis: ['exportSummary:list','exprt:get'],
+    compliance: {
+        hipaa: 'HIPAA requires strict access controls to all data. ' +
+            'Restricting NFS ensures all access is limited to those ' +
+            'with explicit approval.',
+        pci: 'PCI requires all access to be restricted and identified. Limiting NFS ' +
+            'access ensures compliance.'
+    },
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
@@ -25,12 +32,12 @@ module.exports = {
 
                 if ((fileSystems.err && fileSystems.err.length) || !fileSystems.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for File Systems: ' + helpers.addError(fileSystems), region);
+                        'Unable to query for file systems: ' + helpers.addError(fileSystems), region);
                     return rcb();
                 }
 
                 if (!fileSystems.data.length) {
-                    helpers.addResult(results, 0, 'No File Systems present', region);
+                    helpers.addResult(results, 0, 'No file systems found', region);
                     return rcb();
                 }
 
@@ -54,13 +61,12 @@ module.exports = {
                     var mountTargets = helpers.addSource(cache, source,
                         ['mountTarget', 'list', region]);
 
-                    if ((mountTargets.err && mountTargets.err.length) || !mountTargets.data || !mountTargets.data.length) {
-                        var publicFileSystemStr = Object.values(publicFileSystem).join(', ');
-                        helpers.addResult(results, 2, `The following NFS allow public access: ${publicFileSystemStr}`, region);
-                        return rcb();
-                    } else {
-                        mountTargets.data.forEach(mountTarget => {
-                            if (publicExportSets > 1) {
+                     if (!mountTargets || (mountTargets.err && mountTargets.err.length) || !mountTargets.data || !mountTargets.data.length) {
+                         var publicFileSystemStr = Object.values(publicFileSystem).join(', ');
+                         helpers.addResult(results, 2, `The following NFS allow public access: ${publicFileSystemStr}`, region);
+                     } else {
+                         mountTargets.data.forEach(mountTarget => {
+                             if (publicExportSets > 1) {
                                 if (publicExportSets.indexOf(mountTarget.exportSetId) > -1) {
                                     mountSubnets[mountTarget.subnetId] = publicFileSystem[mountTarget.exportSetId];
                                 }
@@ -97,8 +103,9 @@ module.exports = {
                     }
                 }
             }
+
             rcb();
-        }, function(){
+        }, function() {
             callback(null, results, source);
         });
     }

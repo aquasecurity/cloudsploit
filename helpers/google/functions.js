@@ -85,7 +85,8 @@ function findOpenAllPorts(ngs, location, results) {
                     if (sgroups['direction'] === 'INGRESS' && 
                     firewallRule['IPProtocol'] === protocol && 
                     sgroups['disabled'] === false &&
-                    (sourceAddressPrefix.includes('*') || sourceAddressPrefix.includes('') || sourceAddressPrefix.includes('0.0.0.0/0') || sourceAddressPrefix.includes('<nw>/0') || sourceAddressPrefix.includes('/0') || sourceAddressPrefix.includes('internet'))) {
+                        sourceAddressPrefix &&
+                        (sourceAddressPrefix.includes('*') || sourceAddressPrefix.includes('') || sourceAddressPrefix.includes('0.0.0.0/0') || sourceAddressPrefix.includes('<nw>/0') || sourceAddressPrefix.includes('/0') || sourceAddressPrefix.includes('internet'))) {
                         sourcefilter = (sourceAddressPrefix == '0.0.0.0/0' ? 'any IP' : sourceAddressPrefix);
                         if (firewallRule['ports']) {
                             firewallRule['ports'].forEach((portRange) => {
@@ -108,6 +109,7 @@ function findOpenAllPorts(ngs, location, results) {
                     } else if (sgroups['direction'] === 'INGRESS' && 
                         firewallRule['IPProtocol'] == 'all' &&
                         sgroups['disabled'] === false &&
+                        sourceAddressPrefix &&
                         (sourceAddressPrefix.includes('*') || sourceAddressPrefix.includes('') || sourceAddressPrefix.includes('0.0.0.0/0') || sourceAddressPrefix.includes('<nw>/0') || sourceAddressPrefix.includes('/0') || sourceAddressPrefix.includes('internet'))) {
                         var string = 'all ports open to the public';
                         if (strings.indexOf(string) === -1) strings.push(string);

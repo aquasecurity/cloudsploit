@@ -4,11 +4,15 @@ var helpers = require('../../../helpers/oracle');
 module.exports = {
     title: 'Object Store Policy Protection',
     category: 'Object Store',
-    description: 'Ensure Policy statements have deletion protection for Object Store Services unless it is an administrator group.',
-    more_info: 'Adding deletion protection to Oracle Object Store policies mitigates unintended deletion of Object Store Services by unauthorized users or groups.',
-    link: 'https://docs.cloud.oracle.com/iaas/Content/Security/Reference/dbaas_security.htm',
+    description: 'Ensure policy statements have deletion protection for object store services unless it is an administrator group.',
+    more_info: 'Adding deletion protection to Oracle object store policies mitigates unintended deletion of object store services by unauthorized users or groups.',
+    link: 'https://docs.cloud.oracle.com/iaas/Content/Object/Tasks/managingobjects.htm',
     recommended_action: 'When writing policies, avoid blanket statements, and add a where statement with the line request.permission != {OBJECT_DELETE, BUCKET_DELETE} .',
     apis: ['policy:list'],
+    compliance: {
+        hipaa: 'HIPAA requires that all patient information is ' +
+            'protected from accidental deletion or modification'
+    },
     settings: {
         policy_group_admins: {
             name: 'Admin groups with delete permissions.',
@@ -47,7 +51,8 @@ module.exports = {
             var policyProtection = true;
 
             policies.data.forEach(policy => {
-                if (policy.statements) {
+                if (policy.statements &&
+                    policy.statements.length) {
                     policy.statements.forEach(statement => {
 
                         const statementLower = statement.toLowerCase();
@@ -66,7 +71,7 @@ module.exports = {
 
                             policyProtection = false;
                             var statementArr = statementLower.split(' ');
-                            var mySeverity = 2;
+                            var severity = 2;
 
                             if (statementArr[1] === 'any-user') {
                                 var groupName = statementArr[2] === 'to' ? '' : statementArr[2];
@@ -84,16 +89,16 @@ module.exports = {
                             if (statementArr.indexOf('request.user.name') > -1) {
                                 groupType = 'The user';
                                 groupName = statementArr[statementArr.length - 1];
-                                mySeverity = 1;
+                                severity = 1;
                             }
 
-                            helpers.addResult(results, mySeverity,
-                                `${groupType} ${groupName} has the ability to delete all Object Store Services in ${compartment} ${compartmentName}`, region, policy.id);
+                            helpers.addResult(results, severity,
+                                `${groupType} ${groupName} has the ability to delete all object store services in ${compartment} ${compartmentName}`, region, policy.id);
                         }
                     });
 
                     if (policyProtection) {
-                        helpers.addResult(results, 0, 'All policies have Object Store delete protection enabled', region);
+                        helpers.addResult(results, 0, 'All policies have object store delete protection enabled', region);
                     }
                 }
             });

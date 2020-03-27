@@ -64,7 +64,7 @@ describe('dbBackupEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No databases present')
+                expect(results[0].message).to.include('No databases found')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -81,7 +81,7 @@ describe('dbBackupEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('The database has Auto Backup Disabled')
+                expect(results[0].message).to.include('The database has auto backup disabled')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -127,7 +127,7 @@ describe('dbBackupEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('The database has Auto Backup Enabled')
+                expect(results[0].message).to.include('The database has auto backup enabled')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };

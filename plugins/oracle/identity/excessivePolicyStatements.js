@@ -4,8 +4,10 @@ var helpers = require('../../../helpers/oracle/');
 module.exports = {
     title: 'Excessive Policy Statements',
     category: 'Identity',
-    description: 'Determine if there are an excessive number of policy Statements in the account',
-    more_info: 'Keeping the number of policy statements to a minimum helps reduce the chances of compromised accounts causing catastrophic damage to the account. Common statements should be grouped under the same policy. ',
+    description: 'Determine if there are an excessive number of policy statements in the account',
+    more_info: 'Keeping the number of policy statements to a minimum helps reduce the chances ' +
+        'of compromised accounts causing catastrophic damage to the account. Common statements ' +
+        'should be grouped under the same policy. ',
     recommended_action: 'Limit the number of policy statements to prevent accidental authorizations',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Identity/Concepts/policygetstarted.htm',
     apis: ['policy:list'],
@@ -47,18 +49,18 @@ module.exports = {
 
                 if (policies.err || !policies.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for Policies: ' + helpers.addError(policies), region);
+                        'Unable to query for policies: ' + helpers.addError(policies), region);
                     return rcb();
-                };
+                }
 
                 if (!policies.data.length) {
-                    helpers.addResult(results, 0, 'No Policies present', region);
+                    helpers.addResult(results, 0, 'No policies found', region);
                     return rcb();
-                };
+                }
 
                 policies.data.forEach(policy => {
                     var policyAmt = policy.statements.length;
-                    var returnMsg = ' number of policy statements: ' + policyAmt + ' present';
+                    var returnMsg = ' number of policy statements: ' + policyAmt + ' found';
     
                     if (policyAmt > config.excessive_policy_statement_fail) {
                         helpers.addResult(results, 2, 'Excessive' + returnMsg, region, policy.id, custom);
@@ -66,7 +68,7 @@ module.exports = {
                         helpers.addResult(results, 1, 'Large' + returnMsg, region, policy.id, custom);
                     } else {
                         helpers.addResult(results, 0, 'Acceptable' + returnMsg, region, policy.id, custom);
-                    };
+                    }
                 });
             }
             rcb();
