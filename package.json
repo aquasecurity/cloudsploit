@@ -4,7 +4,12 @@
   "description": "AWS security scanning scripts",
   "main": "index.js",
   "scripts": {
-    "test": "mocha './**/*.spec.js'"
+    "test": "mocha './**/*.spec.js'",
+    "test-watch": "nodemon --exec npm run test",
+    "test-cov": "nyc --reporter text --reporter cobertura --reporter lcov --all -- npm run test",
+    "test-cov-watch": "nodemon --exec npm run test-cov",
+    "test-cov-html": "nyc --reporter html --reporter cobertura --reporter lcov --all -- npm run test",
+    "test-cov-html-watch": "nodemon --exec npm run test-cov-html"
   },
   "bin": {
     "cloudsploit-scan": "./index.js"
@@ -58,6 +63,8 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^6.1.4"
+    "mocha": "^6.1.4",
+    "nodemon": "^1.19.4",
+    "nyc": "^14.1.1"
   }
 }
