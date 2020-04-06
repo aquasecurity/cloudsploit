@@ -9,6 +9,10 @@ module.exports = {
     recommended_action: 'Enable CMK KMS-based encryption for all S3 buckets.',
     link: 'https://docs.aws.amazon.com/AmazonS3/latest/dev/bucket-encryption.html',
     apis: ['S3:listBuckets', 'S3:getBucketEncryption', 'KMS:listKeys', 'KMS:describeKey', 'KMS:listAliases', 'CloudFront:listDistributions'],
+    apis_remediate: ['S3:listBuckets', 'S3:getBucketEncryption', 'S3:getBucketLocation'],
+    apis_compare: ['S3:getBucketEncryption'],
+    actions: {remediate:'S3:putBucketEncryption', rollback:'S3:deleteBucketEncryption'},
+    permissions: {remediate:'s3:PutEncryptionConfiguration', rollback:'s3:PutEncryptionConfiguration'},
     settings: {
         s3_encryption_require_cmk: {
             name: 'S3 Encryption Require CMK',
@@ -24,8 +28,8 @@ module.exports = {
         },
         s3_encryption_kms_alias: {
             name: 'S3 Encryption KMS Alias',
-            description: 'If set, S3 encryption must be configured using the KMS key alias specified. Be sure to include the alias/ prefix.',
-            regex: '^alias/[a-zA-Z0-9_/-]{0,256}$',
+            description: 'If set, S3 encryption must be configured using the KMS key alias specified. Be sure to include the alias/ prefix. Comma-delimited.',
+            regex: '^alias/[a-zA-Z0-9_/-,]{0,256}$',
             default: false
         },
         s3_encryption_allow_cloudfront: {
@@ -100,11 +104,14 @@ module.exports = {
             // Lookup the key aliases if required
             function(cb) {
                 if (!config.s3_encryption_kms_alias) return cb();
+                var configAliasIds = config.s3_encryption_kms_alias.split(',');
+
                 async.each(regions.kms, function(region, rcb) {
                     var listAliases = helpers.addSource(cache, source,
                         ['kms', 'listAliases', region]);
 
-                    var aliasId;
+                    var aliasIds = [];
+
                     if (!listAliases || listAliases.err ||
                         !listAliases.data) {
                         return rcb();
@@ -115,12 +122,13 @@ module.exports = {
                     }
 
                     listAliases.data.forEach(function(alias){
-                        if (alias.AliasName == config.s3_encryption_kms_alias) {
-                            aliasId = alias.AliasArn.replace(/:alias\/.*/, ':key/' + alias.TargetKeyId);
+                        if (configAliasIds.indexOf(alias.AliasName) > -1) {
+                            aliasIds.push(alias.AliasArn.replace(/:alias\/.*/, ':key/' + alias.TargetKeyId));
                         }
                     });
 
-                    if (aliasId) aliasKeyIds.push(aliasId);
+                    if (aliasIds.length) aliasKeyIds = aliasKeyIds.concat(aliasIds);
+
                     rcb();
                 }, function(){
                     cb();
@@ -262,6 +270,104 @@ module.exports = {
             }
         ], function(){
             callback(null, results, source);
+        });
+    },
+
+    remediate: function(config, cache, settings, resources, callback) {
+        var putCall = this.actions.remediate;
+        var pluginName = 'bucketEncryption';
+        var bucketNameArr = resources.split(':');
+        var bucketName = bucketNameArr[bucketNameArr.length - 1];
+
+        // find the location of the bucket needing to be remediated
+        var bucketLocations = cache['s3']['getBucketLocation'];
+        var bucketLocation;
+
+        for (var key in bucketLocations) {
+            if (bucketLocations[key][bucketName]) {
+                bucketLocation = key;
+                break;
+            }
+        }
+
+        // add the location of the bucket to the config
+        config.region = bucketLocation;
+        var params = {};
+        // create the params necessary for the remediation
+        if (settings.input &&
+            settings.input.kmsKeyId) {
+            params = {
+                'Bucket': bucketName,
+                'ServerSideEncryptionConfiguration': {
+                    'Rules': [{
+                        'ApplyServerSideEncryptionByDefault': {
+                            "SSEAlgorithm": "aws:kms",
+                            'KMSMasterKeyID': config.kmsKeyId
+                        }
+                    }]
+                }
+            };
+        } else {
+            params = {
+                'Bucket': bucketName,
+                'ServerSideEncryptionConfiguration': {
+                    'Rules': [{
+                        'ApplyServerSideEncryptionByDefault': {
+                            "SSEAlgorithm": "AES256",
+                        }
+                    }]
+                }
+            };
+        }
+
+        var remediation_file = settings.remediation_file;
+        remediation_file['scans'][pluginName][resources] = {
+            'Encryption': 'Disabled',
+            'Bucket': bucketName
+        };
+
+        // passes the config, put call, and params to the remediate helper function
+        helpers.remediatePlugin(config, putCall, params, function (err, results) {
+            if (err) {
+                remediation_file['remediations'][pluginName]['error'] = err;
+
+                return callback(err, null);
+            }
+
+            let action = params;
+            action.remediate = putCall;
+
+            remediation_file['remediations'][pluginName][resources] = action;
+            remediation_file['remediations'][pluginName]['action'] = 'ENCRYPTED';
+            settings.remediation_file = remediation_file;
+            return callback(null, action);
+        });
+    },
+
+    rollback: function(config, cache, settings, resources, callback) {
+        // the call necessary for the rollback (should be a put or delete call)
+        var putCall = this.actions.rollback;
+        var pluginName = 'bucketEncryption';
+
+        var params = {};
+        var bucketNameArr = resources.split(':');
+        var bucketName = bucketNameArr[bucketNameArr.length - 1];
+        var remediation_file = settings.remediation_file;
+        params['Bucket'] = bucketName;
+        settings.connection.region = settings['regions'][resources];
+        // runs the rollback
+        helpers.remediatePlugin(config, putCall, params, function (err, results) {
+            if (err) {
+                return callback(err, null);
+            } else {
+                let action = params;
+                action.rollback = putCall;
+                action['Encryption'] = 'DISABLED';
+                remediation_file['rollback'][pluginName][resources] = action;
+                remediation_file['rollback'][pluginName]['action'] = 'DISABLED';
+                settings.remediation_file = remediation_file;
+                return callback(null, action);
+            }
         });
     }
 };

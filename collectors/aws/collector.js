@@ -579,6 +579,11 @@ var postcalls = [
                 signatureVersion: 'v4',
                 override: true
             },
+            getBucketLocation: {
+                deleteRegion: true,
+                signatureVersion: 'v4',
+                override: true
+            },
             getPublicAccessBlock: {
                 deleteRegion: true,
                 signatureVersion: 'v4',
