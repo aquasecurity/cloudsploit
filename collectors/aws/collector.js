@@ -222,7 +222,11 @@ var calls = {
         describeRouteTables: {
             property: 'RouteTables',
             paginate: 'NextToken'
-        }
+        },
+        describeTags: {
+            property: 'Tags',
+            paginate: 'NextToken',
+        },
     },
     ECR: {
         describeRepositories: {
@@ -600,7 +604,7 @@ var postcalls = [
                 reliesOnService: 'ec2',
                 reliesOnCall: 'describeVpcs',
                 override: true
-            }
+            },
         },
         ECR: {
             getRepositoryPolicy: {
