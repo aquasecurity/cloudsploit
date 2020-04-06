@@ -143,6 +143,7 @@ module.exports = {
         'bucketAllUsersAcl'             : require(__dirname + '/plugins/aws/s3/bucketAllUsersAcl.js'),
         'bucketVersioning'              : require(__dirname + '/plugins/aws/s3/bucketVersioning.js'),
         'bucketLogging'                 : require(__dirname + '/plugins/aws/s3/bucketLogging.js'),
+        's3Encryption'                  : require(__dirname + '/plugins/aws/s3/s3Encryption.js'),
         'bucketPublicAccessBlock'       : require(__dirname + '/plugins/aws/s3/bucketPublicAccessBlock.js'),
         'bucketEncryption'              : require(__dirname + '/plugins/aws/s3/bucketEncryption.js'),
         'bucketWebsiteEnabled'          : require(__dirname + '/plugins/aws/s3/bucketWebsiteEnabled.js'),
