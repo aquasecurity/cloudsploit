@@ -132,6 +132,7 @@ var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, Googl
 
         serviceProviderObj.collector(serviceProviderObj.config, settings, function (err, collection) {
             if (err || !collection) return console.log('ERROR: Unable to obtain API metadata');
+            outputHandler.writeCollection(collection, serviceProviderObj.name)
 
             console.log('');
             console.log('-----------------------');

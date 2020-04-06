@@ -186,6 +186,9 @@ node index.js --json=./out.json
 # Output results in JUnit XML (suppressing the console output)
 node index.js --junit=./out.xml
 
+# Output collection results in JSON
+node index.js --collection=./collection.json
+
 # Output results only to the console (default if omitted)
 node index.js --console
 

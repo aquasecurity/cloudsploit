@@ -37,7 +37,7 @@
     "@octokit/request": "^3.0.3",
     "@octokit/rest": "^16.3.2",
     "async": "^2.6.1",
-    "aws-sdk": "^2.580.0",
+    "aws-sdk": "^2.648.0",
     "azure-arm-authorization": "^8.3.1",
     "azure-arm-cdn": "^4.2.0",
     "azure-arm-compute": "^9.1.0",

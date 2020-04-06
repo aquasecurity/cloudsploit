@@ -1,5 +1,6 @@
 var async = require('async');
 var regions = require(__dirname + '/regions');
+var AWS = require('aws-sdk');
 
 function waitForCredentialReport(iam, callback, CREDENTIAL_DOWNLOAD_STARTED) {
     if (!CREDENTIAL_DOWNLOAD_STARTED) {
@@ -226,6 +227,31 @@ function defaultPartition(settings) {
     return 'aws';
 }
 
+function remediatePlugin(config, call, params, callback) {
+    var service = call.split(':')[0];
+    var callKey = call.split(':')[1];
+    var executor = new AWS[service](config);
+
+    var executorCb = function (err, data) {
+        if (err) {
+            return callback(err, null)
+        } else if (data) {
+           return callback(null, data);
+        }
+    };
+
+    executor[callKey](params, executorCb);
+}
+
+function nullArray(object) {
+    for (key in object) {
+        if (Array.isArray(object[key]) && !object[key].length) {
+            object[key] = null;
+        }
+    }
+    return object;
+}
+
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
@@ -234,5 +260,7 @@ module.exports = {
     globalPrincipal: globalPrincipal,
     crossAccountPrincipal: crossAccountPrincipal,
     defaultRegion: defaultRegion,
-    defaultPartition: defaultPartition
+    defaultPartition: defaultPartition,
+    remediatePlugin: remediatePlugin,
+    nullArray: nullArray
 };
