@@ -277,6 +277,26 @@ module.exports = {
     },
 
     /**
+     * Creates an output handler that writes collection in the JSON format.
+     * @param {fs.WriteSteam} stream The stream to write to or an object that
+     * obeys the writeable stream contract.
+     */
+    createCollection: function(stream) {
+        var results = {};
+        return {
+            stream: stream,
+
+            write: function (collection, providerName) {
+                results[providerName] = collection;
+            },
+
+            close: function () {
+                this.stream.write(JSON.stringify(results));
+                this.stream.end();
+            }
+        }
+    },
+    /**
      * Creates an output handler depending on the arguments list as expected
      * in the command line format. If multiple output handlers are specified
      * in the arguments, then constructs a unified view so that it appears that
@@ -291,6 +311,7 @@ module.exports = {
      */
     create: function (argv) {
         var outputs = [];
+        var collectionOutput;
 
         // Creates the handlers for writing output.
         var addCsvOutput = argv.find(function (arg) {
@@ -312,6 +333,15 @@ module.exports = {
         var addConsoleOutput = argv.find(function (arg) {
             return arg.startsWith('--console');
         })
+
+        var addCollectionOutput = argv.find(function(arg) {
+            return arg.startsWith('--collection=')
+        })
+        if(addCollectionOutput) {
+            var stream = fs.createWriteStream(addCollectionOutput.substr(13))
+            collectionOutput = this.createCollection(stream)
+        }
+
         // Write to console if specified or by default if there is not
         // other output handler specified.
         if (addConsoleOutput || outputs.length == 0) {
@@ -348,7 +378,16 @@ module.exports = {
                 }
             },
 
+            writeCollection: function(collection, providerName) {
+                if(collectionOutput) {
+                    collectionOutput.write(collection, providerName)
+                }
+            },
+
             close: function () {
+                if(collectionOutput) {
+                    collectionOutput.close()
+                }
                 for (var output of outputs) {
                     output.close();
                 }

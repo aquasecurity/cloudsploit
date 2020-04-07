@@ -270,6 +270,19 @@ describe('bucketEncryption', function () {
             s3.run(cache, {s3_encryption_kms_alias: 'alias/my-alias'}, callback);
         })
 
+        it('should give passing result if S3 bucket has CMK KMS encryption with one of provided aliases', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1)
+                expect(results[0].status).to.equal(0)
+                expect(results[0].message).to.include('has aws:kms encryption enabled using required KMS key')
+                done()
+            };
+
+            const cache = createCache(true, false, false, true);
+
+            s3.run(cache, {s3_encryption_kms_alias: 'alias/some-other-alias,alias/my-alias'}, callback);
+        })
+
         it('should give failing result if S3 bucket has CMK KMS encryption without provided alias', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)

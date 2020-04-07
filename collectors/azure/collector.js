@@ -363,7 +363,7 @@ var postcalls = {
             reliesOnService: ['resourceGroups', 'servers'],
             reliesOnSubService: [undefined, 'sql'],
             reliesOnCall: ['list', 'list'],
-            filterKey: ['resourceGroupName', 'serverName'],
+            filterKey: ['resourceGroupName', 'name'],
             filterValue: ['resourceGroupName', 'name'],
             arm: true,
         },
@@ -462,7 +462,7 @@ var postcalls = {
             reliesOnService: ['resourceGroups','servers'],
             reliesOnSubService: [undefined, 'sql'],
             reliesOnCall: ['list','list'],
-            filterKey: ['resourceGroupName','serverName'],
+            filterKey: ['resourceGroupName','name'],
             filterValue: ['resourceGroupName','name'],
             arm: true
         }
@@ -493,7 +493,7 @@ var postcalls = {
             reliesOnService: ['resourceGroups','servers'],
             reliesOnSubService: [undefined, 'sql'],
             reliesOnCall: ['list', 'list'],
-            filterKey: ['resourceGroupName', 'serverName'],
+            filterKey: ['resourceGroupName', 'name'],
             filterValue: ['resourceGroupName', 'name'],
             arm: true
         }

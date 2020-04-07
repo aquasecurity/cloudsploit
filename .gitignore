@@ -10,3 +10,5 @@ vscode/*
 .local
 template.packaged.yaml
 config.*
+coverage/
+.nyc_output
