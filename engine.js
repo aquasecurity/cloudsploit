@@ -1,9 +1,10 @@
-
 var async = require('async');
 var plugins = require('./exports.js');
 var complianceControls = require('./compliance/controls.js')
 var suppress = require('./postprocess/suppress.js')
 var output = require('./postprocess/output.js')
+var helpers = require('./helpers/shared')
+var once = require('lodash.once');
 
 /**
  * The main function to execute CloudSploit scans.
@@ -12,10 +13,12 @@ var output = require('./postprocess/output.js')
  * @param GitHubConfig The configuration for Github. If undefined, then don't run.
  * @param OracleConfig The configuration for Oracle. If undefined, then don't run.
  * @param GoogleConfig The configuration for Google. If undefined, then don't run.
-
+ *
  * @param settings General purpose settings.
+ * @param [outputHandler] Optional custom handler for result collection.
+ * @param [callback] callback to be ran upon completion.
  */
-var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, GoogleConfig, settings) {
+var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, GoogleConfig, settings, outputHandler, callback) {
     // Determine if scan is a compliance scan
     var complianceArgs = process.argv
         .filter(function (arg) {
@@ -39,7 +42,7 @@ var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, Googl
     var suppressionFilter = suppress.create(process.argv)
 
     // Initialize the output handler
-    var outputHandler = output.create(process.argv)
+    outputHandler = outputHandler || output.create(process.argv)
 
     // The original cloudsploit always has a 0 exit code. With this option, we can have
     // the exit code depend on the results (useful for integration with CI systems)
@@ -108,7 +111,7 @@ var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, Googl
 
                 if (sp == 'github' && !serviceProviderConfig.organization &&
                     plugin.types.indexOf('user') === -1) continue;
-                
+
                 // Skip if our compliance set says don't run the rule
                 if (!compliance.includes(spp, plugin)) continue;
 
@@ -161,28 +164,40 @@ var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, Googl
                     plugin.types.indexOf('user') === -1) return pluginDone(null, 0);
 
                 var maximumStatus = 0
-                plugin.run(collection, settings, function(err, results) {
-                    outputHandler.startCompliance(plugin, key, compliance)
+                // ensure callback is only called once, since plugin.run could throw after triggering the callback
+                pluginDone = once(pluginDone);
+                try {
+                    plugin.run(collection, settings, function(err, results) {
+                        outputHandler.startCompliance(plugin, key, compliance)
 
-                    for (r in results) {
-                        // If we have suppressed this result, then don't process it
-                        // so that it doesn't affect the return code.
-                        if (suppressionFilter([key, results[r].region || 'any', results[r].resource || 'any'].join(':'))) {
-                            continue;
+                        for (r in results) {
+                            // If we have suppressed this result, then don't process it
+                            // so that it doesn't affect the return code.
+                            if (suppressionFilter([key, results[r].region || 'any', results[r].resource || 'any'].join(':'))) {
+                                continue;
+                            }
+
+                            // Write out the result (to console or elsewhere)
+                            outputHandler.writeResult(results[r], plugin, key)
+
+                            // Add this to our tracking fo the worst status to calculate
+                            // the exit code
+                            maximumStatus = Math.max(maximumStatus, results[r].status)
                         }
-
-                        // Write out the result (to console or elsewhere)
-                        outputHandler.writeResult(results[r], plugin, key)
-
-                        // Add this to our tracking fo the worst status to calculate
-                        // the exit code
-                        maximumStatus = Math.max(maximumStatus, results[r].status)
-                    }
-
-                    outputHandler.endCompliance(plugin, key, compliance)
-
+                        outputHandler.endCompliance(plugin, key, compliance)
+                        setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
+                    });
+                } catch (error) {
+                    outputHandler.writeResult({
+                        status: 3,
+                        region: 'unknown',
+                        resource: null,
+                        custom: false,
+                        message: helpers.addError(error)
+                    }, plugin, key)
+                    maximumStatus = 3;
                     setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
-                });
+                }
             }, function(err, results){
                 if (err) return console.log(err);
                 var summaryStatus = Math.max(...Object.values(results))
@@ -196,6 +211,9 @@ var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, Googl
             process.exitCode = Math.max(results)
         }
         console.log('Done');
+        if(callback) {
+            callback(err)
+        }
     });
 };
 

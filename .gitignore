@@ -7,5 +7,6 @@ output.json
 vscode/*
 .vscode/
 .idea
-coverage/
-.nyc_output
+.local
+template.packaged.yaml
+config.*
