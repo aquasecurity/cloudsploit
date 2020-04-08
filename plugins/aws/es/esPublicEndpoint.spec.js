@@ -110,31 +110,31 @@ describe('esPublicEndpoint', function () {
                   }
                 ],
                 {
-                    AccessPolicies: {
-                        "Version": "2012-10-17",
-                        "Statement": [
-                          {
-                            "Effect": "Allow",
-                            "Principal": {
-                              "AWS": "*"
-                            },
-                            "Action": [
-                                "es:ESHttp*"
-                            ],
-                            "Condition": {
-                              "IpAddress": {
-                                "aws:SourceIp": [
-                                  "192.0.2.0/24"
-                                ]
-                              }
-                            },
-                          }
-                        ]
-                    },
                     DomainStatus: {
                         DomainName: 'mydomain',
                         ARN: 'arn:1234',
-                        VPCOptions: {}
+                        VPCOptions: {},
+                        AccessPolicies: {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                              {
+                                "Effect": "Allow",
+                                "Principal": {
+                                  "AWS": "*"
+                                },
+                                "Action": [
+                                    "es:ESHttp*"
+                                ],
+                                "Condition": {
+                                  "IpAddress": {
+                                    "aws:SourceIp": [
+                                      "192.0.2.0/24"
+                                    ]
+                                  }
+                                },
+                              }
+                            ]
+                        },
                     }
                 }
             );

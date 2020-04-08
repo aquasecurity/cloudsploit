@@ -53,7 +53,9 @@ module.exports = {
                         results, 3,
                         'Unable to query for ES domain config: ' + helpers.addError(describeElasticsearchDomain), region);
                 } else {
-                    var policies = helpers.normalizePolicyDocument(describeElasticsearchDomain.data.AccessPolicies);
+                    var localDomain = describeElasticsearchDomain.data.DomainStatus;
+
+                    var policies = helpers.normalizePolicyDocument(localDomain.AccessPolicies);
                     var containsIpPolicy = false;
 
                     for (p in policies) {
@@ -63,7 +65,6 @@ module.exports = {
                         }
                     }
                     
-                    var localDomain = describeElasticsearchDomain.data.DomainStatus;
 
                     if (localDomain.VPCOptions &&
                         localDomain.VPCOptions.VPCId &&
