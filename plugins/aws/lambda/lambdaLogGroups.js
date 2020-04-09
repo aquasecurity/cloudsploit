@@ -43,18 +43,14 @@ module.exports = {
                 if (!describeLogGroups.data) {
                     result = [3, 'Error querying for log groups'];
                 } else if (describeLogGroups.err) {
-                    if (describeLogGroups.err.code && policy.err.code == 'ResourceNotFoundException') {
-                        result = [0, 'Function does not have a log group attached to it'];
-                    } else {
-                        result = [3, 'Error querying for log groups: ' + helpers.addError(describeLogGroups)];
-                    }
+                    result = [3, 'Error querying for log groups: ' + helpers.addError(describeLogGroups)];
                 } else if (describeLogGroups.data) {
                     var found = describeLogGroups.data.find(function(lg) {
                         return lg.logGroupName == "/aws/lambda/" + func.FunctionName;
                     });
 
                     if (found) {
-                        result = [0, 'Function has log group: ' + found];
+                        result = [0, 'Function has log group: ' + found.logGroupName];
                     } else {
                         result = [2, 'Function has no log group'];
                     }
@@ -64,7 +60,7 @@ module.exports = {
 
                 helpers.addResult(results, result[0], result[1], region, arn);
             }
-            
+
             rcb();
         }, function(){
             callback(null, results, source);
