@@ -44,6 +44,7 @@ module.exports = {
     sns: regions,
     sqs: regions,
     ssm: regions,
+    secretsmanager: regions,
     // SSE via KMS is only supported in some regions
     // even though SQS is supported in all regions.
     sqs_encrypted: regions,
