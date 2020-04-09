@@ -47,16 +47,22 @@ module.exports = {
                 var identity = getIdentityVerificationAttributes.data.VerificationAttributes[i];
 
                 if (!identity.VerificationStatus) {
-                    helpers.addResult(results, 1, 'Verification has not been requested', region, i);
+                    helpers.addResult(results, 2, 'Domain identity exists with unknown status', region, i);
                 } else if (identity.VerificationStatus == 'Success') {
                     helpers.addResult(results, 2,
-                        'Domain is being used as the verified identity', region, i);
+                        'Domain identity exists and is verified', region, i);
                 } else if (identity.VerificationStatus == 'Pending') {
-                    helpers.addResult(results, 1,
-                        'Domain has not been verified, but has requested verification', region, i);  
+                    helpers.addResult(results, 2,
+                        'Domain identity exists and has verification that is pending', region, i);
+                } else if (identity.VerificationStatus == 'Failed') {
+                    helpers.addResult(results, 2,
+                        'Domain identity exists but verification failed', region, i);
+                } else if (identity.VerificationStatus == 'TemporaryFailure') {
+                    helpers.addResult(results, 2,
+                        'Domain identity exists but verification temporarily failed', region, i);  
                 } else {
-                    helpers.addResult(results, 0,
-                        'Verification is configured properly', region, i);
+                    helpers.addResult(results, 2, 'Domain identity exists with unknown status', region, i);
+
                 }
             }
 

@@ -46,7 +46,7 @@ describe('sesValidatedDomains', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('Domain is being used as the verified identity')
+                expect(results[0].message).to.include('Domain identity exists and is verified')
                 done()
             };
 
@@ -73,8 +73,8 @@ describe('sesValidatedDomains', function () {
         it('should give warning result if verified domain identities are pending', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
-                expect(results[0].status).to.equal(1)
-                expect(results[0].message).to.include('Domain has not been verified, but has requested verification')
+                expect(results[0].status).to.equal(2)
+                expect(results[0].message).to.include('Domain identity exists and has verification that is pending')
                 done()
             };
 
@@ -101,8 +101,8 @@ describe('sesValidatedDomains', function () {
         it('should give warning result if domain identity exists, but verification has not yet been requested', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
-                expect(results[0].status).to.equal(1)
-                expect(results[0].message).to.include('Verification has not been requested')
+                expect(results[0].status).to.equal(2)
+                expect(results[0].message).to.include('Domain identity exists with unknown status')
                 done()
             };
 
