@@ -108,7 +108,7 @@ var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, Googl
 
                 if (sp == 'github' && !serviceProviderConfig.organization &&
                     plugin.types.indexOf('user') === -1) continue;
-                
+
                 // Skip if our compliance set says don't run the rule
                 if (!compliance.includes(spp, plugin)) continue;
 
