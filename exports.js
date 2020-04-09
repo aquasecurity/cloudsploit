@@ -2,6 +2,8 @@
 
 module.exports = {
     aws : {
+        'apiGatewayRestApiWafEnabled'   : require(__dirname + '/plugins/aws/apigateway/apiGatewayRestApiWafEnabled.js'),
+
         'acmValidation'                 : require(__dirname + '/plugins/aws/acm/acmValidation.js'),
         'acmCertificateExpiry'          : require(__dirname + '/plugins/aws/acm/acmCertificateExpiry.js'),
         'asgMultiAz'                    : require(__dirname + '/plugins/aws/autoscaling/asgMultiAz.js'),
