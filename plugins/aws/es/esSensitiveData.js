@@ -2,17 +2,17 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'ElasticSearch Sensitive Data',
+    title: 'ElasticSearch IAM authentication',
     category: 'ES',
-    description: 'Ensures ElasticSearch domains that contain Sensitive Data leverage IAM Authentication only',
-    more_info: 'ElasticSearch domains can be flagged as containing Sensitive Data, in which case they should not have access policies with a global principal or lacking a principal',
+    description: 'Ensures ElasticSearch domains require IAM Authentication',
+    more_info: 'ElasticSearch domains can allow access without IAM authentication, by having a policy that does not specify the principal or has a wildcard principal',
     link: 'https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-ac.html',
     recommended_action: 'Configure the ElasticSearch domain to have an access policy without a global principal or no principal',
     apis: ['ES:listDomainNames', 'ES:describeElasticsearchDomain'],
     settings: {
-        contains_sensitive_data: {
-            name: 'ElasticSearch Sensitive Data',
-            description: 'Causes plugin to run if there is Sensitive Data flagged',
+        es_require_iam_authentication: {
+            name: 'ElasticSearch IAM authentication',
+            description: 'Causes plugin to run if flagged for IAM Authentication',
             default: false
         },
     },
@@ -22,9 +22,9 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
-        var config = {contains_sensitive_data: settings.contains_sensitive_data || this.settings.contains_sensitive_data.default};
+        var config = {es_require_iam_authentication: settings.es_require_iam_authentication || this.settings.es_require_iam_authentication.default};
 
-        if (config.contains_sensitive_data) {
+        if (config.es_require_iam_authentication) {
             async.each(regions.es, function (region, rcb) {
                 var listDomainNames = helpers.addSource(cache, source,
                     ['es', 'listDomainNames', region]);

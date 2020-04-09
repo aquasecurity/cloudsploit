@@ -38,7 +38,7 @@ describe('esPublicEndpoint', function () {
                 {}
             );
 
-            es.run(cache, {contains_sensitive_data: true}, callback);
+            es.run(cache, {es_require_iam_authentication: true}, callback);
         })
 
         it('should give positive result if there are no access policies', function (done) {
@@ -62,7 +62,7 @@ describe('esPublicEndpoint', function () {
                 }
             );
 
-            es.run(cache, {contains_sensitive_data: true}, callback);
+            es.run(cache, {es_require_iam_authentication: true}, callback);
         })
 
         it('should give error result if Principal is global', function (done) {
@@ -108,7 +108,7 @@ describe('esPublicEndpoint', function () {
                 }
             );
     
-            es.run(cache, {contains_sensitive_data: true}, callback);
+            es.run(cache, {es_require_iam_authentication: true}, callback);
         })
     
         it('should give error result if Principal does not exist', function (done) {
@@ -151,7 +151,7 @@ describe('esPublicEndpoint', function () {
                 }
             );
     
-            es.run(cache, {contains_sensitive_data: true}, callback);
+            es.run(cache, {es_require_iam_authentication: true}, callback);
         })
 
         it('should give error result if Principal does not exist', function (done) {
@@ -194,7 +194,7 @@ describe('esPublicEndpoint', function () {
                 }
             );
     
-            es.run(cache, {contains_sensitive_data: true}, callback);
+            es.run(cache, {es_require_iam_authentication: true}, callback);
         })
 
     })
