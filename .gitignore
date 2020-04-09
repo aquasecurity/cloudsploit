@@ -7,3 +7,5 @@ output.json
 vscode/*
 .vscode/
 .idea
+coverage/
+.nyc_output
