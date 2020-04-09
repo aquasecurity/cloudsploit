@@ -99,7 +99,7 @@ describe('esPublicEndpoint', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('ES domain is configured to use a public endpoint, but contains an Ip Condition policy')
+                expect(results[0].message).to.include('ES domain is configured to use a public endpoint, but contains an IP Condition policy')
                 done()
             };
 
@@ -139,7 +139,7 @@ describe('esPublicEndpoint', function () {
                 }
             );
 
-            es.run(cache, {allow_public_only_if_ip_condition_policy: true}, callback);
+            es.run(cache, {allow_es_public_endpoint_if_ip_condition_policy: true}, callback);
         })
     })
 })
