@@ -15,11 +15,20 @@ module.exports = {
              'encryption should be enabled for all parameters storing this type ' +
              'of data.'
     },
+    settings: {
+        allow_ssm_non_secure_strings: {
+            name: 'Allow SSM Non-Secure Strings',
+            description: 'Allow for non-secure strings to pass',
+            default: false
+        }
+    },
+
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var config = {allow_ssm_non_secure_strings: settings.allow_ssm_non_secure_strings || this.settings.allow_ssm_non_secure_strings.default}
 
         var acctRegion = helpers.defaultRegion(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
@@ -45,8 +54,10 @@ module.exports = {
                 var param = describeParameters.data[i];
                 var arn = 'arn:aws:ssm:' + region + ':' + accountId + ':parameter/' + param.Name;
 
-                if (param.Type != "SecureString") {
+                if (param.Type != "SecureString" && !config.allow_ssm_non_secure_strings) {
                     helpers.addResult(results, 2, 'Non-SecureString Parameters present', region, arn)
+                } else if (param.Type != "SecureString" && config.allow_ssm_non_secure_strings) {
+                    helpers.addResult(results, 0, 'Non-SecureString Parameters present but are allowed', region, arn)
                 } else {
                     helpers.addResult(results, 0, 'Parameter of Type SecureString', region, arn)
                 }
