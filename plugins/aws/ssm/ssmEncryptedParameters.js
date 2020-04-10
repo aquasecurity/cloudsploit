@@ -87,7 +87,7 @@ module.exports = {
                 if (parameter.Type != 'SecureString' && !secureStrings) {
                     helpers.addResult(results, 2, 'Non-SecureString Parameters present', region, arn);
                     continue;
-                } else if (parameter.Type != 'SecureString' && !secureStrings) {
+                } else if (parameter.Type != 'SecureString' && secureStrings) {
                     helpers.addResult(results, 0, 'Non-SecureString Parameters present but are allowed', region, arn)
                     continue;
                 }
