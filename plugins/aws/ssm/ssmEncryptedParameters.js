@@ -40,11 +40,18 @@ module.exports = {
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awskms',
         },
+        allow_ssm_non_secure_strings: {
+            name: 'Allow SSM Non-Secure Strings',
+            description: 'Allow for non-secure strings to pass',
+            default: false
+        }
     },
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
+        var regions = helpers.regions(settings);
+        var secureStrings = settings.allow_ssm_non_secure_strings || this.settings.allow_ssm_non_secure_strings.default;
 
         var desiredEncryptionLevelString = settings.ssm_encryption_level || this.settings.ssm_encryption_level.default
         if(!desiredEncryptionLevelString.match(this.settings.ssm_encryption_level.regex)) {
@@ -77,8 +84,11 @@ module.exports = {
                 var parameterName = parameter.Name.charAt(0) === '/' ? parameter.Name.substr(1) : parameter.Name;
                 var arn = `arn:aws:ssm:${region}:${accountId}:parameter/${parameterName}`;
 
-                if (parameter.Type != 'SecureString') {
+                if (parameter.Type != 'SecureString' && !secureStrings) {
                     helpers.addResult(results, 2, 'Non-SecureString Parameters present', region, arn);
+                    continue;
+                } else if (parameter.Type != 'SecureString' && !secureStrings) {
+                    helpers.addResult(results, 0, 'Non-SecureString Parameters present but are allowed', region, arn)
                     continue;
                 }
 
