@@ -46,7 +46,7 @@ module.exports = {
 
         for (let bucket of listBuckets.data) {
             var bucketResource = `arn:aws:s3:::${bucket.Name}`;
-            console.log(JSON.stringify(getBucketPolicy, null, 2))
+            // console.log(JSON.stringify(getBucketPolicy, null, 2))
 
             var getBucketPolicy = helpers.addSource(cache, source, ['s3', 'getBucketPolicy', region, bucket.Name]);
             if (getBucketPolicy && getBucketPolicy.err && getBucketPolicy.err.code && getBucketPolicy.err.code === 'NoSuchBucketPolicy') {

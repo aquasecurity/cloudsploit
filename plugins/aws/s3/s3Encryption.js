@@ -73,7 +73,7 @@ module.exports = {
         var source = {};
 
         var desiredEncryptionLevelString = settings.s3_required_encryption_level || this.settings.s3_required_encryption_level.default
-        console.log(desiredEncryptionLevelString)
+        // console.log(desiredEncryptionLevelString)
         if(!desiredEncryptionLevelString.match(this.settings.s3_required_encryption_level.regex)) {
             helpers.addResult(results, 3, 'Settings misconfigured for S3 Encryption Enforcement.');
             return callback(null, results, source);

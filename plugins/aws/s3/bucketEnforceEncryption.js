@@ -89,7 +89,7 @@ module.exports = {
             } else {
                 try {
                     var policyJson = JSON.parse(getBucketPolicy.data.Policy);
-                    getBucketPolicy.data.Policy = policyJson;
+                    // getBucketPolicy.data.Policy = policyJson;
 
                     if (!policyJson || !policyJson.Statement) {
                         helpers.addResult(results, 3,
@@ -152,7 +152,6 @@ module.exports = {
                 }
             }
         }
-        
         callback(null, results, source);
     }
 };
