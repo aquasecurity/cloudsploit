@@ -17,7 +17,6 @@ module.exports = {
         },
     },
 
-
     run: function (cache, settings, callback) {
         var results = [];
         var source = {};
@@ -28,25 +27,25 @@ module.exports = {
             async.each(regions.es, function (region, rcb) {
                 var listDomainNames = helpers.addSource(cache, source,
                     ['es', 'listDomainNames', region]);
-    
+
                 if (!listDomainNames) return rcb();
-    
+
                 if (listDomainNames.err || !listDomainNames.data) {
                     helpers.addResult(
                         results, 3,
                         'Unable to query for ES domains: ' + helpers.addError(listDomainNames), region);
                     return rcb();
                 }
-    
+
                 if (!listDomainNames.data.length){
                     helpers.addResult(results, 0, 'No ES domains found', region);
                     return rcb();
                 }
-    
+
                 listDomainNames.data.forEach(function(domain){
                     var describeElasticsearchDomain = helpers.addSource(cache, source,
                         ['es', 'describeElasticsearchDomain', region, domain.DomainName]);
-    
+
                     if (!describeElasticsearchDomain ||
                         describeElasticsearchDomain.err ||
                         !describeElasticsearchDomain.data ||
@@ -81,16 +80,17 @@ module.exports = {
                                 helpers.addResult(results, 0,
                                     'ES domain has no access policies that do not require auth', region, localDomain.ARN);
                             }
-          
+
                         }
                     }
                 });
-    
+
                 rcb();
             }, function () {
                 callback(null, results, source);
             });
+        } else {
+            callback();
         }
-        
     }
 };
