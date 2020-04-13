@@ -111,13 +111,13 @@ module.exports = {
                                 statement.Effect === 'Deny' &&
                                 statement.Principal &&
                                 ((typeof statement.Principal == 'string' && statement.Principal == '*') ||
-                                 (Array.isArray(statement.Principal) && statement.indexOf('*') > -1)) &&
+                                 (Array.isArray(statement.Principal) && statement.Principal.indexOf('*') > -1)) &&
                                 statement.Action &&
                                 ((typeof statement.Action == 'string' && statement.Action == 's3:PutObject') ||
-                                 (Array.isArray(statement.Action) && statement.indexOf('s3:PutObject') > -1)) &&
+                                 (Array.isArray(statement.Action) && statement.Action.indexOf('s3:PutObject') > -1)) &&
                                 statement.Resource &&
                                 ((typeof statement.Resource == 'string' && statement.Resource == (bucketResource + '/*')) ||
-                                 (Array.isArray(statement.Principal) && statement.indexOf(bucketResource + '/*') > -1)) &&
+                                 (Array.isArray(statement.Principal) && statement.Resource.indexOf(bucketResource + '/*') > -1)) &&
                                 statement.Condition) {
                                 if (statement.Condition.StringNotEquals &&
                                     statement.Condition.StringNotEquals['s3:x-amz-server-side-encryption']) {
