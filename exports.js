@@ -141,6 +141,7 @@ module.exports = {
         'domainTransferLock'            : require(__dirname + '/plugins/aws/route53/domainTransferLock.js'),
 
         'bucketEncryptionInTransit'     : require(__dirname + '/plugins/aws/s3/bucketEncryptionInTransit.js'),
+        'accountPublicAccessBlock'      : require(__dirname + '/plugins/aws/s3/accountPublicAccessBlock.js'),
         'bucketAllUsersPolicy'          : require(__dirname + '/plugins/aws/s3/bucketAllUsersPolicy.js'),
         'bucketAllUsersAcl'             : require(__dirname + '/plugins/aws/s3/bucketAllUsersAcl.js'),
         'bucketVersioning'              : require(__dirname + '/plugins/aws/s3/bucketVersioning.js'),

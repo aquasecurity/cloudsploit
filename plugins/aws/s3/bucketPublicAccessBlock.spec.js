@@ -26,6 +26,27 @@ const createCache = (BlockPublicAcls, IgnorePublicAcls, BlockPublicPolicy, Restr
                 },
             },
         },
+        sts: {
+            getCallerIdentity: {
+                data: '1'
+            }
+        },
+        s3control: {
+            getPublicAccessBlock: {
+                'us-east-1': {
+                    '1': {
+                        data: {
+                            PublicAccessBlockConfiguration: {
+                                BlockPublicAcls,
+                                IgnorePublicAcls,
+                                BlockPublicPolicy,
+                                RestrictPublicBuckets,
+                            },
+                        },
+                    },
+                },
+            }
+        }
     };
 };
 

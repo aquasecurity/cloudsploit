@@ -605,6 +605,14 @@ var postcalls = [
                 override: true
             }
         },
+        S3Control: {
+            getPublicAccessBlock: {
+                reliesOnService: 'sts',
+                reliesOnCall: 'getCallerIdentity',
+                override: true,
+                default: true
+            }
+        },
         EC2: {
             describeSubnets: {
                 reliesOnService: 'ec2',
@@ -963,6 +971,7 @@ var collect = function (AWSConfig, settings, callback) {
                 if (!collection[serviceLower]) collection[serviceLower] = {};
 
                 async.eachOfLimit(serviceObj, 1, function (callObj, callKey, callCb) {
+
                     if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
                     if (!collection[serviceLower][callKey]) collection[serviceLower][callKey] = {};
 
