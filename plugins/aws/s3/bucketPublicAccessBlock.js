@@ -80,41 +80,35 @@ module.exports = {
                 }
 
                 var combinedMissingBlocks = [];
-                var missingBlocks = [];
+                var coveredByAccount = []
 
                 if (getPublicAccessBlock.data) {
                     var config = getPublicAccessBlock.data.PublicAccessBlockConfiguration;
-                    missingBlocks = Object.keys(config).filter(k => !config[k]);
-    
-                    for (i in missingBlocks) {
-                        var key = missingBlocks[i];
+                    var missingBlocks = Object.keys(config).filter(k => !config[k]);
+
+                    missingBlocks.forEach(function(key) {
                         if (missingAccountBlocks.indexOf(key) > -1) {
                             combinedMissingBlocks.push(key);
-                            missingBlocks.splice(i, 1);
+                        } else {
+                            coveredByAccount.push(key);
                         }
-                    }
+                    });
                 }
             
-                if (combinedMissingBlocks.length && !missingBlocks.length) {
+                if (combinedMissingBlocks.length && !coveredByAccount.length) {
                     helpers.addResult(results, 2, `Missing public access blocks: ${combinedMissingBlocks.join(', ')}`, 'global', 'arn:aws:s3:::' + bucket);
                     continue;
                 }
 
-                if (!accountAccessBlocked && missingBlocks.length) {
-                    helpers.addResult(results, 2, `Missing public access blocks: ${missingBlocks.join(', ')}`, 'global', 'arn:aws:s3:::' + bucket);
+                if (combinedMissingBlocks.length && coveredByAccount.length) {
+                    helpers.addResult(results, 2, `Missing public access blocks: ${combinedMissingBlocks.join(', ')}. Account level provides blocks for ${coveredByAccount.join(', ')}`, 'global', 'arn:aws:s3:::' + bucket);
                     continue;
                 }
 
-                if (combinedMissingBlocks.length && missingBlocks.length) {
-                    helpers.addResult(results, 2, `Missing public access blocks: ${combinedMissingBlocks.join(', ')}. Account level provides blocks for ${missingBlocks.join(', ')}`, 'global', 'arn:aws:s3:::' + bucket);
+                if (!combinedMissingBlocks.length && accountAccessBlocked && coveredByAccount.length) {
+                    helpers.addResult(results, 0, `Public access block fully enabled. Account level provides blocks for ${coveredByAccount.join(', ')}`, 'global', 'arn:aws:s3:::' + bucket);
                     continue;
                 }
-
-                if (!combinedMissingBlocks.length && accountAccessBlocked && missingBlocks.length) {
-                    helpers.addResult(results, 0, `Public access block fully enabled. Account level provides blocks for ${missingBlocks.join(', ')}`, 'global', 'arn:aws:s3:::' + bucket);
-                    continue;
-                }
-
 
                 helpers.addResult(results, 0, `Public access block fully enabled`, 'global', 'arn:aws:s3:::' + bucket);
             }

@@ -1,7 +1,7 @@
 var expect = require('chai').expect;
 var bucketPublicAccessBlock = require('./bucketPublicAccessBlock');
 
-const createCache = (BlockPublicAcls, IgnorePublicAcls, BlockPublicPolicy, RestrictPublicBuckets) => {
+const createCache = (BlockPublicAcls, IgnorePublicAcls, BlockPublicPolicy, RestrictPublicBuckets, s3control) => {
     return {
         s3: {
             listBuckets: {
@@ -28,7 +28,9 @@ const createCache = (BlockPublicAcls, IgnorePublicAcls, BlockPublicPolicy, Restr
         },
         sts: {
             getCallerIdentity: {
-                data: '1'
+                'us-east-1': {
+                    data: '1'
+                }
             }
         },
         s3control: {
@@ -36,12 +38,7 @@ const createCache = (BlockPublicAcls, IgnorePublicAcls, BlockPublicPolicy, Restr
                 'us-east-1': {
                     '1': {
                         data: {
-                            PublicAccessBlockConfiguration: {
-                                BlockPublicAcls,
-                                IgnorePublicAcls,
-                                BlockPublicPolicy,
-                                RestrictPublicBuckets,
-                            },
+                            PublicAccessBlockConfiguration: s3control
                         },
                     },
                 },
@@ -151,10 +148,21 @@ const createCacheErrorGetPublicAccessBlock = () => {
     };
 };
 
-describe('bucketPublicAccessBlock', function () {
+describe.only('bucketPublicAccessBlock', function () {
     describe('run', function () {
         it('should PASS if public access block is fully configured', function (done) {
-            const cache = createCache(true, true, true, true);
+            const cache = createCache(
+                                        true, 
+                                        true, 
+                                        true, 
+                                        true,
+                                        {
+                                            BlockPublicAcls: true,
+                                            IgnorePublicAcls: true,
+                                            BlockPublicPolicy: true,
+                                            RestrictPublicBuckets: true, 
+                                        });
+
             bucketPublicAccessBlock.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -189,10 +197,80 @@ describe('bucketPublicAccessBlock', function () {
         });
 
         it('should FAIL if public access block is partially configured', function (done) {
-            const cache = createCache(true, true, false, false);
+            const cache = createCache(
+                                        true, 
+                                        true, 
+                                        false, 
+                                        false,
+                                        {
+                                            BlockPublicAcls: true,
+                                            IgnorePublicAcls: true,
+                                            BlockPublicPolicy: false,
+                                            RestrictPublicBuckets: false, 
+                                        });
             bucketPublicAccessBlock.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                done();
+            });
+        });
+
+        it('should PASS if account level covers everything', function (done) {
+            const cache = createCache(
+                                        true, 
+                                        true, 
+                                        false, 
+                                        false,
+                                        {
+                                            BlockPublicAcls: true,
+                                            IgnorePublicAcls: true,
+                                            BlockPublicPolicy: true,
+                                            RestrictPublicBuckets: true, 
+                                        });
+            bucketPublicAccessBlock.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Account level provides blocks for')
+                done();
+            });
+        });
+
+        it('should PASS if bucket level blocks handle missing account blocks', function (done) {
+            const cache = createCache(
+                                        true, 
+                                        true, 
+                                        false, 
+                                        false,
+                                        {
+                                            BlockPublicAcls: false,
+                                            IgnorePublicAcls: false,
+                                            BlockPublicPolicy: true,
+                                            RestrictPublicBuckets: true, 
+                                        });
+            bucketPublicAccessBlock.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Account level provides blocks for')
+                done();
+            });
+        });
+
+        it('should FAIL if account level does not cover missing blocks on bucket', function (done) {
+            const cache = createCache(
+                                        true, 
+                                        true, 
+                                        false, 
+                                        false,
+                                        {
+                                            BlockPublicAcls: true,
+                                            IgnorePublicAcls: true,
+                                            BlockPublicPolicy: false,
+                                            RestrictPublicBuckets: true, 
+                                        });
+            bucketPublicAccessBlock.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('Missing public access blocks: BlockPublicPolicy. Account level provides blocks for RestrictPublicBuckets')
                 done();
             });
         });
