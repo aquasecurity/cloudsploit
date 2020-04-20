@@ -39,6 +39,7 @@ module.exports = {
     cloudwatchlogs: regions,
     configservice: regions,
     dynamodb: regions,
+    dms: regions,
     ec2: regions,
     ecr: regions,
     eks: ['us-east-1', 'us-east-2', 'us-west-2', 'eu-west-1', 'eu-central-1',

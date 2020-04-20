@@ -4,8 +4,9 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Enable All Organization Features',
     category: 'Organizations',
-    description: 'Ensure all Organization features are enabled',
-    recommended_action: 'Enable all AWS Organizations features',
+    description: 'Ensures all Organization features are enabled',
+    more_info: 'All AWS Organizations should be enabled to take advantage of all shared security controls and policies across all member accounts.',
+    recommended_action: 'Enable all AWS Organizations features.',
     link: 'https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_org_support-all-features.html?icmpid=docs_orgs_console',
     apis: ['Organizations:describeOrganization'],
 

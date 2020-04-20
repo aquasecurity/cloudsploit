@@ -103,6 +103,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    DMS: {
+        describeReplicationInstances: {
+            property: 'ReplicationInstances',
+            paginate: 'Marker'
+        }
+    },
     DynamoDB: {
         listTables: {
             property: 'TableNames',

@@ -17,7 +17,7 @@ module.exports = {
     },
 
     run: function (cache, settings, callback) {
-        const configuration = {
+        const config = {
             latestPythonVersion: settings.latestPythonVersion || this.settings.latestPythonVersion.default
         };
 

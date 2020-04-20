@@ -5,7 +5,8 @@ module.exports = {
     title: 'EBS Volume Snapshot Public',
     category: 'EC2',
     description: 'Ensures EBS volume snapshots are private',
-    more_info: '',
+    more_info: 'EBS volumes often contain sensitive data from running EC2 instances and should be set to private so they cannot be accidentally shared with other accounts.',
+    recommended_action: 'Ensure that each EBS snapshot has its permissions set to private.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-modifying-snapshot-permissions.html',
     apis: ['Support:describeTrustedAdvisorChecks', 'Support:describeTrustedAdvisorCheckResult'],
 

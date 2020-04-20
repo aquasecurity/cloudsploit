@@ -5,6 +5,7 @@ module.exports = {
     title: 'Organization Invite',
     category: 'Organizations',
     description: 'Ensure all Organization invites are accepted',
+    more_info: 'AWS Organizations invites should be accepted or rejected quickly so that member accounts can take advantage of all Organization features.',
     recommended_action: 'Enable all AWS Organizations features',
     link: 'https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_org_support-all-features.html?icmpid=docs_orgs_console',
     apis: ['Organizations:listHandshakesForAccount'],
