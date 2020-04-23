@@ -11,8 +11,8 @@ module.exports = {
     apis: ['ES:listDomainNames', 'ES:describeElasticsearchDomain'],
     settings: {
         allow_es_public_endpoint_if_ip_condition_policy: {
-            name: 'Allow Public Only If Ip Condition Policy',
-            description: 'Allows public ElasticSearch endpoints if set to true and if there is an Ip Condition policy',
+            name: 'Allow Public Only If Ip Condition Policy or Restricted Principal.',
+            description: 'Allows public ElasticSearch endpoints if set to true and if there is an Ip Condition policy and/or a resitricted non-star principal.',
             default: false
         },
     },
