@@ -56,15 +56,24 @@ module.exports = {
                     var localDomain = describeElasticsearchDomain.data.DomainStatus;
 
                     var policies = helpers.normalizePolicyDocument(localDomain.AccessPolicies);
-                    var containsIpPolicy = false;
+                    var validPolicy = true;
 
-                    for (p in policies) {
-                        var policy = policies[p]
-                        if (policy.Condition && policy.Condition.IpAddress) {
-                            containsIpPolicy = true;
+                    if(!policies) {
+                        validPolicy = false
+                    } else {
+                        for (p in policies) {
+                            var policy = policies[p]
+                            containsIpPolicy = false;
+                            if (policy.Condition && policy.Condition.IpAddress) {
+                                containsIpPolicy = true;
+                            }
+                            if(!containsIpPolicy) {
+                                if(helpers.globalPrincipal(policy.Principal)) {
+                                    validPolicy = false;
+                                }
+                            }
                         }
                     }
-                    
 
                     if (localDomain.VPCOptions &&
                         localDomain.VPCOptions.VPCId &&
@@ -72,17 +81,18 @@ module.exports = {
                         helpers.addResult(results, 0,
                             'ES domain is configured to use a VPC endpoint', region, localDomain.ARN);
                     } else {
-                        if (containsIpPolicy && config.allow_es_public_endpoint_if_ip_condition_policy) {
-                            helpers.addResult(results, 0,
-                                'ES domain is configured to use a public endpoint, but contains an IP Condition policy', region, localDomain.ARN);
-                        } else if (!containsIpPolicy && config.allow_es_public_endpoint_if_ip_condition_policy) {
-                            helpers.addResult(results, 2,
-                                'ES domain is configured to use a public endpoint, and does not have an IP condition policy', region, localDomain.ARN); 
+                        if(config.allow_es_public_endpoint_if_ip_condition_policy) {
+                            if(validPolicy) {
+                                helpers.addResult(results, 0,
+                                    'ES domain is configured to use a public endpoint, but is allowed with a valid policy.', region, localDomain.ARN);
+                            } else {
+                                helpers.addResult(results, 2,
+                                    'ES domain is configured to use a public endpoint but does not have a valid policy.', region, localDomain.ARN);
+                            }
                         } else {
                             helpers.addResult(results, 2,
-                                'ES domain is configured to use a public endpoint', region, localDomain.ARN);
+                                'ES domain is configured to use a public endpoint.', region, localDomain.ARN);
                         }
-
                     }
                 }
             });
