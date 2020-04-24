@@ -12,9 +12,9 @@ module.exports = {
     settings: {
         allow_es_public_endpoint_if_ip_condition_policy: {
             name: 'Allow Public Only If Ip Condition Policy or Restricted Principal.',
-            description: 'Allows public ElasticSearch endpoints if set to true and if there is an Ip Condition policy and/or a resitricted non-star principal.',
+            description: 'Allows public ElasticSearch endpoints if set to true and if there is an Ip Condition policy and/or a restricted non-star principal.',
             regex: '^(true|false)$',
-            default: false
+            default: "false"
         },
     },
 
@@ -23,6 +23,8 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
         var config = {allow_es_public_endpoint_if_ip_condition_policy: settings.allow_es_public_endpoint_if_ip_condition_policy || this.settings.allow_es_public_endpoint_if_ip_condition_policy.default};
+
+        config.allow_es_public_endpoint_if_ip_condition_policy = (config.allow_es_public_endpoint_if_ip_condition_policy === 'true' || config.allow_es_public_endpoint_if_ip_condition_policy === true);
 
         async.each(regions.es, function (region, rcb) {
             var listDomainNames = helpers.addSource(cache, source,
@@ -56,18 +58,17 @@ module.exports = {
                 } else {
                     var localDomain = describeElasticsearchDomain.data.DomainStatus;
 
-                    var policies = helpers.normalizePolicyDocument(localDomain.AccessPolicies);
+                    // assume we have no bad policies
                     var validPolicy = true;
 
-                    if(!config.allow_es_public_endpoint_if_ip_condition_policy || !policies) {
-                        validPolicy = false
-                    } else {
+                    if(config.allow_es_public_endpoint_if_ip_condition_policy) { // evaluate policies if the setting is enabled.
+                        var policies = helpers.normalizePolicyDocument(localDomain.AccessPolicies);
+                        if (!policies) policies = [] // if no policy document then no statements
+
                         for (p in policies) {
                             var policy = policies[p]
-                            containsIpPolicy = false;
-                            if (policy.Condition && policy.Condition.IpAddress) {
-                                containsIpPolicy = true;
-                            }
+                            containsIpPolicy = policy.Condition && policy.Condition.IpAddress;
+
                             if(!containsIpPolicy && helpers.globalPrincipal(policy.Principal)) {
                                 validPolicy = false;
                             }
@@ -83,10 +84,10 @@ module.exports = {
                         if(config.allow_es_public_endpoint_if_ip_condition_policy) {
                             if(validPolicy) {
                                 helpers.addResult(results, 0,
-                                    'ES domain is configured to use a public endpoint, but is allowed with a valid policy.', region, localDomain.ARN);
+                                    'ES domain is configured to use a public endpoint, but is allowed since there are no public access policies.', region, localDomain.ARN);
                             } else {
                                 helpers.addResult(results, 2,
-                                    'ES domain is configured to use a public endpoint but does not have a valid policy.', region, localDomain.ARN);
+                                    'ES domain is configured to use a public endpoint and has disallowed public access policies.', region, localDomain.ARN);
                             }
                         } else {
                             helpers.addResult(results, 2,

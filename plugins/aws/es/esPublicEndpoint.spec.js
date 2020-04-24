@@ -99,11 +99,11 @@ describe('esPublicEndpoint', function () {
       es.run(cache, {}, callback);
     })
 
-    it('should give error result if ES VPC config is disabled without access policy and setting set to true ', function (done) {
+    it('should give passing result if ES VPC config is disabled with no access policy and setting set to true ', function (done) {
       const callback = (err, results) => {
         expect(results.length).to.equal(1)
-        expect(results[0].status).to.equal(2)
-        expect(results[0].message).to.include('ES domain is configured to use a public endpoint but does not have a valid policy.')
+        expect(results[0].status).to.equal(0)
+        expect(results[0].message).to.include('ES domain is configured to use a public endpoint, but is allowed since there are no public access policies.')
         done()
       };
 
@@ -239,7 +239,7 @@ describe('esPublicEndpoint', function () {
       const callback = (err, results) => {
         expect(results.length).to.equal(1)
         expect(results[0].status).to.equal(0)
-        expect(results[0].message).to.include('ES domain is configured to use a public endpoint, but is allowed with a valid policy.')
+        expect(results[0].message).to.include('ES domain is configured to use a public endpoint, but is allowed since there are no public access policies.')
         done()
       };
 
@@ -380,7 +380,7 @@ describe('esPublicEndpoint', function () {
       const callback = (err, results) => {
         expect(results.length).to.equal(1)
         expect(results[0].status).to.equal(2)
-        expect(results[0].message).to.include('ES domain is configured to use a public endpoint but does not have a valid policy.')
+        expect(results[0].message).to.include('ES domain is configured to use a public endpoint and has disallowed public access policies.')
         done()
       };
 
@@ -496,7 +496,7 @@ describe('esPublicEndpoint', function () {
       const callback = (err, results) => {
         expect(results.length).to.equal(1)
         expect(results[0].status).to.equal(0)
-        expect(results[0].message).to.include('ES domain is configured to use a public endpoint, but is allowed with a valid policy.')
+        expect(results[0].message).to.include('ES domain is configured to use a public endpoint, but is allowed since there are no public access policies.')
         done()
       };
 
