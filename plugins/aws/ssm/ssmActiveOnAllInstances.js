@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Install SSM on all servers and ensure it is active.',
     apis: ['EC2:describeInstances', 'SSM:describeInstanceInformation', 'STS:getCallerIdentity'],
     settings: {
-        ssm_agent_threshold : {
+        ssm_agent_threshold: {
             name: 'Threshold for EC2 SSM individual reporting.',
             description: 'Sets the value where EC2 instance reporting becomes aggregated once breached.',
             regex: '^[0-9]*$',
@@ -28,7 +28,7 @@ module.exports = {
         var threshold = settings.ssm_agent_threshold || this.settings.ssm_agent_threshold.default
 
         if(typeof threshold === "string") {
-            threshold.match(this.ssm_agent_threshold.regex)
+            threshold.match(this.settings.ssm_agent_threshold.regex)
             threshold = parseInt(threshold)
         }
 
@@ -65,11 +65,6 @@ module.exports = {
 
             if (!instanceList.length) {
                 helpers.addResult(results, 0, 'No EC2 instances found', region);
-                return rcb();
-            }
-
-            if (!describeInstanceInformation.data.length) {
-                helpers.addResult(results, 2, 'No SSM installations found on any of ' + instanceList.length + ' instances', region);
                 return rcb();
             }
 
