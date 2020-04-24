@@ -23,7 +23,7 @@ const createCache = (listData, descData) => {
     }
 };
 
-describe.only('esPublicEndpoint', function () {
+describe('esPublicEndpoint', function () {
   describe('run', function () {
     it('should give passing result if no ES domains present with no settings.', function (done) {
       const callback = (err, results) => {
