@@ -107,6 +107,10 @@ if(process.env.GOOGLE_PROJECT_ID && process.env.GOOGLE_API_KEY){
         region: process.env.GOOGLE_DEFAULT_REGION || 'us-east1'
     };
 }
+if(process.env.GOOGLE_APPLICATION_CREDENTIALS){
+    GoogleConfig = require(process.env.GOOGLE_APPLICATION_CREDENTIALS)
+    GoogleConfig.project = GoogleConfig.project_id;
+}
 
 // Custom settings - place plugin-specific settings here
 var settings = {};
