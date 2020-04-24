@@ -108,7 +108,7 @@ if(process.env.GOOGLE_PROJECT_ID && process.env.GOOGLE_API_KEY){
     };
 }
 if(process.env.GOOGLE_APPLICATION_CREDENTIALS){
-    GoogleConfig = require(process.env.GOOGLE_APPLICATION_CREDENTIALS)
+    GoogleConfig = require(process.env.GOOGLE_APPLICATION_CREDENTIALS);
     GoogleConfig.project = GoogleConfig.project_id;
 }
 
