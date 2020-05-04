@@ -12,7 +12,9 @@ module.exports = {
     settings: {
         tag: {
             name: 'Management Lock Tag',
-            default: 'cloudsploitLock'
+            description: 'This tag will be required to indicate that the management lock is enabled.',
+            default: 'cloudsploitLock',
+            regex: '^.{2,125}$'
         }
     },
     run: function (cache, settings, callback) {

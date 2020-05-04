@@ -24,9 +24,9 @@ module.exports = {
         }
 
         if (describeOrganization.data.FeatureSet !== 'ALL') {
-            helpers.addResult(results, 2, 'Not all Organization features are enabled', 'global', describeOrganization.data.Id);
+            helpers.addResult(results, 2, 'Not all Organization features are enabled', 'global', describeOrganization.data.MasterAccountArn);
         } else {
-            helpers.addResult(results, 0, 'All Organization features are enabled', 'global', describeOrganization.data.Id);
+            helpers.addResult(results, 0, 'All Organization features are enabled', 'global', describeOrganization.data.MasterAccountArn);
         }
 
         callback(null, results, source);

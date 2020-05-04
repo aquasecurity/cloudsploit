@@ -111,7 +111,7 @@ class AzureExecutor {
                     if (results && results.error==true){
                         var err=results;
                         callback(err, null);
-                    } else if (results && results.error==false){
+                    } else if (results && results.error==false && results.length){
                         results.forEach((result) => {
                           if (result.locations) {
                             result.location = result.locations[0];
@@ -119,6 +119,16 @@ class AzureExecutor {
                         });
 
                         callback(null, results);
+                    } else if (results && results.value) {
+                        results.value.forEach((result) => {
+                            if (result.locations) {
+                                result.location = result.locations[0];
+                            }
+                        });
+
+                        callback(null, results.value);
+                    } else {
+                        callback()
                     }
                 });
             }

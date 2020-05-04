@@ -9,10 +9,17 @@ module.exports = {
     recommended_action: 'Enable CMK KMS-based encryption for all S3 buckets.',
     link: 'https://docs.aws.amazon.com/AmazonS3/latest/dev/bucket-encryption.html',
     apis: ['S3:listBuckets', 'S3:getBucketEncryption', 'KMS:listKeys', 'KMS:describeKey', 'KMS:listAliases', 'CloudFront:listDistributions'],
+    remediation_description: 'The impacted bucket will be configured to use either AES-256 encryption, or CMK-based encryption if a KMS key ID is provided.',
     apis_remediate: ['S3:listBuckets', 'S3:getBucketEncryption', 'S3:getBucketLocation'],
     apis_compare: ['S3:getBucketEncryption'],
-    actions: {remediate:'S3:putBucketEncryption', rollback:'S3:deleteBucketEncryption'},
-    permissions: {remediate:'s3:PutEncryptionConfiguration', rollback:'s3:PutEncryptionConfiguration'},
+    actions: {
+        remediate: ['S3:putBucketEncryption'],
+        rollback: ['S3:deleteBucketEncryption']
+    },
+    permissions: {
+        remediate: ['s3:PutEncryptionConfiguration'],
+        rollback: ['s3:PutEncryptionConfiguration']
+    },
     settings: {
         s3_encryption_require_cmk: {
             name: 'S3 Encryption Require CMK',
@@ -321,24 +328,27 @@ module.exports = {
         }
 
         var remediation_file = settings.remediation_file;
-        remediation_file['scans'][pluginName][resources] = {
+
+        remediation_file['pre_remediate']['actions'][pluginName][resources] = {
             'Encryption': 'Disabled',
             'Bucket': bucketName
         };
 
         // passes the config, put call, and params to the remediate helper function
-        helpers.remediatePlugin(config, putCall, params, function (err, results) {
+        helpers.remediatePlugin(config, putCall[0], params, function (err, results) {
             if (err) {
-                remediation_file['remediations'][pluginName]['error'] = err;
-
+                remediation_file['remediate']['actions'][pluginName]['error'] = err;
                 return callback(err, null);
             }
 
             let action = params;
-            action.remediate = putCall;
+            action.action = putCall;
 
-            remediation_file['remediations'][pluginName][resources] = action;
-            remediation_file['remediations'][pluginName]['action'] = 'ENCRYPTED';
+            remediation_file['post_remediate']['actions'][pluginName][resources] = action;
+            remediation_file['remediate']['actions'][pluginName][resources] = {
+                'Action': 'ENCRYPTED',
+                'Bucket': bucketName
+            };
             settings.remediation_file = remediation_file;
             return callback(null, action);
         });

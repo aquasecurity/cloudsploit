@@ -22,7 +22,9 @@ module.exports = {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
+        
         var logProfile;
+        var unknownFound;
         
         for (var location of locations.logProfiles) {
 
@@ -32,11 +34,12 @@ module.exports = {
             if (!logProfiles) continue;
 
             if (logProfiles.err || !logProfiles.data) {
+                unknownFound = true;
                 helpers.addResult(results, 3,
-                'Unable to query Log Profiles: ' + helpers.addError(logProfiles), location);
+                    'Unable to query Log Profiles: ' + helpers.addError(logProfiles), location);
                 continue;
             }
-                
+
             if (!logProfiles.data.length) {
                 continue;
             } else {
@@ -44,6 +47,8 @@ module.exports = {
                 break;
             }
         }
+
+        if (!logProfile && unknownFound) return callback(null, results, source);
         
         async.each(locations.logProfiles, (loc, lcb) => {
             if (!logProfile) return lcb();

@@ -17,40 +17,14 @@ module.exports = {
 
         async.each(locations.activityLogAlerts, function (location, rcb) {
 
-            var activityAlerts = helpers.addSource(cache, source, 
+            var conditionResource = 'microsoft.security/policies';
+
+            var text = "Security Policy";
+
+            var activityLogAlerts = helpers.addSource(cache, source,
                 ['activityLogAlerts', 'listBySubscriptionId', location]);
 
-            if (!activityAlerts) return rcb();
-
-            if (activityAlerts.err || !activityAlerts.data) {
-                helpers.addResult(results, 3, 
-                    'Unable to query for Activity Alerts: ' + helpers.addError(activityAlerts), location);
-                return rcb();
-            }
-            if (!activityAlerts.data.length) {
-                helpers.addResult(results, 2, 'No existing Activity Alerts found', location);
-            }
-            var alertExists = false;
-            activityAlerts.data.forEach(activityAlert => {                
-                let conditionList = (activityAlert && 
-                    activityAlert.condition && 
-                    activityAlert.condition.allOf) ?
-                    activityAlert.condition.allOf : [];
-
-                conditionList.forEach(condition => {
-                    if (condition.equals && 
-                        condition.equals.indexOf("microsoft.security/policies/write") > -1 &&
-                        !alertExists) {
-                        helpers.addResult(results, 0, 
-                            'Log alert for Security Policy write exists', location, activityAlert.id);
-                        alertExists = true;
-                    };
-                });
-            });
-            if (!alertExists) {
-                helpers.addResult(results, 2, 
-                    'Log alert for Security Policy write does not exist', location);
-            };
+            helpers.checkLogAlerts(activityLogAlerts, conditionResource, text, results, location);
             
             rcb();
         }, function () {

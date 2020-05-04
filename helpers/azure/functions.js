@@ -94,7 +94,7 @@ function checkPolicyAssignment(policyAssignments, param, text, results, location
     if (policyAssignment.parameters &&
         policyAssignment.parameters[param] &&
         policyAssignment.parameters[param].value &&
-        policyAssignment.parameters[param].value == 'AuditIfNotExists') {
+        (policyAssignment.parameters[param].value == 'AuditIfNotExists' || policyAssignment.parameters[param].value == 'Audit')) {
         shared.addResult(results, 0,
             text + ' is enabled', location, policyAssignment.id);
     } else {
@@ -103,7 +103,79 @@ function checkPolicyAssignment(policyAssignments, param, text, results, location
     }
 }
 
+function checkLogAlerts(activityLogAlerts, conditionResource, text, results, location) {
+    if (!activityLogAlerts) return;
+
+    if (activityLogAlerts.err || !activityLogAlerts.data) {
+        shared.addResult(results, 3,
+            'Unable to query for Activity Alerts: ' + shared.addError(activityLogAlerts), location);
+        return;
+    }
+
+    if (!activityLogAlerts.data.length) {
+        shared.addResult(results, 2, 'No existing Activity Alerts found', location);
+        return;
+    }
+
+    let alertCreateUpdateEnabled = false;
+    let alertDeleteEnabled = false;
+    let alertCreateDeleteEnabled = false;
+    let subscriptionId;
+
+    for (let res in activityLogAlerts.data) {
+        const activityLogAlertResource = activityLogAlerts.data[res];
+        subscriptionId = "/subscriptions/" + activityLogAlertResource.id.split('/')[2];
+
+        if (activityLogAlertResource.type &&
+            activityLogAlertResource.type.toLowerCase() !== 'Microsoft.Insights/ActivityLogAlerts'.toLowerCase()) continue;
+
+        const allConditions = activityLogAlertResource.condition;
+
+        if (!allConditions || !allConditions.allOf || !allConditions.allOf.length) continue;
+
+
+        var conditionOperation = allConditions.allOf.filter((d) => {
+            return (d.equals && d.equals.toLowerCase().indexOf(conditionResource) > -1);
+        });
+        if (conditionOperation && conditionOperation.length) {
+            allConditions.allOf.forEach(condition => {
+                if (condition.field && (condition.field === 'resourceType') && (condition.equals && (condition.equals.toLowerCase() === conditionResource))) {
+                    alertCreateDeleteEnabled = (!alertCreateDeleteEnabled && activityLogAlertResource.enabled ? true : alertCreateDeleteEnabled);
+                } else if (condition.equals.toLowerCase().indexOf(conditionResource + "/write") > -1) {
+                    alertCreateUpdateEnabled = (!alertCreateUpdateEnabled && activityLogAlertResource.enabled ? true : alertCreateUpdateEnabled);
+                } else
+                if (condition.equals.toLowerCase().indexOf(conditionResource + "/delete") > -1) {
+                    alertDeleteEnabled = (!alertDeleteEnabled && activityLogAlertResource.enabled ? true : alertDeleteEnabled);
+                }
+            })
+        }
+    }
+
+    if ((alertCreateDeleteEnabled && alertDeleteEnabled && alertCreateUpdateEnabled) ||
+        (alertCreateUpdateEnabled && alertDeleteEnabled) ||
+        (alertCreateDeleteEnabled && !alertDeleteEnabled && !alertCreateUpdateEnabled)) {
+        shared.addResult(results, 0,
+            `Log Alert for ${text} write and delete is enabled`, location, subscriptionId);
+    } else if ((alertCreateDeleteEnabled && alertDeleteEnabled) ||
+        (alertDeleteEnabled && !alertCreateUpdateEnabled && !alertCreateDeleteEnabled)) {
+        shared.addResult(results, 0,
+            `Log alert for ${text} delete is enabled`, location, subscriptionId);
+        shared.addResult(results, 2,
+            `Log alert for ${text} write is not enabled`, location, subscriptionId);
+    } else if ((alertCreateDeleteEnabled && alertCreateUpdateEnabled) ||
+        (alertCreateUpdateEnabled && !alertCreateDeleteEnabled && !alertDeleteEnabled)) {
+        shared.addResult(results, 0,
+            `Log alert for ${text} write is enabled`, location, subscriptionId);
+        shared.addResult(results, 2,
+            `Log Alert for ${text} delete is not enabled`, location, subscriptionId);
+    } else {
+        shared.addResult(results, 2,
+            `Log Alert for ${text} write and delete is not enabled`, location, subscriptionId);
+    }
+}
+
 module.exports = {
     findOpenPorts: findOpenPorts,
-    checkPolicyAssignment: checkPolicyAssignment
+    checkPolicyAssignment: checkPolicyAssignment,
+    checkLogAlerts: checkLogAlerts
 };

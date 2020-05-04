@@ -49,6 +49,7 @@ module.exports = {
         'openPostgreSQL'                : require(__dirname + '/plugins/aws/ec2/openPostgreSQL.js'),
         'openRDP'                       : require(__dirname + '/plugins/aws/ec2/openRDP.js'),
         'openRPC'                       : require(__dirname + '/plugins/aws/ec2/openRPC.js'),
+        'openSalt'                      : require(__dirname + '/plugins/aws/ec2/openSalt.js'),
         'openSMBoTCP'                   : require(__dirname + '/plugins/aws/ec2/openSMBoTCP.js'),
         'openSMTP'                      : require(__dirname + '/plugins/aws/ec2/openSMTP.js'),
         'openSQLServer'                 : require(__dirname + '/plugins/aws/ec2/openSQLServer.js'),
@@ -88,7 +89,11 @@ module.exports = {
         'elbHttpsOnly'                  : require(__dirname + '/plugins/aws/elb/elbHttpsOnly.js'),
         'elbLoggingEnabled'             : require(__dirname + '/plugins/aws/elb/elbLoggingEnabled.js'),
         'elbNoInstances'                : require(__dirname + '/plugins/aws/elb/elbNoInstances.js'),
-        'elbWafEnabled'                 : require(__dirname + '/plugins/aws/elb/elbWafEnabled.js'),
+
+        'elbv2LoggingEnabled'             : require(__dirname + '/plugins/aws/elbv2/elbv2LoggingEnabled.js'),
+        'elbv2HttpsOnly'                  : require(__dirname + '/plugins/aws/elbv2/elbv2HttpsOnly.js'),
+        'elbv2NoInstances'                : require(__dirname + '/plugins/aws/elbv2/elbv2NoInstances.js'),
+        'elbv2WafEnabled'                 : require(__dirname + '/plugins/aws/elbv2/elbv2WafEnabled.js'),
 
         'esPublicEndpoint'              : require(__dirname + '/plugins/aws/es/esPublicEndpoint.js'),
         'esEncryptedDomain'             : require(__dirname + '/plugins/aws/es/esEncryptedDomain.js'),
@@ -286,6 +291,7 @@ module.exports = {
         'openNetBIOS'                   : require(__dirname + '/plugins/azure/networksecuritygroups/openNetBIOS.js'),
         'openPostgreSQL'                : require(__dirname + '/plugins/azure/networksecuritygroups/openPostgreSQL.js'),
         'openRPC'                       : require(__dirname + '/plugins/azure/networksecuritygroups/openRPC.js'),
+        'openSalt'                      : require(__dirname + '/plugins/azure/networksecuritygroups/openSalt.js'),
         'openSMBoTCP'                   : require(__dirname + '/plugins/azure/networksecuritygroups/openSMBoTCP.js'),
         'openSQLServer'                 : require(__dirname + '/plugins/azure/networksecuritygroups/openSQLServer.js'),
 
@@ -442,6 +448,7 @@ module.exports = {
         'openPostgreSQL'                : require(__dirname + '/plugins/google/vpcnetwork/openPostgreSQL.js'),
         'openRDP'                       : require(__dirname + '/plugins/google/vpcnetwork/openRDP.js'),
         'openRPC'                       : require(__dirname + '/plugins/google/vpcnetwork/openRPC.js'),
+        'openSalt'                      : require(__dirname + '/plugins/google/vpcnetwork/openSalt.js'),
         'openSMBoTCP'                   : require(__dirname + '/plugins/google/vpcnetwork/openSMBoTCP.js'),
         'openSMTP'                      : require(__dirname + '/plugins/google/vpcnetwork/openSMTP.js'),
         'openSQLServer'                 : require(__dirname + '/plugins/google/vpcnetwork/openSQLServer.js'),

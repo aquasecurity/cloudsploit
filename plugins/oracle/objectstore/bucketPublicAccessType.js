@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Object store buckets can be configured to allow anyone, regardless of whether they are an Oracle cloud user or not, to write objects to a bucket or delete objects. This option should not be configured unless there is a strong business requirement.',
     recommended_action: 'Disable global all users policies on all object store buckets and ensure the bucket is configured with the least privileges.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Object/Tasks/managingbuckets.htm',
-    apis: ['bucket:list', 'bucket:get'],
+    apis: ['namespace:get','bucket:list', 'bucket:get'],
     compliance: {
         pci: 'PCI requires that cardholder data can only be accessed by those with ' +
             'a legitimate business need. If PCI-restricted data is stored in Object Store, ' +
@@ -31,17 +31,12 @@ module.exports = {
 
                 if (!getBucket) return rcb();
 
-                if ((getBucket.err &&
-                        getBucket.err.length &&
-                        getBucket.err.length) || !getBucket.data) {
-
+                if ((getBucket.err && getBucket.err.length) || !getBucket.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for object store bucket details: ' + helpers.addError(getBucket), region);
-
                 } else if (!getBucket.data.length) {
                     helpers.addResult(results, 0, 'No object store bucket details to check', region);
                 } else {
-
                     var bucketIssues = [];
 
                     getBucket.data.forEach(function (bucket) {

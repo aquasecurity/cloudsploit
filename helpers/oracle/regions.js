@@ -53,5 +53,6 @@ module.exports = {
     preAuthenticatedRequest: regions,
     configuration: ['us-ashburn-1'],
     dbSystem: regions,
-    mountTarget: regions
+    mountTarget: regions,
+    namespace: regions
 };

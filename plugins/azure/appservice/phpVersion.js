@@ -12,7 +12,9 @@ module.exports = {
     settings: {
         latestPhpVersion: {
             name: 'Latest PHP Version',
-            default: 7.3
+            default: 7.3,
+            description: 'The latest PHP version supported by Azure App Service.',
+            regex: '[0-9.]{2,5}'
         }
     },
     run: function (cache, settings, callback) {

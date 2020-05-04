@@ -13,42 +13,9 @@ module.exports = {
     run: function (cache, settings, callback) {
         const results = [];
         const source = {};
-        const locations = helpers.locations(settings.govcloud);
 
         let resourceLocationPolicyAssignment = {};
-        let allowedLocations = [];
-
-        let resourceGroups = [];
-
-        let resourceLocationsNotMatched = '';
-
-        function getResourceGroup(resource){
-            let resourceGroupInitIndex = resource.id.indexOf('/resourceGroups/') > -1 ? resource.id.indexOf('/resourceGroups/') : resource.id.indexOf('/resourcegroups/');
-            var resourceGroupIndex = resourceGroupInitIndex + '/resourceGroups/'.length;
-            var resourceGroupEndIndex = resource.id.indexOf('/', resourceGroupIndex);
-            var resourceGroupName = resource.id.substring(resourceGroupIndex, resourceGroupEndIndex);
-            var resourceGroupId = resource.id.substring(0, resourceGroupEndIndex);
-
-            resource.resourceGroupName = resourceGroupName;
-            resource.resourceGroupId = resourceGroupId;
-        }
-
-        function getResourceGroupLocation(resource) {
-            return resourceGroups.find((resourceGroup) => {
-                return resourceGroup.name.toLowerCase()==resource.resourceGroupName.toLowerCase();
-            });
-        }
-
-        for (location in locations.resourceGroups) {
-            let resourceGroupsList = helpers.addSource(cache, source, ['resourceGroups', 'list', locations.resourceGroups[location]]);
-            if (resourceGroupsList &&
-                resourceGroupsList.data &&
-                resourceGroupsList.data.length > 0) {
-                for (r in resourceGroupsList.data){
-                    resourceGroups.push(resourceGroupsList.data[r]);
-                }
-            }
-        }
+        const policyDefinitionId = '/providers/Microsoft.Authorization/policyDefinitions/0a914e76-4921-4c19-b460-a2d36003525a';
 
         const policyAssignments = helpers.addSource(cache, source,
             ['policyAssignments', 'list', 'global']);
@@ -66,37 +33,15 @@ module.exports = {
             return callback();
         }
 
-        if (policyAssignments &&
-            policyAssignments.data) {
-            resourceLocationPolicyAssignment = policyAssignments.data.find((policyAssignment) => {
-                if (policyAssignment.displayName) return policyAssignment.displayName.includes("Audit resource location matches resource group location");
-            });
-        }
 
-        if (resourceLocationPolicyAssignment) {
-            for (location in locations.resources) {
-                let resources = helpers.addSource(cache, source, ['resources', 'list', locations.resources[location]]);
+        resourceLocationPolicyAssignment = policyAssignments.data.find((policyAssignment) => {
+            if (policyAssignment.policyDefinitionId) return (policyAssignment.policyDefinitionId === policyDefinitionId)
+        });
 
-                if (resources &&
-                    resources.data &&
-                    resources.data.length > 0) {
-                    for (r in resources.data) {
-                        getResourceGroup(resources.data[r]);
-                        var resG = getResourceGroupLocation(resources.data[r]);
-                        resources.data[r].resourceGroupLocation = resG.location;
-                        if (resources.data[r].resourceGroupLocation != resources.data[r].location && resources.data[r].location!='global') {
-                            helpers.addResult(results, 2,
-                                "The resource: " + resources.data[r].name + " is located at: " + resources.data[r].location + " not matching the resource group: " + resources.data[r].resourceGroupName + " located at: " + resources.data[r].resourceGroupLocation, resources.data[r].location, resources.data[r].id);
-                        } else if (resources.data[r].location!='global') {
-                            helpers.addResult(results, 0,
-                                "The resource: " + resources.data[r].name + " is located at: " + resources.data[r].location + " matching the resource group location", resources.data[r].location, resources.data[r].id);
-                        }
-                    }
-                }
-            }
 
+        if (resourceLocationPolicyAssignment && Object.keys(resourceLocationPolicyAssignment).length) {
             helpers.addResult(results, 0,
-                'The policy to audit matching resource location to resource group location is assigned', 'global');
+                'The policy to audit matching resource location to resource group location is assigned', 'global', resourceLocationPolicyAssignment.id);
         } else {
             helpers.addResult(results, 2,
                 'No existing assignment for the resource location matches resource group location policy', 'global');

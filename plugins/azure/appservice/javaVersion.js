@@ -12,7 +12,9 @@ module.exports = {
     settings: {
         latestJavaVersion: {
             name: 'Latest Java Version',
-            default: 1.8
+            default: 1.8,
+            description: 'The latest Java version supported by Azure App Service.',
+            regex: '[0-9.]{2,5}'
         }
     },
 

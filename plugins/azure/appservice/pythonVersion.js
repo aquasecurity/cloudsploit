@@ -12,7 +12,9 @@ module.exports = {
     settings: {
         latestPythonVersion: {
             name: 'Latest Python Version',
-            default: 3.6
+            default: 3.6,
+            description: 'The latest Python version supported by Azure App Service.',
+            regex: '[0-9.]{2,5}'
         }
     },
 

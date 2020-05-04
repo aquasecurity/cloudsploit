@@ -36,9 +36,16 @@ module.exports = {
             }
 
             if (!virtualMachines.data.length) {
-                helpers.addResult(results, 0, 'No existing Virtual Machines found', location);
+                helpers.addResult(results, 0, 'No Virtual Machines found', location);
             } else {
                 for(i in virtualMachines.data){
+                    if (virtualMachines.data[i].storageProfile &&
+                        virtualMachines.data[i].storageProfile.imageReference &&
+                        virtualMachines.data[i].storageProfile.imageReference.offer &&
+                        virtualMachines.data[i].storageProfile.imageReference.offer.toLowerCase().indexOf('windowsserver') > -1) {
+                        helpers.addResult(results, 0, 'The Microsoft VM does not offer endpoint protection', location, virtualMachines.data[i].id);
+                        continue;
+                    }
                     if (virtualMachines.data[i]) {
                         VMs.push({
                             'vmId': (virtualMachines.data[i].id ? virtualMachines.data[i].id : 'VM Id Not Found'),
@@ -47,7 +54,9 @@ module.exports = {
                         });
                     }
                 }
-
+                if (!VMs.length) {
+                    return rcb();
+                }
                 var virtualMachineExtensions = helpers.addSource(cache, source, ['virtualMachineExtensions', 'list', location]);
 
                 var IaaSAntimalware = [];
@@ -61,14 +70,13 @@ module.exports = {
                 if (!virtualMachineExtensions.data.length) {
                     helpers.addResult(results, 2, 'No VM Extensions found', location);
                 } else {
-                    for(var vm in virtualMachineExtensions.data){
+                    for (var vm in virtualMachineExtensions.data) {
                         if (virtualMachineExtensions.data[vm]) {
                             var virtualMachine = virtualMachineExtensions.data[vm];
-                            for(var ext in virtualMachine.value) {
+                            for (var ext in virtualMachine.value) {
                                 var extension = virtualMachine.value[ext];
                                 if (extension.name &&
-                                    extension.name.search("IaaSAntimalware") > -1
-                                ) {
+                                    extension.name.search("IaaSAntimalware") > -1) {
                                     IaaSAntimalware.push({
                                         'extId': (extension.id ? extension.id : 'Ext Id Not Found'),
                                         'extName': (extension.name ? extension.name : 'Ext Name Not Found'),
@@ -90,17 +98,14 @@ module.exports = {
                     }
                 }
 
-                var reg = 0;
                 for(i in VMs){
-                    if(!VMs[i].protected){
+                    if(VMs[i].protected){
+                        helpers.addResult(results, 0, 'Endpoint protection is installed on the virtual machine', location, VMs[i].vmId);
+                    } else {
                         helpers.addResult(results, 2, 'Endpoint protection is not installed on this virtual machine', location, VMs[i].vmId);
-                        reg++;
                     }
                 }
 
-                if(!reg){
-                    helpers.addResult(results, 0, 'Endpoint protection is installed on all virtual machines', location);
-                }
             }
 
             rcb();

@@ -65,12 +65,6 @@ var calls = {
             arm: true
         }
     },
-    activityLogAlerts: {
-        listBySubscriptionId: {
-            api: "MonitorManagementClient",
-            arm: true
-        }
-    },
     vaults: {
         list: {
             api: "KeyVaultManagementClient",
@@ -205,7 +199,14 @@ var calls = {
             arm: true,
             ascLoc: true
         }
-    }
+    },
+    diagnosticSettingsOperations: {
+        list: {
+            api: "MonitorManagementClient",
+            arm: true,
+            subscription: true
+        }
+    },
 };
 
 var postcalls = {
@@ -233,16 +234,6 @@ var postcalls = {
     autoscaleSettings: {
         listByResourceGroup: {
             api: "MonitorManagementClient",
-            reliesOnService: ['resourceGroups'],
-            reliesOnCall: ['list'],
-            filterKey: ['resourceGroupName'],
-            filterValue: ['resourceGroupName'],
-            arm: true
-        }
-    },
-    networkSecurityGroups: {
-        list: {
-            api: "NetworkManagementClient",
             reliesOnService: ['resourceGroups'],
             reliesOnCall: ['list'],
             filterKey: ['resourceGroupName'],
@@ -581,14 +572,17 @@ var finalcalls = {
         }
     },
     diagnosticSettingsOperations: {
-        list: {
-            api: "MonitorManagementClient",
-            reliesOnService: ['endpoints'],
-            reliesOnCall: ['listByProfile'],
-            filterKey: ['id'],
-            filterValue: ['id'],
-            arm: true
-        }
+        endpoint: {
+            list: {
+                api: "MonitorManagementClient",
+                reliesOnService: ['endpoints'],
+                reliesOnCall: ['listByProfile'],
+                filterKey: ['id'],
+                filterValue: ['id'],
+                arm: true
+            }
+        },
+        manyApi: true
     },
     serverSecurityAlertPolicies: {
         listByServer: {

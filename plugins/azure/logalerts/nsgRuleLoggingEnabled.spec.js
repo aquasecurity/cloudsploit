@@ -17,10 +17,10 @@ const createCache = (err, data) => {
 
 describe('nsgRuleLoggingEnabled', function () {
     describe('run', function () {
-        it('should give passing result if no activity log alerts found', function (done) {
+        it('should give failing result if no activity log alerts found', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
+                expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('No existing Activity Alerts found');
                 expect(results[0].region).to.equal('global');
                 done()
@@ -38,7 +38,7 @@ describe('nsgRuleLoggingEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(2);
                 expect(results[1].status).to.equal(2);
-                expect(results[1].message).to.include('Log alert for Network Security Groups rule write does not exist');
+                expect(results[1].message).to.include('Log alert for Network Security Groups rule write is not enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -87,7 +87,7 @@ describe('nsgRuleLoggingEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(2);
                 expect(results[1].status).to.equal(2);
-                expect(results[1].message).to.include('Log Alert for Network Security Groups rule delete does not exist');
+                expect(results[1].message).to.include('Log Alert for Network Security Groups rule delete is not enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -135,8 +135,8 @@ describe('nsgRuleLoggingEnabled', function () {
         it('should give passing result if nsg rule write enabled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(2);
-                expect(results[1].status).to.equal(0);
-                expect(results[1].message).to.include('Log alert for Network Security Groups rule write is enabled');
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Log alert for Network Security Groups rule write is enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -159,10 +159,6 @@ describe('nsgRuleLoggingEnabled', function () {
                                 {
                                     "field": "category",
                                     "equals": "Security"
-                                },
-                                {
-                                    "field": "operationName",
-                                    "equals": "Microsoft.Network/networkSecurityGroups/securityRules/delete"
                                 },
                                 {
                                     "field": "operationName",
@@ -216,10 +212,6 @@ describe('nsgRuleLoggingEnabled', function () {
                                 {
                                     "field": "operationName",
                                     "equals": "Microsoft.Network/networkSecurityGroups/securityRules/delete"
-                                },
-                                {
-                                    "field": "operationName",
-                                    "equals": "Microsoft.Network/networkSecurityGroups/securityRules/write"
                                 }
                             ]
                         },

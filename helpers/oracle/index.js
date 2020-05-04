@@ -37,16 +37,18 @@ function OracleExecutor (OracleConfig, Service) {
             function ociMany (callObj, OracleConfig) {
                 async.eachLimit(callObj.reliesOnService, 10,function(service, serviceCb) {
                     var records = callObj.collection[service][callObj.reliesOnCall[callObj.reliesOnService.indexOf(service)]][OracleConfig.region].data;
-
+                    if (service === 'namespace') {
+                        parameters['namespaceName'] = records;
+                        return serviceCb();
+                    }
                     async.eachLimit(records, 10,function(record, recordCb) {
-                        for (filter in callObj.filterKey){
-                            if(callObj.filterConfig && callObj.filterConfig[filter]) {
+                        for (filter in callObj.filterKey) {
+                            if (callObj.filterConfig && callObj.filterConfig[filter]) {
                                 parameters[callObj.filterKey[filter]] = OracleConfig[callObj.filterValue[filter]];
-                            } else {
+                            } else if (record[callObj.filterValue[filter]]) {
                                 parameters[callObj.filterKey[filter]] = record[callObj.filterValue[filter]];
                             }
                         }
-
                         try {
                             OracleConfig.privateKey = sshpk.parsePrivateKey(OracleConfig.keyValue, 'pem');
                             assert.ok(sshpk.PrivateKey.isPrivateKey(OracleConfig.privateKey, [1, 2]),
@@ -58,7 +60,7 @@ function OracleExecutor (OracleConfig, Service) {
                         if (callObj.restVersion ||
                             callObj.restVersion == '') {
                             OracleConfig.RESTversion = callObj.restVersion;
-                        };
+                        }
 
                         oci(callObj.api, oracleService, callKey, OracleConfig, parameters, function(result) {
                             if (result.code) {
@@ -74,17 +76,18 @@ function OracleExecutor (OracleConfig, Service) {
                             } else if (Object.prototype.toString.call(result) == "[object Object]") {
                                 aggregatedResults.push(result);
                             }
-
                             recordCb();
                         });
+
                     }, function(){
                         serviceCb();
                     });
+
                 }, function() {
                     callback(aggregatedErrors, aggregatedResults);
+
                 });
             }
-
             ociMany(callObj, OracleConfig);
         } else {
             for (filter in callObj.filterKey){

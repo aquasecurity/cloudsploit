@@ -651,6 +651,21 @@ var postcalls = [
                 reliesOnCall: 'describeTargetGroups',
                 filterKey: 'TargetGroupArn',
                 filterValue: 'TargetGroupArn'
+            },
+            describeLoadBalancerAttributes: {
+                reliesOnService: 'elbv2',
+                reliesOnCall: 'describeLoadBalancers',
+                override: true
+            },
+            describeListeners: {
+                reliesOnService: 'elbv2',
+                reliesOnCall: 'describeLoadBalancers',
+                override: true
+            },
+            describeTargetGroups: {
+                reliesOnService: 'elbv2',
+                reliesOnCall: 'describeLoadBalancers',
+                override: true
             }
         },
         IAM: {
@@ -1087,7 +1102,6 @@ var collect = function (AWSConfig, settings, callback) {
                 postcallCb();
             });
         }, function () {
-            //console.log(JSON.stringify(collection, null, 2));
             callback(null, collection);
         });
     });

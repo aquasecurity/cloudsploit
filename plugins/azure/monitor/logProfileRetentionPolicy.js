@@ -21,6 +21,7 @@ module.exports = {
         var source = {};
         var locations = helpers.locations(settings.govcloud);
         var profileExists = false;
+        var unknownFound;
 
         async.each(locations.logProfiles, function(location, rcb){
             var logProfiles = helpers.addSource(cache, source,
@@ -28,7 +29,12 @@ module.exports = {
 
             if (!logProfiles) return rcb();
 
-            if (logProfiles.err || !logProfiles.data) return rcb();
+            if (logProfiles.err || !logProfiles.data) {
+                unknownFound = true;
+                helpers.addResult(results, 3,
+                    'Unable to query Log Profiles: ' + helpers.addError(logProfiles), location);
+                return rcb();
+            }
             
             if (!logProfiles.data.length) return rcb();
                 
@@ -60,7 +66,7 @@ module.exports = {
             rcb();
         }, function(){
             // Global checking goes here
-            if (!profileExists) {
+            if (!profileExists && !unknownFound) {
                 helpers.addResult(results, 2, 'No Log Profile found', 'global');
             }
             callback(null, results, source);

@@ -12,7 +12,9 @@ module.exports = {
     settings: {
         latestNetFrameworkVersion: {
             name: 'Latest .NET Framework Version',
-            default: 4.0
+            default: 4.0,
+            description: 'The latest NET version supported by Azure App Service.',
+            regex: '[0-9.]{2,5}'
         }
     },
     run: function (cache, settings, callback) {

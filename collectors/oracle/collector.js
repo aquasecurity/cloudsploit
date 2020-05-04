@@ -82,6 +82,14 @@ var calls = {
             filterValue: ['compartmentId'],
         }
     },
+    namespace: {
+        get: {
+            api: "objectStore",
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+            restVersion: ""
+        }
+    },
     group: {
         list: {
             api: "iam",
@@ -282,11 +290,10 @@ var postcalls = {
     bucket: {
         list: {
             api: "objectStore",
-            reliesOnService: ['compartment'],
-            reliesOnCall: ['get'],
-            filterKey: ['compartmentId', 'namespaceName'],
-            filterValue: ['compartmentId', 'name'],
-            filterConfig: [true, false],
+            reliesOnService: ['namespace','compartment'],
+            reliesOnCall: ['get','get'],
+            filterKey: ['namespaceName','compartmentId'],
+            filterValue: ['namespaceName','compartmentId'],
             restVersion: ""
         }
     },
@@ -347,11 +354,11 @@ var finalcalls = {
     bucket: {
         get: {
             api: "objectStore",
-            reliesOnService: ['bucket'],
-            reliesOnCall: ['list'],
-            filterKey: ['namespaceName', 'bucketName'],
-            filterValue: ['namespace', 'name'],
-            restVersion: ""
+            reliesOnService: ['bucket','namespace'],
+            reliesOnCall: ['list', 'get'],
+            filterKey: ['bucketName', 'namespaceName'],
+            filterValue: ['name','namespace'],
+            restVersion: "",
         }
     },
     exprt: {
@@ -368,10 +375,10 @@ var finalcalls = {
     preAuthenticatedRequest: {
         list: {
             api: "objectStore",
-            reliesOnService: ['bucket'],
-            reliesOnCall: ['list'],
-            filterKey: ['namespaceName', 'bucketName'],
-            filterValue: ['namespace', 'name'],
+            reliesOnService: ['bucket','namespace'],
+            reliesOnCall: ['list', 'get'],
+            filterKey: ['bucketName', 'namespaceName'],
+            filterValue: ['name','namespace'],
             restVersion: ""
         }
     },

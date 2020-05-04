@@ -2,8 +2,8 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'ELB WAF Enabled',
-    category: 'ELB',
+    title: 'ELBv2 WAF Enabled',
+    category: 'ELBv2',
     description: 'Ensure that all Application Load Balancers have WAF enabled.',
     more_info: 'Enabling WAF allows control over requests to the load balancer, allowing or denying traffic based off rules in the Web ACL',
     link: 'https://aws.amazon.com/blogs/aws/aws-web-application-firewall-waf-for-application-load-balancers/',
@@ -67,7 +67,7 @@ module.exports = {
                     if (!listResources || listResources.err || !listResources.data) {
                         helpers.addResult(results, 3,
                             'Unable to query for WAf Resources: ' + helpers.addError(listResources), region, webACLId);
-                        return rcb();
+                        return
                     }
 
                     if (listResources.data.ResourceArns) {
