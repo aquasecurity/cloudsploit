@@ -44,6 +44,8 @@ module.exports = {
             return original.err;
         } else if (original.err.message) {
             return original.err.message;
+        } else if (original.err.code) {
+            return original.err.code;
         } else {
             return 'Unable to obtain data';
         }

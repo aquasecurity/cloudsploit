@@ -8,35 +8,34 @@ module.exports = {
     more_info: 'ARM is the latest and most secure method of launching Azure resources. VM Classic should not be used.',
     recommended_action: 'Migrate instances from Cloud Service to ARM.',
     link: 'https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-overview',
-    apis: ['resources:list'],
+    apis: ['virtualMachines:listAll'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.resources, function(location, rcb){
+        async.each(locations.virtualMachines, function(location, rcb){
+            var virtualMachines = helpers.addSource(cache, source, 
+                ['virtualMachines', 'listAll', location]);
 
-            var resources = helpers.addSource(cache, source, 
-                ['resources', 'list', location]);
+            if (!virtualMachines) return rcb();
 
-            if (!resources) return rcb();
-
-            if (resources.err || !resources.data) {
-                helpers.addResult(results, 3, 'Unable to query for resources: ' + helpers.addError(resources), location);
+            if (virtualMachines.err || !virtualMachines.data) {
+                helpers.addResult(results, 3, 'Unable to query for virtualMachines: ' + helpers.addError(virtualMachines), location);
                 return rcb();
             }
 
-            if (!resources.data.length) {
-                helpers.addResult(results, 0, 'No existing resources found', location);
+            if (!virtualMachines.data.length) {
+                helpers.addResult(results, 0, 'No existing Virtual Machines found', location);
                 return rcb();
             }
 
             var classicVms = 0;
 
-            resources.data.forEach(resource => {
+            virtualMachines.data.forEach(resource => {
                 if (resource.type &&
-                    resource.type == "Microsoft.ClassicCompute/virtualMachines") {
+                    resource.type.toLowerCase() == "microsoft.classiccompute/virtualmachines") {
                     classicVms++;
                 }
             });

@@ -2,14 +2,17 @@ var assert = require('assert');
 var expect = require('chai').expect;
 var auth = require('./secretExpirationEnabled');
 
-const createCache = (err, data) => {
+const createCache = (err, list, get) => {
     return {
-        KeyVaultClient: {
-            getSecrets: {
+        vaults: {
+            list: {
                 'eastus': {
                     err: err,
-                    data: data
+                    data: list
                 }
+            },
+            getSecrets: {
+                'eastus': get
             }
         }
     }
@@ -21,14 +24,15 @@ describe('secretExpirationEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No secrets found');
+                expect(results[0].message).to.include('No Key Vaults found');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
 
             const cache = createCache(
                 null,
-                []
+                [],
+                {}
             );
 
             auth.run(cache, {}, callback);
@@ -46,21 +50,36 @@ describe('secretExpirationEnabled', function () {
             const cache = createCache(
                 null,
                 [
+                    
                     {
-                        "id": "https://test1.vault.azure.net/secrets/test",
-                        "attributes": {
-                            "enabled": true,
-                            "created": "2019-10-28T19:11:09.000Z",
-                            "updated": "2019-10-28T19:19:40.000Z",
-                            "recoveryLevel": "Purgeable"
-                        },
-                        "tags": {},
+                        "id": "/subscriptions/abcdef123-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.KeyVault/vaults/testvault",
+                        "name": "testvault",
+                        "type": "Microsoft.KeyVault/vaults",
                         "location": "eastus",
-                        "storageAccount": {
-                            "name": "test"
+                        "tags": {},
+                        "sku": {
+                            "family": "A",
+                            "name": "Standard"
                         }
                     }
-                ]
+                ],
+                {
+                    '/subscriptions/abcdef123-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.KeyVault/vaults/testvault': {
+                        data: [
+                            {
+                                "id": "https://testvault.vault.azure.net/secrets/mysecret",
+                                "attributes": {
+                                    "enabled": true,
+                                    "exp": null,
+                                    "created": 1572289869,
+                                    "updated": 1572290380,
+                                    "recoveryLevel": "Recoverable+Purgeable"
+                                },
+                                "tags": {}
+                            }
+                        ]
+                    }
+                }
             );
 
             auth.run(cache, {}, callback);
@@ -78,22 +97,36 @@ describe('secretExpirationEnabled', function () {
             const cache = createCache(
                 null,
                 [
+
                     {
-                        "id": "https://test1.vault.azure.net/secrets/test",
-                        "attributes": {
-                            "enabled": true,
-                            "expires": "2021-10-28T19:10:52.000Z",
-                            "created": "2019-10-28T19:11:09.000Z",
-                            "updated": "2019-10-28T19:19:40.000Z",
-                            "recoveryLevel": "Purgeable"
-                        },
-                        "tags": {},
+                        "id": "/subscriptions/abcdef123-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.KeyVault/vaults/testvault",
+                        "name": "testvault",
+                        "type": "Microsoft.KeyVault/vaults",
                         "location": "eastus",
-                        "storageAccount": {
-                            "name": "test"
+                        "tags": {},
+                        "sku": {
+                            "family": "A",
+                            "name": "Standard"
                         }
                     }
-                ]
+                ],
+                {
+                    '/subscriptions/abcdef123-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.KeyVault/vaults/testvault': {
+                        data: [
+                            {
+                                "id": "https://testvault.vault.azure.net/secrets/mysecret",
+                                "attributes": {
+                                    "enabled": true,
+                                    "exp": 1635448252,
+                                    "created": 1572289869,
+                                    "updated": 1572290380,
+                                    "recoveryLevel": "Recoverable+Purgeable"
+                                },
+                                "tags": {}
+                            }
+                        ]
+                    }
+                }
             );
 
             auth.run(cache, {}, callback);
@@ -111,22 +144,36 @@ describe('secretExpirationEnabled', function () {
             const cache = createCache(
                 null,
                 [
+
                     {
-                        "id": "https://test1.vault.azure.net/secrets/test",
-                        "attributes": {
-                            "enabled": false,
-                            "expires": "2021-10-28T19:10:52.000Z",
-                            "created": "2019-10-28T19:11:09.000Z",
-                            "updated": "2019-10-28T19:19:40.000Z",
-                            "recoveryLevel": "Purgeable"
-                        },
-                        "tags": {},
+                        "id": "/subscriptions/abcdef123-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.KeyVault/vaults/testvault",
+                        "name": "testvault",
+                        "type": "Microsoft.KeyVault/vaults",
                         "location": "eastus",
-                        "storageAccount": {
-                            "name": "test"
+                        "tags": {},
+                        "sku": {
+                            "family": "A",
+                            "name": "Standard"
                         }
                     }
-                ]
+                ],
+                {
+                    '/subscriptions/abcdef123-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.KeyVault/vaults/testvault': {
+                        data: [
+                            {
+                                "id": "https://testvault.vault.azure.net/secrets/mysecret",
+                                "attributes": {
+                                    "enabled": false,
+                                    "exp": 1635448252,
+                                    "created": 1572289869,
+                                    "updated": 1572290380,
+                                    "recoveryLevel": "Recoverable+Purgeable"
+                                },
+                                "tags": {}
+                            }
+                        ]
+                    }
+                }
             );
 
             auth.run(cache, {}, callback);

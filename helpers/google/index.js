@@ -208,9 +208,7 @@ var run = function (GoogleConfig, collection, settings, service, callObj, callKe
 };
 
 var addParent = function(GoogleConfig, region, callObj) {
-    if (!callObj.location) {
-        return `projects/${GoogleConfig.project}`
-    } else if (callObj.location && callObj.location == 'global') {
+    if (callObj.location && callObj.location == 'global') {
         return `projects/${GoogleConfig.project}/locations/-`
     } else if (callObj.location && callObj.location == 'region') {
         return `projects/${GoogleConfig.project}/locations/${region}`

@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'All load balancers should have backend server resources. Those without any are consuming costs without providing any functionality. Additionally, old load balancers with no instances pose a security concern if new instances are accidentally attached.',
     link: 'https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-overview',
     recommended_action: 'Delete old load balancers that no longer have backend resources.',
-    apis: ['resourceGroups:list', 'loadBalancers:list'],
+    apis: ['loadBalancers:listAll'],
 
     run: function (cache, settings, callback) {
         const results = [];
@@ -18,7 +18,7 @@ module.exports = {
         async.each(locations.loadBalancers, function (location, rcb) {
 
             const loadBalancers = helpers.addSource(cache, source,
-                ['loadBalancers', 'list', location]);
+                ['loadBalancers', 'listAll', location]);
 
             if (!loadBalancers) return rcb();
 

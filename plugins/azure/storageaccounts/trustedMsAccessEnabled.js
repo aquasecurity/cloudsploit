@@ -33,9 +33,9 @@ module.exports = {
             }
 
             storageAccount.data.forEach(account => {
-                if (account.networkRuleSet && 
-                    account.networkRuleSet.bypass &&
-                    account.networkRuleSet.bypass.toLowerCase().indexOf("azureservices") !== -1) {
+                if (account.networkAcls && 
+                    account.networkAcls.bypass &&
+                    account.networkAcls.bypass.toLowerCase().indexOf("azureservices") > -1) {
                     helpers.addResult(results, 0, 'Storage Account is set to allow trusted Microsoft services', location, account.id);
                 } else {
                     helpers.addResult(results, 2, 'Storage Account is not set to allow trusted Microsoft services', location, account.id);

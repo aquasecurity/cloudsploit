@@ -34,7 +34,7 @@ module.exports = {
 
             if (webApps.err || !webApps.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query App Services: ' + helpers.addError(webApps), location);
+                    'Unable to query App Service: ' + helpers.addError(webApps), location);
                 return rcb();
             }
 
@@ -43,21 +43,13 @@ module.exports = {
                 return rcb();
             }
 
-            var noWebAppHttps = [];
-
             webApps.data.forEach(function (webApp) {
-                if (!webApp.httpsOnly) noWebAppHttps.push(webApp.id);
-            });
-
-            if (noWebAppHttps.length > 20) {
-                helpers.addResult(results, 2, 'More than 20 App Services do not have HTTPS Only enabled', location);
-            } else if (noWebAppHttps.length) {
-                for (app in noWebAppHttps) {
-                    helpers.addResult(results, 2, 'App Service does not have HTTPS Only enabled', location, noWebAppHttps[app]);
+                if (webApp.httpsOnly) {
+                    helpers.addResult(results, 0, 'The App Service has HTTPS Only enabled', location, webApp.id);
+                } else {
+                    helpers.addResult(results, 2, 'The App Service does not have HTTPS Only enabled', location, webApp.id);
                 }
-            } else {
-                helpers.addResult(results, 0, 'All App Services have HTTPS Only enabled', location);
-            }
+            });
 
             rcb();
         }, function () {

@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Automated backups of SQL databases with recent restore points help ensure that database recovery operations can occur without significant data loss.',
     link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-recovery-using-backups',
     recommended_action: 'Ensure that each SQL database has automated backups configured with a sufficient retention period and that the last known backup operation completes successfully.',
-    apis: ['resourceGroups:list', 'servers:sql:list', 'databases:listByServer'],
+    apis: ['servers:listSql', 'databases:listByServer'],
     compliance: {
         hipaa: 'HIPAA requires backups of all user data ' +
             'and inventory to ensure future availability.'
@@ -19,36 +19,52 @@ module.exports = {
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.databases, function (location, rcb) {
-            const databases = helpers.addSource(cache, source,
-                ['databases', 'listByServer', location]);
+        async.each(locations.servers, function (location, rcb) {
+            var servers = helpers.addSource(cache, source,
+                ['servers', 'listSql', location]);
 
-            if (!databases) return rcb();
+            if (!servers) return rcb();
 
-            if (databases.err || !databases.data) {
+            if (servers.err || !servers.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for SQL Databases: ' + helpers.addError(databases), location);
+                    'Unable to query for SQL servers: ' + helpers.addError(servers), location);
                 return rcb();
             }
 
-            if (!databases.data.length) {
-                helpers.addResult(results, 0, 'No SQL databases found', location);
+            if (!servers.data.length) {
+                helpers.addResult(results, 0, 'No SQL servers found', location);
                 return rcb();
             }
 
-            databases.data.forEach(function(database){
-                if (!database.earliestRestoreDate) {
-                    helpers.addResult(results, 2, 
-                        'SQL Database is not restorable', location, database.id);
+            // Loop through servers and check databases
+            servers.data.forEach(function (server) {
+                var databases = helpers.addSource(cache, source,
+                    ['databases', 'listByServer', location, server.id]);
+
+                if (!databases || databases.err || !databases.data) {
+                    helpers.addResult(results, 3,
+                        'Unable to query for SQL server databases: ' + helpers.addError(databases), location, server.id);
                 } else {
-                    helpers.addResult(results, 0, 
-                        'SQL Database is restorable', location, database.id);
+                    if (!databases.data.length) {
+                        helpers.addResult(results, 0,
+                            'No databases found for SQL server', location, server.id);
+                    } else {
+                        // Loop through databases
+                        databases.data.forEach(function (database) {
+                            if (database.earliestRestoreDate) {
+                                helpers.addResult(results, 0,
+                                    'SQL Database is restorable', location, database.id);
+                            } else {
+                                helpers.addResult(results, 2,
+                                    'SQL Database is not restorable', location, database.id);
+                            }
+                        });
+                    }
                 }
             });
 
-        rcb();
+            rcb();
         }, function () {
-        // Global checking goes here
             callback(null, results, source);
         });
     }

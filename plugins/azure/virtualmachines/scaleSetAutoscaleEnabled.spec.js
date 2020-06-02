@@ -2,21 +2,21 @@ var assert = require('assert');
 var expect = require('chai').expect;
 var plugin = require('./scaleSetAutoscaleEnabled');
 
-const createCache = (err, data, adata, aerr) => {
+const createCache = (err, list, get) => {
     return {
         virtualMachineScaleSets: {
-            list: {
+            listAll: {
                 'eastus': {
                     err: err,
-                    data: data
+                    data: list
                 }
             }
         },
         autoscaleSettings: {
-            listByResourceGroup: {
+            listBySubscription: {
                 'eastus': {
-                    err: aerr,
-                    data: adata
+                    err: err,
+                    data: get
                 }
             }
         }
@@ -37,6 +37,7 @@ describe('scaleSetAutoscaleEnabled', function () {
             const cache = createCache(
                 ['error'],
                 null,
+                {}
             );
 
             plugin.run(cache, {}, callback);
@@ -54,7 +55,7 @@ describe('scaleSetAutoscaleEnabled', function () {
                 null,
                 ['data'],
                  null,
-                ['error'],
+                {}
             );
 
             plugin.run(cache, {}, callback);
@@ -71,6 +72,7 @@ describe('scaleSetAutoscaleEnabled', function () {
             const cache = createCache(
                 null,
                 [],
+                {}
             );
 
             plugin.run(cache, {}, callback);
@@ -79,7 +81,7 @@ describe('scaleSetAutoscaleEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('All Virtual Machine Scale Sets have autoscale enabled')
+                expect(results[0].message).to.include('Virtual Machine Scale Set has autoscale enabled')
                 expect(results[0].region).to.equal('eastus')
                 done()
             };
@@ -92,63 +94,6 @@ describe('scaleSetAutoscaleEnabled', function () {
                         "name": "gioScaleSet1",
                         "type": "Microsoft.Compute/virtualMachineScaleSets",
                         "location": "eastus",
-                        "sku": {
-                            "name": "Standard_DS1_v2",
-                            "tier": "Standard",
-                            "capacity": 2
-                        },
-                        "upgradePolicy": {
-                            "mode": "Manual"
-                        },
-                        "virtualMachineProfile": {
-                            "osProfile": {
-                                "computerNamePrefix": "gioscales",
-                                "adminUsername": "Gio",
-                                "windowsConfiguration": {
-                                    "provisionVMAgent": true,
-                                    "enableAutomaticUpdates": true
-                                },
-                                "secrets": []
-                            },
-                            "storageProfile": {
-                                "imageReference": {
-                                    "publisher": "MicrosoftWindowsServer",
-                                    "offer": "WindowsServer",
-                                    "sku": "2016-Datacenter",
-                                    "version": "latest"
-                                },
-                                "osDisk": {
-                                    "caching": "ReadWrite",
-                                    "createOption": "FromImage",
-                                    "managedDisk": {
-                                        "storageAccountType": "Premium_LRS"
-                                    }
-                                }
-                            },
-                            "networkProfile": {
-                                "networkInterfaceConfigurations": [
-                                    {
-                                        "name": "gioScaleSet1Nic",
-                                        "primary": true,
-                                        "enableAcceleratedNetworking": false,
-                                        "dnsSettings": {
-                                            "dnsServers": []
-                                        },
-                                        "ipConfigurations": [
-                                            {
-                                                "name": "gioScaleSet1IpConfig",
-                                                "subnet": {
-                                                    "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Network/virtualNetworks/gioVNtest1/subnets/subnettest1"
-                                                },
-                                                "privateIPAddressVersion": "IPv4"
-                                            }
-                                        ],
-                                        "enableIPForwarding": false
-                                    }
-                                ]
-                            },
-                            "priority": "Regular"
-                        },
                         "provisioningState": "Succeeded",
                         "overprovision": true,
                         "uniqueId": "866a138f-93d7-4d0d-89b4-c25762373a58",

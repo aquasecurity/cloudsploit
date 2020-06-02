@@ -18,11 +18,11 @@ var GoogleConfig;
 // };
 
 // AzureConfig = {
-//  ApplicationID: '',          // A.K.A ClientID
-//  KeyValue: '',               // Secret
-//  DirectoryID: '',            // A.K.A TenantID or Domain
-//  SubscriptionID: '',
-//  location: 'East US'
+//     ApplicationID: '',          // A.K.A ClientID
+//     KeyValue: '',               // Secret
+//     DirectoryID: '',            // A.K.A TenantID or Domain
+//     SubscriptionID: '',
+//     location: 'East US'
 // };
 
 // GitHubConfig = {

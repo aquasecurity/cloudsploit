@@ -22,36 +22,41 @@ module.exports = {
 
         async.each(locations.webApps, function (location, rcb) {
 
-            const authSettings = helpers.addSource(
-                cache, source, ['webApps', 'getAuthSettings', location]
+            const webApps = helpers.addSource(
+                cache, source, ['webApps', 'list', location]
             );
-            if (!authSettings) return rcb();
 
-            if (authSettings.err || !authSettings.data) {
-                helpers.addResult(results, 3, 'Unable to query App Service: ' + helpers.addError(authSettings), location);
+            if (!webApps) return rcb();
+
+            if (webApps.err || !webApps.data) {
+                helpers.addResult(results, 3,
+                    'Unable to query for App Services: ' + helpers.addError(webApps), location);
                 return rcb();
             }
-            if (!authSettings.data.length) {
+
+            if (!webApps.data.length) {
                 helpers.addResult(
                     results, 0, 'No existing App Services found', location);
                 return rcb();
             }
 
-            var noWebAppAuthEnabled = [];
-
-            authSettings.data.forEach(function(settings){
-                if (!settings.enabled) noWebAppAuthEnabled.push(settings.id);
-            });
-
-            if (noWebAppAuthEnabled.length > 20) {
-                helpers.addResult(results, 2, 'More than 20 App Services do not have App Service Authentication enabled', location);
-            } else if (noWebAppAuthEnabled.length) {
-                for (settings in noWebAppAuthEnabled) {
-                    helpers.addResult(results, 2, 'App Service does not have App Service Authentication enabled', location, noWebAppAuthEnabled[settings]);
+            webApps.data.forEach(function(webApp) {
+                const authSettings = helpers.addSource(
+                    cache, source, ['webApps', 'getAuthSettings', location, webApp.id]
+                );
+                
+                if (!authSettings || authSettings.err || !authSettings.data) {
+                    helpers.addResult(results, 3,
+                        'Unable to query App Service: ' + helpers.addError(authSettings),
+                        location, webApp.id);
+                } else {
+                    if (authSettings.data.enabled) {
+                        helpers.addResult(results, 0, 'App Service has App Service Authentication enabled', location, webApp.id);
+                    } else {
+                        helpers.addResult(results, 2, 'App Service does not have App Service Authentication enabled', location, webApp.id);
+                    }
                 }
-            } else {
-                helpers.addResult(results, 0, 'All App Services have App Service Authentication enabled', location);
-            }
+            });
 
             rcb();
         }, function () {

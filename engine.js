@@ -131,7 +131,7 @@ var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, Googl
         settings.skip_regions = serviceProviderObj.skipRegions;
 
         serviceProviderObj.collector(serviceProviderObj.config, settings, function (err, collection) {
-            if (err || !collection) return console.log('ERROR: Unable to obtain API metadata');
+            if (err || !collection) return console.log(`ERROR: Unable to obtain API metadata: ${err}`);
             outputHandler.writeCollection(collection, serviceProviderObj.name)
 
             console.log('');

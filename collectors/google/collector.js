@@ -230,7 +230,7 @@ var postcalls = {
             reliesOnService: ['serviceAccounts'],
             reliesOnCall: ['list'],
             filterKey: ['id'],
-            filterValue: ['uniqueId'],
+            filterValue: ['uniqueId']
         }
     },
     users: {

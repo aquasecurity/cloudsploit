@@ -33,19 +33,15 @@ module.exports = {
                 return rcb();
             };
 
-            var allConnected = true;
             virtualMachines.data.forEach(virtualMachine => {
-                if (!virtualMachine.availabilitySet) {
+                if (virtualMachine.availabilitySet) {
+                    helpers.addResult(results, 0,
+                        'The Virtual Machine has Availability Set enabled', location, virtualMachine.id);
+                } else {
                     helpers.addResult(results, 2,
                         'The Virtual Machine does not have Availability Set enabled', location, virtualMachine.id);
-                    allConnected = false;
-                };
+                }
             });
-
-            if (allConnected) {
-                helpers.addResult(results, 0,
-                    'All Virtual Machines have Availability Set enabled', location);
-            };
 
             rcb();
         }, function() {

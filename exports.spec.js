@@ -90,6 +90,13 @@ describe('exports', function () {
                     });
 
                     expect(lTest.remediation_description, `Test: ${test} remediation_description parameter is not a string`).to.be.an('string');
+
+                    if (lTest.realtime_triggers) {
+                        expect(lTest.realtime_triggers, `Test: ${test} realtime_triggers parameter is not an array`).to.be.an('array');
+                        lTest.realtime_triggers.forEach(function(lTrigger){
+                            expect(lTrigger, `Test: ${test} realtime_triggers property is not a string`).to.be.an('string');
+                        });
+                    }
                 }
 
                 if (lTest.rollback) {

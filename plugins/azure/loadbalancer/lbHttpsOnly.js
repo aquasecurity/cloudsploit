@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'For maximum security, load balancers can be configured to only accept HTTPS connections. Standard HTTP connections will be blocked. This should only be done if the client application is configured to query HTTPS directly and not rely on a redirect from HTTP.',
     link: 'https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-overview',
     recommended_action: 'Ensure that each load balancer only accepts connections on port 443.',
-    apis: ['resourceGroups:list', 'loadBalancers:list'],
+    apis: ['loadBalancers:listAll'],
     compliance: {
         hipaa: 'HIPAA requires all data to be transmitted over secure channels. ' +
                 'App Service HTTPS redirection should be used to ensure site visitors ' +
@@ -23,7 +23,7 @@ module.exports = {
         async.each(locations.loadBalancers, function (location, rcb) {
 
             const loadBalancers = helpers.addSource(cache, source,
-                ['loadBalancers', 'list', location]);
+                ['loadBalancers', 'listAll', location]);
 
             if (!loadBalancers) return rcb();
 
@@ -42,9 +42,12 @@ module.exports = {
                 var notHTTPSRules = 0;
                 var isHTTPS = false;
 
-                if (loadBalancer.inboundNatRules.length > 0) {
+                if (loadBalancer.inboundNatRules &&
+                    loadBalancer.inboundNatRules.length > 0) {
                     loadBalancer.inboundNatRules.forEach(inboundRule => {
-                        if (inboundRule.frontendPort == 443) {
+                        if (inboundRule.properties &&
+                            inboundRule.properties.frontendPort &&
+                            inboundRule.properties.frontendPort == 443) {
                             isHTTPS = true;
                         } else {
                             notHTTPSRules++;
@@ -52,9 +55,12 @@ module.exports = {
                     });
                 };
 
-                if (loadBalancer.loadBalancingRules.length > 0) {
+                if (loadBalancer.loadBalancingRules &&
+                    loadBalancer.loadBalancingRules.length > 0) {
                     loadBalancer.loadBalancingRules.forEach(loadBalancingRule => {
-                        if (loadBalancingRule.frontendPort == 443) {
+                        if (loadBalancingRule.properties &&
+                            loadBalancingRule.properties.frontendPort &&
+                            loadBalancingRule.properties.frontendPort == 443) {
                             isHTTPS = true;
                         } else {
                             notHTTPSRules++;

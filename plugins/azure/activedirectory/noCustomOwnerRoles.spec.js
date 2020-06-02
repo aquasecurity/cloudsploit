@@ -36,10 +36,13 @@ describe('noCustomOwnerRoles', function () {
 
         it('should give failing result if permissions to create custom owner roles enabled', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Permission to create custom owner roles enabled');
+                expect(results.length).to.equal(2);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Permission to create custom owner roles is not enabled');
                 expect(results[0].region).to.equal('global');
+                expect(results[1].status).to.equal(2);
+                expect(results[1].message).to.include('Permission to create custom owner roles enabled');
+                expect(results[1].region).to.equal('global');
                 done()
             };
 
@@ -52,7 +55,7 @@ describe('noCustomOwnerRoles', function () {
                         "type": "Microsoft.Authorization/roleDefinitions",
                         "roleName": "AcrPush",
                         "description": "acr push",
-                        "roleType": "BuiltInRole",
+                        "roleType": "CustomRole",
                         "permissions": [
                             {
                                 "actions": [
@@ -75,7 +78,7 @@ describe('noCustomOwnerRoles', function () {
                         "type": "Microsoft.Authorization/roleDefinitions",
                         "roleName": "AcrPush",
                         "description": "acr push",
-                        "roleType": "BuiltInRole",
+                        "roleType": "CustomRole",
                         "permissions": [
                             {
                                 "actions": [
@@ -102,7 +105,7 @@ describe('noCustomOwnerRoles', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No permissions to create custom owner roles enabled');
+                expect(results[0].message).to.include('Permission to create custom owner roles is not enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -116,7 +119,7 @@ describe('noCustomOwnerRoles', function () {
                         "type": "Microsoft.Authorization/roleDefinitions",
                         "roleName": "AcrPush",
                         "description": "acr push",
-                        "roleType": "BuiltInRole",
+                        "roleType": "CustomRole",
                         "permissions": [
                             {
                                 "actions": [

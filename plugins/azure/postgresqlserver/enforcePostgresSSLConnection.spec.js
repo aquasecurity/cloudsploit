@@ -5,12 +5,10 @@ var auth = require('./enforcePostgresSSLConnection');
 const createCache = (err, data) => {
     return {
         servers: {
-            postgres: {
-                list: {
-                    'eastus': {
-                        err: err,
-                        data: data
-                    }
+            listPostgres: {
+                'eastus': {
+                    err: err,
+                    data: data
                 }
             }
         }

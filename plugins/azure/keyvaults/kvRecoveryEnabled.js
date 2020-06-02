@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Purge Protection and Soft Delete are features that safeguard losing key access. With these setting enabled, key vaults have recovery actions available to restore deleted or compromised key vaults.',
     recommended_action: 'Once Key Vaults are created, the Azure CLI must be used to update the vault Soft Delete and Purge Protection settings.',
     link: 'https://docs.microsoft.com/en-us/azure/key-vault/key-vault-ovw-soft-delete',
-    apis: ['resourceGroups:list', 'vaults:list', 'vaults:get'],
+    apis: ['vaults:list'],
     compliance: {
         hipaa: 'HIPAA requires that all encryption mechanisms be protected against ' +
                 'modifications or loss.'
@@ -20,47 +20,51 @@ module.exports = {
         const locations = helpers.locations(settings.govcloud);
 
         async.each(locations.vaults, function (location, rcb) {
-            const vaults = helpers.addSource(cache, source,
-                ['vaults', 'get', location]);
+            var vaults = helpers.addSource(cache, source,
+                ['vaults', 'list', location]);
 
             if (!vaults) return rcb();
 
             if (vaults.err || !vaults.data) {
-                helpers.addResult(results, 3,
-                'Unable to query Key Vaults: ' + helpers.addError(vaults), location);
+                helpers.addResult(results, 3, 'Unable to query for Key Vaults: ' + helpers.addError(vaults), location);
                 return rcb();
             }
 
             if (!vaults.data.length) {
-                helpers.addResult(results, 0, 'No existing Key Vaults found', location);
+                helpers.addResult(results, 0, 'No Key Vaults found', location);
                 return rcb();
             }
-            
-            vaults.data.forEach(vault => {
+
+            vaults.data.forEach(function(vault) {
                 let vaultProperties = vault.properties;
+                let enablePurgeProtection = false;
+                let enableSoftDelete = false;
 
                 if (vaultProperties &&
                     vaultProperties.enablePurgeProtection) {
-                    helpers.addResult(results, 0, 
-                        'Purge protection is enabled for the Key Vault', location, vault.id);
-                } else { 
-                    helpers.addResult(results, 2, 
-                        'Purge protection is disabled for the Key Vault', location, vault.id);
+                    enablePurgeProtection = true;
                 }
 
                 if (vaultProperties &&
                     vaultProperties.enableSoftDelete) {
-                    helpers.addResult(results, 0, 
-                        'Soft delete is enabled for the Key Vault', location, vault.id);
+                    enableSoftDelete = true;
+                }
+
+                if (enablePurgeProtection && enableSoftDelete) {
+                    helpers.addResult(results, 0,
+                        'Purge protection and soft delete are enabled for the Key Vault', location, vault.id);
                 } else {
-                    helpers.addResult(results, 2, 
-                        'Soft delete is disabled for the Key Vault', location, vault.id);
+                    let msg = [
+                        `Purge protection is ${enablePurgeProtection ? '' : 'not'} enabled.`,
+                        `Soft delete is ${enableSoftDelete ? '' : 'not'} enabled.`
+                    ];
+                    helpers.addResult(results, 2, msg.join(' '), location, vault.id);
                 }
             });
-            
+
             rcb();
         }, function () {
-        // Global checking goes here
+            // Global checking goes here
             callback(null, results, source);
         });
     }

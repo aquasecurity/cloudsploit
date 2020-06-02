@@ -34,18 +34,21 @@ module.exports = {
                 return rcb();
             }
 
-            var noAutoUpdates = false;
+            var found = false;
             virtualMachines.data.forEach(virtualMachine => {
                 if (virtualMachine.osProfile &&
-                    virtualMachine.osProfile.windowsConfiguration &&
-                    !virtualMachine.osProfile.windowsConfiguration.enableAutomaticUpdates) {
-                    helpers.addResult(results, 2, 'Automatic updates are not enabled for this virtual machine: ' + virtualMachine.name, location, virtualMachine.id);
-                    noAutoUpdates = true;
+                    virtualMachine.osProfile.windowsConfiguration) {
+                    found = true;
+                    if (virtualMachine.osProfile.windowsConfiguration.enableAutomaticUpdates) {
+                        helpers.addResult(results, 0, 'Automatic updates are enabled for this virtual machine: ' + virtualMachine.name, location, virtualMachine.id);
+                    } else {
+                        helpers.addResult(results, 2, 'Automatic updates are not enabled for this virtual machine: ' + virtualMachine.name, location, virtualMachine.id);
+                    }
                 }
             });
 
-            if (!noAutoUpdates) {
-                helpers.addResult(results, 0, 'Automatic updates are enabled on all windows virtual machines', location);
+            if (!found) {
+                helpers.addResult(results, 0, 'Automatic updates are enabled on all Windows virtual machines', location);
             }
 
             rcb();

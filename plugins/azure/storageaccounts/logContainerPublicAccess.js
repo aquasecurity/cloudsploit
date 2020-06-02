@@ -21,69 +21,87 @@ module.exports = {
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        let containerExists = false;
         var diagnosticContainers = {};
         var diagnosticSettingsOperations = helpers.addSource(cache, source,
             ['diagnosticSettingsOperations', 'list', 'global']);
 
         if (!diagnosticSettingsOperations || diagnosticSettingsOperations.err || !diagnosticSettingsOperations.data) {
-            diagnosticSettingsOperations.data = [];
+            helpers.addResult(results, 3,
+                'Unable to query for diagnostic settings: ' + helpers.addError(diagnosticSettingsOperations), 'global');
+            return callback(null, results, source);
         }
 
-        if (diagnosticSettingsOperations.data.length) {
-            diagnosticSettingsOperations.data.forEach(diagnosticSettingsOperation => {
+        if (!diagnosticSettingsOperations.data.length) {
+            helpers.addResult(results, 0,
+                'No diagnostic settings found', 'global');
+            return callback(null, results, source);
+        }
+
+        diagnosticSettingsOperations.data.forEach(diagnosticSettingsOperation => {
+            if (diagnosticSettingsOperation.storageAccountId && diagnosticSettingsOperation.name) {
                 if (!diagnosticContainers[diagnosticSettingsOperation.storageAccountId]) diagnosticContainers[diagnosticSettingsOperation.storageAccountId] = [];
-                diagnosticContainers[diagnosticSettingsOperation.storageAccountId].push(diagnosticSettingsOperation.name)
-            })
-        }
+                diagnosticContainers[diagnosticSettingsOperation.storageAccountId].push(diagnosticSettingsOperation.name.toLowerCase());
+            }
+        });
 
-        async.each(locations.blobContainers, (loc, cb) => {
-            const blobContainerList = helpers.addSource(cache, source,
-                ['blobContainers', 'list', loc]);
+        async.each(locations.storageAccounts, function (location, rcb) {
+            var storageAccounts = helpers.addSource(cache, source,
+                ['storageAccounts', 'list', location]);
 
-            if (!blobContainerList) return cb();
+            if (!storageAccounts) return rcb();
 
-            if (blobContainerList.err || !blobContainerList.data) {
+            if (storageAccounts.err || !storageAccounts.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for Storage Containers: ' + helpers.addError(blobContainerList), loc);
-                return cb();
+                    'Unable to query for storage accounts: ' + helpers.addError(storageAccounts), location);
+                return rcb();
             }
 
-            if (!blobContainerList.data.length) {
-                helpers.addResult(results, 0, 'No existing Storage Containers found', loc);
-                return cb();
+            if (!storageAccounts.data.length) {
+                helpers.addResult(results, 0, 'No storage accounts found', location);
+                return rcb();
             }
 
-            blobContainerList.data.forEach(blobContainers => {
-                var diagnosticBlob = [];
-                if (blobContainers.id && diagnosticContainers[blobContainers.id] && diagnosticContainers[blobContainers.id].length) {
-                    diagnosticBlob = diagnosticContainers[blobContainers.id];
-                }
-                blobContainers.value.forEach(blobContainer => {
-                    if (blobContainer.name &&
-                        ((diagnosticBlob.indexOf(blobContainer.name) > -1) ||
-                        (blobContainer.name.toLowerCase() === "insights-operational-logs") ||
-                        (blobContainer.name.toLowerCase().indexOf("insights-logs-") > -1)) &&
-                        blobContainer.publicAccess) {
-                        if (blobContainer.publicAccess.toLowerCase() === "none") {
-                            helpers.addResult(results, 0,
-                                'Storage container storing the activity logs is not publicly accessible', loc, blobContainer.id);
-                            containerExists = true;
-                        } else {
-                            helpers.addResult(results, 2,
-                                'Storage container storing the activity logs is publicly accessible', loc, blobContainer.id);
-                            containerExists = true;
+            let containerExists = false;
+
+            storageAccounts.data.forEach(storageAccount => {
+                const blobContainerList = helpers.addSource(cache, source,
+                    ['blobContainers', 'list', location, storageAccount.id]);
+
+                let saBlobs = [];
+                if (diagnosticContainers[storageAccount.id]) saBlobs = diagnosticContainers[storageAccount.id];
+
+                if (!blobContainerList || blobContainerList.err || !blobContainerList.data) {
+                    helpers.addResult(results, 3,
+                        'Unable to query for storage containers: ' + helpers.addError(blobContainerList), location, storageAccount.id);
+                } else if (!blobContainerList.data.length) {
+                    helpers.addResult(results, 0, 'No existing storage containers found', location, storageAccount.id);
+                } else {
+                    blobContainerList.data.forEach(blobContainer => {
+                        if (blobContainer.name) {
+                            if (blobContainer.name.toLowerCase() === "insights-operational-logs" ||
+                                blobContainer.name.toLowerCase().indexOf("insights-logs-") > -1 ||
+                                saBlobs.indexOf(blobContainer.name.toLowerCase()) > -1) {
+                                containerExists = true;
+                                if (blobContainer.publicAccess &&
+                                    blobContainer.publicAccess.toLowerCase() == 'none') {
+                                    helpers.addResult(results, 0,
+                                        'Storage container storing the activity logs is not publicly accessible', location, blobContainer.id);
+                                } else {
+                                    helpers.addResult(results, 2,
+                                        'Storage container storing the activity logs is publicly accessible', location, blobContainer.id);
+                                }
+                            }
                         }
-                    }
-                });
+                    });
+                }
             });
 
             if (!containerExists) {
                 helpers.addResult(results, 0,
-                    'No existing Storage Containers found for insight logs', loc);
+                    'No existing Storage Containers found for insight logs', location);
             }
 
-            cb();
+            rcb();
         }, function () {
             callback(null, results, source);
         });

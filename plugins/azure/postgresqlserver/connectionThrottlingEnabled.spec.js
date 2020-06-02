@@ -2,14 +2,19 @@ var assert = require('assert');
 var expect = require('chai').expect;
 var auth = require('./connectionThrottlingEnabled');
 
-const createCache = (err, data) => {
+const createCache = (err, list, get) => {
     return {
-        configurations: {
-            listByServer: {
+        servers: {
+            listPostgres: {
                 'eastus': {
                     err: err,
-                    data: data
+                    data: list
                 }
+            }
+        },
+        configurations: {
+            listByServer: {
+                'eastus': get
             }
         }
     }
@@ -28,7 +33,8 @@ describe('connectionThrottlingEnabled', function () {
 
             const cache = createCache(
                 null,
-                []
+                [],
+                {}
             );
 
             auth.run(cache, {}, callback);
@@ -47,21 +53,32 @@ describe('connectionThrottlingEnabled', function () {
                 null,
                 [
                     {
-                        "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.DBforPostgreSQL/servers/gioservertest1/configurations/log_checkpoints",
+                        "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.DBforPostgreSQL/servers/gioservertest1",
                         "name": "connection_throttling",
-                        "type": "Microsoft.DBforPostgreSQL/servers/configurations",
-                        "value": "off",
-                        "description": "Logs each checkpoint.",
-                        "defaultValue": "on",
-                        "dataType": "Boolean",
-                        "allowedValues": "on,off",
-                        "source": "system-default",
-                        "location": "ukwest",
-                        "storageAccount": {
-                            "name": "gioservertest1"
-                        }
-                    },
-                ]
+                        "type": "Microsoft.DBforPostgreSQL/servers"
+                    }
+                ],
+                {
+                    "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.DBforPostgreSQL/servers/gioservertest1": {
+                        data: [
+                            {
+                                "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.DBforPostgreSQL/servers/gioservertest1/configurations/log_checkpoints",
+                                "name": "connection_throttling",
+                                "type": "Microsoft.DBforPostgreSQL/servers/configurations",
+                                "value": "off",
+                                "description": "Logs each checkpoint.",
+                                "defaultValue": "on",
+                                "dataType": "Boolean",
+                                "allowedValues": "on,off",
+                                "source": "system-default",
+                                "location": "ukwest",
+                                "storageAccount": {
+                                    "name": "gioservertest1"
+                                }
+                            }
+                        ]
+                    }
+                }
             );
 
             auth.run(cache, {}, callback);
@@ -80,21 +97,32 @@ describe('connectionThrottlingEnabled', function () {
                 null,
                 [
                     {
-                        "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.DBforPostgreSQL/servers/gioservertest1/configurations/log_checkpoints",
+                        "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.DBforPostgreSQL/servers/gioservertest1",
                         "name": "connection_throttling",
-                        "type": "Microsoft.DBforPostgreSQL/servers/configurations",
-                        "value": "ON",
-                        "description": "Logs each checkpoint.",
-                        "defaultValue": "on",
-                        "dataType": "Boolean",
-                        "allowedValues": "on,off",
-                        "source": "system-default",
-                        "location": "ukwest",
-                        "storageAccount": {
-                            "name": "gioservertest1"
-                        }
-                    },
-                ]
+                        "type": "Microsoft.DBforPostgreSQL/servers"
+                    }
+                ],
+                {
+                    "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.DBforPostgreSQL/servers/gioservertest1": {
+                        data: [
+                            {
+                                "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.DBforPostgreSQL/servers/gioservertest1/configurations/log_checkpoints",
+                                "name": "connection_throttling",
+                                "type": "Microsoft.DBforPostgreSQL/servers/configurations",
+                                "value": "on",
+                                "description": "Logs each checkpoint.",
+                                "defaultValue": "on",
+                                "dataType": "Boolean",
+                                "allowedValues": "on,off",
+                                "source": "system-default",
+                                "location": "ukwest",
+                                "storageAccount": {
+                                    "name": "gioservertest1"
+                                }
+                            }
+                        ]
+                    }
+                }
             );
 
             auth.run(cache, {}, callback);

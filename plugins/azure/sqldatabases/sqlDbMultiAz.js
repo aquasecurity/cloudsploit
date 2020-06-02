@@ -8,43 +8,59 @@ module.exports = {
     more_info: 'Creating SQL Database instances in a single availability zone creates a single point of failure for all systems relying on that database. All SQL Database instances should be created in multiple availability zones to ensure proper failover.',
     link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-high-availability#zone-redundant-configuration',
     recommended_action: 'Ensure that each SQL Database is configured to be zone redundant.',
-    apis: ['resourceGroups:list', 'servers:sql:list', 'databases:listByServer'],
+    apis: ['servers:listSql', 'databases:listByServer'],
 
     run: function (cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.databases, function (location, rcb) {
-            const databases = helpers.addSource(cache, source,
-                ['databases', 'listByServer', location]);
+        async.each(locations.servers, function (location, rcb) {
+            var servers = helpers.addSource(cache, source,
+                ['servers', 'listSql', location]);
 
-            if(!databases) return rcb();
+            if (!servers) return rcb();
 
-            if (databases.err || !databases.data) {
+            if (servers.err || !servers.data) {
                 helpers.addResult(results, 3,
-                'Unable to query for SQL Databases: ' + helpers.addError(databases), location);
+                    'Unable to query for SQL servers: ' + helpers.addError(servers), location);
                 return rcb();
             }
 
-            if (!databases.data.length) {
-                helpers.addResult(results, 0, 'No SQL Databases found', location);
+            if (!servers.data.length) {
+                helpers.addResult(results, 0, 'No SQL servers found', location);
                 return rcb();
             }
 
-            databases.data.forEach(database => {
-                if (!database.zoneRedundant) {
-                    helpers.addResult(results, 2, 
-                        'SQL Database does not have zone redundancy enabled', location, database.id);
+            // Loop through servers and check databases
+            servers.data.forEach(function (server) {
+                var databases = helpers.addSource(cache, source,
+                    ['databases', 'listByServer', location, server.id]);
+
+                if (!databases || databases.err || !databases.data) {
+                    helpers.addResult(results, 3,
+                        'Unable to query for SQL server databases: ' + helpers.addError(databases), location, server.id);
                 } else {
-                    helpers.addResult(results, 0, 
-                        'SQL Database has zone redundancy enabled', location, database.id);
+                    if (!databases.data.length) {
+                        helpers.addResult(results, 0,
+                            'No databases found for SQL server', location, server.id);
+                    } else {
+                        // Loop through databases
+                        databases.data.forEach(function (database) {
+                            if (database.zoneRedundant) {
+                                helpers.addResult(results, 0,
+                                    'SQL Database has zone redundancy enabled', location, database.id);
+                            } else {
+                                helpers.addResult(results, 2,
+                                    'SQL Database does not have zone redundancy enabled', location, database.id);
+                            }
+                        });
+                    }
                 }
             });
 
             rcb();
         }, function () {
-        // Global checking goes here
             callback(null, results, source);
         });
     }

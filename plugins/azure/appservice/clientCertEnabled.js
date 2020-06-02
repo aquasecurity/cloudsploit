@@ -34,21 +34,13 @@ module.exports = {
                 return rcb();
             }
 
-            let noWebAppClientCert = [];
-
-            webApps.data.forEach(function(webApp){
-                if (!webApp.clientCertEnabled) noWebAppClientCert.push(webApp.id);
-            });
-
-            if (noWebAppClientCert.length > 20) {
-                helpers.addResult(results, 2, 'More than 20 App Services do not have Client Certificates enabled', location);
-            } else if (noWebAppClientCert.length) {
-                for (app in noWebAppClientCert) {
-                    helpers.addResult(results, 2, 'The App Service does not have Client Certificates enabled', location, noWebAppClientCert[app]);
+            webApps.data.forEach(function(webApp) {
+                if (webApp.clientCertEnabled) {
+                    helpers.addResult(results, 0, 'The App Service has Client Certificates enabled', location, webApp.id);
+                } else {
+                    helpers.addResult(results, 2, 'The App Service does not have Client Certificates enabled', location, webApp.id);
                 }
-            } else {
-                helpers.addResult(results, 0, 'All App Services have Client Certificates enabled', location);
-            }
+            });
 
             rcb();
         }, function () {

@@ -9,11 +9,30 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/vpc.html',
     recommended_action: 'Update the Lambda function with a VPC configuration.',
     apis: ['Lambda:listFunctions'],
+    settings: {
+        lambda_whitelist: {
+            name: 'Lambda Functions Whitelisted',
+            description: 'A comma-delimited list of known lambda function Function Names that should be whitelisted',
+            regex: '^.{1,255}$',
+            default: 'Aqua-CSPM-Token-Rotator-Function'
+        }
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+
+        var config = {
+            lambda_whitelist: settings.lambda_whitelist || this.settings.lambda_whitelist.default
+        };
+
+        if (config.lambda_whitelist &&
+            config.lambda_whitelist.length) {
+            config.lambda_whitelist = config.lambda_whitelist.split(',');
+        } else {
+            config.lambda_whitelist = [];
+        }
 
         async.each(regions.lambda, function(region, rcb){
             var listFunctions = helpers.addSource(cache, source,
@@ -36,14 +55,21 @@ module.exports = {
                 // For resource, attempt to use the endpoint address (more specific) but fallback to the instance identifier
                 var lambdaFunction = listFunctions.data[f];
 
-                if (lambdaFunction.VpcConfig && lambdaFunction.VpcConfig.VpcId) {
+                if (config.lambda_whitelist.length &&
+                    config.lambda_whitelist.indexOf(lambdaFunction.FunctionName)>-1) {
                     helpers.addResult(results, 0,
-                        'Function is being launched into a VPC',
+                        'The function ' + lambdaFunction.FunctionName + ' is whitelisted.',
                         region, lambdaFunction.FunctionArn);
                 } else {
-                    helpers.addResult(results, 2,
-                        'Function is not being launched into a VPC',
-                        region, lambdaFunction.FunctionArn);
+                    if (lambdaFunction.VpcConfig && lambdaFunction.VpcConfig.VpcId) {
+                        helpers.addResult(results, 0,
+                            'Function is being launched into a VPC',
+                            region, lambdaFunction.FunctionArn);
+                    } else {
+                        helpers.addResult(results, 2,
+                            'Function is not being launched into a VPC',
+                            region, lambdaFunction.FunctionArn);
+                    }
                 }
             }
             

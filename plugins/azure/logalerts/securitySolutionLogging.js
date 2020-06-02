@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Monitoring for create or update and delete Security Solution events gives insight into event changes and may reduce the time it takes to detect suspicious activity.',
     recommended_action: 'Add a new log alert to the Alerts service that monitors for Security Solution create or update and delete events.',
     link: 'https://docs.microsoft.com/en-us/azure/security/azure-log-audit',
-    apis: ['resourceGroups:list', 'activityLogAlerts:listBySubscriptionId'],
+    apis: ['activityLogAlerts:listBySubscriptionId'],
 
     run: function(cache, settings, callback) {
         const results = [];

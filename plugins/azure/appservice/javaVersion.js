@@ -30,40 +30,49 @@ module.exports = {
         var locations = helpers.locations(settings.govcloud);
 
         async.each(locations.webApps, function (location, rcb) {
-
-            var webApps = helpers.addSource(cache, source, ['webApps', 'listConfigurations', location]);
+            const webApps = helpers.addSource(
+                cache, source, ['webApps', 'list', location]
+            );
 
             if (!webApps) return rcb();
 
             if (webApps.err || !webApps.data) {
-                helpers.addResult(results, 3, 'Unable to query App Services: ' + helpers.addError(webApps), location);
+                helpers.addResult(results, 3,
+                    'Unable to query for App Services: ' + helpers.addError(webApps), location);
                 return rcb();
             }
 
             if (!webApps.data.length) {
-                helpers.addResult(results, 0, 'No existing App Services found', location);
+                helpers.addResult(
+                    results, 0, 'No existing App Services found', location);
                 return rcb();
             }
 
             var found = false;
 
-            webApps.data.forEach(webApp => {
-                if (webApp.javaVersion && webApp.javaVersion !== "") {
+            webApps.data.forEach(function (webApp) {
+                const webConfigs = helpers.addSource(
+                    cache, source, ['webApps', 'listConfigurations', location, webApp.id]
+                );
+
+                if (helpers.checkAppVersions(
+                    webConfigs,
+                    results,
+                    location,
+                    webApp.id,
+                    'javaVersion',
+                    config.latestJavaVersion,
+                    'Java',
+                    custom)
+                ) {
                     found = true;
-                    if (parseFloat(webApp.javaVersion) >= config.latestJavaVersion) {
-                        helpers.addResult(results, 0, 
-                            `The Java version (${parseFloat(webApp.javaVersion)}) is the latest version`, location, webApp.id, custom);
-                    } else {
-                        helpers.addResult(results, 2, 
-                            `The Java version (${parseFloat(webApp.javaVersion)}) is not the latest version`, location, webApp.id, custom);
-                    }
                 }
             });
 
             if (!found) {
                 helpers.addResult(results, 0, 'No App Services with Java found', location);
             }
-            
+
             rcb();
         }, function () {
             // Global checking goes here

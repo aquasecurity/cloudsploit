@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'All Azure CDN endpoints should enable HTTPS to secure traffic to the backend custom origin.',
     recommended_action: 'Enable HTTPS and disable HTTP for each custom origin endpoint for each CDN profile.',
     link: 'https://docs.microsoft.com/en-us/azure/cdn/cdn-create-endpoint-how-to',
-    apis: ['resourceGroups:list', 'profiles:list', 'endpoints:listByProfile', 'origins:listByEndpoint'],
+    apis: ['profiles:list', 'endpoints:listByProfile'],
     compliance: {
         hipaa: 'HIPAA requires all data to be transmitted over secure channels. ' +
                 'Secure CDN origins should be used to ensure traffic between ' +
@@ -23,42 +23,49 @@ module.exports = {
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.origins, (location, rcb) => {
+        async.each(locations.profiles, (location, rcb) => {
+            const profiles = helpers.addSource(cache, source,
+                ['profiles', 'list', location]);
 
-            const origins = helpers.addSource(cache, source,
-                ['origins', 'listByEndpoint', location]);
+            if (!profiles) return rcb();
 
-            if (!origins) return rcb();
-
-            if (origins.err || !origins.data) {
-                helpers.addResult(results, 0,
-                    'Unable to query CDN Profile endpoint origins');
+            if (profiles.err || !profiles.data) {
+                helpers.addResult(results, 3,
+                    'Unable to query for CDN Profiles: ' + helpers.addError(profiles));
                 return rcb();
             }
 
-            if (!origins.data.length) {
-                helpers.addResult(results, 0, 'No existing CDN Profile endpoint origins found', location);
+            if (!profiles.data.length) {
+                helpers.addResult(results, 0, 'No existing CDN Profiles found', location);
                 return rcb();
             }
 
-            let isInsecureCustomOrigin = false;
+            profiles.data.forEach(function(profile) {
+                const endpoints = helpers.addSource(cache, source,
+                    ['endpoints', 'listByProfile', location, profile.id]);
 
-            for (let res in origins.data) {
-                let Origin = origins.data[res];
-                if (Origin.httpsPort == undefined
-                    && Origin.hostName.indexOf("blob.core.windows.net") == -1
-                    && Origin.hostName.indexOf("cloudapp.net") == -1
-                    && Origin.hostName.indexOf("azurewebsites.net") == -1) {
-                    isInsecureCustomOrigin = true
-                    helpers.addResult(results, 2,
-                        'The Custom Origin has HTTPS disabled', location, Origin.hostName);
+                if (!endpoints || endpoints.err || !endpoints.data) {
+                    helpers.addResult(results, 3,
+                        'Unable to query for CDN Profile endpoints: ' + helpers.addError(endpoints), profile.id);
+                } else {
+                    if (!endpoints.data.length) {
+                        helpers.addResult(results, 0,
+                            'CDN profile does not contain any endpoints', location, profile.id);
+                    } else {
+                        // Loop through all endpoints
+                        endpoints.data.forEach(function(endpoint) {
+                            if (endpoint.isHttpAllowed) {
+                                helpers.addResult(results, 2,
+                                    'CDN profile endpoint allows insecure HTTP origin', location, endpoint.id);
+                            } else {
+                                helpers.addResult(results, 0,
+                                    'CDN profile endpoint does not allow insecure HTTP origin', location, endpoint.id);
+                            }
+                        });
+                    }
                 }
-            }
+            });
 
-            if (!isInsecureCustomOrigin) {
-                helpers.addResult(results, 0,
-                    'All custom origins have HTTPS enabled', location);
-            }
             rcb();
         }, function () {
             callback(null, results, source);

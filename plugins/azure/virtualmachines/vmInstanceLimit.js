@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Azure limits regions to certain numbers of resources. Exceeding those limits could prevent resources from launching.',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/windows/overview',
     recommended_action: 'Contact Azure support to increase the number of instances available',
-    apis: ['resourceGroups:list', 'virtualMachines:listAll'],
+    apis: ['virtualMachines:listAll'],
     settings: {
         instance_limit_percentage_fail: {
             name: 'Instance Limit Percentage Fail',

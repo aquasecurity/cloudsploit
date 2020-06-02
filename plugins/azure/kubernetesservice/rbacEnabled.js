@@ -36,10 +36,10 @@ module.exports = {
             managedClusters.data.forEach(managedCluster => {
                 if (managedCluster.hasOwnProperty('kubernetesVersion') && managedCluster.enableRBAC) {
                     helpers.addResult(results, 0, 
-                        'RBAC is enabled on the cluster', location, managedCluster.name);
+                        'RBAC is enabled on the cluster', location, managedCluster.id);
                 } else {
-                    helpers.addResult(results, 1, 
-                        'RBAC is not enabled on the cluster', location, managedCluster.name);
+                    helpers.addResult(results, 2, 
+                        'RBAC is not enabled on the cluster', location, managedCluster.id);
                 };
             });
             

@@ -12,7 +12,7 @@ module.exports = {
     settings: {
         latestPhpVersion: {
             name: 'Latest PHP Version',
-            default: 7.3,
+            default: '7.3',
             description: 'The latest PHP version supported by Azure App Service.',
             regex: '[0-9.]{2,5}'
         }
@@ -29,34 +29,42 @@ module.exports = {
         var locations = helpers.locations(settings.govcloud);
 
         async.each(locations.webApps, function (location, rcb) {
-            var webApps = helpers.addSource(cache, source, 
-                ['webApps', 'listConfigurations', location]);
+            const webApps = helpers.addSource(
+                cache, source, ['webApps', 'list', location]
+            );
 
             if (!webApps) return rcb();
 
             if (webApps.err || !webApps.data) {
-                helpers.addResult(results, 3, 'Unable to query App Services: ' + helpers.addError(webApps), location);
+                helpers.addResult(results, 3,
+                    'Unable to query for App Services: ' + helpers.addError(webApps), location);
                 return rcb();
             }
 
             if (!webApps.data.length) {
-                helpers.addResult(results, 0, 'No existing App Services found', location);
+                helpers.addResult(
+                    results, 0, 'No existing App Services found', location);
                 return rcb();
             }
 
             var found = false;
 
-            webApps.data.forEach(webApp => {
-                if (webApp.phpVersion && webApp.phpVersion !== "") {
-                    found = true;
+            webApps.data.forEach(function (webApp) {
+                const webConfigs = helpers.addSource(
+                    cache, source, ['webApps', 'listConfigurations', location, webApp.id]
+                );
 
-                    if (parseFloat(webApp.phpVersion) >= config.latestphpVersion) {
-                        helpers.addResult(results, 0, 
-                            `The PHP version (${parseFloat(webApp.phpVersion)}) is the latest version`, location, webApp.id, custom);
-                    } else {
-                        helpers.addResult(results, 2, 
-                            `The PHP version (${parseFloat(webApp.phpVersion)}) is not the latest version`, location, webApp.id, custom);
-                    }
+                if (helpers.checkAppVersions(
+                    webConfigs,
+                    results,
+                    location,
+                    webApp.id,
+                    'phpVersion',
+                    config.latestphpVersion,
+                    'PHP',
+                    custom)
+                ) {
+                    found = true;
                 }
             });
 

@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Monitoring for create or update Security Policy Rule events gives insight into policy changes and may reduce the time it takes to detect suspicious activity.',
     recommended_action: 'Add a new log alert to the Alerts service that monitors for Security Policy Rule create or update events.',
     link: 'https://docs.microsoft.com/en-us/azure/azure-monitor/platform/activity-log-alerts',
-    apis: ['resourceGroups:list','activityLogAlerts:listBySubscriptionId'],
+    apis: ['activityLogAlerts:listBySubscriptionId'],
 
     run: function (cache, settings, callback) {
         var results = [];

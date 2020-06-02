@@ -5,7 +5,7 @@ var plugin = require('./scaleSetMultiAz');
 const createCache = (err, data) => {
     return {
         virtualMachineScaleSets: {
-            list: {
+            listAll: {
                 'eastus': {
                     err: err,
                     data: data
@@ -53,7 +53,7 @@ describe('scaleSetMultiAz', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('All Virtual Machine Scale Sets are in multiple zones')
+                expect(results[0].message).to.include('The Virtual Machine Scale Set is in multiple zone')
                 expect(results[0].region).to.equal('eastus')
                 done()
             };
