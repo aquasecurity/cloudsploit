@@ -4,67 +4,84 @@ var signature = require('http-signature');
 function call(OracleConfig, options, callback) {
     var body = JSON.stringify(options.body);
     delete options.body;
+    var respBodyArr =[];
+    var newOptions = JSON.parse(JSON.stringify(options));
+    var originalPath = options.path;
 
-    // begin https request
-    var request = https.request(options, function(response) {
-        var respBody = '';
+    var makeCall = function(innerOptions) {
+        // begin https request
+        var request = https.request(innerOptions, function(response) {
+            var respBody = '';
 
-        response.on('data', function(chunk) { 
-            respBody += chunk;
+            response.on('data', function(chunk) {
+                respBody += chunk;
+            });
+
+            response.on('end', function() {
+                var parentOcidArr = innerOptions.path.split('/');
+
+                try {
+                    respBody = JSON.parse(respBody);
+                } catch (e) {
+                    return callback({code:'Invalid Response'});
+                }
+
+                if (parentOcidArr.length > 3 &&
+                    parentOcidArr.length % 2 == 1) {
+                    var parentOcidName = parentOcidArr[parentOcidArr.length-3];
+                    var parentOcidVal = parentOcidArr[parentOcidArr.length-2];
+
+                    if (respBody.length) {
+                        respBody.forEach(resp => {
+                            resp[parentOcidName] = parentOcidVal;
+                        });
+                    } else {
+                        respBody[parentOcidName] = parentOcidVal;
+                    }
+                } else if (parentOcidArr.length > 3 &&
+                    parentOcidArr.length % 2 == 0) {
+                    var parentOcidName = parentOcidArr[parentOcidArr.length-2];
+                    var parentOcidVal = parentOcidArr[parentOcidArr.length-1];
+
+                    if (respBody.length) {
+                        respBody.forEach(resp => {
+                            resp[parentOcidName] = parentOcidVal;
+                        });
+                    } else {
+                        respBody[parentOcidName] = parentOcidVal;
+                    }
+                }
+                if (respBody.length) {
+                    respBodyArr = respBodyArr.concat(respBody);
+                }
+                if (this.headers && this.headers['opc-next-page']) {
+                    innerOptions.path = originalPath + '&page=' + this.headers['opc-next-page'];
+                    makeCall(innerOptions);
+                } else if (respBodyArr.length) {
+                    callback(respBodyArr);
+                } else {
+                    callback(respBody);
+                }
+
+            });
         });
 
-        response.on('end', function() {
-            var parentOcidArr = options.path.split('/');
-
-            try {
-                respBody = JSON.parse(respBody);
-            } catch (e) {
-                return callback({code:'Invalid Response'});
-            }
-
-            if (parentOcidArr.length > 3 &&
-                parentOcidArr.length % 2 == 1) {
-                var parentOcidName = parentOcidArr[parentOcidArr.length-3];
-                var parentOcidVal = parentOcidArr[parentOcidArr.length-2];
-
-                if (respBody.length) {
-                    respBody.forEach(resp => {
-                        resp[parentOcidName] = parentOcidVal
-                    });
-                } else {
-                    respBody[parentOcidName] = parentOcidVal
-                }
-            } else if (parentOcidArr.length > 3 &&
-                parentOcidArr.length % 2 == 0) {
-                var parentOcidName = parentOcidArr[parentOcidArr.length-2];
-                var parentOcidVal = parentOcidArr[parentOcidArr.length-1];
-
-                if (respBody.length) {
-                    respBody.forEach(resp => {
-                        resp[parentOcidName] = parentOcidVal
-                    });
-                } else {
-                    respBody[parentOcidName] = parentOcidVal
-                }
-            }
-            callback(respBody);
+        // Create signature
+        signature.sign(request, {
+            key: OracleConfig.privateKey,
+            keyId: [OracleConfig.tenancyId, OracleConfig.userId, OracleConfig.keyFingerprint].join('/'),
+            headers: ["host", "date", "(request-target)"]
         });
-    });
 
-    // Create signature
-    signature.sign(request, {
-        key: OracleConfig.privateKey,
-        keyId: [OracleConfig.tenancyId, OracleConfig.userId, OracleConfig.keyFingerprint].join('/'),
-        headers: ["host", "date", "(request-target)"]
-    });
+        var oldAuthHead = request.getHeader("Authorization");
+        var newAuthHead = oldAuthHead.replace("Signature ", "Signature version=\"1\",");
+        request.setHeader("Authorization", newAuthHead);
 
-    var oldAuthHead = request.getHeader("Authorization");
-    var newAuthHead = oldAuthHead.replace("Signature ", "Signature version=\"1\",");
-    request.setHeader("Authorization", newAuthHead);
-
-    var requestToWrite = (body === undefined ? '': body);
-    request.write(requestToWrite);
-    request.end();
+        var requestToWrite = (body === undefined ? '': body);
+        request.write(requestToWrite);
+        request.end();
+    };
+    makeCall(newOptions)
 }
 
 var buildHeaders = function(allowedHeaders, options) {

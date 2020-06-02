@@ -79,7 +79,8 @@ var calls = {
         get: {
             api: "iam",
             filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
+            filterValue: ['tenancyId'],
+            filterConfig: [true]
         }
     },
     namespace: {
@@ -87,7 +88,8 @@ var calls = {
             api: "objectStore",
             filterKey: ['compartmentId'],
             filterValue: ['compartmentId'],
-            restVersion: ""
+            restVersion: "",
+            filterConfig: [true]
         }
     },
     group: {
@@ -228,6 +230,7 @@ var calls = {
             api: 'audit',
             filterKey: ['compartmentId'],
             filterValue: ['compartmentId'],
+            filterConfig: [true]
         }
     },
     networkSecurityGroup: {
@@ -290,11 +293,13 @@ var postcalls = {
     bucket: {
         list: {
             api: "objectStore",
-            reliesOnService: ['namespace','compartment'],
-            reliesOnCall: ['get','get'],
-            filterKey: ['namespaceName','compartmentId'],
-            filterValue: ['namespaceName','compartmentId'],
-            restVersion: ""
+            reliesOnService: ['namespace'],
+            reliesOnCall: ['get'],
+            filterKey: ['compartmentId','namespaceName'],
+            filterValue: ['compartmentId','namespaceName'],
+            filterConfig: [true, false],
+            restVersion: "",
+            limit: 900
         }
     },
     waasPolicy: {

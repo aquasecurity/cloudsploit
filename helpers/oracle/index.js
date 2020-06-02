@@ -39,8 +39,8 @@ function OracleExecutor (OracleConfig, Service) {
                     var records = callObj.collection[service][callObj.reliesOnCall[callObj.reliesOnService.indexOf(service)]][OracleConfig.region].data;
                     if (service === 'namespace') {
                         parameters['namespaceName'] = records;
-                        return serviceCb();
                     }
+                    if (!records.length) return callback([], []);
                     async.eachLimit(records, 10,function(record, recordCb) {
                         for (filter in callObj.filterKey) {
                             if (callObj.filterConfig && callObj.filterConfig[filter]) {
@@ -61,7 +61,9 @@ function OracleExecutor (OracleConfig, Service) {
                             callObj.restVersion == '') {
                             OracleConfig.RESTversion = callObj.restVersion;
                         }
-
+                        if (callObj.limit) {
+                            parameters['limit'] = callObj.limit;
+                        }
                         oci(callObj.api, oracleService, callKey, OracleConfig, parameters, function(result) {
                             if (result.code) {
                                 aggregatedErrors.push(result);
@@ -113,8 +115,13 @@ function OracleExecutor (OracleConfig, Service) {
             };
 
             return oci(callObj.api, oracleService, callKey, OracleConfig, parameters, function(result) {
+                var resultArr = [];
                 if (result.code) {
                     return callback(result);
+                }
+                if (oracleService === 'authenticationPolicy' && !result.length) {
+                    resultArr.push(result);
+                    return callback(null, resultArr);
                 }
                 //console.log('\n' + require('util').inspect(result, {depth: null}));
                 callback(null, result);

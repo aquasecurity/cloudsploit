@@ -37,23 +37,15 @@ module.exports = {
                 } else if (!getBucket.data.length) {
                     helpers.addResult(results, 0, 'No object store bucket details to check', region);
                 } else {
-                    var bucketIssues = [];
 
                     getBucket.data.forEach(function (bucket) {
-
-                        var bucketResource = bucket.etag;
-
                         if (bucket.publicAccessType &&
-                            bucket.publicAccessType !== "NoPublicAccess") {
-                            bucketIssues.push(bucket.publicAccessType);
-                        }
-
-                        if (!bucketIssues.length) {
+                            bucket.publicAccessType === "NoPublicAccess") {
                             helpers.addResult(results, 0,
-                                'Object store Buckets do not allow any public access.', region, bucketResource);
+                                `Object store bucket (${bucket.name}) does not allow public access.`, region, bucket.id);
                         } else {
                             helpers.addResult(results, 2,
-                                'Object store bucket allows public access: ' + bucketIssues.join(', '), region, bucketResource);
+                                `Object store bucket (${bucket.name}) allows  ` + (bucket.publicAccessType ? bucket.publicAccessType : ''), region, bucket.id);
                         }
                     });
                 }
