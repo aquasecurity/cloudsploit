@@ -66,7 +66,7 @@ module.exports = {
                         webConfigs.data[0].linuxFxVersion.indexOf('|') > -1) {
                         found = true;
 
-                        var pythonVersion = webConfigs.linuxFxVersion.substr(webConfigs.linuxFxVersion.indexOf('|') + 1);
+                        var pythonVersion = webConfigs.data[0].linuxFxVersion.substr(webConfigs.data[0].linuxFxVersion.indexOf('|') + 1);
 
                         var version = parseFloat(pythonVersion);
                         var allowedVersion = parseFloat(config.latestPythonVersion);
