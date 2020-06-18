@@ -38,11 +38,11 @@ module.exports = {
                 helpers.addResult(results, 0, 'No existing disks found', location);
             } else {
                 var found = false;
-                for(i in disks.data) {
+                for(var i in disks.data) {
                     var disk = disks.data[i];
                     if (disk.name &&
                         disk.name.length &&
-                        disk.name.toLowerCase().indexOf("osdisk") === -1) {
+                        disk.name.toLowerCase().indexOf('osdisk') === -1) {
                         found = true;
                         if (disk && disk.encryption) {
                             helpers.addResult(results, 0, 'Data disk encryption is enabled', location, disk.id);
@@ -62,4 +62,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

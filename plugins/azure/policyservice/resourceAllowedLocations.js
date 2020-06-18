@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.microsoft.com/en-us/azure/governance/policy/assign-policy-portal',
     apis: ['policyAssignments:list'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
@@ -20,7 +20,7 @@ module.exports = {
 
         var globalPolicies = [];
 
-        async.each(locations.policyAssignments, function (location, rcb) {
+        async.each(locations.policyAssignments, function(location, rcb) {
             const policyAssignments = helpers.addSource(cache, source,
                 ['policyAssignments', 'list', location]);
 

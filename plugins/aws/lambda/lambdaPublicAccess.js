@@ -32,7 +32,7 @@ module.exports = {
                 return rcb();
             }
 
-            for (f in listFunctions.data) {
+            for (var f in listFunctions.data) {
                 var func = listFunctions.data[f];
                 var arn = func.FunctionArn;
 
@@ -53,12 +53,12 @@ module.exports = {
                     var normalized = helpers.normalizePolicyDocument(policy.data.Policy);
 
                     var found = [];
-                    for (n in normalized) {
+                    for (var n in normalized) {
                         var statement = normalized[n];
                         if (statement.Principal) {
                             var isGlobal = helpers.globalPrincipal(statement.Principal);
                             if (isGlobal) {
-                                for (s in statement.Action) {
+                                for (var s in statement.Action) {
                                     if (found.indexOf(statement.Action[s]) == -1) {
                                         found.push(statement.Action[s]);
                                     }

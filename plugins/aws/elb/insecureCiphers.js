@@ -133,12 +133,12 @@ module.exports = {
                     return cb();
                 }
 
-                for (i in describeLoadBalancerPolicies.data.PolicyDescriptions) {
+                for (var i in describeLoadBalancerPolicies.data.PolicyDescriptions) {
                     var policyDesc = describeLoadBalancerPolicies.data.PolicyDescriptions[i];
 
                     var elbBad = [];
 
-                    for (j in policyDesc.PolicyAttributeDescriptions) {
+                    for (var j in policyDesc.PolicyAttributeDescriptions) {
                         var policyAttrDesc = policyDesc.PolicyAttributeDescriptions[j];
 
                         if (policyAttrDesc.AttributeValue === 'true' &&

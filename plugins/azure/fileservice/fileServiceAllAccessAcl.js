@@ -22,7 +22,7 @@ module.exports = {
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.storageAccounts, function (location, rcb) {
+        async.each(locations.storageAccounts, function(location, rcb) {
             const storageAccounts = helpers.addSource(
                 cache, source, ['storageAccounts', 'list', location]);
 
@@ -58,7 +58,7 @@ module.exports = {
                         helpers.addResult(results, 0,
                             'No existing File Service shares found', location, storageAccount.id);
                     } else {
-                        listSharesSegmented.data.forEach(function (fileShare) {
+                        listSharesSegmented.data.forEach(function(fileShare) {
                             fileShare.id = `${storageAccount.id}/fileService/${fileShare.name}`;
                             // Add share ACL
                             var getShareAcl = helpers.addSource(cache, source,
@@ -72,25 +72,27 @@ module.exports = {
                                 var fullPermissions = [];
 
                                 if (acl.signedIdentifiers && Object.keys(acl.signedIdentifiers).length) {
-                                    for (ident in acl.signedIdentifiers) {
+                                    for (var ident in acl.signedIdentifiers) {
                                         var permissions = acl.signedIdentifiers[ident].Permissions;
-                                        for (i = 0; i <= permissions.length; i++) {
+                                        for (var i = 0; i <= permissions.length; i++) {
                                             switch (permissions.charAt(i)) {
-                                                // case "r":
-                                                //     fullPermissions.push('read');
-                                                //     break;
-                                                case "c":
-                                                    fullPermissions.push(`create (via identifier ${ident})`);
-                                                    break;
-                                                case "w":
-                                                    fullPermissions.push(`write (via identifier ${ident})`);
-                                                    break;
-                                                case "d":
-                                                    fullPermissions.push(`delete (via identifier ${ident})`);
-                                                    break;
-                                                case "l":
-                                                    fullPermissions.push(`list (via identifier ${ident})`);
-                                                    break;
+                                            // case "r":
+                                            //     fullPermissions.push('read');
+                                            //     break;
+                                            case 'c':
+                                                fullPermissions.push(`create (via identifier ${ident})`);
+                                                break;
+                                            case 'w':
+                                                fullPermissions.push(`write (via identifier ${ident})`);
+                                                break;
+                                            case 'd':
+                                                fullPermissions.push(`delete (via identifier ${ident})`);
+                                                break;
+                                            case 'l':
+                                                fullPermissions.push(`list (via identifier ${ident})`);
+                                                break;
+                                            default:
+                                                break;
                                             }
                                         }
                                     }

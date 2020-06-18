@@ -18,9 +18,9 @@ const createCache = (err, list, get) => {
     }
 };
 
-describe('aksLatestVersion', function () {
-    describe('run', function () {
-        it('should give passing result if no managed clusters', function (done) {
+describe('aksLatestVersion', function() {
+    describe('run', function() {
+        it('should give passing result if no managed clusters', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -37,7 +37,7 @@ describe('aksLatestVersion', function () {
             auth.run(cache, {}, callback);
         });
 
-        it('should give failing result if the Kubernetes clusters does not have the latest version installed', function (done) {
+        it('should give failing result if the Kubernetes clusters does not have the latest version installed', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -92,7 +92,7 @@ describe('aksLatestVersion', function () {
             auth.run(cache, {}, callback);
         });
 
-        it('should give passing result if the Kubernetes clusters have the latest version installed', function (done) {
+        it('should give passing result if the Kubernetes clusters have the latest version installed', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);

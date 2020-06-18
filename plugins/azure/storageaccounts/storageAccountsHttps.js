@@ -39,7 +39,7 @@ module.exports = {
             if (!storageAccount.data.length) {
                 helpers.addResult(results, 0, 'No storage accounts found', location);
             } else {
-                for (acct in storageAccount.data) {
+                for (var acct in storageAccount.data) {
                     var account = storageAccount.data[acct];
 
                     if (account.enableHttpsTrafficOnly || account.supportsHttpsTrafficOnly) {

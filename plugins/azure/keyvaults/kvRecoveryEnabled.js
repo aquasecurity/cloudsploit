@@ -14,12 +14,12 @@ module.exports = {
                 'modifications or loss.'
     },
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.vaults, function (location, rcb) {
+        async.each(locations.vaults, function(location, rcb) {
             var vaults = helpers.addSource(cache, source,
                 ['vaults', 'list', location]);
 
@@ -63,7 +63,7 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });

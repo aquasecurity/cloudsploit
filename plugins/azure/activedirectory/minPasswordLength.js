@@ -10,12 +10,12 @@ module.exports = {
     recommended_action: 'No action necessary. Azure handles password requirement settings.',
     apis: ['resources:list'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.resources, function (location, rcb) {
+        async.each(locations.resources, function(location, rcb) {
 
             const resources = helpers.addSource(cache, source, 
                 ['resources', 'list', location]);
@@ -28,10 +28,10 @@ module.exports = {
             }
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             helpers.addResult(results, 0, 'Minimum password length is 8 characters', 'global');
             callback(null, results, source);
         });
     }
-}
+};

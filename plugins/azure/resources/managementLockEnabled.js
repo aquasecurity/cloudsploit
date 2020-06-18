@@ -17,7 +17,7 @@ module.exports = {
             regex: '^.{2,125}$'
         }
     },
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
@@ -35,22 +35,22 @@ module.exports = {
                 helpers.addResult(results, 3,
                     'Unable to query Management Locks: ' + helpers.addError(managementLocks),location);
                 return rcb();
-            };
+            }
 
             if (!managementLocks.data.length) {
                 helpers.addResult(results, 0, 'No Management Locks', location);
                 return rcb();
-            };
+            }
 
             var myLockedResourceObj = {};
 
             managementLocks.data.forEach(managementLock => {
-                myLockedResource = managementLock.id.split('/');
-                resourceLength = myLockedResource.length;
+                var myLockedResource = managementLock.id.split('/');
+                var resourceLength = myLockedResource.length;
 
                 if (!myLockedResourceObj[myLockedResource[resourceLength - 6]]) {
                     myLockedResourceObj[myLockedResource[resourceLength - 6]] = [];
-                };
+                }
                 myLockedResourceObj[myLockedResource[resourceLength - 6]].push(myLockedResource[resourceLength - 5]);
             });
 
@@ -64,7 +64,7 @@ module.exports = {
                     helpers.addResult(results, 3,
                         'Unable to query Resources: ' + helpers.addError(resources),loc);
                     return lcb();
-                };
+                }
 
                 if (!resources.data.length) return lcb();
                 
@@ -81,15 +81,15 @@ module.exports = {
                         helpers.addResult(results, 2,
                             'Resource does not have Management Lock Enabled', loc, resource.id);
                         return resCb();        
-                    };
+                    }
 
-                }, function () {
+                }, function() {
                     lcb();
                 });
             });
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });

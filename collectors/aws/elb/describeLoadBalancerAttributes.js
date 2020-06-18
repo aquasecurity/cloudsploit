@@ -8,7 +8,7 @@ module.exports = function(AWSConfig, collection, callback) {
         collection.elb.describeLoadBalancerAttributes[AWSConfig.region][lb.DNSName] = {};
         var params = {
             'LoadBalancerName':lb.LoadBalancerName
-        }
+        };
         elb.describeLoadBalancerAttributes(params, function(err, data) {
             if (err) {
                 collection.elb.describeLoadBalancerAttributes[AWSConfig.region][lb.DNSName].err = err;

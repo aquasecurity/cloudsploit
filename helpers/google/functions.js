@@ -3,13 +3,13 @@ var shared = require(__dirname + '/../shared.js');
 
 function addResult(results, status, message, region, resource, custom){
     // Override unknown results for regions that are opt-in
-        results.push({
-            status: status,
-            message: message,
-            region: region || 'global',
-            resource: resource || null,
-            custom: custom || false
-        });
+    results.push({
+        status: status,
+        message: message,
+        region: region || 'global',
+        resource: resource || null,
+        custom: custom || false
+    });
 }
 
 function findOpenPorts(ngs, protocols, service, location, results) {
@@ -51,7 +51,7 @@ function findOpenPorts(ngs, protocols, service, location, results) {
                                         if (strings.indexOf(string) === -1) strings.push(string);
                                         found = true;
                                     }
-                                })
+                                });
                             }
                         }
                     }
@@ -104,7 +104,7 @@ function findOpenAllPorts(ngs, location, results) {
                                     if (strings.indexOf(string) === -1) strings.push(string);
                                     found = true;
                                 }
-                            })
+                            });
                         }
                     } else if (sgroups['direction'] && (sgroups['direction'] === 'INGRESS') &&
                         firewallRule['IPProtocol'] && (firewallRule['IPProtocol'] === 'all') &&

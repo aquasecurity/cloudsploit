@@ -13,7 +13,7 @@ const encryptionLevelMap = {
 function statementTargetsAction(statement, targetAction) {
     return Array.isArray(statement.Action)
         ? statement.Action.find(action => minimatch(targetAction, action))
-        : minimatch(targetAction, statement.Action)
+        : minimatch(targetAction, statement.Action);
 }
 
 /**
@@ -43,8 +43,8 @@ function getEncryptionLevel(statement) {
 
 function getKeyEncryptionLevel(kmsKey) {
     return kmsKey.Origin === 'AWS_CLOUDHSM' ? 'cloudhsm' :
-           kmsKey.Origin === 'EXTERNAL' ? 'externalcmk' :
-           kmsKey.KeyManager === 'CUSTOMER' ? 'awscmk' : 'awskms'
+        kmsKey.Origin === 'EXTERNAL' ? 'externalcmk' :
+            kmsKey.KeyManager === 'CUSTOMER' ? 'awscmk' : 'awskms';
 }
 
 module.exports = {
@@ -109,10 +109,11 @@ module.exports = {
 
             try {
                 // Parse the policy if it hasn't been parsed and replaced by another plugin....
+                var policyJson;
                 if (typeof getBucketPolicy.data.Policy === 'string') {
-                    var policyJson = JSON.parse(getBucketPolicy.data.Policy);
+                    policyJson = JSON.parse(getBucketPolicy.data.Policy);
                 } else {
-                    var policyJson = getBucketPolicy.data.Policy
+                    policyJson = getBucketPolicy.data.Policy;
                 }
             } catch(e) {
                 helpers.addResult(results, 3, `Bucket policy on bucket [${bucket.Name}] could not be parsed.`, 'global', bucketResource);
@@ -127,11 +128,11 @@ module.exports = {
                 continue;
             }
 
-            statementEncryptionLevels = policyJson.Statement.map(statement => {
+            var statementEncryptionLevels = policyJson.Statement.map(statement => {
                 const encryptionLevel = getEncryptionLevel(statement);
                 if (encryptionLevel.level) return encryptionLevel.level;
                 if (encryptionLevel.key) {
-                    const keyId = encryptionLevel.key.split('/')[1]
+                    const keyId = encryptionLevel.key.split('/')[1];
                     const describeKey = helpers.addSource(cache, source, ['kms', 'describeKey', region, keyId]);
                     if (!describeKey || describeKey.err || !describeKey.data) {
                         helpers.addResult(results, 3, `Unable to query for KMS Key: ${helpers.addError(describeKey)}`, region, keyId);

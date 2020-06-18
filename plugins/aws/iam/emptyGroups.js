@@ -17,7 +17,7 @@ module.exports = {
         var region = helpers.defaultRegion(settings);
 
         var listGroups = helpers.addSource(cache, source,
-                ['iam', 'listGroups', region]);
+            ['iam', 'listGroups', region]);
 
         if (!listGroups) return callback(null, results, source);
 

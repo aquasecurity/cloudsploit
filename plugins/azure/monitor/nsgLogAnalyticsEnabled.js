@@ -18,7 +18,7 @@ module.exports = {
             'infrastructure.'
     },
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
@@ -51,7 +51,7 @@ module.exports = {
                     helpers.addResult(results, 2, 'No existing diagnostics settings', location, nsg.id);
                 } else {
                     var found = false;
-                    diagnosticSettings.data.forEach(function (ds) {
+                    diagnosticSettings.data.forEach(function(ds) {
                         if (ds.logs && ds.logs.length) found = true;
                     });
 
@@ -64,7 +64,7 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }

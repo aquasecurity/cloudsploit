@@ -14,7 +14,7 @@ module.exports = {
     mostRecentDate: function(dates) {
         var mostRecentDate;
 
-        for (d in dates) {
+        for (var d in dates) {
             if (!mostRecentDate || dates[d] > mostRecentDate) {
                 mostRecentDate = dates[d];
             }
@@ -26,7 +26,7 @@ module.exports = {
     isCustom: function(providedSettings, pluginSettings) {
         var isCustom = false;
 
-        for (s in pluginSettings) {
+        for (var s in pluginSettings) {
             if (providedSettings[s] && pluginSettings[s].default &&
                 (providedSettings[s] !== pluginSettings[s].default)) {
                 isCustom = true;
@@ -71,19 +71,20 @@ module.exports = {
         if (!source[service][call]) source[service][call] = {};
         if (!source[service][call][region]) source[service][call][region] = {};
 
+        var original;
         if (extra) {
-            var original = (cache[service] &&
-                           cache[service][call] &&
-                           cache[service][call][region] &&
-                           cache[service][call][region][extra]) ?
-                           cache[service][call][region][extra] : null;
+            original = (cache[service] &&
+                cache[service][call] &&
+                cache[service][call][region] &&
+                cache[service][call][region][extra]) ?
+                cache[service][call][region][extra] : null;
 
             source[service][call][region][extra] = original;
         } else {
-            var original = (cache[service] &&
-                           cache[service][call] &&
-                           cache[service][call][region]) ?
-                           cache[service][call][region] : null;
+            original = (cache[service] &&
+                cache[service][call] &&
+                cache[service][call][region]) ?
+                cache[service][call][region] : null;
 
             source[service][call][region] = original;
         }

@@ -145,6 +145,17 @@ function checkPolicyAssignment(policyAssignments, param, text, results, location
         return;
     }
 
+    // This check is required to handle a defect in the Azure API that causes
+    // unmodified ASC policies to return an empty object for parameters: {}
+    // https://knowledgebase.paloaltonetworks.com/KCSArticleDetail?id=kA10g000000PMSZCA4
+    if (policyAssignment.parameters &&
+        !Object.keys(policyAssignment.parameters).length) {
+        addResult(results, 0,
+            'There ASC Default Policy Assignment includes all plugins', location,
+            policyAssignment.id);
+        return;
+    }
+
     if (policyAssignment.parameters &&
         policyAssignment.parameters[param] &&
         policyAssignment.parameters[param].value &&

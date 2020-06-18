@@ -14,12 +14,12 @@ module.exports = {
             'and inventory to ensure future availability.'
     },
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.servers, function (location, rcb) {
+        async.each(locations.servers, function(location, rcb) {
             var servers = helpers.addSource(cache, source,
                 ['servers', 'listSql', location]);
 
@@ -37,7 +37,7 @@ module.exports = {
             }
 
             // Loop through servers and check databases
-            servers.data.forEach(function (server) {
+            servers.data.forEach(function(server) {
                 var databases = helpers.addSource(cache, source,
                     ['databases', 'listByServer', location, server.id]);
 
@@ -50,7 +50,7 @@ module.exports = {
                             'No databases found for SQL server', location, server.id);
                     } else {
                         // Loop through databases
-                        databases.data.forEach(function (database) {
+                        databases.data.forEach(function(database) {
                             if (database.earliestRestoreDate) {
                                 helpers.addResult(results, 0,
                                     'SQL Database is restorable', location, database.id);
@@ -64,7 +64,7 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }

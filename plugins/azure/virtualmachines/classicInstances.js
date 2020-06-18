@@ -35,7 +35,7 @@ module.exports = {
 
             virtualMachines.data.forEach(resource => {
                 if (resource.type &&
-                    resource.type.toLowerCase() == "microsoft.classiccompute/virtualmachines") {
+                    resource.type.toLowerCase() == 'microsoft.classiccompute/virtualmachines') {
                     classicVms++;
                 }
             });
@@ -48,7 +48,7 @@ module.exports = {
 
             rcb();
         }, function(){
-            callback(null, results, source)
+            callback(null, results, source);
         });
     }
 }; 

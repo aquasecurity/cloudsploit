@@ -10,12 +10,12 @@ module.exports = {
     link: 'https://docs.microsoft.com/en-gb/azure/sql-database/sql-database-advanced-data-security',
     apis: ['servers:listSql', 'serverSecurityAlertPolicies:listByServer'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.servers, function (location, rcb) {
+        async.each(locations.servers, function(location, rcb) {
 
             var servers = helpers.addSource(cache, source,
                 ['servers', 'listSql', location]);
@@ -59,7 +59,7 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });

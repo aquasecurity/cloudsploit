@@ -18,7 +18,7 @@ module.exports = {
         async.each(locations.activityLogAlerts, (location, rcb) => {
             var conditionResource = 'microsoft.security/securitysolutions';
 
-            var text = "Security Solution";
+            var text = 'Security Solution';
 
             var activityLogAlerts = helpers.addSource(cache, source,
                 ['activityLogAlerts', 'listBySubscriptionId', location]);

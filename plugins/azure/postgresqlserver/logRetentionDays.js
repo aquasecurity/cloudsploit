@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.microsoft.com/en-us/azure/postgresql/howto-configure-server-parameters-using-portal',
     apis: ['servers:listPostgres', 'configurations:listByServer'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
@@ -32,7 +32,7 @@ module.exports = {
                 return rcb();
             }
 
-            servers.data.forEach(function (server) {
+            servers.data.forEach(function(server) {
                 const configurations = helpers.addSource(cache, source,
                     ['configurations', 'listByServer', location, server.id]);
 
@@ -56,7 +56,7 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });

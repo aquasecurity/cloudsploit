@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Enable all EKS cluster logs to be sent to CloudWatch with proper log retention limits.',
     apis: ['EKS:listClusters', 'EKS:describeCluster', 'STS:getCallerIdentity'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
@@ -19,7 +19,7 @@ module.exports = {
         var awsOrGov = helpers.defaultPartition(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
-        async.each(regions.eks, function (region, rcb) {
+        async.each(regions.eks, function(region, rcb) {
             var listClusters = helpers.addSource(cache, source,
                 ['eks', 'listClusters', region]);
 
@@ -37,7 +37,7 @@ module.exports = {
                 return rcb();
             }
 
-            for (c in listClusters.data) {
+            for (var c in listClusters.data) {
                 var clusterName = listClusters.data[c];
                 var describeCluster = helpers.addSource(cache, source,
                     ['eks', 'describeCluster', region, clusterName]);
@@ -60,10 +60,10 @@ module.exports = {
                     var logEnabled = [];
                     var logDisabled = [];
 
-                    for (l in describeCluster.data.cluster.logging.clusterLogging) {
+                    for (var l in describeCluster.data.cluster.logging.clusterLogging) {
                         var group = describeCluster.data.cluster.logging.clusterLogging[l];
 
-                        for (t in group.types) {
+                        for (var t in group.types) {
                             var groupName = group.types[t];
                             if (group.enabled && logEnabled.indexOf(groupName) === -1) {
                                 logEnabled.push(groupName);
@@ -92,7 +92,7 @@ module.exports = {
             }
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }

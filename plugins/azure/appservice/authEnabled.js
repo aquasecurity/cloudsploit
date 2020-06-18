@@ -15,12 +15,12 @@ module.exports = {
         pci: 'Access to system components must be restricted to known users.'
     },
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.webApps, function (location, rcb) {
+        async.each(locations.webApps, function(location, rcb) {
 
             const webApps = helpers.addSource(
                 cache, source, ['webApps', 'list', location]
@@ -59,9 +59,9 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });
     }
-}
+};

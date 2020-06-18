@@ -20,9 +20,9 @@ const createCache = (err, list, get) => {
     }
 };
 
-describe('sendAlertsEnabled', function () {
-    describe('run', function () {
-        it('should give passing result if no Database Threat Detection policies', function (done) {
+describe('sendAlertsEnabled', function() {
+    describe('run', function() {
+        it('should give passing result if no Database Threat Detection policies', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -40,7 +40,7 @@ describe('sendAlertsEnabled', function () {
             auth.run(cache, {}, callback);
         })
 
-        it('should give failing result if send alerts is not configured', function (done) {
+        it('should give failing result if send alerts is not configured', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -91,7 +91,7 @@ describe('sendAlertsEnabled', function () {
             auth.run(cache, {}, callback);
         });
 
-        it('should give passing result if enabled App Service', function (done) {
+        it('should give passing result if enabled App Service', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);

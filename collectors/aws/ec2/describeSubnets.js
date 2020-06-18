@@ -11,7 +11,7 @@ module.exports = function(AWSConfig, collection, callback) {
         var params = {
             Filters: [
                 {
-                    Name: "vpc-id",
+                    Name: 'vpc-id',
                     Values: [
                         vpc.VpcId
                     ]

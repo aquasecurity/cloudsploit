@@ -51,18 +51,13 @@ describe('exports', function () {
                     expect(remediateParams[0], `Test: ${test} remediate function parameter 1 is not: config`).to.equal('config');
                     expect(remediateParams[1], `Test: ${test} remediate function parameter 2 is not: cache`).to.equal('cache');
                     expect(remediateParams[2], `Test: ${test} remediate function parameter 3 is not: settings`).to.equal('settings');
-                    expect(remediateParams[3], `Test: ${test} remediate function parameter 4 is not: resources`).to.equal('resources');
+                    expect(remediateParams[3], `Test: ${test} remediate function parameter 4 is not: resource`).to.equal('resource');
                     expect(remediateParams[4], `Test: ${test} remediate function parameter 4 is not: callback`).to.equal('callback');
 
                     // Check remediation properties, if they exist
                     expect(lTest.apis_remediate).to.be.an('array');
                     lTest.apis_remediate.forEach(function(apiCall){
                         expect(apiCall, `Test: ${test} API call in apis_remediate is not a string`).to.be.an('string');
-                    });
-
-                    expect(lTest.apis_compare).to.be.an('array');
-                    lTest.apis_compare.forEach(function(apiCall){
-                        expect(apiCall, `Test: ${test} API call in apis_compare is not a string`).to.be.an('string');
                     });
 
                     expect(lTest.actions, `Test: ${test} actions is not an object`).to.be.an('object');
@@ -105,7 +100,7 @@ describe('exports', function () {
                     expect(rollbackParams[0], `Test: ${test} rollback function parameter 1 is not: config`).to.equal('config');
                     expect(rollbackParams[1], `Test: ${test} rollback function parameter 2 is not: cache`).to.equal('cache');
                     expect(rollbackParams[2], `Test: ${test} rollback function parameter 3 is not: settings`).to.equal('settings');
-                    expect(rollbackParams[3], `Test: ${test} rollback function parameter 4 is not: resources`).to.equal('resources');
+                    expect(rollbackParams[3], `Test: ${test} rollback function parameter 4 is not: resource`).to.equal('resource');
                     expect(rollbackParams[4], `Test: ${test} rollback function parameter 4 is not: callback`).to.equal('callback');
                 }
             }

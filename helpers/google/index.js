@@ -23,68 +23,67 @@ var authenticate = async function(GoogleConfig) {
 var processCall = function(GoogleConfig, collection, settings, regions, call, service, client, serviceCb) {
     // Loop through each of the service's functions
     if (call.manyApi) {
-        async.eachOfLimit(call, 10, function (callInt, item, itemsCb) {
-                var myEngine = item;
-                async.eachOfLimit(callInt, 10, function (callObj, callKey, callCb) {
-                    if (settings.api_calls && settings.api_calls.indexOf(service + ':' + myEngine + ':' + callKey) === -1) return callCb();
-                    if (!collection[service]) collection[service] = {};
-                    if (!collection[service][myEngine]) collection[service][myEngine] = {};
-                    if (!collection[service][myEngine][callKey]) collection[service][myEngine][callKey] = {};
+        async.eachOfLimit(call, 10, function(callInt, item, itemsCb) {
+            var myEngine = item;
+            async.eachOfLimit(callInt, 10, function(callObj, callKey, callCb) {
+                if (settings.api_calls && settings.api_calls.indexOf(service + ':' + myEngine + ':' + callKey) === -1) return callCb();
+                if (!collection[service]) collection[service] = {};
+                if (!collection[service][myEngine]) collection[service][myEngine] = {};
+                if (!collection[service][myEngine][callKey]) collection[service][myEngine][callKey] = {};
 
-                    async.eachLimit(regions[service][myEngine], 10, function (region, regionCb) {
-                        if (callObj.location == 'zone') {
-                            async.each(regions.zones[region], function (zone, zoneCb) {
-                                run(GoogleConfig, collection, settings, service, callObj, callKey, zone, zoneCb, client, myEngine);
-                            }, function () {
-                                regionCb();
-                            });
-                        } else {
-                            run(GoogleConfig, collection, settings, service, callObj, callKey, region, regionCb, client, myEngine);
-                        }
-                    }, function () {
-                        callCb();
-                    });
-                }, function () {
-                    itemsCb();
+                async.eachLimit(regions[service][myEngine], 10, function(region, regionCb) {
+                    if (callObj.location == 'zone') {
+                        async.each(regions.zones[region], function(zone, zoneCb) {
+                            run(GoogleConfig, collection, settings, service, callObj, callKey, zone, zoneCb, client, myEngine);
+                        }, function() {
+                            regionCb();
+                        });
+                    } else {
+                        run(GoogleConfig, collection, settings, service, callObj, callKey, region, regionCb, client, myEngine);
+                    }
+                }, function() {
+                    callCb();
                 });
-        }, function () {
+            }, function() {
+                itemsCb();
+            });
+        }, function() {
             serviceCb();
         });
     } else {
-        async.eachOfLimit(call, 10, function (callObj, callKey, callCb) {
+        async.eachOfLimit(call, 10, function(callObj, callKey, callCb) {
             if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
             if (!collection[service]) collection[service] = {};
             if (!collection[service][callKey]) collection[service][callKey] = {};
 
-            async.eachLimit(regions[service], 10, function (region, regionCb) {
+            async.eachLimit(regions[service], 10, function(region, regionCb) {
                 if (callObj.location == 'zone') {
-                    async.each(regions.zones[region], function (zone, zoneCb) {
+                    async.each(regions.zones[region], function(zone, zoneCb) {
                         run(GoogleConfig, collection, settings, service, callObj, callKey, zone, zoneCb, client);
-                    }, function () {
+                    }, function() {
                         regionCb();
                     });
                 } else {
                     run(GoogleConfig, collection, settings, service, callObj, callKey, region, regionCb, client);
                 }
-            }, function () {
+            }, function() {
                 callCb();
             });
 
-        }, function () {
+        }, function() {
             serviceCb();
         });
     }
 };
 
-var run = function (GoogleConfig, collection, settings, service, callObj, callKey, region, regionCb, client, myEngine) {
+var run = function(GoogleConfig, collection, settings, service, callObj, callKey, region, regionCb, client, myEngine) {
     if (settings.skip_regions &&
-        settings.skip_regions.indexOf(region) > -1 &&
-        globalServices.indexOf(Service) === -1) return regionCb();
+        settings.skip_regions.indexOf(region) > -1) return regionCb();
 
     var LocalGoogleConfig = JSON.parse(JSON.stringify(GoogleConfig));
-        LocalGoogleConfig[callObj.location] = region;
-        LocalGoogleConfig.service = service;
-        LocalGoogleConfig.auth = client;
+    LocalGoogleConfig[callObj.location] = region;
+    LocalGoogleConfig.service = service;
+    LocalGoogleConfig.auth = client;
 
     if (callObj.parent && !callObj.reliesOnService) {
         if (!callObj.params) callObj.params = {};
@@ -103,6 +102,8 @@ var run = function (GoogleConfig, collection, settings, service, callObj, callKe
         version: callObj.version,
         params : {}
     };
+
+    var records;
     
     if (myEngine) {
         if (!collection[service][myEngine][callKey][region]) {
@@ -113,7 +114,7 @@ var run = function (GoogleConfig, collection, settings, service, callObj, callKe
         if (callObj.reliesOnService) {
             if (!callObj.reliesOnService.length) return regionCb();
             // Ensure multiple pre-requisites are met
-            for (reliedService in callObj.reliesOnService) {
+            for (var reliedService in callObj.reliesOnService) {
                 if (callObj.reliesOnService[reliedService] && !collection[callObj.reliesOnService[reliedService]]) return regionCb();
 
                 if (callObj.reliesOnService[reliedService] &&
@@ -123,17 +124,17 @@ var run = function (GoogleConfig, collection, settings, service, callObj, callKe
                     !collection[callObj.reliesOnService[reliedService]][myEngine][callObj.reliesOnCall[reliedService]][region].data ||
                     !collection[callObj.reliesOnService[reliedService]][myEngine][callObj.reliesOnCall[reliedService]][region].data.length)) return regionCb();
 
-                var records = collection[callObj.reliesOnService[reliedService]][myEngine][callObj.reliesOnCall[reliedService]][region].data;
-                async.eachLimit(records, 10, function(record, recordCb) {
-                    for (filter in callObj.filterKey) {
-                        callObj.params[callObj.filterKey[filter]] = record[callObj.filterValue[filter]]
+                records = collection[callObj.reliesOnService[reliedService]][myEngine][callObj.reliesOnCall[reliedService]][region].data;
+                async.eachLimit(records, 10, function(record) {
+                    for (var filter in callObj.filterKey) {
+                        callObj.params[callObj.filterKey[filter]] = record[callObj.filterValue[filter]];
                     }
                     execute(LocalGoogleConfig, collection, service, callObj, callKey, region, regionCb, options, myEngine);
                 }, function() {
                     regionCb();
-                })
+                });
             }
-            callObj.params[callObj.filterKey[reliedService]] = [callObj.filterValue[reliedService]]
+            callObj.params[callObj.filterKey[reliedService]] = [callObj.filterValue[reliedService]];
         } else {
             execute(LocalGoogleConfig, collection, service, callObj, callKey, region, regionCb, options, myEngine);
         }
@@ -160,10 +161,10 @@ var run = function (GoogleConfig, collection, settings, service, callObj, callKe
                     !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][region].data ||
                     !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][region].data.length)) return regionCb();
 
-                var records = collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][region].data;
+                records = collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][region].data;
                 async.eachLimit(records, 10, function(record, recordCb) {
-                    for (filter in callObj.filterKey) {
-                        callObj.params[callObj.filterKey[filter]] = record[callObj.filterValue[filter]]
+                    for (var filter in callObj.filterKey) {
+                        callObj.params[callObj.filterKey[filter]] = record[callObj.filterValue[filter]];
                         options.version = callObj.version;
                     }
                     if (callObj.parent) {
@@ -172,9 +173,9 @@ var run = function (GoogleConfig, collection, settings, service, callObj, callKe
                     execute(LocalGoogleConfig, collection, service, callObj, callKey, region, recordCb, options);
                 }, function() {
                     regionCb();
-                })
+                });
             }
-            callObj.params[callObj.filterKey[reliedService]] = [callObj.filterValue[reliedService]]
+            callObj.params[callObj.filterKey[reliedService]] = [callObj.filterValue[reliedService]];
         } else if (callObj.reliesOnService &&
             callObj.reliesOnSubService) {
             if (!callObj.reliesOnService.length) return regionCb();
@@ -189,16 +190,16 @@ var run = function (GoogleConfig, collection, settings, service, callObj, callKe
                         !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnSubService[reliedService]][callObj.reliesOnCall[reliedService]][region].data ||
                         !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnSubService[reliedService]][callObj.reliesOnCall[reliedService]][region].data.length)) return regionCb();
 
-                var records = collection[callObj.reliesOnService[reliedService]][callObj.reliesOnSubService[reliedService]][callObj.reliesOnCall[reliedService]][region].data;
+                records = collection[callObj.reliesOnService[reliedService]][callObj.reliesOnSubService[reliedService]][callObj.reliesOnCall[reliedService]][region].data;
                 async.eachLimit(records, 10, function(record, recordCb) {
-                    for (filter in callObj.filterKey) {
-                        callObj.params[callObj.filterKey[filter]] = record[callObj.filterValue[filter]]
+                    for (var filter in callObj.filterKey) {
+                        callObj.params[callObj.filterKey[filter]] = record[callObj.filterValue[filter]];
                         options.version = callObj.version;
                     }
                     execute(LocalGoogleConfig, collection, service, callObj, callKey, region, recordCb, options);
                 }, function() {
                     regionCb();
-                })
+                });
             }
 
         } else {
@@ -209,19 +210,19 @@ var run = function (GoogleConfig, collection, settings, service, callObj, callKe
 
 var addParent = function(GoogleConfig, region, callObj) {
     if (callObj.location && callObj.location == 'global') {
-        return `projects/${GoogleConfig.project}/locations/-`
+        return `projects/${GoogleConfig.project}/locations/-`;
     } else if (callObj.location && callObj.location == 'region') {
-        return `projects/${GoogleConfig.project}/locations/${region}`
+        return `projects/${GoogleConfig.project}/locations/${region}`;
     } else if (callObj.serviceAccount) {
-        return `projects/${GoogleConfig.project}/serviceAccounts/${callObj.params.id}`
+        return `projects/${GoogleConfig.project}/serviceAccounts/${callObj.params.id}`;
     } else {
-        return `projects/${GoogleConfig.project}`
+        return `projects/${GoogleConfig.project}`;
     }
 };
 
-var execute = function (LocalGoogleConfig, collection, service, callObj, callKey, region, regionCb, options, myEngine) {
+var execute = function(LocalGoogleConfig, collection, service, callObj, callKey, region, regionCb, options, myEngine) {
     var executor = new google[callObj.api](options);
-    var executorCb = function (err, data) {
+    var executorCb = function(err, data) {
         if (myEngine) {
             if (err) {
                 collection[service][myEngine][callKey][region].err = err;
@@ -237,14 +238,14 @@ var execute = function (LocalGoogleConfig, collection, service, callObj, callKey
                 if (data.data.items) {
                     collection[service][myEngine][callKey][region].data = data.data.items;
                 } else if (data.data[service]) {
-                    collection[service][myEngine][callKey][region].data = data.data[service]
+                    collection[service][myEngine][callKey][region].data = data.data[service];
                 } else {
                     collection[service][myEngine][callKey][region].data = [];
                 }
             }
 
             if (callObj.rateLimit) {
-                setTimeout(function () {
+                setTimeout(function() {
                     regionCb();
                 }, callObj.rateLimit);
             } else {
@@ -266,20 +267,20 @@ var execute = function (LocalGoogleConfig, collection, service, callObj, callKey
                     if (data.data.items.constructor.name === 'Array') {
                         collection[service][callKey][region].data = collection[service][callKey][region].data.concat(data.data.items);
                     } else {
-                        collection[service][callKey][region].data = data.data.items
+                        collection[service][callKey][region].data = data.data.items;
                     }
                 } else if (data.data[service]) {
                     if (data.data[service].constructor.name === 'Array') {
                         collection[service][callKey][region].data = collection[service][callKey][region].data.concat(data.data[service]);
                     } else {
-                        collection[service][callKey][region].data.push(data.data[service])
+                        collection[service][callKey][region].data.push(data.data[service]);
                     }
                 }
                 else if (data.data.accounts) {
                     if (data.data.accounts.constructor.name === 'Array') {
                         collection[service][callKey][region].data = collection[service][callKey][region].data.concat(data.data.accounts);
                     } else {
-                        collection[service][callKey][region].data.push(data.data.accounts)
+                        collection[service][callKey][region].data.push(data.data.accounts);
                     }
                 } else if (data.data) {
                     if (data.data.constructor.name === 'Array') {
@@ -295,7 +296,7 @@ var execute = function (LocalGoogleConfig, collection, service, callObj, callKey
             }
 
             if (callObj.rateLimit) {
-                setTimeout(function () {
+                setTimeout(function() {
                     regionCb();
                 }, callObj.rateLimit);
             } else {
@@ -336,7 +337,7 @@ var helpers = {
     processCall: processCall
 };
 
-for (s in shared) helpers[s] = shared[s];
-for (f in functions) helpers[f] = functions[f];
+for (var s in shared) helpers[s] = shared[s];
+for (var f in functions) helpers[f] = functions[f];
 
 module.exports = helpers;

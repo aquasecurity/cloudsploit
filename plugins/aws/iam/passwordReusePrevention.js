@@ -8,6 +8,10 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
     recommended_action: 'Increase the minimum previous passwords that can be reused to 24.',
     apis: ['IAM:getAccountPasswordPolicy'],
+    remediation_description: 'The password policy for password reuse prevention will be set to the value set by the user. Otherwise, it will default to 24.',
+    apis_remediate: ['IAM:getAccountPasswordPolicy'],
+    actions: {remediate: ['IAM:updateAccountPasswordPolicy'], rollback: ['IAM:updateAccountPasswordPolicy']},
+    permissions: {remediate: ['iam:UpdateAccountPasswordPolicy'], rollback: ['iam:UpdateAccountPasswordPolicy']},
     compliance: {
         pci: 'PCI requires that the previous 4 passwords not be reused. ' +
              'Restricting IAM password reuse enforces this policy.'
@@ -41,7 +45,7 @@ module.exports = {
         var region = helpers.defaultRegion(settings);
 
         var getAccountPasswordPolicy = helpers.addSource(cache, source,
-                ['iam', 'getAccountPasswordPolicy', region]);
+            ['iam', 'getAccountPasswordPolicy', region]);
 
         if (!getAccountPasswordPolicy) return callback(null, results, source);
 
@@ -75,5 +79,20 @@ module.exports = {
         }
 
         callback(null, results, source);
+    },
+    remediate: function(config, cache, settings, resource, callback) {
+        var remediation_file = settings.remediation_file;
+        var putCall = this.actions.remediate;
+        var pluginName = 'passwordReusePrevention';
+        var passwordKey = 'PasswordReusePrevention';
+
+        var input = {};
+        if (settings.input && settings.input['maxPreviousPasswords']) {
+            input[passwordKey] = `${settings.input['maxPreviousPasswords']}`;
+        } else {
+            input[passwordKey] = '24';
+        }
+
+        helpers.remediatePasswordPolicy(putCall, pluginName, remediation_file, passwordKey, config, cache, settings, resource, input, callback);
     }
 };

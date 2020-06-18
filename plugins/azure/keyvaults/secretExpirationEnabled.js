@@ -10,12 +10,12 @@ module.exports = {
     link: 'https://docs.microsoft.com/en-us/azure/secret-vault/about-secrets-secrets-and-certificates',
     apis: ['vaults:list', 'vaults:getSecrets'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.vaults, function (location, rcb) {
+        async.each(locations.vaults, function(location, rcb) {
             var vaults = helpers.addSource(cache, source,
                 ['vaults', 'list', location]);
 
@@ -49,7 +49,7 @@ module.exports = {
                             if (!attributes.enabled) {
                                 helpers.addResult(results, 0,
                                     'The secret is disabled', location, secretId);
-                            } else if (attributes.exp && attributes.exp !== null && attributes.exp !== "") {
+                            } else if (attributes.exp && attributes.exp !== null && attributes.exp !== '') {
                                 helpers.addResult(results, 0,
                                     'Expiry date is set for the secret', location, secretId);
                             } else {
@@ -65,9 +65,9 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });
     }
-}
+};

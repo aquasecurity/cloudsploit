@@ -16,12 +16,12 @@ module.exports = {
              'unintended traffic to cross these isolation boundaries.'
     },
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.networkSecurityGroups, function (location, rcb) {
+        async.each(locations.networkSecurityGroups, function(location, rcb) {
 
             let networkSecurityGroups = helpers.addSource(
                 cache, source, ['networkSecurityGroups', 'listAll', location]
@@ -55,21 +55,21 @@ module.exports = {
                             rule.properties.access == 'Deny');
                     });
 
-                    for (rule in denyRules) {
+                    for (var rule in denyRules) {
                         if (!denyRules[rule].properties) continue;
                         let dRule = denyRules[rule].properties;
                         if (dRule.destinationAddressPrefix &&
-                            dRule.destinationAddressPrefix == "*" &&
+                            dRule.destinationAddressPrefix == '*' &&
                             dRule.destinationPortRange &&
-                            dRule.destinationPortRange == "*" &&
+                            dRule.destinationPortRange == '*' &&
                             dRule.protocol &&
-                            dRule.protocol == "*" &&
+                            dRule.protocol == '*' &&
                             dRule.provisioningState &&
-                            dRule.provisioningState == "Succeeded" &&
+                            dRule.provisioningState == 'Succeeded' &&
                             dRule.sourceAddressPrefix &&
-                            dRule.sourceAddressPrefix == "*" &&
+                            dRule.sourceAddressPrefix == '*' &&
                             dRule.sourcePortRange &&
-                            dRule.sourcePortRange == "*" &&
+                            dRule.sourcePortRange == '*' &&
                             dRule.direction) {
                             if (dRule.direction == 'Inbound') denyRuleInbound = true;
                             if (dRule.direction == 'Outbound') denyRuleOutbound = true;
@@ -92,7 +92,7 @@ module.exports = {
                 }
             }
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }

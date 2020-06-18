@@ -16,7 +16,7 @@ module.exports = {
                 'and secure.'
     },
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
@@ -44,7 +44,7 @@ module.exports = {
             }
         });
 
-        async.each(locations.storageAccounts, function (location, rcb) {
+        async.each(locations.storageAccounts, function(location, rcb) {
             var storageAccounts = helpers.addSource(cache, source,
                 ['storageAccounts', 'list', location]);
 
@@ -78,8 +78,8 @@ module.exports = {
                 } else {
                     blobContainerList.data.forEach(blobContainer => {
                         if (blobContainer.name) {
-                            if (blobContainer.name.toLowerCase() === "insights-operational-logs" ||
-                                blobContainer.name.toLowerCase().indexOf("insights-logs-") > -1 ||
+                            if (blobContainer.name.toLowerCase() === 'insights-operational-logs' ||
+                                blobContainer.name.toLowerCase().indexOf('insights-logs-') > -1 ||
                                 saBlobs.indexOf(blobContainer.name.toLowerCase()) > -1) {
                                 containerExists = true;
                                 if (blobContainer.publicAccess &&
@@ -102,7 +102,7 @@ module.exports = {
             }
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }

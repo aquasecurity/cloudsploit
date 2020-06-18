@@ -10,12 +10,12 @@ module.exports = {
     link: 'https://azure.microsoft.com/en-us/blog/announcing-http-2-support-in-azure-app-service/',
     apis: ['webApps:list', 'webApps:listConfigurations'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.webApps, function (location, rcb) {
+        async.each(locations.webApps, function(location, rcb) {
             const webApps = helpers.addSource(
                 cache, source, ['webApps', 'list', location]
             );
@@ -34,7 +34,7 @@ module.exports = {
                 return rcb();
             }
 
-            webApps.data.forEach(function (webApp) {
+            webApps.data.forEach(function(webApp) {
                 const webConfigs = helpers.addSource(
                     cache, source, ['webApps', 'listConfigurations', location, webApp.id]
                 );
@@ -53,9 +53,9 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });
     }
-}
+};

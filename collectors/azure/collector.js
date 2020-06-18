@@ -38,7 +38,7 @@ var calls = {
     },
     virtualNetworks: {
         listAll: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/virtualNetworks?api-version=2020-04-01'
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/virtualNetworks?api-version=2020-03-01'
         }
     },
     virtualMachines: {
@@ -53,7 +53,7 @@ var calls = {
     },
     networkSecurityGroups: {
         listAll: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/networkSecurityGroups?api-version=2020-04-01'
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/networkSecurityGroups?api-version=2020-03-01'
         }
     },
     vaults: {
@@ -73,7 +73,7 @@ var calls = {
     },
     networkWatchers: {
         listAll: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/networkWatchers?api-version=2020-04-01'
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/networkWatchers?api-version=2020-03-01'
         }
     },
     policyAssignments: {
@@ -128,7 +128,7 @@ var calls = {
     },
     loadBalancers: {
         listAll: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/loadBalancers?api-version=2020-04-01'
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/loadBalancers?api-version=2020-03-01'
         }
     },
     users: {
@@ -290,7 +290,7 @@ var postcalls = {
         list: {
             reliesOnPath: 'subscriptions.listLocations',
             properties: ['name'],
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/locations/{name}/usages?api-version=2020-04-01'
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/locations/{name}/usages?api-version=2020-03-01'
         }
     },
     firewallRules: {
@@ -379,6 +379,11 @@ function parseCollection(path, obj) {
 }
 
 var collect = function(AzureConfig, settings, callback) {
+    // Used to gather info only
+    if (settings.gather) {
+        return callback(null, calls, postcalls, tertiarycalls, specialcalls);
+    }
+    
     var helpers = require(__dirname + '/../../helpers/azure/auth.js');
     
     // Login using the Azure config

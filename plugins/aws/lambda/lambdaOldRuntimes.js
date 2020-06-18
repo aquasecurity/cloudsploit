@@ -41,7 +41,7 @@ module.exports = {
 
             var found = false;
 
-            for (f in listFunctions.data) {
+            for (var f in listFunctions.data) {
                 // For resource, attempt to use the endpoint address (more specific) but fallback to the instance identifier
                 var lambdaFunction = listFunctions.data[f];
 

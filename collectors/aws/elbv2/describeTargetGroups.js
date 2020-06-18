@@ -8,7 +8,7 @@ module.exports = function(AWSConfig, collection, callback) {
         collection.elbv2.describeTargetGroups[AWSConfig.region][lb.DNSName] = {};
         var params = {
             'LoadBalancerArn':lb.LoadBalancerArn
-        }
+        };
         elb.describeTargetGroups(params, function(err, data) {
             if (err) {
                 collection.elbv2.describeTargetGroups[AWSConfig.region][lb.DNSName].err = err;

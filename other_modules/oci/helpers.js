@@ -26,10 +26,12 @@ function call(OracleConfig, options, callback) {
                     return callback({code:'Invalid Response'});
                 }
 
+                var parentOcidName;
+                var parentOcidVal;
                 if (parentOcidArr.length > 3 &&
                     parentOcidArr.length % 2 == 1) {
-                    var parentOcidName = parentOcidArr[parentOcidArr.length-3];
-                    var parentOcidVal = parentOcidArr[parentOcidArr.length-2];
+                    parentOcidName = parentOcidArr[parentOcidArr.length-3];
+                    parentOcidVal = parentOcidArr[parentOcidArr.length-2];
 
                     if (respBody.length) {
                         respBody.forEach(resp => {
@@ -40,8 +42,8 @@ function call(OracleConfig, options, callback) {
                     }
                 } else if (parentOcidArr.length > 3 &&
                     parentOcidArr.length % 2 == 0) {
-                    var parentOcidName = parentOcidArr[parentOcidArr.length-2];
-                    var parentOcidVal = parentOcidArr[parentOcidArr.length-1];
+                    parentOcidName = parentOcidArr[parentOcidArr.length-2];
+                    parentOcidVal = parentOcidArr[parentOcidArr.length-1];
 
                     if (respBody.length) {
                         respBody.forEach(resp => {
@@ -70,18 +72,18 @@ function call(OracleConfig, options, callback) {
         signature.sign(request, {
             key: OracleConfig.privateKey,
             keyId: [OracleConfig.tenancyId, OracleConfig.userId, OracleConfig.keyFingerprint].join('/'),
-            headers: ["host", "date", "(request-target)"]
+            headers: ['host', 'date', '(request-target)']
         });
 
-        var oldAuthHead = request.getHeader("Authorization");
-        var newAuthHead = oldAuthHead.replace("Signature ", "Signature version=\"1\",");
-        request.setHeader("Authorization", newAuthHead);
+        var oldAuthHead = request.getHeader('Authorization');
+        var newAuthHead = oldAuthHead.replace('Signature ', 'Signature version="1",');
+        request.setHeader('Authorization', newAuthHead);
 
         var requestToWrite = (body === undefined ? '': body);
         request.write(requestToWrite);
         request.end();
     };
-    makeCall(newOptions)
+    makeCall(newOptions);
 }
 
 var buildHeaders = function(allowedHeaders, options) {
@@ -90,16 +92,16 @@ var buildHeaders = function(allowedHeaders, options) {
         'user-agent': 'Mozilla/5.0'
     };
 
-    for (h in allowedHeaders) {
+    for (var h in allowedHeaders) {
         var header = allowedHeaders[h].toLowerCase();
         if (options[header]) headers[header] = options[header];
     }
     return headers;
 };
 
-var buildQueryString = function (allowedStrings, options) {
+var buildQueryString = function(allowedStrings, options) {
     var queryString = '';
-    for (s in allowedStrings) {
+    for (var s in allowedStrings) {
         var qs = allowedStrings[s];
         if (options[qs]) queryString += (queryString == '' ? '?' : '&') + qs + '=' + encodeURIComponent(options[qs]);
     }

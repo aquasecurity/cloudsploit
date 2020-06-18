@@ -24,7 +24,7 @@ var filterPatterns = [
     },
     {
         name: 'Sign In Failures',
-        pattern: '{ ($.eventName = ConsoleLogin) && ($.errorMessage = \"Failed authentication\") }'
+        pattern: '{ ($.eventName = ConsoleLogin) && ($.errorMessage = "Failed authentication") }'
     },
     {
         name: 'Disabled CMKs',
@@ -85,7 +85,7 @@ module.exports = {
 
             var trailsInRegion = [];
 
-            for (t in describeTrails.data) {
+            for (var t in describeTrails.data) {
                 if (describeTrails.data[t].HomeRegion &&
                     describeTrails.data[t].HomeRegion === region) {
                     trailsInRegion.push(describeTrails.data[t]);
@@ -115,7 +115,7 @@ module.exports = {
             // Organize filters by log group name
             var filters = {};
 
-            for (f in describeMetricFilters.data) {
+            for (var f in describeMetricFilters.data) {
                 var filter = describeMetricFilters.data[f];
 
                 if (filter.logGroupName && filter.filterPattern) {
@@ -145,12 +145,12 @@ module.exports = {
                 var missing = [];
 
                 // If there is a filter setup, check for all strings.
-                for (p in filterPatterns) {
-                    var found = false
+                for (var p in filterPatterns) {
+                    var found = false;
                     var pattern = filterPatterns[p];
-                    var patternSearch = pattern.pattern.replace(/\s+/g, '').toLowerCase()
+                    var patternSearch = pattern.pattern.replace(/\s+/g, '').toLowerCase();
 
-                    for (f in filters) {
+                    for (var f in filters) {
                         var filter = filters[f];
 
                         if (filter.indexOf(patternSearch) > - 1) {

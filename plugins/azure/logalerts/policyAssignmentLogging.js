@@ -10,15 +10,15 @@ module.exports = {
     link: 'https://docs.microsoft.com/en-us/azure/azure-monitor/platform/activity-log-alerts',
     apis: ['activityLogAlerts:listBySubscriptionId'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.activityLogAlerts, function (location, rcb) {
+        async.each(locations.activityLogAlerts, function(location, rcb) {
             var conditionResource = 'microsoft.authorization/policyassignments';
 
-            var text = "Policy Assignment";
+            var text = 'Policy Assignment';
 
             var activityLogAlerts = helpers.addSource(cache, source,
                 ['activityLogAlerts', 'listBySubscriptionId', location]);
@@ -26,7 +26,7 @@ module.exports = {
             helpers.checkLogAlerts(activityLogAlerts, conditionResource, text, results, location);
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }

@@ -31,13 +31,13 @@ module.exports = {
             var instancesTokensRequired = [];
             var instancesInsecure = [];
 
-            for (reservation of describeInstances.data) {
+            for (var reservation of describeInstances.data) {
                 var accountId = reservation.OwnerId;
-                for (instance of reservation.Instances) {
+                for (var instance of reservation.Instances) {
                     var arn = 'arn:aws:ec2:' + region + ':' + accountId + ':instance/' + instance.InstanceId;
 
                     if (!instance.MetadataOptions) {
-                        helpers.addResult(results, 3, `Unable to get instance metadata options`, region, arn);
+                        helpers.addResult(results, 3, 'Unable to get instance metadata options', region, arn);
                         continue;
                     }
 
@@ -63,16 +63,16 @@ module.exports = {
                 helpers.addResult(results, 0, 'No instances found', region);
             } else if (totalCount <= 20) {
                 // Add individual results
-                for (iArn of instancesEndpointDisabled) {
+                for (var iArn of instancesEndpointDisabled) {
                     helpers.addResult(results, 0, 'Instance has instance metadata endpoint disabled', region, iArn);
                 }
 
-                for (iArn of instancesTokensRequired) {
-                    helpers.addResult(results, 0, 'Instance requires tokens for instance metadata endpoint access', region, iArn);
+                for (var jArn of instancesTokensRequired) {
+                    helpers.addResult(results, 0, 'Instance requires tokens for instance metadata endpoint access', region, jArn);
                 }
 
-                for (iArn of instancesInsecure) {
-                    helpers.addResult(results, 2, 'Instance has instance metadata endpoint enabled and does not require HttpTokens', region, iArn);
+                for (var kArn of instancesInsecure) {
+                    helpers.addResult(results, 2, 'Instance has instance metadata endpoint enabled and does not require HttpTokens', region, kArn);
                 }
             } else if (instancesInsecure.length) {
                 helpers.addResult(results, 2, message, region);

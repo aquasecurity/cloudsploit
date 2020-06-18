@@ -19,12 +19,12 @@ module.exports = {
                 'are always connecting over a secure channel.'
     },
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.webApps, function (location, rcb) {
+        async.each(locations.webApps, function(location, rcb) {
 
             const webApps = helpers.addSource(
                 cache, source, ['webApps', 'list', location]
@@ -43,7 +43,7 @@ module.exports = {
                 return rcb();
             }
 
-            webApps.data.forEach(function (webApp) {
+            webApps.data.forEach(function(webApp) {
                 if (webApp.httpsOnly) {
                     helpers.addResult(results, 0, 'The App Service has HTTPS Only enabled', location, webApp.id);
                 } else {
@@ -52,9 +52,9 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });
     }
-}
+};

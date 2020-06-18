@@ -17,7 +17,7 @@ module.exports = {
             regex: '[0-9.]{2,5}'
         }
     },
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const config = {
             latestNetFrameworkVersion: settings.latestNetFrameworkVersion || this.settings.latestNetFrameworkVersion.default
         };
@@ -28,7 +28,7 @@ module.exports = {
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.webApps, function (location, rcb) {
+        async.each(locations.webApps, function(location, rcb) {
             const webApps = helpers.addSource(
                 cache, source, ['webApps', 'list', location]
             );
@@ -49,7 +49,7 @@ module.exports = {
 
             var found = false;
 
-            webApps.data.forEach(function (webApp) {
+            webApps.data.forEach(function(webApp) {
                 const webConfigs = helpers.addSource(
                     cache, source, ['webApps', 'listConfigurations', location, webApp.id]
                 );
@@ -62,8 +62,7 @@ module.exports = {
                     'netFrameworkVersion',
                     config.latestNetFrameworkVersion,
                     '.NET',
-                    custom)
-                    ) {
+                    custom)) {
                     found = true;
                 }
             });
@@ -73,9 +72,9 @@ module.exports = {
             }
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });
     }
-}
+};

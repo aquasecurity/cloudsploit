@@ -15,7 +15,7 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
 
-        async.each(regions.support, function (region, rcb) {
+        async.each(regions.support, function(region, rcb) {
             var describeTrustedAdvisorChecks = helpers.addSource(cache, source, ['support', 'describeTrustedAdvisorChecks', region]);
 
             if (!describeTrustedAdvisorChecks || describeTrustedAdvisorChecks.err || !describeTrustedAdvisorChecks.data) {
@@ -51,7 +51,7 @@ module.exports = {
                 });
                 cb(null, results, source);
             }, rcb);
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }

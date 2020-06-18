@@ -17,7 +17,7 @@ module.exports = {
             'access ensures compliance.'
     },
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
@@ -41,7 +41,7 @@ module.exports = {
                 return rcb();
             }
 
-            storageAccounts.data.forEach(function (storageAccount) {
+            storageAccounts.data.forEach(function(storageAccount) {
                 const blobContainers = helpers.addSource(
                     cache, source, ['blobContainers', 'list', location, storageAccount.id]
                 );
@@ -65,7 +65,7 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }

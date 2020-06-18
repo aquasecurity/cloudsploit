@@ -10,12 +10,12 @@ module.exports = {
     recommended_action: 'Configure the ElasticSearch domain to use a VPC endpoint for secure VPC communication.',
     apis: ['ES:listDomainNames', 'ES:describeElasticsearchDomain'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
 
-        async.each(regions.es, function (region, rcb) {
+        async.each(regions.es, function(region, rcb) {
             var listDomainNames = helpers.addSource(cache, source,
                 ['es', 'listDomainNames', region]);
 
@@ -60,7 +60,7 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }

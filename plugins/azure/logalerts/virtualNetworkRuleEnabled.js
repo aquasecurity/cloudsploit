@@ -17,16 +17,16 @@ module.exports = {
                 'firewalls.'
     },
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.activityLogAlerts, function (location, rcb) {
+        async.each(locations.activityLogAlerts, function(location, rcb) {
 
             var conditionResource = 'microsoft.network/virtualnetworks';
 
-            var text = "Virtual Networks";
+            var text = 'Virtual Networks';
 
             var activityLogAlerts = helpers.addSource(cache, source,
                 ['activityLogAlerts', 'listBySubscriptionId', location]);
@@ -34,7 +34,7 @@ module.exports = {
             helpers.checkLogAlerts(activityLogAlerts, conditionResource, text, results, location);
             
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });

@@ -10,12 +10,12 @@ module.exports = {
     link: 'https://docs.microsoft.com/en-us/azure/azure-subscription-service-limits',
     apis: ['subscriptions:listLocations', 'usages:list'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.usages, function (location, rcb) {
+        async.each(locations.usages, function(location, rcb) {
             const subLocations = helpers.addSource(cache, source,
                 ['subscriptions', 'listLocations', location]);
 
@@ -28,7 +28,7 @@ module.exports = {
             }
 
             if (!subLocations.data.length) {
-                helpers.addResult(results, 0, 'No resource subscription locations found', location)
+                helpers.addResult(results, 0, 'No resource subscription locations found', location);
                 return rcb();
             }
 
@@ -82,9 +82,9 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });
     }
-}
+};

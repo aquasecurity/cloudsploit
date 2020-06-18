@@ -50,12 +50,12 @@ module.exports = {
                     helpers.addResult(results, 3,
                         'Unable to query for WAFs: ' + helpers.addError(listWebACLs), region);
                     return rcb();
-                };
+                }
 
                 if (!listWebACLs.data.length) {
                     helpers.addResult(results, 0, 'No WAFs found', region);
                     return rcb();
-                };
+                }
 
                 listWebACLs.data.forEach(webACL => {
 
@@ -67,7 +67,7 @@ module.exports = {
                     if (!listResources || listResources.err || !listResources.data) {
                         helpers.addResult(results, 3,
                             'Unable to query for WAf Resources: ' + helpers.addError(listResources), region, webACLId);
-                        return
+                        return;
                     }
 
                     if (listResources.data.ResourceArns) {
@@ -79,7 +79,7 @@ module.exports = {
                                 }
                             }
                         });
-                    };
+                    }
                 });
 
                 rcb();
@@ -93,7 +93,7 @@ module.exports = {
                     helpers.addResult(results, 0, 'All Application Load Balancers have WAF enabled');
                 }
                 callback(null, results, source);
-            })
+            });
         });
     }
 };

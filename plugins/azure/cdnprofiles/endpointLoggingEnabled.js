@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.microsoft.com/en-us/azure/cdn/cdn-azure-diagnostic-logs',
     apis: ['profiles:list', 'endpoints:listByProfile', 'diagnosticSettings:listByEndpoint'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
@@ -68,7 +68,7 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }

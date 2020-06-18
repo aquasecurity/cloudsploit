@@ -10,12 +10,12 @@ module.exports = {
     link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-aad-authentication-configure',
     apis: ['servers:listSql', 'serverAzureADAdministrators:listByServer'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.servers, function (location, rcb) {
+        async.each(locations.servers, function(location, rcb) {
 
             var servers = helpers.addSource(cache, source,
                 ['servers', 'listSql', location]);
@@ -33,7 +33,7 @@ module.exports = {
                 return rcb();
             }
 
-            servers.data.forEach(function (server) {
+            servers.data.forEach(function(server) {
                 const serverAzureADAdministrators = helpers.addSource(cache, source,
                     ['serverAzureADAdministrators', 'listByServer', location, server.id]);
 
@@ -64,7 +64,7 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });

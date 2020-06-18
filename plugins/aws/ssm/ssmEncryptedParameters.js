@@ -41,14 +41,14 @@ module.exports = {
                 return rcb();
             }
 
-            for (i in describeParameters.data) {
+            for (var i in describeParameters.data) {
                 var param = describeParameters.data[i];
                 var arn = 'arn:aws:ssm:' + region + ':' + accountId + ':parameter/' + param.Name;
 
-                if (param.Type != "SecureString") {
-                    helpers.addResult(results, 2, 'Non-SecureString Parameters present', region, arn)
+                if (param.Type != 'SecureString') {
+                    helpers.addResult(results, 2, 'Non-SecureString Parameters present', region, arn);
                 } else {
-                    helpers.addResult(results, 0, 'Parameter of Type SecureString', region, arn)
+                    helpers.addResult(results, 0, 'Parameter of Type SecureString', region, arn);
                 }
             }
 
