@@ -227,6 +227,9 @@ var calls = {
             property: 'Tags',
             paginate: 'NextToken',
         },
+        getEbsEncryptionByDefault: {
+            property: 'EbsEncryptionByDefault'
+        },
     },
     ECR: {
         describeRepositories: {
