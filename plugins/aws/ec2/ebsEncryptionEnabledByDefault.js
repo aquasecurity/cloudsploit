@@ -1,6 +1,37 @@
 var async = require('async');
 var helpers = require('../../../helpers/aws');
 
+const encryptionLevelMap = {
+    none: 0,
+    sse: 1,
+    awskms: 2,
+    awscmk: 3,
+    externalcmk: 4,
+    cloudhsm: 5,
+    0: 'none',
+    1: 'sse',
+    2: 'awskms',
+    3: 'awscmk',
+    4: 'externalcmk',
+    5: 'cloudhsm',
+};
+
+function getEncryptionLevel(kmsKey) {
+    if (kmsKey.Origin === 'AWS_KMS') {
+        if (kmsKey.KeyManager === 'AWS') {
+            return 2;
+        } else if (kmsKey.KeyManager === 'CUSTOMER') {
+            return 3;
+        }
+    }
+    if (kmsKey.Origin === 'EXTERNAL') {
+        return 4;
+    }
+    if (kmsKey.Origin === 'AWS_CLOUDHSM') {
+        return 5;
+    }
+}
+
 module.exports = {
     title: 'EBS Encryption Enabled By Default',
     category: 'EC2',
@@ -8,34 +39,60 @@ module.exports = {
     more_info: 'An AWS account may be configured such that, for a particular region(s), it will be mandatory that new EBS volumes and snapshot copies are encrypted.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSEncryption.html#encryption-by-default',
     recommended_action: 'Enable EBS Encryption by Default',
-    apis: ['EC2:getEbsEncryptionByDefault'],
+    apis: ['EC2:getEbsEncryptionByDefault', 'EC2:getEbsDefaultKmsKeyId', 'KMS:describeKey', 'KMS:listKeys', 'KMS:listAliases'],
+    settings: {
+        ebs_encryption_level: {
+            name: 'EBS Minimum Encryption Level',
+            description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
+            regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
+            default: 'awskms',
+        },
+    },
 
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var targetEncryptionLevel = encryptionLevelMap[settings.ebs_encryption_level || this.settings.ebs_encryption_level.default];
 
         async.each(regions.ec2, function(region, rcb){
             var getEbsEncryptionByDefault = helpers.addSource(cache, source,
                 ['ec2', 'getEbsEncryptionByDefault', region]);
+            var getEbsDefaultKmsKeyId = helpers.addSource(cache, source,
+                ['ec2', 'getEbsDefaultKmsKeyId', region]);
+
             if (!getEbsEncryptionByDefault) return rcb();
-
-            if (getEbsEncryptionByDefault.err) {
-                helpers.addResult(results, 3,
-                    'Unable to query for ebs encryption by default status: ' + helpers.addError(getEbsEncryptionByDefault), region);
-                return rcb();
-            }
-
-            if (getEbsEncryptionByDefault.data) {
-                helpers.addResult(results, 0,
-                    'EBS encryption by default is enabled', region);
-                return rcb();
-            }
+            if (!getEbsDefaultKmsKeyId) return rcb();
 
             if (!getEbsEncryptionByDefault.data) {
                 helpers.addResult(results, 2,
-                    'EBS encryption by default is not enabled', region);
+                    'no encryption', region);
+                return rcb();
+            }
+            var kmsKeyId = ""
+            if (getEbsDefaultKmsKeyId.data.split('/')[0] === 'alias') {
+                var listAliases = helpers.addSource(cache, source,
+                ['kms', 'listAliases', region]);
+                listAliases.data.forEach(function(alias){
+                    if (alias.AliasName == getEbsDefaultKmsKeyId.data) {
+                        kmsKeyId = alias.TargetKeyId;
+                    }
+                });
+            } else {
+                kmsKeyId = getEbsDefaultKmsKeyId.data.split('/')[1];
+            }
+            var describeKey = helpers.addSource(cache, source, ['kms', 'describeKey', region, kmsKeyId]);
+            if (!describeKey) return rcb();
+            var encryptionLevel = getEncryptionLevel(describeKey.data.KeyMetadata);
+
+            if (encryptionLevel < targetEncryptionLevel) {
+                helpers.addResult(results, 2,
+                    encryptionLevelMap[encryptionLevel], region);
+                return rcb();
+            } else {
+                helpers.addResult(results, 0,
+                    encryptionLevelMap[encryptionLevel], region);
                 return rcb();
             }
 

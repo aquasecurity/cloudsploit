@@ -230,6 +230,9 @@ var calls = {
         getEbsEncryptionByDefault: {
             property: 'EbsEncryptionByDefault'
         },
+        getEbsDefaultKmsKeyId: {
+            property: 'KmsKeyId'
+        },
     },
     ECR: {
         describeRepositories: {
