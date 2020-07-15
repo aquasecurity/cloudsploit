@@ -43,8 +43,8 @@ module.exports = {
     settings: {
         ebs_encryption_level: {
             name: 'EBS Minimum Encryption Level',
-            description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
-            regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
+            description: 'In order (lowest to highest) none=no encryption; awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
+            regex: '^(none|awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awskms',
         },
     },
@@ -65,9 +65,9 @@ module.exports = {
             if (!getEbsEncryptionByDefault) return rcb();
             if (!getEbsDefaultKmsKeyId) return rcb();
 
-            if (!getEbsEncryptionByDefault.data) {
+            if (!getEbsEncryptionByDefault.data && targetEncryptionLevel !== 0) {
                 helpers.addResult(results, 2,
-                    'no encryption', region);
+                    'encryption by default is disabled, and the settings indicate that "none" is not the desired encryption level. enabling of "EBS encryption by default" is required', region);
                 return rcb();
             }
             var kmsKeyId = ""
@@ -88,11 +88,11 @@ module.exports = {
 
             if (encryptionLevel < targetEncryptionLevel) {
                 helpers.addResult(results, 2,
-                    encryptionLevelMap[encryptionLevel], region);
+                    encryptionLevelMap[encryptionLevel].concat(' is the level of encryption, which is less than the target level, ', encryptionLevelMap[targetEncryptionLevel], ' raising level of encryption is required'), region);
                 return rcb();
             } else {
                 helpers.addResult(results, 0,
-                    encryptionLevelMap[encryptionLevel], region);
+                    encryptionLevelMap[encryptionLevel].concat(' is the level of encryption, which is greater than or equal to the target level, ', encryptionLevelMap[targetEncryptionLevel]), region);
                 return rcb();
             }
 
