@@ -44,16 +44,16 @@ module.exports = {
             var found = false;
             var groups = describeSecurityGroups.data;
 
-            for (g in groups) {
+            for (var g in groups) {
                 var strings = [];
                 var resource = 'arn:aws:ec2:' + region + ':' +
                                groups[g].OwnerId + ':security-group/' +
                                groups[g].GroupId;
 
-                for (p in groups[g].IpPermissions) {
+                for (var p in groups[g].IpPermissions) {
                     var permission = groups[g].IpPermissions[p];
 
-                    for (k in permission.IpRanges) {
+                    for (var k in permission.IpRanges) {
                         var range = permission.IpRanges[k];
 
                         if (range.CidrIp === '0.0.0.0/0') {
@@ -64,26 +64,26 @@ module.exports = {
                             }
 
                             if (permission.IpProtocol === '-1') {
-                                var string = 'all protocols open to 0.0.0.0/0';
-                                if (strings.indexOf(string) === -1) strings.push(string);
+                                var stringO = 'all protocols open to 0.0.0.0/0';
+                                if (strings.indexOf(stringO) === -1) strings.push(stringO);
                                 found = true;
                             }
                         }
                     }
 
-                    for (k in permission.Ipv6Ranges) {
-                        var range = permission.Ipv6Ranges[k];
+                    for (var l in permission.Ipv6Ranges) {
+                        var rangeV6 = permission.Ipv6Ranges[l];
 
-                        if (range.CidrIpv6 === '::/0') {
+                        if (rangeV6.CidrIpv6 === '::/0') {
                             if (!permission.FromPort && (!permission.ToPort || permission.ToPort === 65535)) {
-                                var string = 'all ports open to ::/0';
-                                if (strings.indexOf(string) === -1) strings.push(string);
+                                var stringV6 = 'all ports open to ::/0';
+                                if (strings.indexOf(stringV6) === -1) strings.push(stringV6);
                                 found = true;
                             }
 
                             if (permission.IpProtocol === '-1') {
-                                var string = 'all protocols open to ::/0';
-                                if (strings.indexOf(string) === -1) strings.push(string);
+                                var stringP = 'all protocols open to ::/0';
+                                if (strings.indexOf(stringP) === -1) strings.push(stringP);
                                 found = true;
                             }
                         }

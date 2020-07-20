@@ -18,7 +18,7 @@ module.exports = {
         async.each(regions.kms, function(region, rcb){
             
             var listKeys = helpers.addSource(cache, source,
-                    ['kms', 'listKeys', region]);
+                ['kms', 'listKeys', region]);
 
             if (!listKeys) return rcb();
 

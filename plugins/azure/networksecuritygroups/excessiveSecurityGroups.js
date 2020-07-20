@@ -24,7 +24,7 @@ module.exports = {
         }
     },
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var config = {
             excessive_security_groups_fail: settings.excessive_security_groups_fail || 
                 this.settings.excessive_security_groups_fail.default,
@@ -38,7 +38,7 @@ module.exports = {
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.networkSecurityGroups, function (location, rcb) {
+        async.each(locations.networkSecurityGroups, function(location, rcb) {
 
             let networkSecurityGroups = helpers.addSource(cache, source, 
                 ['networkSecurityGroups', 'listAll', location]);
@@ -68,7 +68,7 @@ module.exports = {
             }
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }

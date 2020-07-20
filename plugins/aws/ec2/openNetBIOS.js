@@ -9,6 +9,17 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
     recommended_action: 'Restrict UDP ports 137 and 138 to known IP addresses',
     apis: ['EC2:describeSecurityGroups'],
+    remediation_description: 'The impacted security group rule will be deleted if no input is provided. Otherwise, any input will replace the open CIDR rule.',
+    apis_remediate: ['EC2:describeSecurityGroups'],
+    actions: {
+        remediate: ['EC2:authorizeSecurityGroupIngress','EC2:revokeSecurityGroupIngress'],
+        rollback: ['EC2:authorizeSecurityGroupIngress']
+    },
+    permissions: {
+        remediate: ['ec2:AuthorizeSecurityGroupIngress','ec2:RevokeSecurityGroupIngress'],
+        rollback:['ec2:AuthorizeSecurityGroupIngress']
+    },
+    realtime_triggers: ['ec2:AuthorizeSecurityGroupIngress'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -43,6 +54,37 @@ module.exports = {
             rcb();
         }, function(){
             callback(null, results, source);
+        });
+    },
+    remediate: function(config, cache, settings, resource, callback) {
+        var remediation_file = settings.remediation_file;
+        var putCall = this.actions.remediate;
+        var pluginName = 'openNetBIOS';
+        var protocol = 'udp';
+        var ports = [137,138];
+        var actions = [];
+        var errors = [];
+
+        async.each(ports,function(port, cb) {
+            helpers.remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, settings, resource, remediation_file, function(error, action) {
+                if (error && (error.length || Object.keys(error).length)) {
+                    errors.push(error);
+                } else if (action && (action.length || Object.keys(action).length)){
+                    actions.push(action);
+                }
+
+                cb();
+            });
+        }, function() {
+            if (errors && errors.length) {
+                remediation_file['post_remediate']['actions'][pluginName]['error'] = errors.join(', ');
+                settings.remediation_file = remediation_file;
+                return callback(errors, null);
+            } else {
+                remediation_file['post_remediate']['actions'][pluginName][resource] = actions;
+                settings.remediation_file = remediation_file;
+                return callback(null, actions);
+            }
         });
     }
 };

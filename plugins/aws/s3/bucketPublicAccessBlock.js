@@ -1,4 +1,3 @@
-var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
@@ -63,13 +62,13 @@ module.exports = {
                     helpers.addResult(results, 3, `Error: ${helpers.addError(getPublicAccessBlock)}`, 'global', 'arn:aws:s3:::' + bucket);
                     continue;
                 }
-                var config = getPublicAccessBlock.data.PublicAccessBlockConfiguration;
-                var missingBlocks = Object.keys(config).filter(k => !config[k]);
+                var configLocal = getPublicAccessBlock.data.PublicAccessBlockConfiguration;
+                var missingBlocks = Object.keys(configLocal).filter(k => !configLocal[k]);
                 if (missingBlocks.length) {
                     helpers.addResult(results, 2, `Missing public access blocks: ${missingBlocks.join(', ')}`, 'global', 'arn:aws:s3:::' + bucket);
                     continue;
                 }
-                helpers.addResult(results, 0, `Public access block fully enabled`, 'global', 'arn:aws:s3:::' + bucket);
+                helpers.addResult(results, 0, 'Public access block fully enabled', 'global', 'arn:aws:s3:::' + bucket);
             }
         }
 

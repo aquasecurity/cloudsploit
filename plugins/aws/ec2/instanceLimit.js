@@ -53,7 +53,7 @@ module.exports = {
             };
 
             // Loop through response to assign custom limits
-            for (i in describeAccountAttributes.data) {
+            for (var i in describeAccountAttributes.data) {
                 if (limits[describeAccountAttributes.data[i].AttributeName]) {
                     limits[describeAccountAttributes.data[i].AttributeName] = describeAccountAttributes.data[i].AttributeValues[0].AttributeValue;
                 }
@@ -71,20 +71,16 @@ module.exports = {
             }
 
             var ec2Instances = 0;
-            var spotInstances = 0;
 
             if (!describeInstances.data.length) {
                 helpers.addResult(results, 0, 'No instances found', region);
                 return rcb();
             } else {
-                for (instances in describeInstances.data){
-                    for (instance in describeInstances.data[instances].Instances){
-                        if (describeInstances.data[instances].Instances[instance].SpotInstanceRequestId){
-                            spotInstances+=1;
-                        } else {
-                            ec2Instances+=1;
+                for (var instances in describeInstances.data){
+                    for (var instance in describeInstances.data[instances].Instances){
+                        if (!describeInstances.data[instances].Instances[instance].SpotInstanceRequestId){
+                            ec2Instances += 1;
                         }
-
                     }
                 }
             }

@@ -51,11 +51,10 @@ module.exports = {
     all_regions: regions,
     zones: zones,
     disks: regions,
-	keyRings: regions,
+    keyRings: regions,
     cryptoKeys: regions,
     securityPolicies: ['global'],
     firewalls: ['global'],
-    securityPolicies: ['global'],
     buckets: ['global'],
     instances: {
         compute: regions,

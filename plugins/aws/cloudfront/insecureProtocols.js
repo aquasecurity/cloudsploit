@@ -58,7 +58,7 @@ module.exports = {
             if (!distribution.ViewerCertificate ||
                 !distribution.ViewerCertificate.MinimumProtocolVersion) {
                 helpers.addResult(results, 0, 'Distribution is not configured for SSL delivery',
-                        'global', distribution.ARN);
+                    'global', distribution.ARN);
                 return cb();
             }
 
@@ -74,7 +74,7 @@ module.exports = {
                 }
             } else if (distribution.ViewerCertificate.MinimumProtocolVersion === 'SSLv3') {
                 helpers.addResult(results, 1, 'Distribution is using insecure SSLv3',
-                        'global', distribution.ARN);
+                    'global', distribution.ARN);
             } else if (distribution.ViewerCertificate.MinimumProtocolVersion === 'TLSv1') {
                 helpers.addResult(results, 1, 'Distribution is using insecure TLSv1.0',
                     'global', distribution.ARN);

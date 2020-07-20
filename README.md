@@ -1,24 +1,23 @@
 [<img src="https://cloudsploit.com/images/logos/cloudsploit_by_aqua_A02.png" height="130">](https://cloudsploit.com)
 
 [![Build Status](https://travis-ci.org/cloudsploit/scans.svg?branch=master)](https://travis-ci.org/cloudsploit/scans)
-[![Known Vulnerabilities](https://snyk.io/test/github/cloudsploit/scans/badge.svg)](https://snyk.io/test/github/cloudsploit/scans)
 
 CloudSploit Scans
 =================
 
 ## Background
-CloudSploit scans is an open-source project designed to allow detection of security risks in cloud infrastructure accounts. These scripts are designed to return a series of potential misconfigurations and security risks.
+CloudSploit scans is an open-source project designed to allow detection of security risks in cloud infrastructure accounts, including: Amazon Web Services (AWS), Microsoft Azure, Google Cloud Platform (GCP), and Oracle Cloud Infrastructure (OCI). These scripts are designed to return a series of potential misconfigurations and security risks.
 
-## Deploy your way
+## Deployment Options
 CloudSploit is available in two deployment options:
 
-### Self-hosted
+### Self-Hosted
 Follow the instructions below to deploy the open-source version of CloudSploit on your machine in just a few simple steps.
 
-### Hosted at AquaCloud
-CloudSploit, by Aqua, hosted in the Aqua Cloud, is a fully managed service maintained and updated by the cloud security experts at Aqua. Our hosted scanner handles the scheduling and running of background scans, aggregation of data into dashboards, tools, and visualizations, and integrates with popular third-party services for alerts.
+### Hosted at Aqua Cloud
+CloudSploit by Aqua, hosted in the Aqua Cloud, is a fully managed service CSPM solution maintained and updated by the cloud security experts at Aqua. Our hosted scanner handles the scheduling and running of background scans, aggregation of data into dashboards, tools, and visualizations, and integrates with popular third-party services for alerts.
 
-Sign up to [AquaCloud](https://cloud.aquasec.com/signup) today!
+Sign up for [Aqua Cloud](https://cloud.aquasec.com/signup) today!
 
 ## Installation
 Ensure that NodeJS is installed. If not, install it from [here](https://nodejs.org/download/).
@@ -39,7 +38,6 @@ To begin using the scanner, edit the `index.js` file with the corresponding sett
 
 Cloud Infrastructure configuration steps:
 
-
 * [AWS](#aws)
 * [Azure](#azure) 
 * [GCP](#gcp) 
@@ -48,7 +46,6 @@ Cloud Infrastructure configuration steps:
 #### AWS
 
 Create a "cloudsploit" user, with the `SecurityAudit` policy.
-
 
 1. Navigate to the [IAM console](https://console.aws.amazon.com/iam/home).
 1. Go to Users 
@@ -437,8 +434,7 @@ We'll add these API calls to `collect.js`. First, under `calls` add:
 ```
 virtualMachines: {
   listAll: {
-    api: "ComputeManagementClient",
-    arm: true
+    url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachines?api-version=2019-12-01'
   }
 },
 ```
@@ -447,12 +443,9 @@ Then, under `postcalls`, add:
 ```
 virtualMachineExtensions: {
   list: {
-    api: "ComputeManagementClient",
-    reliesOnService: ['resourceGroups', 'virtualMachines'],
-    reliesOnCall: ['list', 'listAll'],
-    filterKey: ['resourceGroupName', 'name'],
-    filterValue: ['resourceGroupName', 'name'],
-    arm: true
+    reliesOnPath: 'virtualMachines.listAll',
+    properties: ['id'],
+    url: 'https://management.azure.com/{id}/extensions?api-version=2019-12-01'
   }
 },
 ```
@@ -462,7 +455,7 @@ Next, we'll write the plugin. Create a new file in the `plugins/virtualmachines`
 
 In the file, we'll be sure to export the plugin's title, category, description, link, and more information about it. Additionally, we will add any API calls it makes:
 ```
-apis: ['resourceGroups:list', 'virtualMachines:listAll', 'virtualMachineExtensions:list'],
+apis: ['virtualMachines:listAll', 'virtualMachineExtensions:list'],
 ```
 In the `run` function, we can obtain the output of the collection phase from earlier by doing:
 ```
@@ -471,7 +464,7 @@ var virtualMachines = helpers.addSource(cache, source,
 ```
 Then, we can loop through each of the results and do:
 ```
-var virtualMachineExtensions = helpers.addSource(cache, source,     ['virtualMachineExtensions', 'list', location]);
+var virtualMachineExtensions = helpers.addSource(cache, source,     ['virtualMachineExtensions', 'list', location, virtualMachine.id]);
 ```
 The `helpers` function ensures that the proper results are returned from the collection and that they are saved into a "source" variable which can be returned with the results.
 

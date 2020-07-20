@@ -42,7 +42,7 @@ module.exports = {
                 return rcb();
             }
 
-            for (i in describeClusters.data) {
+            for (var i in describeClusters.data) {
                 // For resource, attempt to use the endpoint address (more specific) but fallback to the instance identifier
                 var cluster = describeClusters.data[i];
                 var clusterResource = (cluster.Endpoint && cluster.Endpoint.Address) ? cluster.Endpoint.Address : cluster.ClusterIdentifier;

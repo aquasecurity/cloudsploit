@@ -15,43 +15,56 @@ module.exports = {
             'version.'
     },
 
-
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.webApps, function (location, rcb) {
-            var webApps = helpers.addSource(cache, source, 
-                ['webApps', 'listConfigurations', location]);
+        async.each(locations.webApps, function(location, rcb) {
+            const webApps = helpers.addSource(
+                cache, source, ['webApps', 'list', location]
+            );
 
             if (!webApps) return rcb();
 
             if (webApps.err || !webApps.data) {
-                helpers.addResult(results, 3, 'Unable to query App Services: ' + helpers.addError(webApps), location);
+                helpers.addResult(results, 3,
+                    'Unable to query for App Services: ' + helpers.addError(webApps), location);
                 return rcb();
             }
 
             if (!webApps.data.length) {
-                helpers.addResult(results, 0, 'No existing App Services found', location);
+                helpers.addResult(
+                    results, 0, 'No existing App Services found', location);
                 return rcb();
             }
 
-            webApps.data.forEach(item => {
-                if (item.minTlsVersion &&
-                    parseFloat(item.minTlsVersion) >= 1.2) {
-                    helpers.addResult(results, 0,'Minimum TLS version criteria is satisfied', location, item.id);
+            webApps.data.forEach(function(webApp) {
+                const webConfigs = helpers.addSource(
+                    cache, source, ['webApps', 'listConfigurations', location, webApp.id]
+                );
+
+                if (!webConfigs || webConfigs.err || !webConfigs.data) {
+                    helpers.addResult(results, 3,
+                        'Unable to query App Service: ' + helpers.addError(webConfigs),
+                        location, webApp.id);
                 } else {
-                    helpers.addResult(results, 2, 'Minimum TLS version is not 1.2', location, item.id);
-                };
+                    if (webConfigs.data[0] &&
+                        webConfigs.data[0].minTlsVersion &&
+                        parseFloat(webConfigs.data[0].minTlsVersion) >= parseFloat('1.2')) {
+                        helpers.addResult(results, 0, 'Minimum TLS version criteria is satisfied', location, webApp.id);
+                    } else {
+                        helpers.addResult(results, 2, 'Minimum TLS version is not 1.2', location, webApp.id);
+                    }
+                }
             });
-            
+
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });
     }
-}
+};
 
 

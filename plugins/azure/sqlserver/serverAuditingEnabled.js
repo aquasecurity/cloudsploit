@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Enabling SQL Server Auditing ensures that all activities are being logged properly, including potentially-malicious activity.',
     recommended_action: 'Ensure that auditing is enabled for each SQL server.',
     link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-auditing',
-    apis: ['servers:sql:list', 'serverBlobAuditingPolicies:get'],
+    apis: ['servers:listSql', 'serverBlobAuditingPolicies:get'],
     compliance: {
         hipaa: 'HIPAA requires that a secure audit record for ' +
             'write read and delete is created for all ' +
@@ -20,33 +20,44 @@ module.exports = {
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.databases, function(location, rcb){
-            var serverBlobAuditingPolicies = helpers.addSource(cache, source,
-                ['serverBlobAuditingPolicies', 'get', location]);
+        async.each(locations.servers, function(location, rcb) {
 
-            if (!serverBlobAuditingPolicies) return rcb();
+            var servers = helpers.addSource(cache, source,
+                ['servers', 'listSql', location]);
 
-            if (serverBlobAuditingPolicies.err || !serverBlobAuditingPolicies.data) {
+            if (!servers) return rcb();
+
+            if (servers.err || !servers.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for Server Auditing policies: ' + helpers.addError(serverBlobAuditingPolicies), location);
+                    'Unable to query for SQL servers: ' + helpers.addError(servers), location);
                 return rcb();
             }
 
-            if (!serverBlobAuditingPolicies.data.length) {
-                helpers.addResult(results, 0, 'No Server Auditing policies found', location);
+            if (!servers.data.length) {
+                helpers.addResult(results, 0, 'No SQL servers found', location);
                 return rcb();
             }
 
-            serverBlobAuditingPolicies.data.forEach(serverBlobAuditingPolicy => {
-                var serverIdArr = serverBlobAuditingPolicy.id.split('/');
-                serverIdArr.length = serverIdArr.length - 2;
-                var serverId = serverIdArr.join('/');
+            servers.data.forEach(function(server) {
+                const serverBlobAuditingPolicies = helpers.addSource(cache, source,
+                    ['serverBlobAuditingPolicies', 'get', location, server.id]);
 
-                if (serverBlobAuditingPolicy.state &&
-                    serverBlobAuditingPolicy.state === 'Enabled') {
-                    helpers.addResult(results, 0, 'Server auditing is enabled on the SQL Server', location, serverId);
+                if (!serverBlobAuditingPolicies || serverBlobAuditingPolicies.err || !serverBlobAuditingPolicies.data) {
+                    helpers.addResult(results, 3,
+                        'Unable to query Auditing Policies: ' + helpers.addError(serverBlobAuditingPolicies), location, server.id);
                 } else {
-                    helpers.addResult(results, 2, 'Server auditing is not enabled on the SQL Server', location, serverId);
+                    if (!serverBlobAuditingPolicies.data.length) {
+                        helpers.addResult(results, 2, 'No Server Auditing policies found', location, server.id);
+                    } else {
+                        serverBlobAuditingPolicies.data.forEach(serverBlobAuditingPolicy => {
+                            if (serverBlobAuditingPolicy.state &&
+                                serverBlobAuditingPolicy.state.toLowerCase() === 'enabled') {
+                                helpers.addResult(results, 0, 'Server auditing is enabled on the SQL Server', location, server.id);
+                            } else {
+                                helpers.addResult(results, 2, 'Server auditing is not enabled on the SQL Server', location, server.id);
+                            }
+                        });
+                    }
                 }
             });
 

@@ -8,58 +8,60 @@ module.exports = {
     more_info: 'Enabling Send to Log Analytics ensures that all Load Balancer logs are being properly monitored and managed.',
     recommended_action: 'Send all diagnostic logs for Load Balancers from the Azure Monitor service to Log Analytics.',
     link: 'https://docs.microsoft.com/en-us/azure/azure-monitor/platform/collect-activity-logs',
-    apis: ['loadBalancers:listAll', 'diagnosticSettingsOperations:lb:list'],
+    apis: ['loadBalancers:listAll', 'diagnosticSettings:listByLoadBalancer'],
     compliance: {
         hipaa: 'HIPAA requires that a secure audit log record for ' +
             'write read and delete is created for all ' +
             'activities in the system.'
     },
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.diagnosticSettingsOperations.lb, (location, rcb) => {
+        async.each(locations.loadBalancers, (location, rcb) => {
+            const loadBalancers = helpers.addSource(cache, source,
+                ['loadBalancers', 'listAll', location]);
 
-            const diagnosticSettingsResources = helpers.addSource(cache, source, 
-                ['diagnosticSettingsOperations', 'lb', 'list', location]);
+            if (!loadBalancers) return rcb();
 
-            if (!diagnosticSettingsResources) return rcb();
-
-            if (diagnosticSettingsResources.err || !diagnosticSettingsResources.data ) {
+            if (loadBalancers.err || !loadBalancers.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query Diagnostic Settings: ' + helpers.addError(diagnosticSettingsResources),location);
+                    'Unable to query for Load Balancers: ' + helpers.addError(loadBalancers), location);
                 return rcb();
             }
 
-            if (!diagnosticSettingsResources.data.length) {
-                helpers.addResult(results, 0, 'No Load Balancers found', location);
+            if (!loadBalancers.data.length) {
+                helpers.addResult(results, 0, 'No existing Load Balancers found', location);
                 return rcb();
             }
 
-            diagnosticSettingsResources.data.forEach(loadBalancerSettings => {
-                var isWorkspace = loadBalancerSettings.value.filter((d) => {
-                    return d.hasOwnProperty('workspaceId') == true;
-                });
+            loadBalancers.data.forEach(function(loadBalancer) {
+                const diagnosticSettings = helpers.addSource(cache, source,
+                    ['diagnosticSettings', 'listByLoadBalancer', location, loadBalancer.id]);
 
-                if (!loadBalancerSettings.value.length) {
-                    helpers.addResult(results, 2,
-                        'Diagnostic Settings are not configured for the Load Balancer', location, loadBalancerSettings.id);
+                if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
+                    helpers.addResult(results, 3,
+                        'Unable to query diagnostics settings: ' + helpers.addError(diagnosticSettings), location, loadBalancer.id);
+                } else if (!diagnosticSettings.data.length) {
+                    helpers.addResult(results, 2, 'No existing diagnostics settings', location, loadBalancer.id);
                 } else {
-                    if (isWorkspace.length) {
-                        helpers.addResult(results, 0,
-                        'Send to Log Analytics is configured for the Load Balancer', location, loadBalancerSettings.id);
+                    var found = false;
+                    diagnosticSettings.data.forEach(function(ds) {
+                        if (ds.logs && ds.logs.length) found = true;
+                    });
+
+                    if (found) {
+                        helpers.addResult(results, 0, 'Log analytics is enabled for load balancer', location, loadBalancer.id);
                     } else {
-                        helpers.addResult(results, 2,
-                        'Send to Log Analytics is not configured for the Load Balancer', location, loadBalancerSettings.id);
+                        helpers.addResult(results, 2, 'Log analytics is not enabled for load balancer', location, loadBalancer.id);
                     }
                 }
             });
 
             rcb();
-        }, function () {
-            // Global checking goes here
+        }, function() {
             callback(null, results, source);
         });
     }

@@ -33,7 +33,7 @@ module.exports = {
 
         if (!authenticationPolicy) return callback(null, results, source);
 
-        if (authenticationPolicy.err || !authenticationPolicy.data) {
+        if ((authenticationPolicy.err && authenticationPolicy.err.length) || !authenticationPolicy.data) {
             helpers.addResult(results, 3,
                 'Unable to query for password policy status: ' + helpers.addError(authenticationPolicy));
             return callback(null, results, source);
@@ -44,20 +44,25 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        var passwordPolicy = authenticationPolicy.data.passwordPolicy;
-
-        if (!passwordPolicy ||
-            (passwordPolicy &&
-            !passwordPolicy.minimumPasswordLength)) {
-            helpers.addResult(results, 1,
-                'Password policy does not require a minimum password length', 'global', authenticationPolicy.data.compartmentId);
-        } else if (passwordPolicy.minimumPasswordLength < 10) {
-            helpers.addResult(results, 2, 'Minimum password length of: ' + passwordPolicy.minimumPasswordLength + ' is less than 10 characters', 'global', authenticationPolicy.data.compartmentId);
-        } else if (passwordPolicy.minimumPasswordLength < 14) {
-            helpers.addResult(results, 1, 'Minimum password length of: ' + passwordPolicy.minimumPasswordLength + ' is less than 14 characters', 'global', authenticationPolicy.data.compartmentId);
-        } else {
-            helpers.addResult(results, 0, 'Minimum password length of: ' + passwordPolicy.minimumPasswordLength + ' is suitable', 'global', authenticationPolicy.data.compartmentId);
-        }
+        authenticationPolicy.data.forEach(policy => {
+            var passwordPolicy = policy.passwordPolicy;
+            if (passwordPolicy &&
+                passwordPolicy.minimumPasswordLength) {
+                if (passwordPolicy.minimumPasswordLength > 14) {
+                    helpers.addResult(results, 0, 'Minimum password length of: ' + passwordPolicy.minimumPasswordLength + ' is suitable', 'global', authenticationPolicy.data.compartmentId);
+                }  else if (passwordPolicy &&
+                    passwordPolicy.minimumPasswordLength &&
+                    passwordPolicy.minimumPasswordLength < 14) {
+                    helpers.addResult(results, 1, 'Minimum password length of: ' + passwordPolicy.minimumPasswordLength + ' is less than the recommended 14 characters', 'global', authenticationPolicy.data.compartmentId);
+                } else {
+                    helpers.addResult(results, 2,
+                        'Password policy does not require a minimum password length', 'global', authenticationPolicy.data.compartmentId);
+                }
+            } else {
+                helpers.addResult(results, 2,
+                    'Password policy does not require a minimum password length', 'global', authenticationPolicy.data.compartmentId);
+            }
+        });
 
         callback(null, results, source);
     }

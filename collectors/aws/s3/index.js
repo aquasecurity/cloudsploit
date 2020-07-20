@@ -11,7 +11,6 @@ module.exports = function(callKey, forceCloudTrail, AWSConfig, collection, callb
         collection.s3.listBuckets[AWSConfig.region] &&
         collection.s3.listBuckets[AWSConfig.region].data &&
         collection.s3.listBuckets[AWSConfig.region].data.length) {
-        
         knownBuckets = collection.s3.listBuckets[AWSConfig.region].data.map(function(bucket){
             return bucket.Name;
         });
@@ -20,11 +19,11 @@ module.exports = function(callKey, forceCloudTrail, AWSConfig, collection, callb
     if (collection && collection.cloudtrail &&
         collection.cloudtrail.describeTrails) {
 
-        for (region in collection.cloudtrail.describeTrails) {
+        for (var region in collection.cloudtrail.describeTrails) {
             if (!collection.cloudtrail.describeTrails[region].data ||
                 !collection.cloudtrail.describeTrails[region].data.length) continue;
 
-            for (t in collection.cloudtrail.describeTrails[region].data) {
+            for (var t in collection.cloudtrail.describeTrails[region].data) {
                 var trail = collection.cloudtrail.describeTrails[region].data[t];
                 
                 if (knownBuckets.indexOf(trail.S3BucketName) === -1) {

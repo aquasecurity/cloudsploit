@@ -10,66 +10,23 @@ module.exports = {
     link: 'https://docs.microsoft.com/en-us/azure/azure-monitor/platform/activity-log-alerts',
     apis: ['activityLogAlerts:listBySubscriptionId'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.activityLogAlerts, function (location, rcb) {
+        async.each(locations.activityLogAlerts, function(location, rcb) {
+            var conditionResource = 'microsoft.network/networksecuritygroups/securityrules';
 
-            var activityAlerts = helpers.addSource(cache, source,
+            var text = 'Network Security Groups rule';
+
+            var activityLogAlerts = helpers.addSource(cache, source,
                 ['activityLogAlerts', 'listBySubscriptionId', location]);
 
-            if (!activityAlerts) return rcb();
-
-            if (activityAlerts.err || !activityAlerts.data) {
-                helpers.addResult(results, 3,
-                    'Unable to query for Activity Alerts: ' + helpers.addError(activityAlerts), location);
-                return rcb();
-            }
-
-            if (!activityAlerts.data.length) {
-                helpers.addResult(results, 0, 'No existing Activity Alerts found', location);
-                return rcb();
-            }
-
-            var deleteAlertExists = false;
-            var writeAlertExists = false;
-            activityAlerts.data.forEach(activityAlert => {
-                let conditionList = (activityAlert &&
-                    activityAlert.condition &&
-                    activityAlert.condition.allOf) ?
-                    activityAlert.condition.allOf : [];
-
-                conditionList.forEach(condition => {
-                    if (condition.equals &&
-                        condition.equals.indexOf('Microsoft.Network/networkSecurityGroups/securityRules/write') > -1 &&
-                        !writeAlertExists) {
-                        helpers.addResult(results, 0,
-                            'Log alert for Network Security Groups rule write is enabled', location, activityAlert.id);
-                        writeAlertExists = true;
-                    } else if (condition.equals &&
-                        condition.equals.indexOf("Microsoft.Network/networkSecurityGroups/securityRules/delete") > -1 &&
-                        !deleteAlertExists) {
-                        helpers.addResult(results, 0,
-                            'Log alert for Network Security Groups rule delete is enabled', location, activityAlert.id);
-                        deleteAlertExists = true;
-                    }
-                });
-            });
-
-            if (!writeAlertExists) {
-                helpers.addResult(results, 2,
-                    'Log alert for Network Security Groups rule write does not exist', location);
-            }
-
-            if (!deleteAlertExists) {
-                helpers.addResult(results, 2,
-                    'Log Alert for Network Security Groups rule delete does not exist', location);
-            }
+            helpers.checkLogAlerts(activityLogAlerts, conditionResource, text, results, location);
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }

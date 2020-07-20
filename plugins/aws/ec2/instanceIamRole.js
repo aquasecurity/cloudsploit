@@ -48,10 +48,10 @@ module.exports = {
 
             var found = 0;
 
-            for (i in describeInstances.data) {
+            for (var i in describeInstances.data) {
                 var accountId = describeInstances.data[i].OwnerId;
 
-                for (j in describeInstances.data[i].Instances) {
+                for (var j in describeInstances.data[i].Instances) {
                     var instance = describeInstances.data[i].Instances[j];
 
                     if (!instance.IamInstanceProfile ||
