@@ -10,12 +10,12 @@ module.exports = {
     recommended_action: 'Delete old load balancers that no longer have backend resources.',
     apis: ['loadBalancers:listAll'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.loadBalancers, function (location, rcb) {
+        async.each(locations.loadBalancers, function(location, rcb) {
 
             const loadBalancers = helpers.addSource(cache, source,
                 ['loadBalancers', 'listAll', location]);
@@ -26,12 +26,12 @@ module.exports = {
                 helpers.addResult(results, 3,
                     'Unable to query Load Balancers: ' + helpers.addError(loadBalancers), location);
                 return rcb();
-            };
+            }
 
             if (!loadBalancers.data.length) {
                 helpers.addResult(results, 0, 'No existing Load Balancers', location);
                 return rcb();
-            };
+            }
 
             loadBalancers.data.forEach(loadBalancer => {
                 var backendAmt = 0;
@@ -43,9 +43,10 @@ module.exports = {
                         'Load Balancer does not have any backend instances', location, loadBalancer.id);
                 } else {
                     loadBalancer.backendAddressPools.forEach(backendAddressPool => {
-                        if (backendAddressPool.backendIPConfigurations) {
-                            backendAmt += backendAddressPool.backendIPConfigurations.length;
-                        };
+                        if (backendAddressPool.properties &&
+                            backendAddressPool.properties.backendIPConfigurations) {
+                            backendAmt += backendAddressPool.properties.backendIPConfigurations.length;
+                        }
                     });
 
                     if (backendAmt) {
@@ -54,11 +55,11 @@ module.exports = {
                     } else {
                         helpers.addResult(results, 2, 
                             'Load Balancer does not have any backend instances', location, loadBalancer.id);
-                    };
-                };  
+                    }
+                }
             });
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });

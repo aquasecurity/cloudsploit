@@ -11,12 +11,12 @@ module.exports = {
     link: 'https://docs.microsoft.com/en-us/azure/app-service/overview-managed-identity',
     apis: ['webApps:list'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.webApps, function (location, rcb) {
+        async.each(locations.webApps, function(location, rcb) {
 
             const webApps = helpers.addSource(
                 cache, source, ['webApps', 'list', location]
@@ -35,7 +35,7 @@ module.exports = {
                 return rcb();
             }
 
-            webApps.data.forEach(function (webApp) {
+            webApps.data.forEach(function(webApp) {
                 if (webApp.identity) {
                     helpers.addResult(results, 0, 'The App Service has identities assigned', location, webApp.id);
                 } else {
@@ -44,9 +44,9 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });
     }
-}
+};

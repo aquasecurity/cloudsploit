@@ -20,7 +20,7 @@ module.exports = {
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.servers, function (location, rcb) {
+        async.each(locations.servers, function(location, rcb) {
             var servers = helpers.addSource(cache, source,
                 ['servers', 'listSql', location]);
 

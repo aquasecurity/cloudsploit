@@ -48,7 +48,7 @@ module.exports = {
                     helpers.addResult(results, 0, 'Network Watcher is enabled', location, networkWatcher.id);
                 } else {
                     helpers.addResult(results, 2, 'Network Watcher is not successfully provisioned for the region', location, networkWatcher.id);
-                };
+                }
             });
 
             rcb();

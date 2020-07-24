@@ -15,12 +15,12 @@ module.exports = {
             'the Key periodically. Key Vaults provides Key expiration capabilities that ' +
             'should be enabled.'
     },
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.vaults, function (location, rcb) {
+        async.each(locations.vaults, function(location, rcb) {
             var vaults = helpers.addSource(cache, source, 
                 ['vaults', 'list', location]);
 
@@ -51,7 +51,7 @@ module.exports = {
                         
                         if (key.attributes) {
                             let attributes = key.attributes;
-                            if (attributes.expires && attributes.expires !== null && attributes.expires !== "") {
+                            if (attributes.expires && attributes.expires !== null && attributes.expires !== '') {
                                 helpers.addResult(results, 0,
                                     'Expiry date is set for the key', location, keyId);
                             } else {
@@ -67,9 +67,9 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });
     }
-}
+};

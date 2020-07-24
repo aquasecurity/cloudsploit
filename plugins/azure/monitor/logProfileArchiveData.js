@@ -80,7 +80,7 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }

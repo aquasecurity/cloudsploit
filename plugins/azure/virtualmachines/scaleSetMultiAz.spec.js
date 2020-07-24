@@ -15,9 +15,9 @@ const createCache = (err, data) => {
     }
 };
 
-describe('scaleSetMultiAz', function () {
-    describe('run', function () {
-        it('should give unknown result if a scale set error is passed or no data is present', function (done) {
+describe('scaleSetMultiAz', function() {
+    describe('run', function() {
+        it('should give unknown result if a scale set error is passed or no data is present', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(3)
@@ -33,7 +33,7 @@ describe('scaleSetMultiAz', function () {
 
             plugin.run(cache, {}, callback);
         })
-        it('should give passing result if no scale set records are found', function (done) {
+        it('should give passing result if no scale set records are found', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
@@ -49,7 +49,7 @@ describe('scaleSetMultiAz', function () {
 
             plugin.run(cache, {}, callback);
         })
-        it('should give passing result if the scale set is multi Az', function (done) {
+        it('should give passing result if the scale set is multi Az', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
@@ -141,7 +141,7 @@ describe('scaleSetMultiAz', function () {
 
             plugin.run(cache, {}, callback);
         })
-        it('should give failing result if the scale set is not multi Az', function (done) {
+        it('should give failing result if the scale set is not multi Az', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(2)

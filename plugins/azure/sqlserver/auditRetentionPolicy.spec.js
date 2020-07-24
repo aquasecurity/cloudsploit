@@ -20,9 +20,9 @@ const createCache = (err, list, get) => {
     }
 };
 
-describe('auditRetentionPolicy', function () {
-    describe('run', function () {
-        it('should give passing result if no auditing policies', function (done) {
+describe('auditRetentionPolicy', function() {
+    describe('run', function() {
+        it('should give passing result if no auditing policies', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -40,7 +40,7 @@ describe('auditRetentionPolicy', function () {
             auth.run(cache, {}, callback);
         })
 
-        it('should give failing result if sql server auditing retention is less than 90 days', function (done) {
+        it('should give failing result if sql server auditing retention is less than 90 days', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -86,7 +86,7 @@ describe('auditRetentionPolicy', function () {
             auth.run(cache, {}, callback);
         });
 
-        it('should give failing result if sql server auditing is not being stored in a storage account', function (done) {
+        it('should give failing result if sql server auditing is not being stored in a storage account', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -132,7 +132,7 @@ describe('auditRetentionPolicy', function () {
             auth.run(cache, {}, callback);
         });
 
-        it('should give passing result if server auditing retention is greater than 90 days', function (done) {
+        it('should give passing result if server auditing retention is greater than 90 days', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);

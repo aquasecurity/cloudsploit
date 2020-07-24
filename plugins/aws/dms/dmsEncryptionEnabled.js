@@ -172,7 +172,7 @@ module.exports = {
                             }
                         }
                     });
-                    rcb()
+                    rcb();
                 }, function(){
                     cb();
                 });

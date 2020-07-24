@@ -37,7 +37,6 @@ module.exports = {
     redshift: regions,
     apigateway: regions,
     cloudwatch: regions,
-    ecr: regions,
     ecs: regions,
     sagemaker: [],
     ses: [],

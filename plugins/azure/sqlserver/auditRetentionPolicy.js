@@ -15,7 +15,7 @@ module.exports = {
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.servers, function (location, rcb) {
+        async.each(locations.servers, function(location, rcb) {
 
             var servers = helpers.addSource(cache, source,
                 ['servers', 'listSql', location]);
@@ -33,7 +33,7 @@ module.exports = {
                 return rcb();
             }
 
-            servers.data.forEach(function (server) {
+            servers.data.forEach(function(server) {
                 const serverBlobAuditingPolicies = helpers.addSource(cache, source,
                     ['serverBlobAuditingPolicies', 'get', location, server.id]);
 
@@ -61,7 +61,7 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });

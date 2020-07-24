@@ -10,12 +10,12 @@ module.exports = {
     link: 'https://docs.microsoft.com/en-us/azure/aks/aad-integration',
     apis: ['managedClusters:list', 'managedClusters:getUpgradeProfile'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.managedClusters, function (location, rcb) {
+        async.each(locations.managedClusters, function(location, rcb) {
             var managedClusters = helpers.addSource(cache, source,
                 ['managedClusters', 'list', location]);
 
@@ -53,9 +53,9 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });
     }
-}
+};

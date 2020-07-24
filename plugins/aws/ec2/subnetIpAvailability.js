@@ -56,13 +56,13 @@ module.exports = {
                 return rcb();
             }
 
-            for(i in describeSubnets.data){
+            for(var i in describeSubnets.data){
                 var subnetSize = helpers.cidrSize(describeSubnets.data[i].CidrBlock);
-                var consumedIPs = subnetSize - describeSubnets.data[i].AvailableIpAddressCount
+                var consumedIPs = subnetSize - describeSubnets.data[i].AvailableIpAddressCount;
                 var percentageConsumed = Math.ceil((consumedIPs / subnetSize) * 100);
                 var subnetArn = 'arn:aws:ec2:' + region + ':' + accountId + ':subnet/' + describeSubnets.data[i].SubnetId;
 
-                returnMsg = 'Subnet ' + describeSubnets.data[i].SubnetId
+                var returnMsg = 'Subnet ' + describeSubnets.data[i].SubnetId
                             + ' is using ' + consumedIPs + ' of '
                             + subnetSize + ' (' + percentageConsumed + '%) available IPs.';
 

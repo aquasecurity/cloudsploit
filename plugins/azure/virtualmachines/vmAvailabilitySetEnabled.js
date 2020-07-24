@@ -26,12 +26,12 @@ module.exports = {
                 helpers.addResult(results, 3,
                     'Unable to query for Virtual Machines: ' + helpers.addError(virtualMachines), location);
                 return rcb();
-            };
+            }
 
             if (!virtualMachines.data.length) {
                 helpers.addResult(results, 0, 'No existing Virtual Machines found', location);
                 return rcb();
-            };
+            }
 
             virtualMachines.data.forEach(virtualMachine => {
                 if (virtualMachine.availabilitySet) {

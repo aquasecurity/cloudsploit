@@ -18,7 +18,7 @@ module.exports = {
         }
     },
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const config = {
             latestPythonVersion: settings.latestPythonVersion || this.settings.latestPythonVersion.default
         };
@@ -29,7 +29,7 @@ module.exports = {
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.webApps, function (location, rcb) {
+        async.each(locations.webApps, function(location, rcb) {
             const webApps = helpers.addSource(
                 cache, source, ['webApps', 'list', location]
             );
@@ -50,13 +50,13 @@ module.exports = {
 
             var found = false;
 
-            webApps.data.forEach(function (webApp) {
+            webApps.data.forEach(function(webApp) {
                 const webConfigs = helpers.addSource(
                     cache, source, ['webApps', 'listConfigurations', location, webApp.id]
                 );
 
                 if (!webConfigs || webConfigs.err || !webConfigs.data) {
-                    shared.addResult(results, 3,
+                    helpers.addResult(results, 3,
                         'Unable to query App Service: ' + helpers.addError(webConfigs),
                         location, webApp.id);
                 } else {
@@ -66,7 +66,7 @@ module.exports = {
                         webConfigs.data[0].linuxFxVersion.indexOf('|') > -1) {
                         found = true;
 
-                        var pythonVersion = webConfigs.linuxFxVersion.substr(webConfigs.linuxFxVersion.indexOf('|') + 1);
+                        var pythonVersion = webConfigs.data[0].linuxFxVersion.substr(webConfigs.data[0].linuxFxVersion.indexOf('|') + 1);
 
                         var version = parseFloat(pythonVersion);
                         var allowedVersion = parseFloat(config.latestPythonVersion);
@@ -87,9 +87,9 @@ module.exports = {
             }
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });
     }
-}
+};

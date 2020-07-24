@@ -18,7 +18,7 @@ module.exports = {
         }
     },
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const config = {
             latestJavaVersion: settings.latestJavaVersion || this.settings.latestJavaVersion.default
         };
@@ -29,7 +29,7 @@ module.exports = {
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.webApps, function (location, rcb) {
+        async.each(locations.webApps, function(location, rcb) {
             const webApps = helpers.addSource(
                 cache, source, ['webApps', 'list', location]
             );
@@ -50,7 +50,7 @@ module.exports = {
 
             var found = false;
 
-            webApps.data.forEach(function (webApp) {
+            webApps.data.forEach(function(webApp) {
                 const webConfigs = helpers.addSource(
                     cache, source, ['webApps', 'listConfigurations', location, webApp.id]
                 );
@@ -74,9 +74,9 @@ module.exports = {
             }
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });
     }
-}
+};

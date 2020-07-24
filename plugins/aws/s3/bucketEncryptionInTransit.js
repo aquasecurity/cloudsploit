@@ -60,10 +60,11 @@ module.exports = {
             }
             try {
                 // Parse the policy if it hasn't be parsed and replaced by another plugin....
+                var policyJson;
                 if (typeof getBucketPolicy.data.Policy === 'string') {
-                    var policyJson = JSON.parse(getBucketPolicy.data.Policy);
+                    policyJson = JSON.parse(getBucketPolicy.data.Policy);
                 } else {
-                    var policyJson = getBucketPolicy.data.Policy
+                    policyJson = getBucketPolicy.data.Policy;
                 }
             } catch(e) {
                 helpers.addResult(results, 3, `Bucket policy on bucket ${bucket.Name} could not be parsed.`, 'global', bucketResource);
@@ -81,7 +82,7 @@ module.exports = {
             if (policyJson.Statement.find(statement => statementDeniesInsecureTransport(statement, bucketResource))) {
                 helpers.addResult(results, 0, 'Bucket policy enforces encryption in transit', 'global', bucketResource);
             } else {
-                helpers.addResult(results, 2, `Bucket does not enforce encryption in transit`, 'global', bucketResource);
+                helpers.addResult(results, 2, 'Bucket does not enforce encryption in transit', 'global', bucketResource);
             }
         }
         callback(null, results, source);

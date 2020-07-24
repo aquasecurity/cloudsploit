@@ -15,9 +15,9 @@ const createCache = (err, data) => {
     }
 };
 
-describe('noCustomOwnerRoles', function () {
-    describe('run', function () {
-        it('should give passing result if no role definitions', function (done) {
+describe('noCustomOwnerRoles', function() {
+    describe('run', function() {
+        it('should give passing result if no role definitions', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -34,7 +34,7 @@ describe('noCustomOwnerRoles', function () {
             auth.run(cache, {}, callback);
         });
 
-        it('should give failing result if permissions to create custom owner roles enabled', function (done) {
+        it('should give failing result if permissions to create custom owner roles enabled', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(0);
@@ -101,7 +101,7 @@ describe('noCustomOwnerRoles', function () {
             auth.run(cache, {}, callback);
         });
 
-        it('should give passing result if there are no permissions to create custom owner roles enabled', function (done) {
+        it('should give passing result if there are no permissions to create custom owner roles enabled', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);

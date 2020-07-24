@@ -10,12 +10,12 @@ module.exports = {
     link: 'https://docs.microsoft.com/en-us/azure/app-service/app-service-web-configure-tls-mutual-auth#enable-client-certificates',
     apis: ['webApps:list'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.webApps, function (location, rcb) {
+        async.each(locations.webApps, function(location, rcb) {
 
             const webApps = helpers.addSource(
                 cache, source, ['webApps', 'list', location]
@@ -43,9 +43,9 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });
     }
-}
+};

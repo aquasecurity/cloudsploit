@@ -21,9 +21,6 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
 
-        var acctRegion = helpers.defaultRegion(settings);
-        var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
-
         async.each(regions.ec2, function(region, rcb){
             var describeSnapshots = helpers.addSource(cache, source,
                 ['ec2', 'describeSnapshots', region]);
@@ -54,7 +51,7 @@ module.exports = {
             if (unencryptedSnapshots.length > 20) {
                 helpers.addResult(results, 2, 'More than 20 EBS snapshots are unencrypted', region);
             } else if (unencryptedSnapshots.length) {
-                for (u in unencryptedSnapshots) {
+                for (var u in unencryptedSnapshots) {
                     helpers.addResult(results, 2, 'EBS snapshot is unencrypted', region, unencryptedSnapshots[u]);
                 }
             } else {

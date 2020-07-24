@@ -23,9 +23,9 @@ const createCache = (err, list, get) => {
     }
 };
 
-describe('scaleSetAutoscaleEnabled', function () {
-    describe('run', function () {
-        it('should give unknown result if a scale set error is passed or no data is present', function (done) {
+describe('scaleSetAutoscaleEnabled', function() {
+    describe('run', function() {
+        it('should give unknown result if a scale set error is passed or no data is present', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(3)
@@ -42,7 +42,7 @@ describe('scaleSetAutoscaleEnabled', function () {
 
             plugin.run(cache, {}, callback);
         })
-        it('should give unknown result if an autoscale error is passed or no data is present', function (done) {
+        it('should give unknown result if an autoscale error is passed or no data is present', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(3)
@@ -60,7 +60,7 @@ describe('scaleSetAutoscaleEnabled', function () {
 
             plugin.run(cache, {}, callback);
         })
-        it('should give passing result if no scale set records are found', function (done) {
+        it('should give passing result if no scale set records are found', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
@@ -77,7 +77,7 @@ describe('scaleSetAutoscaleEnabled', function () {
 
             plugin.run(cache, {}, callback);
         })
-        it('should give passing result if all scale sets have Autoscale Enabled', function (done) {
+        it('should give passing result if all scale sets have Autoscale Enabled', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
@@ -247,7 +247,7 @@ describe('scaleSetAutoscaleEnabled', function () {
 
             plugin.run(cache, {}, callback);
         })
-        it('should give failing result if the scale set has Autoscale Disabled', function (done) {
+        it('should give failing result if the scale set has Autoscale Disabled', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(2)

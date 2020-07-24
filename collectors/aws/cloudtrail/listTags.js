@@ -1,5 +1,5 @@
-var AWS = require("aws-sdk");
-var async = require("async");
+var AWS = require('aws-sdk');
+var async = require('async');
 
 module.exports = function(AWSConfig, collection, callback) {
     var cloudtrail = new AWS.CloudTrail(AWSConfig);

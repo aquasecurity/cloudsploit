@@ -59,7 +59,7 @@ module.exports = {
                     });
                 }
                 if (non_https_listener && non_https_listener.length){
-                    var msg = "The following listeners are not using HTTPS-only: ";
+                    var msg = 'The following listeners are not using HTTPS-only: ';
                     helpers.addResult(results, 2,
                         msg + non_https_listener.join(', '), region, elbArn);
                 }else if (non_https_listener && !non_https_listener.length) {

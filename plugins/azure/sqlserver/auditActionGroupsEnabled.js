@@ -20,7 +20,7 @@ module.exports = {
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.servers, function (location, rcb) {
+        async.each(locations.servers, function(location, rcb) {
 
             var servers = helpers.addSource(cache, source,
                 ['servers', 'listSql', location]);
@@ -38,7 +38,7 @@ module.exports = {
                 return rcb();
             }
 
-            servers.data.forEach(function (server) {
+            servers.data.forEach(function(server) {
                 const serverBlobAuditingPolicies = helpers.addSource(cache, source,
                     ['serverBlobAuditingPolicies', 'get', location, server.id]);
 
@@ -53,9 +53,9 @@ module.exports = {
                         serverBlobAuditingPolicies.data.forEach(serverBlobAuditingPolicy => {
                             if (serverBlobAuditingPolicy.auditActionsAndGroups &&
                                 serverBlobAuditingPolicy.auditActionsAndGroups.length) {
-                                if (serverBlobAuditingPolicy.auditActionsAndGroups.indexOf("SUCCESSFUL_DATABASE_AUTHENTICATION_GROUP") > -1 &&
-                                    serverBlobAuditingPolicy.auditActionsAndGroups.indexOf("FAILED_DATABASE_AUTHENTICATION_GROUP") > -1 &&
-                                    serverBlobAuditingPolicy.auditActionsAndGroups.indexOf("BATCH_COMPLETED_GROUP") > -1) {
+                                if (serverBlobAuditingPolicy.auditActionsAndGroups.indexOf('SUCCESSFUL_DATABASE_AUTHENTICATION_GROUP') > -1 &&
+                                    serverBlobAuditingPolicy.auditActionsAndGroups.indexOf('FAILED_DATABASE_AUTHENTICATION_GROUP') > -1 &&
+                                    serverBlobAuditingPolicy.auditActionsAndGroups.indexOf('BATCH_COMPLETED_GROUP') > -1) {
                                     helpers.addResult(results, 0, 'Audit Action and Groups is enabled on the SQL Server', location, server.id);
                                 } else {
                                     helpers.addResult(results, 2, 'Audit Action and Groups is not configured properly on the SQL Server', location, server.id);
@@ -69,7 +69,7 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });

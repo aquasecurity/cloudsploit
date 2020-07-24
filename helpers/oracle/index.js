@@ -16,7 +16,7 @@ var regions = function(govcloud) {
 };
 
 // Oracle Executor
-function OracleExecutor (OracleConfig, Service) {
+function OracleExecutor(OracleConfig) {
     this.oracleConfig = OracleConfig;
     this.oci = oci;
 
@@ -34,7 +34,7 @@ function OracleExecutor (OracleConfig, Service) {
             var aggregatedErrors=[];
             var aggregatedResults=[];
 
-            function ociMany (callObj, OracleConfig) {
+            function ociMany(callObj, OracleConfig) {  // eslint-disable-line no-inner-declarations
                 async.eachLimit(callObj.reliesOnService, 10,function(service, serviceCb) {
                     var records = callObj.collection[service][callObj.reliesOnCall[callObj.reliesOnService.indexOf(service)]][OracleConfig.region].data;
                     if (service === 'namespace') {
@@ -42,7 +42,7 @@ function OracleExecutor (OracleConfig, Service) {
                     }
                     if (!records.length) return callback([], []);
                     async.eachLimit(records, 10,function(record, recordCb) {
-                        for (filter in callObj.filterKey) {
+                        for (var filter in callObj.filterKey) {
                             if (callObj.filterConfig && callObj.filterConfig[filter]) {
                                 parameters[callObj.filterKey[filter]] = OracleConfig[callObj.filterValue[filter]];
                             } else if (record[callObj.filterValue[filter]]) {
@@ -53,7 +53,7 @@ function OracleExecutor (OracleConfig, Service) {
                             OracleConfig.privateKey = sshpk.parsePrivateKey(OracleConfig.keyValue, 'pem');
                             assert.ok(sshpk.PrivateKey.isPrivateKey(OracleConfig.privateKey, [1, 2]),
                                 'options.key must be a sshpk.PrivateKey');
-                            (!OracleConfig.RESTversion ? OracleConfig.RESTversion = '/20160918' : false )
+                            (!OracleConfig.RESTversion ? OracleConfig.RESTversion = '/20160918' : false );
                         } catch (e) {
                             console.log('Could not read the Oracle Private Key.');
                         }
@@ -71,11 +71,11 @@ function OracleExecutor (OracleConfig, Service) {
                             //console.log('\n' + require('util').inspect(result, {depth: null}));
                             if (result &&
                                 result.length &&
-                                Object.prototype.toString.call(result) == "[object Array]") {
+                                Object.prototype.toString.call(result) == '[object Array]') {
                                 result.forEach(function(listItem){
                                     aggregatedResults.push(listItem);
                                 });
-                            } else if (Object.prototype.toString.call(result) == "[object Object]") {
+                            } else if (Object.prototype.toString.call(result) == '[object Object]') {
                                 aggregatedResults.push(result);
                             }
                             recordCb();
@@ -92,7 +92,7 @@ function OracleExecutor (OracleConfig, Service) {
             }
             ociMany(callObj, OracleConfig);
         } else {
-            for (filter in callObj.filterKey){
+            for (var filter in callObj.filterKey){
                 if(callObj.filterLiteral && callObj.filterLiteral[filter]) {
                     parameters[callObj.filterKey[filter]] = callObj.filterValue[filter];
                 } else {
@@ -104,7 +104,7 @@ function OracleExecutor (OracleConfig, Service) {
                 OracleConfig.privateKey = sshpk.parsePrivateKey(OracleConfig.keyValue, 'pem');
                 assert.ok(sshpk.PrivateKey.isPrivateKey(OracleConfig.privateKey, [1, 2]),
                     'options.key must be a sshpk.PrivateKey');
-                (!OracleConfig.RESTversion ? OracleConfig.RESTversion = '/20160918' : false )
+                (!OracleConfig.RESTversion ? OracleConfig.RESTversion = '/20160918' : false );
 
             } catch (e) {
                 console.log('Could not read the Oracle Private Key.');
@@ -112,7 +112,7 @@ function OracleExecutor (OracleConfig, Service) {
             if (callObj.restVersion ||
                 callObj.restVersion == '') {
                 OracleConfig.RESTversion = callObj.restVersion;
-            };
+            }
 
             return oci(callObj.api, oracleService, callKey, OracleConfig, parameters, function(result) {
                 var resultArr = [];
@@ -127,7 +127,7 @@ function OracleExecutor (OracleConfig, Service) {
                 callback(null, result);
             });
         }
-    }
+    };
 }
 
 var helpers = {
@@ -136,7 +136,7 @@ var helpers = {
     MAX_REGIONS_AT_A_TIME: 6
 };
 
-for (s in shared) helpers[s] = shared[s];
-for (f in functions) helpers[f] = functions[f];
+for (var s in shared) helpers[s] = shared[s];
+for (var f in functions) helpers[f] = functions[f];
 
 module.exports = helpers;

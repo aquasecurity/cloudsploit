@@ -12,7 +12,7 @@ module.exports = function(AWSConfig, collection, callback) {
             // You can use the key ID or the Amazon Resource Name (ARN) of the CMK.
             KeyId: key.KeyId,
             // The name of the key policy to retrieve.
-            PolicyName: "default"
+            PolicyName: 'default'
         };
 
         kms.getKeyPolicy(params, function(err, data) {
@@ -20,10 +20,11 @@ module.exports = function(AWSConfig, collection, callback) {
                 collection.kms.getKeyPolicy[AWSConfig.region][key.KeyId].err = err;
             }
             // convert the data to json object
+            var policyData;
             try {
-                var policyData = JSON.parse(data.Policy);
+                policyData = JSON.parse(data.Policy);
             } catch(e) {
-                var policyData = null;
+                policyData = null;
             }
             
             collection.kms.getKeyPolicy[AWSConfig.region][key.KeyId].data = policyData;

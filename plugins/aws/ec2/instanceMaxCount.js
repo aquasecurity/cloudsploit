@@ -170,8 +170,8 @@ module.exports = {
             instance_count_region_threshold_cn_northwest_1: settings.instance_count_region_threshold_cn_northwest_1 || this.settings.instance_count_region_threshold_cn_northwest_1.default
         };
 
-        for (c in config) {
-            if (settings.hasOwnProperty(c)) {
+        for (var c in config) {
+            if (Object.prototype.hasOwnProperty.call(settings, c)) {
                 config[c] = settings[c];    
             }
         }
@@ -203,11 +203,11 @@ module.exports = {
 
             var instanceCount = 0;
 
-            for (i in describeInstances.data) {
-                for (j in describeInstances.data[i].Instances) {
+            for (var i in describeInstances.data) {
+                for (var j in describeInstances.data[i].Instances) {
                     var instance = describeInstances.data[i].Instances[j];
 
-                    if (instance.State.Name == "running") {
+                    if (instance.State.Name == 'running') {
                         instanceCountGlobal +=1;
                         instanceCount +=1;
                     }

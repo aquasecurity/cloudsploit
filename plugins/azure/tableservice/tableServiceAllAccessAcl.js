@@ -21,7 +21,7 @@ module.exports = {
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.storageAccounts, function (location, rcb) {
+        async.each(locations.storageAccounts, function(location, rcb) {
             const storageAccounts = helpers.addSource(
                 cache, source, ['storageAccounts', 'list', location]);
 
@@ -38,7 +38,7 @@ module.exports = {
                 return rcb();
             }
 
-            storageAccounts.data.forEach(function (storageAccount) {
+            storageAccounts.data.forEach(function(storageAccount) {
                 // Attempt to list keys to see if future calls will succeed
                 var listKeys = helpers.addSource(cache, source,
                     ['storageAccounts', 'listKeys', location, storageAccount.id]);
@@ -72,25 +72,27 @@ module.exports = {
                                 var fullPermissions = [];
 
                                 if (acl.signedIdentifiers && Object.keys(acl.signedIdentifiers).length) {
-                                    for (ident in acl.signedIdentifiers) {
+                                    for (var ident in acl.signedIdentifiers) {
                                         var permissions = acl.signedIdentifiers[ident].Permissions;
-                                        for (i = 0; i <= permissions.length; i++) {
+                                        for (var i = 0; i <= permissions.length; i++) {
                                             switch (permissions.charAt(i)) {
-                                                // case "r":
-                                                //     fullPermissions.push('read');
-                                                //     break;
-                                                case "c":
-                                                    fullPermissions.push(`create (via identifier ${ident})`);
-                                                    break;
-                                                case "w":
-                                                    fullPermissions.push(`write (via identifier ${ident})`);
-                                                    break;
-                                                case "d":
-                                                    fullPermissions.push(`delete (via identifier ${ident})`);
-                                                    break;
-                                                case "l":
-                                                    fullPermissions.push(`list (via identifier ${ident})`);
-                                                    break;
+                                            // case "r":
+                                            //     fullPermissions.push('read');
+                                            //     break;
+                                            case 'c':
+                                                fullPermissions.push(`create (via identifier ${ident})`);
+                                                break;
+                                            case 'w':
+                                                fullPermissions.push(`write (via identifier ${ident})`);
+                                                break;
+                                            case 'd':
+                                                fullPermissions.push(`delete (via identifier ${ident})`);
+                                                break;
+                                            case 'l':
+                                                fullPermissions.push(`list (via identifier ${ident})`);
+                                                break;
+                                            default:
+                                                break;
                                             }
                                         }
                                     }
@@ -110,7 +112,7 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }

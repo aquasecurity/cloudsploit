@@ -18,9 +18,9 @@ const createCache = (err, list, get) => {
     }
 };
 
-describe('secretExpirationEnabled', function () {
-    describe('run', function () {
-        it('should give passing result if no secrets found', function (done) {
+describe('secretExpirationEnabled', function() {
+    describe('run', function() {
+        it('should give passing result if no secrets found', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -38,7 +38,7 @@ describe('secretExpirationEnabled', function () {
             auth.run(cache, {}, callback);
         });
 
-        it('should give failing result if expiration is not set on secrets', function (done) {
+        it('should give failing result if expiration is not set on secrets', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -85,7 +85,7 @@ describe('secretExpirationEnabled', function () {
             auth.run(cache, {}, callback);
         });
 
-        it('should give passing result if expiration is set on keys', function (done) {
+        it('should give passing result if expiration is set on keys', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -132,7 +132,7 @@ describe('secretExpirationEnabled', function () {
             auth.run(cache, {}, callback);
         });
 
-        it('should give passing result if key is disabled', function (done) {
+        it('should give passing result if key is disabled', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);

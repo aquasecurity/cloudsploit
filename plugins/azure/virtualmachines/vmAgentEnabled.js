@@ -47,7 +47,7 @@ module.exports = {
                 } else if (virtualMachine.osProfile &&
                     virtualMachine.osProfile.windowsConfiguration) {
                     if (virtualMachine.osProfile.windowsConfiguration.provisionVMAgent) {
-                        helpers.addResult(results, 2, 'VM Agent is not enabled for this virtual machine: ' + virtualMachine.name, location, virtualMachine.id);
+                        helpers.addResult(results, 0, 'VM Agent is enabled for this virtual machine: ' + virtualMachine.name, location, virtualMachine.id);
                     } else {
                         helpers.addResult(results, 2, 'VM Agent is not enabled for this virtual machine: ' + virtualMachine.name, location, virtualMachine.id);
                     }

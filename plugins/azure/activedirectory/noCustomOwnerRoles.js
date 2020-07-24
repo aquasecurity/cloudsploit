@@ -10,12 +10,12 @@ module.exports = {
     recommended_action: 'Remove roles that allow permissions to create custom owner roles.',
     apis: ['roleDefinitions:list'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.roleDefinitions, function (location, rcb) {
+        async.each(locations.roleDefinitions, function(location, rcb) {
 
             const roleDefinitions = helpers.addSource(cache, source,
                 ['roleDefinitions', 'list', location]);
@@ -56,7 +56,7 @@ module.exports = {
                     roleDefinition.permissions.forEach(permission => {
                         if (permission.actions &&
                             (permission.actions.indexOf('*') > -1)) {
-                            action = true
+                            action = true;
                         }
                     });
                 }
@@ -64,7 +64,7 @@ module.exports = {
                     ((roleDefinition.assignableScopes.indexOf('/') > -1) ||
                         (roleDefinition.assignableScopes.indexOf(subAlone) > -1) ||
                         (roleDefinition.assignableScopes.indexOf(subscription) > -1))) {
-                    scope = true
+                    scope = true;
                 }
 
                 if (action && scope) {
@@ -75,9 +75,9 @@ module.exports = {
             });
             
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });
     }
-}
+};

@@ -10,12 +10,12 @@ module.exports = {
     link: 'https://docs.microsoft.com/en-us/azure/storage/common/storage-network-security',
     apis: ['storageAccounts:list'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.storageAccounts, function (location, rcb) {
+        async.each(locations.storageAccounts, function(location, rcb) {
             var storageAccount = helpers.addSource(cache, source,
                 ['storageAccounts', 'list', location]);
 
@@ -35,7 +35,7 @@ module.exports = {
             storageAccount.data.forEach(account => {
                 if (account.networkAcls && 
                     account.networkAcls.bypass &&
-                    account.networkAcls.bypass.toLowerCase().indexOf("azureservices") > -1) {
+                    account.networkAcls.bypass.toLowerCase().indexOf('azureservices') > -1) {
                     helpers.addResult(results, 0, 'Storage Account is set to allow trusted Microsoft services', location, account.id);
                 } else {
                     helpers.addResult(results, 2, 'Storage Account is not set to allow trusted Microsoft services', location, account.id);
@@ -43,7 +43,7 @@ module.exports = {
             });
             
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });

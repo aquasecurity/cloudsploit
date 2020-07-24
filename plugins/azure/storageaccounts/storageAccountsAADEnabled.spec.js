@@ -21,9 +21,9 @@ const createCache = (err, list, get) => {
     }
 };
 
-describe('storageAccountsAADEnabled', function () {
-    describe('run', function () {
-        it('should give passing result if no storage accounts', function (done) {
+describe('storageAccountsAADEnabled', function() {
+    describe('run', function() {
+        it('should give passing result if no storage accounts', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -41,7 +41,7 @@ describe('storageAccountsAADEnabled', function () {
             auth.run(cache, {}, callback);
         })
 
-        it('should give failing result if storage account is not configured with aad authentication', function (done) {
+        it('should give failing result if storage account is not configured with aad authentication', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -114,7 +114,7 @@ describe('storageAccountsAADEnabled', function () {
             auth.run(cache, {}, callback);
         })
 
-        it('should give passing result if storage account is not configured with aad authentication but no file shares', function (done) {
+        it('should give passing result if storage account is not configured with aad authentication but no file shares', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -179,7 +179,7 @@ describe('storageAccountsAADEnabled', function () {
             auth.run(cache, {storage_account_check_file_share: 'true'}, callback);
         })
 
-        it('should give passing result if enabled App Service', function (done) {
+        it('should give passing result if enabled App Service', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(0)

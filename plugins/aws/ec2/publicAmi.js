@@ -35,7 +35,7 @@ module.exports = {
             var found = false;
 
             // Now lookup flow logs and map to images
-            for (i in describeImages.data) {
+            for (var i in describeImages.data) {
                 var image = describeImages.data[i];
 
                 if (image.Public) {

@@ -26,12 +26,12 @@ module.exports = {
                 helpers.addResult(results, 3,
                     'Unable to query for Virtual Machine Scale Sets: ' + helpers.addError(virtualMachineScaleSets), location);
                 return rcb();
-            };
+            }
 
             if (!virtualMachineScaleSets.data.length) {
                 helpers.addResult(results, 0, 'No existing Virtual Machine Scale Sets found', location);
                 return rcb();
-            };
+            }
 
             virtualMachineScaleSets.data.forEach(virtualMachineScaleSet => {
                 if (virtualMachineScaleSet.zones &&

@@ -50,12 +50,15 @@ module.exports = {
 
             var asMap = {};
             autoscaleSettings.data.forEach(function(autoscaleSetting) {
-                asMap[autoscaleSetting.targetResourceUri] = autoscaleSetting;
+                if (autoscaleSetting.targetResourceUri) {
+                    asMap[autoscaleSetting.targetResourceUri.toLowerCase()] = autoscaleSetting;
+                }
             });
 
             virtualMachineScaleSets.data.forEach(virtualMachineScaleSet => {
-                if (asMap[virtualMachineScaleSet.id] &&
-                    asMap[virtualMachineScaleSet.id].enabled) {
+                if (virtualMachineScaleSet.id &&
+                    asMap[virtualMachineScaleSet.id.toLowerCase()] &&
+                    asMap[virtualMachineScaleSet.id.toLowerCase()].enabled) {
                     helpers.addResult(results, 0,
                         'Virtual Machine Scale Set has autoscale enabled', location, virtualMachineScaleSet.id);
                 } else {

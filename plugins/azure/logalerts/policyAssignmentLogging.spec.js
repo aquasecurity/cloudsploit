@@ -15,9 +15,9 @@ const createCache = (err, data) => {
     }
 };
 
-describe('policyAssignmentLogging', function () {
-    describe('run', function () {
-        it('should give failing result if no activity log alerts found', function (done) {
+describe('policyAssignmentLogging', function() {
+    describe('run', function() {
+        it('should give failing result if no activity log alerts found', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -34,7 +34,7 @@ describe('policyAssignmentLogging', function () {
             auth.run(cache, {}, callback);
         });
 
-        it('should give failing result if policy assignment write not enabled', function (done) {
+        it('should give failing result if policy assignment write not enabled', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(2);
                 expect(results[1].status).to.equal(2);
@@ -83,7 +83,7 @@ describe('policyAssignmentLogging', function () {
             auth.run(cache, {}, callback);
         });
 
-        it('should give failing result if policy assignment delete not enabled', function (done) {
+        it('should give failing result if policy assignment delete not enabled', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(2);
                 expect(results[1].status).to.equal(2);
@@ -132,7 +132,7 @@ describe('policyAssignmentLogging', function () {
             auth.run(cache, {}, callback);
         });
 
-        it('should give passing result if policy assignment write enabled', function (done) {
+        it('should give passing result if policy assignment write enabled', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(0);
@@ -181,7 +181,7 @@ describe('policyAssignmentLogging', function () {
             auth.run(cache, {}, callback);
         });
 
-        it('should give passing result if policy assignment delete enabled', function (done) {
+        it('should give passing result if policy assignment delete enabled', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(0);

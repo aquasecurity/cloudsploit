@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.microsoft.com/en-us/azure/postgresql/howto-configure-server-parameters-using-portal',
     apis: ['servers:listPostgres', 'configurations:listByServer'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
@@ -21,7 +21,7 @@ module.exports = {
 
             helpers.checkServerConfigs(servers, cache, source, location, results, 'PostgreSQL', 'connection_throttling', 'Connection throttling');
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });

@@ -1,5 +1,3 @@
-var async = require('async');
-var AWS = require('aws-sdk');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
@@ -43,16 +41,13 @@ module.exports = {
 
             if (Distribution.DefaultCacheBehavior.ViewerProtocolPolicy == 'redirect-to-https') {
                 helpers.addResult(results, 0, 'CloudFront distribution ' + 
-                        'is configured to redirect non-HTTPS traffic to HTTPS', 'global',
-                        Distribution.ARN)
+                    'is configured to redirect non-HTTPS traffic to HTTPS', 'global', Distribution.ARN);
             } else if (Distribution.DefaultCacheBehavior.ViewerProtocolPolicy == 'https-only') {
                 helpers.addResult(results, 0, 'The CloudFront ' + 
-                        'distribution is set to use HTTPS only.', 'global',
-                        Distribution.ARN)
+                    'distribution is set to use HTTPS only.', 'global', Distribution.ARN);
             } else {
                 helpers.addResult(results, 2, 'CloudFront distribution ' + 
-                        'is not configured to use HTTPS', 'global',
-                        Distribution.ARN)
+                    'is not configured to use HTTPS', 'global', Distribution.ARN);
             }
         });
 

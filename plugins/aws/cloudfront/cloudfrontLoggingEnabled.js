@@ -1,5 +1,3 @@
-var async = require('async');
-var AWS = require('aws-sdk');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
@@ -48,16 +46,16 @@ module.exports = {
         // loop through Instances for every reservation
         listDistributions.data.forEach(function(Distribution){
             var getDistribution = helpers.addSource(cache, source,
-                    ['cloudfront', 'getDistribution', region, Distribution.Id]);
+                ['cloudfront', 'getDistribution', region, Distribution.Id]);
 
             if (getDistribution.data &&
                 getDistribution.data.Distribution &&
                 getDistribution.data.Distribution.DistributionConfig &&
                 getDistribution.data.Distribution.DistributionConfig.Logging){
-                logging = getDistribution.data.Distribution.DistributionConfig.Logging;
+                var logging = getDistribution.data.Distribution.DistributionConfig.Logging;
                 if (logging.Enabled){
                     helpers.addResult(results, 0,
-                            'Request logging is enabled', 'global', Distribution.ARN);
+                        'Request logging is enabled', 'global', Distribution.ARN);
                 } else {
                     helpers.addResult(results, 2,
                         'Request logging is not enabled', 'global', Distribution.ARN);

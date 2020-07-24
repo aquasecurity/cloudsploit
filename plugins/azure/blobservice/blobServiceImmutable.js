@@ -13,7 +13,7 @@ module.exports = {
     compliance: {
         hipaa: 'Blob immutability preserves the integrity of stored data and protects against ' +
             'accidental or malicious destruction.'
-  },
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -39,7 +39,7 @@ module.exports = {
                 return rcb();
             }
 
-            storageAccounts.data.forEach(function (storageAccount) {
+            storageAccounts.data.forEach(function(storageAccount) {
                 const blobContainers = helpers.addSource(
                     cache, source, ['blobContainers', 'list', location, storageAccount.id]
                 );
@@ -51,7 +51,7 @@ module.exports = {
                 } else if (!blobContainers.data.length) {
                     helpers.addResult(results, 0, 'Storage Account does not contain blob containers', location, storageAccount.id);
                 } else {
-                    blobContainers.data.forEach(function (blob) {
+                    blobContainers.data.forEach(function(blob) {
                         if (blob.hasImmutabilityPolicy) {
                             helpers.addResult(results, 0, 'Immutability has been configured for the blob service', location, blob.id);
                         } else {
@@ -62,7 +62,7 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }

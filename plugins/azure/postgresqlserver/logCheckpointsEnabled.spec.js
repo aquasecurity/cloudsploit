@@ -20,9 +20,9 @@ const createCache = (err, list, get) => {
     }
 };
 
-describe('logCheckpointsEnabled', function () {
-    describe('run', function () {
-        it('should give passing result if no servers', function (done) {
+describe('logCheckpointsEnabled', function() {
+    describe('run', function() {
+        it('should give passing result if no servers', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -40,7 +40,7 @@ describe('logCheckpointsEnabled', function () {
             auth.run(cache, {}, callback);
         })
 
-        it('should give failing result if postgresql server has log_checkpoints disabled', function (done) {
+        it('should give failing result if postgresql server has log_checkpoints disabled', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -83,7 +83,7 @@ describe('logCheckpointsEnabled', function () {
             auth.run(cache, {}, callback);
         });
 
-        it('should give passing result if postgresql server has log_checkpoints enabled', function (done) {
+        it('should give passing result if postgresql server has log_checkpoints enabled', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);

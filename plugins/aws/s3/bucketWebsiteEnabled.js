@@ -1,4 +1,3 @@
-var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
@@ -45,7 +44,7 @@ module.exports = {
                 helpers.addResult(results, 3,
                     'Error querying bucket website for : ' + bucket.Name +
                     ': ' + helpers.addError(getBucketWebsite),
-                    'global', 'arn:aws:s3:::' + bucket.Name)
+                    'global', 'arn:aws:s3:::' + bucket.Name);
             } else if (Object.keys(getBucketWebsite.data).length) {
                 helpers.addResult(results, 2,
                     'Bucket : ' + bucket.Name + ' has static website hosting enabled',

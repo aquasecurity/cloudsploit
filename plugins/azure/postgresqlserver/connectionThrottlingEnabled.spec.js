@@ -20,9 +20,9 @@ const createCache = (err, list, get) => {
     }
 };
 
-describe('connectionThrottlingEnabled', function () {
-    describe('run', function () {
-        it('should give passing result if no servers', function (done) {
+describe('connectionThrottlingEnabled', function() {
+    describe('run', function() {
+        it('should give passing result if no servers', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -40,7 +40,7 @@ describe('connectionThrottlingEnabled', function () {
             auth.run(cache, {}, callback);
         })
 
-        it('should give failing result if postgresql server has connection_throttling disabled', function (done) {
+        it('should give failing result if postgresql server has connection_throttling disabled', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -84,7 +84,7 @@ describe('connectionThrottlingEnabled', function () {
             auth.run(cache, {}, callback);
         });
 
-        it('should give passing result if postgresql server has connection_throttling enabled', function (done) {
+        it('should give passing result if postgresql server has connection_throttling enabled', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
