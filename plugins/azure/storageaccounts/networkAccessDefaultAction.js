@@ -43,9 +43,15 @@ module.exports = {
             for (var acct in storageAccount.data) {
                 const account = storageAccount.data[acct];
 
+                // Different versions of the Azure API return different response
+                // formats for this property, hence the extra check.
                 if (account.networkRuleSet &&
                     account.networkRuleSet.defaultAction &&
                     account.networkRuleSet.defaultAction.toLowerCase() === 'deny') {
+                    helpers.addResult(results, 0, 'Storage Account default network access rule set to deny', location, account.id);
+                } else if (account.networkAcls &&
+                    account.networkAcls.defaultAction &&
+                    account.networkAcls.defaultAction.toLowerCase() === 'deny') {
                     helpers.addResult(results, 0, 'Storage Account default network access rule set to deny', location, account.id);
                 } else {
                     helpers.addResult(results, 2, 'Storage Account default network access rule set to allow from all networks', location, account.id);

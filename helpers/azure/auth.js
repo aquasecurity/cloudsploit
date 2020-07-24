@@ -77,14 +77,22 @@ module.exports = {
     },
 
     call: function(params, callback) {
+        var headers = {
+            'Authorization': `Bearer ${params.token}`
+        };
+
+        if (params.body && Object.keys(params.body).length) {
+            headers['Content-Length'] = JSON.stringify(params.body).length;
+            headers['Content-Type'] = 'application/json;charset=UTF-8';
+        }
+
         request({
-            method: params.post ? 'POST' : 'GET',
+            method: params.method ? params.method : params.post ? 'POST' : 'GET',
             uri: params.url,
-            headers: {
-                'Authorization': `Bearer ${params.token}`
-            }
+            headers: headers,
+            body: params.body ? JSON.stringify(params.body) : null
         }, function(error, response, body) {
-            if (response && response.statusCode == 200 && body) {
+            if (response && response.statusCode === 200 && body) {
                 try {
                     body = JSON.parse(body);
                 } catch (e) {

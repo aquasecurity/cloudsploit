@@ -37,35 +37,49 @@ module.exports = {
                 helpers.addResult(results, 0, 'No Virtual Machines found', location);
             } else {
                 virtualMachines.data.forEach(function(virtualMachine){
+                    var windowsImg = false;
                     if (virtualMachine.storageProfile &&
                         virtualMachine.storageProfile.imageReference &&
                         virtualMachine.storageProfile.imageReference.offer &&
                         virtualMachine.storageProfile.imageReference.offer.toLowerCase().indexOf('windowsserver') > -1) {
-                        helpers.addResult(results, 0, 'The Microsoft VM does not offer endpoint protection', location, virtualMachine.id);
-                    } else {
-                        var virtualMachineExtensions = helpers.addSource(cache, source,
-                            ['virtualMachineExtensions', 'list', location, virtualMachine.id]);
-                        
-                        if (!virtualMachineExtensions || virtualMachineExtensions.err || !virtualMachineExtensions.data) {
-                            helpers.addResult(results, 3, 'Unable to query for VM Extensions: ' + helpers.addError(virtualMachineExtensions), location, virtualMachine.id);
-                        } else if (!virtualMachineExtensions.data.length) {
+                        windowsImg = true;
+                    } else if (virtualMachine.storageProfile &&
+                        virtualMachine.storageProfile.osDisk &&
+                        virtualMachine.storageProfile.osDisk.osType &&
+                        virtualMachine.storageProfile.osDisk.osType.toLowerCase().indexOf('windows') > -1) {
+                        windowsImg = true;
+                    }
+
+                    var virtualMachineExtensions = helpers.addSource(cache, source,
+                        ['virtualMachineExtensions', 'list', location, virtualMachine.id]);
+
+                    if (!virtualMachineExtensions || virtualMachineExtensions.err || !virtualMachineExtensions.data) {
+                        helpers.addResult(results, 3, 'Unable to query for VM Extensions: ' + helpers.addError(virtualMachineExtensions), location, virtualMachine.id);
+                    } else if (!virtualMachineExtensions.data.length) {
+                        if (!windowsImg) {
                             helpers.addResult(results, 2, 'No VM Extensions found', location, virtualMachine.id);
                         } else {
-                            var antiMalware = false;
-                            virtualMachineExtensions.data.forEach(function(virtualMachineExtension){
-                                if (virtualMachineExtension.type &&
-                                    virtualMachineExtension.type == 'IaaSAntimalware' &&
-                                    virtualMachineExtension.settings &&
-                                    virtualMachineExtension.settings.AntimalwareEnabled &&
-                                    virtualMachineExtension.settings.AntimalwareEnabled == 'true') {
-                                    antiMalware = true;
-                                }
-                            });
-                            
-                            if (antiMalware) {
-                                helpers.addResult(results, 0, 'Endpoint protection is installed on the virtual machine', location, virtualMachine.id);
-                            } else {
+                            helpers.addResult(results, 0, 'The Microsoft VM does not offer endpoint protection', location, virtualMachine.id);
+                        }
+                    } else {
+                        var antiMalware = false;
+                        virtualMachineExtensions.data.forEach(function(virtualMachineExtension) {
+                            if (virtualMachineExtension.type &&
+                                virtualMachineExtension.type == 'IaaSAntimalware' &&
+                                virtualMachineExtension.settings &&
+                                virtualMachineExtension.settings.AntimalwareEnabled &&
+                                virtualMachineExtension.settings.AntimalwareEnabled) {
+                                antiMalware = true;
+                            }
+                        });
+
+                        if (antiMalware) {
+                            helpers.addResult(results, 0, 'Endpoint protection is installed on the virtual machine', location, virtualMachine.id);
+                        } else {
+                            if (!windowsImg) {
                                 helpers.addResult(results, 2, 'Endpoint protection is not installed on the virtual machine', location, virtualMachine.id);
+                            } else {
+                                helpers.addResult(results, 0, 'The Microsoft VM does not offer endpoint protection', location, virtualMachine.id);
                             }
                         }
                     }
