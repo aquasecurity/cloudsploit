@@ -92,6 +92,9 @@ describe('exports', function () {
                             expect(lTrigger, `Test: ${test} realtime_triggers property is not a string`).to.be.an('string');
                         });
                     }
+
+                    expect(lTest.remediation_min_version, `Test: ${test} remediation_min_version parameter is not a string`).to.be.a('string');
+                    expect(lTest.remediation_min_version.length, `Test: ${test} remediation_min_version parameter  length is not 12`).to.equal(12);
                 }
 
                 if (lTest.rollback) {
