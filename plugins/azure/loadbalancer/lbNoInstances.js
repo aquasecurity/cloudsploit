@@ -46,15 +46,18 @@ module.exports = {
                         if (backendAddressPool.properties &&
                             backendAddressPool.properties.backendIPConfigurations) {
                             backendAmt += backendAddressPool.properties.backendIPConfigurations.length;
+                        } else if (backendAddressPool.properties &&
+                            backendAddressPool.properties.loadBalancerBackendAddresses) {
+                            backendAmt += backendAddressPool.properties.loadBalancerBackendAddresses.length;
                         }
                     });
 
                     if (backendAmt) {
                         helpers.addResult(results, 0, 
-                            'Load Balancer has ' + backendAmt + ' backend ' + (backendAmt > 1 ? 'instances' : 'instance'), location, loadBalancer.id);    
+                            'Load Balancer has ' + backendAmt + ' backend ' + (backendAmt > 1 ? 'instances or addresses' : 'instance or address'), location, loadBalancer.id);
                     } else {
                         helpers.addResult(results, 2, 
-                            'Load Balancer does not have any backend instances', location, loadBalancer.id);
+                            'Load Balancer does not have any backend instances or addresses', location, loadBalancer.id);
                     }
                 }
             });
