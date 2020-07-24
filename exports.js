@@ -97,6 +97,7 @@ module.exports = {
         'elbv2WafEnabled'                 : require(__dirname + '/plugins/aws/elbv2/elbv2WafEnabled.js'),
 
         'esPublicEndpoint'              : require(__dirname + '/plugins/aws/es/esPublicEndpoint.js'),
+        'esRequireIAMAuth'              : require(__dirname + '/plugins/aws/es/esRequireIAMAuth.js'),
         'esEncryptedDomain'             : require(__dirname + '/plugins/aws/es/esEncryptedDomain.js'),
         'esNodeToNodeEncryption'        : require(__dirname + '/plugins/aws/es/esNodeToNodeEncryption.js'),
         'esLoggingEnabled'              : require(__dirname + '/plugins/aws/es/esLoggingEnabled.js'),
