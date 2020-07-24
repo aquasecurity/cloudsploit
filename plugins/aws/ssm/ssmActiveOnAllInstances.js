@@ -9,6 +9,14 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-setting-up.html',
     recommended_action: 'Install SSM on all servers and ensure it is active.',
     apis: ['EC2:describeInstances', 'SSM:describeInstanceInformation', 'STS:getCallerIdentity'],
+    settings: {
+        ssm_agent_threshold: {
+            name: 'Threshold for EC2 SSM individual reporting.',
+            description: 'Sets the value where EC2 instance reporting becomes aggregated once breached.',
+            regex: '^[0-9]*$',
+            default: 20
+        }
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -17,6 +25,12 @@ module.exports = {
 
         var acctRegion = helpers.defaultRegion(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
+        var threshold = settings.ssm_agent_threshold || this.settings.ssm_agent_threshold.default
+
+        if(typeof threshold === "string") {
+            threshold.match(this.settings.ssm_agent_threshold.regex)
+            threshold = parseInt(threshold)
+        }
 
         async.each(regions.ssm, function(region, rcb){
             // Look for EC2 instances
@@ -54,11 +68,6 @@ module.exports = {
                 return rcb();
             }
 
-            if (!describeInstanceInformation.data.length) {
-                helpers.addResult(results, 2, 'No SSM installations found on any of ' + instanceList.length + ' instances', region);
-                return rcb();
-            }
-
             var ssmMap = {};
             var instanceListPass = [];
             var instanceListFail = [];
@@ -79,7 +88,7 @@ module.exports = {
                 }
             });
 
-            if (instanceListFail.length + instanceListPass.length <= 20) {
+            if (instanceListFail.length + instanceListPass.length <= threshold) {
                 instanceListPass.forEach(function(arn){
                     helpers.addResult(results, 0, 'Instance has SSM agent installed and online', region, arn);
                 });
