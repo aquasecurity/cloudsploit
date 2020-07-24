@@ -4,10 +4,10 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Lambda Log Groups',
     category: 'Lambda',
-    description: 'Ensures each Lambda function has a valid log group attached to it.',
+    description: 'Ensures each Lambda function has a valid log group attached to it',
     more_info: 'Every Lambda function created should automatically have a CloudWatch log group generated to handle its log streams.',
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/monitoring-cloudwatchlogs.html',
-    recommended_action: 'Update your functions permissions to allow logging.',
+    recommended_action: 'Update the Lambda function permissions to allow CloudWatch logging.',
     apis: ['Lambda:listFunctions', 'CloudWatchLogs:describeLogGroups'],
 
     run: function(cache, settings, callback) {
@@ -32,21 +32,20 @@ module.exports = {
                 return rcb();
             }
 
-            var describeLogGroups = helpers.addSource(cache, source, ['cloudwatchlogs', 'describeLogGroups', region]);
+            var describeLogGroups = helpers.addSource(cache, source,
+                ['cloudwatchlogs', 'describeLogGroups', region]);
 
-            for (f in listFunctions.data) {
+            for (var f in listFunctions.data) {
                 var func = listFunctions.data[f];
                 var arn = func.FunctionArn;
 
                 var result = [0, ''];
 
-                if (!describeLogGroups.data) {
-                    result = [3, 'Error querying for log groups'];
-                } else if (describeLogGroups.err) {
+                if (describeLogGroups.err || !describeLogGroups.data) {
                     result = [3, 'Error querying for log groups: ' + helpers.addError(describeLogGroups)];
                 } else if (describeLogGroups.data) {
                     var found = describeLogGroups.data.find(function(lg) {
-                        return lg.logGroupName == "/aws/lambda/" + func.FunctionName;
+                        return lg.logGroupName == '/aws/lambda/' + func.FunctionName;
                     });
 
                     if (found) {

@@ -2,9 +2,10 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'RDS / DocumentDB Minor Version Upgrade',
+    title: 'RDS DocumentDB Minor Version Upgrade',
     category: 'RDS',
-    description: 'Auto Minor Version Upgrade must be enabled on RDS and DocumentDB databases.',
+    description: 'Ensures Auto Minor Version Upgrade is enabled on RDS and DocumentDB databases',
+    more_info: 'RDS supports automatically upgrading the minor version of the database, which should be enabled to ensure security fixes are quickly deployed.',
     link: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_UpgradeDBInstance.Upgrading.html#USER_UpgradeDBInstance.Upgrading.AutoMinorVersionUpgrades',
     recommended_action: 'Enable automatic minor version upgrades on RDS and DocumentDB databases',
     apis: ['RDS:describeDBInstances'],
@@ -13,8 +14,6 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
-
-        var foundDBInstance = false;
 
         async.each(regions.rds, function(region, rcb) {
             var describeDBInstances = helpers.addSource(cache, source, ['rds', 'describeDBInstances', region]);
@@ -29,11 +28,11 @@ module.exports = {
             }
 
             if (!describeDBInstances.data.length) {
+                helpers.addResult(results, 0, 'No RDS/DocumentDB instances found');
                 return rcb();
             }
 
-            foundDBInstance = true;
-            for (i in describeDBInstances.data) {
+            for (var i in describeDBInstances.data) {
                 var db = describeDBInstances.data[i];
 
                 if (db.AutoMinorVersionUpgrade) {
@@ -45,9 +44,6 @@ module.exports = {
 
             rcb();
         }, function() {
-            if (!foundDBInstance) {
-                helpers.addResult(results, 0, 'No RDS/DocumentDB instances found');
-            }
             callback(null, results, source);
         });
     }

@@ -33,10 +33,7 @@ describe('rdsMinorVersionUpgrade', function () {
             rds.run(cache, {}, callback);
         })
 
-    })
-
-    describe('run', function () {
-        it('should give failing result if AutoMinorVersionUpgrade is not enabled', function (done) {
+        it('should give failing result if AutoMinorVersionUpgrade is not enabled', function(done) {
             const callback = (err, results) => {
                 expect(results[0].status).to.equal(2)
                 expect(results.length).to.equal(1)
@@ -53,10 +50,7 @@ describe('rdsMinorVersionUpgrade', function () {
             rds.run(cache, {}, callback);
         })
 
-    })
-
-    describe('run', function () {
-        it('should give failing result if AutoMinorVersionUpgrade is not included on the object', function (done) {
+        it('should give failing result if AutoMinorVersionUpgrade is not included on the object', function(done) {
             const callback = (err, results) => {
                 expect(results[0].status).to.equal(2)
                 expect(results.length).to.equal(1)
@@ -72,10 +66,7 @@ describe('rdsMinorVersionUpgrade', function () {
             rds.run(cache, {}, callback);
         })
 
-    })
-
-    describe('run', function () {
-        it('should give passing result if DB descriptors are not passed', function (done) {
+        it('should give passing result if DB descriptors are not passed', function(done) {
             const callback = (err, results) => {
                 expect(results[0].status).to.equal(0)
                 expect(results.length).to.equal(1)
@@ -88,6 +79,5 @@ describe('rdsMinorVersionUpgrade', function () {
 
             rds.run(cache, {}, callback);
         })
-
     })
 })

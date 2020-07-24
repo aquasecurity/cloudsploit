@@ -329,12 +329,12 @@ module.exports = {
             outputs.push(this.createJunit(streamJunit));
         }
 
-        var addJsonOutput = argv.find(function (arg) {
+        var addJsonOutput = argv.find(function(arg) {
             return arg.startsWith('--json=');
         });
         if (addJsonOutput) {
-            var stream = fs.createWriteStream(addJsonOutput.substr(7));
-            outputs.push(this.createJson(stream));
+            var streamJson = fs.createWriteStream(addJsonOutput.substr(7));
+            outputs.push(this.createJson(streamJson));
         }
 
         var addConsoleOutput = argv.find(function(arg) {

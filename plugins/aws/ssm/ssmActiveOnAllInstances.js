@@ -25,11 +25,11 @@ module.exports = {
 
         var acctRegion = helpers.defaultRegion(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
-        var threshold = settings.ssm_agent_threshold || this.settings.ssm_agent_threshold.default
+        var threshold = settings.ssm_agent_threshold || this.settings.ssm_agent_threshold.default;
 
-        if(typeof threshold === "string") {
-            threshold.match(this.settings.ssm_agent_threshold.regex)
-            threshold = parseInt(threshold)
+        if (typeof threshold === 'string') {
+            threshold.match(this.settings.ssm_agent_threshold.regex);
+            threshold = parseInt(threshold);
         }
 
         async.each(regions.ssm, function(region, rcb){

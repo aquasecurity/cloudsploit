@@ -4,10 +4,10 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Lambda Public Access',
     category: 'Lambda',
-    description: 'Ensures Lambda functions are not accessible globally.',
+    description: 'Ensures Lambda functions are not accessible globally',
     more_info: 'The Lambda function execution policy should not allow public invocation of the function.',
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/access-control-resource-based.html',
-    recommended_action: 'Correct the Lambda policy to prevent access from the public.',
+    recommended_action: 'Update the Lambda policy to prevent access from the public.',
     apis: ['Lambda:listFunctions', 'Lambda:getPolicy'],
 
     run: function(cache, settings, callback) {
