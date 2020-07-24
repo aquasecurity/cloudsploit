@@ -9,6 +9,7 @@ module.exports = {
     recommended_action: 'Increase the minimum length requirement for the password policy',
     apis: ['IAM:getAccountPasswordPolicy'],
     remediation_description: 'The password policy for minimum password length will be set to the value set by the user. Otherwise, it will default to 14.',
+    remediation_min_version: '202006221808',
     apis_remediate: ['IAM:getAccountPasswordPolicy'],
     actions: {remediate: ['IAM:updateAccountPasswordPolicy'], rollback: ['IAM:updateAccountPasswordPolicy']},
     permissions: {remediate: ['iam:UpdateAccountPasswordPolicy'], rollback: ['iam:UpdateAccountPasswordPolicy']},

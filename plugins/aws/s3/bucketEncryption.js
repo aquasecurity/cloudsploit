@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonS3/latest/dev/bucket-encryption.html',
     apis: ['S3:listBuckets', 'S3:getBucketEncryption', 'KMS:listKeys', 'KMS:describeKey', 'KMS:listAliases', 'CloudFront:listDistributions'],
     remediation_description: 'The impacted bucket will be configured to use either AES-256 encryption, or CMK-based encryption if a KMS key ID is provided.',
+    remediation_min_version: '202006020730',
     apis_remediate: ['S3:listBuckets', 'S3:getBucketEncryption', 'S3:getBucketLocation'],
     actions: {
         remediate: ['S3:putBucketEncryption'],

@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Restrict TCP port 50070 and 50470 to known IP addresses for Hadoop/HDFS',
     apis: ['EC2:describeSecurityGroups'],
     remediation_description: 'The impacted security group rule will be deleted if no input is provided. Otherwise, any input will replace the open CIDR rule.',
+    remediation_min_version: '202006020730',
     apis_remediate: ['EC2:describeSecurityGroups'],
     actions: {
         remediate: ['EC2:authorizeSecurityGroupIngress','EC2:revokeSecurityGroupIngress'],

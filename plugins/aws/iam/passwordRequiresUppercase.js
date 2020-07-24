@@ -9,6 +9,7 @@ module.exports = {
     recommended_action: 'Update the password policy to require the use of uppercase letters',
     apis: ['IAM:getAccountPasswordPolicy'],
     remediation_description: 'The password policy for password requires uppercase will be set to true.',
+    remediation_min_version: '202006221808',
     apis_remediate: ['IAM:getAccountPasswordPolicy'],
     actions: {remediate: ['IAM:updateAccountPasswordPolicy'], rollback: ['IAM:updateAccountPasswordPolicy']},
     permissions: {remediate: ['iam:UpdateAccountPasswordPolicy'], rollback: ['iam:UpdateAccountPasswordPolicy']},
