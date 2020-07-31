@@ -20,82 +20,83 @@ module.exports = {
 
         var accountId = helpers.addSource(cache, source, ["sts", "getCallerIdentity", acctRegion, "data"]);
 
-        async.each(regions.workspaces, function(region, ipcontrol){
+        const enabledString = "IP Access Control enabled.";
+        const disabledString = "IP Access Control not enabled.";
+
+        async.each(regions.workspaces, function(region, rcb){
             var listWorkspaces = helpers.addSource(cache, source, ["workspaces", "describeWorkspaces", region, "data"]);
             var listDirectories = helpers.addSource(cache, source, ["workspaces", "describeWorkspaceDirectories", region, "data"]);
             var listIPGroups = helpers.addSource(cache, source, ["workspaces", "describeIpGroups", region, "data"]);
 
             if (!listWorkspaces) {
-                return callback(null, results, source)
+                return rcb()
             }
 
             if (listWorkspaces.err) {
                 helpers.addResult(
                     results, 3, "Unable to query for WorkSpaces information: " + helpers.addError(listWorkspaces), region
                 );
+                return rcb()
             }
 
             if (!listWorkspaces.length) {
                 helpers.addResult(
                     results, 0, "No Workspaces found.", region
                 );
+                return rcb()
             }
 
-            for (var i in listWorkspaces) {
-                var workspace = listWorkspaces[i];
+            for (var workspace of listWorkspaces) {
                 var arn = "arn:" + awsOrGov + ":workspaces:" + region + ":" + accountId + ":workspace/" + workspace.WorkspaceId;
 
-                if (!("DirectoryId" in workspace)){
+                if (!(workspace.DirectoryId)){
                     helpers.addResult(
-                        results, 2, "IP Access Control not enabled.", region, arn
+                        results, 2, disabledString, region, arn
                     );
                 }
 
                 if (workspace){
                     var workspaceDirectory = listDirectories.find(directory => directory.DirectoryId === workspace.DirectoryId);
+                    if (workspaceDirectory.ipGroupIds) {
+                        let openIP = []
+                        for (var workspaceIPGroup of workspaceDirectory.ipGroupIds){
+                            var ipGroup = listIPGroups.find(o => o.groupId === workspaceIPGroup);
 
-                    if (!("ipGroupIds" in workspaceDirectory)){
-                        helpers.addResult(
-                            results, 2, "IP Access Control not enabled.", region, arn
-                        );
-                    }
-
-                    if ("ipGroupIds" in workspaceDirectory){
-                        for (var j in workspaceDirectory.ipGroupIds){
-                            var ipGroup = listIPGroups.find(o => o.groupId === workspaceDirectory.ipGroupIds[j]);
-
-                            if (!("userRules" in ipGroup)){
-                                helpers.addResult(
-                                    results, 2, "IP Access Control not enabled.", region, arn
-                                );
-                            }
-
-                            if ("userRules" in ipGroup){
+                            if (ipGroup.userRules) {
                                 var queryIPGroup = ipGroup.userRules.find(o => o.ipRule === "0.0.0.0/0");
-
                                 if (queryIPGroup){
-                                    helpers.addResult(
-                                        results, 2, "IP range 0.0.0.0/0 is enabled.", region, arn
-                                    );
-                                    break;
+                                    openIP.push('disabled')
                                 } else {
-                                    helpers.addResult(
-                                        results, 0, "IP Access Control enabled.", region, arn
-                                    );
+                                    openIP.push('enabled')
                                 }
+                            } else {
+                                openIP.push('enabled')
                             }
+
                         }
+                        var ipOpen = openIP.find(o => o === 'disabled');
+
+                        if (ipOpen){
+                            helpers.addResult(
+                                results, 2, disabledString, region, arn
+                            );
+                        } else {
+                            helpers.addResult(
+                                results, 0, enabledString, region, arn
+                            );
+                        }
+                    } else {
+                        helpers.addResult(
+                            results, 2, disabledString, region, arn
+                        );
                     }
                 }
             }
 
-            ipcontrol();
+            rcb();
 
         }, function(){
             callback(null, results, source);
         });
-
-        return callback(null, results, source);
     }
-
 }
