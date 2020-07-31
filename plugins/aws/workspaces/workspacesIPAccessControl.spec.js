@@ -179,7 +179,7 @@ describe("workspacesIPAccessControl", function () {
             done();
         });
 
-        it("should give no IP access controls on both the workspaces", function (done) {
+        it("should give IP access controls on both the workspaces", function (done) {
             const settings = {};
             const cache = testWorkspaces();
 
@@ -193,7 +193,7 @@ describe("workspacesIPAccessControl", function () {
             done();
         })
 
-        it("should give missing metric for a metric that is defined with all requirements", function (done) {
+        it("should give IP access control enabled on one and no IP access control on the other", function (done) {
             const settings = {};
             const cache = testWorkspaces2();
 
