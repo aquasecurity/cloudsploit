@@ -191,7 +191,7 @@ module.exports = {
         'organizationInvite'            : require(__dirname + '/plugins/aws/organizations/organizationInvite.js'),
         'guardDutyEnabled'              : require(__dirname + '/plugins/aws/guardduty/guarddutyEnabled.js'),
         'guardDutyMaster'               : require(__dirname + '/plugins/aws/guardduty/guarddutyMaster.js'),
-
+        'workspacesIPAccessControl'     : require(__dirname + '/plugins/aws/workspaces/workspacesIPAccessControl.js'),
         'xrayEncryptionEnabled'         : require(__dirname + '/plugins/aws/xray/xrayEncryptionEnabled.js')
     },
     azure : {
