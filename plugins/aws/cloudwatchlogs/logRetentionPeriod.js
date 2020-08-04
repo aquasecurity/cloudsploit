@@ -11,6 +11,9 @@ module.exports = {
     apis: ['CloudWatchLogs:describeLogGroups'],
     settings: {
         log_retention_in_days: {
+            name: 'CloudWatch Log retention period minimum',
+            description: 'Ensures CloudWatch Log groups have a retention no less than this value',
+            regex: '^[0-9]*$',
             default: 90
         }
     },
