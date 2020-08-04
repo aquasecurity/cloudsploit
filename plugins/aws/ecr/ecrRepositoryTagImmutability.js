@@ -10,12 +10,12 @@ module.exports = {
     recommended_action: 'Update ECR registry configurations to ensure image tag mutability is set to immutable.',
     apis: ['ECR:describeRepositories'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
 
-        async.each(regions.ecr, function (region, rcb) {
+        async.each(regions.ecr, function(region, rcb) {
             var describeRepositories = helpers.addSource(cache, source,
                 ['ecr', 'describeRepositories', region]);
 
@@ -33,7 +33,7 @@ module.exports = {
                 return rcb();
             }
 
-            for (r in describeRepositories.data) {
+            for (var r in describeRepositories.data) {
                 var repository = describeRepositories.data[r];
                 var arn = repository.repositoryArn;
                 var immutability = repository.imageTagMutability;
@@ -50,7 +50,7 @@ module.exports = {
             }
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }

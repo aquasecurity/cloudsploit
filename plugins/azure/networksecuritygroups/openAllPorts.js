@@ -19,12 +19,12 @@ module.exports = {
              'backend services.'
     },
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.networkSecurityGroups, function (location, rcb) {
+        async.each(locations.networkSecurityGroups, function(location, rcb) {
 
             let networkSecurityGroups = helpers.addSource(
                 cache, source, ['networkSecurityGroups', 'listAll', location]
@@ -53,7 +53,7 @@ module.exports = {
             helpers.findOpenPorts(networkSecurityGroups.data, ports, service, location, results);
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }

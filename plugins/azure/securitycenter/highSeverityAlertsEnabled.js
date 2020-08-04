@@ -33,23 +33,14 @@ module.exports = {
                 return rcb();
             }
 
-            let alertExists = false;
-            var subId = '';
             securityContacts.data.forEach(securityContact => {
-                var idArr = securityContact.id.split('/');
-                idArr.length = idArr.length - 2;
-                subId = idArr.join('/');
-
-                if (securityContact.alertNotifications === 'On') {
-                    alertExists = true;
+                if (securityContact.alertNotifications &&
+                    securityContact.alertNotifications.toLowerCase() == 'on') {
+                    helpers.addResult(results, 0, 'High severity alerts for the subscription are configured', location, securityContact.id);
+                } else {
+                    helpers.addResult(results, 2, 'High severity alerts for the subscription are not configured', location, securityContacts.id);
                 }
             });
-
-            if (alertExists) {
-                helpers.addResult(results, 0, 'High severity alerts for the subscription are configured', location, subId);
-            } else {
-                helpers.addResult(results, 2, 'High severity alerts for the subscription are not configured', location, subId);
-            }
 
             rcb();
         }, function(){

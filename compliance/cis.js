@@ -214,20 +214,20 @@ var maxProfileLevel = -1;
 // PCI controls. The PCI information is defined inline, so this compliance
 // checks for that information on the plugin.
 module.exports = {
-    describe: function (pluginId, plugin) {
+    describe: function(pluginId) {
         return controls[pluginId].title;
     },
 
-    includes: function (pluginId, plugin) {
+    includes: function(pluginId) {
         if (maxProfileLevel <= 0) {
-            return controls.hasOwnProperty(pluginId);
+            return Object.prototype.hasOwnProperty.call(controls, pluginId);
         }
 
-        return controls.hasOwnProperty(pluginId)
-            && controls[pluginId].profile <= maxProfileLevel;
+        return Object.prototype.hasOwnProperty.call(controls, pluginId) &&
+            controls[pluginId].profile <= maxProfileLevel;
     },
 
-    setMaxProfile: function (level) {
+    setMaxProfile: function(level) {
         maxProfileLevel = level;
     }
 };

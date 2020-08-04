@@ -11,7 +11,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html',
     recommended_action: 'Ensure that all IAM roles are scoped to specific services and API calls.',
     apis: ['IAM:listRoles', 'IAM:listRolePolicies', 'IAM:listAttachedRolePolicies',
-           'IAM:getPolicy', 'IAM:getRolePolicy'],
+        'IAM:getPolicy', 'IAM:getRolePolicy'],
     settings: {
         iam_role_policies_ignore_path: {
             name: 'IAM Role Policies Ignore Path',
@@ -34,7 +34,7 @@ module.exports = {
         var region = helpers.defaultRegion(settings);
 
         var listRoles = helpers.addSource(cache, source,
-                ['iam', 'listRoles', region]);
+            ['iam', 'listRoles', region]);
 
         if (!listRoles) return callback(null, results, source);
 
@@ -62,14 +62,14 @@ module.exports = {
 
             // Get managed policies attached to role
             var listAttachedRolePolicies = helpers.addSource(cache, source,
-                    ['iam', 'listAttachedRolePolicies', region, role.RoleName]);
+                ['iam', 'listAttachedRolePolicies', region, role.RoleName]);
 
             // Get inline policies attached to role
             var listRolePolicies = helpers.addSource(cache, source,
-                    ['iam', 'listRolePolicies', region, role.RoleName]);
+                ['iam', 'listRolePolicies', region, role.RoleName]);
 
             var getRolePolicy = helpers.addSource(cache, source,
-                    ['iam', 'getRolePolicy', region, role.RoleName]);
+                ['iam', 'getRolePolicy', region, role.RoleName]);
 
             if (listAttachedRolePolicies.err) {
                 helpers.addResult(results, 3,
@@ -90,7 +90,7 @@ module.exports = {
                 listAttachedRolePolicies.data &&
                 listAttachedRolePolicies.data.AttachedPolicies) {
 
-                for (a in listAttachedRolePolicies.data.AttachedPolicies) {
+                for (var a in listAttachedRolePolicies.data.AttachedPolicies) {
                     var policy = listAttachedRolePolicies.data.AttachedPolicies[a];
 
                     if (policy.PolicyArn === managedAdminPolicy) {
@@ -105,20 +105,20 @@ module.exports = {
                 listRolePolicies.data &&
                 listRolePolicies.data.PolicyNames) {
 
-                for (p in listRolePolicies.data.PolicyNames) {
-                    var policy = listRolePolicies.data.PolicyNames[p];
+                for (var p in listRolePolicies.data.PolicyNames) {
+                    var policyName = listRolePolicies.data.PolicyNames[p];
 
                     if (getRolePolicy &&
-                        getRolePolicy[policy] && 
-                        getRolePolicy[policy].data &&
-                        getRolePolicy[policy].data.PolicyDocument) {
+                        getRolePolicy[policyName] && 
+                        getRolePolicy[policyName].data &&
+                        getRolePolicy[policyName].data.PolicyDocument) {
 
                         var statements = helpers.normalizePolicyDocument(
-                            getRolePolicy[policy].data.PolicyDocument);
+                            getRolePolicy[policyName].data.PolicyDocument);
                         if (!statements) break;
 
                         // Loop through statements to see if admin privileges
-                        for (s in statements) {
+                        for (var s in statements) {
                             var statement = statements[s];
 
                             if (statement.Effect === 'Allow' &&
@@ -151,11 +151,11 @@ module.exports = {
             if (roleFailures.length) {
                 helpers.addResult(results, 2,
                     roleFailures.join(', '),
-                    'global', role.Arn);
+                    'global', role.Arn, custom);
             } else {
                 helpers.addResult(results, 0,
                     'Role does not have overly-permissive policy',
-                    'global', role.Arn);
+                    'global', role.Arn, custom);
             }
 
             cb();

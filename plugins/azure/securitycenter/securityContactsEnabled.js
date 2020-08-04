@@ -33,34 +33,19 @@ module.exports = {
                 return rcb();
             }
 
-            let phoneExists = false;
-            let emailExists = false;
-            let subId = '';
-
             securityContacts.data.forEach(securityContact => {
-                var idArr = securityContact.id.split('/');
-                idArr.length = idArr.length - 2;
-                subId = idArr.join('/');
-
                 if (securityContact.phone) {
-                    phoneExists = true;
+                    helpers.addResult(results, 0, 'Security Contact phone number is set on the subscription', location, securityContact.id);
+                } else {
+                    helpers.addResult(results, 2, 'Security Contact phone number is not set on the subscription', location, securityContact.id);
                 }
+
                 if (securityContact.email) {
-                    emailExists = true;
+                    helpers.addResult(results, 0, 'Security Contact email address is set on the subscription', location, securityContact.id);
+                } else {
+                    helpers.addResult(results, 2, 'Security Contact email address is not set on the subscription', location, securityContact.id);
                 }
             });
-
-            if (phoneExists) {
-                helpers.addResult(results, 0, 'Security Contact phone number is set on the subscription', location, subId);
-            } else {
-                helpers.addResult(results, 2, 'Security Contact phone number is not set on the subscription', location, subId);
-            }
-
-            if (emailExists) {
-                helpers.addResult(results, 0, 'Security Contact email address is set on the subscription', location, subId);
-            } else {
-                helpers.addResult(results, 2, 'Security Contact email address is not set on the subscription', location, subId);
-            }
 
             rcb();
         }, function(){

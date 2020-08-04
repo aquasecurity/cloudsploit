@@ -15,9 +15,9 @@ const createCache = (err, data) => {
     }
 };
 
-describe('ensureNoGuestUser', function () {
-    describe('run', function () {
-        it('should give passing result if no users', function (done) {
+describe('ensureNoGuestUser', function() {
+    describe('run', function() {
+        it('should give passing result if no users', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -34,7 +34,7 @@ describe('ensureNoGuestUser', function () {
             auth.run(cache, {}, callback);
         });
 
-        it('should give failing result if guest users exist', function (done) {
+        it('should give failing result if guest users exist', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -117,7 +117,7 @@ describe('ensureNoGuestUser', function () {
             auth.run(cache, {}, callback);
         });
 
-        it('should give passing result if there are no guest users', function (done) {
+        it('should give passing result if there are no guest users', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
