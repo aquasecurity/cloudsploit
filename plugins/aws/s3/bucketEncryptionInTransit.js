@@ -21,8 +21,10 @@ function statementDeniesInsecureTransport(statement, bucketResource) {
 module.exports = {
     title: 'S3 Bucket Encryption In Transit',
     category: 'S3',
-    recommended_action: 'Add statement to bucket policy that denies all s3 actions. Resources must be list of bucket arn and bucket arn/*. The condition must equal { "Bool": { "aws:SecureTransport": "false" }',
-    description: 'S3 bucket must have bucket policy statement the denies insecure transport (http)',
+    description: 'Ensures S3 buckets have bucket policy statements that deny insecure transport',
+    more_info: 'S3 bucket policies can be configured to deny access to the bucket over HTTP.',
+    recommended_action: 'Add statements to the bucket policy that deny all S3 actions when SecureTransport is false. Resources must be list of bucket ARN and bucket ARN with wildcard.',
+    link: 'https://aws.amazon.com/premiumsupport/knowledge-center/s3-bucket-policy-for-config-rule/',
     apis: ['S3:listBuckets', 'S3:getBucketPolicy'],
 
     run: function(cache, settings, callback) {
@@ -46,7 +48,6 @@ module.exports = {
 
         for (let bucket of listBuckets.data) {
             var bucketResource = `arn:aws:s3:::${bucket.Name}`;
-            console.log(JSON.stringify(getBucketPolicy, null, 2))
 
             var getBucketPolicy = helpers.addSource(cache, source, ['s3', 'getBucketPolicy', region, bucket.Name]);
             if (getBucketPolicy && getBucketPolicy.err && getBucketPolicy.err.code && getBucketPolicy.err.code === 'NoSuchBucketPolicy') {
@@ -59,10 +60,11 @@ module.exports = {
             }
             try {
                 // Parse the policy if it hasn't be parsed and replaced by another plugin....
+                var policyJson;
                 if (typeof getBucketPolicy.data.Policy === 'string') {
-                    var policyJson = JSON.parse(getBucketPolicy.data.Policy);
+                    policyJson = JSON.parse(getBucketPolicy.data.Policy);
                 } else {
-                    var policyJson = getBucketPolicy.data.Policy
+                    policyJson = getBucketPolicy.data.Policy;
                 }
             } catch(e) {
                 helpers.addResult(results, 3, `Bucket policy on bucket ${bucket.Name} could not be parsed.`, 'global', bucketResource);
@@ -80,7 +82,7 @@ module.exports = {
             if (policyJson.Statement.find(statement => statementDeniesInsecureTransport(statement, bucketResource))) {
                 helpers.addResult(results, 0, 'Bucket policy enforces encryption in transit', 'global', bucketResource);
             } else {
-                helpers.addResult(results, 2, `Bucket does not enforce encryption in transit`, 'global', bucketResource);
+                helpers.addResult(results, 2, 'Bucket does not enforce encryption in transit', 'global', bucketResource);
             }
         }
         callback(null, results, source);

@@ -1,4 +1,3 @@
-var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
@@ -50,7 +49,7 @@ module.exports = {
                 helpers.addResult(results, 3,
                     'Error querying bucket logging for : ' + bucket.Name +
                     ': ' + helpers.addError(getBucketLogging),
-                    'global', 'arn:aws:s3:::' + bucket.Name)
+                    'global', 'arn:aws:s3:::' + bucket.Name);
             } else if (getBucketLogging.data.LoggingEnabled) {
                 helpers.addResult(results, 0,
                     'Bucket : ' + bucket.Name + ' has logging enabled',

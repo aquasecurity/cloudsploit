@@ -10,12 +10,12 @@ module.exports = {
     recommended_action: 'Remove roles that allow permissions to create custom owner roles.',
     apis: ['roleDefinitions:list'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.roleDefinitions, function (location, rcb) {
+        async.each(locations.roleDefinitions, function(location, rcb) {
 
             const roleDefinitions = helpers.addSource(cache, source,
                 ['roleDefinitions', 'list', location]);
@@ -31,10 +31,23 @@ module.exports = {
                 helpers.addResult(results, 0, 'No role definitions found', location);
                 return rcb();
             }
-            var roleFound = false;
+
+            var customRoles = [];
+            
             roleDefinitions.data.forEach(roleDefinition => {
-                var subscription = roleDefinition.id.split('/').slice(0,3).join('/');
-                var subAlone = subscription.split('/').slice(2,3).join('/');
+                if (roleDefinition.roleType && roleDefinition.roleType !== 'BuiltInRole') {
+                    customRoles.push(roleDefinition);
+                }
+            });
+
+            if (!customRoles.length) {
+                helpers.addResult(results, 0,'No custom roles found', location);
+                return rcb();
+            }
+
+            customRoles.forEach(function(roleDefinition) {
+                var subscription = roleDefinition.id.split('/').slice(0, 3).join('/');
+                var subAlone = subscription.split('/').slice(2, 3).join('/');
                 var action = false;
                 var scope = false;
 
@@ -43,29 +56,28 @@ module.exports = {
                     roleDefinition.permissions.forEach(permission => {
                         if (permission.actions &&
                             (permission.actions.indexOf('*') > -1)) {
-                            action = true
+                            action = true;
                         }
-                    })
+                    });
                 }
                 if (roleDefinition.assignableScopes &&
                     ((roleDefinition.assignableScopes.indexOf('/') > -1) ||
-                    (roleDefinition.assignableScopes.indexOf(subAlone) > -1) ||
-                    (roleDefinition.assignableScopes.indexOf(subscription) > -1))) {
-                        scope = true
+                        (roleDefinition.assignableScopes.indexOf(subAlone) > -1) ||
+                        (roleDefinition.assignableScopes.indexOf(subscription) > -1))) {
+                    scope = true;
                 }
 
                 if (action && scope) {
-                    helpers.addResult(results, 2,'Permission to create custom owner roles enabled', 'global', roleDefinition.id);
-                    roleFound = true;
+                    helpers.addResult(results, 2, 'Permission to create custom owner roles enabled', location, roleDefinition.id);
+                } else {
+                    helpers.addResult(results, 0, 'Permission to create custom owner roles is not enabled', location, roleDefinition.id);
                 }
             });
-            if (!roleFound) {
-                helpers.addResult(results, 0,'No permissions to create custom owner roles enabled', 'global');
-            }
+            
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });
     }
-}
+};

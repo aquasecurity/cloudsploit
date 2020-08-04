@@ -4,7 +4,7 @@ var async = require('async');
 module.exports = function(AWSConfig, collection, callback) {
     var iam = new AWS.IAM(AWSConfig);
 
-    var generateCredentialReport = function(genCb, genResults) {
+    var generateCredentialReport = function(genCb) {
         iam.generateCredentialReport(function(err, data) {
             if ((err && err.code && err.code == 'ReportInProgress') || (data && data.State)) return genCb();
             if (err || !data || !data.State) return genCb(err || 'Unable to generate credential report');
@@ -12,7 +12,7 @@ module.exports = function(AWSConfig, collection, callback) {
         });
     };
 
-    var getCredentialReport = function(pingCb, pingResults) {
+    var getCredentialReport = function(pingCb) {
         iam.getCredentialReport(function(err, data) {
             if (err || !data || !data.Content) return pingCb('Waiting for credential report');
             pingCb(null, data);
@@ -34,16 +34,20 @@ module.exports = function(AWSConfig, collection, callback) {
             try {
                 var csvContent = reportData.Content.toString();
                 var csvRows = csvContent.split('\n');
-                var firstRow = csvRows[0];
             } catch(e) {
                 collection.iam.generateCredentialReport[AWSConfig.region].err = 'Error converting credential CSV to string: ' + e;
+                return callback();
+            }
+
+            if (!csvRows[0]) {
+                collection.iam.generateCredentialReport[AWSConfig.region].err = 'Error reading credential CSV';
                 return callback();
             }
 
             var headings = [];
             var entries = [];
 
-            for (r in csvRows) {
+            for (var r in csvRows) {
                 var csvRow = csvRows[r];
                 var csvFields = csvRow.split(',');
                 
@@ -54,7 +58,7 @@ module.exports = function(AWSConfig, collection, callback) {
                 } else {
                     var entry = {};
 
-                    for (f in csvFields) {
+                    for (var f in csvFields) {
                         var field = csvFields[f];
 
                         if (field === 'TRUE' || field === 'true') {

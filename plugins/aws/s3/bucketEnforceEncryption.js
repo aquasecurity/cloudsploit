@@ -1,4 +1,3 @@
-var async = require('async');
 var helpers = require('../../../helpers/aws/');
 
 module.exports = {
@@ -58,7 +57,7 @@ module.exports = {
         var allowRegex = (config.s3_enforce_encryption_allow_pattern &&
             config.s3_enforce_encryption_allow_pattern.length) ? new RegExp(config.s3_enforce_encryption_allow_pattern) : false;
 
-        for (i in listBuckets.data) {
+        for (var i in listBuckets.data) {
             var bucket = listBuckets.data[i];
             if (!bucket.Name) continue;
 
@@ -104,7 +103,7 @@ module.exports = {
                         var encryptionType;
                         var nullCondition = false;
 
-                        for (s in policyJson.Statement) {
+                        for (var s in policyJson.Statement) {
                             var statement = policyJson.Statement[s];
 
                             if (statement.Effect &&
@@ -133,7 +132,7 @@ module.exports = {
                             if (config.s3_enforce_encryption_require_cmk && encryptionType !== 'aws:kms') {
                                 helpers.addResult(results, 2,
                                     'Bucket policy requires encryption on object uploads but is not enforcing AWS KMS type',
-                                        'global', bucketResource, custom);
+                                    'global', bucketResource, custom);
                             } else {
                                 helpers.addResult(results, 0,
                                     'Bucket policy requires encryption on object uploads',

@@ -16,7 +16,7 @@ module.exports = {
         var region = helpers.defaultRegion(settings);
 
         var getAccountSummary = helpers.addSource(cache, source,
-                ['iam', 'getAccountSummary', region]);
+            ['iam', 'getAccountSummary', region]);
 
         if (!getAccountSummary || !getAccountSummary.data ||
             !getAccountSummary.data.AccountMFAEnabled) {
@@ -26,7 +26,7 @@ module.exports = {
         }
 
         var listVirtualMFADevices = helpers.addSource(cache, source,
-                ['iam', 'listVirtualMFADevices', region]);
+            ['iam', 'listVirtualMFADevices', region]);
 
         if (!listVirtualMFADevices ||
             listVirtualMFADevices.err ||
@@ -38,7 +38,7 @@ module.exports = {
 
         var arn;
 
-        for (r in listVirtualMFADevices.data) {
+        for (var r in listVirtualMFADevices.data) {
             var obj = listVirtualMFADevices.data[r];
 
             if (obj.SerialNumber && obj.SerialNumber.indexOf(':mfa/root-account-mfa-device') > -1) {

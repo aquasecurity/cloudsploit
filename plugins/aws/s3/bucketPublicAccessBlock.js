@@ -1,4 +1,3 @@
-var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
@@ -42,7 +41,7 @@ module.exports = {
             helpers.addResult(results, 0, 'No S3 buckets to check');
             return callback(null, results, source);
         }
-        
+
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', region, 'data']);
         var getAccountPublicAccessBlock = helpers.addSource(cache, source, ['s3control', 'getPublicAccessBlock', region, accountId]);
 
@@ -94,7 +93,7 @@ module.exports = {
                         }
                     });
                 }
-            
+
                 if (combinedMissingBlocks.length && !coveredByAccount.length) {
                     helpers.addResult(results, 2, `Missing public access blocks: ${combinedMissingBlocks.join(', ')}`, 'global', 'arn:aws:s3:::' + bucket);
                     continue;

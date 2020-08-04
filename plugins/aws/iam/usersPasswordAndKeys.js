@@ -10,12 +10,12 @@ module.exports = {
     recommended_action: 'Remove access keys from all users with console access.',
     apis: ['IAM:generateCredentialReport'],
     settings: {
-        machine_username_regex: {
-            name: 'Machine User Name Regex',
+        iam_machine_username_regex: {
+            name: 'IAM Machine User Name Regex',
             description: 'Only inspect users that match this regex',
             regex: '^.*$',
-            default: '^.*$',
-        },
+            default: '^.*$'
+        }
     },
 
     run: function(cache, settings, callback) {
@@ -24,11 +24,10 @@ module.exports = {
 
         var region = helpers.defaultRegion(settings);
 
-        var machineUsernameRejex = RegExp(this.settings.machine_username_regex.default);
         try {
-            var machineUsernameRejex = RegExp(settings.machine_username_regex || this.settings.machine_username_regex.default);
+            var machineUsernameRegex = RegExp(settings.iam_machine_username_regex || this.settings.iam_machine_username_regex.default);
         } catch (err) {
-            helpers.addResult(results, 3, err.message, 'global', this.settings.machine_username_regex.name);
+            helpers.addResult(results, 3, 'Invalid regex for machine username: ' + machineUsernameRegex, 'global');
         }
 
         var generateCredentialReport = helpers.addSource(cache, source, ['iam', 'generateCredentialReport', region]);
@@ -50,7 +49,7 @@ module.exports = {
         async.each(generateCredentialReport.data, function(obj, cb){
             // The root account security is handled in a different plugin
             if (obj.user === '<root_account>') return cb();
-            if (!machineUsernameRejex.test(obj.user)) return cb();
+            if (!machineUsernameRegex.test(obj.user)) return cb();
             if (!obj.password_enabled) return cb();
 
             found = true;

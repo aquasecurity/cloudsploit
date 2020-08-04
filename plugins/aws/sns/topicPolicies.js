@@ -71,7 +71,7 @@ module.exports = {
                 var actions = [];
 
                 if (policy.Statement && policy.Statement.length) {
-                    for (s in policy.Statement) {
+                    for (var s in policy.Statement) {
                         var statement = policy.Statement[s];
 
                         // Evaluates whether the effect of the statement is to "allow" access to the SNS
@@ -103,7 +103,7 @@ module.exports = {
                                     actions.push(statement.Action);
                                 }
                             } else if (statement.Action && statement.Action.length) {
-                                for (a in statement.Action) {
+                                for (var a in statement.Action) {
                                     if (actions.indexOf(statement.Action[a]) === -1) {
                                         actions.push(statement.Action[a]);
                                     }

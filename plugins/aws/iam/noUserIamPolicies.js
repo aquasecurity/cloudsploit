@@ -17,7 +17,7 @@ module.exports = {
         var region = helpers.defaultRegion(settings);
 
         var listUsers = helpers.addSource(cache, source,
-                ['iam', 'listUsers', region]);
+            ['iam', 'listUsers', region]);
 
         if (!listUsers) return callback(null, results, source);
 
@@ -33,15 +33,13 @@ module.exports = {
         }
 
         async.each(listUsers.data, function(user, cb){
-            var goodUser = true;
-
             if (!user.UserName) return cb();
 
             var listAttachedUserPolicies = helpers.addSource(cache, source,
-                    ['iam', 'listAttachedUserPolicies', region, user.UserName]);
+                ['iam', 'listAttachedUserPolicies', region, user.UserName]);
 
             var listUserPolicies = helpers.addSource(cache, source,
-                    ['iam', 'listUserPolicies', region, user.UserName]);
+                ['iam', 'listUserPolicies', region, user.UserName]);
 
             if (!listAttachedUserPolicies) return cb();
             if (!listUserPolicies) return cb();

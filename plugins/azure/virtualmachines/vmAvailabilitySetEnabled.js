@@ -26,26 +26,22 @@ module.exports = {
                 helpers.addResult(results, 3,
                     'Unable to query for Virtual Machines: ' + helpers.addError(virtualMachines), location);
                 return rcb();
-            };
+            }
 
             if (!virtualMachines.data.length) {
                 helpers.addResult(results, 0, 'No existing Virtual Machines found', location);
                 return rcb();
-            };
+            }
 
-            var allConnected = true;
             virtualMachines.data.forEach(virtualMachine => {
-                if (!virtualMachine.availabilitySet) {
+                if (virtualMachine.availabilitySet) {
+                    helpers.addResult(results, 0,
+                        'The Virtual Machine has Availability Set enabled', location, virtualMachine.id);
+                } else {
                     helpers.addResult(results, 2,
                         'The Virtual Machine does not have Availability Set enabled', location, virtualMachine.id);
-                    allConnected = false;
-                };
+                }
             });
-
-            if (allConnected) {
-                helpers.addResult(results, 0,
-                    'All Virtual Machines have Availability Set enabled', location);
-            };
 
             rcb();
         }, function() {

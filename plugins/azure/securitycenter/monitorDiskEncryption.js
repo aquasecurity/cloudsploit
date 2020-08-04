@@ -14,12 +14,12 @@ module.exports = {
                 'monitoring ensures this configuration is not modified undetected.'
     },
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.policyAssignments, function (location, rcb) {
+        async.each(locations.policyAssignments, function(location, rcb) {
 
             const policyAssignments = helpers.addSource(cache, source,
                 ['policyAssignments', 'list', location]);
@@ -29,7 +29,7 @@ module.exports = {
                 'Monitor Disk Encryption', results, location);
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });

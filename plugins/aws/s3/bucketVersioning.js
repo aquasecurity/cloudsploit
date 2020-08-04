@@ -1,4 +1,3 @@
-var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
@@ -43,7 +42,7 @@ module.exports = {
                 helpers.addResult(results, 3,
                     'Error querying bucket versioning for : ' + bucket.Name +
                     ': ' + helpers.addError(getBucketVersioning),
-                    'global', 'arn:aws:s3:::' + bucket.Name)
+                    'global', 'arn:aws:s3:::' + bucket.Name);
             } else if (getBucketVersioning.data.Status == 'Enabled') {
                 helpers.addResult(results, 0,
                     'Bucket : ' + bucket.Name + ' has versioning enabled',

@@ -10,12 +10,12 @@ module.exports = {
     recommended_action: 'Ensure each ElasticSearch domain is running the latest service software and update out-of-date domains.',
     apis: ['ES:listDomainNames', 'ES:describeElasticsearchDomain'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
 
-        async.each(regions.es, function (region, rcb) {
+        async.each(regions.es, function(region, rcb) {
             var listDomainNames = helpers.addSource(cache, source,
                 ['es', 'listDomainNames', region]);
 
@@ -62,7 +62,7 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }

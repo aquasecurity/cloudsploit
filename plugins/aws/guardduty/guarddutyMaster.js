@@ -43,7 +43,7 @@ module.exports = {
 
                     var arn = 'arn:' + awsOrGov + ':guardduty:' + region + ':' + accountId + ':detector/' + detectorId;
                     if (!getMasterAccount || !getMasterAccount.data.Master) {
-                        helpers.addResult(results, 2, `GuardDuty master account is not configured`, region, arn);
+                        helpers.addResult(results, 2, 'GuardDuty master account is not configured', region, arn);
                     } else {
                         if (getMasterAccount.data.Master.RelationshipStatus !== 'Enabled') {
                             helpers.addResult(results, 2, 'GuardDuty master account not enabled', region, arn);
@@ -58,6 +58,8 @@ module.exports = {
                         }
                     }
                 }
+            } else if (listDetectors.data.length === 0) {
+                helpers.addResult(results, 2, 'No GuardDuty detectors found', region, arn);
             }
             rcb();
         }, function(){
