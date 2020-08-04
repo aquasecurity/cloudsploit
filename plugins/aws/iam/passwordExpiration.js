@@ -9,6 +9,7 @@ module.exports = {
     recommended_action: 'Enable password expiration for the account',
     apis: ['IAM:getAccountPasswordPolicy'],
     remediation_description: 'The password policy for password expiration will be set to true.',
+    remediation_min_version: '202006221808',
     apis_remediate: ['IAM:getAccountPasswordPolicy'],
     actions: {remediate: ['IAM:updateAccountPasswordPolicy'], rollback: ['IAM:updateAccountPasswordPolicy']},
     permissions: {remediate: ['iam:UpdateAccountPasswordPolicy'], rollback: ['iam:UpdateAccountPasswordPolicy']},

@@ -9,6 +9,7 @@ module.exports = {
     recommended_action: 'Increase the minimum previous passwords that can be reused to 24.',
     apis: ['IAM:getAccountPasswordPolicy'],
     remediation_description: 'The password policy for password reuse prevention will be set to the value set by the user. Otherwise, it will default to 24.',
+    remediation_min_version: '202006221808',
     apis_remediate: ['IAM:getAccountPasswordPolicy'],
     actions: {remediate: ['IAM:updateAccountPasswordPolicy'], rollback: ['IAM:updateAccountPasswordPolicy']},
     permissions: {remediate: ['iam:UpdateAccountPasswordPolicy'], rollback: ['iam:UpdateAccountPasswordPolicy']},

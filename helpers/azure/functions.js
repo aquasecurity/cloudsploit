@@ -1,4 +1,5 @@
 var shared = require(__dirname + '/../shared.js');
+var auth = require(__dirname + '/auth.js');
 
 function addResult(results, status, message, region, resource, custom) {
     // Override unknown results for known error messages
@@ -41,7 +42,7 @@ function addResult(results, status, message, region, resource, custom) {
 
 function findOpenPorts(ngs, protocols, service, location, results) {
     let found = false;
-    var openPrefix = ['*', '0.0.0.0', '<nw/0>', '/0', 'internet'];
+    var openPrefix = ['*', '0.0.0.0', '0.0.0.0/0', '<nw/0>', '/0', '::/0', 'internet'];
     for (let sGroups of ngs) {
         let strings = [];
         let resource = sGroups.id;
@@ -73,28 +74,28 @@ function findOpenPorts(ngs, protocols, service, location, results) {
                             securityRule.properties['direction'] &&
                             securityRule.properties['direction'] === 'Inbound' &&
                             securityRule.properties['protocol'] &&
-                            securityRule.properties['protocol'] === protocol) {
+                            (securityRule.properties['protocol'] === protocol || securityRule.properties['protocol'] === '*')) {
                             if (securityRule.properties['destinationPortRange']) {
                                 if (securityRule.properties['destinationPortRange'].toString().indexOf("-") > -1) {
                                     let portRange = securityRule.properties['destinationPortRange'].split("-");
                                     let startPort = portRange[0];
                                     let endPort = portRange[1];
-                                    if (parseInt(startPort) < port && parseInt(endPort) > port) {
-                                        var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol == '*' ? `All protocols` : protocol.toUpperCase()) +
+                                    if (parseInt(startPort) <= port && parseInt(endPort) >= port) {
+                                        var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
                                             ` port ` + ports + ` open to ` + sourceFilter;
                                         strings.push(string);
                                         if (strings.indexOf(string) === -1) strings.push(string);
                                         found = true;
                                     }
                                 } else if (securityRule.properties['destinationPortRange'].toString().indexOf(port) > -1) {
-                                    var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol == '*' ? `All protocols` : protocol.toUpperCase()) +
-                                        (ports == '*' ? ` and all ports` : ` port ` + ports) + ` open to ` + sourceFilter;
+                                    var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
+                                        (ports === '*' ? ` and all ports` : ` port ` + ports) + ` open to ` + sourceFilter;
                                     if (strings.indexOf(string) === -1) strings.push(string);
                                     found = true;
                                 }
                             } else if (securityRule.properties['destinationPortRanges'] &&
                                 securityRule.properties['destinationPortRanges'].toString().indexOf(port) > -1) {
-                                var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol == '*' ? `All protocols` : protocol.toUpperCase()) +
+                                var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
                                     ` port ` + ports + ` open to ` + sourceFilter;
                                 if (strings.indexOf(string) === -1) strings.push(string);
                                 found = true;
@@ -300,11 +301,45 @@ function checkServerConfigs(servers, cache, source, location, results, serverTyp
     });
 }
 
+function processCall(config, method, body, baseUrl, resource, callback) {
+    var fullUrl = baseUrl.replace('{resource}', resource);
+
+    var params = {
+        url: fullUrl,
+        body: body,
+        token: config.token,
+        method: method
+    };
+
+    auth.call(params, callback);
+}
+
+function remediatePlugin(config, method, body, baseUrl, resource, remediation_file, putCall, pluginName, callback) {
+    processCall(config, method, body, baseUrl, resource, function(err) {
+        if (err) {
+            remediation_file['remediate']['actions'][pluginName]['error'] = err;
+            return callback(err, null);
+        }
+
+        let action = body;
+        action.action = putCall;
+
+        remediation_file['post_remediate']['actions'][pluginName][resource] = action;
+        remediation_file['remediate']['actions'][pluginName][resource] = {
+            'Action': 'Enabled'
+        };
+
+        return callback(null, action);
+    })
+}
+
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
     checkPolicyAssignment: checkPolicyAssignment,
     checkLogAlerts: checkLogAlerts,
     checkAppVersions: checkAppVersions,
-    checkServerConfigs: checkServerConfigs
+    checkServerConfigs: checkServerConfigs,
+    remediatePlugin: remediatePlugin,
+    processCall: processCall
 };

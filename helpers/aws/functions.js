@@ -261,8 +261,10 @@ function remediatePasswordPolicy(putCall, pluginName, remediation_file, password
 
     if (!getAccountPasswordPolicy) return callback('No data found');
 
+    let createPolicyInput = pluginName + 'CreatePolicy';
+
     if ((getAccountPasswordPolicy.err ||
-        !getAccountPasswordPolicy.data || !Object.keys(getAccountPasswordPolicy.data).length) && (settings.input && settings.input.createPasswordPolicy)) {
+        !getAccountPasswordPolicy.data || !Object.keys(getAccountPasswordPolicy.data).length) && (settings.input && settings.input[createPolicyInput])) {
         remediation_file['pre_remediate']['actions'][pluginName][resource] = null;
         params = {
             HardExpiry: true,

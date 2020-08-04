@@ -58,6 +58,8 @@ module.exports = {
                         }
                     }
                 }
+            } else if (listDetectors.data.length === 0) {
+                helpers.addResult(results, 2, 'No GuardDuty detectors found', region, arn);
             }
             rcb();
         }, function(){
