@@ -16,7 +16,7 @@ var helpers = {
     CLOUDSPLOIT_EVENTS_BUCKET: 'cloudsploit-engine-trails'
 };
 
-for (s in shared) helpers[s] = shared[s];
-for (f in functions) helpers[f] = functions[f];
+for (var s in shared) helpers[s] = shared[s];
+for (var f in functions) helpers[f] = functions[f];
 
 module.exports = helpers;

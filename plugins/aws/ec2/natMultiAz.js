@@ -37,7 +37,7 @@ module.exports = {
 
             var vpcMap = {};
 
-            for (i in describeVpcs.data) {
+            for (var i in describeVpcs.data) {
                 if (!describeVpcs.data[i].VpcId) continue;
                 vpcMap[describeVpcs.data[i].VpcId] = [];
             }
@@ -52,7 +52,7 @@ module.exports = {
             }
 
             // Now lookup NATs and map to VPCs
-            for (n in describeNatGateways.data) {
+            for (var n in describeNatGateways.data) {
                 var gw = describeNatGateways.data[n];
 
                 if (gw.VpcId && gw.SubnetId && vpcMap[gw.VpcId] &&
@@ -64,7 +64,7 @@ module.exports = {
             var found = false;
 
             // Loop through VPCs and add results
-            for (v in vpcMap) {
+            for (var v in vpcMap) {
                 var numSubnets = vpcMap[v].length;
 
                 if (numSubnets) {

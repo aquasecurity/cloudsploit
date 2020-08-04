@@ -10,12 +10,12 @@ module.exports = {
     recommended_action: 'Restrict TCP port 50070 and 50470 to known IP addresses for Hadoop/HDFS',
     apis: ['networkSecurityGroups:listAll'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.networkSecurityGroups, function (location, rcb) {
+        async.each(locations.networkSecurityGroups, function(location, rcb) {
 
             let networkSecurityGroups = helpers.addSource(
                 cache, source, ['networkSecurityGroups', 'listAll', location]
@@ -42,7 +42,7 @@ module.exports = {
             helpers.findOpenPorts(networkSecurityGroups.data, ports, service, location, results);
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }

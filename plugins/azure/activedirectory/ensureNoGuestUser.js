@@ -10,12 +10,12 @@ module.exports = {
     recommended_action: 'Remove all guest users unless they are required to be members of the Active Directory account.',
     apis: ['users:list'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.users, function (location, rcb) {
+        async.each(locations.users, function(location, rcb) {
 
             const users = helpers.addSource(cache, source,
                 ['users', 'list', location]);
@@ -33,7 +33,7 @@ module.exports = {
 
             var guestUser = false;
             users.data.forEach(user => {
-                if (user.userType === "Guest") {
+                if (user.userType === 'Guest') {
                     helpers.addResult(results, 2, 'The user is a guest user', location, user.mail);
                     guestUser = true;
                 }
@@ -43,9 +43,9 @@ module.exports = {
                 helpers.addResult(results, 0, 'The subscription does not have any guest users', location);
             }
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });
     }
-}
+};

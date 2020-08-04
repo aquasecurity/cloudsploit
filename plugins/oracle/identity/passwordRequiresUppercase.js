@@ -32,7 +32,7 @@ module.exports = {
 
         if (!authenticationPolicy) return callback(null, results, source);
 
-        if (authenticationPolicy.err || !authenticationPolicy.data) {
+        if ((authenticationPolicy.err && authenticationPolicy.err.length) || !authenticationPolicy.data) {
             helpers.addResult(results, 3,
                 'Unable to query for password policy status: ' + helpers.addError(authenticationPolicy));
             return callback(null, results, source);
@@ -43,17 +43,18 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        var passwordPolicy = authenticationPolicy.data.passwordPolicy;
+        authenticationPolicy.data.forEach(policy => {
+            var passwordPolicy = policy.passwordPolicy;
 
-        if (!passwordPolicy ||
-            (passwordPolicy &&
-            !passwordPolicy.isUppercaseCharactersRequired)) {
-            helpers.addResult(results, 1,
-                'Password policy does not require uppercase characters', 'global', authenticationPolicy.data.compartmentId);
-        } else {
-            helpers.addResult(results, 0,
-                'Password policy requires uppercase characters', 'global', authenticationPolicy.data.compartmentId);
-        }
+            if (passwordPolicy &&
+                passwordPolicy.isUppercaseCharactersRequired) {
+                helpers.addResult(results, 0,
+                    'Password policy requires uppercase characters', 'global', authenticationPolicy.data.compartmentId);
+            } else {
+                helpers.addResult(results, 1,
+                    'Password policy does not require uppercase characters', 'global', authenticationPolicy.data.compartmentId);
+            }
+        });
 
         callback(null, results, source);
     }

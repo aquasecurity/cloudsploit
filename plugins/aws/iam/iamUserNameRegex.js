@@ -4,8 +4,10 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'IAM Username Matches Regex',
     category: 'IAM',
-    description: 'All IAM Usernames Match the Given Regex',
-    recommended_action: 'Rename the IAM user name.',
+    description: 'Ensures all IAM user names match the given regex',
+    more_info: 'Many organizational policies require IAM user names to follow a common naming convention. This check ensures these conventions are followed.',
+    recommended_action: 'Rename the IAM user name to match the provided regex.',
+    link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users.html',
     apis: ['IAM:generateCredentialReport'],
     settings: {
         iam_username_regex: {
@@ -22,7 +24,7 @@ module.exports = {
 
         var usernameRegex = RegExp(this.settings.iam_username_regex.default);
         try {
-            var usernameRegex = RegExp(settings.iam_username_regex || this.settings.iam_username_regex.default);
+            usernameRegex = RegExp(settings.iam_username_regex || this.settings.iam_username_regex.default);
         } catch (err) {
             helpers.addResult(results, 3, err.message, 'global', this.settings.iam_username_regex.name);
         }
@@ -40,7 +42,7 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        async.each(generateCredentialReport.data, function (user, cb) {
+        async.each(generateCredentialReport.data, function(user, cb) {
             var username = user.user;
 
             // ignore the root account name

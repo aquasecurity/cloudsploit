@@ -53,7 +53,7 @@ module.exports = {
             };
 
             // Loop through response to assign custom limits
-            for (i in describeAccountAttributes.data) {
+            for (var i in describeAccountAttributes.data) {
                 if (describeAccountAttributes.data[i].AttributeName &&
                     limits[describeAccountAttributes.data[i].AttributeName] &&
                     describeAccountAttributes.data[i].AttributeValues &&

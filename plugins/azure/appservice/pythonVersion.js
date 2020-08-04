@@ -12,12 +12,14 @@ module.exports = {
     settings: {
         latestPythonVersion: {
             name: 'Latest Python Version',
-            default: 3.6
+            default: '3.6',
+            description: 'The latest Python version supported by Azure App Service.',
+            regex: '[0-9.]{2,5}'
         }
     },
 
-    run: function (cache, settings, callback) {
-        const configuration = {
+    run: function(cache, settings, callback) {
+        const config = {
             latestPythonVersion: settings.latestPythonVersion || this.settings.latestPythonVersion.default
         };
 
@@ -27,38 +29,55 @@ module.exports = {
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.webApps, function (location, rcb) {
+        async.each(locations.webApps, function(location, rcb) {
             const webApps = helpers.addSource(
-                cache, source, ['webApps', 'listConfigurations', location]
+                cache, source, ['webApps', 'list', location]
             );
 
             if (!webApps) return rcb();
 
             if (webApps.err || !webApps.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query App Services: ' + helpers.addError(webApps), location);
+                    'Unable to query for App Services: ' + helpers.addError(webApps), location);
                 return rcb();
             }
 
             if (!webApps.data.length) {
-                helpers.addResult(results, 0, 'No existing App Services found', location);
+                helpers.addResult(
+                    results, 0, 'No existing App Services found', location);
                 return rcb();
             }
 
             var found = false;
 
-            webApps.data.forEach(webApp => {
-                if (webApp.linuxFxVersion.indexOf('PYTHON') >-1 &&
-                    webApp.linuxFxVersion.indexOf('|') >-1) {
-                    found = true;
+            webApps.data.forEach(function(webApp) {
+                const webConfigs = helpers.addSource(
+                    cache, source, ['webApps', 'listConfigurations', location, webApp.id]
+                );
 
-                    var pythonVersion = webApp.linuxFxVersion.substr(webApp.linuxFxVersion.indexOf('|')+1);
-                    if (parseFloat(pythonVersion) >= config.latestPythonVersion) {
-                        helpers.addResult(results, 0, 
-                            `The Python version (${parseFloat(pythonVersion)}) is the latest version`, location, webApp.id, custom);
-                    } else {
-                        helpers.addResult(results, 2, 
-                            `The Python version (${parseFloat(pythonVersion)}) is not the latest version`, location, webApp.id, custom);
+                if (!webConfigs || webConfigs.err || !webConfigs.data) {
+                    helpers.addResult(results, 3,
+                        'Unable to query App Service: ' + helpers.addError(webConfigs),
+                        location, webApp.id);
+                } else {
+                    if (webConfigs.data[0] &&
+                        webConfigs.data[0].linuxFxVersion &&
+                        webConfigs.data[0].linuxFxVersion.indexOf('PYTHON') > -1 &&
+                        webConfigs.data[0].linuxFxVersion.indexOf('|') > -1) {
+                        found = true;
+
+                        var pythonVersion = webConfigs.data[0].linuxFxVersion.substr(webConfigs.data[0].linuxFxVersion.indexOf('|') + 1);
+
+                        var version = parseFloat(pythonVersion);
+                        var allowedVersion = parseFloat(config.latestPythonVersion);
+
+                        if (version >= allowedVersion) {
+                            helpers.addResult(results, 0,
+                                `The Python version (${pythonVersion}) is the latest version`, location, webApp.id, custom);
+                        } else {
+                            helpers.addResult(results, 2,
+                                `The Python version (${pythonVersion}) is not the latest version`, location, webApp.id, custom);
+                        }
                     }
                 }
             });
@@ -68,9 +87,9 @@ module.exports = {
             }
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });
     }
-}
+};

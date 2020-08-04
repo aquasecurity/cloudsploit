@@ -20,49 +20,46 @@ module.exports = {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
-        var profileExists = false;
-
-        async.each(locations.logProfiles, function(location, rcb){
-            var logProfiles = helpers.addSource(cache, source,
+        
+        async.each(locations.logProfiles, (location, rcb) => {
+            const logProfiles = helpers.addSource(cache, source,
                 ['logProfiles', 'list', location]);
 
             if (!logProfiles) return rcb();
 
-            if (logProfiles.err || !logProfiles.data) return rcb();
-            
-            if (!logProfiles.data.length) return rcb();
-                
-            logProfiles.data.forEach((logProfileResource) => {
-                profileExists = true;
-                if (logProfileResource.retentionPolicy &&
-                    logProfileResource.retentionPolicy.enabled &&
-                    logProfileResource.retentionPolicy.enabled == true && 
-                    logProfileResource.retentionPolicy.days &&
-                    logProfileResource.retentionPolicy.days >= 365) {
-                    helpers.addResult(results, 0, 
-                        `The Log Profile has a retention policy of ${logProfileResource.retentionPolicy.days} days`, 
-                        'global', logProfileResource.id);
+            if (logProfiles.err || !logProfiles.data) {
+                helpers.addResult(results, 3,
+                    'Unable to query for Log Profiles: ' + helpers.addError(logProfiles), location);
+                return rcb();
+            }
 
-                } else if (logProfileResource.retentionPolicy &&
-                    logProfileResource.retentionPolicy.enabled &&
-                    logProfileResource.retentionPolicy.days) {
-                    helpers.addResult(results, 1, 
-                        `The Log Profile does not have a sufficient retention policy: ${logProfileResource.retentionPolicy.days} days`, 
-                        'global', logProfileResource.id);
-                        	
-                } else {
-                    helpers.addResult(results, 2, 
+            if (!logProfiles.data.length) {
+                helpers.addResult(results, 2, 'No existing Log Profiles found', location);
+                return rcb();
+            }
+
+            logProfiles.data.forEach(function(logProfile) {
+                if (!logProfile.retentionPolicy) {
+                    helpers.addResult(results, 2,
                         'The Log Profile does not have a retention policy',
-                        'global', logProfileResource.id);
+                        location, logProfile.id);
+                } else if (!logProfile.retentionPolicy.enabled) {
+                    helpers.addResult(results, 2,
+                        'The Log Profile retention policy is not enabled',
+                        location, logProfile.id);
+                } else if (!logProfile.retentionPolicy.days || logProfile.retentionPolicy.days < 365) {
+                    helpers.addResult(results, 2,
+                        `The Log Profile retention policy of ${logProfile.retentionPolicy.days || '0'} days is not sufficient (at least 365 days).`,
+                        location, logProfile.id);
+                } else {
+                    helpers.addResult(results, 0,
+                        `The Log Profile retention policy of ${logProfile.retentionPolicy.days} days is sufficient.`,
+                        location, logProfile.id);
                 }
             });
 
             rcb();
-        }, function(){
-            // Global checking goes here
-            if (!profileExists) {
-                helpers.addResult(results, 2, 'No Log Profile found', 'global');
-            }
+        }, function() {
             callback(null, results, source);
         });
     }

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /*********************
  Collector - The collector will query GitHub APIs for the information required
@@ -10,7 +10,6 @@ var Octokit = require('@octokit/rest');
 var Octoapp = require('@octokit/app');
 var Octoreq = require('@octokit/request');
 var async = require('async');
-var util = require('util');
 
 var collectors = require(__dirname + '/../../collectors/github');
 var helpers = require(__dirname + '/../../helpers/github');
@@ -103,7 +102,7 @@ var postcalls = [
 ];
 
 // Loop through all of the top-level collectors for each service
-var collect = function (GitHubConfig, settings, callback) {
+var collect = function(GitHubConfig, settings, callback) {
     var collection = {};
     var appConfig = { id: GitHubConfig.application_id, privateKey: GitHubConfig.private_key };
     if (GitHubConfig.url) appConfig.baseUrl = GitHubConfig.url;
@@ -175,7 +174,7 @@ var collect = function (GitHubConfig, settings, callback) {
                 if (!collection[service]) collection[service] = {};
 
                 // Loop through each of the service's functions
-                async.eachOfLimit(call, 10, function (callObj, callKey, callCb) {
+                async.eachOfLimit(call, 10, function(callObj, callKey, callCb) {
                     if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
                     if (!collection[service][callKey]) collection[service][callKey] = {};
 
@@ -185,7 +184,7 @@ var collect = function (GitHubConfig, settings, callback) {
 
                     var finish = function() {
                         if (callObj.rateLimit) {
-                            setTimeout(function () {
+                            setTimeout(function() {
                                 callCb();
                             }, callObj.rateLimit);
                         } else {
@@ -194,7 +193,7 @@ var collect = function (GitHubConfig, settings, callback) {
                     };
 
                     if (callObj.override) {
-                        collectors[service][callKey](GitHubConfig, octokit[type], collection, function () {
+                        collectors[service][callKey](GitHubConfig, octokit[type], collection, function() {
                             finish();
                         });
                     } else {
@@ -220,11 +219,11 @@ var collect = function (GitHubConfig, settings, callback) {
                 });
             }, function(){
                 // Now loop through the follow up calls
-                async.eachSeries(postcalls, function (postcallObj, postcallCb) {
-                    async.eachOfLimit(postcallObj, 10, function (serviceObj, service, serviceCb) {
+                async.eachSeries(postcalls, function(postcallObj, postcallCb) {
+                    async.eachOfLimit(postcallObj, 10, function(serviceObj, service, serviceCb) {
                         if (!collection[service]) collection[service] = {};
 
-                        async.eachOfLimit(serviceObj, 1, function (callObj, callKey, callCb) {
+                        async.eachOfLimit(serviceObj, 1, function(callObj, callKey, callCb) {
                             if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
                             if (!collection[service][callKey]) collection[service][callKey] = {};
 
@@ -240,9 +239,9 @@ var collect = function (GitHubConfig, settings, callback) {
                             var type = callObj.type;
 
                             if (callObj.override) {
-                                collectors[service][callKey](GitHubConfig, octokit[type], collection, function () {
+                                collectors[service][callKey](GitHubConfig, octokit[type], collection, function() {
                                     if (callObj.rateLimit) {
-                                        setTimeout(function () {
+                                        setTimeout(function() {
                                             callCb();
                                         }, callObj.rateLimit);
                                     } else {
@@ -256,12 +255,12 @@ var collect = function (GitHubConfig, settings, callback) {
 
                                     var processResults = function(results){
                                         collection[service][callKey].data = processPagination(callObj, results);
-                                        depCb();
+                                        callCb();
                                     };
 
                                     var processErr = function(err){
                                         collection[service][callKey].err = err;
-                                        depCb();
+                                        callCb();
                                     };
 
                                     if (callObj.paginate) {
@@ -271,7 +270,7 @@ var collect = function (GitHubConfig, settings, callback) {
                                         octokit[type][service][callKey](params).then(processResults, processErr);
                                     }
                                 } else {
-                                    async.eachLimit(collection[callObj.reliesOnService][callObj.reliesOnCall].data, 10, function (dep, depCb) {
+                                    async.eachLimit(collection[callObj.reliesOnService][callObj.reliesOnCall].data, 10, function(dep, depCb) {
                                         collection[service][callKey][dep[callObj.filterValue]] = {};
 
                                         var filter = {};
@@ -294,9 +293,9 @@ var collect = function (GitHubConfig, settings, callback) {
                                         } else {
                                             octokit[type][service][callKey](filter).then(processResults, processErr);
                                         }
-                                    }, function () {
+                                    }, function() {
                                         if (callObj.rateLimit) {
-                                            setTimeout(function () {
+                                            setTimeout(function() {
                                                 callCb();
                                             }, callObj.rateLimit);
                                         } else {
@@ -305,13 +304,13 @@ var collect = function (GitHubConfig, settings, callback) {
                                     });
                                 }
                             }
-                        }, function () {
+                        }, function() {
                             serviceCb();
                         });
-                    }, function () {
+                    }, function() {
                         postcallCb();
                     });
-                }, function () {
+                }, function() {
                     //console.log(JSON.stringify(collection, null, 2));
                     helpers.cleanCollection(collection);
                     callback(null, collection);

@@ -33,10 +33,10 @@ module.exports = {
             }
             
             storageAccounts.data.forEach(storageAccount => {
-                if (storageAccount["encryption"] &&
-                    storageAccount["encryption"]["services"] &&
-                    storageAccount["encryption"]["services"]["file"] &&
-                    storageAccount["encryption"]["services"]["file"]["enabled"]) {
+                if (storageAccount['encryption'] &&
+                    storageAccount['encryption']['services'] &&
+                    storageAccount['encryption']['services']['file'] &&
+                    storageAccount['encryption']['services']['file']['enabled']) {
                     helpers.addResult(results, 0, 'Encryption is enabled on the File Service', location, storageAccount.id);
                 } else {
                     helpers.addResult(results, 2, 'Encryption is disabled on the File Service', location, storageAccount.id);

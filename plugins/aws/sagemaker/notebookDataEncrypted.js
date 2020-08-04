@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'An optional encryption key can be supplied during Notebook Instance creation.',
     recommended_action: 'An existing KMS key should be supplied during Notebook Instance creation.',
     link: 'https://docs.aws.amazon.com/sagemaker/latest/dg/API_CreateNotebookInstance.html#API_CreateNotebookInstance_RequestSyntax',
-    apis: ['SageMaker:listNotebookInstances', 'SageMaker:describeNotebookInstance'],
+    apis: ['SageMaker:listNotebookInstances'],
     compliance: {
         hipaa: 'All data in HIPAA environments must be encrypted, including ' +
                 'data at rest. SageMaker encryption ensures Notebook data is ' +
@@ -39,13 +39,9 @@ module.exports = {
                 return rcb();
             }
 
-            for (i in listNotebookInstances.data) {
+            for (var i in listNotebookInstances.data) {
                 var instance = listNotebookInstances.data[i];
-                var instanceName = instance.NotebookInstanceName;
                 var instanceArn = instance.NotebookInstanceArn;
-
-                var describeNotebookInstance = helpers.addSource(cache, source,
-                    ['sagemaker', 'describeNotebookInstance', region, instanceName]);
 
                 if (!instance.KmsKeyId){
                     helpers.addResult(results, 2,

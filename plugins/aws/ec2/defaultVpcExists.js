@@ -35,7 +35,7 @@ module.exports = {
                 return rcb();
             }
 
-            for (v in describeVpcs.data) {
+            for (var v in describeVpcs.data) {
                 var vpc = describeVpcs.data[v];
                 // arn:${Partition}:ec2:${Region}:${Account}:vpc/${VpcId}
                 var arn = 'arn:' + awsOrGov + ':ec2:' + region + ':' + accountId + ':vpc/' + vpc.VpcId;
