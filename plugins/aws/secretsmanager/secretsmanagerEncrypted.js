@@ -22,6 +22,7 @@ module.exports = {
     more_info: 'SecretsManager Secrets should be encrypted. This allows their values to be used by approved systems, while restricting access to other users of the account.',
     recommended_action: 'Encrypt SecretsManager Secrets',
     apis: ['SecretsManager:listSecrets', 'SecretsManager:describeSecret', 'KMS:listKeys', 'KMS:describeKey'],
+    link: 'https://docs.aws.amazon.com/secretsmanager/latest/userguide/data-protection.html',
     compliance: {
         hipaa: 'HIPAA requires that all data is encrypted, including data at rest',
         pci: 'PCI requires proper encryption of cardholder data at rest. SecretsManager ' +
