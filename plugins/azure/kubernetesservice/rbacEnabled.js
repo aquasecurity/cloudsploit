@@ -10,12 +10,12 @@ module.exports = {
     link: 'https://docs.microsoft.com/en-us/azure/aks/aad-integration',
     apis: ['managedClusters:list'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.managedClusters, function (location, rcb) {
+        async.each(locations.managedClusters, function(location, rcb) {
 
             var managedClusters = helpers.addSource(cache, source, 
                 ['managedClusters', 'list', location]);
@@ -26,27 +26,27 @@ module.exports = {
                 helpers.addResult(results, 3, 
                     'Unable to query for Kubernetes clusters: ' + helpers.addError(managedClusters), location);
                 return rcb();
-            };
+            }
 
             if (!managedClusters.data.length) {
                 helpers.addResult(results, 0, 'No existing Kubernetes clusters', location);
                 return rcb();
-            };
+            }
 
             managedClusters.data.forEach(managedCluster => {
-                if (managedCluster.hasOwnProperty('kubernetesVersion') && managedCluster.enableRBAC) {
+                if (Object.prototype.hasOwnProperty.call(managedCluster, 'kubernetesVersion') && managedCluster.enableRBAC) {
                     helpers.addResult(results, 0, 
-                        'RBAC is enabled on the cluster', location, managedCluster.name);
+                        'RBAC is enabled on the cluster', location, managedCluster.id);
                 } else {
-                    helpers.addResult(results, 1, 
-                        'RBAC is not enabled on the cluster', location, managedCluster.name);
-                };
+                    helpers.addResult(results, 2, 
+                        'RBAC is not enabled on the cluster', location, managedCluster.id);
+                }
             });
             
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });
     }
-}
+};

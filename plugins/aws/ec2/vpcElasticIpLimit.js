@@ -78,7 +78,7 @@ module.exports = {
             // If EIPs exist, determine type of each
             var eips = 0;
 
-            for (i in describeAddresses.data) {
+            for (var i in describeAddresses.data) {
                 if (describeAddresses.data[i].Domain === 'vpc') { eips++; }
             }
 

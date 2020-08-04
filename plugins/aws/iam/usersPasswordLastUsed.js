@@ -45,7 +45,7 @@ module.exports = {
         var region =  helpers.defaultRegion(settings);
 
         var generateCredentialReport = helpers.addSource(cache, source,
-                ['iam', 'generateCredentialReport', region]);
+            ['iam', 'generateCredentialReport', region]);
 
         if (!generateCredentialReport) return callback(null, results, source);
 
@@ -63,7 +63,7 @@ module.exports = {
 
         var found = false;
 
-        for (r in generateCredentialReport.data) {
+        for (var r in generateCredentialReport.data) {
             var obj = generateCredentialReport.data[r];
 
             // Skip root user and users without passwords
@@ -71,17 +71,19 @@ module.exports = {
             if (obj.user === '<root_account>') continue;
             if (!obj.password_enabled) continue;
 
+            var daysAgo;
+            var returnMsg;
             if (obj.password_last_used && obj.password_last_used !== 'no_information') {
-                var daysAgo = helpers.daysAgo(obj.password_last_used);
+                daysAgo = helpers.daysAgo(obj.password_last_used);
 
-                var returnMsg = 'User password login was last used ' +
+                returnMsg = 'User password login was last used ' +
                     daysAgo + ' days ago';
             } else if (obj.user_creation_time) {
                 // Password is enabled but never used,
                 // find when account was created
-                var daysAgo = helpers.daysAgo(obj.user_creation_time);
+                daysAgo = helpers.daysAgo(obj.user_creation_time);
 
-                var returnMsg = 'User was created ' +
+                returnMsg = 'User was created ' +
                     daysAgo + ' days ago but password login was never used';
             } else {
                 // Not enough info in data response

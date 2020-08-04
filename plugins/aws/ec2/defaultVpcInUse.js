@@ -35,7 +35,7 @@ module.exports = {
             // Find the default VPC
             var defaultVpcId;
 
-            for (v in describeVpcs.data) {
+            for (var v in describeVpcs.data) {
                 var vpc = describeVpcs.data[v];
                 if (vpc.IsDefault) defaultVpcId = vpc.VpcId;
             }
@@ -60,8 +60,8 @@ module.exports = {
                 helpers.addResult(results, 3, 'Unable to query for EC2 instances: ' + helpers.addError(describeInstances), region);
             } else if (describeInstances.data.length) {
                 // Count instances in VPC
-                for (i in describeInstances.data) {
-                    for (j in describeInstances.data[i].Instances) {
+                for (var i in describeInstances.data) {
+                    for (var j in describeInstances.data[i].Instances) {
                         if (describeInstances.data[i].Instances[j].VpcId &&
                             describeInstances.data[i].Instances[j].VpcId == defaultVpcId) {
                             numInstances += 1;
@@ -78,9 +78,9 @@ module.exports = {
                 helpers.addResult(results, 3, 'Unable to query for load balancers: ' + helpers.addError(describeLoadBalancers), region);
             } else if (describeLoadBalancers.data.length) {
                 // Count ELBs in VPC
-                for (i in describeLoadBalancers.data) {
-                    if (describeLoadBalancers.data[i].VPCId &&
-                        describeLoadBalancers.data[i].VPCId == defaultVpcId) {
+                for (var k in describeLoadBalancers.data) {
+                    if (describeLoadBalancers.data[k].VPCId &&
+                        describeLoadBalancers.data[k].VPCId == defaultVpcId) {
                         numElbs += 1;
                     }
                 }
@@ -97,10 +97,10 @@ module.exports = {
                     helpers.addResult(results, 3, 'Unable to query for Lambda functions: ' + helpers.addError(listFunctions), region);
                 } else if (listFunctions.data.length) {
                     // Count functions in VPC
-                    for (i in listFunctions.data) {
-                        if (listFunctions.data[i].VpcConfig &&
-                            listFunctions.data[i].VpcConfig.VpcId &&
-                            listFunctions.data[i].VpcConfig.VpcId == defaultVpcId) {
+                    for (var l in listFunctions.data) {
+                        if (listFunctions.data[l].VpcConfig &&
+                            listFunctions.data[l].VpcConfig.VpcId &&
+                            listFunctions.data[l].VpcConfig.VpcId == defaultVpcId) {
                             numFunctions += 1;
                         }
                     }
@@ -115,10 +115,10 @@ module.exports = {
                 helpers.addResult(results, 3, 'Unable to query for RDS instances: ' + helpers.addError(describeDBInstances), region);
             } else if (describeDBInstances.data.length) {
                 // Count RDS instances in VPC
-                for (i in describeDBInstances.data) {
-                    if (describeDBInstances.data[i].DBSubnetGroup &&
-                        describeDBInstances.data[i].DBSubnetGroup.VpcId &&
-                        describeDBInstances.data[i].DBSubnetGroup.VpcId == defaultVpcId) {
+                for (var m in describeDBInstances.data) {
+                    if (describeDBInstances.data[m].DBSubnetGroup &&
+                        describeDBInstances.data[m].DBSubnetGroup.VpcId &&
+                        describeDBInstances.data[m].DBSubnetGroup.VpcId == defaultVpcId) {
                         numDBs += 1;
                     }
                 }
@@ -132,9 +132,9 @@ module.exports = {
                 helpers.addResult(results, 3, 'Unable to query for Redshift instances: ' + helpers.addError(describeClusters), region);
             } else if (describeClusters.data.length) {
                 // Count Redshift instances in VPC
-                for (i in describeClusters.data) {
-                    if (describeClusters.data[i].VpcId &&
-                        describeClusters.data[i].VpcId == defaultVpcId) {
+                for (var n in describeClusters.data) {
+                    if (describeClusters.data[n].VpcId &&
+                        describeClusters.data[n].VpcId == defaultVpcId) {
                         numRedshift += 1;
                     }
                 }
@@ -143,7 +143,6 @@ module.exports = {
             if (!numInstances && !numElbs &&
                 !numFunctions && !numDBs && !numRedshift) {
                 helpers.addResult(results, 0, 'Default VPC is not in use', region);
-                return rcb();
             } else {
                 var numStr = numInstances + ' EC2 instance' + (numInstances === 1 ? '' : 's') + '; ' +
                              numElbs + ' ELB' + (numElbs === 1 ? '' : 's') + '; ' +
@@ -151,7 +150,6 @@ module.exports = {
                              numDBs + ' RDS instance' + (numDBs === 1 ? '' : 's') + '; ' +
                              numRedshift + ' Redshift cluster' + (numRedshift === 1 ? '' : 's');
                 helpers.addResult(results, 2, 'Default VPC is in use: ' + numStr, region);
-                return rcb();
             }
 
             rcb();

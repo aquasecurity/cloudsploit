@@ -46,7 +46,7 @@ module.exports = {
                 return rcb();
             }
 
-            for (i in describeDBInstances.data) {
+            for (var i in describeDBInstances.data) {
                 // For resource, attempt to use the endpoint address (more specific) but fallback to the instance identifier
                 var db = describeDBInstances.data[i];
                 var dbResource = db.DBInstanceArn;

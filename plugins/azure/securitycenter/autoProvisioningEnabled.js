@@ -28,25 +28,17 @@ module.exports = {
             }
 
             if (!autoProvisioningSettings.data.length) {
-                helpers.addResult(results, 0, 'No existing auto provisioning settings found', location );
+                helpers.addResult(results, 2, 'No existing auto provisioning settings found', location);
                 return rcb();
             }
 
-            let isExists = false;
-
-            for (let autoProvisioningSetting of autoProvisioningSettings.data) {
-                if (autoProvisioningSetting.autoProvision &&
-                    autoProvisioningSetting.autoProvision.toLowerCase() == 'on') {
-                    isExists = true;
-                    break;
+            autoProvisioningSettings.data.forEach(function(aps){
+                if (aps.autoProvision && aps.autoProvision.toLowerCase() == 'on') {
+                    helpers.addResult(results, 0, 'Monitoring Agent Auto Provisioning is enabled', location, aps.id);
+                } else {
+                    helpers.addResult(results, 2, 'Monitoring Agent Auto Provisioning is disabled', location, aps.id);
                 }
-            }
-
-            if (isExists) {
-                helpers.addResult(results, 0, 'Monitoring Agent Auto Provisioning is enabled', location);
-            } else {
-                helpers.addResult(results, 2, 'Monitoring Agent Auto Provisioning is disabled', location);
-            }
+            });
 
             rcb();
         }, function(){

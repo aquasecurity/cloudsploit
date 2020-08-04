@@ -1,4 +1,3 @@
-var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
@@ -38,7 +37,7 @@ module.exports = {
         var region = helpers.defaultRegion(settings);
 
         var listServerCertificates = helpers.addSource(cache, source,
-                ['iam', 'listServerCertificates', region]);
+            ['iam', 'listServerCertificates', region]);
 
         if (!listServerCertificates) return callback(null, results, source);
 
@@ -55,7 +54,7 @@ module.exports = {
 
         var now = new Date();
 
-        for (i in listServerCertificates.data) {
+        for (var i in listServerCertificates.data) {
             if (listServerCertificates.data[i].ServerCertificateName && listServerCertificates.data[i].Expiration) {
                 var certificate = listServerCertificates.data[i];
 

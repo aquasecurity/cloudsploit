@@ -33,11 +33,11 @@ function cleanCollection(collection) {
         if (typeof obj == 'string') {
             return;
         } else if (Array.isArray(obj)) {
-            for (i in obj) {
+            for (var i in obj) {
                 processObj(obj[i], blacklist);
             }
         } else {
-            for (prop in obj) {
+            for (var prop in obj) {
                 if (typeof obj[prop] == 'string') {
                     if (blacklist.indexOf(prop) > -1) {
                         delete obj[prop];
@@ -49,14 +49,14 @@ function cleanCollection(collection) {
         }
     }
 
-    for (service in collection) {
-        for (call in collection[service]) {
+    for (var service in collection) {
+        for (var call in collection[service]) {
             if (collection[service][call].data) {
                 processObj(collection[service][call].data, dataBlacklist);
             } else if (collection[service][call].err) {
                 processObj(collection[service][call].err, errBlacklist);
             } else {
-                for (c in collection[service][call]) {
+                for (var c in collection[service][call]) {
                     if (collection[service][call][c].data) {
                         processObj(collection[service][call][c].data, dataBlacklist);
                     } else if (collection[service][call][c].err) {
@@ -78,19 +78,20 @@ function addSource(cache, source, paths){
     if (!source[service][call]) source[service][call] = {}; 
     if (!source[service][call]) source[service][call] = {}; 
 
+    var original;
     if (extra) {    
-        var original = (cache[service] &&   
-                       cache[service][call] &&  
-                       cache[service][call] &&  
-                       cache[service][call][extra]) ?   
-                       cache[service][call][extra] : null;  
+        original = (cache[service] &&   
+            cache[service][call] &&  
+            cache[service][call] &&  
+            cache[service][call][extra]) ?   
+            cache[service][call][extra] : null;  
 
         source[service][call][extra] = original;    
     } else {    
-        var original = (cache[service] &&   
-                       cache[service][call] &&  
-                       cache[service][call]) ?  
-                       cache[service][call] : null; 
+        original = (cache[service] &&   
+            cache[service][call] &&  
+            cache[service][call]) ?  
+            cache[service][call] : null; 
 
         source[service][call] = original;   
     }   

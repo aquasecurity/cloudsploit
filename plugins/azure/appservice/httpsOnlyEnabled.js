@@ -19,12 +19,12 @@ module.exports = {
                 'are always connecting over a secure channel.'
     },
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.webApps, function (location, rcb) {
+        async.each(locations.webApps, function(location, rcb) {
 
             const webApps = helpers.addSource(
                 cache, source, ['webApps', 'list', location]
@@ -34,7 +34,7 @@ module.exports = {
 
             if (webApps.err || !webApps.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query App Services: ' + helpers.addError(webApps), location);
+                    'Unable to query App Service: ' + helpers.addError(webApps), location);
                 return rcb();
             }
 
@@ -43,26 +43,18 @@ module.exports = {
                 return rcb();
             }
 
-            var noWebAppHttps = [];
-
-            webApps.data.forEach(function (webApp) {
-                if (!webApp.httpsOnly) noWebAppHttps.push(webApp.id);
+            webApps.data.forEach(function(webApp) {
+                if (webApp.httpsOnly) {
+                    helpers.addResult(results, 0, 'The App Service has HTTPS Only enabled', location, webApp.id);
+                } else {
+                    helpers.addResult(results, 2, 'The App Service does not have HTTPS Only enabled', location, webApp.id);
+                }
             });
 
-            if (noWebAppHttps.length > 20) {
-                helpers.addResult(results, 2, 'More than 20 App Services do not have HTTPS Only enabled', location);
-            } else if (noWebAppHttps.length) {
-                for (app in noWebAppHttps) {
-                    helpers.addResult(results, 2, 'App Service does not have HTTPS Only enabled', location, noWebAppHttps[app]);
-                }
-            } else {
-                helpers.addResult(results, 0, 'All App Services have HTTPS Only enabled', location);
-            }
-
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });
     }
-}
+};

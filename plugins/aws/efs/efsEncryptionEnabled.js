@@ -18,12 +18,12 @@ module.exports = {
             'of data.'
     },
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
 
-        async.each(regions.efs, function (region, rcb) {
+        async.each(regions.efs, function(region, rcb) {
             var describeFileSystems = helpers.addSource(cache, source,
                 ['efs', 'describeFileSystems', region]);
 
@@ -52,7 +52,7 @@ module.exports = {
             if (unencryptedEFS.length > 20) {
                 helpers.addResult(results, 2, 'More than 20 EFS systems are unencrypted', region);
             } else if (unencryptedEFS.length) {
-                for (u in unencryptedEFS) {
+                for (var u in unencryptedEFS) {
                     // ARN: arn:aws:elasticfilesystem:region:account-id:file-system/file-system-id
                     var arn = 'arn:aws:elasticfilesystem:' + region + ':' + unencryptedEFS[u].OwnerId + ':file-system/' + unencryptedEFS[u].FileSystemId;
                     helpers.addResult(results, 2, 'EFS: ' + unencryptedEFS[u].FileSystemId + ' is unencrypted', region, arn);
@@ -62,7 +62,7 @@ module.exports = {
             }
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }

@@ -24,7 +24,7 @@ module.exports = {
         }
     },
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var config = {
             ecr_check_global_principal: settings.ecr_check_global_principal || this.settings.ecr_check_global_principal.default,
             ecr_check_cross_account_principal: settings.ecr_check_cross_account_principal || this.settings.ecr_check_cross_account_principal.default
@@ -37,7 +37,7 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
 
-        async.each(regions.ecr, function (region, rcb) {
+        async.each(regions.ecr, function(region, rcb) {
             var describeRepositories = helpers.addSource(cache, source,
                 ['ecr', 'describeRepositories', region]);
 
@@ -55,7 +55,7 @@ module.exports = {
                 return rcb();
             }
 
-            for (r in describeRepositories.data) {
+            for (var r in describeRepositories.data) {
                 var repository = describeRepositories.data[r];
                 var name = repository.repositoryName;
                 var arn = repository.repositoryArn;
@@ -92,7 +92,7 @@ module.exports = {
                 var found = [];
                 var result = 0;
 
-                for (s in policy) {
+                for (var s in policy) {
                     var statement = policy[s];
 
                     if (statement.Effect == 'Allow') {
@@ -128,7 +128,7 @@ module.exports = {
             }
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }

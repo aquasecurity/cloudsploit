@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Monitoring for create or update and delete Security Solution events gives insight into event changes and may reduce the time it takes to detect suspicious activity.',
     recommended_action: 'Add a new log alert to the Alerts service that monitors for Security Solution create or update and delete events.',
     link: 'https://docs.microsoft.com/en-us/azure/security/azure-log-audit',
-    apis: ['resourceGroups:list', 'activityLogAlerts:listByResourceGroup'],
+    apis: ['activityLogAlerts:listBySubscriptionId'],
 
     run: function(cache, settings, callback) {
         const results = [];
@@ -16,56 +16,16 @@ module.exports = {
         const locations = helpers.locations(settings.govcloud);
 
         async.each(locations.activityLogAlerts, (location, rcb) => {
-            const activityLogAlerts = helpers.addSource(cache, source, 
-                ['activityLogAlerts', 'listByResourceGroup', location]);
+            var conditionResource = 'microsoft.security/securitysolutions';
 
-        if (!activityLogAlerts) return rcb();
+            var text = 'Security Solution';
 
-        if (activityLogAlerts.err || !activityLogAlerts.data) {
-            helpers.addResult(results, 3,
-                'Unable to query for Log Alerts: ' + helpers.addError(activityLogAlerts), location);
-            return rcb();
-        }
+            var activityLogAlerts = helpers.addSource(cache, source,
+                ['activityLogAlerts', 'listBySubscriptionId', location]);
 
-        if (!activityLogAlerts.data.length) {
-            helpers.addResult(results, 2, 'No existing Log Alerts found', location);
-            return rcb();
-        }
+            helpers.checkLogAlerts(activityLogAlerts, conditionResource, text, results, location);
 
-        var writeExists = false;
-        var deleteExists = false;
-
-        activityLogAlerts.data.forEach(activityLogAlertResource => {
-            const allConditions = activityLogAlertResource.condition;
-
-            for (var allCondition of allConditions.allOf) {
-                const condition = allCondition.equals;
-                if (condition && condition.indexOf("microsoft.security/securitysolutions/write") > -1) {
-                    helpers.addResult(results, 0,
-                        'Log Alert for Security Solution write is enabled', location, activityLogAlertResource.id);
-                    writeExists = true;
-                }
-                if (condition && condition.indexOf("microsoft.security/securitysolutions/delete") > -1) {
-                    helpers.addResult(results, 0,
-                        'Log Alert for Security Solution delete is enabled', location, activityLogAlertResource.id);
-                    deleteExists = true;
-                }
-
-                if (writeExists && deleteExists) break;
-            };
-        });
-
-        if (!writeExists) {
-            helpers.addResult(results, 2,
-                'Log Alert for Security Solution write is not enabled', location);
-        }
-
-        if (!deleteExists) {
-            helpers.addResult(results, 2,
-                'Log Alert for Security Solution delete is not enabled', location);   
-        }
-
-        rcb();
+            rcb();
         }, function(){
             // Global checking goes here
             callback(null, results, source);

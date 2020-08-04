@@ -8,7 +8,7 @@ module.exports = function(AWSConfig, collection, callback) {
         collection.cloudfront.getDistribution[AWSConfig.region][distribution.Id] = {};
         var params = {
             'Id':distribution.Id
-        }
+        };
 
         cloudfront.getDistribution(params, function(err, data) {
             if (err) {

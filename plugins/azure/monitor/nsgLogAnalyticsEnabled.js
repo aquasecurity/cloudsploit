@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Enabling Log Analytics for Network Security Groups ensures that logs are shipped to a central repository that can be queried and audited.',
     recommended_action: 'Enable sending of logs to Log Analytics for each Network Security Group resource in the Azure Monitor.',
     link: 'https://docs.microsoft.com/en-us/azure/azure-monitor/platform/collect-activity-logs',
-    apis: ['networkSecurityGroups:listAll', 'diagnosticSettingsOperations:nsg:list'],
+    apis: ['networkSecurityGroups:listAll', 'diagnosticSettings:listByNetworkSecurityGroup'],
     compliance: {
         pci: 'PCI requires monitoring and logging of all network traffic. ' +
             'These include malicious attempts to access services within the ' +
@@ -18,52 +18,53 @@ module.exports = {
             'infrastructure.'
     },
 
-
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.diagnosticSettingsOperations.nsg, (location, rcb) => {
+        async.each(locations.networkSecurityGroups, (location, rcb) => {
+            const networkSecurityGroups = helpers.addSource(cache, source,
+                ['networkSecurityGroups', 'listAll', location]);
 
-            const diagnosticSettingsResources = helpers.addSource(cache, source,
-                ['diagnosticSettingsOperations', 'nsg', 'list', location]);
+            if (!networkSecurityGroups) return rcb();
 
-            if (!diagnosticSettingsResources) return rcb();
-
-            if (diagnosticSettingsResources.err || !diagnosticSettingsResources.data) {
+            if (networkSecurityGroups.err || !networkSecurityGroups.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query Diagnostic Settings: ' + helpers.addError(diagnosticSettingsResources), location);
+                    'Unable to query for Network Security Groups: ' + helpers.addError(networkSecurityGroups), location);
                 return rcb();
             }
 
-            if (!diagnosticSettingsResources.data.length) {
-                helpers.addResult(results, 0, 'No Network Security Groups found', location);
+            if (!networkSecurityGroups.data.length) {
+                helpers.addResult(results, 0, 'No existing Network Security Groups found', location);
                 return rcb();
             }
 
-            diagnosticSettingsResources.data.forEach(networkGroupSettings => {
-                var isWorkspace = networkGroupSettings.value.filter((d) => {
-                    return d.hasOwnProperty('workspaceId') == true;
-                });
+            networkSecurityGroups.data.forEach(function(nsg) {
+                const diagnosticSettings = helpers.addSource(cache, source,
+                    ['diagnosticSettings', 'listByNetworkSecurityGroup', location, nsg.id]);
 
-                if (!networkGroupSettings.value.length) {
-                    helpers.addResult(results, 2,
-                        'Diagnostic Settings are not configured for the Network Security Group', location, networkGroupSettings.id);
+                if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
+                    helpers.addResult(results, 3,
+                        'Unable to query diagnostics settings: ' + helpers.addError(diagnosticSettings), location, nsg.id);
+                } else if (!diagnosticSettings.data.length) {
+                    helpers.addResult(results, 2, 'No existing diagnostics settings', location, nsg.id);
                 } else {
-                    if (isWorkspace.length) {
-                        helpers.addResult(results, 0,
-                            'Send to Log Analytics is configured for the Network Security Group', location, networkGroupSettings.id);
+                    var found = false;
+                    diagnosticSettings.data.forEach(function(ds) {
+                        if (ds.logs && ds.logs.length) found = true;
+                    });
+
+                    if (found) {
+                        helpers.addResult(results, 0, 'NSG Log Analytics is enabled for NSG', location, nsg.id);
                     } else {
-                        helpers.addResult(results, 2,
-                            'Send to Log Analytics is not configured for the Network Security Group', location, networkGroupSettings.id);
+                        helpers.addResult(results, 2, 'NSG Log Analytics is not enabled for NSG', location, nsg.id);
                     }
                 }
             });
 
             rcb();
-        }, function () {
-            // Global checking goes here
+        }, function() {
             callback(null, results, source);
         });
     }

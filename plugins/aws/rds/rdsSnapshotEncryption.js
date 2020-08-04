@@ -25,12 +25,12 @@ module.exports = {
                 helpers.addResult(results, 3,
                     'Unable to query for RDS snapshots: ' + helpers.addError(describeDBSnapshots), region);
                 return rcb();
-            };
+            }
 
             if (!describeDBSnapshots.data.length) {
                 helpers.addResult(results, 0, 'No RDS snapshots found', region);
                 return rcb();
-            };
+            }
 
             describeDBSnapshots.data.forEach(snapshot => {
                 var dbResource = snapshot.DBSnapshotArn;
@@ -40,7 +40,7 @@ module.exports = {
                     helpers.addResult(results, 0, 'Snapshot encryption is enabled via KMS key: ' + kmsKey, region, dbResource);
                 } else {
                     helpers.addResult(results, 2, 'Snapshot encryption not enabled', region, dbResource);
-                };
+                }
             });
 
             rcb();
