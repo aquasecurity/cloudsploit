@@ -18,8 +18,6 @@ module.exports = {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
-        var policyDisabled = false;
-        var policyId = '';
 
         async.each(locations.policyAssignments, (location, rcb) => {
             const policyAssignments = helpers.addSource(cache, source, 

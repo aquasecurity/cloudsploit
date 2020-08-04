@@ -12,10 +12,12 @@ module.exports = {
     settings: {
         latestNetFrameworkVersion: {
             name: 'Latest .NET Framework Version',
-            default: 4.0
+            default: '4.0',
+            description: 'The latest NET version supported by Azure App Service.',
+            regex: '[0-9.]{2,5}'
         }
     },
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const config = {
             latestNetFrameworkVersion: settings.latestNetFrameworkVersion || this.settings.latestNetFrameworkVersion.default
         };
@@ -26,48 +28,53 @@ module.exports = {
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.webApps, function (location, rcb) {
+        async.each(locations.webApps, function(location, rcb) {
             const webApps = helpers.addSource(
-                cache, source, ['webApps', 'listConfigurations', location]
+                cache, source, ['webApps', 'list', location]
             );
 
             if (!webApps) return rcb();
 
             if (webApps.err || !webApps.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query App Services: ' + helpers.addError(webApps), location);
+                    'Unable to query for App Services: ' + helpers.addError(webApps), location);
                 return rcb();
             }
 
             if (!webApps.data.length) {
-                helpers.addResult(results, 0, 'No existing App Services found', location);
+                helpers.addResult(
+                    results, 0, 'No existing App Services found', location);
                 return rcb();
             }
 
             var found = false;
 
-            webApps.data.forEach(webApp => {
-                if (webApp.netFrameworkVersion && webApp.netFrameworkVersion !== "") {
-                    found = true;
+            webApps.data.forEach(function(webApp) {
+                const webConfigs = helpers.addSource(
+                    cache, source, ['webApps', 'listConfigurations', location, webApp.id]
+                );
 
-                    if (parseFloat(webApp.netFrameworkVersion.substr(1)) >= config.latestNetFrameworkVersion) {
-                        helpers.addResult(results, 0, 
-                            `The .NET framework version (${parseFloat(webApp.netFrameworkVersion)}) is the latest version`, location, webApp.id, custom);
-                    } else {
-                        helpers.addResult(results, 2, 
-                            `The .NET framework version (${parseFloat(webApp.netFrameworkVersion)}) is not the latest version`, location, webApp.id, custom);
-                    }
+                if (helpers.checkAppVersions(
+                    webConfigs,
+                    results,
+                    location,
+                    webApp.id,
+                    'netFrameworkVersion',
+                    config.latestNetFrameworkVersion,
+                    '.NET',
+                    custom)) {
+                    found = true;
                 }
             });
 
             if (!found) {
-                helpers.addResult(results, 0, 'No App Services with the .NET framework found', location);
+                helpers.addResult(results, 0, 'No App Services with .NET found', location);
             }
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });
     }
-}
+};

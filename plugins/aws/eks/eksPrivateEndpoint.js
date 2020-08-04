@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Enable the private endpoint setting for all EKS clusters.',
     apis: ['EKS:listClusters', 'EKS:describeCluster', 'STS:getCallerIdentity'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
@@ -19,7 +19,7 @@ module.exports = {
         var awsOrGov = helpers.defaultPartition(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
-        async.each(regions.eks, function (region, rcb) {
+        async.each(regions.eks, function(region, rcb) {
             var listClusters = helpers.addSource(cache, source,
                 ['eks', 'listClusters', region]);
 
@@ -37,7 +37,7 @@ module.exports = {
                 return rcb();
             }
 
-            for (c in listClusters.data) {
+            for (var c in listClusters.data) {
                 var clusterName = listClusters.data[c];
                 var describeCluster = helpers.addSource(cache, source,
                     ['eks', 'describeCluster', region, clusterName]);
@@ -62,7 +62,7 @@ module.exports = {
             }
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }

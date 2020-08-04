@@ -11,12 +11,12 @@ module.exports = {
     link: 'https://docs.microsoft.com/en-us/azure/app-service/overview-managed-identity',
     apis: ['webApps:list'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.webApps, function (location, rcb) {
+        async.each(locations.webApps, function(location, rcb) {
 
             const webApps = helpers.addSource(
                 cache, source, ['webApps', 'list', location]
@@ -26,7 +26,7 @@ module.exports = {
 
             if (webApps.err || !webApps.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query App Services: ' + helpers.addError(webApps), location);
+                    'Unable to query App Service: ' + helpers.addError(webApps), location);
                 return rcb();
             }
 
@@ -35,26 +35,18 @@ module.exports = {
                 return rcb();
             }
 
-            var noWebAppIdentity = [];
-
-            webApps.data.forEach(function(webApp){
-                if (!webApp.identity) noWebAppIdentity.push(webApp.id);
+            webApps.data.forEach(function(webApp) {
+                if (webApp.identity) {
+                    helpers.addResult(results, 0, 'The App Service has identities assigned', location, webApp.id);
+                } else {
+                    helpers.addResult(results, 2, 'The App Service does not have an identity assigned', location, webApp.id);
+                }
             });
 
-            if (noWebAppIdentity.length > 20) {
-                helpers.addResult(results, 2, 'More than 20 App Services do not have an identity assigned', location);
-            } else if (noWebAppIdentity.length) {
-                for (app in noWebAppIdentity) {
-                    helpers.addResult(results, 2, 'App Service does not have an identity assigned', location, noWebAppIdentity[app]);
-                }
-            } else {
-                helpers.addResult(results, 0, 'All App Services have identities assigned', location);
-            }
-
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });
     }
-}
+};

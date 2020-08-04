@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'SageMaker notebooks should not be exposed to the Internet. Public availability can be configured via the DirectInternetAccess attribute.',
     recommended_action: 'Disable DirectInternetAccess for each SageMaker notebook.',
     link: 'https://docs.aws.amazon.com/sagemaker/latest/dg/appendix-additional-considerations.html#appendix-notebook-and-internet-access',
-    apis: ['SageMaker:listNotebookInstances', 'SageMaker:describeNotebookInstance'],
+    apis: ['SageMaker:listNotebookInstances'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -34,21 +34,17 @@ module.exports = {
                 return rcb();
             }
 
-            for (i in listNotebookInstances.data) {
+            for (var i in listNotebookInstances.data) {
                 var instance = listNotebookInstances.data[i];
-                var instanceName = instance.NotebookInstanceName;
                 var instanceArn = instance.NotebookInstanceArn;
-
-                var describeNotebookInstance = helpers.addSource(cache, source,
-                    ['sagemaker', 'describeNotebookInstance', region, instanceName]);
 
                 if (instance.DirectInternetAccess &&
                     instance.DirectInternetAccess == 'Enabled'){
                     helpers.addResult(results, 2,
-                    'Direct Internet access is enabled', region, instanceArn);
+                        'Direct Internet access is enabled', region, instanceArn);
                 } else {
                     helpers.addResult(results, 0,
-                    'Direct Internet access is not enabled', region, instanceArn);
+                        'Direct Internet access is not enabled', region, instanceArn);
                 }
             }
 

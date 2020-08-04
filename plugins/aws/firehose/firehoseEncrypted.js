@@ -78,10 +78,10 @@ module.exports = {
                     deliveryStreamDesc.Destinations[0].ExtendedS3DestinationDescription.EncryptionConfiguration &&
                     deliveryStreamDesc.Destinations[0].ExtendedS3DestinationDescription.EncryptionConfiguration.KMSEncryptionConfig) {
                     if (deliveryStreamDesc.Destinations[0].ExtendedS3DestinationDescription.EncryptionConfiguration.KMSEncryptionConfig === defaultKmsKey) {
+                        //Note: Default KeyARN returns, but doesn't match the alias
                         helpers.addResult(results, 1,
                             'The Firehose delivery stream uses the default KMS key (' + defaultKmsKey + ') for SSE',
                             region, deliveryStreamARN);
-                            //Note: Default KeyARN returns, but doesn't match the alias
                     } else {
                         helpers.addResult(results, 0,
                             'The Firehose delivery stream uses a KMS key for SSE',

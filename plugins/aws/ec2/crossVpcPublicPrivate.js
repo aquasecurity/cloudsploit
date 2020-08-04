@@ -22,222 +22,216 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         async.each(regions.ec2, function(region, rcb) {
+            // for Subnets
+            var describeSubnets = helpers.addSource(cache, source, ['ec2', 'describeSubnets', region]);
 
-
-                // for Subnets
-                var describeSubnets = helpers.addSource(cache, source, ['ec2', 'describeSubnets', region]);
-
-                // error handling
-                if (!describeSubnets || !describeSubnets.data || describeSubnets.err) {
-                    helpers.addResult(results, 3, 'Unable to query for Subnets: ' + helpers.addError(describeSubnets), region);
-                    return rcb();
-                }
-
-                // grapping a list of Vpcs and Subnets
-                var subVpc = [];
-                for (i in describeSubnets.data) {
-                    subVpc.push({
-                        vcpId: describeSubnets.data[i].VpcId,
-                        subId: describeSubnets.data[i].SubnetId,
-                        subCidr: describeSubnets.data[i].CidrBlock
-                    });
-                }
-
-
-
-                // for RouteTables
-                var describeRouteTables = helpers.addSource(cache, source, ['ec2', 'describeRouteTables', region]);
-
-                // error handling
-                if (!describeRouteTables || !describeRouteTables.data || describeRouteTables.err) {
-                    helpers.addResult(results, 3, 'Unable to query for RouteTables: ' + helpers.addError(describeRouteTables), region);
-                    return rcb();
-                }
-
-
-                // for VpcPeeringConnections
-                var describeVpcPeeringConnections = helpers.addSource(cache, source, ['ec2', 'describeVpcPeeringConnections', region]);
-
-                // error handling
-                if (!describeVpcPeeringConnections || !describeVpcPeeringConnections.data || describeVpcPeeringConnections.err) {
-                    helpers.addResult(results, 3, 'Unable to query for VpcPeering: ' + helpers.addError(describeVpcPeeringConnections), region);
-                    return rcb();
-                }
-
-                if (!describeVpcPeeringConnections.data.length) {
-                    helpers.addResult(results, 0, 'No public private subnets connection found', region);
-                    return rcb()
-                }
-
-                // collecting data about the peering connections
-                var vpcPeeringInfo = [];
-
-                for (i in describeVpcPeeringConnections.data) {
-                    vpcPeeringInfo.push({
-                        peeringId: describeVpcPeeringConnections.data[i].VpcPeeringConnectionId,
-                        vpcId: describeVpcPeeringConnections.data[i].AccepterVpcInfo.VpcId,
-                        peercidr: describeVpcPeeringConnections.data[i].AccepterVpcInfo.CidrBlock,
-                        ownerId: describeVpcPeeringConnections.data[i].AccepterVpcInfo.OwnerId
-                    });
-                    vpcPeeringInfo.push({
-                        peeringId: describeVpcPeeringConnections.data[i].VpcPeeringConnectionId,
-                        vpcId: describeVpcPeeringConnections.data[i].RequesterVpcInfo.VpcId,
-                        peercidr: describeVpcPeeringConnections.data[i].RequesterVpcInfo.CidrBlock,
-                        ownerId: describeVpcPeeringConnections.data[i].RequesterVpcInfo.OwnerId
-                    });
-                }
-
-
-                var routes = [];
-                var publicRoutes = [];
-                var privateRoutes = [];
-                var routesInfo = [];
-                var tempPubSubnets = [];
-                var tempPrvSubnets = [];
-                var subnets = [];
-
-                // collecting data about the Routes
-                for (k in describeRouteTables.data) {
-                    routes.push({
-                        rtId: describeRouteTables.data[k].RouteTableId,
-                        type: 'private'
-                    });
-                    for (l in describeRouteTables.data[k].Routes) {
-                        routesInfo.push({
-                            rtId: describeRouteTables.data[k].RouteTableId,
-                            rtCB: describeRouteTables.data[k].Routes[l].DestinationCidrBlock,
-                            rtIg: describeRouteTables.data[k].Routes[l].GatewayId,
-                            rtVpcId: describeRouteTables.data[k].Routes[l].VpcPeeringConnectionId
-                        });
-                    }
-                    for (i in describeRouteTables.data[k].Associations) {
-                        routesInfo.push({
-                            rtId: describeRouteTables.data[k].RouteTableId,
-                            rtSub: describeRouteTables.data[k].Associations[i].SubnetId
-                        });
-                    }
-                }
-
-                // filtering the public RouteTables
-                for (i in routes) {
-                    for (j in routesInfo) {
-                        if (routes[i].rtId == routesInfo[j].rtId && routesInfo[j].rtCB == '0.0.0.0/0' && routesInfo[j].rtIg != 'local') {
-                            routes[i].type = 'public';
-                            publicRoutes.push(routes[i].rtId);
-                        }
-                    }
-                }
-                for (i in routes) {
-                    if (routes[i].type == 'private') {
-                        privateRoutes.push(routes[i].rtId);
-                    }
-                }
-
-                // filtering the public and private subnets based on the RouteTables
-                for (i in publicRoutes) {
-                    for (j in routesInfo) {
-                        if (publicRoutes[i] == routesInfo[j].rtId) {
-                            tempPubSubnets.push(routesInfo[j].rtSub);
-                        }
-                    }
-                }
-                for (i in privateRoutes) {
-                    for (j in routesInfo) {
-                        if (privateRoutes[i] == routesInfo[j].rtId) {
-                            tempPrvSubnets.push(routesInfo[j].rtSub);
-                        }
-                    }
-                }
-
-
-                // mapping the subnets into one dictionary
-                for (i in subVpc) {
-                    for (j in tempPrvSubnets) {
-                        if (subVpc[i].subId == tempPrvSubnets[j]) {
-                            subnets.push({
-                                subId: subVpc[i].subId,
-                                subCidr: subVpc[i].subCidr,
-                                subVpcId: subVpc[i].vcpId,
-                                type: 'private'
-                            });
-                        }
-                    }
-                }
-                for (i in subVpc) {
-                    for (j in tempPubSubnets) {
-                        if (subVpc[i].subId == tempPubSubnets[j]) {
-                            subnets.push({
-                                subId: subVpc[i].subId,
-                                subCidr: subVpc[i].subCidr,
-                                subVpcId: subVpc[i].vcpId,
-                                type: 'public'
-                            });
-                        }
-                    }
-                }
-
-                // filtering the routes that are related to the peering process
-                var peeringRoutes = [];
-
-                for (i in vpcPeeringInfo) {
-                    for (j in routesInfo) {
-                        if (vpcPeeringInfo[i].peeringId == routesInfo[j].rtVpcId) {
-                            peeringRoutes.push({
-                                routeId: routesInfo[j].rtId,
-                                vpcId: vpcPeeringInfo[i].vpcId,
-                                peeringCidr: routesInfo[j].rtCB,
-                                peeringId: vpcPeeringInfo[i].peeringId,
-                                ownerId: vpcPeeringInfo[i].ownerId
-                            });
-                        }
-                    }
-                }
-
-                // generating the public and private records
-                var pubRecord = [];
-                var prvRecord = [];
-
-                for (i in peeringRoutes) {
-                    for (j in subnets) {
-                        if (peeringRoutes[i].vpcId == subnets[j].subVpcId && peeringRoutes[i].peeringCidr == subnets[j].subCidr) {
-                            if (subnets[j].type == 'public') {
-                                pubRecord.push({
-                                    vpcId: peeringRoutes[i].vpcId,
-                                    peeringId: peeringRoutes[i].peeringId,
-                                    subnetId: subnets[j].subId,
-                                    ownerId: peeringRoutes[i].ownerId
-                                });
-                            } else {
-                                prvRecord.push({
-                                    vpcId: peeringRoutes[i].vpcId,
-                                    peeringId: peeringRoutes[i].peeringId,
-                                    subnetId: subnets[j].subId,
-                                    ownerId: peeringRoutes[i].ownerId
-                                });
-                            }
-                        }
-                    }
-                }
-
-                // comparing and showing the results
-                var register = 0;
-                for (i in pubRecord) {
-                    for (j in prvRecord) {
-                        if (pubRecord[i].peeringId == prvRecord[j].peeringId) {
-                            register++;
-                            helpers.addResult(results, 2, 'A route between public and private subnets of different VPCs found, for Subnets: ' + pubRecord[i].subnetId + ' and ' + prvRecord[j].subnetId, region, 'arn:aws:ec2:' + region + ':' + prvRecord[j].ownerId + ':vpc-peering-connection/' + prvRecord[j].peeringId);
-                        }
-                    }
-                }
-
-                if (!register) {
-                    helpers.addResult(results, 0, 'No routes between public and private subnets of different VPCs found', region);
-                }
-
+            // error handling
+            if (!describeSubnets || !describeSubnets.data || describeSubnets.err) {
+                helpers.addResult(results, 3, 'Unable to query for Subnets: ' + helpers.addError(describeSubnets), region);
                 return rcb();
-            },
-            function() {
-                callback(null, results, source);
-            });
+            }
+
+            // grapping a list of Vpcs and Subnets
+            var subVpc = [];
+            for (var i in describeSubnets.data) {
+                subVpc.push({
+                    vcpId: describeSubnets.data[i].VpcId,
+                    subId: describeSubnets.data[i].SubnetId,
+                    subCidr: describeSubnets.data[i].CidrBlock
+                });
+            }
+
+            // for RouteTables
+            var describeRouteTables = helpers.addSource(cache, source, ['ec2', 'describeRouteTables', region]);
+
+            // error handling
+            if (!describeRouteTables || !describeRouteTables.data || describeRouteTables.err) {
+                helpers.addResult(results, 3, 'Unable to query for RouteTables: ' + helpers.addError(describeRouteTables), region);
+                return rcb();
+            }
+
+            // for VpcPeeringConnections
+            var describeVpcPeeringConnections = helpers.addSource(cache, source, ['ec2', 'describeVpcPeeringConnections', region]);
+
+            // error handling
+            if (!describeVpcPeeringConnections || !describeVpcPeeringConnections.data || describeVpcPeeringConnections.err) {
+                helpers.addResult(results, 3, 'Unable to query for VpcPeering: ' + helpers.addError(describeVpcPeeringConnections), region);
+                return rcb();
+            }
+
+            if (!describeVpcPeeringConnections.data.length) {
+                helpers.addResult(results, 0, 'No public private subnets connection found', region);
+                return rcb();
+            }
+
+            // collecting data about the peering connections
+            var vpcPeeringInfo = [];
+
+            for (i in describeVpcPeeringConnections.data) {
+                vpcPeeringInfo.push({
+                    peeringId: describeVpcPeeringConnections.data[i].VpcPeeringConnectionId,
+                    vpcId: describeVpcPeeringConnections.data[i].AccepterVpcInfo.VpcId,
+                    peercidr: describeVpcPeeringConnections.data[i].AccepterVpcInfo.CidrBlock,
+                    ownerId: describeVpcPeeringConnections.data[i].AccepterVpcInfo.OwnerId
+                });
+                vpcPeeringInfo.push({
+                    peeringId: describeVpcPeeringConnections.data[i].VpcPeeringConnectionId,
+                    vpcId: describeVpcPeeringConnections.data[i].RequesterVpcInfo.VpcId,
+                    peercidr: describeVpcPeeringConnections.data[i].RequesterVpcInfo.CidrBlock,
+                    ownerId: describeVpcPeeringConnections.data[i].RequesterVpcInfo.OwnerId
+                });
+            }
+
+
+            var routes = [];
+            var publicRoutes = [];
+            var privateRoutes = [];
+            var routesInfo = [];
+            var tempPubSubnets = [];
+            var tempPrvSubnets = [];
+            var subnets = [];
+
+            // collecting data about the Routes
+            for (var k in describeRouteTables.data) {
+                routes.push({
+                    rtId: describeRouteTables.data[k].RouteTableId,
+                    type: 'private'
+                });
+                for (var l in describeRouteTables.data[k].Routes) {
+                    routesInfo.push({
+                        rtId: describeRouteTables.data[k].RouteTableId,
+                        rtCB: describeRouteTables.data[k].Routes[l].DestinationCidrBlock,
+                        rtIg: describeRouteTables.data[k].Routes[l].GatewayId,
+                        rtVpcId: describeRouteTables.data[k].Routes[l].VpcPeeringConnectionId
+                    });
+                }
+                for (var m in describeRouteTables.data[k].Associations) {
+                    routesInfo.push({
+                        rtId: describeRouteTables.data[k].RouteTableId,
+                        rtSub: describeRouteTables.data[k].Associations[m].SubnetId
+                    });
+                }
+            }
+
+            // filtering the public RouteTables
+            for (var n in routes) {
+                for (var o in routesInfo) {
+                    if (routes[n].rtId == routesInfo[o].rtId && routesInfo[o].rtCB == '0.0.0.0/0' && routesInfo[o].rtIg != 'local') {
+                        routes[n].type = 'public';
+                        publicRoutes.push(routes[n].rtId);
+                    }
+                }
+            }
+            for (var p in routes) {
+                if (routes[p].type == 'private') {
+                    privateRoutes.push(routes[p].rtId);
+                }
+            }
+
+            // filtering the public and private subnets based on the RouteTables
+            for (var q in publicRoutes) {
+                for (var r in routesInfo) {
+                    if (publicRoutes[q] == routesInfo[r].rtId) {
+                        tempPubSubnets.push(routesInfo[r].rtSub);
+                    }
+                }
+            }
+            for (var s in privateRoutes) {
+                for (var t in routesInfo) {
+                    if (privateRoutes[s] == routesInfo[t].rtId) {
+                        tempPrvSubnets.push(routesInfo[t].rtSub);
+                    }
+                }
+            }
+
+            // mapping the subnets into one dictionary
+            for (var u in subVpc) {
+                for (var v in tempPrvSubnets) {
+                    if (subVpc[u].subId == tempPrvSubnets[v]) {
+                        subnets.push({
+                            subId: subVpc[u].subId,
+                            subCidr: subVpc[u].subCidr,
+                            subVpcId: subVpc[u].vcpId,
+                            type: 'private'
+                        });
+                    }
+                }
+            }
+            for (var w in subVpc) {
+                for (var x in tempPubSubnets) {
+                    if (subVpc[w].subId == tempPubSubnets[x]) {
+                        subnets.push({
+                            subId: subVpc[w].subId,
+                            subCidr: subVpc[w].subCidr,
+                            subVpcId: subVpc[w].vcpId,
+                            type: 'public'
+                        });
+                    }
+                }
+            }
+
+            // filtering the routes that are related to the peering process
+            var peeringRoutes = [];
+
+            for (var y in vpcPeeringInfo) {
+                for (var z in routesInfo) {
+                    if (vpcPeeringInfo[y].peeringId == routesInfo[z].rtVpcId) {
+                        peeringRoutes.push({
+                            routeId: routesInfo[z].rtId,
+                            vpcId: vpcPeeringInfo[y].vpcId,
+                            peeringCidr: routesInfo[z].rtCB,
+                            peeringId: vpcPeeringInfo[y].peeringId,
+                            ownerId: vpcPeeringInfo[y].ownerId
+                        });
+                    }
+                }
+            }
+
+            // generating the public and private records
+            var pubRecord = [];
+            var prvRecord = [];
+
+            for (var a in peeringRoutes) {
+                for (var b in subnets) {
+                    if (peeringRoutes[a].vpcId == subnets[b].subVpcId && peeringRoutes[a].peeringCidr == subnets[b].subCidr) {
+                        if (subnets[b].type == 'public') {
+                            pubRecord.push({
+                                vpcId: peeringRoutes[a].vpcId,
+                                peeringId: peeringRoutes[a].peeringId,
+                                subnetId: subnets[b].subId,
+                                ownerId: peeringRoutes[a].ownerId
+                            });
+                        } else {
+                            prvRecord.push({
+                                vpcId: peeringRoutes[a].vpcId,
+                                peeringId: peeringRoutes[a].peeringId,
+                                subnetId: subnets[b].subId,
+                                ownerId: peeringRoutes[a].ownerId
+                            });
+                        }
+                    }
+                }
+            }
+
+            // comparing and showing the results
+            var register = 0;
+            for (var c in pubRecord) {
+                for (var d in prvRecord) {
+                    if (pubRecord[c].peeringId == prvRecord[d].peeringId) {
+                        register++;
+                        helpers.addResult(results, 2, 'A route between public and private subnets of different VPCs found, for Subnets: ' + pubRecord[c].subnetId + ' and ' + prvRecord[d].subnetId, region, 'arn:aws:ec2:' + region + ':' + prvRecord[d].ownerId + ':vpc-peering-connection/' + prvRecord[d].peeringId);
+                    }
+                }
+            }
+
+            if (!register) {
+                helpers.addResult(results, 0, 'No routes between public and private subnets of different VPCs found', region);
+            }
+
+            return rcb();
+        },
+        function() {
+            callback(null, results, source);
+        });
     }
 };

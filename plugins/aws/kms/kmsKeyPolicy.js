@@ -24,7 +24,7 @@ module.exports = {
         kms_key_policy_whitelisted_account_ids: {
             name: 'KMS Key Policy Whitelisted Account IDs',
             description: 'A comma-delimited list of known third-party AWS account IDs that should be trusted',
-            regex: '^\d{12}(?:,\d{12})*$',
+            regex: '^\\d{12}(?:,\\d{12})*$',
             default: ''
         }
     },
@@ -51,12 +51,10 @@ module.exports = {
 
         var acctRegion = helpers.defaultRegion(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
-        
-        const const_wildcard = '*'
 
         async.each(regions.kms, function(region, rcb){
             var listKeys = helpers.addSource(cache, source,
-                    ['kms', 'listKeys', region]);
+                ['kms', 'listKeys', region]);
 
             if (!listKeys) return rcb();
 
@@ -90,7 +88,7 @@ module.exports = {
                 var statements = getKeyPolicy.data.Statement;
                 var totalUsers = [];
 
-                for (s in statements) {
+                for (var s in statements) {
                     var statement = statements[s];
 
                     if (!statement.Principal || !statement.Effect ||
@@ -109,7 +107,7 @@ module.exports = {
                     var newUsers = principal.AWS.filter(function(newUser){
                         return totalUsers.filter(function(existingUser){
                             return existingUser === newUser;
-                        }).length === 0
+                        }).length === 0;
                     });
 
                     totalUsers = totalUsers.concat(newUsers);
@@ -130,14 +128,14 @@ module.exports = {
                         config.kms_key_policy_whitelisted_account_ids.indexOf(conditionalCaller) === -1) {
                         thirdPartyTrusted += 1;
                     } else if (!conditionalCaller) {
-                        for (u in principal.AWS) {
+                        for (var u in principal.AWS) {
                             if (principal.AWS[u] !== '*' &&
                                 principal.AWS[u].indexOf(accountId) === -1  &&
                                 config.kms_key_policy_whitelisted_account_ids.indexOf(principal.AWS[u]) === -1) {
                                 // Loop through whitelisted account IDs to ensure trusted account
                                 // is not whitelisted by user.
                                 var wlFound = false;
-                                for (i in config.kms_key_policy_whitelisted_account_ids) {
+                                for (var i in config.kms_key_policy_whitelisted_account_ids) {
                                     if (principal.AWS[u].indexOf(config.kms_key_policy_whitelisted_account_ids[i]) > -1) {
                                         wlFound = true;
                                     }

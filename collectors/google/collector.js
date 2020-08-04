@@ -119,7 +119,7 @@ var calls = {
             api: 'compute',
             version: 'v1',
             location: 'null'
-			}
+        }
     },
     subnetworks: {
         list: {
@@ -230,7 +230,7 @@ var postcalls = {
             reliesOnService: ['serviceAccounts'],
             reliesOnCall: ['list'],
             filterKey: ['id'],
-            filterValue: ['uniqueId'],
+            filterValue: ['uniqueId']
         }
     },
     users: {
@@ -249,7 +249,7 @@ var postcalls = {
 
 };
 
-var collect = function (GoogleConfig, settings, callback) {
+var collect = function(GoogleConfig, settings, callback) {
     var collection = {};
 
     GoogleConfig.maxRetries = 5;
@@ -260,20 +260,20 @@ var collect = function (GoogleConfig, settings, callback) {
     helpers.authenticate(GoogleConfig)
         .then(client => {
             
-            async.eachOfLimit(calls, 10, function (call, service, serviceCb) {
+            async.eachOfLimit(calls, 10, function(call, service, serviceCb) {
                 if (!collection[service]) collection[service] = {};
 
-                helpers.processCall(GoogleConfig, collection, settings, regions, call, service, client, function () {
+                helpers.processCall(GoogleConfig, collection, settings, regions, call, service, client, function() {
                     serviceCb();
                 });
-            }, function () {
-                async.eachOfLimit(postcalls, 10, function (postcallObj, service, postcallCb) {
-                    helpers.processCall(GoogleConfig, collection, settings, regions, postcallObj, service, client, function () {
+            }, function() {
+                async.eachOfLimit(postcalls, 10, function(postcallObj, service, postcallCb) {
+                    helpers.processCall(GoogleConfig, collection, settings, regions, postcallObj, service, client, function() {
                         postcallCb();
-                    })
-                }, function () {
-                    callback(null, collection)
-                })
+                    });
+                }, function() {
+                    callback(null, collection);
+                });
             });
         });
 };

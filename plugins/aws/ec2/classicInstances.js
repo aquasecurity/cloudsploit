@@ -44,8 +44,8 @@ module.exports = {
             var inVpc = 0;
             var notInVpc = 0;
 
-            for (i in describeInstances.data) {
-                for (j in describeInstances.data[i].Instances) {
+            for (var i in describeInstances.data) {
+                for (var j in describeInstances.data[i].Instances) {
                     // When the instance is shutting down or stopped, it no longer maintains
                     // the NetworkInterfaces property used to determine instance VPC placement
                     if (describeInstances.data[i].Instances[j].State &&

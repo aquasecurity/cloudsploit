@@ -10,12 +10,12 @@ module.exports = {
     recommended_action: 'For each VM, open the Networking blade and verify that the Inbound Port Rules do not have a rule for RDP with a source equal to Any or Internet',
     apis: ['networkSecurityGroups:listAll'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.networkSecurityGroups, function (location, rcb) {
+        async.each(locations.networkSecurityGroups, function(location, rcb) {
 
             var networkSecurityGroups = helpers.addSource(
                 cache, source, ['networkSecurityGroups', 'listAll', location]
@@ -43,7 +43,7 @@ module.exports = {
             helpers.findOpenPorts(networkSecurityGroups.data, ports, service, location, results);
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }
