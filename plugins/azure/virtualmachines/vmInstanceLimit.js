@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Azure limits regions to certain numbers of resources. Exceeding those limits could prevent resources from launching.',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/windows/overview',
     recommended_action: 'Contact Azure support to increase the number of instances available',
-    apis: ['resourceGroups:list', 'virtualMachines:listAll'],
+    apis: ['virtualMachines:listAll'],
     settings: {
         instance_limit_percentage_fail: {
             name: 'Instance Limit Percentage Fail',
@@ -55,14 +55,14 @@ module.exports = {
                 helpers.addResult(results, 3, 
                     'Unable to query Virtual Machines: ' + helpers.addError(virtualMachines), location);
                 return rcb();
-            };
+            }
 
             if (!virtualMachines.data.length) {
                 helpers.addResult(results, 0, 'No existing Virtual Machines', location);
                 return rcb();
-            };
+            }
 
-            vmInstances = virtualMachines.data.length;
+            var vmInstances = virtualMachines.data.length;
 
             var percentage = Math.ceil((vmInstances / config.instance_limit) * 100);
             var returnMsg = 'Region contains ' + vmInstances + ' of ' +
@@ -74,7 +74,7 @@ module.exports = {
                 helpers.addResult(results, 1, returnMsg, location);
             } else {
                 helpers.addResult(results, 0, returnMsg, location);
-            };
+            }
 
             rcb();
         }, function(){

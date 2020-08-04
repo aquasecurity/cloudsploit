@@ -15,7 +15,7 @@ module.exports = {
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.resourceGroups, function(location, rcb){
+        async.each(locations.networkWatchers, function(location, rcb){
             const networkWatchers = helpers.addSource(cache, source,
                 ['networkWatchers', 'listAll', location]);
 
@@ -24,9 +24,15 @@ module.exports = {
 
             if (!networkWatchers || !virtualNetworks) return rcb();
 
-            if (networkWatchers.err || !networkWatchers.data || !virtualNetworks.data) {
+            if (networkWatchers.err || !networkWatchers.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for Network Watcher: ' + helpers.addError(networkWatchers), location);
+                    'Unable to query for Network Watchers: ' + helpers.addError(networkWatchers), location);
+                return rcb();
+            }
+
+            if (virtualNetworks.err || !virtualNetworks.data) {
+                helpers.addResult(results, 3,
+                    'Unable to query for Virtual Networks: ' + helpers.addError(virtualNetworks), location);
                 return rcb();
             }
 
@@ -38,11 +44,11 @@ module.exports = {
 
             networkWatchers.data.forEach((networkWatcher) => {
                 if (networkWatcher.provisioningState &&
-                    networkWatcher.provisioningState == "Succeeded") {
+                    networkWatcher.provisioningState.toLowerCase() == 'succeeded') {
                     helpers.addResult(results, 0, 'Network Watcher is enabled', location, networkWatcher.id);
                 } else {
                     helpers.addResult(results, 2, 'Network Watcher is not successfully provisioned for the region', location, networkWatcher.id);
-                };
+                }
             });
 
             rcb();

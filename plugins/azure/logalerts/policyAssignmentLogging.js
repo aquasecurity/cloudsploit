@@ -8,64 +8,25 @@ module.exports = {
     more_info: 'Monitoring for create or update and delete Policy Assignment events gives insight into policy changes and may reduce the time it takes to detect suspicious activity.',
     recommended_action: 'Add a new log alert to the Alerts service that monitors for Policy Assignment create or update and delete events.',
     link: 'https://docs.microsoft.com/en-us/azure/azure-monitor/platform/activity-log-alerts',
-    apis: ['resourceGroups:list','activityLogAlerts:listBySubscriptionId'],
+    apis: ['activityLogAlerts:listBySubscriptionId'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.activityLogAlerts, function (location, rcb) {
+        async.each(locations.activityLogAlerts, function(location, rcb) {
+            var conditionResource = 'microsoft.authorization/policyassignments';
 
-            var activityAlerts = helpers.addSource(cache, source,
+            var text = 'Policy Assignment';
+
+            var activityLogAlerts = helpers.addSource(cache, source,
                 ['activityLogAlerts', 'listBySubscriptionId', location]);
 
-            if (!activityAlerts) return rcb();
-
-            if (activityAlerts.err || !activityAlerts.data) {
-                helpers.addResult(results, 3,
-                    'Unable to query for Activity Alerts: ' + helpers.addError(activityAlerts), location);
-                return rcb();
-            }
-            if (!activityAlerts.data.length) {
-                helpers.addResult(results, 0, 'No existing Activity Alerts found', location);
-                return rcb();
-            }
-            var writeAlertExists = false;
-            var deleteAlertExists = false;
-            activityAlerts.data.forEach(activityAlert => {
-                let conditionList = (activityAlert &&
-                    activityAlert.condition &&
-                    activityAlert.condition.allOf) ?
-                    activityAlert.condition.allOf : [];
-
-                conditionList.forEach(condition => {
-                    if (condition.equals &&
-                        condition.equals.indexOf("Microsoft.Authorization/policyAssignments/write") > -1 &&
-                        !writeAlertExists) {
-                        helpers.addResult(results, 0,
-                            'Log alert for Policy Assignment write exists', location, activityAlert.id);
-                        writeAlertExists = true;
-                    } else if (condition.equals &&
-                        condition.equals.indexOf("Microsoft.Authorization/policyAssignments/delete") > -1 &&
-                        !deleteAlertExists) {
-                        helpers.addResult(results, 0,
-                            'Log alert for Policy Assignment delete exists', location, activityAlert.id);
-                        deleteAlertExists = true;
-                    }
-                });
-            });
-            if (!writeAlertExists) {
-                helpers.addResult(results, 2,
-                    'Log alert for Policy Assignment write does not exist', location);
-            }
-            if (!deleteAlertExists) {
-                helpers.addResult(results, 2,
-                    'Log alert for Policy Assignment delete does not exist', location);
-            }
+            helpers.checkLogAlerts(activityLogAlerts, conditionResource, text, results, location);
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }

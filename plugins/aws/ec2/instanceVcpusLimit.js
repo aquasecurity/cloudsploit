@@ -24,7 +24,7 @@ module.exports = {
         }
     },
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var config = {
             instance_limit_percentage_fail: settings.instance_limit_percentage_fail || this.settings.instance_limit_percentage_fail.default,
             instance_limit_percentage_warn: settings.instance_limit_percentage_warn || this.settings.instance_limit_percentage_warn.default
@@ -49,7 +49,7 @@ module.exports = {
                     'Unable to query for account limits: ' + helpers.addError(describeAccountAttributes) + '. Default limit of ' + limits['max-instances'] + ' will be used.', region);
             } else {
                 // Loop through response to assign custom limits
-                for (i in describeAccountAttributes.data) {
+                for (var i in describeAccountAttributes.data) {
                     if (limits[describeAccountAttributes.data[i].AttributeName]) {
                         limits[describeAccountAttributes.data[i].AttributeName] = describeAccountAttributes.data[i].AttributeValues[0].AttributeValue;
                     }
@@ -58,10 +58,8 @@ module.exports = {
 
             var ec2Instances = 0;
 
-            for (instances in describeInstances.data) {
-                for (instance in describeInstances.data[instances].Instances) {
-                    ec2Instances += 1;
-                }
+            for (var instances in describeInstances.data) {
+                ec2Instances += describeInstances.data[instances].Instances.length;
             }
 
             var percentage = Math.ceil((ec2Instances / limits['max-instances'])*100);
@@ -112,7 +110,7 @@ module.exports = {
 
             if (onDemandServiceQuotas &&
                 onDemandServiceQuotas.length>0) {
-                for (sq in onDemandServiceQuotas) {
+                for (var sq in onDemandServiceQuotas) {
                     var serviceQuota = onDemandServiceQuotas[sq];
                     var instanceTypeName = serviceQuota.QuotaName.replace('Running On-Demand ', '').replace(' instances', '').toLowerCase();
                     var instanceType;
@@ -173,13 +171,13 @@ module.exports = {
             }
 
             for (const it in instanceMap.instanceType) {
+                var percentage;
                 if (instanceMap.groupInstanceTypes[it]) {
-                    var percentage = Math.ceil(instanceMap.groupVcpus[it] / instanceMap.limit[it] * 100);
-                    instanceMap.limitUsage[it] = percentage;
+                    percentage = Math.ceil(instanceMap.groupVcpus[it] / instanceMap.limit[it] * 100);
                 } else {
-                    var percentage = Math.ceil(instanceMap.vcpus[it] / instanceMap.limit[it] * 100);
-                    instanceMap.limitUsage[it] = percentage;
+                    percentage = Math.ceil(instanceMap.vcpus[it] / instanceMap.limit[it] * 100);
                 }
+                instanceMap.limitUsage[it] = percentage;
             }
 
             var ec2Vcpus = 0;
@@ -215,7 +213,7 @@ module.exports = {
             rcb();
         }
 
-        async.each(regions.ec2, function (region, rcb) {
+        async.each(regions.ec2, function(region, rcb) {
 
             var describeInstances = helpers.addSource(cache, source,
                 ['ec2', 'describeInstances', region]);
@@ -240,7 +238,7 @@ module.exports = {
                 helpers.addResult(results, 0, 'No instances found', region);
                 rcb();
             }
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }

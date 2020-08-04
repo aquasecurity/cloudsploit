@@ -400,6 +400,14 @@
                 "tertiaryPath": "p",
                 "endpoint": "objectstorage.{{region}}.oraclecloud.com"
             }
+        },
+        "namespace": {
+            "get": {
+                "allowedHeaders": ["opc-client-request-id", "compartmentId"],
+                "method": "GET",
+                "path": "n",
+                "endpoint": "objectstorage.{{region}}.oraclecloud.com"
+            }
         }
     },
     "waas": {

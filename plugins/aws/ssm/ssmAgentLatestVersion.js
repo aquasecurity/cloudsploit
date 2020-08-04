@@ -38,7 +38,7 @@ module.exports = {
             var instanceListPass = [];
             var instanceListFail = [];
 
-            for (i in describeInstanceInformation.data) {
+            for (var i in describeInstanceInformation.data) {
                 var info = describeInstanceInformation.data[i];
                 // arn:${Partition}:ec2:${Region}:${Account}:instance/${InstanceId}
                 var arn = 'arn:aws:ec2:' + region + ':' + accountId + ':instance/' + info.InstanceId;

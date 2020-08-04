@@ -42,23 +42,21 @@ module.exports = {
                 !distribution.Origins.Items ||
                 !distribution.Origins.Items.length) {
                 helpers.addResult(results, 0, 'No CloudFront origins found',
-                        'global', distribution.ARN);
+                    'global', distribution.ARN);
                 return cb();
             }
 
-            for (o in distribution.Origins.Items) {
+            for (var o in distribution.Origins.Items) {
                 var origin = distribution.Origins.Items[o];
 
                 if (origin.S3OriginConfig &&
                     (!origin.S3OriginConfig.OriginAccessIdentity ||
                      !origin.S3OriginConfig.OriginAccessIdentity.length)) {
                     helpers.addResult(results, 2, 'CloudFront distribution is using an S3 ' + 
-                        'origin without an origin access identity', 'global',
-                        distribution.ARN);
+                        'origin without an origin access identity', 'global', distribution.ARN);
                 } else {
                     helpers.addResult(results, 0, 'CloudFront distribution origin is not setup ' +
-                            'without an origin access identity', 'global',
-                            distribution.ARN);
+                        'without an origin access identity', 'global', distribution.ARN);
                 }
             }
 

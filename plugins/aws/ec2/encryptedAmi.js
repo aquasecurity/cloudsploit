@@ -21,7 +21,7 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
 
-         async.each(regions.ec2, function(region, rcb){
+        async.each(regions.ec2, function(region, rcb){
             var describeImages = helpers.addSource(cache, source,
                 ['ec2', 'describeImages', region]);
 

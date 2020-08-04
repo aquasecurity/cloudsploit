@@ -1,5 +1,4 @@
 var async = require('async');
-var AWS = require('aws-sdk');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
@@ -47,7 +46,7 @@ module.exports = {
         var region = helpers.defaultRegion(settings);
 
         var generateCredentialReport = helpers.addSource(cache, source,
-                ['iam', 'generateCredentialReport', region]);
+            ['iam', 'generateCredentialReport', region]);
 
         if (!generateCredentialReport) return callback(null, results, source);
 

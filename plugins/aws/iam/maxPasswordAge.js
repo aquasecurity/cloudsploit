@@ -8,6 +8,11 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
     recommended_action: 'Descrease the maximum allowed age of passwords for the password policy',
     apis: ['IAM:getAccountPasswordPolicy'],
+    remediation_description: 'The password policy for maximum password age will be set to the value set by the user. Otherwise, it will default to 179.',
+    remediation_min_version: '202006221808',
+    apis_remediate: ['IAM:getAccountPasswordPolicy'],
+    actions: {remediate: ['IAM:updateAccountPasswordPolicy'], rollback: ['IAM:updateAccountPasswordPolicy']},
+    permissions: {remediate: ['iam:UpdateAccountPasswordPolicy'], rollback: ['iam:UpdateAccountPasswordPolicy']},
     compliance: {
         pci: 'PCI requires that all user credentials are rotated every 90 days. Setting ' +
              'an IAM password rotation policy enforces this requirement.'
@@ -41,7 +46,7 @@ module.exports = {
         var region = helpers.defaultRegion(settings);
 
         var getAccountPasswordPolicy = helpers.addSource(cache, source,
-                ['iam', 'getAccountPasswordPolicy', region]);
+            ['iam', 'getAccountPasswordPolicy', region]);
 
         if (!getAccountPasswordPolicy) return callback(null, results, source);
 
@@ -72,5 +77,20 @@ module.exports = {
         }
 
         callback(null, results, source);
+    },
+    remediate: function(config, cache, settings, resource, callback) {
+        var remediation_file = settings.remediation_file;
+        var putCall = this.actions.remediate;
+        var pluginName = 'maxPasswordAge';
+        var passwordKey = 'MaxPasswordAge';
+        var input = {};
+        if (settings.input && settings.input['maxPasswordAge']) {
+            input[passwordKey] = `${settings.input['maxPasswordAge']}`;
+        } else {
+            input[passwordKey] = '179';
+        }
+
+
+        helpers.remediatePasswordPolicy(putCall, pluginName, remediation_file, passwordKey, config, cache, settings, resource, input, callback);
     }
 };

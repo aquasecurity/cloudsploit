@@ -32,7 +32,7 @@ module.exports = {
             !config.canary_user.length) return callback(null, results, source);
 
         var generateCredentialReport = helpers.addSource(cache, source,
-                ['iam', 'generateCredentialReport', region]);
+            ['iam', 'generateCredentialReport', region]);
 
         if (!generateCredentialReport) return callback(null, results, source);
 
