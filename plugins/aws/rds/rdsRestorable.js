@@ -60,7 +60,7 @@ module.exports = {
 
             var clustersPresent = false;
 
-            for (i in describeDBInstances.data) {
+            for (var i in describeDBInstances.data) {
                 var db = describeDBInstances.data[i];
 
                 // Aurora databases do not list the restore information in this API call
@@ -110,24 +110,24 @@ module.exports = {
                 return rcb();
             }
 
-            for (i in describeDBClusters.data) {
-                var db = describeDBClusters.data[i];
-                var dbResource = db.DBClusterArn;
+            for (var j in describeDBClusters.data) {
+                var dbCluster = describeDBClusters.data[j];
+                var dbResourceCluster = dbCluster.DBClusterArn;
 
-                if (db.LatestRestorableTime) {
-                    var difference = helpers.daysAgo(db.LatestRestorableTime);
-                    var returnMsg = 'RDS cluster restorable time is ' + difference + ' hours old';
+                if (dbCluster.LatestRestorableTime) {
+                    var differenceCluster = helpers.daysAgo(dbCluster.LatestRestorableTime);
+                    var returnMsgCluster = 'RDS cluster restorable time is ' + differenceCluster + ' hours old';
 
-                    if (difference > config.rds_restorable_fail) {
-                        helpers.addResult(results, 2, returnMsg, region, dbResource, custom);
-                    } else if (difference > config.rds_restorable_warn) {
-                        helpers.addResult(results, 1, returnMsg, region, dbResource, custom);
+                    if (differenceCluster > config.rds_restorable_fail) {
+                        helpers.addResult(results, 2, returnMsgCluster, region, dbResourceCluster, custom);
+                    } else if (differenceCluster > config.rds_restorable_warn) {
+                        helpers.addResult(results, 1, returnMsgCluster, region, dbResourceCluster, custom);
                     } else {
-                        helpers.addResult(results, 0, returnMsg, region, dbResource, custom);
+                        helpers.addResult(results, 0, returnMsgCluster, region, dbResourceCluster, custom);
                     }
                 } else {
                     helpers.addResult(results, 2, 'RDS cluster does not have a restorable time',
-                        region, dbResource);
+                        region, dbResourceCluster);
                 }
             }
 

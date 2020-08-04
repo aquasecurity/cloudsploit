@@ -16,12 +16,12 @@ module.exports = {
              'unintended traffic to cross these isolation boundaries.'
     },
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.networkSecurityGroups, function (location, rcb) {
+        async.each(locations.networkSecurityGroups, function(location, rcb) {
 
             let networkSecurityGroups = helpers.addSource(
                 cache, source, ['networkSecurityGroups', 'listAll', location]
@@ -40,51 +40,49 @@ module.exports = {
                 return rcb();
             }
 
-            for (s in networkSecurityGroups.data) {
+            for (let s in networkSecurityGroups.data) {
                 var sg = networkSecurityGroups.data[s];
 
-                if(sg.defaultSecurityRules &&
+                if (sg.defaultSecurityRules &&
                     sg.defaultSecurityRules.length) {
 
                     var denyRuleInbound = false;
                     var denyRuleOutbound = false;
 
                     var denyRules = sg.defaultSecurityRules.filter((rule) => {
-                        return rule.access == 'Deny'
+                        return (rule.properties &&
+                            rule.properties.access &&
+                            rule.properties.access == 'Deny');
                     });
 
-                    for (rule in denyRules){
-                        if (
-                            denyRules[rule].destinationAddressPrefix &&
-                            denyRules[rule].destinationAddressPrefix == "*" &&
-                            denyRules[rule].destinationPortRange &&
-                            denyRules[rule].destinationPortRange == "*" &&
-                            denyRules[rule].protocol &&
-                            denyRules[rule].protocol == "*" &&
-                            denyRules[rule].provisioningState &&
-                            denyRules[rule].provisioningState == "Succeeded" &&
-                            denyRules[rule].sourceAddressPrefix &&
-                            denyRules[rule].sourceAddressPrefix == "*" &&
-                            denyRules[rule].sourcePortRange &&
-                            denyRules[rule].sourcePortRange == "*" &&
-                            denyRules[rule].direction
-                        )
-                        {
-                            if (denyRules[rule].direction=='Inbound') denyRuleInbound = true;
-                            if (denyRules[rule].direction=='Outbound') denyRuleOutbound = true;
+                    for (var rule in denyRules) {
+                        if (!denyRules[rule].properties) continue;
+                        let dRule = denyRules[rule].properties;
+                        if (dRule.destinationAddressPrefix &&
+                            dRule.destinationAddressPrefix == '*' &&
+                            dRule.destinationPortRange &&
+                            dRule.destinationPortRange == '*' &&
+                            dRule.protocol &&
+                            dRule.protocol == '*' &&
+                            dRule.provisioningState &&
+                            dRule.provisioningState == 'Succeeded' &&
+                            dRule.sourceAddressPrefix &&
+                            dRule.sourceAddressPrefix == '*' &&
+                            dRule.sourcePortRange &&
+                            dRule.sourcePortRange == '*' &&
+                            dRule.direction) {
+                            if (dRule.direction == 'Inbound') denyRuleInbound = true;
+                            if (dRule.direction == 'Outbound') denyRuleOutbound = true;
                         }
                     }
 
-                    if (
-                        denyRuleInbound &&
-                        denyRuleOutbound
-                    ) {
+                    if (denyRuleInbound && denyRuleOutbound) {
                         helpers.addResult(results, 0,
                             'The security group: ' + sg.name + ' has all required default inbound and outbound rules',
                             location, sg.id);
                     } else {
                         helpers.addResult(results, 2,
-                            'The security group: ' + sg.name +' does not have required default inbound and outbound rules: ' + (denyRuleInbound ? 'Inbound: OK; ' : 'Inbound: FAIL; ') + (denyRuleOutbound ? 'Outbound: OK' : 'Outbound: FAIL'),
+                            'The security group: ' + sg.name + ' does not have required default inbound and outbound rules: ' + (denyRuleInbound ? 'Inbound: OK; ' : 'Inbound: FAIL; ') + (denyRuleOutbound ? 'Outbound: OK' : 'Outbound: FAIL'),
                             location, sg.id);
                     }
                 } else {
@@ -94,7 +92,7 @@ module.exports = {
                 }
             }
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }

@@ -16,11 +16,11 @@ var consoleOutputHandler = {
         }
     },
 
-    endCompliance: function(plugin, pluginKey, compliance) {
+    endCompliance: function() {
         // For console output, we don't do anything
     },
 
-    writeResult: function (result, plugin, pluginKey) {
+    writeResult: function(result, plugin) {
         var statusWord;
         if (result.status === 0) {
             statusWord = 'OK';
@@ -39,7 +39,7 @@ var consoleOutputHandler = {
     },
 
     close: function() {}
-}
+};
 
 module.exports = {
     /**
@@ -47,21 +47,21 @@ module.exports = {
      * @param {fs.WriteSteam} stream The stream to write to or an object that
      * obeys the writeable stream contract.
      */
-    createCsv: function (stream) {
+    createCsv: function(stream) {
         var writer = csvWriter({headers: ['category', 'title', 'resource',
-                                          'region', 'statusWord', 'message']});
+            'region', 'statusWord', 'message']});
         writer.pipe(stream);
 
         return {
             writer: writer,
 
-            startCompliance: function(plugin, pluginKey, compliance) {
+            startCompliance: function() {
             },
 
-            endCompliance: function(plugin, pluginKey, compliance) {
+            endCompliance: function() {
             },
 
-            writeResult: function (result, plugin, pluginKey) {
+            writeResult: function(result, plugin) {
                 var statusWord;
                 if (result.status === 0) {
                     statusWord = 'OK';
@@ -74,15 +74,15 @@ module.exports = {
                 }
 
                 this.writer.write([plugin.category, plugin.title,
-                                   (result.resource || 'N/A'),
-                                   (result.region || 'Global'),
-                                   statusWord, result.message]);
+                    (result.resource || 'N/A'),
+                    (result.region || 'Global'),
+                    statusWord, result.message]);
             },
 
-            close: function () {
+            close: function() {
                 this.writer.end();
             }
-        }
+        };
     },
 
     /**
@@ -90,47 +90,47 @@ module.exports = {
      * @param {fs.WriteSteam} stream The stream to write to or an object that
      * obeys the writeable stream contract.
      */
-    createJson: function (stream) {
-      var results = [];
-      return {
-          stream: stream,
+    createJson: function(stream) {
+        var results = [];
+        return {
+            stream: stream,
 
-          startCompliance: function(plugin, pluginKey, compliance) {
-          },
+            startCompliance: function() {
+            },
 
-          endCompliance: function(plugin, pluginKey, compliance) {
-          },
+            endCompliance: function() {
+            },
 
-          writeResult: function (result, plugin, pluginKey) {
-              var statusWord;
-              if (result.status === 0) {
-                  statusWord = 'OK';
-              } else if (result.status === 1) {
-                  statusWord = 'WARN';
-              } else if (result.status === 2) {
-                  statusWord = 'FAIL';
-              } else {
-                  statusWord = 'UNKNOWN';
-              }
+            writeResult: function(result, plugin, pluginKey) {
+                var statusWord;
+                if (result.status === 0) {
+                    statusWord = 'OK';
+                } else if (result.status === 1) {
+                    statusWord = 'WARN';
+                } else if (result.status === 2) {
+                    statusWord = 'FAIL';
+                } else {
+                    statusWord = 'UNKNOWN';
+                }
 
-              results.push({
-                plugin: pluginKey,
-                category: plugin.category,
-                title: plugin.title,
-                resource: result.resource || 'N/A',
-                region: result.region || 'Global',
-                status: statusWord,
-                statusNumber: result.status,
-                message: result.message
-              })
-          },
+                results.push({
+                    plugin: pluginKey,
+                    category: plugin.category,
+                    title: plugin.title,
+                    resource: result.resource || 'N/A',
+                    region: result.region || 'Global',
+                    status: statusWord,
+                    statusNumber: result.status,
+                    message: result.message
+                });
+            },
 
-          close: function () {
-            this.stream.write(JSON.stringify(results));
-            this.stream.end();
-          }
-      }
-  },
+            close: function() {
+                this.stream.write(JSON.stringify(results));
+                this.stream.end();
+            }
+        };
+    },
 
     /***
      * Creates an output handler that writes output in the JUnit XML format.
@@ -142,7 +142,7 @@ module.exports = {
      * @param {fs.WriteStream} stream The stream to write to or an object that
      * obeys the writeable stream contract.
      */
-    createJunit: function (stream) {
+    createJunit: function(stream) {
         return {
             stream: stream,
 
@@ -153,18 +153,18 @@ module.exports = {
              */
             testSuites: {},
 
-            startCompliance: function(plugin, pluginKey, compliance) {
+            startCompliance: function() {
             },
 
-            endCompliance: function(plugin, pluginKey, compliance) {
+            endCompliance: function() {
             },
 
             /**
              * Adds the result to be written to the output file.
              */
-            writeResult: function (result, plugin, pluginKey) {
+            writeResult: function(result, plugin, pluginKey) {
                 var suiteName = pluginKey;
-                if (!this.testSuites.hasOwnProperty(suiteName)) {
+                if (!Object.prototype.hasOwnProperty.call(this.testSuites, suiteName)) {
                     // The time to report for the tests (since we don't have
                     // time for any of them.) The expected JUnit format doesn't
                     // allow for time or MS, so omit those
@@ -211,7 +211,7 @@ module.exports = {
              * the work happens on close since we need to know information
              * about results upfront.
              */
-            close: function () {
+            close: function() {
                 this.stream.write('<?xml version="1.0" encoding="UTF-8" ?>\n');
                 this.stream.write('<testsuites>\n');
 
@@ -231,7 +231,7 @@ module.exports = {
              * only be called internally by this class.
              * @param testSuite The test suite to write to the stream
              */
-            _writeSuite: function (testSuite, index)  {
+            _writeSuite: function(testSuite, index)  {
                 var numTests = testSuite.testCases.length;
 
                 this.stream.write('\t<testsuite name="' + testSuite.name +
@@ -273,7 +273,7 @@ module.exports = {
 
                 this.stream.write('\t</testsuite>\n');
             }
-        }
+        };
     },
 
     /**
@@ -286,15 +286,15 @@ module.exports = {
         return {
             stream: stream,
 
-            write: function (collection, providerName) {
+            write: function(collection, providerName) {
                 results[providerName] = collection;
             },
 
-            close: function () {
+            close: function() {
                 this.stream.write(JSON.stringify(results));
                 this.stream.end();
             }
-        }
+        };
     },
 
     // This creates a multiplexer-like object that forwards the
@@ -362,37 +362,45 @@ module.exports = {
      * one output handler or one that forwards function calls to a group of
      * output handlers.
      */
-    create: function (argv) {
+    create: function(argv) {
         var outputs = [];
         var collectionOutputs = [];
 
         // Creates the handlers for writing output.
-        var addCsvOutput = argv.find(function (arg) {
+        var addCsvOutput = argv.find(function(arg) {
             return arg.startsWith('--csv=');
-        })
+        });
         if (addCsvOutput) {
             var stream = fs.createWriteStream(addCsvOutput.substr(6));
             outputs.push(this.createCsv(stream));
         }
 
-        var addJunitOutput = argv.find(function (arg) {
+        var addJunitOutput = argv.find(function(arg) {
             return arg.startsWith('--junit=');
-        })
+        });
         if (addJunitOutput) {
-            var stream = fs.createWriteStream(addJunitOutput.substr(8));
-            outputs.push(this.createJunit(stream));
+            var streamJunit = fs.createWriteStream(addJunitOutput.substr(8));
+            outputs.push(this.createJunit(streamJunit));
         }
 
-        var addConsoleOutput = argv.find(function (arg) {
+        var addJsonOutput = argv.find(function(arg) {
+            return arg.startsWith('--json=');
+        });
+        if (addJsonOutput) {
+            var streamJson = fs.createWriteStream(addJsonOutput.substr(7));
+            outputs.push(this.createJson(streamJson));
+        }
+
+        var addConsoleOutput = argv.find(function(arg) {
             return arg.startsWith('--console');
-        })
+        });
 
         var addCollectionOutput = argv.find(function(arg) {
-            return arg.startsWith('--collection=')
-        })
+            return arg.startsWith('--collection=');
+        });
         if(addCollectionOutput) {
-            var stream = fs.createWriteStream(addCollectionOutput.substr(13))
-            collectionOutputs.append(this.createCollection(stream))
+            var streamColl = fs.createWriteStream(addCollectionOutput.substr(13));
+            collectionOutput = this.createCollection(streamColl);
         }
 
         // Write to console if specified or by default if there is not
@@ -402,10 +410,10 @@ module.exports = {
         }
 
         // Ignore any "OK" results - only report issues
-        var ignoreOkStatus = argv.find(function (arg) {
+        var ignoreOkStatus = argv.find(function(arg) {
             return arg.startsWith('--ignore-ok');
-        })
+        });
 
         return this.multiplexer(outputs, collectionOutputs, ignoreOkStatus);
     }
-}
+};

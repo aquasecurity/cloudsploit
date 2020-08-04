@@ -43,7 +43,7 @@ module.exports = {
                 return rcb();
             }
 
-            for (i in getIdentityDkimAttributes.data.DkimAttributes) {
+            for (var i in getIdentityDkimAttributes.data.DkimAttributes) {
                 var identity = getIdentityDkimAttributes.data.DkimAttributes[i];
 
                 if (!identity.DkimEnabled) {

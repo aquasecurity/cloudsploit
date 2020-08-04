@@ -30,14 +30,14 @@ module.exports = {
             if (!describeTrails.data.length) {
                 helpers.addResult(results, 2, 'CloudTrail is not enabled', region);
             } else if (describeTrails.data[0]) {
-                for (t in describeTrails.data) {
+                for (var t in describeTrails.data) {
                     if (describeTrails.data[t].S3BucketName == helpers.CLOUDSPLOIT_EVENTS_BUCKET) continue;
                     if (!describeTrails.data[t].CloudWatchLogsLogGroupArn) {
                         helpers.addResult(results, 2, 'CloudTrail CloudWatch integration is not enabled',
-                            region, describeTrails.data[t].TrailARN)
+                            region, describeTrails.data[t].TrailARN);
                     } else {
                         helpers.addResult(results, 0, 'CloudTrail CloudWatch integration is enabled',
-                            region, describeTrails.data[t].TrailARN)
+                            region, describeTrails.data[t].TrailARN);
                     }
                 }
             } else {

@@ -8,52 +8,26 @@ module.exports = {
     more_info: 'Monitoring for create or update Security Policy Rule events gives insight into policy changes and may reduce the time it takes to detect suspicious activity.',
     recommended_action: 'Add a new log alert to the Alerts service that monitors for Security Policy Rule create or update events.',
     link: 'https://docs.microsoft.com/en-us/azure/azure-monitor/platform/activity-log-alerts',
-    apis: ['resourceGroups:list','activityLogAlerts:listBySubscriptionId'],
+    apis: ['activityLogAlerts:listBySubscriptionId'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.activityLogAlerts, function (location, rcb) {
+        async.each(locations.activityLogAlerts, function(location, rcb) {
 
-            var activityAlerts = helpers.addSource(cache, source, 
+            var conditionResource = 'microsoft.security/policies';
+
+            var text = 'Security Policy';
+
+            var activityLogAlerts = helpers.addSource(cache, source,
                 ['activityLogAlerts', 'listBySubscriptionId', location]);
 
-            if (!activityAlerts) return rcb();
-
-            if (activityAlerts.err || !activityAlerts.data) {
-                helpers.addResult(results, 3, 
-                    'Unable to query for Activity Alerts: ' + helpers.addError(activityAlerts), location);
-                return rcb();
-            }
-            if (!activityAlerts.data.length) {
-                helpers.addResult(results, 2, 'No existing Activity Alerts found', location);
-            }
-            var alertExists = false;
-            activityAlerts.data.forEach(activityAlert => {                
-                let conditionList = (activityAlert && 
-                    activityAlert.condition && 
-                    activityAlert.condition.allOf) ?
-                    activityAlert.condition.allOf : [];
-
-                conditionList.forEach(condition => {
-                    if (condition.equals && 
-                        condition.equals.indexOf("microsoft.security/policies/write") > -1 &&
-                        !alertExists) {
-                        helpers.addResult(results, 0, 
-                            'Log alert for Security Policy write exists', location, activityAlert.id);
-                        alertExists = true;
-                    };
-                });
-            });
-            if (!alertExists) {
-                helpers.addResult(results, 2, 
-                    'Log alert for Security Policy write does not exist', location);
-            };
+            helpers.checkLogAlerts(activityLogAlerts, conditionResource, text, results, location);
             
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }
