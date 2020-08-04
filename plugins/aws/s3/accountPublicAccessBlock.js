@@ -13,6 +13,7 @@ module.exports = {
         s3_public_access_block_on_account: {
             name: 'S3 Public Access Block On Account',
             description: 'When set, checks to see if public access block is enabled at the account level',
+            regex: '^(true|false)$',
             default: false
         }
     },
@@ -21,6 +22,7 @@ module.exports = {
         var config = {
             s3_public_access_block_on_account: settings.s3_public_access_block_on_account || this.settings.s3_public_access_block_on_account.default
         };
+        config.s3_public_access_block_on_account == config.s3_public_access_block_on_account == 'true' || config.s3_public_access_block_on_account == true
 
         if (config.s3_public_access_block_on_account) {
             var results = [];
@@ -32,7 +34,7 @@ module.exports = {
             if (!accountId) return callback(null, results, source);
 
             var getAccountPublicAccessBlock = helpers.addSource(cache, source, ['s3control', 'getPublicAccessBlock', region, accountId]);
-    
+
             if (!getAccountPublicAccessBlock) return callback(null, results, source);
 
             if (getAccountPublicAccessBlock.err && getAccountPublicAccessBlock.err.code === 'NoSuchPublicAccessBlockConfiguration') {
@@ -45,20 +47,20 @@ module.exports = {
                 return callback(null, results, source);
             }
 
-            var configuration = getAccountPublicAccessBlock.data.PublicAccessBlockConfiguration;         
+            var configuration = getAccountPublicAccessBlock.data.PublicAccessBlockConfiguration;
             var missingAccountBlocks = Object.keys(configuration).filter(k => !configuration[k]);
-    
+
             if (missingAccountBlocks.length) {
                 helpers.addResult(results, 2, `Missing public access blocks: ${missingAccountBlocks.join(', ')}`, accountId);
                 return callback(null, results, source);
             }
-            
+
             helpers.addResult(results, 0, "Public Access Block Is Enabled On This Account", accountId)
-    
+
             callback(null, results, source);
         } else {
             callback();
         }
-        
+
     }
 };
