@@ -1,5 +1,4 @@
 var async = require('async');
-var AWS = require('aws-sdk');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
@@ -39,7 +38,7 @@ module.exports = {
                 return rcb();
             }
 
-            for (i in listTables.data) {
+            for (var i in listTables.data) {
                 var table = listTables.data[i];
 
                 var describeTable = helpers.addSource(cache, source,

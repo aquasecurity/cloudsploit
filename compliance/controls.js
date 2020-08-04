@@ -1,5 +1,5 @@
 module.exports = {
-    create: function (names) {
+    create: function(names) {
         // We we don't have a specified compliance, then include all plugins
         if (names.length === 0) {
             return require('./all.js');

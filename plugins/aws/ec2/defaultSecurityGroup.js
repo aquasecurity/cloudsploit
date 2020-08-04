@@ -38,7 +38,7 @@ module.exports = {
                 return rcb();
             }
 
-            for (s in describeSecurityGroups.data) {
+            for (var s in describeSecurityGroups.data) {
                 var sg = describeSecurityGroups.data[s];
                 // arn:aws:ec2:region:account-id:security-group/security-group-id
                 var resource = 'arn:aws:ec2:' + region + ':' + sg.OwnerId + ':security-group/' + sg.GroupId;

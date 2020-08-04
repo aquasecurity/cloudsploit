@@ -8,22 +8,22 @@ module.exports = {
     more_info: 'MySQL servers should be set to use SSL for data transmission to ensure all data is encrypted in transit.',
     recommended_action: 'Ensure the connection security of each Azure Database for MySQL is configured to enforce SSL connections.',
     link: 'https://docs.microsoft.com/en-us/azure/mysql/concepts-ssl-connection-security',
-    apis: ['servers:mysql:list'],
+    apis: ['servers:listMysql'],
     compliance: {
         hipaa: 'HIPAA requires all data to be transmitted over secure channels. ' +
             'MySQL SSL connection should be used to ensure internal ' +
             'services are always connecting over a secure channel.',
     },
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.servers.mysql, (location, rcb) => {
+        async.each(locations.servers, (location, rcb) => {
 
             const servers = helpers.addSource(cache, source,
-                ['servers', 'mysql', 'list', location]);
+                ['servers', 'listMysql', location]);
 
             if (!servers) return rcb();
 
@@ -38,24 +38,19 @@ module.exports = {
                 return rcb();
             }
 
-            let allSslEnforced = true;
-
-            for (let res in servers.data) {
-                const mySQLServer = servers.data[res];
-
-                if (mySQLServer.sslEnforcement && 
-                    mySQLServer.sslEnforcement !== 'Enabled') {
+            servers.data.forEach(function(server) {
+                if (server.sslEnforcement &&
+                    server.sslEnforcement.toLowerCase() == 'enabled') {
+                    helpers.addResult(results, 0,
+                        'The MySQL server enforces SSL connections', location, server.id);
+                } else {
                     helpers.addResult(results, 2,
-                        'The MySQL server does not enforce SSL connections', location, mySQLServer.name);
-                    allSslEnforced = false;
-                }
-            }
+                        'The MySQL server does not enforce SSL connections', location, server.id);
+                } 
+            });
 
-            if (allSslEnforced) {
-                helpers.addResult(results, 0, 'All MySQL servers enforce SSL connections', location);
-            }
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });

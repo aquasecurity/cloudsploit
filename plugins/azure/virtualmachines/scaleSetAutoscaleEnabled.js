@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Autoscale automatically creates new instances when certain metrics are surpassed, or can destroy instances that are being underutilized. This creates a highly available scale set.',
     recommended_action: 'Ensure that autoscale is enabled for all Virtual Machine Scale Sets.',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-autoscale-overview',
-    apis: ['resourceGroups:list', 'virtualMachineScaleSets:list', 'autoscaleSettings:listByResourceGroup'],
+    apis: ['virtualMachineScaleSets:listAll', 'autoscaleSettings:listBySubscription'],
 
     run: function(cache, settings, callback) {
         const results = [];
@@ -18,7 +18,7 @@ module.exports = {
         async.each(locations.virtualMachineScaleSets, (location, rcb) => {
 
             const virtualMachineScaleSets = helpers.addSource(cache, source,
-                ['virtualMachineScaleSets', 'list', location]);
+                ['virtualMachineScaleSets', 'listAll', location]);
 
             if (!virtualMachineScaleSets) return rcb();
 
@@ -34,42 +34,38 @@ module.exports = {
             }
 
             const autoscaleSettings = helpers.addSource(cache, source,
-                ['autoscaleSettings', 'listByResourceGroup', location]);
+                ['autoscaleSettings', 'listBySubscription', location]);
 
-            if (!autoscaleSettings) return rcb();
-
-            if (autoscaleSettings.err || !autoscaleSettings.data) {
+            if (!autoscaleSettings || autoscaleSettings.err || !autoscaleSettings.data) {
                 helpers.addResult(results, 3,
                     'Unable to query for AutoScale settings: ' + helpers.addError(autoscaleSettings), location);
                 return rcb();
             }
 
-            let autoScaleonVSS = 0;
-            virtualMachineScaleSets.data.forEach(virtualMachineScaleSet => {
-                    let oneEnabled = false;
-                    for (let autoscaleSetting of autoscaleSettings.data) {
-                        if (autoscaleSetting.targetResourceUri === virtualMachineScaleSet.id) {
-                            if (!autoscaleSetting.enabled ||
-                                autoscaleSetting.enabled == false) {
-                                continue;
-                            } else {
-                                autoScaleonVSS++;
-                                oneEnabled = true;
-                                break;
-                            }
-                        }
-                    }
+            if (!autoscaleSettings.data.length) {
+                helpers.addResult(results, 2,
+                    'No Virtual Machine Scale Sets have autoscale enabled', location);
+                return rcb();
+            }
 
-                if (oneEnabled == false) {
+            var asMap = {};
+            autoscaleSettings.data.forEach(function(autoscaleSetting) {
+                if (autoscaleSetting.targetResourceUri) {
+                    asMap[autoscaleSetting.targetResourceUri.toLowerCase()] = autoscaleSetting;
+                }
+            });
+
+            virtualMachineScaleSets.data.forEach(virtualMachineScaleSet => {
+                if (virtualMachineScaleSet.id &&
+                    asMap[virtualMachineScaleSet.id.toLowerCase()] &&
+                    asMap[virtualMachineScaleSet.id.toLowerCase()].enabled) {
+                    helpers.addResult(results, 0,
+                        'Virtual Machine Scale Set has autoscale enabled', location, virtualMachineScaleSet.id);
+                } else {
                     helpers.addResult(results, 2,
                         'Virtual Machine Scale Set does not have autoscale enabled', location, virtualMachineScaleSet.id);
                 }
             });
-
-            if (autoScaleonVSS == virtualMachineScaleSets.data.length) {
-                helpers.addResult(results, 0,
-                    'All Virtual Machine Scale Sets have autoscale enabled', location);
-            }
 
             rcb();
         }, function() {

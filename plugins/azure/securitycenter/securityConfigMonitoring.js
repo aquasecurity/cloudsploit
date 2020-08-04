@@ -15,7 +15,7 @@ module.exports = {
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.policyAssignments, function (location, rcb) {
+        async.each(locations.policyAssignments, function(location, rcb) {
 
             const policyAssignments = helpers.addSource(cache, source,
                 ['policyAssignments', 'list', location]);
@@ -25,7 +25,7 @@ module.exports = {
                 'Monitor Security Configuration', results, location);
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });

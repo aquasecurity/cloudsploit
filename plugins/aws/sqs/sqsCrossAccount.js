@@ -84,7 +84,7 @@ module.exports = {
 
                 var statements = helpers.normalizePolicyDocument(policy);
 
-                for (s in statements) {
+                for (var s in statements) {
                     var statement = statements[s];
                     if (!statement.Effect || statement.Effect !== 'Allow') continue;
                     if (!statement.Principal) continue;
@@ -96,10 +96,8 @@ module.exports = {
                                 statement.Condition.StringEquals['AWS:SourceOwner'] == '*') ||
                             (statement.Condition.ArnEquals && (
                                 !statement.Condition.ArnEquals['aws:SourceArn'] ||
-                                statement.Condition.ArnEquals['aws:SourceArn'].indexOf(accountId) === -1)))
-                            ) {
-
-                            for (a in statement.Action) {
+                                statement.Condition.ArnEquals['aws:SourceArn'].indexOf(accountId) === -1)))) {
+                            for (var a in statement.Action) {
                                 if (globalActions.indexOf(statement.Action[a]) === -1) {
                                     globalActions.push(statement.Action[a]);
                                 }

@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Pre-authenticated requests allow for users who are not in the tenancy to access buckets, ensuring least access prevents malicious entities from leveraging this type of access to edit or delete objects in a bucket.',
     recommended_action: 'When creating pre-authenticated Requests, ensure only object read permissions are selected.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Object/Tasks/usingpreauthenticatedrequests.htm',
-    apis: ['bucket:list','preAuthenticatedRequest:list'],
+    apis: ['namespace:get','bucket:list','preAuthenticatedRequest:list'],
     compliance: {
         hipaa: 'HIPAA requires all services that contain user information to be ' +
             'protected from accidental deletion or modification.'

@@ -10,12 +10,12 @@ module.exports = {
     link: 'https://docs.microsoft.com/en-us/azure/security-center/security-center-adaptiveapplication',
     apis: ['policyAssignments:list'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.policyAssignments, function (location, rcb) {
+        async.each(locations.policyAssignments, function(location, rcb) {
             const policyAssignments = helpers.addSource(
                 cache, source, ['policyAssignments', 'list', location]
             );
@@ -25,7 +25,7 @@ module.exports = {
                 'Monitor Adaptive Application Whitelisting', results, location);
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });

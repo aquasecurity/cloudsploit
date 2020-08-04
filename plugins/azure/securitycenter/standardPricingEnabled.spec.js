@@ -15,9 +15,9 @@ const createCache = (err, data) => {
     }
 };
 
-describe('standardPricingEnabled', function () {
-    describe('run', function () {
-        it('should give passing result if no pricings found', function (done) {
+describe('standardPricingEnabled', function() {
+    describe('run', function() {
+        it('should give passing result if no pricings found', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -34,7 +34,7 @@ describe('standardPricingEnabled', function () {
             auth.run(cache, {}, callback);
         });
 
-        it('should give failing result if disable App Service', function (done) {
+        it('should give failing result if disable App Service', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -59,7 +59,7 @@ describe('standardPricingEnabled', function () {
             auth.run(cache, {}, callback);
         });
 
-        it('should give passing result if enabled App Service', function (done) {
+        it('should give passing result if enabled App Service', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);

@@ -10,12 +10,12 @@ module.exports = {
     link: 'https://docs.microsoft.com/en-us/azure/container-registry/container-registry-authentication',
     apis: ['registries:list'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.registries, function (location, rcb) {
+        async.each(locations.registries, function(location, rcb) {
 
             var registries = helpers.addSource(cache, source,
                 ['registries', 'list', location]);
@@ -44,9 +44,9 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });
     }
-}
+};
