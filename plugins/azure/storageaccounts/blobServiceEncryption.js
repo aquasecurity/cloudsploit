@@ -17,12 +17,12 @@ module.exports = {
              'type of data.'
     },
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.storageAccounts, function (location, rcb) {
+        async.each(locations.storageAccounts, function(location, rcb) {
             const storageAccounts = helpers.addSource(
                 cache, source, ['storageAccounts', 'list', location]);
 
@@ -51,7 +51,7 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });

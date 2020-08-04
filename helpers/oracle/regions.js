@@ -9,10 +9,10 @@ var regions = [
     'ap-mumbai-1',
     'ap-seoul-1',
     'ap-tokyo-1',
-    "ap-sydney-1",
-    "sa-saopaulo-1",
-    "ap-osaka-1",
-    "eu-zurich-1",
+    'ap-sydney-1',
+    'sa-saopaulo-1',
+    'ap-osaka-1',
+    'eu-zurich-1',
 ];
 
 module.exports = {
@@ -53,5 +53,6 @@ module.exports = {
     preAuthenticatedRequest: regions,
     configuration: ['us-ashburn-1'],
     dbSystem: regions,
-    mountTarget: regions
+    mountTarget: regions,
+    namespace: regions
 };

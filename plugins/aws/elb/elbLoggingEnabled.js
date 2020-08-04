@@ -52,7 +52,7 @@ module.exports = {
                 if ( describeLoadBalancerAttributes.data && 
                     describeLoadBalancerAttributes.data.LoadBalancerAttributes && 
                     describeLoadBalancerAttributes.data.LoadBalancerAttributes.AccessLog) {
-                    accessLog = describeLoadBalancerAttributes.data.LoadBalancerAttributes.AccessLog
+                    var accessLog = describeLoadBalancerAttributes.data.LoadBalancerAttributes.AccessLog;
                     
                     //console.log(lb.DNSName)
                     if (accessLog.Enabled){

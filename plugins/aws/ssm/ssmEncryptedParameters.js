@@ -43,6 +43,7 @@ module.exports = {
         allow_ssm_non_secure_strings: {
             name: 'Allow SSM Non-Secure Strings',
             description: 'Allow for non-secure strings to pass',
+            regex: '^(true|false)$',
             default: false
         }
     },
@@ -51,15 +52,15 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
-        var secureStrings = settings.allow_ssm_non_secure_strings || this.settings.allow_ssm_non_secure_strings.default;
+        var secureStrings = settings.allow_ssm_non_secure_strings == 'true' || settings.allow_ssm_non_secure_strings == true || this.settings.allow_ssm_non_secure_strings.default;
 
         var desiredEncryptionLevelString = settings.ssm_encryption_level || this.settings.ssm_encryption_level.default
-        if(!desiredEncryptionLevelString.match(this.settings.ssm_encryption_level.regex)) {
+        if (!desiredEncryptionLevelString.match(this.settings.ssm_encryption_level.regex)) {
             helpers.addResult(results, 3, 'Settings misconfigured for SSM Encryption Level.');
             return callback(null, results, source);
         }
 
-        var desiredEncryptionLevel = encryptionLevelMap[desiredEncryptionLevelString]
+        var desiredEncryptionLevel = encryptionLevelMap[desiredEncryptionLevelString];
 
         var regions = helpers.regions(settings);
         var defaultRegion = helpers.defaultRegion(settings);
@@ -88,7 +89,7 @@ module.exports = {
                     helpers.addResult(results, 2, 'Non-SecureString Parameters present', region, arn);
                     continue;
                 } else if (parameter.Type != 'SecureString' && secureStrings) {
-                    helpers.addResult(results, 0, 'Non-SecureString Parameters present but are allowed', region, arn)
+                    helpers.addResult(results, 0, 'Non-SecureString Parameters present but are allowed', region, arn);
                     continue;
                 }
 
@@ -103,15 +104,15 @@ module.exports = {
                         helpers.addResult(results, 3, 'No Aliases present, however one is required.', region);
                         continue;
                     }
-                    alias = aliases.data.find(a => a.AliasName === parameter.KeyId)
+                    alias = aliases.data.find(a => a.AliasName === parameter.KeyId);
                     if (!alias) {
                         helpers.addResult(results, 3, 'Unable to locate alias: ' + parameter.KeyId, region);
                         continue;
                     } else {
-                        keyId = alias.TargetKeyId
+                        keyId = alias.TargetKeyId;
                     }
                 } else {
-                    keyId = parameter.KeyId.split('/')[1]
+                    keyId = parameter.KeyId.split('/')[1];
                 }
 
                 var describeKey = helpers.addSource(cache, source, ['kms', 'describeKey', region, keyId]);
@@ -125,8 +126,8 @@ module.exports = {
                     continue;
                 }
 
-                currentEncryptionLevelString = getEncryptionLevel(describeKey.data.KeyMetadata)
-                currentEncryptionLevel = encryptionLevelMap[currentEncryptionLevelString]
+                currentEncryptionLevelString = getEncryptionLevel(describeKey.data.KeyMetadata);
+                currentEncryptionLevel = encryptionLevelMap[currentEncryptionLevelString];
 
                 if (currentEncryptionLevel < desiredEncryptionLevel) {
                     helpers.addResult(results, 1, `SSM Param is encrypted to ${currentEncryptionLevelString}, which is lower than the desired ${desiredEncryptionLevelString} level.`, region, arn);

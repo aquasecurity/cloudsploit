@@ -1,5 +1,3 @@
-var async = require('async');
-var AWS = require('aws-sdk');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
@@ -46,7 +44,7 @@ module.exports = {
 
         if (!badFlag) {
             helpers.addResult(results, 0, 'All CloudFront distributions have WAF enabled');
-        };
+        }
 
         return callback(null, results, source);
     }

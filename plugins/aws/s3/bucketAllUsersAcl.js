@@ -1,4 +1,3 @@
-var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 var ACL_ALL_USERS = 'http://acs.amazonaws.com/groups/global/AllUsers';
@@ -40,7 +39,7 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        for (i in listBuckets.data) {
+        for (var i in listBuckets.data) {
             var bucket = listBuckets.data[i];
             if (!bucket.Name) continue;
 
@@ -59,7 +58,7 @@ module.exports = {
                     ': ' + helpers.addError(getBucketAcl),
                     'global', bucketResource);
             } else {
-                for (g in getBucketAcl.data.Grants) {
+                for (var g in getBucketAcl.data.Grants) {
                     var grant = getBucketAcl.data.Grants[g];
 
                     if (grant.Grantee &&

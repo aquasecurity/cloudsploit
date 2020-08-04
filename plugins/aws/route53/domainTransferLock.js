@@ -31,7 +31,7 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        for (i in listDomains.data) {
+        for (var i in listDomains.data) {
             var domain = listDomains.data[i];
             if (!domain.DomainName) continue;
 

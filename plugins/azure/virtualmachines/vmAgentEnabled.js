@@ -35,23 +35,24 @@ module.exports = {
                 helpers.addResult(results, 0, 'No existing virtual machines found', location);
                 return rcb();
             }
-            var noVMAgent = false;
+
             virtualMachines.data.forEach(virtualMachine => {
                 if (virtualMachine.osProfile &&
-                    virtualMachine.osProfile.linuxConfiguration &&
-                    !virtualMachine.osProfile.linuxConfiguration.provisionVMAgent) {
-                    helpers.addResult(results, 2, 'VM Agent is not enabled for this virtual machine: ' + virtualMachine.name, location, virtualMachine.id);
-                    noVMAgent = true;
+                    virtualMachine.osProfile.linuxConfiguration) {
+                    if (virtualMachine.osProfile.linuxConfiguration.provisionVMAgent) {
+                        helpers.addResult(results, 0, 'VM Agent is enabled for this virtual machine: ' + virtualMachine.name, location, virtualMachine.id);
+                    } else {
+                        helpers.addResult(results, 2, 'VM Agent is not enabled for this virtual machine: ' + virtualMachine.name, location, virtualMachine.id);
+                    }
                 } else if (virtualMachine.osProfile &&
-                    virtualMachine.osProfile.windowsConfiguration &&
-                    !virtualMachine.osProfile.windowsConfiguration.provisionVMAgent) {
-                    helpers.addResult(results, 2, 'VM Agent is not enabled for this virtual machine: ' + virtualMachine.name, location, virtualMachine.id);
-                    noVMAgent = true;
+                    virtualMachine.osProfile.windowsConfiguration) {
+                    if (virtualMachine.osProfile.windowsConfiguration.provisionVMAgent) {
+                        helpers.addResult(results, 0, 'VM Agent is enabled for this virtual machine: ' + virtualMachine.name, location, virtualMachine.id);
+                    } else {
+                        helpers.addResult(results, 2, 'VM Agent is not enabled for this virtual machine: ' + virtualMachine.name, location, virtualMachine.id);
+                    }
                 }
             });
-            if (!noVMAgent) {
-                helpers.addResult(results, 0, 'VM agent is enabled on all virtual machines', location);
-            }
 
             rcb();
         }, function() {

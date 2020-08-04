@@ -2,22 +2,24 @@ var assert = require('assert');
 var expect = require('chai').expect;
 var auth = require('./authEnabled');
 
-const createCache = (err, data) => {
+const createCache = (err, list, data) => {
     return {
         webApps: {
-            getAuthSettings: {
+            list: {
                 'eastus': {
-                    err: err,
-                    data: data
+                    data: list
                 }
+            },
+            getAuthSettings: {
+                'eastus': data
             }
         }
     }
 };
 
-describe('authEnabled', function () {
-    describe('run', function () {
-        it('should give passing result if no App Services', function (done) {
+describe('authEnabled', function() {
+    describe('run', function() {
+        it('should give passing result if no App Services', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(0)
@@ -28,13 +30,14 @@ describe('authEnabled', function () {
 
             const cache = createCache(
                 null,
-                []
+                [],
+                {}
             );
 
             auth.run(cache, {}, callback);
         })
 
-        it('should give failing result if disable App Service', function (done) {
+        it('should give failing result if disable App Service', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(2)
@@ -47,31 +50,33 @@ describe('authEnabled', function () {
                 null,
                 [
                     {
-                        "id": "/subscriptions/example/resourceGroups/devresourcegroup/providers/Microsoft.Web/sites/sample/config/authsettings",
-                        "name": "authsettings",
-                        "type": "Microsoft.Web/sites/config",
-                        "enabled": false,
-                        "runtimeVersion": "1.0.0",
-                        "unauthenticatedClientAction": "AllowAnonymous",
-                        "tokenStoreEnabled": true,
-                        "defaultProvider": "AzureActiveDirectory",
-                        "error": false,
-                        "location": "eastus",
-                        "storageAccount": {
-                            "name": "cloudsploit"
+                        "id": "/subscriptions/abcdef-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/devresourcegroup/providers/Microsoft.Web/sites/test-webapp",
+                        "name": "gio-test-webapp",
+                        "type": "Microsoft.Web/sites",
+                        "kind": "app,linux,container",
+                        "location": "East US",
+                        "state": "Running"
+                    }
+                ],
+                {
+                    "/subscriptions/abcdef-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/devresourcegroup/providers/Microsoft.Web/sites/test-webapp": {
+                        "data": {
+                            "name": "authsettings",
+                            "type": "Microsoft.Web/sites/config",
+                            "enabled": false
                         }
-                      }
-                ]
+                    }
+                }
             );
 
             auth.run(cache, {}, callback);
         })
 
-        it('should give passing result if enabled App Service', function (done) {
+        it('should give passing result if enabled App Service', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('All App Services have App Service Authentication enabled')
+                expect(results[0].message).to.include('App Service has App Service Authentication enabled')
                 expect(results[0].region).to.equal('eastus')
                 done()
             };
@@ -80,21 +85,23 @@ describe('authEnabled', function () {
                 null,
                 [
                     {
-                        "id": "/subscriptions/example/resourceGroups/devresourcegroup/providers/Microsoft.Web/sites/sample/config/authsettings",
-                        "name": "authsettings",
-                        "type": "Microsoft.Web/sites/config",
-                        "enabled": true,
-                        "runtimeVersion": "1.0.0",
-                        "unauthenticatedClientAction": "AllowAnonymous",
-                        "tokenStoreEnabled": true,
-                        "defaultProvider": "AzureActiveDirectory",
-                        "error": false,
-                        "location": "eastus",
-                        "storageAccount": {
-                            "name": "cloudsploit"
+                        "id": "/subscriptions/abcdef-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/devresourcegroup/providers/Microsoft.Web/sites/test-webapp",
+                        "name": "gio-test-webapp",
+                        "type": "Microsoft.Web/sites",
+                        "kind": "app,linux,container",
+                        "location": "East US",
+                        "state": "Running"
+                    }
+                ],
+                {
+                    "/subscriptions/abcdef-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/devresourcegroup/providers/Microsoft.Web/sites/test-webapp": {
+                        "data": {
+                            "name": "authsettings",
+                            "type": "Microsoft.Web/sites/config",
+                            "enabled": true
                         }
-                      }
-                ]
+                    }
+                }
             );
 
             auth.run(cache, {}, callback);
