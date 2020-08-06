@@ -65,6 +65,18 @@ module.exports = {
             if (!getEbsEncryptionByDefault) return rcb();
             if (!getEbsDefaultKmsKeyId) return rcb();
 
+            if (getEbsEncryptionByDefault.err) {
+                helpers.addResult(results, 3,
+                    'Unable to query for ebs encryption by default: ' + helpers.addError(getEbsEncryptionByDefault), region);
+                return rcb();
+            }
+
+            if (getEbsDefaultKmsKeyId.err) {
+                helpers.addResult(results, 3,
+                    'Unable to query for ebs default kms key id: ' + helpers.addError(getEbsDefaultKmsKeyId), region);
+                return rcb();
+            }
+
             if (!getEbsEncryptionByDefault.data && targetEncryptionLevel !== 0) {
                 helpers.addResult(results, 2,
                     'encryption by default is disabled, and the settings indicate that "none" is not the desired encryption level. enabling of "EBS encryption by default" is required', region, region);
@@ -72,10 +84,13 @@ module.exports = {
             }
             var kmsKeyId = "";
             if (getEbsDefaultKmsKeyId.data.split('/')[0] === 'alias') {
-                var listAliases = helpers.addSource(cache, source,
-                ['kms', 'listAliases', region]);
+                var listAliases = helpers.addSource(cache, source, ['kms', 'listAliases', region]);
+                if (listAliases.err || !listAliases.data) {
+                    helpers.addResult(results, 3, 'Unable to query for list aliases: ' + helpers.addError(listAliases), region);
+                    return rcb();
+                }
                 listAliases.data.forEach(function(alias){
-                    if (alias.AliasName == getEbsDefaultKmsKeyId.data) {
+                    if (alias.AliasName === getEbsDefaultKmsKeyId.data) {
                         kmsKeyId = alias.TargetKeyId;
                     }
                 });
@@ -84,6 +99,11 @@ module.exports = {
             }
             var describeKey = helpers.addSource(cache, source, ['kms', 'describeKey', region, kmsKeyId]);
             if (!describeKey) return rcb();
+            if (describeKey.err || !describeKey.data) {
+                helpers.addResult(results, 3,
+                    'Unable to query for describe key: ' + helpers.addError(describeKey), region);
+                return rcb();
+            }
             var encryptionLevel = getEncryptionLevel(describeKey.data.KeyMetadata);
 
             if (encryptionLevel < targetEncryptionLevel) {
