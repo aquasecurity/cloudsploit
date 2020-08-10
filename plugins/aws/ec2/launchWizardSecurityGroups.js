@@ -37,7 +37,7 @@ module.exports = {
                 // arn:aws:ec2:region:account-id:security-group/security-group-id
                 var resource = 'arn:aws:ec2:' + region + ':' + sg.OwnerId + ':security-group/' + sg.GroupId;
 
-                if (sg.GroupName.startsWith('launch-wizard')) {
+                if (sg.GroupName.toLowerCase().startsWith('launch-wizard')) {
                     helpers.addResult(results, 2,
                     'Security Group ' + sg.GroupName + ' is launched using EC2 launch wizard',
                     region, resource);
