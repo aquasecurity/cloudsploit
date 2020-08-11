@@ -21,7 +21,7 @@ module.exports = {
     more_info: '',
     recommended_action: 'Enable Default Encryption on S3 buckets.',
     link: 'https://docs.aws.amazon.com/AmazonS3/latest/user-guide/default-bucket-encryption.html',
-    apis: ['S3:listBuckets', 'S3:getBucketEncryption', 'kms:describeKey'],
+    apis: ['S3:listBuckets', 'S3:getBucketEncryption', 'KMS:describeKey', 'KMS:listAliases', 'KMS:listKeys'],
     compliance: {},
     settings: {
         s3_encryption_level: {
@@ -90,15 +90,33 @@ module.exports = {
             } else {
                 var algorithm = getBucketEncryption.data.ServerSideEncryptionConfiguration.Rules[0].ApplyServerSideEncryptionByDefault.SSEAlgorithm
                 if(algorithm === 'aws:kms' && desiredEncryptionLevel > 1) { //if only sse is required, reduce chance for errors and computation.
-                    var keyId = getBucketEncryption.data.ServerSideEncryptionConfiguration.Rules[0].ApplyServerSideEncryptionByDefault.KMSMasterKeyID.split("/")[1]
+                    var getAliases = helpers.addSource(cache, source, ['kms', 'listAliases', region]);
+                    var getKeys = helpers.addSource(cache, source, ['kms', 'listKeys', region]);
+                    var keyArn = getBucketEncryption.data.ServerSideEncryptionConfiguration.Rules[0].ApplyServerSideEncryptionByDefault.KMSMasterKeyID
+                    if (keyArn.includes("alias/")) {
+                        var aliasName = keyArn.slice(keyArn.search('alias/'), keyArn.length);
+                        var queryAlias = getAliases.data.find(o => o.AliasName === aliasName);
+                        if (!queryAlias){
+                            helpers.addResult(results, 3, `Unable to locate KMS Alias for Bucket: ${bucket.Name} for alias: ` + aliasName, region, bucketResource);
+                            return bcb();
+                        }
+                        var keyId = (getKeys.data.find(o => o.KeyId === queryAlias.TargetKeyId)).KeyId;
+                        if (!keyId){
+                            helpers.addResult(results, 3, `Unable to locate KMS Key for Bucket: ${bucket.Name} for alias: ` + queryAlias, region, bucketResource);
+                            return bcb();
+                        }
+                    } else {
+                        var keyId = getBucketEncryption.data.ServerSideEncryptionConfiguration.Rules[0].ApplyServerSideEncryptionByDefault.KMSMasterKeyID.split("/")[1]
+                    }
+
                     var describeKey = helpers.addSource(cache, source, ['kms', 'describeKey', region, keyId]);
 
                     if(!describeKey) {
-                        helpers.addResult(results, 3, 'Unable locate KMS key for describeKey: ' + keyId, region);
+                        helpers.addResult(results, 3, `Unable to locate KMS key for Bucket: ${bucket.Name} for describeKey: ` + keyId, region, bucketResource);
                         return bcb();
                     }
                     if (describeKey.err || !describeKey.data) {
-                        helpers.addResult(results, 3, 'Unable to query for KMS Key: ' + helpers.addError(describeKey), region);
+                        helpers.addResult(results, 3, `Unable to query for KMS Key: ${helpers.addError(describeKey)} for Bucket: ${bucket.Name}`, region, bucketResource);
                         return bcb();
                     }
                     currentEncryptionLevelString = getEncryptionLevel(describeKey.data.KeyMetadata)

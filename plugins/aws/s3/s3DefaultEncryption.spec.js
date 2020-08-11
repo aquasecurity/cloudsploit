@@ -2,7 +2,7 @@ var assert = require('assert');
 var expect = require('chai').expect;
 var defaultEncryption = require('./s3DefaultEncryption.js')
 
-const createCache = (s3Buckets, encryptionData, keyData) => {
+const createCache = (s3Buckets, encryptionData, keyData, aliasData=[{}], listkeyData=[{}]) => {
     return {
         s3: {
             listBuckets: {
@@ -15,13 +15,19 @@ const createCache = (s3Buckets, encryptionData, keyData) => {
         kms: {
             describeKey: {
                 'us-east-1': keyData
+            },
+            listKeys:{
+                'us-east-1': listkeyData
+            },
+            listAliases:{
+                'us-east-1': aliasData
             }
         }
     }
 }
 
 const createDataHolder = (resource, data) => {
-    returnVal = {}
+    var returnVal = {}
     returnVal[resource] = data
     return returnVal
 }
@@ -80,11 +86,35 @@ var awsKMSEncryption = {
     }
 }
 
+var awsKMSEncryptionAlias = {
+    "ServerSideEncryptionConfiguration": {
+        "Rules": [{
+            "ApplyServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "aws:kms",
+                "KMSMasterKeyID": "arn:aws:kms:us-east-1:12345:alias/test"
+            }
+        }]
+    }
+}
+
+var awsKMSDescribeKeyAlias = {
+    "KeyMetadata": {
+        "AWSAccountId": "12345",
+        "KeyId": "abcdefgh-1234-12ab-12ab-012345678910",
+        "Arn": "arn:aws:kms:us-east-1:12345:key/abcdefgh-1234-12ab-12ab-012345678910",
+        "Enabled": true,
+        "KeyUsage": "ENCRYPT_DECRYPT",
+        "KeyState": "Enabled",
+        "Origin": "AWS_KMS",
+        "KeyManager": "CUSTOMER",
+    }
+}
+
 var awsKMSKey = { //abbreviated event
     "KeyMetadata": {
         "KeyManager": "AWS",
         "Origin": "AWS_KMS"
-     }
+    }
 }
 
 var awsCustomerKey = { //abbreviated event
@@ -106,6 +136,16 @@ var awsHSMKey = { //abbreviated event
         "KeyManager": "CUSTOMER",
         "Origin": "AWS_CLOUDHSM"
     }
+}
+
+var awsAliasKMS = {"AliasName": "alias/test",
+    "AliasArn": "arn:aws:kms:us-east-1:12345:alias/test",
+    "TargetKeyId": "abcdefgh-1234-12ab-12ab-012345678910"
+}
+
+var awsAliasKeys ={
+    "KeyId": "abcdefgh-1234-12ab-12ab-012345678910",
+    "KeyArn": "arn:aws:kms:us-east-1:12345:key/abcdefgh-1234-12ab-12ab-012345678910"
 }
 
 describe('bucketDefaultEncryption', function () {
@@ -531,6 +571,22 @@ describe('bucketDefaultEncryption', function () {
                 const callback = (err, results) => {
                     expect(results.length).to.equal(1)
                     expect(results[0].status).to.equal(3)
+                    done()
+                }
+
+                process.nextTick(() => { defaultEncryption.run(cache, {s3_encryption_level: 'awskms'}, callback) })
+            })
+
+            it('should PASS when bucket encryption is created using an alias.', function (done){
+                const cache = createCache({data: [exampleBucket]},
+                    createDataHolder(bucketName, {data: awsKMSEncryptionAlias}),
+                    createDataHolder(awsKey, {data: awsKMSDescribeKeyAlias}),
+                    {data: [awsAliasKMS]},
+                    {data:[awsAliasKeys]});
+
+                const callback = (err, results) => {
+                    expect(results.length).to.equal(1)
+                    expect(results[0].status).to.equal(0)
                     done()
                 }
 
