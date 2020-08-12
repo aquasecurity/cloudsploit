@@ -18,10 +18,10 @@ module.exports = {
             regex: '^[0-9A-Za-z/._-]{3,512}$',
             default: false
         },
-        only_look_at_action_star_effect_allow: {
-            name: 'Only Look At Action Star Effect Allow',
+        ignore_service_specific_wildcards: {
+            name: 'Ignore Service Specific Wildcards',
             description: 'enable this to consider only those roles which allow all actions',
-            regex: '^[1]$', // set as 1 to enable, omit config to disable
+            regex: '^[true|false]$', // string true or boolean true to enable, string false or boolean false to disable
             default: false
         },
     },
@@ -29,8 +29,10 @@ module.exports = {
     run: function(cache, settings, callback) {
         var config = {
             iam_role_policies_ignore_path: settings.iam_role_policies_ignore_path || this.settings.iam_role_policies_ignore_path.default,
-            only_look_at_action_star_effect_allow: settings.only_look_at_action_star_effect_allow || this.settings.only_look_at_action_star_effect_allow.default
+            ignore_service_specific_wildcards: settings.ignore_service_specific_wildcards || this.settings.ignore_service_specific_wildcards.default
         };
+
+        if (config.ignore_service_specific_wildcards === 'false') config.ignore_service_specific_wildcards = false;
 
         var custom = helpers.isCustom(settings, this.settings);
 
@@ -128,28 +130,22 @@ module.exports = {
                             if (statement.Effect === 'Allow' &&
                                 !statement.Condition) {
                                 let failMsg = false;
-                                if (config.only_look_at_action_star_effect_allow) {
-                                    if (statement.Action.includes("*") || statement.Action.includes('*:*')) {
-                                        failMsg = 'wildcard action allowed on '.concat(statement.Resource.join(', '));
+                                if (statement.Action.includes('*') || statement.Action.includes('*:*') &&
+                                    statement.Resource &&
+                                    statement.Resource.includes('*')) {
+                                    failMsg = 'Role inline policy allows all actions on all resources';
+                                } else if (statement.Action.includes('*') || statement.Action.includes('*:*')) {
+                                    failMsg = 'Role inline policy allows all actions on selected resources';
+                                } else if (statement.Action && statement.Action.length && !config.ignore_service_specific_wildcards) {
+                                    // Check each action for wildcards
+                                    let wildcards = [];
+                                    for (var i in statement.Action) {
+                                        if (statement.Action[i].endsWith(':*')) {
+                                            wildcards.push(statement.Action[i]);
+                                        }
                                     }
-                                } else {
-                                    if (statement.Action.includes('*') &&
-                                        statement.Resource &&
-                                        statement.Resource.includes('*')) {
-                                        failMsg = 'Role inline policy allows all actions on all resources';
-                                    } else if (statement.Action.includes('*')) {
-                                        failMsg = 'Role inline policy allows all actions on selected resources';
-                                    } else if (statement.Action && statement.Action.length) {
-                                        // Check each action for wildcards
-                                        let wildcards = [];
-                                        for (var i in statement.Action) {
-                                            if (statement.Action[i].endsWith(':*')) {
-                                                wildcards.push(statement.Action[i]);
-                                            }
-                                        }
-                                        if (wildcards.length) {
-                                            failMsg = 'Role inline policy allows wildcard actions: '.concat(wildcards.join(', '));
-                                        }
+                                    if (wildcards.length) {
+                                        failMsg = 'Role inline policy allows wildcard actions: '.concat(wildcards.join(', '));
                                     }
                                 }
                                 if (failMsg) roleFailures.push(failMsg);

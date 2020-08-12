@@ -162,7 +162,7 @@ const cache =  {
                                     Statement: [
                                         {
                                             Action: [
-                                                "s3:*",
+                                                "s3:*", //wildcard action
                                                 "s3:Put*",
                                                 "s3:Get*",
                                                 "s3:*MultipartUpload*"
@@ -185,23 +185,21 @@ const cache =  {
 
 describe('iamRolePolicies', function () {
     describe('run', function () {
-        it('should PASS when actions end with wildcard but only_look_at_action_star_effect_allow is enabled', function (done) {
+        it('should PASS when actions end with wildcard but ignore_service_specific_wildcards is enabled', function (done) {
             let settings = {
-                only_look_at_action_star_effect_allow: 1,
+                ignore_service_specific_wildcards: true,
             };
 
             let callback = (err, results) => {
-                expect(results[0].status).to.equal(0);
+                expect(results[1].status).to.equal(0);
                 done();
             };
 
             iamRolePolicies.run(cache, settings, callback)
         });
 
-        it('should FAIL when action is literally * and only_look_at_action_star_effect_allow is enabled', function (done) {
-            let settings = {
-                only_look_at_action_star_effect_allow: 1,
-            };
+        it('should FAIL when action is literally *', function (done) {
+            let settings = {};
 
             let copied_cache = JSON.parse(JSON.stringify(cache));
             copied_cache.iam.getRolePolicy["us-east-1"].ExampleRole1.a.data.PolicyDocument.Statement[0].Action = ["*"];
@@ -213,8 +211,23 @@ describe('iamRolePolicies', function () {
             iamRolePolicies.run(copied_cache, settings, callback)
         });
 
-        it('should FAIL when actions end with wildcard but only_look_at_action_star_effect_allow is disabled', function (done) {
+        it('should FAIL when action is literally *:*', function (done) {
             let settings = {};
+
+            let copied_cache = JSON.parse(JSON.stringify(cache));
+            copied_cache.iam.getRolePolicy["us-east-1"].ExampleRole1.a.data.PolicyDocument.Statement[0].Action = ["*:*"];
+            let callback = (err, results) => {
+                expect(results[0].status).to.equal(2);
+                done();
+            };
+
+            iamRolePolicies.run(copied_cache, settings, callback)
+        });
+
+        it('should FAIL when actions end with wildcard but ignore_service_specific_wildcards is disabled', function (done) {
+            let settings = {
+                ignore_service_specific_wildcards: 'false',
+            };
             let callback = (err, results) => {
                 expect(results[1].status).to.equal(2);
                 done();
