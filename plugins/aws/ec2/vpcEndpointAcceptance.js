@@ -34,8 +34,7 @@ module.exports = {
 
             for (var s in describeVpcEndpointServices.data) {
                 var service = describeVpcEndpointServices.data[s];
-                // arn:aws:ec2:region:account-id:/
-                var resource = service.ServiceName;
+                var resource = service.ServiceId;
                 if (service.AcceptanceRequired === false) {
                     helpers.addResult(results, 2,
                         'Vpc endpoint service ' + (service.ServiceId) + ' does not require acceptance',
