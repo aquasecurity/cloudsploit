@@ -97,14 +97,14 @@ module.exports = {
                         var aliasName = keyArn.slice(keyArn.search('alias/'), keyArn.length);
                         var queryAlias = getAliases.data.find(o => o.AliasName === aliasName);
                         if (!queryAlias){
-                            helpers.addResult(results, 3, `Unable to locate KMS Alias for Bucket: ${bucket.Name} for alias: ` + aliasName, region, bucketResource);
+                            helpers.addResult(results, 3, `Unable to locate Alias for Bucket: ${bucket.Name} for alias: ` + aliasName, region, bucketResource);
+                            return bcb();
+                        }
+                        if (!getKeys.data.find(o => o.KeyId === queryAlias.TargetKeyId)){
+                            helpers.addResult(results, 3, `Unable to locate KMS Key for Bucket: ${bucket.Name} for alias: ` + aliasName, region, bucketResource);
                             return bcb();
                         }
                         var keyId = (getKeys.data.find(o => o.KeyId === queryAlias.TargetKeyId)).KeyId;
-                        if (!keyId){
-                            helpers.addResult(results, 3, `Unable to locate KMS Key for Bucket: ${bucket.Name} for alias: ` + queryAlias, region, bucketResource);
-                            return bcb();
-                        }
                     } else {
                         var keyId = getBucketEncryption.data.ServerSideEncryptionConfiguration.Rules[0].ApplyServerSideEncryptionByDefault.KMSMasterKeyID.split("/")[1]
                     }

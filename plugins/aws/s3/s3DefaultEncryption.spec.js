@@ -592,6 +592,38 @@ describe('bucketDefaultEncryption', function () {
 
                 process.nextTick(() => { defaultEncryption.run(cache, {s3_encryption_level: 'awskms'}, callback) })
             })
+
+            it('should FAIL when bucket encryption alias is not found.', function (done){
+                const cache = createCache({data: [exampleBucket]},
+                    createDataHolder(bucketName, {data: awsKMSEncryptionAlias}),
+                    createDataHolder(awsKey, {data: awsKMSDescribeKeyAlias}),
+                    {data: []},
+                    {data:[awsAliasKeys]});
+
+                const callback = (err, results) => {
+                    expect(results.length).to.equal(1)
+                    expect(results[0].status).to.equal(3)
+                    done()
+                }
+
+                process.nextTick(() => { defaultEncryption.run(cache, {s3_encryption_level: 'awskms'}, callback) })
+            })
+
+            it('should FAIL when bucket encryption alias is not associated with a key.', function (done){
+                const cache = createCache({data: [exampleBucket]},
+                    createDataHolder(bucketName, {data: awsKMSEncryptionAlias}),
+                    createDataHolder(awsKey, {data: awsKMSDescribeKeyAlias}),
+                    {data: [awsAliasKMS]},
+                    {data:[]});
+
+                const callback = (err, results) => {
+                    expect(results.length).to.equal(1)
+                    expect(results[0].status).to.equal(3)
+                    done()
+                }
+
+                process.nextTick(() => { defaultEncryption.run(cache, {s3_encryption_level: 'awskms'}, callback) })
+            })
         })
 
         describe('awscmkSettings', function () {
