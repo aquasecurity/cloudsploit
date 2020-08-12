@@ -82,7 +82,8 @@ module.exports = {
                     'encryption by default is disabled, and the settings indicate that "none" is not the desired encryption level. enabling of "EBS encryption by default" is required', region);
                 return rcb();
             }
-            var kmsKeyId = ""
+            var kmsKeyId = "";
+            var isPredefinedAlias = false;
             if (getEbsDefaultKmsKeyId.data.split('/')[0] === 'alias') {
                 var listAliases = helpers.addSource(cache, source, ['kms', 'listAliases', region]);
                 if (listAliases.err || !listAliases.data) {
@@ -91,20 +92,31 @@ module.exports = {
                 }
                 listAliases.data.forEach(function(alias){
                     if (alias.AliasName === getEbsDefaultKmsKeyId.data) {
-                        kmsKeyId = alias.TargetKeyId;
+                        if (alias.hasOwnProperty('TargetKeyId')) {
+                            kmsKeyId = alias.TargetKeyId;
+                        }
+                        else {
+                            isPredefinedAlias = true;
+                        }
                     }
                 });
             } else {
                 kmsKeyId = getEbsDefaultKmsKeyId.data.split('/')[1];
             }
-            var describeKey = helpers.addSource(cache, source, ['kms', 'describeKey', region, kmsKeyId]);
-            if (!describeKey) return rcb();
-            if (describeKey.err || !describeKey.data) {
-                helpers.addResult(results, 3,
-                    'Unable to query for describe key: ' + helpers.addError(describeKey), region);
-                return rcb();
+            var encryptionLevel;
+            if (!isPredefinedAlias) {
+                var describeKey = helpers.addSource(cache, source, ['kms', 'describeKey', region, kmsKeyId]);
+                if (!describeKey) return rcb();
+                if (describeKey.err || !describeKey.data) {
+                    helpers.addResult(results, 3,
+                        'Unable to query for describe key: ' + helpers.addError(describeKey), region);
+                    return rcb();
+                }
+                encryptionLevel = getEncryptionLevel(describeKey.data.KeyMetadata);
             }
-            var encryptionLevel = getEncryptionLevel(describeKey.data.KeyMetadata);
+            else {
+                encryptionLevel = 2; //awskms
+            }
 
             if (encryptionLevel < targetEncryptionLevel) {
                 helpers.addResult(results, 2,
