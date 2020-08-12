@@ -232,10 +232,7 @@ var calls = {
         },
         describeVpcEndpointServices: {
             property: 'ServiceDetails',
-            paginate: 'NextToken',
-            filters: {
-                serviceName: 'ec2'
-            }
+            paginate: 'NextToken'
         },
         describeRouteTables: {
             property: 'RouteTables',

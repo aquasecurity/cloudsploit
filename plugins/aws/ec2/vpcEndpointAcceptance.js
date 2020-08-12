@@ -23,25 +23,25 @@ module.exports = {
 
             if (describeVpcEndpointServices.err || !describeVpcEndpointServices.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for vpc endpoint services: ' + helpers.addError(describeVpcEndpointServices), region);
+                    'Unable to query for VPC endpoint services: ' + helpers.addError(describeVpcEndpointServices), region);
                 return rcb();
             }
 
             if (!describeVpcEndpointServices.data.length) {
-                helpers.addResult(results, 0, 'No vpc endpoint services present', region);
+                helpers.addResult(results, 0, 'No VPC endpoint services present', region);
                 return rcb();
             }
 
             for (var s in describeVpcEndpointServices.data) {
                 var service = describeVpcEndpointServices.data[s];
-                var resource = service.ServiceId;
-                if (service.AcceptanceRequired === false) {
-                    helpers.addResult(results, 2,
-                        'Vpc endpoint service ' + (service.ServiceId) + ' does not require acceptance',
+                var resource = service.ServiceName;
+                if (service.AcceptanceRequired) {
+                    helpers.addResult(results, 0,
+                        'Vpc endpoint service ' + (service.ServiceId) + ' requires acceptance by the service owner',
                         region, resource);
                 } else {
-                    helpers.addResult(results, 0,
-                        'Vpc endpoint service ' + (service.ServiceId) + ' requires acceptance',
+                    helpers.addResult(results, 2,
+                        'Vpc endpoint service ' + (service.ServiceId) + ' does not require acceptance by the service owner',
                         region, resource);
                 }
             }
