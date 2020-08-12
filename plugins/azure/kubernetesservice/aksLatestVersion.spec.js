@@ -2,22 +2,25 @@ var assert = require('assert');
 var expect = require('chai').expect;
 var auth = require('./aksLatestVersion');
 
-const createCache = (err, data) => {
+const createCache = (err, list, get) => {
     return {
         managedClusters: {
-            getUpgradeProfile: {
+            list: {
                 'eastus': {
                     err: err,
-                    data: data
+                    data: list
                 }
+            },
+            getUpgradeProfile: {
+                'eastus': get
             }
         }
     }
 };
 
-describe('aksLatestVersion', function () {
-    describe('run', function () {
-        it('should give passing result if no managed clusters', function (done) {
+describe('aksLatestVersion', function() {
+    describe('run', function() {
+        it('should give passing result if no managed clusters', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -34,7 +37,7 @@ describe('aksLatestVersion', function () {
             auth.run(cache, {}, callback);
         });
 
-        it('should give failing result if the Kubernetes clusters does not have the latest version installed', function (done) {
+        it('should give failing result if the Kubernetes clusters does not have the latest version installed', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -47,40 +50,49 @@ describe('aksLatestVersion', function () {
                 null,
                 [
                     {
-                        "id": "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a/resourcegroups/gionewfunctiontest/providers/Microsoft.ContainerService/managedClusters/kubtest3/upgradeprofiles/default",
-                        "name": "default",
-                        "type": "Microsoft.ContainerService/managedClusters/upgradeprofiles",
-                        "controlPlaneProfile": {
-                            "kubernetesVersion": "1.11.10",
-                            "osType": "Linux",
-                            "upgrades": [
-                                "1.12.7",
-                                "1.12.8"
-                            ]
-                        },
-                        "agentPoolProfiles": [
-                            {
+                        "id": "/subscriptions/subid1/providers/Microsoft.ContainerService/managedClusters",
+                        "location": "eastus",
+                        "name": "clustername1"
+                    }
+                ],
+                {
+                    "/subscriptions/subid1/providers/Microsoft.ContainerService/managedClusters": {
+                        data: {
+                            "id": "/subscriptions/subid1/providers/Microsoft.ContainerService/managedClusters/kubtest3/upgradeprofiles/default",
+                            "name": "default",
+                            "type": "Microsoft.ContainerService/managedClusters/upgradeprofiles",
+                            "controlPlaneProfile": {
                                 "kubernetesVersion": "1.11.10",
                                 "osType": "Linux",
                                 "upgrades": [
                                     "1.12.7",
                                     "1.12.8"
                                 ]
+                            },
+                            "agentPoolProfiles": [
+                                {
+                                    "kubernetesVersion": "1.11.10",
+                                    "osType": "Linux",
+                                    "upgrades": [
+                                        "1.12.7",
+                                        "1.12.8"
+                                    ]
+                                }
+                            ],
+                            "error": false,
+                            "location": "centralus",
+                            "storageAccount": {
+                                "name": "kubtest3"
                             }
-                        ],
-                        "error": false,
-                        "location": "centralus",
-                        "storageAccount": {
-                            "name": "kubtest3"
                         }
                     }
-                ]
+                }
             );
 
             auth.run(cache, {}, callback);
         });
 
-        it('should give passing result if the Kubernetes clusters have the latest version installed', function (done) {
+        it('should give passing result if the Kubernetes clusters have the latest version installed', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -93,26 +105,37 @@ describe('aksLatestVersion', function () {
                 null,
                 [
                     {
-                        "id": "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a/resourcegroups/gionewfunctiontest/providers/Microsoft.ContainerService/managedClusters/kubtest3/upgradeprofiles/default",
-                        "name": "default",
-                        "type": "Microsoft.ContainerService/managedClusters/upgradeprofiles",
-                        "controlPlaneProfile": {
-                            "kubernetesVersion": "1.11.10",
-                            "osType": "Linux",
-                        },
-                        "agentPoolProfiles": [
-                            {
+                        "id": "/subscriptions/subid1/providers/Microsoft.ContainerService/managedClusters",
+                        "location": "eastus",
+                        "name": "clustername1"
+                    }
+                ],
+                {
+                    "/subscriptions/subid1/providers/Microsoft.ContainerService/managedClusters": {
+                        data: {
+                            "id": "/subscriptions/subid1/providers/Microsoft.ContainerService/managedClusters/kubtest3/upgradeprofiles/default",
+                            "name": "default",
+                            "type": "Microsoft.ContainerService/managedClusters/upgradeprofiles",
+                            "controlPlaneProfile": {
                                 "kubernetesVersion": "1.11.10",
                                 "osType": "Linux",
+                                "upgrades": []
+                            },
+                            "agentPoolProfiles": [
+                                {
+                                    "kubernetesVersion": "1.11.10",
+                                    "osType": "Linux",
+                                    "upgrades": []
+                                }
+                            ],
+                            "error": false,
+                            "location": "centralus",
+                            "storageAccount": {
+                                "name": "kubtest3"
                             }
-                        ],
-                        "error": false,
-                        "location": "centralus",
-                        "storageAccount": {
-                            "name": "kubtest3"
                         }
                     }
-                ]
+                }
             );
 
             auth.run(cache, {}, callback);

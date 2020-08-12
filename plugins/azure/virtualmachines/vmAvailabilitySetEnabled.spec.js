@@ -16,9 +16,9 @@ const createCache = (err, data) => {
     }
 };
 
-describe('vmAvailabilitySetEnabled', function () {
-    describe('run', function () {
-        it('should give unknown result if a virtual machine error is passed or no data is present', function (done) {
+describe('vmAvailabilitySetEnabled', function() {
+    describe('run', function() {
+        it('should give unknown result if a virtual machine error is passed or no data is present', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(3)
@@ -34,7 +34,7 @@ describe('vmAvailabilitySetEnabled', function () {
 
             plugin.run(cache, {}, callback);
         })
-        it('should give passing result if no virtual machine records are found', function (done) {
+        it('should give passing result if no virtual machine records are found', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
@@ -50,11 +50,11 @@ describe('vmAvailabilitySetEnabled', function () {
 
             plugin.run(cache, {}, callback);
         })
-        it('should give passing result if all virtual machines have availability sets enabled', function (done) {
+        it('should give passing result if all virtual machines have availability sets enabled', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('All Virtual Machines have Availability Set enabled')
+                expect(results[0].message).to.include('The Virtual Machine has Availability Set enabled')
                 expect(results[0].region).to.equal('eastus')
                 done()
             };
@@ -124,7 +124,7 @@ describe('vmAvailabilitySetEnabled', function () {
 
             plugin.run(cache, {}, callback);
         })
-        it('should give failing result if the virtual machine does not have availability sets enabled', function (done) {
+        it('should give failing result if the virtual machine does not have availability sets enabled', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(2)

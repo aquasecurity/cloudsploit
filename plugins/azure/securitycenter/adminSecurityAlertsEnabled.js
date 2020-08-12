@@ -32,24 +32,15 @@ module.exports = {
                 helpers.addResult(results, 2, 'No existing security contacts', location);
                 return rcb();
             }
-
-            let alertExists = false;
             
             securityContacts.data.forEach(securityContact => {
-                var idArr = securityContact.id.split('/');
-                idArr.length = idArr.length - 2;
-                subId = idArr.join('/');
-
-                if (securityContact.alertsToAdmins == 'On') {
-                    alertExists = true;
+                if (securityContact.alertsToAdmins &&
+                    securityContact.alertsToAdmins.toLowerCase() == 'on') {
+                    helpers.addResult(results, 0, 'Security alerts for the subscription are configured to be sent to admins', location, securityContact.id);
+                } else {
+                    helpers.addResult(results, 2, 'Security alerts for the subscription are not configured to be sent to admins', location, securityContact.id);
                 }
             });
-
-            if (alertExists) {
-                helpers.addResult(results, 0, 'Security alerts for the subscription are configured to be sent to admins', location, subId);
-            } else {
-                helpers.addResult(results, 2, 'Security alerts for the subscription are not configured to be sent to admins', location, subId);
-            }
 
             rcb();
         }, function(){

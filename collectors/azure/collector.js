@@ -17,859 +17,637 @@
  *********************/
 
 var async = require('async');
-var jsonsafe = require('fast-safe-stringify');
+var collectors = require(__dirname + '/index.js');
 
-var helpers = require(__dirname + '/../../helpers/azure');
-
+// Standard calls that contain top-level operations
 var calls = {
     resourceGroups: {
         list: {
-            api: "ResourceManagementClient",
-            arm: true
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/resourcegroups?api-version=2019-10-01'
         }
     },
     activityLogAlerts: {
         listBySubscriptionId: {
-            api: "MonitorManagementClient",
-            arm: true
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/microsoft.insights/activityLogAlerts?api-version=2017-04-01'
         }
     },
     storageAccounts: {
         list: {
-            api: "StorageManagementClient",
-            arm: true,
-            module: false
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Storage/storageAccounts?api-version=2019-06-01'
         }
     },
     virtualNetworks: {
         listAll: {
-            api: "NetworkManagementClient",
-            arm: true
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/virtualNetworks?api-version=2020-03-01'
         }
     },
     virtualMachines: {
         listAll: {
-            api: "ComputeManagementClient",
-            arm: true
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachines?api-version=2019-12-01'
         }
     },
     disks: {
         list: {
-            api: "ComputeManagementClient",
-            arm: true
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/disks?api-version=2019-07-01'
         }
     },
     networkSecurityGroups: {
         listAll: {
-            api: "NetworkManagementClient",
-            arm: true
-        }
-    },
-    activityLogAlerts: {
-        listBySubscriptionId: {
-            api: "MonitorManagementClient",
-            arm: true
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/networkSecurityGroups?api-version=2020-03-01'
         }
     },
     vaults: {
         list: {
-            api: "KeyVaultManagementClient",
-            arm: true
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.KeyVault/vaults?api-version=2019-09-01'
         }
     },
     resources: {
         list: {
-            api: "ResourceManagementClient",
-            arm: true
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/resources?api-version=2019-10-01'
         }
     },
     managedClusters: {
         list: {
-            api: "ContainerServiceClient",     
-            arm: true
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.ContainerService/managedClusters?api-version=2020-03-01'
         }
     },
     networkWatchers: {
         listAll: {
-            api: "NetworkManagementClient",
-            arm: true
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/networkWatchers?api-version=2020-03-01'
         }
-    },
-    servers: {
-        sql: {
-            list: {
-                api: "SQLManagementClient",
-                arm: true
-            }
-        },
-        mysql: {
-            list: {
-                api: "MySQLManagementClient",
-                arm: true
-            }
-        },
-        postgres: {
-            list: {
-                api: "PostgresClient",
-                arm: true
-            }
-        },
-        manyApi: true
     },
     policyAssignments: {
         list: {
-            api: "PolicyClient",
-            arm: true
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/policyAssignments?api-version=2019-09-01',
         }
     },
     policyDefinitions: {
         list: {
-            api: "PolicyClient",
-            arm: true
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/policyDefinitions?api-version=2019-09-01'
         }
     },
     webApps: {
         list: {
-            api: "WebSiteManagementClient",
-            arm: true
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Web/sites?api-version=2019-08-01'
         }
     },
     logProfiles: {
         list: {
-            api: "MonitorManagementClient",
-            arm: true
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/microsoft.insights/logprofiles?api-version=2016-03-01'
         }
     },
     profiles: {
         list: {
-            api: "CdnManagementClient",
-            arm: true
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Cdn/profiles?api-version=2019-04-15'
         }
     },
     autoProvisioningSettings: {
         list: {
-            api: "SecurityCenterClient",
-            arm: true,
-            ascLoc: true
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Security/autoProvisioningSettings?api-version=2017-08-01-preview'
         }
     },
     securityContacts: {
         list: {
-            api: "SecurityCenterClient",
-            arm: true,
-            ascLoc: true
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Security/securityContacts?api-version=2017-08-01-preview',
         }
     },
     subscriptions: {
         listLocations: {
-            api: "SubscriptionClient",
-            arm: true,
-            noSubscription: true
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/locations?api-version=2020-01-01'
         }
     },
     roleDefinitions: {
         list: {
-            api: "AuthorizationClient",
-            arm: true,
-            subscription: true
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/roleDefinitions?api-version=2015-07-01'
         }
     },
     managementLocks: {
         listAtSubscriptionLevel: {
-            api: "ManagementLockClient",
-            arm: true
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/locks?api-version=2016-09-01'
         }
     },
     loadBalancers: {
         listAll: {
-            api: "NetworkManagementClient",
-            arm: true
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/loadBalancers?api-version=2020-03-01'
         }
     },
     users: {
         list: {
-            api: "AzureGraphClient",
-            arm: true,
-            ad: true
+            url: 'https://graph.windows.net/myorganization/users?api-version=1.6',
+            graph: true
         }
     },
     registries: {
         list: {
-            api: "ContainerRegistryClient",
-            arm: true
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.ContainerRegistry/registries?api-version=2019-05-01'
         }
     },
     pricings: {
         list: {
-            api: "SecurityCenterClient",
-            arm: true,
-            ascLoc: true
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Security/pricings?api-version=2018-06-01'
+        }
+    },
+    availabilitySets: {
+        listBySubscription: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/availabilitySets?api-version=2019-12-01'
+        }
+    },
+    virtualMachineScaleSets: {
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachineScaleSets?api-version=2019-12-01'
+        }
+    },
+    autoscaleSettings: {
+        listBySubscription: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/microsoft.insights/autoscalesettings?api-version=2015-04-01'
+        }
+    },
+    diagnosticSettingsOperations: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/microsoft.insights/diagnosticSettings?api-version=2017-05-01-preview'
+        }
+    },
+    servers: {
+        listSql: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Sql/servers?api-version=2019-06-01-preview'
+        },
+        listMysql: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.DBforMySQL/servers?api-version=2017-12-01'
+        },
+        listPostgres: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.DBforPostgreSQL/servers?api-version=2017-12-01'
         }
     }
 };
 
 var postcalls = {
-    storageAccounts: {
-        listKeys: {
-            api: "StorageManagementClient",
-            reliesOnService: ['resourceGroups', 'storageAccounts'],
-            reliesOnCall: ['list', 'list'],
-            filterKey: ['resourceGroupName', 'name'],
-            filterValue: ['resourceGroupName', 'name'],
-            arm: true,
-            module: false
-        },
-    },
-    availabilitySets: {
-        list: {
-            api: "ComputeManagementClient",
-            reliesOnService: ['resourceGroups'],
-            reliesOnCall: ['list'],
-            filterKey: ['resourceGroupName'],
-            filterValue: ['resourceGroupName'],
-            arm: true,
-        }
-    },
-    autoscaleSettings: {
-        listByResourceGroup: {
-            api: "MonitorManagementClient",
-            reliesOnService: ['resourceGroups'],
-            reliesOnCall: ['list'],
-            filterKey: ['resourceGroupName'],
-            filterValue: ['resourceGroupName'],
-            arm: true
-        }
-    },
-    networkSecurityGroups: {
-        list: {
-            api: "NetworkManagementClient",
-            reliesOnService: ['resourceGroups'],
-            reliesOnCall: ['list'],
-            filterKey: ['resourceGroupName'],
-            filterValue: ['resourceGroupName'],
-            arm: true
-        }
-    },
-    networkSecurityGroups: {
-        list: {
-            api: "NetworkManagementClient",
-            reliesOnService: ['resourceGroups'],
-            reliesOnCall: ['list'],
-            filterKey: ['resourceGroupName'],
-            filterValue: ['resourceGroupName'],
-            arm: true
-        }
-    },
     serverBlobAuditingPolicies: {
         get: {
-            api: "SQLManagementClient",
-            reliesOnService: ['resourceGroups', 'servers'],
-            reliesOnSubService: [undefined, 'sql'],
-            reliesOnCall: ['list', 'list'],
-            filterKey: ['resourceGroupName', 'name'],
-            filterValue: ['resourceGroupName', 'name'],
-            arm: true,
-        }
-    },
-    configurations: {
-        listByServer: {
-            api: "PostgresClient",
-            reliesOnService: ['resourceGroups', 'servers'],
-            reliesOnSubService: [undefined, 'postgres'],
-            reliesOnCall: ['list', 'list'],
-            filterKey: ['resourceGroupName', 'name'],
-            filterValue: ['resourceGroupName', 'name'],
-            arm: true,
-
-        }
-    },
-    diagnosticSettingsOperations: {
-        nsg: {
-            list: {
-                api: "MonitorManagementClient",
-                reliesOnService: ['networkSecurityGroups'],
-                reliesOnCall: ['listAll'],
-                filterKey: ['resourceUri'],
-                filterValue: ['id'],
-                arm: true
-            },
-        },
-        lb: {
-            list: {
-                api: "MonitorManagementClient",
-                reliesOnService: ['loadBalancers'],
-                reliesOnCall: ['listAll'],
-                filterKey: ['id'],
-                filterValue: ['id'],
-                arm: true
-            },
-        },
-        kv: {
-            list: {
-                api: "MonitorManagementClient",
-                reliesOnService: ['vaults'],
-                reliesOnCall: ['list'],
-                filterKey: ['id'],
-                filterValue: ['id'],
-                arm: true
-            }
-        },
-        manyApi: true
-    },
-    virtualMachineExtensions: {
-        list: {
-            api: "ComputeManagementClient",
-            reliesOnService: ['resourceGroups', 'virtualMachines'],
-            reliesOnCall: ['list', 'listAll'],
-            filterKey: ['resourceGroupName', 'name'],
-            filterValue: ['resourceGroupName', 'name'],
-            arm: true
-        }
-    },
-    activityLogAlerts: {
-        listByResourceGroup: {
-            api: "MonitorManagementClient",
-            reliesOnService: ['resourceGroups'],
-            reliesOnCall: ['list'],
-            filterKey: ['resourceGroupName'],
-            filterValue: ['resourceGroupName'],
-            arm: true,
-            module: false
-        }
-    },
-    vaults: {
-        listByResourceGroup: {
-            api: "KeyVaultManagementClient",
-            reliesOnService: ['resourceGroups'],
-            reliesOnCall: ['list'],
-            filterKey: ['resourceGroupName'],
-            filterValue: ['resourceGroupName'],
-            arm: true
-        }
-    },
-    blobContainers: {
-        list: {
-            api: "StorageManagementClient",
-            reliesOnService: ['resourceGroups', 'storageAccounts'],
-            reliesOnCall: ['list', 'list'],
-            filterKey: ['resourceGroupName', 'name'],
-            filterValue: ['resourceGroupName', 'name'],
-            arm: true
-        }
-    },
-    encryptionProtectors: {
-        get: {
-            api: "SQLManagementClient",
-            reliesOnService: ['resourceGroups', 'servers'],
-            reliesOnSubService: [undefined, 'sql'],
-            reliesOnCall: ['list', 'list'],
-            filterKey: ['resourceGroupName', 'name'],
-            filterValue: ['resourceGroupName', 'name'],
-            arm: true,
-        },
-    },
-    webApps: {
-        getAuthSettings: {
-            api: "WebSiteManagementClient",
-            reliesOnService: ['webApps', 'webApps'],
-            reliesOnCall: ['list', 'list'],
-            filterKey: ['resourceGroup', 'name'],
-            filterValue: ['resourceGroup', 'name'],
-            arm: true
-        },
-        listConfigurations: {
-            api: "WebSiteManagementClient",
-            reliesOnService: ['webApps', 'webApps'],
-            reliesOnCall: ['list', 'list'],
-            filterKey: ['resourceGroup', 'name'],
-            filterValue: ['resourceGroup', 'name'],
-            arm: true
-        },
-        get: {
-            api: "WebSiteManagementClient",
-            reliesOnService: ['webApps', 'webApps'],
-            reliesOnCall: ['list', 'list'],
-            filterKey: ['resourceGroupName', 'name'],
-            filterValue: ['resourceGroupName', 'name'],
-            arm: true
-        }
-    },
-    servers: {
-        listByResourceGroup: {
-            api: "SQLManagementClient",
-            reliesOnService: ['resourceGroups'],
-            reliesOnCall: ['list'],
-            filterKey: ['resourceGroupName'],
-            filterValue: ['resourceGroupName'],
-            arm: true,
-            module: false,
-        }
-    },
-    endpoints: {
-        listByProfile: {
-            api: "CdnManagementClient",
-            reliesOnService: ['resourceGroups', 'profiles'],
-            reliesOnCall: ['list', 'list'],
-            filterKey: ['resourceGroupName', 'profileName'],
-            filterValue: ['resourceGroupName', 'name'],
-            arm: true
-        },
-    },
-    KeyVaultClient: {
-        getKeys: {
-            api: "KeyVaultClient",
-            reliesOnService: ['vaults'],
-            reliesOnCall: ['list'],
-            filterKey: ['name'],
-            filterValue: ['name'],
-            arm: false,
-            keyVault: true
-        },
-        getSecrets: {
-            api: "KeyVaultClient",
-            reliesOnService: ['vaults'],
-            reliesOnCall: ['list'],
-            filterKey: ['name'],
-            filterValue: ['name'],
-            arm: false,
-            keyVault: true
-        }
-    },
-    loadBalancers: {
-        list: {
-            api: "NetworkManagementClient",
-            reliesOnService: ['resourceGroups'],
-            reliesOnCall: ['list'],
-            filterKey: ['resourceGroupName'],
-            filterValue: ['resourceGroupName'],
-            arm: true
-        }
-    },
-    databases: {
-        listByServer: {
-            api: "SQLManagementClient",
-            reliesOnService: ['resourceGroups','servers'],
-            reliesOnSubService: [undefined, 'sql'],
-            reliesOnCall: ['list','list'],
-            filterKey: ['resourceGroupName','serverName'],
-            filterValue: ['resourceGroupName','name'],
-            arm: true
-        },
-    },
-    serverAzureADAdministrators: {
-        listByServer: {
-            api: "SQLManagementClient",
-            reliesOnService: ['resourceGroups','servers'],
-            reliesOnSubService: [undefined, 'sql'],
-            reliesOnCall: ['list','list'],
-            filterKey: ['resourceGroupName','name'],
-            filterValue: ['resourceGroupName','name'],
-            arm: true
-        }
-    },
-	virtualMachineScaleSets: {
-        list: {
-            api: "ComputeManagementClient",
-            reliesOnService: ['resourceGroups'],
-            reliesOnCall: ['list'],
-            filterKey: ['resourceGroupName'],
-            filterValue: ['resourceGroupName'],
-            arm: true
-        }
-    },
-    usages: {
-        list: {
-            api: "NetworkManagementClient",
-            reliesOnService: ['subscriptions'],
-            reliesOnCall: ['listLocations'],
-            filterKey: ['name'],
-            filterValue: ['name'],
-            arm: true
-        }
-    },
-    firewallRules: {
-        listByServer: {
-            api: "SQLManagementClient",
-            reliesOnService: ['resourceGroups','servers'],
-            reliesOnSubService: [undefined, 'sql'],
-            reliesOnCall: ['list', 'list'],
-            filterKey: ['resourceGroupName', 'name'],
-            filterValue: ['resourceGroupName', 'name'],
-            arm: true
-        }
-    },
-    managedClusters: {
-        getUpgradeProfile: {
-            api: "ContainerServiceClient",
-            reliesOnService: ['resourceGroups', 'managedClusters'],
-            reliesOnCall: ['list', 'list'],
-            filterKey: ['resourceGroupName', 'recourceName'],
-            filterValue: ['resourceGroupName','name'],
-            arm: true
-        }
-    }
-};
-
-var finalcalls = {
-    securityRules: {
-        list: {
-            api: "NetworkManagementClient",
-            reliesOnService: ['resourceGroups', 'networkSecurityGroups'],
-            reliesOnCall: ['list', 'list'],
-            filterKey: ['resourceGroupName', 'networkSecurityGroupName'],
-            filterValue: ['resourceGroupName','name'],
-            arm: true
-        }
-    },
-    BlobService: {
-        listContainersSegmented: {
-            api: "StorageServiceClient",
-            reliesOnService: ['storageAccounts', 'storageAccounts'],
-            reliesOnCall: ['list', 'listKeys'],
-            filterKey: ['name', 'keys'],
-            filterValue: ['name', 'value'],
-            filterListKeys: [false, true],
-            arm: false,
-            module: true
-        }
-    },
-    FileService: {
-        listSharesSegmented: {
-            api: "StorageServiceClient",
-            reliesOnService: ['storageAccounts', 'storageAccounts'],
-            reliesOnCall: ['list', 'listKeys'],
-            filterKey: ['name', 'keys'],
-            filterValue: ['name', 'value'],
-            filterListKeys: [false, true],
-            arm: false,
-            module: true
-        }
-    },
-    TableService: {
-        listTablesSegmented: {
-            api: "StorageServiceClient",
-            reliesOnService: ['storageAccounts', 'storageAccounts'],
-            reliesOnCall: ['list', 'listKeys'],
-            filterKey: ['name', 'keys'],
-            filterValue: ['name', 'value'],
-            filterListKeys: [false, true],
-            arm: false,
-            module: true
-        }
-    },
-    QueueService: {
-        listQueuesSegmented: {
-            api: "StorageServiceClient",
-            reliesOnService: ['storageAccounts', 'storageAccounts'],
-            reliesOnCall: ['list', 'listKeys'],
-            filterKey: ['name', 'keys'],
-            filterValue: ['name', 'value'],
-            filterListKeys: [false, true],
-            arm: false,
-            module: true
-        }
-    },
-    KeyVaultClient: {
-        getSecrets: {
-            api: "KeyVaultClient",
-            reliesOnService: ['vaults'],
-            reliesOnCall: ['listByResourceGroup'],
-            filterKey: ['properties'],
-            filterValue: ['[0.{properties/vaultUri'],
-            arm: false,
-            module: true
-        }
-    },
-    diagnosticSettingsOperations: {
-        list: {
-            api: "MonitorManagementClient",
-            reliesOnService: ['endpoints'],
-            reliesOnCall: ['listByProfile'],
-            filterKey: ['id'],
-            filterValue: ['id'],
-            arm: true
+            reliesOnPath: 'servers.listSql',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/auditingSettings?api-version=2017-03-01-preview'
         }
     },
     serverSecurityAlertPolicies: {
         listByServer: {
-            api: "SQLManagementClient",
-            reliesOnService: ['resourceGroups', 'servers'],
-            reliesOnCall: ['list', 'listByResourceGroup'],
-            filterKey: ['resourceGroupName', 'serverName'],
-            filterValue: ['resourceGroupName', 'name'],
-            arm: true,
-            module: false,
+            reliesOnPath: 'servers.listSql',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/securityAlertPolicies?api-version=2017-03-01-preview'
         }
     },
-    origins: {
-        listByEndpoint: {
-            api: "CdnManagementClient",
-            reliesOnService: ['resourceGroups', 'profiles', 'endpoints'],
-            reliesOnCall: ['list', 'list', 'listByProfile'],
-            filterKey: ['resourceGroupName', 'profileName', 'endpointName'],
-            filterValue: ['resourceGroupName', 'profileName', 'name'],
-            arm: true,
+    configurations: {
+        listByServer: {
+            reliesOnPath: 'servers.listPostgres',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/configurations?api-version=2017-12-01'
         }
     },
+    virtualMachineExtensions: {
+        list: {
+            reliesOnPath: 'virtualMachines.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/extensions?api-version=2019-12-01'
+        }
+    },
+    blobContainers: {
+        list: {
+            reliesOnPath: 'storageAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/blobServices/default/containers?api-version=2019-06-01'
+        }
+    },
+    fileShares: {
+        list: {
+            reliesOnPath: 'storageAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/fileServices/default/shares?api-version=2019-06-01'
+        }
+    },
+    storageAccounts: {
+        listKeys: {
+            reliesOnPath: 'storageAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/listKeys?api-version=2019-06-01',
+            post: true
+        }
+    },
+    encryptionProtectors: {
+        listByServer: {
+            reliesOnPath: 'servers.listSql',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/encryptionProtector?api-version=2015-05-01-preview'
+        },
+    },
+    webApps: {
+        getAuthSettings: {
+            reliesOnPath: 'webApps.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/config/authsettings/list?api-version=2019-08-01',
+            post: true
+        },
+        listConfigurations: {
+            reliesOnPath: 'webApps.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/config?api-version=2019-08-01'
+        }
+    },
+    endpoints: {
+        listByProfile: {
+            reliesOnPath: 'profiles.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/endpoints?api-version=2019-04-15'
+        },
+    },
+    vaults: {
+        getKeys: {
+            reliesOnPath: 'vaults.list',
+            properties: ['vaultUri'],
+            url: '{vaultUri}keys?api-version=7.0',
+            vault: true
+        },
+        getSecrets: {
+            reliesOnPath: 'vaults.list',
+            properties: ['vaultUri'],
+            url: '{vaultUri}secrets?api-version=7.0',
+            vault: true
+        }
+    },
+    databases: {
+        listByServer: {
+            reliesOnPath: 'servers.listSql',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/databases?api-version=2017-10-01-preview'
+        },
+    },
+    serverAzureADAdministrators: {
+        listByServer: {
+            reliesOnPath: 'servers.listSql',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/administrators?api-version=2014-04-01'
+        }
+    },
+    usages: {
+        list: {
+            reliesOnPath: 'subscriptions.listLocations',
+            properties: ['name'],
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/locations/{name}/usages?api-version=2020-03-01'
+        }
+    },
+    firewallRules: {
+        listByServer: {
+            reliesOnPath: 'servers.listSql',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/firewallRules?api-version=2014-04-01'
+        }
+    },
+    managedClusters: {
+        getUpgradeProfile: {
+            reliesOnPath: 'managedClusters.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/upgradeProfiles/default?api-version=2020-03-01'
+        }
+    }
+};
+
+var tertiarycalls = {
     databaseBlobAuditingPolicies: {
         get: {
-            api: "SQLManagementClient",
-            reliesOnService: ['resourceGroups', 'servers', 'databases'],
-            reliesOnSubService: [undefined, 'sql', undefined],
-            reliesOnCall: ['list', 'list', 'listByServer'],
-            filterKey: ['resourceGroupName', 'serverName', 'databaseName'],
-            filterValue: ['resourceGroupName', 'serverName', 'name'],
-            arm: true
+            reliesOnPath: 'databases.listByServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/auditingSettings?api-version=2017-03-01-preview'
         }
     },
-	vaults: {
-        get: {
-            api: "KeyVaultManagementClient",
-            reliesOnService: ['resourceGroups','vaults'],
-            reliesOnCall: ['list','list'],
-            filterKey: ['resourceGroupName','name'],
-            filterValue: ['resourceGroupName','name'],
-            arm: true
-        }
-    },
-    transparentDataEncryptions: {
-        get: {
-            api: "SQLManagementClient",
-            reliesOnService: ['resourceGroups', 'servers', 'databases'],
-            reliesOnSubService: [undefined, 'sql', undefined],
-            reliesOnCall: ['list', 'list', 'listByServer'],
-            filterKey: ['resourceGroupName', 'serverName', 'databaseName'],
-            filterValue: ['resourceGroupName', 'serverName', 'name'],
-            arm: true
+    diagnosticSettings: {
+        listByEndpoint: {
+            reliesOnPath: 'endpoints.listByProfile',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2017-05-01-preview'
+        },
+        listByKeyVault: {
+            reliesOnPath: 'vaults.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2017-05-01-preview'
+        },
+        listByLoadBalancer: {
+            reliesOnPath: 'loadBalancers.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2017-05-01-preview'
+        },
+        listByNetworkSecurityGroup: {
+            reliesOnPath: 'networkSecurityGroups.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2017-05-01-preview'
         }
     }
 };
 
-var postfinalcalls = {
-    FileService: {
-        getShareAcl: {
-            api: "StorageServiceClient",
-            reliesOnService: ['storageAccounts', 'storageAccounts', 'FileService'],
-            reliesOnCall: ['list', 'listKeys', 'listSharesSegmented'],
-            filterKey: ['name', 'keys', 'name'],
-            filterValue: ['name', 'value', 'name'],
-            entryKey: ['', '', 'fileName'],
-            filterListKeys: [false, true, false],
-            arm: false,
-            module: true
+var specialcalls = {
+    tableService: {
+        listTablesSegmented: {
+            reliesOnPath: ['storageAccounts.listKeys'],
         }
     },
-    TableService: {
-        getTableAcl: {
-            api: "StorageServiceClient",
-            reliesOnService: ['storageAccounts', 'storageAccounts', 'TableService'],
-            reliesOnCall: ['list', 'listKeys', 'listTablesSegmented'],
-            filterKey: ['name', 'keys', 'table'],
-            filterValue: ['name', 'value', 'name'],
-            entryKey: ['', '', 'tableName'],
-            filterListKeys: [false, true, false],
-            arm: false,
-            module: true
+    fileService: {
+        listSharesSegmented: {
+            reliesOnPath: ['storageAccounts.listKeys'],
         }
     },
-    QueueService: {
-        getQueueAcl: {
-            api: "StorageServiceClient",
-            reliesOnService: ['storageAccounts', 'storageAccounts', 'QueueService'],
-            reliesOnCall: ['list', 'listKeys', 'listQueuesSegmented'],
-            filterKey: ['name', 'keys', 'name'],
-            filterValue: ['name', 'value', 'name'],
-            entryKey: ['', '', 'queueName'],
-            filterListKeys: [false, true, false],
-            arm: false,
-            module: true
+    blobService: {
+        listContainersSegmented: {
+            reliesOnPath: ['storageAccounts.listKeys'],
+        }
+    },
+    queueService: {
+        listQueuesSegmented: {
+            reliesOnPath: ['storageAccounts.listKeys'],
         }
     }
 };
 
-// Loop through all of the top-level collectors for each service
-var processCall = function (AzureConfig, collection, settings, call, service, serviceCb) {
-    // Initialize collection service and locations
-    if (!collection[service]) collection[service] = {};
-
-    var locations = helpers.locations(false)[service].locations ? helpers.locations(false)[service].locations : helpers.locations(false)[service];
-
-    if (!call.manyApi) {
-        async.eachOfLimit(call, 10, function (callObj, callKey, callCb) {
-            if (!collection[service][callKey]) collection[service][callKey] = {};
-            if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
-
-            executeCall(AzureConfig, collection, collection[service][callKey], service, callObj, callKey, locations, callCb);
-
-        }, function () {
-            serviceCb();
-        });
-    } else {
-        async.eachOfLimit(call, 10, function (callInt, item, itemsCb) {
-            var myEngine = item;
-            async.eachOfLimit(callInt, 10, function(callObj, callKey, callCb) {
-                if (settings.api_calls && settings.api_calls.indexOf(service + ':' + myEngine + ':' + callKey) === -1) return callCb();
-                if (!collection[service][myEngine]) collection[service][myEngine] = {};
-                if (!collection[service][myEngine][callKey]) collection[service][myEngine][callKey] = {};
-
-                executeCall(AzureConfig, collection, collection[service][myEngine][callKey], service, callObj, callKey, locations, callCb);
-
-            }, function () {
-                itemsCb();
-            })
-        }, function () {
-            serviceCb();
-        });
-    }
-};
-
-var executeCall = function(AzureConfig, collection, collectionObject, service, callObj, callKey, locations, executeCallCb){
-    for (l in locations) {
-        if (!collectionObject[locations[l]]) {
-            collectionObject[locations[l]] = { data: [] };
-        }
-    }
-
-    var LocalAzureConfig = JSON.parse(JSON.stringify(AzureConfig));
-    LocalAzureConfig.service = service;
-
-    var executor = new helpers.AzureExecutor(LocalAzureConfig);
-    executor.run(collection, service, callObj, callKey, function (err, data) {
-        errorHandling(err, data, collectionObject, locations);
-
-        if (!data) {
-            return executeCallCb();
-        }
-
-        var locationsInArray = [];
-        for (var d = 0; d < data.length; d++) {
-            if (data[d].location &&
-                locations &&
-                locations.length &&
-                locations.length > 0) {
-                data[d].location = data[d].location.replace(/ /g, "").toLowerCase();
-                var locationExists = locationsInArray.filter(loc => loc == data[d].location);
-                var locationIsValid = locations.filter(loc => loc == data[d].location);
-                if (locationExists && locationExists.length == 0 &&
-                    locationIsValid && locationIsValid.length > 0) {
-                    locationsInArray.push(data[d].location);
-                }
-            } else {
-                data[d].location = "global";
-                locationsInArray.push(data[d].location);
-            }
-        }
-
-        if (locationsInArray &&
-            locationsInArray.length > 0) {
-            for (locationSelected in locationsInArray) {
-                var dataToPush = data.filter((d) => {
-                    return d.location == locationsInArray[locationSelected];
-                });
-
-                if (collectionObject[locationsInArray[locationSelected]] == undefined) {
-                    collectionObject[locationsInArray[locationSelected]] = {};
-                }
-
-                collectionObject[locationsInArray[locationSelected]].data = dataToPush;
-            }
+function parseCollection(path, obj) {
+    if (typeof path == 'string') path = path.split('.');
+    if (path.length) {
+        var localPath = path.shift();
+        if (obj[localPath]) {
+            return parseCollection(path, obj[localPath]);
         } else {
-            if (data.length > 0) {
-                collectionObject['unknown'] = {};
-                collectionObject['unknown'].data = data;
-            }
+            return false;
         }
-        executeCallCb();
-    });
-};
-
-// Loop through all of the top-level collectors for each service
-var collect = function (AzureConfig, settings, callback) {
-    var collection = {};
-
-    AzureConfig.maxRetries = 5;
-    AzureConfig.retryDelayOptions = { base: 300 };
-    AzureConfig.location = AzureConfig.location ? AzureConfig.location : 'global';
-
-    var settings = settings;
-
-    async.eachOfLimit(calls, 10, function (call, service, serviceCbcall) {
-        var service = service;
-        if (!collection[service]) collection[service] = {};
-
-        processCall(AzureConfig, collection, settings, call, service, function () {
-            serviceCbcall();
-        });
-    }, function () {
-        // Now loop through the follow up calls
-        async.eachOfLimit(postcalls, 10, function (postCall, service, serviceCbpostCall) {
-            var service = service;
-            if (!collection[service]) collection[service] = {};
-
-            processCall(AzureConfig, collection, settings, postCall, service, function () {
-                serviceCbpostCall();
-            });
-        }, function () {
-            // Now loop through the follow up calls
-            async.eachOfLimit(finalcalls, 10, function (finalCall, service, serviceCbfinalCall) {
-                var service = service;
-                if (!collection[service]) collection[service] = {};
-
-                processCall(AzureConfig, collection, settings, finalCall, service, function () {
-                    serviceCbfinalCall();
-                });
-
-            }, function () {
-                // Now loop through the follow up calls
-                async.eachOfLimit(postfinalcalls, 10, function (postFinalCall, service, serviceCbpostFinalCall) {
-                    var service = service;
-                    if (!collection[service]) collection[service] = {};
-
-                    processCall(AzureConfig, collection, settings, postFinalCall, service, function () {
-                        serviceCbpostFinalCall();
-                    });
-
-                }, function () {
-                    //console.log(JSON.stringify(collection, null, 2));
-                    collection = JSON.parse(jsonsafe(collection));
-                    callback(null, collection);
-                });
-            }, function () {
-                //console.log(JSON.stringify(collection, null, 2));
-                callback(null, collection);
-            });
-        }, function () {
-            //console.log(JSON.stringify(collection, null, 2));
-            callback(null, collection);
-        });
-    }, function () {
-        //console.log(JSON.stringify(collection, null, 2));
-        callback(null, collection);
-    });
-};
-
-function errorHandling(err, data, collectionObject, locations) {
-    if ((err && err.length == undefined) == true || (err && err.length !== undefined && err.length > 0) == true) {
-        for (l in locations) {
-            if (err.body && err.body.message) {
-                collectionObject[locations[l]].err = err.body.message;
-            } else if (err.body && err.body.error && err.body.error.message) {
-                collectionObject[locations[l]].err = err.body.error.message;
-            } else if (data && data.length && data.length>0 && err.length && err.length>0) {
-                var errorsReturned = '';
-                for (e in err){
-                    if (![404, 403, 400].includes(err[e].statusCode)){
-                        errorsReturned += err[e].message + '; ';
-                    }
-                }
-                if (errorsReturned.length) {
-                    collectionObject[locations[l]].err = errorsReturned;
-                }
-            } else {
-                collectionObject[locations[l]].err = "An error ocurred while retrieving service data";
-            }
-        }
+    } else {
+        return obj;
     }
 }
+
+var collect = function(AzureConfig, settings, callback) {
+    // Used to gather info only
+    if (settings.gather) {
+        return callback(null, calls, postcalls, tertiarycalls, specialcalls);
+    }
+    
+    var helpers = require(__dirname + '/../../helpers/azure/auth.js');
+    
+    // Login using the Azure config
+    helpers.login(AzureConfig, function(loginErr, loginData) {
+        if (loginErr) return callback(loginErr);
+
+        var collection = {};
+
+        var processCall = function(obj, cb) {
+            var localUrl = obj.url.replace(/\{subscriptionId\}/g, AzureConfig.SubscriptionID);
+            helpers.call({
+                url: localUrl,
+                post: obj.post,
+                token: obj.graph ? loginData.graphToken : (obj.vault ? loginData.vaultToken : loginData.token)
+            }, cb);
+        };
+
+        async.series([
+            // Calls - process the simple calls
+            function(cb) {
+                function processTopCall(collectionObj, service, subCallObj, subCallCb) {
+                    processCall(subCallObj, function(processCallErr, processCallData) {
+                        helpers.addLocations(subCallObj, service, collectionObj, processCallErr, processCallData);
+                        subCallCb();
+                    });
+                }
+                
+                async.eachOfLimit(calls, 10, function(callObj, service, callCb) {
+                    if (!collection[service]) collection[service] = {};
+                    // Loop through sub-calls
+                    async.eachOf(callObj, function(subCallObj, one, subCallCb) {
+                        // Skip API calls unless required
+                        if (settings &&
+                            settings.api_calls &&
+                            settings.api_calls.indexOf([service, one].join(':')) === -1) return subCallCb();
+                        
+                        if (!collection[service][one]) collection[service][one] = {};
+                        processTopCall(collection[service][one], service, subCallObj, subCallCb);
+                    }, function() {
+                        callCb();
+                    });
+                }, function() {
+                    cb();
+                });
+            },
+
+            // Post Calls - secondary calls that rely on calls
+            function(cb) {
+                function processTopCall(collectionObj, service, subCallObj, subCallCb) {
+                    // Loop through original properties
+                    var regionsToLoop = parseCollection(subCallObj.reliesOnPath, collection);
+                    if (regionsToLoop && Object.keys(regionsToLoop).length) {
+                        // Loop through regions
+                        async.eachOf(regionsToLoop, function(regionObj, region, regionCb) {
+                            if (regionObj && regionObj.data && regionObj.data.length) {
+                                if (!collectionObj[region]) collectionObj[region] = {};
+                                async.each(regionObj.data, function(regionData, regionDataCb) {
+                                    var localReq = {
+                                        url: subCallObj.url,
+                                        post: subCallObj.post,
+                                        token: subCallObj.token,
+                                        graph: subCallObj.graph,
+                                        vault: subCallObj.vault
+                                    };
+                                    // Check and replace properties
+                                    if (subCallObj.properties && subCallObj.properties.length) {
+                                        subCallObj.properties.forEach(function(propToReplace) {
+                                            if (regionData[propToReplace]) {
+                                                var re = new RegExp(`{${propToReplace}}`, 'g');
+                                                localReq.url = subCallObj.url.replace(re, regionData[propToReplace]);
+                                            }
+                                        });
+                                    }
+
+                                    // Add ID
+                                    collectionObj[region][regionData.id] = {};
+
+                                    // Call and process API
+                                    processCall(localReq, function(processCallErr, processCallData) {
+                                        if (processCallErr) collectionObj[region][regionData.id].err = processCallErr;
+                                        if (processCallData) {
+                                            if (processCallData.value) {
+                                                collectionObj[region][regionData.id].data = processCallData.value;
+                                            } else {
+                                                collectionObj[region][regionData.id].data = processCallData;
+                                            }
+                                            helpers.reduceProperties(service, collectionObj[region][regionData.id].data);
+                                        }
+                                        regionDataCb();
+                                    });
+                                }, function() {
+                                    regionCb();
+                                });
+                            } else {
+                                regionCb();
+                            }
+                        }, function() {
+                            subCallCb();
+                        });
+                    } else {
+                        subCallCb();
+                    }
+                }
+                
+                async.eachOfLimit(postcalls, 10, function(callObj, service, callCb) {
+                    if (!collection[service]) collection[service] = {};
+                    // Loop through sub-calls
+                    async.eachOf(callObj, function(subCallObj, one, subCallCb) {
+                        if (settings &&
+                            settings.api_calls &&
+                            settings.api_calls.indexOf([service, one].join(':')) === -1) return subCallCb();
+                        
+                        if (!collection[service][one]) collection[service][one] = {};
+                        processTopCall(collection[service][one], service, subCallObj, subCallCb);
+                    }, function() {
+                        callCb();
+                    });
+                }, function() {
+                    cb();
+                });
+            },
+
+            // Tertiary Calls - tertiary calls that rely on secondary calls
+            function(cb) {
+                function processTopCall(collectionObj, service, subCallObj, subCallCb) {
+                    // Loop through original properties
+                    var regionsToLoop = parseCollection(subCallObj.reliesOnPath, collection);
+                    if (regionsToLoop && Object.keys(regionsToLoop).length) {
+                        // Loop through regions
+                        async.eachOf(regionsToLoop, function(regionObj, region, regionCb) {
+                            if (!collectionObj[region]) collectionObj[region] = {};
+                            // Loop through the resources
+                            async.eachOf(regionObj, function(resourceObj, resourceId, resourceCb){
+                                function processResource(resourceData, resourceDataCb) {
+                                    var localReq = {
+                                        url: subCallObj.url,
+                                        post: subCallObj.post,
+                                        token: subCallObj.token,
+                                        graph: subCallObj.graph,
+                                        vault: subCallObj.vault
+                                    };
+                                    // Check and replace properties
+                                    if (subCallObj.properties && subCallObj.properties.length) {
+                                        subCallObj.properties.forEach(function(propToReplace) {
+                                            if (resourceData[propToReplace]) {
+                                                var re = new RegExp(`{${propToReplace}}`, 'g');
+                                                localReq.url = subCallObj.url.replace(re, resourceData[propToReplace]);
+                                            }
+                                        });
+                                    }
+
+                                    // Add ID
+                                    collectionObj[region][resourceData.id] = {};
+
+                                    // Call and process API
+                                    processCall(localReq, function(processCallErr, processCallData) {
+                                        if (processCallErr) collectionObj[region][resourceData.id].err = processCallErr;
+                                        if (processCallData) {
+                                            if (processCallData.value) {
+                                                collectionObj[region][resourceData.id].data = processCallData.value;
+                                            } else {
+                                                collectionObj[region][resourceData.id].data = processCallData;
+                                            }
+                                            helpers.reduceProperties(service, collectionObj[region][resourceData.id].data);
+                                        }
+                                        resourceDataCb();
+                                    });
+                                }
+                                
+                                if (Array.isArray(resourceObj)) {
+                                    async.each(resourceObj, function(resourceData, resourceDataCb) {
+                                        processResource(resourceData, resourceDataCb);
+                                    }, function(){
+                                        resourceCb();
+                                    });
+                                } else {
+                                    if (resourceObj && resourceObj.data && resourceObj.data.length) {
+                                        async.each(resourceObj.data, function(resourceData, resourceDataCb) {
+                                            processResource(resourceData, resourceDataCb);
+                                        }, function() {
+                                            resourceCb();
+                                        });
+                                    } else {
+                                        resourceCb();
+                                    }
+                                }
+                            }, function(){
+                                regionCb();
+                            });
+                        }, function() {
+                            subCallCb();
+                        });
+                    } else {
+                        subCallCb();
+                    }
+                }
+
+                async.eachOfLimit(tertiarycalls, 10, function(callObj, service, callCb) {
+                    if (!collection[service]) collection[service] = {};
+                    // Loop through sub-calls
+                    async.eachOf(callObj, function(subCallObj, one, subCallCb) {
+                        if (settings &&
+                            settings.api_calls &&
+                            settings.api_calls.indexOf([service, one].join(':')) === -1) return subCallCb();
+                        
+                        if (!collection[service][one]) collection[service][one] = {};
+                        if (subCallObj.url) {
+                            processTopCall(collection[service][one], service, subCallObj, subCallCb);
+                        } else {
+                            // Go one level deeper
+                            async.eachOf(subCallObj, function(innerCallObj, two, innerCb) {
+                                if (settings &&
+                                    settings.api_calls &&
+                                    settings.api_calls.indexOf([service, one, two].join(':')) === -1) return subCallCb();
+                                
+                                if (!collection[service][one][two]) collection[service][one][two] = {};
+                                processTopCall(collection[service][one][two], service, innerCallObj, innerCb);
+                            }, function() {
+                                subCallCb();
+                            });
+                        }
+                    }, function() {
+                        callCb();
+                    });
+                }, function() {
+                    cb();
+                });
+            },
+
+            // Process special calls with override functions
+            function(cb) {
+                async.eachOfLimit(specialcalls, 10, function(callObj, service, callCb) {
+                    if (!collectors[service]) return callCb();
+                    if (!collection[service]) collection[service] = {};
+                    async.eachOfLimit(callObj, 1, function(subCallObj, one, subCallCb) {
+                        if (settings &&
+                            settings.api_calls &&
+                            settings.api_calls.indexOf([service, one].join(':')) === -1) return subCallCb();
+                        if (!collectors[service][one]) return subCallCb();
+                        if (!collection[service][one]) collection[service][one] = {};
+                        var reliesOn = {};
+                        if (subCallObj.reliesOnPath) {
+                            subCallObj.reliesOnPath.forEach(function(path){
+                                reliesOn[path] = parseCollection(path, collection);
+                            });
+                        }
+                        collectors[service][one](collection, reliesOn, function(){
+                            subCallCb();
+                        });
+                    }, function(){
+                        callCb();
+                    });
+                }, function() {
+                    cb();
+                });
+            },
+
+            // Finalize
+            function() {
+                //console.log(JSON.stringify(collection, null,2));
+                callback(null, collection);
+            }
+        ]);
+    });
+};
 
 module.exports = collect;

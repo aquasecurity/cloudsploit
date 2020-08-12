@@ -37,21 +37,22 @@ module.exports = {
             if (!disks.data.length) {
                 helpers.addResult(results, 0, 'No existing disks found', location);
             } else {
-                var reg = 0;
-                for(i in disks.data){
-                    if(disks.data[i].name &&
-                        disks.data[i].name.search("OsDisk") === -1){
-                        if(!disks.data[i].encryptionSettings ||
-                            (disks.data[i].encryptionSettings &&
-                            !disks.data[i].encryptionSettings.enabled)
-                        ){
-                            helpers.addResult(results, 2, 'Data disk encryption is not enabled', location, disks.data[i].id);
-                            reg++;
+                var found = false;
+                for(var i in disks.data) {
+                    var disk = disks.data[i];
+                    if (disk.name &&
+                        disk.name.length &&
+                        disk.name.toLowerCase().indexOf('osdisk') === -1) {
+                        found = true;
+                        if (disk && disk.encryption) {
+                            helpers.addResult(results, 0, 'Data disk encryption is enabled', location, disk.id);
+                        } else {
+                            helpers.addResult(results, 2, 'Data disk encryption is disabled', location, disk.id);
                         }
                     }
                 }
-                if(!reg){
-                    helpers.addResult(results, 0, 'Data disk encryption is enabled for all virtual machines', location);
+                if (!found) {
+                    helpers.addResult(results, 0, 'No data disks found', location);
                 }
             }
 
@@ -61,4 +62,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

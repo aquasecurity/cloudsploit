@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Pre-authenticated requests allow for users who are not in the tenancy to access buckets, having a short expiration time-frame ensures that access does not last longer than intended.',
     recommended_action: 'When creating pre-authenticated Requests, ensure the expiration date-time is limited to the minimum time possible.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Object/Tasks/usingPre-Authenticatedrequests.htm',
-    apis: ['bucket:list','preAuthenticatedRequest:list'],
+    apis: ['namespace:get','bucket:list','preAuthenticatedRequest:list'],
     settings: {
         preauthorization_expiration_date_warn: {
             name: 'Pre-Authorization Request Expiration Date Warning',

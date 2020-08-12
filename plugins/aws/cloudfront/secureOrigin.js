@@ -45,11 +45,11 @@ module.exports = {
                 !distribution.Origins.Items ||
                 !distribution.Origins.Items.length) {
                 helpers.addResult(results, 0, 'No CloudFront origins found',
-                        'global', distribution.ARN);
+                    'global', distribution.ARN);
                 return cb();
             }
 
-            for (o in distribution.Origins.Items) {
+            for (var o in distribution.Origins.Items) {
                 var origin = distribution.Origins.Items[o];
 
                 if (origin.CustomOriginConfig &&

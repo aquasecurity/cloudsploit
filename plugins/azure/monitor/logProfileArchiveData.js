@@ -22,61 +22,65 @@ module.exports = {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
-        var logProfile;
-        
-        for (var location of locations.logProfiles) {
 
-            const logProfiles = helpers.addSource(cache, source, 
+        async.each(locations.logProfiles, (location, rcb) => {
+            const logProfiles = helpers.addSource(cache, source,
                 ['logProfiles', 'list', location]);
 
-            if (!logProfiles) continue;
+            if (!logProfiles) return rcb();
 
             if (logProfiles.err || !logProfiles.data) {
                 helpers.addResult(results, 3,
-                'Unable to query Log Profiles: ' + helpers.addError(logProfiles), location);
-                continue;
+                    'Unable to query for Log Profiles: ' + helpers.addError(logProfiles), location);
+                return rcb();
             }
-                
+
             if (!logProfiles.data.length) {
-                continue;
-            } else {
-                logProfile = logProfiles.data;
-                break;
+                helpers.addResult(results, 2, 'No existing Log Profiles found', location);
+                return rcb();
             }
-        }
-        
-        async.each(locations.logProfiles, (loc, lcb) => {
-            if (!logProfile) return lcb();
-            
-            var logProfileMatch = logProfile.find((d) => {
-                return d.locations.includes(loc);
+
+            logProfiles.data.forEach(function(logProfile){
+                var issues = [];
+                if (logProfile.locations && logProfile.locations.length) {
+                    var unmatchedRegions = [];
+                    locations.all.forEach(function(region){
+                        if (region !== 'global' && logProfile.locations.indexOf(region) === -1) {
+                            unmatchedRegions.push(region);
+                        }
+                    });
+                    if (unmatchedRegions.length) {
+                        issues.push('the following regions are not being monitored: ' + unmatchedRegions.join(', '));
+                    }
+                } else {
+                    issues.push('no regions are being monitored');
+                }
+
+                if (logProfile.categories && logProfile.categories.length) {
+                    var unmatchedCats = [];
+                    ['Write', 'Delete', 'Action'].forEach(function(cat){
+                        if (logProfile.categories.indexOf(cat) === -1) {
+                            unmatchedCats.push(cat);
+                        }
+                    });
+                    if (unmatchedCats.length) {
+                        issues.push('the following categories are not being monitored: ' + unmatchedCats.join(', '));
+                    }
+                } else {
+                    issues.push('no log categories are being monitored');
+                }
+
+                if (issues.length) {
+                    helpers.addResult(results, 2,
+                        'Log Profile has the following issues: ' + issues.join('; '), location, logProfile.id);
+                } else {
+                    helpers.addResult(results, 0,
+                        'Log Profile is archiving all activities in all regions.', location, logProfile.id);
+                }
             });
 
-            if (logProfileMatch &&
-                logProfileMatch.categories &&
-                logProfileMatch.categories.length &&
-                logProfileMatch.categories.length === 3) {
-                helpers.addResult(results, 0,
-                'Log Profile is archiving all activities in the region.', loc);
-                lcb();
-            } else if (logProfileMatch &&
-                logProfileMatch.categories &&
-                logProfileMatch.categories.length &&
-                logProfileMatch.categories.length < 3) {
-                var categories = logProfileMatch.categories.join(' and ');
-                helpers.addResult(results, 2,
-                    `Log Profile is only archiving ${categories} in the region.`, loc);
-                lcb();
-
-            } else {
-                helpers.addResult(results, 2,
-                'Log Profile is not archiving data in the region.', loc);
-                lcb();
-            }
+            rcb();
         }, function() {
-            if (!logProfile) {
-                helpers.addResult(results, 2, 'No Log Profile enabled.', 'global');
-            }
             callback(null, results, source);
         });
     }

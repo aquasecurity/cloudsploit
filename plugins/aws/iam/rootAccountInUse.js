@@ -27,7 +27,7 @@ module.exports = {
     },
 
     run: function(cache, settings, callback) {
-        this._run(cache, settings, callback, new Date())
+        this._run(cache, settings, callback, new Date());
     },
 
     _run: function(cache, settings, callback, now) {
@@ -43,7 +43,7 @@ module.exports = {
         var region = helpers.defaultRegion(settings);
 
         var generateCredentialReport = helpers.addSource(cache, source,
-                ['iam', 'generateCredentialReport', region]);
+            ['iam', 'generateCredentialReport', region]);
 
         if (!generateCredentialReport) return callback(null, results, source);
 
@@ -55,7 +55,7 @@ module.exports = {
 
         var found = false;
 
-        for (r in generateCredentialReport.data) {
+        for (var r in generateCredentialReport.data) {
             var obj = generateCredentialReport.data[r];
 
             if (obj && obj.user === '<root_account>') {

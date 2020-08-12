@@ -13,7 +13,7 @@ const encryptionLevelMap = {
 function statementTargetsAction(statement, targetAction) {
     return Array.isArray(statement.Action)
         ? statement.Action.find(action => minimatch(targetAction, action))
-        : minimatch(targetAction, statement.Action)
+        : minimatch(targetAction, statement.Action);
 }
 
 /**
@@ -43,15 +43,16 @@ function getEncryptionLevel(statement) {
 
 function getKeyEncryptionLevel(kmsKey) {
     return kmsKey.Origin === 'AWS_CLOUDHSM' ? 'cloudhsm' :
-           kmsKey.Origin === 'EXTERNAL' ? 'externalcmk' :
-           kmsKey.KeyManager === 'CUSTOMER' ? 'awscmk' : 'awskms'
+        kmsKey.Origin === 'EXTERNAL' ? 'externalcmk' :
+            kmsKey.KeyManager === 'CUSTOMER' ? 'awscmk' : 'awskms';
 }
 
 module.exports = {
     title: 'S3 Bucket Encryption Enforcement',
     category: 'S3',
     description: 'All statements in all S3 bucket policies must have a condition that requires encryption at a certain level',
-    recommended_action: 'Configure a bucket policy to enforce encryption',
+    more_info: 'S3 buckets support numerous types of encryption, including AES-256, KMS using a default key, KMS with a CMK, or via HSM-based key.',
+    recommended_action: 'Configure a bucket policy to enforce encryption.',
     link: 'https://aws.amazon.com/blogs/security/how-to-prevent-uploads-of-unencrypted-objects-to-amazon-s3/',
     apis: ['S3:listBuckets', 'S3:getBucketPolicy', 'KMS:listKeys', 'KMS:describeKey'],
     settings: {
@@ -72,8 +73,7 @@ module.exports = {
         var results = [];
         var source = {};
 
-        var desiredEncryptionLevelString = settings.s3_required_encryption_level || this.settings.s3_required_encryption_level.default
-        // console.log(desiredEncryptionLevelString)
+        var desiredEncryptionLevelString = settings.s3_required_encryption_level || this.settings.s3_required_encryption_level.default;
         if(!desiredEncryptionLevelString.match(this.settings.s3_required_encryption_level.regex)) {
             helpers.addResult(results, 3, 'Settings misconfigured for S3 Encryption Enforcement.');
             return callback(null, results, source);
@@ -109,10 +109,11 @@ module.exports = {
 
             try {
                 // Parse the policy if it hasn't been parsed and replaced by another plugin....
+                var policyJson;
                 if (typeof getBucketPolicy.data.Policy === 'string') {
-                    var policyJson = JSON.parse(getBucketPolicy.data.Policy);
+                    policyJson = JSON.parse(getBucketPolicy.data.Policy);
                 } else {
-                    var policyJson = getBucketPolicy.data.Policy
+                    policyJson = getBucketPolicy.data.Policy;
                 }
             } catch(e) {
                 helpers.addResult(results, 3, `Bucket policy on bucket [${bucket.Name}] could not be parsed.`, 'global', bucketResource);
@@ -127,11 +128,11 @@ module.exports = {
                 continue;
             }
 
-            statementEncryptionLevels = policyJson.Statement.map(statement => {
+            var statementEncryptionLevels = policyJson.Statement.map(statement => {
                 const encryptionLevel = getEncryptionLevel(statement);
                 if (encryptionLevel.level) return encryptionLevel.level;
                 if (encryptionLevel.key) {
-                    const keyId = encryptionLevel.key.split('/')[1]
+                    const keyId = encryptionLevel.key.split('/')[1];
                     const describeKey = helpers.addSource(cache, source, ['kms', 'describeKey', region, keyId]);
                     if (!describeKey || describeKey.err || !describeKey.data) {
                         helpers.addResult(results, 3, `Unable to query for KMS Key: ${helpers.addError(describeKey)}`, region, keyId);

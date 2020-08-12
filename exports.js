@@ -24,6 +24,8 @@ module.exports = {
 
         'configServiceEnabled'          : require(__dirname + '/plugins/aws/configservice/configServiceEnabled.js'),
 
+        'dmsEncryptionEnabled'          : require(__dirname + '/plugins/aws/dms/dmsEncryptionEnabled.js'),
+
         'dynamoKmsEncryption'           : require(__dirname + '/plugins/aws/dynamodb/dynamoKmsEncryption.js'),
 
         'defaultSecurityGroup'          : require(__dirname + '/plugins/aws/ec2/defaultSecurityGroup.js'),
@@ -37,6 +39,7 @@ module.exports = {
         'openAllPortsProtocols'         : require(__dirname + '/plugins/aws/ec2/openAllPortsProtocols.js'),
         'openCIFS'                      : require(__dirname + '/plugins/aws/ec2/openCIFS.js'),
         'openDNS'                       : require(__dirname + '/plugins/aws/ec2/openDNS.js'),
+        'openDocker'                    : require(__dirname + '/plugins/aws/ec2/openDocker.js'),
         'openFTP'                       : require(__dirname + '/plugins/aws/ec2/openFTP.js'),
         'openHadoopNameNode'            : require(__dirname + '/plugins/aws/ec2/openHadoopNameNode.js'),
         'openHadoopNameNodeWebUI'       : require(__dirname + '/plugins/aws/ec2/openHadoopNameNodeWebUI.js'),
@@ -47,6 +50,7 @@ module.exports = {
         'openPostgreSQL'                : require(__dirname + '/plugins/aws/ec2/openPostgreSQL.js'),
         'openRDP'                       : require(__dirname + '/plugins/aws/ec2/openRDP.js'),
         'openRPC'                       : require(__dirname + '/plugins/aws/ec2/openRPC.js'),
+        'openSalt'                      : require(__dirname + '/plugins/aws/ec2/openSalt.js'),
         'openSMBoTCP'                   : require(__dirname + '/plugins/aws/ec2/openSMBoTCP.js'),
         'openSMTP'                      : require(__dirname + '/plugins/aws/ec2/openSMTP.js'),
         'openSQLServer'                 : require(__dirname + '/plugins/aws/ec2/openSQLServer.js'),
@@ -86,9 +90,14 @@ module.exports = {
         'elbHttpsOnly'                  : require(__dirname + '/plugins/aws/elb/elbHttpsOnly.js'),
         'elbLoggingEnabled'             : require(__dirname + '/plugins/aws/elb/elbLoggingEnabled.js'),
         'elbNoInstances'                : require(__dirname + '/plugins/aws/elb/elbNoInstances.js'),
-        'elbWafEnabled'                 : require(__dirname + '/plugins/aws/elb/elbWafEnabled.js'),
+
+        'elbv2LoggingEnabled'             : require(__dirname + '/plugins/aws/elbv2/elbv2LoggingEnabled.js'),
+        'elbv2HttpsOnly'                  : require(__dirname + '/plugins/aws/elbv2/elbv2HttpsOnly.js'),
+        'elbv2NoInstances'                : require(__dirname + '/plugins/aws/elbv2/elbv2NoInstances.js'),
+        'elbv2WafEnabled'                 : require(__dirname + '/plugins/aws/elbv2/elbv2WafEnabled.js'),
 
         'esPublicEndpoint'              : require(__dirname + '/plugins/aws/es/esPublicEndpoint.js'),
+        'esRequireIAMAuth'              : require(__dirname + '/plugins/aws/es/esRequireIAMAuth.js'),
         'esEncryptedDomain'             : require(__dirname + '/plugins/aws/es/esEncryptedDomain.js'),
         'esNodeToNodeEncryption'        : require(__dirname + '/plugins/aws/es/esNodeToNodeEncryption.js'),
         'esLoggingEnabled'              : require(__dirname + '/plugins/aws/es/esLoggingEnabled.js'),
@@ -135,6 +144,7 @@ module.exports = {
         'rdsRestorable'                 : require(__dirname + '/plugins/aws/rds/rdsRestorable.js'),
         'rdsMultiAz'                    : require(__dirname + '/plugins/aws/rds/rdsMultiAz.js'),
         'rdsSnapshotEncryption'         : require(__dirname + '/plugins/aws/rds/rdsSnapshotEncryption.js'),
+        'rdsMinorVersionUpgrade'        : require(__dirname + '/plugins/aws/rds/rdsMinorVersionUpgrade.js'),
 
         'domainAutoRenew'               : require(__dirname + '/plugins/aws/route53/domainAutoRenew.js'),
         'domainExpiry'                  : require(__dirname + '/plugins/aws/route53/domainExpiry.js'),
@@ -168,6 +178,7 @@ module.exports = {
         'lambdaOldRuntimes'             : require(__dirname + '/plugins/aws/lambda/lambdaOldRuntimes.js'),
         'lambdaVpcConfig'               : require(__dirname + '/plugins/aws/lambda/lambdaVpcConfig.js'),
         'lambdaPublicAccess'            : require(__dirname + '/plugins/aws/lambda/lambdaPublicAccess.js'),
+        'lambdaLogGroups'               : require(__dirname + '/plugins/aws/lambda/lambdaLogGroups.js'),
 
         'monitoringMetrics'             : require(__dirname + '/plugins/aws/cloudwatchlogs/monitoringMetrics.js'),
 
@@ -276,6 +287,7 @@ module.exports = {
         'openFTP'                       : require(__dirname + '/plugins/azure/networksecuritygroups/openFTP.js'),
         'openSSH'                       : require(__dirname + '/plugins/azure/networksecuritygroups/openSSH.js'),
         'openCIFS'                      : require(__dirname + '/plugins/azure/networksecuritygroups/openCIFS.js'),
+        'openDocker'                    : require(__dirname + '/plugins/azure/networksecuritygroups/openDocker.js'),
         'openDNS'                       : require(__dirname + '/plugins/azure/networksecuritygroups/openDNS.js'),
         'openRDP'                       : require(__dirname + '/plugins/azure/networksecuritygroups/openRDP.js'),
         'openTelnet'                    : require(__dirname + '/plugins/azure/networksecuritygroups/openTelnet.js'),
@@ -285,6 +297,7 @@ module.exports = {
         'openNetBIOS'                   : require(__dirname + '/plugins/azure/networksecuritygroups/openNetBIOS.js'),
         'openPostgreSQL'                : require(__dirname + '/plugins/azure/networksecuritygroups/openPostgreSQL.js'),
         'openRPC'                       : require(__dirname + '/plugins/azure/networksecuritygroups/openRPC.js'),
+        'openSalt'                      : require(__dirname + '/plugins/azure/networksecuritygroups/openSalt.js'),
         'openSMBoTCP'                   : require(__dirname + '/plugins/azure/networksecuritygroups/openSMBoTCP.js'),
         'openSQLServer'                 : require(__dirname + '/plugins/azure/networksecuritygroups/openSQLServer.js'),
 
@@ -388,10 +401,12 @@ module.exports = {
         'openFTP'                       : require(__dirname + '/plugins/oracle/networking/openFTP.js'),
         'openCIFS'                      : require(__dirname + '/plugins/oracle/networking/openCIFS.js'),
         'openDNS'                       : require(__dirname + '/plugins/oracle/networking/openDNS.js'),
+        'openDocker'                    : require(__dirname + '/plugins/oracle/networking/openDocker.js'),
         'openSQLServer'                 : require(__dirname + '/plugins/oracle/networking/openSQLServer.js'),
         'openHadoopNameNode'            : require(__dirname + '/plugins/oracle/networking/openHadoopNameNode.js'),
         'openHadoopNameNodeWebUI'       : require(__dirname + '/plugins/oracle/networking/openHadoopNameNodeWebUI.js'),
         'openKibana'                    : require(__dirname + '/plugins/oracle/networking/openKibana.js'),
+        'openSalt'                      : require(__dirname + '/plugins/oracle/networking/openSalt.js'),
         'openSMTP'                      : require(__dirname + '/plugins/oracle/networking/openSMTP.js'),
 
         'statelessSecurityRules'        : require(__dirname + '/plugins/oracle/networking/statelessSecurityRules.js'),
@@ -428,6 +443,7 @@ module.exports = {
     google: {
         'excessiveFirewallRules'        : require(__dirname + '/plugins/google/vpcnetwork/excessiveFirewallRules.js'),
         'openDNS'                       : require(__dirname + '/plugins/google/vpcnetwork/openDNS.js'),
+        'openDocker'                    : require(__dirname + '/plugins/google/vpcnetwork/openDocker.js'),
         'openSSH'                       : require(__dirname + '/plugins/google/vpcnetwork/openSSH.js'),
         'openCIFS'                      : require(__dirname + '/plugins/google/vpcnetwork/openCIFS.js'),
         'openAllPorts'                  : require(__dirname + '/plugins/google/vpcnetwork/openAllPorts.js'),
@@ -441,6 +457,7 @@ module.exports = {
         'openPostgreSQL'                : require(__dirname + '/plugins/google/vpcnetwork/openPostgreSQL.js'),
         'openRDP'                       : require(__dirname + '/plugins/google/vpcnetwork/openRDP.js'),
         'openRPC'                       : require(__dirname + '/plugins/google/vpcnetwork/openRPC.js'),
+        'openSalt'                      : require(__dirname + '/plugins/google/vpcnetwork/openSalt.js'),
         'openSMBoTCP'                   : require(__dirname + '/plugins/google/vpcnetwork/openSMBoTCP.js'),
         'openSMTP'                      : require(__dirname + '/plugins/google/vpcnetwork/openSMTP.js'),
         'openSQLServer'                 : require(__dirname + '/plugins/google/vpcnetwork/openSQLServer.js'),

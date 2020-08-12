@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Azure limits availability sets to certain numbers of resources. Exceeding those limits could prevent resources from launching.',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/windows/overview',
     recommended_action: 'Contact Azure support to increase the number of instances available',
-    apis: ['resourceGroups:list', 'availabilitySets:list'],
+    apis: ['resourceGroups:list', 'availabilitySets:listBySubscription'],
     settings: {
         instance_limit_percentage_fail: {
             name: 'Instance Limit Percentage Fail',
@@ -39,7 +39,7 @@ module.exports = {
         async.each(locations.availabilitySets, function(location, rcb){
 
             var availabilitySets = helpers.addSource(cache, source, 
-                ['availabilitySets', 'list', location]);
+                ['availabilitySets', 'listBySubscription', location]);
 
             if (!availabilitySets) return rcb();
 
@@ -47,12 +47,12 @@ module.exports = {
                 helpers.addResult(results, 3, 
                     'Unable to query Availability Sets: ' + helpers.addError(availabilitySets), location);
                 return rcb();
-            };
+            }
 
             if (!availabilitySets.data.length) {
                 helpers.addResult(results, 0, 'No existing Availability Sets', location);
                 return rcb();
-            };
+            }
 
             var limits = {
                 'max-instances': 200
@@ -60,10 +60,10 @@ module.exports = {
 
             availabilitySets.data.forEach(availabilitySet => {
                 if (availabilitySet.virtualMachines) {
-                    vmInstances = availabilitySet.virtualMachines.length;
+                    var vmInstances = availabilitySet.virtualMachines.length;
                 } else {
                     return;
-                };
+                }
 
                 var percentage = Math.ceil((vmInstances / limits['max-instances']) * 100);
                 var returnMsg = 'Availability Set contains ' + vmInstances + ' of ' +
@@ -75,12 +75,12 @@ module.exports = {
                     helpers.addResult(results, 1, returnMsg, location, availabilitySet.id);
                 } else {
                     helpers.addResult(results, 0, returnMsg, location, availabilitySet.id);
-                };
+                }
             });
 
             rcb();
         }, function(){
-            callback(null, results, source)
+            callback(null, results, source);
         });
     }
 };

@@ -36,7 +36,7 @@ module.exports = {
                 return rcb();
             }
 
-            for (i in listServers.data) {
+            for (var i in listServers.data) {
                 var server = listServers.data[i];
                 var arn = server.Arn;
 

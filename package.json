@@ -23,7 +23,7 @@
     "cloud",
     "security"
   ],
-  "author": "CloudSploit",
+  "author": "Aqua Security",
   "license": "GPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/cloudsploit/scans/issues"
@@ -38,28 +38,12 @@
     "@octokit/rest": "^16.3.2",
     "async": "^2.6.1",
     "aws-sdk": "^2.648.0",
-    "azure-arm-authorization": "^8.3.1",
-    "azure-arm-cdn": "^4.2.0",
-    "azure-arm-compute": "^9.1.0",
-    "azure-arm-containerregistry": "^5.1.0",
-    "azure-arm-containerservice": "^8.0.0",
-    "azure-arm-keyvault": "^1.2.0",
-    "azure-arm-monitor": "^5.4.0",
-    "azure-arm-mysql": "^3.2.0",
-    "azure-arm-network": "^13.0.0",
-    "azure-arm-postgresql": "^4.3.0",
-    "azure-arm-resource": "^7.3.0",
-    "azure-arm-security": "^1.2.0-preview",
-    "azure-arm-sql": "^5.7.0",
-    "azure-arm-storage": "^6.3.0",
-    "azure-arm-website": "^5.7.0",
-    "azure-graph": "^4.3.0",
-    "azure-keyvault": "^3.0.4",
-    "azure-storage": "^2.10.2",
+    "azure-storage": "^2.10.3",
     "csv-write-stream": "^2.0.0",
     "fast-safe-stringify": "^2.0.6",
     "googleapis": "^40.0.1",
-    "ms-rest-azure": "^2.5.9"
+    "minimatch": "^3.0.4",
+    "ms-rest-azure": "^2.6.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",

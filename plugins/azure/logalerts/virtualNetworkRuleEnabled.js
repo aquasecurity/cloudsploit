@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Monitoring for create or update and delete Virtual Networks events gives insight into event changes and may reduce the time it takes to detect suspicious activity.',
     recommended_action: 'Add a new log alert to the Alerts service that monitors for Virtual Networks create or update and delete events.',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-network/security-overview',
-    apis: ['resourceGroups:list', 'activityLogAlerts:listByResourceGroup', 'resources:list'],
+    apis: ['activityLogAlerts:listBySubscriptionId'],
     compliance: {
         hipaa: 'HIPAA requires the auditing of changes to access controls for network ' +
                 'resources.',
@@ -17,136 +17,24 @@ module.exports = {
                 'firewalls.'
     },
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        const activityLogAlerts = helpers.addSource(
-            cache, source, ['activityLogAlerts', 'listByResourceGroup', 'global']
-        );
+        async.each(locations.activityLogAlerts, function(location, rcb) {
 
-        if (!activityLogAlerts) return callback();
+            var conditionResource = 'microsoft.network/virtualnetworks';
 
-        if (activityLogAlerts.err || !activityLogAlerts.data) {
-            helpers.addResult(results, 3,
-                'Unable to query for Log Alerts: ' + helpers.addError(activityLogAlerts), 'global');
-            return callback();
-        }
+            var text = 'Virtual Networks';
 
-        if (!activityLogAlerts.data.length) {
-            helpers.addResult(results, 2,
-                'No existing Log Alerts found', 'global');
-            return callback();
-        }
+            var activityLogAlerts = helpers.addSource(cache, source,
+                ['activityLogAlerts', 'listBySubscriptionId', location]);
 
-        async.each(locations.resources, function(location, rcb) {
-
-            var resourceList = helpers.addSource(cache, source, ['resources', 'list', location]);
-
-            if (!resourceList || resourceList.err || !resourceList.data) {
-                helpers.addResult(results, 3,
-                    'Unable to obtain resource list data: ' + helpers.addError(resourceList),
-                    location
-                );
-                return rcb();
-            }
-
-            var virtualNetworkResourceList = resourceList.data.filter((d) => {
-                return d.type == 'Microsoft.Network/virtualNetworks';
-            });
-
-            if (virtualNetworkResourceList &&
-                virtualNetworkResourceList.length &&
-                virtualNetworkResourceList.length>0) {
-
-                let alertCreateUpdateExists = false;
-                let alertCreateUpdateEnabled = false;
-                let alertDeleteExists = false;
-                let alertDeleteEnabled = false;
-
-                for (let res in activityLogAlerts.data) {
-                    const activityLogAlertResource = activityLogAlerts.data[res];
-
-                    if (activityLogAlertResource.type !== 'Microsoft.Insights/ActivityLogAlerts') continue;
-
-                    const allConditions = activityLogAlertResource.condition;
-
-                    var conditionOperation = allConditions.allOf.filter((d) => {
-                        return d.field == 'operationName';
-                    });
-
-                    if (conditionOperation && conditionOperation.length) {
-                        for (c in conditionOperation) {
-                            var condition = conditionOperation[c];
-                            if (condition.equals.indexOf("Microsoft.Network/virtualNetworks/write") > -1) {
-                                alertCreateUpdateExists = true;
-                                alertCreateUpdateEnabled = (!alertCreateUpdateEnabled && activityLogAlertResource.enabled ? true : alertCreateUpdateEnabled);
-                            } else if (condition.equals.indexOf("Microsoft.Network/virtualNetworks/delete") > -1) {
-                                alertDeleteExists = true;
-                                alertDeleteEnabled = (!alertDeleteEnabled && activityLogAlertResource.enabled ? true : alertDeleteEnabled);
-                            }
-                        }
-                    }
-                }
-
-                if (alertCreateUpdateExists &&
-                    alertCreateUpdateEnabled &&
-                    alertDeleteExists &&
-                    alertDeleteEnabled) {
-                    helpers.addResult(
-                        results,
-                        0,
-                        'Log Alert for Virtual Networks create or update and delete is enabled',
-                        location
-                    );
-                } else {
-                    if ((!alertCreateUpdateExists) ||
-                        (alertCreateUpdateExists &&
-                            !alertCreateUpdateEnabled)) {
-                        helpers.addResult(results, 2,
-                            'Log Alert for Virtual Networks create or update is not enabled',
-                            location
-                        );
-                    } else {
-                        helpers.addResult(results, 0,
-                            'Log Alert for Virtual Networks create or update is enabled',
-                            location
-                        );
-                    }
-
-                    if ((!alertDeleteExists) ||
-                        (alertDeleteExists &&
-                            !alertDeleteEnabled)) {
-                        helpers.addResult(results, 2,
-                            'Log Alert for Virtual Networks delete is not enabled',
-                            location
-                        );
-                    } else {
-                        helpers.addResult(results, 0,
-                            'Log Alert for Virtual Networks delete is enabled',
-                            location
-                        );
-                    }
-                }
-
-                if (!alertCreateUpdateExists &&
-                    !alertDeleteExists) {
-                    helpers.addResult(results, 2,
-                        'Log Alert for Virtual Networks is not enabled',
-                        location
-                    );
-                }
-
-            } else {
-                helpers.addResult(results, 0,
-                    'No Virtual Networks resources found',
-                    location
-                );
-            }
-
+            helpers.checkLogAlerts(activityLogAlerts, conditionResource, text, results, location);
+            
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });
