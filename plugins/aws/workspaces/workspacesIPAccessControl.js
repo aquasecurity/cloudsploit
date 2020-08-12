@@ -21,6 +21,7 @@ module.exports = {
         var accountId = helpers.addSource(cache, source, ["sts", "getCallerIdentity", acctRegion, "data"]);
 
         const enabledString = "IP Access Control enabled.";
+        const enabledButAllowsWorldString = "IP Access Control enabled but 0.0.0.0/0 is allowed";
         const disabledString = "IP Access Control not enabled.";
 
         async.each(regions.workspaces, function(region, rcb){
@@ -49,51 +50,34 @@ module.exports = {
             for (var workspace of listWorkspaces) {
                 var arn = "arn:" + awsOrGov + ":workspaces:" + region + ":" + accountId + ":workspace/" + workspace.WorkspaceId;
 
-                if (!(workspace.DirectoryId)){
-                    helpers.addResult(
-                        results, 2, disabledString, region, arn
-                    );
+                if (!workspace.DirectoryId){
+                    helpers.addResult(results, 2, disabledString, region, arn);
                 }
 
-                if (workspace){
-                    var workspaceDirectory = listDirectories.find(directory => directory.DirectoryId === workspace.DirectoryId);
-                    if (workspaceDirectory.ipGroupIds) {
-                        let openIP = []
-                        for (var workspaceIPGroup of workspaceDirectory.ipGroupIds){
-                            var ipGroup = listIPGroups.find(o => o.groupId === workspaceIPGroup);
+                var workspaceDirectory = listDirectories.find(directory => directory.DirectoryId === workspace.DirectoryId);
+                if (workspaceDirectory.ipGroupIds) {
+                    let openToEverything = false;
+                    for (var workspaceIPGroup of workspaceDirectory.ipGroupIds){
+                        var ipGroup = listIPGroups.find(o => o.groupId === workspaceIPGroup);
 
-                            if (ipGroup.userRules) {
-                                var queryIPGroup = ipGroup.userRules.find(o => o.ipRule === "0.0.0.0/0");
-                                if (queryIPGroup){
-                                    openIP.push('disabled')
-                                } else {
-                                    openIP.push('enabled')
-                                }
-                            } else {
-                                openIP.push('enabled')
+                        if (ipGroup.userRules) {
+                            if (ipGroup.userRules.find(o => o.ipRule === "0.0.0.0/0")) {
+                                openToEverything = true;
                             }
-
                         }
-                        var ipOpen = openIP.find(o => o === 'disabled');
-
-                        if (ipOpen){
-                            helpers.addResult(
-                                results, 2, disabledString, region, arn
-                            );
-                        } else {
-                            helpers.addResult(
-                                results, 0, enabledString, region, arn
-                            );
-                        }
-                    } else {
-                        helpers.addResult(
-                            results, 2, disabledString, region, arn
-                        );
                     }
+
+                    if (openToEverything){
+                        helpers.addResult(results, 2, enabledButAllowsWorldString, region, arn);
+                    } else {
+                        helpers.addResult(results, 0, enabledString, region, arn);
+                    }
+                } else {
+                    helpers.addResult(results, 2, disabledString, region, arn);
                 }
             }
 
-            rcb();
+            return rcb();
 
         }, function(){
             callback(null, results, source);
