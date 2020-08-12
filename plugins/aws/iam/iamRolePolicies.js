@@ -21,7 +21,7 @@ module.exports = {
         ignore_service_specific_wildcards: {
             name: 'Ignore Service Specific Wildcards',
             description: 'enable this to consider only those roles which allow all actions',
-            regex: '^[true|false]$', // string true or boolean true to enable, string false or boolean false to disable
+            regex: '^(true|false)$', // string true or boolean true to enable, string false or boolean false to disable
             default: false
         },
     },
