@@ -19,18 +19,18 @@ module.exports = function(AWSConfig, collection, callback) {
         });
     };
 
-    async.retry({times: 10, interval: 5000}, generateCredentialReport, function(genErr){
+    async.retry({times: 24, interval: 5000}, generateCredentialReport, function(genErr){
         if (genErr) {
             collection.iam.generateCredentialReport[AWSConfig.region].err = genErr || 'Unable to download credential report';
             return callback();
         }
 
-        async.retry({times: 10, interval: 5000}, getCredentialReport, function(reportErr, reportData){
+        async.retry({times: 24, interval: 5000}, getCredentialReport, function(reportErr, reportData){
             if (reportErr || !reportData || !reportData.Content) {
                 collection.iam.generateCredentialReport[AWSConfig.region].err = reportErr || 'Unable to download credential report';
                 return callback();
             }
-            
+
             try {
                 var csvContent = reportData.Content.toString();
                 var csvRows = csvContent.split('\n');
@@ -50,7 +50,7 @@ module.exports = function(AWSConfig, collection, callback) {
             for (var r in csvRows) {
                 var csvRow = csvRows[r];
                 var csvFields = csvRow.split(',');
-                
+
                 // Create the header row
                 if (r == 0) {
                     headings = csvRow.split(',');
