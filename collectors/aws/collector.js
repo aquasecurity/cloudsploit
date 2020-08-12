@@ -230,6 +230,13 @@ var calls = {
                 ]
             }
         },
+        describeVpcEndpointServices: {
+            property: 'ServiceDetails',
+            paginate: 'NextToken',
+            filters: {
+                serviceName: 'ec2'
+            }
+        },
         describeRouteTables: {
             property: 'RouteTables',
             paginate: 'NextToken'
