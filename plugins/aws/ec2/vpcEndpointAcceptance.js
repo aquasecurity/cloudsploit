@@ -37,11 +37,11 @@ module.exports = {
                 var resource = service.ServiceName;
                 if (service.AcceptanceRequired) {
                     helpers.addResult(results, 0,
-                        'Vpc endpoint service ' + (service.ServiceId) + ' requires acceptance by the service owner',
+                        'VPC endpoint service ' + (service.ServiceId) + ' requires acceptance by the service owner',
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'Vpc endpoint service ' + (service.ServiceId) + ' does not require acceptance by the service owner',
+                        'VPC endpoint service ' + (service.ServiceId) + ' does not require acceptance by the service owner',
                         region, resource);
                 }
             }
