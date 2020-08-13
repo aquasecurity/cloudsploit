@@ -34,6 +34,9 @@ module.exports = {
 
             for (var s in describeVpcEndpointServices.data) {
                 var service = describeVpcEndpointServices.data[s];
+
+                if (service.Owner === 'amazon') continue;
+
                 var resource = service.ServiceName;
                 if (service.AcceptanceRequired) {
                     helpers.addResult(results, 0,
