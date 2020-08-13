@@ -3,25 +3,25 @@ const vpcEndpointAcceptance = require('./vpcEndpointAcceptance');
 
 const vpcEndpointServices = [
     {
-    "ServiceName": "com.amazonaws.vpce.us-east-1.vpce-svc-09d3a6a098dce6e8c",
-    "ServiceId": "vpce-svc-09d3a6a098dce6e8c",
-    "ServiceType": [
-      {
-        "ServiceType": "Interface"
-      }
-    ],
-    "AvailabilityZones": [
-      "us-east-1a",
-      "us-east-1b"
-    ],
-    "Owner": "560213429563",
-    "BaseEndpointDnsNames": [
-      "vpce-svc-09d3a6a098dce6e8c.us-east-1.vpce.amazonaws.com"
-    ],
-    "VpcEndpointPolicySupported": false,
-    "AcceptanceRequired": true,
-    "ManagesVpcEndpoints": false,
-    "Tags": []
+        "ServiceName": "com.amazonaws.vpce.us-east-1.vpce-svc-09d3a6a098dce6e8c",
+        "ServiceId": "vpce-svc-09d3a6a098dce6e8c",
+        "ServiceType": [
+        {
+            "ServiceType": "Interface"
+        }
+        ],
+        "AvailabilityZones": [
+        "us-east-1a",
+        "us-east-1b"
+        ],
+        "Owner": "560213429563",
+        "BaseEndpointDnsNames": [
+        "vpce-svc-09d3a6a098dce6e8c.us-east-1.vpce.amazonaws.com"
+        ],
+        "VpcEndpointPolicySupported": false,
+        "AcceptanceRequired": true,
+        "ManagesVpcEndpoints": false,
+        "Tags": []
     },
     {
         "ServiceName": "com.amazonaws.vpce.us-east-1.vpce-svc-09145867a106679a3",
