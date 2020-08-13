@@ -230,6 +230,10 @@ var calls = {
                 ]
             }
         },
+        describeVpcEndpointServices: {
+            property: 'ServiceDetails',
+            paginate: 'NextToken'
+        },
         describeRouteTables: {
             property: 'RouteTables',
             paginate: 'NextToken'
