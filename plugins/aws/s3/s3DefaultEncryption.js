@@ -98,7 +98,7 @@ module.exports = {
                     if (keyArn.includes('alias/')) {
                         var getAliases = helpers.addSource(cache, source, ['kms', 'listAliases', queryBucketRegion]);
                         if (getAliases.err || !getAliases.data){
-                            helpers.addResult(results, 3, `Unable to get aliases for Bucket: ${bucket.Name} in region: ${queryBucketRegion}`)
+                            helpers.addResult(results, 3, `Unable to get aliases for Bucket: ${bucket.Name} in region: ${queryBucketRegion}`, 'global', bucketResource);
                         }
                         var queryAlias = getAliases.data.find(o => o.AliasArn === keyArn);
                         if (!queryAlias){
