@@ -27,16 +27,16 @@ module.exports = {
                 return rcb();
             }
 
+            describeVpcEndpointServices.data = describeVpcEndpointServices.data.filter(service => service.Owner != 'amazon');
+            
             if (!describeVpcEndpointServices.data.length) {
-                helpers.addResult(results, 0, 'No VPC endpoint services present', region);
+                helpers.addResult(results, 0,
+                    'No user owned VPC endpoint services present', region);
                 return rcb();
             }
 
             for (var s in describeVpcEndpointServices.data) {
                 var service = describeVpcEndpointServices.data[s];
-
-                if (service.Owner === 'amazon') continue;
-
                 var resource = service.ServiceName;
                 if (service.AcceptanceRequired) {
                     helpers.addResult(results, 0,
