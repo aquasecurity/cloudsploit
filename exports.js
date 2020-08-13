@@ -28,8 +28,8 @@ module.exports = {
 
         'dynamoKmsEncryption'           : require(__dirname + '/plugins/aws/dynamodb/dynamoKmsEncryption.js'),
 
-        'defaultSecurityGroup'             : require(__dirname + '/plugins/aws/ec2/defaultSecurityGroup.js'),
-        'launchWizardSecurityGroup'        : require(__dirname + '/plugins/aws/ec2/launchWizardSecurityGroup.js'),
+        'defaultSecurityGroup'          : require(__dirname + '/plugins/aws/ec2/defaultSecurityGroup.js'),
+        'launchWizardSecurityGroup'     : require(__dirname + '/plugins/aws/ec2/launchWizardSecurityGroup.js'),
         'elasticIpLimit'                : require(__dirname + '/plugins/aws/ec2/elasticIpLimit.js'),
         'subnetIpAvailability'          : require(__dirname + '/plugins/aws/ec2/subnetIpAvailability.js'),
         'excessiveSecurityGroups'       : require(__dirname + '/plugins/aws/ec2/excessiveSecurityGroups.js'),
