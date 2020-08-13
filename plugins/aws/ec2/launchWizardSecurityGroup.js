@@ -42,7 +42,7 @@ module.exports = {
                 var sg = describeSecurityGroups.data[s];
                 var resource = 'arn:aws:ec2:' + region + ':' + sg.OwnerId + ':security-group/' + sg.GroupId;
 
-                if (sg.GroupName.indexOf("launch-wizard") != -1) {
+                if (sg.GroupName.toLowerCase().indexOf("launch-wizard") != -1) {
                     if (sg.IpPermissions.length ||
                          sg.IpPermissionsEgress.length) {
                         helpers.addResult(results, 2,
