@@ -28,25 +28,18 @@ module.exports = {
             }
 
             if (!describeSecurityGroups.data.length) {
-                helpers.addResult(results, 0, 'No security groups found', region);
+                helpers.addResult(results, 0, 'No security groups present', region);
                 return rcb();
             }
 
             for (var s in describeSecurityGroups.data) {
                 var sg = describeSecurityGroups.data[s];
-                var resource = 'arn:aws:ec2:' + region + ':' + sg.OwnerId + ':security-group/' + sg.GroupId;
+                var resource = sg.GroupId;
 
-                if(!sg.GroupName) {
-                    helpers.addResult(results, 2,
-                        'Unable to get group name of security group',
-                        region, resource);
-                    continue;
-                }
-                
                 if (sg.GroupName.toLowerCase().startsWith('launch-wizard')) {
                     helpers.addResult(results, 2,
-                        'Security Group ' + sg.GroupName + ' was launched using EC2 launch wizard',
-                        region, resource);
+                    'Security Group ' + sg.GroupName + ' was launched using EC2 launch wizard',
+                    region, resource);
                 } else {
                     helpers.addResult(results, 0,
                         'Security Group ' + sg.GroupName + ' was not launched using EC2 launch wizard',

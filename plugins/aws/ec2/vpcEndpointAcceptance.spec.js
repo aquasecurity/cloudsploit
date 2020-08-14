@@ -112,15 +112,6 @@ describe('vpcEndpointAcceptance', function () {
             });
         });
 
-        it('should PASS if no VPC endpoint services are detected', function (done) {
-            const cache = createCache([]);
-            vpcEndpointAcceptance.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                done();
-            });
-        });
-
         it('should UNKNOWN if there was an error querying for VPC endpoint services', function (done) {
             const cache = createErrorCache();
             vpcEndpointAcceptance.run(cache, {}, (err, results) => {
