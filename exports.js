@@ -29,6 +29,7 @@ module.exports = {
         'dynamoKmsEncryption'           : require(__dirname + '/plugins/aws/dynamodb/dynamoKmsEncryption.js'),
 
         'defaultSecurityGroup'          : require(__dirname + '/plugins/aws/ec2/defaultSecurityGroup.js'),
+        'launchWizardSecurityGroups'    : require(__dirname + '/plugins/aws/ec2/launchWizardSecurityGroups'),
         'elasticIpLimit'                : require(__dirname + '/plugins/aws/ec2/elasticIpLimit.js'),
         'subnetIpAvailability'          : require(__dirname + '/plugins/aws/ec2/subnetIpAvailability.js'),
         'excessiveSecurityGroups'       : require(__dirname + '/plugins/aws/ec2/excessiveSecurityGroups.js'),
@@ -71,8 +72,9 @@ module.exports = {
         'ebsSnapshotPrivate'            : require(__dirname + '/plugins/aws/ec2/ebsSnapshotPrivate.js'),
         'natMultiAz'                    : require(__dirname + '/plugins/aws/ec2/natMultiAz.js'),
         'defaultVpcInUse'               : require(__dirname + '/plugins/aws/ec2/defaultVpcInUse.js'),
-        'defaultVpcExists'               : require(__dirname + '/plugins/aws/ec2/defaultVpcExists.js'),
+        'defaultVpcExists'              : require(__dirname + '/plugins/aws/ec2/defaultVpcExists.js'),
         'crossVpcPublicPrivate'         : require(__dirname + '/plugins/aws/ec2/crossVpcPublicPrivate.js'),
+        'vpcEndpointAcceptance'         : require(__dirname + '/plugins/aws/ec2/vpcEndpointAcceptance'),
         'ebsEncryptedSnapshots'         : require(__dirname + '/plugins/aws/ec2/ebsEncryptedSnapshots.js'),
         'ec2MetadataOptions'             : require(__dirname + '/plugins/aws/ec2/ec2MetadataOptions.js'),
 
