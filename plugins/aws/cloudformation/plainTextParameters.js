@@ -10,11 +10,10 @@ module.exports = {
     recommended_action: 'Update the sensitive parameters to use the NoEcho property.',
     apis: ['CloudFormation:describeStacks'],
     settings: {
-        plain_text_parameters: {
-            name: 'CloudFormation Plaintext Parameters',
-            description: 'A comma-delimited list of parameter strings that indicate a sensitive value',
-            regex: '[a-zA-Z0-9,]',
-            default: 'secret,password,privatekey'
+        plainTextParameters: {
+            secretWords: [
+                'secret', 'password', 'privatekey'
+            ]
         }
     },
 
@@ -22,7 +21,8 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
-        var secretWords = this.settings.plain_text_parameters.default;
+        secretWords = this.settings.plainTextParameters.secretWords;
+
         async.each(regions.cloudformation, function(region, rcb){
 
             var describeStacks = helpers.addSource(cache, source,
@@ -48,13 +48,15 @@ module.exports = {
 
                 if(!stack.Parameters || !stack.Parameters.length) {
                     helpers.addResult(results, 0,
-                        'Template does not contain any parameters', region, resource);
-                    continue;
+                        'The template does not contain any potentially-sensitive parameters', region, resource);
+                    return rcb();
                 }
 
                 stack.Parameters.forEach(function(parameter){
-                    if(parameter.ParameterKey && secretWords.includes(parameter.ParameterKey.toLowerCase()) && !parameter.ParameterValue.match('^[*]+$')) {
-                        foundStrings.push(parameter.ParameterKey);
+                    if(!parameterFound && secretWords.includes(parameter.ParameterKey.toLowerCase())) {
+                        parameterFound = true;
+                        helpers.addResult(results, 1,
+                            'Template contains one of the following potentially-sensitive parameters: secret, key, password', region, resource);
                     }
                 });
 
