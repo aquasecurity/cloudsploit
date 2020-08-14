@@ -110,16 +110,11 @@ var settings = {
     }
 };
 
-function loadHelperFile(path) {
-    try {
-        var contents = require(path);
-    } catch (e) {
-        console.error(`ERROR: The credential file could not be loaded ${path}`);
-        console.error(e);
-        process.exit(1);
-    }
-    return contents;
-}
+// If running in GovCloud, uncomment the following
+// settings.govcloud = true;
+
+// If running in AWS China, uncomment the following
+// settings.china = true;
 
 function checkRequiredKeys(obj, keys) {
     keys.forEach(function(key){
