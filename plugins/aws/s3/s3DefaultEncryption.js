@@ -72,7 +72,7 @@ module.exports = {
             var getBucketEncryption = helpers.addSource(cache, source,
                 ['s3', 'getBucketEncryption', region, bucket.Name]);
             var getBucketRegion = helpers.addSource(cache, source,
-                ['s3', 'getBucketLocation',region ,bucket.Name]) || {data:{LocationConstraint: region}};
+                ['s3', 'getBucketLocation', region, bucket.Name]) || {data:{LocationConstraint: region}};
             var queryBucketRegion = getBucketRegion.data.LocationConstraint || region
 
             if (!getBucketEncryption) {
