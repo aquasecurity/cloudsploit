@@ -1,0 +1,55 @@
+{
+    "env": {
+        "node": true,
+        "es6": true
+    },
+    "extends": "eslint:recommended",
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "parserOptions": {
+        "ecmaVersion": 2018
+    },
+    "ignorePatterns": [
+        "node_modules/",
+        "tests/",
+        "scripts/",
+        ".github/",
+        "helpers/azure/functions.js",
+        "helpers/google/functions.js",
+        "helpers/oracle/functions.js",
+        "plugins/github/",
+        "plugins/google/",
+        "plugins/oracle/",
+        "*.spec.js"
+    ],
+    "rules": {
+        "indent": [
+            "error",
+            4
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "space-before-function-paren": [
+            "error",
+            "never"
+        ],
+        "default-case": [
+            "error"
+        ],
+        "no-eval": [
+            "error"
+        ]
+    }
+}
