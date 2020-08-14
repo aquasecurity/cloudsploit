@@ -44,7 +44,7 @@ module.exports = {
                 if (describeLogGroups.err || !describeLogGroups.data) {
                     result = [3, 'Error querying for log groups: ' + helpers.addError(describeLogGroups)];
                 } else if (describeLogGroups.data) {
-                    var found = describeLogGroups.data.find(function (lg) {
+                    var found = describeLogGroups.data.find(function(lg) {
                         return lg.logGroupName == '/aws/lambda/' + func.FunctionName;
                     });
 
