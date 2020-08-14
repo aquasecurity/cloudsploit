@@ -1,6 +1,6 @@
-var assert = require('assert');
-var expect = require('chai').expect;
-var eks = require('./cloudtrailBucketDelete');
+const assert = require('assert');
+const expect = require('chai').expect;
+const eks = require('./cloudtrailBucketDelete');
 const createCache = (descTrailsData, getBuckVerData, listBuckData, buckName) => {
     let to_return = {
         cloudtrail: {
@@ -25,7 +25,7 @@ const createCache = (descTrailsData, getBuckVerData, listBuckData, buckName) => 
     return to_return
 };
 
-describe('cloudtrailBucketAccessLogging', function () {
+describe('cloudtrailBucketDelete', function () {
     describe('run', function () {
         it('should PASS if CloudTrail logging bucket has MFADelete enabled', function (done) {
             const callback = (err, results) => {

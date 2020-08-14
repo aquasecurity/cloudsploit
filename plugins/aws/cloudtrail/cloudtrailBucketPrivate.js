@@ -1,6 +1,22 @@
 var async = require('async');
 var helpers = require('../../../helpers/aws');
 
+function bucketIsInAccount(allBuckets, targetBucketName) {
+    for (let i in allBuckets) {
+        let bucket = allBuckets[i];
+        if (bucket.Name === targetBucketName) {
+            return true; // target bucket present in account
+        }
+    }
+    return false; // not present in account
+}
+
+function bucketExists(err) {
+    return !(err &&
+        err.code &&
+        err.code === 'NoSuchBucket');
+}
+
 module.exports = {
     title: 'CloudTrail Bucket Private',
     category: 'CloudTrail',
@@ -8,9 +24,21 @@ module.exports = {
     more_info: 'CloudTrail buckets contain large amounts of sensitive account data and should only be accessible by logged in users.',
     recommended_action: 'Set the S3 bucket access policy for all CloudTrail buckets to only allow known users to access its files.',
     link: 'http://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket-policies.html',
-    apis: ['CloudTrail:describeTrails', 'S3:getBucketAcl'],
+    apis: ['CloudTrail:describeTrails', 'S3:getBucketAcl', 'S3:listBuckets'],
+    settings: {
+        ignore_bucket_not_in_account: {
+            name: 'Ignore CloudTrail Buckets Not in Account',
+            description: 'enable to ignore cloudtrail buckets that are not in the account',
+            regex: '^(true|false)$', // string true or boolean true to enable, string false or boolean false to disable
+            default: false
+        },
+    },
 
     run: function(cache, settings, callback) {
+        var config = {
+          ignore_bucket_not_in_account: settings.ignore_bucket_not_in_account || this.settings.ignore_bucket_not_in_account.default
+        };
+        if (config.ignore_bucket_not_in_account === 'false') config.ignore_bucket_not_in_account = false;
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
@@ -40,15 +68,37 @@ module.exports = {
 
                 var s3Region = helpers.defaultRegion(settings);
 
+                const listBuckets = helpers.addSource(cache, source, ['s3', 'listBuckets', s3Region]);
+                if (!listBuckets) return rcb(null, results, source);
+                if (listBuckets.err || !listBuckets.data) {
+                    helpers.addResult(results, 3, `Unable to query for S3 buckets: ${helpers.addError(listBuckets)}`);
+                    return rcb(null, results, source);
+                }
+
                 var getBucketAcl = helpers.addSource(cache, source,
                     ['s3', 'getBucketAcl', s3Region, trail.S3BucketName]);
 
                 if (!getBucketAcl || getBucketAcl.err || !getBucketAcl.data) {
-                    helpers.addResult(results, 3,
-                        'Error querying for bucket policy for bucket: ' + trail.S3BucketName + ': ' + helpers.addError(getBucketAcl),
+                    if (!bucketExists(getBucketAcl.err)) {
+                        helpers.addResult(results, 2,
+                            'Bucket: ' + trail.S3BucketName + ' does not exist' ,
+                            region, 'arn:aws:s3:::' + trail.S3BucketName);
+
+                        return cb();
+                    }
+                    else if (config.ignore_bucket_not_in_account && !bucketIsInAccount(listBuckets.data, trail.S3BucketName)) {
+                        helpers.addResult(results, 0,
+                        'Bucket: ' + trail.S3BucketName + ' is not in account',
                         region, 'arn:aws:s3:::' + trail.S3BucketName);
 
-                    return cb();
+                        return cb();
+                    } else {
+                        helpers.addResult(results, 3,
+                            'Error querying for bucket policy for bucket: ' + trail.S3BucketName + ': ' + helpers.addError(getBucketAcl),
+                            region, 'arn:aws:s3:::' + trail.S3BucketName);
+
+                        return cb();
+                    }
                 }
 
                 var allowsAllUsersTypes = [];
