@@ -51,7 +51,7 @@ describe('lambdaLogGroups', function () {
             const cache = createCache(
                 [{
                     "FunctionName": "mb-ngsc-test",
-                    "FunctionArn": "arn:aws:lambda:us-east-1:555",  
+                    "FunctionArn": "arn:aws:lambda:us-east-1:555",
                 }], null
             );
 
@@ -69,11 +69,11 @@ describe('lambdaLogGroups', function () {
             const cache = createCache(
                 [{
                     "FunctionName": "mb-ngsc-test",
-                    "FunctionArn": "arn:aws:lambda:us-east-1:666",  
-                }], 
+                    "FunctionArn": "arn:aws:lambda:us-east-1:666",
+                }],
                 [{
                     "logGroupName": "/aws/lambda/mb-ngsc-test",
-                    "arn": "arn:aws:lambda:us-east-1:555",  
+                    "arn": "arn:aws:lambda:us-east-1:555",
                 }]
             );
 
@@ -91,11 +91,11 @@ describe('lambdaLogGroups', function () {
             const cache = createCache(
                 [{
                     "FunctionName": "mb-ngsc-test",
-                    "FunctionArn": "arn:aws:lambda:us-east-1:666",  
-                }], 
+                    "FunctionArn": "arn:aws:lambda:us-east-1:666",
+                }],
                 [{
                     "logGroupName": "/aws/lambda/test",
-                    "arn": "arn:aws:logs:us-east-1:555",  
+                    "arn": "arn:aws:logs:us-east-1:555",
                 }]
             );
             lambda.run(cache, {}, callback);
@@ -105,7 +105,7 @@ describe('lambdaLogGroups', function () {
                 const callback = (err, results) => {
                     expect(results.length).to.equal(1)
                     expect(results[0].status).to.equal(0)
-                    expect(results[0].message).to.include('Function has log group: /aws/lambda/us-east-1.fp-ngsc-test')
+                    expect(results[0].message).to.include('/aws/lambda/us-east-1.fp-ngsc-test')
                     done()
                 };
 
@@ -127,7 +127,7 @@ describe('lambdaLogGroups', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('Function has log group: /aws/lambda/us-east-1.fp-ngsc-test')
+                expect(results[0].message).to.include('/aws/lambda/us-east-1.fp-ngsc-test')
                 done()
             };
 

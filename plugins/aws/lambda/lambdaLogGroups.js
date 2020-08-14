@@ -51,8 +51,9 @@ module.exports = {
                     if (found) {
                         result = [0, 'Function has log group: ' + found.logGroupName];
                     } else {
-                        for (var regionIndex in regions.cloudwatchlogs) {
-                            var cloudwatchRegion = regions.cloudwatchlogs[regionIndex];
+                        // check for lambda@edge log groups
+                        var lambdaEdgeLogGroupName = '/aws/lambda/' + region + '.' + func.FunctionName;
+                        for (var cloudwatchRegion of regions.cloudwatchlogs) {
                             var regionLogGroups = helpers.addSource(cache, source,
                                 ['cloudwatchlogs', 'describeLogGroups', cloudwatchRegion]) || {};
 
@@ -60,19 +61,16 @@ module.exports = {
                                 continue;
                             }
 
-                            var aliasfunctionLogName = '/aws/lambda/' + region + '.' + func.FunctionName;
-
                             if (regionLogGroups.data) {
-                                var foundLoggroup = regionLogGroups.data.find(logGroup => logGroup.logGroupName === aliasfunctionLogName);
-                            }
-
-                            if (foundLoggroup) {
-                                result = [0, 'Function has log group: ' + foundLoggroup.logGroupName];
-                                break;
+                                var foundLogGroup = regionLogGroups.data.find(logGroup => logGroup.logGroupName === lambdaEdgeLogGroupName);
+                                if (foundLogGroup) {
+                                    result = [0, 'Function has lambda@edge log group: ' + foundLogGroup.logGroupName + ' in region: ' + cloudwatchRegion];
+                                    break;
+                                }
                             }
                         }
 
-                        if (result[1] === ''){
+                        if (result[1] === '') {
                             result = [2, 'Function has no log group'];
                         }
                     }
@@ -82,7 +80,7 @@ module.exports = {
                 helpers.addResult(results, result[0], result[1], region, arn);
             }
             rcb();
-        }, function(){
+        }, function() {
             callback(null, results, source);
         });
     }
