@@ -37,7 +37,7 @@ module.exports = {
             name: 'Ignore CloudTrail Buckets Not in Account',
             description: 'enable to ignore cloudtrail buckets that are not in the account',
             regex: '^(true|false)$', // string true or boolean true to enable, string false or boolean false to disable
-            default: true
+            default: false
         },
     },
 

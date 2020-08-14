@@ -154,7 +154,7 @@ describe('cloudtrailBucketAccessLogging', function () {
             eks.run(cache, {}, callback);
         });
 
-        it('should PASS if CloudTrail logging bucket has access logging enabled and bucket is another account', function (done) {
+        it('should PASS if CloudTrail logging bucket has access logging enabled and bucket is another account, with ignore_bucket_not_in_account enabled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -193,7 +193,7 @@ describe('cloudtrailBucketAccessLogging', function () {
                 'delete-me-ueoeuaou-ms'
             );
 
-            eks.run(cache, {}, callback);
+            eks.run(cache, {ignore_bucket_not_in_account: true}, callback);
         });
     })
 });
