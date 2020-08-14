@@ -579,6 +579,14 @@ var postcalls = [
                 filterValue: 'DomainName'
             }
         },
+        IAM: {
+            getServerCertificate: {
+                reliesOnService: 'iam',
+                reliesOnCall: 'listServerCertificates',
+                filterKey: 'ServerCertificateName',
+                filterValue: 'ServerCertificateName'
+            }
+        },
         S3: {
             getBucketLogging: {
                 reliesOnService: 's3',
