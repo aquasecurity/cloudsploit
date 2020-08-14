@@ -98,9 +98,123 @@ describe('lambdaLogGroups', function () {
                     "arn": "arn:aws:logs:us-east-1:555",  
                 }]
             );
+            lambda.run(cache, {}, callback);
+        })
+
+        it('should give a passing result if a log group names match with the function@edge in the same region', function (done) {
+                const callback = (err, results) => {
+                    expect(results.length).to.equal(1)
+                    expect(results[0].status).to.equal(0)
+                    expect(results[0].message).to.include('Function has log group: /aws/lambda/us-east-1.fp-ngsc-test')
+                    done()
+                };
+
+                const cache = createCache(
+                    [{
+                        "FunctionName": "fp-ngsc-test",
+                        "FunctionArn": "arn:aws:lambda:us-east-1:666",
+                    }],
+                    [{
+                        "logGroupName": "/aws/lambda/us-east-1.fp-ngsc-test",
+                        "arn": "arn:aws:logs:us-east-1:555",
+                    }]
+                );
 
             lambda.run(cache, {}, callback);
         })
 
+        it('should give a passing result if a log group names match with the function@edge in a different region', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1)
+                expect(results[0].status).to.equal(0)
+                expect(results[0].message).to.include('Function has log group: /aws/lambda/us-east-1.fp-ngsc-test')
+                done()
+            };
+
+            const customCache = (lambdaData, cwData) => {
+                return {
+                    lambda: {
+                        listFunctions: {
+                            'us-east-1': {
+                                err: null,
+                                data: lambdaData
+                            }
+                        }
+                    },
+                    cloudwatchlogs: {
+                        describeLogGroups: {
+                            'us-east-1':{
+                                err: null,
+                                data:[]
+                            },
+                            'us-east-2': {
+                                err: null,
+                                data: cwData
+                            }
+                        }
+                    }
+                }
+            };
+
+            const cache = customCache(
+                [{
+                    "FunctionName": "fp-ngsc-test",
+                    "FunctionArn": "arn:aws:lambda:us-east-1:666",
+                }],
+                [{
+                    "logGroupName": "/aws/lambda/us-east-1.fp-ngsc-test",
+                    "arn": "arn:aws:logs:us-east-1:555",
+                }]
+            );
+
+            lambda.run(cache, {}, callback);
+        })
+
+        it('should give a failing result if a log group names matches with the function name without the region', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1)
+                expect(results[0].status).to.equal(2)
+                expect(results[0].message).to.include('unction has no log group')
+                done()
+            };
+
+            const customCache = (lambdaData, cwData) => {
+                return {
+                    lambda: {
+                        listFunctions: {
+                            'us-east-1': {
+                                err: null,
+                                data: lambdaData
+                            }
+                        }
+                    },
+                    cloudwatchlogs: {
+                        describeLogGroups: {
+                            'us-east-1':{
+                                err: null,
+                                data:[]
+                            },
+                            'us-east-2': {
+                                err: null,
+                                data: cwData
+                            }
+                        }
+                    }
+                }
+            };
+
+            const cache = customCache(
+                [{
+                    "FunctionName": "fp-ngsc-test",
+                    "FunctionArn": "arn:aws:lambda:us-east-1:666",
+                }],
+                [{
+                    "logGroupName": "/aws/lambda/fp-ngsc-test",
+                    "arn": "arn:aws:logs:us-east-1:555",
+                }]
+            );
+
+            lambda.run(cache, {}, callback);
+        })
     })
 })

@@ -44,22 +44,43 @@ module.exports = {
                 if (describeLogGroups.err || !describeLogGroups.data) {
                     result = [3, 'Error querying for log groups: ' + helpers.addError(describeLogGroups)];
                 } else if (describeLogGroups.data) {
-                    var found = describeLogGroups.data.find(function(lg) {
+                    var found = describeLogGroups.data.find(function (lg) {
                         return lg.logGroupName == '/aws/lambda/' + func.FunctionName;
                     });
 
                     if (found) {
                         result = [0, 'Function has log group: ' + found.logGroupName];
                     } else {
-                        result = [2, 'Function has no log group'];
+                        for (var regionIndex in regions.cloudwatchlogs) {
+                            var cloudwatchRegion = regions.cloudwatchlogs[regionIndex];
+                            var regionLogGroups = helpers.addSource(cache, source,
+                                ['cloudwatchlogs', 'describeLogGroups', cloudwatchRegion]) || {};
+
+                            if (regionLogGroups.err || !regionLogGroups.data) {
+                                continue;
+                            }
+
+                            var aliasfunctionLogName = '/aws/lambda/' + region + '.' + func.FunctionName;
+
+                            if (regionLogGroups.data) {
+                                var foundLoggroup = regionLogGroups.data.find(logGroup => logGroup.logGroupName === aliasfunctionLogName);
+                            }
+
+                            if (foundLoggroup) {
+                                result = [0, 'Function has log group: ' + foundLoggroup.logGroupName];
+                                break;
+                            }
+                        }
+
+                        if (result[1] === ''){
+                            result = [2, 'Function has no log group'];
+                        }
                     }
                 } else {
                     result = [3, 'Unable to obtain log groups for Lambda'];
                 }
-
                 helpers.addResult(results, result[0], result[1], region, arn);
             }
-
             rcb();
         }, function(){
             callback(null, results, source);
