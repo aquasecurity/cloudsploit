@@ -36,7 +36,7 @@ module.exports = {
                 var sg = describeSecurityGroups.data[s];
                 var resource = sg.GroupId;
 
-                if (sg.GroupName.toLowerCase().startsWith('launch-wizard')) {
+                if (sg.GroupName && sg.GroupName.toLowerCase().startsWith('launch-wizard')) {
                     helpers.addResult(results, 2,
                     'Security Group ' + sg.GroupName + ' was launched using EC2 launch wizard',
                     region, resource);

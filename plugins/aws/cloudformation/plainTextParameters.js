@@ -22,7 +22,7 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
-        secretWords = this.settings.plain_text_parameters.default;
+        var secretWords = this.settings.plain_text_parameters.default;
         async.each(regions.cloudformation, function(region, rcb){
 
             var describeStacks = helpers.addSource(cache, source,
@@ -48,14 +48,14 @@ module.exports = {
                 var resource = stack.StackId;
                 parameterFound = false;
 
-                if(!stack.Parameters.length) {
+                if(!stack.Parameters || !stack.Parameters.length) {
                     helpers.addResult(results, 0,
-                        'The template does not contain any potentially-sensitive parameters', region, resource);
+                        'Template does not contain any potentially-sensitive parameters', region, resource);
                     return rcb();
                 }
 
                 stack.Parameters.forEach(function(parameter){
-                    if(!parameterFound && secretWords.includes(parameter.ParameterKey.toLowerCase())) {
+                    if((!parameterFound && parameter.ParameterKey && secretWords.includes(parameter.ParameterKey.toLowerCase()))) {
                         parameterFound = true;
                         helpers.addResult(results, 1,
                             'Template contains one of the following potentially-sensitive parameters: secret, key, password', region, resource);
