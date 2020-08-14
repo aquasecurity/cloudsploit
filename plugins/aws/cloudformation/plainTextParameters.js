@@ -9,12 +9,19 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html',
     recommended_action: 'Update the sensitive parameters to use the NoEcho property.',
     apis: ['CloudFormation:describeStacks'],
+    settings: {
+        plainTextParameters: {
+            secretWords: [
+                'secret', 'password', 'privatekey'
+            ]
+        }
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
-        secretWords = settings.plainTextParameters.secretWords;
+        secretWords = this.settings.plainTextParameters.secretWords;
 
         async.each(regions.cloudformation, function(region, rcb){
 
@@ -35,30 +42,33 @@ module.exports = {
             }
             
             var parameterFound;
-            describeStacks.data.forEach(function(stack){
+            for (var s in describeStacks.data){
+                // arn:aws:cloudformation:region:account-id:stack/stack-name/stack-id
+                var stack = describeStacks.data[s];
+                var resource = stack.StackId;
                 parameterFound = false;
 
                 if(!stack.Parameters.length) {
                     helpers.addResult(results, 0,
-                        'The template did not contain any potentially-sensitive parameters', region);
-                    return;
+                        'The template does not contain any potentially-sensitive parameters', region, resource);
+                    return rcb();
                 }
 
                 stack.Parameters.forEach(function(parameter){
-                    if(secretWords.includes(parameter.ParameterKey.toLowerCase()) && !parameterFound) {
+                    if(!parameterFound && secretWords.includes(parameter.ParameterKey.toLowerCase())) {
                         parameterFound = true;
                         helpers.addResult(results, 1,
-                            'The template contained one of the following potentially-sensitive parameters: secret, key, password', region);
-                        return;
+                            'Template contains one of the following potentially-sensitive parameters: secret, key, password', region, resource);
                     }
                 });
                 
                 if(!parameterFound) {
                     helpers.addResult(results, 0,
-                    'The template did not contain any potentially-sensitive parameters', region);
+                    'Template does not contain any potentially-sensitive parameters', region, resource);
                 }
 
-            });
+            }
+
             rcb();
         }, function(){
             callback(null, results, source);

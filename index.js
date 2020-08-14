@@ -113,13 +113,7 @@ if(process.env.GOOGLE_APPLICATION_CREDENTIALS){
 }
 
 // Custom settings - place plugin-specific settings here
-var settings = {
-    plainTextParameters: {
-        secretWords: [
-            'secret', 'password', 'privatekey'
-        ]
-    }
-};
+var settings = {};
 
 // If running in GovCloud, uncomment the following
 // settings.govcloud = true;
