@@ -82,7 +82,7 @@ module.exports = {
                 var getBucketLogging = helpers.addSource(cache, source,
                     ['s3', 'getBucketLogging', s3Region, trail.S3BucketName]);
 
-                if (!getBucketLogging || getBucketLogging.err || !getBucketLogging.data) {
+                if (!getBucketLogging || getBucketLogging.err) { // data will be {} if logging is disabled.
                     if (!bucketExists(getBucketLogging.err)) {
                         helpers.addResult(results, 2,
                             'Bucket: ' + trail.S3BucketName + ' does not exist' ,
