@@ -1,3 +1,4 @@
+var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
@@ -8,63 +9,59 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html',
     recommended_action: 'Update the sensitive parameters to use the NoEcho property.',
     apis: ['CloudFormation:describeStacks'],
-    compliance: {
-        hipaa: 'HIPAA requires all data to be transmitted over secure channels. ' +
-                'CloudFront HTTPS redirection should be used to ensure site visitors ' +
-                'are always connecting over a secure channel.'
-    },
-    // settings : { secretWords : ["password", "privatekey", "secret"] },
 
     run: function(cache, settings, callback) {
-
         var results = [];
         var source = {};
+        var regions = helpers.regions(settings);
+        secretWords = settings.plainTextParameters.secretWords;
 
-        var region = helpers.defaultRegion(settings);
+        async.each(regions.cloudformation, function(region, rcb){
 
-        var describeStacks = helpers.addSource(cache, source,
-            ['cloudformation', 'describeStacks', region]);
+            var describeStacks = helpers.addSource(cache, source,
+                ['cloudformation', 'describeStacks', region]);
+                
+            if (!describeStacks) return rcb();
 
-        console.log(describeStacks);
-        console.log("results received");
-        // if (!describeStacks) return callback(null, results, source);
+            if (describeStacks.err || !describeStacks.data) {
+                helpers.addResult(results, 3,
+                    'Unable to describe stacks: ' + helpers.addError(describeStacks), region);
+                    return rcb();
+            }
 
-        // if (describeStacks.err || !describeStacks.data) {
-        //     helpers.addResult(results, 3,
-        //         'Unable to describe stacks: ' + helpers.addError(describeStacks));
-        //     return callback(null, results, source);
-        // }
+            if (!describeStacks.data.length) {
+                helpers.addResult(results, 0, 'No stack description found', region);
+                return rcb();
+            }
+            
+            var parameterFound;
+            describeStacks.data.forEach(function(stack){
+                parameterFound = false;
 
-        // if (!describeStacks.data.length) {
-        //     helpers.addResult(results, 0, 'No stacks descriptions found');
-        //     return callback(null, results, source);
-        // }
-        // console.log(describeStacks.data);
-        // loop through stacks for every template retrieval
-        // describeStacks.data.forEach(function(Distribution){
-        //     var stackTemplate = helpers.addSource(cache, source,
-        //         ['cloudformation', 'getTemplate', region]);
-    
-        //     if (!describeStacks) return callback(null, results, source);
-    
-        //     if (describeStacks.err || !describeStacks.data) {
-        //         helpers.addResult(results, 3,
-        //             'Unable to describe stacks: ' + helpers.addError(describeStacks));
-        //         return callback(null, results, source);
-        //     }
+                if(!stack.Parameters.length) {
+                    helpers.addResult(results, 0,
+                        'The template did not contain any potentially-sensitive parameters', region);
+                    return;
+                }
 
-        //     if (Distribution.DefaultCacheBehavior.ViewerProtocolPolicy == 'redirect-to-https') {
-        //         helpers.addResult(results, 0, 'CloudFront distribution ' + 
-        //             'is configured to redirect non-HTTPS traffic to HTTPS', 'global', Distribution.ARN);
-        //     } else if (Distribution.DefaultCacheBehavior.ViewerProtocolPolicy == 'https-only') {
-        //         helpers.addResult(results, 0, 'The CloudFront ' + 
-        //             'distribution is set to use HTTPS only.', 'global', Distribution.ARN);
-        //     } else {
-        //         helpers.addResult(results, 2, 'CloudFront distribution ' + 
-        //             'is not configured to use HTTPS', 'global', Distribution.ARN);
-        //     }
-        // });
+                stack.Parameters.forEach(function(parameter){
+                    if(secretWords.includes(parameter.ParameterKey.toLowerCase()) && !parameterFound) {
+                        parameterFound = true;
+                        helpers.addResult(results, 1,
+                            'The template contained one of the following potentially-sensitive parameters: secret, key, password', region);
+                        return;
+                    }
+                });
+                
+                if(!parameterFound) {
+                    helpers.addResult(results, 0,
+                    'The template did not contain any potentially-sensitive parameters', region);
+                }
 
-        callback(null, results, source);
+            });
+            rcb();
+        }, function(){
+            callback(null, results, source);
+        });
     }
 };
