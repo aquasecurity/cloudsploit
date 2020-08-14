@@ -10,18 +10,12 @@ module.exports = {
     recommended_action: 'Update the sensitive parameters to use the NoEcho property.',
     apis: ['CloudFormation:describeStacks'],
     settings: {
-<<<<<<< HEAD
+
         plain_text_parameters: {
             name: 'CloudFormation Plaintext Parameters',
             description: 'A comma-delimited list of parameter strings that indicate a sensitive value',
             regex: '[a-zA-Z0-9,]',
             default: 'secret,password,privatekey'
-=======
-        plainTextParameters: {
-            secretWords: [
-                'secret', 'password', 'privatekey'
-            ]
->>>>>>> 3da6672... Refactored code in plaintextParameters plugin and spec file
         }
     },
 
@@ -29,12 +23,8 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
-<<<<<<< HEAD
         var secretWords = this.settings.plain_text_parameters.default;
-=======
-        secretWords = this.settings.plainTextParameters.secretWords;
 
->>>>>>> 3da6672... Refactored code in plaintextParameters plugin and spec file
         async.each(regions.cloudformation, function(region, rcb){
 
             var describeStacks = helpers.addSource(cache, source,
