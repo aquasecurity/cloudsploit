@@ -96,6 +96,22 @@ try {
     console.error('ERROR: Config file could not be loaded. Please ensure you have copied the config_example.js file to config.js');
     process.exit(1);
 }
+<<<<<<< HEAD
+=======
+if(process.env.GOOGLE_APPLICATION_CREDENTIALS){
+    GoogleConfig = require(process.env.GOOGLE_APPLICATION_CREDENTIALS);
+    GoogleConfig.project = GoogleConfig.project_id;
+}
+
+// Custom settings - place plugin-specific settings here
+var settings = {
+    plainTextParameters: {
+        secretWords: [
+            'secret', 'password', 'privatekey'
+        ]
+    }
+};
+>>>>>>> a4ea92f... SPLOIT-113: Added Plain Text Parameters plugin for CloudFormation
 
 function loadHelperFile(path) {
     try {
