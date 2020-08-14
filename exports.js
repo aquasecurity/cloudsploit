@@ -13,9 +13,13 @@ module.exports = {
         'cloudfrontHttpsOnly'           : require(__dirname + '/plugins/aws/cloudfront/cloudfrontHttpsOnly.js'),
         'cloudfrontLoggingEnabled'      : require(__dirname + '/plugins/aws/cloudfront/cloudfrontLoggingEnabled.js'),
         'cloudfrontWafEnabled'          : require(__dirname + '/plugins/aws/cloudfront/cloudfrontWafEnabled.js'),
+<<<<<<< HEAD
 
         'plainTextParameters'           :  require(__dirname + '/plugins/aws/cloudformation/plainTextParameters.js'),
 
+=======
+        'plainTextParameters'           :  require(__dirname + '/plugins/aws/cloudformation/plainTextParameters.js'),
+>>>>>>> 306d721... SPLOIT-113: Added Plain Text Parameters plugin for CloudFormation
         'cloudtrailBucketAccessLogging' : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailBucketAccessLogging.js'),
         'cloudtrailBucketDelete'        : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailBucketDelete.js'),
         'cloudtrailEnabled'             : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailEnabled.js'),
@@ -31,7 +35,10 @@ module.exports = {
         'dynamoKmsEncryption'           : require(__dirname + '/plugins/aws/dynamodb/dynamoKmsEncryption.js'),
 
         'defaultSecurityGroup'          : require(__dirname + '/plugins/aws/ec2/defaultSecurityGroup.js'),
+<<<<<<< HEAD
         'launchWizardSecurityGroups'    : require(__dirname + '/plugins/aws/ec2/launchWizardSecurityGroups'),
+=======
+>>>>>>> 306d721... SPLOIT-113: Added Plain Text Parameters plugin for CloudFormation
         'elasticIpLimit'                : require(__dirname + '/plugins/aws/ec2/elasticIpLimit.js'),
         'subnetIpAvailability'          : require(__dirname + '/plugins/aws/ec2/subnetIpAvailability.js'),
         'excessiveSecurityGroups'       : require(__dirname + '/plugins/aws/ec2/excessiveSecurityGroups.js'),

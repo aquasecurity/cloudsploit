@@ -115,6 +115,7 @@ const createNullCache = () => {
     };
 };
 
+<<<<<<< HEAD
 describe('plaintextParameters', function () {
     describe('run', function () {
         it('should FAIL if template contains one of secret words', function (done) {
@@ -122,10 +123,20 @@ describe('plaintextParameters', function () {
             plaintextParameters.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+=======
+describe('plainTextParameters', function () {
+    describe('run', function () {
+        it('should FAIL if Stack parameters contain one of secret words ["password" , "privatekey", "secret"]', function (done) {
+            const cache = createCache([describeStacks[0]]);
+            plainTextParameters.run(cache, settings, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(1);
+>>>>>>> 306d721... SPLOIT-113: Added Plain Text Parameters plugin for CloudFormation
                 done();
             });
         });
 
+<<<<<<< HEAD
         it('should PASS if template does not contain any of secret words', function (done) {
             const cache = createCache([describeStacks[1]]);
             plaintextParameters.run(cache, {}, (err, results) => {
@@ -138,6 +149,11 @@ describe('plaintextParameters', function () {
         it('should PASS if template contains any of secret words but with NoEcho enabled', function (done) {
             const cache = createCache([describeStacks[2]]);
             plaintextParameters.run(cache, {}, (err, results) => {
+=======
+        it('should PASS if Stack parameters does not contain any of secret words ["password" , "privatekey", "secret"]', function (done) {
+            const cache = createCache([describeStacks[1]]);
+            plainTextParameters.run(cache, settings, (err, results) => {
+>>>>>>> 306d721... SPLOIT-113: Added Plain Text Parameters plugin for CloudFormation
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -146,7 +162,11 @@ describe('plaintextParameters', function () {
 
         it('should PASS if unable to describe stacks', function (done) {
             const cache = createCache([]);
+<<<<<<< HEAD
             plaintextParameters.run(cache, {}, (err, results) => {
+=======
+            plainTextParameters.run(cache, settings, (err, results) => {
+>>>>>>> 306d721... SPLOIT-113: Added Plain Text Parameters plugin for CloudFormation
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -155,7 +175,11 @@ describe('plaintextParameters', function () {
 
         it('should PASS if there is no parameter in the stack', function (done) {
             const cache = createCache([describeStacks[2]]);
+<<<<<<< HEAD
             plaintextParameters.run(cache, {}, (err, results) => {
+=======
+            plainTextParameters.run(cache, settings, (err, results) => {
+>>>>>>> 306d721... SPLOIT-113: Added Plain Text Parameters plugin for CloudFormation
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -164,7 +188,11 @@ describe('plaintextParameters', function () {
 
         it('should not return any results if unable to fetch any stack description', function (done) {
             const cache = createNullCache();
+<<<<<<< HEAD
             plaintextParameters.run(cache, {}, (err, results) => {
+=======
+            plainTextParameters.run(cache, settings, (err, results) => {
+>>>>>>> 306d721... SPLOIT-113: Added Plain Text Parameters plugin for CloudFormation
                 expect(results.length).to.equal(0);
                 done();
             });
@@ -172,7 +200,11 @@ describe('plaintextParameters', function () {
 
         it('should UNKNOWN if error occurs while fetching stack description', function (done) {
             const cache = createErrorCache();
+<<<<<<< HEAD
             plaintextParameters.run(cache, {}, (err, results) => {
+=======
+            plainTextParameters.run(cache, settings, (err, results) => {
+>>>>>>> 306d721... SPLOIT-113: Added Plain Text Parameters plugin for CloudFormation
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
