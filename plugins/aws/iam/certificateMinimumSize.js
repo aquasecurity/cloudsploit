@@ -29,7 +29,7 @@ module.exports = {
         }
 
         if (!listServerCertificates.data.length) {
-            helpers.addResult(results, 0, 'No server certificate found');
+            helpers.addResult(results, 0, 'No server certificate found', 'global');
             return callback(null, results, source);
         }
 

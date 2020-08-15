@@ -40,10 +40,6 @@ var calls = {
         listCertificates: {
             property: 'CertificateSummaryList',
             paginate: 'NextToken'
-        },
-        getCertificate: {
-            property: 'Certificate',
-            paginate: 'NextToken'
         }
     },
     Athena: {
@@ -581,14 +577,6 @@ var postcalls = [
                 reliesOnCall: 'listDomainNames',
                 filterKey: 'DomainName',
                 filterValue: 'DomainName'
-            }
-        },
-        IAM: {
-            getServerCertificate: {
-                reliesOnService: 'iam',
-                reliesOnCall: 'listServerCertificates',
-                filterKey: 'ServerCertificateName',
-                filterValue: 'ServerCertificateName'
             }
         },
         S3: {
