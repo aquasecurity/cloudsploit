@@ -56,8 +56,6 @@ module.exports = {
                 return cb();
             }
 
-            var resource = serverCertificate.data.ServerCertificate.ServerCertificateMetadata.ServerCertificateName;
-
             const certificatePem = forge.pki.certificateFromPem(serverCertificate.data.ServerCertificate.CertificateBody);
 
             const certificateBitLength = certificatePem.publicKey.n.bitLength();
