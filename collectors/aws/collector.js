@@ -40,10 +40,6 @@ var calls = {
         listCertificates: {
             property: 'CertificateSummaryList',
             paginate: 'NextToken'
-        },
-        getCertificate: {
-            property: 'Certificate',
-            paginate: 'NextToken'
         }
     },
     Athena: {
@@ -583,14 +579,6 @@ var postcalls = [
                 filterValue: 'DomainName'
             }
         },
-        IAM: {
-            getServerCertificate: {
-                reliesOnService: 'iam',
-                reliesOnCall: 'listServerCertificates',
-                filterKey: 'ServerCertificateName',
-                filterValue: 'ServerCertificateName'
-            }
-        },
         S3: {
             getBucketLogging: {
                 reliesOnService: 's3',
@@ -774,6 +762,12 @@ var postcalls = [
                 filterKey: 'UserName',
                 filterValue: 'UserName',
                 rateLimit: 100
+            },
+            getServerCertificate: {
+                reliesOnService: 'iam',
+                reliesOnCall: 'listServerCertificates',
+                filterKey: 'ServerCertificateName',
+                filterValue: 'ServerCertificateName'
             }
         },
         Kinesis: {
