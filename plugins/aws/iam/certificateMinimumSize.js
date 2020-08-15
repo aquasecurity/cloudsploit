@@ -23,7 +23,7 @@ module.exports = {
         if (!listServerCertificates) return callback(null, results, source);
 
         if (listServerCertificates.err || !listServerCertificates.data) {
-            helpers.addResult(results, 3,
+            helpers.addResult(results, 2,
                 'Unable to find any server certificates ' + helpers.addError(listServerCertificates), region);
             return callback(null, results, source);
         }
