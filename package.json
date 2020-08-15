@@ -9,7 +9,8 @@
     "test-cov": "nyc --reporter text --reporter cobertura --reporter lcov --all -- npm run test",
     "test-cov-watch": "nodemon --exec npm run test-cov",
     "test-cov-html": "nyc --reporter html --reporter cobertura --reporter lcov --all -- npm run test",
-    "test-cov-html-watch": "nodemon --exec npm run test-cov-html"
+    "test-cov-html-watch": "nodemon --exec npm run test-cov-html",
+    "lint": "npx eslint ."
   },
   "bin": {
     "cloudsploit-scan": "./index.js"
@@ -49,6 +50,7 @@
     "chai": "^4.2.0",
     "mocha": "^6.1.4",
     "nodemon": "^1.19.4",
-    "nyc": "^14.1.1"
+    "nyc": "^14.1.1",
+    "eslint": "^6.8.0"
   }
 }
