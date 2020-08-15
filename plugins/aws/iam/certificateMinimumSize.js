@@ -24,7 +24,7 @@ module.exports = {
         if (!listServerCertificates) return callback(null, results, source);
 
         if (listServerCertificates.err || !listServerCertificates.data) {
-            helpers.addResult(results, 3,
+            helpers.addResult(results, 2,
                 'Unable to find any server certificates ' + helpers.addError(listServerCertificates), region);
             return callback(null, results, source);
         }
@@ -40,23 +40,21 @@ module.exports = {
             var resource = certificate.ServerCertificateName;
 
             if (!serverCertificate || serverCertificate.err || !serverCertificate.data) {
-                helpers.addResult(results, 3,
-                    'Unable to get server certificate ' + helpers.addError(listServerCertificates), region);
-                return cb();
+                helpers.addResult(results, 2,
+                    'Unable to find server certificate ' + helpers.addError(listServerCertificates), region);
+                cb();
             }
 
             if (serverCertificate.data.length == 0) {
                 helpers.addResult(results, 2, 'No server certificate found', region);
-                return cb();
+                cb();
             }
 
             if(!serverCertificate.data.ServerCertificate  || !serverCertificate.data.ServerCertificate.CertificateBody) {
-                helpers.addResult(results, 3,
+                helpers.addResult(results, 2,
                     'Unable to get IAM server certificate body ' + helpers.addError(listServerCertificates), region);
-                return cb();
+                cb();
             }
-
-            var resource = serverCertificate.data.ServerCertificate.ServerCertificateMetadata.ServerCertificateName;
 
             const certificatePem = forge.pki.certificateFromPem(serverCertificate.data.ServerCertificate.CertificateBody);
 
@@ -66,10 +64,10 @@ module.exports = {
                     'IAM Certificate is security complient with 2048 bit key length', region, resource);
             }
             else {
-                helpers.addResult(results, 1,
+                helpers.addResult(results, 2,
                     'IAM Certificate should have atleast 2048 bit key length', region, resource);
             }
-            return cb();
+            cb();
         }, function(){
             callback(null, results, source);
         });
