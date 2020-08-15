@@ -171,7 +171,7 @@ describe('certificateMinimumSize', function () {
             const cache = createErrorCache();
             certificateMinimumSize.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(3);
+                expect(results[0].status).to.equal(2);
                 done();
             });
         });
@@ -180,7 +180,7 @@ describe('certificateMinimumSize', function () {
             const cache = createCache([listCertificates[0]], []);
             certificateMinimumSize.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(3);
+                expect(results[0].status).to.equal(2);
                 done();
             });
         });
@@ -189,7 +189,7 @@ describe('certificateMinimumSize', function () {
             const cache = createCertificateCache([listCertificates[0]], certificates[2]);
             certificateMinimumSize.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(3);
+                expect(results[0].status).to.equal(2);
                 done();
             });
         });
@@ -203,11 +203,11 @@ describe('certificateMinimumSize', function () {
             });
         });
 
-        it('should WARN if server certificate has less than 2048 bit key length', function (done) {
+        it('should FAIL if server certificate has less than 2048 bit key length', function (done) {
             const cache = createCertificateCache([listCertificates[0]], certificates[1]);
             certificateMinimumSize.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(1);
+                expect(results[0].status).to.equal(2);
                 done();
             });
         });
