@@ -43,16 +43,9 @@ module.exports = {
                 var resource = 'arn:aws:ec2:' + region + ':' + sg.OwnerId + ':security-group/' + sg.GroupId;
 
                 if (sg.GroupName.toLowerCase().indexOf("launch-wizard") != -1) {
-                    if (sg.IpPermissions.length ||
-                         sg.IpPermissionsEgress.length) {
-                        helpers.addResult(results, 2,
+                    helpers.addResult(results, 2,
                             sg.GroupName + 'security group has ' + (sg.IpPermissions.length || '0') + ' inbound and ' + (sg.IpPermissionsEgress.length || '0') + ' outbound rules',
                             region, resource);
-                    } else {
-                        helpers.addResult(results, 0,
-                            'Default security group does not have inbound or outbound rules',
-                            region, resource);
-                    }
                 }
             }
 
