@@ -42,10 +42,10 @@ module.exports = {
                 var sg = describeSecurityGroups.data[s];
                 var resource = 'arn:aws:ec2:' + region + ':' + sg.OwnerId + ':security-group/' + sg.GroupId;
 
-                if (sg.GroupName.toLowerCase().indexOf("launch-wizard") != -1) {
+                if (sg.GroupName.toLowerCase().indexOf('launch-wizard') != -1) {
                     helpers.addResult(results, 2,
-                            sg.GroupName + 'security group has ' + (sg.IpPermissions.length || '0') + ' inbound and ' + (sg.IpPermissionsEgress.length || '0') + ' outbound rules',
-                            region, resource);
+                        sg.GroupName + 'security group has ' + (sg.IpPermissions.length || '0') + ' inbound and ' + (sg.IpPermissionsEgress.length || '0') + ' outbound rules',
+                        region, resource);
                 }
             }
 
