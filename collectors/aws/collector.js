@@ -94,6 +94,50 @@ var calls = {
             }
         }
     },
+    Comprehend: {
+        listEntitiesDetectionJobs: {
+            property: 'EntitiesDetectionJobPropertiesList',
+            paginate: 'NextToken',
+            params: {
+                MaxResults: 100
+            }
+        },
+        listDocumentClassificationJobs: {
+            property: 'DocumentClassificationJobPropertiesList',
+            paginate: 'NextToken',
+            params: {
+                MaxResults: 100
+            }
+        },
+        listDominantLanguageDetectionJobs: {
+            property: 'DominantLanguageDetectionJobPropertiesList',
+            paginate: 'NextToken',
+            params: {
+                MaxResults: 100
+            }
+        },
+        listKeyPhrasesDetectionJobs: {
+            property: 'KeyPhrasesDetectionJobPropertiesList',
+            paginate: 'NextToken',
+            params: {
+                MaxResults: 100
+            }
+        },
+        listSentimentDetectionJobs: {
+            property: 'SentimentDetectionJobPropertiesList',
+            paginate: 'NextToken',
+            params: {
+                MaxResults: 100
+            }
+        },
+        listTopicsDetectionJobs: {
+            property: 'TopicsDetectionJobPropertiesList',
+            paginate: 'NextToken',
+            params: {
+                MaxResults: 100
+            }
+        }
+    },
     ConfigService: {
         describeConfigurationRecorders: {
             property: 'ConfigurationRecorders'
@@ -970,6 +1014,7 @@ var collect = function(AWSConfig, settings, callback) {
                         if (err) collection[serviceLower][callKey][region].err = err;
 
                         if (!data) return regionCb();
+
                         if (callObj.property && !data[callObj.property]) return regionCb();
                         if (callObj.secondProperty && !data[callObj.secondProperty]) return regionCb();
 
@@ -1067,7 +1112,6 @@ var collect = function(AWSConfig, settings, callback) {
                             });
                         } else {
                             var executor = new AWS[service](LocalAWSConfig);
-
                             if (!collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region] ||
                                 !collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region].data) {
                                 return regionCb();
