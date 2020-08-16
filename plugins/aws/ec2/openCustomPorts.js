@@ -28,7 +28,6 @@ module.exports = {
         async.each(regions.ec2, function(region, rcb){
             var describeSecurityGroups = helpers.addSource(cache, source,
                 ['ec2', 'describeSecurityGroups', region]);
-            console.log(describeSecurityGroups);
 
             if (!describeSecurityGroups) return rcb();
 
