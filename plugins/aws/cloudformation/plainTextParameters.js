@@ -49,8 +49,8 @@ module.exports = {
 
                 if(!stack.Parameters || !stack.Parameters.length) {
                     helpers.addResult(results, 0,
-                        'Template does not contain any potentially-sensitive parameters', region, resource);
-                    return rcb();
+                        'Template does not contain any parameters', region, resource);
+                    continue;
                 }
 
                 stack.Parameters.forEach(function(parameter){
