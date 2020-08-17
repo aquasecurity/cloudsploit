@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-const plaintextParameters = require('./plaintextParameters');
+const plaintextParameters = require('./plainTextParameters');
 
 const describeStacks = [
         {

@@ -46,12 +46,12 @@ module.exports = {
                 // arn:aws:cloudformation:region:account-id:stack/stack-name/stack-id
                 var stack = describeStacks.data[s];
                 var resource = stack.StackId;
-                parameterFound = false;
+                let parameterFound = false;
 
                 if(!stack.Parameters || !stack.Parameters.length) {
                     helpers.addResult(results, 0,
-                        'Template does not contain any potentially-sensitive parameters', region, resource);
-                    return rcb();
+                        'Template does not contain any parameters', region, resource);
+                    continue;
                 }
 
                 stack.Parameters.forEach(function(parameter){
