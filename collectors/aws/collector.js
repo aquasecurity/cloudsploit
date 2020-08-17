@@ -814,8 +814,7 @@ var postcalls = [
             describeDBParameters: {
                 reliesOnService: 'rds',
                 reliesOnCall: 'describeDBParameterGroups',
-                filterKey: 'DBParameterGroupName',
-                filterValue: 'DBParameterGroupName'
+                override: true
             }
         },
         SageMaker: {
@@ -1022,12 +1021,14 @@ var collect = function(AWSConfig, settings, callback) {
     }, function() {
         // Now loop through the follow up calls
         async.eachSeries(postcalls, function(postcallObj, postcallCb) {
+
             async.eachOfLimit(postcallObj, 10, function(serviceObj, service, serviceCb) {
                 var serviceLower = service.toLowerCase();
                 if (!collection[serviceLower]) collection[serviceLower] = {};
-
+                
                 async.eachOfLimit(serviceObj, 1, function(callObj, callKey, callCb) {
                     if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
+
                     if (!collection[serviceLower][callKey]) collection[serviceLower][callKey] = {};
 
                     async.eachLimit(regions[serviceLower], helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb) {
@@ -1045,7 +1046,7 @@ var collect = function(AWSConfig, settings, callback) {
                             !collection[callObj.reliesOnService][callObj.reliesOnCall][region] ||
                             !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data ||
                             !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data.length)) return regionCb();
-
+                            
                         var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
                         if (callObj.deleteRegion) {
                             //delete LocalAWSConfig.region;
@@ -1054,7 +1055,6 @@ var collect = function(AWSConfig, settings, callback) {
                             LocalAWSConfig.region = region;
                         }
                         if (callObj.signatureVersion) LocalAWSConfig.signatureVersion = callObj.signatureVersion;
-
                         if (callObj.override) {
                             collectors[serviceLower][callKey](LocalAWSConfig, collection, function() {
                                 if (callObj.rateLimit) {
@@ -1147,6 +1147,7 @@ var collect = function(AWSConfig, settings, callback) {
         }, function() {
             callback(null, collection);
         });
+        // console.log(JSON.stringify(collection, null, 2));
     });
 };
 

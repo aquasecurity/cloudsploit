@@ -93,6 +93,8 @@ module.exports = {
     },
 
     addResult: function(results, status, message, region, resource, custom){
+        console.log('results');
+        console.log(message);
         results.push({
             status: status,
             message: message,
