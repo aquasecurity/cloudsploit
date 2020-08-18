@@ -10,12 +10,12 @@ var GoogleConfig;
 
 // OPTION 1: Configure service provider credentials through hard-coded config objects
 
-// AWSConfig = {
-//  accessKeyId: '',
-//  secretAccessKey: '',
-//  sessionToken: '',
-//  region: 'us-east-1'
-// };
+AWSConfig = {
+    accessKeyId: 'AKIAYE32SRU5XWXGIMV3',
+    secretAccessKey: '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',
+    sessionToken: '',
+    region: 'us-east-1'
+};
 
 // AzureConfig = {
 //     ApplicationID: '',          // A.K.A ClientID
