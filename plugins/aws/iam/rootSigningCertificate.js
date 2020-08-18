@@ -35,10 +35,7 @@ module.exports = {
         var found = false;
         for (var r in generateCredentialReport.data) {
             var obj = generateCredentialReport.data[r];
-            var resource = '';
-
-            if (obj.arn) resource = obj.arn;
-            else continue;
+            const resource = obj.arn;
 
             if (obj && obj.user === '<root_account>') {
                 found = true;
