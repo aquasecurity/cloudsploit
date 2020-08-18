@@ -29,7 +29,7 @@ module.exports = {
 
                 if (!securityLists) return rcb();
 
-                if ((securityLists.err && securityLists.err.length > 0) || !securityLists.data ) {
+                if (securityLists.err || !securityLists.data ) {
                     helpers.addResult(results, 3,
                         'Unable to query for security lists: ' + helpers.addError(securityLists), region);
                     return rcb();
@@ -40,25 +40,32 @@ module.exports = {
                     return rcb();
                 }
 
-                securityLists.data.forEach(securityList =>  {
+                var noDefault = true;
+                securityLists.data.forEach(securityList => {
                     if (securityList.displayName) {
                         var displayNameArr = securityList.displayName.split(" ");
-                        if (displayNameArr[0] === 'Default') {
+                        if (displayNameArr[0].toLowerCase() === 'default') {
+                            noDefault = false;
                             if ((securityList.egressSecurityRules &&
                                 securityList.egressSecurityRules.length) ||
-                                securityList.ingressSecurityRules) {
+                                (securityList.ingressSecurityRules &&
+                                securityList.ingressSecurityRules.length)) {
                                 helpers.addResult(results, 2,
                                     'Default security list has ' + (securityList.egressSecurityRules.length || '0') + ' inbound and ' + (securityList.ingressSecurityRules.length || '0') + ' outbound rules',
                                     region, securityList.vcnId);
                             } else {
                                 helpers.addResult(results, 0,
-                                    'Default security list does not have inbound or outbound rules',
-                                    region, securityList.vcnId);
+                                    'Default security list does not have inbound or outbound rules', region, securityList.vcnId);
                             }
                         }
                     }
                 });
+
+                if (noDefault) {
+                    helpers.addResult(results, 0, 'No default security list found', region);
+                }
             }
+
             rcb();
         }, function () {
             // Global checking goes here

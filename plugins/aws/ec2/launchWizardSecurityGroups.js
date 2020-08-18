@@ -28,7 +28,7 @@ module.exports = {
             }
 
             if (!describeSecurityGroups.data.length) {
-                helpers.addResult(results, 0, 'No security groups present', region);
+                helpers.addResult(results, 0, 'No security groups found', region);
                 return rcb();
             }
 
@@ -36,7 +36,14 @@ module.exports = {
                 var sg = describeSecurityGroups.data[s];
                 var resource = sg.GroupId;
 
-                if (sg.GroupName && sg.GroupName.toLowerCase().startsWith('launch-wizard')) {
+                if(!sg.GroupName) {
+                    helpers.addResult(results, 2,
+                        'Unable to get group name of security group',
+                        region, resource);
+                    continue;
+                }
+                
+                if (sg.GroupName.toLowerCase().startsWith('launch-wizard')) {
                     helpers.addResult(results, 2,
                         'Security Group ' + sg.GroupName + ' was launched using EC2 launch wizard',
                         region, resource);
