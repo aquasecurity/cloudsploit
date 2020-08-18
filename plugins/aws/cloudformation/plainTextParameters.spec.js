@@ -117,11 +117,11 @@ const createNullCache = () => {
 
 describe('plaintextParameters', function () {
     describe('run', function () {
-        it('should WARN if template contains one of secret words', function (done) {
+        it('should FAIL if template contains one of secret words', function (done) {
             const cache = createCache([describeStacks[0]]);
             plaintextParameters.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(1);
+                expect(results[0].status).to.equal(2);
                 done();
             });
         });
