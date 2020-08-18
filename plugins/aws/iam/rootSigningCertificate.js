@@ -41,9 +41,9 @@ module.exports = {
 
                 if (obj.cert_1_active ||
                     obj.cert_2_active) {
-                    helpers.addResult(results, 0, 'The root user uses x509 singing certificates.', 'global', obj.arn);
+                    helpers.addResult(results, 2, 'The root user uses x509 singing certificates.', 'global', obj.arn);
                 } else {
-                    helpers.addResult(results, 2, 'The root user does not use x509 singing certificates.', 'global', obj.arn);
+                    helpers.addResult(results, 0, 'The root user does not use x509 singing certificates.', 'global', obj.arn);
                 }
 
                 break;
