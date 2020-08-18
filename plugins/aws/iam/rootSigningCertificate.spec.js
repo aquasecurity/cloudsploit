@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-const rootAccountActiveSigningCertificate = require('./rootAccountActiveSigningCertificate');
+const rootSigningCertificate = require('./rootSigningCertificate');
 
 const credentialReports = [
     {
@@ -47,7 +47,7 @@ const credentialReports = [
       access_key_2_last_used_service: null,
       cert_1_active: true,
       cert_1_last_rotated: null,
-      cert_2_active: true,
+      cert_2_active: false,
       cert_2_last_rotated: null
     },
     {
@@ -71,7 +71,7 @@ const credentialReports = [
       access_key_2_last_used_service: null,
       cert_1_active: true,
       cert_1_last_rotated: null,
-      cert_2_active: true,
+      cert_2_active: false,
       cert_2_last_rotated: null
     }
 ]
@@ -112,12 +112,12 @@ const createNullCache = () => {
     };
 };
 
-describe('rootAccountActiveSigningCertificate', function () {
+describe('rootSigningCertificate', function () {
     describe('run', function () {
 
         it('should PASS if the root user is not using x509 singing certificates', function (done) {
             const cache = createCache([credentialReports[0]]);
-            rootAccountActiveSigningCertificate.run(cache, {}, (err, results) => {
+            rootSigningCertificate.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -126,7 +126,7 @@ describe('rootAccountActiveSigningCertificate', function () {
 
         it('should FAIL if the root user is using x509 singing certificates', function (done) {
             const cache = createCache([credentialReports[1]]);
-            rootAccountActiveSigningCertificate.run(cache, {}, (err, results) => {
+            rootSigningCertificate.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -135,24 +135,24 @@ describe('rootAccountActiveSigningCertificate', function () {
 
         it('should UNKNOWN if the root user is not found', function (done) {
             const cache = createCache([credentialReports[2]]);
-            rootAccountActiveSigningCertificate.run(cache, {}, (err, results) => {
+            rootSigningCertificate.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
             });
         });
 
-        it('should not return any results if unable to fetch any stack description', function (done) {
+        it('should not return any results if unable to fetch credential reports', function (done) {
             const cache = createNullCache();
-            rootAccountActiveSigningCertificate.run(cache, {}, (err, results) => {
+            rootSigningCertificate.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });
         });
 
-        it('should UNKNOWN if error occurs while fetching stack description', function (done) {
+        it('should UNKNOWN if error occurs while fetching credential reports', function (done) {
             const cache = createErrorCache();
-            rootAccountActiveSigningCertificate.run(cache, {}, (err, results) => {
+            rootSigningCertificate.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();

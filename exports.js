@@ -126,7 +126,7 @@ module.exports = {
         'passwordRequiresUppercase'     : require(__dirname + '/plugins/aws/iam/passwordRequiresUppercase.js'),
         'passwordReusePrevention'       : require(__dirname + '/plugins/aws/iam/passwordReusePrevention.js'),
         'rootAccessKeys'                : require(__dirname + '/plugins/aws/iam/rootAccessKeys.js'),
-        'rootAccountActiveCertificate'  : require(__dirname + '/plugins/aws/iam/rootAccountActiveSigningCertificate.js'),
+        'rootSigningCertificate'  : require(__dirname + '/plugins/aws/iam/rootSigningCertificate.js'),
         'rootAccountInUse'              : require(__dirname + '/plugins/aws/iam/rootAccountInUse.js'),
         'rootHardwareMfa'               : require(__dirname + '/plugins/aws/iam/rootHardwareMfa.js'),
         'rootMfaEnabled'                : require(__dirname + '/plugins/aws/iam/rootMfaEnabled.js'),
