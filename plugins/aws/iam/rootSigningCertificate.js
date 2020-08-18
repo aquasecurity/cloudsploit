@@ -35,15 +35,18 @@ module.exports = {
         var found = false;
         for (var r in generateCredentialReport.data) {
             var obj = generateCredentialReport.data[r];
+            var resource = '';
+
+            if (obj.arn) resource = obj.arn;
 
             if (obj && obj.user === '<root_account>') {
                 found = true;
 
                 if (obj.cert_1_active ||
                     obj.cert_2_active) {
-                    helpers.addResult(results, 2, 'The root user uses x509 singing certificates.', 'global', obj.arn);
+                    helpers.addResult(results, 2, 'The root user uses x509 singing certificates.', 'global', resource);
                 } else {
-                    helpers.addResult(results, 0, 'The root user does not use x509 singing certificates.', 'global', obj.arn);
+                    helpers.addResult(results, 0, 'The root user does not use x509 singing certificates.', 'global', resource);
                 }
 
                 break;
