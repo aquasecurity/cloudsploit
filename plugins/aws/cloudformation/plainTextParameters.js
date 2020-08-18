@@ -27,7 +27,6 @@ module.exports = {
 
             var describeStacks = helpers.addSource(cache, source,
                 ['cloudformation', 'describeStacks', region]);
-                
             if (!describeStacks) return rcb();
 
             if (describeStacks.err || !describeStacks.data) {
@@ -45,7 +44,7 @@ module.exports = {
                 // arn:aws:cloudformation:region:account-id:stack/stack-name/stack-id
                 var stack = describeStacks.data[s];
                 var resource = stack.StackId;
-                let parameterFound = false;
+                let foundStrings = [];
 
                 if(!stack.Parameters || !stack.Parameters.length) {
                     helpers.addResult(results, 0,
@@ -54,18 +53,19 @@ module.exports = {
                 }
 
                 stack.Parameters.forEach(function(parameter){
-                    if(!parameterFound && parameter.ParameterKey && secretWords.includes(parameter.ParameterKey.toLowerCase()) && !parameter.ParameterValue.match('^[*]+$')) {
-                        parameterFound = true;
-                        helpers.addResult(results, 1,
-                            'Template contains one of the following potentially-sensitive parameters: secret, key, password', region, resource);
+                    if(parameter.ParameterKey && secretWords.includes(parameter.ParameterKey.toLowerCase()) && !parameter.ParameterValue.match('^[*]+$')) {
+                        foundStrings.push(parameter.ParameterKey);
                     }
                 });
-                
-                if(!parameterFound) {
+
+                if(foundStrings && foundStrings.length) {
+                    helpers.addResult(results, 1,
+                        'Template contains the following potentially-sensitive parameters: ' + foundStrings, region, resource);
+                }
+                else {
                     helpers.addResult(results, 0,
                         'Template does not contain any potentially-sensitive parameters', region, resource);
                 }
-
             }
 
             rcb();
