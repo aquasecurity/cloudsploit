@@ -54,15 +54,17 @@ module.exports = {
                 }
 
                 stack.Parameters.forEach(function(parameter){
-                    if(!parameterFound && parameter.ParameterKey && secretWords.includes(parameter.ParameterKey.toLowerCase()) && !parameter.ParameterValue.match('^[*]+$')) {
-                        parameterFound = true;
-                        helpers.addResult(results, 1,
-                            'Template contains one of the following potentially-sensitive parameters: secret, key, password', region, resource);
+                    if(parameter.ParameterKey && secretWords.includes(parameter.ParameterKey.toLowerCase()) && !parameter.ParameterValue.match('^[*]+$')) {
+                        foundStrings.push(parameter.ParameterKey);
                     }
                 });
 
                 if(foundStrings && foundStrings.length) {
+<<<<<<< HEAD
                     helpers.addResult(results, 2,
+=======
+                    helpers.addResult(results, 1,
+>>>>>>> aac8ece... Accomodated PR changes
                         'Template contains the following potentially-sensitive parameters: ' + foundStrings, region, resource);
                 }
                 else {
