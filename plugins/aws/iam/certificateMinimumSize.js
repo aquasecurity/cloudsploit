@@ -42,18 +42,18 @@ module.exports = {
             if (!serverCertificate || serverCertificate.err || !serverCertificate.data) {
                 helpers.addResult(results, 2,
                     'Unable to find server certificate ' + helpers.addError(listServerCertificates), region);
-                cb();
+                return cb();
             }
 
             if (serverCertificate.data.length == 0) {
                 helpers.addResult(results, 2, 'No server certificate found', region);
-                cb();
+                return cb();
             }
 
             if(!serverCertificate.data.ServerCertificate  || !serverCertificate.data.ServerCertificate.CertificateBody) {
                 helpers.addResult(results, 2,
                     'Unable to get IAM server certificate body ' + helpers.addError(listServerCertificates), region);
-                cb();
+                return cb();
             }
 
             const certificatePem = forge.pki.certificateFromPem(serverCertificate.data.ServerCertificate.CertificateBody);
