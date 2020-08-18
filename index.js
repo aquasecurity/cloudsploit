@@ -14,7 +14,7 @@ var GoogleConfig;
 //     accessKeyId: '',
 //     secretAccessKey: '',
 //     sessionToken: '',
-//     region: ''
+//     region: 'us-east-1'
 // };
 
 // AzureConfig = {
