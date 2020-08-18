@@ -14,7 +14,6 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
-
         async.each(regions.rds, function(region, rcb){
             var describeDBParameterGroups = helpers.addSource(cache, source,
                 ['rds', 'describeDBParameterGroups', region]);
@@ -57,37 +56,38 @@ module.exports = {
                     return paramcb();
                 }
 
-                var TLS10 = '';
-                var TLS11 = '';
-                var TLS12 = '';
+                var tls10 = '';
+                var tls11 = '';
+                var tls12 = '';
+
                 for (var param in parameters.data.Parameters) {
                     if (parameters.data.Parameters[param] &&
                         parameters.data.Parameters[param].ParameterName &&
                         parameters.data.Parameters[param].ParameterName === 'rds.tls10') {
                         
-                            TLS10 = parameters.data.Parameters[param].ParameterValue;
+                            tls10 = parameters.data.Parameters[param].ParameterValue;
                     }
                     else if (parameters.data.Parameters[param] &&
                         parameters.data.Parameters[param].ParameterName &&
                         parameters.data.Parameters[param].ParameterName === 'rds.tls11') {
                         
-                            TLS11 = parameters.data.Parameters[param].ParameterValue;
+                            tls11 = parameters.data.Parameters[param].ParameterValue;
                     }
                     else if (parameters.data.Parameters[param] &&
                         parameters.data.Parameters[param].ParameterName &&
                         parameters.data.Parameters[param].ParameterName === 'rds.tls12') {
                         
-                            TLS12 = parameters.data.Parameters[param].ParameterValue;
+                            tls12 = parameters.data.Parameters[param].ParameterValue;
                         }
                 }
 
-                if (TLS10 === 'disabled' && TLS11 === 'disabled' && TLS12 === 'default') {
+                if (tls10 === 'disabled' && tls11 === 'disabled' && tls12 === 'default') {
                     helpers.addResult(results, 0,
                         'DB parameter group ' + (group.DBParameterGroupName) + ' uses TLS 1.2',
                         region, resource);
 
                 }
-                else if (TLS10 != 'disabled' || TLS11 != 'disabled') {
+                else if (tls10 != 'disabled' || tls11 != 'disabled') {
                     helpers.addResult(results, 2,
                         'DB parameter group ' + (group.DBParameterGroupName) + ' does not use TLS 1.2',
                         region, resource);
