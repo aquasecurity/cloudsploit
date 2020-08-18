@@ -11,10 +11,10 @@ module.exports = {
     apis: ['CloudFormation:describeStacks'],
     settings: {
         plain_text_parameters: {
-            name: "CloudFormation Plaintext Parameters",
-            description: "A comma-delimited list of parameter strings that indicate a sensitive value",
-            regex: "[a-zA-Z0-9,]",
-            default: "secret,password,privatekey"
+            name: 'CloudFormation Plaintext Parameters',
+            description: 'A comma-delimited list of parameter strings that indicate a sensitive value',
+            regex: '[a-zA-Z0-9,]',
+            default: 'secret,password,privatekey'
         }
     },
 
@@ -33,7 +33,7 @@ module.exports = {
             if (describeStacks.err || !describeStacks.data) {
                 helpers.addResult(results, 3,
                     'Unable to describe stacks: ' + helpers.addError(describeStacks), region);
-                    return rcb();
+                return rcb();
             }
 
             if (!describeStacks.data.length) {
@@ -41,7 +41,6 @@ module.exports = {
                 return rcb();
             }
             
-            var parameterFound;
             for (var s in describeStacks.data){
                 // arn:aws:cloudformation:region:account-id:stack/stack-name/stack-id
                 var stack = describeStacks.data[s];
@@ -55,7 +54,7 @@ module.exports = {
                 }
 
                 stack.Parameters.forEach(function(parameter){
-                    if(!parameterFound && parameter.ParameterKey && secretWords.includes(parameter.ParameterKey.toLowerCase()) && !parameter.ParameterValue.match("^[\*]+$")) {
+                    if(!parameterFound && parameter.ParameterKey && secretWords.includes(parameter.ParameterKey.toLowerCase()) && !parameter.ParameterValue.match('^[*]+$')) {
                         parameterFound = true;
                         helpers.addResult(results, 1,
                             'Template contains one of the following potentially-sensitive parameters: secret, key, password', region, resource);
@@ -64,7 +63,7 @@ module.exports = {
                 
                 if(!parameterFound) {
                     helpers.addResult(results, 0,
-                    'Template does not contain any potentially-sensitive parameters', region, resource);
+                        'Template does not contain any potentially-sensitive parameters', region, resource);
                 }
 
             }
