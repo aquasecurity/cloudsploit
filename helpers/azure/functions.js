@@ -1,5 +1,6 @@
 var shared = require(__dirname + '/../shared.js');
 var auth = require(__dirname + '/auth.js');
+var async = require('async');
 
 function addResult(results, status, message, region, resource, custom) {
     // Override unknown results for known error messages
@@ -43,6 +44,7 @@ function addResult(results, status, message, region, resource, custom) {
 function findOpenPorts(ngs, protocols, service, location, results) {
     let found = false;
     var openPrefix = ['*', '0.0.0.0', '0.0.0.0/0', '<nw/0>', '/0', '::/0', 'internet'];
+
     for (let sGroups of ngs) {
         let strings = [];
         let resource = sGroups.id;
@@ -322,15 +324,249 @@ function remediatePlugin(config, method, body, baseUrl, resource, remediation_fi
         }
 
         let action = body;
-        action.action = putCall;
-
-        remediation_file['post_remediate']['actions'][pluginName][resource] = action;
-        remediation_file['remediate']['actions'][pluginName][resource] = {
-            'Action': 'Enabled'
-        };
 
         return callback(null, action);
     })
+}
+
+function remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, settings, resource, remediation_file, baseUrl, method, cb) {
+
+
+    var failingPermissions = [];
+    var passingSecurityRules = [];
+    var sgName;
+    if (resource && resource.length) {
+        var sgNameArr = resource.split('/');
+        sgName = sgNameArr[sgNameArr.length -1];
+        config.region = settings.regions[resource];
+    } else {
+        return cb('No resource provided');
+    }
+
+    if (!config.region) return cb('No region found when parsing resource');
+    if (!sgName) return cb('No security group name found when parsing resource');
+
+    var networkSecurityGroups = shared.addSource(cache, {},
+        ['networkSecurityGroups', 'listAll', config.region]);
+
+    if (!networkSecurityGroups.data || networkSecurityGroups.err) return cb('Unable to query for network security groups: ' + shared.addError(networkSecurityGroups));
+
+    if (!networkSecurityGroups.data.length) return cb('No network security groups present');
+
+    var securityGroup = networkSecurityGroups.data.find(nsg => {
+        return (nsg.name && nsg.name === sgName);
+    });
+
+    if (!securityGroup) return cb('The target network security group was not found');
+
+    if (!remediation_file['pre_remediate']['actions'][pluginName][resource] || !remediation_file['pre_remediate']['actions'][pluginName][resource].length) remediation_file['pre_remediate']['actions'][pluginName][resource] = [];
+    if (!remediation_file['post_remediate']['actions'][pluginName][resource] || !remediation_file['post_remediate']['actions'][pluginName][resource].length) remediation_file['post_remediate']['actions'][pluginName][resource] = [];
+    if (!remediation_file['remediate']['actions'][pluginName][resource]['steps'] || !remediation_file['remediate']['actions'][pluginName][resource]['steps'].length) remediation_file['remediate']['actions'][pluginName][resource]['steps'] = [];
+    var passingPermission = true;
+    function findPortRange(portToCheck, protocolToCheck, rule) {
+        if (portToCheck &&
+            portToCheck.toString().indexOf("-") > -1) {
+            let portRange = portToCheck.split("-");
+            let startPort = portRange[0];
+            let endPort = portRange[1];
+            if  (parseInt(startPort) <= port && parseInt(endPort) >= port && protocolToCheck && protocolToCheck === protocol) {
+                if (passingPermission) {
+                    passingPermission = false;
+                }
+                failingPermissions.push(rule);
+            } else {
+                if (passingPermission) return;
+                passingSecurityRules.push(rule);
+            }
+        } else if (portToCheck &&
+            portToCheck.toString().indexOf(port) > -1) {
+            if (portToCheck <= port && portToCheck >= port && protocolToCheck && protocolToCheck === protocol) {
+                if (passingPermission) {
+                    passingPermission = false;
+                }
+                failingPermissions.push(rule);
+            } else {
+                if (passingPermission) return;
+                passingSecurityRules.push(rule);
+            }
+        }
+    }
+
+    var failingRulePortIndex = {};
+
+    securityGroup.securityRules.forEach(rule => {
+        if (rule.properties['destinationPortRange']) {
+            findPortRange(rule.properties['destinationPortRange'], rule.properties.protocol, rule);
+        } else if (rule.properties['destinationPortRanges'] && rule.properties['destinationPortRanges'].length) {
+            for (let portIndex in rule.properties['destinationPortRanges']) {
+                let portToCheck = rule.properties['destinationPortRanges'][portIndex]
+                findPortRange(portToCheck, rule.properties.protocol, rule);
+                if (!passingPermission) {
+                    failingRulePortIndex[rule.name] = portIndex;
+                    break;
+                }
+            }
+
+            if (!passingPermission) {
+                failingPermissions.push(rule);
+            } else {
+                passingSecurityRules.push(rule);
+            }
+
+
+        }
+    });
+
+    if (!failingPermissions.length) return cb();
+
+    // because this changed to async need a way to aggregate errors and actions without stopping the whole function
+    var errors = [];
+    var actions = [];
+    var publicIpv4Strings = ['0.0.0.0', '0.0.0.0/0', '*', 'internet', '<nw/0>'];
+    var publicIpv6Strings = ['/0', '::/0', '::'];
+
+    // changed this to an async function to avoid the callback already called error(was forEach loop before)
+    async.each(failingPermissions,function(failingPermission, fpCb) {
+        var spliced = false;
+        var openIpRange = false;
+        var openIpv6Range = false;
+        var localIpExists = false;
+        var localIpV6Exists = false;
+        var ipv4InputKey = pluginName + 'AzureReplacementIpAddress';
+        var ipv6InputKey = pluginName + 'AzureReplacementIpv6Address';
+        var sourceAddressArr = [];
+
+        if (failingPermission.properties && (failingPermission.properties.sourceAddressPrefix || failingPermission.properties.sourceAddressPrefixes)) {
+
+            // I had to parse > stringify because it was using the final state instead of the current state of failingPermission.properties
+            remediation_file['pre_remediate']['actions'][pluginName][resource].push(JSON.parse(JSON.stringify(failingPermission.properties)));
+
+            sourceAddressArr = failingPermission.properties.sourceAddressPrefixes;
+            if (failingPermission.properties.sourceAddressPrefix) sourceAddressArr.push(failingPermission.properties.sourceAddressPrefix);
+
+            function checkIp(inputKey, ipType, publicString) {
+                if (sourceAddressArr.indexOf(publicString) > -1) {
+
+                    //this is if the input specified does not exist in the security rule
+                    if (settings.input && settings.input[inputKey] && sourceAddressArr.indexOf(settings.input[inputKey]) === -1) {
+                        sourceAddressArr.push(settings.input[inputKey]);
+                        sourceAddressArr.splice(sourceAddressArr.indexOf(publicString), 1);
+
+                    // this if the input specified already exists
+                    } else if (settings.input && settings.input[inputKey] && sourceAddressArr.indexOf(settings.input[inputKey]) > -1) {
+                        ipType === 'ipv4' ? localIpExists = true : localIpV6Exists = true;
+                        sourceAddressArr.splice(sourceAddressArr.indexOf(publicString), 1);
+
+                    // this is if there is no input and the failing port is in an array (destinationPortRanges). Will remove the port from the array
+                    } else if ((!settings.input || !settings.input[inputKey]) && (failingRulePortIndex[failingPermission.name]) && !spliced) {
+                        spliced = true;
+                        failingPermission.properties['destinationPortRanges'].splice([failingRulePortIndex[failingPermission.name]], 1)
+
+                        // this is if there is no input and the failing port is not an array
+                    } else if (!settings.input || !settings.input[inputKey]) {
+                        sourceAddressArr.splice(sourceAddressArr.indexOf(publicString), 1);
+                    }
+
+                    ipType === 'ipv4' ? openIpRange = true : openIpv6Range = true;
+                }
+            }
+
+            publicIpv4Strings.forEach(publicv4String => {
+                checkIp(ipv4InputKey, 'ipv4', publicv4String)
+            });
+
+            // will save a check, can only be v4 or v6 never both.
+            if (!openIpRange) {
+                publicIpv6Strings.forEach(publicv6String => {
+                    checkIp(ipv6InputKey, 'ipv6', publicv6String)
+                });
+            }
+
+        } else {
+            return fpCb();
+        }
+
+        if (!openIpv6Range && !openIpRange) return fpCb();
+
+        if (openIpRange && openIpv6Range) return fpCb('Invalid format, only IP or IPv6 can be remediated at one time');
+
+        var params = {
+            properties: {
+                securityRules: passingSecurityRules
+            },
+            location: config.region
+        };
+
+        // this ensures that the failing security rule actually has an ip address. if not we do not pass it and it gets deleted
+        if (sourceAddressArr && sourceAddressArr.length && sourceAddressArr.length === 1) {
+            failingPermission.properties.sourceAddressPrefix = sourceAddressArr.join(', ');
+            if (failingPermission.properties.sourceAddressPrefixes) delete failingPermission.properties.sourceAddressPrefixes;
+            params.properties.securityRules.push(failingPermission);
+        } else if (sourceAddressArr && sourceAddressArr.length && sourceAddressArr.length > 1) {
+            failingPermission.properties.sourceAddressPrefixes = sourceAddressArr
+            if (failingPermission.properties.sourceAddressPrefix) delete failingPermission.properties.sourceAddressPrefix;
+            params.properties.securityRules.push(failingPermission);
+        }
+
+        remediatePlugin(config, method, params, baseUrl, resource, remediation_file, putCall, pluginName, function(err) {
+            if (err) {
+                errors.push(err);
+                return fpCb(err);
+            } else {
+                if (openIpv6Range && !localIpV6Exists && settings.input && settings.input[ipv6InputKey]) {
+                    remediation_file['remediate']['actions'][pluginName][resource]['steps'].push({
+                        'inboundRule': settings.input[ipv6InputKey],
+                        'action': 'ADDED'
+                    });
+                } else if (openIpv6Range && localIpV6Exists && settings.input && settings.input[ipv6InputKey]) {
+                    remediation_file['remediate']['actions'][pluginName][resource]['steps'].push({
+                        'inboundRule': settings.input[ipv6InputKey],
+                        'action': 'Already Exists'
+                    });
+                 }
+
+                if (openIpv6Range) {
+                    remediation_file['remediate']['actions'][pluginName][resource]['steps'].push({
+                        'inboundRule': '::/0',
+                        'action': 'DELETED'
+                    });
+                }
+
+                if (openIpRange && !localIpExists && settings.input && settings.input[ipv4InputKey]) {
+                    remediation_file['remediate']['actions'][pluginName][resource]['steps'].push({
+                        'inboundRule': settings.input[ipv4InputKey],
+                        'action': 'ADDED'
+                    });
+
+                } else if (openIpRange && localIpExists && settings.input && settings.input[ipv4InputKey]){
+                    remediation_file['remediate']['actions'][pluginName][resource]['steps'].push({
+                        'inboundRule': settings.input[ipv4InputKey],
+                        'action': 'Already Exists'
+                    });
+                }
+
+                if (openIpRange) {
+                    remediation_file['remediate']['actions'][pluginName][resource]['steps'].push({
+                        'inboundRule': '0.0.0.0/0',
+                        'action': 'DELETED'
+                    });
+                }
+
+                actions.push(params);
+                return fpCb();
+            }
+        });
+
+
+    }, function(err) {
+        if (errors && errors.length) {
+            cb(errors.join(', '));
+        } else if (err) {
+            cb(err);
+        } else {
+            cb(null, actions);
+        }
+    });
 }
 
 module.exports = {
@@ -341,5 +577,6 @@ module.exports = {
     checkAppVersions: checkAppVersions,
     checkServerConfigs: checkServerConfigs,
     remediatePlugin: remediatePlugin,
-    processCall: processCall
+    processCall: processCall,
+    remediateOpenPorts: remediateOpenPorts
 };

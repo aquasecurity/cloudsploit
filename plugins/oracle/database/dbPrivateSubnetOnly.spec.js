@@ -78,29 +78,10 @@ describe('dbPrivateSubnetOnly', function () {
             };
 
             const cache = createCache(
-                [],
+                null,
                 ['hello'],
                 undefined,
                 ['hello']
-            );
-
-            plugin.run(cache, {}, callback);
-        });
-
-        it('should give passing result if no subnets or db systems are found', function (done) {
-            const callback = (err, results) => {
-                expect(results.length).to.be.above(0)
-                expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No database systems or subnets present')
-                expect(results[0].region).to.equal('us-ashburn-1')
-                done()
-            };
-
-            const cache = createCache(
-                null,
-                [],
-                [],
-                null
             );
 
             plugin.run(cache, {}, callback);
@@ -148,7 +129,7 @@ describe('dbPrivateSubnetOnly', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('The following db systems use the public subnet')
+                expect(results[0].message).to.include('The DB system is in a public subnet')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -462,7 +443,7 @@ describe('dbPrivateSubnetOnly', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('All db systems are in private subnets')
+                expect(results[0].message).to.include('The DB system is in a private subnet')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };

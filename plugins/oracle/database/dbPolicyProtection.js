@@ -44,11 +44,14 @@ module.exports = {
                 return rcb();
             }
             var policyProtection = true;
+            var entered = false;
 
             policies.data.forEach(policy => {
-                if (policy.statements) {
-                    policy.statements.forEach(statement => {
+                if (policy.statements &&
+                    policy.statements.length) {
+                    entered = true;
 
+                    policy.statements.forEach(statement => {
                         const statementLower = statement.toLowerCase();
 
                         if (statementLower.indexOf('allow') > -1 &&
@@ -67,17 +70,18 @@ module.exports = {
 
                             policyProtection = false;
                             var statementArr = statementLower.split(' ');
-                            var mySeverity = 2;
+                            var statementNormalArr = statement.split(' ');
+                            var severity = 2;
 
-                            if (statementArr[1] === 'any-user') {
-                                var groupName = statementArr[2] === 'to' ? '' : statementArr[2];
+                            if (statementArr[1] === 'any-user' || statementArr[1] === 'dynamic-group') {
+                                var groupName = statementArr[2] === 'to' ? '' : statementNormalArr[2];
                                 var compartment = statementArr[6] === 'tenancy' ? 'tenancy' : statementArr[6];
-                                var compartmentName = statementArr[7] === 'tenancy' ? '' : statementArr[7];
+                                var compartmentName = (!statementArr[7] || statementArr[7] === 'tenancy') ? '' : statementNormalArr[7];
                                 var groupType = statementArr[1];
                             } else {
-                                var groupName = statementArr[2] === 'to' ? '' : statementArr[2];
+                                var groupName = statementArr[2] === 'to' ? '' : statementNormalArr[2];
                                 var compartment = statementArr[7] === 'tenancy' ? 'tenancy' : statementArr[7];
-                                var compartmentName = statementArr[7] === 'tenancy' ? '' : statementArr[8];
+                                var compartmentName = (!statementArr[7] || statementArr[7] === 'tenancy') ? '' : statementNormalArr[8];
                                 var groupType = 'The ' + statementArr[1];
                             }
 
@@ -85,20 +89,19 @@ module.exports = {
                             if (statementArr.indexOf('request.user.name') > -1) {
                                 groupType = 'The user';
                                 groupName = statementArr[statementArr.length - 1];
-                                mySeverity = 1;
+                                severity = 1;
                             }
 
-                            helpers.addResult(results, mySeverity,
+                            helpers.addResult(results, severity,
                                 `${groupType} ${groupName} has the ability to delete all database services in ${compartment} ${compartmentName}`, region, policy.id);
                         }
                     });
-
-                    if (policyProtection) {
-                        helpers.addResult(results, 0, 'All policies have database delete protection enabled', region);
-                    }
                 }
             });
 
+            if (policyProtection && entered) {
+                helpers.addResult(results, 0, 'All policies have database delete protection enabled', region);
+            }
             rcb();
         }, function () {
             // Global checking goes here
