@@ -20,7 +20,6 @@ var async = require('async');
 
 var helpers = require(__dirname + '/../../helpers/oracle');
 
-const compartmentService = {name: 'compartment', call: 'get', region: helpers.regions(false).default};
 const regionSubscriptionService = {name: 'regionSubscription', call: 'list', region: helpers.regions(false).default};
 
 var globalServices = [
@@ -406,14 +405,10 @@ var processCall = function(OracleConfig, collection, settings, regions, call, se
                 collection[regionSubscriptionService.name][regionSubscriptionService.call] &&
                 collection[regionSubscriptionService.name][regionSubscriptionService.call][regionSubscriptionService.region] &&
                 collection[regionSubscriptionService.name][regionSubscriptionService.call][regionSubscriptionService.region].data &&
-                collection[regionSubscriptionService.name][regionSubscriptionService.call][regionSubscriptionService.region].data.filter(
-                    r => r.regionName == region) &&
-                collection[regionSubscriptionService.name][regionSubscriptionService.call][regionSubscriptionService.region].data.filter(
-                    r => r.regionName == region).length == 0
-            ) {
+                collection[regionSubscriptionService.name][regionSubscriptionService.call][regionSubscriptionService.region].data.filter(r => r.regionName == region) &&
+                collection[regionSubscriptionService.name][regionSubscriptionService.call][regionSubscriptionService.region].data.filter(r => r.regionName == region).length == 0) {
                 return regionCb();
             }
-
             if (!collection[service][callKey][region]) collection[service][callKey][region] = {};
 
             if (callObj.reliesOnService) {
@@ -424,9 +419,9 @@ var processCall = function(OracleConfig, collection, settings, regions, call, se
 
                     if (callObj.reliesOnService[reliedService] &&
                         (!collection[callObj.reliesOnService[reliedService]] ||
-                            !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]] ||
-                            !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][region] ||
-                            !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][region].data)) return regionCb();
+                        !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]] ||
+                        !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][region] ||
+                        !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][region].data)) return regionCb();
                 }
             }
 
@@ -437,7 +432,7 @@ var processCall = function(OracleConfig, collection, settings, regions, call, se
 
             var executor = new helpers.OracleExecutor(LocalOracleConfig);
             executor.run(collection, service, callObj, callKey, function(err, data) {
-                if (err) {
+                if (err && err.length) {
                     collection[service][callKey][region].err = err;
                 }
 
@@ -484,35 +479,6 @@ var getRegionSubscription = function(OracleConfig, collection, settings, calls, 
     });
 };
 
-var getCompartment = function(OracleConfig, collection, settings, calls, service, callKey, region, serviceCb) {
-
-    var LocalOracleConfig = JSON.parse(JSON.stringify(OracleConfig));
-    LocalOracleConfig.region = region;
-    LocalOracleConfig.service = service;
-
-    helpers.regions(false)[service].forEach(function(region) {
-        if (!collection[service]) collection[service] = {};
-        if (!collection[service][callKey]) collection[service][callKey] = {};
-        if (!collection[service][callKey][region]) collection[service][callKey][region] = {};
-        if (!collection[service][callKey][region].data) collection[service][callKey][region].data = [];
-    });
-
-    var executor = new helpers.OracleExecutor(LocalOracleConfig);
-    executor.run(collection, service, calls[service][callKey], callKey, function(err, data) {
-        if (err) {
-            collection[service][callKey][region].err = err;
-        }
-
-        if (!data) return serviceCb();
-
-        helpers.regions(false)[service].forEach(function(region) {
-            collection[service][callKey][region].data.push(data);
-        });
-
-        serviceCb();
-    });
-};
-
 // Loop through all of the top-level collectors for each service
 var collect = function(OracleConfig, settings, callback) {
     var collection = {};
@@ -523,32 +489,27 @@ var collect = function(OracleConfig, settings, callback) {
     var regions = helpers.regions(settings.govcloud);
 
     getRegionSubscription(OracleConfig, collection, settings, calls, regionSubscriptionService.name, regionSubscriptionService.call, regionSubscriptionService.region, function() {
-        getCompartment(OracleConfig, collection, settings, calls, compartmentService.name, compartmentService.call, compartmentService.region, function() {
-            async.eachOfLimit(calls, 10, function(call, service, serviceCb) {
+        async.eachOfLimit(calls, 10, function(call, service, serviceCb) {
+            if (!collection[service]) collection[service] = {};
+
+            processCall(OracleConfig, collection, settings, regions, call, service, function() {
+                serviceCb();
+            });
+        }, function() {
+            // Now loop through the follow up calls
+            async.eachOfLimit(postcalls, 10, function(postCall, service, serviceCb) {
                 if (!collection[service]) collection[service] = {};
 
-                processCall(OracleConfig, collection, settings, regions, call, service, function() {
+                processCall(OracleConfig, collection, settings, regions, postCall, service, function() {
                     serviceCb();
                 });
             }, function() {
                 // Now loop through the follow up calls
-                async.eachOfLimit(postcalls, 10, function(postCall, service, serviceCb) {
+                async.eachOfLimit(finalcalls, 10, function(finalCall, service, serviceCb) {
                     if (!collection[service]) collection[service] = {};
 
-                    processCall(OracleConfig, collection, settings, regions, postCall, service, function() {
+                    processCall(OracleConfig, collection, settings, regions, finalCall, service, function() {
                         serviceCb();
-                    });
-                }, function() {
-                    // Now loop through the follow up calls
-                    async.eachOfLimit(finalcalls, 10, function(finalCall, service, serviceCb) {
-                        if (!collection[service]) collection[service] = {};
-
-                        processCall(OracleConfig, collection, settings, regions, finalCall, service, function() {
-                            serviceCb();
-                        });
-                    }, function() {
-                        //console.log(JSON.stringify(collection, null, 2));
-                        callback(null, collection);
                     });
                 }, function() {
                     //console.log(JSON.stringify(collection, null, 2));
@@ -558,6 +519,9 @@ var collect = function(OracleConfig, settings, callback) {
                 //console.log(JSON.stringify(collection, null, 2));
                 callback(null, collection);
             });
+        }, function() {
+            //console.log(JSON.stringify(collection, null, 2));
+            callback(null, collection);
         });
     });
 };
