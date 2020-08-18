@@ -54,7 +54,7 @@ module.exports = {
                 }
 
                 stack.Parameters.forEach(function(parameter){
-                    if(!parameterFound && parameter.ParameterKey && secretWords.includes(parameter.ParameterKey.toLowerCase()) && !parameter.ParameterValue.match("^[\*]+$")) {
+                    if(!parameterFound && parameter.ParameterKey && secretWords.includes(parameter.ParameterKey.toLowerCase()) && !parameter.ParameterValue.match('^[*]+$')) {
                         parameterFound = true;
                         helpers.addResult(results, 1,
                             'Template contains one of the following potentially-sensitive parameters: secret, key, password', region, resource);
