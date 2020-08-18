@@ -59,7 +59,7 @@ module.exports = {
                 });
 
                 if(foundStrings && foundStrings.length) {
-                    helpers.addResult(results, 1,
+                    helpers.addResult(results, 2,
                         'Template contains the following potentially-sensitive parameters: ' + foundStrings, region, resource);
                 }
                 else {
