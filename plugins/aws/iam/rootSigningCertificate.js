@@ -38,6 +38,7 @@ module.exports = {
             var resource = '';
 
             if (obj.arn) resource = obj.arn;
+            else continue;
 
             if (obj && obj.user === '<root_account>') {
                 found = true;
