@@ -74,17 +74,17 @@ module.exports = {
                 var s3Region = helpers.defaultRegion(settings);
 
                 const listBuckets = helpers.addSource(cache, source, ['s3', 'listBuckets', s3Region]);
-                if (!listBuckets) return rcb(null, results, source);
+                if (!listBuckets) return cb(null, results, source);
                 if (listBuckets.err || !listBuckets.data) {
                     helpers.addResult(results, 3, `Unable to query for S3 buckets: ${helpers.addError(listBuckets)}`);
-                    return rcb(null, results, source);
+                    return cb(null, results, source);
                 }
 
                 var getBucketLogging = helpers.addSource(cache, source,
                     ['s3', 'getBucketLogging', s3Region, trail.S3BucketName]);
 
                 if (!getBucketLogging || getBucketLogging.err) { // data will be {} if logging is disabled.
-                    if (!bucketExists(getBucketLogging.err)) {
+                    if (getBucketLogging && !bucketExists(getBucketLogging.err)) {
                         helpers.addResult(results, 2,
                             'Bucket: ' + trail.S3BucketName + ' does not exist' ,
                             region, 'arn:aws:s3:::' + trail.S3BucketName);
