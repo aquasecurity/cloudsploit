@@ -60,11 +60,7 @@ module.exports = {
                 });
 
                 if(foundStrings && foundStrings.length) {
-<<<<<<< HEAD
                     helpers.addResult(results, 2,
-=======
-                    helpers.addResult(results, 1,
->>>>>>> aac8ece... Accomodated PR changes
                         'Template contains the following potentially-sensitive parameters: ' + foundStrings, region, resource);
                 }
                 else {
