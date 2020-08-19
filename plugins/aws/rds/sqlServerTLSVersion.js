@@ -54,9 +54,9 @@ module.exports = {
                     return paramcb();
                 }
 
-                var tls10 = '';
-                var tls11 = '';
-                var tls12 = '';
+                var tls10 = null;
+                var tls11 = null;
+                var tls12 = null;
 
                 for (var param in parameters.data.Parameters) {
                     if (parameters.data.Parameters[param] &&
@@ -77,15 +77,15 @@ module.exports = {
                         
                         tls12 = parameters.data.Parameters[param].ParameterValue;
                     }
+                    if (!tls10 || !tls11 || !tls12) continue;
                 }
 
                 if (tls10 === 'disabled' && tls11 === 'disabled' && tls12 != 'disabled') {
                     helpers.addResult(results, 0,
                         'DB parameter group ' + (group.DBParameterGroupName) + ' uses TLS 1.2',
                         region, resource);
-
                 }
-                else if (tls10 != 'disabled' || tls11 != 'disabled') {
+                else {
                     helpers.addResult(results, 2,
                         'DB parameter group ' + (group.DBParameterGroupName) + ' does not use TLS 1.2',
                         region, resource);
