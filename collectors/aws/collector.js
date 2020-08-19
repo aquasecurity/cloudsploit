@@ -1059,7 +1059,7 @@ var collect = function(AWSConfig, settings, callback) {
                             LocalAWSConfig.region = region;
                         }
                         if (callObj.signatureVersion) LocalAWSConfig.signatureVersion = callObj.signatureVersion;
-                        
+
                         if (callObj.override) {
                             collectors[serviceLower][callKey](LocalAWSConfig, collection, function() {
                                 if (callObj.rateLimit) {
