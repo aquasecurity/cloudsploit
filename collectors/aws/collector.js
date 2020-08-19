@@ -544,6 +544,14 @@ var postcalls = [
                 filterValue: 'Name'
             }
         },
+        AutoScaling: {
+            describeNotificationConfigurations: {
+                reliesOnService: 'autoscaling',
+                reliesOnCall: 'describeAutoScalingGroups',
+                filterKey: 'AutoScalingGroups',
+                filterValue: 'AutoScalingGroups'
+            }
+        },
         CloudFront: {
             getDistribution: {
                 reliesOnService: 'cloudfront',
