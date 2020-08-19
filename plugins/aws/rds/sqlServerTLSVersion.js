@@ -37,8 +37,6 @@ module.exports = {
                 var resource = group.DBParameterGroupArn;
 
                 if(group.DBParameterGroupFamily && !group.DBParameterGroupFamily.startsWith('sqlserver')) return paramcb();
-
-                if (group.DBParameterGroupName.startsWith('default.')) return paramcb();
                 
                 var parameters = helpers.addSource(cache, source,
                     ['rds', 'describeDBParameters', region, group.DBParameterGroupName]);
@@ -65,23 +63,23 @@ module.exports = {
                         parameters.data.Parameters[param].ParameterName &&
                         parameters.data.Parameters[param].ParameterName === 'rds.tls10') {
                         
-                            tls10 = parameters.data.Parameters[param].ParameterValue;
+                        tls10 = parameters.data.Parameters[param].ParameterValue;
                     }
                     else if (parameters.data.Parameters[param] &&
                         parameters.data.Parameters[param].ParameterName &&
                         parameters.data.Parameters[param].ParameterName === 'rds.tls11') {
                         
-                            tls11 = parameters.data.Parameters[param].ParameterValue;
+                        tls11 = parameters.data.Parameters[param].ParameterValue;
                     }
                     else if (parameters.data.Parameters[param] &&
                         parameters.data.Parameters[param].ParameterName &&
                         parameters.data.Parameters[param].ParameterName === 'rds.tls12') {
                         
-                            tls12 = parameters.data.Parameters[param].ParameterValue;
-                        }
+                        tls12 = parameters.data.Parameters[param].ParameterValue;
+                    }
                 }
 
-                if (tls10 === 'disabled' && tls11 === 'disabled' && tls12 === 'default') {
+                if (tls10 === 'disabled' && tls11 === 'disabled' && tls12 != 'disabled') {
                     helpers.addResult(results, 0,
                         'DB parameter group ' + (group.DBParameterGroupName) + ' uses TLS 1.2',
                         region, resource);
