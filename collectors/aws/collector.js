@@ -1033,7 +1033,6 @@ var collect = function(AWSConfig, settings, callback) {
 
                 async.eachOfLimit(serviceObj, 1, function(callObj, callKey, callCb) {
                     if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
-
                     if (!collection[serviceLower][callKey]) collection[serviceLower][callKey] = {};
 
                     async.eachLimit(regions[serviceLower], helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb) {
@@ -1060,6 +1059,7 @@ var collect = function(AWSConfig, settings, callback) {
                             LocalAWSConfig.region = region;
                         }
                         if (callObj.signatureVersion) LocalAWSConfig.signatureVersion = callObj.signatureVersion;
+                        
                         if (callObj.override) {
                             collectors[serviceLower][callKey](LocalAWSConfig, collection, function() {
                                 if (callObj.rateLimit) {
