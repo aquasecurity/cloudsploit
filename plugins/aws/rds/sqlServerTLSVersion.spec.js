@@ -1,4 +1,3 @@
-var assert = require('assert');
 var expect = require('chai').expect;
 var sqlServerTLSVersion = require('./sqlServerTLSVersion.js');
 
@@ -154,7 +153,16 @@ describe('sqlServerTLSVersion', function () {
                 done();
             });
         });
-        
+
+        it('should PASS if unable to get group parameters', function (done) {
+            const cache = createCache([parameterGroups[0]],[]);
+            sqlServerTLSVersion.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
+
         it('should FAIL if parameter group does not use TLS version 1.2', function (done) {
             const cache = createCache([parameterGroups[0]], groupParameters[0]);
             sqlServerTLSVersion.run(cache, {}, (err, results) => {
