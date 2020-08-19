@@ -3,8 +3,15 @@ var helpers = require('../../../helpers/aws');
 
 var managedAdminPolicy = 'arn:aws:iam::aws:policy/AdministratorAccess';
 
-function hasFederatedUserRole(statement) {
-    return statement.Action.includes('sts:AssumeRoleWithSAML') || statement.Action.includes('sts:AssumeRoleWithWebIdentity');
+function hasFederatedUserRole(policyDocument) {
+    // true iff every statement refers to federated user access
+    let statement;
+    for (statement of policyDocument.Statement) {
+        if (statement.Action !== 'sts:AssumeRoleWithSAML' && statement.Action !== 'sts:AssumeRoleWithWebIdentity'){
+            return false;
+        }
+    }
+    return true;
 }
 
 module.exports = {
@@ -71,7 +78,13 @@ module.exports = {
 
         async.each(listRoles.data, function(role, cb){
             if (!role.RoleName) return cb();
-
+            if (hasFederatedUserRole(JSON.parse(decodeURIComponent(role.AssumeRolePolicyDocument))) && config.ignore_identity_federation_roles) {
+                helpers.addResult(results, 0,
+                    'Role is federated user role',
+                    'global', role.Arn, custom
+                );
+                return cb();
+            }
             // Skip roles with user-defined paths
             if (config.iam_role_policies_ignore_path &&
                 config.iam_role_policies_ignore_path.length &&
@@ -161,10 +174,6 @@ module.exports = {
                                     }
                                 }
                                 if (failMsg) roleFailures.push(failMsg);
-                                if (hasFederatedUserRole(statement) && config.ignore_identity_federation_roles) {
-                                    roleFailures.length = 0;
-                                    break; // ignore this role and do not check other statements.
-                                }
                             }
                         }
                     }
