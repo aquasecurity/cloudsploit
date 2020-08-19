@@ -42,7 +42,7 @@ module.exports = {
 
                 if (!requests) return rcb();
 
-                if ((requests.err && requests.err.length) || !requests.data) {
+                if (requests.err || !requests.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for pre-authenticated requests: ' + helpers.addError(requests), region);
                     return rcb();
@@ -54,7 +54,6 @@ module.exports = {
                 }
 
                 var expiredRequests = true;
-                var shortExpiry = true;
                 requests.data.forEach(request => {
                     if (request.timeExpires) {
                         var ONE_DAY = 24*60*60*1000;
@@ -69,18 +68,17 @@ module.exports = {
                     if (timeExpires > config.preauthorization_expiration_date_fail) {
                         helpers.addResult(results, 2,
                             `pre-authenticated request expires in ${timeExpires} days`, region, request.id);
-                        shortExpiry = false;
                     } else if (timeExpires > config.preauthorization_expiration_date_warn) {
                         helpers.addResult(results, 1,
                             `pre-authenticated request expires in ${timeExpires} days`, region, request.id);
-                        shortExpiry = false;
+                    } else {
+                        helpers.addResult(results, 0,
+                            `Pre-authenticated requests is set to expire in less than ${config.preauthorization_expiration_date_warn} days`, region, request.id);
                     }
                 });
+
                 if (expiredRequests) {
                     helpers.addResult(results, 0, 'No active pre-authenticated requests', region);
-                } else if (shortExpiry) {
-                    helpers.addResult(results, 0,
-                        `All pre-authenticated requests are set to expire in less than ${config.preauthorization_expiration_date_warn} days`, region);
                 }
             }
             rcb();

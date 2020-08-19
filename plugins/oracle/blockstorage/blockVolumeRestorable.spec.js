@@ -62,7 +62,9 @@ describe('blockVolumeRestorable', function () {
 
             const cache = createCache(
                 [],
-                undefined
+                undefined,
+                undefined,
+                []
             );
 
             plugin.run(cache, {}, callback);
@@ -95,7 +97,7 @@ describe('blockVolumeRestorable', function () {
             };
 
             const cache = createCache(
-                [],
+                null,
                 ['lots of data'],
                 undefined,
                 ['error']
@@ -108,7 +110,7 @@ describe('blockVolumeRestorable', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(1)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('The following block volumes are not actively restorable')
+                expect(results[0].message).to.include('Block volume is not actively restorable')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -169,7 +171,7 @@ describe('blockVolumeRestorable', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(1)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('All block volumes are restorable.')
+                expect(results[0].message).to.include('Block volume is actively restorable')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };

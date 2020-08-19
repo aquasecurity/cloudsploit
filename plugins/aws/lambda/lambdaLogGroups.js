@@ -41,7 +41,7 @@ module.exports = {
 
                 var result = [0, ''];
 
-                if (describeLogGroups.err || !describeLogGroups.data) {
+                if (!describeLogGroups || describeLogGroups.err || !describeLogGroups.data) {
                     result = [3, 'Error querying for log groups: ' + helpers.addError(describeLogGroups)];
                 } else if (describeLogGroups.data) {
                     var found = describeLogGroups.data.find(function(lg) {

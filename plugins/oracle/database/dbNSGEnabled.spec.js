@@ -185,7 +185,7 @@ describe('dbNSGEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('All database systems have network security groups enabled')
+                expect(results[0].message).to.include('The database system has network security groups enabled')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -193,49 +193,6 @@ describe('dbNSGEnabled', function () {
             const cache = createCache(
                 null,
                 [
-                    {
-                        "availabilityDomain": "fMgC:US-ASHBURN-AD-1",
-                        "backupNetworkNsgIds": null,
-                        "backupSubnetId": null,
-                        "clusterName": null,
-                        "compartmentId": "ocid1.tenancy.oc1..aaaaaaaao43aqdrzuacodg7ffqv2zeauftjyjkwhnbrugt44ympzeiblxx7q",
-                        "cpuCoreCount": 1,
-                        "dataStoragePercentage": 80,
-                        "dataStorageSizeInGBs": 256,
-                        "databaseEdition": "ENTERPRISE_EDITION_HIGH_PERFORMANCE",
-                        "dbSystemOptions": null,
-                        "definedTags": {},
-                        "diskRedundancy": "HIGH",
-                        "displayName": "giodbsystemtest1",
-                        "domain": "sub08061941230.giovcntest1.oraclevcn.com",
-                        "faultDomains": [
-                            "FAULT-DOMAIN-1"
-                        ],
-                        "freeformTags": {},
-                        "hostname": "oraclehello",
-                        "id": "ocid1.dbsystem.oc1.iad.abuwcljt7a36nmivltthuqvwlbkkycv7rf7h75sjdziuym5vdqkjwo5hje4q",
-                        "kmsKeyId": null,
-                        "lastPatchHistoryEntryId": null,
-                        "licenseModel": "LICENSE_INCLUDED",
-                        "lifecycleDetails": "Hostname oraclehello is already in-use in this subnet ocid1.subnet.oc1.iad.aaaaaaaazwuooxeivkzmb622gwvlthykwalti333cdtjr7mdbrbtk6ybalhq. Please terminate & re-provision the instance with a non-overlapping hostname.",
-                        "lifecycleState": "TERMINATED",
-                        "listenerPort": 1521,
-                        "nodeCount": 1,
-                        "nsgIds": null,
-                        "recoStorageSizeInGB": 256,
-                        "scanDnsRecordId": null,
-                        "scanIpIds": null,
-                        "shape": "VM.Standard2.1",
-                        "sparseDiskgroup": null,
-                        "sshPublicKeys": [
-                            "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC8SLjQgLYi9uR409mg0M46MMHcdTL5/GzPY2VDyw1cpljbPap0qEhx6SIkNQPw/Ka/mmdpLjFZatTduPFLBsZ2qMded1Kro4xGmFwCNfltz+CgSOcg6+eSO/luo9oAAQn7FTwkcTie0xQOL8hkeT1gM/1LkAdmc6Grqv5UkIdcUnKRvsQoJaofmYVsjGXAZF/d/LTFxyL2ZM/SXPOqzWAfNQtLLJ1BaPEWX0Ey36kUY/s5nGUIpZ/UBBL1jZd1yjZG2Pqf1qbwFbTzPKAtIS1XKKez5Dx4Y29Mi2Lx9gjRoZ0faO79DfWTRhUGC2PPUrJDmeWjoW4biLr1PCwuOl0L Gio@Gio's Macbook Pro"
-                        ],
-                        "subnetId": "ocid1.subnet.oc1.iad.aaaaaaaazwuooxeivkzmb622gwvlthykwalti333cdtjr7mdbrbtk6ybalhq",
-                        "timeCreated": "2019-09-11T20:45:40.542Z",
-                        "timeZone": "UTC",
-                        "version": null,
-                        "vipIds": null
-                    },
                     {
                         "availabilityDomain": "fMgC:US-ASHBURN-AD-1",
                         "backupNetworkNsgIds": null,

@@ -86,6 +86,15 @@ module.exports = {
             'storageAccount': storageAccountName
         };
 
-        helpers.remediatePlugin(config, method, body, baseUrl, resource, remediation_file, putCall, pluginName, callback);
+        helpers.remediatePlugin(config, method, body, baseUrl, resource, remediation_file, putCall, pluginName, function(err, action) {
+            action.action = putCall;
+
+            remediation_file['post_remediate']['actions'][pluginName][resource] = action;
+            remediation_file['remediate']['actions'][pluginName][resource] = {
+                'Action': 'Enabled'
+            };
+
+            callback(null, action);
+        });
     }
 };
