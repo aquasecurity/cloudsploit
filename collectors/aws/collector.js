@@ -1021,11 +1021,10 @@ var collect = function(AWSConfig, settings, callback) {
     }, function() {
         // Now loop through the follow up calls
         async.eachSeries(postcalls, function(postcallObj, postcallCb) {
-
             async.eachOfLimit(postcallObj, 10, function(serviceObj, service, serviceCb) {
                 var serviceLower = service.toLowerCase();
                 if (!collection[serviceLower]) collection[serviceLower] = {};
-                
+
                 async.eachOfLimit(serviceObj, 1, function(callObj, callKey, callCb) {
                     if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
 
@@ -1046,7 +1045,7 @@ var collect = function(AWSConfig, settings, callback) {
                             !collection[callObj.reliesOnService][callObj.reliesOnCall][region] ||
                             !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data ||
                             !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data.length)) return regionCb();
-                            
+
                         var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
                         if (callObj.deleteRegion) {
                             //delete LocalAWSConfig.region;
