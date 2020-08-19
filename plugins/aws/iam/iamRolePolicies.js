@@ -3,6 +3,10 @@ var helpers = require('../../../helpers/aws');
 
 var managedAdminPolicy = 'arn:aws:iam::aws:policy/AdministratorAccess';
 
+function hasFederatedUserRole(statement) {
+    return statement.Action.includes('sts:AssumeRoleWithSAML') || statement.Action.includes('sts:AssumeRoleWithWebIdentity');
+}
+
 module.exports = {
     title: 'IAM Role Policies',
     category: 'IAM',
@@ -24,15 +28,23 @@ module.exports = {
             regex: '^(true|false)$', // string true or boolean true to enable, string false or boolean false to disable
             default: false
         },
+        ignore_identity_federation_roles: {
+            name: 'Ignore Identity Federation Roles',
+            description: 'enable this to ignore idp/saml trust roles',
+            regex: '^(true|false)$', // string true or boolean true to enable, string false or boolean false to disable
+            default: false
+        },
     },
 
     run: function(cache, settings, callback) {
         var config = {
             iam_role_policies_ignore_path: settings.iam_role_policies_ignore_path || this.settings.iam_role_policies_ignore_path.default,
-            ignore_service_specific_wildcards: settings.ignore_service_specific_wildcards || this.settings.ignore_service_specific_wildcards.default
+            ignore_service_specific_wildcards: settings.ignore_service_specific_wildcards || this.settings.ignore_service_specific_wildcards.default,
+            ignore_identity_federation_roles: settings.ignore_identity_federation_roles || this.settings.ignore_identity_federation_roles
         };
 
         if (config.ignore_service_specific_wildcards === 'false') config.ignore_service_specific_wildcards = false;
+        if (config.ignore_identity_federation_roles === 'false') config.ignore_identity_federation_roles = false;
 
         var custom = helpers.isCustom(settings, this.settings);
 
@@ -149,6 +161,10 @@ module.exports = {
                                     }
                                 }
                                 if (failMsg) roleFailures.push(failMsg);
+                                if (hasFederatedUserRole(statement) && config.ignore_identity_federation_roles) {
+                                    roleFailures.length = 0;
+                                    break; // ignore this role and do not check other statements.
+                                }
                             }
                         }
                     }

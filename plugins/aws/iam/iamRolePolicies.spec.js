@@ -224,6 +224,38 @@ describe('iamRolePolicies', function () {
             iamRolePolicies.run(copied_cache, settings, callback)
         });
 
+        it('should PASS when action indicates federated identity role, has wildcards, and ignore_identity_federation_roles is enabled', function (done) {
+            let settings = {
+                ignore_identity_federation_roles: 'true'
+            };
+
+            let copied_cache = JSON.parse(JSON.stringify(cache));
+            copied_cache.iam.getRolePolicy["us-east-1"].ExampleRole1.a.data.PolicyDocument.Statement[0].Action = ["*:*"];
+            copied_cache.iam.getRolePolicy["us-east-1"].ExampleRole1.b.data.PolicyDocument.Statement[0].Action = ["sts:AssumeRoleWithWebIdentity"];
+            let callback = (err, results) => {
+                expect(results[0].status).to.equal(0);
+                done();
+            };
+
+            iamRolePolicies.run(copied_cache, settings, callback)
+        });
+
+        it('should FAIL when action indicates federated identity role, has wildcards, and ignore_identity_federation_roles is disabled', function (done) {
+            let settings = {
+                ignore_identity_federation_roles: 'false'
+            };
+
+            let copied_cache = JSON.parse(JSON.stringify(cache));
+            copied_cache.iam.getRolePolicy["us-east-1"].ExampleRole1.a.data.PolicyDocument.Statement[0].Action = ["*:*"];
+            copied_cache.iam.getRolePolicy["us-east-1"].ExampleRole1.b.data.PolicyDocument.Statement[0].Action = ["sts:AssumeRoleWithWebIdentity"];
+            let callback = (err, results) => {
+                expect(results[0].status).to.equal(2);
+                done();
+            };
+
+            iamRolePolicies.run(copied_cache, settings, callback)
+        });
+
         it('should FAIL when actions end with wildcard but ignore_service_specific_wildcards is disabled', function (done) {
             let settings = {
                 ignore_service_specific_wildcards: 'false',
