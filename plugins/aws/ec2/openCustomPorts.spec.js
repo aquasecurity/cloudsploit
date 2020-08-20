@@ -19,7 +19,7 @@ const securityGroups = [
                 }
             ],
             "PrefixListIds": [],
-            "ToPort": 25,
+            "ToPort": 30,
             "UserIdGroupPairs": []
         }],
         "OwnerId": "560213429563",
@@ -45,40 +45,40 @@ const securityGroups = [
         ],
         "VpcId": "vpc-99de2fe4"
     },
-        {
-            "Description": "launch-wizard-1 created 2020-08-10T14:28:09.271+05:00",
-            "GroupName": "launch-wizard-1",
-            "IpPermissions": [
-                {
-                    "FromPort": 22,
-                    "IpProtocol": "tcp",
-                    "IpRanges": [
-                        {
-                            "CidrIp": "0.0.0.0/0"
-                        }
-                    ],
-                    "Ipv6Ranges": [],
-                    "PrefixListIds": [],
-                    "ToPort": 22,
-                    "UserIdGroupPairs": []
-                }
-            ],
-            "OwnerId": "560213429563",
-            "GroupId": "sg-0ff1642cae23c309a",
-            "IpPermissionsEgress": [
-                {
-                    "IpProtocol": "-1",
-                    "IpRanges": [
-                        {
-                            "CidrIp": "0.0.0.0/0"
-                        }
-                    ],
-                    "Ipv6Ranges": [],
-                    "PrefixListIds": [],
-                    "UserIdGroupPairs": []
-                }
-            ],
-            "VpcId": "vpc-99de2fe4"
+    {
+        "Description": "launch-wizard-1 created 2020-08-10T14:28:09.271+05:00",
+        "GroupName": "launch-wizard-1",
+        "IpPermissions": [
+            {
+                "FromPort": 80,
+                "IpProtocol": "tcp",
+                "IpRanges": [
+                    {
+                        "CidrIp": "0.0.0.0/0"
+                    }
+                ],
+                "Ipv6Ranges": [],
+                "PrefixListIds": [],
+                "ToPort": 80,
+                "UserIdGroupPairs": []
+            }
+        ],
+        "OwnerId": "560213429563",
+        "GroupId": "sg-0ff1642cae23c309a",
+        "IpPermissionsEgress": [
+            {
+                "IpProtocol": "-1",
+                "IpRanges": [
+                    {
+                        "CidrIp": "0.0.0.0/0"
+                    }
+                ],
+                "Ipv6Ranges": [],
+                "PrefixListIds": [],
+                "UserIdGroupPairs": []
+            }
+        ],
+        "VpcId": "vpc-99de2fe4"
     }
 ]
 
