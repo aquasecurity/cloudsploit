@@ -174,7 +174,7 @@ describe('certificateMinimumSize', function () {
             console.log(cache);
             certificateMinimumSize.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(3);
+                expect(results[0].status).to.equal(2);
                 done();
             });
         });

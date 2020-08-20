@@ -1,63 +1,82 @@
 var expect = require('chai').expect;
-const plaintextParameters = require('./plaintextParameters');
+const plaintextParameters = require('./plainTextParameters');
 
 const describeStacks = [
-        {
-            StackId: 'arn:aws:cloudformation:us-east-1:55005500:stack/TestStack/1493b310-dc80-11ea-b8ab-1214c28caebf',
-            StackName: 'TestStack',
-            Parameters: [
-                {
-                    ParameterKey: 'Secret',
-                    ParameterValue: 'bucketwithsecretparameter1'
-                },
-                {
-                    ParameterKey: 'Password',
-                    ParameterValue: 'bucketwithsecretparameter1'
-                }
-            ],
-            CreationTime: '2020-08-13T13:34:52.435Z',
-            RollbackConfiguration: { RollbackTriggers: [] },
-            StackStatus: 'CREATE_COMPLETE',
-            DisableRollback: false,
-            NotificationARNs: [],
-            Capabilities: [],
-            Outputs: [],
-            Tags: [],
-            DriftInformation: { StackDriftStatus: 'NOT_CHECKED' }
-        },
-        {
-            StackId: 'arn:aws:cloudformation:us-east-1:55005500:stack/TestStack/1493b310-dc80-11ea-b8ab-1214c28caebf',
-            StackName: 'TestStack',
-            Parameters: [
-                {
-                    ParameterKey: 'S3BucketName',
-                    ParameterValue: 'testbucketplaintext1'
-                }
-            ],
-            CreationTime: '2020-08-12T09:42:04.803Z',
-            RollbackConfiguration: { RollbackTriggers: [] },
-            StackStatus: 'CREATE_COMPLETE',
-            DisableRollback: false,
-            NotificationARNs: [],
-            Capabilities: [],
-            Outputs: [],
-            Tags: [],
-            DriftInformation: { StackDriftStatus: 'NOT_CHECKED' }
-        },
-        {
-            StackId: 'arn:aws:cloudformation:us-east-1:55005500:stack/TestStack/1493b310-dc80-11ea-b8ab-1214c28caebf',
-            StackName: 'TestStack',
-            Parameters: [],
-            CreationTime: '2020-08-12T09:42:04.803Z',
-            RollbackConfiguration: { RollbackTriggers: [] },
-            StackStatus: 'CREATE_COMPLETE',
-            DisableRollback: false,
-            NotificationARNs: [],
-            Capabilities: [],
-            Outputs: [],
-            Tags: [],
-            DriftInformation: { StackDriftStatus: 'NOT_CHECKED' }
-        }
+    {
+        StackId: 'arn:aws:cloudformation:us-east-1:55005500:stack/TestStack/1493b310-dc80-11ea-b8ab-1214c28caebf',
+        StackName: 'TestStack',
+        Parameters: [
+            {
+                ParameterKey: 'Secret',
+                ParameterValue: 'bucketwithsecretparameter1'
+            },
+            {
+                ParameterKey: 'Password',
+                ParameterValue: 'bucketwithsecretparameter1'
+            }
+        ],
+        CreationTime: '2020-08-13T13:34:52.435Z',
+        RollbackConfiguration: { RollbackTriggers: [] },
+        StackStatus: 'CREATE_COMPLETE',
+        DisableRollback: false,
+        NotificationARNs: [],
+        Capabilities: [],
+        Outputs: [],
+        Tags: [],
+        DriftInformation: { StackDriftStatus: 'NOT_CHECKED' }
+    },
+    {
+        StackId: 'arn:aws:cloudformation:us-east-1:55005500:stack/TestStack/1493b310-dc80-11ea-b8ab-1214c28caebf',
+        StackName: 'TestStack',
+        Parameters: [
+            {
+                ParameterKey: 'S3BucketName',
+                ParameterValue: 'testbucketplaintext1'
+            }
+        ],
+        CreationTime: '2020-08-12T09:42:04.803Z',
+        RollbackConfiguration: { RollbackTriggers: [] },
+        StackStatus: 'CREATE_COMPLETE',
+        DisableRollback: false,
+        NotificationARNs: [],
+        Capabilities: [],
+        Outputs: [],
+        Tags: [],
+        DriftInformation: { StackDriftStatus: 'NOT_CHECKED' }
+    },
+    {
+        StackId: 'arn:aws:cloudformation:us-east-1:55005500:stack/TestStack/1493b310-dc80-11ea-b8ab-1214c28caebf',
+        StackName: 'TestStack',
+        Parameters: [
+            {
+                ParameterKey: 'Secret',
+                ParameterValue: '****'
+            }
+        ],
+        CreationTime: '2020-08-13T13:34:52.435Z',
+        RollbackConfiguration: { RollbackTriggers: [] },
+        StackStatus: 'CREATE_COMPLETE',
+        DisableRollback: false,
+        NotificationARNs: [],
+        Capabilities: [],
+        Outputs: [],
+        Tags: [],
+        DriftInformation: { StackDriftStatus: 'NOT_CHECKED' }
+    },
+    {
+        StackId: 'arn:aws:cloudformation:us-east-1:55005500:stack/TestStack/1493b310-dc80-11ea-b8ab-1214c28caebf',
+        StackName: 'TestStack',
+        Parameters: [],
+        CreationTime: '2020-08-12T09:42:04.803Z',
+        RollbackConfiguration: { RollbackTriggers: [] },
+        StackStatus: 'CREATE_COMPLETE',
+        DisableRollback: false,
+        NotificationARNs: [],
+        Capabilities: [],
+        Outputs: [],
+        Tags: [],
+        DriftInformation: { StackDriftStatus: 'NOT_CHECKED' }
+    }
 ]
 
 const createCache = (stacks) => {
@@ -98,17 +117,26 @@ const createNullCache = () => {
 
 describe('plaintextParameters', function () {
     describe('run', function () {
-        it('should WARN if template contains one of secret words ["password" , "privatekey", "secret"]', function (done) {
+        it('should FAIL if template contains one of secret words', function (done) {
             const cache = createCache([describeStacks[0]]);
             plaintextParameters.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(1);
+                expect(results[0].status).to.equal(2);
                 done();
             });
         });
 
-        it('should PASS if template does not contain any of secret words ["password" , "privatekey", "secret"]', function (done) {
+        it('should PASS if template does not contain any of secret words', function (done) {
             const cache = createCache([describeStacks[1]]);
+            plaintextParameters.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
+
+        it('should PASS if template contains any of secret words but with NoEcho enabled', function (done) {
+            const cache = createCache([describeStacks[2]]);
             plaintextParameters.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
