@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Open Custom Ports',
     category: 'EC2',
-    description: 'Ensures that the defined ports are not exposed publicly.',
+    description: 'Ensures that the defined ports are not exposed publicly',
     more_info: 'Security groups should be used to restrict access to ports from known networks.',
     link: 'https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html',
     recommended_action: 'Modify the security group to ensure the ports are not exposed publicly.',
@@ -28,6 +28,7 @@ module.exports = {
         async.each(regions.ec2, function(region, rcb){
             var describeSecurityGroups = helpers.addSource(cache, source,
                 ['ec2', 'describeSecurityGroups', region]);
+            console.log(describeSecurityGroups);
 
             if (!describeSecurityGroups) return rcb();
 
@@ -42,22 +43,22 @@ module.exports = {
                 return rcb();
             }
 
-            var found = false;
-            var groups = describeSecurityGroups.data;
+            var portFound = false;
 
-            for (var g in groups) {
-                var strings = [];
-                var resource = 'arn:aws:ec2:' + region + ':' +
-                               groups[g].OwnerId + ':security-group/' +
-                               groups[g].GroupId;
+            for (var g in describeSecurityGroups.data) {
+                var group = describeSecurityGroups.data[g];
+                var resource = group.GroupId;
+                var openPorts = [];
 
-                for (var p in groups[g].IpPermissions) {
-                    var permission = groups[g].IpPermissions[p];
+                if (!group.IpPermissions) continue;
+
+                for (var p in group.IpPermissions) {
+                    var permission = group.IpPermissions[p];
                     
-                    for (var k in permission.IpRanges) {
-                        var range = permission.IpRanges[k];
+                    for (var r in permission.IpRanges) {
+                        var range = permission.IpRanges[r];
 
-                        if (range.CidrIp === '0.0.0.0/0') {
+                        if (range.CidrIp && range.CidrIp === '0.0.0.0/0') {
                             var portRange = permission.ToPort - permission.FromPort;
 
                             for (let p=0; p <= portRange; p++) {
@@ -66,25 +67,23 @@ module.exports = {
                                 if (!allowed_open_ports.includes(port)) {
                                     var string = permission.IpProtocol.toUpperCase() +
                                     ' port ' + port + ' open to 0.0.0.0/0';
-                                    if (strings.indexOf(string) === -1) strings.push(string);
-                                    found = true;
+                                    if (openPorts.indexOf(string) === -1) openPorts.push(string);
+                                    portFound = true;
                                 }
                             }
                         }
                     }
                 }
 
-                if (strings.length) {
+                if (openPorts.length) {
                     helpers.addResult(results, 2,
-                        'Security group: ' + groups[g].GroupId +
-                        ' (' + groups[g].GroupName +
-                        ') has ' + ': ' + strings.join(' and '), region,
-                        resource);
+                        'Security group: ' + group.GroupName + ' has: ' + openPorts.join(' and '), 
+                        region, resource);
                 }
             }
 
-            if (!found) {
-                helpers.addResult(results, 0, 'No public open ports found', region);
+            if (!portFound) {
+                helpers.addResult(results, 0, 'No public open ports found', region, resource);
             }
 
             rcb();
