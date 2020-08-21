@@ -115,18 +115,9 @@ const createNullCache = () => {
     };
 };
 
-
 describe('plaintextParameters', function () {
     describe('run', function () {
         it('should FAIL if template contains one of secret words', function (done) {
-            const cache = createCache([describeStacks[0]]);
-            plaintextParameters.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-            });
-        });
-
-        it('should WARN if template contains one of secret words ["password" , "privatekey", "secret"]', function (done) {
             const cache = createCache([describeStacks[0]]);
             plaintextParameters.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -137,15 +128,6 @@ describe('plaintextParameters', function () {
 
         it('should PASS if template does not contain any of secret words', function (done) {
             const cache = createCache([describeStacks[1]]);
-            plaintextParameters.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                done();
-            });
-        });
-
-        it('should PASS if template contains any of secret words but with NoEcho enabled', function (done) {
-            const cache = createCache([describeStacks[2]]);
             plaintextParameters.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -182,7 +164,6 @@ describe('plaintextParameters', function () {
 
         it('should not return any results if unable to fetch any stack description', function (done) {
             const cache = createNullCache();
-
             plaintextParameters.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
