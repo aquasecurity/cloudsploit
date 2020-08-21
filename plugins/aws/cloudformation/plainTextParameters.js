@@ -10,7 +10,6 @@ module.exports = {
     recommended_action: 'Update the sensitive parameters to use the NoEcho property.',
     apis: ['CloudFormation:describeStacks'],
     settings: {
-
         plain_text_parameters: {
             name: 'CloudFormation Plaintext Parameters',
             description: 'A comma-delimited list of parameter strings that indicate a sensitive value',
