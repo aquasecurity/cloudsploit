@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Security groups should be used to restrict access to ports from known networks.',
     link: 'https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html',
     recommended_action: 'Modify the security group to ensure the ports are not exposed publicly.',
-    apis: ['EC2:describeSecurityGroups'],
+    apis: ['EC2:describeSecurityGroups', 'STS:getCallerIdentity'],
     settings: {
         open_port_allowed_list: {
             name: 'EC2 Allowed Open Ports',
@@ -22,6 +22,10 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var acctRegion = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
+
+        var accountId = helpers.addSource(cache, source, ["sts", "getCallerIdentity", acctRegion, "data"]);
 
         var allowed_open_ports = this.settings.open_port_allowed_list.default;
 
@@ -43,7 +47,7 @@ module.exports = {
             // Loop through each security group
             for (var g in describeSecurityGroups.data) {
                 var group = describeSecurityGroups.data[g];
-                var resource = group.GroupId;
+                var arn = 'arn:' + awsOrGov + ':ec2:' + region + ':' + accountId + ':security-group/' + group.GroupId
                 var openPorts = [];
 
                 if (!group.IpPermissions) continue;
@@ -75,11 +79,11 @@ module.exports = {
                 if (openPorts.length) {
                     helpers.addResult(results, 2,
                         'Security group ' + group.GroupName + ' has: ' + openPorts.join(' , ') + ' open to 0.0.0.0/0', 
-                        region, resource);
+                        region, arn);
                 } else {
                     helpers.addResult(results, 0,
                         'Security group: ' + group.GroupName + ' has no open ports',
-                        region, resource);
+                        region, arn);
                 }
             }
 
