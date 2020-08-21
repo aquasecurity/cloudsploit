@@ -195,7 +195,7 @@ var engine = function(AWSConfig, AzureConfig, GitHubConfig, OracleConfig, Google
         if (useStatusExitCode) {
             process.exitCode = Math.max(results);
         }
-        console.log('Done');
+        console.log('INFO: Scan complete');
     });
 };
 

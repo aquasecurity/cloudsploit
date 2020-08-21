@@ -1,8 +1,44 @@
 var csvWriter = require('csv-write-stream');
 var fs = require('fs');
+var ttytable = require('tty-table');
 
 // For the console output, we don't need any state since we can write
 // directly to the console.
+var tableHeaders = [
+    {
+        value: 'Category'
+    },
+    {
+        value: 'Plugin'
+    },
+    {
+        value: 'Resource'
+    },
+    {
+        value: 'Region'
+    },
+    {
+        value: 'Status',
+        width: '10%',
+        formatter: function(value) {
+            if (value === 'OK') {
+                value = this.style(value, 'bgGreen', 'black');
+            } else if (value === 'FAIL') {
+                value = this.style(value, 'bgRed', 'white');
+            } else if (value === 'WARN') {
+                value = this.style(value, 'bgYellow', 'black');
+            } else {
+                value = this.style(value, 'bgGray', 'white');
+            }
+            return value;
+        }
+    },
+    {
+        value: 'Message'
+    }
+];
+var tableRows = [];
+
 var consoleOutputHandler = {
     startCompliance: function(plugin, pluginKey, compliance) {
         var complianceDesc = compliance.describe(pluginKey, plugin);
@@ -17,7 +53,8 @@ var consoleOutputHandler = {
     },
 
     endCompliance: function() {
-        // For console output, we don't do anything
+        // For console output, do nothing
+
     },
 
     writeResult: function(result, plugin) {
@@ -32,13 +69,35 @@ var consoleOutputHandler = {
             statusWord = 'UNKNOWN';
         }
 
-        console.log(plugin.category + '\t' + plugin.title + '\t' +
-                        (result.resource || 'N/A') + '\t' +
-                        (result.region || 'Global') + '\t\t' +
-                        statusWord + '\t' + result.message);
+        tableRows.push({
+            Category: plugin.category,
+            Plugin: plugin.title,
+            Resource: (result.resource || 'N/A'),
+            Region: (result.region || 'global'),
+            Status: statusWord,
+            Message: result.message
+        });
+
+        // console.log(plugin.category + '\t' + plugin.title + '\t' +
+        //                 (result.resource || 'N/A') + '\t' +
+        //                 (result.region || 'Global') + '\t\t' +
+        //                 statusWord + '\t' + result.message);
     },
 
-    close: function() {}
+    close: function() {
+        // For console output, print the table
+        const t1 = ttytable(tableHeaders, tableRows, null, {
+            borderStyle: 'solid',
+            borderColor: 'white',
+            paddingBottom: 0,
+            headerAlign: 'center',
+            headerColor: 'white',
+            align: 'left',
+            color: 'white',
+            width: '100%'
+        }).render();
+        console.log(t1);
+    }
 };
 
 module.exports = {
