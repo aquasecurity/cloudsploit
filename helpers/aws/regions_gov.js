@@ -25,6 +25,7 @@ module.exports = {
     ec2: regions,
     ecr: regions,
     eks: [],
+    elasticbeanstalk: regions,
     elastictranscoder: [],
     elb: regions,
     elbv2: regions,
