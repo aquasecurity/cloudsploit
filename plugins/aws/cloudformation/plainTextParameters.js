@@ -36,7 +36,7 @@ module.exports = {
             }
 
             if (!describeStacks.data.length) {
-                helpers.addResult(results, 0, 'No stack description found', region);
+                helpers.addResult(results, 0, 'No CloudFormation stacks found', region);
                 return rcb();
             }
             
