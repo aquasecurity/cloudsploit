@@ -1160,6 +1160,7 @@ var collect = function(AWSConfig, settings, callback) {
         }, function() {
             callback(null, collection);
         });
+        // console.log(JSON.stringify(collection, null, 2));
     });
 };
 
