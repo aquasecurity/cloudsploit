@@ -4,8 +4,8 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'AutoScaling Group Missing ELB',
     category: 'AutoScaling',
-    description: 'Ensures all autoscaling groups are referencing active load balancers.',
-    more_info: 'Each autoscaling group should with a load balancer configured should reference an active ELB.',
+    description: 'Ensures all AutoScaling groups are referencing active load balancers.',
+    more_info: 'Each AutoScaling group with a load balancer configured should reference an active ELB.',
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/attach-load-balancer-asg.html',
     recommended_action: 'Ensure that the autoscaling group load balancer has not been deleted. If so, remove it from the ASG.',
     apis: ['AutoScaling:describeAutoScalingGroups', 'ELB:describeLoadBalancers'],
@@ -14,6 +14,7 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var elbNames = [];
 
         async.each(regions.autoscaling, function(region, rcb){
             var autoScalingGroups = helpers.addSource(cache, source,
@@ -34,9 +35,30 @@ module.exports = {
                 return rcb();
             }
 
-            if (!autoScalingGroups.data.length) {
-                helpers.addResult(results, 0, 'No AutoScaling groups found', region);
+            if (elasticLoadBalancersV2.err || !elasticLoadBalancersV2.data) {
+                helpers.addResult(results, 3, 'Unable to query for Application/Network load balancers: ' +  helpers.addError(elasticLoadBalancersV2), region);
                 return rcb();
+            }
+            
+            if (!autoScalingGroups.data.length) {
+                helpers.addResult(results, 0, 'No AutoScaling group found', region);
+                return rcb();
+            }
+            
+            if (elasticLoadBalancers.data.length) {
+                elasticLoadBalancers.data.forEach(function(elb) {
+                    if(elb.LoadBalancerName) {
+                        elbNames.push(elb.LoadBalancerName);
+                    }
+                });
+            }
+
+            if (elasticLoadBalancersV2.data.length) {
+                elasticLoadBalancersV2.data.forEach(function(elbv2) {
+                    if(elbv2.LoadBalancerName) {
+                        elbNames.push(elbv2.LoadBalancerName);
+                    }
+                });
             }
 
             var elbFound = false;
