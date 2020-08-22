@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-const emptyASG = require('./emptyASG');
+const emptyAsg = require('./emptyAsg');
 
 const autoScalingGroups =  [
     {
@@ -118,11 +118,11 @@ const createNullCache = () => {
     };
 };
 
-describe('emptyASG', function () {
+describe('emptyAsg', function () {
     describe('run', function () {
         it('should PASS if autoscaling group contains instance(s)', function (done) {
             const cache = createCache([autoScalingGroups[0]]);
-            emptyASG.run(cache, {}, (err, results) => {
+            emptyAsg.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -131,7 +131,7 @@ describe('emptyASG', function () {
 
         it('should FAIL if autoscaling group does not contain instance(s)', function (done) {
             const cache = createCache([autoScalingGroups[1]]);
-            emptyASG.run(cache, {}, (err, results) => {
+            emptyAsg.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -140,7 +140,7 @@ describe('emptyASG', function () {
 
         it('should PASS if no autoscaling group data found ', function (done) {
             const cache = createCache([]);
-            emptyASG.run(cache, {}, (err, results) => {
+            emptyAsg.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -149,7 +149,7 @@ describe('emptyASG', function () {
         
         it('should UNKNOWN if unable to describe autoscaling group found', function (done) {
             const cache = createErrorCache();
-            emptyASG.run(cache, {}, (err, results) => {
+            emptyAsg.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -158,7 +158,7 @@ describe('emptyASG', function () {
 
         it('should not return anything if no autoscaling group found', function (done) {
             const cache = createNullCache();
-            emptyASG.run(cache, {}, (err, results) => {
+            emptyAsg.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });

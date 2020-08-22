@@ -34,14 +34,15 @@ module.exports = {
             }
 
             describeAutoScalingGroups.data.forEach(function(asg){
+                var resource = asg.AutoScalingGroupARN;
                 if (!asg.Instances.length) {
                     helpers.addResult(results, 2,
-                        'Auto scaling group does not contain any instance',
-                        region, asg.AutoScalingGroupName);
+                        'Auto scaling group: ' + asg.AutoScalingGroupName + ' does not contain any instance',
+                        region, resource);
                 } else {
                     helpers.addResult(results, 0,
-                        'Auto scaling group contains ' + asg.Instances.length + ' instance(s)',
-                        region, asg.AutoScalingGroupName);
+                        'Auto scaling group: ' + asg.AutoScalingGroupName + ' contains ' + asg.Instances.length + ' instance(s)',
+                        region, resource);
                 }
             });
             
