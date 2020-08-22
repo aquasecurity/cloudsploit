@@ -150,12 +150,13 @@ describe('asgActiveNotifications', function () {
             });
         });
 
-        // it('should UNKNOWN if unable to describe notification configurations of autoscaling group found', function (done) {
-        //     const cache = createCache(autoScalingGroups[0], null);
-        //     asgActiveNotifications.run(cache, {}, (err, results) => {
-        //         expect(results.length).to.equal(0);
-        //         done();
-        //     });
-        // });
+        it('should FAIL if No auto scaling group notification configurations found', function (done) {
+            const cache = createCache([autoScalingGroups[0]], null);
+            asgActiveNotifications.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
+                done();
+            });
+        });
     });
 });
