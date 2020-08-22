@@ -8,77 +8,107 @@ module.exports = {
     more_info: 'Each autoscaling group should with a load balancer configured should reference an active ELB.',
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/attach-load-balancer-asg.html',
     recommended_action: 'Ensure that the autoscaling group load balancer has not been deleted. If so, remove it from the ASG.',
-    apis: ['AutoScaling:describeAutoScalingGroups', 'ELB:describeLoadBalancer'],
+    apis: ['AutoScaling:describeAutoScalingGroups', 'ELB:describeLoadBalancers', 'ELBv2:describeLoadBalancers'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var loadBalancers = {};
 
         async.each(regions.autoscaling, function(region, rcb){
             var autoScalingGroups = helpers.addSource(cache, source,
                 ['autoscaling', 'describeAutoScalingGroups', region]);
+                
+            var elasticLoadBalancers = helpers.addSource(cache, source,
+                ['elb', 'describeLoadBalancers', region]);
 
-            if (!autoScalingGroups) return rcb();
+            var elasticLoadBalancersV2 = helpers.addSource(cache, source,
+                ['elbv2', 'describeLoadBalancers', region]);
+
+            if (!autoScalingGroups || !elasticLoadBalancers || !elasticLoadBalancersV2) return rcb();
 
             if (autoScalingGroups.err || !autoScalingGroups.data) {
-                helpers.addResult(results, 3,
-                    'Unable to query for AutoScaling groups: ' + 
-                    helpers.addError(autoScalingGroups), region);
+                helpers.addResult(results, 3, 'Unable to query for AutoScaling groups: ' +  helpers.addError(autoScalingGroups), region);
+                return rcb();
+            }
+
+            if (elasticLoadBalancers.err || !elasticLoadBalancers.data) {
+                helpers.addResult(results, 3, 'Unable to query for Classic load balancers: ' +  helpers.addError(elasticLoadBalancers), region);
+                return rcb();
+            }
+
+            if (elasticLoadBalancersV2.err || !elasticLoadBalancersV2.data) {
+                helpers.addResult(results, 3, 'Unable to query for Application/Network load balancers: ' +  helpers.addError(elasticLoadBalancersV2), region);
                 return rcb();
             }
 
             if (!autoScalingGroups.data.length) {
-                helpers.addResult(results, 0, 'No AutoScaling groups found', region);
+                helpers.addResult(results, 0, 'No AutoScaling group found', region);
                 return rcb();
             }
+            
+            if (elasticLoadBalancers.data.length) {
+                elasticLoadBalancers.data.forEach(function(elb) {
+                    if(elb.LoadBalancerName) {
+                        loadBalancers[elb.LoadBalancerName] =  elb;
+                    }
+                });
+            }
 
-            autoScalingGroups.data.forEach(function(asg){
-                asgAvailabilityZones = asg.AvailabilityZones;
-                if(asg.HealthCheckType == "ELB") {
-                    if (asg.LoadBalancerNames) {
-                        // create ELBs and check
-                        asg.LoadBalancerNames.forEach(function(elbName){
-                            var elasticLoadBalancer = helpers.addSource(cache, source,
-                                ['autoscaling', 'describeLoadBalancers', region, elbName]);
+            if (elasticLoadBalancersV2.data.length) {
+                elasticLoadBalancersV2.data.forEach(function(elbv2) {
+                    if(elbv2.LoadBalancerName) {
+                        loadBalancers[elbv2.LoadBalancerName] =  elbv2;
+                    }
+                });
+            }
 
-                            if(!elasticLoadBalancer || !elasticLoadBalancer.data || !elasticLoadBalancer.data.LoadBalancerDescriptions) {
-                                console.log('Load balancer not found in AutoScaling group ' + elbName);
-                                helpers.addResult(results, 2,
-                                    'Load balancer not found in AutoScaling group',
-                                    region, elbName);
-                            } 
-                            else {
-                                var differentAzFound = false;
-                                elbAvailabilityZones = elasticLoadBalancer.LoadBalancerDescriptions.AvailabilityZones;
-                                elbAvailabilityZones.foreach(function(elbAz){
+            autoScalingGroups.data.forEach(function(asg) {
+                var asgAvailabilityZones = asg.AvailabilityZones;
+                var differentAzFound = false;
+                var resource = asg.AutoScalingGroupARN;
+
+                if(asg.HealthCheckType == 'ELB') {
+                    if(!loadBalancers.length) {
+                        helpers.addResult(results, 0, 'No Load Balancer found', region);
+                        return rcb();
+                    }
+
+                    if (asg.LoadBalancerNames && asg.LoadBalancerNames.length) {
+
+                        asg.LoadBalancerNames.forEach(function(elbName) {
+                            if(elbName in loadBalancers) {
+                                var loadBalancer = loadBalancers[elbName];
+                                differentAzFound = false;
+                                var elbAvailabilityZones = loadBalancer.AvailabilityZones;
+
+                                // if Load Balancer is in any AZ different from AutoScaling group's AZs then add an error result
+                                elbAvailabilityZones.forEach(function(elbAz) {
                                     if(!asgAvailabilityZones.includes(elbAz)) {
                                         differentAzFound = true;
                                     }
                                 });
+
                                 if(differentAzFound) {
-                                    console.log('Load balancer ' + elbName + ' is not in the same AZ as of AutoScaling group');
-                                    helpers.addResult(results, 2, 'Load balancer ' + elbName + ' is not in the same AZ as of AutoScaling group', region, asg.autoScalingGroupName);
+                                    helpers.addResult(results, 2, 'Load balancer "' + elbName + '" is not in the same AZ as of AutoScaling group', region, resource);
                                 }
                                 else {
-                                    console.log('Load balancer ' + elbName + ' is in the same AZ as of AutoScaling group');
-                                    helpers.addResult(results, 0, 'Load balancer ' + elbName + ' is in the same AZ as of AutoScaling group', region, asg.autoScalingGroupName);
+                                    helpers.addResult(results, 0, 'Load balancer "' + elbName + '" is in the same AZ as of AutoScaling group', region, resource);
                                 }
+                            }
+                            else {
+                                helpers.addResult(results, 2, 'AutoScaling group utilizes an inactive load balancer "'+ elbName + '"', region, resource);
                             }
                         });
                     }
                     else {
-                        console.log('Load balancer not found in AutoScaling group');
-                        helpers.addResult(results, 2,
-                            'Load balancer not found in AutoScaling group',
-                            region, elbName);
+                        helpers.addResult(results, 2, 'AutoScaling group does not have any Load Balancer associated', region, resource);
                     }
                 }
                 else {
-                    console.log('AutoScaling group does not utilize a load balancer');
-                    helpers.addResult(results, 0, 'AutoScaling group does not utilize a load balancer', region, elbName);
+                    helpers.addResult(results, 0, 'AutoScaling group does not utilize a load balancer', region, resource);
                 }
-
             });
             
             rcb();
