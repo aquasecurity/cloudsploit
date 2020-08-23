@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-var engine = require('./engine');
+const { ArgumentParser } = require('argparse');
+const engine = require('./engine');
 
 console.log(`
    _____ _                 _  _____       _       _ _   
@@ -11,7 +12,71 @@ console.log(`
   \\_____|_|\\___/ \\__,_|\\__,_|_____/| .__/|_|\\___/|_|\\__|
                                    | |                  
                                    |_|                  
+
+  CloudSploit by Aqua Security, Ltd.
+  Cloud security auditing for AWS, Azure, GCP, Oracle, and GitHub
 `);
+
+const parser = new ArgumentParser({});
+
+parser.add_argument('--credentials', {
+    help: 'The path to a cloud provider credentials file.',
+    required: true
+});
+
+parser.add_argument('--compliance', {
+    help: 'Compliance mode. Only return results applicable to the selected program.',
+    choices: ['hipaa', 'cis', 'cis1', 'cis2', 'pci']
+});
+parser.add_argument('--plugin', {
+    help: 'A specific plugin to run. If none provided, all plugins will be run. Obtain from the exports.js file. E.g. acmValidation'
+});
+parser.add_argument('--govcloud', {
+    help: 'AWS only. Enables GovCloud mode.',
+    action: 'store_true'
+});
+parser.add_argument('--china', {
+    help: 'AWS only. Enables AWS China mode.',
+    action: 'store_true'
+});
+parser.add_argument('--csv', { help: 'Output: CSV file' });
+parser.add_argument('--json', { help: 'Output: JSON file' });
+parser.add_argument('--junit', { help: 'Output: Junit file' });
+parser.add_argument('--console', {
+    help: 'Console output format. Default: table',
+    choices: ['none', 'text', 'table'],
+    default: 'table'
+});
+parser.add_argument('--collection', { help: 'Output: full collection JSON as file' });
+parser.add_argument('--ignore-ok', {
+    help: 'Ignore passing (OK) results',
+    action: 'store_true'
+});
+parser.add_argument('--exit-code', {
+    help: 'Exits with a non-zero status code if non-passing results are found',
+    action: 'store_true'
+});
+parser.add_argument('--skip-paginate', {
+    help: 'AWS only. Skips pagination (for debugging).',
+    action: 'store_false'
+});
+parser.add_argument('--suppress', {
+    help: 'Suppress results matching the provided Regex. Format: pluginId:region:resourceId',
+    action: 'append'
+});
+parser.add_argument('--skip-region', {
+    help: 'Skips provided region or location (e.g. --skip-region=us-east-1',
+    action: 'append'
+});
+
+let settings = parser.parse_args();
+let cloudConfig = {};
+
+settings.cloud = 'aws';
+
+// Now execute the scans using the defined configuration information.
+engine(cloudConfig, settings);
+return;
 
 try {
     var config = require('./config.js');
@@ -19,12 +84,6 @@ try {
     console.error('ERROR: Config file could not be loaded. Please ensure you have copied the config_example.js file to config.js');
     process.exit(1);
 }
-
-var AWSConfig;
-var AzureConfig;
-var GitHubConfig;
-var OracleConfig;
-var GoogleConfig;
 
 function loadHelperFile(path) {
     try {
@@ -47,20 +106,20 @@ function checkRequiredKeys(obj, keys) {
 }
 
 if (config.credentials.aws.credential_file) {
-    AWSConfig = loadHelperFile(config.credentials.aws.credential_file);
+    cloudConfig = loadHelperFile(config.credentials.aws.credential_file);
 } else if (config.credentials.aws.access_key) {
     checkRequiredKeys(config.credentials.aws, ['secret_access_key']);
-    AWSConfig = {
+    cloudConfig = {
         accessKeyId: config.credentials.aws.access_key,
         secretAccessKey: config.credentials.aws.secret_access_key,
         sessionToken: config.credentials.aws.session_token,
         region: 'us-east-1'
     };
 } else if (config.credentials.azure.credential_file) {
-    AzureConfig = loadHelperFile(config.credentials.azure.credential_file);
+    cloudConfig = loadHelperFile(config.credentials.azure.credential_file);
 } else if (config.credentials.azure.application_id) {
     checkRequiredKeys(config.credentials.azure, ['key_value', 'directory_id', 'subscription_id']);
-    AzureConfig = {
+    cloudConfig = {
         ApplicationID: config.credentials.azure.application_id,
         KeyValue: config.credentials.azure.key_value,
         DirectoryID: config.credentials.azure.directory_id,
@@ -68,21 +127,21 @@ if (config.credentials.aws.credential_file) {
         location: 'East US'
     };
 } else if (config.credentials.google.credential_file) {
-    GoogleConfig = loadHelperFile(config.credentials.google.credential_file);
+    cloudConfig = loadHelperFile(config.credentials.google.credential_file);
 } else if (config.credentials.google.project) {
     checkRequiredKeys(config.credentials.google, ['client_email', 'private_key']);
     // TODO: Format?
-    // GoogleConfig = {
+    // cloudConfig = {
     //     type: 'service_account',
     //     project: config.credentials.google.project,
     //     client_email: config.credentials.google.client_email,
     //     private_key: config.credentials.google.private_key,
     // };
 } else if (config.credentials.oracle.credential_file) {
-    OracleConfig = loadHelperFile(config.credentials.oracle.credential_file);
+    cloudConfig = loadHelperFile(config.credentials.oracle.credential_file);
 } else if (config.credentials.oracle.tenancy_id) {
     checkRequiredKeys(config.credentials.oracle, ['compartment_id', 'user_id', 'key_fingerprint', 'key_value']);
-    OracleConfig = {
+    cloudConfig = {
         RESTversion: '/20160918',
         tenancyId: config.credentials.oracle.tenancy_id,
         compartmentId: config.credentials.oracle.compartment_id,
@@ -92,10 +151,10 @@ if (config.credentials.aws.credential_file) {
         region: 'us-ashburn-1',
     };
 } else if (config.credentials.github.credential_file) {
-    GitHubConfig = loadHelperFile(config.credentials.github.credential_file);
+    cloudConfig = loadHelperFile(config.credentials.github.credential_file);
 } else if (config.credentials.github.token) {
     checkRequiredKeys(config.credentials.github, ['url', 'login']);
-    GitHubConfig = {
+    cloudConfig = {
         token: config.credentials.github.token,
         url: config.credentials.github.url,
         organization: config.credentials.github.organization,
@@ -107,4 +166,4 @@ if (config.credentials.aws.credential_file) {
 }
 
 // Now execute the scans using the defined configuration information.
-engine(AWSConfig, AzureConfig, GitHubConfig, OracleConfig, GoogleConfig, config.settings);
+engine(cloudConfig, settings);

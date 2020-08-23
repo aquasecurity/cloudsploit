@@ -1,201 +1,133 @@
 var async = require('async');
-var plugins = require('./exports.js');
-var complianceControls = require('./compliance/controls.js');
+var exports = require('./exports.js');
 var suppress = require('./postprocess/suppress.js');
 var output = require('./postprocess/output.js');
 
 /**
  * The main function to execute CloudSploit scans.
- * @param AWSConfig The configuration for AWS. If undefined, then don't run.
- * @param AzureConfig The configuration for Azure. If undefined, then don't run.
- * @param GitHubConfig The configuration for Github. If undefined, then don't run.
- * @param OracleConfig The configuration for Oracle. If undefined, then don't run.
- * @param GoogleConfig The configuration for Google. If undefined, then don't run.
-
+ * @param cloudConfig The configuration for the cloud provider.
  * @param settings General purpose settings.
  */
-var engine = function(AWSConfig, AzureConfig, GitHubConfig, OracleConfig, GoogleConfig, settings) {
-    // Determine if scan is a compliance scan
-    var complianceArgs = process.argv
-        .filter(function(arg) {
-            return arg.startsWith('--compliance=');
-        })
-        .map(function(arg) {
-            return arg.substring(13);
-        });
-    var compliance = complianceControls.create(complianceArgs);
-    if (!compliance) {
-        console.log('ERROR: Unsupported compliance mode. Please use one of the following:');
-        console.log('       --compliance=hipaa');
-        console.log('       --compliance=pci');
-        console.log('       --compliance=cis');
-        console.log('       --compliance=cis-1');
-        console.log('       --compliance=cis-2');
-        process.exit();
-    }
-
+var engine = function(cloudConfig, settings) {
     // Initialize any suppression rules based on the the command line arguments
-    var suppressionFilter = suppress.create(process.argv);
+    var suppressionFilter = suppress.create(settings.suppress);
 
     // Initialize the output handler
-    var outputHandler = output.create(process.argv);
+    var outputHandler = output.create(settings);
 
-    // The original cloudsploit always has a 0 exit code. With this option, we can have
-    // the exit code depend on the results (useful for integration with CI systems)
-    var useStatusExitCode = process.argv.includes('--statusExitCode');
+    // Configure Service Provider Collector
+    var collector = require(`./collectors/${settings.cloud}/collector.js`);
+    var plugins = exports[settings.cloud];
+    var apiCalls = [];
 
-    // Configure Service Provider Collectors
-    var serviceProviders = {
-        aws : {
-            name: 'aws',
-            collector: require('./collectors/aws/collector.js'),
-            config: AWSConfig,
-            apiCalls: [],
-            skipRegions: []     // Add any regions you wish to skip here. Ex: 'us-east-2'
-        },
-        azure : {
-            name: 'azure',
-            collector: require('./collectors/azure/collector.js'),
-            config: AzureConfig,
-            apiCalls: [],
-            skipRegions: []     // Add any locations you wish to skip here. Ex: 'East US'
-        },
-        github: {
-            name: 'github',
-            collector: require('./collectors/github/collector.js'),
-            config: GitHubConfig,
-            apiCalls: []
-        },
-        oracle: {
-            name: 'oracle',
-            collector: require('./collectors/oracle/collector.js'),
-            config: OracleConfig,
-            apiCalls: []
-        },
-        google: {
-            name: 'google',
-            collector: require('./collectors/google/collector.js'),
-            config: GoogleConfig,
-            apiCalls: []
-        }
-    };
-
-    // Ignore Service Providers without a Config Object
-    for (var provider in serviceProviders){
-        if (serviceProviders[provider].config == undefined) delete serviceProviders[provider];
+    // Print customization options
+    if (settings.compliance) console.log(`INFO: Using compliance mode: ${settings.compliance.toUpperCase()}`);
+    if (settings.govcloud) console.log('INFO: Using AWS GovCloud mode');
+    if (settings.china) console.log('INFO: Using AWS China mode');
+    if (settings.skip_regions && settings.skip_regions.length) console.log(`INFO: Skipping regions: ${settings.skip_regions.join(', ')}`);
+    if (settings.ignore_ok) console.log('INFO: Ignoring passing results');
+    if (settings.skip_paginate) console.log('INFO: Skipping AWS pagination mode');
+    if (settings.suppress && settings.suppress.length) console.log('INFO: Suppressing results based on suppress flags');
+    if (settings.plugin) {
+        if (!plugins[settings.plugin]) return console.log(`ERROR: Invalid plugin: ${settings.plugin}`);
+        console.log(`INFO: Testing plugin: ${plugins[settings.plugin].title}`);
     }
 
     // STEP 1 - Obtain API calls to make
     console.log('INFO: Determining API calls to make...');
 
-    function getMapValue(obj, key) {
-        if (Object.prototype.hasOwnProperty.call(obj, key))
-            return obj[key];
-        throw new Error('Invalid map key.');
-    }
+    Object.entries(plugins).forEach(function(p){
+        var pluginId = p[0];
+        var plugin = p[1];
 
-    for (var p in plugins) {
-        if (!plugins[p]) continue;
-        for (var sp in serviceProviders) {
-            var serviceProviderPlugins = getMapValue(plugins, serviceProviders[sp].name);
-            var serviceProviderAPICalls = serviceProviders[sp].apiCalls;
-            var serviceProviderConfig = serviceProviders[sp].config;
-            for (var spp in serviceProviderPlugins) {
-                var plugin = getMapValue(serviceProviderPlugins, spp);
-                // Skip GitHub plugins that do not match the run type
-                if (sp == 'github' && serviceProviderConfig.organization &&
-                    plugin.types.indexOf('org') === -1) continue;
-
-                if (sp == 'github' && !serviceProviderConfig.organization &&
-                    plugin.types.indexOf('user') === -1) continue;
-                
-                // Skip if our compliance set says don't run the rule
-                if (!compliance.includes(spp, plugin)) continue;
-
-                for (var pac in plugin.apis) {
-                    if (serviceProviderAPICalls.indexOf(plugin.apis[pac]) === -1) {
-                        serviceProviderAPICalls.push(plugin.apis[pac]);
-                    }
+        // Skip plugins that don't match the ID flag
+        if (!settings.plugin || settings.plugin == pluginId) {
+            // Skip GitHub plugins that do not match the run type
+            if (settings.cloud == 'github') {
+                if (cloudConfig.organization &&
+                    plugin.types.indexOf('org') === -1) {
+                    console.debug(`DEBUG: Skipping GitHub plugin ${plugin.title} because it is not for Organization accounts`);
+                } else if (!cloudConfig.organization &&
+                    plugin.types.indexOf('org') === -1) {
+                    console.debug(`DEBUG: Skipping GitHub plugin ${plugin.title} because it is not for User accounts`);
                 }
+            } else if (settings.compliance && (!plugin.compliance || !plugin.compliance[settings.compliance])) {
+                console.debug(`DEBUG: Skipping plugin ${plugin.title} because it is not used for compliance program: ${settings.compliance}`);
+            } else {
+                plugin.apis.forEach(function(api) {
+                    if (apiCalls.indexOf(api) === -1) apiCalls.push(api);
+                });
             }
         }
-    }
+    });
 
-    console.log('INFO: API calls determined.');
+    if (!apiCalls.length) return console.log('ERROR: Nothing to collect.');
+
+    console.log(`INFO: Found ${apiCalls.length} API calls to make for ${settings.cloud} plugins`);
     console.log('INFO: Collecting metadata. This may take several minutes...');
 
     // STEP 2 - Collect API Metadata from Service Providers
-    async.map(serviceProviders, function(serviceProviderObj, serviceProviderDone) {
+    collector(cloudConfig, {
+        api_calls: apiCalls,
+        skip_regions: settings.skip_regions || [],
+        paginate: settings.skip_paginate,
+        govcloud: settings.govcloud,
+        china: settings.china
+    }, function(err, collection) {
+        if (err || !collection || !Object.keys(collection).length) return console.log(`ERROR: Unable to obtain API metadata: ${err || 'No data returned'}`);
+        outputHandler.writeCollection(collection, settings.cloud);
+        
+        console.log('INFO: Metadata collection complete. Analyzing...');
+        console.log('INFO: Analysis complete. Scan report to follow...');
 
-        settings.api_calls = serviceProviderObj.apiCalls;
-        settings.skip_regions = serviceProviderObj.skipRegions;
+        var maximumStatus = 0;
 
-        serviceProviderObj.collector(serviceProviderObj.config, settings, function(err, collection) {
-            if (err || !collection) return console.log(`ERROR: Unable to obtain API metadata: ${err}`);
-            outputHandler.writeCollection(collection, serviceProviderObj.name);
+        async.mapValuesLimit(plugins, 10, function(plugin, key, pluginDone) {
+            if (settings.compliance && (!plugin.compliance || !plugin.compliance[settings.compliance])) return pluginDone(null, 0);
+            if (settings.plugin && settings.plugin !== key) return pluginDone(null, 0);
 
-            console.log('');
-            console.log('-----------------------');
-            console.log(serviceProviderObj.name.toUpperCase());
-            console.log('-----------------------');
-            console.log('');
-            console.log('');
-            console.log('INFO: Metadata collection complete. Analyzing...');
-            console.log('INFO: Analysis complete. Scan report to follow...\n');
-            console.log('');
+            // Skip GitHub plugins that do not match the run type
+            if (settings.cloud == 'github' &&
+                cloudConfig.organization &&
+                plugin.types.indexOf('org') === -1) return pluginDone(null, 0);
 
-            var serviceProviderPlugins = getMapValue(plugins, serviceProviderObj.name);
+            if (settings.cloud == 'github' &&
+                !cloudConfig.organization &&
+                plugin.types.indexOf('user') === -1) return pluginDone(null, 0);
 
-            async.mapValuesLimit(serviceProviderPlugins, 10, function(plugin, key, pluginDone) {
-                if (!compliance.includes(key, plugin)) {
-                    return pluginDone(null, 0);
-                }
-
-                // Skip GitHub plugins that do not match the run type
-                if (serviceProviderObj.name == 'github' &&
-                    serviceProviderObj.config.organization &&
-                    plugin.types.indexOf('org') === -1) return pluginDone(null, 0);
-
-                if (serviceProviderObj.name == 'github' &&
-                    !serviceProviderObj.config.organization &&
-                    plugin.types.indexOf('user') === -1) return pluginDone(null, 0);
-
-                var maximumStatus = 0;
-                plugin.run(collection, settings, function(err, results) {
-                    outputHandler.startCompliance(plugin, key, compliance);
-
-                    for (var r in results) {
-                        // If we have suppressed this result, then don't process it
-                        // so that it doesn't affect the return code.
-                        if (suppressionFilter([key, results[r].region || 'any', results[r].resource || 'any'].join(':'))) {
-                            continue;
-                        }
-
-                        // Write out the result (to console or elsewhere)
-                        outputHandler.writeResult(results[r], plugin, key);
-
-                        // Add this to our tracking fo the worst status to calculate
-                        // the exit code
-                        maximumStatus = Math.max(maximumStatus, results[r].status);
+            plugin.run(collection, settings, function(err, results) {
+                for (var r in results) {
+                    // If we have suppressed this result, then don't process it
+                    // so that it doesn't affect the return code.
+                    if (suppressionFilter([key, results[r].region || 'any', results[r].resource || 'any'].join(':'))) {
+                        continue;
                     }
 
-                    outputHandler.endCompliance(plugin, key, compliance);
+                    var complianceMsg = (settings.compliance && plugin.compliance &&
+                        plugin.compliance[settings.compliance]) ? plugin.compliance[settings.compliance] : null;
 
-                    setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
-                });
-            }, function(err, results){
-                if (err) return console.log(err);
-                var summaryStatus = Math.max(...Object.values(results));
-                serviceProviderDone(err, summaryStatus);
+                    // Write out the result (to console or elsewhere)
+                    outputHandler.writeResult(results[r], plugin, key, complianceMsg);
+
+                    // Add this to our tracking fo the worst status to calculate
+                    // the exit code
+                    maximumStatus = Math.max(maximumStatus, results[r].status);
+                }
+
+                setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
             });
+        }, function(err) {
+            if (err) return console.log(err);
+            // console.log(JSON.stringify(collection, null, 2));
+            outputHandler.close();
+            if (settings.exit_code) {
+                // The original cloudsploit always has a 0 exit code. With this option, we can have
+                // the exit code depend on the results (useful for integration with CI systems)
+                console.log(`INFO: Exiting with exit code: ${maximumStatus}`);
+                process.exitCode = maximumStatus;
+            }
+            console.log('INFO: Scan complete');
         });
-    }, function(err, results) {
-        // console.log(JSON.stringify(collection, null, 2));
-        outputHandler.close();
-        if (useStatusExitCode) {
-            process.exitCode = Math.max(results);
-        }
-        console.log('INFO: Scan complete');
     });
 };
 

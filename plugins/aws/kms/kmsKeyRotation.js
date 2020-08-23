@@ -13,7 +13,8 @@ module.exports = {
         pci: 'PCI has strict requirements regarding the use of encryption keys ' +
              'to protect cardholder data. These requirements include rotating ' +
              'the key periodically. KMS provides key rotation capabilities that ' +
-             'should be enabled.'
+             'should be enabled.',
+        cis2: '2.8 Ensure rotation for customer created CMKs is enabled'
     },
 
     run: function(cache, settings, callback) {
