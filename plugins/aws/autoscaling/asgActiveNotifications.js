@@ -34,37 +34,29 @@ module.exports = {
             }
 
             async.each(describeAutoScalingGroups.data, function(asg, cb){
+                var resource = asg.AutoScalingGroupARN;
                 var notificationConfiguration = helpers.addSource(cache, source,
-                    ['autoscaling', 'describeNotificationConfigurations', region, asg.AutoScalingGroupName]);
+                    ['autoscaling', 'describeNotificationConfigurations', region, asg.AutoScalingGroupARN]);
 
                 if (!notificationConfiguration) return cb();
 
                 if (notificationConfiguration.err || !notificationConfiguration.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for auto scaling group notification configurations: ' + 
-                        helpers.addError(notificationConfiguration), region, asg.AutoScalingGroupName);
+                        helpers.addError(notificationConfiguration), region, resource);
                     return cb();
                 }
     
-                if (!notificationConfiguration.data.length) {
-                    helpers.addResult(results, 2, 'No auto scaling group notification configurations found', region);
-                    return cb();
-                }
-                var configurationsList = [];
-                notificationConfiguration.data.forEach(function(config){
-                    if(config.NotificationType && config.TopicARN) {
-                        var notificationType = config.NotificationType;
-                        var topicARN = config.TopicARN;
-                        configurationsList.push({notificationType, topicARN});
-                    }
-                });
-                if (configurationsList.length) {
-                    helpers.addResult(results, 0,
-                        'Auto scaling group has the following notification configurations ', region, configurationsList);
-                }
-                else {
+                if (!notificationConfiguration.data.NotificationConfigurations ||
+                    !notificationConfiguration.data.NotificationConfigurations.length) {
                     helpers.addResult(results, 2,
-                        'Auto scaling group does not have any notification configurations ', region, asg.AutoScalingGroupName);
+                        'Auto scaling group: ' + asg.AutoScalingGroupName + ' does not have notifications active',
+                        region, resource);
+                    return cb();
+                } else {
+                    helpers.addResult(results, 0,
+                        'Auto scaling group: ' + asg.AutoScalingGroupName + ' has notifications active',
+                        region, resource);
                 }
 
                 cb();

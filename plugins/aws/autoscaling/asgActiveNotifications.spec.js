@@ -63,6 +63,7 @@ const notificationConfigurations = [
 ];
 
 const createCache = (asgs, notifications) => {
+    if (asgs.length) var asgArn = asgs[0].AutoScalingGroupARN;
     return {
         autoscaling: {
             describeAutoScalingGroups: {
@@ -72,8 +73,10 @@ const createCache = (asgs, notifications) => {
             },
             describeNotificationConfigurations: {
                 'us-east-1': {
-                    [asgs[0].AutoScalingGroupName]: {
-                        data: notifications
+                    [asgArn]: {
+                        data: {
+                            NotificationConfigurations: notifications
+                        }
                     }
                 },
             },
@@ -115,7 +118,7 @@ const createNullCache = () => {
 
 describe('asgActiveNotifications', function () {
     describe('run', function () {
-        it('should PASS if notification configurations are active for autoscaling group', function (done) {
+        it('should PASS if notification are active for autoscaling group', function (done) {
             const cache = createCache([autoScalingGroups[0]], [notificationConfigurations[0]]);
             asgActiveNotifications.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -124,7 +127,7 @@ describe('asgActiveNotifications', function () {
             });
         });
 
-        it('should FAIL if notification configurations active for autoscaling group', function (done) {
+        it('should FAIL if notification are not active for autoscaling group', function (done) {
             const cache = createCache([autoScalingGroups[0]], []);
             asgActiveNotifications.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -151,10 +154,10 @@ describe('asgActiveNotifications', function () {
         });
 
         it('should FAIL if No auto scaling group notification configurations found', function (done) {
-            const cache = createCache([autoScalingGroups[0]], null);
+            const cache = createCache([autoScalingGroups[0]]);
             asgActiveNotifications.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(3);
+                expect(results[0].status).to.equal(2);
                 done();
             });
         });

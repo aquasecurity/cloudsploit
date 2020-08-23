@@ -548,8 +548,7 @@ var postcalls = [
             describeNotificationConfigurations: {
                 reliesOnService: 'autoscaling',
                 reliesOnCall: 'describeAutoScalingGroups',
-                filterKey: 'AutoScalingGroups',
-                filterValue: 'AutoScalingGroups'
+                override: true
             }
         },
         CloudFront: {
