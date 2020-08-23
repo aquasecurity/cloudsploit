@@ -19,9 +19,8 @@ console.log(`
 
 const parser = new ArgumentParser({});
 
-parser.add_argument('--credentials', {
-    help: 'The path to a cloud provider credentials file.',
-    required: true
+parser.add_argument('--config', {
+    help: 'The path to a CloudSploit config file containing cloud credentials. See config_example.js'
 });
 
 parser.add_argument('--compliance', {
@@ -75,11 +74,16 @@ let cloudConfig = {};
 settings.cloud = 'aws';
 
 // Now execute the scans using the defined configuration information.
-engine(cloudConfig, settings);
-return;
+if (!settings.config) {
+    // AWS will handle the default credential chain without needing a credential file
+    console.log('INFO: No config file provided, using default AWS credential chain.');
+    return engine(cloudConfig, settings);
+}
+
+console.log(`INFO: Using CloudSploit config file: ${settings.config}`);
 
 try {
-    var config = require('./config.js');
+    var config = require(settings.config);
 } catch(e) {
     console.error('ERROR: Config file could not be loaded. Please ensure you have copied the config_example.js file to config.js');
     process.exit(1);
@@ -107,6 +111,10 @@ function checkRequiredKeys(obj, keys) {
 
 if (config.credentials.aws.credential_file) {
     cloudConfig = loadHelperFile(config.credentials.aws.credential_file);
+    if (!cloudConfig || !cloudConfig.accessKeyId || !cloudConfig.secretAccessKey) {
+        console.error('ERROR: AWS credential file does not have accessKeyId or secretAccessKey properties');
+        process.exit(1);
+    }
 } else if (config.credentials.aws.access_key) {
     checkRequiredKeys(config.credentials.aws, ['secret_access_key']);
     cloudConfig = {
@@ -116,8 +124,15 @@ if (config.credentials.aws.credential_file) {
         region: 'us-east-1'
     };
 } else if (config.credentials.azure.credential_file) {
+    settings.cloud = 'azure';
     cloudConfig = loadHelperFile(config.credentials.azure.credential_file);
+    if (!cloudConfig || !cloudConfig.ApplicationID || !cloudConfig.KeyValue || !cloudConfig.DirectoryID || !cloudConfig.SubscriptionID) {
+        console.error('ERROR: Azure credential file does not have ApplicationID, KeyValue, DirectoryID, or SubscriptionID');
+        process.exit(1);
+    }
+    cloudConfig.location = 'East US';
 } else if (config.credentials.azure.application_id) {
+    settings.cloud = 'azure';
     checkRequiredKeys(config.credentials.azure, ['key_value', 'directory_id', 'subscription_id']);
     cloudConfig = {
         ApplicationID: config.credentials.azure.application_id,
@@ -127,19 +142,29 @@ if (config.credentials.aws.credential_file) {
         location: 'East US'
     };
 } else if (config.credentials.google.credential_file) {
+    settings.cloud = 'google';
     cloudConfig = loadHelperFile(config.credentials.google.credential_file);
 } else if (config.credentials.google.project) {
+    settings.cloud = 'google';
     checkRequiredKeys(config.credentials.google, ['client_email', 'private_key']);
-    // TODO: Format?
-    // cloudConfig = {
-    //     type: 'service_account',
-    //     project: config.credentials.google.project,
-    //     client_email: config.credentials.google.client_email,
-    //     private_key: config.credentials.google.private_key,
-    // };
+    cloudConfig = {
+        type: 'service_account',
+        project: config.credentials.google.project,
+        client_email: config.credentials.google.client_email,
+        private_key: config.credentials.google.private_key,
+    };
 } else if (config.credentials.oracle.credential_file) {
+    settings.cloud = 'oracle';
     cloudConfig = loadHelperFile(config.credentials.oracle.credential_file);
+    if (!cloudConfig || !cloudConfig.tenancyId || !cloudConfig.compartmentId || !cloudConfig.userId || !cloudConfig.keyValue) {
+        console.error('ERROR: Oracle credential file does not have tenancyId, compartmentId, userId, or keyValue');
+        process.exit(1);
+    }
+
+    cloudConfig.RESTversion = '/20160918';
+    cloudConfig.region = 'us-ashburn-1';
 } else if (config.credentials.oracle.tenancy_id) {
+    settings.cloud = 'oracle';
     checkRequiredKeys(config.credentials.oracle, ['compartment_id', 'user_id', 'key_fingerprint', 'key_value']);
     cloudConfig = {
         RESTversion: '/20160918',
@@ -151,8 +176,10 @@ if (config.credentials.aws.credential_file) {
         region: 'us-ashburn-1',
     };
 } else if (config.credentials.github.credential_file) {
+    settings.cloud = 'github';
     cloudConfig = loadHelperFile(config.credentials.github.credential_file);
 } else if (config.credentials.github.token) {
+    settings.cloud = 'github';
     checkRequiredKeys(config.credentials.github, ['url', 'login']);
     cloudConfig = {
         token: config.credentials.github.token,

@@ -39,5 +39,4 @@ Create a "cloudsploit" user, with the `SecurityAudit` policy.
 1. Make sure you safely store the Access key ID and Secret access key.
 1. Paste them into the corresponding AWS credentials section of the `index.js` file.
 
- 
 If using environment variables, the same ones expected by the aws sdks, namely `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_SESSION_TOKEN`, can be used.

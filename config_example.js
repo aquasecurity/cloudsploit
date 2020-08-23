@@ -46,15 +46,5 @@ module.exports = {
             // login: process.env.GITHUB_LOGIN || 'myusername',
             // organization: process.env.GITHUB_ORG || false
         }
-    },
-    settings: {
-        // AWS: whether to paginate API response calls. Recommended unless debugging.
-        paginate: true,
-        // AWS: whether the account being scanned is a GovCloud account
-        govcloud: false,
-        // AWS: whether the account being scanned is an AWS China account
-        china: false,
-        // Whether to add timestamps to collector calls. Not recommended unless debugging.
-        debug_time: false
     }
 };

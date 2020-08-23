@@ -26,6 +26,13 @@ $ ./index.js -h
   + [Microsoft Azure](docs/azure.md#cloud-provider-configuration)
   + [Google Cloud Platform](docs/gcp.md#cloud-provider-configuration)
   + [Oracle Cloud Infrastructure](docs/oracle.md#cloud-provider-configuration)
+  + [CloudSploit Config File](#cloudsploit-config-file)
+  + [Credential Files](#credential-files)
+    + [AWS](#aws)
+    + [Azure](#azur)
+    + [GCP](#gcp)
+    + [Oracle OCI](#oracle-oci)
+  + [Environment Variables](#environment-variables)
 * [Running](#running)
 * [CLI Options](#cli-options)
 * [Compliance](#compliance)
@@ -75,10 +82,86 @@ CloudSploit requires read-only permission to your cloud account. Follow the guid
 * [Google Cloud Platform](docs/gcp.md#cloud-provider-configuration)
 * [Oracle Cloud Infrastructure](docs/oracle.md#cloud-provider-configuration)
 
-To begin using the scanner, edit the `index.js` file with the corresponding settings. You can use any of these three options:
- * Enter your settings [inline](https://github.com/cloudsploit/scans/blob/master/index.js#L13-L53).
- * Create a json [file](https://github.com/cloudsploit/scans/blob/master/index.js#L57-L61).
- * Use [environment variables](https://github.com/cloudsploit/scans/blob/master/index.js#L64-L109). 
+For AWS, you can run CloudSploit directly and it will detect credentials using the default [AWS credential chain](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CredentialProviderChain.html).
+
+### CloudSploit Config File
+The CloudSploit config file allows you to pass cloud provider credentials by:
+1. A JSON file on your file system
+1. Environment variables
+1. Hard-coding (not recommended)
+
+Start by copying the example config file:
+```
+$ cp config_example.js config.js
+```
+
+Edit the config file by uncommenting the relevant sections for the cloud provider you are testing. Each cloud has both a `credential_file` option, as well as inline options. For example:
+```
+azure: {
+    // OPTION 1: If using a credential JSON file, enter the path below
+    // credential_file: '/path/to/file.json',
+    // OPTION 2: If using hard-coded credentials, enter them below
+    // application_id: process.env.AZURE_APPLICATION_ID || '',
+    // key_value: process.env.AZURE_KEY_VALUE || '',
+    // directory_id: process.env.AZURE_DIRECTORY_ID || '',
+    // subscription_id: process.env.AZURE_SUBSCRIPTION_ID || ''
+}
+```
+
+### Credential Files
+If you use the `credential_file` option, point to a file in your file system that follows the correct format for the cloud you are using.
+
+#### AWS
+```
+{
+  "accessKeyId": "YOURACCESSKEY",
+  "secretAccessKey": "YOURSECRETKEY"
+}
+```
+
+#### Azure
+```
+{
+  "ApplicationID": "YOURAZUREAPPLICATIONID",
+  "KeyValue": "YOURAZUREKEYVALUE",
+  "DirectoryID": "YOURAZUREDIRECTORYID",
+  "SubscriptionID": "YOURAZURESUBSCRIPTIONID"
+}
+```
+
+#### GCP
+Note: For GCP, you [generate a JSON file](docs/gcp.md) directly from the GCP console, which you should not edit.
+```
+{
+    "type": "service_account",
+    "project": "GCPPROJECTNAME",
+    "client_email": "GCPCLIENTEMAIL",
+    "private_key": "GCPPRIVATEKEY"
+}
+```
+
+#### Oracle OCI
+```
+{
+  "tenancyId": "YOURORACLETENANCYID",
+  "compartmentId": "YOURORACLECOMPARTMENTID",
+  "userId": "YOURORACLEUSERID",
+  "keyFingerprint": "YOURORACLEKEYFINGERPRINT",
+  "keyValue": "YOURORACLEKEYVALUE",
+}
+```
+
+### Environment Variables
+CloudSploit supports passing environment variables, but you must first uncomment the section of your `config.js` file relevant to the cloud provider being scanned.
+
+You can then pass the variables listed in each section. For example, for AWS:
+```
+{
+  access_key: process.env.AWS_ACCESS_KEY_ID || '',
+  secret_access_key: process.env.AWS_SECRET_ACCESS_KEY || '',
+  session_token: process.env.AWS_SESSION_TOKEN || '',
+}
+```
 
 ## Running
 To run a standard scan, showing all outputs and results, simply run:
@@ -116,13 +199,13 @@ See [Output Formats](#output-formates) below for more output options.
     CloudSploit by Aqua Security, Ltd.
     Cloud security auditing for AWS, Azure, GCP, Oracle, and GitHub
 
-  usage: index.js [-h] --credentials CREDENTIALS [--compliance {hipaa,cis,cis1,cis2,pci}] [--plugin PLUGIN] [--govcloud] [--china] [--csv CSV] [--json JSON] [--junit JUNIT]
+  usage: index.js [-h] --config CONFIG [--compliance {hipaa,cis,cis1,cis2,pci}] [--plugin PLUGIN] [--govcloud] [--china] [--csv CSV] [--json JSON] [--junit JUNIT]
                   [--table] [--console {none,text,table}] [--collection COLLECTION] [--ignore-ok] [--exit-code] [--skip-paginate] [--suppress SUPPRESS]
                   [--skip-region SKIP_REGION]
 
   optional arguments:
     -h, --help            show this help message and exit
-    --credentials CREDENTIALS
+    --config CONFIG
                           The path to a cloud provider credentials file.
     --compliance {hipaa,cis,cis1,cis2,pci}
                           Compliance mode. Only return results applicable to the selected program.
