@@ -170,7 +170,7 @@ describe('certificateMinimumSize', function () {
         });
 
         it('should UNKNOWN if server certificate body is empty', function (done) {
-            const cache = createCertificateCache([listCertificates[0]], certificates[2]);
+            const cache = createCache([listCertificates[0]], certificates[2]);
             certificateMinimumSize.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
