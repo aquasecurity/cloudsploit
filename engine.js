@@ -24,7 +24,6 @@ var engine = function(cloudConfig, settings) {
     if (settings.compliance) console.log(`INFO: Using compliance mode: ${settings.compliance.toUpperCase()}`);
     if (settings.govcloud) console.log('INFO: Using AWS GovCloud mode');
     if (settings.china) console.log('INFO: Using AWS China mode');
-    if (settings.skip_regions && settings.skip_regions.length) console.log(`INFO: Skipping regions: ${settings.skip_regions.join(', ')}`);
     if (settings.ignore_ok) console.log('INFO: Ignoring passing results');
     if (settings.skip_paginate) console.log('INFO: Skipping AWS pagination mode');
     if (settings.suppress && settings.suppress.length) console.log('INFO: Suppressing results based on suppress flags');
@@ -69,7 +68,6 @@ var engine = function(cloudConfig, settings) {
     // STEP 2 - Collect API Metadata from Service Providers
     collector(cloudConfig, {
         api_calls: apiCalls,
-        skip_regions: settings.skip_regions || [],
         paginate: settings.skip_paginate,
         govcloud: settings.govcloud,
         china: settings.china

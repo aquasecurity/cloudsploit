@@ -201,7 +201,6 @@ See [Output Formats](#output-formates) below for more output options.
 
   usage: index.js [-h] --config CONFIG [--compliance {hipaa,cis,cis1,cis2,pci}] [--plugin PLUGIN] [--govcloud] [--china] [--csv CSV] [--json JSON] [--junit JUNIT]
                   [--table] [--console {none,text,table}] [--collection COLLECTION] [--ignore-ok] [--exit-code] [--skip-paginate] [--suppress SUPPRESS]
-                  [--skip-region SKIP_REGION]
 
   optional arguments:
     -h, --help            show this help message and exit
@@ -224,8 +223,6 @@ See [Output Formats](#output-formates) below for more output options.
     --exit-code           Exits with a non-zero status code if non-passing results are found
     --skip-paginate       AWS only. Skips pagination (for debugging).
     --suppress SUPPRESS   Suppress results matching the provided Regex. Format: pluginId:region:resourceId
-    --skip-region SKIP_REGION
-                          Skips provided region or location (e.g. --skip-region=us-east-1
   ```
 </details>
 

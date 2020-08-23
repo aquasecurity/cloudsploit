@@ -63,10 +63,6 @@ parser.add_argument('--suppress', {
     help: 'Suppress results matching the provided Regex. Format: pluginId:region:resourceId',
     action: 'append'
 });
-parser.add_argument('--skip-region', {
-    help: 'Skips provided region or location (e.g. --skip-region=us-east-1',
-    action: 'append'
-});
 
 let settings = parser.parse_args();
 let cloudConfig = {};
