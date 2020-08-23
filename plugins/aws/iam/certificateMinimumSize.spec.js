@@ -134,11 +134,11 @@ const createNullCache = () => {
 describe('certificateMinimumSize', function () {
     describe('run', function () {
 
-        it('should PASS if unable to get server certificates metadata list', function (done) {
+        it('should PASS if unable to get server certificates', function (done) {
             const cache = createCache([]);
             certificateMinimumSize.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
+                expect(results[0].status).to.equal(0);
                 done();
             });
         });
@@ -155,31 +155,31 @@ describe('certificateMinimumSize', function () {
             const cache = createErrorCache();
             certificateMinimumSize.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
+                expect(results[0].status).to.equal(3);
                 done();
             });
         });
 
-        it('should FAIL if server certificate data is empty', function (done) {
-            const cache = createCache([listCertificates[0]], []);
+        it('should UNKNOWN if unable to query for server certificate', function (done) {
+            const cache = createCache([listCertificates[0]]);
             certificateMinimumSize.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
+                expect(results[0].status).to.equal(3);
                 done();
             });
         });
 
-        it('should FAIL if server certificate body empty', function (done) {
+        it('should UNKNOWN if server certificate body is empty', function (done) {
             const cache = createCertificateCache([listCertificates[0]], certificates[2]);
             certificateMinimumSize.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
+                expect(results[0].status).to.equal(3);
                 done();
             });
         });
 
         it('should PASS if server certificate has 2048 bit key length', function (done) {
-            const cache = createCertificateCache([listCertificates[0]], certificates[0]);
+            const cache = createCache([listCertificates[0]], certificates[0]);
             certificateMinimumSize.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -188,7 +188,7 @@ describe('certificateMinimumSize', function () {
         });
 
         it('should FAIL if server certificate has less than 2048 bit key length', function (done) {
-            const cache = createCertificateCache([listCertificates[0]], certificates[1]);
+            const cache = createCache([listCertificates[0]], certificates[1]);
             certificateMinimumSize.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);

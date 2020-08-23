@@ -23,8 +23,8 @@ module.exports = {
         if (!listServerCertificates) return callback(null, results, source);
 
         if (listServerCertificates.err || !listServerCertificates.data) {
-            helpers.addResult(results, 2,
-                'Unable to find any server certificates ' + helpers.addError(listServerCertificates), region);
+            helpers.addResult(results, 3,
+                'Unable to query for server certificates: ' + helpers.addError(listServerCertificates), region);
             return callback(null, results, source);
         }
 
@@ -43,18 +43,14 @@ module.exports = {
                 !serverCertificate.data ||
                 !serverCertificate.data.ServerCertificate) {
                 helpers.addResult(results, 3,
-                    'Unable to get server certificate for: ' + certificate.ServerCertificateName + ': ' + helpers.addError(serverCertificate), 'global', resource);
+                    'Unable to query server certificate for: ' + certificate.ServerCertificateName + ': ' + helpers.addError(serverCertificate),
+                    'global', resource);
                 return cb();
             }
 
-            if (!serverCertificate.data.length) {
-                helpers.addResult(results, 0, 'No server certificate found for: ' + certificate.ServerCertificateName, 'global', resource);
-                return cb();
-            }
-
-            if (serverCertificate.ServerCertificate.data.CertificateBody) {
+            if (!serverCertificate.data.ServerCertificate.CertificateBody) {
                 helpers.addResult(results, 3,
-                    'Unable to get certificate body for: ' + certificate.ServerCertificateName + ': ' + helpers.addError(listServerCertificates), 'global', resource);
+                    'Unable to get certificate body for: ' + certificate.ServerCertificateName, 'global', resource);
                 return cb();
             }
 
