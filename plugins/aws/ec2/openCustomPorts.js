@@ -23,7 +23,7 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
 
-        var allowed_open_ports = this.settings.open_port_allowed_list.default;
+        var allowed_open_ports = settings.open_port_allowed_list || this.settings.open_port_allowed_list.default;
 
         async.each(regions.ec2, function(region, rcb){
             var describeSecurityGroups = helpers.addSource(cache, source,

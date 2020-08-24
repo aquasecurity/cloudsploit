@@ -22,7 +22,7 @@ const securityGroups = [
             "ToPort": 30,
             "UserIdGroupPairs": []
         }],
-        "OwnerId": "560213429563",
+        "OwnerId": "12345654321",
         "GroupId": "sg-0b5f2771716acfee4",
         "IpPermissionsEgress": [
             {
@@ -63,7 +63,7 @@ const securityGroups = [
                 "UserIdGroupPairs": []
             }
         ],
-        "OwnerId": "560213429563",
+        "OwnerId": "12345654321",
         "GroupId": "sg-0ff1642cae23c309a",
         "IpPermissionsEgress": [
             {
