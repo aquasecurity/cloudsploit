@@ -89,7 +89,6 @@ describe("workspacesIPAccessControl", function () {
             const cache = noWorkspaces();
 
             const callback = (err, results) => {
-                console.log(results)
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
             };
