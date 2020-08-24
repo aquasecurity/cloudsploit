@@ -45,12 +45,13 @@ module.exports = {
 
                 if (parameters.err || !parameters.data){
                     helpers.addResult(results, 3,
-                        'Unable to query for parameters: ' + helpers.addError(parameters));
+                        'Unable to query for parameters: ' + helpers.addError(parameters),
+                        region, resource);
                     return paramcb();
                 }
 
                 if (!parameters.data.Parameters || !parameters.data.Parameters.length) {
-                    helpers.addResult(results, 0, 'No parameters found');
+                    helpers.addResult(results, 0, 'No parameters found', region, resource);
                     return paramcb();
                 }
 

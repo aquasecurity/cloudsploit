@@ -6,13 +6,13 @@ const parameterGroups = [
         "DBParameterGroupName": "default.sqlserver-ex-14.0",
         "DBParameterGroupFamily": "sqlserver-ex-14.0",
         "Description": "Default parameter group for sqlserver-ex-14.0",
-        "DBParameterGroupArn": "arn:aws:rds:us-east-1:560213429563:pg:default.sqlserver-ex-14.0"
+        "DBParameterGroupArn": "arn:aws:rds:us-east-1:23424531345:pg:default.sqlserver-ex-14.0"
     },
     {
         "DBParameterGroupName": "ex-g",
         "DBParameterGroupFamily": "sqlserver-ex-14.0",
         "Description": "abv",
-        "DBParameterGroupArn": "arn:aws:rds:us-east-1:560213429563:pg:ex-g"
+        "DBParameterGroupArn": "arn:aws:rds:us-east-1:23424531345:pg:ex-g"
     }
 ];
 

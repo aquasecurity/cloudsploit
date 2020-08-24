@@ -820,7 +820,8 @@ var postcalls = [
             describeDBParameters: {
                 reliesOnService: 'rds',
                 reliesOnCall: 'describeDBParameterGroups',
-                override: true
+                filterKey: 'DBParameterGroupName',
+                filterValue: 'DBParameterGroupName'
             }
         },
         SageMaker: {
