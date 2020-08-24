@@ -50,25 +50,25 @@ module.exports = {
             for (var workspace of listWorkspaces) {
                 var arn = "arn:" + awsOrGov + ":workspaces:" + region + ":" + accountId + ":workspace/" + workspace.WorkspaceId;
 
-                if (workspace.UserVolumeEncryptionEnabled  === "True" && workspace.RootVolumeEncryptionEnabled === "True"){
+                if (workspace.UserVolumeEncryptionEnabled && workspace.RootVolumeEncryptionEnabled){
                     helpers.addResult(
                         results, 0, enabledString, region, arn
                     );
-                } else  if (workspace.UserVolumeEncryptionEnabled  === "True"  && workspace.RootVolumeEncryptionEnabled === "False"){
+                } else  if (workspace.UserVolumeEncryptionEnabled && !workspace.RootVolumeEncryptionEnabled){
                     helpers.addResult(
                         results, 2, enabledUser, region, arn
                     );
-                } else if (workspace.UserVolumeEncryptionEnabled  === "False"  && workspace.RootVolumeEncryptionEnabled === "True"){
+                } else if (!workspace.UserVolumeEncryptionEnabled && workspace.RootVolumeEncryptionEnabled){
                     helpers.addResult(
                         results, 2, enabledRoot, region, arn
                     );
                 } else if (!workspace.UserVolumeEncryptionEnabled && !workspace.RootVolumeEncryptionEnabled){
                     helpers.addResult(
-                        results, 3, unknownStatusString, region, arn
+                        results, 2, disabledString, region, arn
                     );
                 } else {
                     helpers.addResult(
-                        results, 2, disabledString, region, arn
+                        results, 3, unknownStatusString, region, arn
                     );
                 }
             }
