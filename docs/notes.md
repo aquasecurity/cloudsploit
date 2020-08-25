@@ -3,7 +3,7 @@
 ## Hosted SaaS
 When using the [hosted scanner](https://cloud.aquasec.com/signup), you will be able to see an intuitive visual representation of the scan results. In the Aqua Wave console, printable scan results look as follows:
 
-[<img src="https://cloudsploit.com/images/printable-report.png">](https://cloud.aquasec.com/signup)
+[<img src="./saas.png">](https://cloud.aquasec.com/signup)
 
 ## Cross-Account IAM Role
 Cross-account roles enable you to share access to your account with another AWS account using the same policy model that you're used to within AWS services' scope.
