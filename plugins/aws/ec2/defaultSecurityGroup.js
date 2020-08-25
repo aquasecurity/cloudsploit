@@ -13,7 +13,8 @@ module.exports = {
         pci: 'PCI has strict requirements to segment networks using firewalls. ' +
              'Security groups are a software-layer firewall that should be used ' +
              'to isolate resources. Ensure default security groups to not allow ' +
-             'unintended traffic to cross these isolation boundaries.'
+             'unintended traffic to cross these isolation boundaries.',
+        cis2: '4.3 Ensure the default security group of every VPC restricts all traffic'
     },
 
     run: function(cache, settings, callback) {

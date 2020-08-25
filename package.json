@@ -1,7 +1,7 @@
 {
   "name": "cloudsploit",
-  "version": "0.0.1-dev5",
-  "description": "AWS security scanning scripts",
+  "version": "2.0.0",
+  "description": "AWS, Azure, GCP, Oracle, GitHub security scanning scripts",
   "main": "index.js",
   "scripts": {
     "test": "mocha './**/*.spec.js'",
@@ -21,6 +21,11 @@
   },
   "keywords": [
     "aws",
+    "azure",
+    "google",
+    "gcp",
+    "oracle",
+    "oci",
     "cloud",
     "security"
   ],
@@ -29,7 +34,7 @@
   "bugs": {
     "url": "https://github.com/cloudsploit/scans/issues"
   },
-  "homepage": "https://cloudsploit.com",
+  "homepage": "https://cloud.aquasec.com",
   "publishConfig": {
     "access": "public"
   },
@@ -37,6 +42,7 @@
     "@octokit/app": "^3.0.0",
     "@octokit/request": "^3.0.3",
     "@octokit/rest": "^16.3.2",
+    "argparse": "^2.0.0",
     "async": "^2.6.1",
     "aws-sdk": "^2.648.0",
     "azure-storage": "^2.10.3",
@@ -44,7 +50,8 @@
     "fast-safe-stringify": "^2.0.6",
     "googleapis": "^40.0.1",
     "minimatch": "^3.0.4",
-    "ms-rest-azure": "^2.6.0"
+    "ms-rest-azure": "^2.6.0",
+    "tty-table": "^4.1.3"
   },
   "devDependencies": {
     "chai": "^4.2.0",

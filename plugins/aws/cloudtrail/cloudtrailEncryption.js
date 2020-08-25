@@ -9,6 +9,9 @@ module.exports = {
     recommended_action: 'Enable CloudTrail log encryption through the CloudTrail console or API',
     link: 'http://docs.aws.amazon.com/awscloudtrail/latest/userguide/encrypting-cloudtrail-log-files-with-aws-kms.html',
     apis: ['CloudTrail:describeTrails'],
+    compliance: {
+        cis2: '2.7 Ensure CloudTrail logs are encrypted at rest using KMS CMKs'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
