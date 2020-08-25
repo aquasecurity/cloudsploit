@@ -25,7 +25,8 @@ parser.add_argument('--config', {
 
 parser.add_argument('--compliance', {
     help: 'Compliance mode. Only return results applicable to the selected program.',
-    choices: ['hipaa', 'cis', 'cis1', 'cis2', 'pci']
+    choices: ['hipaa', 'cis', 'cis1', 'cis2', 'pci'],
+    action: 'append'
 });
 parser.add_argument('--plugin', {
     help: 'A specific plugin to run. If none provided, all plugins will be run. Obtain from the exports.js file. E.g. acmValidation'
@@ -74,6 +75,17 @@ if (!settings.config) {
     // AWS will handle the default credential chain without needing a credential file
     console.log('INFO: No config file provided, using default AWS credential chain.');
     return engine(cloudConfig, settings);
+}
+
+// If "compliance=cis" is passed, turn into "compliance=cis1 and compliance=cis2"
+if (settings.compliance && settings.compliance.indexOf('cis') > -1) {
+    if (settings.compliance.indexOf('cis1') === -1) {
+        settings.compliance.push('cis1');
+    }
+    if (settings.compliance.indexOf('cis2') === -1) {
+        settings.compliance.push('cis2');
+    }
+    settings.compliance = settings.compliance.filter(function(e) { return e !== 'cis'; });
 }
 
 console.log(`INFO: Using CloudSploit config file: ${settings.config}`);

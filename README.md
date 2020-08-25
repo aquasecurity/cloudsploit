@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/cloudsploit/scans.svg?branch=master)](https://travis-ci.org/cloudsploit/scans)
 
-CloudSploit Scans
+CloudSploit by Aqua - Cloud Security Scans
 =================
 
 [<img src="docs/console.png">](https://cloud.aquasec.com/signup)
@@ -19,7 +19,7 @@ $ ./index.js -h
 * [Background](#background)
 * [Deployment Options](#deployment-options)
   + [Self-Hosted](#self-hosted)
-  + [Hosted at Aqua Wave (SaaS)](#hosted-at-aqua-wave--saas-)
+  + [Hosted at Aqua Wave](#hosted-at-aqua-wave)
 * [Installation](#installation)
 * [Configuration](#configuration)
   + [Amazon Web Services](docs/aws.md#cloud-provider-configuration)
@@ -61,10 +61,8 @@ CloudSploit is available in two deployment options:
 ### Self-Hosted
 Follow the instructions below to deploy the open-source version of CloudSploit on your machine in just a few simple steps.
 
-### Hosted at Aqua Wave (SaaS)
-CloudSploit is provided as part of Aqua Wave, a fully-managed cloud security solution maintained and updated by the cloud security experts at Aqua. Our hosted scanner handles the scheduling and running of background scans, aggregation of data into dashboards, tools, and visualizations, and integrates with popular third-party services for alerts.
-
-Sign up for [Aqua Wave](https://cloud.aquasec.com/signup) today!
+### Hosted at Aqua Wave
+A commercial version of CloudSploit hosted at Aqua Wave. Try [Aqua Wave](https://cloud.aquasec.com/signup) today!
 
 ## Installation
 Ensure that NodeJS is installed. If not, install it from [here](https://nodejs.org/download/).
@@ -234,6 +232,11 @@ $ ./index.js --compliance=hipaa
 $ ./index.js --compliance=pci
 ```
 
+Multiple compliance modes can be run at the same time:
+```
+$ ./index.js --compliance=cis1 --compliance=cis2
+```
+
 CloudSploit currently supports the following compliance mappings:
 
 ### HIPAA
@@ -255,7 +258,7 @@ $ ./index.js --compliance=cis1
 $ ./index.js --compliance=cis2
 ```
 
-CIS Benchmarks are supported, both for Level 1 and Level 2 controls.
+CIS Benchmarks are supported, both for Level 1 and Level 2 controls. Passing `--compliance=cis` will run both level 1 and level 2 controls.
 
 ## Output Formats
 CloudSploit supports output in several formats for consumption by other tools. If you do not specify otherwise, CloudSploit writes output to standard output (the console) as a table.

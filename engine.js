@@ -21,7 +21,7 @@ var engine = function(cloudConfig, settings) {
     var apiCalls = [];
 
     // Print customization options
-    if (settings.compliance) console.log(`INFO: Using compliance mode: ${settings.compliance.toUpperCase()}`);
+    if (settings.compliance) console.log(`INFO: Using compliance modes: ${settings.compliance.join(', ')}`);
     if (settings.govcloud) console.log('INFO: Using AWS GovCloud mode');
     if (settings.china) console.log('INFO: Using AWS China mode');
     if (settings.ignore_ok) console.log('INFO: Ignoring passing results');
@@ -35,28 +35,54 @@ var engine = function(cloudConfig, settings) {
     // STEP 1 - Obtain API calls to make
     console.log('INFO: Determining API calls to make...');
 
+    var skippedPlugins = [];
+
     Object.entries(plugins).forEach(function(p){
         var pluginId = p[0];
         var plugin = p[1];
 
         // Skip plugins that don't match the ID flag
-        if (!settings.plugin || settings.plugin == pluginId) {
+        var skip = false;
+        if (settings.plugin && settings.plugin !== pluginId) {
+            skip = true;
+        } else {
             // Skip GitHub plugins that do not match the run type
             if (settings.cloud == 'github') {
                 if (cloudConfig.organization &&
                     plugin.types.indexOf('org') === -1) {
+                    skip = true;
                     console.debug(`DEBUG: Skipping GitHub plugin ${plugin.title} because it is not for Organization accounts`);
                 } else if (!cloudConfig.organization &&
                     plugin.types.indexOf('org') === -1) {
+                    skip = true;
                     console.debug(`DEBUG: Skipping GitHub plugin ${plugin.title} because it is not for User accounts`);
                 }
-            } else if (settings.compliance && (!plugin.compliance || !plugin.compliance[settings.compliance])) {
-                console.debug(`DEBUG: Skipping plugin ${plugin.title} because it is not used for compliance program: ${settings.compliance}`);
-            } else {
-                plugin.apis.forEach(function(api) {
-                    if (apiCalls.indexOf(api) === -1) apiCalls.push(api);
-                });
             }
+
+            if (settings.compliance && settings.compliance.length) {
+                if (!plugin.compliance || !Object.keys(plugin.compliance).length) {
+                    skip = true;
+                    console.debug(`DEBUG: Skipping plugin ${plugin.title} because it is not used for compliance programs`);
+                } else {
+                    // Compare
+                    var cMatch = false;
+                    settings.compliance.forEach(function(c){
+                        if (plugin.compliance[c]) cMatch = true;
+                    });
+                    if (!cMatch) {
+                        skip = true;
+                        console.debug(`DEBUG: Skipping plugin ${plugin.title} because it did not match compliance programs ${settings.compliance.join(', ')}`);
+                    }
+                }
+            }
+        }
+
+        if (skip) {
+            skippedPlugins.push(pluginId);
+        } else {
+            plugin.apis.forEach(function(api) {
+                if (apiCalls.indexOf(api) === -1) apiCalls.push(api);
+            });
         }
     });
 
@@ -81,17 +107,7 @@ var engine = function(cloudConfig, settings) {
         var maximumStatus = 0;
 
         async.mapValuesLimit(plugins, 10, function(plugin, key, pluginDone) {
-            if (settings.compliance && (!plugin.compliance || !plugin.compliance[settings.compliance])) return pluginDone(null, 0);
-            if (settings.plugin && settings.plugin !== key) return pluginDone(null, 0);
-
-            // Skip GitHub plugins that do not match the run type
-            if (settings.cloud == 'github' &&
-                cloudConfig.organization &&
-                plugin.types.indexOf('org') === -1) return pluginDone(null, 0);
-
-            if (settings.cloud == 'github' &&
-                !cloudConfig.organization &&
-                plugin.types.indexOf('user') === -1) return pluginDone(null, 0);
+            if (skippedPlugins.indexOf(key) > -1) return pluginDone(null, 0);
 
             plugin.run(collection, settings, function(err, results) {
                 for (var r in results) {
@@ -100,9 +116,17 @@ var engine = function(cloudConfig, settings) {
                     if (suppressionFilter([key, results[r].region || 'any', results[r].resource || 'any'].join(':'))) {
                         continue;
                     }
-
-                    var complianceMsg = (settings.compliance && plugin.compliance &&
-                        plugin.compliance[settings.compliance]) ? plugin.compliance[settings.compliance] : null;
+                    
+                    var complianceMsg = [];
+                    if (settings.compliance && settings.compliance.length) {
+                        settings.compliance.forEach(function(c){
+                            if (plugin.compliance && plugin.compliance[c]) {
+                                complianceMsg.push(`${c.toUpperCase()}: ${plugin.compliance[c]}`);
+                            }
+                        });
+                    }
+                    complianceMsg = complianceMsg.join('; ');
+                    if (!complianceMsg.length) complianceMsg = null;
 
                     // Write out the result (to console or elsewhere)
                     outputHandler.writeResult(results[r], plugin, key, complianceMsg);
