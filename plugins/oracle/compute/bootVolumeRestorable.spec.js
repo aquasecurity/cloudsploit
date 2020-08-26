@@ -95,7 +95,7 @@ describe('bootVolumeRestorable', function () {
             };
 
             const cache = createCache(
-                [],
+                null,
                 ['lots of data'],
                 undefined,
                 ['error']
@@ -108,7 +108,7 @@ describe('bootVolumeRestorable', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(1)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('The following boot volumes are not actively restorable')
+                expect(results[0].message).to.include('The boot volume is not actively restorabl')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -169,7 +169,7 @@ describe('bootVolumeRestorable', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(1)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('All boot volumes are actively restorable')
+                expect(results[0].message).to.include('The boot volume is actively restorable')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };

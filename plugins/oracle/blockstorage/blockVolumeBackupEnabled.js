@@ -22,9 +22,12 @@ module.exports = {
                 var blockVolumes = helpers.addSource(cache, source,
                     ['volume', 'list', region]);
 
+                var blockVolumeBackupPolicies = helpers.addSource(cache, source,
+                    ['volumeBackupPolicyAssignment', 'volume', region]);
+
                 if (!blockVolumes) return rcb();
 
-                if ((blockVolumes.err && blockVolumes.err.length) || !blockVolumes.data) {
+                if (blockVolumes.err || !blockVolumes.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for block volumes: ' + helpers.addError(blockVolumes), region);
                     return rcb();
@@ -35,39 +38,26 @@ module.exports = {
                     return rcb();
                 }
 
-
-                var badBlockVolumes = [];
-                blockVolumes.data.forEach(blockVolume => {
-                    badBlockVolumes.push(blockVolume.id);
-                });
-
-                var blockVolumeBackupPolicies = helpers.addSource(cache, source,
-                    ['volumeBackupPolicyAssignment', 'volume', region]);
-
-                if (!blockVolumeBackupPolicies) return rcb();
-
-                if ((blockVolumeBackupPolicies.err && blockVolumeBackupPolicies.err.length) || !blockVolumeBackupPolicies.data) {
+                if (!blockVolumeBackupPolicies || blockVolumeBackupPolicies.err || !blockVolumeBackupPolicies.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for block volume backups: ' + helpers.addError(blockVolumeBackupPolicies), region);
                     return rcb();
                 }
 
+                var enabledBlockVolumes = [];
                 blockVolumeBackupPolicies.data.forEach(blockVolumeBackupPolicy => {
-                    var bootIdx = badBlockVolumes.indexOf(blockVolumeBackupPolicy.assetId);
-
-                    if (bootIdx > -1) {
-                        badBlockVolumes.splice(bootIdx, 1);
-                    }
+                    enabledBlockVolumes.push(blockVolumeBackupPolicy.assetId)
                 });
 
-                if (badBlockVolumes.length) {
-                    var badBlockVolumesStr = badBlockVolumes.join(', ');
-                    helpers.addResult(results, 2,
-                        `The following block volumes do not have a backup policy enabled: ${badBlockVolumesStr}`, region);
-                } else {
-                    helpers.addResult(results, 0,
-                        'All block volumes have a backup policy enabled', region);
-                }
+                blockVolumes.data.forEach(blockVolume => {
+                    if (enabledBlockVolumes.indexOf(blockVolume.id) > -1) {
+                        helpers.addResult(results, 0,
+                            'Block volume has a backup policy enabled', region, blockVolume.id);
+                    } else {
+                        helpers.addResult(results, 2,
+                            'Block volume has a backup policy disabled', region, blockVolume.id);
+                    }
+                });
             }
             rcb();
         }, function(){

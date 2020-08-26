@@ -23,13 +23,13 @@ module.exports = {
         if (!listServerCertificates) return callback(null, results, source);
 
         if (listServerCertificates.err || !listServerCertificates.data) {
-            helpers.addResult(results, 2,
-                'Unable to find any server certificates ' + helpers.addError(listServerCertificates), region);
+            helpers.addResult(results, 3,
+                'Unable to query for server certificates: ' + helpers.addError(listServerCertificates), region);
             return callback(null, results, source);
         }
 
         if (!listServerCertificates.data.length) {
-            helpers.addResult(results, 0, 'No server certificate found');
+            helpers.addResult(results, 0, 'No server certificate found', 'global');
             return callback(null, results, source);
         }
 
@@ -38,21 +38,19 @@ module.exports = {
             var serverCertificate = helpers.addSource(cache, source,
                 ['iam', 'getServerCertificate', region, certificate.ServerCertificateName]);
 
-            if (!serverCertificate || serverCertificate.err || !serverCertificate.data) {
+            if (!serverCertificate ||
+                serverCertificate.err ||
+                !serverCertificate.data ||
+                !serverCertificate.data.ServerCertificate) {
                 helpers.addResult(results, 3,
-                    'Unable to get server certificate for: ' + certificate.ServerCertificateName + ': ' + helpers.addError(serverCertificate), 'global', resource);
+                    'Unable to query server certificate for: ' + certificate.ServerCertificateName + ': ' + helpers.addError(serverCertificate),
+                    'global', resource);
                 return cb();
             }
 
-            if (!serverCertificate.data.length) {
-                helpers.addResult(results, 0, 'No server certificate found for: ' + certificate.ServerCertificateName, 'global', resource);
-                return cb();
-            }
-
-            if(!serverCertificate.data.ServerCertificate  || !serverCertificate.ServerCertificate.data.CertificateBody) {
-                console.log('here');
+            if (!serverCertificate.data.ServerCertificate.CertificateBody) {
                 helpers.addResult(results, 3,
-                    'Unable to get certificate body for: ' + certificate.ServerCertificateName + ': ' + helpers.addError(listServerCertificates), 'global', resource);
+                    'Unable to get certificate body for: ' + certificate.ServerCertificateName, 'global', resource);
                 return cb();
             }
 
@@ -61,10 +59,10 @@ module.exports = {
 
             if (certificateBitLength >= 2048) {
                 helpers.addResult(results, 0,
-                    'IAM Certificate ' + certificate.ServerCertificateName + ' is security complient with 2048 bit key length', 'global', resource);
+                    'IAM Certificate ' + certificate.ServerCertificateName + ' is security compliant with 2048 bit key length', 'global', resource);
             } else {
                 helpers.addResult(results, 2,
-                    'IAM Certificate ' + certificate.ServerCertificateName + ' should have atleast 2048 bit key length', 'global', resource);
+                    'IAM Certificate ' + certificate.ServerCertificateName + ' is not security compliant 2048 bit key length', 'global', resource);
             }
             
             cb();
