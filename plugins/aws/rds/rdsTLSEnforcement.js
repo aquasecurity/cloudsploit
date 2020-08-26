@@ -16,6 +16,9 @@ module.exports = {
         var parameterMappings = {
             "mysql": "require_secure_transport",
             "sqlserver-ex": "rds.force_ssl",
+            "sqlserver-ee": "rds.force_ssl",
+            "sqlserver-se": "rds.force_ssl",
+            "sqlserver-web": "rds.force_ssl",
             "postgres": "rds.force_ssl"
         };
 
@@ -44,31 +47,37 @@ module.exports = {
             for (var instance of listDBInstances.data) {
                 var arn = `arn:${awsOrGov}:rds:${region}:${accountId}:db:${instance.DBInstanceIdentifier}`
                 var tlsEnforced = false
-                for (var parameterGroup of instance.DBParameterGroups){
-                    var listDBParameters = helpers.addSource(cache, source,
-                        ["rds", "describeDBParameters", region, parameterGroup.DBParameterGroupName]
-                    );
-                    if (listDBParameters.err || !listDBParameters.data) {
-                        helpers.addResult(results, 3, `Unable to query for parameters on Parameter Group: ${parameterGroup.DBParameterGroupName}.` + helpers.addError(listDBParameters), region, arn);
-                    } else {
-                        var engineName = instance.Engine
-                        var query = listDBParameters.data.Parameters.find(directory => directory.ParameterName === parameterMappings[engineName]);
-                        if (!query){
-                            tlsEnforced = false
-                            helpers.addResult(results, 3, `Unable to find Parameter: ${parameterMappings[engineName]} for ${instance.DBInstanceIdentifier} database.`, region, arn);
-                            break;
-                        } else if (query.ParameterValue === "1"){
-                            tlsEnforced = true
+                var engineName = instance.Engine
+                if (!(engineName in parameterMappings)){
+                    helpers.addResult(results, 0, `TLS Enforcement is not supported on the ${instance.DBInstanceIdentifier} database with ${engineName} engine.`, region, arn);
+                } else {
+                    for (var parameterGroup of instance.DBParameterGroups){
+                        var listDBParameters = helpers.addSource(cache, source,
+                            ["rds", "describeDBParameters", region, parameterGroup.DBParameterGroupName]
+                        );
+                        if (!listDBParameters) {
+                            return rcb
+                        } else if (listDBParameters.err || !listDBParameters.data) {
+                            helpers.addResult(results, 3, `Unable to query for parameters on Parameter Group: ${parameterGroup.DBParameterGroupName}.` + helpers.addError(listDBParameters), region, arn);
                         } else {
-                            tlsEnforced = false
-                            helpers.addResult(results, 2, `TLS is not enabled on the ${instance.DBInstanceIdentifier} database.`, region, arn);
-                            break;
+                            var query = listDBParameters.data.Parameters.find(directory => directory.ParameterName === parameterMappings[engineName]);
+                            if (!query){
+                                tlsEnforced = false
+                                helpers.addResult(results, 3, `Unable to find Parameter: ${parameterMappings[engineName]} for ${instance.DBInstanceIdentifier} database.`, region, arn);
+                                break;
+                            } else if (query.ParameterValue === "1"){
+                                tlsEnforced = true
+                            } else {
+                                tlsEnforced = false
+                                helpers.addResult(results, 2, `TLS is not enforced on the ${instance.DBInstanceIdentifier} database.`, region, arn);
+                                break;
+                            }
                         }
                     }
                 }
 
                 if (tlsEnforced){
-                    helpers.addResult(results, 0, `TLS is enabled on the ${instance.DBInstanceIdentifier} database.`, region, arn);
+                    helpers.addResult(results, 0, `TLS is enforced on the ${instance.DBInstanceIdentifier} database.`, region, arn);
                 }
             }
             return rcb();

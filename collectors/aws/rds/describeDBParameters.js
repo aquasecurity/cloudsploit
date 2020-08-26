@@ -14,14 +14,15 @@ module.exports = function(AWSConfig, collection, callback) {
         };
 
         rds.describeDBParameters(params).eachPage(function(err, data) {
-            if (!data){
+            if (err) {
+                collection.rds.describeDBParameters[AWSConfig.region][parameterGroupName.DBParameterGroupName].err = err;
+                collection.rds.describeDBParameters[AWSConfig.region][parameterGroupName.DBParameterGroupName].data = null;
+                cb();
+            } else if (!data) {
                 cb();
             } else {
                 collection.rds.describeDBParameters[AWSConfig.region][parameterGroupName.DBParameterGroupName].data.Parameters =
                     collection.rds.describeDBParameters[AWSConfig.region][parameterGroupName.DBParameterGroupName].data.Parameters.concat(data.Parameters);
-            }
-            if (err) {
-                collection.rds.describeDBParameters[AWSConfig.region][parameterGroupName.DBParameterGroupName].err = err;
             }
         });
     }, function(){
