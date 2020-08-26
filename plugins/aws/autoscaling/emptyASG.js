@@ -35,7 +35,7 @@ module.exports = {
 
             describeAutoScalingGroups.data.forEach(function(asg){
                 var resource = asg.AutoScalingGroupARN;
-                if (!asg.Instances.length) {
+                if (!asg.Instances || !asg.Instances.length) {
                     helpers.addResult(results, 2,
                         'Auto scaling group: ' + asg.AutoScalingGroupName + ' does not contain any instance',
                         region, resource);

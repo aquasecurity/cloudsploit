@@ -1,10 +1,10 @@
 var expect = require('chai').expect;
-const emptyAsg = require('./emptyAsg');
+const emptyASG = require('./emptyASG');
 
 const autoScalingGroups =  [
     {
         "AutoScalingGroupName": "auto-scaling-test-group",
-        "AutoScalingGroupARN": "arn:aws:autoscaling:us-east-1:560213429563:autoScalingGroup:e83ceb12-2760-4a92-a374-3df611331bdc:autoScalingGroupName/auto-scaling-test-group",
+        "AutoScalingGroupARN": "arn:aws:autoscaling:us-east-1:111122223333:autoScalingGroup:e83ceb12-2760-4a92-a374-3df611331bdc:autoScalingGroupName/auto-scaling-test-group",
         "LaunchTemplate": {
             "LaunchTemplateId": "lt-0f1f6b356026abc86",
             "LaunchTemplateName": "auto-scaling-template",
@@ -45,11 +45,11 @@ const autoScalingGroups =  [
             "Default"
         ],
         "NewInstancesProtectedFromScaleIn": false,
-        "ServiceLinkedRoleARN": "arn:aws:iam::560213429563:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
+        "ServiceLinkedRoleARN": "arn:aws:iam::111122223333:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
     },
     {
         "AutoScalingGroupName": "auto-scaling-test-group",
-        "AutoScalingGroupARN": "arn:aws:autoscaling:us-east-1:560213429563:autoScalingGroup:e83ceb12-2760-4a92-a374-3df611331bdc:autoScalingGroupName/auto-scaling-test-group",
+        "AutoScalingGroupARN": "arn:aws:autoscaling:us-east-1:111122223333:autoScalingGroup:e83ceb12-2760-4a92-a374-3df611331bdc:autoScalingGroupName/auto-scaling-test-group",
         "LaunchTemplate": {
             "LaunchTemplateId": "lt-0f1f6b356026abc86",
             "LaunchTemplateName": "auto-scaling-template",
@@ -76,7 +76,7 @@ const autoScalingGroups =  [
             "Default"
         ],
         "NewInstancesProtectedFromScaleIn": false,
-        "ServiceLinkedRoleARN": "arn:aws:iam::560213429563:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
+        "ServiceLinkedRoleARN": "arn:aws:iam::111122223333:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
     },
 ];
 
@@ -118,11 +118,11 @@ const createNullCache = () => {
     };
 };
 
-describe('emptyAsg', function () {
+describe('emptyASG', function () {
     describe('run', function () {
         it('should PASS if autoscaling group contains instance(s)', function (done) {
             const cache = createCache([autoScalingGroups[0]]);
-            emptyAsg.run(cache, {}, (err, results) => {
+            emptyASG.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -131,7 +131,7 @@ describe('emptyAsg', function () {
 
         it('should FAIL if autoscaling group does not contain instance(s)', function (done) {
             const cache = createCache([autoScalingGroups[1]]);
-            emptyAsg.run(cache, {}, (err, results) => {
+            emptyASG.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -140,7 +140,7 @@ describe('emptyAsg', function () {
 
         it('should PASS if no autoscaling group data found ', function (done) {
             const cache = createCache([]);
-            emptyAsg.run(cache, {}, (err, results) => {
+            emptyASG.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -149,7 +149,7 @@ describe('emptyAsg', function () {
         
         it('should UNKNOWN if unable to describe autoscaling group found', function (done) {
             const cache = createErrorCache();
-            emptyAsg.run(cache, {}, (err, results) => {
+            emptyASG.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -158,7 +158,7 @@ describe('emptyAsg', function () {
 
         it('should not return anything if no autoscaling group found', function (done) {
             const cache = createNullCache();
-            emptyAsg.run(cache, {}, (err, results) => {
+            emptyASG.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });
