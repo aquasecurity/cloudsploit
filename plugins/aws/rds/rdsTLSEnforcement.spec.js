@@ -183,7 +183,7 @@ describe("rdsTLSEnforcement", function () {
             rds.run(cache, {}, callback);
         });
 
-        it("should give no result if the database engine is not supported", function (done) {
+        it("should give pass result if the database engine is not supported", function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].message).to.include("TLS Enforcement is not supported on the test01 database with oracle-se1 engine.")
