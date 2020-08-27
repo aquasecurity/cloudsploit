@@ -117,6 +117,7 @@ module.exports = {
         'iamUserAdmins'                 : require(__dirname + '/plugins/aws/iam/iamUserAdmins.js'),
         'iamUserNameRegex'              : require(__dirname + '/plugins/aws/iam/iamUserNameRegex.js'),
         'iamRolePolicies'               : require(__dirname + '/plugins/aws/iam/iamRolePolicies.js'),
+        'iamRoleLastUsed'               : require(__dirname + '/plugins/aws/iam/iamRoleLastUsed.js'),
         'maxPasswordAge'                : require(__dirname + '/plugins/aws/iam/maxPasswordAge.js'),
         'minPasswordLength'             : require(__dirname + '/plugins/aws/iam/minPasswordLength.js'),
         'noUserIamPolicies'             : require(__dirname + '/plugins/aws/iam/noUserIamPolicies.js'),
