@@ -4,7 +4,7 @@ const rootSigningCertificate = require('./rootSigningCertificate');
 const credentialReports = [
     {
       user: '<root_account>',
-      arn: 'arn:aws:iam::560213429563:root',
+      arn: 'arn:aws:iam::111122223333:root',
       user_creation_time: '2020-08-09T16:55:28+00:00',
       password_enabled: 'not_supported',
       password_last_used: '2020-08-17T21:13:44+00:00',
@@ -28,7 +28,7 @@ const credentialReports = [
     },
     {
       user: '<root_account>',
-      arn: 'arn:aws:iam::560213429563:user/cloudsploit',
+      arn: 'arn:aws:iam::111122223333:user/cloudsploit',
       user_creation_time: '2020-08-17T09:07:27+00:00',
       password_enabled: true,
       password_last_used: 'no_information',
@@ -52,7 +52,7 @@ const credentialReports = [
     },
     {
       user: 'codesploit',
-      arn: 'arn:aws:iam::560213429563:user/cloudsploit',
+      arn: 'arn:aws:iam::111122223333:user/cloudsploit',
       user_creation_time: '2020-08-17T09:07:27+00:00',
       password_enabled: true,
       password_last_used: 'no_information',
