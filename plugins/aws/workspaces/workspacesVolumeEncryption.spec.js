@@ -22,8 +22,7 @@ const noWorkspaces = (statement) => {
             },
         },
         kms:{describeKey: {"us-east-1":{data: []}},
-            listKeys: {"us-east-1":{data:[]}},
-            listAliases: {"us-east-1":{data:[]}}}
+            listKeys: {"us-east-1":{data:[]}},}
     }
 };
 
@@ -33,21 +32,24 @@ const testWorkspaces = (statement) => {
             WorkspaceId: "test01",
             UserVolumeEncryptionEnabled: true,
             RootVolumeEncryptionEnabled: true,
-            VolumeEncryptionKey: "arn:aws:kms:us-east-1:null:alias/test01"
+            VolumeEncryptionKey: "arn:aws:kms:us-east-1:null:key/12345"
         },
         {
             WorkspaceId: "test02",
-            RootVolumeEncryptionEnabled: true
+            RootVolumeEncryptionEnabled: true,
+            VolumeEncryptionKey: "arn:aws:kms:us-east-1:null:key/12345"
         },]},},},
-        kms:{describeKey: {"us-east-1":{data: [
-                    ]}},
+        kms:{describeKey: {"us-east-1":{"12345": {data: {KeyMetadata:{
+                            KeyId: "12345",
+                            Arn: "arn:aws:kms:us-east-1:null:key/12345",
+                            KeyState: "Enabled",
+                            Origin: "AWS_KMS",
+                            KeyManager: "AWS",
+                        }
+        }}}},
             listKeys: {"us-east-1":{data:[{
                         "KeyId": "12345",
-                        "KeyArn": "arn:aws:kms:us-east-1:null:key/12345"}]}},
-            listAliases: {"us-east-1":{data:[{
-                        "AliasName": "alias/test-fenil",
-                        "AliasArn": "arn:aws:kms:us-east-1:null:alias/test01",
-                        "TargetKeyId": "12345"}]}}}
+                        "KeyArn": "arn:aws:kms:us-east-1:null:key/12345"}]}},}
     }};
 
 const testWorkspaces2 = (statement) => {
@@ -58,33 +60,36 @@ const testWorkspaces2 = (statement) => {
                     UserVolumeEncryptionEnabled: true,
                     RootVolumeEncryptionEnabled: true,
                     VolumeEncryptionKey: "arn:aws:kms:us-east-1:null:key/12345"
-                },
-                {
-                    WorkspaceId: "test02"
                 },]},},
         },
-        kms:{describeKey: {"us-east-1":{data: []}},
+        kms:{describeKey: {"us-east-1": {12345: {data: {KeyMetadata:{
+                            KeyId: "12345",
+                            Arn: "arn:aws:kms:us-east-1:null:key/12345",
+                            KeyState: "Enabled",
+                            Origin: "AWS_KMS",
+                            KeyManager: "AWS",
+                        }
+        }}}},
             listKeys: {"us-east-1":{data:[{
                         "KeyId": "12345",
-                        "KeyArn": "arn:aws:kms:us-east-1:null:key/12345"}]}},
-            listAliases: {"us-east-1":{data:[]}}}
+                        "KeyArn": "arn:aws:kms:us-east-1:null:key/12345"}]}},}
     }};
 
 
-describe("workspacesIPAccessControl", function () {
+describe("workspacesVolumeEncryption", function () {
     describe("run", function () {
         it("should give a general error if it can not get workspaces", function (done) {
             const settings = {};
             const cache = errorWorkspaces();
             const callback = (err, results) => {
-                expect(results.length).to.equal(0)
+                expect(results.length).to.equal(1)
             };
 
             metrics.run(cache, settings, callback);
             done();
         });
 
-        it("should give an output of passed volume encryption on first workspace and no encryption on user volume for second workspace", function (done) {
+        it("should give an output of no workspaces found", function (done) {
             const settings = {};
             const cache = noWorkspaces();
 
@@ -97,7 +102,7 @@ describe("workspacesIPAccessControl", function () {
             done();
         });
 
-        it("should give IP access controls on both the workspaces", function (done) {
+        it("should give volume encryption enabled for first workspace and not enabled on second workspace", function (done) {
             const settings = {};
             const cache = testWorkspaces();
 
@@ -111,17 +116,16 @@ describe("workspacesIPAccessControl", function () {
             done();
         })
 
-        it("should give no volume encryption on one workspace02", function (done) {
+        it("should give a fail because the current encryption level is lower than desired", function (done) {
             const settings = {};
             const cache = testWorkspaces2();
 
             const callback = (err, results) => {
-                expect(results.length).to.equal(2);
-                expect(results[0].status).to.equal(0);
-                expect(results[1].status).to.equal(2);
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
             };
 
-            metrics.run(cache, settings, callback);
+            metrics.run(cache, {workspace_encryption_level: "externalcmk"}, callback);
             done();
         })
     })
