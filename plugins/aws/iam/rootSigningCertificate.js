@@ -11,7 +11,7 @@ module.exports = {
     compliance: {
         hipaa: 'HIPAA requires strong auditing controls surrounding actions ' +
                 'taken in the environment. The root user lacks these controls ' +
-                'since it is not tied to a specific user. The root access keys ' +
+                'since it is not tied to a specific user. The root signing keys ' +
                 'should not be used.'
     },
 
