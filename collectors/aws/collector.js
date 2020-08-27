@@ -890,6 +890,12 @@ var postcalls = [
                 reliesOnService: 'iam',
                 reliesOnCall: 'listRoles',
                 override: true
+            },
+            getRole: {
+                reliesOnService: 'iam',
+                reliesOnCall: 'listRoles',
+                filterKey: 'RoleName',
+                filterValue: 'RoleName'
             }
         }
     }
