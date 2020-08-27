@@ -124,30 +124,3 @@ module.exports = {
         });
     }
 }
-
-
-
-// if (workspace.VolumeEncryptionKey.includes("alias/")){
-//     var getAliases = helpers.addSource(cache, source, ["kms", "listAliases", region]);
-//     if (getAliases.err || !getAliases.data){
-//         helpers.addResult(results, 3, "Unable to get aliases", region, arn);
-//     } else {
-//         var queryAlias = getAliases.data.find(alias => alias.AliasArn === workspace.VolumeEncryptionKey);
-//         if (!queryAlias){
-//             var aliasName = workspace.VolumeEncryptionKey.slice(workspace.VolumeEncryptionKey.search("alias/"), workspace.VolumeEncryptionKey.length);
-//             helpers.addResult(results, 3, `Unable to locate Alias: ${aliasName}`, region, arn);
-//         } else {
-//             var queryKey = listKeys.data.find(key => key.KeyId === queryAlias.TargetKeyId);
-//             if (!queryKey){
-//                 helpers.addResult(results, 3, `Unable to locate Key for Alias: ${aliasName}`, region, arn);
-//             } else {
-//                 helpers.addResult(results, 0, enabledString, region, arn);
-//             }}}
-// } else {
-//     var queryKey = listKeys.data.find(key => key.KeyArn === workspace.VolumeEncryptionKey);
-//     if (queryKey){
-//         helpers.addResult(results, 0, enabledString, region, arn);
-//     } else {
-//         helpers.addResult(results, 3, unknownStatusString, region, arn);
-//     }
-// }
