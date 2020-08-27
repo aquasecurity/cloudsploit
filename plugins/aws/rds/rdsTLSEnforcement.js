@@ -55,9 +55,7 @@ module.exports = {
                         var listDBParameters = helpers.addSource(cache, source,
                             ["rds", "describeDBParameters", region, parameterGroup.DBParameterGroupName]
                         );
-                        if (!listDBParameters) {
-                            return rcb
-                        } else if (listDBParameters.err || !listDBParameters.data) {
+                        if (listDBParameters.err || !listDBParameters.data || !listDBParameters) {
                             helpers.addResult(results, 3, `Unable to query for parameters on Parameter Group: ${parameterGroup.DBParameterGroupName}.` + helpers.addError(listDBParameters), region, arn);
                         } else {
                             var query = listDBParameters.data.Parameters.find(directory => directory.ParameterName === parameterMappings[engineName]);
