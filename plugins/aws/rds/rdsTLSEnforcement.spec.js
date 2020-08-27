@@ -12,12 +12,12 @@ const createCache = (err, dbInstance, dbParameterGroups, dbParameters) => {
                 }
             },
             describeDBParameterGroups:{
-                "us-east-1":{
+                "us-east-1": {
                     err: err,
                     data: dbParameterGroups
                 }
             },
-            describeDBParameters:{
+            describeDBParameters: {
                 "us-east-1": dbParameters
             }
         }
@@ -30,7 +30,7 @@ describe("rdsTLSEnforcement", function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include("No RDS Database found")
+                expect(results[0].message).to.include("No RDS Databases found")
                 done()
             };
 
@@ -58,12 +58,12 @@ describe("rdsTLSEnforcement", function () {
                     {
                         DBInstanceIdentifier: "test01",
                         Engine: "mysql",
-                        DBParameterGroups:[{DBParameterGroupName: "test01pgroup"}],
+                        DBParameterGroups: [{DBParameterGroupName: "test01pgroup"}],
                     },
                     {
                         DBInstanceIdentifier: "test02",
                         Engine: "sqlserver-ex",
-                        DBParameterGroups:[{DBParameterGroupName: "test02pgroup"}],
+                        DBParameterGroups: [{DBParameterGroupName: "test02pgroup"}],
                     }],
                 {DBParameterGroupName: [{
                             DBParameterGroupName: "test01pgroup",
@@ -75,10 +75,10 @@ describe("rdsTLSEnforcement", function () {
                         }]
                     },
                 {
-                    test01pgroup:{data: {Parameters:[{
+                    test01pgroup:{data: { Parameters: [{
                         ParameterName: "require_secure_transport", ParameterValue: "1"}]}, err: null,
                     },
-                    test02pgroup:{data: {Parameters:[{
+                    test02pgroup:{data: { Parameters: [{
                         ParameterName: "rds.force_ssl", ParameterValue: "1"}]}, err: null
                     }
                 }

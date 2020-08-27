@@ -26,8 +26,6 @@ module.exports = {
         var acctRegion = helpers.defaultRegion(settings);
         var awsOrGov = helpers.defaultPartition(settings);
 
-        var accountId = helpers.addSource(cache, source, ["sts", "getCallerIdentity", acctRegion, "data"]);
-
         async.each(regions.rds, function(region, rcb){
             var listDBInstances = helpers.addSource(cache, source, ["rds", "describeDBInstances", region]);
             if (!listDBInstances) {
@@ -40,18 +38,18 @@ module.exports = {
             }
 
             if (!listDBInstances.data.length) {
-                helpers.addResult(results, 0, "No RDS Database found", region);
+                helpers.addResult(results, 0, "No RDS Databases found", region);
                 return rcb()
             }
 
             for (var instance of listDBInstances.data) {
-                var arn = `arn:${awsOrGov}:rds:${region}:${accountId}:db:${instance.DBInstanceIdentifier}`
-                var tlsEnforced = false
-                var engineName = instance.Engine
-                if (!(engineName in parameterMappings)){
+                var arn = instance.DBInstanceArn;
+                var tlsEnforced = false;
+                var engineName = instance.Engine;
+                if (!parameterMappings[engineName]) {
                     helpers.addResult(results, 0, `TLS Enforcement is not supported on the ${instance.DBInstanceIdentifier} database with ${engineName} engine.`, region, arn);
                 } else {
-                    for (var parameterGroup of instance.DBParameterGroups){
+                    for (var parameterGroup of instance.DBParameterGroups) {
                         var listDBParameters = helpers.addSource(cache, source,
                             ["rds", "describeDBParameters", region, parameterGroup.DBParameterGroupName]
                         );
@@ -59,14 +57,14 @@ module.exports = {
                             helpers.addResult(results, 3, `Unable to query for parameters on Parameter Group: ${parameterGroup.DBParameterGroupName}.` + helpers.addError(listDBParameters), region, arn);
                         } else {
                             var query = listDBParameters.data.Parameters.find(directory => directory.ParameterName === parameterMappings[engineName]);
-                            if (!query){
-                                tlsEnforced = false
+                            if (!query) {
+                                tlsEnforced = false;
                                 helpers.addResult(results, 3, `Unable to find Parameter: ${parameterMappings[engineName]} for ${instance.DBInstanceIdentifier} database.`, region, arn);
                                 break;
-                            } else if (query.ParameterValue === "1"){
-                                tlsEnforced = true
+                            } else if (query.ParameterValue === "1") {
+                                tlsEnforced = true;
                             } else {
-                                tlsEnforced = false
+                                tlsEnforced = false;
                                 helpers.addResult(results, 2, `TLS is not enforced on the ${instance.DBInstanceIdentifier} database.`, region, arn);
                                 break;
                             }
@@ -74,7 +72,7 @@ module.exports = {
                     }
                 }
 
-                if (tlsEnforced){
+                if (tlsEnforced) {
                     helpers.addResult(results, 0, `TLS is enforced on the ${instance.DBInstanceIdentifier} database.`, region, arn);
                 }
             }
