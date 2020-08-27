@@ -74,10 +74,10 @@ module.exports = {
                 var s3Region = helpers.defaultRegion(settings);
 
                 const listBuckets = helpers.addSource(cache, source, ['s3', 'listBuckets', s3Region]);
-                if (!listBuckets) return cb(null, results, source);
+                if (!listBuckets) return cb();
                 if (listBuckets.err || !listBuckets.data) {
                     helpers.addResult(results, 3, `Unable to query for S3 buckets: ${helpers.addError(listBuckets)}`);
-                    return cb(null, results, source);
+                    return cb();
                 }
 
                 var getBucketLogging = helpers.addSource(cache, source,
