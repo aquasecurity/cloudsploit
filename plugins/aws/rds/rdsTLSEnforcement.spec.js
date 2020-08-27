@@ -47,8 +47,8 @@ describe("rdsTLSEnforcement", function () {
                 expect(results.length).to.equal(2)
                 expect(results[0].status).to.equal(0)
                 expect(results[1].status).to.equal(0)
-                expect(results[0].message).to.include("TLS is enforced on the test01 database.")
-                expect(results[1].message).to.include("TLS is enforced on the test02 database.")
+                expect(results[0].message).to.include("TLS is enforced on the test01 database")
+                expect(results[1].message).to.include("TLS is enforced on the test02 database")
                 done()
             };
 
@@ -93,9 +93,9 @@ describe("rdsTLSEnforcement", function () {
                 expect(results[0].status).to.equal(2)
                 expect(results[1].status).to.equal(3)
                 expect(results[2].status).to.equal(3)
-                expect(results[0].message).to.include("TLS is not enforced on the test01 database.")
-                expect(results[1].message).to.include("Unable to find Parameter: rds.force_ssl for test02 database.")
-                expect(results[2].message).to.include("Unable to query for parameters on Parameter Group: test03pgroup.error")
+                expect(results[0].message).to.include("TLS is not enforced on the test01 database")
+                expect(results[1].message).to.include("Unable to find Parameter: rds.force_ssl for test02 database")
+                expect(results[2].message).to.include("Unable to query for parameters on Parameter Group: test03pgroup error")
                 done()
             };
 
@@ -145,11 +145,11 @@ describe("rdsTLSEnforcement", function () {
                 rds.run(cache, {}, callback);
             });
 
-        it("should give not passing result when TLS RDS is not enabled on one parameter group", function (done) {
+        it("should give an error result when TLS RDS has two parameter groups", function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
-                expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include("TLS is not enforced on the test01 database.")
+                expect(results[0].status).to.equal(3)
+                expect(results[0].message).to.include("Multiple parameter groups present and behaviour can be unexpected")
                 done()
             };
 
@@ -186,7 +186,7 @@ describe("rdsTLSEnforcement", function () {
         it("should give pass result if the database engine is not supported", function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
-                expect(results[0].message).to.include("TLS Enforcement is not supported on the test01 database with oracle-se1 engine.")
+                expect(results[0].message).to.include("TLS Enforcement is not supported on the test01 database with oracle-se1 engine")
                 done()
             };
 

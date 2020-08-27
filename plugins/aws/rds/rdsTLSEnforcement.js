@@ -29,51 +29,43 @@ module.exports = {
         async.each(regions.rds, function(region, rcb){
             var listDBInstances = helpers.addSource(cache, source, ["rds", "describeDBInstances", region]);
             if (!listDBInstances) {
-                return rcb()
+                return rcb();
             }
 
             if (listDBInstances.err) {
                 helpers.addResult(results, 3, "Unable to query for RDS information: " + helpers.addError(listDBInstances), region);
-                return rcb()
+                return rcb();
             }
 
             if (!listDBInstances.data.length) {
                 helpers.addResult(results, 0, "No RDS Databases found", region);
-                return rcb()
+                return rcb();
             }
 
             for (var instance of listDBInstances.data) {
                 var arn = instance.DBInstanceArn;
-                var tlsEnforced = false;
                 var engineName = instance.Engine;
                 if (!parameterMappings[engineName]) {
-                    helpers.addResult(results, 0, `TLS Enforcement is not supported on the ${instance.DBInstanceIdentifier} database with ${engineName} engine.`, region, arn);
+                    helpers.addResult(results, 0, `TLS Enforcement is not supported on the ${instance.DBInstanceIdentifier} database with ${engineName} engine`, region, arn);
+                } else if (instance.DBParameterGroups.length > 1){
+                    helpers.addResult(results, 3, "Multiple parameter groups present and behaviour can be unexpected" , region, arn);
                 } else {
-                    for (var parameterGroup of instance.DBParameterGroups) {
-                        var listDBParameters = helpers.addSource(cache, source,
-                            ["rds", "describeDBParameters", region, parameterGroup.DBParameterGroupName]
-                        );
-                        if (listDBParameters.err || !listDBParameters.data || !listDBParameters) {
-                            helpers.addResult(results, 3, `Unable to query for parameters on Parameter Group: ${parameterGroup.DBParameterGroupName}.` + helpers.addError(listDBParameters), region, arn);
+                    var instanceParameterGroup = instance.DBParameterGroups[0]
+                    var listDBParameters = helpers.addSource(cache, source,
+                        ["rds", "describeDBParameters", region, instanceParameterGroup.DBParameterGroupName]
+                    );
+                    if (!listDBParameters || listDBParameters.err || !listDBParameters.data) {
+                        helpers.addResult(results, 3, `Unable to query for parameters on Parameter Group: ${instanceParameterGroup.DBParameterGroupName} ` + helpers.addError(listDBParameters), region, arn);
+                    } else {
+                        var query = listDBParameters.data.Parameters.find(directory => directory.ParameterName === parameterMappings[engineName]);
+                        if (!query) {
+                            helpers.addResult(results, 3, `Unable to find Parameter: ${parameterMappings[engineName]} for ${instance.DBInstanceIdentifier} database`, region, arn);
+                        } else if (query.ParameterValue === "1") {
+                            helpers.addResult(results, 0, `TLS is enforced on the ${instance.DBInstanceIdentifier} database`, region, arn);
                         } else {
-                            var query = listDBParameters.data.Parameters.find(directory => directory.ParameterName === parameterMappings[engineName]);
-                            if (!query) {
-                                tlsEnforced = false;
-                                helpers.addResult(results, 3, `Unable to find Parameter: ${parameterMappings[engineName]} for ${instance.DBInstanceIdentifier} database.`, region, arn);
-                                break;
-                            } else if (query.ParameterValue === "1") {
-                                tlsEnforced = true;
-                            } else {
-                                tlsEnforced = false;
-                                helpers.addResult(results, 2, `TLS is not enforced on the ${instance.DBInstanceIdentifier} database.`, region, arn);
-                                break;
-                            }
+                            helpers.addResult(results, 2, `TLS is not enforced on the ${instance.DBInstanceIdentifier} database`, region, arn);
                         }
                     }
-                }
-
-                if (tlsEnforced) {
-                    helpers.addResult(results, 0, `TLS is enforced on the ${instance.DBInstanceIdentifier} database.`, region, arn);
                 }
             }
             return rcb();
