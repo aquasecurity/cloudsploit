@@ -1,74 +1,74 @@
 #!/usr/bin/env node
 
-var engine = require('./engine');
+const { ArgumentParser } = require('argparse');
+const engine = require('./engine');
 
-var AWSConfig;
-var AzureConfig;
-var GitHubConfig;
-var OracleConfig;
-var GoogleConfig;
+console.log(`
+   _____ _                 _  _____       _       _ _   
+  / ____| |               | |/ ____|     | |     (_) |  
+ | |    | | ___  _   _  __| | (___  _ __ | | ___  _| |_ 
+ | |    | |/ _ \\| | | |/ _\` |\\___ \\| '_ \\| |/ _ \\| | __|
+ | |____| | (_) | |_| | (_| |____) | |_) | | (_) | | |_ 
+  \\_____|_|\\___/ \\__,_|\\__,_|_____/| .__/|_|\\___/|_|\\__|
+                                   | |                  
+                                   |_|                  
 
-// OPTION 1: Configure service provider credentials through hard-coded config objects
+  CloudSploit by Aqua Security, Ltd.
+  Cloud security auditing for AWS, Azure, GCP, Oracle, and GitHub
+`);
 
-// AWSConfig = {
-//     accessKeyId: '',
-//     secretAccessKey: '',
-//     sessionToken: '',
-//     region: 'us-east-1'
-// };
+const parser = new ArgumentParser({});
 
-// AzureConfig = {
-//     ApplicationID: '',          // A.K.A ClientID
-//     KeyValue: '',               // Secret
-//     DirectoryID: '',            // A.K.A TenantID or Domain
-//     SubscriptionID: '',
-//     location: 'East US'
-// };
+parser.add_argument('--config', {
+    help: 'The path to a CloudSploit config file containing cloud credentials. See config_example.js'
+});
 
-// GitHubConfig = {
-//  token: '',                      // GitHub app token
-//  url: 'https://api.github.com',  // BaseURL if not using public GitHub
-//  organization: false,            // Set to true if the login is an organization
-//  login: ''                       // The login id for the user or organization
-// };
+parser.add_argument('--compliance', {
+    help: 'Compliance mode. Only return results applicable to the selected program.',
+    choices: ['hipaa', 'cis', 'cis1', 'cis2', 'pci'],
+    action: 'append'
+});
+parser.add_argument('--plugin', {
+    help: 'A specific plugin to run. If none provided, all plugins will be run. Obtain from the exports.js file. E.g. acmValidation'
+});
+parser.add_argument('--govcloud', {
+    help: 'AWS only. Enables GovCloud mode.',
+    action: 'store_true'
+});
+parser.add_argument('--china', {
+    help: 'AWS only. Enables AWS China mode.',
+    action: 'store_true'
+});
+parser.add_argument('--csv', { help: 'Output: CSV file' });
+parser.add_argument('--json', { help: 'Output: JSON file' });
+parser.add_argument('--junit', { help: 'Output: Junit file' });
+parser.add_argument('--console', {
+    help: 'Console output format. Default: table',
+    choices: ['none', 'text', 'table'],
+    default: 'table'
+});
+parser.add_argument('--collection', { help: 'Output: full collection JSON as file' });
+parser.add_argument('--ignore-ok', {
+    help: 'Ignore passing (OK) results',
+    action: 'store_true'
+});
+parser.add_argument('--exit-code', {
+    help: 'Exits with a non-zero status code if non-passing results are found',
+    action: 'store_true'
+});
+parser.add_argument('--skip-paginate', {
+    help: 'AWS only. Skips pagination (for debugging).',
+    action: 'store_false'
+});
+parser.add_argument('--suppress', {
+    help: 'Suppress results matching the provided Regex. Format: pluginId:region:resourceId',
+    action: 'append'
+});
 
-// Oracle Important Note:
-// Please read Oracle API's key generation instructions: config/_oracle/keys/Readme.md
-// You will want an API signing key to fill the keyFingerprint and privateKey params
-// OracleConfig = {
-//  RESTversion: '/20160918',
-//  tenancyId: 'ocid1.tenancy.oc1..',
-//  compartmentId: 'ocid1.compartment.oc1..',
-//  userId: 'ocid1.user.oc1..',
-//  keyFingerprint: 'YOURKEYFINGERPRINT',
-//  keyValue: "-----BEGIN PRIVATE KEY-----\nYOUR-PRIVATE-KEY-GOES-HERE\n-----END PRIVATE KEY-----\n",
-//  region: 'us-ashburn-1',
-// };
+let settings = parser.parse_args();
+let cloudConfig = {};
 
-// GoogleConfig = {
-//     "type": "service_account",
-//     "project": "your-project-name",
-//     "client_email": "cloudsploit@your-project-name.iam.gserviceaccount.com",
-//     "private_key": "-----BEGIN PRIVATE KEY-----\nYOUR-PRIVATE-KEY-GOES-HERE\n-----END PRIVATE KEY-----\n",
-// };
-
-// OPTION 2: Import a service provider config file containing credentials
-
-// AWSConfig = require(__dirname + '/aws_credentials.json');
-// AzureConfig = require(__dirname + '/azure_credentials.json');
-// GitHubConfig = require(__dirname + '/github_credentials.json');
-// OracleConfig = require(__dirname + '/oracle_credentials.json');
-// GoogleConfig = require(__dirname + '/google_credentials.json');
-
-// OPTION 3: ENV configuration with service provider env vars
-if(process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY){
-    AWSConfig = {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey:  process.env.AWS_SECRET_ACCESS_KEY,
-        sessionToken: process.env.AWS_SESSION_TOKEN,
-        region: process.env.AWS_DEFAULT_REGION || 'us-east-1'
-    };
-}
+settings.cloud = 'aws';
 
 // Now execute the scans using the defined configuration information.
 if (!settings.config) {
@@ -96,19 +96,17 @@ try {
     console.error('ERROR: Config file could not be loaded. Please ensure you have copied the config_example.js file to config.js');
     process.exit(1);
 }
-if(process.env.GOOGLE_APPLICATION_CREDENTIALS){
-    GoogleConfig = require(process.env.GOOGLE_APPLICATION_CREDENTIALS);
-    GoogleConfig.project = GoogleConfig.project_id;
+
+function loadHelperFile(path) {
+    try {
+        var contents = require(path);
+    } catch (e) {
+        console.error(`ERROR: The credential file could not be loaded ${path}`);
+        console.error(e);
+        process.exit(1);
+    }
+    return contents;
 }
-
-// Custom settings - place plugin-specific settings here
-var settings = {};
-
-// If running in GovCloud, uncomment the following
-// settings.govcloud = true;
-
-// If running in AWS China, uncomment the following
-// settings.china = true;
 
 function checkRequiredKeys(obj, keys) {
     keys.forEach(function(key){
