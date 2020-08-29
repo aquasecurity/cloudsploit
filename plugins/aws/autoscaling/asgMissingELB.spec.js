@@ -4,7 +4,7 @@ const asgMissingELB = require('./asgMissingELB');
 const autoScalingGroups =  [
     {
         "AutoScalingGroupName": "auto-scaling-test-group",
-        "AutoScalingGroupARN": "arn:aws:autoscaling:us-east-1:560213429563:autoScalingGroup:e83ceb12-2760-4a92-a374-3df611331bdc:autoScalingGroupName/auto-scaling-test-group",
+        "AutoScalingGroupARN": "arn:aws:autoscaling:us-east-1:111122223333:autoScalingGroup:e83ceb12-2760-4a92-a374-3df611331bdc:autoScalingGroupName/auto-scaling-test-group",
         "LaunchTemplate": {
             "LaunchTemplateId": "lt-0f1f6b356026abc86",
             "LaunchTemplateName": "auto-scaling-template",
@@ -17,7 +17,7 @@ const autoScalingGroups =  [
         "AvailabilityZones": [
             "us-east-1a"
         ],
-        "LoadBalancerNames": ["my-load-balancer"],
+        "LoadBalancerNames": ["asgEmptyElb"],
         "TargetGroupARNs": [],
         "HealthCheckType": "EC2",
         "HealthCheckGracePeriod": 300,
@@ -45,11 +45,11 @@ const autoScalingGroups =  [
             "Default"
         ],
         "NewInstancesProtectedFromScaleIn": false,
-        "ServiceLinkedRoleARN": "arn:aws:iam::560213429563:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
+        "ServiceLinkedRoleARN": "arn:aws:iam::111122223333:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
     },
     {
         "AutoScalingGroupName": "auto-scaling-test-group",
-        "AutoScalingGroupARN": "arn:aws:autoscaling:us-east-1:560213429563:autoScalingGroup:e83ceb12-2760-4a92-a374-3df611331bdc:autoScalingGroupName/auto-scaling-test-group",
+        "AutoScalingGroupARN": "arn:aws:autoscaling:us-east-1:111122223333:autoScalingGroup:e83ceb12-2760-4a92-a374-3df611331bdc:autoScalingGroupName/auto-scaling-test-group",
         "LaunchTemplate": {
             "LaunchTemplateId": "lt-0f1f6b356026abc86",
             "LaunchTemplateName": "auto-scaling-template",
@@ -76,7 +76,69 @@ const autoScalingGroups =  [
             "Default"
         ],
         "NewInstancesProtectedFromScaleIn": false,
-        "ServiceLinkedRoleARN": "arn:aws:iam::560213429563:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
+        "ServiceLinkedRoleARN": "arn:aws:iam::111122223333:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
+    },
+    {
+        "AutoScalingGroupName": "auto-scaling-test-group",
+        "AutoScalingGroupARN": "arn:aws:autoscaling:us-east-1:111122223333:autoScalingGroup:e83ceb12-2760-4a92-a374-3df611331bdc:autoScalingGroupName/auto-scaling-test-group",
+        "LaunchTemplate": {
+            "LaunchTemplateId": "lt-0f1f6b356026abc86",
+            "LaunchTemplateName": "auto-scaling-template",
+            "Version": "$Default"
+        },
+        "MinSize": 1,
+        "MaxSize": 1,
+        "DesiredCapacity": 1,
+        "DefaultCooldown": 300,
+        "AvailabilityZones": [
+            "us-east-1a"
+        ],
+        "LoadBalancerNames": [],
+        "TargetGroupARNs": [],
+        "HealthCheckType": "ELB",
+        "HealthCheckGracePeriod": 300,
+        "Instances": [],
+        "CreatedTime": "2020-08-18T23:12:00.954Z",
+        "SuspendedProcesses": [],
+        "VPCZoneIdentifier": "subnet-06aa0f60",
+        "EnabledMetrics": [],
+        "Tags": [],
+        "TerminationPolicies": [
+            "Default"
+        ],
+        "NewInstancesProtectedFromScaleIn": false,
+        "ServiceLinkedRoleARN": "arn:aws:iam::111122223333:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
+    },
+    {
+        "AutoScalingGroupName": "auto-scaling-test-group",
+        "AutoScalingGroupARN": "arn:aws:autoscaling:us-east-1:111122223333:autoScalingGroup:e83ceb12-2760-4a92-a374-3df611331bdc:autoScalingGroupName/auto-scaling-test-group",
+        "LaunchTemplate": {
+            "LaunchTemplateId": "lt-0f1f6b356026abc86",
+            "LaunchTemplateName": "auto-scaling-template",
+            "Version": "$Default"
+        },
+        "MinSize": 1,
+        "MaxSize": 1,
+        "DesiredCapacity": 1,
+        "DefaultCooldown": 300,
+        "AvailabilityZones": [
+            "us-east-1a"
+        ],
+        "LoadBalancerNames": [],
+        "TargetGroupARNs": [],
+        "HealthCheckType": "EC2",
+        "HealthCheckGracePeriod": 300,
+        "Instances": [],
+        "CreatedTime": "2020-08-18T23:12:00.954Z",
+        "SuspendedProcesses": [],
+        "VPCZoneIdentifier": "subnet-06aa0f60",
+        "EnabledMetrics": [],
+        "Tags": [],
+        "TerminationPolicies": [
+            "Default"
+        ],
+        "NewInstancesProtectedFromScaleIn": false,
+        "ServiceLinkedRoleARN": "arn:aws:iam::111122223333:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
     },
 ];
 
@@ -239,13 +301,24 @@ const createNullCache = () => {
                 'us-east-1': null,
             },
         },
+        elb: {
+            describeLoadBalancers: {
+                'us-east-1': null,
+            },
+        },
+        elbv2: {
+            describeLoadBalancers: {
+                'us-east-1': null,
+            },
+        },
     };
 };
 
+
 describe('asgMissingELB', function () {
     describe('run', function () {
-        it('should PASS if autoscaling group utilizes active load balancer', function (done) {
-            const cache = createCache([autoScalingGroups[0]], [loadBalancers[0]]);
+        it('should PASS if AutoScaling group utilizes active load balancer', function (done) {
+            const cache = createCache([autoScalingGroups[0]], [loadBalancers[0]], [loadBalancersV2[0]]);
             asgMissingELB.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -253,8 +326,17 @@ describe('asgMissingELB', function () {
             });
         });
 
-        it('should FAIL if autoscaling group does not utilizes active load balancer', function (done) {
-            const cache = createCache([autoScalingGroups[1]], [loadBalancers[0]]);
+        it('should FAIL if AutoScaling group utilizes inactive load balancer', function (done) {
+            const cache = createCache([autoScalingGroups[1]], [loadBalancers[0]], [loadBalancersV2[0]]);
+            asgMissingELB.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                done();
+            });
+        });
+
+        it('should FAIL if AutoScaling group does not have any ELB associated', function (done) {
+            const cache = createCache([autoScalingGroups[2]], [loadBalancers[0]], [loadBalancersV2[0]]);
             asgMissingELB.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -262,7 +344,16 @@ describe('asgMissingELB', function () {
             });
         });
         
-        it('should UNKNOWN if unable to describe autoscaling group found', function (done) {
+        it('should PASS if AutoScaling group does not utilize a load balancer', function (done) {
+            const cache = createCache([autoScalingGroups[3]], [loadBalancers[0]], [loadBalancersV2[0]]);
+            asgMissingELB.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
+        
+        it('should UNKNOWN if unable to describe AutoScaling group found', function (done) {
             const cache = createErrorCache();
             asgMissingELB.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -271,7 +362,7 @@ describe('asgMissingELB', function () {
             });
         });
 
-        it('should not return anything if no autoscaling group found', function (done) {
+        it('should not return anything if no AutoScaling group found', function (done) {
             const cache = createNullCache();
             asgMissingELB.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
