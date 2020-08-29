@@ -82,95 +82,99 @@ const autoScalingGroups =  [
 
 const loadBalancers = [
     {
-        "AvailabilityZones": [
-            "us-west-2a"
-        ], 
-        "BackendServerDescriptions": [
-            {
-                "InstancePort": 80, 
-                "PolicyNames": [
-                    "my-ProxyProtocol-policy"
-                ]
-            }
-        ], 
-        "CanonicalHostedZoneName": "my-load-balancer-1234567890.us-west-2.elb.amazonaws.com", 
-        "CanonicalHostedZoneNameID": "Z3DZXE0EXAMPLE", 
-        "CreatedTime": "2020-08-18T23:12:00.954Z", 
-        "DNSName": "my-load-balancer-1234567890.us-west-2.elb.amazonaws.com", 
-        "HealthCheck": {
-            "HealthyThreshold": 2, 
-            "Interval": 30, 
-            "Target": "HTTP:80/png", 
-            "Timeout": 3, 
-            "UnhealthyThreshold": 2
-        }, 
-        "Instances": [
-            {
-                "InstanceId": "i-207d9717"
-            }, 
-            {
-            "InstanceId": "i-afefb49b"
-            }
-        ], 
+        "LoadBalancerName": "asgEmptyElb",
+        "DNSName": "asgEmptyElb-1112223333.us-east-1.elb.amazonaws.com",
+        "CanonicalHostedZoneName": "asgEmptyElb-1112223333.us-east-1.elb.amazonaws.com",
+        "CanonicalHostedZoneNameID": "Z35SXDOTRQ7X7K",
         "ListenerDescriptions": [
             {
                 "Listener": {
-                    "InstancePort": 80, 
-                    "InstanceProtocol": "HTTP", 
-                    "LoadBalancerPort": 80, 
-                    "Protocol": "HTTP"
-                }, 
-                "PolicyNames": [
-                ]
-            }, 
-            {
-                "Listener": {
-                    "InstancePort": 443, 
-                    "InstanceProtocol": "HTTPS", 
-                    "LoadBalancerPort": 443, 
-                    "Protocol": "HTTPS", 
-                    "SSLCertificateId": "arn:aws:iam::123456789012:server-certificate/my-server-cert"
-                }, 
-                "PolicyNames": [
-                    "ELBSecurityPolicy-2015-03"
-                ]
+                    "Protocol": "HTTP",
+                    "LoadBalancerPort": 80,
+                    "InstanceProtocol": "HTTP",
+                    "InstancePort": 80
+                },
+                "PolicyNames": []
             }
-        ], 
-        "LoadBalancerName": "my-load-balancer", 
+        ],
         "Policies": {
-            "AppCookieStickinessPolicies": [
-            ], 
-            "LBCookieStickinessPolicies": [
-                {
-                    "CookieExpirationPeriod": 60, 
-                    "PolicyName": "my-duration-cookie-policy"
-                }
-            ], 
-            "OtherPolicies": [
-                "my-PublicKey-policy", 
-                "my-authentication-policy", 
-                "my-SSLNegotiation-policy", 
-                "my-ProxyProtocol-policy", 
-                "ELBSecurityPolicy-2015-03"
-            ]
-        }, 
-        "Scheme": "internet-facing", 
-        "SecurityGroups": [
-            "sg-a61988c3"
-        ], 
-        "SourceSecurityGroup": {
-            "GroupName": "my-elb-sg", 
-            "OwnerAlias": "123456789012"
-        }, 
+            "AppCookieStickinessPolicies": [],
+            "LBCookieStickinessPolicies": [],
+            "OtherPolicies": []
+        },
+        "BackendServerDescriptions": [],
+        "AvailabilityZones": [
+            "us-east-1f",
+            "us-east-1e",
+            "us-east-1d",
+            "us-east-1c",
+            "us-east-1b",
+            "us-east-1a"
+        ],
         "Subnets": [
-            "subnet-15aaab61"
-        ], 
-        "VPCId": "vpc-a01106c2"
+            "subnet-06aa0f60",
+            "subnet-673a9a46",
+            "subnet-6a8b635b",
+            "subnet-aac6b3e7",
+            "subnet-c21b84cc",
+            "subnet-e83690b7"
+        ],
+        "VPCId": "vpc-99de2fe4",
+        "Instances": [
+            {
+                "InstanceId": "i-00178f718e021c46b"
+            }
+        ],
+        "HealthCheck": {
+            "Target": "HTTP:80/index.html",
+            "Interval": 30,
+            "Timeout": 5,
+            "UnhealthyThreshold": 2,
+            "HealthyThreshold": 10
+        },
+        "SourceSecurityGroup": {
+            "OwnerAlias": "111122223333",
+            "GroupName": "default"
+        },
+        "SecurityGroups": [
+            "sg-aa941691"
+        ],
+        "CreatedTime": "2020-08-26T02:49:20.250Z",
+        "Scheme": "internet-facing"
     }
-];
+]
 
+const loadBalancersV2 = [
+    {
+        "LoadBalancerArn": "arn:aws:elasticloadbalancing:us-east-1:111122223333:loadbalancer/net/networkELB/2ea2eb9b8d381866",
+        "DNSName": "networkELB-2ea2eb9b8d381866.elb.us-east-1.amazonaws.com",
+        "CanonicalHostedZoneId": "Z26RNL4JYFTOTI",
+        "CreatedTime": "2020-08-26T02:50:34.119Z",
+        "LoadBalancerName": "networkELB",
+        "Scheme": "internet-facing",
+        "VpcId": "vpc-99de2fe4",
+        "State": {
+            "Code": "active"
+        },
+        "Type": "network",
+        "AvailabilityZones": [
+            {
+                "ZoneName": "us-east-1b",
+                "SubnetId": "subnet-673a9a46",
+                "LoadBalancerAddresses": []
+            },
+            {
+                "ZoneName": "us-east-1a",
+                "SubnetId": "subnet-06aa0f60",
+                "LoadBalancerAddresses": []
+            }
+        ],
+        "IpAddressType": "ipv4"
+    }
 
-const createCache = (asgs, elb) => {
+]
+
+const createCache = (asgs, elb, elbv2) => {
     return {
         autoscaling: {
             describeAutoScalingGroups: {
@@ -186,6 +190,13 @@ const createCache = (asgs, elb) => {
                 },
             },
         },
+        elbv2:{
+            describeLoadBalancers: {
+                'us-east-1': {
+                    data: elbv2
+                },
+            },
+        },
     };
 };
 
@@ -195,7 +206,7 @@ const createErrorCache = () => {
             describeAutoScalingGroups: {
                 'us-east-1': {
                     err: {
-                        message: 'error describing autoscaling groups'
+                        message: 'error describing AutoScaling groups'
                     },
                 },
             },
@@ -204,7 +215,16 @@ const createErrorCache = () => {
             describeLoadBalancers: {
                 'us-east-1': {
                     err: {
-                        message: 'error describing load balancers'
+                        message: 'error describing classic load balancers'
+                    },
+                },
+            },
+        },
+        elbv2: {
+            describeLoadBalancers: {
+                'us-east-1': {
+                    err: {
+                        message: 'error describing application/network load balancers'
                     },
                 },
             },
