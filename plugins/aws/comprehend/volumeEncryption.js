@@ -33,7 +33,7 @@ module.exports = {
 
                     if (!listEntitiesDetectionJobs.data.length) {
                         helpers.addResult(results, 0,
-                            'No entities detection jobs found', region)
+                            'No entities detection jobs found', region);
                         return lcb();
                     }
 

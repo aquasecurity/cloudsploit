@@ -1014,7 +1014,6 @@ var collect = function(AWSConfig, settings, callback) {
                         if (err) collection[serviceLower][callKey][region].err = err;
 
                         if (!data) return regionCb();
-
                         if (callObj.property && !data[callObj.property]) return regionCb();
                         if (callObj.secondProperty && !data[callObj.secondProperty]) return regionCb();
 
@@ -1112,6 +1111,7 @@ var collect = function(AWSConfig, settings, callback) {
                             });
                         } else {
                             var executor = new AWS[service](LocalAWSConfig);
+
                             if (!collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region] ||
                                 !collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region].data) {
                                 return regionCb();
