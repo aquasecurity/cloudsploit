@@ -68,7 +68,7 @@ const autoScalingGroups =  [
             "us-east-1a",
             "us-west-1a"
         ],
-        "LoadBalancerNames": ["my-load-balancer2"],
+        "LoadBalancerNames": ["my-load-balancer3"],
         "TargetGroupARNs": [],
         "HealthCheckType": "ELB",
         "HealthCheckGracePeriod": 300,
@@ -196,6 +196,11 @@ const autoScalingGroups =  [
 const loadBalancers = [
     {
         "AvailabilityZones": [
+            "us-east-1f",
+            "us-east-1e",
+            "us-east-1d",
+            "us-east-1c",
+            "us-east-1b",
             "us-east-1a"
         ], 
         "BackendServerDescriptions": [
@@ -335,7 +340,7 @@ const loadBalancers = [
                 ]
             }
         ], 
-        "LoadBalancerName": "my-load-balancer", 
+        "LoadBalancerName": "my-load-balancer2", 
         "Policies": {
             "AppCookieStickinessPolicies": [
             ], 
@@ -384,6 +389,13 @@ const createCache = (asgs, elb, elbv2) => {
                 },
             },
         },
+        elbv2: {
+            describeLoadBalancers: {
+                'us-east-1': {
+                    data: elbv2
+                }
+            }
+        }
     };
 };
 
@@ -415,16 +427,7 @@ const createErrorCache = () => {
                     },
                 },
             },
-        },
-        elb: {
-            describeLoadBalancers: {
-                'us-east-1': {
-                    err: {
-                        message: 'error describing load balancers'
-                    },
-                },
-            },
-        },
+        }
     };
 };
 
@@ -451,7 +454,7 @@ const createNullCache = () => {
 describe('sameAzElb', function () {
     describe('run', function () {
         it('should PASS if load balancer is in the same Availability Zone as of AutoScaling group', function (done) {
-            const cache = createCache([autoScalingGroups[0]], [loadBalancers[0]]);
+            const cache = createCache([autoScalingGroups[0]], [loadBalancers[0]], []);
             sameAzElb.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -460,7 +463,7 @@ describe('sameAzElb', function () {
         });
         
         it('should PASS if AutoScaling does not utilizes load balancer as HealthCheckType', function (done) {
-            const cache = createCache([autoScalingGroups[2]], [loadBalancers[1]]);
+            const cache = createCache([autoScalingGroups[2]], [], []);
             sameAzElb.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -469,7 +472,7 @@ describe('sameAzElb', function () {
         });
 
         it('should FAIL if load balancer is not in the same Availability Zone as of AutoScaling group', function (done) {
-            const cache = createCache([autoScalingGroups[1]], [loadBalancers[1]]);
+            const cache = createCache([autoScalingGroups[1]], [loadBalancers[1]],[]);
             sameAzElb.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -478,7 +481,7 @@ describe('sameAzElb', function () {
         });
 
         it('should FAIL if autoscaling group utilizes an inactive load balancer', function (done) {
-            const cache = createCache([autoScalingGroups[1]], []);
+            const cache = createCache([autoScalingGroups[1]], [], []);
             sameAzElb.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -486,7 +489,7 @@ describe('sameAzElb', function () {
             });
         });
 
-        it('should FAIL if autoscaling group utilizes an inactive load balancer', function (done) {
+        it('should UNKOWN if unable to query for load balancers', function (done) {
             const cache = createCache([autoScalingGroups[1]], null, null);
             sameAzElb.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -494,8 +497,8 @@ describe('sameAzElb', function () {
                 done();
             });
         });
-
-        it('should UNKNOWN if unable to describe autoscaling group found', function (done) {
+        
+        it('should UNKNOWN if unable to describe autoscaling groups', function (done) {
             const cache = createErrorCache();
             sameAzElb.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -511,6 +514,5 @@ describe('sameAzElb', function () {
                 done();
             });
         });
-
     });
 });
