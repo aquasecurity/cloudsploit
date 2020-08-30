@@ -368,8 +368,6 @@ const loadBalancers = [
     }
 ];
 
-]
-
 const createCache = (asgs, elb, elbv2) => {
     return {
         autoscaling: {
