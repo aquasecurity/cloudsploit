@@ -1,19 +1,18 @@
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Root Access Keys',
+    title: 'Root Account Active Signing Certificates',
     category: 'IAM',
-    description: 'Ensures the root account is not using access keys',
-    more_info: 'The root account should avoid using access keys. Since the root account has full permissions across the entire account, creating access keys for it only increases the chance that they are compromised. Instead, create IAM users with predefined roles.',
-    link: 'http://docs.aws.amazon.com/general/latest/gr/managing-aws-access-keys.html',
-    recommended_action: 'Remove access keys for the root account and setup IAM users with limited permissions instead',
+    description: 'Ensures the root user is not using x509 singing certificates',
+    more_info: 'AWS supports using x509 signing certificates for API access, but these should not be attached to the root user, which has full access to the account.',
+    link: 'https://docs.aws.amazon.com/whitepapers/latest/aws-overview-security-processes/x.509-certificates.html',
+    recommended_action: 'Delete the x509 certificates associated with the root account.',
     apis: ['IAM:generateCredentialReport'],
     compliance: {
         hipaa: 'HIPAA requires strong auditing controls surrounding actions ' +
                 'taken in the environment. The root user lacks these controls ' +
-                'since it is not tied to a specific user. The root access keys ' +
-                'should not be used.',
-        cis1: '1.12 Ensure no root account access key exists'
+                'since it is not tied to a specific user. The root signing keys ' +
+                'should not be used.'
     },
 
     run: function(cache, settings, callback) {
@@ -24,7 +23,7 @@ module.exports = {
 
         var generateCredentialReport = helpers.addSource(cache, source,
             ['iam', 'generateCredentialReport', region]);
-
+        
         if (!generateCredentialReport) return callback(null, results, source);
 
         if (generateCredentialReport.err || !generateCredentialReport.data) {
@@ -34,18 +33,18 @@ module.exports = {
         }
 
         var found = false;
-
         for (var r in generateCredentialReport.data) {
             var obj = generateCredentialReport.data[r];
+            const resource = obj.arn;
 
-            if (obj && obj.user === '<root_account>') {
+            if (obj && obj.user && obj.user === '<root_account>') {
                 found = true;
 
-                if (!obj.access_key_1_active &&
-                    !obj.access_key_2_active) {
-                    helpers.addResult(results, 0, 'Access keys were not found for the root account', 'global', obj.arn);
+                if (obj.cert_1_active ||
+                    obj.cert_2_active) {
+                    helpers.addResult(results, 2, 'The root user uses x509 singing certificates.', 'global', resource);
                 } else {
-                    helpers.addResult(results, 2, 'Access keys were found for the root account', 'global', obj.arn);
+                    helpers.addResult(results, 0, 'The root user does not use x509 singing certificates.', 'global', resource);
                 }
 
                 break;
