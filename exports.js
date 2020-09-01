@@ -152,6 +152,7 @@ module.exports = {
         'rdsMultiAz'                    : require(__dirname + '/plugins/aws/rds/rdsMultiAz.js'),
         'rdsSnapshotEncryption'         : require(__dirname + '/plugins/aws/rds/rdsSnapshotEncryption.js'),
         'rdsMinorVersionUpgrade'        : require(__dirname + '/plugins/aws/rds/rdsMinorVersionUpgrade.js'),
+        'sqlServerTLSVersion'           : require(__dirname + '/plugins/aws/rds/sqlServerTLSVersion'),
 
         'domainAutoRenew'               : require(__dirname + '/plugins/aws/route53/domainAutoRenew.js'),
         'domainExpiry'                  : require(__dirname + '/plugins/aws/route53/domainExpiry.js'),
