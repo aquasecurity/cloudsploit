@@ -9,6 +9,9 @@ module.exports = {
     recommended_action: 'Enable CloudTrail CloudWatch integration for all regions',
     link: 'http://docs.aws.amazon.com/awscloudtrail/latest/userguide/send-cloudtrail-events-to-cloudwatch-logs.html',
     apis: ['CloudTrail:describeTrails'],
+    compliance: {
+        cis1: '2.4 Ensure CloudTrail trails are integrated with CloudWatch Logs'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
