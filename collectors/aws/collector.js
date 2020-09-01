@@ -485,6 +485,10 @@ var calls = {
                 MaxResults: 50
             },
             paginate: 'NextToken'
+        },
+        listAssociations: {
+            property: 'Associations',
+            paginate: 'NextToken'
         }
     },
     STS: {

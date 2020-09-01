@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'To ensure the latest version of the SSM agent is installed, it should be configured to consume automatic updates.',
     link: 'https://docs.aws.amazon.com/systems-manager/latest/userguide/ssm-agent-automatic-updates.html',
     recommended_action: 'Update the SSM agent configuration for all managed instances to use automatic updates.',
-    apis: ['SSM:describeInstanceInformation'],
+    apis: ['SSM:describeInstanceInformation', 'SSM:listAssociations'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -19,47 +19,66 @@ module.exports = {
             var describeInstanceInformation = helpers.addSource(cache, source,
                 ['ssm', 'describeInstanceInformation', region]);
 
-            if (!describeInstanceInformation) return rcb();
+            var associationsList = helpers.addSource(cache, source,
+                ['ssm', 'listAssociations', region]);
+
+            if (!describeInstanceInformation || !associationsList) return rcb();
 
             if (describeInstanceInformation.err || !describeInstanceInformation.data) {
                 helpers.addResult(results, 3,
                     'Unable to query for SSM instance information: ' + helpers.addError(describeInstanceInformation), region);
                 return rcb();
             }
-            console.log(describeInstanceInformation);
             
-            //********************************
-            //* 
-            //* 
-            //* ssm describe-instance-information -> instance id
-            //* ssm list-association with instance id
-            //* currently no instance id attribute is displayed in association
-            //* look for a way to get association from instance id
-            //* ALTERNATE: list-association will return all the associations and in Targets.instanceIds look for the instance id
-            //* 
-            //* 
-            //* 
-            //*********************************
+            if (associationsList.err || !associationsList.data) {
+                helpers.addResult(results, 3,
+                    'Unable to query for SSM Associations List: ' + helpers.addError(associationsList), region);
+                return rcb();
+            }
 
             if(!describeInstanceInformation.data.length) {
                 helpers.addResult(results, 2,
                     'No instance found in SSM instance information', region);
                 return rcb();
             }
+            
+            if(!associationsList.data.length) {
+                helpers.addResult(results, 2,
+                    'No SSM AWS-UpdateSSMAgent associations found', region);
+                return rcb();
+            }
 
-            describeInstanceInformation.data.forEach(function(instance){
-                if (instance.IsLatestVersion) {
-                    helpers.addResult(results, 0,
-                        'SSM Agent auto update is enabled', region, instance.InstanceId);
-                }
-                else {
-                    helpers.addResult(results, 2,
-                        'SSM Agent auto update is disabled', region, instance.InstanceId);    
+            var associatedInstances = [];
+
+            associationsList.data.forEach(function(association){
+                if (association.Name === 'AWS-UpdateSSMAgent' && association.Targets && association.Targets.length) {
+                    association.Targets.forEach(function(target){
+                        if(target.Key && target.Key === 'InstanceIds' && target.Values && target.Values.length) {
+                            target.Values.forEach(function(instanceId){
+                                if(!associatedInstances.includes(instanceId) && association.ScheduleExpression){
+                                    associatedInstances.push(instanceId);
+                                }
+                            });
+                        }
+                    });
                 }
             });
+
+            describeInstanceInformation.data.forEach(function(instance) {
+                var resource = instance.InstanceId;
+                if (associatedInstances.includes(resource) || associatedInstances.includes('*')) {
+                    helpers.addResult(results, 0, 
+                        'Instance has SSM Agent auto update enabled', region, resource);
+                }
+                else {
+                    helpers.addResult(results, 2, 
+                        'Instance does not have SSM Agent auto update enabled', region, resource);
+                }
+            });
+
             rcb();
         }, function(){
             callback(null, results, source);
         });
     }
-}
+};
