@@ -50,6 +50,7 @@ module.exports = {
         'ap-southeast-1', 'ap-northeast-1', 'ap-southeast-2', 'ap-south-1'],
     elb: regions,
     elbv2: regions,
+    emr: regions,
     es: regions,
     kinesis: regions,
     firehose: ['us-east-1', 'us-east-2', 'us-west-2', 'us-west-1',

@@ -298,6 +298,12 @@ var calls = {
             paginateReqProp: 'Marker'
         }
     },
+    EMR: {
+        listClusters: {
+            property: 'Clusters',
+            paginate: 'Marker'
+        }
+    },
     ES: {
         listDomainNames: {
             property: 'DomainNames'
@@ -705,6 +711,14 @@ var postcalls = [
                 override: true
             }
         },
+        EMR: {
+            describeCluster: {
+                reliesOnService: 'emr',
+                reliesOnCall: 'listClusters',
+                filterKey: 'ClusterId',
+                filterValue: 'Id'
+            }
+        },
         IAM: {
             getGroup: {
                 reliesOnService: 'iam',
@@ -887,6 +901,13 @@ var postcalls = [
         },
     },
     {
+        EMR: {
+            describeSecurityConfiguration: {
+                reliesOnService: 'emr',
+                reliesOnCall: 'listClusters',
+                override: true
+            }
+        },
         IAM: {
             getUserPolicy: {
                 reliesOnService: 'iam',
