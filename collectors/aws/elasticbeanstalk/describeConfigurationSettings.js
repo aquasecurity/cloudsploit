@@ -10,11 +10,11 @@ module.exports = function(AWSConfig, collection, callback) {
             EnvironmentName: environment.EnvironmentName
         };
         elasticbeanstalk.describeConfigurationSettings(params, function(err, data) {
-            collection.elasticbeanstalk.describeConfigurationSettings[AWSConfig.region][environment.EnvironmentName] = {};
+            collection.elasticbeanstalk.describeConfigurationSettings[AWSConfig.region][environment.EnvironmentArn] = {};
             if (err || !data) {
-                collection.elasticbeanstalk.describeConfigurationSettings[AWSConfig.region][environment.EnvironmentName].err = err;
+                collection.elasticbeanstalk.describeConfigurationSettings[AWSConfig.region][environment.EnvironmentArn].err = err;
             } else {
-                collection.elasticbeanstalk.describeConfigurationSettings[AWSConfig.region][environment.EnvironmentName].data = data;
+                collection.elasticbeanstalk.describeConfigurationSettings[AWSConfig.region][environment.EnvironmentArn].data = data;
             }
             cb();
         });

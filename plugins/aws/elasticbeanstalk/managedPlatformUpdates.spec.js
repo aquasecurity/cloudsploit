@@ -116,7 +116,7 @@ const configurationSettings = [
 ];
   
 const createCache = (environments, configurationSettings) => {
-    if (environments.length) var environmentName = environments[0].EnvironmentName;
+    if (environments.length) var environmentArn = environments[0].EnvironmentArn;
     return {
         elasticbeanstalk: {
             describeEnvironments: {
@@ -126,7 +126,7 @@ const createCache = (environments, configurationSettings) => {
             },
             describeConfigurationSettings: {
                 'us-east-1': {
-                    [environmentName]: {
+                    [environmentArn]: {
                             data: {
                                 ConfigurationSettings: configurationSettings
                             }
@@ -174,11 +174,11 @@ describe('managedPlatformUpdates', function () {
             });
         });
 
-        it('should PASS if unable to get configuration settings', function (done) {
+        it('should FAIL if unable to get configuration settings', function (done) {
             const cache = createCache([environments[0]],[]);
             managedPlatformUpdates.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
+                expect(results[0].status).to.equal(2);
                 done();
             });
         });
