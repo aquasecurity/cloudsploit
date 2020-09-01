@@ -7,7 +7,7 @@ module.exports = {
     description: 'Ensures that groups do not have any inline policies',
     more_info: 'Managed Policies are recommended over inline policies.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_managed-vs-inline.html',
-    recommended_action: 'Remove unused groups without users',
+    recommended_action: 'Remove inline policies attached to groups',
     apis: ['IAM:listGroups', 'IAM:listGroupPolicies'],
 
     run: function(cache, settings, callback) {
@@ -45,7 +45,7 @@ module.exports = {
                 return cb();
             }
             
-            if (listGroupPolicies.data.PolicyNames && !listGroupPolicies.data.PolicyNames.length) {
+            if (!listGroupPolicies.data.PolicyNames || !listGroupPolicies.data.PolicyNames.length) {
                 helpers.addResult(results, 0,
                     'Group: ' + group.GroupName + ' does not contain any inline policy',
                     'global', group.Arn);
