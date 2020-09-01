@@ -400,6 +400,10 @@ var calls = {
         describeDBSnapshots: {
             property: 'DBSnapshots',
             paginate: 'Marker'
+        },
+        describeDBParameterGroups: {
+            property: 'DBParameterGroups',
+            paginate: 'Marker'
         }
     },
     Redshift: {
@@ -812,6 +816,14 @@ var postcalls = [
                 filterValue: 'FunctionArn'
             }
         },
+        RDS: {
+            describeDBParameters: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'describeDBParameterGroups',
+                filterKey: 'DBParameterGroupName',
+                filterValue: 'DBParameterGroupName'
+            }
+        },
         SageMaker: {
             describeNotebookInstance: {
                 reliesOnService: 'sagemaker',
@@ -890,6 +902,12 @@ var postcalls = [
                 reliesOnService: 'iam',
                 reliesOnCall: 'listRoles',
                 override: true
+            },
+            getRole: {
+                reliesOnService: 'iam',
+                reliesOnCall: 'listRoles',
+                filterKey: 'RoleName',
+                filterValue: 'RoleName'
             }
         }
     }
