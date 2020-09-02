@@ -66,32 +66,8 @@ module.exports = {
 
             autoScalingGroups.data.forEach(function(asg){
                 var resource = asg.AutoScalingGroupARN;
-<<<<<<< HEAD
-                if(asg.HealthCheckType == 'ELB') {
-                    if(!elbNames.length) {
-                        helpers.addResult(results, 0, 'No Load Balancer found', region);
-                        return rcb();
-                    }
-
-                    if (asg.LoadBalancerNames && asg.LoadBalancerNames.length) {
-                        asg.LoadBalancerNames.forEach(function(elbName){
-                            if(elbNames.includes(elbName)) {
-                                helpers.addResult(results, 0, 'AutoScaling group utilizes active load balancer "'+ elbName + '"', region, resource);
-                            }
-                            else {
-                                helpers.addResult(results, 2, 'AutoScaling group utilizes an inactive load balancer "'+ elbName + '"', region, resource);
-                            }
-                        });
-                    }
-                    else {
-                        helpers.addResult(results, 2, 'AutoScaling group does not have any Load Balancer associated', region, resource);
-                    }
-                }
-                else {
-                    helpers.addResult(results, 0, 'AutoScaling group does not utilize a load balancer', region, resource);
-=======
                 var inactiveElbs = [];
-                if(asg.HealthCheckType == 'ELB') {
+                if(asg.HealthCheckType && asg.HealthCheckType === 'ELB') {
                     if (asg.LoadBalancerNames && asg.LoadBalancerNames.length) {
                         asg.LoadBalancerNames.forEach(function(elbName){
                             if(!elbNames.length || !elbNames.includes(elbName)) {
@@ -117,7 +93,6 @@ module.exports = {
                 else {
                     helpers.addResult(results, 0,
                         'AutoScaling group does not utilize a load balancer', region, resource);
->>>>>>> aac1fd828cc1bd65eb3705b5e2592468f09ccbf9
                 }
 
             });
@@ -127,8 +102,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-<<<<<<< HEAD
 };
-=======
-};
->>>>>>> aac1fd828cc1bd65eb3705b5e2592468f09ccbf9
