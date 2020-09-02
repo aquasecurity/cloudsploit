@@ -66,6 +66,7 @@ module.exports = {
 
             autoScalingGroups.data.forEach(function(asg){
                 var resource = asg.AutoScalingGroupARN;
+<<<<<<< HEAD
                 if(asg.HealthCheckType == 'ELB') {
                     if(!elbNames.length) {
                         helpers.addResult(results, 0, 'No Load Balancer found', region);
@@ -88,6 +89,35 @@ module.exports = {
                 }
                 else {
                     helpers.addResult(results, 0, 'AutoScaling group does not utilize a load balancer', region, resource);
+=======
+                var inactiveElbs = [];
+                if(asg.HealthCheckType == 'ELB') {
+                    if (asg.LoadBalancerNames && asg.LoadBalancerNames.length) {
+                        asg.LoadBalancerNames.forEach(function(elbName){
+                            if(!elbNames.length || !elbNames.includes(elbName)) {
+                                inactiveElbs.push(elbName);
+                            }
+                        });
+
+                        if (inactiveElbs.length){
+                            helpers.addResult(results, 2,
+                                'AutoScaling group utilizes these inactive load balancers: '+ inactiveElbs.join(', '),
+                                region, resource);
+                        } else {
+                            helpers.addResult(results, 0,
+                                'AutoScaling group: ' + asg.AutoScalingGroupName + ' utilizes active load balancers',
+                                region, resource);
+                        }
+                    }
+                    else {
+                        helpers.addResult(results, 2,
+                            'AutoScaling group does not have any Load Balancer associated', region, resource);
+                    }
+                }
+                else {
+                    helpers.addResult(results, 0,
+                        'AutoScaling group does not utilize a load balancer', region, resource);
+>>>>>>> aac1fd828cc1bd65eb3705b5e2592468f09ccbf9
                 }
 
             });
@@ -97,4 +127,8 @@ module.exports = {
             callback(null, results, source);
         });
     }
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> aac1fd828cc1bd65eb3705b5e2592468f09ccbf9
