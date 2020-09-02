@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-const crossAccountAccess = require('./crossAccountAccess');
+const crossAccountMfaExtIdAccess = require('./crossAccountMfaExtIdAccess');
 
 const roles = [
     {
@@ -86,20 +86,20 @@ const createNullCache = () => {
     };
 };
 
-describe('crossAccountAccess', function () {
+describe('crossAccountMfaExtIdAccess', function () {
     describe('run', function () {
-        it('should FAIL if MFA/external ID is not required for IAM role', function (done) {
+        it('should FAIL if cross-account role does not require MFA/external ID', function (done) {
             const cache = createCache([roles[4]]);
-            crossAccountAccess.run(cache, {}, (err, results) => {
+            crossAccountMfaExtIdAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
             });
         });
 
-        it('should PASS if MFA/external ID is required for IAM role', function (done) {
+        it('should PASS if cross-account role requires MFA/external ID', function (done) {
             const cache = createCache([roles[1], roles[3]]);
-            crossAccountAccess.run(cache, {}, (err, results) => {
+            crossAccountMfaExtIdAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(0);
                 expect(results[1].status).to.equal(0);
@@ -109,7 +109,7 @@ describe('crossAccountAccess', function () {
 
         it('should PASS if no IAM roles found', function (done) {
             const cache = createCache([]);
-            crossAccountAccess.run(cache, {}, (err, results) => {
+            crossAccountMfaExtIdAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -118,7 +118,7 @@ describe('crossAccountAccess', function () {
 
         it('should UNKNOWN if there was an error querying for IAM roles', function (done) {
             const cache = createErrorCache();
-            crossAccountAccess.run(cache, {}, (err, results) => {
+            crossAccountMfaExtIdAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -127,16 +127,17 @@ describe('crossAccountAccess', function () {
 
         it('should not return any results if unable to query for IAM roles', function (done) {
             const cache = createNullCache();
-            crossAccountAccess.run(cache, {}, (err, results) => {
+            crossAccountMfaExtIdAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });
         });
 
-        it('should not return any results if IAM role principal is not AWS', function (done) {
+        it('should PASS if no cross-account IAM role found', function (done) {
             const cache = createCache([roles[0], roles[2]]);
-            crossAccountAccess.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(0);
+            crossAccountMfaExtIdAccess.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0)
                 done();
             });
         });
