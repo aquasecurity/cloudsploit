@@ -92,7 +92,7 @@ module.exports = {
                 if (!workspace.VolumeEncryptionKey) {
                     helpers.addResult(results, 2, disabledString, region, arn);
                 } else if (!queryKeys) {
-                    helpers.addResult(results, 3, `Unable to find key with key arn: ${workspace.VolumeEncryptionKey}`, region);
+                    helpers.addResult(results, 3, `Unable to find key with key arn: ${workspace.VolumeEncryptionKey}`, region, arn);
                 } else {
                     var describeKey = helpers.addSource(cache, source, ["kms", "describeKey", region, queryKeys["KeyId"]]);
                     if (!describeKey || describeKey.err || !describeKey.data) {
