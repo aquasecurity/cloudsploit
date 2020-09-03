@@ -127,6 +127,12 @@ var calls = {
             paginateReqProp: 'ExclusiveStartTableName'
         }
     },
+    DAX: {
+        describeClusters: {
+            property: 'Clusters',
+            paginate: 'NextToken'
+        }
+    },
     EC2: {
         describeAccountAttributes: {
             property: 'AccountAttributes'
