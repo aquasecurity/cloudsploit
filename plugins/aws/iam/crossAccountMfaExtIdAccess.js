@@ -31,7 +31,7 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        var found = false;
+        var crossAccountfound = false;
 
         listRoles.data.forEach(role => {
             if (!role.AssumeRolePolicyDocument) {
@@ -39,22 +39,34 @@ module.exports = {
             }
 
             var assumeRolePolicy = JSON.parse(decodeURIComponent(role.AssumeRolePolicyDocument));
+            var goodStatements = [];
+            var crossAccountRole = false;
             
-            if (assumeRolePolicy.Statement &&
-                assumeRolePolicy.Statement.length &&
-                assumeRolePolicy.Statement[0].Principal &&
-                assumeRolePolicy.Statement[0].Principal.AWS) {
-                found = true;
-                if (assumeRolePolicy.Statement[0].Condition &&
-                            (assumeRolePolicy.Statement[0].Condition.Bool &&
-                                assumeRolePolicy.Statement[0].Condition.Bool['aws:MultiFactorAuthPresent'] &&
-                                assumeRolePolicy.Statement[0].Condition.Bool['aws:MultiFactorAuthPresent'] === 'true') ||
-                            (assumeRolePolicy.Statement[0].Condition.StringEquals &&
-                                assumeRolePolicy.Statement[0].Condition.StringEquals['sts:ExternalId'])) {
+            if (assumeRolePolicy.Statement && assumeRolePolicy.Statement.length) {
+                for (var s in assumeRolePolicy.Statement) {
+                    var statement = assumeRolePolicy.Statement[s];
+                    
+                    if (statement.Principal &&
+                        statement.Principal.AWS) {
+                        crossAccountRole = true;
+                        crossAccountfound = true;
+
+                        if (statement.Condition &&
+                                (statement.Condition.Bool &&
+                                    statement.Condition.Bool['aws:MultiFactorAuthPresent'] &&
+                                    statement.Condition.Bool['aws:MultiFactorAuthPresent'] === 'true') ||
+                                (statement.Condition.StringEquals &&
+                                    statement.Condition.StringEquals['sts:ExternalId'])) {
+                            goodStatements.push(statement);
+                        }
+                    }
+                }
+
+                if (crossAccountRole && goodStatements.length === assumeRolePolicy.Statement.length) {
                     helpers.addResult(results, 0,
                         'Cross-account role :' + role.RoleName + ': requires MFA/external ID',
                         'global', role.Arn);
-                } else {
+                } else if (crossAccountRole) {
                     helpers.addResult(results, 2,
                         'Cross-account role :' + role.RoleName + ': does not require MFA/external ID',
                         'global', role.Arn);
@@ -62,7 +74,7 @@ module.exports = {
             }
         });
 
-        if (!found) {
+        if (!crossAccountfound) {
             helpers.addResult(results, 0, 'No cross-account IAM roles found');
         }
         

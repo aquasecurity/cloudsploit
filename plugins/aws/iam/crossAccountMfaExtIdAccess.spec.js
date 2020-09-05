@@ -116,6 +116,15 @@ describe('crossAccountMfaExtIdAccess', function () {
             });
         });
 
+        it('should PASS if no cross-account IAM role found', function (done) {
+            const cache = createCache([roles[0], roles[2]]);
+            crossAccountMfaExtIdAccess.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0)
+                done();
+            });
+        });
+
         it('should UNKNOWN if there was an error querying for IAM roles', function (done) {
             const cache = createErrorCache();
             crossAccountMfaExtIdAccess.run(cache, {}, (err, results) => {
@@ -129,15 +138,6 @@ describe('crossAccountMfaExtIdAccess', function () {
             const cache = createNullCache();
             crossAccountMfaExtIdAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
-                done();
-            });
-        });
-
-        it('should PASS if no cross-account IAM role found', function (done) {
-            const cache = createCache([roles[0], roles[2]]);
-            crossAccountMfaExtIdAccess.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0)
                 done();
             });
         });
