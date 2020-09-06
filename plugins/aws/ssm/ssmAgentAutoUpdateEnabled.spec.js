@@ -1,57 +1,114 @@
 var expect = require('chai').expect;
 const ssmAgentAutoUpdateEnabled = require('./ssmAgentAutoUpdateEnabled');
 
-const instancesInformation = [
+const describeInstanceInformation = [
     {
-        InstanceId: 'i-057f5422533f6e2d1',
-        PingStatus: 'Online',
-        LastPingDateTime: '2020-08-21T20:34:36.934Z',
-        AgentVersion: '2.3.1644.0',
-        IsLatestVersion: true,
-        PlatformType: 'Linux',
-        PlatformName: 'Amazon Linux',
-        PlatformVersion: '2',
-        ResourceType: 'EC2Instance',
-        IPAddress: '172.31.48.168',
-        ComputerName: 'ip-172-31-48-168.ec2.internal',
-        AssociationStatus: 'Success',
-        LastAssociationExecutionDate: '2020-08-21T19:54:48.550Z',
-        LastSuccessfulAssociationExecutionDate: '2020-08-21T19:54:48.550Z',
-        AssociationOverview: {
-            DetailedStatus: 'Success',
-            InstanceAssociationStatusAggregatedCount: { Success: 2 }
-        }
-    },
-    {
-        InstanceId: 'i-057f5422533f6e2d1',
-        PingStatus: 'Online',
-        LastPingDateTime: '2020-08-21T20:34:36.934Z',
-        AgentVersion: '2.3.1644.0',
-        IsLatestVersion: false,
-        PlatformType: 'Linux',
-        PlatformName: 'Amazon Linux',
-        PlatformVersion: '2',
-        ResourceType: 'EC2Instance',
-        IPAddress: '172.31.48.168',
-        ComputerName: 'ip-172-31-48-168.ec2.internal',
-        AssociationStatus: 'Success',
-        LastAssociationExecutionDate: '2020-08-21T19:54:48.550Z',
-        LastSuccessfulAssociationExecutionDate: '2020-08-21T19:54:48.550Z',
-        AssociationOverview: {
-            DetailedStatus: 'Success',
-            InstanceAssociationStatusAggregatedCount: { Success: 2 }
+        "InstanceId": "i-0c8993c98fdb46a97",
+        "PingStatus": "Online",
+        "LastPingDateTime": 1599395666.201,
+        "AgentVersion": "2.3.1644.0",
+        "IsLatestVersion": true,
+        "PlatformType": "Linux",
+        "PlatformName": "Amazon Linux",
+        "PlatformVersion": "2",
+        "ResourceType": "EC2Instance",
+        "IPAddress": "172.31.44.20",
+        "ComputerName": "ip-172-31-44-20.ec2.internal",
+        "AssociationStatus": "Success",
+        "LastAssociationExecutionDate": 1599393759.647,
+        "LastSuccessfulAssociationExecutionDate": 1599393759.647,
+        "AssociationOverview": {
+            "DetailedStatus": "Success",
+            "InstanceAssociationStatusAggregatedCount": {
+                "Success": 2
+            }
         }
     }
 ];
 
-const createCache = (stacks) => {
+const listAssociations = [
+    {
+        "Name": "AWS-UpdateSSMAgent",
+        "AssociationId": "fbf42ad7-0e04-45e4-9a95-b5bea99fa311",
+        "AssociationVersion": "2",
+        "DocumentVersion": "$DEFAULT",
+        "Targets": [
+            {
+                "Key": "InstanceIds",
+                "Values": [
+                    "*"
+                ]
+            }
+        ],
+        "LastExecutionDate": 1599393759.647,
+        "Overview": {
+            "Status": "Success",
+            "DetailedStatus": "Success",
+            "AssociationStatusAggregatedCount": {
+                "Success": 1
+            }
+        },
+        "ScheduleExpression": "rate(30 days)",
+        "AssociationName": "test-asso-959"
+    },
+    {
+        "Name": "AWS-UpdateSSMAgent",
+        "AssociationId": "fbf42ad7-0e04-45e4-9a95-b5bea99fa311",
+        "AssociationVersion": "2",
+        "DocumentVersion": "$DEFAULT",
+        "Targets": [
+            {
+                "Key": "InstanceIds",
+                "Values": [
+                    "*"
+                ]
+            }
+        ],
+        "LastExecutionDate": 1599393759.647,
+        "Overview": {
+            "Status": "Success",
+            "DetailedStatus": "Success",
+            "AssociationStatusAggregatedCount": {
+                "Success": 1
+            }
+        },
+        "AssociationName": "test-asso-959"
+    },
+    {
+        "Name": "AWS-AttachEBSVolume",
+        "AssociationId": "a068476e-b759-478e-9ea0-d61e4381fefe",
+        "AssociationVersion": "1",
+        "Targets": [
+            {
+                "Key": "aws:NoOpAutomationTag",
+                "Values": [
+                    "AWS-NoOpAutomationTarget-Value"
+                ]
+            }
+        ],
+        "LastExecutionDate": 1599378755.529,
+        "Overview": {
+            "Status": "Failed",
+            "DetailedStatus": "InvalidAutomationParameters",
+            "AssociationStatusAggregatedCount": {}
+        },
+        "AssociationName": "test1-947"
+    }
+];
+
+const createCache = (instances, associations) => {
     return {
         ssm: {
             describeInstanceInformation: {
                 'us-east-1': {
-                    data: stacks
+                    data: instances
                 },
             },
+            listAssociations: {
+                'us-east-1': {
+                    data: associations
+                }
+            }
         },
     };
 };
@@ -66,6 +123,13 @@ const createErrorCache = () => {
                     },
                 },
             },
+            listAssociations: {
+                'us-east-1': {
+                    err: {
+                        message: 'error listing associations'
+                    },
+                },
+            },
         },
     };
 };
@@ -76,14 +140,17 @@ const createNullCache = () => {
             describeInstanceInformation: {
                 'us-east-1': null,
             },
+            listAssociations: {
+                'us-east-1': null,
+            },
         },
     };
 };
 
 describe('ssmAgentAutoUpdateEnabled', function () {
     describe('run', function () {
-        it('should PASS if ssm agent is set to auto update', function (done) {
-            const cache = createCache([instancesInformation[0]]);
+        it('should PASS if SSM Agent has SSM Agent auto update enabled', function (done) {
+            const cache = createCache([describeInstanceInformation[0]], listAssociations);
             ssmAgentAutoUpdateEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -91,8 +158,8 @@ describe('ssmAgentAutoUpdateEnabled', function () {
             });
         });
 
-        it('should FAIL if ssm agent is not set to auto update', function (done) {
-            const cache = createCache([instancesInformation[1]]);
+        it('should FAIL if instance does not have SSM Agent auto update enabled', function (done) {
+            const cache = createCache([describeInstanceInformation[0]], listAssociations[1]);
             ssmAgentAutoUpdateEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -100,19 +167,11 @@ describe('ssmAgentAutoUpdateEnabled', function () {
             });
         });
 
-        it('should PASS if no instance found in ssm instance information', function (done) {
-            const cache = createCache([]);
+        it('should FAIL if no instance found in ssm instance information', function (done) {
+            const cache = createCache([], []);
             ssmAgentAutoUpdateEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                done();
-            });
-        });
-
-        it('should not return any results if unable to fetch any instance information', function (done) {
-            const cache = createNullCache();
-            ssmAgentAutoUpdateEnabled.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(0);
                 done();
             });
         });
@@ -126,79 +185,13 @@ describe('ssmAgentAutoUpdateEnabled', function () {
             });
         });
 
+        it('should not return any results if unable to fetch any instance information', function (done) {
+            const cache = createNullCache();
+            ssmAgentAutoUpdateEnabled.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(0);
+                done();
+            });
+        });
+
     });
 });
-
-C:\Users\Abdul\Documents\Projects\Aqua\scans>aws ssm describe-association --association-id 6f2d0558-6519-4ae7-98ea-010f0d6ed246
-{
-    "AssociationDescription": {
-        "Name": "AWS-UpdateSSMAgent",
-        "AssociationVersion": "2",
-        "Date": 1598039643.583,
-        "LastUpdateAssociationDate": 1598220090.665,
-        "Overview": {
-            "Status": "Success",
-            "DetailedStatus": "Success",
-            "AssociationStatusAggregatedCount": {
-                "Success": 4
-            }
-        },
-        "DocumentVersion": "$DEFAULT",
-        "Parameters": {},
-        "AssociationId": "6f2d0558-6519-4ae7-98ea-010f0d6ed246",
-        "Targets": [
-            {
-                "Key": "InstanceIds",
-                "Values": [
-                    "*"
-                ]
-            }
-        ],
-        "ScheduleExpression": "rate(14 days)",
-        "LastExecutionDate": 1598322467.814,
-        "LastSuccessfulExecutionDate": 1598322467.814,
-        "AssociationName": "SystemAssociationForSsmAgentUpdate",
-        "ComplianceSeverity": "UNSPECIFIED",
-        "ApplyOnlyAtCronInterval": false
-    }
-}
-
-C:\Users\Abdul\Documents\Projects\Aqua\scans>aws ssm describe-association --association-id 6f2d0558-6519-4ae7-98ea-010f0d6ed246
-{
-    "AssociationDescription": {
-        "Name": "AWS-UpdateSSMAgent",
-        "AssociationVersion": "3",
-        "Date": 1598039643.583,
-        "LastUpdateAssociationDate": 1598322535.914,
-        "Overview": {
-            "Status": "Success",
-            "DetailedStatus": "Success",
-            "AssociationStatusAggregatedCount": {
-                "Success": 1
-            }
-        },
-        "DocumentVersion": "$DEFAULT",
-        "Parameters": {
-            "allowDowngrade": [
-                "false"
-            ],
-            "version": [
-                ""
-            ]
-        },
-        "AssociationId": "6f2d0558-6519-4ae7-98ea-010f0d6ed246",
-        "Targets": [
-            {
-                "Key": "InstanceIds",
-                "Values": [
-                    "*"
-                ]
-            }
-        ],
-        "LastExecutionDate": 1598322538.002,
-        "LastSuccessfulExecutionDate": 1598322538.002,
-        "AssociationName": "SystemAssociationForSsmAgentUpdate",
-        "ComplianceSeverity": "UNSPECIFIED",
-        "ApplyOnlyAtCronInterval": false
-    }
-}

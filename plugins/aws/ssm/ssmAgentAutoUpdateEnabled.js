@@ -19,10 +19,10 @@ module.exports = {
             var describeInstanceInformation = helpers.addSource(cache, source,
                 ['ssm', 'describeInstanceInformation', region]);
 
-            var associationsList = helpers.addSource(cache, source,
+            var listAssociations = helpers.addSource(cache, source,
                 ['ssm', 'listAssociations', region]);
 
-            if (!describeInstanceInformation || !associationsList) return rcb();
+            if (!describeInstanceInformation || !listAssociations) return rcb();
 
             if (describeInstanceInformation.err || !describeInstanceInformation.data) {
                 helpers.addResult(results, 3,
@@ -30,9 +30,9 @@ module.exports = {
                 return rcb();
             }
             
-            if (associationsList.err || !associationsList.data) {
+            if (listAssociations.err || !listAssociations.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for SSM Associations List: ' + helpers.addError(associationsList), region);
+                    'Unable to query for SSM Associations List: ' + helpers.addError(listAssociations), region);
                 return rcb();
             }
 
@@ -42,7 +42,7 @@ module.exports = {
                 return rcb();
             }
             
-            if(!associationsList.data.length) {
+            if(!listAssociations.data.length) {
                 helpers.addResult(results, 2,
                     'No SSM AWS-UpdateSSMAgent associations found', region);
                 return rcb();
@@ -50,7 +50,7 @@ module.exports = {
 
             var associatedInstances = [];
 
-            associationsList.data.forEach(function(association){
+            listAssociations.data.forEach(function(association){
                 if (association.Name === 'AWS-UpdateSSMAgent' && association.Targets && association.Targets.length) {
                     association.Targets.forEach(function(target){
                         if(target.Key && target.Key === 'InstanceIds' && target.Values && target.Values.length) {
