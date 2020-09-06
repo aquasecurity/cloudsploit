@@ -73,15 +73,17 @@ module.exports = {
                     if (asg.LoadBalancerNames && asg.LoadBalancerNames.length) {
 
                         asg.LoadBalancerNames.forEach(function(elbName) {
-                            if(elbName in loadBalancers) {
+                            if(loadBalancers[elbName]) {
                                 var loadBalancer = loadBalancers[elbName];
                                 var elbAvailabilityZones = loadBalancer.AvailabilityZones;
 
-                                elbAvailabilityZones.forEach(function(elbAz) {
-                                    if(!asgAvailabilityZones.includes(elbAz)) {
-                                        distinctAzs.push(elbAz);
-                                    }
-                                });
+                                if (elbAvailabilityZones && elbAvailabilityZones.length) {
+                                    elbAvailabilityZones.forEach(function(elbAz) {
+                                        if(asgAvailabilityZones && asgAvailabilityZones.length && !asgAvailabilityZones.includes(elbAz)) {
+                                            distinctAzs.push(elbAz);
+                                        }
+                                    });
+                                }
 
                                 if(distinctAzs.length) {
                                     helpers.addResult(results, 2,
