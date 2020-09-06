@@ -41,28 +41,24 @@ module.exports = {
                     'No managed instances found', region);
                 return rcb();
             }
-            
-            if(!listAssociations.data.length) {
-                helpers.addResult(results, 2,
-                    'No SSM associations found', region);
-                return rcb();
-            }
 
             var associatedInstances = [];
 
-            listAssociations.data.forEach(association => {
-                if (association.Name === 'AWS-UpdateSSMAgent' && association.Targets && association.Targets.length) {
-                    association.Targets.forEach(function(target){
-                        if(target.Key && target.Key === 'InstanceIds' && target.Values && target.Values.length) {
-                            target.Values.forEach(function(instanceId){
-                                if(!associatedInstances.includes(instanceId) && association.ScheduleExpression){
-                                    associatedInstances.push(instanceId);
-                                }
-                            });
-                        }
-                    });
-                }
-            });
+            if (listAssociations.data.length) {
+                listAssociations.data.forEach(association => {
+                    if (association.Name === 'AWS-UpdateSSMAgent' && association.Targets && association.Targets.length) {
+                        association.Targets.forEach(function(target){
+                            if(target.Key && target.Key === 'InstanceIds' && target.Values && target.Values.length) {
+                                target.Values.forEach(function(instanceId){
+                                    if(!associatedInstances.includes(instanceId) && association.ScheduleExpression){
+                                        associatedInstances.push(instanceId);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
 
             describeInstanceInformation.data.forEach(function(instance) {
                 var resource = instance.InstanceId;
