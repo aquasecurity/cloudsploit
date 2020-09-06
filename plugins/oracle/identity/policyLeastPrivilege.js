@@ -52,10 +52,11 @@ module.exports = {
                 return rcb();
             }
             var policyProtection = true;
-
+            var entered = false;
             policies.data.forEach(policy => {
                 if (policy.statements &&
                     policy.statements.length) {
+                    entered = true;
                     policy.statements.forEach(statement => {
 
                         const statementLower = statement.toLowerCase();
@@ -102,12 +103,12 @@ module.exports = {
                                 `${groupType} ${groupName} has the ability to ${verb} ${resourceType} in ${compartment} ${compartmentName}`, region, policy.id);
                         }
                     });
-
-                    if (policyProtection) {
-                        helpers.addResult(results, 0, 'All policies follow least access.', region);
-                    }
                 }
             });
+
+            if (policyProtection && entered) {
+                helpers.addResult(results, 0, 'All policies follow least access.', region);
+            }
 
             rcb();
         }, function () {

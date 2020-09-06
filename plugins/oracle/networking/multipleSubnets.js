@@ -34,44 +34,39 @@ module.exports = {
                     return rcb();
                 }
 
-                if (vcns.data.length > 1) {
-                    helpers.addResult(results, 0,
-                        'Multiple (' + vcns.data.length + ') VCNs are used.', region);
-                    return rcb();
-                }
-
                 // Looks like we have only one VCN
-                var vcnId = vcns.data[0].id;
-
-                if (!vcnId) {
-                    helpers.addResult(results, 3, 'Unable to query for subnets for VCN.', region);
-                    return rcb();
-                }
-
                 var subnets = helpers.addSource(cache, source,
                     ['subnet', 'list', region]);
 
-                
-                if (!subnets || (subnets.err && subnets.err.length)|| !subnets.data) {
+
+                if (!subnets || subnets.err || !subnets.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for subnets: ' + helpers.addError(subnets), region);
                     return rcb();
                 }
 
-                var vcnSubnets = subnets.data.filter(subnet => {
-                    if (subnet.vcnId) return subnet.vcnId === vcnId;
-                });
+                vcns.data.forEach(vcn => {
+                    var vcnId = vcn.id;
+                    if (!vcnId) {
+                        helpers.addResult(results, 3, 'Unable to query for subnets for VCN.', region);
+                        return rcb();
+                    }
 
-                if (vcnSubnets.length > 1) {
-                    helpers.addResult(results, 0,
-                        'There are ' + vcnSubnets.length + ' different subnets used in one VCN.',region, vcnId);
-                } else if (vcnSubnets.length === 1) {
-                    helpers.addResult(results, 2,
-                        'Only one subnet (' + vcnSubnets[0].id + ') in one VCN is used.', region, vcnId);
-                } else {
-                    helpers.addResult(results, 0,
-                        'The VCN does not have any subnets', region, vcnId);
-                }
+                    var vcnSubnets = subnets.data.filter(subnet => {
+                        if (subnet.vcnId) return subnet.vcnId === vcnId;
+                    });
+
+                    if (vcnSubnets.length > 1) {
+                        helpers.addResult(results, 0,
+                            'There are ' + vcnSubnets.length + ' different subnets in VCN.',region, vcnId);
+                    } else if (vcnSubnets.length === 1) {
+                        helpers.addResult(results, 2,
+                            'Only one subnet is used.', region, vcnId);
+                    } else {
+                        helpers.addResult(results, 1,
+                            'The VCN does not have any subnets', region, vcnId);
+                    }
+                })
             }
             rcb();
         }, function(){

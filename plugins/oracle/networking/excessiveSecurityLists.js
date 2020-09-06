@@ -44,7 +44,7 @@ module.exports = {
 
                 if (!securityLists) return rcb();
 
-                if ((securityLists.err && securityLists.err.length > 0) || !securityLists.data ) {
+                if (securityLists.err || !securityLists.data ) {
                     helpers.addResult(results, 3,
                         'Unable to query for security lists: ' + helpers.addError(securityLists), region);
                     return rcb();

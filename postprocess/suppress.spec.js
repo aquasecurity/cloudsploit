@@ -9,20 +9,20 @@ describe('create', function () {
     });
 
     it('should return the filter if matches', function () {
-        var filter = suppress.create(['--suppress=*n*']);
+        var filter = suppress.create(['*n*']);
 
         expect(filter('any')).to.equal('*n*');
     });
 
     it('should return the filter if matches whole word', function () {
-        var filter = suppress.create(['--suppress=*longer*']);
+        var filter = suppress.create(['*longer*']);
 
         expect(filter('longer')).to.equal('*longer*');
     });
 
     it('should return the filter if multiple and second matches', function () {
-        var filter = suppress.create(['--suppress=*first*',
-                                      '--suppress=second']);
+        var filter = suppress.create(['*first*',
+                                      'second']);
 
         expect(filter('second')).to.equal('second');
     });
