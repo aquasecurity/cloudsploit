@@ -106,7 +106,7 @@ describe('preAuthRequestsExpiry', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('All pre-authenticated requests are set to expire in less than')
+                expect(results[0].message).to.include('Pre-authenticated requests is set to expire in less than 10 days')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };

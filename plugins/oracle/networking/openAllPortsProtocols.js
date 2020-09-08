@@ -51,14 +51,14 @@ module.exports = {
 
                 if (!getSecurityLists) return rcb();
 
-                if (getSecurityLists.err && getSecurityLists.err.length)  {
+                if (getSecurityLists.err || !getSecurityLists.data)  {
                     helpers.addResult(results, 3,
                         'Unable to query for security lists: ' +
                         helpers.addError(getSecurityLists), region);
                     return rcb();
                 }
 
-                if (!getSecurityLists.data || !getSecurityLists.data.length) {
+                if (!getSecurityLists.data.length) {
                     helpers.addResult(results, 0,
                         'No security lists found', region);
                     return rcb();

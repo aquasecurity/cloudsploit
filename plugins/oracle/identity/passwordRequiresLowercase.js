@@ -32,7 +32,7 @@ module.exports = {
 
         if (!authenticationPolicy) return callback(null, results, source);
 
-        if ((authenticationPolicy.err && authenticationPolicy.err.length) || !authenticationPolicy.data) {
+        if (authenticationPolicy.err || !authenticationPolicy.data) {
             helpers.addResult(results, 3,
                 'Unable to query for password policy status: ' + helpers.addError(authenticationPolicy));
             return callback(null, results, source);

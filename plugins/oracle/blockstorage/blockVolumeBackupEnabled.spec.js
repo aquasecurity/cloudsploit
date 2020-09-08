@@ -53,10 +53,10 @@ describe('blockVolumeBackupEnabled', function () {
     describe('run', function () {
         it('should give unknown result if a volume error is passed or no data is present', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.above(1)
-                expect(results[0].status).to.equal(3)
-                expect(results[0].message).to.include('Unable to query for block volumes')
-                expect(results[0].region).to.equal('us-ashburn-1')
+                expect(results.length).to.be.above(1);
+                expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query for block volumes');
+                expect(results[0].region).to.equal('us-ashburn-1');
                 done()
             };
 
@@ -95,7 +95,7 @@ describe('blockVolumeBackupEnabled', function () {
             };
 
             const cache = createCache(
-                [],
+                null,
                 ['lots of data'],
                 undefined,
                 ['error']
@@ -108,7 +108,7 @@ describe('blockVolumeBackupEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(1)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('The following block volumes do not have a backup policy enabled')
+                expect(results[0].message).to.include('Block volume has a backup policy disabled')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -169,7 +169,7 @@ describe('blockVolumeBackupEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(1)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('All block volumes have a backup policy enabled')
+                expect(results[0].message).to.include('Block volume has a backup policy enabled')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
