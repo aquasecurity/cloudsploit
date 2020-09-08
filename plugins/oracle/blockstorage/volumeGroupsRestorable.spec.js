@@ -95,7 +95,7 @@ describe('volumeGroupsRestorable', function () {
             };
 
             const cache = createCache(
-                [],
+                null,
                 ['lots of data'],
                 undefined,
                 ['error']
@@ -108,7 +108,7 @@ describe('volumeGroupsRestorable', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(1)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('The following volume groups are not actively restorable')
+                expect(results[0].message).to.include('Volume group is not actively restorable')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -169,7 +169,7 @@ describe('volumeGroupsRestorable', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(1)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('All volume groups are restorable')
+                expect(results[0].message).to.include('Volume group is actively restorable')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };

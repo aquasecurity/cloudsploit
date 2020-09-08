@@ -4,7 +4,13 @@ var chaiAsPromised = require("chai-as-promised")
 var expect = require('chai').expect;
 chai.use(chaiAsPromised)
 
-//Put events into JSON files...
+var embeddedEvent = {
+    "cloud": "aws",
+    "cloudConfig": {
+        "roleArn": "arn:aws:iam::1234567890:role/someRole"
+    }
+}
+
 var snsEvent = {
     "Records": [
         {
@@ -16,7 +22,7 @@ var snsEvent = {
                 "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
                 "TopicArn": "arn:aws:sns:us-east-1:123456789012:ExampleTopic",
                 "Subject": "example subject",
-                "Message": "{\"aws\" : {\"roleArn\": \"arn:aws:iam::1234567890:role/someRole\"}}",
+                "Message": JSON.stringify(embeddedEvent),
                 "Timestamp": "1970-01-01T00:00:00.000Z",
                 "SignatureVersion": "1",
                 "Signature": "EXAMPLE",
@@ -47,83 +53,76 @@ var cloudwatchEvent = {
     "resources": [
         "arn:aws:events:us-east-1:123456789012:rule/ExampleRule"
     ],
-    "detail": {
-        "aws": {
-            "roleArn": "arn:aws:iam::1234567890:role/someRole"
-        }
-    }
+    "detail": embeddedEvent
 }
 
-var expectedOutcome = {
-    'aws': {
+var expectedOutcome = [
+    'aws',
+    {
         "roleArn": "arn:aws:iam::1234567890:role/someRole"
     }
-}
+]
 
 var configWithAccountId = {
-    'aws': {
+    cloud: 'aws',
+    cloudConfig: {
         "account_id": "1234567890"
     }
 }
 
-var expectedConfigFromAccountId = {
-    'aws': {
+var expectedConfigFromAccountId = [
+    'aws',
+    {
         "roleArn": ("arn:aws:iam::1234567890:role/" + process.env.DEFAULT_ROLE_NAME)
     }
-}
+]
 
 var notCredentialedConfiguration = {
-    "gcp" : {
+    cloud: "gcp",
+    cloudConfig: {
         "private_key": ""
     }
 }
 
-var noServiceProvided = {}
-
-var multipleServicesProvided = {
-    'aws' : {},
-    'gcp' : {}
+var invalidCloud = {
+    cloud: 'fluffyWhiteOne',
+    cloudConfig: 'mostly water'
 }
 
 describe('configs', function () {
     describe('parseEvent', function () {
         it('Gets JSON object from SNS event', function () {
-            expect(configs.parseEvent(snsEvent)).to.deep.equal(expectedOutcome)
+            expect(configs.parseEvent(snsEvent)).to.deep.equal(embeddedEvent)
         })
         it('Gets JSON object from CloudWatch event', function () {
-            expect(configs.parseEvent(cloudwatchEvent)).to.deep.equal(expectedOutcome)
+            expect(configs.parseEvent(cloudwatchEvent)).to.deep.equal(embeddedEvent)
         })
     })
 
-    describe('getConfigurations', function () {
+    describe('getCloudConfig', function () {
         var partition = "aws"
         it('Gets aws configurations from SNS with RoleArn', async function () {
-            var input = await configs.getConfigurations(configs.parseEvent(snsEvent), partition)
+            var input = await configs.getCloudConfig(configs.parseEvent(snsEvent), partition)
             var output = expectedOutcome
             expect(input).to.deep.equal(output)
         })
         it('Gets aws configurations from Cloudwatch with RoleArn', async function () {
-            var input = await configs.getConfigurations(configs.parseEvent(cloudwatchEvent), partition)
+            var input = await configs.getCloudConfig(configs.parseEvent(cloudwatchEvent), partition)
             var output = expectedOutcome
             expect(input).to.deep.equal(output)
         })
         it('Gets aws configurations containing Account ID', async function () {
-            var input = await configs.getConfigurations(configWithAccountId, partition)
+            var input = await configs.getCloudConfig(configWithAccountId, partition)
             var output = expectedConfigFromAccountId
             expect(input).to.deep.equal(output)
         })
-        it('Should throw an error when given a key that must be credentialed', async function () {
-            var input = configs.getConfigurations(notCredentialedConfiguration, partition)
-            expect(input).to.be.rejectedWith("Configuration passed in through event which must be in Secrets Manager.")
+        it('Should throw an error when given a key that must be credentialed', function () {
+            var input = configs.getCloudConfig(notCredentialedConfiguration, partition)
+            return expect(input).to.eventually.be.rejectedWith("Configuration passed in through event which must be in Secrets Manager.")
         })
-        it('Should throw an error when given a configuration without a valid service', async function () {
-            var input = configs.getConfigurations(noServiceProvided, partition)
-            expect(input).to.be.rejectedWith("No services provided or provided services are malformed in Incoming Event.")
+        it('Should throw an error when given a configuration with an valid cloud', function () {
+            var input = configs.getCloudConfig(invalidCloud, partition)
+            return expect(input).to.eventually.be.rejectedWith("Invalid cloud specified")
         })
-        it('Should throw an error when given a configuration with multiple services', async function () {
-            var input = configs.getConfigurations(multipleServicesProvided, partition)
-            expect(input).to.be.rejectedWith("Multiple Services in Incoming Event.")
-        })
-        //need to find a way to test credentialedId.
     })
 })

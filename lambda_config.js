@@ -25,17 +25,17 @@ function parseEvent(event) {
 
     //Expected events are SNS and Cloudwatch, could add other events here if needed.
     if(event.Records && event.Records[0].Sns) {
-        console.log("SNS Event Trigger");
+        console.log('SNS Event Trigger');
         allConfigurations = JSON.parse(event.Records[0].Sns.Message);
     } else if(event.detail) {
-        console.log("CloudWatch Event Trigger");
+        console.log('CloudWatch Event Trigger');
         allConfigurations = event.detail;
     } else {
         allConfigurations = event;
     }
     // console.assert(allConfigurations, "Configurations not found from incoming Event.");
 
-    return allConfigurations
+    return allConfigurations;
 }
 
 /***
@@ -49,46 +49,45 @@ function parseEvent(event) {
  *
  * @throws Any misconfiguration will result in an error being thrown.
  */
-async function getConfigurations(parsedEvent, partition) {
-    console.log("Begin Parsing of Incoming Event");
+async function getCloudConfig(parsedEvent, partition) {
+    console.log('Begin Parsing of Incoming Event');
     var secretPrefix = process.env.SECRET_PREFIX;
     var defaultRoleName = process.env.DEFAULT_ROLE_NAME;
 
-    //Anything in these arrays will be required to be found in the CredentialID Secret Manager.
-    var expectedServices = {
-        'aws' : [],
-        'azure': ["KeyValue"],
-        'gcp': ["private_key"],
-        'github': [],
-        'oracle': ["keyValue","keyFingerprint"]
-    };
+    // Anything in these arrays will be required to be found in the CredentialID Secret Manager.
+    var clouds = ['aws', 'azure', 'gcp', 'github', 'oracle'];
 
-    var serviceCount = 0;
-    for (service in parsedEvent) {
-        if(service in expectedServices) {
-            console.log("Found Service ",service.toUpperCase());
-            serviceCount++;
-            if(serviceCount > 1) throw (new Error("Multiple Services in Incoming Event."));
-            expectedServices[service].forEach((config) => {
-                if (config in parsedEvent[service]) throw (new Error("Configuration passed in through event which must be in Secrets Manager."));
-            })
-            if(service === 'aws') {
-                //If account_id in aws config, then replace it with roleArn.
-                if (parsedEvent.aws.account_id) {
-                    parsedEvent.aws.roleArn = ["arn", partition, "iam", "", parsedEvent.aws.account_id, "role/" + defaultRoleName].join(':');
-                    delete parsedEvent.aws.account_id;
-                }
-            } else if(parsedEvent[service].credentialId) {
-                var secretsManagerKey = [secretPrefix, service, parsedEvent[service].credentialId].join('/');
-                secret = await getSecret(secretsManagerKey); // eslint-disable-line  no-await-in-loop
-                delete parsedEvent[service].credentialId;
-                Object.assign(parsedEvent[service], secret);
-            }
-        }
+    var disallowedKeysByServices = {
+        'aws' : [],
+        'azure': ['KeyValue'],
+        'gcp': ['private_key'],
+        'github': [],
+        'oracle': ['keyValue', 'keyFingerprint']
+    };
+    var cloud = parsedEvent.cloud;
+    var cloudConfig = parsedEvent.cloudConfig;
+
+    if (!clouds.find(c => c === cloud)) {
+        throw new Error('Invalid cloud specified');
     }
 
-    if(serviceCount === 0) throw (new Error("No services provided or provided services are malformed in Incoming Event."));
-    return parsedEvent;
+    disallowedKeysByServices[cloud].forEach((config) => {
+        if (config in cloudConfig) throw (new Error('Configuration passed in through event which must be in Secrets Manager.'));
+    });
+    if (cloud === 'aws') {
+        // If account_id in aws config, then replace it with roleArn.
+        if (cloudConfig.account_id) {
+            cloudConfig.roleArn = ['arn', partition, 'iam', '', cloudConfig.account_id, 'role/' + defaultRoleName].join(':');
+            delete cloudConfig.account_id;
+        }
+    } else if (cloudConfig.credentialId) {
+        var secretsManagerKey = [secretPrefix, cloud, cloudConfig.credentialId].join('/');
+        var secret = await getSecret(secretsManagerKey); // eslint-disable-line  no-await-in-loop
+        delete cloudConfig.credentialId;
+        Object.assign(cloudConfig, secret);
+    }
+
+    return [cloud, cloudConfig];
 }
 
 /***
@@ -102,9 +101,9 @@ async function getConfigurations(parsedEvent, partition) {
  */
 
 async function getCredentials(roleArn, externalId) {
-    console.log("Getting Credentials for AWS Configuration");
+    console.log('Getting Credentials for AWS Configuration');
     if(!roleArn) {
-        throw new Error("roleArn is not defined from incoming event.");
+        throw new Error('roleArn is not defined from incoming event.');
     }
     var STSParams = {
         RoleArn: roleArn,
@@ -113,8 +112,8 @@ async function getCredentials(roleArn, externalId) {
     let credentials = new AWS.ChainableTemporaryCredentials({ params: STSParams });
 
     return credentials.getPromise().then(() => {
-        return { credentials }
+        return { credentials };
     });
 }
 
-module.exports = {getConfigurations, parseEvent, getCredentials}
+module.exports = {getCloudConfig, parseEvent, getCredentials};

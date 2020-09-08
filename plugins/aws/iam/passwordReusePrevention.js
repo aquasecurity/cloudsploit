@@ -15,7 +15,8 @@ module.exports = {
     permissions: {remediate: ['iam:UpdateAccountPasswordPolicy'], rollback: ['iam:UpdateAccountPasswordPolicy']},
     compliance: {
         pci: 'PCI requires that the previous 4 passwords not be reused. ' +
-             'Restricting IAM password reuse enforces this policy.'
+             'Restricting IAM password reuse enforces this policy.',
+        cis1: '1.10 Ensure IAM password policy prevents password reuse'
     },
     settings: {
         password_reuse_fail: {

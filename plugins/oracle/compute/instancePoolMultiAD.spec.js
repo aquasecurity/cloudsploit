@@ -145,7 +145,7 @@ describe('instancePoolMultiAD', function () {
         it('should give passing result if instance pools have no availability domains', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
-                expect(results[0].status).to.equal(0)
+                expect(results[0].status).to.equal(2)
                 expect(results[0].message).to.include('No availability domains')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()

@@ -1,9 +1,9 @@
 var AWS = require('aws-sdk');
 var engine = require('./engine.js');
 var output = require('./postprocess/output.js');
-var configs = require('./lambda_config.js')
-var util = require('util')
-var promisifiedEngine = util.promisify(engine)
+var configs = require('./lambda_config.js');
+var util = require('util');
+var promisifiedEngine = util.promisify(engine);
 
 /***
  * Writes the output to S3, it writes two files.
@@ -20,32 +20,32 @@ var promisifiedEngine = util.promisify(engine)
  */
 async function writeToS3(bucket, resultsToWrite, templatePrefix, s3Prefix) {
     var s3 = new AWS.S3({apiVersion: 'latest'});
-    var bucketPrefix = templatePrefix ? `${templatePrefix}/` : "";
+    var bucketPrefix = templatePrefix ? `${templatePrefix}/` : '';
     bucketPrefix = s3Prefix ? `${bucketPrefix}${s3Prefix}/` : bucketPrefix;
+    require('fs').writeFileSync('runresults.json', JSON.stringify(resultsToWrite, null, 2));
     if (bucket && resultsToWrite) {
-        console.log("Writing Output to S3");
+        console.log('Writing Output to S3');
         var dt = new Date();
         var objectName = [dt.getFullYear(), dt.getMonth() + 1, dt.getDate() + '.json'].join( '-' );
         var key = bucketPrefix + objectName;
-        var latestKey = bucketPrefix + "latest.json";
+        var latestKey = bucketPrefix + 'latest.json';
         var results = JSON.stringify(resultsToWrite, null, 2);
-        console.log(`Writing results to s3://${bucket}/${key}`)
-        console.log(`Writing results to s3://${bucket}/${latestKey}`)
-        // require('fs').writeFileSync('runresults.json', results);
+        console.log(`Writing results to s3://${bucket}/${key}`);
+        console.log(`Writing results to s3://${bucket}/${latestKey}`);
         var promises = [
-            s3.putObject({Bucket: bucket, Key: latestKey, Body: results}).promise(),
-            s3.putObject({Bucket: bucket, Key: key, Body: results}).promise()
+            // s3.putObject({Bucket: bucket, Key: latestKey, Body: results}).promise(),
+            // s3.putObject({Bucket: bucket, Key: key, Body: results}).promise()
         ];
 
         return Promise.all(promises);
     }
-    return []
+    return [];
 }
 
 // "memoryStream" to get outputs instead of using a file stream
 class MemoryStream {
     constructor() {
-        this.data = ''
+        this.data = '';
     }
     write(chunk) {
         this.data += chunk;
@@ -54,50 +54,51 @@ class MemoryStream {
 }
 
 exports.handler = async function(event, context) {
-    console.log("EVENT:", JSON.stringify(event));
+    console.log('EVENT:', JSON.stringify(event));
     try {
         //Object Initialization//
         var partition = context.invokedFunctionArn.split(':')[1];
-        var configurations = await configs.getConfigurations(configs.parseEvent(event), partition);
+        var parsedEvent = configs.parseEvent(event);
+        var [cloud, cloudConfig] = await configs.getCloudConfig(event, partition);
 
-        jsonOutput = new MemoryStream();
-        collectionOutput = new MemoryStream();
+        var jsonOutput = new MemoryStream();
+        var collectionOutput = new MemoryStream();
         var outputHandler = output.multiplexer([output.createJson(jsonOutput)], [output.createCollection(collectionOutput)], false);
         //Settings Configuration//
-        console.log("Configuring Settings");
-        var settings = configurations.settings || {};
+        console.log('Configuring Settings');
+        var settings = parsedEvent.settings || {};
         settings.china = partition === 'aws-cn';
         settings.govcloud = partition === 'aws-us-gov';
         settings.paginate = settings.paginate || true;
         settings.debugTime = settings.debugTime || false;
-
+        settings.cloud = cloud;
         //Config Gathering//
-        console.log("Gathering Configurations");
-        var AWSConfig = configurations.aws.roleArn ? await configs.getCredentials(configurations.aws.roleArn, configurations.aws.externalId) : null;
-        var AzureConfig = configurations.azure || null;
-        var GoogleConfig = configurations.gcp || null;
-        var GitHubConfig = configurations.github || null;
-        var OracleConfig = configurations.oracle || null;
+        console.log('Gathering Configurations');
+
+        if (cloud === 'aws') {
+            cloudConfig = cloudConfig.roleArn ? await configs.getCredentials(cloudConfig.roleArn, cloudConfig.externalId) : null;
+        }
 
         //Run Primary Cloudspoit Engine//
-        console.log("Begin Calling Main Engine")
+        console.log('Begin Calling Main Engine');
 
-        var enginePromise = promisifiedEngine(AWSConfig, AzureConfig, GitHubConfig, OracleConfig, GoogleConfig, settings, outputHandler);
-
+        var enginePromise = promisifiedEngine(cloudConfig, settings, outputHandler);
 
         await enginePromise;
         var results = {
-            collectionData: JSON.parse(collectionOutput.data),
+            collectionData: {
+                [cloud]: JSON.parse(collectionOutput.data),
+            },
             resultsData: JSON.parse(jsonOutput.data)
-        }
+        };
 
-        console.assert(results.collectionData, "No Collection Data found.");
-        console.assert(results.resultsData, "No Results Data found.");
-        await writeToS3(process.env.RESULT_BUCKET, results, process.env.RESULT_PREFIX, configurations.s3Prefix);
+        console.assert(results.collectionData, 'No Collection Data found.');
+        console.assert(results.resultsData, 'No Results Data found.');
+        await writeToS3(process.env.RESULT_BUCKET, results, process.env.RESULT_PREFIX, parsedEvent.s3Prefix);
         return 'Ok';
     } catch(err) {
         // Just log the error and re-throw so we have a lambda error metric
         console.log(err);
         throw(err);
     }
-}
+};

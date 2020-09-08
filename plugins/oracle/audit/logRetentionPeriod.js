@@ -41,7 +41,7 @@ module.exports = {
 
                 if (!configurations) return rcb();
 
-                if ((configurations.err && configurations.err.length) || !configurations.data) {
+                if (configurations.err || !configurations.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for audit configurations: ' + helpers.addError(configurations), region);
                     return rcb();
@@ -54,15 +54,13 @@ module.exports = {
                 var configuration = configurations.data;
 
                 if (configuration.retentionPeriodDays &&
-                    config.audit_log_retention_days &&
-                    configuration.retentionPeriodDays < config.audit_log_retention_days) {
-                    helpers.addResult(results, 2,
-                        `Audit configuration period is ${configuration.retentionPeriodDays} days`, region);
-                    return rcb();
-                } else {
+                config.audit_log_retention_days &&
+                configuration.retentionPeriodDays >= config.audit_log_retention_days) {
                     helpers.addResult(results, 0,
                         `Audit configuration period is ${configuration.retentionPeriodDays} days`, region);
-                    return rcb();
+                } else {
+                    helpers.addResult(results, 2,
+                        `Audit configuration period is ${configuration.retentionPeriodDays} days`, region);
                 }
             }
             rcb();

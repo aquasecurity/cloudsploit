@@ -1,44 +1,74 @@
 var csvWriter = require('csv-write-stream');
 var fs = require('fs');
+var ttytable = require('tty-table');
 
-// For the console output, we don't need any state since we can write
-// directly to the console.
-var consoleOutputHandler = {
-    startCompliance: function(plugin, pluginKey, compliance) {
-        var complianceDesc = compliance.describe(pluginKey, plugin);
-        if (complianceDesc) {
-            console.log('');
-            console.log('-----------------------');
-            console.log(plugin.title);
-            console.log('-----------------------');
-            console.log(complianceDesc);
-            console.log('');
+function exchangeStatusWord(result) {
+    if (result.status === 0) return 'OK';
+    if (result.status === 1) return 'WARN';
+    if (result.status === 2) return 'FAIL';
+    return 'UNKNOWN';
+}
+
+function commaSafe(str) {
+    if (!str) return '';
+    return str.replace(/,/g, ' ');
+}
+
+function log(msg, settings) {
+    if (!settings.mocha) console.log(msg);
+}
+
+var createConsoleOutputHandler = function(tableHeaders, tableRows, settings) {
+    return {
+        writeResult: function(result, plugin, pluginKey, complianceMsg) {
+            var toWrite = {
+                Category: plugin.category,
+                Plugin: plugin.title,
+                Description: plugin.description,
+                Resource: (result.resource || 'N/A'),
+                Region: (result.region || 'global'),
+                Status: exchangeStatusWord(result),
+                Message: result.message || 'N/A'
+            };
+
+            if (complianceMsg) {
+                if (tableHeaders.length !== 8) {
+                    tableHeaders.push({
+                        value: 'Compliance'
+                    });
+                }
+                toWrite.Compliance = complianceMsg;
+            }
+
+            tableRows.push(toWrite);
+        },
+
+        close: function() {
+            // For console output, print the table
+            if (settings.console == 'none') {
+                console.log('INFO: Console output suppressed because "console" setting was "none"');
+            } else if (settings.console == 'text') {
+                tableRows.forEach(function(row){
+                    Object.entries(row).forEach(function(entry){
+                        console.log(`${entry[0]}: ${entry[1]}`);
+                    });
+                    console.log('\n');
+                });
+            } else {
+                const t1 = ttytable(tableHeaders, tableRows, null, {
+                    borderStyle: 'solid',
+                    borderColor: 'white',
+                    paddingBottom: 0,
+                    headerAlign: 'center',
+                    headerColor: 'white',
+                    align: 'left',
+                    color: 'white',
+                    width: '100%'
+                }).render();
+                if (process.argv.join('').indexOf('mocha') === -1) console.log(t1);
+            }
         }
-    },
-
-    endCompliance: function() {
-        // For console output, we don't do anything
-    },
-
-    writeResult: function(result, plugin) {
-        var statusWord;
-        if (result.status === 0) {
-            statusWord = 'OK';
-        } else if (result.status === 1) {
-            statusWord = 'WARN';
-        } else if (result.status === 2) {
-            statusWord = 'FAIL';
-        } else {
-            statusWord = 'UNKNOWN';
-        }
-
-        console.log(plugin.category + '\t' + plugin.title + '\t' +
-                        (result.resource || 'N/A') + '\t' +
-                        (result.region || 'Global') + '\t\t' +
-                        statusWord + '\t' + result.message);
-    },
-
-    close: function() {}
+    };
 };
 
 module.exports = {
@@ -46,41 +76,32 @@ module.exports = {
      * Creates an output handler that writes output in the CSV format.
      * @param {fs.WriteSteam} stream The stream to write to or an object that
      * obeys the writeable stream contract.
+     * @param {Object} settings The source settings object
      */
-    createCsv: function(stream) {
-        var writer = csvWriter({headers: ['category', 'title', 'resource',
-            'region', 'statusWord', 'message']});
+    createCsv: function(stream, settings) {
+        var headers = ['category', 'title', 'description',
+            'resource', 'region', 'statusWord', 'message'];
+        if (settings.compliance) headers.push('compliance');
+        var writer = csvWriter({headers: headers});
         writer.pipe(stream);
 
         return {
             writer: writer,
 
-            startCompliance: function() {
-            },
-
-            endCompliance: function() {
-            },
-
-            writeResult: function(result, plugin) {
-                var statusWord;
-                if (result.status === 0) {
-                    statusWord = 'OK';
-                } else if (result.status === 1) {
-                    statusWord = 'WARN';
-                } else if (result.status === 2) {
-                    statusWord = 'FAIL';
-                } else {
-                    statusWord = 'UNKNOWN';
-                }
-
-                this.writer.write([plugin.category, plugin.title,
+            writeResult: function(result, plugin, pluginKey, complianceMsg) {
+                var toWrite = [plugin.category, plugin.title, commaSafe(plugin.description),
                     (result.resource || 'N/A'),
                     (result.region || 'Global'),
-                    statusWord, result.message]);
+                    exchangeStatusWord(result), commaSafe(result.message)];
+
+                if (settings.compliance) toWrite.push(complianceMsg || '');
+
+                this.writer.write(toWrite);
             },
 
             close: function() {
                 this.writer.end();
+                log(`INFO: CSV file written to ${settings.csv}`, settings);
             }
         };
     },
@@ -90,44 +111,34 @@ module.exports = {
      * @param {fs.WriteSteam} stream The stream to write to or an object that
      * obeys the writeable stream contract.
      */
-    createJson: function(stream) {
+    createJson: function(stream, settings) {
         var results = [];
         return {
             stream: stream,
 
-            startCompliance: function() {
-            },
-
-            endCompliance: function() {
-            },
-
-            writeResult: function(result, plugin, pluginKey) {
-                var statusWord;
-                if (result.status === 0) {
-                    statusWord = 'OK';
-                } else if (result.status === 1) {
-                    statusWord = 'WARN';
-                } else if (result.status === 2) {
-                    statusWord = 'FAIL';
-                } else {
-                    statusWord = 'UNKNOWN';
-                }
-
-                results.push({
+            writeResult: function(result, plugin, pluginKey, complianceMsg) {
+                var toWrite = {
                     plugin: pluginKey,
                     category: plugin.category,
                     title: plugin.title,
+                    description: plugin.description,
                     resource: result.resource || 'N/A',
                     region: result.region || 'Global',
-                    status: statusWord,
+                    status: exchangeStatusWord(result),
                     statusNumber: result.status,
                     message: result.message
-                });
+                };
+
+                if (complianceMsg) toWrite.compliance = complianceMsg;
+                results.push(toWrite);
             },
 
             close: function() {
-                this.stream.write(JSON.stringify(results));
+                this.stream.write(JSON.stringify(results, null, 2));
                 this.stream.end();
+                if (settings) {
+                    log(`INFO: JSON file written to ${settings.json}`, settings);
+                }
             }
         };
     },
@@ -142,7 +153,7 @@ module.exports = {
      * @param {fs.WriteStream} stream The stream to write to or an object that
      * obeys the writeable stream contract.
      */
-    createJunit: function(stream) {
+    createJunit: function(stream, settings) {
         return {
             stream: stream,
 
@@ -152,12 +163,6 @@ module.exports = {
              * we group tests based on the plugin key.
              */
             testSuites: {},
-
-            startCompliance: function() {
-            },
-
-            endCompliance: function() {
-            },
 
             /**
              * Adds the result to be written to the output file.
@@ -224,6 +229,7 @@ module.exports = {
                 this.stream.write('</testsuites>\n');
 
                 this.stream.end();
+                log(`INFO: JUnit file written to ${settings.junit}`, settings);
             },
 
             /**
@@ -281,18 +287,21 @@ module.exports = {
      * @param {fs.WriteSteam} stream The stream to write to or an object that
      * obeys the writeable stream contract.
      */
-    createCollection: function(stream) {
+    createCollection: function(stream, settings) {
         var results = {};
         return {
             stream: stream,
 
-            write: function(collection, providerName) {
-                results[providerName] = collection;
+            write: function(collection) {
+                results = collection;
             },
 
             close: function() {
-                this.stream.write(JSON.stringify(results));
+                this.stream.write(JSON.stringify(results, null, 2));
                 this.stream.end();
+                if (settings) {
+                    log(`INFO: Collection file written to ${settings.collection}`, settings);
+                }
             }
         };
     },
@@ -303,51 +312,35 @@ module.exports = {
     // and the caller doesn't need to worry about that part.
     multiplexer(outputs, collectionOutputs, ignoreOkStatus) {
         return {
-            startCompliance: function(plugin, pluginKey, compliance) {
-                for (var output of outputs) {
-                    if (output.startCompliance) {
-                        output.startCompliance(plugin, pluginKey, compliance);
-                    }
-                }
-            },
-
-            endCompliance: function(plugin, pluginKey, compliance) {
-                for (var output of outputs) {
-                    if (output.endCompliance) {
-                        output.endCompliance(plugin, pluginKey, compliance);
-                    }
-                }
-            },
-
-            writeResult: function (result, plugin, pluginKey) {
-                for (var output of outputs) {
+            writeResult: function(result, plugin, pluginKey, complianceMsg) {
+                outputs.forEach(function(output) {
                     if (output.writeResult) {
                         if (!(ignoreOkStatus && result.status === 0)) {
-                            output.writeResult(result, plugin, pluginKey);
+                            output.writeResult(result, plugin, pluginKey, complianceMsg);
                         }
                     }
-                }
+                });
             },
-
+            // supports collection lists
             writeCollection: function(collection, providerName) {
-                for (var collectionOutput of collectionOutputs)
-                    if(collectionOutput.write) {
-                        collectionOutput.write(collection, providerName)
-                    }
+                collectionOutputs.forEach(function(collectionOutput) {
+                    if (collectionOutput.write) collectionOutput.write(collection, providerName);
+                });
             },
 
-            close: function () {
-                for (var collectionOutput of collectionOutputs)
-                    if(collectionOutput.close) {
-                        collectionOutput.close()
+            close: function() { // support collection lists
+                collectionOutputs.forEach(function(collectionOutput) {
+                    if (collectionOutput.close) {
+                        collectionOutput.close();
                     }
-                for (var output of outputs) {
+                });
+                outputs.forEach(function(output) {
                     if (output.close) {
                         output.close();
                     }
-                }
+                });
             }
-        }
+        };
     },
     /**
      * Creates an output handler depending on the arguments list as expected
@@ -362,57 +355,81 @@ module.exports = {
      * one output handler or one that forwards function calls to a group of
      * output handlers.
      */
-    create: function(argv) {
+    create: function(settings) {
         var outputs = [];
         var collectionOutputs = [];
 
+        var tableHeaders = [
+            {
+                value: 'Category',
+                width: '10%',
+            },
+            {
+                value: 'Plugin'
+            },
+            {
+                value: 'Description'
+            },
+            {
+                value: 'Resource'
+            },
+            {
+                value: 'Region'
+            },
+            {
+                value: 'Status',
+                width: '10%',
+                formatter: function(value) {
+                    if (value === 'OK') {
+                        value = this.style(value, 'bgGreen', 'black');
+                    } else if (value === 'FAIL') {
+                        value = this.style(value, 'bgRed', 'white');
+                    } else if (value === 'WARN') {
+                        value = this.style(value, 'bgYellow', 'black');
+                    } else {
+                        value = this.style(value, 'bgGray', 'white');
+                    }
+                    return value;
+                }
+            },
+            {
+                value: 'Message'
+            }
+        ];
+
+        var tableRows = [];
+
         // Creates the handlers for writing output.
-        var addCsvOutput = argv.find(function(arg) {
-            return arg.startsWith('--csv=');
-        });
-        if (addCsvOutput) {
-            var stream = fs.createWriteStream(addCsvOutput.substr(6));
-            outputs.push(this.createCsv(stream));
+        if (settings.csv) {
+            var stream = fs.createWriteStream(settings.csv);
+            outputs.push(this.createCsv(stream, settings));
         }
 
-        var addJunitOutput = argv.find(function(arg) {
-            return arg.startsWith('--junit=');
-        });
-        if (addJunitOutput) {
-            var streamJunit = fs.createWriteStream(addJunitOutput.substr(8));
-            outputs.push(this.createJunit(streamJunit));
+        if (settings.junit) {
+            var streamJunit = fs.createWriteStream(settings.junit);
+            outputs.push(this.createJunit(streamJunit, settings));
         }
 
-        var addJsonOutput = argv.find(function(arg) {
-            return arg.startsWith('--json=');
-        });
-        if (addJsonOutput) {
-            var streamJson = fs.createWriteStream(addJsonOutput.substr(7));
-            outputs.push(this.createJson(streamJson));
+        if (settings.json) {
+            var streamJson = fs.createWriteStream(settings.json);
+            outputs.push(this.createJson(streamJson, settings));
         }
 
-        var addConsoleOutput = argv.find(function(arg) {
-            return arg.startsWith('--console');
-        });
-
-        var addCollectionOutput = argv.find(function(arg) {
-            return arg.startsWith('--collection=');
-        });
-        if(addCollectionOutput) {
-            var streamColl = fs.createWriteStream(addCollectionOutput.substr(13));
-            collectionOutput = this.createCollection(streamColl);
+        if (settings.collection) {
+            var streamColl = fs.createWriteStream(settings.collection);
+            collectionOutputs.push(this.createCollection(streamColl, settings));
         }
+
+        var addConsoleOutput = settings.console;
 
         // Write to console if specified or by default if there is not
         // other output handler specified.
         if (addConsoleOutput || outputs.length == 0) {
-            outputs.push(consoleOutputHandler);
+            outputs.push(createConsoleOutputHandler(tableHeaders, tableRows, settings));
         }
 
         // Ignore any "OK" results - only report issues
-        var ignoreOkStatus = argv.find(function(arg) {
-            return arg.startsWith('--ignore-ok');
-        });
+        var ignoreOkStatus = settings.ignore_ok;
 
         return this.multiplexer(outputs, collectionOutputs, ignoreOkStatus);
     }
