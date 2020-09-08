@@ -25,7 +25,7 @@ describe('output', function () {
     describe('junit', function () {
         it('should generate empty junit when no results', function () {
             var buffer = createOutputBuffer();
-            var handler = output.createJunit(buffer);
+            var handler = output.createJunit(buffer, {mocha: true, junit: 'test.junit'});
             handler.close();
             expect(buffer.cache).to.equal(
                 '<?xml version="1.0" encoding="UTF-8" ?>\n' + 
@@ -34,7 +34,7 @@ describe('output', function () {
 
         it('should indicate one pass there is one passing result', function () {
             var buffer = createOutputBuffer();
-            var handler = output.createJunit(buffer);
+            var handler = output.createJunit(buffer, { mocha: true, junit: 'test.junit' });
             handler.writeResult({status: 0}, {title:'myTitle'}, 'key');
             handler.close();
 
@@ -45,7 +45,7 @@ describe('output', function () {
 
         it('should indicate one failure there is one failing result', function () {
             var buffer = createOutputBuffer();
-            var handler = output.createJunit(buffer);
+            var handler = output.createJunit(buffer, { mocha: true, junit: 'test.junit' });
             handler.writeResult({status: 2, message: 'fail message'}, {title:'myTitle'}, 'key');
             handler.close();
 
@@ -57,7 +57,7 @@ describe('output', function () {
 
         it('should indicate one error there is one failing error', function () {
             var buffer = createOutputBuffer();
-            var handler = output.createJunit(buffer);
+            var handler = output.createJunit(buffer, { mocha: true, junit: 'test.junit' });
             handler.writeResult({status: 3, message: 'error message'}, {title:'myTitle'}, 'key');
             handler.close();
 
@@ -71,34 +71,34 @@ describe('output', function () {
     describe('csv', function () {
         it('should generate only header if no results', function () {
             var buffer = createOutputBuffer();
-            var handler = output.createCsv(buffer);
+            var handler = output.createCsv(buffer, { mocha: true, junit: 'test.csv' });
             handler.close();
             expect(buffer.cache).to.equal('');
         })
 
         it('should indicate one pass there is one passing result', function () {
             var buffer = createOutputBuffer();
-            var handler = output.createCsv(buffer);
-            handler.writeResult({status: 0}, {title:'myTitle'}, 'key');
+            var handler = output.createCsv(buffer, { mocha: true, junit: 'test.csv' });
+            handler.writeResult({status: 0}, {title:'myTitle', description: 'myDescription'}, 'key');
             handler.close();
-            expect(buffer.cache).to.equal('category,title,resource,region,statusWord,message\n,myTitle,N/A,Global,OK,\n');
+            expect(buffer.cache).to.equal('category,title,description,resource,region,statusWord,message\n,myTitle,myDescription,N/A,Global,OK,\n');
         })
     })
 
     describe('json', function () {
         it('should generate empty array if no results', function () {
             var buffer = createOutputBuffer();
-            var handler = output.createJson(buffer);
+            var handler = output.createJson(buffer, { mocha: true, junit: 'test.json' });
             handler.close();
             expect(buffer.cache).to.equal('[]');
         })
 
         it('should indicate one pass there is one passing result', function () {
             var buffer = createOutputBuffer();
-            var handler = output.createJson(buffer);
-            handler.writeResult({status: 0}, {title:'myTitle'}, 'key');
+            var handler = output.createJson(buffer, { mocha: true, junit: 'test.json' });
+            handler.writeResult({ status: 0 }, { title: 'myTitle', description: 'myDescription' }, 'key');
             handler.close();
-            expect(buffer.cache).to.equal('[{"plugin":"key","title":"myTitle","resource":"N/A","region":"Global","status":"OK"}]');
+            expect(JSON.stringify(JSON.parse(buffer.cache))).to.equal('[{"plugin":"key","title":"myTitle","description":"myDescription","resource":"N/A","region":"Global","status":"OK"}]');
         })
     })
 
@@ -108,7 +108,11 @@ describe('output', function () {
             // default, which is console output.
             var handler = output.create([])
 
-            handler.writeResult({status: 0}, {title:'myTitle'}, 'key');
+            handler.writeResult({status: 0, message: 'Certificate has validation enabled'}, {
+                category: 'ACM',
+                title:'ACM Certificate Validation',
+                description: 'Testing the ACM certificate which must have DNS validation enabled'
+            }, 'key');
             handler.close();
             // No expect here because in the current structure, we cannot
             // capture the standard output
@@ -119,21 +123,11 @@ describe('output', function () {
             // default, which is console output.
             var handler = output.create([]);
 
-            // Create the information about the compliance rule - for this
-            // test, it doesn't have to be anything fancy
-            var complianceRule = {
-                describe: function (pluginKey, plugin) {
-                    return 'desc';
-                }
-            };
-            var plugin = {
-                title: 'title'
-            };
-            var pluginKey = 'someIdentifier';
-
-            handler.startCompliance(plugin, pluginKey, complianceRule);
-            handler.writeResult({status: 0}, {title:'myTitle'}, 'key');
-            handler.endCompliance(plugin, pluginKey, complianceRule);
+            handler.writeResult({ status: 0, message: 'Certificate has validation enabled'}, {
+                category: 'ACM',
+                title: 'ACM Certificate Validation',
+                description: 'Testing the ACM certificate which must have DNS validation enabled'
+            }, 'key2', 'Compliance message');
             handler.close();
             // No expect here because in the current structure, we cannot
             // capture the standard output

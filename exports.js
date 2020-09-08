@@ -5,6 +5,7 @@ module.exports = {
         'acmValidation'                 : require(__dirname + '/plugins/aws/acm/acmValidation.js'),
         'acmCertificateExpiry'          : require(__dirname + '/plugins/aws/acm/acmCertificateExpiry.js'),
         'asgMultiAz'                    : require(__dirname + '/plugins/aws/autoscaling/asgMultiAz.js'),
+        'emptyASG'                      : require(__dirname + '/plugins/aws/autoscaling/emptyASG.js'),
         'workgroupEncrypted'            : require(__dirname + '/plugins/aws/athena/workgroupEncrypted.js'),
         'workgroupEnforceConfiguration' : require(__dirname + '/plugins/aws/athena/workgroupEnforceConfiguration.js'),
         'publicS3Origin'                : require(__dirname + '/plugins/aws/cloudfront/publicS3Origin.js'),
@@ -13,6 +14,8 @@ module.exports = {
         'cloudfrontHttpsOnly'           : require(__dirname + '/plugins/aws/cloudfront/cloudfrontHttpsOnly.js'),
         'cloudfrontLoggingEnabled'      : require(__dirname + '/plugins/aws/cloudfront/cloudfrontLoggingEnabled.js'),
         'cloudfrontWafEnabled'          : require(__dirname + '/plugins/aws/cloudfront/cloudfrontWafEnabled.js'),
+
+        'plainTextParameters'           :  require(__dirname + '/plugins/aws/cloudformation/plainTextParameters.js'),
 
         'cloudtrailBucketAccessLogging' : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailBucketAccessLogging.js'),
         'cloudtrailBucketDelete'        : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailBucketDelete.js'),
@@ -29,6 +32,7 @@ module.exports = {
         'dynamoKmsEncryption'           : require(__dirname + '/plugins/aws/dynamodb/dynamoKmsEncryption.js'),
 
         'defaultSecurityGroup'          : require(__dirname + '/plugins/aws/ec2/defaultSecurityGroup.js'),
+        'launchWizardSecurityGroups'    : require(__dirname + '/plugins/aws/ec2/launchWizardSecurityGroups'),
         'elasticIpLimit'                : require(__dirname + '/plugins/aws/ec2/elasticIpLimit.js'),
         'subnetIpAvailability'          : require(__dirname + '/plugins/aws/ec2/subnetIpAvailability.js'),
         'excessiveSecurityGroups'       : require(__dirname + '/plugins/aws/ec2/excessiveSecurityGroups.js'),
@@ -71,8 +75,9 @@ module.exports = {
         'ebsSnapshotPrivate'            : require(__dirname + '/plugins/aws/ec2/ebsSnapshotPrivate.js'),
         'natMultiAz'                    : require(__dirname + '/plugins/aws/ec2/natMultiAz.js'),
         'defaultVpcInUse'               : require(__dirname + '/plugins/aws/ec2/defaultVpcInUse.js'),
-        'defaultVpcExists'               : require(__dirname + '/plugins/aws/ec2/defaultVpcExists.js'),
+        'defaultVpcExists'              : require(__dirname + '/plugins/aws/ec2/defaultVpcExists.js'),
         'crossVpcPublicPrivate'         : require(__dirname + '/plugins/aws/ec2/crossVpcPublicPrivate.js'),
+        'vpcEndpointAcceptance'         : require(__dirname + '/plugins/aws/ec2/vpcEndpointAcceptance'),
         'ebsEncryptedSnapshots'         : require(__dirname + '/plugins/aws/ec2/ebsEncryptedSnapshots.js'),
         'ec2MetadataOptions'             : require(__dirname + '/plugins/aws/ec2/ec2MetadataOptions.js'),
 
@@ -112,6 +117,7 @@ module.exports = {
         'iamUserAdmins'                 : require(__dirname + '/plugins/aws/iam/iamUserAdmins.js'),
         'iamUserNameRegex'              : require(__dirname + '/plugins/aws/iam/iamUserNameRegex.js'),
         'iamRolePolicies'               : require(__dirname + '/plugins/aws/iam/iamRolePolicies.js'),
+        'iamRoleLastUsed'               : require(__dirname + '/plugins/aws/iam/iamRoleLastUsed.js'),
         'maxPasswordAge'                : require(__dirname + '/plugins/aws/iam/maxPasswordAge.js'),
         'minPasswordLength'             : require(__dirname + '/plugins/aws/iam/minPasswordLength.js'),
         'noUserIamPolicies'             : require(__dirname + '/plugins/aws/iam/noUserIamPolicies.js'),
@@ -122,6 +128,7 @@ module.exports = {
         'passwordRequiresUppercase'     : require(__dirname + '/plugins/aws/iam/passwordRequiresUppercase.js'),
         'passwordReusePrevention'       : require(__dirname + '/plugins/aws/iam/passwordReusePrevention.js'),
         'rootAccessKeys'                : require(__dirname + '/plugins/aws/iam/rootAccessKeys.js'),
+        'rootSigningCertificate'        : require(__dirname + '/plugins/aws/iam/rootSigningCertificate.js'),
         'rootAccountInUse'              : require(__dirname + '/plugins/aws/iam/rootAccountInUse.js'),
         'rootHardwareMfa'               : require(__dirname + '/plugins/aws/iam/rootHardwareMfa.js'),
         'rootMfaEnabled'                : require(__dirname + '/plugins/aws/iam/rootMfaEnabled.js'),
@@ -145,6 +152,7 @@ module.exports = {
         'rdsMultiAz'                    : require(__dirname + '/plugins/aws/rds/rdsMultiAz.js'),
         'rdsSnapshotEncryption'         : require(__dirname + '/plugins/aws/rds/rdsSnapshotEncryption.js'),
         'rdsMinorVersionUpgrade'        : require(__dirname + '/plugins/aws/rds/rdsMinorVersionUpgrade.js'),
+        'sqlServerTLSVersion'           : require(__dirname + '/plugins/aws/rds/sqlServerTLSVersion'),
 
         'domainAutoRenew'               : require(__dirname + '/plugins/aws/route53/domainAutoRenew.js'),
         'domainExpiry'                  : require(__dirname + '/plugins/aws/route53/domainExpiry.js'),
