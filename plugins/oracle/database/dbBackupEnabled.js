@@ -24,7 +24,7 @@ module.exports = {
 
                 if (!databases) return rcb();
 
-                if ((databases.err && databases.err.length) || !databases.data) {
+                if (databases.err || !databases.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for databases: ' + helpers.addError(databases), region);
                     return rcb();

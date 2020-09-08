@@ -9,3 +9,4 @@ vscode/*
 .idea
 coverage/
 .nyc_output
+config.js

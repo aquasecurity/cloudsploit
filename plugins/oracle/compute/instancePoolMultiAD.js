@@ -47,7 +47,7 @@ module.exports = {
                             helpers.addResult(results, 0, 
                                 `Instance pool is in multiple availability domains: ${availabilityDomains}`, region, instancePool.id);
                     } else {
-                        helpers.addResult(results, 0, 
+                        helpers.addResult(results, 2,
                             'No availability domains', region, instancePool.id);
                     }
                 });
