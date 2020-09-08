@@ -5,10 +5,10 @@ module.exports = {
     title: 'Unused EBS Volumes',
     category: 'EC2',
     description: 'Ensures EBS volumes are in use and attached to EC2 instances',
-    more_info: 'EBS volumes should be deleted if the parent instance has been deleted to prevent accidental exposure of data',
-    recommended_action: 'Delete the unassociated EBS volume',
-    link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-attaching-volume.html',
-    apis: ['EC2:describeVolumes', 'EC2:describeInstances'],
+    more_info: 'EBS volumes should be deleted if the parent instance has been deleted to prevent accidental exposure of data.',
+    recommended_action: 'Delete the unassociated EBS volume.',
+    link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-deleting-volume.html',
+    apis: ['EC2:describeInstances', 'EC2:describeVolumes'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -59,7 +59,9 @@ module.exports = {
                 if (volume.VolumeId) {
                     if(!usedEbsVolumes.includes(volume.VolumeId)) {
                         unusedEbsVolumeFound = true;
-                        helpers.addResult(results, 2, 'EBS Volume is not attached to any EC2 instance', region, volume.VolumeId);
+                        helpers.addResult(results, 2,
+                            'EBS Volume is not attached to any EC2 instance',
+                            region, volume.VolumeId);
                     }
                 }
             });
