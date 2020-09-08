@@ -9,6 +9,9 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/acm/latest/userguide/managed-renewal.html',
     recommended_action: 'Ensure AWS is able to renew the certificate via email or DNS validation of the domain.',
     apis: ['ACM:listCertificates', 'ACM:describeCertificate'],
+    compliance: {
+        pci: 'PCI requires certificates to be kept up to date and rotated prior to expiry.'
+    },
     settings: {
         acm_certificate_expiry_pass: {
             name: 'ACM Certificate Expiry Pass',

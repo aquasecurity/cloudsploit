@@ -24,49 +24,45 @@ module.exports = {
 
                 if (!bootVolumes) return rcb();
 
-                if ((bootVolumes.err && bootVolumes.err.length) || !bootVolumes.data) {
+                if (bootVolumes.err || !bootVolumes.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for boot volume attachments: ' + helpers.addError(bootVolumes), region);
                     return rcb();
                 }
-
 
                 if (!bootVolumes.data.length) {
                     helpers.addResult(results, 0, 'No boot volumes found', region);
                     return rcb();
                 }
 
-
-                var badBootVolumes = [];
-                bootVolumes.data.forEach(bootVolume => {
-                    badBootVolumes.push(bootVolume.id);
-                });
-
                 var bootVolumeBackups = helpers.addSource(cache, source,
                     ['bootVolumeBackup', 'list', region]);
 
-                if (!bootVolumeBackups) return rcb();
-
-                if ((bootVolumeBackups.err && bootVolumeBackups.err.length) || !bootVolumeBackups.data) {
+                if (!bootVolumeBackups || bootVolumeBackups.err || !bootVolumeBackups.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for boot volume backups: ' + helpers.addError(bootVolumeBackups), region);
                     return rcb();
                 }
 
+                if (!bootVolumes.data.length) {
+                    helpers.addResult(results, 2, 'No boot volume backups found', region);
+                    return rcb();
+                }
+
+                var enabledBootVolumes = [];
                 bootVolumeBackups.data.forEach(bootVolumeBackup => {
-                    if (badBootVolumes.indexOf(bootVolumeBackup.bootVolumeId) > -1) {
-                        badBootVolumes.splice(badBootVolumes.indexOf(bootVolumeBackup.bootVolumeId), 1);
-                    }
+                    enabledBootVolumes.push(bootVolumeBackup.bootVolumeId)
                 });
 
-                if (badBootVolumes.length) {
-                    var badBootVolumesStr = badBootVolumes.join(', ');
-                    helpers.addResult(results, 2,
-                        `The following boot volumes are not actively restorable: ${badBootVolumesStr}`, region);
-                } else {
-                    helpers.addResult(results, 0,
-                        'All boot volumes are actively restorable', region);
-                }
+                bootVolumes.data.forEach(bootVolume => {
+                    if (enabledBootVolumes.indexOf(bootVolume.id) > -1) {
+                        helpers.addResult(results, 0,
+                            'The boot volume is actively restorable', region, bootVolume.id);
+                    } else {
+                        helpers.addResult(results, 2,
+                            'The boot volume is not actively restorable', region, bootVolume.id);
+                    }
+                });
             }
             rcb();
         }, function(){

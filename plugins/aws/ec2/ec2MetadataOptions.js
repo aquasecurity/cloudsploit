@@ -6,7 +6,7 @@ module.exports = {
     title: 'Insecure EC2 Metadata Options',
     category: 'EC2',
     description: 'Ensures EC2 instance metadata is updated to require HttpTokens or disable HttpEndpoint',
-    more_info: 'The new EC2 metadata service prevents SSRF attack escalations from accessing the senstive instance metadata endpoints.',
+    more_info: 'The new EC2 metadata service prevents SSRF attack escalations from accessing the sensitive instance metadata endpoints.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html#configuring-instance-metadata-service',
     recommended_action: 'Update instance metadata options to use IMDSv2',
     apis: ['EC2:describeInstances'],

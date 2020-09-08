@@ -31,7 +31,7 @@ module.exports = {
 
                 if (!getBucket) return rcb();
 
-                if ((getBucket.err && getBucket.err.length) || !getBucket.data) {
+                if (getBucket.err || !getBucket.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for object store bucket details: ' + helpers.addError(getBucket), region);
                 } else if (!getBucket.data.length) {

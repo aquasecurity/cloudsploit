@@ -15,7 +15,8 @@ module.exports = {
                 'should not be used.',
         pci: 'PCI requires that cardholder data can only be accessed by those with ' +
              'a legitimate business need. Restricting root access prevents access ' +
-             'to these environments from users who may not be identified.'
+             'to these environments from users who may not be identified.',
+        cis1: '1.1 Avoid the use of the root account'
     },
     settings: {
         root_account_in_use_days: {

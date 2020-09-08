@@ -33,9 +33,7 @@ module.exports = {
                 var getSecurityLists = helpers.addSource(cache, source,
                     ['securityList', 'list', region]);
 
-                if (getSecurityLists &&
-                    getSecurityLists.err &&
-                    getSecurityLists.err.length)  {
+                if (getSecurityLists && getSecurityLists.err)  {
 
                     helpers.addResult(results, 3,
                         'Unable to query for security lists: ' +
@@ -53,10 +51,7 @@ module.exports = {
                 var getSecurityRules = helpers.addSource(cache, source,
                     ['securityRule', 'list', region]);
 
-                if (getSecurityRules &&
-                    getSecurityRules.err &&
-                    getSecurityRules.err.length)  {
-
+                if (getSecurityRules && getSecurityRules.err)  {
                     helpers.addResult(results, 3,
                         'Unable to query for security rules: ' +
                         helpers.addError(getSecurityRules), region);
