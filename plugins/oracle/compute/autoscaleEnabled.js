@@ -14,10 +14,8 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings.govcloud);
-        var badInstancePools = [];
 
         async.each(regions.instancePool, function(region, rcb){
-
             if (helpers.checkRegionSubscription(cache, source, results, region)) {
 
                 var instancePools = helpers.addSource(cache, source,
@@ -25,68 +23,53 @@ module.exports = {
 
                 if (!instancePools) return rcb();
 
-                if ((instancePools.err && instancePools.err.length) || !instancePools.data) {
+                if (instancePools.err || !instancePools.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for instance pools: ' + helpers.addError(instancePools), region);
                     return rcb();
                 }
 
                 if (!instancePools.data.length) {
-                    helpers.addResult(results, 0,
-                        'No instance pool found', region);
+                    helpers.addResult(results, 0, 'No instance pool found', region);
+                    return rcb()
                 }
+
+                var autoscaleConfigurations = helpers.addSource(cache, source,
+                    ['autoscaleConfiguration', 'list', region]);
+
+                if (!autoscaleConfigurations || autoscaleConfigurations.err || !autoscaleConfigurations.data) {
+                    helpers.addResult(results, 3,
+                        'Unable to query for autoscaling configurations: ' + helpers.addError(autoscaleConfigurations), region);
+                    return rcb();
+                }
+
+                if (!autoscaleConfigurations.data.length) {
+                    helpers.addResult(results, 2, 'No autoscaling configurations found', region);
+                    return rcb();
+                }
+
+                var enabledInstancePools = [];
+                autoscaleConfigurations.data.forEach(autoscaleConfiguration => {
+                    if (autoscaleConfiguration.isEnabled &&
+                        autoscaleConfiguration.resource &&
+                        autoscaleConfiguration.resource.id) {
+                        enabledInstancePools.push(autoscaleConfiguration.resource.id);
+                    }
+                });
 
                 instancePools.data.forEach(instancePool => {
-                    badInstancePools.push(instancePool.id)
+                    if (enabledInstancePools.indexOf(instancePool.id) > -1) {
+                        helpers.addResult(results, 0,
+                            'The instance pool has autoscaling enabled', region, instancePool.id);
+                    } else {
+                        helpers.addResult(results, 2,
+                            'The instance pool has autoscaling disabled', region, instancePool.id);
+                    }
                 });
             }
-
             rcb();
         }, function() {
-            if (!badInstancePools) {
-                return callback(null, results, source);
-            }
-
-            async.each(regions.autoscaleConfiguration, function(location, lcb){
-
-                if (helpers.checkRegionSubscription(cache, source, results, location)) {
-
-                    var autoscaleConfigs = helpers.addSource(cache, source,
-                        ['autoscaleConfiguration', 'list', location]);
-
-                    if (!autoscaleConfigs) return lcb();
-
-                    if ((autoscaleConfigs.err && autoscaleConfigs.err.length) || !autoscaleConfigs.data) {
-                        helpers.addResult(results, 3,
-                            'Unable to query for autoscaling configurations: ' + helpers.addError(autoscaleConfigs), location);
-                        return lcb();
-                    }
-
-                    if (!autoscaleConfigs.data.length) {
-                        return lcb();
-                    }
-
-                    autoscaleConfigs.data.forEach(autoscaleConfig => {
-                        if (autoscaleConfig.isEnabled &&
-                            autoscaleConfig.resource &&
-                            autoscaleConfig.resource.id) {
-                            if (badInstancePools.indexOf(autoscaleConfig.resource.id) > -1) {
-                                badInstancePools.splice(badInstancePools.indexOf(autoscaleConfig.resource.id), 1);
-                            }
-                        }
-                    });
-                }
-                lcb();
-            }, function() {
-                if (badInstancePools.length) {
-                    helpers.addResult(results, 2,
-                        `The following instance pools do not have autoscaling configured: ${badInstancePools.join(', ')} `);
-                } else {
-                    helpers.addResult(results, 0,
-                        'All instance pools have autoscaling configured');
-                }
-                callback(null, results, source);
-            });
+            callback(null, results, source);
         });
     }
 };

@@ -11,3 +11,4 @@ vscode/*
 template.packaged.yaml
 coverage/
 .nyc_output
+config.js

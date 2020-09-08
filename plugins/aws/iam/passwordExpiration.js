@@ -15,7 +15,8 @@ module.exports = {
     permissions: {remediate: ['iam:UpdateAccountPasswordPolicy'], rollback: ['iam:UpdateAccountPasswordPolicy']},
     compliance: {
         pci: 'PCI requires that user passwords are rotated every 90 days. Forcing ' +
-             'password expirations enforces this policy.'
+             'password expirations enforces this policy.',
+        cis1: '1.11 Ensure IAM password policy expires passwords within 90 days or less'
     },
 
     run: function(cache, settings, callback) {

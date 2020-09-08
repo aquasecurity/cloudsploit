@@ -42,21 +42,15 @@ module.exports = {
             }
 
             users.data.forEach(user => {
-                if (!user.isMfaActivated) {
-                    noMFAUsers.push(user.name)
+                if (user.isMfaActivated) {
+                    helpers.addResult(results, 0, 'The user has MFA enabled', 'global', user.id);
+                } else {
+                    helpers.addResult(results, 2, 'The user has MFA disabled', 'global', user.id);
                 }
             });
-
             rcb();
         }, function () {
             // Global checking goes here
-            if (noMFAUsers.length) {
-                var noMFAUserStr = noMFAUsers.join(', ');
-                helpers.addResult(results, 2,
-                    `The following accounts do not have an MFA device enabled: ${noMFAUserStr}`, 'global');
-            } else {
-                helpers.addResult(results, 0, 'All accounts have MFA enabled.', 'global');
-            }
             callback(null, results, source);
         });
     }
