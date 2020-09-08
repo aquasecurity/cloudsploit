@@ -15,7 +15,8 @@ module.exports = {
     permissions: {remediate: ['iam:UpdateAccountPasswordPolicy'], rollback: ['iam:UpdateAccountPasswordPolicy']},
     compliance: {
         pci: 'PCI requires a strong password policy. Setting IAM password ' +
-             'requirements enforces this policy.'
+             'requirements enforces this policy.',
+        cis1: '1.8 Ensure IAM password policy require at least one number'
     },
 
     run: function(cache, settings, callback) {

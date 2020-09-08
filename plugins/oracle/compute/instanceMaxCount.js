@@ -130,7 +130,7 @@ module.exports = {
 
                 if (!instances) return rcb();
 
-                if ((instances.err && instances.err.length) || !instances.data) {
+                if (instances.err || !instances.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for instances: ' + helpers.addError(instances), region);
                     return rcb();
@@ -146,8 +146,8 @@ module.exports = {
                 instances.data.forEach(instance => {
                     if (instance.lifecycleState &&
                         instance.lifecycleState === 'RUNNING') {
-                        instanceCountGlobal +=1;
-                        instanceCount +=1;
+                        instanceCountGlobal++;
+                        instanceCount++;
                     }
                 });
 

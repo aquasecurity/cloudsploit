@@ -60,6 +60,12 @@ var calls = {
             }
         }
     },
+    CloudFormation: {
+        describeStacks: {
+            property: 'Stacks',
+            paginate: 'NextToken'
+        }
+    },
     CloudFront: {
         // TODO: Pagination is using an older format
         listDistributions: {
@@ -230,6 +236,10 @@ var calls = {
                 ]
             }
         },
+        describeVpcEndpointServices: {
+            property: 'ServiceDetails',
+            paginate: 'NextToken'
+        },
         describeRouteTables: {
             property: 'RouteTables',
             paginate: 'NextToken'
@@ -391,8 +401,9 @@ var calls = {
             property: 'DBSnapshots',
             paginate: 'Marker'
         },
-        describeDBParameterGroups:{
+        describeDBParameterGroups: {
             property: 'DBParameterGroups',
+            paginate: 'Marker'
         }
     },
     Redshift: {
@@ -890,6 +901,12 @@ var postcalls = [
                 reliesOnService: 'iam',
                 reliesOnCall: 'listRoles',
                 override: true
+            },
+            getRole: {
+                reliesOnService: 'iam',
+                reliesOnCall: 'listRoles',
+                filterKey: 'RoleName',
+                filterValue: 'RoleName'
             }
         }
     }
@@ -901,7 +918,7 @@ var collect = function(AWSConfig, settings, callback) {
     if (settings.gather) {
         return callback(null, calls, postcalls);
     }
-    
+
     AWSConfig.maxRetries = 8;
     AWSConfig.retryDelayOptions = {base: 100};
 

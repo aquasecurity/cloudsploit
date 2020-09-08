@@ -88,65 +88,6 @@ describe('multipleSubnets', function () {
 
             plugin.run(cache, {}, callback);
         })
-        it('should give passing result if there are multiple VCNs in a region', function (done) {
-            const callback = (err, results) => {
-                expect(results.length).to.be.above(0)
-                expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('VCNs are used.')
-                expect(results[0].region).to.equal('us-ashburn-1')
-                done()
-            };
-
-            const cache = createCache(
-                null,
-                null,
-                [
-                    {
-                        "cidrBlock": "10.1.0.0/16",
-                        "compartmentId": "ocid1.tenancy.oc1..aaaaaaaao43aqdrzuacodg7ffqv2zeauftjyjkwhnbrugt44ympzeiblxx7q",
-                        "defaultDhcpOptionsId": "ocid1.dhcpoptions.oc1.iad.aaaaaaaaxh7iyslywylxkgniny66a4plra33abpyg5y2lpqcutgfyneouj2a",
-                        "defaultRouteTableId": "ocid1.routetable.oc1.iad.aaaaaaaavfrldnlzxwbvdikxybzunzzgjgeq43upwzfa5whjtrndoqidm7lq",
-                        "defaultSecurityListId": "ocid1.securitylist.oc1.iad.aaaaaaaaptqi7soqbtr6uaskgtyc2qjivca3a3ux5s5u4iyhcyx3d66wya6a",
-                        "definedTags": {},
-                        "displayName": "Test Virtual Network 2",
-                        "dnsLabel": "testvirtualnetw",
-                        "freeformTags": {},
-                        "id": "ocid1.vcn.oc1.iad.aaaaaaaaeipubpvwvbxo4wse2wh7e3subl65dfv2rlmpczadbluneqg2ntlq",
-                        "lifecycleState": "AVAILABLE",
-                        "timeCreated": "2019-06-04T18:32:32.614Z",
-                        "vcnDomainName": "testvirtualnetw.oraclevcn.com"
-                    },
-                    {
-                        "cidrBlock": "10.0.0.0/16",
-                        "compartmentId": "ocid1.tenancy.oc1..aaaaaaaao43aqdrzuacodg7ffqv2zeauftjyjkwhnbrugt44ympzeiblxx7q",
-                        "defaultDhcpOptionsId": "ocid1.dhcpoptions.oc1.iad.aaaaaaaa4ytfmktadjazpa6o4ponigkha5qmydkxrac6vcirdshejakxwmnq",
-                        "defaultRouteTableId": "ocid1.routetable.oc1.iad.aaaaaaaayqkxq4lotwh7vzorhkcc2tdv5jnt5z464hnbaijfwjsolpmnctiq",
-                        "defaultSecurityListId": "ocid1.securitylist.oc1.iad.aaaaaaaai3cwmosnfihr4rxpeyjfbt7j522tdoexvr2fyr6kqioxhdwwfyzq",
-                        "definedTags": {},
-                        "displayName": "Test Virtual Network #1",
-                        "freeformTags": {},
-                        "id": "ocid1.vcn.oc1.iad.aaaaaaaakw2ep6iemb6wy3pexoox63rjpqlnyjinzdoyewee7e22zhrbqp7q",
-                        "lifecycleState": "AVAILABLE",
-                        "timeCreated": "2019-02-28T18:24:37.604Z"
-                    },
-                    {
-                        "cidrBlock": "10.0.0.0/16",
-                        "compartmentId": "ocid1.tenancy.oc1..aaaaaaaao43aqdrzuacodg7ffqv2zeauftjyjkwhnbrugt44ympzeiblxx7q",
-                        "defaultDhcpOptionsId": "ocid1.dhcpoptions.oc1.iad.aaaaaaaafnnevu3kpld76oriye2llmxexctk5b5p2bpclxbn655okva2h2la",
-                        "defaultRouteTableId": "ocid1.routetable.oc1.iad.aaaaaaaa6ihfuq4kr5i46rakq3uunbglbnlxnaoyt3u63xo4qmcdhjnbod4a",
-                        "defaultSecurityListId": "ocid1.securitylist.oc1.iad.aaaaaaaazhtqkhrkifh7h2jherpmogcofcfvs2i6aeaqnzdueyhhxwjgrlma",
-                        "definedTags": {},
-                        "displayName": "Test Virtual Network #1",
-                        "freeformTags": {},
-                        "id": "ocid1.vcn.oc1.iad.aaaaaaaaihl7n5qajssmue7fse6g2wkmtsbihpad7rhqcxqwnuu5sriv3wfq",
-                        "lifecycleState": "AVAILABLE",
-                        "timeCreated": "2019-02-28T18:19:32.594Z"
-                    }
-                ]
-            );
-
-            plugin.run(cache, {}, callback);
-        })
 
         it('should give unknown result if a Subnet error is passed or no data is present', function (done) {
             const callback = (err, results) => {
@@ -183,10 +124,11 @@ describe('multipleSubnets', function () {
 
             plugin.run(cache, {}, callback);
         })
-        it('should give passing result if there are no subnets', function (done) {
+
+        it('should give warning result if there are no subnets', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
-                expect(results[0].status).to.equal(0)
+                expect(results[0].status).to.equal(1)
                 expect(results[0].message).to.include('The VCN does not have any subnets')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
@@ -221,7 +163,7 @@ describe('multipleSubnets', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('different subnets used in one VCN')
+                expect(results[0].message).to.include('different subnets in VCN')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -375,7 +317,7 @@ describe('multipleSubnets', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('in one VCN is used')
+                expect(results[0].message).to.include('Only one subnet is used.')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
