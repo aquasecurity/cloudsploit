@@ -22,7 +22,7 @@ async function writeToS3(bucket, resultsToWrite, templatePrefix, s3Prefix) {
     var s3 = new AWS.S3({apiVersion: 'latest'});
     var bucketPrefix = templatePrefix ? `${templatePrefix}/` : '';
     bucketPrefix = s3Prefix ? `${bucketPrefix}${s3Prefix}/` : bucketPrefix;
-    require('fs').writeFileSync('runresults.json', JSON.stringify(resultsToWrite, null, 2));
+    // require('fs').writeFileSync('runresults.json', JSON.stringify(resultsToWrite, null, 2));
     if (bucket && resultsToWrite) {
         console.log('Writing Output to S3');
         var dt = new Date();
@@ -33,8 +33,8 @@ async function writeToS3(bucket, resultsToWrite, templatePrefix, s3Prefix) {
         console.log(`Writing results to s3://${bucket}/${key}`);
         console.log(`Writing results to s3://${bucket}/${latestKey}`);
         var promises = [
-            // s3.putObject({Bucket: bucket, Key: latestKey, Body: results}).promise(),
-            // s3.putObject({Bucket: bucket, Key: key, Body: results}).promise()
+            s3.putObject({Bucket: bucket, Key: latestKey, Body: results}).promise(),
+            s3.putObject({Bucket: bucket, Key: key, Body: results}).promise()
         ];
 
         return Promise.all(promises);
