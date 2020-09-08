@@ -9,6 +9,9 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
     recommended_action: 'Restrict TCP port 3389 to known IP addresses',
     apis: ['EC2:describeSecurityGroups'],
+    compliance: {
+        cis1: '4.2 Ensure no security groups allow ingress from 0.0.0.0/0 to port 3389'
+    },
     remediation_description: 'The impacted security group rule will be deleted if no input is provided. Otherwise, any input will replace the open CIDR rule.',
     remediation_min_version: '202006020730',
     apis_remediate: ['EC2:describeSecurityGroups'],

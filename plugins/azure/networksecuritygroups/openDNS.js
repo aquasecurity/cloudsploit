@@ -9,6 +9,11 @@ module.exports = {
     link: 'https://docs.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
     recommended_action: 'Restrict TCP and UDP port 53 to known IP addresses',
     apis: ['networkSecurityGroups:listAll'],
+    remediation_min_version: '202008121825',
+    remediation_description: 'The impacted network security group rule will be deleted if no input is provided. If the failing port is in a port range and no input is provided, the range will be deleted. Otherwise, any input will replace the open CIDR rule.',
+    apis_remediate: ['networkSecurityGroups:listAll'],
+    actions: {remediate:['networkSecurityGroups:update'], rollback:['networkSecurityGroups:update']},
+    permissions: {remediate: ['networkSecurityGroups:update'], rollback: ['networkSecurityGroups:update']},
 
     run: function(cache, settings, callback) {
         const results = [];
@@ -17,9 +22,8 @@ module.exports = {
 
         async.each(locations.networkSecurityGroups, function(location, rcb) {
 
-            let networkSecurityGroups = helpers.addSource(
-                cache, source, ['networkSecurityGroups', 'listAll', location]
-            );
+            let networkSecurityGroups = helpers.addSource(cache, source,
+                ['networkSecurityGroups', 'listAll', location]);
 
             if (!networkSecurityGroups) return rcb();
 
@@ -35,8 +39,7 @@ module.exports = {
 
             let ports = {
                 'UDP': [53],
-                'TCP': [53],
-                '*'  : [53]
+                'TCP': [53]
             };
 
             let service = 'DNS';
@@ -46,6 +49,42 @@ module.exports = {
             rcb();
         }, function() {
             callback(null, results, source);
+        });
+    },
+    remediate: function(config, cache, settings, resource, callback) {
+        var remediation_file = settings.remediation_file;
+        var putCall = this.actions.remediate;
+
+        // inputs specific to the plugin
+        var pluginName = 'openDNS';
+        var baseUrl = 'https://management.azure.com/{resource}?api-version=2020-05-01';
+        var method = 'PUT';
+        var protocols = ['TCP','UDP','*'];
+        var port = 53;
+        var errors = [];
+        var actions = [];
+
+        // create the params necessary for the remediation
+        async.each(protocols,function(protocol, cb) {
+            helpers.remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, settings, resource, remediation_file, baseUrl, method,function(error, action) {
+                if (error && (error.length || Object.keys(error).length)) {
+                    errors.push(error);
+                } else if (action && (action.length || Object.keys(action).length)){
+                    actions.push(action);
+                }
+
+                cb();
+            });
+        }, function() {
+            if (errors && errors.length) {
+                remediation_file['post_remediate']['actions'][pluginName]['error'] = errors.join(', ');
+                settings.remediation_file = remediation_file;
+                return callback(errors, null);
+            } else {
+                remediation_file['post_remediate']['actions'][pluginName][resource] = actions;
+                settings.remediation_file = remediation_file;
+                return callback(null, actions);
+            }
         });
     }
 };
