@@ -11,6 +11,8 @@ jobs:
   include:
     - stage: NPM test
       script: npm test
+    - stage: Lint
+      script: npm run lint
     - stage: NPM release
       # Deployment of cloudsploit is setup to work nicely both for the master repo
       # any forks. That is, a fork can also publish to NPM to a custom scope. To do

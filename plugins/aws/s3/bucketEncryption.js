@@ -20,7 +20,7 @@ module.exports = {
         remediate: ['s3:PutEncryptionConfiguration'],
         rollback: ['s3:PutEncryptionConfiguration']
     },
-    realtime_triggers: ['s3:DeleteBucketEncryption'],
+    realtime_triggers: ['s3:DeleteBucketEncryption', 's3:CreateBucket'],
     settings: {
         s3_encryption_require_cmk: {
             name: 'S3 Encryption Require CMK',
