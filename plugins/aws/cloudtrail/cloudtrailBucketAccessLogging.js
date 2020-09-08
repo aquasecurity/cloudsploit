@@ -30,7 +30,8 @@ module.exports = {
                 'verifying that the audit logs for the AWS environment are not modified.',
         pci: 'PCI requires tracking and monitoring of all access to environments ' +
              'in which cardholder data is present. CloudTrail bucket access logging ' +
-             'helps audit the bucket in which these logs are stored.'
+             'helps audit the bucket in which these logs are stored.',
+        cis1: '2.6 Ensure CloudTrail bucket access logging is enabled'
     },
     settings: {
         ignore_bucket_not_in_account: {

@@ -33,6 +33,9 @@ module.exports = {
             default: false
         },
     },
+    compliance: {
+        cis1: '2.3 Ensure the S3 bucket used to store CloudTrail logs is not publicly accessible'
+    },
 
     run: function(cache, settings, callback) {
         var config = {

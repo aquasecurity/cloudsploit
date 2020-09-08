@@ -33,7 +33,7 @@ module.exports = {
 
         if (!authenticationPolicy) return callback(null, results, source);
 
-        if ((authenticationPolicy.err && authenticationPolicy.err.length) || !authenticationPolicy.data) {
+        if (authenticationPolicy.err || !authenticationPolicy.data) {
             helpers.addResult(results, 3,
                 'Unable to query for password policy status: ' + helpers.addError(authenticationPolicy));
             return callback(null, results, source);
@@ -51,6 +51,10 @@ module.exports = {
                 if (passwordPolicy.minimumPasswordLength > 14) {
                     helpers.addResult(results, 0, 'Minimum password length of: ' + passwordPolicy.minimumPasswordLength + ' is suitable', 'global', authenticationPolicy.data.compartmentId);
                 }  else if (passwordPolicy &&
+                    passwordPolicy.minimumPasswordLength &&
+                    passwordPolicy.minimumPasswordLength < 10) {
+                    helpers.addResult(results, 2, 'Minimum password length of: ' + passwordPolicy.minimumPasswordLength + ' is less than the recommded 14 characters', 'global', authenticationPolicy.data.compartmentId);
+                } else if (passwordPolicy &&
                     passwordPolicy.minimumPasswordLength &&
                     passwordPolicy.minimumPasswordLength < 14) {
                     helpers.addResult(results, 1, 'Minimum password length of: ' + passwordPolicy.minimumPasswordLength + ' is less than the recommended 14 characters', 'global', authenticationPolicy.data.compartmentId);
