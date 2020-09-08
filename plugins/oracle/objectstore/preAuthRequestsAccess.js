@@ -28,7 +28,7 @@ module.exports = {
 
                 if (!requests) return rcb();
 
-                if ((requests.err && requests.err.length) || !requests.data) {
+                if (requests.err || !requests.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for pre-authenticated requests: ' + helpers.addError(requests), region);
                     return rcb();
@@ -40,35 +40,31 @@ module.exports = {
                 }
 
                 var expiredRequests = true;
-                var leastAccess = true;
                 requests.data.forEach(request => {
                     var ONE_DAY = 24*60*60*1000;
                     if (request.timeExpires) {
                         var timeExpires = request.timeExpires.split("T")[0];
 
                         timeExpires = Math.ceil((new Date(timeExpires).getTime() - new Date(new Date()).getTime())/(ONE_DAY));
-
                         if (timeExpires < 0) return;
-
-                        expiredRequests = false;
                     }
 
+                    expiredRequests = false;
                     if (request.accessType &&
                         ((request.accessType === 'AnyObjectWrite'))) {
                         helpers.addResult(results, 2,
                             'pre-authenticated request allows write access to all objects', region, request.id);
-                        leastAccess = false;
                     } else if (request.accessType &&
                             (!(request.accessType === 'ObjectRead'))) {
                         helpers.addResult(results, 1,
                             `pre-authenticated request allows write access to ${request.objectName}`, region, request.id);
-                        leastAccess = false;
+                    } else {
+                        helpers.addResult(results, 0, 'Pre-authenticated requests has least access', region, request.id);
                     }
                 });
+
                 if (expiredRequests) {
                     helpers.addResult(results, 0, 'No active pre-authenticated requests', region);
-                } else if (leastAccess) {
-                    helpers.addResult(results, 0, 'All pre-authenticated requests have least access', region);
                 }
             }
             rcb();

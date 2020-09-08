@@ -31,10 +31,7 @@ module.exports = {
 
         if (!groups || !userGroups) return callback(null, results, source);
 
-        if (((groups.err &&
-            groups.err.length) || !groups.data) ||
-            ((userGroups.err &&
-                userGroups.err.length) || !userGroups.data)) {
+        if (groups.err || !groups.data || userGroups.err  || !userGroups.data) {
             helpers.addResult(results, 3,
                 'Unable to query user groups: ' + helpers.addError(userGroups));
             return callback(null, results, source);
@@ -52,11 +49,10 @@ module.exports = {
                 if (u.groupId) return u.groupId === group.id;
             });
 
-            if (users &&
-                users.length) {
-                helpers.addResult(results, 0, 'Group contains ' + users.length + ' user(s)', defaultRegion, group.name + ' - ' + group.id);
+            if (users && users.length) {
+                helpers.addResult(results, 0, `Group: ${group.name} contains ' + users.length + ' user(s)`, defaultRegion, group.id);
             } else {
-                helpers.addResult(results, 1, 'Group does not contain any users', defaultRegion, group.name + ' - ' + group.id)
+                helpers.addResult(results, 1, `Group: ${group.name} does not contain any users`, defaultRegion,group.id)
             }
         }
 

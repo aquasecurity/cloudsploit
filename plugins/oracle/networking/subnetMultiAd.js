@@ -24,7 +24,7 @@ module.exports = {
 
                 if (!subnets) return rcb();
 
-                if ((subnets.err && subnets.err.length) || !subnets.data) {
+                if (subnets.err || !subnets.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for subnets: ' + helpers.addError(subnets), region);
                     return rcb();
