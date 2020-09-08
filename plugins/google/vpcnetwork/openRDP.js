@@ -7,7 +7,7 @@ module.exports = {
     description: 'Determines if TCP port 3389 for RDP is open to the public',
     more_info: "While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as RDP should be restricted to known IP addresses.",
     link: 'https://cloud.google.com/vpc/docs/using-firewalls',
-    recommended_action: 'Restrict TCP port 5432 to known IP addresses.',
+    recommended_action: 'Restrict TCP port 3389 to known IP addresses.',
     apis: ['firewalls:list'],
 
     run: function(cache, settings, callback) {

@@ -123,7 +123,9 @@ describe('nfsPublicAccess', function () {
                             "path": "/FileSystem-20190604-2257",
                             "timeCreated": "2019-06-04T22:57:46.291Z"
                         }
-                    ]
+                    ],
+                [],
+                []
             );
 
             plugin.run(cache, {}, callback);
