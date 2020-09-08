@@ -30,7 +30,7 @@ module.exports = {
 
                 if (!bootVolumeAttachments) return rcb();
 
-                if ((bootVolumeAttachments.err && bootVolumeAttachments.err.length) || !bootVolumeAttachments.data) {
+                if (bootVolumeAttachments.err || !bootVolumeAttachments.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for boot volume attachments: ' + helpers.addError(bootVolumeAttachments), region);
                     return rcb();
@@ -42,8 +42,7 @@ module.exports = {
                 }
 
                 bootVolumeAttachments.data.forEach(bootVolumeAttachment => {
-                    if (bootVolumeAttachment.isPvEncryptionInTransitEnabled &&
-                        bootVolumeAttachment.isPvEncryptionInTransitEnabled === true) {
+                    if (bootVolumeAttachment.isPvEncryptionInTransitEnabled) {
                         helpers.addResult(results, 0, 'boot volume transit encryption is enabled', region, bootVolumeAttachment.bootVolumeId);
                     } else {
                         helpers.addResult(results, 2, 'boot volume transit encryption is disabled', region, bootVolumeAttachment.bootVolumeId);

@@ -24,7 +24,7 @@ module.exports = {
 
                 if (!blockVolumes) return rcb();
 
-                if ((blockVolumes.err && blockVolumes.err.length) || !blockVolumes.data) {
+                if (blockVolumes.err || !blockVolumes.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for block volumes: ' + helpers.addError(blockVolumes), region);
                     return rcb();
@@ -35,42 +35,33 @@ module.exports = {
                     return rcb();
                 }
 
-
-                var badBlockVolumes = [];
-                blockVolumes.data.forEach(blockVolume => {
-                    badBlockVolumes.push(blockVolume.id);
-                });
-
                 var blockVolumeBackups = helpers.addSource(cache, source,
                     ['volumeBackup', 'list', region]);
 
-                if (!blockVolumeBackups) return rcb();
-
-                if ((blockVolumeBackups.err && blockVolumeBackups.err.length) || !blockVolumeBackups.data) {
+                if (!blockVolumeBackups || blockVolumeBackups.err || !blockVolumeBackups.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for block volume backups: ' + helpers.addError(blockVolumeBackups), region);
                     return rcb();
                 }
 
+                var enabledBlockVolumes = [];
                 blockVolumeBackups.data.forEach(blockVolumeBackup => {
-                    var bootIdx = badBlockVolumes.indexOf(blockVolumeBackup.volumeId);
-
                     if (blockVolumeBackup.lifecycleState &&
-                        blockVolumeBackup.lifecycleState === 'TERMINATED') {
-                        return;
-                    } else if (bootIdx > -1) {
-                        badBlockVolumes.splice(bootIdx, 1);
+                        blockVolumeBackup.lifecycleState.toUpperCase() === 'AVAILABLE') {
+                        enabledBlockVolumes.push(blockVolumeBackup.volumeId)
                     }
                 });
 
-                if (badBlockVolumes.length) {
-                    var badBlockVolumesStr = badBlockVolumes.join(', ');
-                    helpers.addResult(results, 2,
-                        `The following block volumes are not actively restorable: ${badBlockVolumesStr}`, region);
-                } else {
-                    helpers.addResult(results, 0,
-                        'All block volumes are restorable.', region);
-                }
+                blockVolumes.data.forEach(blockVolume => {
+                    if (enabledBlockVolumes.indexOf(blockVolume.id) > -1) {
+                        helpers.addResult(results, 0,
+                            'Block volume is actively restorable', region, blockVolume.id);
+                    } else {
+                        helpers.addResult(results, 2,
+                            'Block volume is not actively restorable', region, blockVolume.id);
+                    }
+                });
+
             }
             rcb();
         }, function(){
