@@ -65,35 +65,18 @@ describe('statelessSecurityRules', function () {
                 ['error'],
                 null,
                 null,
-                null
-            );
-
-            plugin.run(cache, {}, callback);
-        });
-        it('should give unknown result if an security rule error is passed or no data is present', function (done) {
-            const callback = (err, results) => {
-                expect(results.length).to.be.above(0)
-                expect(results[0].status).to.equal(3)
-                expect(results[0].message).to.include('Unable to query for security rules')
-                expect(results[0].region).to.equal('us-ashburn-1')
-                done()
-            };
-
-            const cache = createCache(
-                [],
-                [],
-                null,
                 ['error']
             );
 
             plugin.run(cache, {}, callback);
         });
+
         it('should give passing result if no security list records are found', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
-                expect(results[1].status).to.equal(0)
-                expect(results[1].message).to.include('No security lists found')
-                expect(results[1].region).to.equal('us-ashburn-1')
+                expect(results[0].status).to.equal(0)
+                expect(results[0].message).to.include('No security lists found')
+                expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
 
@@ -119,24 +102,6 @@ describe('statelessSecurityRules', function () {
             const cache = createCache(
                 null,
                 [{hello:'world'}, {how:'are you'}],
-                [],
-                null
-            );
-
-            plugin.run(cache, {}, callback);
-        });
-        it('should give passing result if no security list or security rule records are found', function (done) {
-            const callback = (err, results) => {
-                expect(results.length).to.be.above(0)
-                expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No security rules or lists found')
-                expect(results[0].region).to.equal('us-ashburn-1')
-                done()
-            };
-
-            const cache = createCache(
-                null,
-                [],
                 [],
                 null
             );

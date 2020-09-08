@@ -24,7 +24,7 @@ module.exports = {
 
                 if (!instances) return rcb();
 
-                if ((instances.err && instances.err.length) || !instances.data) {
+                if (instances.err || !instances.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for instances: ' + helpers.addError(instances), region);
                     return rcb();
@@ -36,12 +36,11 @@ module.exports = {
                 }
 
                 instances.data.forEach(instance => {
-                    if (!instance.agentConfig ||
-                        (instance.agentConfig &&
-                        instance.agentConfig.isMonitoringDisabled)) {
-                        helpers.addResult(results, 2, 'Instance monitoring is disabled', region, instance.id);
-                    } else {
+                    if (instance.agentConfig &&
+                        !instance.agentConfig.isMonitoringDisabled) {
                         helpers.addResult(results, 0, 'Instance monitoring is enabled', region, instance.id);
+                    } else {
+                        helpers.addResult(results, 2, 'Instance monitoring is disabled', region, instance.id);
                     }
                 });
             }

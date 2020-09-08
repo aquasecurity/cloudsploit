@@ -24,7 +24,7 @@ module.exports = {
 
                 if (!bootVolumes) return rcb();
 
-                if ((bootVolumes.err && bootVolumes.err.length) || !bootVolumes.data) {
+                if (bootVolumes.err || !bootVolumes.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for boot volume attachments: ' + helpers.addError(bootVolumes), region);
                     return rcb();
@@ -35,37 +35,35 @@ module.exports = {
                     return rcb();
                 }
 
-
-                var badBootVolumes = [];
-                bootVolumes.data.forEach(bootVolume => {
-                    badBootVolumes.push(bootVolume.id);
-                });
-
                 var bootVolumeBackupPolicies = helpers.addSource(cache, source,
                     ['volumeBackupPolicyAssignment', 'bootVolume', region]);
 
-                if (!bootVolumeBackupPolicies) return rcb();
-
-                if ((bootVolumeBackupPolicies.err && bootVolumeBackupPolicies.err.length) || !bootVolumeBackupPolicies.data) {
+                if (!bootVolumeBackupPolicies || bootVolumeBackupPolicies.err || !bootVolumeBackupPolicies.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for boot volume backups: ' + helpers.addError(bootVolumeBackupPolicies), region);
                     return rcb();
                 }
 
+                if (!bootVolumes.data.length) {
+                    helpers.addResult(results, 2, 'No boot volume backup policies found', region);
+                    return rcb();
+                }
+
+                var enabledBootVolumes = [];
+
                 bootVolumeBackupPolicies.data.forEach(bootVolumeBackupPolicy => {
-                    if (badBootVolumes.indexOf(bootVolumeBackupPolicy.bootVolumeId) > -1) {
-                        badBootVolumes.splice(badBootVolumes.indexOf(bootVolumeBackupPolicy.bootVolumeId), 1);
-                    }
+                    enabledBootVolumes.push(bootVolumeBackupPolicy.bootVolumeId)
                 });
 
-                if (badBootVolumes.length) {
-                    var badBootVolumesStr = badBootVolumes.join(', ');
-                    helpers.addResult(results, 2,
-                        `The following boot volumes do not have a backup policy: ${badBootVolumesStr}`, region);
-                } else {
-                    helpers.addResult(results, 0,
-                        'All boot volumes have a backup policy', region);
-                }
+                bootVolumes.data.forEach(bootVolume => {
+                    if (enabledBootVolumes.indexOf(bootVolume.id) > -1) {
+                        helpers.addResult(results, 0,
+                            'The boot volume has backup policies enabled', region, bootVolume.id);
+                    } else {
+                        helpers.addResult(results, 2,
+                            'The boot volume has backup policies disabled', region, bootVolume.id);
+                    }
+                });
             }
             rcb();
         }, function(){

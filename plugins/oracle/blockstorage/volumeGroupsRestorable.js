@@ -24,7 +24,7 @@ module.exports = {
 
                 if (!volumeGroups) return rcb();
 
-                if ((volumeGroups.err && volumeGroups.err.length) || !volumeGroups.data) {
+                if (volumeGroups.err || !volumeGroups.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for volume groups: ' + helpers.addError(volumeGroups), region);
                     return rcb();
@@ -35,42 +35,32 @@ module.exports = {
                     return rcb();
                 }
 
-
-                var badVolumeGroups = [];
-                volumeGroups.data.forEach(volumeGroup => {
-                    badVolumeGroups.push(volumeGroup.id);
-                });
-
                 var volumeGroupBackups = helpers.addSource(cache, source,
                     ['volumeGroupBackup', 'list', region]);
 
-                if (!volumeGroupBackups) return rcb();
-
-                if ((volumeGroupBackups.err && volumeGroupBackups.err.length) || !volumeGroupBackups.data) {
+                if (!volumeGroupBackups || volumeGroupBackups.err || !volumeGroupBackups.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for volume group backups: ' + helpers.addError(volumeGroupBackups), region);
                     return rcb();
                 }
 
+                var enabledVolumeGroups = [];
                 volumeGroupBackups.data.forEach(volumeGroupBackup => {
-                    var bootIdx = badVolumeGroups.indexOf(volumeGroupBackup.volumeGroupId);
-
                     if (volumeGroupBackup.lifecycleState &&
-                        volumeGroupBackup.lifecycleState === 'TERMINATED') {
-                        return;
-                    } else if (bootIdx > -1) {
-                        badVolumeGroups.splice(bootIdx, 1);
+                        volumeGroupBackup.lifecycleState.toUpperCase() === 'AVAILABLE') {
+                        enabledVolumeGroups.push(volumeGroupBackup.volumeGroupId)
                     }
                 });
 
-                if (badVolumeGroups.length) {
-                    var badVolumeGroupsStr = badVolumeGroups.join(', ');
-                    helpers.addResult(results, 2,
-                        `The following volume groups are not actively restorable: ${badVolumeGroupsStr}`, region);
-                } else {
-                    helpers.addResult(results, 0,
-                        'All volume groups are restorable', region);
-                }
+                volumeGroups.data.forEach(volumeGroup => {
+                    if (enabledVolumeGroups.indexOf(volumeGroup.id) > -1) {
+                        helpers.addResult(results, 0,
+                            'Volume group is actively restorable', region, volumeGroup.id);
+                    } else {
+                        helpers.addResult(results, 2,
+                            'Volume group is not actively restorable', region, volumeGroup.id);
+                    }
+                });
             }
             rcb();
         }, function(){

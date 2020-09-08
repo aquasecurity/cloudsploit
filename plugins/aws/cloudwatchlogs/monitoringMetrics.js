@@ -68,6 +68,9 @@ module.exports = {
     recommended_action: 'Enable metric filters to detect malicious activity in CloudTrail logs sent to CloudWatch.',
     link: 'http://docs.aws.amazon.com/awscloudtrail/latest/userguide/send-cloudtrail-events-to-cloudwatch-logs.html',
     apis: ['CloudTrail:describeTrails', 'CloudWatchLogs:describeMetricFilters'],
+    compliance: {
+        cis1: '3.0 Monitoring metrics are enabled'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

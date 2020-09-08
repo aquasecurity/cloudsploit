@@ -34,7 +34,7 @@ module.exports = {
 
                 if (!databases) return rcb();
 
-                if ((databases.err && databases.err.length) || !databases.data) {
+                if (databases.err || !databases.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for database systems: ' + helpers.addError(databases), region);
                     return rcb();
@@ -44,24 +44,17 @@ module.exports = {
                     helpers.addResult(results, 0, 'No database systems found', region);
                     return rcb();
                 }
-
-                var allEnabled = true;
-
                 databases.data.forEach(database => {
                     if (database.lifecycleState === "AVAILABLE") {
-                        if (!database.nsgIds ||
-                            (database.nsgIds &&
-                            !database.nsgIds.length)) {
+                        if (database.nsgIds &&
+                            database.nsgIds.length) {
+                            helpers.addResult(results, 0, 'The database system has network security groups enabled', region, database.id);
+                        } else {
                             helpers.addResult(results, 2, 'The database system has network security groups disabled', region, database.id);
-                            allEnabled = false;
+
                         }
                     }
                 });
-
-                if (allEnabled) {
-                    helpers.addResult(results, 0,
-                        'All database systems have network security groups enabled', region);
-                }
             }
 
             rcb();
