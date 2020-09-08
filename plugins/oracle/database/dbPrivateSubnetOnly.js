@@ -30,73 +30,52 @@ module.exports = {
         async.each(regions.dbSystem, function(region, rcb){
 
             if (helpers.checkRegionSubscription(cache, source, results, region)) {
-                var noSubnet = false;
-                var noDbSystem = false;
-                var badSubnetObj = {};
-
-                const databases = helpers.addSource(cache, source,
+                const dbSystems = helpers.addSource(cache, source,
                     ['dbSystem', 'list', region]);
 
-                if (databases && ((databases.err && databases.err.length) || !databases.data)) {
+                if (!dbSystems || dbSystems.err || !dbSystems.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for database systems: ' + helpers.addError(databases), region);
+                        'Unable to query for database systems: ' + helpers.addError(dbSystems), region);
+                    return rcb();
+                }
 
-                } else if (databases && !databases.data.length) {
-                    noDbSystem = true;
-
-                } else if (databases) {
-
-                    databases.data.forEach(database => {
-                        if (database.lifecycleState === "AVAILABLE") {
-                            if (database.subnetId) {
-                                if (!badSubnetObj[database.subnetId]) {
-                                    badSubnetObj[database.subnetId] = [];
-                                }
-                                badSubnetObj[database.subnetId].push(database.id);
-                            }
-                        }
-                    });
+                if (!dbSystems.data.length) {
+                    helpers.addResult(results, 0, 'No database systems found', region);
+                    return rcb();
                 }
 
                 const subnets = helpers.addSource(cache, source,
                     ['subnet', 'list', region]);
 
-                if (subnets && ((subnets.err && subnets.err.length) || !subnets.data)) {
+                if (!subnets || subnets.err || !subnets.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for subnets: ' + helpers.addError(subnets), region);
-
-                } else if (subnets && !subnets.data.length) {
-                    noSubnet = true;
-
-                } else if (subnets) {
-                    var noPublicSubnets = true;
-                    subnets.data.forEach(subnet => {
-                        if (subnet.id) {
-                            if (!subnet.prohibitPublicIpOnVnic) {
-                                if (badSubnetObj &&
-                                    badSubnetObj[subnet.id]) {
-                                    var badDbSystemsStr =  badSubnetObj[subnet.id].join(", ");
-                                    // not sure whether to use 'this', 'the', or 'a' to refer to the subnet
-                                    helpers.addResult(results, 2,
-                                        `The following db systems use the public subnet: ${badDbSystemsStr}`, region, subnet.id);
-                                    noPublicSubnets = false;
-                                }
-                            }
-                        }
-                    });
+                    return rcb();
                 }
 
-                if (noSubnet && noDbSystem) {
-                    helpers.addResult(results, 0, 'No database systems or subnets present', region);
-                } else if (noDbSystem) {
-                    helpers.addResult(results, 0, 'No database systems found', region);
-                } else if (noSubnet) {
+                if (!subnets.data.length) {
                     helpers.addResult(results, 0, 'No subnets found', region);
-                } else if (noPublicSubnets) {
-                    helpers.addResult(results, 0, 'All db systems are in private subnets', region);
+                    return rcb();
                 }
 
+                var privateSubnets = [];
+                subnets.data.forEach(subnet => {
+                    if (subnet.id) {
+                        if (subnet.prohibitPublicIpOnVnic) {
+                            privateSubnets.push(subnet.id);
+                        }
+                    }
+                });
 
+                dbSystems.data.forEach(dbSystem => {
+                    if (dbSystem.lifecycleState === "AVAILABLE") {
+                        if (dbSystem.subnetId && (privateSubnets.indexOf(dbSystem.subnetId) > -1)) {
+                            helpers.addResult(results, 0, 'The DB system is in a private subnet', region, dbSystem.id);
+                        } else {
+                            helpers.addResult(results, 2, 'The DB system is in a public subnet', region, dbSystem.id);
+                        }
+                    }
+                });
             }
 
             rcb();

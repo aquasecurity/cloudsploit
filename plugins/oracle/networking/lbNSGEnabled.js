@@ -35,23 +35,17 @@ module.exports = {
                     return rcb();
                 }
 
-                var allLbs = true;
                 loadBalancers.data.forEach(loadBalancer => {
                     if (loadBalancer.networkSecurityGroupIds &&
-                        loadBalancer.networkSecurityGroupIds.length < 1) {
+                        loadBalancer.networkSecurityGroupIds.length > 0) {
+                        helpers.addResult(results, 0,
+                            'Load Balancer has network security groups connected', region, loadBalancer.id);
+                    } else {
                         helpers.addResult(results, 2,
                             'Load Balancer has no network security groups connected', region, loadBalancer.id);
-                        allLbs = false;
-                    } else {
-
                     }
                 });
-                if (allLbs) {
-                    helpers.addResult(results, 0,
-                        `All Load balancers have network security groups Connected`, region);
-                }
             }
-
             rcb();
         }, function(){
             // Global checking goes here
