@@ -38,9 +38,7 @@ module.exports = {
                 var notificationConfiguration = helpers.addSource(cache, source,
                     ['autoscaling', 'describeNotificationConfigurations', region, asg.AutoScalingGroupARN]);
 
-                if (!notificationConfiguration) return cb();
-
-                if (notificationConfiguration.err || !notificationConfiguration.data) {
+                if (!notificationConfiguration || notificationConfiguration.err || !notificationConfiguration.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for auto scaling group notification configurations: ' + 
                         helpers.addError(notificationConfiguration), region, resource);
