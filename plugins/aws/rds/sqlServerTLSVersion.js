@@ -22,28 +22,29 @@ module.exports = {
             
             if (describeDBParameterGroups.err || !describeDBParameterGroups.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for parameter groups: ' + helpers.addError(describeDBParameterGroups));
+                    'Unable to query for parameter groups: ' + helpers.addError(describeDBParameterGroups), region);
                 return rcb();
             }
 
             if (!describeDBParameterGroups.data.length) {
-                helpers.addResult(results, 0, 'No parameter groups found');
+                helpers.addResult(results, 0, 'No parameter groups found', region);
                 return rcb();
             }
+
+            var sqlFound = false;
 
             async.each(describeDBParameterGroups.data, function(group, paramcb){
                 if (!group.DBParameterGroupName) return paramcb();
                 
                 var resource = group.DBParameterGroupArn;
 
-                if(group.DBParameterGroupFamily && !group.DBParameterGroupFamily.startsWith('sqlserver')) return paramcb();
+                if (group.DBParameterGroupFamily && !group.DBParameterGroupFamily.startsWith('sqlserver')) return paramcb();
+                sqlFound = true;
                 
                 var parameters = helpers.addSource(cache, source,
                     ['rds', 'describeDBParameters', region, group.DBParameterGroupName]);
-                
-                if (!parameters) return paramcb();
 
-                if (parameters.err || !parameters.data){
+                if (!parameters || parameters.err || !parameters.data){
                     helpers.addResult(results, 3,
                         'Unable to query for parameters: ' + helpers.addError(parameters),
                         region, resource);
@@ -51,7 +52,7 @@ module.exports = {
                 }
 
                 if (!parameters.data.Parameters || !parameters.data.Parameters.length) {
-                    helpers.addResult(results, 0, 'No parameters found', region, resource);
+                    helpers.addResult(results, 2, 'No parameters found for group', region, resource);
                     return paramcb();
                 }
 
@@ -88,12 +89,16 @@ module.exports = {
                 }
                 else {
                     helpers.addResult(results, 2,
-                        'DB parameter group ' + (group.DBParameterGroupName) + ' does not use TLS 1.2',
+                        'DB parameter group ' + (group.DBParameterGroupName) + ' does not require TLS 1.2',
                         region, resource);
                 }
 
                 paramcb();
             });
+
+            if (!sqlFound) {
+                helpers.addResult(results, 0, 'No DB parameter groups for SQL servers found', region);
+            }
             
             rcb();
         

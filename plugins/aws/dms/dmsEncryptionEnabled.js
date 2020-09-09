@@ -4,9 +4,9 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'DMS Encryption Enabled',
     category: 'DMS',
-    description: 'Ensures DMS encryption is enabled',
+    description: 'Ensures DMS encryption is enabled using a CMK',
     more_info: 'Data sent through the data migration service is encrypted using KMS. Encryption is enabled by default, but it is recommended to use customer managed keys.',
-    recommended_action: 'Enable encryption using KMS for all DMS replication instances.',
+    recommended_action: 'Enable encryption using KMS CMKs for all DMS replication instances.',
     link: 'https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Security.html',
     apis: ['DMS:describeReplicationInstances', 'KMS:listKeys', 'KMS:describeKey', 'KMS:listAliases'],
     compliance: {
