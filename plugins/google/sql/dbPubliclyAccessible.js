@@ -4,10 +4,10 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'DB Publicly Accessible',
     category: 'SQL',
-    description: 'Ensures that SQL instances have a failover replica to be cross-AZ for high availability.',
-    more_info: 'Creating SQL instances in with a single AZ creates a single point of failure for all systems relying on that database. All SQL instances should be created in multiple AZs to ensure proper failover.',
-    link: 'https://cloud.google.com/sql/docs/mysql/instance-settings',
-    recommended_action: '1. Enter the SQL category of the Google Console. 2. Select the instance. 3. Select the Replicas tab. 4. Select Create Failover Replica and follow the prompts.',
+    description: 'Ensures that SQL instances do not allow public access',
+    more_info: 'Unless there is a specific business requirement, SQL instances should not have a public endpoint and should only be accessed from within a VPC.',
+    link: 'https://cloud.google.com/sql/docs/mysql/authorize-networks',
+    recommended_action: 'Ensure that SQL instances is configured to prohibit traffic from the public 0.0.0.0 global IP address.',
     apis: ['instances:sql:list'],
     compliance: {
         hipaa: 'SQL instances should only be launched in VPC environments and ' +
@@ -19,7 +19,6 @@ module.exports = {
             'Ensure SQL instances are not accessible from the Internet ' +
             'and use proper jump box access mechanisms.'
     },
-  
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -48,7 +47,7 @@ module.exports = {
                     sqlInstance.settings.ipConfiguration) {
                     myIpConfig = sqlInstance.settings.ipConfiguration
                     if (myIpConfig.privateNetwork && !myIpConfig.ipv4Enabled) {
-                        helpers.addResult(results, 0, 
+                        helpers.addResult(results, 0,
                             'SQL Instance is not publicly accessible', region, sqlInstance.name);
                     } else if (myIpConfig.ipv4Enabled &&
                                 myIpConfig.authorizedNetworks) {
@@ -59,13 +58,13 @@ module.exports = {
                                         }
                                     })
                                     if (openNetwork) {
-                                        helpers.addResult(results, 2, 
+                                        helpers.addResult(results, 2,
                                             'SQL Instance is publicly accessible by all IP addresses', region, sqlInstance.name);
                                     } else if (myIpConfig.authorizedNetworks.length){
-                                        helpers.addResult(results, 1, 
+                                        helpers.addResult(results, 1,
                                             'SQL Instance is publicly accessible by specific IP addresses', region, sqlInstance.name);
                                     } else {
-                                        helpers.addResult(results, 0, 
+                                        helpers.addResult(results, 0,
                                             'SQL Instance is not publicly accessible', region, sqlInstance.name);
                                     }
                                 }
