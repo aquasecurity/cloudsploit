@@ -4,7 +4,7 @@ const asgActiveNotifications = require('./asgActiveNotifications');
 const autoScalingGroups =  [
     {
         "AutoScalingGroupName": "auto-scaling-test-group",
-        "AutoScalingGroupARN": "arn:aws:autoscaling:us-east-1:560213429563:autoScalingGroup:e83ceb12-2760-4a92-a374-3df611331bdc:autoScalingGroupName/auto-scaling-test-group",
+        "AutoScalingGroupARN": "arn:aws:autoscaling:us-east-1:111122223333:autoScalingGroup:e83ceb12-2760-4a92-a374-3df611331bdc:autoScalingGroupName/auto-scaling-test-group",
         "LaunchTemplate": {
             "LaunchTemplateId": "lt-0f1f6b356026abc86",
             "LaunchTemplateName": "auto-scaling-template",
@@ -45,7 +45,7 @@ const autoScalingGroups =  [
             "Default"
         ],
         "NewInstancesProtectedFromScaleIn": false,
-        "ServiceLinkedRoleARN": "arn:aws:iam::560213429563:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
+        "ServiceLinkedRoleARN": "arn:aws:iam::111122223333:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
     }
 ];
 
@@ -90,12 +90,12 @@ const createErrorCache = () => {
             describeAutoScalingGroups: {
                 'us-east-1': {
                     err: {
-                        message: 'error describing autoscaling groups'
+                        message: 'error describing autos caling groups'
                     },
                 },
                 describeNotificationConfigurations: {
                     'us-east-1': {
-                        message: 'error describing autoscaling group notification configurations'
+                        message: 'error describing auto scaling group notification configurations'
                     },
                 },
             },
@@ -118,7 +118,7 @@ const createNullCache = () => {
 
 describe('asgActiveNotifications', function () {
     describe('run', function () {
-        it('should PASS if notification are active for autoscaling group', function (done) {
+        it('should PASS if notification are active for auto scaling group', function (done) {
             const cache = createCache([autoScalingGroups[0]], [notificationConfigurations[0]]);
             asgActiveNotifications.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -127,7 +127,7 @@ describe('asgActiveNotifications', function () {
             });
         });
 
-        it('should FAIL if notification are not active for autoscaling group', function (done) {
+        it('should FAIL if notification are not active for auto scaling group', function (done) {
             const cache = createCache([autoScalingGroups[0]], []);
             asgActiveNotifications.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -136,7 +136,7 @@ describe('asgActiveNotifications', function () {
             });
         });
 
-        it('should UNKNOWN if unable to describe autoscaling group found', function (done) {
+        it('should UNKNOWN if unable to describe auto scaling group found', function (done) {
             const cache = createErrorCache();
             asgActiveNotifications.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -145,7 +145,7 @@ describe('asgActiveNotifications', function () {
             });
         });
 
-        it('should not return anything if no autoscaling group found', function (done) {
+        it('should not return anything if no auto scaling group found', function (done) {
             const cache = createNullCache();
             asgActiveNotifications.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);

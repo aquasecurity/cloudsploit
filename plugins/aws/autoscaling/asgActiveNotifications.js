@@ -2,12 +2,12 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'AutoScaling Notifications Active',
-    category: 'AutoScaling',
-    description: 'Ensures autoscaling groups have notifications active.',
+    title: 'Auto Scaling Notifications Active',
+    category: 'Auto Scaling',
+    description: 'Ensures auto scaling groups have notifications active.',
     more_info: 'Notifications can be sent to an SNS endpoint when scaling actions occur, which should be set to ensure all scaling activity is recorded.',
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/ASGettingNotifications.html',
-    recommended_action: 'Add a notification endpoint to the autoscaling group.',
+    recommended_action: 'Add a notification endpoint to the auto scaling group.',
     apis: ['AutoScaling:describeAutoScalingGroups', 'AutoScaling:describeNotificationConfigurations'],
 
     run: function(cache, settings, callback) {
