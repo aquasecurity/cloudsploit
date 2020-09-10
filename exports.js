@@ -101,7 +101,8 @@ module.exports = {
         'elbv2NoInstances'                : require(__dirname + '/plugins/aws/elbv2/elbv2NoInstances.js'),
         'elbv2WafEnabled'                 : require(__dirname + '/plugins/aws/elbv2/elbv2WafEnabled.js'),
 
-        'emrEncryptionInTransit'         : require(__dirname + '/plugins/aws/emr/emrEncryptionInTransit.js'),
+        'emrEncryptionInTransit'        : require(__dirname + '/plugins/aws/emr/emrEncryptionInTransit.js'),
+        'emrEncryptionAtRest'           : require(__dirname + '/plugins/aws/emr/emrEncryptionAtRest.js'),
 
         'esPublicEndpoint'              : require(__dirname + '/plugins/aws/es/esPublicEndpoint.js'),
         'esRequireIAMAuth'              : require(__dirname + '/plugins/aws/es/esRequireIAMAuth.js'),
