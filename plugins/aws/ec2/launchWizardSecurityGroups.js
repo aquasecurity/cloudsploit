@@ -34,7 +34,7 @@ module.exports = {
 
             for (var s in describeSecurityGroups.data) {
                 var sg = describeSecurityGroups.data[s];
-                var resource = sg.GroupId;
+                var resource = 'arn:aws:ec2:' + region + ':' + sg.OwnerId + ':security-group/' + sg.GroupId;
 
                 if(!sg.GroupName) {
                     helpers.addResult(results, 2,
