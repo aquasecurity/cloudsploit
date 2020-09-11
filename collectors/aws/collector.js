@@ -271,6 +271,12 @@ var calls = {
             paginate: 'nextToken'
         }
     },
+    ElasticBeanstalk: {
+        describeEnvironments: {
+            property: 'Environments',
+            paginate: 'NextToken'
+        }
+    },
     ElasticTranscoder: {
         // TODO: Pagination via NextPageToken and PageToken
         listPipelines: {
@@ -667,6 +673,13 @@ var postcalls = [
             describeCluster: {
                 reliesOnService: 'eks',
                 reliesOnCall: 'listClusters',
+                override: true
+            }
+        },
+        ElasticBeanstalk: {
+            describeConfigurationSettings: {
+                reliesOnService: 'elasticbeanstalk',
+                reliesOnCall: 'describeEnvironments',
                 override: true
             }
         },
