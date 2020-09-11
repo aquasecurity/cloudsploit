@@ -17,9 +17,8 @@ module.exports = function(AWSConfig, collection, callback) {
             if (err) {
                 collection.rds.describeDBParameters[AWSConfig.region][parameterGroupName.DBParameterGroupName].err = err;
                 collection.rds.describeDBParameters[AWSConfig.region][parameterGroupName.DBParameterGroupName].data = null;
-                cb();
             } else if (!data) {
-                cb();
+                cb(); // once eachPage is done iterating, data will be null, so then we call the callback once.
             } else {
                 collection.rds.describeDBParameters[AWSConfig.region][parameterGroupName.DBParameterGroupName].data.Parameters =
                     collection.rds.describeDBParameters[AWSConfig.region][parameterGroupName.DBParameterGroupName].data.Parameters.concat(data.Parameters);
