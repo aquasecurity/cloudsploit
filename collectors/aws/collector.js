@@ -94,6 +94,50 @@ var calls = {
             }
         }
     },
+    Comprehend: {
+        listEntitiesDetectionJobs: {
+            property: 'EntitiesDetectionJobPropertiesList',
+            paginate: 'NextToken',
+            params: {
+                MaxResults: 100
+            }
+        },
+        listDocumentClassificationJobs: {
+            property: 'DocumentClassificationJobPropertiesList',
+            paginate: 'NextToken',
+            params: {
+                MaxResults: 100
+            }
+        },
+        listDominantLanguageDetectionJobs: {
+            property: 'DominantLanguageDetectionJobPropertiesList',
+            paginate: 'NextToken',
+            params: {
+                MaxResults: 100
+            }
+        },
+        listKeyPhrasesDetectionJobs: {
+            property: 'KeyPhrasesDetectionJobPropertiesList',
+            paginate: 'NextToken',
+            params: {
+                MaxResults: 100
+            }
+        },
+        listSentimentDetectionJobs: {
+            property: 'SentimentDetectionJobPropertiesList',
+            paginate: 'NextToken',
+            params: {
+                MaxResults: 100
+            }
+        },
+        listTopicsDetectionJobs: {
+            property: 'TopicsDetectionJobPropertiesList',
+            paginate: 'NextToken',
+            params: {
+                MaxResults: 100
+            }
+        }
+    },
     ConfigService: {
         describeConfigurationRecorders: {
             property: 'ConfigurationRecorders'
