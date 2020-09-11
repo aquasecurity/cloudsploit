@@ -17,6 +17,7 @@ module.exports = function(AWSConfig, collection, callback) {
             if (err) {
                 collection.rds.describeDBParameters[AWSConfig.region][parameterGroupName.DBParameterGroupName].err = err;
                 collection.rds.describeDBParameters[AWSConfig.region][parameterGroupName.DBParameterGroupName].data = null;
+                cb();
             } else if (!data) {
                 cb();
             } else {
