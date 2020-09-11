@@ -12,7 +12,7 @@
 1. Leave the default JSON selected.
 1. Click on "Create".
 1. The key will be downloaded to your machine.
-1. Open the JSON key file, in a text editor and copy the Project Id, Client Email and Private Key values into the `index.js` file.
+1. Move the JSON key file to a safe location; you will reference it in your `config.js` file later.
 1. Enter the APIs & Services category.
 1. Select Enable APIS & SERVICES at the top of the page
 1. Search for DNS, then Select the option that appears and Enable it.
