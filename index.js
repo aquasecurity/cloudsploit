@@ -152,6 +152,7 @@ if (config.credentials.aws.credential_file) {
 } else if (config.credentials.google.credential_file) {
     settings.cloud = 'google';
     cloudConfig = loadHelperFile(config.credentials.google.credential_file);
+    cloudConfig.project = cloudConfig.project_id;
 } else if (config.credentials.google.project) {
     settings.cloud = 'google';
     checkRequiredKeys(config.credentials.google, ['client_email', 'private_key']);
