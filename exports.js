@@ -173,6 +173,7 @@ module.exports = {
 
         'dkimEnabled'                   : require(__dirname + '/plugins/aws/ses/dkimEnabled.js'),
 
+        'topicEncrypted'                : require(__dirname + '/plugins/aws/sns/topicEncrypted.js'),
         'topicPolicies'                 : require(__dirname + '/plugins/aws/sns/topicPolicies.js'),
         'sqsCrossAccount'               : require(__dirname + '/plugins/aws/sqs/sqsCrossAccount.js'),
         'sqsEncrypted'                  : require(__dirname + '/plugins/aws/sqs/sqsEncrypted.js'),
