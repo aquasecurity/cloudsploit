@@ -21,6 +21,7 @@ module.exports = {
     cloudformation: regions,
     configservice: regions,
     dms: regions,
+    dax: regions,
     dynamodb: regions,
     ec2: regions,
     ecr: regions,
