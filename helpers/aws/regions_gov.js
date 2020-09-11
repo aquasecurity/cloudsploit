@@ -19,6 +19,7 @@ module.exports = {
     cloudtrail: regions,
     cloudwatchlogs: regions,
     cloudformation: regions,
+    comprehend: ['us-gov-west-1'],
     configservice: regions,
     dms: regions,
     dynamodb: regions,

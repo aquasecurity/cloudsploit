@@ -2,12 +2,12 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'AutoScaling Group Missing ELB',
+    title: 'Auto Scaling Group Missing ELB',
     category: 'AutoScaling',
-    description: 'Ensures all AutoScaling groups are referencing active load balancers.',
-    more_info: 'Each AutoScaling group with a load balancer configured should reference an active ELB.',
+    description: 'Ensures all Auto Scaling groups are referencing active load balancers.',
+    more_info: 'Each Auto Scaling group with a load balancer configured should reference an active ELB.',
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/attach-load-balancer-asg.html',
-    recommended_action: 'Ensure that the AutoScaling group load balancer has not been deleted. If so, remove it from the ASG.',
+    recommended_action: 'Ensure that the Auto Scaling group load balancer has not been deleted. If so, remove it from the ASG.',
     apis: ['AutoScaling:describeAutoScalingGroups', 'ELB:describeLoadBalancers', 'ELBv2:describeLoadBalancers'],
 
     run: function(cache, settings, callback) {
@@ -29,7 +29,7 @@ module.exports = {
             if (!autoScalingGroups || !elasticLoadBalancers || !elasticLoadBalancersV2) return rcb();
 
             if (autoScalingGroups.err || !autoScalingGroups.data) {
-                helpers.addResult(results, 3, 'Unable to query for AutoScaling groups: ' +  helpers.addError(autoScalingGroups), region);
+                helpers.addResult(results, 3, 'Unable to query for Auto Scaling groups: ' +  helpers.addError(autoScalingGroups), region);
                 return rcb();
             }
 
@@ -44,7 +44,7 @@ module.exports = {
             }
             
             if (!autoScalingGroups.data.length) {
-                helpers.addResult(results, 0, 'No AutoScaling group found', region);
+                helpers.addResult(results, 0, 'No Auto Scaling group found', region);
                 return rcb();
             }
             
@@ -77,22 +77,22 @@ module.exports = {
 
                         if (inactiveElbs.length){
                             helpers.addResult(results, 2,
-                                'AutoScaling group utilizes these inactive load balancers: '+ inactiveElbs.join(', '),
+                                'Auto Scaling group utilizes these inactive load balancers: '+ inactiveElbs.join(', '),
                                 region, resource);
                         } else {
                             helpers.addResult(results, 0,
-                                'AutoScaling group: ' + asg.AutoScalingGroupName + ' utilizes active load balancers',
+                                'Auto Scaling group: ' + asg.AutoScalingGroupName + ' utilizes active load balancers',
                                 region, resource);
                         }
                     }
                     else {
                         helpers.addResult(results, 2,
-                            'AutoScaling group does not have any Load Balancer associated', region, resource);
+                            'Auto Scaling group does not have any Load Balancer associated', region, resource);
                     }
                 }
                 else {
                     helpers.addResult(results, 0,
-                        'AutoScaling group does not utilize a load balancer', region, resource);
+                        'Auto Scaling group does not utilize a load balancer', region, resource);
                 }
 
             });
