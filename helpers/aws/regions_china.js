@@ -22,7 +22,7 @@ module.exports = {
     comprehend: [],
     configservice: regions,
     dms: regions,
-    dax: regions,
+    dax: ['cn-northwest-1'],
     dynamodb: regions,
     ec2: regions,
     ecr: regions,
