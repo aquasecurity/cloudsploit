@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Root Account Active Signing Certificates',
     category: 'IAM',
-    description: 'Ensures the root user is not using x509 singing certificates',
+    description: 'Ensures the root user is not using x509 signing certificates',
     more_info: 'AWS supports using x509 signing certificates for API access, but these should not be attached to the root user, which has full access to the account.',
     link: 'https://docs.aws.amazon.com/whitepapers/latest/aws-overview-security-processes/x.509-certificates.html',
     recommended_action: 'Delete the x509 certificates associated with the root account.',
@@ -42,9 +42,9 @@ module.exports = {
 
                 if (obj.cert_1_active ||
                     obj.cert_2_active) {
-                    helpers.addResult(results, 2, 'The root user uses x509 singing certificates.', 'global', resource);
+                    helpers.addResult(results, 2, 'The root user uses x509 signing certificates.', 'global', resource);
                 } else {
-                    helpers.addResult(results, 0, 'The root user does not use x509 singing certificates.', 'global', resource);
+                    helpers.addResult(results, 0, 'The root user does not use x509 signing certificates.', 'global', resource);
                 }
 
                 break;
