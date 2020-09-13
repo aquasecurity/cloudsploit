@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Same Availability Zone in ASG and ELB',
+    title: 'AutoScaling ELB Same Availability Zone',
     category: 'AutoScaling',
     description: 'Ensures all autoscaling groups with attached ELBs are operating in the same availability zone.',
     more_info: 'To work properly and prevent orphaned instances, ELBs must be created in the same availability zones as the backend instances in the autoscaling group.',
