@@ -5,7 +5,9 @@ module.exports = {
         'acmValidation'                 : require(__dirname + '/plugins/aws/acm/acmValidation.js'),
         'acmCertificateExpiry'          : require(__dirname + '/plugins/aws/acm/acmCertificateExpiry.js'),
         'asgMultiAz'                    : require(__dirname + '/plugins/aws/autoscaling/asgMultiAz.js'),
+        'asgActiveNotifications'        : require(__dirname + '/plugins/aws/autoscaling/asgActiveNotifications.js'),
         'emptyASG'                      : require(__dirname + '/plugins/aws/autoscaling/emptyASG.js'),
+        'asgMissingELB'                 : require(__dirname + '/plugins/aws/autoscaling/asgMissingELB.js'),
         'workgroupEncrypted'            : require(__dirname + '/plugins/aws/athena/workgroupEncrypted.js'),
         'workgroupEnforceConfiguration' : require(__dirname + '/plugins/aws/athena/workgroupEnforceConfiguration.js'),
         'publicS3Origin'                : require(__dirname + '/plugins/aws/cloudfront/publicS3Origin.js'),
@@ -14,6 +16,9 @@ module.exports = {
         'cloudfrontHttpsOnly'           : require(__dirname + '/plugins/aws/cloudfront/cloudfrontHttpsOnly.js'),
         'cloudfrontLoggingEnabled'      : require(__dirname + '/plugins/aws/cloudfront/cloudfrontLoggingEnabled.js'),
         'cloudfrontWafEnabled'          : require(__dirname + '/plugins/aws/cloudfront/cloudfrontWafEnabled.js'),
+        
+        'volumeEncryption'              : require(__dirname + '/plugins/aws/comprehend/volumeEncryption.js'),
+        'outputResultEncryption'        : require(__dirname + '/plugins/aws/comprehend/outputResultEncryption.js'),
 
         'plainTextParameters'           :  require(__dirname + '/plugins/aws/cloudformation/plainTextParameters.js'),
 
@@ -30,6 +35,7 @@ module.exports = {
         'dmsEncryptionEnabled'          : require(__dirname + '/plugins/aws/dms/dmsEncryptionEnabled.js'),
 
         'dynamoKmsEncryption'           : require(__dirname + '/plugins/aws/dynamodb/dynamoKmsEncryption.js'),
+        'daxClusterEncryption'          : require(__dirname + '/plugins/aws/dynamodb/daxClusterEncryption.js'),
 
         'defaultSecurityGroup'          : require(__dirname + '/plugins/aws/ec2/defaultSecurityGroup.js'),
         'launchWizardSecurityGroups'    : require(__dirname + '/plugins/aws/ec2/launchWizardSecurityGroups'),
@@ -79,14 +85,17 @@ module.exports = {
         'crossVpcPublicPrivate'         : require(__dirname + '/plugins/aws/ec2/crossVpcPublicPrivate.js'),
         'vpcEndpointAcceptance'         : require(__dirname + '/plugins/aws/ec2/vpcEndpointAcceptance'),
         'ebsEncryptedSnapshots'         : require(__dirname + '/plugins/aws/ec2/ebsEncryptedSnapshots.js'),
-        'ec2MetadataOptions'             : require(__dirname + '/plugins/aws/ec2/ec2MetadataOptions.js'),
         'openCustomPorts'               : require(__dirname + '/plugins/aws/ec2/openCustomPorts.js'),
+        'ebsUnusedVolumes'              : require(__dirname + '/plugins/aws/ec2/ebsUnusedVolumes.js'),
+        'ec2MetadataOptions'            : require(__dirname + '/plugins/aws/ec2/ec2MetadataOptions.js'),
 
         'efsEncryptionEnabled'          : require(__dirname + '/plugins/aws/efs/efsEncryptionEnabled.js'),
 
         'ecrRepositoryPolicy'           : require(__dirname + '/plugins/aws/ecr/ecrRepositoryPolicy.js'),
         'ecrRepositoryTagImmutability'  : require(__dirname + '/plugins/aws/ecr/ecrRepositoryTagImmutability.js'),
-
+        
+        'managedPlatformUpdates'        : require(__dirname + '/plugins/aws/elasticbeanstalk/managedPlatformUpdates.js'),
+        
         'eksKubernetesVersion'          : require(__dirname + '/plugins/aws/eks/eksKubernetesVersion.js'),
         'eksLoggingEnabled'             : require(__dirname + '/plugins/aws/eks/eksLoggingEnabled.js'),
         'eksPrivateEndpoint'            : require(__dirname + '/plugins/aws/eks/eksPrivateEndpoint.js'),
@@ -115,6 +124,7 @@ module.exports = {
         'accessKeysRotated'             : require(__dirname + '/plugins/aws/iam/accessKeysRotated.js'),
         'certificateExpiry'             : require(__dirname + '/plugins/aws/iam/certificateExpiry.js'),
         'emptyGroups'                   : require(__dirname + '/plugins/aws/iam/emptyGroups.js'),
+        'groupInlinePolicies'           : require(__dirname + '/plugins/aws/iam/groupInlinePolicies.js'),
         'iamUserAdmins'                 : require(__dirname + '/plugins/aws/iam/iamUserAdmins.js'),
         'iamUserNameRegex'              : require(__dirname + '/plugins/aws/iam/iamUserNameRegex.js'),
         'iamRolePolicies'               : require(__dirname + '/plugins/aws/iam/iamRolePolicies.js'),
@@ -153,6 +163,7 @@ module.exports = {
         'rdsMultiAz'                    : require(__dirname + '/plugins/aws/rds/rdsMultiAz.js'),
         'rdsSnapshotEncryption'         : require(__dirname + '/plugins/aws/rds/rdsSnapshotEncryption.js'),
         'rdsMinorVersionUpgrade'        : require(__dirname + '/plugins/aws/rds/rdsMinorVersionUpgrade.js'),
+        'sqlServerTLSVersion'           : require(__dirname + '/plugins/aws/rds/sqlServerTLSVersion'),
 
         'domainAutoRenew'               : require(__dirname + '/plugins/aws/route53/domainAutoRenew.js'),
         'domainExpiry'                  : require(__dirname + '/plugins/aws/route53/domainExpiry.js'),
