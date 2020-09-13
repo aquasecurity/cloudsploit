@@ -94,6 +94,50 @@ var calls = {
             }
         }
     },
+    Comprehend: {
+        listEntitiesDetectionJobs: {
+            property: 'EntitiesDetectionJobPropertiesList',
+            paginate: 'NextToken',
+            params: {
+                MaxResults: 100
+            }
+        },
+        listDocumentClassificationJobs: {
+            property: 'DocumentClassificationJobPropertiesList',
+            paginate: 'NextToken',
+            params: {
+                MaxResults: 100
+            }
+        },
+        listDominantLanguageDetectionJobs: {
+            property: 'DominantLanguageDetectionJobPropertiesList',
+            paginate: 'NextToken',
+            params: {
+                MaxResults: 100
+            }
+        },
+        listKeyPhrasesDetectionJobs: {
+            property: 'KeyPhrasesDetectionJobPropertiesList',
+            paginate: 'NextToken',
+            params: {
+                MaxResults: 100
+            }
+        },
+        listSentimentDetectionJobs: {
+            property: 'SentimentDetectionJobPropertiesList',
+            paginate: 'NextToken',
+            params: {
+                MaxResults: 100
+            }
+        },
+        listTopicsDetectionJobs: {
+            property: 'TopicsDetectionJobPropertiesList',
+            paginate: 'NextToken',
+            params: {
+                MaxResults: 100
+            }
+        }
+    },
     ConfigService: {
         describeConfigurationRecorders: {
             property: 'ConfigurationRecorders'
@@ -125,6 +169,12 @@ var calls = {
             property: 'TableNames',
             paginate: 'LastEvaluatedTableName',
             paginateReqProp: 'ExclusiveStartTableName'
+        }
+    },
+    DAX: {
+        describeClusters: {
+            property: 'Clusters',
+            paginate: 'NextToken'
         }
     },
     EC2: {
@@ -271,6 +321,12 @@ var calls = {
             paginate: 'nextToken'
         }
     },
+    ElasticBeanstalk: {
+        describeEnvironments: {
+            property: 'Environments',
+            paginate: 'NextToken'
+        }
+    },
     ElasticTranscoder: {
         // TODO: Pagination via NextPageToken and PageToken
         listPipelines: {
@@ -399,6 +455,10 @@ var calls = {
         },
         describeDBSnapshots: {
             property: 'DBSnapshots',
+            paginate: 'Marker'
+        },
+        describeDBParameterGroups: {
+            property: 'DBParameterGroups',
             paginate: 'Marker'
         }
     },
@@ -544,6 +604,13 @@ var postcalls = [
                 filterValue: 'Name'
             }
         },
+        AutoScaling: {
+            describeNotificationConfigurations: {
+                reliesOnService: 'autoscaling',
+                reliesOnCall: 'describeAutoScalingGroups',
+                override: true
+            }
+        },
         CloudFront: {
             getDistribution: {
                 reliesOnService: 'cloudfront',
@@ -663,6 +730,13 @@ var postcalls = [
             describeCluster: {
                 reliesOnService: 'eks',
                 reliesOnCall: 'listClusters',
+                override: true
+            }
+        },
+        ElasticBeanstalk: {
+            describeConfigurationSettings: {
+                reliesOnService: 'elasticbeanstalk',
+                reliesOnCall: 'describeEnvironments',
                 override: true
             }
         },
@@ -810,6 +884,14 @@ var postcalls = [
                 reliesOnCall: 'listFunctions',
                 filterKey: 'Resource',
                 filterValue: 'FunctionArn'
+            }
+        },
+        RDS: {
+            describeDBParameters: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'describeDBParameterGroups',
+                filterKey: 'DBParameterGroupName',
+                filterValue: 'DBParameterGroupName'
             }
         },
         SageMaker: {
