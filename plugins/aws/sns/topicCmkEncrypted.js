@@ -4,9 +4,10 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'SNS Topic Encrypted With KMS Customer Master Keys',
     category: 'SNS',
-    description: 'Ensure that Amazon SNS topics are encrypted with KMS Customer Master Keys (CMKs).',
-    more_info: 'SNS topics should enforce Server-Side Encryption (SSE) with Customer Master Keys (CMKs) to secure data at rest. SSE protects the contents of messages in Amazon SNS topics using keys managed in AWS Key Management Service (AWS KMS).',
-    recommended_action: 'Use Customer Master Keys (CMKs) for Server-Side Encryption to protect the conents of SNS topic messages.',
+    description: 'Ensures Amazon SNS topics are encrypted with KMS Customer Master Keys (CMKs).',
+    more_info: 'AWS SNS topics should be  encrypted with KMS Customer Master Keys (CMKs) instead of AWS managed-keys' +
+               'in order to have a more granular control over the SNS data-at-rest encryption and decryption process.',
+    recommended_action: 'Update SNS topics to use Customer Master Keys (CMKs) for Server-Side Encryption.',
     link: 'https://docs.aws.amazon.com/sns/latest/dg/sns-server-side-encryption.html',
     apis: ['SNS:listTopics', 'SNS:getTopicAttributes'],
 
@@ -33,18 +34,16 @@ module.exports = {
             }
 
             async.each(listTopics.data, function(topic, cb){
+                if (!topic.TopicArn) return cb();
+                
                 var resource = topic.TopicArn;
-                if (!resource) return cb();
 
                 var getTopicAttributes = helpers.addSource(cache, source,
                     ['sns', 'getTopicAttributes', region, resource]);
 
-                if (!getTopicAttributes ||
-                    (!getTopicAttributes.err && !getTopicAttributes.data)) return cb();
-
-                if (getTopicAttributes.err || !getTopicAttributes.data) {
+                if (!getTopicAttributes || getTopicAttributes.err || !getTopicAttributes.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query SNS topic for policy: ' + helpers.addError(getTopicAttributes),
+                        'Unable to query SNS topic attributes: ' + helpers.addError(getTopicAttributes),
                         region, resource);
 
                     return cb();
@@ -55,18 +54,18 @@ module.exports = {
                     var kmsMasterKeyId = getTopicAttributes.data.Attributes.KmsMasterKeyId;
                     if (kmsMasterKeyId === 'alias/aws/sns'){
                         helpers.addResult(results, 2,
-                            'The SNS topic has Server-Side Encryption enabled with default KMS key',
+                            'SNS topic is using default KMS key for Server-Side Encryption',
                             region, resource);
                     }
                     else {
                         helpers.addResult(results, 0,
-                            'The SNS topic has Server-Side Encryption enabled with KMS Customer Master key',
+                            'SNS topic is using CMK key for Server-Side Encryption',
                             region, resource);
                     }
                 }
                 else {
                     helpers.addResult(results, 2,
-                        'The SNS topic does not have Server-Side Encryption enabled',
+                        'Server-Side Encryption is not enabled for SNS topic',
                         region, resource);
                 }
 

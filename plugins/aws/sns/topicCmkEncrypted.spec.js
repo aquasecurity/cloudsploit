@@ -129,7 +129,7 @@ const createNullCache = () => {
 
 describe('topicCmkEncrypted', function () {
     describe('run', function () {
-        it('should PASS if SNS topic has SSE enabled with KMS Customer Master key', function (done) {
+        it('should PASS if SNS topic is using CMK key for Server-Side Encryption', function (done) {
             const cache = createCache([listTopics[0]], getTopicAttributes[1]);
             topicCmkEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -138,7 +138,7 @@ describe('topicCmkEncrypted', function () {
             });
         });
 
-        it('should FAIL if SNS topic does not have SSE enabled with KMS default key', function (done) {
+        it('should FAIL if SNS topic is using default KMS key for Server-Side Encryption', function (done) {
             const cache = createCache([listTopics[1]], getTopicAttributes[0]);
             topicCmkEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -147,7 +147,7 @@ describe('topicCmkEncrypted', function () {
             });
         });
         
-        it('should FAIL if SNS topic does not have SSE enabled', function (done) {
+        it('should FAIL if Server-Side Encryption is not enabled for SNS topic', function (done) {
             const cache = createCache([listTopics[1]], getTopicAttributes[2]);
             topicCmkEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -156,7 +156,7 @@ describe('topicCmkEncrypted', function () {
             });
         });
 
-        it('should PASS if no SNS topic found', function (done) {
+        it('should PASS if no SNS topics found', function (done) {
             const cache = createCache([]);
             topicCmkEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -165,7 +165,7 @@ describe('topicCmkEncrypted', function () {
             });
         });
 
-        it('should UNKNOWN if unable to list sns topics', function (done) {
+        it('should UNKNOWN if error while listing SNS topics', function (done) {
             const cache = createErrorCache();
             topicCmkEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -174,7 +174,7 @@ describe('topicCmkEncrypted', function () {
             });
         });
 
-        it('should UNKNOWN if unable to get sns topic attributes', function (done) {
+        it('should UNKNOWN if error while getting SNS topic attributes', function (done) {
             const cache = createTopicAttributesErrorCache([listTopics[0]]);
             topicCmkEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -183,7 +183,7 @@ describe('topicCmkEncrypted', function () {
             });
         });
 
-        it('should not return any result if sns list topics response is not found', function (done) {
+        it('should not return any result if unable to list SNS topics', function (done) {
             const cache = createNullCache();
             topicCmkEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
