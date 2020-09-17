@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-const privateCidrAllowed = require('./privateCidrAllowed');
+const securityGroupRfc1918 = require('./securityGroupRfc1918');
 
 const describeSecurityGroups = [
     {
@@ -137,11 +137,11 @@ const createNullCache = () => {
     };
 };
 
-describe('privateCidrAllowed', function () {
+describe('securityGroupRfc1918', function () {
     describe('run', function () {
-        it('should FAIL if security group allows one of reserved private address', function (done) {
+        it('should FAIL if security group allows any reserved private address', function (done) {
             const cache = createCache([describeSecurityGroups[0]]);
-            privateCidrAllowed.run(cache, {}, (err, results) => {
+            securityGroupRfc1918.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -150,32 +150,33 @@ describe('privateCidrAllowed', function () {
 
         it('should PASS if security group does not allow any reserved private address', function (done) {
             const cache = createCache([describeSecurityGroups[1]]);
-            privateCidrAllowed.run(cache, {}, (err, results) => {
+            securityGroupRfc1918.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
             });
         });
 
-        it('should not return any result if security group does not have Ip permissions configured', function (done) {
+        it('should PASS if security group does not have Ip permissions configured', function (done) {
             const cache = createCache([describeSecurityGroups[2]]);
-            privateCidrAllowed.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(0);
+            securityGroupRfc1918.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
                 done();
             });
         });
 
-        it('should not return any results if unable to fetch any stack description', function (done) {
+        it('should not return any results if unable to describe security groups', function (done) {
             const cache = createNullCache();
-            privateCidrAllowed.run(cache, {}, (err, results) => {
+            securityGroupRfc1918.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });
         });
 
-        it('should UNKNOWN if error occurs while fetching stack description', function (done) {
+        it('should UNKNOWN if error while describing security groups', function (done) {
             const cache = createErrorCache();
-            privateCidrAllowed.run(cache, {}, (err, results) => {
+            securityGroupRfc1918.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();

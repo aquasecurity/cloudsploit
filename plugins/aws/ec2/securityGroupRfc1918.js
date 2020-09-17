@@ -43,10 +43,14 @@ module.exports = {
 
             for (var g in describeSecurityGroups.data) {
                 var group = describeSecurityGroups.data[g];
-                var resource = group.GroupId;
-                var privateCidrFound = [];
+                var resource = 'arn:aws:ec2:' + region + ':' + group.OwnerId + ':security-group/' + group.GroupId;
+                var privateCidrsFound = [];
 
-                if (!group.IpPermissions || !group.IpPermissions.length) continue;
+                if (!group.IpPermissions || !group.IpPermissions.length) {
+                    helpers.addResult(results, 0,
+                        'Security group :' + group.GroupName + ': does not have any ip permission', region, resource);
+                    continue;
+                }
 
                 for (var p in group.IpPermissions) {
                     var permission = group.IpPermissions[p];
@@ -54,19 +58,20 @@ module.exports = {
                     for (var r in permission.IpRanges) {
                         var cidrIp = permission.IpRanges[r].CidrIp;
                         if (cidrIp && privateCidrs.includes(cidrIp)) {
-                            if(!privateCidrFound.includes(cidrIp)) {
-                                privateCidrFound.push(cidrIp);
+                            if(!privateCidrsFound.includes(cidrIp)) {
+                                privateCidrsFound.push(cidrIp);
                             }
                         }
                     }
 
-                    if(privateCidrFound.length) {
+                    if(privateCidrsFound.length) {
                         helpers.addResult(results, 2,
-                            'Security group ' + group.GroupName + ' has inbound access allowed for reserved private addresses: ' + privateCidrFound.join(' , '), 
+                            'Security group :' + group.GroupName + ': allows inbound access for these reserved private address: ' + privateCidrsFound.join(', '), 
                             region, resource);
-                    }
-                    else {
-                        helpers.addResult(results, 0, 'Security group ' + group.GroupName + ' has no reserved private addresses allowed', region);
+                    } else {
+                        helpers.addResult(results, 0,
+                            'Security group :' + group.GroupName + ': does not allow any reserved private address',
+                            region, resource);
                     }
                 }
             }
