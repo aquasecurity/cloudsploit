@@ -131,7 +131,7 @@ describe('cloudtrailObjectLock', function () {
             });
         });
 
-        it('should PASS if no CloudTrail policies are detected', function (done) {
+        it('should PASS if no trails found', function (done) {
             const cache = createCache([]);
             cloudtrailObjectLock.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -140,7 +140,7 @@ describe('cloudtrailObjectLock', function () {
             });
         });
 
-        it('should UNKNOWN if there was an error querying for CloudTrail policy', function (done) {
+        it('should UNKNOWN if there was an error querying for trails', function (done) {
             const cache = createErrorCache();
             cloudtrailObjectLock.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -149,7 +149,7 @@ describe('cloudtrailObjectLock', function () {
             });
         });
 
-        it('should not return any results if unable to query for CloudTrail policy', function (done) {
+        it('should not return any results if unable to query for trails', function (done) {
             const cache = createNullCache();
             cloudtrailObjectLock.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);

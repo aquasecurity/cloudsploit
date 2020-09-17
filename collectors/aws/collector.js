@@ -644,10 +644,11 @@ var postcalls = [
                 override: true
             },
             getObjectLockConfiguration: {
-                reliesOnService: 'cloudtrail',
-                reliesOnCall: 'describeTrails',
-                filterKey: 'Bucket',
-                filterValue: 'S3BucketName'
+                reliesOnService: 's3',
+                reliesOnCall: 'listBuckets',
+                deleteRegion: true,
+                signatureVersion: 'v4',
+                override: true
             }
         },
         EC2: {
