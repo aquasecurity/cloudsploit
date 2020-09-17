@@ -223,7 +223,7 @@ describe('emrEncryptionInTransit', function () {
             });
         });
 
-        it('should PASS if encryption in transit is not enabled for EMR cluster', function (done) {
+        it('should PASS if encryption in transit is enabled for EMR cluster', function (done) {
             const cache = createCache([listClusters[1]], describeCluster[1], describeSecurityConfiguration[1]);
             emrEncryptionInTransit.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);

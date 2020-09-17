@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'EMR Encryption In Transit',
     category: 'EMR',
-    description: 'Ensures encryption is enabled in transit for EMR clusters',
+    description: 'Ensures encryption in transit is enabled for EMR clusters',
     more_info: 'EMR clusters should be configured to enable encryption in transit.',
     link: 'https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-data-encryption-options.html',
     recommended_action: 'Update security configuration associated with EMR cluster to enable encryption in transit.',
@@ -60,23 +60,26 @@ module.exports = {
 
                 if (!describeSecurityConfiguration ||
                     describeSecurityConfiguration.err ||
-                    !describeSecurityConfiguration.data) {
+                    !describeSecurityConfiguration.data ||
+                    !describeSecurityConfiguration.data.SecurityConfiguration) {
                     helpers.addResult(results, 3,
                         'Unable to query for EMR cluster security configuration', region, resource);
                     return lcb();
                 }
 
-                if (!describeSecurityConfiguration.data.SecurityConfiguration) {
-                    helpers.addResult(results, 2,
-                        'No security configuration found for :' + cluster.Name + ': EMR cluster',
+                try {
+                    var clusterSecurityConfiguration = JSON.parse(describeSecurityConfiguration.data.SecurityConfiguration);
+                } catch (e) {
+                    helpers.addResult(results, 3,
+                        'Cluster security configuration is not valid JSON.',
                         region, resource);
+
                     return lcb();
                 }
 
-                var clusterSecurityConfiguration = JSON.parse(describeSecurityConfiguration.data.SecurityConfiguration);
-
                 if (clusterSecurityConfiguration.EncryptionConfiguration &&
                     clusterSecurityConfiguration.EncryptionConfiguration.EnableInTransitEncryption &&
+                    clusterSecurityConfiguration.EncryptionConfiguration.EnableInTransitEncryption === true &&
                     clusterSecurityConfiguration.EncryptionConfiguration.InTransitEncryptionConfiguration) {
                     helpers.addResult(results, 0,
                         'Encryption in transit is enabled for :' + cluster.Name + ': EMR cluster',

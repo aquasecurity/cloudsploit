@@ -4,10 +4,10 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'EMR Encryption At Rest',
     category: 'EMR',
-    description: 'Ensures encryption is enabled at rest for EMR clusters',
-    more_info: 'EMR clusters should be configured to enable encryption at rest.',
+    description: 'Ensures encryption at rest for local disks is enabled for EMR clusters',
+    more_info: 'EMR clusters should be configured to enable encryption at rest for local disks.',
     link: 'https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-data-encryption-options.html',
-    recommended_action: 'Update security configuration associated with EMR cluster to enable encryption at rest.',
+    recommended_action: 'Update security configuration associated with EMR cluster to enable encryption at rest for local disks.',
     apis: ['EMR:listClusters', 'EMR:describeCluster', 'EMR:describeSecurityConfiguration'],
 
     run: function(cache, settings, callback) {
@@ -45,7 +45,6 @@ module.exports = {
                         'Unable to query for EMR cluster', region, resource);
                     return lcb();
                 }
-
                 if (!describeCluster.data.Cluster.SecurityConfiguration) {
                     helpers.addResult(results, 2,
                         'No security configuration found for :' + cluster.Name + ': EMR cluster',
@@ -60,30 +59,34 @@ module.exports = {
 
                 if (!describeSecurityConfiguration ||
                     describeSecurityConfiguration.err ||
-                    !describeSecurityConfiguration.data) {
+                    !describeSecurityConfiguration.data ||
+                    !describeSecurityConfiguration.data.SecurityConfiguration) {
                     helpers.addResult(results, 3,
                         'Unable to query for EMR cluster security configuration', region, resource);
                     return lcb();
                 }
 
-                if (!describeSecurityConfiguration.data.SecurityConfiguration) {
-                    helpers.addResult(results, 2,
-                        'No security configuration found for :' + cluster.Name + ': EMR cluster',
+                try {
+                    var clusterSecurityConfiguration = JSON.parse(describeSecurityConfiguration.data.SecurityConfiguration);
+                } catch (e) {
+                    helpers.addResult(results, 3,
+                        'Cluster security configuration is not valid JSON.',
                         region, resource);
+
                     return lcb();
                 }
 
-                var clusterSecurityConfiguration = JSON.parse(describeSecurityConfiguration.data.SecurityConfiguration);
-
                 if (clusterSecurityConfiguration.EncryptionConfiguration &&
                     clusterSecurityConfiguration.EncryptionConfiguration.EnableAtRestEncryption &&
-                    clusterSecurityConfiguration.EncryptionConfiguration.AtRestEncryptionConfiguration) {
+                    clusterSecurityConfiguration.EncryptionConfiguration.EnableAtRestEncryption === true &&
+                    clusterSecurityConfiguration.EncryptionConfiguration.AtRestEncryptionConfiguration &&
+                    clusterSecurityConfiguration.EncryptionConfiguration.AtRestEncryptionConfiguration.LocalDiskEncryptionConfiguration) {
                     helpers.addResult(results, 0,
-                        'Encryption at rest is enabled for :' + cluster.Name + ': EMR cluster',
+                        'Encryption at rest for local disks is enabled for :' + cluster.Name + ': EMR cluster',
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'Encryption at rest is not enabled for :' + cluster.Name + ': EMR cluster',
+                        'Encryption at rest for local disks is not enabled for :' + cluster.Name + ': EMR cluster',
                         region, resource);
                 }
                 lcb();
