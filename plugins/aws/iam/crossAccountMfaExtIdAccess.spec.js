@@ -88,7 +88,7 @@ const createNullCache = () => {
 
 describe('crossAccountMfaExtIdAccess', function () {
     describe('run', function () {
-        it('should FAIL if cross-account role does not require MFA/external ID', function (done) {
+        it('should FAIL if cross-account role does not require MFA/external ID for any account', function (done) {
             const cache = createCache([roles[4]]);
             crossAccountMfaExtIdAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -97,7 +97,7 @@ describe('crossAccountMfaExtIdAccess', function () {
             });
         });
 
-        it('should PASS if cross-account role requires MFA/external ID', function (done) {
+        it('should PASS if cross-account role requires MFA/external ID for all accounts', function (done) {
             const cache = createCache([roles[1], roles[3]]);
             crossAccountMfaExtIdAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(2);

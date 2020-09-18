@@ -34,12 +34,23 @@ module.exports = {
         var crossAccountfound = false;
 
         listRoles.data.forEach(role => {
-            if (!role.AssumeRolePolicyDocument) {
+            if (!role.AssumeRolePolicyDocument || !role.Arn) {
+                return;
+            }
+            
+            var resource = role.Arn;
+
+            try {
+                var assumeRolePolicy = JSON.parse(decodeURIComponent(role.AssumeRolePolicyDocument));
+            } catch (e) {
+                helpers.addResult(results, 3,
+                    'IAM role policy document is not valid JSON.',
+                    region, resource);
                 return;
             }
 
-            var assumeRolePolicy = JSON.parse(decodeURIComponent(role.AssumeRolePolicyDocument));
             var goodStatements = [];
+            var nonConfiguredAccounts = [];
             var crossAccountRole = false;
             
             if (assumeRolePolicy.Statement && assumeRolePolicy.Statement.length) {
@@ -58,17 +69,19 @@ module.exports = {
                                 (statement.Condition.StringEquals &&
                                     statement.Condition.StringEquals['sts:ExternalId'])) {
                             goodStatements.push(statement);
+                        } else {
+                            nonConfiguredAccounts.push(statement.Principal.AWS);
                         }
                     }
                 }
 
                 if (crossAccountRole && goodStatements.length === assumeRolePolicy.Statement.length) {
                     helpers.addResult(results, 0,
-                        'Cross-account role :' + role.RoleName + ': requires MFA/external ID',
+                        'Cross-account role :' + role.RoleName + ': requires MFA/external ID for all accounts',
                         'global', role.Arn);
                 } else if (crossAccountRole) {
                     helpers.addResult(results, 2,
-                        'Cross-account role :' + role.RoleName + ': does not require MFA/external ID',
+                        'Cross-account role :' + role.RoleName + ': does not require MFA/external ID for these account ARNs: ' + nonConfiguredAccounts.join(', '),
                         'global', role.Arn);
                 }
             }
