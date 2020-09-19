@@ -3,31 +3,244 @@ var rdsCmkEncryptionEnabled = require('./rdsCmkEncryptionEnabled');
 
 const describeDBInstances = [
     {
-        "Engine": "mysql",
+        "DBInstanceIdentifier": "test-db-115",
+        "DBInstanceClass": "db.m4.large",
+        "Engine": "postgres",
+        "DBInstanceStatus": "creating",
+        "MasterUsername": "postgres",
+        "DBName": "cloudsploit",
+        "AllocatedStorage": 20,
+        "PreferredBackupWindow": "09:07-09:37",
+        "BackupRetentionPeriod": 0,
+        "DBSecurityGroups": [],
+        "VpcSecurityGroups": [
+          {
+            "VpcSecurityGroupId": "sg-aa941691",
+            "Status": "active"
+          }
+        ],
+        "DBParameterGroups": [
+          {
+            "DBParameterGroupName": "default.postgres12",
+            "ParameterApplyStatus": "in-sync"
+          }
+        ],
+        "AvailabilityZone": "us-east-1f",
+        "DBSubnetGroup": {
+          "DBSubnetGroupName": "default-vpc-99de2fe4",
+          "DBSubnetGroupDescription": "Created from the RDS Management Console",
+          "VpcId": "vpc-99de2fe4",
+          "SubnetGroupStatus": "Complete",
+          "Subnets": [
+            {
+              "SubnetIdentifier": "subnet-aac6b3e7",
+              "SubnetAvailabilityZone": {
+                "Name": "us-east-1c"
+              },
+              "SubnetOutpost": {},
+              "SubnetStatus": "Active"
+            }
+          ]
+        },
+        "PreferredMaintenanceWindow": "fri:10:05-fri:10:35",
+        "PendingModifiedValues": {
+          "MasterUserPassword": "****",
+          "ProcessorFeatures": []
+        },
+        "MultiAZ": false,
+        "EngineVersion": "12.3",
+        "AutoMinorVersionUpgrade": false,
+        "ReadReplicaDBInstanceIdentifiers": [],
+        "ReadReplicaDBClusterIdentifiers": [],
+        "LicenseModel": "postgresql-license",
+        "OptionGroupMemberships": [
+          {
+            "OptionGroupName": "default:postgres-12",
+            "Status": "in-sync"
+          }
+        ],
+        "PubliclyAccessible": false,
+        "StatusInfos": [],
+        "StorageType": "gp2",
+        "DbInstancePort": 0,
         "StorageEncrypted": true,
         "KmsKeyId": "arn:aws:kms:us-east-1:012345678910:key/abcdef10-1517-49d8-b085-77c50b904149",
+        "DbiResourceId": "db-ZLVMKFR7AS6SJYTQPXZ4SUH5ZU",
+        "CACertificateIdentifier": "rds-ca-2019",
+        "DomainMemberships": [],
+        "CopyTagsToSnapshot": false,
+        "MonitoringInterval": 0,
+        "DBInstanceArn": "arn:aws:rds:us-east-1:560213429563:db:test-db-115",
+        "IAMDatabaseAuthenticationEnabled": false,
+        "PerformanceInsightsEnabled": false,
+        "EnabledCloudwatchLogsExports": [],
+        "ProcessorFeatures": [],
+        "DeletionProtection": false,
+        "AssociatedRoles": []
     },
     {
-        "Engine": "mysql",
+        "DBInstanceIdentifier": "test-db-115",
+        "DBInstanceClass": "db.m4.large",
+        "Engine": "postgres",
+        "DBInstanceStatus": "creating",
+        "MasterUsername": "postgres",
+        "DBName": "cloudsploit",
+        "AllocatedStorage": 20,
+        "PreferredBackupWindow": "09:07-09:37",
+        "BackupRetentionPeriod": 0,
+        "DBSecurityGroups": [],
+        "VpcSecurityGroups": [
+          {
+            "VpcSecurityGroupId": "sg-aa941691",
+            "Status": "active"
+          }
+        ],
+        "DBParameterGroups": [
+          {
+            "DBParameterGroupName": "default.postgres12",
+            "ParameterApplyStatus": "in-sync"
+          }
+        ],
+        "AvailabilityZone": "us-east-1f",
+        "DBSubnetGroup": {
+          "DBSubnetGroupName": "default-vpc-99de2fe4",
+          "DBSubnetGroupDescription": "Created from the RDS Management Console",
+          "VpcId": "vpc-99de2fe4",
+          "SubnetGroupStatus": "Complete",
+          "Subnets": [
+            {
+              "SubnetIdentifier": "subnet-aac6b3e7",
+              "SubnetAvailabilityZone": {
+                "Name": "us-east-1c"
+              },
+              "SubnetOutpost": {},
+              "SubnetStatus": "Active"
+            }
+          ]
+        },
+        "PreferredMaintenanceWindow": "fri:10:05-fri:10:35",
+        "PendingModifiedValues": {
+          "MasterUserPassword": "****",
+          "ProcessorFeatures": []
+        },
+        "MultiAZ": false,
+        "EngineVersion": "12.3",
+        "AutoMinorVersionUpgrade": false,
+        "ReadReplicaDBInstanceIdentifiers": [],
+        "ReadReplicaDBClusterIdentifiers": [],
+        "LicenseModel": "postgresql-license",
+        "OptionGroupMemberships": [
+          {
+            "OptionGroupName": "default:postgres-12",
+            "Status": "in-sync"
+          }
+        ],
+        "PubliclyAccessible": false,
+        "StatusInfos": [],
+        "StorageType": "gp2",
+        "DbInstancePort": 0,
         "StorageEncrypted": true,
-        "KmsKeyId": "arn:aws:kms:us-east-1:012345678910:key/88888888-1517-49d8-b085-77c50b904149",
+        "KmsKeyId": "arn:aws:kms:us-east-1:012345678910:key/88888828-1517-49d8-b085-77c50b904149",
+        "DbiResourceId": "db-ZLVMKFR7AS6SJYTQPXZ4SUH5ZU",
+        "CACertificateIdentifier": "rds-ca-2019",
+        "DomainMemberships": [],
+        "CopyTagsToSnapshot": false,
+        "MonitoringInterval": 0,
+        "DBInstanceArn": "arn:aws:rds:us-east-1:560213429563:db:test-db-115",
+        "IAMDatabaseAuthenticationEnabled": false,
+        "PerformanceInsightsEnabled": false,
+        "EnabledCloudwatchLogsExports": [],
+        "ProcessorFeatures": [],
+        "DeletionProtection": false,
+        "AssociatedRoles": []
     },
     {
-        "Engine": "mysql",
+        "DBInstanceIdentifier": "test-db-115",
+        "DBInstanceClass": "db.m4.large",
+        "Engine": "postgres",
+        "DBInstanceStatus": "creating",
+        "MasterUsername": "postgres",
+        "DBName": "cloudsploit",
+        "AllocatedStorage": 20,
+        "PreferredBackupWindow": "09:07-09:37",
+        "BackupRetentionPeriod": 0,
+        "DBSecurityGroups": [],
+        "VpcSecurityGroups": [
+          {
+            "VpcSecurityGroupId": "sg-aa941691",
+            "Status": "active"
+          }
+        ],
+        "DBParameterGroups": [
+          {
+            "DBParameterGroupName": "default.postgres12",
+            "ParameterApplyStatus": "in-sync"
+          }
+        ],
+        "AvailabilityZone": "us-east-1f",
+        "DBSubnetGroup": {
+          "DBSubnetGroupName": "default-vpc-99de2fe4",
+          "DBSubnetGroupDescription": "Created from the RDS Management Console",
+          "VpcId": "vpc-99de2fe4",
+          "SubnetGroupStatus": "Complete",
+          "Subnets": [
+            {
+              "SubnetIdentifier": "subnet-aac6b3e7",
+              "SubnetAvailabilityZone": {
+                "Name": "us-east-1c"
+              },
+              "SubnetOutpost": {},
+              "SubnetStatus": "Active"
+            }
+          ]
+        },
+        "PreferredMaintenanceWindow": "fri:10:05-fri:10:35",
+        "PendingModifiedValues": {
+          "MasterUserPassword": "****",
+          "ProcessorFeatures": []
+        },
+        "MultiAZ": false,
+        "EngineVersion": "12.3",
+        "AutoMinorVersionUpgrade": false,
+        "ReadReplicaDBInstanceIdentifiers": [],
+        "ReadReplicaDBClusterIdentifiers": [],
+        "LicenseModel": "postgresql-license",
+        "OptionGroupMemberships": [
+          {
+            "OptionGroupName": "default:postgres-12",
+            "Status": "in-sync"
+          }
+        ],
+        "PubliclyAccessible": false,
+        "StatusInfos": [],
+        "StorageType": "gp2",
+        "DbInstancePort": 0,
         "StorageEncrypted": false,
+        "DbiResourceId": "db-ZLVMKFR7AS6SJYTQPXZ4SUH5ZU",
+        "CACertificateIdentifier": "rds-ca-2019",
+        "DomainMemberships": [],
+        "CopyTagsToSnapshot": false,
+        "MonitoringInterval": 0,
+        "DBInstanceArn": "arn:aws:rds:us-east-1:560213429563:db:test-db-115",
+        "IAMDatabaseAuthenticationEnabled": false,
+        "PerformanceInsightsEnabled": false,
+        "EnabledCloudwatchLogsExports": [],
+        "ProcessorFeatures": [],
+        "DeletionProtection": false,
+        "AssociatedRoles": []
     }
 ];
 
 const listAliases = [
     {
-        AliasArn: "arn:aws:kms:us-east-1:012345678910:alias/example1", 
-        AliasName: "custom/key", 
-        TargetKeyId: "abcdef10-1517-49d8-b085-77c50b904149"
+        "AliasArn": "arn:aws:kms:us-east-1:012345678910:alias/example1", 
+        "AliasName": "custom/key", 
+        "TargetKeyId": "abcdef10-1517-49d8-b085-77c50b904149"
     },
     {
-        AliasArn: "arn:aws:kms:us-east-1:012345678910:alias/customRdsKey", 
-        AliasName: "alias/aws/rds", 
-        TargetKeyId: "abcdef10-1517-49d8-b085-77c50b904149"
+        "AliasArn": "arn:aws:kms:us-east-1:012345678910:alias/customRdsKey", 
+        "AliasName": "alias/aws/rds", 
+        "TargetKeyId": "abcdef10-1517-49d8-b085-77c50b904149"
     }
 ];
 
@@ -92,7 +305,7 @@ const createNullCache = () => {
 
 describe('rdsCmkEncryptionEnabled', function () {
     describe('run', function () {
-        it('should PASS if RDS instance is encrypted at rest via KMS Customer Master Key', function (done) {
+        it('should PASS if RDS DB instance is using Customer Master Key for encryption', function (done) {
             const cache = createCache([describeDBInstances[0]], [listAliases[0]]);
             rdsCmkEncryptionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -101,7 +314,7 @@ describe('rdsCmkEncryptionEnabled', function () {
             });
         });
         
-        it('should PASS if RDS instance is encrypted at rest via default KMS key', function (done) {
+        it('should FAIL if RDS DB instance is not using Customer Master Key for encryption', function (done) {
             const cache = createCache([describeDBInstances[0]], [listAliases[1]]);
             rdsCmkEncryptionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -110,7 +323,7 @@ describe('rdsCmkEncryptionEnabled', function () {
             });
         });
                 
-        it('should FAIL if RDS instance encryption key is not found', function (done) {
+        it('should FAIL if RDS DB instance encryption key is not found', function (done) {
             const cache = createCache([describeDBInstances[1]], [listAliases[1]]);
             rdsCmkEncryptionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -119,7 +332,7 @@ describe('rdsCmkEncryptionEnabled', function () {
             });
         });
                 
-        it('should FAIL if RDS instance does not have encryption enabled', function (done) {
+        it('should FAIL if RDS DB instance does not have encryption enabled', function (done) {
             const cache = createCache([describeDBInstances[2]], [listAliases[1]]);
             rdsCmkEncryptionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -128,7 +341,7 @@ describe('rdsCmkEncryptionEnabled', function () {
             });
         });
 
-        it('should UNKNOWN if unable to describe RDS instances', function (done) {
+        it('should UNKNOWN if error while describing RDS DB instances', function (done) {
             const cache = createErrorCache();
             rdsCmkEncryptionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -137,13 +350,12 @@ describe('rdsCmkEncryptionEnabled', function () {
             });
         });
 
-        it('should not return anything if no RDS instance found', function (done) {
+        it('should not return anything if unable to describe RDS DB instances', function (done) {
             const cache = createNullCache();
             rdsCmkEncryptionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });
         });
-
     });
 });
