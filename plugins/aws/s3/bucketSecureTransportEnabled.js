@@ -23,7 +23,7 @@ module.exports = {
 
         if (listBuckets.err || !listBuckets.data) {
             helpers.addResult(results, 3,
-                'Unable to query for S3 buckets: ' + helpers.addError(listBuckets));
+                `Unable to query for S3 buckets: ${helpers.addError(listBuckets)}`);
             return callback(null, results, source);
         }
 
@@ -43,66 +43,61 @@ module.exports = {
             // Check the bucket policy
             if (getBucketPolicy && getBucketPolicy.err &&
                 getBucketPolicy.err.code && getBucketPolicy.err.code === 'NoSuchBucketPolicy') {
-                helpers.addResult(results, 2,
-                    'No bucket policy found',
-                    'global', resource);
+                helpers.addResult(results, 2, 'No bucket policy found', 'global', resource);
             }
             else if (!getBucketPolicy || getBucketPolicy.err ||
                        !getBucketPolicy.data || !getBucketPolicy.data.Policy) {
                 helpers.addResult(results, 3,
-                    'Error querying for bucket policy for bucket: ' + bucket.Name +
-                    ': ' + helpers.addError(getBucketPolicy),
+                    `Error querying for bucket policy for bucket "${bucket.Name}" ${helpers.addError(getBucketPolicy)}`,
                     'global', resource);
             }
             else {
                 try {
                     var policyJson = JSON.parse(getBucketPolicy.data.Policy);
-
-                    if (!policyJson || !policyJson.Statement) {
-                        helpers.addResult(results, 3,
-                            'Error querying for bucket policy for bucket: ' + bucket.Name +
-                            ': Policy JSON is invalid or does not contain valid statements.',
-                            'global', resource);
-                    }
-                    else if (!policyJson.Statement.length) {
-                        helpers.addResult(results, 2,
-                            'Bucket policy does not contain any statements',
-                            'global', resource);
-                    }
-                    else {
-                        var sslEnforced = false;
-                        for (var s in policyJson.Statement) {
-                            var statement = policyJson.Statement[s];
-                            if (statement.Effect &&
-                                statement.Condition &&
-                                statement.Condition.Bool &&
-                                statement.Condition.Bool['aws:SecureTransport']) {
-                                var secureTransport = statement.Condition.Bool['aws:SecureTransport'];
-                                var statementEffect = statement.Effect;
-
-                                if (secureTransport === 'false' && statementEffect === 'Deny') {
-                                    sslEnforced = true;
-                                }
-                            }
-                        }
-
-                        if(sslEnforced){
-                            helpers.addResult(results, 0,
-                                'Bucket Policy for bucket: ' + bucket.Name + ': enforces SSL to secure data in transit',
-                                'global', resource);
-                        }
-                        else {
-                            helpers.addResult(results, 2,
-                                'Bucket Policy: ' + bucket.Name + ': does not enforce SSL to secure data in transit',
-                                'global', resource);
-                        }
-                    }
                 }
                 catch(e) {
                     helpers.addResult(results, 3,
-                        'Error querying for bucket policy for bucket: ' + bucket.Name +
-                        ': Policy JSON could not be parsed.',
+                        `Error querying for bucket policy for bucket: "${bucket.Name}". Policy JSON could not be parsed`,
                         'global', resource);
+                    return;
+                }
+
+                if (!policyJson || !policyJson.Statement) {
+                    helpers.addResult(results, 3,
+                        `Error querying for bucket policy for bucket: "${bucket.Name}". Policy JSON is invalid or does not contain valid statements.`,
+                        'global', resource);
+                }
+                else if (!policyJson.Statement.length) {
+                    helpers.addResult(results, 2,
+                        'Bucket policy does not contain any statements',
+                        'global', resource);
+                } else {
+                    var sslEnforced = false;
+                    for (var s in policyJson.Statement) {
+                        var statement = policyJson.Statement[s];
+                        if (statement.Effect &&
+                            statement.Condition &&
+                            statement.Condition.Bool &&
+                            statement.Condition.Bool['aws:SecureTransport']) {
+                            var secureTransport = statement.Condition.Bool['aws:SecureTransport'];
+                            var statementEffect = statement.Effect;
+
+                            if (secureTransport === 'false' && statementEffect === 'Deny') {
+                                sslEnforced = true;
+                            }
+                        }
+                    }
+
+                    if(sslEnforced){
+                        helpers.addResult(results, 0,
+                            `Bucket Policy for bucket "${bucket.Name}" enforces SSL to secure data in transit`,
+                            'global', resource);
+                    }
+                    else {
+                        helpers.addResult(results, 2,
+                            `Bucket Policy for bucket "${bucket.Name}" does not enforce SSL to secure data in transit`,
+                            'global', resource);
+                    }
                 }
             }
         });

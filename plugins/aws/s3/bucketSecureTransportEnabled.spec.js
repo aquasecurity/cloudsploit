@@ -112,7 +112,7 @@ describe('bucketSecureTransportEnabled', function () {
             });
         });
 
-        it('should UNKNOWN if unable to list s3 buckets', function (done) {
+        it('should UNKNOWN if error while listing S3 buckets', function (done) {
             const cache = createErrorCache();
             bucketSecureTransportEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -121,7 +121,7 @@ describe('bucketSecureTransportEnabled', function () {
             });
         });
 
-        it('should not return any result if s3 list bucket response is not found', function (done) {
+        it('should not return any result if S3 list bucket response is not found', function (done) {
             const cache = createNullCache();
             bucketSecureTransportEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
