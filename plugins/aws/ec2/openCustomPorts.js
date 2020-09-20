@@ -14,7 +14,7 @@ module.exports = {
             name: 'EC2 Allowed Open Ports',
             description: 'A comma-delimited list of ports that indicates open ports allowed for any connection',
             regex: '[a-zA-Z0-9,]',
-            default: [80, 443]
+            default: '80,443'
         }
     },
 
@@ -24,6 +24,7 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var allowed_open_ports = settings.open_port_allowed_list || this.settings.open_port_allowed_list.default;
+        // allowed_open_ports = allowed_open_ports.split(',');
 
         async.each(regions.ec2, function(region, rcb){
             var describeSecurityGroups = helpers.addSource(cache, source,
@@ -65,7 +66,7 @@ module.exports = {
 
                                 if (!allowed_open_ports.includes(port)) {
                                     var openPort = permission.IpProtocol.toUpperCase() + ' port ' + port;
-                                    if (openPorts.indexOf(openPort) === -1) openPorts.push(openPort);
+                                    if (openPorts.indexOf(openPort) === -1) openPorts.push(openPort.toString());
                                 }
                             }
                         }
