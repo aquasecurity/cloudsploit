@@ -46,7 +46,7 @@ module.exports = {
 
             if (listAssociations.data.length) {
                 listAssociations.data.forEach(association => {
-                    if (association.Name === 'AWS-UpdateSSMAgent' && association.Targets && association.Targets.length) {
+                    if (association.Name && association.Name === 'AWS-UpdateSSMAgent' && association.Targets && association.Targets.length) {
                         association.Targets.forEach(function(target){
                             if(target.Key && target.Key === 'InstanceIds' && target.Values && target.Values.length) {
                                 target.Values.forEach(function(instanceId){
