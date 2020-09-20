@@ -104,5 +104,13 @@ module.exports = {
 
     objectFirstKey: function(object) {
         return Object.keys(object)[0];
+    },
+
+    isValidArray: function(value){
+        return (Array.isArray(value) && value.length > 0);
+    },
+
+    isValidObject: function(value){
+        return (value && (typeof value === 'object') && (value.constructor === Object));
     }
 };
