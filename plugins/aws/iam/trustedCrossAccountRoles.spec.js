@@ -99,7 +99,7 @@ describe('trustedCrossAccountRoles', function () {
 
         it('should PASS if cross-account role contains trusted account IDs', function (done) {
             const cache = createCache([roles[1]]);
-            trustedCrossAccountRoles.run(cache, {}, (err, results) => {
+            trustedCrossAccountRoles.run(cache, {whitelisted_accounts:'123456654321'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();

@@ -13,15 +13,13 @@ module.exports = {
             name: 'Allowed cross-account role account IDs',
             description: 'Return a failing result if cross-account role contains any account ID other than these account IDs',
             regex: '^[0-9{12}]$',
-            default: [ '123456654321' ]
+            default: ''
         }
     },
 
     run: function(cache, settings, callback) {
-        var config = {
-            whitelisted_accounts: settings.whitelisted_accounts || this.settings.whitelisted_accounts.default
-        };
-
+        var whitelisted_accounts = settings.whitelisted_accounts || this.settings.whitelisted_accounts.default;
+        whitelisted_accounts = whitelisted_accounts.split(',');
         // RegExp to get account ID from 'arn:aws:iam::{account ID}:root' principal
         var accountRegExp = /(?<=arn:aws:iam::)(.*?)(?=:)/g;
         var results = [];
@@ -48,11 +46,16 @@ module.exports = {
         var awsRolesFound = false;
 
         listRoles.data.forEach(role => {
-            if (!role.AssumeRolePolicyDocument) {
+            if (!role.AssumeRolePolicyDocument) return;
+
+            try {
+                var assumeRolePolicy = JSON.parse(decodeURIComponent(role.AssumeRolePolicyDocument));
+            } catch (e) {
+                helpers.addResult(results, 3,
+                    'IAM role policy document is not valid JSON.',
+                    'global', role.Arn);
                 return;
             }
-
-            var assumeRolePolicy = JSON.parse(decodeURIComponent(role.AssumeRolePolicyDocument));
             var restrictedAccounts = [];
             var crossAccountRole = false;
             
@@ -67,7 +70,7 @@ module.exports = {
 
                         var account = statement.Principal.AWS.match(accountRegExp).toString();
 
-                        if (!config.whitelisted_accounts.includes(account)) restrictedAccounts.push(account);
+                        if (!whitelisted_accounts.includes(account)) restrictedAccounts.push(account);
                     }
                 }
 
