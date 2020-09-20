@@ -16,9 +16,9 @@ const domainNames = [
 const domains = [
     {
         "DomainStatus": {
-            "DomainId": "560213429563/test-domain-104",
+            "DomainId": "1123456654321/test-domain-104",
             "DomainName": "test-domain-104",
-            "ARN": "arn:aws:es:us-east-1:560213429563:domain/test-domain-104",
+            "ARN": "arn:aws:es:us-east-1:1123456654321:domain/test-domain-104",
             "Created": true,
             "Deleted": false,
             "Endpoints": {
@@ -39,7 +39,7 @@ const domains = [
                 "VolumeType": "gp2",
                 "VolumeSize": 10
             },
-            "AccessPolicies": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"*\"},\"Action\":\"es:*\",\"Resource\":\"arn:aws:es:us-east-1:560213429563:domain/test-domain-104/*\"}]}",
+            "AccessPolicies": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"*\"},\"Action\":\"es:*\",\"Resource\":\"arn:aws:es:us-east-1:1123456654321:domain/test-domain-104/*\"}]}",
             "SnapshotOptions": {},
             "VPCOptions": {
                 "VPCId": "vpc-99de2fe4",
@@ -87,9 +87,9 @@ const domains = [
     },
     {
         "DomainStatus": {
-            "DomainId": "560213429563/test-domain3-104",
+            "DomainId": "1123456654321/test-domain3-104",
             "DomainName": "test-domain3-104",
-            "ARN": "arn:aws:es:us-east-1:560213429563:domain/test-domain3-104",
+            "ARN": "arn:aws:es:us-east-1:1123456654321:domain/test-domain3-104",
             "Created": true,
             "Deleted": false,
             "Endpoint": "search-test-domain3-104-oqrea5hh2cok7twvowby43f3iy.us-east-1.es.amazonaws.com",
@@ -143,9 +143,9 @@ const domains = [
     },
     {
         "DomainStatus": {
-            "DomainId": "560213429563/test-domain2-104",
+            "DomainId": "1123456654321/test-domain2-104",
             "DomainName": "test-domain2-104",
-            "ARN": "arn:aws:es:us-east-1:560213429563:domain/test-domain2-104",
+            "ARN": "arn:aws:es:us-east-1:1123456654321:domain/test-domain2-104",
             "Created": true,
             "Deleted": false,
             "Endpoints": {
@@ -166,7 +166,7 @@ const domains = [
                 "VolumeType": "gp2",
                 "VolumeSize": 10
             },
-            "AccessPolicies": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::560213429563:role/service-role/AmazonComprehendServiceRole-akhtar-comprehend-role\"},\"Action\":\"es:*\",\"Resource\":\"arn:aws:es:us-east-1:560213429563:domain/test-domain2-104/*\"}]}",
+            "AccessPolicies": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::1123456654321:role/service-role/AmazonComprehendServiceRole-akhtar-comprehend-role\"},\"Action\":\"es:*\",\"Resource\":\"arn:aws:es:us-east-1:1123456654321:domain/test-domain2-104/*\"}]}",
             "SnapshotOptions": {},
             "VPCOptions": {
                 "VPCId": "vpc-99de2fe4",

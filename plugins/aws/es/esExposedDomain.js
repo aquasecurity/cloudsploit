@@ -44,7 +44,7 @@ module.exports = {
                     !describeElasticsearchDomain.data.DomainStatus) {
                     helpers.addResult(
                         results, 3,
-                        'Unable to query for ES domain config: ' + helpers.addError(describeElasticsearchDomain), region);
+                        'Unable to query for ES domain config: ' + helpers.addError(describeElasticsearchDomain), region, resource);
                 }
 
                 var goodStatements = [];
