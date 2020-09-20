@@ -49,7 +49,7 @@ module.exports = {
 
                 if(!elbv2Attributes.data.Attributes || !elbv2Attributes.data.Attributes.length){
                     helpers.addResult(results, 2,
-                        'Application/Network load balancer attributes not found ' +  helpers.addError(elbv2Attributes),
+                        'Application/Network load balancer attributes not found',
                         region, resource);
                     return cb();
                 }
@@ -59,7 +59,7 @@ module.exports = {
                 elbv2Attributes.data.Attributes.forEach(attribute => {
                     if (attribute.Key && attribute.Key === 'deletion_protection.enabled') {
                         found = true;
-                        if (attribute.Value === 'true') {
+                        if (attribute.Value && attribute.Value === 'true') {
                             helpers.addResult(results, 0,
                                 'Load balancer :' + elb.LoadBalancerName + ': has deletion protection enabled',
                                 region, resource);
@@ -72,7 +72,7 @@ module.exports = {
                 });
 
                 if (!found) {
-                    helpers.addResult(results, 2, 'Deletion protection key not found', region, resource);
+                    helpers.addResult(results, 2, 'Deletion protection not found', region, resource);
                 }
 
                 cb();
