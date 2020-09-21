@@ -63,11 +63,11 @@ module.exports = {
                         crossAccountfound = true;
 
                         if (statement.Condition &&
-                                (statement.Condition.Bool &&
+                            ((statement.Condition.Bool &&
                                     statement.Condition.Bool['aws:MultiFactorAuthPresent'] &&
                                     statement.Condition.Bool['aws:MultiFactorAuthPresent'] === 'true') ||
                                 (statement.Condition.StringEquals &&
-                                    statement.Condition.StringEquals['sts:ExternalId'])) {
+                                    statement.Condition.StringEquals['sts:ExternalId']))) {
                             goodStatements.push(statement);
                         } else {
                             nonConfiguredAccounts.push(statement.Principal.AWS);
