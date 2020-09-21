@@ -40,10 +40,10 @@ module.exports = {
                 var resource = `arn:${awsOrGov}:ec2:${region}:${accountId}:eip/${elasticIp.AllocationId}`;
 
                 if(elasticIp.AssociationId) {
-                    helpers.addResult(results, 0, `Elastic IP address :${elasticIp.AllocationId}: is associated to a resource`,
+                    helpers.addResult(results, 0, `Elastic IP address ${elasticIp.AllocationId} is associated to a resource`,
                         region, resource);
                 } else {
-                    helpers.addResult(results, 2, `Elastic IP address :${elasticIp.AllocationId}: is not associated to any resource`,
+                    helpers.addResult(results, 2, `Elastic IP address ${elasticIp.AllocationId} is not associated to any resource`,
                         region, resource);
                 }
             });
