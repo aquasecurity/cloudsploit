@@ -35,7 +35,7 @@ module.exports = {
             describeAutoScalingGroups.data.forEach(function(asg){
                 if (!asg.SuspendedProcesses || !asg.SuspendedProcesses.length) {
                     helpers.addResult(results, 0,
-                        `AutoScaling group "${asg.AutoScalingGroupName}" does not have any suspended process`,
+                        `AutoScaling group "${asg.AutoScalingGroupName}" does not have any suspended processes`,
                         region, asg.AutoScalingGroupARN);
                 }
                 else {
