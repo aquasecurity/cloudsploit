@@ -7,6 +7,7 @@ module.exports = {
         'asgMultiAz'                    : require(__dirname + '/plugins/aws/autoscaling/asgMultiAz.js'),
         'asgActiveNotifications'        : require(__dirname + '/plugins/aws/autoscaling/asgActiveNotifications.js'),
         'emptyASG'                      : require(__dirname + '/plugins/aws/autoscaling/emptyASG.js'),
+        'sameAzElb'                     : require(__dirname + '/plugins/aws/autoscaling/sameAzElb.js'),
         'asgMissingELB'                 : require(__dirname + '/plugins/aws/autoscaling/asgMissingELB.js'),
         'asgSuspendedProcesses'         : require(__dirname + '/plugins/aws/autoscaling/asgSuspendedProcesses.js'),
         'workgroupEncrypted'            : require(__dirname + '/plugins/aws/athena/workgroupEncrypted.js'),
