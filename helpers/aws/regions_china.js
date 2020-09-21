@@ -31,6 +31,7 @@ module.exports = {
     elastictranscoder: [],
     elb: regions,
     elbv2: regions,
+    emr: regions,
     es: regions,
     kinesis: [],
     firehose: regions,
