@@ -82,7 +82,6 @@ describe('groupInlinePolicies', function () {
     describe('run', function () {
         it('should FAIL if IAM group contains inline policies', function (done) {
             const cache = createCache([groups[0]], groupPolicies[1]);
-            console.log(cache);
             groupInlinePolicies.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
