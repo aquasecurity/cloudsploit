@@ -124,6 +124,7 @@ module.exports = {
         'accessKeysLastUsed'            : require(__dirname + '/plugins/aws/iam/accessKeysLastUsed.js'),
         'accessKeysRotated'             : require(__dirname + '/plugins/aws/iam/accessKeysRotated.js'),
         'certificateExpiry'             : require(__dirname + '/plugins/aws/iam/certificateExpiry.js'),
+        'crossAccountMfaExtIdAccess'    : require(__dirname + '/plugins/aws/iam/crossAccountMfaExtIdAccess.js'),
         'emptyGroups'                   : require(__dirname + '/plugins/aws/iam/emptyGroups.js'),
         'groupInlinePolicies'           : require(__dirname + '/plugins/aws/iam/groupInlinePolicies.js'),
         'iamUserAdmins'                 : require(__dirname + '/plugins/aws/iam/iamUserAdmins.js'),
