@@ -4,7 +4,7 @@
   "description": "AWS, Azure, GCP, Oracle, GitHub security scanning scripts",
   "main": "index.js",
   "scripts": {
-    "test": "nyc --reporter=text mocha './**/*.spec.js'",
+    "test": "mocha './**/*.spec.js'",
     "test-watch": "nodemon --exec npm run test",
     "test-cov": "nyc --reporter text --reporter cobertura --reporter lcov --all -- npm run test",
     "test-cov-watch": "nodemon --exec npm run test-cov",
@@ -56,9 +56,9 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "eslint": "^6.8.0",
     "mocha": "^6.1.4",
     "nodemon": "^1.19.4",
-    "nyc": "^14.1.1"
+    "nyc": "^14.1.1",
+    "eslint": "^6.8.0"
   }
 }
