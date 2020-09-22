@@ -6,7 +6,7 @@ module.exports = {
     category: 'SNS',
     description: 'Ensures that Amazon SNS topics enforce Server-Side Encryption (SSE)',
     more_info: 'SNS topics should enforce Server-Side Encryption (SSE) to secure data at rest. SSE protects the contents of messages in Amazon SNS topics using keys managed in AWS Key Management Service (AWS KMS).',
-    recommended_action: 'Enable Server-Side Encryption to protect the conents of SNS topic messages.',
+    recommended_action: 'Enable Server-Side Encryption to protect the content of SNS topic messages.',
     link: 'https://docs.aws.amazon.com/sns/latest/dg/sns-server-side-encryption.html',
     apis: ['SNS:listTopics', 'SNS:getTopicAttributes'],
 
@@ -48,14 +48,14 @@ module.exports = {
                     return cb();
                 }
 
-                if (!getTopicAttributes.data.Attributes ||
-                    !getTopicAttributes.data.Attributes.KmsMasterKeyId) {
-                    helpers.addResult(results, 2,
+                if (getTopicAttributes.data.Attributes &&
+                    getTopicAttributes.data.Attributes.KmsMasterKeyId) {
+                    helpers.addResult(results, 0,
                         'Server-Side Encryption is enabled for SNS topic',
                         region, resource);
                 } 
                 else {
-                    helpers.addResult(results, 0,
+                    helpers.addResult(results, 2,
                         'Server-Side Encryption is not enabled for SNS topic',
                         region, resource);
                 }
