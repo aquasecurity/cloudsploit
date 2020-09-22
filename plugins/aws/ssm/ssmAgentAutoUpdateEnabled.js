@@ -8,12 +8,17 @@ module.exports = {
     more_info: 'To ensure the latest version of the SSM agent is installed, it should be configured to consume automatic updates.',
     link: 'https://docs.aws.amazon.com/systems-manager/latest/userguide/ssm-agent-automatic-updates.html',
     recommended_action: 'Update the SSM agent configuration for all managed instances to use automatic updates.',
-    apis: ['SSM:describeInstanceInformation', 'SSM:listAssociations'],
+    apis: ['SSM:describeInstanceInformation', 'SSM:listAssociations', 'STS:getCallerIdentity'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+
+        var acctRegion = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
+
+        var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
         async.each(regions.ssm, function(region, rcb){
             var describeInstanceInformation = helpers.addSource(cache, source,
@@ -29,16 +34,16 @@ module.exports = {
                     'Unable to query SSM describe instance information: ' + helpers.addError(describeInstanceInformation), region);
                 return rcb();
             }
-            
-            if (listAssociations.err || !listAssociations.data) {
-                helpers.addResult(results, 3,
-                    'Unable to query SSM list associations: ' + helpers.addError(listAssociations), region);
-                return rcb();
-            }
 
             if(!describeInstanceInformation.data.length) {
                 helpers.addResult(results, 0,
                     'No managed instances found', region);
+                return rcb();
+            }
+
+            if (listAssociations.err || !listAssociations.data) {
+                helpers.addResult(results, 3,
+                    'Unable to query SSM list associations: ' + helpers.addError(listAssociations), region);
                 return rcb();
             }
 
@@ -61,7 +66,8 @@ module.exports = {
             }
 
             describeInstanceInformation.data.forEach(function(instance) {
-                var resource = instance.InstanceId;
+                var resource = 'arn:' + awsOrGov + ':ec2:' + region + ':' + accountId + ':instance/' + instance.InstanceId;
+
                 if (associatedInstances.includes(resource) || associatedInstances.includes('*')) {
                     helpers.addResult(results, 0, 
                         'Instance has SSM Agent auto update enabled', region, resource);
