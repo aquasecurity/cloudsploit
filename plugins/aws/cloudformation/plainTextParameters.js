@@ -23,6 +23,7 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
         var secretWords = this.settings.plain_text_parameters.default;
+        secretWords = secretWords.split(',');
         async.each(regions.cloudformation, function(region, rcb){
 
             var describeStacks = helpers.addSource(cache, source,
