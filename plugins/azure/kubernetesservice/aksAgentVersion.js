@@ -1,6 +1,6 @@
 var async = require('async');
 var helpers = require('../../../helpers/azure/');
-var compareVersions = require('compare-versions');
+//var compareVersions = require('compare-versions');
 
 module.exports = {
     title: 'Kubernetes Latest Version',
@@ -43,7 +43,7 @@ module.exports = {
                 } else {
                     agentPoolProfiles.forEach(agentPoolProfile =>{
                         if (agentPoolProfile.orchestratorVersion &&
-                            compareVersions(agentPoolProfile.orchestratorVersion,kubernetesVersion) === -1 ) {
+                            helpers.compareVersions(agentPoolProfile.orchestratorVersion,kubernetesVersion) === -1 ) {
                             helpers.addResult(results, 2,
                                 `The node pool ${agentPoolProfile.name} does not have the latest Kubernetes version: ${kubernetesVersion}`, location, managedCluster.id);
                         } else {
