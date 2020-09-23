@@ -4,17 +4,17 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'EC2 Security Group RFC 1918',
     category: 'EC2',
-    description: 'Ensures EC2 security groups are not configured to allow inbound traffic from RFC-1918 CIDRs',
+    description: 'Ensures EC2 security groups are configured to deny inbound traffic from RFC-1918 CIDRs',
     more_info: 'RFC-1918 IP addresses are considered reserved private addresses and should not be used in security groups.',
-    link: 'https://www.cloudconformity.com/knowledge-base/aws/EC2/security-group-rfc1918.html',
-    recommended_action: 'Modify the security group to ensure the private reserved addresses are not allowed for inbound traffic',
+    link: 'https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html',
+    recommended_action: 'Modify the security group to deny private reserved addresses for inbound traffic',
     apis: ['EC2:describeSecurityGroups'],
     settings: {
         privateCidrs: {
             name: 'EC2 RFC 1918 CIDR Addresses',
             description: 'A comma-delimited list of CIDRs that indicates reserved private addresses',
-            regex: '[a-zA-Z0-9,]',
-            default: ['10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16']
+            regex: '/^(?=.*[^.]$)((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).?){4}$/',
+            default: '10.0.0.0/8,172.16.0.0/12,192.168.0.0/16'
         }
     },
 
@@ -22,7 +22,10 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
+
         var privateCidrs = settings.privateCidrs || this.settings.privateCidrs.default;
+        privateCidrs = privateCidrs.split(',');
 
         async.each(regions.ec2, function(region, rcb){
             var describeSecurityGroups = helpers.addSource(cache, source,
@@ -43,7 +46,7 @@ module.exports = {
 
             for (var g in describeSecurityGroups.data) {
                 var group = describeSecurityGroups.data[g];
-                var resource = 'arn:aws:ec2:' + region + ':' + group.OwnerId + ':security-group/' + group.GroupId;
+                var resource = 'arn:' + awsOrGov + ':ec2:' + region + ':' + group.OwnerId + ':security-group/' + group.GroupId;
                 var privateCidrsFound = [];
 
                 if (!group.IpPermissions || !group.IpPermissions.length) {
@@ -64,13 +67,13 @@ module.exports = {
                         }
                     }
 
-                    if(privateCidrsFound.length) {
-                        helpers.addResult(results, 2,
-                            'Security group :' + group.GroupName + ': allows inbound access for these reserved private address: ' + privateCidrsFound.join(', '), 
+                    if(!privateCidrsFound.length) {
+                        helpers.addResult(results, 0,
+                            'Security group "' + group.GroupName + '" is configured to deny any reserved private address',
                             region, resource);
                     } else {
-                        helpers.addResult(results, 0,
-                            'Security group :' + group.GroupName + ': does not allow any reserved private address',
+                        helpers.addResult(results, 2,
+                            'Security group "' + group.GroupName + '" is configured to allow inbound access for these reserved private addresses: ' + privateCidrsFound.join(', '), 
                             region, resource);
                     }
                 }
