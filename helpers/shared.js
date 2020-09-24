@@ -107,8 +107,8 @@ module.exports = {
     },
 
     compareVersions: function compareVersions(v1, v2) {
-        var s1 = v1.split('\.');
-        var s2 = v2.split('\.');
+        var s1 = v1.split(`.`);
+        var s2 = v2.split(`.`);
 
         for (var i = 0; i < Math.max(s1.length - 1, s2.length - 1); i++) {
             var n1 = parseInt(s1[i] || 0, 10);
