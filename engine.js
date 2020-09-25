@@ -94,13 +94,13 @@ var engine = function(cloudConfig, settings) {
     // STEP 2 - Collect API Metadata from Service Providers
     collector(cloudConfig, {
         api_calls: apiCalls,
-        paginate: settings.skip_paginate,
+        paginate: !settings.skip_paginate,
         govcloud: settings.govcloud,
         china: settings.china
     }, function(err, collection) {
         if (err || !collection || !Object.keys(collection).length) return console.log(`ERROR: Unable to obtain API metadata: ${err || 'No data returned'}`);
         outputHandler.writeCollection(collection, settings.cloud);
-        
+
         console.log('INFO: Metadata collection complete. Analyzing...');
         console.log('INFO: Analysis complete. Scan report to follow...');
 
