@@ -154,11 +154,11 @@ describe('sqlServerTLSVersion', function () {
             });
         });
 
-        it('should PASS if unable to get group parameters', function (done) {
+        it('should FAIL if unable to get group parameters', function (done) {
             const cache = createCache([parameterGroups[0]],[]);
             sqlServerTLSVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
+                expect(results[0].status).to.equal(2);
                 done();
             });
         });
