@@ -7,7 +7,7 @@ module.exports = {
     description: 'Ensures all AutoScaling groups have ELB health check active.',
     more_info: 'AutoScaling groups should have ELB health checks active to replace unhealthy instances in time.',
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-add-elb-healthcheck.html',
-    recommended_action: 'Enable ELB health check and attach an active ELB to the AutoScaling group.',
+    recommended_action: 'Enable ELB health check for the AutoScaling groups.',
     apis: ['AutoScaling:describeAutoScalingGroups'],
 
     run: function(cache, settings, callback) {
@@ -23,25 +23,27 @@ module.exports = {
 
             if (describeAutoScalingGroups.err || !describeAutoScalingGroups.data) {
                 helpers.addResult(results, 3,
-                    `Unable to query for auto scaling groups: ${helpers.addError(describeAutoScalingGroups)}`, region);
+                    `Unable to query for AutoScaling groups: ${helpers.addError(describeAutoScalingGroups)}`, region);
                 return rcb();
             }
 
             if (!describeAutoScalingGroups.data.length) {
-                helpers.addResult(results, 0, 'No AutoScaling group found', region);
+                helpers.addResult(results, 0, 'No AutoScaling groups found', region);
                 return rcb();
             }
 
             describeAutoScalingGroups.data.forEach(function(asg){
+                if (!asg.AutoScalingGroupARN) return;
+
                 var resource = asg.AutoScalingGroupARN;
 
-                if(asg.HealthCheckType && asg.HealthCheckType === 'ELB' && asg.LoadBalancerNames && asg.LoadBalancerNames.length) {
+                if(asg.HealthCheckType && asg.HealthCheckType === 'ELB') {
                     helpers.addResult(results, 0,
-                        `AutoScaling group :${asg.AutoScalingGroupName}: has ELB health check active`,
+                        `AutoScaling group "${asg.AutoScalingGroupName}" has ELB health check active`,
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `AutoScaling group :asg.AutoScalingGroupName: does not have ELB health check active`,
+                        `AutoScaling group "${asg.AutoScalingGroupName}" does not have ELB health check active`,
                         region, resource);
                 }
             });

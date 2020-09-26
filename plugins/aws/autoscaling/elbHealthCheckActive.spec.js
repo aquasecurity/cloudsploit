@@ -4,16 +4,7 @@ const elbHealthCheckActive = require('./elbHealthCheckActive');
 const describeAutoScalingGroups = [
     {
         "AutoScalingGroupName": "test-38",
-        "AutoScalingGroupARN": "arn:aws:autoscaling:us-east-1:560213429563:autoScalingGroup:724d79e1-0e79-43f2-a65e-52a60d4868f9:autoScalingGroupName/test-38",
-        "LaunchTemplate": {
-            "LaunchTemplateId": "lt-0f1f6b356026abc86",
-            "LaunchTemplateName": "auto-scaling-template",
-            "Version": "$Default"
-        },
-        "MinSize": 1,
-        "MaxSize": 1,
-        "DesiredCapacity": 1,
-        "DefaultCooldown": 300,
+        "AutoScalingGroupARN": "arn:aws:autoscaling:us-east-1:112233445566:autoScalingGroup:724d79e1-0e79-43f2-a65e-52a60d4868f9:autoScalingGroupName/test-38",
         "AvailabilityZones": [
             "us-east-1a"
         ],
@@ -35,30 +26,11 @@ const describeAutoScalingGroups = [
                 },
                 "ProtectedFromScaleIn": false
             }
-        ],
-        "CreatedTime": "2020-09-15T15:19:18.576Z",
-        "SuspendedProcesses": [],
-        "VPCZoneIdentifier": "subnet-06aa0f60",
-        "EnabledMetrics": [],
-        "Tags": [],
-        "TerminationPolicies": [
-            "Default"
-        ],
-        "NewInstancesProtectedFromScaleIn": false,
-        "ServiceLinkedRoleARN": "arn:aws:iam::560213429563:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
+        ]
     },
     {
         "AutoScalingGroupName": "test-38",
-        "AutoScalingGroupARN": "arn:aws:autoscaling:us-east-1:560213429563:autoScalingGroup:724d79e1-0e79-43f2-a65e-52a60d4868f9:autoScalingGroupName/test-38",
-        "LaunchTemplate": {
-            "LaunchTemplateId": "lt-0f1f6b356026abc86",
-            "LaunchTemplateName": "auto-scaling-template",
-            "Version": "$Default"
-        },
-        "MinSize": 1,
-        "MaxSize": 1,
-        "DesiredCapacity": 1,
-        "DefaultCooldown": 300,
+        "AutoScalingGroupARN": "arn:aws:autoscaling:us-east-1:112233445566:autoScalingGroup:724d79e1-0e79-43f2-a65e-52a60d4868f9:autoScalingGroupName/test-38",
         "AvailabilityZones": [
             "us-east-1a"
         ],
@@ -66,7 +38,7 @@ const describeAutoScalingGroups = [
             "test-38-classic"
         ],
         "TargetGroupARNs": [
-            "arn:aws:elasticloadbalancing:us-east-1:560213429563:targetgroup/temp-tg/fee5b45af37af625"
+            "arn:aws:elasticloadbalancing:us-east-1:112233445566:targetgroup/temp-tg/fee5b45af37af625"
         ],
         "HealthCheckType": "ELB",
         "HealthCheckGracePeriod": 300,
@@ -84,17 +56,7 @@ const describeAutoScalingGroups = [
                 },
                 "ProtectedFromScaleIn": false
             }
-        ],
-        "CreatedTime": "2020-09-15T15:19:18.576Z",
-        "SuspendedProcesses": [],
-        "VPCZoneIdentifier": "subnet-06aa0f60",
-        "EnabledMetrics": [],
-        "Tags": [],
-        "TerminationPolicies": [
-            "Default"
-        ],
-        "NewInstancesProtectedFromScaleIn": false,
-        "ServiceLinkedRoleARN": "arn:aws:iam::560213429563:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
+        ]
     }
 ];
 
@@ -116,7 +78,7 @@ const createErrorCache = () => {
             describeAutoScalingGroups: {
                 'us-east-1': {
                     err: {
-                        message: 'error describing auto scaling groups'
+                        message: 'error describing AutoScaling groups'
                     },
                 },
             },
@@ -136,7 +98,7 @@ const createNullCache = () => {
 
 describe('elbHealthCheckActive', function () {
     describe('run', function () {
-        it('should PASS if auto scaling group has ELB health check active', function (done) {
+        it('should PASS if AutoScaling group has ELB health check active', function (done) {
             const cache = createCache([describeAutoScalingGroups[1]]);
             elbHealthCheckActive.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -145,7 +107,7 @@ describe('elbHealthCheckActive', function () {
             });
         });
 
-        it('should FAIL if auto scaling group does not have ELB health check active', function (done) {
+        it('should FAIL if AutoScaling group does not have ELB health check active', function (done) {
             const cache = createCache([describeAutoScalingGroups[0]]);
             elbHealthCheckActive.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -154,7 +116,7 @@ describe('elbHealthCheckActive', function () {
             });
         });
 
-        it('should PASS if no auto scaling group found', function (done) {
+        it('should PASS if no AutoScaling groups found', function (done) {
             const cache = createCache([]);
             elbHealthCheckActive.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -163,7 +125,7 @@ describe('elbHealthCheckActive', function () {
             });
         });
 
-        it('should UNKNOWN if unable to describe auto scaling group found', function (done) {
+        it('should UNKNOWN if unable to describe AutpScaling groups', function (done) {
             const cache = createErrorCache();
             elbHealthCheckActive.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -172,7 +134,7 @@ describe('elbHealthCheckActive', function () {
             });
         });
 
-        it('should not return anything if no auto scaling group found', function (done) {
+        it('should not return anything if no response found for describe AutoScaling groups', function (done) {
             const cache = createNullCache();
             elbHealthCheckActive.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
