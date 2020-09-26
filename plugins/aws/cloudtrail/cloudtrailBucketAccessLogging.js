@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'CloudTrail buckets should utilize access logging for an additional layer of auditing. If the log files are deleted or modified in any way, the additional access logs can help determine who made the changes.',
     recommended_action: 'Enable access logging on the CloudTrail bucket from the S3 console',
     link: 'http://docs.aws.amazon.com/AmazonS3/latest/UG/ManagingBucketLogging.html',
-    apis: ['CloudTrail:describeTrails', 'S3:getBucketLogging'],
+    apis: ['CloudTrail:describeTrails', 'S3:getBucketLogging', 'S3:listBuckets'],
     compliance: {
         hipaa: 'Access logging for CloudTrail helps ensure strict integrity controls, ' +
                 'verifying that the audit logs for the AWS environment are not modified.',
