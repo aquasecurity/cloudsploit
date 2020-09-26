@@ -4,8 +4,8 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'RDS Transport Encryption Enabled',
     category: 'RDS',
-    description: 'Ensures that RDS SQL Server instances have Transport Encryption enabled.',
-    more_info: 'Parameter group associated with the RDS instance should have rds.force_ssl set to true to ensure transport encryption',
+    description: 'Ensures RDS SQL Server instances have Transport Encryption enabled.',
+    more_info: 'Parameter group associated with the RDS instance should have transport encryption enabled to handle encryption and decryption',
     link: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html',
     recommended_action: 'Update the parameter group associated with the RDS instance to have rds.force_ssl set to true',
     apis: ['RDS:describeDBInstances', 'RDS:describeDBParameters', 'RDS:describeDBParameterGroups'],
@@ -35,13 +35,18 @@ module.exports = {
                 return rcb();
             }
 
+            var sqlInstanceFound = false;
+
             async.each(describeDBInstances.data, function(db, cb){
-                if (db.Engine === 'sqlserver-ex') {
+                if (db.Engine.startsWith('sqlserver')) {
+                    if (!db.DBInstanceArn) return cb();
+
                     var resource = db.DBInstanceArn;
+                    sqlInstanceFound = true;
 
                     if (!db.DBParameterGroups || !db.DBParameterGroups.length) {
                         helpers.addResult(results, 0,
-                            `RDS DB instance "${db.DBName}" does not have any parameter groups associated`,
+                            `RDS DB instance "${db.DBInstanceIdentifier}" does not have any parameter groups associated`,
                             region, resource);
                     }
 
@@ -58,34 +63,44 @@ module.exports = {
                     }
 
                     if (!parameters.data.Parameters || !parameters.data.Parameters.length) {
-                        helpers.addResult(results, 2,
-                            `No parameter found for group "${db.DBParameterGroupName}"`,
+                        helpers.addResult(results, 3,
+                            `No parameters found for RDS paramater group "${dbParameterGroup}"`,
                             region, resource);
                         return cb();
                     }
 
                     var forceSslEnabled = false;
-                    parameters.data.Parameters.forEach(function(param){
-                        if (param.ParameterName === 'rds.force_ssl') {
-                            if(param.ParameterValue === '0'){
-                                forceSslEnabled = true;
-                            }
+
+                    for (var p in parameters.data.Parameters) {
+                        var param = parameters.data.Parameters[p];
+
+                        if (param.ParameterName && param.ParameterName==='rds.force_ssl' &&
+                            param.ParameterValue && param.ParameterValue !== '0') {
+                            forceSslEnabled = true;
+                            break;
                         }
-                    });
+                    }
                     
                     if (forceSslEnabled) {
                         helpers.addResult(results, 0,
                             `RDS DB instance "${db.DBInstanceIdentifier}" has transport encryption enabled`,
                             region, resource);
-                    }
-                    else {
+                    } else {
                         helpers.addResult(results, 2,
                             `RDS DB instance "${db.DBInstanceIdentifier}" does not have transport encryption enabled`,
                             region, resource);
                     }
                 }
+
                 cb();
             });
+
+            if (!sqlInstanceFound) {
+                helpers.addResult(results, 0,
+                    'No RDS SQL Server instances found',
+                    region);
+            }
+
             rcb();
         }, function(){
             callback(null, results, source);
