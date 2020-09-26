@@ -62,12 +62,19 @@ module.exports = {
                 launchConfigurations[config.LaunchConfigurationName] = config.IamInstanceProfile;
             });
 
+            var launchConfigurationAsgFound = false;
             async.each(describeAutoScalingGroups.data, function(asg, cb){
                 var resource = asg.AutoScalingGroupARN;
                 if(asg.LaunchConfigurationName && asg.LaunchConfigurationName.length){
+                    launchConfigurationAsgFound = true;
                     var launchConfigurationName = asg.LaunchConfigurationName;
 
-                    if (asg.Tags && asg.Tags.length) {
+                    if (!asg.Tags || !asg.Tags.length) {
+                        helpers.addResult(results, 0,
+                            `Auto Scaling group "${asg.AutoScalingGroupName}" does not contain any tags`,
+                            region, resource);
+                    }
+                    else {
                         var appTierTagFound = false;
                         asg.Tags.forEach(function(tag){
                             if (tag.Key === app_tier_tag_key) {
@@ -87,11 +94,23 @@ module.exports = {
                                     region, resource);
                             }
                         }
+                        else {
+                            helpers.addResult(results, 0,
+                                `Auto Scaling group "${asg.AutoScalingGroupName}" does not contain App-Tier tag`,
+                                region, resource);
+                        }
                     }
                 }
+
+                if (!launchConfigurationAsgFound) {
+                    helpers.addResult(results, 0,
+                        'No Auto Scaling group with launch configurations found',
+                        region);
+                }
+
                 cb();
             });
-            
+
             rcb();
         }, function(){
             callback(null, results, source);

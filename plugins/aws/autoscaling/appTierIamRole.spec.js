@@ -278,6 +278,24 @@ describe('appTierIamRole', function () {
             });
         });
 
+        it('should PASS if Auto Scaling group does not have any App-Tier tag', function (done) {
+            const cache = createCache([describeAutoScalingGroups[1]], [describeLaunchConfigurations[0]]);
+            appTierIamRole.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
+
+        it('should PASS if Auto Scaling group does not utilize launch configuration', function (done) {
+            const cache = createCache([describeAutoScalingGroups[2]], [describeLaunchConfigurations[0]]);
+            appTierIamRole.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
+
         it('should FAIL if no Auto Scaling launch configurations found', function (done) {
             const cache = createCache([describeAutoScalingGroups[0]], []);
             appTierIamRole.run(cache, {}, (err, results) => {
@@ -307,22 +325,6 @@ describe('appTierIamRole', function () {
 
         it('should not return anything if unable to describe Auto Scaling groups', function (done) {
             const cache = createNullCache();
-            appTierIamRole.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(0);
-                done();
-            });
-        });
-
-        it('should not return anything if Auto Scaling group does not have any App-Tier tag', function (done) {
-            const cache = createCache([describeAutoScalingGroups[1]], [describeLaunchConfigurations[0]]);
-            appTierIamRole.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(0);
-                done();
-            });
-        });
-
-        it('should not return anything if Auto Scaling group does not utilize launch configuration', function (done) {
-            const cache = createCache([describeAutoScalingGroups[2]], [describeLaunchConfigurations[0]]);
             appTierIamRole.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
