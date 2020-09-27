@@ -5,15 +5,15 @@ module.exports = {
     title: 'Web-Tier Auto Scaling Group Associated ELB',
     category: 'AutoScaling',
     description: 'Ensures that Web-Tier Auto Scaling Group has an associated Elastic Load Balancer',
-    more_info: 'Web-Tier ASG group should have ELB associated to distribute incoming traffic across EC2 instances',
+    more_info: 'Web-Tier Auto Scaling group should have ELB associated to distribute incoming traffic across EC2 instances.',
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/attach-load-balancer-asg.html',
-    recommended_action: 'Update Web-Tier ASG and associate ELB to the group to distribute incoming traffic',
+    recommended_action: 'Update Web-Tier Auto Scaling group to associate ELB to distribute incoming traffic.',
     apis: ['AutoScaling:describeAutoScalingGroups'],
     settings: {
         web_tier_tag_key: {
             name: 'Auto Scaling Web-Tier Tag Key',
             description: 'Web-Tier tag key used by Auto Scaling groups to indicate Web-Tier groups',
-            regex: '[a-zA-Z0-9,]',
+            regex: '^.*$',
             default: 'web_tier'
         }
     },
@@ -42,23 +42,27 @@ module.exports = {
                 return rcb();
             }
 
-            async.each(describeAutoScalingGroups.data, function(asg, cb){
+            var webTierAsgFound = false;
+            describeAutoScalingGroups.data.forEach(asg => {
+                if (!asg.AutoScalingGroupARN) return;
+
                 var resource = asg.AutoScalingGroupARN;
 
-                if (!asg.Tags || !asg.Tags.length) {
-                    helpers.addResult(results, 0,
-                        `Auto Scaling group "${asg.AutoScalingGroupName}" does not contain any tags`,
-                        region, resource);
-                }
-                else {
+                if (asg.Tags && asg.Tags.length) {
                     var webTierTagFound = false;
-                    asg.Tags.forEach(function(tag){
+
+                    for (var t in asg.Tags) {
+                        var tag = asg.Tags[t];
+
                         if (tag.Key === web_tier_tag_key) {
                             webTierTagFound = true;
+                            break;
                         }
-                    });
+                    }
 
                     if(webTierTagFound) {
+                        webTierAsgFound = true;
+
                         if(asg.LoadBalancerNames && asg.LoadBalancerNames.length) {
                             helpers.addResult(results, 0,
                                 `Auto Scaling group "${asg.AutoScalingGroupName}" has "${asg.LoadBalancerNames.join(' , ')}" load balancers associated`,
@@ -70,15 +74,14 @@ module.exports = {
                                 region, resource);
                         }
                     }
-                    else {
-                        helpers.addResult(results, 0,
-                            `Auto Scaling group "${asg.AutoScalingGroupName}" does not contain Web-Tier tag`,
-                            region, resource);
-                    }
                 }
-
-                cb();
             });
+
+            if (!webTierAsgFound) {
+                helpers.addResult(results, 0,
+                    'No Web-Tier Auto Scaling group found',
+                    region);
+            }
 
             rcb();
         }, function(){
