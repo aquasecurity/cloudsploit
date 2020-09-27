@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Launch Configuration Referencing Missing Security Groups',
     category: 'AutoScaling',
-    description: 'Ensures that Auto Scaling Launch Configurations are not utilizing missing Security Groups.',
+    description: 'Ensures that Auto Scaling launch configurations are not utilizing missing security groups.',
     more_info: 'Auto Scaling launch configuration should utilize an active security group to ensure safety of managed instances.',
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/GettingStartedTutorial.html',
     recommended_action: 'Ensure that the launch configuration security group has not been deleted. If so, remove it from launch configurations',
@@ -36,15 +36,14 @@ module.exports = {
                 return rcb();
             }
 
-            if (!describeSecurityGroups) return rcb();
-
-            if (describeSecurityGroups.err || !describeSecurityGroups.data) {
+            if (!describeSecurityGroups || describeSecurityGroups.err || !describeSecurityGroups.data) {
                 helpers.addResult(results, 3,
                     `Unable to query for EC2 security groups: ${helpers.addError(describeSecurityGroups)}`, region);
                 return rcb();
             }
 
             var securityGroups = [];
+
             if (describeSecurityGroups.data.length) {
                 describeSecurityGroups.data.forEach(function(sg){
                     securityGroups.push(sg.GroupId);
@@ -56,34 +55,30 @@ module.exports = {
 
                 if (!config.SecurityGroups || !config.SecurityGroups.length) {
                     helpers.addResult(results, 2,
-                        `Auto Scaling launch configuration ${config.LaunchConfigurationName} does not utilize any security group`,
+                        `Auto Scaling launch configuration "${config.LaunchConfigurationName}" does not have any security group associated`,
                         region, resource);
                 }
                 else {
-                    if (!securityGroups.length) {
-                        helpers.addResult(results, 2, 'No EC2 security groups found', region);
-                        return rcb();
-                    }
-
                     var missingSecurityGroups = [];
+
                     config.SecurityGroups.forEach(function(group){
                         if (!securityGroups.includes(group)) {
                             missingSecurityGroups.push(group);
                         }
                     });
 
-                    if(missingSecurityGroups.length > 0) {
+                    if(missingSecurityGroups.length) {
                         helpers.addResult(results, 2,
-                            `Auto Scaling launch configuration utilizes "${missingSecurityGroups.join(' , ')}" missing EC2 security groups`,
+                            `Auto Scaling launch configuration "${config.LaunchConfigurationName}" refereces these missing EC2 security groups: ${missingSecurityGroups.join(', ')}`,
                             region, resource);
-                    }
-                    else {
+                    } else {
                         helpers.addResult(results, 0,
-                            `Auto Scaling launch configuration "${config.LaunchConfigurationName}" does not utilize missing EC2 security group`,
+                            `Auto Scaling launch configuration "${config.LaunchConfigurationName}" does not reference any missing EC2 security group`,
                             region, resource);
                     }
                 }
             });
+
             rcb();
         }, function(){
             callback(null, results, source);

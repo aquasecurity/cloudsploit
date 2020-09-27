@@ -170,7 +170,7 @@ const createNullCache = () => {
 
 describe('asgMissingSecurityGroups', function () {
     describe('run', function () {
-        it('should PASS if Auto Scaling launch configuration does not utilize any missing EC2 security group', function (done) {
+        it('should PASS if Auto Scaling launch configuration does not reference any missing EC2 security group', function (done) {
             const cache = createCache([describeLaunchConfigurations[0]], [describeSecurityGroups[0]]);
             asgMissingSecurityGroups.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -179,7 +179,7 @@ describe('asgMissingSecurityGroups', function () {
             });
         });
 
-        it('should FAIL if Auto Scaling launch configuration utilize missing EC2 security group(s)', function (done) {
+        it('should FAIL if Auto Scaling launch configuration references missing EC2 security group(s)', function (done) {
             const cache = createCache([describeLaunchConfigurations[1]], [describeSecurityGroups[0]]);
             asgMissingSecurityGroups.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -206,7 +206,7 @@ describe('asgMissingSecurityGroups', function () {
             });
         });
 
-        it('should UNKNOWN if error describing Auto Scaling launch configurations', function (done) {
+        it('should UNKNOWN if unable to describe Auto Scaling launch configurations', function (done) {
             const cache = createErrorCache();
             asgMissingSecurityGroups.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -215,7 +215,7 @@ describe('asgMissingSecurityGroups', function () {
             });
         });
 
-        it('should not return anything if unable to describe Auto Scaling launch configurations', function (done) {
+        it('should not return anything if describe Auto Scaling launch configurations response not found', function (done) {
             const cache = createNullCache();
             asgMissingSecurityGroups.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
