@@ -45,10 +45,10 @@ module.exports = {
                         if (agentPoolProfile.orchestratorVersion &&
                             helpers.compareVersions(agentPoolProfile.orchestratorVersion,kubernetesVersion) === -1 ) {
                             helpers.addResult(results, 2,
-                                `The node pool ${agentPoolProfile.name} does not have the latest Kubernetes version: ${kubernetesVersion}`, location, managedCluster.id);
+                                `The node pool ${agentPoolProfile.name} does not have the cluster Kubernetes version: ${kubernetesVersion}`, location, managedCluster.id);
                         } else {
                             helpers.addResult(results, 0,
-                                `The node pool ${agentPoolProfile.name} has the latest Kubernetes version`, location, managedCluster.id);
+                                `The node pool ${agentPoolProfile.name} has the cluster Kubernetes version`, location, managedCluster.id);
                         }
                     });
                 }
