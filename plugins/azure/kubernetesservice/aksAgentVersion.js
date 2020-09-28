@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/azure/');
 //var compareVersions = require('compare-versions');
 
 module.exports = {
-    title: 'Kubernetes Latest Version',
+    title: 'Kubernetes Version For Agent Pools',
     category: 'Kubernetes Service',
     description: 'Ensures the kubernetes version is same across the node pools with the cluster.',
     more_info: 'AKS supports provisioning clusters from several versions of Kubernetes. Node pools should be at per with the cluster kubernetes version.',
