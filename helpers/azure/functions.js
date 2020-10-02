@@ -71,6 +71,7 @@ function findOpenPorts(ngs, protocols, service, location, results) {
                 for (let protocol in protocols) {
                     let ports = protocols[protocol];
                     for (let port of ports) {
+                        let founded = false;
                         if (securityRule.properties['access'] &&
                             securityRule.properties['access'] === 'Allow' &&
                             securityRule.properties['direction'] &&
@@ -78,30 +79,16 @@ function findOpenPorts(ngs, protocols, service, location, results) {
                             securityRule.properties['protocol'] &&
                             (securityRule.properties['protocol'] === protocol || securityRule.properties['protocol'] === '*')) {
                             if (securityRule.properties['destinationPortRange']) {
-                                if (securityRule.properties['destinationPortRange'].toString().indexOf("-") > -1) {
-                                    let portRange = securityRule.properties['destinationPortRange'].split("-");
-                                    let startPort = portRange[0];
-                                    let endPort = portRange[1];
-                                    if (parseInt(startPort) <= port && parseInt(endPort) >= port) {
-                                        var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
-                                            ` port ` + ports + ` open to ` + sourceFilter;
-                                        strings.push(string);
-                                        if (strings.indexOf(string) === -1) strings.push(string);
-                                        found = true;
-                                    }
-                                } else if (securityRule.properties['destinationPortRange'].toString().indexOf(port) > -1) {
-                                    var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
-                                        (ports === '*' ? ` and all ports` : ` port ` + ports) + ` open to ` + sourceFilter;
-                                    if (strings.indexOf(string) === -1) strings.push(string);
-                                    found = true;
-                                }
-                            } else if (securityRule.properties['destinationPortRanges'] &&
-                                securityRule.properties['destinationPortRanges'].toString().indexOf(port) > -1) {
-                                var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
-                                    ` port ` + ports + ` open to ` + sourceFilter;
-                                if (strings.indexOf(string) === -1) strings.push(string);
-                                found = true;
+                                founded = checkPorts(securityRule.properties['destinationPortRange'], port)
+                            } else if (securityRule.properties['destinationPortRanges']) {
+                                founded = checkPorts(securityRule.properties['destinationPortRanges'], port)
                             }
+                        }
+                        if (founded) {
+                            var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
+                                (ports === '*' ? ` and all ports` : ` port ` + ports) + ` open to ` + sourceFilter;
+                            if (strings.indexOf(string) === -1) strings.push(string);
+                            found = true;
                         }
                     }
                 }
@@ -120,6 +107,34 @@ function findOpenPorts(ngs, protocols, service, location, results) {
     }
 
     return;
+}
+
+function checkPorts(destinationPort, port) {
+    if(destinationPort.toString().indexOf(",") > -1) {
+        let destinationPortRangeArray = destinationPort.toString().split(",");
+        for (let index in destinationPortRangeArray) {
+            if (destinationPortRangeArray[index].toString().indexOf("-") > -1) {
+                let portRange = destinationPortRangeArray[index].split("-");
+                let startPort = portRange[0];
+                let endPort = portRange[1];
+                if (parseInt(startPort) <= port && parseInt(endPort) >= port) {
+                    return true;
+                }
+            } else if (destinationPortRangeArray[index].toString() === port.toString()) {
+                return true;
+            }
+        }
+    } else if (destinationPort.toString().indexOf("-") > -1) {
+        let portRange = destinationPort.toString().split("-");
+        let startPort = portRange[0];
+        let endPort = portRange[1];
+        if (parseInt(startPort) <= port && parseInt(endPort) >= port) {
+            return true;
+        }
+    } else if (destinationPort.toString() === port.toString()) {
+        return true;
+    }
+    return false;
 }
 
 function checkPolicyAssignment(policyAssignments, param, text, results, location) {
