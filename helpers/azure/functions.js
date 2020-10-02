@@ -91,16 +91,6 @@ function findOpenPorts(ngs, protocols, service, location, results) {
                                     }
                                 } else if (securityRule.properties['destinationPortRange'].toString().indexOf(port) > -1) {
                                     if (securityRule.properties['destinationPortRange'].toString().indexOf(",") > -1) {
-                                        let portArray = securityRule.properties['destinationPortRange'].split(",");
-                                        for (let p in portArray) {
-                                            if (p === port) {
-                                                var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
-                                                    (ports === '*' ? ` and all ports` : ` port ` + ports) + ` open to ` + sourceFilter;
-                                                if (strings.indexOf(string) === -1) strings.push(string);
-                                                found = true;
-                                            }
-                                        }
-                                    } else if (securityRule.properties['destinationPortRange'].toString() === port) {
                                         var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
                                             (ports === '*' ? ` and all ports` : ` port ` + ports) + ` open to ` + sourceFilter;
                                         if (strings.indexOf(string) === -1) strings.push(string);
@@ -108,21 +98,13 @@ function findOpenPorts(ngs, protocols, service, location, results) {
                                     }
                                 }
                             } else if (securityRule.properties['destinationPortRanges']) {
-                                if (securityRule.properties['destinationPortRanges'].toString().indexOf(",") > -1) {
-                                    let portArray = securityRule.properties['destinationPortRanges'].split(",");
-                                    for (let p in portArray) {
-                                        if (p === port) {
-                                            var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
-                                                ` port ` + ports + ` open to ` + sourceFilter;
-                                            if (strings.indexOf(string) === -1) strings.push(string);
-                                            found = true;
-                                        }
+                                if (securityRule.properties['destinationPortRanges'].length > 0) {
+                                    if (securityRule.properties['destinationPortRanges'].includes(port)) {
+                                        var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
+                                            ` port ` + ports + ` open to ` + sourceFilter;
+                                        if (strings.indexOf(string) === -1) strings.push(string);
+                                        found = true;
                                     }
-                                } else if (securityRule.properties['destinationPortRanges'].toString() === port) {
-                                    var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
-                                        ` port ` + ports + ` open to ` + sourceFilter;
-                                    if (strings.indexOf(string) === -1) strings.push(string);
-                                    found = true;
                                 }
                             }
                         }
