@@ -125,7 +125,7 @@ function checkPorts(destinationPort, port) {
             }
         }
     } else if (destinationPort.toString().indexOf("-") > -1) {
-        let portRange = destinationPortRange.toString().split("-");
+        let portRange = destinationPort.toString().split("-");
         let startPort = portRange[0];
         let endPort = portRange[1];
         if (parseInt(startPort) <= port && parseInt(endPort) >= port) {
