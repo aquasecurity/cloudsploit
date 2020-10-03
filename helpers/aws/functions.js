@@ -216,6 +216,34 @@ function crossAccountPrincipal(principal, accountId) {
     return false;
 }
 
+function extractAccountsFromPrincipal(principal) {
+    var accountRegExp = /^[0-9]{12}$/g;
+    var arnRegExp = /(?<=arn:aws:iam::)([0-9]{12})/g;
+
+    if (typeof principal === 'string' &&
+        accountRegExp.test(principal)) {
+        let account = principal.match(accountRegExp).toString;
+        return [account];
+    }
+
+    var response = [];
+    var awsPrincipals = principal.AWS;
+    if(!Array.isArray(awsPrincipals)) {
+        awsPrincipals = [awsPrincipals];
+    }
+
+    for (var a in awsPrincipals) {
+        let principal = awsPrincipals[a];
+        if (arnRegExp.test(principal)) {
+            let account = principal.match(arnRegExp).toString();
+            response.push(account);
+        }
+    }
+
+    return response;
+
+}
+
 function defaultRegion(settings) {
     if (settings.govcloud) return 'us-gov-west-1';
     if (settings.china) return 'cn-north-1';
@@ -532,15 +560,16 @@ function remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, 
 
 module.exports = {
     addResult: addResult,
-    findOpenPorts: findOpenPorts,
-    waitForCredentialReport: waitForCredentialReport,
-    normalizePolicyDocument: normalizePolicyDocument,
-    globalPrincipal: globalPrincipal,
-    crossAccountPrincipal: crossAccountPrincipal,
-    defaultRegion: defaultRegion,
-    defaultPartition: defaultPartition,
-    remediatePlugin: remediatePlugin,
     nullArray: nullArray,
+    defaultRegion: defaultRegion,
+    findOpenPorts: findOpenPorts,
+    globalPrincipal: globalPrincipal,
+    remediatePlugin: remediatePlugin,
+    defaultPartition: defaultPartition,
+    remediateOpenPorts: remediateOpenPorts,
+    crossAccountPrincipal: crossAccountPrincipal,
     remediatePasswordPolicy:remediatePasswordPolicy,
-    remediateOpenPorts: remediateOpenPorts
+    normalizePolicyDocument: normalizePolicyDocument,
+    waitForCredentialReport: waitForCredentialReport,
+    extractAccountsFromPrincipal: extractAccountsFromPrincipal
 };
