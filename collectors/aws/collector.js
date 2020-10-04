@@ -763,6 +763,11 @@ var postcalls = [
                 reliesOnService: 'elb',
                 reliesOnCall: 'describeLoadBalancers',
                 override: true
+            },
+            describeTags: {
+                reliesOnService: 'elb',
+                reliesOnCall: 'describeLoadBalancers',
+                override: true
             }
         },
         ELBv2: {
