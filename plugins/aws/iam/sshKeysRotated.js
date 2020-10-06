@@ -93,7 +93,7 @@ module.exports = {
         }
 
         if (!found) {
-            helpers.addResult(results, 0, 'No SSH keys found', 'global', obj.arn);
+            helpers.addResult(results, 0, 'No SSH keys found', 'global');
         }
 
         callback(null, results, source);
