@@ -38,7 +38,7 @@ module.exports = {
             var sqlInstanceFound = false;
 
             async.each(describeDBInstances.data, function(db, cb){
-                if (db.Engine.startsWith('sqlserver')) {
+                if (db.Engine && db.Engine.startsWith('sqlserver')) {
                     if (!db.DBInstanceArn) return cb();
 
                     var resource = db.DBInstanceArn;
@@ -74,7 +74,7 @@ module.exports = {
                     for (var p in parameters.data.Parameters) {
                         var param = parameters.data.Parameters[p];
 
-                        if (param.ParameterName && param.ParameterName==='rds.force_ssl' &&
+                        if (param.ParameterName && param.ParameterName === 'rds.force_ssl' &&
                             param.ParameterValue && param.ParameterValue !== '0') {
                             forceSslEnabled = true;
                             break;
