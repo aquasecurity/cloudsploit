@@ -44,12 +44,28 @@ var engine = function(cloudConfig, settings, outputHandler, callback) {
     Object.entries(plugins).forEach(function(p){
         var pluginId = p[0];
         var plugin = p[1];
-
         // Skip plugins that don't match the ID flag
         var skip = false;
         if (settings.plugin && settings.plugin !== pluginId) {
             skip = true;
-        } else {
+        }
+        else if (settings.skipPlugins) {
+            if (Array.isArray(settings.skipPlugins)) {
+                if (settings.skipPlugins.includes(pluginId)) {
+                    skip = true;
+                    console.debug(`DEBUG: Skipping plugin ${plugin.title} because it is within skipPlugins`);
+                }
+            }
+            else {
+                // assumes type is String
+                let asArray = settings.skipPlugins.split(',');
+                if (asArray.includes(pluginId)) {
+                    skip = true;
+                    console.debug(`DEBUG: Skipping plugin ${plugin.title} because it is within skipPlugins`);
+                }
+            }
+        }
+        else {
             // Skip GitHub plugins that do not match the run type
             if (settings.cloud == 'github') {
                 if (cloudConfig.organization &&

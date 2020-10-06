@@ -19,6 +19,10 @@ console.log(`
 
 const parser = new ArgumentParser({});
 
+parser.add_argument('--skipPlugins', {
+    help: 'Plugin ids (corresponds to keys in exports.js) to skip'
+});
+
 parser.add_argument('--config', {
     help: 'The path to a CloudSploit config file containing cloud credentials. See config_example.js'
 });
