@@ -51,7 +51,7 @@ module.exports = {
                         
                         if (key.attributes) {
                             let attributes = key.attributes;
-                            if (attributes.expires && attributes.expires !== null && attributes.expires !== '') {
+                            if (attributes.exp && attributes.exp !== null && attributes.exp !== '') {
                                 helpers.addResult(results, 0,
                                     'Expiry date is set for the key', location, keyId);
                             } else {
