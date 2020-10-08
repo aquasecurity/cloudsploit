@@ -4,14 +4,14 @@ const { ArgumentParser } = require('argparse');
 const engine = require('./engine');
 
 console.log(`
-   _____ _                 _  _____       _       _ _   
-  / ____| |               | |/ ____|     | |     (_) |  
- | |    | | ___  _   _  __| | (___  _ __ | | ___  _| |_ 
+   _____ _                 _  _____       _       _ _
+  / ____| |               | |/ ____|     | |     (_) |
+ | |    | | ___  _   _  __| | (___  _ __ | | ___  _| |_
  | |    | |/ _ \\| | | |/ _\` |\\___ \\| '_ \\| |/ _ \\| | __|
- | |____| | (_) | |_| | (_| |____) | |_) | | (_) | | |_ 
+ | |____| | (_) | |_| | (_| |____) | |_) | | (_) | | |_
   \\_____|_|\\___/ \\__,_|\\__,_|_____/| .__/|_|\\___/|_|\\__|
-                                   | |                  
-                                   |_|                  
+                                   | |
+                                   |_|
 
   CloudSploit by Aqua Security, Ltd.
   Cloud security auditing for AWS, Azure, GCP, Oracle, and GitHub
@@ -19,7 +19,7 @@ console.log(`
 
 const parser = new ArgumentParser({});
 
-parser.add_argument('--skipPlugins', {
+parser.add_argument('--skip-plugins', {
     help: 'Plugin ids (corresponds to keys in exports.js) to skip'
 });
 

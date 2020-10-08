@@ -30,6 +30,7 @@ var engine = function(cloudConfig, settings, outputHandler, callback) {
     if (settings.china) console.log('INFO: Using AWS China mode');
     if (settings.ignore_ok) console.log('INFO: Ignoring passing results');
     if (settings.skip_paginate) console.log('INFO: Skipping AWS pagination mode');
+    if (settings.skip_plugins) console.log('INFO: Skipping plugins:', settings.skip_plugins);
     if (settings.suppress && settings.suppress.length) console.log('INFO: Suppressing results based on suppress flags');
     if (settings.plugin) {
         if (!plugins[settings.plugin]) return console.log(`ERROR: Invalid plugin: ${settings.plugin}`);
@@ -48,24 +49,11 @@ var engine = function(cloudConfig, settings, outputHandler, callback) {
         var skip = false;
         if (settings.plugin && settings.plugin !== pluginId) {
             skip = true;
-        }
-        else if (settings.skipPlugins) {
-            if (Array.isArray(settings.skipPlugins)) {
-                if (settings.skipPlugins.includes(pluginId)) {
-                    skip = true;
-                    console.debug(`DEBUG: Skipping plugin ${plugin.title} because it is within skipPlugins`);
-                }
-            }
-            else {
-                // assumes type is String
-                let asArray = settings.skipPlugins.split(',');
-                if (asArray.includes(pluginId)) {
-                    skip = true;
-                    console.debug(`DEBUG: Skipping plugin ${plugin.title} because it is within skipPlugins`);
-                }
-            }
-        }
-        else {
+        } else if (settings.skip_plugins && settings.skip_plugins.includes && settings.skip_plugins.includes(pluginId)) {
+            // includes method present on strings and arrays
+            skip = true;
+            console.debug(`DEBUG: Skipping plugin ${plugin.title} because it is within skip plugins list`);
+        } else {
             // Skip GitHub plugins that do not match the run type
             if (settings.cloud == 'github') {
                 if (cloudConfig.organization &&
