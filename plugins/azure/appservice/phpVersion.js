@@ -60,7 +60,7 @@ module.exports = {
                     location,
                     webApp.id,
                     'phpVersion',
-                    config.latestphpVersion,
+                    config.latestPhpVersion,
                     'PHP',
                     custom)
                 ) {
