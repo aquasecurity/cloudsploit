@@ -1,4 +1,4 @@
-FROM node:8-alpine
+FROM node:14-alpine
 
 # Define a build argment that can be supplied when building the container
 # You can then do the following:
