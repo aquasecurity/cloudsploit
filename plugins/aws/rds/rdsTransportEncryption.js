@@ -50,35 +50,40 @@ module.exports = {
                             region, resource);
                     }
 
-                    var dbParameterGroup = db.DBParameterGroups[0].DBParameterGroupName;
-
-                    var parameters = helpers.addSource(cache, source,
-                        ['rds', 'describeDBParameters', region, dbParameterGroup]);
-
-                    if (!parameters || parameters.err || !parameters.data) {
-                        helpers.addResult(results, 3,
-                            `Unable to query for parameters: ${helpers.addError(parameters)}`,
-                            region, resource);
-                        return cb();
-                    }
-
-                    if (!parameters.data.Parameters || !parameters.data.Parameters.length) {
-                        helpers.addResult(results, 3,
-                            `No parameters found for RDS paramater group "${dbParameterGroup}"`,
-                            region, resource);
-                        return cb();
-                    }
-
                     var forceSslEnabled = false;
+                    
+                    for (var pg in db.DBParameterGroups) {
+                        var dbParameterGroup = db.DBParameterGroups[pg];
+                        var groupName = dbParameterGroup.DBParameterGroupName;
 
-                    for (var p in parameters.data.Parameters) {
-                        var param = parameters.data.Parameters[p];
-
-                        if (param.ParameterName && param.ParameterName === 'rds.force_ssl' &&
-                            param.ParameterValue && param.ParameterValue !== '0') {
-                            forceSslEnabled = true;
-                            break;
+                        var parameters = helpers.addSource(cache, source,
+                            ['rds', 'describeDBParameters', region, groupName]);
+    
+                        if (!parameters || parameters.err || !parameters.data) {
+                            helpers.addResult(results, 3,
+                                `Unable to query for parameters: ${helpers.addError(parameters)}`,
+                                region, resource);
+                            return cb();
                         }
+    
+                        if (!parameters.data.Parameters || !parameters.data.Parameters.length) {
+                            helpers.addResult(results, 3,
+                                `No parameters found for RDS paramater group "${groupName}"`,
+                                region, resource);
+                            return cb();
+                        }
+    
+                        for (var p in parameters.data.Parameters) {
+                            var param = parameters.data.Parameters[p];
+    
+                            if (param.ParameterName && param.ParameterName === 'rds.force_ssl' &&
+                                param.ParameterValue && param.ParameterValue !== '0') {
+                                forceSslEnabled = true;
+                                break;
+                            }
+                        }
+
+                        if (forceSslEnabled) break;
                     }
                     
                     if (forceSslEnabled) {
