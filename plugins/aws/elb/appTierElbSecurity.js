@@ -5,15 +5,15 @@ module.exports = {
     title: 'App-Tier ELB Security Policy',
     category: 'ELB',
     description: 'Ensures that AWS App-Tier ELBs are using the latest predefined security policies.',
-    more_info: 'AWS  App-Tier ELBs should use the latest predefined security policies to secure the connection between client and ELB.',
+    more_info: 'AWS App-Tier ELBs should use the latest predefined security policies to secure the connection between client and ELB.',
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-https-listener.html',
     recommended_action: 'Update App-Tier ELB reference security policy to latest predefined security policy to secure the connection between client and ELB',
     apis: ['ELB:describeLoadBalancers', 'ELB:describeLoadBalancerPolicies', 'ELB:describeTags', 'STS:getCallerIdentity'],
     settings: {
         app_tier_tag_key: {
-            name: 'Auto Scaling App-Tier Tag Key',
-            description: 'App-Tier tag key used by Auto Scaling groups to indicate App-Tier groups',
-            regex: '[a-zA-Z0-9-,]',                                                                  //TODO using _ in default
+            name: 'App-Tier Tag Key',
+            description: 'App-Tier tag key used by ELBs to indicate App-Tier groups',
+            regex: '^.*$',
             default: 'app_tier'
         },
         latest_security_policies: {
@@ -29,8 +29,11 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
 
-        var app_tier_tag_key = settings.app_tier_tag_key || this.settings.app_tier_tag_key.default;
-        var latest_security_policies = settings.latest_security_policies || this.settings.latest_security_policies.default;
+        var config = {
+            app_tier_tag_key : settings.app_tier_tag_key || this.settings.app_tier_tag_key.default,
+            latest_security_policies : settings.latest_security_policies || this.settings.latest_security_policies.default
+        };
+        config.latest_security_policies = config.latest_security_policies.split(',');
 
         var acctRegion = helpers.defaultRegion(settings);
         var awsOrGov = helpers.defaultPartition(settings);
@@ -68,16 +71,18 @@ module.exports = {
                         region, resource);
                     return cb();
                 }
-                
+
                 var appTierTag = false;
                 describeTags.data.TagDescriptions.forEach(function(Tags) {
                     if(Tags && Tags.Tags) {
-                        Tags.Tags.forEach(function(td) {                           //TODO use for loop and break
-                            if(td.Key === app_tier_tag_key) {
+                        for (var i in Tags.Tags){
+                            var td = Tags.Tags[i];
+                            if(td.Key === config.app_tier_tag_key) {
                                 appTierTag = true;
                                 appTierElbFound = true;
+                                break;
                             }
-                        });
+                        }
                     }
                 });
 
@@ -85,7 +90,7 @@ module.exports = {
                     var resource = `arn:${awsOrGov}:elasticloadbalancing:${region}:${accountId}:loadbalancer/${lb.LoadBalancerName}`;
 
                     var describeLoadBalancerPolicies = helpers.addSource(cache, source,
-                        ['elb', 'describeLoadBalancerPolicies', region, lb.DNSName]);                //TODO can't use elb name?
+                        ['elb', 'describeLoadBalancerPolicies', region, lb.DNSName]);
 
                     if (!describeLoadBalancerPolicies ||
                         describeLoadBalancerPolicies.err ||
@@ -100,12 +105,12 @@ module.exports = {
                     var insecurePolicies = false;
                     var securityPolicyFound = false;
                     describeLoadBalancerPolicies.data.PolicyDescriptions.forEach(function(policyDesc) {
-                        if(policyDesc && policyDesc.PolicyAttributeDescriptions) {                   //No need to check policyDesc
+                        if(policyDesc.PolicyAttributeDescriptions) {
                             for (var i in policyDesc.PolicyAttributeDescriptions) {
                                 var policyAttrDesc = policyDesc.PolicyAttributeDescriptions[i];
-                                if (policyAttrDesc.AttributeName === 'Reference-Security-Policy') {              //if policyAttrDesc && ...
+                                if (policyAttrDesc.AttributeName === 'Reference-Security-Policy') {
                                     securityPolicyFound = true;
-                                    if(latest_security_policies.indexOf(policyAttrDesc.AttributeValue) === -1) {
+                                    if(!config.latest_security_policies.includes(policyAttrDesc.AttributeValue)) {
                                         insecurePolicies = true;
                                     }
                                     break;
