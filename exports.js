@@ -10,6 +10,8 @@ module.exports = {
         'sameAzElb'                     : require(__dirname + '/plugins/aws/autoscaling/sameAzElb.js'),
         'asgMissingELB'                 : require(__dirname + '/plugins/aws/autoscaling/asgMissingELB.js'),
         'asgSuspendedProcesses'         : require(__dirname + '/plugins/aws/autoscaling/asgSuspendedProcesses.js'),
+        'appTierAsgApprovedAmi'         : require(__dirname + '/plugins/aws/autoscaling/appTierAsgApprovedAmi.js'),
+        'webTierAsgApprovedAmi'         : require(__dirname + '/plugins/aws/autoscaling/webTierAsgApprovedAmi.js'),
         'workgroupEncrypted'            : require(__dirname + '/plugins/aws/athena/workgroupEncrypted.js'),
         'workgroupEnforceConfiguration' : require(__dirname + '/plugins/aws/athena/workgroupEnforceConfiguration.js'),
         'publicS3Origin'                : require(__dirname + '/plugins/aws/cloudfront/publicS3Origin.js'),
