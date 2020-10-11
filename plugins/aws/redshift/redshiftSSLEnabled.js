@@ -52,45 +52,48 @@ module.exports = {
 
                 var clusterIdentifier = cluster.ClusterIdentifier;
                 var resource = `arn:${awsOrGov}:redshift:${region}:${accountId}:cluster:${clusterIdentifier}`;
-                var clusterParameterGroup = cluster.ClusterParameterGroups[0].ParameterGroupName;
-                
-                if (!clusterParameterGroup.startsWith('default.redshift')) {
-                    var describeClusterParameters = helpers.addSource(cache, source,
-                        ['redshift', 'describeClusterParameters', region, clusterParameterGroup]);
+                var requireSsl = false;
 
-                    if (!describeClusterParameters ||
-                        describeClusterParameters.err ||
-                        !describeClusterParameters.data ||
-                        !describeClusterParameters.data.Parameters) {
-                        helpers.addResult(results, 3,
-                            `Unable to query parameter group "${clusterParameterGroup}": ${helpers.addError(describeClusterParameters)}`, 
-                            region, resource);
-                        return ccb();
-                    }
+                for (var cg in cluster.ClusterParameterGroups) {
+                    var clusterParameterGroup = cluster.ClusterParameterGroups[cg];
+                    var groupName = clusterParameterGroup.ParameterGroupName;
 
-                    var requireSsl = false;
-                    for (var p in describeClusterParameters.data.Parameters) {
-                        var param = describeClusterParameters.data.Parameters[p];
-
-                        if (param.ParameterName && param.ParameterName === 'require_ssl' &&
-                            param.ParameterValue && param.ParameterValue === 'true') {
-                            requireSsl = true;
-                            break;
+                    if (!groupName.startsWith('default.redshift')) {
+                        var describeClusterParameters = helpers.addSource(cache, source,
+                            ['redshift', 'describeClusterParameters', region, groupName]);
+    
+                        if (!describeClusterParameters ||
+                            describeClusterParameters.err ||
+                            !describeClusterParameters.data ||
+                            !describeClusterParameters.data.Parameters) {
+                            helpers.addResult(results, 3,
+                                `Unable to query parameter group "${groupName}": ${helpers.addError(describeClusterParameters)}`, 
+                                region, resource);
+                            return ccb();
+                        }
+    
+                        
+                        for (var p in describeClusterParameters.data.Parameters) {
+                            var param = describeClusterParameters.data.Parameters[p];
+    
+                            if (param.ParameterName && param.ParameterName === 'require_ssl' &&
+                                param.ParameterValue && param.ParameterValue === 'true') {
+                                requireSsl = true;
+                                break;
+                            }
                         }
                     }
 
-                    if (requireSsl) {
-                        helpers.addResult(results, 0,
-                            `Parameter group associated with Redshift cluster "${clusterIdentifier}" requires SSL connection`,
-                            region, resource);
-                    } else {
-                        helpers.addResult(results, 2,
-                            `Parameter group associated with Redshift cluster "${clusterIdentifier}" does not require SSL connection`,
-                            region, resource);
-                    }        
+                    if(requireSsl) break;
+                }
+                
+                if (requireSsl) {
+                    helpers.addResult(results, 0,
+                        `Parameter group associated with Redshift cluster "${clusterIdentifier}" requires SSL connection`,
+                        region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `Redshift cluster "${clusterIdentifier}" is using default parameter group`,
+                        `Parameter group associated with Redshift cluster "${clusterIdentifier}" does not require SSL connection`,
                         region, resource);
                 }
 
