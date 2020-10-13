@@ -1,9 +1,10 @@
 var expect = require('chai').expect;
-const topicPolicies = require('./topicPolicies');
+var topicPolicies = require('./topicPolicies');
 
 
 const listTopics = [
     { TopicArn: 'arn:aws:sns:us-east-1:111122223333:test-topic' },
+    { TopicArn: 'arn:aws:sns:us-east-1:111122223333:test-topic-2' },
     { TopicArn: 'arn:aws:sns:us-east-1:111122223333:test-topic-2' }
 ];
 
@@ -11,14 +12,14 @@ const getTopicAttributes = [
     {
         "ResponseMetadata": "{\"RequestId\": '2a205b73-5c0d-55e2-8129-0ca612f4a41c' }",
         "Attributes": {
-            "Policy": '{"Version":"2008-10-17","Id":"__default_policy_ID","Statement":[{"Sid":"__default_statement_ID","Effect":"Allow","Principal":{"AWS":"*"},"Action":["SNS:GetTopicAttributes","SNS:SetTopicAttributes","SNS:AddPermission","SNS:RemovePermission","SNS:DeleteTopic","SNS:Subscribe","SNS:ListSubscriptionsByTopic","SNS:Publish","SNS:Receive"],"Resource":"arn:aws:sns:us-east-1:111122223333:test-topic","Condition":{"StringEquals":{"AWS:SourceOwner":"111122223333"}}}]}',
+            "Policy": '{"Version":"2008-10-17","Id":"__default_policy_ID","Statement":[{"Sid":"__default_statement_ID","Effect":"Allow","Principal":{"AWS":"arn:aws:iam:112233445566"},"Action":["SNS:GetTopicAttributes","SNS:SetTopicAttributes","SNS:AddPermission","SNS:RemovePermission","SNS:DeleteTopic","SNS:Subscribe","SNS:ListSubscriptionsByTopic","SNS:Publish","SNS:Receive"],"Resource":"arn:aws:sns:us-east-1:111122223333:test-topic","Condition":{"StringEquals":{"AWS:SourceOwner":"111122223333"}}}]}',
             "Owner": '111122223333',
             "SubscriptionsPending": "0",
             "KmsMasterKeyId": 'alias/aws/sns',
             "TopicArn": 'arn:aws:sns:us-east-1:111122223333:test-topic',
             "EffectiveDeliveryPolicy": '{"http":{"defaultHealthyRetryPolicy":{"minDelayTarget":20,"maxDelayTarget":20,"numRetries":3,"numMaxDelayRetries":0,"numNoDelayRetries":0,"numMinDelayRetries":0,"backoffFunction":"linear"},"disableSubscriptionOverrides":false}}',
             "SubscriptionsConfirmed": "0",
-            "DisplayName": '',
+            "DisplayName": "",
             "SubscriptionsDeleted": "0"
         }
     },
@@ -32,21 +33,8 @@ const getTopicAttributes = [
           "TopicArn": 'arn:aws:sns:us-east-1:111122223333:test-138-cmk',
           "EffectiveDeliveryPolicy": '{"http":{"defaultHealthyRetryPolicy":{"minDelayTarget":20,"maxDelayTarget":20,"numRetries":3,"numMaxDelayRetries":0,"numNoDelayRetries":0,"numMinDelayRetries":0,"backoffFunction":"linear"},"disableSubscriptionOverrides":false}}',
           "SubscriptionsConfirmed": "0",
-          "DisplayName": '',
+          "DisplayName": "",
           "SubscriptionsDeleted": "0"
-        }
-    },
-    {
-        "ResponseMetadata": "{\"RequestId\": '2a205b73-5c0d-55e2-8129-0ca612f4a41c' }",
-        "Attributes": {
-            "Policy": '{"Version":"2008-10-17","Id":"__default_policy_ID","Statement":[{"Sid":"__default_statement_ID","Effect":"Allow","Principal":{"AWS":"*"},"Action":["SNS:GetTopicAttributes","SNS:SetTopicAttributes","SNS:AddPermission","SNS:RemovePermission","SNS:DeleteTopic","SNS:Subscribe","SNS:ListSubscriptionsByTopic","SNS:Publish","SNS:Receive"],"Resource":"arn:aws:sns:us-east-1:111122223333:test-topic-2","Condition":{"StringEquals":{"AWS:SourceOwner":"111122223333"}}}]}',
-            "Owner": '111122223333',
-            "SubscriptionsPending": "0",
-            "TopicArn": 'arn:aws:sns:us-east-1:111122223333:test-topic-2',
-            "EffectiveDeliveryPolicy": '{"http":{"defaultHealthyRetryPolicy":{"minDelayTarget":20,"maxDelayTarget":20,"numRetries":3,"numMaxDelayRetries":0,"numNoDelayRetries":0,"numMinDelayRetries":0,"backoffFunction":"linear"},"disableSubscriptionOverrides":false}}',
-            "SubscriptionsConfirmed": "0",
-            "DisplayName": "",
-            "SubscriptionsDeleted": "0"
         }
     },
     {
@@ -61,7 +49,20 @@ const getTopicAttributes = [
             "DisplayName": "",
             "SubscriptionsDeleted": "0"
         }
-    } 
+    },
+    {
+        "ResponseMetadata": "{\"RequestId\": '2a205b73-5c0d-55e2-8129-0ca612f4a41c' }",
+        "Attributes": {
+            "Owner": '111122223333',
+            "SubscriptionsPending": "0",
+            "KmsMasterKeyId": 'alias/aws/sns',
+            "TopicArn": 'arn:aws:sns:us-east-1:111122223333:test-topic',
+            "EffectiveDeliveryPolicy": '{"http":{"defaultHealthyRetryPolicy":{"minDelayTarget":20,"maxDelayTarget":20,"numRetries":3,"numMaxDelayRetries":0,"numNoDelayRetries":0,"numMinDelayRetries":0,"backoffFunction":"linear"},"disableSubscriptionOverrides":false}}',
+            "SubscriptionsConfirmed": "0",
+            "DisplayName": "",
+            "SubscriptionsDeleted": "0"
+        }
+    }
 ];
 
 const createCache = (listTopics, getTopicAttributes) => {
@@ -152,7 +153,7 @@ describe('topicPolicies', function () {
         });
 
         it('should FAIL if SNS topic policy allows global access', function (done) {
-            const cache = createCache([listTopics[1]], getTopicAttributes[3]);
+            const cache = createCache([listTopics[1]], getTopicAttributes[2]);
             topicPolicies.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -180,6 +181,15 @@ describe('topicPolicies', function () {
 
         it('should UNKNOWN if unable to get SNS topic attributes', function (done) {
             const cache = createTopicAttributesErrorCache([listTopics[0]]);
+            topicPolicies.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
+                done();
+            });
+        });
+
+        it('should UNKNOWN if SNS topic does not have a policy attached', function (done) {
+            const cache = createTopicAttributesErrorCache([listTopics[2]], getTopicAttributes[3]);
             topicPolicies.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
