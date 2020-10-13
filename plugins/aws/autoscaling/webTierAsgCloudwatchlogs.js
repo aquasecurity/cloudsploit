@@ -4,17 +4,31 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Web-Tier Auto Scaling Group CloudWatch Logs Enabled',
     category: 'autoscaling',
-    description: 'Ensures that an agent for AWS CloudWatch Logs is installed within Web-Tier Auto Scaling Group.',
-    more_info: '',
-    link: '',
-    recommended_action: '',
+    description: 'Ensures that Web-Tier Auto Scaling Groups are using CloudWatch Logs agent.',
+    more_info: 'EC2 instance available within web-tier Auto Scaling Group (ASG) should use an AWS CloudWatch Logs agent to monitor, store and access log files.',
+    link: 'https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Install-CloudWatch-Agent.html',
+    recommended_action: 'Update web-tier Auto Scaling Group to use CloudWatch Logs agent',
     apis: ['AutoScaling:describeAutoScalingGroups', 'AutoScaling:describeLaunchConfigurations', 'STS:getCallerIdentity'],
     settings: {
         web_tier_tag_key: {
             name: 'Auto Scaling Web-Tier Tag Key',
             description: 'Web-Tier tag key used by Auto Scaling groups to indicate Web-Tier groups',
-            regex: '[a-zA-Z0-9-,]',
+            regex: '^.*$',
             default: 'web_tier'
+        },
+        cw_log_agent_install_command: {
+            name: 'Cloudwatch Agent Install Command',
+            description: 'Commands to install Cloudwatch Agent',
+            regex: '^.*$',
+            default: '#!/bin/bash curl https://s3.amazonaws.com//aws-cloudwatch/downloads/latest/awslogs-agent-setup.py -O ' +
+            'chmod +x ./awslogs-agent-setup.py ' +
+            './awslogs-agent-setup.py -n -r <AWS_REGION> -c <S3_CLOUDWATCH_AGENT_CONFIG_FILE_LOCATION>'
+        },
+        s3_cw_agent_config_file: {
+            name: 'S3 Cloudwatch Agent Config File Location',
+            description: 'S3 path of cloudwatch agent configuration file',
+            regex: '^.*$',
+            default: ''
         }
     },
 
@@ -23,7 +37,11 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
 
-        var webTierTagKey = settings.web_tier_tag_key || this.settings.web_tier_tag_key.default;
+        var config = {
+            web_tier_tag_key: settings.web_tier_tag_key || this.settings.web_tier_tag_key.default,
+            cw_log_agent_install_command: settings.cw_log_agent_install_command || this.settings.cw_log_agent_install_command.default,
+            s3_cw_agent_config_file: settings.s3_cw_agent_config_file || this.settings.s3_cw_agent_config_file.default
+        };
 
         async.each(regions.autoscaling, function(region, rcb){
             var describeAutoScalingGroups = helpers.addSource(cache, source,
@@ -48,19 +66,21 @@ module.exports = {
 
                 var webTierTag = false;
                 if(asg.Tags && asg.Tags.length){
-                   asg.Tags.forEach(function(tag) {
-                        if(tag && tag.Key && tag.Key === webTierTagKey) {
+                    for (var t in asg.Tags) {
+                        var tag = asg.Tags[t];
+                        if(tag && tag.Key && tag.Key === config.web_tier_tag_key) {
                             webTierTag = true;
                             webTierAsgFound = true;
+                            break;
                         }
-                    });
+                    }
                 }
 
                 if (webTierTag) {
                     var resource = asg.AutoScalingGroupARN;
 
                     var describeLaunchConfigurations = helpers.addSource(cache, source,
-                        ['autoscaling', 'describeLaunchConfigurations', region, asg.AutoScalingGroupName]);
+                        ['autoscaling', 'describeLaunchConfigurations', region, asg.AutoScalingGroupARN]);
 
                     if(!describeLaunchConfigurations ||
                         describeLaunchConfigurations.err ||
@@ -74,13 +94,17 @@ module.exports = {
                     }
 
                     var logsEnabled = false;                    
-                    describeLaunchConfigurations.data.LaunchConfigurations.forEach(function(config){
-                        if(config.UserData) {
+                    describeLaunchConfigurations.data.LaunchConfigurations.forEach(function(launchConfig){
+                        
+                        config.cw_log_agent_install_command = config.cw_log_agent_install_command.replace('<AWS_REGION>', region);
+                        config.cw_log_agent_install_command = config.cw_log_agent_install_command.replace('<S3_CLOUDWATCH_AGENT_CONFIG_FILE_LOCATION>', config.s3_cw_agent_config_file);
+                        if(launchConfig.UserData &&
+                            launchConfig.UserData.indexOf(config.cw_log_agent_install_command) > -1) {
                             logsEnabled = true;
                         }
                     });
 
-                    if(logsEnabled) {
+                    if (logsEnabled) {
                         helpers.addResult(results, 0,
                             `Auto scaling group "${asg.AutoScalingGroupName}" has CloudWatch logs enabled`,
                             region, resource);

@@ -118,7 +118,7 @@ const describeLaunchConfigurations = [
                     "sg-08f7cb8776a0176ef"
                 ],
                 "ClassicLinkVPCSecurityGroups": [],
-                "UserData": "Here Is Something",
+                "UserData": "#!/bin/bash curl https://s3.amazonaws.com//aws-cloudwatch/downloads/latest/awslogs-agent-setup.py -O chmod +x ./awslogs-agent-setup.py ./awslogs-agent-setup.py -n -r us-east-1 -c s3://bucket-test-13/configFile.config",
                 "InstanceType": "t2.micro",
                 "KernelId": "",
                 "RamdiskId": "",
@@ -216,7 +216,7 @@ const describeLaunchConfigurations = [
 ];
 
 const createCache = (asgs, config) => {
-    if (asgs.length) var asgName = asgs[0].AutoScalingGroupName;
+    var asgArn = (asgs && asgs.length) ? asgs[0].AutoScalingGroupARN : null;
     return {
         autoscaling: {
             describeAutoScalingGroups: {
@@ -226,7 +226,7 @@ const createCache = (asgs, config) => {
             },
             describeLaunchConfigurations: {
                 'us-east-1': {
-                    [asgName]: {
+                    [asgArn]: {
                         data: config
                     }
                 },
@@ -270,16 +270,17 @@ const createNullCache = () => {
 
 describe('appTierAsgCloudWatchLogs', function () {
     describe('run', function () {
-        it('should PASS if App-Tier Auto Scaling launch configuration has CloudWatch logs enabled', function (done) {
+        it('should PASS if App-Tier Auto Scaling launch configuration is using CloudWatch Logs agent', function (done) {
             const cache = createCache([describeAutoScalingGroups[0]], describeLaunchConfigurations[0]);
-            appTierAsgCloudWatchLogs.run(cache, {}, (err, results) => {
+            const settings = { s3_cw_agent_config_file: 's3://bucket-test-13/configFile.config' };
+            appTierAsgCloudWatchLogs.run(cache, settings, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
             });
         });
 
-        it('should FAIL if App-Tier Auto Scaling launch configuration does not have CloudWatch logs enabled', function (done) {
+        it('should FAIL if App-Tier Auto Scaling launch configuration is not using CloudWatch Logs agent', function (done) {
             const cache = createCache([describeAutoScalingGroups[0]], describeLaunchConfigurations[1]);
             appTierAsgCloudWatchLogs.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -288,7 +289,7 @@ describe('appTierAsgCloudWatchLogs', function () {
             });
         });
 
-        it('should UNKNOWN if unable to describe launch configuration for App-Tier auto scaling group', function (done) {
+        it('should UNKNOWN if unable to describe launch configuration for App-Tier Auto Scaling group', function (done) {
             const cache = createCache([describeAutoScalingGroups[0]]);
             appTierAsgCloudWatchLogs.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -297,7 +298,7 @@ describe('appTierAsgCloudWatchLogs', function () {
             });
         });
 
-        it('should PASS if no App-Tier auto scaling groups found', function (done) {
+        it('should PASS if no App-Tier Auto Scaling groups found', function (done) {
             const cache = createCache([describeAutoScalingGroups[1]], describeLaunchConfigurations[2]);
             appTierAsgCloudWatchLogs.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -306,7 +307,7 @@ describe('appTierAsgCloudWatchLogs', function () {
             });
         });
 
-        it('should PASS if no auto scaling groups found', function (done) {
+        it('should PASS if no Auto Scaling groups found', function (done) {
             const cache = createCache([]);
             appTierAsgCloudWatchLogs.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -315,7 +316,7 @@ describe('appTierAsgCloudWatchLogs', function () {
             });
         });
 
-        it('should UNKNOWN if unable to describe auto scaling groups', function (done) {
+        it('should UNKNOWN if unable to describe Auto Scaling groups', function (done) {
             const cache = createErrorCache();
             appTierAsgCloudWatchLogs.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -324,7 +325,7 @@ describe('appTierAsgCloudWatchLogs', function () {
             });
         });
 
-        it('should not return anything if no auto scaling groups found', function (done) {
+        it('should not return anything if no Auto Scaling groups found', function (done) {
             const cache = createNullCache();
             appTierAsgCloudWatchLogs.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
