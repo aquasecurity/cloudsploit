@@ -615,6 +615,11 @@ var postcalls = [
                 reliesOnService: 'autoscaling',
                 reliesOnCall: 'describeAutoScalingGroups',
                 override: true
+            },
+            describeLaunchConfigurations: {
+                reliesOnService: 'autoscaling',
+                reliesOnCall: 'describeAutoScalingGroups',
+                override: true
             }
         },
         CloudFront: {
