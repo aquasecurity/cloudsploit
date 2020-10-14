@@ -155,8 +155,7 @@ var engine = function(cloudConfig, settings) {
 
                     // Remediation
                     if (cloudConfig.pluginsRemediate.indexOf(key) > -1) {
-                        if (results[r].status === 2 &&
-                            results[r].resource.includes("subhadip-test")) {
+                        if (results[r].status === 2) {
                             var resource = results[r].resource;
                             var event = {};
                             event['remediation_file'] = {};
