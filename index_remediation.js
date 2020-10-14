@@ -69,7 +69,6 @@ let settings = parser.parse_args();
 let cloudConfig = {};
 
 settings.cloud = 'aws';
-settings.config = 'C:\\Users\\SubhadipBhattacharyy\\Development\\cloudsploit\\scans\\config.js';
 // Now execute the scans using the defined configuration information.
 if (!settings.config) {
     // AWS will handle the default credential chain without needing a credential file
