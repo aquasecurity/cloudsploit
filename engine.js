@@ -138,7 +138,7 @@ var engine = function(cloudConfig, settings) {
 
                     var complianceMsg = [];
                     if (settings.compliance && settings.compliance.length) {
-                        settings.compliance.forEach(function (c) {
+                        settings.compliance.forEach(function(c) {
                             if (plugin.compliance && plugin.compliance[c]) {
                                 complianceMsg.push(`${c.toUpperCase()}: ${plugin.compliance[c]}`);
                             }

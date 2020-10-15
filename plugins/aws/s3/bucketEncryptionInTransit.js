@@ -127,18 +127,18 @@ module.exports = {
             'Principal': '*',
             'Action': 's3:*',
             'Resource': [resource,resource+'/*'],
-                'Condition': {
-                    'Bool': {
-                        'aws:SecureTransport': 'false'
-                    }
+            'Condition': {
+                'Bool': {
+                    'aws:SecureTransport': 'false'
+                }
             }
-        }
+        };
         var policyBody = {
             'Version': '2012-10-17'
         };
         if (policy.err &&
             policy.err.code === 'NoSuchBucketPolicy'){
-            policyBody["Statement"] = SecureTransport;
+            policyBody['Statement'] = SecureTransport;
             params = {
                 'Bucket': bucketName,
                 'Policy': JSON.stringify(policyBody)
@@ -185,5 +185,10 @@ module.exports = {
     },
     rollback: function(config, cache, settings, resource, callback){
         console.log('Rollback support for this plugin has not yet been implemented');
+        console.log(config);
+        console.log(cache);
+        console.log(settings);
+        console.log(resource);
+        callback();
     }
 };
