@@ -27,6 +27,7 @@ var engine = function(cloudConfig, settings) {
     if (settings.ignore_ok) console.log('INFO: Ignoring passing results');
     if (settings.skip_paginate) console.log('INFO: Skipping AWS pagination mode');
     if (settings.suppress && settings.suppress.length) console.log('INFO: Suppressing results based on suppress flags');
+    if (settings.remediate && settings.remediate.length) console.log('INFO: Remediate the plugins mentioned here');
     if (settings.plugin) {
         if (!plugins[settings.plugin]) return console.log(`ERROR: Invalid plugin: ${settings.plugin}`);
         console.log(`INFO: Testing plugin: ${plugins[settings.plugin].title}`);
