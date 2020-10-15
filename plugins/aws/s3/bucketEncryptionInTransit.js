@@ -30,12 +30,14 @@ module.exports = {
     remediation_min_version: '202006020730',
     apis_remediate: ['S3:listBuckets', 'S3:getBucketPolicy'],
     actions: {
-        remediate: ['S3:putBucketPolicy']
+        remediate: ['S3:putBucketPolicy'],
+        rollback: ['S3:putBucketPolicy']
     },
     permissions: {
-        remediate: ['s3:PutBucketPolicy ']
+        remediate: ['s3:PutBucketPolicy'],
+        rollback: ['s3:PutBucketPolicy ']
     },
-
+    realtime_triggers: ['s3:putBucketPolicy', 's3:CreateBucket'],
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
@@ -180,5 +182,8 @@ module.exports = {
             settings.remediation_file = remediation_file;
             return callback(null, action);
         });
+    },
+    rollback: function(config, cache, settings, resource, callback){
+        console.log('Rollback support for this plugin has not yet been implemented');
     }
 };

@@ -91,6 +91,24 @@ var engine = function(cloudConfig, settings) {
     console.log(`INFO: Found ${apiCalls.length} API calls to make for ${settings.cloud} plugins`);
     console.log('INFO: Collecting metadata. This may take several minutes...');
 
+    const initializeFile = function(file, type, testQuery, resource) {
+        if (!file['access']) file['access'] = {};
+        if (!file['pre_remediate']) file['pre_remediate'] = {};
+        if (!file['pre_remediate']['actions']) file['pre_remediate']['actions'] = {};
+        if (!file['pre_remediate']['actions'][testQuery]) file['pre_remediate']['actions'][testQuery] = {};
+        if (!file['pre_remediate']['actions'][testQuery][resource]) file['pre_remediate']['actions'][testQuery][resource] = {};
+        if (!file['post_remediate']) file['post_remediate'] = {};
+        if (!file['post_remediate']['actions']) file['post_remediate']['actions'] = {};
+        if (!file['post_remediate']['actions'][testQuery]) file['post_remediate']['actions'][testQuery] = {};
+        if (!file['post_remediate']['actions'][testQuery][resource]) file['post_remediate']['actions'][testQuery][resource] = {};
+        if (!file['remediate']) file['remediate'] = {};
+        if (!file['remediate']['actions']) file['remediate']['actions'] = {};
+        if (!file['remediate']['actions'][testQuery]) file['remediate']['actions'][testQuery] = {};
+        if (!file['remediate']['actions'][testQuery][resource]) file['remediate']['actions'][testQuery][resource] = {};
+
+        return file;
+    };
+
     // STEP 2 - Collect API Metadata from Service Providers
     collector(cloudConfig, {
         api_calls: apiCalls,
@@ -116,10 +134,10 @@ var engine = function(cloudConfig, settings) {
                     if (suppressionFilter([key, results[r].region || 'any', results[r].resource || 'any'].join(':'))) {
                         continue;
                     }
-                    
+
                     var complianceMsg = [];
                     if (settings.compliance && settings.compliance.length) {
-                        settings.compliance.forEach(function(c){
+                        settings.compliance.forEach(function (c) {
                             if (plugin.compliance && plugin.compliance[c]) {
                                 complianceMsg.push(`${c.toUpperCase()}: ${plugin.compliance[c]}`);
                             }
@@ -134,8 +152,23 @@ var engine = function(cloudConfig, settings) {
                     // Add this to our tracking fo the worst status to calculate
                     // the exit code
                     maximumStatus = Math.max(maximumStatus, results[r].status);
+                    // Remediation
+                    if (settings.remediate && settings.remediate.length) {
+                        if (settings.remediate.indexOf(key) > -1) {
+                            if (results[r].status === 2 &&
+                                results[r].resource === 'arn:aws:s3:::test-subha-s3'/*remove this line*/) {
+                                var resource = results[r].resource;
+                                var event = {};
+                                event['remediation_file'] = {};
+                                event['remediation_file'] = initializeFile(event['remediation_file'], 'execute', key, resource);
+                                plugin.remediate(cloudConfig, collection, event, resource, (err, result) => {
+                                    if (err) return console.log(err);
+                                    return console.log(result);
+                                });
+                            }
+                        }
+                    }
                 }
-
                 setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
             });
         }, function(err) {

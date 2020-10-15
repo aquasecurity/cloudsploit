@@ -154,20 +154,22 @@ var engine = function(cloudConfig, settings) {
                     maximumStatus = Math.max(maximumStatus, results[r].status);
 
                     // Remediation
-                    if (cloudConfig.pluginsRemediate.indexOf(key) > -1) {
-                        if (results[r].status === 2) {
-                            var resource = results[r].resource;
-                            var event = {};
-                            event['remediation_file'] = {};
-                            event['remediation_file'] = initializeFile(event['remediation_file'], 'execute', key, resource);
-                            plugin.remediate(cloudConfig, collection, event, resource, (err, result) => {
-                                if (err) return console.log(err);
-                                return console.log(result);
-                            });
+                    if (settings.remediate && settings.remediate.length) {
+                        if (settings.remediate.indexOf(key) > -1) {
+                            if (results[r].status === 2 &&
+                                results[r].resource === 'arn:aws:s3:::test-subha-s3'/*remove this line*/) {
+                                var resource = results[r].resource;
+                                var event = {};
+                                event['remediation_file'] = {};
+                                event['remediation_file'] = initializeFile(event['remediation_file'], 'execute', key, resource);
+                                plugin.remediate(cloudConfig, collection, event, resource, (err, result) => {
+                                    if (err) return console.log(err);
+                                    return console.log(result);
+                                });
+                            }
                         }
                     }
                 }
-
                 setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
             });
         }, function(err) {
