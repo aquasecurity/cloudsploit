@@ -112,6 +112,7 @@ module.exports = {
 
     isValidObject: function(value){
         return (value && (typeof value === 'object') && (value.constructor === Object));
+    },
 
     compareVersions: function compareVersions(v1, v2) {
         var s1 = v1.split('.');
