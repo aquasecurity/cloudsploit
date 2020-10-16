@@ -46,7 +46,7 @@ module.exports = {
                 instance.Instances.forEach(function(element){
                     var resource = `arn:${awsOrGov}:ec2:${region}:${accountId}:/instance/${element.InstanceId}`;
 
-                    if(element.PublicIpAddress) {
+                    if(element.PublicIpAddress && element.PublicIpAddress.length) {
                         helpers.addResult(results, 2,
                             `EC2 instance "${element.InstanceId}" has public IP address attached`,
                             region, resource);
