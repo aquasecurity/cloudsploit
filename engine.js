@@ -84,6 +84,12 @@ var engine = function(cloudConfig, settings) {
             plugin.apis.forEach(function(api) {
                 if (apiCalls.indexOf(api) === -1) apiCalls.push(api);
             });
+            // add the remediation api calls also for data to be collected
+            if (settings.remediate && settings.remediate.includes(pluginId)){
+                plugin.apis_remediate.forEach(function(api) {
+                    if (apiCalls.indexOf(api) === -1) apiCalls.push(api);
+                });
+            }
         }
     });
 
@@ -156,8 +162,7 @@ var engine = function(cloudConfig, settings) {
                     // Remediation
                     if (settings.remediate && settings.remediate.length) {
                         if (settings.remediate.indexOf(key) > -1) {
-                            if (results[r].status === 2 &&
-                                results[r].resource === 'arn:aws:s3:::test-subha-s3'/*remove this line*/) {
+                            if (results[r].status === 2) {
                                 var resource = results[r].resource;
                                 var event = {};
                                 event['remediation_file'] = {};
