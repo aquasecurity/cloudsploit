@@ -354,6 +354,12 @@ var calls = {
             paginateReqProp: 'Marker'
         }
     },
+    EMR: {
+        listClusters: {
+            property: 'Clusters',
+            paginate: 'Marker'
+        }
+    },
     ES: {
         listDomainNames: {
             property: 'DomainNames'
@@ -709,6 +715,13 @@ var postcalls = [
                 deleteRegion: true,
                 signatureVersion: 'v4',
                 override: true
+            },
+            getObjectLockConfiguration: {
+                reliesOnService: 's3',
+                reliesOnCall: 'listBuckets',
+                deleteRegion: true,
+                signatureVersion: 'v4',
+                override: true
             }
         },
         EC2: {
@@ -773,6 +786,14 @@ var postcalls = [
                 reliesOnService: 'elbv2',
                 reliesOnCall: 'describeLoadBalancers',
                 override: true
+            }
+        },
+        EMR: {
+            describeCluster: {
+                reliesOnService: 'emr',
+                reliesOnCall: 'listClusters',
+                filterKey: 'ClusterId',
+                filterValue: 'Id'
             }
         },
         IAM: {
@@ -957,6 +978,13 @@ var postcalls = [
         },
     },
     {
+        EMR: {
+            describeSecurityConfiguration: {
+                reliesOnService: 'emr',
+                reliesOnCall: 'listClusters',
+                override: true
+            }
+        },
         IAM: {
             getUserPolicy: {
                 reliesOnService: 'iam',
