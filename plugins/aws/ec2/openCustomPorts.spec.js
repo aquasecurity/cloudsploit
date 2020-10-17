@@ -100,7 +100,7 @@ const createErrorCache = () => {
             describeSecurityGroups: {
                 'us-east-1': {
                     err: {
-                        message: 'error describing cloudformation stacks'
+                        message: 'error describing security groups'
                     },
                 },
             },
@@ -120,34 +120,7 @@ const createNullCache = () => {
 
 describe('openCustomPorts', function () {
     describe('run', function () {
-
-        it('should not return any results if unable to fetch any security groups description', function (done) {
-            const cache = createNullCache();
-            openCustomPorts.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(0);
-                done();
-            });
-        });
-
-        it('should UNKNOWN if error occurs while fetching any security groups description', function (done) {
-            const cache = createErrorCache();
-            openCustomPorts.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(3);
-                done();
-            });
-        });
-
-        it('should PASS if no security groups are present', function (done) {
-            const cache = createCache([]);
-            openCustomPorts.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                done();
-            });
-        });
-
-        it('should FAIL if any public open port is found', function (done) {
+        it('should FAIL if security group has open ports', function (done) {
             const cache = createCache([securityGroups[0]]);
             openCustomPorts.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -156,7 +129,7 @@ describe('openCustomPorts', function () {
             });
         });
 
-        it('should PASS if no public open port is found', function (done) {
+        it('should PASS if no security group does not have open ports', function (done) {
             const cache = createCache([securityGroups[1]]);
             openCustomPorts.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -165,5 +138,30 @@ describe('openCustomPorts', function () {
             });
         });
 
+        it('should PASS if no security groups found', function (done) {
+            const cache = createCache([]);
+            openCustomPorts.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
+
+        it('should UNKNOWN if unable to describe security groups', function (done) {
+            const cache = createErrorCache();
+            openCustomPorts.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
+                done();
+            });
+        });
+
+        it('should not return any results if describe security groups response not found', function (done) {
+            const cache = createNullCache();
+            openCustomPorts.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(0);
+                done();
+            });
+        });
     });
 });
