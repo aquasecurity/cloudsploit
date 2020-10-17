@@ -13,8 +13,8 @@ module.exports = {
         open_port_allowed_list: {
             name: 'EC2 Allowed Open Ports',
             description: 'A comma-delimited list of ports that indicates open ports allowed for any connection',
-            regex: '[0-9,]',
-            default: '80,443'
+            regex: '[a-zA-Z0-9,:]',
+            default: 'tcp:80,tcp:443'
         }
     },
 
@@ -27,6 +27,16 @@ module.exports = {
         var allowed_open_ports = settings.open_port_allowed_list || this.settings.open_port_allowed_list.default;
         allowed_open_ports = allowed_open_ports.split(',');
 
+        var ports = {};
+        allowed_open_ports.forEach(port => {
+            var [protocol, portNo] = port.split(':');
+            if (ports[protocol]) {
+                ports[protocol].push(Number(portNo));
+            } else {
+                ports[protocol] = [Number(portNo)];
+            }
+        });
+
         async.each(regions.ec2, function(region, rcb){
             var describeSecurityGroups = helpers.addSource(cache, source,
                 ['ec2', 'describeSecurityGroups', region]);
@@ -35,7 +45,7 @@ module.exports = {
 
             if (describeSecurityGroups.err || !describeSecurityGroups.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for security groups: ' + helpers.addError(describeSecurityGroups), region);
+                    `Unable to query for security groups: ${helpers.addError(describeSecurityGroups)}`, region);
                 return rcb();
             }
 
@@ -47,42 +57,66 @@ module.exports = {
             // Loop through each security group
             for (var g in describeSecurityGroups.data) {
                 var group = describeSecurityGroups.data[g];
-                var arn = 'arn:' + awsOrGov + ':ec2:' + region + ':' + group.OwnerId + ':security-group/' + group.GroupId;
-
-                var openPorts = [];
+                var resource = `arn:${awsOrGov}:ec2:${region}:${group.OwnerId}:security-group/${group.GroupId}`;
 
                 if (!group.IpPermissions) continue;
 
+                var cidrIps = [];
+
                 // Loop through each ip permissions in a security group
+                IpPermissionsLoop:
                 for (var p in group.IpPermissions) {
                     var permission = group.IpPermissions[p];
-                    
+
                     // Loop through each ip range for an ip permissions list
+                    IpRangesLoop:
                     for (var r in permission.IpRanges) {
                         var range = permission.IpRanges[r];
 
                         if (range.CidrIp && range.CidrIp === '0.0.0.0/0') {
+                            var allowedPorts = ports[permission.IpProtocol] || [];
                             var portRange = permission.ToPort - permission.FromPort;
                             // Check for all the ports in port range
                             for (let p=0; p <= portRange; p++) {
                                 var port = permission.FromPort + p;
-                                if (!allowed_open_ports.includes(port.toString())) {
-                                    var openPort = permission.IpProtocol.toUpperCase() + ' port ' + port;
-                                    if (openPorts.indexOf(openPort) === -1) openPorts.push(openPort);
+
+                                if (!allowedPorts.includes(port)) {
+                                    if (!cidrIps.length) cidrIps.push(range.CidrIp);
+                                    break IpRangesLoop;
+                                }
+                            }
+                        }
+                    }
+
+                        
+                    for (var l in permission.Ipv6Ranges) {
+                        var rangeV6 = permission.Ipv6Ranges[l];
+                            
+                        if (rangeV6.CidrIpv6 && rangeV6.CidrIpv6 === '::/0') {
+                            var allowedV6Ports = ports[permission.IpProtocol] || [];
+                            var portRangeV6 = permission.ToPort - permission.FromPort;
+
+                            // Check for all the ports in port range
+                            for (let p=0; p <= portRangeV6; p++) {
+                                var portV6 = permission.FromPort + p;
+
+                                if (!allowedV6Ports.includes(portV6)) {
+                                    cidrIps.push(rangeV6.CidrIpv6);
+                                    break IpPermissionsLoop;
                                 }
                             }
                         }
                     }
                 }
 
-                if (!openPorts.length) {
+                if (!cidrIps.length) {
                     helpers.addResult(results, 0,
-                        'Security group "' + group.GroupName + '" has no open ports',
-                        region, arn);
+                        `Security group "${group.GroupName}" does not have ports open to 0.0.0.0/0`, 
+                        region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'Security group "' + group.GroupName + '" has: ' + openPorts.join(' , ') + ' open to 0.0.0.0/0', 
-                        region, arn);
+                        `Security group "${group.GroupName}" has ports open to ${cidrIps}`,
+                        region, resource);
                 }
             }
 
