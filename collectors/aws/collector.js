@@ -472,6 +472,10 @@ var calls = {
         describeClusters: {
             property: 'Clusters',
             paginate: 'Marker'
+        },
+        describeClusterParameterGroups: {
+            property: 'ParameterGroups',
+            paginate: 'Marker'
         }
     },
     Route53Domains: {
@@ -913,6 +917,14 @@ var postcalls = [
                 reliesOnCall: 'describeDBParameterGroups',
                 filterKey: 'DBParameterGroupName',
                 filterValue: 'DBParameterGroupName'
+            }
+        },
+        Redshift: {
+            describeClusterParameters: {
+                reliesOnService: 'redshift',
+                reliesOnCall: 'describeClusterParameterGroups',
+                filterKey: 'ParameterGroupName',
+                filterValue: 'ParameterGroupName'
             }
         },
         SageMaker: {
