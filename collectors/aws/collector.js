@@ -915,6 +915,14 @@ var postcalls = [
                 filterValue: 'DBParameterGroupName'
             }
         },
+        Redshift: {
+            describeLoggingStatus: {
+                reliesOnService: 'redshift',
+                reliesOnCall: 'describeClusters',
+                filterKey: 'ClusterIdentifier',
+                filterValue: 'ClusterIdentifier'
+            }
+        },
         SageMaker: {
             describeNotebookInstance: {
                 reliesOnService: 'sagemaker',
