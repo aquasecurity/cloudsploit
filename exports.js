@@ -110,11 +110,12 @@ module.exports = {
         'elbNoInstances'                : require(__dirname + '/plugins/aws/elb/elbNoInstances.js'),
 
         'elbv2DeletionProtection'       : require(__dirname + '/plugins/aws/elbv2/elbv2DeletionProtection.js'),
-        'elbv2LoggingEnabled'             : require(__dirname + '/plugins/aws/elbv2/elbv2LoggingEnabled.js'),
-        'elbv2HttpsOnly'                  : require(__dirname + '/plugins/aws/elbv2/elbv2HttpsOnly.js'),
-        'elbv2NoInstances'                : require(__dirname + '/plugins/aws/elbv2/elbv2NoInstances.js'),
-        'elbv2WafEnabled'                 : require(__dirname + '/plugins/aws/elbv2/elbv2WafEnabled.js'),
+        'elbv2LoggingEnabled'           : require(__dirname + '/plugins/aws/elbv2/elbv2LoggingEnabled.js'),
+        'elbv2HttpsOnly'                : require(__dirname + '/plugins/aws/elbv2/elbv2HttpsOnly.js'),
+        'elbv2NoInstances'              : require(__dirname + '/plugins/aws/elbv2/elbv2NoInstances.js'),
+        'elbv2WafEnabled'               : require(__dirname + '/plugins/aws/elbv2/elbv2WafEnabled.js'),
 
+        'emrClusterLogging'             : require(__dirname + '/plugins/aws/emr/emrClusterLogging.js'),
         'emrEncryptionInTransit'        : require(__dirname + '/plugins/aws/emr/emrEncryptionInTransit.js'),
         'emrEncryptionAtRest'           : require(__dirname + '/plugins/aws/emr/emrEncryptionAtRest.js'),
 
