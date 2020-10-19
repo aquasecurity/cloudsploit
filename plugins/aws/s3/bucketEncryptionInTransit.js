@@ -143,19 +143,20 @@ module.exports = {
                 'Policy': JSON.stringify(policyBody)
             };
         } else {
-            var policyJson;
-            if (typeof policy.data.Policy === 'string') {
-                policyJson = JSON.parse(policy.data.Policy);
-            } else {
-                policyJson = policy.data.Policy;
+            if(policy.data && policy.data.Policy){
+                var policyJson;
+                if (typeof policy.data.Policy === 'string') {
+                    policyJson = JSON.parse(policy.data.Policy);
+                } else {
+                    policyJson = policy.data.Policy;
+                }
+                policyJson.Statement.push(SecureTransport);
+                params = {
+                    'Bucket': bucketName,
+                    'Policy': JSON.stringify(policyJson)
+                };
             }
-            policyJson.Statement.push(SecureTransport);
-            params = {
-                'Bucket': bucketName,
-                'Policy': JSON.stringify(policyJson)
-            };
         }
-
         var remediation_file = settings.remediation_file;
 
         remediation_file['pre_remediate']['actions'][pluginName][resource] = {
@@ -184,10 +185,7 @@ module.exports = {
     },
     rollback: function(config, cache, settings, resource, callback){
         console.log('Rollback support for this plugin has not yet been implemented');
-        console.log(config);
-        console.log(cache);
-        console.log(settings);
-        console.log(resource);
+        console.log(config, cache, settings, resource);
         callback();
     }
 };
