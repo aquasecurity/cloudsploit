@@ -105,17 +105,16 @@ module.exports = {
         var bucketName = bucketNameArr[bucketNameArr.length - 1];
 
         // find the location of the bucket needing to be remediated
-        var bucketLocations = cache['s3']['getBucketPolicy'];
+        var bucketPolicies = cache['s3']['getBucketPolicy'];
         var bucketLocation;
 
-        for (var key in bucketLocations) {
-            if (bucketLocations[key][bucketName]) {
+        for (var key in bucketPolicies) {
+            if (bucketPolicies[key][bucketName]) {
                 bucketLocation = key;
-                var policy = bucketLocations[key][bucketName];
                 break;
             }
         }
-
+        var policy = bucketPolicies[key][bucketName];
         // add the location of the bucket to the config
         config.region = bucketLocation;
 
@@ -136,7 +135,7 @@ module.exports = {
         var policyBody = {
             'Version': '2012-10-17'
         };
-        if (policy.err &&
+        if (policy.err && policy.err.code &&
             policy.err.code === 'NoSuchBucketPolicy'){
             policyBody['Statement'] = SecureTransport;
             params = {
