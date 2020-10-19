@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'EC2 Security Group RFC 1918',
+    title: 'Open RFC 1918',
     category: 'EC2',
     description: 'Ensures EC2 security groups are configured to deny inbound traffic from RFC-1918 CIDRs',
     more_info: 'RFC-1918 IP addresses are considered reserved private addresses and should not be used in security groups.',
