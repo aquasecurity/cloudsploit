@@ -69,7 +69,7 @@ module.exports = {
 
                     if(!privateCidrsFound.length) {
                         helpers.addResult(results, 0,
-                            'Security group "' + group.GroupName + '" is configured to deny any reserved private address',
+                            'Security group "' + group.GroupName + '" is not configured to allow traffic from any reserved private addresses',
                             region, resource);
                     } else {
                         helpers.addResult(results, 2,
