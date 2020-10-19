@@ -52,7 +52,7 @@ module.exports = {
                             region, resource);
                     } else {
                         helpers.addResult(results, 0,
-                            `EC2 instance "${element.InstanceId}" does not have public IP address attached`,
+                            `EC2 instance "${element.InstanceId}" does not have a public IP address attached`,
                             region, resource);
                     }
                 });
