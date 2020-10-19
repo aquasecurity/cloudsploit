@@ -8,11 +8,21 @@ CloudSploit by Aqua - Cloud Security Scans
 [<img src="docs/console.png">](https://cloud.aquasec.com/signup)
 
 ## Quick Start
+### Generic
 ```
-$ git clone git@github.com:cloudsploit/scans.git
-$ cd scans
+$ git clone https://github.com/aquasecurity/cloudsploit.git
+$ cd cloudsploit
 $ npm install
 $ ./index.js -h
+```
+
+### Docker
+```
+$ git clone https://github.com/aquasecurity/cloudsploit.git
+$ cd cloudsploit
+$ docker build . -t cloudsploit:0.0.1
+$ docker run cloudsploit:0.0.1 -h
+$ docker run -e AWS_ACCESS_KEY_ID=XX -e AWS_SECRET_ACCESS_KEY=YY cloudsploit:0.0.1 --compliance=pci
 ```
 
 ## Documentation
