@@ -915,6 +915,13 @@ var postcalls = [
                 filterValue: 'DBParameterGroupName'
             }
         },
+        S3Control: {
+            getPublicAccessBlock: {
+                reliesOnService: 'sts',
+                reliesOnCall: 'getCallerIdentity',
+                override: true
+            }
+        },
         SageMaker: {
             describeNotebookInstance: {
                 reliesOnService: 'sagemaker',

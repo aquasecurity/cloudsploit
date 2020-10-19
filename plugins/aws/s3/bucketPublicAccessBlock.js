@@ -3,42 +3,74 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'S3 Bucket Public Access Block',
     category: 'S3',
-    description: 'Ensures S3 public access block is enabled on all buckets',
-    more_info: 'Blocking S3 public access at the bucket-level ensures objects are not accidentally exposed.',
-    recommended_action: 'Enable the S3 public access block on all S3 buckets.',
+    description: 'Ensures S3 public access block is enabled on all buckets or for AWS account',
+    more_info: 'Blocking S3 public access at the account level or bucket-level ensures objects are not accidentally exposed.',
+    recommended_action: 'Enable the S3 public access block on all S3 buckets or for AWS account.',
     link: 'https://docs.aws.amazon.com/AmazonS3/latest/dev/access-control-block-public-access.html',
-    apis: ['S3:listBuckets', 'S3:getPublicAccessBlock'],
+    apis: ['S3:listBuckets', 'S3:getPublicAccessBlock', 'S3Control:getPublicAccessBlock', 'STS:getCallerIdentity'],
     settings: {
         s3_public_access_block_allow_pattern: {
             name: 'S3 Public Access Block Allow Pattern',
             description: 'When set, whitelists buckets matching the given pattern. Useful for overriding buckets outside the account control.',
             regex: '^.{1,255}$',
             default: false
+        },
+        check_global_block: {
+            name: 'Check Global Block',
+            description: 'When set, check account level public access for S3 and override bucket level public access check.',
+            regex: '^(true|false)$',
+            default: true
         }
     },
 
     run: function(cache, settings, callback) {
         var config = {
-            s3_public_access_block_allow_pattern: settings.s3_public_access_block_allow_pattern || this.settings.s3_public_access_block_allow_pattern.default
+            s3_public_access_block_allow_pattern: settings.s3_public_access_block_allow_pattern || this.settings.s3_public_access_block_allow_pattern.default,
+            check_global_block: (settings.check_global_block === false) ? false : this.settings.check_global_block.default
         };
-
         var custom = helpers.isCustom(settings, this.settings);
 
         var results = [];
         var source = {};
 
         var region = helpers.defaultRegion(settings);
-
+        var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', region, 'data']);
         var listBuckets = helpers.addSource(cache, source, ['s3', 'listBuckets', region]);
 
         if (!listBuckets) return callback(null, results, source);
         if (listBuckets.err || !listBuckets.data) {
-            helpers.addResult(results, 3, 'Unable to query for S3 buckets: ' + helpers.addError(listBuckets));
+            helpers.addResult(results, 3, `Unable to query for S3 buckets: ${helpers.addError(listBuckets)}`);
             return callback(null, results, source);
         }
 
         if (!listBuckets.data.length) {
             helpers.addResult(results, 0, 'No S3 buckets to check');
+            return callback(null, results, source);
+        }
+
+        var missingBlocks = null;
+
+        if (config.check_global_block) {
+            var accountPublicAccessBlock = helpers.addSource(cache, source, ['s3control', 'getPublicAccessBlock', region, accountId]);
+
+            if (!accountPublicAccessBlock ||
+                accountPublicAccessBlock.err ||
+                !accountPublicAccessBlock.data ||
+                !accountPublicAccessBlock.data.PublicAccessBlockConfiguration) {
+                helpers.addResult(results, 3,
+                    `Unable to query public access block setting for AWS account: ${helpers.addError(accountPublicAccessBlock)}`);
+                return callback(null, results, source);
+            }
+            var configAccount = accountPublicAccessBlock.data.PublicAccessBlockConfiguration;
+            missingBlocks = Object.keys(configAccount).filter(k => !configAccount[k]);
+
+            if (missingBlocks.length) {
+                helpers.addResult(results, 2,
+                    `AWS account is missing public access blocks: ${missingBlocks.join(', ')}`, 'global');
+            } else {
+                helpers.addResult(results, 0, 'AWS account has public access block fully enabled', 'global',);
+            }
+
             return callback(null, results, source);
         }
 
@@ -55,7 +87,7 @@ module.exports = {
                     'global', 'arn:aws:s3:::' + bucket, custom);
             } else {
                 if (getPublicAccessBlock.err && getPublicAccessBlock.err.code === 'NoSuchPublicAccessBlockConfiguration') {
-                    helpers.addResult(results, 2, 'Public Access Block not enabled', 'global', 'arn:aws:s3:::' + bucket);
+                    helpers.addResult(results, 2, 'S3 bucket does not have Public Access Block enabled', 'global', 'arn:aws:s3:::' + bucket);
                     continue;
                 }
                 if (getPublicAccessBlock.err || !getPublicAccessBlock.data) {
@@ -63,12 +95,12 @@ module.exports = {
                     continue;
                 }
                 var configLocal = getPublicAccessBlock.data.PublicAccessBlockConfiguration;
-                var missingBlocks = Object.keys(configLocal).filter(k => !configLocal[k]);
+                missingBlocks = Object.keys(configLocal).filter(k => !configLocal[k]);
                 if (missingBlocks.length) {
-                    helpers.addResult(results, 2, `Missing public access blocks: ${missingBlocks.join(', ')}`, 'global', 'arn:aws:s3:::' + bucket);
+                    helpers.addResult(results, 2, `S3 bucket is missing public access blocks: ${missingBlocks.join(', ')}`, 'global', 'arn:aws:s3:::' + bucket);
                     continue;
                 }
-                helpers.addResult(results, 0, 'Public access block fully enabled', 'global', 'arn:aws:s3:::' + bucket);
+                helpers.addResult(results, 0, 'S3 bucket has public access block fully enabled', 'global', 'arn:aws:s3:::' + bucket);
             }
         }
 
