@@ -21,6 +21,7 @@ module.exports = {
         var regions = helpers.regions(settings);
         
         var acctRegion = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
         async.each(regions.elb, function(region, rcb){
@@ -31,41 +32,46 @@ module.exports = {
 
             if (describeLoadBalancers.err || !describeLoadBalancers.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for load balancers: ' + helpers.addError(describeLoadBalancers), region);
+                    `Unable to query for load balancers: ${helpers.addError(describeLoadBalancers)}`, region);
                 return rcb();
             }
 
             if (!describeLoadBalancers.data.length) {
-                helpers.addResult(results, 0, 'No load balancers present', region);
+                helpers.addResult(results, 0, 'No load balancers found', region);
                 return rcb();
             }
 
             async.each(describeLoadBalancers.data, function(lb, cb){
                 // arn:aws:elasticloadbalancing:region:account-id:loadbalancer/name
-                var elbArn = 'arn:aws:elasticloadbalancing:' +
-                              region + ':' + accountId + ':' +
-                              'loadbalancer/' + lb.LoadBalancerName;
+                var elbArn = `arn:${awsOrGov}:elasticloadbalancing:${region}:${accountId}:loadbalancer/${lb.LoadBalancerName}`;
+
+                if(!lb.ListenerDescriptions.length) {
+                    helpers.addResult(results, 0,
+                        `ELB "${lb.LoadBalancerName}" is not using any listeners`,
+                        region, elbArn);
+                    return cb();
+                }
 
                 // loop through listeners
-                var non_https_listner = [];
+                var non_https_listeners = [];
                 lb.ListenerDescriptions.forEach(function(listener){
                     // if it is not https add errors to results
-                    if (listener.Listener.Protocol != 'HTTPS'){
-                        non_https_listner.push(
-                            listener.Listener.Protocol + ' / ' +  
-                            listener.Listener.LoadBalancerPort
+                    if (listener.Listener.Protocol !== 'HTTPS'){
+                        non_https_listeners.push(
+                            `${listener.Listener.Protocol}/${listener.Listener.LoadBalancerPort}`
                         );
                     }
-
                 });
-                if (non_https_listner){
-                    //helpers.addResult(results, 2, non_https_listner.join(', '), region);
-                    var msg = 'The following listeners are not using HTTPS-only: ';
+
+                if (non_https_listeners.length) {
                     helpers.addResult(
-                        results, 2, msg + non_https_listner.join(', '), region, elbArn
-                    );
-                }else{
-                    helpers.addResult(results, 0, 'No listeners found', region, elbArn);
+                        results, 2,
+                        `Elb "${lb.LoadBalancerName}" is using these listeners ${non_https_listeners.join(', ')} without HTTPS protocol`,
+                        region, elbArn);
+                } else {
+                    helpers.addResult(results, 0,
+                        `ELB "${lb.LoadBalancerName}" is using listeners with HTTPS protocol only`,
+                        region, elbArn);
                 }
                 cb();
             }, function(){
