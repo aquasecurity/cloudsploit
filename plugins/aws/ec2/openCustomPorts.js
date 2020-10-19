@@ -115,7 +115,7 @@ module.exports = {
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `Security group "${group.GroupName}" has ports open to ${cidrIps}`,
+                        `Security group "${group.GroupName}" has ports open to ${cidrIps.join(', ')}`,
                         region, resource);
                 }
             }
