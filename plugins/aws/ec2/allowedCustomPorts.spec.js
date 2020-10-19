@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-const openCustomPorts = require('./openCustomPorts');
+const allowedCustomPorts = require('./allowedCustomPorts');
 
 const securityGroups = [
     {
@@ -118,11 +118,11 @@ const createNullCache = () => {
     };
 };
 
-describe('openCustomPorts', function () {
+describe('allowedCustomPorts', function () {
     describe('run', function () {
         it('should FAIL if security group has open ports', function (done) {
             const cache = createCache([securityGroups[0]]);
-            openCustomPorts.run(cache, {}, (err, results) => {
+            allowedCustomPorts.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -131,7 +131,7 @@ describe('openCustomPorts', function () {
 
         it('should PASS if no security group does not have open ports', function (done) {
             const cache = createCache([securityGroups[1]]);
-            openCustomPorts.run(cache, {}, (err, results) => {
+            allowedCustomPorts.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -140,7 +140,7 @@ describe('openCustomPorts', function () {
 
         it('should PASS if no security groups found', function (done) {
             const cache = createCache([]);
-            openCustomPorts.run(cache, {}, (err, results) => {
+            allowedCustomPorts.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -149,7 +149,7 @@ describe('openCustomPorts', function () {
 
         it('should UNKNOWN if unable to describe security groups', function (done) {
             const cache = createErrorCache();
-            openCustomPorts.run(cache, {}, (err, results) => {
+            allowedCustomPorts.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -158,7 +158,7 @@ describe('openCustomPorts', function () {
 
         it('should not return any results if describe security groups response not found', function (done) {
             const cache = createNullCache();
-            openCustomPorts.run(cache, {}, (err, results) => {
+            allowedCustomPorts.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });
