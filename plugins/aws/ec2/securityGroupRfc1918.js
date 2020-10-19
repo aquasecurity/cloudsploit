@@ -51,7 +51,7 @@ module.exports = {
 
                 if (!group.IpPermissions || !group.IpPermissions.length) {
                     helpers.addResult(results, 0,
-                        'Security group :' + group.GroupName + ': does not have any ip permission', region, resource);
+                        'Security group :' + group.GroupName + ': does not have any IP permissions', region, resource);
                     continue;
                 }
 
