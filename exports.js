@@ -92,6 +92,7 @@ module.exports = {
         'ec2MetadataOptions'             : require(__dirname + '/plugins/aws/ec2/ec2MetadataOptions.js'),
         'openCustomPorts'               : require(__dirname + '/plugins/aws/ec2/openCustomPorts.js'),
         'ebsUnusedVolumes'              : require(__dirname + '/plugins/aws/ec2/ebsUnusedVolumes.js'),
+        'publicIpAddress'               : require(__dirname + '/plugins/aws/ec2/publicIpAddress.js'),
 
         'efsEncryptionEnabled'          : require(__dirname + '/plugins/aws/efs/efsEncryptionEnabled.js'),
 
