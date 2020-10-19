@@ -203,6 +203,7 @@ module.exports = {
         'ssmEncryptedParameters'        : require(__dirname + '/plugins/aws/ssm/ssmEncryptedParameters.js'),
         'ssmActiveOnAllInstances'       : require(__dirname + '/plugins/aws/ssm/ssmActiveOnAllInstances.js'),
         'ssmAgentLatestVersion'         : require(__dirname + '/plugins/aws/ssm/ssmAgentLatestVersion.js'),
+        'ssmAgentAutoUpdateEnabled'     : require(__dirname + '/plugins/aws/ssm/ssmAgentAutoUpdateEnabled'),
 
         'lambdaOldRuntimes'             : require(__dirname + '/plugins/aws/lambda/lambdaOldRuntimes.js'),
         'lambdaVpcConfig'               : require(__dirname + '/plugins/aws/lambda/lambdaVpcConfig.js'),
