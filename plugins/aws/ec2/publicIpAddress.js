@@ -48,7 +48,7 @@ module.exports = {
 
                     if(element.PublicIpAddress && element.PublicIpAddress.length) {
                         helpers.addResult(results, 2,
-                            `EC2 instance "${element.InstanceId}" has public IP address attached`,
+                            `EC2 instance "${element.InstanceId}" has a public IP address attached`,
                             region, resource);
                     } else {
                         helpers.addResult(results, 0,
