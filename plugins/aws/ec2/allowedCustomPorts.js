@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Open Custom Ports',
+    title: 'Allowed Custom Ports',
     category: 'EC2',
     description: 'Ensures that the defined ports are not exposed publicly',
     more_info: 'Security groups should be used to restrict access to ports from known networks.',
