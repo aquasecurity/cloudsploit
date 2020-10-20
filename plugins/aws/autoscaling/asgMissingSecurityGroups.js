@@ -69,7 +69,7 @@ module.exports = {
 
                     if(missingSecurityGroups.length) {
                         helpers.addResult(results, 2,
-                            `Auto Scaling launch configuration "${config.LaunchConfigurationName}" refereces these missing EC2 security groups: ${missingSecurityGroups.join(', ')}`,
+                            `Auto Scaling launch configuration "${config.LaunchConfigurationName}" references these missing EC2 security groups: ${missingSecurityGroups.join(', ')}`,
                             region, resource);
                     } else {
                         helpers.addResult(results, 0,
