@@ -73,7 +73,7 @@ module.exports = {
                             region, resource);
                     } else {
                         helpers.addResult(results, 0,
-                            `Auto Scaling launch configuration "${config.LaunchConfigurationName}" does not reference any missing EC2 security group`,
+                            `Auto Scaling launch configuration "${config.LaunchConfigurationName}" does not reference any missing EC2 security groups`,
                             region, resource);
                     }
                 }
