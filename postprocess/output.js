@@ -18,60 +18,57 @@ function log(msg, settings) {
     if (!settings.mocha) console.log(msg);
 }
 
-// For the console output, we don't need any state since we can write
-// directly to the console.
-var tableHeaders = [];
-var tableRows = [];
+var createConsoleOutputHandler = function(tableHeaders, tableRows, settings) {
+    return {
+        writeResult: function(result, plugin, pluginKey, complianceMsg) {
+            var toWrite = {
+                Category: plugin.category,
+                Plugin: plugin.title,
+                Description: plugin.description,
+                Resource: (result.resource || 'N/A'),
+                Region: (result.region || 'global'),
+                Status: exchangeStatusWord(result),
+                Message: result.message || 'N/A'
+            };
 
-var consoleOutputHandler = {
-    writeResult: function(result, plugin, pluginKey, complianceMsg) {
-        var toWrite = {
-            Category: plugin.category,
-            Plugin: plugin.title,
-            Description: plugin.description,
-            Resource: (result.resource || 'N/A'),
-            Region: (result.region || 'global'),
-            Status: exchangeStatusWord(result),
-            Message: result.message || 'N/A'
-        };
-
-        if (complianceMsg) {
-            if (tableHeaders.length !== 8) {
-                tableHeaders.push({
-                    value: 'Compliance'
-                });
+            if (complianceMsg) {
+                if (tableHeaders.length !== 8) {
+                    tableHeaders.push({
+                        value: 'Compliance'
+                    });
+                }
+                toWrite.Compliance = complianceMsg;
             }
-            toWrite.Compliance = complianceMsg;
-        }
-        
-        tableRows.push(toWrite);
-    },
 
-    close: function(settings) {
-        // For console output, print the table
-        if (settings.console == 'none') {
-            console.log('INFO: Console output suppressed because "console" setting was "none"');
-        } else if (settings.console == 'text') {
-            tableRows.forEach(function(row){
-                Object.entries(row).forEach(function(entry){
-                    console.log(`${entry[0]}: ${entry[1]}`);
+            tableRows.push(toWrite);
+        },
+
+        close: function() {
+            // For console output, print the table
+            if (settings.console == 'none') {
+                console.log('INFO: Console output suppressed because "console" setting was "none"');
+            } else if (settings.console == 'text') {
+                tableRows.forEach(function(row){
+                    Object.entries(row).forEach(function(entry){
+                        console.log(`${entry[0]}: ${entry[1]}`);
+                    });
+                    console.log('\n');
                 });
-                console.log('\n');
-            });
-        } else {
-            const t1 = ttytable(tableHeaders, tableRows, null, {
-                borderStyle: 'solid',
-                borderColor: 'white',
-                paddingBottom: 0,
-                headerAlign: 'center',
-                headerColor: 'white',
-                align: 'left',
-                color: 'white',
-                width: '100%'
-            }).render();
-            if (process.argv.join('').indexOf('mocha') === -1) console.log(t1);
+            } else {
+                const t1 = ttytable(tableHeaders, tableRows, null, {
+                    borderStyle: 'solid',
+                    borderColor: 'white',
+                    paddingBottom: 0,
+                    headerAlign: 'center',
+                    headerColor: 'white',
+                    align: 'left',
+                    color: 'white',
+                    width: '100%'
+                }).render();
+                if (process.argv.join('').indexOf('mocha') === -1) console.log(t1);
+            }
         }
-    }
+    };
 };
 
 module.exports = {
@@ -90,18 +87,18 @@ module.exports = {
 
         return {
             writer: writer,
-        
+
             writeResult: function(result, plugin, pluginKey, complianceMsg) {
                 var toWrite = [plugin.category, plugin.title, commaSafe(plugin.description),
                     (result.resource || 'N/A'),
                     (result.region || 'Global'),
                     exchangeStatusWord(result), commaSafe(result.message)];
-                
+
                 if (settings.compliance) toWrite.push(complianceMsg || '');
-                
+
                 this.writer.write(toWrite);
             },
-        
+
             close: function() {
                 this.writer.end();
                 log(`INFO: CSV file written to ${settings.csv}`, settings);
@@ -118,7 +115,7 @@ module.exports = {
         var results = [];
         return {
             stream: stream,
-      
+
             writeResult: function(result, plugin, pluginKey, complianceMsg) {
                 var toWrite = {
                     plugin: pluginKey,
@@ -128,42 +125,45 @@ module.exports = {
                     resource: result.resource || 'N/A',
                     region: result.region || 'Global',
                     status: exchangeStatusWord(result),
+                    statusNumber: result.status,
                     message: result.message
                 };
 
                 if (complianceMsg) toWrite.compliance = complianceMsg;
                 results.push(toWrite);
             },
-      
+
             close: function() {
                 this.stream.write(JSON.stringify(results, null, 2));
                 this.stream.end();
-                log(`INFO: JSON file written to ${settings.json}`, settings);
+                if (settings) {
+                    log(`INFO: JSON file written to ${settings.json}`, settings);
+                }
             }
         };
     },
 
     /***
      * Creates an output handler that writes output in the JUnit XML format.
-     * 
+     *
      * This constructs the XML directly, rather than through a library so that
      * we don't need to pull in another NPM dependency. This keeps things
      * simple.
-     * 
+     *
      * @param {fs.WriteStream} stream The stream to write to or an object that
      * obeys the writeable stream contract.
      */
     createJunit: function(stream, settings) {
         return {
             stream: stream,
-        
+
             /**
              * The test suites are how we represent result - each test suite
              * maps to one plugin (more specifically the plugin key) so that
              * we group tests based on the plugin key.
              */
             testSuites: {},
-        
+
             /**
              * Adds the result to be written to the output file.
              */
@@ -210,7 +210,7 @@ module.exports = {
                     error: error
                 });
             },
-        
+
             /**
              * Closes the output handler. For this JUnit output handler, all of
              * the work happens on close since we need to know information
@@ -227,7 +227,7 @@ module.exports = {
                 }
 
                 this.stream.write('</testsuites>\n');
-                
+
                 this.stream.end();
                 log(`INFO: JUnit file written to ${settings.junit}`, settings);
             },
@@ -269,7 +269,7 @@ module.exports = {
                     } else {
                         this.stream.write('/>\n');
                     }
-                    
+
                 }
 
                 // Same thing with properties above - this just needs to exist
@@ -299,7 +299,46 @@ module.exports = {
             close: function() {
                 this.stream.write(JSON.stringify(results, null, 2));
                 this.stream.end();
-                log(`INFO: Collection file written to ${settings.collection}`, settings);
+                if (settings) {
+                    log(`INFO: Collection file written to ${settings.collection}`, settings);
+                }
+            }
+        };
+    },
+
+    // This creates a multiplexer-like object that forwards the
+    // call onto any output handler that has been defined. This
+    // allows us to simply send the output to multiple handlers
+    // and the caller doesn't need to worry about that part.
+    multiplexer(outputs, collectionOutputs, ignoreOkStatus) {
+        return {
+            writeResult: function(result, plugin, pluginKey, complianceMsg) {
+                outputs.forEach(function(output) {
+                    if (output.writeResult) {
+                        if (!(ignoreOkStatus && result.status === 0)) {
+                            output.writeResult(result, plugin, pluginKey, complianceMsg);
+                        }
+                    }
+                });
+            },
+            // supports collection lists
+            writeCollection: function(collection, providerName) {
+                collectionOutputs.forEach(function(collectionOutput) {
+                    if (collectionOutput.write) collectionOutput.write(collection, providerName);
+                });
+            },
+
+            close: function() { // support collection lists
+                collectionOutputs.forEach(function(collectionOutput) {
+                    if (collectionOutput.close) {
+                        collectionOutput.close();
+                    }
+                });
+                outputs.forEach(function(output) {
+                    if (output.close) {
+                        output.close();
+                    }
+                });
             }
         };
     },
@@ -308,19 +347,19 @@ module.exports = {
      * in the command line format. If multiple output handlers are specified
      * in the arguments, then constructs a unified view so that it appears that
      * there is only one output handler.
-     * 
+     *
      * @param {string[]} argv Array of command line arguments (may contain
      * arguments that are not relevant to constructing output handlers).
-     * 
+     *
      * @return A object that obeys the output handler contract. This may be
      * one output handler or one that forwards function calls to a group of
      * output handlers.
      */
     create: function(settings) {
         var outputs = [];
-        var collectionOutput;
+        var collectionOutputs = [];
 
-        tableHeaders = [
+        var tableHeaders = [
             {
                 value: 'Category',
                 width: '10%',
@@ -358,7 +397,7 @@ module.exports = {
             }
         ];
 
-        tableRows = [];
+        var tableRows = [];
 
         // Creates the handlers for writing output.
         if (settings.csv) {
@@ -378,7 +417,7 @@ module.exports = {
 
         if (settings.collection) {
             var streamColl = fs.createWriteStream(settings.collection);
-            collectionOutput = this.createCollection(streamColl, settings);
+            collectionOutputs.push(this.createCollection(streamColl, settings));
         }
 
         var addConsoleOutput = settings.console;
@@ -386,35 +425,12 @@ module.exports = {
         // Write to console if specified or by default if there is not
         // other output handler specified.
         if (addConsoleOutput || outputs.length == 0) {
-            outputs.push(consoleOutputHandler);
+            outputs.push(createConsoleOutputHandler(tableHeaders, tableRows, settings));
         }
 
         // Ignore any "OK" results - only report issues
         var ignoreOkStatus = settings.ignore_ok;
 
-        // This creates a multiplexer-like object that forwards the
-        // call onto any output handler that has been defined. This
-        // allows us to simply send the output to multiple handlers
-        // and the caller doesn't need to worry about that part.
-        return {
-            writeResult: function(result, plugin, pluginKey, complianceMsg) {
-                outputs.forEach(function(output) {
-                    if (!(ignoreOkStatus && result.status === 0)) {
-                        output.writeResult(result, plugin, pluginKey, complianceMsg);
-                    }
-                });
-            },
-
-            writeCollection: function(collection, providerName) {
-                if (collectionOutput) collectionOutput.write(collection, providerName);
-            },
-
-            close: function() {
-                if (collectionOutput) collectionOutput.close();
-                outputs.forEach(function(output) {
-                    output.close(settings);
-                });
-            }
-        };
+        return this.multiplexer(outputs, collectionOutputs, ignoreOkStatus);
     }
 };
