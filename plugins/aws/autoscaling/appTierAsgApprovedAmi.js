@@ -14,7 +14,7 @@ module.exports = {
             name: 'Auto Scaling App-Tier Tag Key',
             description: 'App-Tier tag key used by Auto Scaling groups to indicate App-Tier groups',
             regex: '^.*$',
-            default: 'app_tier'
+            default: ''
         },
         approved_amis: {
             name: 'Approved AMIs for ASG Launch Configuration',
@@ -33,6 +33,9 @@ module.exports = {
             app_tier_tag_key: settings.app_tier_tag_key || this.settings.app_tier_tag_key.default,
             approved_amis: settings.approved_amis || this.settings.approved_amis.default
         };
+
+        if (!config.app_tier_tag_key.length) return callback(null, results, source);
+
         config.approved_amis = config.approved_amis.split(',');
 
         async.each(regions.autoscaling, function(region, rcb){
@@ -43,13 +46,13 @@ module.exports = {
 
             if (describeAutoScalingGroups.err || !describeAutoScalingGroups.data) {
                 helpers.addResult(results, 3,
-                    `Unable to query for auto scaling groups: ${helpers.addError(describeAutoScalingGroups)}`,
+                    `Unable to query for Auto Scaling groups: ${helpers.addError(describeAutoScalingGroups)}`,
                     region);
                 return rcb();
             }
 
             if (!describeAutoScalingGroups.data.length) {
-                helpers.addResult(results, 0, 'No auto scaling groups found', region);
+                helpers.addResult(results, 0, 'No Auto Scaling groups found', region);
                 return rcb();
             }
 
@@ -81,7 +84,7 @@ module.exports = {
                         !describeLaunchConfigurations.data.LaunchConfigurations ||
                         !describeLaunchConfigurations.data.LaunchConfigurations.length) {
                         helpers.addResult(results, 3,
-                            `Unable to query launch configurations for auto scaling group "${asg.AutoScalingGroupName}": ${helpers.addError(describeLaunchConfigurations)}`,
+                            `Unable to query launch configurations for Auto Scaling group "${asg.AutoScalingGroupName}": ${helpers.addError(describeLaunchConfigurations)}`,
                             region, resource);
                         return cb();
                     }
@@ -98,16 +101,16 @@ module.exports = {
                     if(imageFound) {
                         if(!unapprovedAmis.length) {
                             helpers.addResult(results, 0,
-                                `Launch Configuration for App-Tier Auto scaling group "${asg.AutoScalingGroupName}" is using approved AMI`,
+                                `Launch Configuration for App-Tier Auto Scaling group "${asg.AutoScalingGroupName}" is using approved AMI`,
                                 region, resource);
                         } else {
                             helpers.addResult(results, 2,
-                                `Launch Configuration for App-Tier Auto scaling group "${asg.AutoScalingGroupName}" is using this unapproved AMI: ${unapprovedAmis.join(', ')}`,
+                                `Launch Configuration for App-Tier Auto Scaling group "${asg.AutoScalingGroupName}" is using this unapproved AMI: ${unapprovedAmis.join(', ')}`,
                                 region, resource);
                         }
                     } else {
                         helpers.addResult(results, 2,
-                            `Launch Configuration for App-Tier Auto scaling group "${asg.AutoScalingGroupName}" is not using any AMI`,
+                            `Launch Configuration for App-Tier Auto Scaling group "${asg.AutoScalingGroupName}" is not using any AMI`,
                             region, resource);
                     }
                 }

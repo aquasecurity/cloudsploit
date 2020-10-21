@@ -325,7 +325,7 @@ describe('appTierAsgApprovedAmi', function () {
     describe('run', function () {
         it('should PASS if Launch Configuration for App-Tier Auto Scaling group is using approved AMIs', function (done) {
             const cache = createCache([describeAutoScalingGroups[0]], describeLaunchConfigurations[0]);
-            appTierAsgApprovedAmi.run(cache, { approved_amis: "ami-0001903fe8544444c" }, (err, results) => {
+            appTierAsgApprovedAmi.run(cache, { app_tier_tag_key: 'app_tier', approved_amis: "ami-0001903fe8544444c" }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -334,7 +334,7 @@ describe('appTierAsgApprovedAmi', function () {
         
         it('should FAIL if Launch Configuration for App-Tier Auto Scaling group is not using active AMIs', function (done) {
             const cache = createCache([describeAutoScalingGroups[0]], describeLaunchConfigurations[1]);
-            appTierAsgApprovedAmi.run(cache, {}, (err, results) => {
+            appTierAsgApprovedAmi.run(cache, { app_tier_tag_key: 'app_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -343,7 +343,7 @@ describe('appTierAsgApprovedAmi', function () {
         
         it('should FAIL if Launch Configuration for App-Tier Auto Scaling group is not using any AMI', function (done) {
             const cache = createCache([describeAutoScalingGroups[0]], describeLaunchConfigurations[2]);
-            appTierAsgApprovedAmi.run(cache, {}, (err, results) => {
+            appTierAsgApprovedAmi.run(cache, { app_tier_tag_key: 'app_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -352,7 +352,7 @@ describe('appTierAsgApprovedAmi', function () {
         
         it('should UNKNOWN if unable to describe launch configuration for App-Tier Auto Scaling group', function (done) {
             const cache = createCache([describeAutoScalingGroups[0]]);
-            appTierAsgApprovedAmi.run(cache, {}, (err, results) => {
+            appTierAsgApprovedAmi.run(cache, { app_tier_tag_key: 'app_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -361,7 +361,7 @@ describe('appTierAsgApprovedAmi', function () {
 
         it('should PASS if no App-Tier Auto Scaling groups found', function (done) {
             const cache = createCache([describeAutoScalingGroups[1]], describeLaunchConfigurations[2]);
-            appTierAsgApprovedAmi.run(cache, {}, (err, results) => {
+            appTierAsgApprovedAmi.run(cache, { app_tier_tag_key: 'app_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -370,7 +370,7 @@ describe('appTierAsgApprovedAmi', function () {
 
         it('should PASS if no Auto Scaling groups found', function (done) {
             const cache = createCache([]);
-            appTierAsgApprovedAmi.run(cache, {}, (err, results) => {
+            appTierAsgApprovedAmi.run(cache, { app_tier_tag_key: 'app_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -379,7 +379,7 @@ describe('appTierAsgApprovedAmi', function () {
 
         it('should UNKNOWN if unable to describe Auto Scaling groups', function (done) {
             const cache = createErrorCache();
-            appTierAsgApprovedAmi.run(cache, {}, (err, results) => {
+            appTierAsgApprovedAmi.run(cache, { app_tier_tag_key: 'app_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -388,11 +388,18 @@ describe('appTierAsgApprovedAmi', function () {
 
         it('should not return anything if describe Auto Scaling groups response not found', function (done) {
             const cache = createNullCache();
+            appTierAsgApprovedAmi.run(cache, { app_tier_tag_key: 'app_tier' }, (err, results) => {
+                expect(results.length).to.equal(0);
+                done();
+            });
+        });
+
+        it('should not return anything if App-Tier tag key is not provided in settings', function (done) {
+            const cache = createNullCache();
             appTierAsgApprovedAmi.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });
-        }); 
-
+        });
     });
 });

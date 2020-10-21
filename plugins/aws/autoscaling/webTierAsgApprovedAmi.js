@@ -14,7 +14,7 @@ module.exports = {
             name: 'Auto Scaling Web-Tier Tag Key',
             description: 'Web-Tier tag key used by Auto Scaling groups to indicate Web-Tier groups',
             regex: '^.*$',
-            default: 'web_tier'
+            default: ''
         },
         approved_amis: {
             name: 'Approved AMIs for ASG Launch Configuration',
@@ -33,6 +33,9 @@ module.exports = {
             web_tier_tag_key: settings.web_tier_tag_key || this.settings.web_tier_tag_key.default,
             approved_amis: settings.approved_amis || this.settings.approved_amis.default
         };
+
+        if (!config.web_tier_tag_key.length) return callback(null, results, source);
+
         config.approved_amis = config.approved_amis.split(',');
 
         async.each(regions.autoscaling, function(region, rcb){
@@ -98,7 +101,7 @@ module.exports = {
                     if(imageFound) {
                         if(!unapprovedAmis.length) {
                             helpers.addResult(results, 0,
-                                `Launch Configuration for Web-Tier Auto scaling group "${asg.AutoScalingGroupName}" is using approved AMIs`,
+                                `Launch Configuration for Web-Tier Auto Scaling group "${asg.AutoScalingGroupName}" is using approved AMIs`,
                                 region, resource);
                         } else {
                             helpers.addResult(results, 2,
