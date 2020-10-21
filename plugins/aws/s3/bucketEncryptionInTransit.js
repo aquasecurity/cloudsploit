@@ -108,6 +108,11 @@ module.exports = {
         var bucketPolicies = cache['s3']['getBucketPolicy'];
         var bucketLocation;
 
+        if ( !bucketPolicies || bucketPolicies.err){
+            err = 'Unable to get bucket location' || bucketLocation.err;
+            return callback(err, null);
+        }
+
         for (var key in bucketPolicies) {
             if (bucketPolicies[key][bucketName]) {
                 bucketLocation = key;
@@ -116,7 +121,10 @@ module.exports = {
         }
         var policy = bucketPolicies[key][bucketName];
         // add the location of the bucket to the config
-        config.region = bucketLocation;
+        if ( !bucketLocation ){
+            err = 'Unable to get bucket location';
+            return callback(err, null);
+        }
 
         // create the params necessary for the remediation
         var params = {};
