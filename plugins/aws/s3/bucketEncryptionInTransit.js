@@ -121,7 +121,7 @@ module.exports = {
         }
         var policy = bucketPolicies[key][bucketName];
         // add the location of the bucket to the config
-        if ( !bucketLocation ){
+        if (!bucketLocation) {
             err = 'Unable to get bucket location';
             return callback(err, null);
         }
