@@ -179,7 +179,7 @@ describe('webTierAssociatedElb', function () {
     describe('run', function () {
         it('should PASS if Web-Tier Auto Scaling group has ELB associated', function (done) {
             const cache = createCache([describeAutoScalingGroups[0]]);
-            webTierAssociatedElb.run(cache, {}, (err, results) => {
+            webTierAssociatedElb.run(cache, { web_tier_tag_key: 'web_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -188,7 +188,7 @@ describe('webTierAssociatedElb', function () {
 
         it('should FAIL if Web-Tier Auto Scaling group does not have ELB associated', function (done) {
             const cache = createCache([describeAutoScalingGroups[1]]);
-            webTierAssociatedElb.run(cache, {}, (err, results) => {
+            webTierAssociatedElb.run(cache, { web_tier_tag_key: 'web_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -197,7 +197,7 @@ describe('webTierAssociatedElb', function () {
 
         it('should PASS if no Auto Scaling groups found', function (done) {
             const cache = createCache([]);
-            webTierAssociatedElb.run(cache, {}, (err, results) => {
+            webTierAssociatedElb.run(cache, { web_tier_tag_key: 'web_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -206,7 +206,7 @@ describe('webTierAssociatedElb', function () {
 
         it('should PASS if no Web-Tier Auto Scaling groups found', function (done) {
             const cache = createCache([describeAutoScalingGroups[2]]);
-            webTierAssociatedElb.run(cache, {}, (err, results) => {
+            webTierAssociatedElb.run(cache, { web_tier_tag_key: 'web_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -215,7 +215,7 @@ describe('webTierAssociatedElb', function () {
 
         it('should UNKNOWN if unable to describe Auto Scaling groups', function (done) {
             const cache = createErrorCache();
-            webTierAssociatedElb.run(cache, {}, (err, results) => {
+            webTierAssociatedElb.run(cache, { web_tier_tag_key: 'web_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -224,7 +224,7 @@ describe('webTierAssociatedElb', function () {
 
         it('should not return anything if describe Auto Scaling groups response not found', function (done) {
             const cache = createNullCache();
-            webTierAssociatedElb.run(cache, {}, (err, results) => {
+            webTierAssociatedElb.run(cache, { web_tier_tag_key: 'web_tier' }, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });
