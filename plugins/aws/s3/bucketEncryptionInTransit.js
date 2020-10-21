@@ -108,8 +108,8 @@ module.exports = {
         var bucketPolicies = cache['s3']['getBucketPolicy'];
         var bucketLocation;
         var err;
-        if ( !bucketPolicies || bucketPolicies.err){
-            err = 'Unable to get bucket location' || bucketLocation.err;
+        if ( !bucketPolicies || bucketPolicies.err || Object.keys(bucketPolicies).length){
+            err = bucketLocation.err || 'Unable to get bucket location';
             return callback(err, null);
         }
 
