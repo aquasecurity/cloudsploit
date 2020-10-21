@@ -4,8 +4,8 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'SQS Public Access',
     category: 'SQS',
-    description: 'Ensures that SQS queues are not publically accessible',
-    more_info: 'SQS queues should be not be publically accessible to prevent unauthorized actions.',
+    description: 'Ensures that SQS queues are not publicly accessible',
+    more_info: 'SQS queues should be not be publicly accessible to prevent unauthorized actions.',
     recommended_action: 'Update the SQS queue policy to prevent public access.',
     link: 'http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-creating-custom-policies.html',
     apis: ['SQS:listQueues', 'SQS:getQueueAttributes', 'STS:getCallerIdentity'],
@@ -62,18 +62,8 @@ module.exports = {
                     return cb();
                 }
 
-                try {
-                    var policy = JSON.parse(getQueueAttributes.data.Attributes.Policy);
-                } catch (e) {
-                    helpers.addResult(results, 3,
-                        'The SQS queue policy is not valid JSON.',
-                        region, resource);
+                var statements = helpers.normalizePolicyDocument(getQueueAttributes.data.Attributes.Policy);
 
-                    return cb();
-                }
-
-                var statements = helpers.normalizePolicyDocument(policy);
-                
                 var publicStatements = [];
                 for (var s in statements) {
                     var statement = statements[s];
@@ -88,11 +78,11 @@ module.exports = {
 
                 if (!publicStatements.length) {
                     helpers.addResult(results, 0,
-                        `SQS queue "${queueName}" is not publically accessible`,
+                        `SQS queue "${queueName}" is not publicly accessible`,
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `SQS queue "${queueName}" is publically accessible`,
+                        `SQS queue "${queueName}" is publicly accessible`,
                         region, resource);
                 }
                 
