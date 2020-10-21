@@ -107,7 +107,7 @@ module.exports = {
         // find the location of the bucket needing to be remediated
         var bucketPolicies = cache['s3']['getBucketPolicy'];
         var bucketLocation;
-
+        var err;
         if ( !bucketPolicies || bucketPolicies.err){
             err = 'Unable to get bucket location' || bucketLocation.err;
             return callback(err, null);
