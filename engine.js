@@ -27,6 +27,7 @@ var engine = function(cloudConfig, settings) {
     if (settings.ignore_ok) console.log('INFO: Ignoring passing results');
     if (settings.skip_paginate) console.log('INFO: Skipping AWS pagination mode');
     if (settings.suppress && settings.suppress.length) console.log('INFO: Suppressing results based on suppress flags');
+    if (settings.remediate && settings.remediate.length) console.log('INFO: Remediate the plugins mentioned here');
     if (settings.plugin) {
         if (!plugins[settings.plugin]) return console.log(`ERROR: Invalid plugin: ${settings.plugin}`);
         console.log(`INFO: Testing plugin: ${plugins[settings.plugin].title}`);
@@ -83,6 +84,12 @@ var engine = function(cloudConfig, settings) {
             plugin.apis.forEach(function(api) {
                 if (apiCalls.indexOf(api) === -1) apiCalls.push(api);
             });
+            // add the remediation api calls also for data to be collected
+            if (settings.remediate && settings.remediate.includes(pluginId)){
+                plugin.apis_remediate.forEach(function(api) {
+                    if (apiCalls.indexOf(api) === -1) apiCalls.push(api);
+                });
+            }
         }
     });
 
@@ -90,6 +97,24 @@ var engine = function(cloudConfig, settings) {
 
     console.log(`INFO: Found ${apiCalls.length} API calls to make for ${settings.cloud} plugins`);
     console.log('INFO: Collecting metadata. This may take several minutes...');
+
+    const initializeFile = function(file, type, testQuery, resource) {
+        if (!file['access']) file['access'] = {};
+        if (!file['pre_remediate']) file['pre_remediate'] = {};
+        if (!file['pre_remediate']['actions']) file['pre_remediate']['actions'] = {};
+        if (!file['pre_remediate']['actions'][testQuery]) file['pre_remediate']['actions'][testQuery] = {};
+        if (!file['pre_remediate']['actions'][testQuery][resource]) file['pre_remediate']['actions'][testQuery][resource] = {};
+        if (!file['post_remediate']) file['post_remediate'] = {};
+        if (!file['post_remediate']['actions']) file['post_remediate']['actions'] = {};
+        if (!file['post_remediate']['actions'][testQuery]) file['post_remediate']['actions'][testQuery] = {};
+        if (!file['post_remediate']['actions'][testQuery][resource]) file['post_remediate']['actions'][testQuery][resource] = {};
+        if (!file['remediate']) file['remediate'] = {};
+        if (!file['remediate']['actions']) file['remediate']['actions'] = {};
+        if (!file['remediate']['actions'][testQuery]) file['remediate']['actions'][testQuery] = {};
+        if (!file['remediate']['actions'][testQuery][resource]) file['remediate']['actions'][testQuery][resource] = {};
+
+        return file;
+    };
 
     // STEP 2 - Collect API Metadata from Service Providers
     collector(cloudConfig, {
@@ -120,7 +145,7 @@ var engine = function(cloudConfig, settings) {
 
                     var complianceMsg = [];
                     if (settings.compliance && settings.compliance.length) {
-                        settings.compliance.forEach(function(c){
+                        settings.compliance.forEach(function(c) {
                             if (plugin.compliance && plugin.compliance[c]) {
                                 complianceMsg.push(`${c.toUpperCase()}: ${plugin.compliance[c]}`);
                             }
@@ -135,8 +160,22 @@ var engine = function(cloudConfig, settings) {
                     // Add this to our tracking fo the worst status to calculate
                     // the exit code
                     maximumStatus = Math.max(maximumStatus, results[r].status);
+                    // Remediation
+                    if (settings.remediate && settings.remediate.length) {
+                        if (settings.remediate.indexOf(key) > -1) {
+                            if (results[r].status === 2) {
+                                var resource = results[r].resource;
+                                var event = {};
+                                event['remediation_file'] = {};
+                                event['remediation_file'] = initializeFile(event['remediation_file'], 'execute', key, resource);
+                                plugin.remediate(cloudConfig, collection, event, resource, (err, result) => {
+                                    if (err) return console.log(err);
+                                    return console.log(result);
+                                });
+                            }
+                        }
+                    }
                 }
-
                 setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
             });
         }, function(err) {
