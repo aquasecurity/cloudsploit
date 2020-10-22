@@ -54,7 +54,7 @@ module.exports = {
                 var resource = config.LaunchConfigurationARN;
 
                 if (!config.SecurityGroups || !config.SecurityGroups.length) {
-                    helpers.addResult(results, 2,
+                    helpers.addResult(results, 0,
                         `Auto Scaling launch configuration "${config.LaunchConfigurationName}" does not have any security groups associated`,
                         region, resource);
                 }

@@ -67,6 +67,35 @@ const describeLaunchConfigurations = [
         "IamInstanceProfile": "arn:aws:iam::111122223333:instance-profile/aws-elasticbeanstalk-ec2-role",
         "CreatedTime": "2020-08-30T22:49:13.182Z",
         "EbsOptimized": false
+    },
+    {
+        "LaunchConfigurationName": "test-lc-44",
+        "LaunchConfigurationARN": "arn:aws:autoscaling:us-east-1:111122223333:launchConfiguration:f20acca0-07b4-4cec-9174-75547b193446:launchConfigurationName/test-lc-44",
+        "ImageId": "ami-02354e95b39ca8dec",
+        "KeyName": "auto-scaling-test-instance",
+        "ClassicLinkVPCSecurityGroups": [],
+        "UserData": "",
+        "InstanceType": "t2.micro",
+        "KernelId": "",
+        "RamdiskId": "",
+        "BlockDeviceMappings": [
+            {
+                "DeviceName": "/dev/xvda",
+                "Ebs": {
+                    "SnapshotId": "snap-06d919bfeced8496a",
+                    "VolumeSize": 8,
+                    "VolumeType": "gp2",
+                    "DeleteOnTermination": true,
+                    "Encrypted": false
+                }
+            }
+        ],
+        "InstanceMonitoring": {
+            "Enabled": false
+        },
+        "IamInstanceProfile": "arn:aws:iam::111122223333:instance-profile/aws-elasticbeanstalk-ec2-role",
+        "CreatedTime": "2020-08-30T22:49:13.182Z",
+        "EbsOptimized": false
     }
 ]
 
@@ -197,6 +226,15 @@ describe('asgMissingSecurityGroups', function () {
             });
         });
         
+        it('should PASS if Auto Scaling launch configuration does not have any security groups associated', function (done) {
+            const cache = createCache([describeLaunchConfigurations[2]], [describeSecurityGroups[0]]);
+            asgMissingSecurityGroups.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
+
         it('should FAIL if no EC2 security groups found', function (done) {
             const cache = createCache([describeLaunchConfigurations[1]],[]);
             asgMissingSecurityGroups.run(cache, {}, (err, results) => {
