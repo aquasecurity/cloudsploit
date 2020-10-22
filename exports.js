@@ -53,6 +53,7 @@ module.exports = {
         'instanceKeyBasedLogin'         : require(__dirname + '/plugins/aws/ec2/instanceKeyBasedLogin.js'),
         'openAllPortsProtocols'         : require(__dirname + '/plugins/aws/ec2/openAllPortsProtocols.js'),
         'openCIFS'                      : require(__dirname + '/plugins/aws/ec2/openCIFS.js'),
+        'openCustomPorts'               : require(__dirname + '/plugins/aws/ec2/openCustomPorts.js'),
         'openDNS'                       : require(__dirname + '/plugins/aws/ec2/openDNS.js'),
         'openDocker'                    : require(__dirname + '/plugins/aws/ec2/openDocker.js'),
         'openFTP'                       : require(__dirname + '/plugins/aws/ec2/openFTP.js'),
