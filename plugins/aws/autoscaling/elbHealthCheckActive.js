@@ -36,18 +36,15 @@ module.exports = {
                 if (!asg.AutoScalingGroupARN) return;
 
                 var resource = asg.AutoScalingGroupARN;
-                
-                if(asg.HealthCheckType && asg.HealthCheckType === 'ELB') {
-                    if(!asg.LoadBalancerNames || !asg.LoadBalancerNames.length) {
-                        helpers.addResult(results, 0,
-                            `Auto Scaling group "${asg.AutoScalingGroupName}" does not use ELBs`,
-                            region, resource);
-                            return;
-                    } else {
-                        helpers.addResult(results, 0,
-                            `Auto Scaling group "${asg.AutoScalingGroupName}" has ELB health check active`,
-                            region, resource);
-                    }
+
+                if (asg.HealthCheckType && asg.HealthCheckType === 'ELB') {
+                    helpers.addResult(results, 0,
+                        `Auto Scaling group "${asg.AutoScalingGroupName}" has ELB health check active`,
+                        region, resource);
+                } else if (!asg.LoadBalancerNames || !asg.LoadBalancerNames.length) {
+                    helpers.addResult(results, 0,
+                        `Auto Scaling group "${asg.AutoScalingGroupName}" does not use ELBs`,
+                        region, resource);
                 } else {
                     helpers.addResult(results, 2,
                         `Auto Scaling group "${asg.AutoScalingGroupName}" does not have ELB health check active`,
