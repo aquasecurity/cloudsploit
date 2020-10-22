@@ -100,7 +100,7 @@ var engine = function(cloudConfig, settings) {
     }, function(err, collection) {
         if (err || !collection || !Object.keys(collection).length) return console.log(`ERROR: Unable to obtain API metadata: ${err || 'No data returned'}`);
         outputHandler.writeCollection(collection, settings.cloud);
-        
+
         console.log('INFO: Metadata collection complete. Analyzing...');
         console.log('INFO: Analysis complete. Scan report to follow...');
 
@@ -110,13 +110,14 @@ var engine = function(cloudConfig, settings) {
             if (skippedPlugins.indexOf(key) > -1) return pluginDone(null, 0);
 
             plugin.run(collection, settings, function(err, results) {
+                if (!results.length) return console.log('ERROR: Nothing to report...');
                 for (var r in results) {
                     // If we have suppressed this result, then don't process it
                     // so that it doesn't affect the return code.
                     if (suppressionFilter([key, results[r].region || 'any', results[r].resource || 'any'].join(':'))) {
                         continue;
                     }
-                    
+
                     var complianceMsg = [];
                     if (settings.compliance && settings.compliance.length) {
                         settings.compliance.forEach(function(c){
