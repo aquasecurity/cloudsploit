@@ -156,7 +156,7 @@ describe('bucketPublicAccessBlock', function () {
 
         it('should PASS if S3 bucket has public access block fully enabled', function (done) {
             const cache = createCache([listBuckets[0]], getPublicAccessBlock[0], getCallerIdentity[0]);
-            const settings = { check_global_block: false };
+            const settings = { check_global_block: 'false' };
             bucketPublicAccessBlock.run(cache, settings, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -200,7 +200,7 @@ describe('bucketPublicAccessBlock', function () {
 
         it('should FAIL if S3 bucket is missing public access block', function (done) {
             const cache = createCache([listBuckets[0]], getPublicAccessBlock[1], getCallerIdentity[0]);
-            bucketPublicAccessBlock.run(cache, { check_global_block: false }, (err, results) => {
+            bucketPublicAccessBlock.run(cache, { check_global_block: 'false' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -209,7 +209,7 @@ describe('bucketPublicAccessBlock', function () {
 
         it('should FAIL if public access block not found', function (done) {
             const cache = createCacheNoPublicAccessBlock([listBuckets[0]]);
-            bucketPublicAccessBlock.run(cache, { check_global_block: false }, (err, results) => {
+            bucketPublicAccessBlock.run(cache, { check_global_block: 'false' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -220,7 +220,7 @@ describe('bucketPublicAccessBlock', function () {
             const cache = createCacheNoPublicAccessBlock([listBuckets[0]]);
             bucketPublicAccessBlock.run(cache, {
                 s3_public_access_block_allow_pattern: listBuckets[0].Name,
-                check_global_block: false
+                check_global_block: 'false'
             }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);

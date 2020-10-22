@@ -19,14 +19,14 @@ module.exports = {
             name: 'Check Global Block',
             description: 'When set, check account level public access for S3 and override bucket level public access check.',
             regex: '^(true|false)$',
-            default: true
+            default: 'true'
         }
     },
 
     run: function(cache, settings, callback) {
         var config = {
             s3_public_access_block_allow_pattern: settings.s3_public_access_block_allow_pattern || this.settings.s3_public_access_block_allow_pattern.default,
-            check_global_block: (settings.check_global_block === false) ? false : this.settings.check_global_block.default
+            check_global_block: settings.check_global_block || this.settings.check_global_block.default
         };
         var custom = helpers.isCustom(settings, this.settings);
 
@@ -50,7 +50,7 @@ module.exports = {
 
         var missingBlocks = null;
 
-        if (config.check_global_block) {
+        if (config.check_global_block === 'true') {
             var accountPublicAccessBlock = helpers.addSource(cache, source, ['s3control', 'getPublicAccessBlock', region, accountId]);
 
             if (!accountPublicAccessBlock ||
