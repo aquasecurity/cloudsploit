@@ -92,6 +92,7 @@ module.exports = {
         'ebsEncryptedSnapshots'         : require(__dirname + '/plugins/aws/ec2/ebsEncryptedSnapshots.js'),
         'ebsUnusedVolumes'              : require(__dirname + '/plugins/aws/ec2/ebsUnusedVolumes.js'),
         'ec2MetadataOptions'            : require(__dirname + '/plugins/aws/ec2/ec2MetadataOptions.js'),
+        'unusedVpcInternetGateways'     : require(__dirname + '/plugins/aws/ec2/unusedVpcInternetGateways.js'),
 
         'efsEncryptionEnabled'          : require(__dirname + '/plugins/aws/efs/efsEncryptionEnabled.js'),
 
