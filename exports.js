@@ -220,6 +220,7 @@ module.exports = {
         'redshiftClusterCmkEncrypted'   : require(__dirname + '/plugins/aws/redshift/redshiftClusterCmkEncrypted.js'),
         'redshiftEncryptionEnabled'     : require(__dirname + '/plugins/aws/redshift/redshiftEncryptionEnabled.js'),
         'redshiftPubliclyAccessible'    : require(__dirname + '/plugins/aws/redshift/redshiftPubliclyAccessible.js'),
+        'redshiftSSLEnabled'            : require(__dirname + '/plugins/aws/redshift/redshiftSSLEnabled.js'),
 
         'transferLoggingEnabled'        : require(__dirname + '/plugins/aws/transfer/transferLoggingEnabled.js'),
 
