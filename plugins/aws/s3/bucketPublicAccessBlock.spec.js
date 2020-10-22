@@ -106,7 +106,7 @@ const createCacheErrorListBucket = () => {
             listBuckets: {
                 'us-east-1': {
                     err: {
-                        message: 'error while listing S3 bucket',
+                        message: 'error while listing S3 buckets',
                     },
                 },
             },
