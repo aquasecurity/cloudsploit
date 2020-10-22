@@ -140,7 +140,7 @@ describe('openCustomPorts', function () {
 
         it('should PASS if no security groups found', function (done) {
             const cache = createCache([]);
-            openCustomPorts.run(cache, {}, (err, results) => {
+            openCustomPorts.run(cache, { restricted_open_ports: 'tcp:22' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -149,7 +149,7 @@ describe('openCustomPorts', function () {
 
         it('should UNKNOWN if unable to describe security groups', function (done) {
             const cache = createErrorCache();
-            openCustomPorts.run(cache, {}, (err, results) => {
+            openCustomPorts.run(cache, { restricted_open_ports: 'tcp:22' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -158,7 +158,7 @@ describe('openCustomPorts', function () {
 
         it('should not return any results if describe security groups response not found', function (done) {
             const cache = createNullCache();
-            openCustomPorts.run(cache, {}, (err, results) => {
+            openCustomPorts.run(cache, { restricted_open_ports: 'tcp:22' }, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });

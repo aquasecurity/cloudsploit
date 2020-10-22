@@ -12,9 +12,9 @@ module.exports = {
     settings: {
         restricted_open_ports: {
             name: 'Restricted Open Ports',
-            description: 'Comma separated list of ports that should be restricted to be publicly open',
+            description: 'Comma separated list of ports that should be restricted and not publicly open',
             regex: '[a-zA-Z0-9,:]',
-            default: 'tcp:22,tcp:23'
+            default: ''
         },
     },
 
@@ -24,6 +24,9 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var restricted_open_ports = settings.restricted_open_ports || this.settings.restricted_open_ports.default;
+
+        if (!restricted_open_ports.length) return callback();
+
         restricted_open_ports = restricted_open_ports.split(',');
 
         var ports = {};
