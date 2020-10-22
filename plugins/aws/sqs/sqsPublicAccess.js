@@ -70,8 +70,7 @@ module.exports = {
 
                     if (statement.Effect &&
                         statement.Effect === 'Allow' &&
-                        statement.Principal &&
-                        statement.Principal === '*') {
+                        helpers.globalPrincipal(statement.Principal)) {
                         publicStatements.push(statement);
                     }
                 }
