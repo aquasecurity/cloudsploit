@@ -21,13 +21,20 @@ module.exports = {
             description: 'Return a warning result when IAM roles exceed this number of days without being used',
             regex: '^[1-9]{1}[0-9]{0,3}$',
             default: 90
+        },
+        iam_role_ignore_path: {
+            name: 'IAM Role Policies Ignore Path',
+            description: 'Ignores roles that contain the provided exact-match path',
+            regex: '^[0-9A-Za-z/._-]{3,512}$',
+            default: false
         }
     },
 
     run: function(cache, settings, callback) {
         var config = {
             iam_role_last_used_fail: settings.iam_role_last_used_fail || this.settings.iam_role_last_used_fail.default,
-            iam_role_last_used_warn: settings.iam_role_last_used_warn || this.settings.iam_role_last_used_warn.default
+            iam_role_last_used_warn: settings.iam_role_last_used_warn || this.settings.iam_role_last_used_warn.default,
+            iam_role_ignore_path: settings.iam_role_ignore_path || this.settings.iam_role_ignore_path.default
         };
 
         var custom = helpers.isCustom(settings, this.settings);
@@ -55,6 +62,14 @@ module.exports = {
 
         async.each(listRoles.data, function(role, cb){
             if (!role.RoleName) return cb();
+
+            // Skip roles with user-defined paths
+            if (config.iam_role_ignore_path &&
+                config.iam_role_ignore_path.length &&
+                role.Path &&
+                role.Path.indexOf(config.iam_role_ignore_path) > -1) {
+                return cb();
+            }
 
             // Get role details
             var getRole = helpers.addSource(cache, source,
