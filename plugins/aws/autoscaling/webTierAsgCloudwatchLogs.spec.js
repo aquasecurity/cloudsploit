@@ -272,7 +272,7 @@ describe('webTierAsgCloudWatchLogs', function () {
     describe('run', function () {
         it('should PASS if Web-Tier Auto Scaling launch configuration has CloudWatch logs enabled', function (done) {
             const cache = createCache([describeAutoScalingGroups[0]], describeLaunchConfigurations[0]);
-            const settings = { s3_cw_agent_config_file: 's3://bucket-test-13/configFile.config' };
+            const settings = { s3_cw_agent_config_file: 's3://bucket-test-13/configFile.config', web_tier_tag_key: 'web_tier' };
             webTierAsgCloudWatchLogs.run(cache, settings, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -282,7 +282,7 @@ describe('webTierAsgCloudWatchLogs', function () {
 
         it('should FAIL if Web-Tier Auto Scaling launch configuration does not have CloudWatch logs enabled', function (done) {
             const cache = createCache([describeAutoScalingGroups[0]], describeLaunchConfigurations[1]);
-            webTierAsgCloudWatchLogs.run(cache, {}, (err, results) => {
+            webTierAsgCloudWatchLogs.run(cache, { web_tier_tag_key: 'web_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -291,7 +291,7 @@ describe('webTierAsgCloudWatchLogs', function () {
 
         it('should UNKNOWN if unable to describe launch configuration for Web-Tier Auto Scaling group', function (done) {
             const cache = createCache([describeAutoScalingGroups[0]]);
-            webTierAsgCloudWatchLogs.run(cache, {}, (err, results) => {
+            webTierAsgCloudWatchLogs.run(cache, { web_tier_tag_key: 'web_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -300,7 +300,7 @@ describe('webTierAsgCloudWatchLogs', function () {
 
         it('should PASS if no Web-Tier Auto Scaling groups found', function (done) {
             const cache = createCache([describeAutoScalingGroups[1]], describeLaunchConfigurations[2]);
-            webTierAsgCloudWatchLogs.run(cache, {}, (err, results) => {
+            webTierAsgCloudWatchLogs.run(cache, { web_tier_tag_key: 'web_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -309,7 +309,7 @@ describe('webTierAsgCloudWatchLogs', function () {
 
         it('should PASS if no Auto Scaling groups found', function (done) {
             const cache = createCache([]);
-            webTierAsgCloudWatchLogs.run(cache, {}, (err, results) => {
+            webTierAsgCloudWatchLogs.run(cache, { web_tier_tag_key: 'web_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -318,7 +318,7 @@ describe('webTierAsgCloudWatchLogs', function () {
 
         it('should UNKNOWN if unable to describe Auto Scaling groups', function (done) {
             const cache = createErrorCache();
-            webTierAsgCloudWatchLogs.run(cache, {}, (err, results) => {
+            webTierAsgCloudWatchLogs.run(cache, { web_tier_tag_key: 'web_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -327,7 +327,7 @@ describe('webTierAsgCloudWatchLogs', function () {
 
         it('should not return anything if no Auto Scaling groups found', function (done) {
             const cache = createNullCache();
-            webTierAsgCloudWatchLogs.run(cache, {}, (err, results) => {
+            webTierAsgCloudWatchLogs.run(cache, { web_tier_tag_key: 'web_tier' }, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });

@@ -14,7 +14,7 @@ module.exports = {
             name: 'Auto Scaling Web-Tier Tag Key',
             description: 'Web-Tier tag key used by Auto Scaling groups to indicate Web-Tier groups',
             regex: '^.*$',
-            default: 'web_tier'
+            default: ''
         },
         cw_log_agent_install_command: {
             name: 'Cloudwatch Agent Install Command',
@@ -42,6 +42,8 @@ module.exports = {
             cw_log_agent_install_command: settings.cw_log_agent_install_command || this.settings.cw_log_agent_install_command.default,
             s3_cw_agent_config_file: settings.s3_cw_agent_config_file || this.settings.s3_cw_agent_config_file.default
         };
+
+        if (!config.web_tier_tag_key.length) return callback();
 
         async.each(regions.autoscaling, function(region, rcb){
             var describeAutoScalingGroups = helpers.addSource(cache, source,
