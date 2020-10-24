@@ -79,8 +79,19 @@ const getUserPolicy = [
     }
 ];
 
-const createCache = (listUsers, listUserPolicies, listAttachedUserPolicies, getUserPolicy) => {
+const listGroups = [
+    {
+        "Path": "/",
+        "GroupName": "group1",
+        "GroupId": "AGPAYE32SRU5VIDOFGQPO",
+        "Arn": "arn:aws:iam::560213429563:group/group1",
+        "CreateDate": "2020-10-24T14:50:04.000Z"
+    }
+];
+
+const createCache = (listUsers, listPolicies, attachedPolicies, getPolicy, listGroups) => {
     var userName = (listUsers && listUsers.length) ? listUsers[0].UserName : null;
+    var groupName = (listGroups && listGroups.length) ? listGroups[0].GroupName : null;
     return {
         iam: {
             listUsers: {
@@ -92,7 +103,7 @@ const createCache = (listUsers, listUserPolicies, listAttachedUserPolicies, getU
                 'us-east-1': {
                     [userName]: {
                         data: {
-                            PolicyNames: listUserPolicies
+                            PolicyNames: listPolicies
                         }
                     }
                 }
@@ -101,7 +112,7 @@ const createCache = (listUsers, listUserPolicies, listAttachedUserPolicies, getU
                 'us-east-1': {
                     [userName]: {
                         data: {
-                            AttachedPolicies: listAttachedUserPolicies
+                            AttachedPolicies: attachedPolicies
                         }
                     }
                 }
@@ -109,7 +120,37 @@ const createCache = (listUsers, listUserPolicies, listAttachedUserPolicies, getU
             getUserPolicy: {
                 'us-east-1': {
                     [userName]: {
-                        data: getUserPolicy
+                        data: getPolicy
+                    }
+                }
+            },
+            listGroups: {
+                'us-east-1': {
+                    data: listGroups
+                }
+            },
+            listGroupsForUser: {
+                'us-east-1': {
+                    [userName]: {
+                        data: {
+                            Groups: listGroups
+                        }
+                    }
+                }
+            },
+            listAttachedGroupPolicies: {
+                'us-east-1': {
+                    [groupName]: {
+                        data: {
+                            AttachedPolicies: attachedPolicies
+                        }
+                    }
+                }
+            },
+            getGroupPolicy: {
+                'us-east-1': {
+                    [groupName]: {
+                        data: getPolicy
                     }
                 }
             }
@@ -167,7 +208,7 @@ describe('iamUserUnauthorizedToEdit', function () {
     describe('run', function () {
 
         it('should PASS if the IAM user does not have edit IAM access policies', function (done) {
-            const cache = createCache([listUsers[0]], [listUserPolicies[1]], [listAttachedUserPolicies[2]], getUserPolicy[0]);
+            const cache = createCache([listUsers[0]], [listUserPolicies[1]], [listAttachedUserPolicies[2]], getUserPolicy[0], [listGroups[0]]);
             iamUserUnauthorizedToEdit.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -205,15 +246,7 @@ describe('iamUserUnauthorizedToEdit', function () {
             });
         });
 
-        it('should not return any results if unable to list IAM users', function (done) {
-            const cache = createNullCache();
-            iamUserUnauthorizedToEdit.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(0);
-                done();
-            });
-        });
-
-        it('should UNKNOWN if error occurs while listing IAM users', function (done) {
+        it('should UNKNOWN if uanble to list IAM users', function (done) {
             const cache = createErrorCache();
             iamUserUnauthorizedToEdit.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -222,11 +255,19 @@ describe('iamUserUnauthorizedToEdit', function () {
             });
         });
 
-        it('should UNKNOWN if error occurs while listing IAM user policies', function (done) {
+        it('should UNKNOWN if uanble to list IAM user policies', function (done) {
             const cache = createListPoliciesErrorCache(listUsers);
             iamUserUnauthorizedToEdit.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(3);
+                done();
+            });
+        });
+
+        it('should not return any results if list IAM users response not found', function (done) {
+            const cache = createNullCache();
+            iamUserUnauthorizedToEdit.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(0);
                 done();
             });
         });

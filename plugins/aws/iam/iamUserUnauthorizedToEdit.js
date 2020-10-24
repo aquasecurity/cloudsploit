@@ -28,7 +28,9 @@ module.exports = {
     more_info: 'Only authorized IAM users should have permission to edit IAM access policies to prevent any unauthorized requests.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/access_controlling.html',
     recommended_action: 'Update unauthorized IAM users to remove permissions to edit IAM access policies.',
-    apis: ['IAM:listUsers', 'IAM:listUserPolicies', 'IAM:listAttachedUserPolicies', 'IAM:getUserPolicy'],
+    apis: ['IAM:listUsers', 'IAM:listUserPolicies', 'IAM:listAttachedUserPolicies',
+        'IAM:listGroupsForUser', 'IAM:listGroups', 'IAM:listGroupPolicies', 
+        'IAM:listAttachedGroupPolicies', 'IAM:getUserPolicy', 'IAM:getGroupPolicy'],
     compliance: {
         pci: 'PCI requires that cardholder data can only be accessed by those with ' +
              'a legitimate business need. Limiting the number of IAM administrators ' +
@@ -58,7 +60,7 @@ module.exports = {
 
         if (listUsers.err || !listUsers.data) {
             helpers.addResult(results, 3,
-                'Unable to query for user IAM policy status: ' + helpers.addError(listUsers));
+                `Unable to query for user IAM policy status: ${helpers.addError(listUsers)}`);
             return callback(null, results, source);
         }
 
@@ -66,6 +68,8 @@ module.exports = {
             helpers.addResult(results, 0, 'No user accounts found');
             return callback(null, results, source);
         }
+
+        var restrictedUser = {};
 
         async.each(listUsers.data, function(user, cb){
             if (!user.UserName) return cb();
@@ -78,33 +82,38 @@ module.exports = {
             var listUserPolicies = helpers.addSource(cache, source,
                 ['iam', 'listUserPolicies', region, user.UserName]);
 
-            if (!listAttachedUserPolicies || listAttachedUserPolicies.err || !listAttachedUserPolicies.data) {
-                helpers.addResult(results, 3,
-                    'Unable to query for IAM attached policy for user: ' + user.UserName + ': ' + helpers.addError(listAttachedUserPolicies), 'global', user.Arn);
-                return cb();
-            }
-                
-            if (!listUserPolicies || listUserPolicies.err || !listUserPolicies.data) {
-                helpers.addResult(results, 3,
-                    'Unable to query for IAM user policy for user: ' + user.UserName + ': ' + helpers.addError(listUserPolicies), 'global', user.Arn);
-                return cb();
-            }
-        
+            var listGroupsForUser = helpers.addSource(cache, source,
+                ['iam', 'listGroupsForUser', region, user.UserName]);
+
             var getUserPolicy = helpers.addSource(cache, source,
                 ['iam', 'getUserPolicy', region, user.UserName]);
 
+            if (!listAttachedUserPolicies || listAttachedUserPolicies.err) {
+                helpers.addResult(results, 3,
+                    `Unable to query for IAM attached policy for user: ${user.UserName}: ${helpers.addError(listAttachedUserPolicies)}`, 'global', user.Arn);
+                return cb();
+            }
+                
+            if (!listUserPolicies || listUserPolicies.err) {
+                helpers.addResult(results, 3,
+                    `Unable to query for IAM user policy for user: ${user.UserName}: ${helpers.addError(listUserPolicies)}`, 'global', user.Arn);
+                return cb();
+            }
 
-            var restrictedPermissions = [];
+            if (!listGroupsForUser || listGroupsForUser.err) {
+                helpers.addResult(results, 3,
+                    `Unable to query for IAM user groups for user: ${user.UserName}: ${helpers.addError(listGroupsForUser)}`, 'global', user.Arn);
+                return cb();
+            }
 
             // See if user has administrator access or IAM full access
-            if (listAttachedUserPolicies.data.AttachedPolicies) {
-
+            if (listAttachedUserPolicies.data && listAttachedUserPolicies.data.AttachedPolicies) {
                 for (var p in listAttachedUserPolicies.data.AttachedPolicies) {
-                    var policy = listAttachedUserPolicies.data.AttachedPolicies[p];
+                    let policy = listAttachedUserPolicies.data.AttachedPolicies[p];
 
                     if (policy.PolicyArn === adminAccessArn ||
                         policy.PolicyArn === iamFullAccessArn) {
-                        restrictedPermissions.push(policy.PolicyName);
+                        addPolicyToUserObj(restrictedUser, user, policy.PolicyName);
                     }
                 }
             }
@@ -113,34 +122,98 @@ module.exports = {
             if (listUserPolicies.data.PolicyNames) {
 
                 for (var up in listUserPolicies.data.PolicyNames) {
-                    var policyName = listUserPolicies.data.PolicyNames[up];
+                    let policyName = listUserPolicies.data.PolicyNames[up];
 
                     if (getUserPolicy &&
                         getUserPolicy[policyName] &&
                         getUserPolicy[policyName].data &&
                         getUserPolicy[policyName].data.PolicyDocument) {
 
-                        var statements = helpers.normalizePolicyDocument(
+                        let statements = helpers.normalizePolicyDocument(
                             getUserPolicy[policyName].data.PolicyDocument);
                         if (!statements) break;
 
                         // Loop through statements to see if admin privileges
                         for (var s in statements) {
-                            var statement = statements[s];
+                            let statement = statements[s];
 
                             if (statement.Effect === 'Allow' &&
                                 (statement.Action.indexOf('iam:*') > -1 ||
                                 iamEditAccessPermissions.some(permission=> statement.Action.includes(permission)))) {
-                                restrictedPermissions.push(policyName);
+                                addPolicyToUserObj(restrictedUser, user, policyName);
                             }
                         }
                     }
                 }
             }
 
-            if (!helpers.isValidArray(restrictedPermissions)) {
+            // See if user is in a group allowing admin access
+            if (listGroupsForUser.data &&
+                listGroupsForUser.data.Groups) {
+
+                for (var g in listGroupsForUser.data.Groups) {
+                    var group = listGroupsForUser.data.Groups[g];
+
+                    // Get managed policies attached to group
+                    var listAttachedGroupPolicies = helpers.addSource(cache, source,
+                        ['iam', 'listAttachedGroupPolicies', region, group.GroupName]);
+
+                    // Get inline policies attached to group
+                    var listGroupPolicies = helpers.addSource(cache, source,
+                        ['iam', 'listGroupPolicies', region, group.GroupName]);
+
+                    var getGroupPolicy = helpers.addSource(cache, source,
+                        ['iam', 'getGroupPolicy', region, group.GroupName]);
+
+                    // See if group has admin managed policy
+                    if (listAttachedGroupPolicies &&
+                        listAttachedGroupPolicies.data &&
+                        listAttachedGroupPolicies.data.AttachedPolicies) {
+
+                        for (var a in listAttachedGroupPolicies.data.AttachedPolicies) {
+                            let policyAttached = listAttachedGroupPolicies.data.AttachedPolicies[a];
+                            if (policyAttached.PolicyArn === adminAccessArn ||
+                                policyAttached.PolicyArn === iamFullAccessArn) {
+                                addPolicyToUserObj(restrictedUser, user, policyAttached.PolicyName);
+                            }
+                        }
+                    }
+
+                    // See if group has admin inline policy
+                    if (listGroupPolicies &&
+                        listGroupPolicies.data &&
+                        listGroupPolicies.data.PolicyNames) {
+
+                        for (var q in listGroupPolicies.data.PolicyNames) {
+                            let policyGroupName = listGroupPolicies.data.PolicyNames[q];
+
+                            if (getGroupPolicy &&
+                                getGroupPolicy[policyGroupName] &&
+                                getGroupPolicy[policyGroupName].data &&
+                                getGroupPolicy[policyGroupName].data.PolicyDocument) {
+                                var statementsGroup = helpers.normalizePolicyDocument(
+                                    getGroupPolicy[policyGroupName].data.PolicyDocument);
+                                if (!statementsGroup) break;
+
+                                // Loop through statements to see if admin privileges
+                                for (s in statementsGroup) {
+                                    let statementGroup = statementsGroup[s];
+
+                                    if (statementGroup.Effect === 'Allow' &&
+                                        (statementGroup.Action.indexOf('iam:*') > -1 ||
+                                        iamEditAccessPermissions.some(permission=> statementGroup.Action.includes(permission)))) {
+                                        addPolicyToUserObj(restrictedUser, user, policyGroupName);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (!restrictedUser[user.Arn]) {
                 helpers.addResult(results, 0,
-                    `IAM user "${user.UserName}" does not have or is authorized to have edit access policies permission`,
+                    `IAM user "${user.UserName}" does not have edit access policies permission`,
                     'global', user.Arn);
             } else if (whitelisted_users.includes(user.Arn)) {
                 helpers.addResult(results, 0,
@@ -148,7 +221,7 @@ module.exports = {
                     'global', user.Arn);
             } else {
                 helpers.addResult(results, 2,
-                    `IAM user "${user.UserName}" is not authorized to have these permissions: ${restrictedPermissions.join(', ')}`,
+                    `IAM user "${user.UserName}" is not authorized to have these policies attached: ${restrictedUser[user.Arn].policyNames.join(', ')}`,
                     'global', user.Arn);
             }
 
@@ -158,3 +231,9 @@ module.exports = {
         });
     }
 };
+
+function addPolicyToUserObj(userObj, user, policy) {
+    if (userObj[user.Arn]) {
+        if (!userObj[user.Arn].policyNames.includes(policy)) userObj[user.Arn].policyNames.push(policy);
+    } else userObj[user.Arn] = {name: user.UserName, policyNames: [policy]};
+}
