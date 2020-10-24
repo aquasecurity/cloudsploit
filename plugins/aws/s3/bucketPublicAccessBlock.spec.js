@@ -134,7 +134,7 @@ const createCacheErrorGetPublicAccessBlock = (listBuckets) => {
                 'us-east-1': {
                     [listBuckets[0].Name]: {
                         err: {
-                            message: 'error describing get public access block',
+                            message: 'error describing S3 public access block',
                         },
                     },
                 },
