@@ -14,7 +14,7 @@ module.exports = {
             name: 'Whitelisted Open Ports',
             description: 'A comma-delimited list of ports that indicates open ports allowed for any connection. Example: tcp:80,tcp:443',
             regex: '[a-zA-Z0-9,:]',
-            default: 'tco:80'
+            default: ''
         }
     },
 
