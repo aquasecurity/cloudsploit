@@ -4,17 +4,17 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Allowed Custom Ports',
     category: 'EC2',
-    description: 'Ensures that the defined ports are not exposed publicly',
+    description: 'Ensures that security groups does not allow public access to any port.',
     more_info: 'Security groups should be used to restrict access to ports from known networks.',
     link: 'https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html',
-    recommended_action: 'Modify the security group to ensure the ports are not exposed publicly.',
+    recommended_action: 'Modify the security group to ensure the ports are not exposed publicly',
     apis: ['EC2:describeSecurityGroups'],
     settings: {
-        open_port_allowed_list: {
-            name: 'EC2 Allowed Open Ports',
-            description: 'A comma-delimited list of ports that indicates open ports allowed for any connection',
+        whitelisted_open_ports: {
+            name: 'Whitelisted Open Ports',
+            description: 'A comma-delimited list of ports that indicates open ports allowed for any connection. Example: tcp:80,tcp:443',
             regex: '[a-zA-Z0-9,:]',
-            default: 'tcp:80,tcp:443'
+            default: 'tco:80'
         }
     },
 
@@ -24,11 +24,15 @@ module.exports = {
         var regions = helpers.regions(settings);
         var awsOrGov = helpers.defaultPartition(settings);
 
-        var allowed_open_ports = settings.open_port_allowed_list || this.settings.open_port_allowed_list.default;
-        allowed_open_ports = allowed_open_ports.split(',');
+        var whitelisted_open_ports = settings.whitelisted_open_ports || this.settings.whitelisted_open_ports.default;
+        
+        if (!whitelisted_open_ports.length) return callback();
+
+        whitelisted_open_ports = whitelisted_open_ports.split(',');
+
 
         var ports = {};
-        allowed_open_ports.forEach(port => {
+        whitelisted_open_ports.forEach(port => {
             var [protocol, portNo] = port.split(':');
             if (ports[protocol]) {
                 ports[protocol].push(Number(portNo));
