@@ -27,6 +27,12 @@ module.exports = {
             description: 'Ignores roles that contain the provided exact-match path',
             regex: '^[0-9A-Za-z/._-]{3,512}$',
             default: false
+        },
+        skip_aws_service_roles: {
+            name: 'Skip AWS Service Roles',
+            description: 'Ignores AWS service roles',
+            regex: '^(true|false)$',
+            default: 'true'
         }
     },
 
@@ -34,9 +40,11 @@ module.exports = {
         var config = {
             iam_role_last_used_fail: settings.iam_role_last_used_fail || this.settings.iam_role_last_used_fail.default,
             iam_role_last_used_warn: settings.iam_role_last_used_warn || this.settings.iam_role_last_used_warn.default,
-            iam_role_ignore_path: settings.iam_role_ignore_path || this.settings.iam_role_ignore_path.default
+            iam_role_ignore_path: settings.iam_role_ignore_path || this.settings.iam_role_ignore_path.default,
+            skip_aws_service_roles: settings.skip_aws_service_roles || this.settings.skip_aws_service_roles.default
         };
 
+        config.skip_aws_service_roles = (config.skip_aws_service_roles == 'true');
         var custom = helpers.isCustom(settings, this.settings);
 
         var results = [];
@@ -61,7 +69,7 @@ module.exports = {
         }
 
         async.each(listRoles.data, function(role, cb){
-            if (!role.RoleName) return cb();
+            if (!role.RoleName || (config.skip_aws_service_roles && role.Path && role.Path.startsWith('/aws-service-role/'))) return cb();
 
             // Skip roles with user-defined paths
             if (config.iam_role_ignore_path &&
