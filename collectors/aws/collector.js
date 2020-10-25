@@ -757,7 +757,8 @@ var postcalls = [
             describeLoadBalancerPolicies: {
                 reliesOnService: 'elb',
                 reliesOnCall: 'describeLoadBalancers',
-                override: true
+                filterKey: 'LoadBalancerName',
+                filterValue: 'LoadBalancerName'
             },
             describeLoadBalancerAttributes: {
                 reliesOnService: 'elb',
