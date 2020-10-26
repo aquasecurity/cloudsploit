@@ -56,7 +56,7 @@ module.exports = {
                 var non_https_listeners = [];
                 lb.ListenerDescriptions.forEach(function(listener){
                     // if it is not https add errors to results
-                    if (listener.Listener.Protocol !== 'HTTPS'){
+                    if (listener.Listener.Protocol !== 'HTTPS' && listener.Listener.Protocol !== 'SSL'){
                         non_https_listeners.push(
                             `${listener.Listener.Protocol}/${listener.Listener.LoadBalancerPort}`
                         );
