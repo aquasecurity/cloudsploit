@@ -321,6 +321,12 @@ var calls = {
             paginate: 'nextToken'
         }
     },
+    ECS: {
+        listClusters: {
+            property: 'clusterArns',
+            paginate: 'nextToken'
+        }
+    },
     ElasticBeanstalk: {
         describeEnvironments: {
             property: 'Environments',
@@ -744,6 +750,23 @@ var postcalls = [
                 reliesOnService: 'eks',
                 reliesOnCall: 'listClusters',
                 override: true
+            },
+            listNodegroups: {
+                reliesOnService: 'eks',
+                reliesOnCall: 'listClusters',
+                override: true
+            }
+        },
+        ECS: {
+            describeCluster: {
+                reliesOnService: 'ecs',
+                reliesOnCall: 'listClusters',
+                override: true
+            },
+            listContainerInstances: {
+                reliesOnService: 'ecs',
+                reliesOnCall: 'listClusters',
+                override: true
             }
         },
         ElasticBeanstalk: {
@@ -1007,6 +1030,13 @@ var postcalls = [
                 filterKey: 'RoleName',
                 filterValue: 'RoleName'
             }
+        },
+        EKS:{
+            describeNodegroups: {
+                reliesOnService: 'eks',
+                reliesOnCall: 'listClusters',
+                override: true
+            }
         }
     }
 ];
@@ -1154,7 +1184,8 @@ var collect = function(AWSConfig, settings, callback) {
                             !collection[callObj.reliesOnService][callObj.reliesOnCall] ||
                             !collection[callObj.reliesOnService][callObj.reliesOnCall][region] ||
                             !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data ||
-                            !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data.length)) return regionCb();
+                            !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data.length))
+                            return regionCb();
 
                         var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
                         if (callObj.deleteRegion) {
