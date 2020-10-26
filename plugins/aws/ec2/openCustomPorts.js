@@ -12,7 +12,7 @@ module.exports = {
     settings: {
         restricted_open_ports: {
             name: 'Restricted Open Ports',
-            description: 'Comma separated list of ports that should be restricted and not publicly open',
+            description: 'Comma separated list of ports that should be restricted and not publicly open. Example: tcp:80,tcp:443',
             regex: '[a-zA-Z0-9,:]',
             default: ''
         },
