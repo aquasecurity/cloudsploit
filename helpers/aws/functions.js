@@ -253,6 +253,14 @@ function nullArray(object) {
     return object;
 }
 
+let divideArray = function(array, size) {
+    var arrayOfArrays = [];
+    while (array.length > 0) {
+        arrayOfArrays.push(array.splice(0, size));
+    }
+    return arrayOfArrays;
+};
+
 function remediatePasswordPolicy(putCall, pluginName, remediation_file, passwordKey, config, cache, settings, resource, input, callback) {
     config.region = defaultRegion({});
     var params;
@@ -541,6 +549,7 @@ module.exports = {
     defaultPartition: defaultPartition,
     remediatePlugin: remediatePlugin,
     nullArray: nullArray,
+    divideArray:divideArray,
     remediatePasswordPolicy:remediatePasswordPolicy,
     remediateOpenPorts: remediateOpenPorts
 };
