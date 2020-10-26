@@ -65,6 +65,7 @@ var calls = {
             params: {
                 MaxRecords: 100
             }
+        }
     },
     CloudFormation: {
         describeStacks: {
