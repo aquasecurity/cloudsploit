@@ -36,27 +36,13 @@ module.exports = {
             }
 
             vaults.data.forEach(function(vault) {
-                let vaultProperties = vault.properties;
-                let enablePurgeProtection = false;
-                let enableSoftDelete = false;
-
-                if (vaultProperties &&
-                    vaultProperties.enablePurgeProtection) {
-                    enablePurgeProtection = true;
-                }
-
-                if (vaultProperties &&
-                    vaultProperties.enableSoftDelete) {
-                    enableSoftDelete = true;
-                }
-
-                if (enablePurgeProtection && enableSoftDelete) {
+                if (vault.enablePurgeProtection && vault.enableSoftDelete) {
                     helpers.addResult(results, 0,
                         'Purge protection and soft delete are enabled for the Key Vault', location, vault.id);
                 } else {
                     let msg = [
-                        `Purge protection is ${enablePurgeProtection ? '' : 'not'} enabled.`,
-                        `Soft delete is ${enableSoftDelete ? '' : 'not'} enabled.`
+                        `Purge protection is ${vault.enablePurgeProtection ? '' : 'not'} enabled.`,
+                        `Soft delete is ${vault.enableSoftDelete ? '' : 'not'} enabled.`
                     ];
                     helpers.addResult(results, 2, msg.join(' '), location, vault.id);
                 }
