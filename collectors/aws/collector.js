@@ -65,7 +65,6 @@ var calls = {
             params: {
                 MaxRecords: 100
             }
-        },
     },
     CloudFormation: {
         describeStacks: {
@@ -479,6 +478,10 @@ var calls = {
         describeClusters: {
             property: 'Clusters',
             paginate: 'Marker'
+        },
+        describeClusterParameterGroups: {
+            property: 'ParameterGroups',
+            paginate: 'Marker'
         }
     },
     Route53Domains: {
@@ -557,6 +560,10 @@ var calls = {
             params: {
                 MaxResults: 50
             },
+            paginate: 'NextToken'
+        },
+        listAssociations: {
+            property: 'Associations',
             paginate: 'NextToken'
         }
     },
@@ -920,6 +927,14 @@ var postcalls = [
                 reliesOnCall: 'describeDBParameterGroups',
                 filterKey: 'DBParameterGroupName',
                 filterValue: 'DBParameterGroupName'
+            }
+        },
+        Redshift: {
+            describeClusterParameters: {
+                reliesOnService: 'redshift',
+                reliesOnCall: 'describeClusterParameterGroups',
+                filterKey: 'ParameterGroupName',
+                filterValue: 'ParameterGroupName'
             }
         },
         SageMaker: {

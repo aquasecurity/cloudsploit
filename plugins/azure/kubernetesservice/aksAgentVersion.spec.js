@@ -38,7 +38,7 @@ describe('aksAgentVersion', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(2);
                 expect(results[1].status).to.equal(2);
-                expect(results[1].message).to.include('does not have the latest Kubernetes version');
+                expect(results[1].message).to.include('does not have the cluster Kubernetes version');
                 expect(results[1].region).to.equal('eastus');
                 done()
             };
@@ -104,7 +104,7 @@ describe('aksAgentVersion', function() {
                 expect(results.length).to.equal(2);
                 results.forEach(result =>{
                     expect(result.status).to.equal(0);
-                    expect(result.message).to.include('has the latest Kubernetes version');
+                    expect(result.message).to.include('has the cluster Kubernetes version');
                     expect(result.region).to.equal('eastus');});
                 done()
             };
