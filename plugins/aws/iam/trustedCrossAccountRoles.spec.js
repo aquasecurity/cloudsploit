@@ -58,6 +58,13 @@ const createCache = (roles) => {
                     data: roles,
                 },
             },
+        },
+        sts: {
+            getCallerIdentity: {
+                'us-east-1': {
+                    data: '112233445566'
+                }
+            }
         }
     };
 };
@@ -99,7 +106,7 @@ describe('trustedCrossAccountRoles', function () {
 
         it('should PASS if cross-account role contains trusted account IDs', function (done) {
             const cache = createCache([roles[1]]);
-            trustedCrossAccountRoles.run(cache, {whitelisted_accounts:'123456654321'}, (err, results) => {
+            trustedCrossAccountRoles.run(cache, { whitelisted_aws_account_principals:'arn:aws:iam::123456654321:root' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();

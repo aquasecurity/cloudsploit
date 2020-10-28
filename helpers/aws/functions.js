@@ -194,10 +194,11 @@ function globalPrincipal(principal) {
     return false;
 }
 
-function crossAccountPrincipal(principal, accountId) {
+function crossAccountPrincipal(principal, accountId, fetchPrincipals = false) {
     if (typeof principal === 'string' &&
         /^[0-9]{12}$/.test(principal) &&
         principal !== accountId) {
+        if (fetchPrincipals) return [principal];
         return true;
     }
 
@@ -206,14 +207,19 @@ function crossAccountPrincipal(principal, accountId) {
         awsPrincipals = [awsPrincipals];
     }
 
+    var principals = [];
+    var response = false;
+
     for (var a in awsPrincipals) {
-        if (/^arn:aws:iam::[0-9]{12}.*/.test(awsPrincipals[a]) &&
+        if (/^arn:aws:iam|sts::[0-9]{12}.*/.test(awsPrincipals[a]) &&
             awsPrincipals[a].indexOf(accountId) === -1) {
-            return true;
+            if (!fetchPrincipals) return true;
+            principals.push(awsPrincipals[a]);
         }
     }
 
-    return false;
+    if (fetchPrincipals) response = principals;
+    return response;
 }
 
 function defaultRegion(settings) {
@@ -542,5 +548,5 @@ module.exports = {
     remediatePlugin: remediatePlugin,
     nullArray: nullArray,
     remediatePasswordPolicy:remediatePasswordPolicy,
-    remediateOpenPorts: remediateOpenPorts
+    remediateOpenPorts: remediateOpenPorts,
 };
