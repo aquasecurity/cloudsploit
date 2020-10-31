@@ -92,6 +92,8 @@ module.exports = {
         'instanceIamRole'               : require(__dirname + '/plugins/aws/ec2/instanceIamRole.js'),
         'ebsEncryptionEnabled'          : require(__dirname + '/plugins/aws/ec2/ebsEncryptionEnabled.js'),
         'ebsSnapshotPrivate'            : require(__dirname + '/plugins/aws/ec2/ebsSnapshotPrivate.js'),
+        'ebsSnapshotPublic'            : require(__dirname + '/plugins/aws/ec2/ebsSnapshotPublic.js'),
+
         'natMultiAz'                    : require(__dirname + '/plugins/aws/ec2/natMultiAz.js'),
         'defaultVpcInUse'               : require(__dirname + '/plugins/aws/ec2/defaultVpcInUse.js'),
         'defaultVpcExists'              : require(__dirname + '/plugins/aws/ec2/defaultVpcExists.js'),

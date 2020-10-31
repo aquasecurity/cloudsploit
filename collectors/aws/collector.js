@@ -756,6 +756,11 @@ var postcalls = [
                 reliesOnCall: 'describeVpcs',
                 override: true
             },
+            describeSnapshotAttribute: {
+                reliesOnService: 'ec2',
+                reliesOnCall: 'describeSnapshots',
+                override: true
+            }
         },
         ECR: {
             getRepositoryPolicy: {
