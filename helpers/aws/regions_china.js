@@ -22,6 +22,7 @@ module.exports = {
     cloudformation: regions,
     comprehend: [],
     configservice: regions,
+    dlm: regions,
     dms: regions,
     dax: ['cn-northwest-1'],
     dynamodb: regions,
