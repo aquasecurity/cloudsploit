@@ -138,7 +138,7 @@ module.exports = {
                         // Loop through statements to see if admin privileges
                         for (var s in statements) {
                             let statement = statements[s];
-                            console.log(statement);
+
                             if (helpers.userGlobalAccess(statement, iamEditAccessPermissions)) {
                                 addPolicyToUserObj(restrictedUser, user, policyName);
                             }
