@@ -16,6 +16,7 @@ module.exports = {
     route53: [],
     route53domains: [],
     s3: regions,
+    s3control: regions,
     cloudtrail: regions,
     cloudwatchlogs: regions,
     cloudformation: regions,
