@@ -352,6 +352,11 @@ var calls = {
             property: 'TargetGroups',
             paginate: 'NextMarker',
             paginateReqProp: 'Marker'
+        },
+        describeTargetHealth: {
+            property: 'TargetGroups',
+            paginate: 'NextMarker',
+            paginateReqProp: 'Marker'
         }
     },
     EMR: {
