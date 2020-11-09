@@ -49,7 +49,7 @@ module.exports = {
                     noListeners = false;
                     describeListeners.data.Listeners.forEach(function(listener){
                         // if it is not https add errors to results
-                        if (listener.Protocol != 'HTTPS'){
+                        if (listener.Protocol !== 'HTTPS' && listener.Listener.Protocol !== 'SSL'){
                             non_https_listener.push(
                                 listener.Protocol + ' / ' +
                                 listener.Port
