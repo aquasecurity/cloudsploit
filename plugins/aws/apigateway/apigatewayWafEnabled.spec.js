@@ -105,7 +105,7 @@ const createNullCache = () => {
 
 describe('apigatewayWafEnabled', function () {
     describe('run', function () {
-        it('should PASS if API Gateway API is associated with Web Application Firewall', function (done) {
+        it('should PASS if API Gateway API has WAF enabled for all stages', function (done) {
             const cache = createCache([getRestApis[0]], getStages[0]);
             apigatewayWafEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -114,7 +114,7 @@ describe('apigatewayWafEnabled', function () {
             });
         });
 
-        it('should FAIL if API Gateway API is not associated Web Application Firewall', function (done) {
+        it('should FAIL if API Gateway API does not have WAF enabled for stages', function (done) {
             const cache = createCache([getRestApis[0]], getStages[1]);
             apigatewayWafEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);

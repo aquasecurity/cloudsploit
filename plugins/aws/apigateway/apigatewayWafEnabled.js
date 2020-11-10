@@ -36,6 +36,8 @@ module.exports = {
 
             async.each(getRestApis.data, function(api, cb){
                 var resource = `arn:${awsOrGov}:apigateway:${region}::/restapis/${api.id}`;
+                var unassociatedStages = [];
+
                 var getStages = helpers.addSource(cache, source,
                     ['apigateway', 'getStages', region, api.id]);
 
@@ -48,7 +50,7 @@ module.exports = {
                     return cb();
                 }
 
-                if (!getStages.data.item) {
+                if (!getStages.data.item || !getStages.data.item.length) {
                     helpers.addResult(results, 0,
                         'No API Gateway Rest API Stages found',
                         region, resource);
@@ -56,16 +58,20 @@ module.exports = {
                 }
 
                 getStages.data.item.forEach(stage => {
-                    if(stage.webAclArn) {
-                        helpers.addResult(results, 0,
-                            `API Gateway API "${api.id}" is associated with Web Application Firewall`,
-                            region, resource);
-                    } else {
-                        helpers.addResult(results, 2,
-                            `API Gateway API "${api.id}" is not associated with Web Application Firewall`,
-                            region, resource);
+                    if (!stage.webAclArn && stage.stageName) {
+                        unassociatedStages.push(stage.stageName);
                     }
                 });
+
+                if (!unassociatedStages.length) {
+                    helpers.addResult(results, 0,
+                        `API Gateway API "${api.id}" has WAF enabled for all stages`,
+                        region, resource);
+                } else {
+                    helpers.addResult(results, 2,
+                        `API Gateway API "${api.id}" does not have WAF enabled for these stages: ${unassociatedStages.join(', ')}`,
+                        region, resource);
+                }
 
                 cb();
             });
