@@ -158,8 +158,8 @@ const describeTargetHealth = [
 ];
 
 const createCache = (elbv2, target, health) => {
-    if (elbv2 && elbv2.length) var lbDnsName = elbv2[0].DNSName;
-    if (target && target.TargetGroups) var targetArn = target.TargetGroups[0].TargetGroupArn;
+    var lbDnsName = (elbv2 && elbv2.length) ? elbv2[0].DNSName : null;
+    var targetArn = (target && target.TargetGroups) ? target.TargetGroups[0].TargetGroupArn : null;
 
     return {
         elbv2:{

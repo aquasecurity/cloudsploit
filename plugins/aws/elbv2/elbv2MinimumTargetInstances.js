@@ -37,7 +37,6 @@ module.exports = {
             async.each(describeLoadBalancers.data, function(elb, cb){
                 var resource = elb.LoadBalancerArn;
                 var healthyInstances = 0;
-                var targetsFound = false;
 
                 var describeTargetGroups = helpers.addSource(cache, source,
                     ['elbv2', 'describeTargetGroups', region, elb.DNSName]);
@@ -55,8 +54,6 @@ module.exports = {
                         region, resource);
                     return cb();
                 }
-
-                targetsFound = true;
 
                 async.each(describeTargetGroups.data.TargetGroups, function(targetGroup, tcb){
                     var describeTargetHealth = helpers.addSource(cache, source,
@@ -77,16 +74,14 @@ module.exports = {
                     tcb();
                 });
 
-                if(targetsFound) {
-                    if(healthyInstances >= 2) {
-                        helpers.addResult(results, 0,
-                            `Application/Network load balancer has ${healthyInstances} healthy instance(s) associated`,
-                            region, resource);
-                    } else {
-                        helpers.addResult(results, 2,
-                            `Application/Network load balancer has ${healthyInstances} healthy instance(s) associated`,
-                            region, resource);
-                    }
+                if(healthyInstances >= 2) {
+                    helpers.addResult(results, 0,
+                        `Application/Network load balancer has ${healthyInstances} healthy instance(s) associated`,
+                        region, resource);
+                } else {
+                    helpers.addResult(results, 2,
+                        `Application/Network load balancer has only ${healthyInstances} healthy instance(s) associated`,
+                        region, resource);
                 }
 
                 cb();
