@@ -1,8 +1,14 @@
 var async = require('async');
+var os = require('os');
 var exports = require('./exports.js');
+var opaExports = require('./opa_exports');
 var suppress = require('./postprocess/suppress.js');
 var output = require('./postprocess/output.js');
+var opaHelper = require('./helpers/opa/opaInstaller');
+var opaPolicyEval = require('./helpers/opa/opaPolicyExecutor');
+var fs = require('fs');
 
+var collectionFile = "./collection.json";
 /**
  * The main function to execute CloudSploit scans.
  * @param cloudConfig The configuration for the cloud provider.
@@ -32,7 +38,16 @@ var engine = function(cloudConfig, settings) {
         if (!plugins[settings.plugin]) return console.log(`ERROR: Invalid plugin: ${settings.plugin}`);
         console.log(`INFO: Testing plugin: ${plugins[settings.plugin].title}`);
     }
-
+    if (settings.opa) {
+        plugins = opaExports[settings.cloud];
+        var osType = os.type();
+        var opaPath;
+        if ( osType === 'Windows_NT') opaPath = 'opa.exe';
+        else opaPath = 'opa';
+        if (!fs.existsSync('opa')) {
+            opaHelper.downloadOPAforOs();
+        }
+    }
     // STEP 1 - Obtain API calls to make
     console.log('INFO: Determining API calls to make...');
 
@@ -130,54 +145,79 @@ var engine = function(cloudConfig, settings) {
         console.log('INFO: Analysis complete. Scan report to follow...');
 
         var maximumStatus = 0;
-
+        if (settings.opa){
+            // check if old collection is present,if so delete it
+            if( fs.existsSync(collectionFile)){
+                fs.unlinkSync(collectionFile)
+            }
+            // write the collection
+            fs.writeFileSync(collectionFile, JSON.stringify(collection, null, 4));
+        }
         async.mapValuesLimit(plugins, 10, function(plugin, key, pluginDone) {
             if (skippedPlugins.indexOf(key) > -1) return pluginDone(null, 0);
+            if ( !settings.opa ) {
+                plugin.run(collection, settings, function (err, results) {
+                    if (!results.length) return console.log('ERROR: Nothing to report...');
+                    for (var r in results) {
+                        // If we have suppressed this result, then don't process it
+                        // so that it doesn't affect the return code.
+                        if (suppressionFilter([key, results[r].region || 'any', results[r].resource || 'any'].join(':'))) {
+                            continue;
+                        }
 
-            plugin.run(collection, settings, function(err, results) {
-                if (!results.length) return console.log('ERROR: Nothing to report...');
-                for (var r in results) {
-                    // If we have suppressed this result, then don't process it
-                    // so that it doesn't affect the return code.
-                    if (suppressionFilter([key, results[r].region || 'any', results[r].resource || 'any'].join(':'))) {
-                        continue;
-                    }
+                        var complianceMsg = [];
+                        if (settings.compliance && settings.compliance.length) {
+                            settings.compliance.forEach(function (c) {
+                                if (plugin.compliance && plugin.compliance[c]) {
+                                    complianceMsg.push(`${c.toUpperCase()}: ${plugin.compliance[c]}`);
+                                }
+                            });
+                        }
+                        complianceMsg = complianceMsg.join('; ');
+                        if (!complianceMsg.length) complianceMsg = null;
 
-                    var complianceMsg = [];
-                    if (settings.compliance && settings.compliance.length) {
-                        settings.compliance.forEach(function(c) {
-                            if (plugin.compliance && plugin.compliance[c]) {
-                                complianceMsg.push(`${c.toUpperCase()}: ${plugin.compliance[c]}`);
-                            }
-                        });
-                    }
-                    complianceMsg = complianceMsg.join('; ');
-                    if (!complianceMsg.length) complianceMsg = null;
+                        // Write out the result (to console or elsewhere)
+                        outputHandler.writeResult(results[r], plugin, key, complianceMsg);
 
-                    // Write out the result (to console or elsewhere)
-                    outputHandler.writeResult(results[r], plugin, key, complianceMsg);
-
-                    // Add this to our tracking fo the worst status to calculate
-                    // the exit code
-                    maximumStatus = Math.max(maximumStatus, results[r].status);
-                    // Remediation
-                    if (settings.remediate && settings.remediate.length) {
-                        if (settings.remediate.indexOf(key) > -1) {
-                            if (results[r].status === 2) {
-                                var resource = results[r].resource;
-                                var event = {};
-                                event['remediation_file'] = {};
-                                event['remediation_file'] = initializeFile(event['remediation_file'], 'execute', key, resource);
-                                plugin.remediate(cloudConfig, collection, event, resource, (err, result) => {
-                                    if (err) return console.log(err);
-                                    return console.log(result);
-                                });
+                        // Add this to our tracking fo the worst status to calculate
+                        // the exit code
+                        maximumStatus = Math.max(maximumStatus, results[r].status);
+                        // Remediation
+                        if (settings.remediate && settings.remediate.length) {
+                            if (settings.remediate.indexOf(key) > -1) {
+                                if (results[r].status === 2) {
+                                    var resource = results[r].resource;
+                                    var event = {};
+                                    event['remediation_file'] = {};
+                                    event['remediation_file'] = initializeFile(event['remediation_file'], 'execute', key, resource);
+                                    plugin.remediate(cloudConfig, collection, event, resource, (err, result) => {
+                                        if (err) return console.log(err);
+                                        return console.log(result);
+                                    });
+                                }
                             }
                         }
                     }
-                }
-                setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
-            });
+                    setTimeout(function () {
+                        pluginDone(err, maximumStatus);
+                    }, 0);
+                });
+            } else{
+                opaPolicyEval.opaEval(plugin.path, collectionFile, opaPath, plugin.rules, plugin.messages,(err, results) => {
+                    if (err){
+                        return console.log(err);
+                    }
+                    // Write out the result (to console or elsewhere)
+                    var complianceMsg = [];
+                    for (var r in results) {
+                        outputHandler.writeResult(results[r], plugin, key, complianceMsg);
+                        maximumStatus = Math.max(maximumStatus, results[r].status);
+                    }
+                    setTimeout(function () {
+                        pluginDone(err, maximumStatus);
+                    }, 0);
+                });
+            }
         }, function(err) {
             if (err) return console.log(err);
             // console.log(JSON.stringify(collection, null, 2));
@@ -187,6 +227,10 @@ var engine = function(cloudConfig, settings) {
                 // the exit code depend on the results (useful for integration with CI systems)
                 console.log(`INFO: Exiting with exit code: ${maximumStatus}`);
                 process.exitCode = maximumStatus;
+            }
+            // check if  collection is present,if so delete it
+            if( fs.existsSync(collectionFile)){
+                fs.unlinkSync(collectionFile)
             }
             console.log('INFO: Scan complete');
         });
