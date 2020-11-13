@@ -28,6 +28,9 @@ module.exports = {
             s3_public_access_block_allow_pattern: settings.s3_public_access_block_allow_pattern || this.settings.s3_public_access_block_allow_pattern.default,
             check_global_block: settings.check_global_block || this.settings.check_global_block.default
         };
+
+        config.check_global_block = (config.check_global_block == 'true');
+
         var custom = helpers.isCustom(settings, this.settings);
 
         var results = [];
@@ -50,7 +53,7 @@ module.exports = {
 
         var globalMissingBlocks = null;
 
-        if (config.check_global_block === 'true') {
+        if (config.check_global_block) {
             var accountPublicAccessBlock = helpers.addSource(cache, source, ['s3control', 'getPublicAccessBlock', region, accountId]);
 
             if (!accountPublicAccessBlock ||
@@ -69,15 +72,12 @@ module.exports = {
             config.s3_public_access_block_allow_pattern.length) ? new RegExp(config.s3_public_access_block_allow_pattern) : false;
 
         for (let { Name: bucket } of listBuckets.data) {
-            if (config.check_global_block === 'true') { 
+            if (config.check_global_block) { 
                 if (!globalMissingBlocks.length) {
-                    helpers.addResult(results, 0, 'AWS account has public access block fully enabled', 'global');
-                } else {
-                    helpers.addResult(results, 2,
-                        `AWS account is missing public access blocks: ${globalMissingBlocks.join(', ')}`, 'global');
+                    helpers.addResult(results, 0, 'AWS account has public access block fully enabled', 'global', `arn:aws:s3:::${bucket}`);
+                    continue;
                 }
 
-                continue;
             }
 
             var getPublicAccessBlock = helpers.addSource(cache, source, ['s3', 'getPublicAccessBlock', region, bucket]);
@@ -86,7 +86,7 @@ module.exports = {
             if (allowRegex && allowRegex.test(bucket)) {
                 helpers.addResult(results, 0,
                     'Bucket: ' + bucket + ' is whitelisted via custom setting.',
-                    'global', 'arn:aws:s3:::' + bucket, custom);
+                    'global', `arn:aws:s3:::${bucket}`, custom);
             } else {
                 if (getPublicAccessBlock.err && getPublicAccessBlock.err.code === 'NoSuchPublicAccessBlockConfiguration') {
                     helpers.addResult(results, 2, 'S3 bucket does not have Public Access Block enabled', 'global', `arn:aws:s3:::${bucket}`);
