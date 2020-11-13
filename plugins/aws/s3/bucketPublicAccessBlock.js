@@ -77,7 +77,6 @@ module.exports = {
                     helpers.addResult(results, 0, 'AWS account has public access block fully enabled', 'global', `arn:aws:s3:::${bucket}`);
                     continue;
                 }
-
             }
 
             var getPublicAccessBlock = helpers.addSource(cache, source, ['s3', 'getPublicAccessBlock', region, bucket]);
