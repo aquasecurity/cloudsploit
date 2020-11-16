@@ -6,8 +6,8 @@ module.exports = {
             path: './plugins/aws/s3/bucketversioning.rego',
             apis: ['S3:listBuckets', 'S3:getBucketVersioning', 'S3:getBucketLocation'],
             rules: {
-                denied: "data.s3.bucketversioning.s3regionviolation",
-                allowed: "data.s3.bucketversioning.s3regionallowed"
+                denied: 'data.s3.bucketversioning.s3regionviolation',
+                allowed: 'data.s3.bucketversioning.s3regionallowed'
             },
             messages: {
                 arnTemplate: 'arn:aws:s3:::',

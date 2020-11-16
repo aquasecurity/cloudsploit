@@ -77,13 +77,6 @@ let settings = parser.parse_args();
 let cloudConfig = {};
 
 settings.cloud = 'aws';
-settings.opa = true;
-
-if (settings.opa){
-    // TBD: Start the opa server
-    var os = require('os');
-    osType = os.type();
-}
 // Now execute the scans using the defined configuration information.
 if (!settings.config) {
     // AWS will handle the default credential chain without needing a credential file

@@ -1,9 +1,8 @@
 // Installs the opa engine based on the user OS
 const os = require('os');
 const fs = require('fs');
-const  https = require('https');
 const request = require('request');
-const { exec,spawn, spawnSync } = require('child_process');
+const { exec } = require('child_process');
 
 var executeCommand = ( command, options, cb) => {
     exec(command, options, (err, stdout, stderr) => {
@@ -13,40 +12,40 @@ var executeCommand = ( command, options, cb) => {
         }
         return cb(null, stdout, stderr);
     });
-}
+};
 
-var downloadOPAforOscurl = () => {
-    var osType = os.type();
-    var command;
-    if ( osType === 'Windows_NT' ){
-        command = "curl -L -o opa.exe https://openpolicyagent.org/downloads/latest/opa_windows_amd64.exe";
-        // command = 'dir';
-    } else if ( osType === 'Linux' ){
-        //command = "curl -L -o opa https://openpolicyagent.org/downloads/latest/opa_linux_amd64";
-        command = 'ls';
-    } else if ( osType === 'Darwin' ){
-        //command = "curl -L -o opa https://openpolicyagent.org/downloads/latest/opa_darwin_amd64";
-        command = 'ls';
-    }
-    executeCommand(command, {}, (err) => {
-        if (err){
-            return console.error("Downloading opa failied for OS type " + osType + "with error " + err);
-        }
-    });
-}
+// var downloadOPAforOscurl = () => {
+//     var osType = os.type();
+//     var command;
+//     if ( osType === 'Windows_NT' ){
+//         command = "curl -L -o opa.exe https://openpolicyagent.org/downloads/latest/opa_windows_amd64.exe";
+//         // command = 'dir';
+//     } else if ( osType === 'Linux' ){
+//         //command = "curl -L -o opa https://openpolicyagent.org/downloads/latest/opa_linux_amd64";
+//         command = 'ls';
+//     } else if ( osType === 'Darwin' ){
+//         //command = "curl -L -o opa https://openpolicyagent.org/downloads/latest/opa_darwin_amd64";
+//         command = 'ls';
+//     }
+//     executeCommand(command, {}, (err) => {
+//         if (err){
+//             return console.error("Downloading opa failied for OS type " + osType + "with error " + err);
+//         }
+//     });
+// };
 
 var downloadOPAforOs = (callback) => {
     var osType = os.type();
     var opaurl;
     var opapath;
     if ( osType === 'Windows_NT' ){
-        opaurl = "https://openpolicyagent.org/downloads/latest/opa_windows_amd64.exe";
+        opaurl = 'https://openpolicyagent.org/downloads/latest/opa_windows_amd64.exe';
         opapath = 'opa.exe';
     } else if ( osType === 'Linux' ){
-        opaurl = "https://openpolicyagent.org/downloads/latest/opa_linux_amd64";
+        opaurl = 'https://openpolicyagent.org/downloads/latest/opa_linux_amd64';
         opapath = 'opa';
     } else if ( osType === 'Darwin' ){
-        opaurl = "https://openpolicyagent.org/downloads/latest/opa_darwin_amd64";
+        opaurl = 'https://openpolicyagent.org/downloads/latest/opa_darwin_amd64';
         opapath = 'opa';
     }
     if (fs.existsSync(opapath)) {
@@ -54,13 +53,13 @@ var downloadOPAforOs = (callback) => {
     }
     const file = fs.createWriteStream(opapath);
 
-    console.log('calling request')
+    console.log('calling request');
     const sendReq = request.get(opaurl);
 
     // verify response code
     sendReq.on('response', (response) => {
         if (response.statusCode !== 200) {
-            return cb('Response status was ' + response.statusCode);
+            return callback('Response status was ' + response.statusCode);
         }
         sendReq.pipe(file);
     });
@@ -70,18 +69,15 @@ var downloadOPAforOs = (callback) => {
 
     // check for request errors
     sendReq.on('error', (err) => {
-        fs.unlink(dest);
+        fs.unlink(opapath);
         return callback(err.message);
     });
 
     file.on('error', (err) => { // Handle errors
-        fs.unlink(dest); // Delete the file async. (But we don't check the result)
+        fs.unlink(opapath); // Delete the file async. (But we don't check the result)
         return callback(err.message);
     });
-}
-
-
-var runOPAEal = () =>{};
+};
 
 module.exports = {
     downloadOPAforOs: downloadOPAforOs,

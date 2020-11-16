@@ -8,7 +8,7 @@ var opaHelper = require('./helpers/opa/opaInstaller');
 var opaPolicyEval = require('./helpers/opa/opaPolicyExecutor');
 var fs = require('fs');
 
-var collectionFile = "./collection.json";
+var collectionFile = './collection.json';
 /**
  * The main function to execute CloudSploit scans.
  * @param cloudConfig The configuration for the cloud provider.
@@ -42,8 +42,12 @@ var engine = function(cloudConfig, settings) {
         plugins = opaExports[settings.cloud];
         var osType = os.type();
         var opaPath;
-        if ( osType === 'Windows_NT') opaPath = 'opa.exe';
-        else opaPath = 'opa';
+        if ( osType === 'Windows_NT') {
+            opaPath = 'opa.exe';
+        }
+        else {
+            opaPath = 'opa';
+        }
     }
     // STEP 1 - Obtain API calls to make
     console.log('INFO: Determining API calls to make...');
@@ -145,7 +149,7 @@ var engine = function(cloudConfig, settings) {
         if (settings.opa){
             // check if old collection is present,if so delete it
             if( fs.existsSync(collectionFile)){
-                fs.unlinkSync(collectionFile)
+                fs.unlinkSync(collectionFile);
             }
             // write the collection
             fs.writeFileSync(collectionFile, JSON.stringify(collection, null, 4));
@@ -153,7 +157,7 @@ var engine = function(cloudConfig, settings) {
         async.mapValuesLimit(plugins, 10, function(plugin, key, pluginDone) {
             if (skippedPlugins.indexOf(key) > -1) return pluginDone(null, 0);
             if ( !settings.opa ) {
-                plugin.run(collection, settings, function (err, results) {
+                plugin.run(collection, settings, function(err, results) {
                     if (!results.length) return console.log('ERROR: Nothing to report...');
                     for (var r in results) {
                         // If we have suppressed this result, then don't process it
@@ -164,7 +168,7 @@ var engine = function(cloudConfig, settings) {
 
                         var complianceMsg = [];
                         if (settings.compliance && settings.compliance.length) {
-                            settings.compliance.forEach(function (c) {
+                            settings.compliance.forEach(function(c) {
                                 if (plugin.compliance && plugin.compliance[c]) {
                                     complianceMsg.push(`${c.toUpperCase()}: ${plugin.compliance[c]}`);
                                 }
@@ -195,7 +199,7 @@ var engine = function(cloudConfig, settings) {
                             }
                         }
                     }
-                    setTimeout(function () {
+                    setTimeout(function(){
                         pluginDone(err, maximumStatus);
                     }, 0);
                 });
@@ -214,7 +218,7 @@ var engine = function(cloudConfig, settings) {
                             outputHandler.writeResult(results[r], plugin, key, complianceMsg);
                             maximumStatus = Math.max(maximumStatus, results[r].status);
                         }
-                        setTimeout(function () {
+                        setTimeout(function(){
                             pluginDone(err, maximumStatus);
                         }, 0);
                     });
@@ -232,7 +236,7 @@ var engine = function(cloudConfig, settings) {
             }
             // check if  collection is present,if so delete it
             if( fs.existsSync(collectionFile)){
-                fs.unlinkSync(collectionFile)
+                fs.unlinkSync(collectionFile);
             }
             console.log('INFO: Scan complete');
         });
