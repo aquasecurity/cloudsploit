@@ -1,6 +1,8 @@
 // Installs the opa engine based on the user OS
 const os = require('os');
 const fs = require('fs');
+const  https = require('https');
+const request = require('request');
 const { exec,spawn, spawnSync } = require('child_process');
 
 var executeCommand = ( command, options, cb) => {
@@ -28,7 +30,7 @@ var executeCommand = ( command, options, cb) => {
     // });
 }
 
-var downloadOPAforOs = () => {
+var downloadOPAforOscurl = () => {
     var osType = os.type();
     var command;
     if ( osType === 'Windows_NT' ){
@@ -46,12 +48,62 @@ var downloadOPAforOs = () => {
             return console.error("Downloading opa failied for OS type " + osType + "with error " + err);
         }
     });
-    //return osType;
 }
+
+var downloadOPAforOs = (callback) => {
+    var osType = os.type();
+    var opaurl;
+    var opapath;
+    if ( osType === 'Windows_NT' ){
+        opaurl = "https://openpolicyagent.org/downloads/latest/opa_windows_amd64.exe";
+        opapath = 'opa.exe';
+        // command = 'dir';
+    } else if ( osType === 'Linux' ){
+        //opaurl = "https://openpolicyagent.org/downloads/latest/opa_linux_amd64";
+        //opapath = 'opa'
+    } else if ( osType === 'Darwin' ){
+        //opaurl = "https://openpolicyagent.org/downloads/latest/opa_darwin_amd64";
+        //opapath = 'opa';
+    }
+    var file = fs.createWriteStream(opapath);
+
+    var request = https.get(opaurl, function(response) {
+        response.pipe(file);
+        file.on('finish', function() {
+            file.close(callback);  // close() is async, call cb after close completes.
+        });
+    }).on('error', function(err) { // Handle errors
+        console.error(err.message);
+        fs.unlink(opapath); // Delete the file async. (But we don't check the result)
+        if (callback) callback(err.message);
+    });
+
+    console.log('calling request')
+    // request({
+    //     uri: opaurl,
+    //     method: 'GET'},
+    //     function (error, response, body) {
+    //     console.log('after request');
+    //     console.error('error:', error); // Print the error if one occurred
+    //     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+    //     console.log('body:', body);
+    //     var file = fs.createWriteStream(opapath);
+    //     response.pipe(file);
+    //     file.on('finish', function () {
+    //         file.close(callback); // close() is async, call callback after close completes.
+    //     });
+    //     file.on('error', function (err) {
+    //         fs.unlink(opapath); // Delete the file async. (But we don't check the result)
+    //         if (callback)
+    //             callback(err.message);
+    //     });
+    // });
+}
+
 
 var runOPAEal = () =>{};
 
 module.exports = {
-    downloadOPAforOs: downloadOPAforOs,
+    downloadOPAforOs: downloadOPAforOscurl,
     executeCommand: executeCommand
 };

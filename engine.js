@@ -44,8 +44,12 @@ var engine = function(cloudConfig, settings) {
         var opaPath;
         if ( osType === 'Windows_NT') opaPath = 'opa.exe';
         else opaPath = 'opa';
-        if (!fs.existsSync('opa')) {
-            opaHelper.downloadOPAforOs();
+        if (!fs.existsSync(opaPath)) {
+            opaHelper.downloadOPAforOs((err) =>{
+                if (err){
+                    return console.log(err);
+                }
+            });
         }
     }
     // STEP 1 - Obtain API calls to make

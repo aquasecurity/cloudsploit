@@ -2,7 +2,6 @@ module.exports = {
     aws: {
         bucketVersioning:{
             title: 'S3 Bucket Versioning through OPA',
-            category: 'S3',
             description: 'Ensures object versioning is enabled on S3 buckets',
             path: './plugins/aws/s3/bucketversioning.rego',
             apis: ['S3:listBuckets', 'S3:getBucketVersioning', 'S3:getBucketLocation'],
