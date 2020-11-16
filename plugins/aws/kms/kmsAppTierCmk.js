@@ -8,11 +8,11 @@ module.exports = {
     more_info: 'Amazon KMS should have Customer Master Key (CMK) for App-Tier to protect data in transit.',
     recommended_action: 'Create a Customer Master Key (CMK) with App-Tier tag',
     link: 'https://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html',
-    apis: ['KMS:listKeys', 'KMS:listResourceTags'],
+    apis: ['KMS:listKeys', 'ResourceGroupsTaggingAPI:getTagKeys', 'KMS:listResourceTags'],
     settings: {
-        kms_app_tier_tag_key: {
-            name: 'KMS App-Tier Tag Key',
-            description: 'App-Tier tag key used by KMS Customer Master Keys to indicate App-Tier CMKs',
+        kms_cmk_tag_key: {
+            name: 'KMS CMK Tag Key',
+            description: 'When this tag key exists in the AWS account, there should also exist a KMS CMK having same tag key',
             regex: '^.*$',
             default: ''
         },
@@ -23,12 +23,34 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
         var config = {
-            kms_app_tier_tag_key: settings.kms_app_tier_tag_key || this.settings.kms_app_tier_tag_key.default
+            kms_cmk_tag_key: settings.kms_cmk_tag_key || this.settings.kms_cmk_tag_key.default
         };
 
-        if (!config.kms_app_tier_tag_key.length) return callback();
+        if (!config.kms_cmk_tag_key.length) return callback(null, results, source);
 
         async.each(regions.kms, function(region, rcb){
+            var getTagKeys = helpers.addSource(cache, source,
+                ['resourcegroupstaggingapi', 'getTagKeys', region]);
+
+            if (!getTagKeys) return rcb();
+
+            if (getTagKeys.err || !getTagKeys.data) {
+                helpers.addResult(results, 3,
+                    `Unable to get tag keys: ${helpers.addError(getTagKeys)}`, region);
+                return rcb();
+            }
+
+            if (!getTagKeys.data.length) {
+                helpers.addResult(results, 0, 'No tag keys found', region);
+                return rcb();
+            }
+
+            if (!getTagKeys.data.includes(config.kms_cmk_tag_key)) {
+                helpers.addResult(results, 0,
+                    `No key with "${config.kms_cmk_tag_key}" tag found`, region);
+                return rcb();
+            }
+
             var listKeys = helpers.addSource(cache, source,
                 ['kms', 'listKeys', region]);
 
@@ -42,31 +64,29 @@ module.exports = {
             }
 
             if (!listKeys.data.length) {
-                helpers.addResult(results, 0, 'No KMS keys found', region);
+                helpers.addResult(results, 2, 'No KMS keys found', region);
                 return rcb();
             }
 
             var appTierKmsKey = false;
 
             async.each(listKeys.data, function(kmsKey, kcb){
-                if(!appTierKmsKey) {
-                    var listResourceTags = helpers.addSource(cache, source,
-                        ['kms', 'listResourceTags', region, kmsKey.KeyId]);
-                    
-                    if (!listResourceTags || listResourceTags.err || !listResourceTags.data || !listResourceTags.data.Tags) {
-                        helpers.addResult(results, 3,
-                            `Unable to describe resource tags: ${helpers.addError(listResourceTags)}`,
-                            region, kmsKey.KeyArn);
-                        return kcb();
-                    }
+                var listResourceTags = helpers.addSource(cache, source,
+                    ['kms', 'listResourceTags', region, kmsKey.KeyId]);
+                
+                if (!listResourceTags || listResourceTags.err || !listResourceTags.data || !listResourceTags.data.Tags) {
+                    helpers.addResult(results, 3,
+                        `Unable to describe resource tags: ${helpers.addError(listResourceTags)}`,
+                        region, kmsKey.KeyArn);
+                    return kcb();
+                }
 
-                    var tags = listResourceTags.data;
-                    if(listResourceTags.data.Tags.length) {
-                        for(var i in listResourceTags.data.Tags) {
-                            if(tags.Tags[i].TagKey === config.app_tier_tag_key) {
-                                appTierKmsKey = true;
-                                break;
-                            }
+                if(listResourceTags.data.Tags.length) {
+                    for (var i in listResourceTags.data.Tags) {
+                        var kmsTag = listResourceTags.data.Tags[i];
+                        if (kmsTag.TagKey && kmsTag.TagKey === config.kms_cmk_tag_key) {
+                            appTierKmsKey = true;
+                            return kcb();
                         }
                     }
                 }
@@ -75,11 +95,11 @@ module.exports = {
             }, function(){
                 if(appTierKmsKey) {
                     helpers.addResult(results, 0,
-                        'App-Tier KMS Customer Master key is present',
+                        `KMS Customer Master key with "${config.kms_cmk_tag_key}" tag is present`,
                         region);
                 } else {
                     helpers.addResult(results, 2,
-                        'No App-Tier KMS Customer Master key found',
+                        `No KMS Customer Master key with "${config.kms_cmk_tag_key}" tag found`,
                         region);
                 }
 
