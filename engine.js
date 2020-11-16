@@ -44,13 +44,6 @@ var engine = function(cloudConfig, settings) {
         var opaPath;
         if ( osType === 'Windows_NT') opaPath = 'opa.exe';
         else opaPath = 'opa';
-        if (!fs.existsSync(opaPath)) {
-            opaHelper.downloadOPAforOs((err) =>{
-                if (err){
-                    return console.log(err);
-                }
-            });
-        }
     }
     // STEP 1 - Obtain API calls to make
     console.log('INFO: Determining API calls to make...');
@@ -207,19 +200,24 @@ var engine = function(cloudConfig, settings) {
                     }, 0);
                 });
             } else{
-                opaPolicyEval.opaEval(plugin.path, collectionFile, opaPath, plugin.rules, plugin.messages,(err, results) => {
-                    if (err){
+                opaHelper.downloadOPAforOs((err) => {
+                    if (err) {
                         return console.log(err);
                     }
-                    // Write out the result (to console or elsewhere)
-                    var complianceMsg = [];
-                    for (var r in results) {
-                        outputHandler.writeResult(results[r], plugin, key, complianceMsg);
-                        maximumStatus = Math.max(maximumStatus, results[r].status);
-                    }
-                    setTimeout(function () {
-                        pluginDone(err, maximumStatus);
-                    }, 0);
+                    opaPolicyEval.opaEval(plugin.path, collectionFile, opaPath, plugin.rules, plugin.messages, (err, results) => {
+                        if (err) {
+                            return console.log(err);
+                        }
+                        // Write out the result (to console or elsewhere)
+                        var complianceMsg = [];
+                        for (var r in results) {
+                            outputHandler.writeResult(results[r], plugin, key, complianceMsg);
+                            maximumStatus = Math.max(maximumStatus, results[r].status);
+                        }
+                        setTimeout(function () {
+                            pluginDone(err, maximumStatus);
+                        }, 0);
+                    });
                 });
             }
         }, function(err) {

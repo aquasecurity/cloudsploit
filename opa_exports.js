@@ -10,7 +10,7 @@ module.exports = {
                 allowed: "data.s3.bucketversioning.s3regionallowed"
             },
             messages: {
-                arn: 'arn:aws:s3:::',
+                arnTemplate: 'arn:aws:s3:::',
                 failed: 'Bucket : bucket.Name has versioning disabled',
                 passed: 'Bucket : bucket.Name has versioning enabled'
             }
