@@ -190,7 +190,8 @@ var engine = function(cloudConfig, settings) {
                                     var resource = results[r].resource;
                                     var event = {};
                                     event['remediation_file'] = {};
-                                    event['remediation_file'] = initializeFile(event['remediation_file'], 'execute', key, resource);
+                                    event['remediation_file'] =
+                                        initializeFile(event['remediation_file'], 'execute', key, resource);
                                     plugin.remediate(cloudConfig, collection, event, resource, (err, result) => {
                                         if (err) return console.log(err);
                                         return console.log(result);
@@ -208,7 +209,8 @@ var engine = function(cloudConfig, settings) {
                     if (err) {
                         return console.log(err);
                     }
-                    opaPolicyEval.opaEval(plugin.path, collectionFile, opaPath, plugin.rules, plugin.messages, (err, results) => {
+                    opaPolicyEval.opaEval(plugin.path, collectionFile, opaPath, plugin.rules, plugin.messages,
+                        (err, results) => {
                         if (err) {
                             return console.log(err);
                         }
