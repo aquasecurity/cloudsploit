@@ -11,8 +11,8 @@ module.exports = {
             },
             messages: {
                 arnTemplate: 'arn:aws:s3:::',
-                failed: 'Bucket : bucket.Name has versioning disabled',
-                passed: 'Bucket : bucket.Name has versioning enabled'
+                failed: 'Bucket : resource.Name has versioning disabled',
+                passed: 'Bucket : resource.Name has versioning enabled'
             }
         }
     }

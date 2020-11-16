@@ -32,11 +32,11 @@ var opaEval = (data, input, opaPath, rules, messages,callback) => {
                 resources.forEach(resource => {
                     if ( res.includes('denied') ){
                         helpers.addResult(finalresults, 2,
-                            messages.failed.replace('bucket.Name', resource),
+                            messages.failed.replace('resource.Name', resource),
                             'global', messages.arnTemplate + resource);
                     } else if( res.includes('allowed') ){
                         helpers.addResult(finalresults, 0,
-                            messages.passed.replace('bucket.Name', resource),
+                            messages.passed.replace('resource.Name', resource),
                             'global', messages.arnTemplate + resource);
                     }
                 });
