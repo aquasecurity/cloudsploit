@@ -211,19 +211,19 @@ var engine = function(cloudConfig, settings) {
                     }
                     opaPolicyEval.opaEval(plugin.path, collectionFile, opaPath, plugin.rules, plugin.messages,
                         (err, results) => {
-                        if (err) {
-                            return console.log(err);
-                        }
-                        // Write out the result (to console or elsewhere)
-                        var complianceMsg = [];
-                        for (var r in results) {
-                            outputHandler.writeResult(results[r], plugin, key, complianceMsg);
-                            maximumStatus = Math.max(maximumStatus, results[r].status);
-                        }
-                        setTimeout(function(){
-                            pluginDone(err, maximumStatus);
-                        }, 0);
-                    });
+                            if (err) {
+                                return console.log(err);
+                            }
+                            // Write out the result (to console or elsewhere)
+                            var complianceMsg = [];
+                            for (var r in results) {
+                                outputHandler.writeResult(results[r], plugin, key, complianceMsg);
+                                maximumStatus = Math.max(maximumStatus, results[r].status);
+                            }
+                            setTimeout(function(){
+                                pluginDone(err, maximumStatus);
+                            }, 0);
+                        });
                 });
             }
         }, function(err) {
