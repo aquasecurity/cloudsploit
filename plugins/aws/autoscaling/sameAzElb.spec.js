@@ -148,7 +148,7 @@ const autoScalingGroups =  [
     },
     {
         "AutoScalingGroupName": "auto-scaling-test-group",
-        "AutoScalingGroupARN": "arn:aws:autoscaling:us-east-1:560213429563:autoScalingGroup:e83ceb12-2760-4a92-a374-3df611331bdc:autoScalingGroupName/auto-scaling-test-group",
+        "AutoScalingGroupARN": "arn:aws:autoscaling:us-east-1:111122223333:autoScalingGroup:e83ceb12-2760-4a92-a374-3df611331bdc:autoScalingGroupName/auto-scaling-test-group",
         "LaunchTemplate": {
             "LaunchTemplateId": "lt-0f1f6b356026abc86",
             "LaunchTemplateName": "auto-scaling-template",
@@ -189,7 +189,7 @@ const autoScalingGroups =  [
             "Default"
         ],
         "NewInstancesProtectedFromScaleIn": false,
-        "ServiceLinkedRoleARN": "arn:aws:iam::560213429563:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
+        "ServiceLinkedRoleARN": "arn:aws:iam::111122223333:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
     },
 ];
 
