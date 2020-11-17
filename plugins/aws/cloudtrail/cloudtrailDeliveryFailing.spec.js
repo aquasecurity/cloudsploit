@@ -32,7 +32,7 @@ const getTrailStatus = [
         "IsLogging": true,
         "LatestDeliveryTime": 1604522848.468,
         "StartLoggingTime": 1604521222.552,
-        "LatestDeliveryError": "Access Denied",
+        "LatestDeliveryError": "NoSuchBucket",
         "LatestDeliveryAttemptTime": "2020-11-04T20:47:28Z",
         "LatestNotificationAttemptTime": "",
         "LatestNotificationAttemptSucceeded": "",
@@ -100,7 +100,7 @@ const createNullCache = () => {
 
 describe('cloudtrailDeliveryFailing', function () {
     describe('run', function () {
-        it('should PASS if CloudTrail trail successfully delivered the log files to the destination', function (done) {
+        it('should PASS if logs for CloudTrail trail are being delivered', function (done) {
             const cache = createCache([describeTrails[0]], getTrailStatus[0]);
             cloudtrailDeliveryFailing.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -109,7 +109,7 @@ describe('cloudtrailDeliveryFailing', function () {
             });
         });
         
-        it('should FAIL if CloudTrail trail failed to deliver the log file to the destination', function (done) {
+        it('should FAIL if logs for CloudTrail trail are not being delivered', function (done) {
             const cache = createCache([describeTrails[0]], getTrailStatus[1]);
             cloudtrailDeliveryFailing.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -118,11 +118,11 @@ describe('cloudtrailDeliveryFailing', function () {
             });
         });
 
-        it('should PASS if No CloudTrail trails found', function (done) {
+        it('should FAIL if CloudTrail is not enabled', function (done) {
             const cache = createCache([]);
             cloudtrailDeliveryFailing.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
+                expect(results[0].status).to.equal(2);
                 done();
             });
         });
@@ -145,7 +145,7 @@ describe('cloudtrailDeliveryFailing', function () {
             });
         });
 
-        it('should not return anything if describe CloudTrail trails response is not found', function (done) {
+        it('should not return anything if describe CloudTrail trails response not found', function (done) {
             const cache = createNullCache();
             cloudtrailDeliveryFailing.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
