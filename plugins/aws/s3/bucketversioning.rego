@@ -28,7 +28,7 @@ s3region1[region]  =  bucketNames {
 s3region2[region] = bucketNames {
 	name := input.s3.listBuckets[location].data[_].Name
 	region := location
-	input.s3.getBucketVersioning[location][name].data.Status
+	input.s3.getBucketVersioning[location][name].data
     bucketNames := [name |
 					name := input.s3.listBuckets[region].data[i].Name
 					not input.s3.getBucketVersioning[region][name].data.Status

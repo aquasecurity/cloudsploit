@@ -29,16 +29,38 @@ var opaEval = (data, input, opaPath, rules, messages,callback) => {
             var locations = results[res];
             Object.keys(locations).forEach(location => {
                 var resources = locations[location];
+                var region;
+                var targetResource;
                 resources.forEach(resource => {
-                    if ( res.includes('denied') ){
-                        helpers.addResult(finalresults, 2,
-                            messages.failed.replace('resource.Name', resource),
-                            'global', messages.arnTemplate + resource);
-                    } else if( res.includes('allowed') ){
-                        helpers.addResult(finalresults, 0,
-                            messages.passed.replace('resource.Name', resource),
-                            'global', messages.arnTemplate + resource);
+                    var newMassage = messages[res];
+                    if ( messages[res].includes('resource.Name') ) {
+                        newMassage = messages[res].replace('resource.Name', resource);
                     }
+                    if ( messages.region){
+                        region = messages.region;
+                    }
+                    else {
+                        region = location;
+                    }
+
+                    if ( messages.arnTemplate ){
+                        targetResource = messages.arnTemplate + resource;
+                    }
+                    else {
+                        targetResource =  resource;
+                    }
+                    helpers.addResult(finalresults, parseInt(res),
+                        newMassage,
+                        region, targetResource);
+                    // if ( res.includes('denied') ){
+                    //     helpers.addResult(finalresults, 2,
+                    //         messages.failed.replace('resource.Name', resource),
+                    //         'global', messages.arnTemplate + resource);
+                    // } else if( res.includes('allowed') ){
+                    //     helpers.addResult(finalresults, 0,
+                    //         messages.passed.replace('resource.Name', resource),
+                    //         'global', messages.arnTemplate + resource);
+                    // }
                 });
             });
         }
