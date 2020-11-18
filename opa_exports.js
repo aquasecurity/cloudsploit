@@ -18,7 +18,7 @@ module.exports = {
             }
         },
         sqsEncrypted:{
-            title: 'SQS Encrypted',
+            title: 'SQS Encrypted through OPA',
             category: 'SQS',
             description: 'Ensures SQS encryption is enabled',
             path: './plugins/aws/sqs/sqsEncrypted.rego',
