@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'DynamoDB tables can be encrypted using AWS-owned or customer-owned KMS keys. Customer keys should be used to ensure control over the encryption seed data.',
     link: 'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/EncryptionAtRest.html',
     recommended_action: 'Create a new DynamoDB table using a CMK KMS key.',
-    apis: ['DynamoDB:listTables', 'DynamoDB:describeTable', 'STS:getCallerIdentity'],
+    apis: ['DynamoDB:listTables', 'DynamoDB:describeTable'],
     remediation_description: 'The impacted DynamoDB table will be configured to use either AES-256 encryption, or CMK-based encryption if a KMS key ID is provided.',
     remediation_min_version: '202010110730',
     apis_remediate: ['DynamoDB:listTables'],
@@ -26,11 +26,6 @@ module.exports = {
 
         var results = [];
         var source = {};
-
-        var acctRegion = helpers.defaultRegion(settings);
-        var awsOrGov = helpers.defaultPartition(settings);
-        var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
-
         var regions = helpers.regions(settings);
 
         async.each(regions.dynamodb, function(region, rcb){
@@ -56,20 +51,22 @@ module.exports = {
                 var describeTable = helpers.addSource(cache, source,
                     ['dynamodb', 'describeTable', region, table]);
 
-                var arn = 'arn:' + awsOrGov + ':dynamodb:' + region + ':' + accountId + ':table/' + table;
-
                 if (describeTable.err || !describeTable.data || !describeTable.data.Table) {
                     helpers.addResult(results, 3,
-                        'Unable to describe DynamoDB table: ' + helpers.addError(describeTable), region, arn);
+                        'Unable to describe DynamoDB table: ' + helpers.addError(describeTable), region, resource);
                     return rcb();
                 }
 
-                if (!describeTable.data.Table.SSEDescription) {
-                    helpers.addResult(results, 1,
-                        'Table is using default encryption with AWS-owned key', region, arn);
-                } else {
+                var resource = describeTable.data.Table.TableArn;
+
+                if (describeTable.data.Table.SSEDescription &&
+                    describeTable.data.Table.SSEDescription.Status &&
+                    describeTable.data.Table.SSEDescription.Status.toUpperCase() === 'ENABLED') {
                     helpers.addResult(results, 0,
-                        'Table encryption is enabled with a KMS master key', region, arn);
+                        'Table encryption is enabled with a KMS master key', region, resource);
+                } else {
+                    helpers.addResult(results, 1,
+                        'Table is using default encryption with AWS-owned key', region, resource);
                 }
             }
 
