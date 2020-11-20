@@ -29,7 +29,7 @@ module.exports = {
             }
 
             if (!describeTrails.data.length) {
-                helpers.addResult(results, 2, 'CloudTrails is not enabled', region);
+                helpers.addResult(results, 2, 'CloudTrail is not enabled', region);
                 return rcb();
             }
 
