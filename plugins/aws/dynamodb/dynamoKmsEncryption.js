@@ -9,18 +9,26 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/EncryptionAtRest.html',
     recommended_action: 'Create a new DynamoDB table using a CMK KMS key.',
     apis: ['DynamoDB:listTables', 'DynamoDB:describeTable'],
-    remediation_description: 'The impacted DynamoDB table will be configured to use either AES-256 encryption, or CMK-based encryption if a KMS key ID is provided.',
-    remediation_min_version: '202010110730',
+    remediation_description: 'The impacted DynamoDB table will be configured to use either KMS encryption with AWS managed CMK, or CMK-based encryption if a KMS key ID is provided.',
+    remediation_min_version: '202001121300',
     apis_remediate: ['DynamoDB:listTables'],
     actions: {
-        remediate: ['S3:updateTable'],
-        rollback: ['S3:updateTable']
+        remediate: ['DynamoDB:updateTable'],
+        rollback: ['DynamoDB:updateTable']
     },
     permissions: {
-        remediate: ['s3:UpdateTable'],
-        rollback: ['s3:UpdateTable']
+        remediate: ['DynamoDB:UpdateTable'],
+        rollback: ['DynamoDB:UpdateTable']
     },
-    realtime_triggers: ['s3:UpdateTable', 's3:CreateTable'],
+    remediation_inputs: {
+        kmsKeyIdforDynamo: {
+            name: '(Optional) DynamoDB KMS Key ID',
+            description: 'The KMS Key ID used for encryption',
+            regex: '^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$',
+            required: false
+        }
+    },
+    realtime_triggers: ['DynamoDB:UpdateTable', 'DynamoDB:CreateTable'],
 
     run: function(cache, settings, callback) {
 
@@ -65,7 +73,7 @@ module.exports = {
                     helpers.addResult(results, 0,
                         'Table encryption is enabled with a KMS master key', region, resource);
                 } else {
-                    helpers.addResult(results, 1,
+                    helpers.addResult(results, 2,
                         'Table is using default encryption with AWS-owned key', region, resource);
                 }
             }
@@ -81,6 +89,7 @@ module.exports = {
         var tableNameArr = resource.split(':');
         var tableName = tableNameArr[tableNameArr.length - 1].split('/')[1];
 
+        // find the location of the table needing to be remediated
         var tableLocation = tableNameArr[3];
 
         // add the location of the table to the config
@@ -89,12 +98,12 @@ module.exports = {
 
         // create the params necessary for the remediation
         if (settings.input &&
-            settings.input.kmsKeyId) {
+            settings.input.kmsKeyIdforDynamo) {
             params = {
                 'TableName': tableName,
                 'SSESpecification': {
                     'Enabled': true,
-                    'KMSMasterKeyId': settings.input.kmsKeyId,
+                    'KMSMasterKeyId': settings.input.kmsKeyIdforDynamo,
                     'SSEType': 'KMS'
                   }
             };
@@ -109,12 +118,10 @@ module.exports = {
         }
 
         var remediation_file = settings.remediation_file;
-
         remediation_file['pre_remediate']['actions'][pluginName][resource] = {
-            'Encryption': 'Default',
-            'Bucket': bucketName
+            'Encryption': 'DEFAULT',
+            'DynamoDB': resource
         };
-
         // passes the config, put call, and params to the remediate helper function
         helpers.remediatePlugin(config, putCall[0], params, function(err) {
             if (err) {
@@ -128,10 +135,11 @@ module.exports = {
             remediation_file['post_remediate']['actions'][pluginName][resource] = action;
             remediation_file['remediate']['actions'][pluginName][resource] = {
                 'Action': 'ENCRYPTED',
-                'Bucket': bucketName
+                'DynamoDB': tableName
             };
+
             settings.remediation_file = remediation_file;
             return callback(null, action);
         });
-    },
+    }
 };
