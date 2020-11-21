@@ -12,6 +12,18 @@ module.exports = {
     compliance: {
         cis2: '2.7 Ensure CloudTrail logs are encrypted at rest using KMS CMKs'
     },
+    remediation_description: 'Encryption for the affected Cloud trails will be enabled.',
+    remediation_min_version: '202010302230',
+    apis_remediate: ['CloudTrail:describeTrails'],
+    actions: {
+        remediate: ['CloudTrail:updateTrail'],
+        rollback: ['CloudTrail:updateTrail']
+    },
+    permissions: {
+        remediate: ['cloudtrail:UpdateTrail'],
+        rollback: ['cloudtrail:UpdateTrail']
+    },
+    realtime_triggers: ['cloudtrail:CreateTrail', 'cloudtrail:UpdateTrail'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -49,6 +61,56 @@ module.exports = {
             rcb();
         }, function(){
             callback(null, results, source);
+        });
+    },
+    remediate: function(config, cache, settings, resource, callback) {
+        var putCall = this.actions.remediate;
+        var pluginName = 'cloudtrailEncryption';
+        var ctNameArr = resource.split(':');
+        var ctName = ctNameArr[ctNameArr.length - 1].split('/');
+        // find the location of the ct needing to be remediated
+
+        var ctLocation = ctNameArr[3];
+        var err;
+        // add the location of the ct to the config
+        config.region = ctLocation;
+        var params = {};
+
+        // create the params necessary for the remediation
+        if (settings.input &&
+            settings.input.kmsKeyIdforCt) {
+            params = {
+                'Name': resource,
+                'KmsKeyId': settings.input.kmsKeyIdforCt,
+            };
+        } else {
+            err = 'KmsKeyId is mandatory to enable encryption';
+            return callback(err, null);
+        }
+
+        var remediation_file = settings.remediation_file;
+        remediation_file['pre_remediate']['actions'][pluginName][resource] = {
+            'Encryption': 'Disabled',
+            'CloudTrail': resource
+        };
+        // passes the config, put call, and params to the remediate helper function
+        helpers.remediatePlugin(config, putCall[0], params, function(err) {
+            if (err) {
+                remediation_file['remediate']['actions'][pluginName]['error'] = err;
+                return callback(err, null);
+            }
+
+            let action = params;
+            action.action = putCall;
+
+            remediation_file['post_remediate']['actions'][pluginName][resource] = action;
+            remediation_file['remediate']['actions'][pluginName][resource] = {
+                'Action': 'ENCRYPTED',
+                'CloudTrail': ctName
+            };
+
+            settings.remediation_file = remediation_file;
+            return callback(null, action);
         });
     }
 };
