@@ -168,7 +168,6 @@ var engine = function(cloudConfig, settings) {
                 async.forEach( failedResources,(resource, rcb) => {
                     if (settings.remediate && settings.remediate.length) {
                         if (settings.remediate.indexOf(key) > -1) {
-                            var resource = resource;
                             var event = {};
                             event['remediation_file'] = {};
                             event['remediation_file'] = initializeFile(event['remediation_file'], 'execute', key, resource);
