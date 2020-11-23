@@ -165,8 +165,8 @@ var engine = function(cloudConfig, settings) {
                         failedResources.push(results[r].resource);
                     }
                 }
-                async.forEach( failedResources,(resource, rcb) => {
-                    if (settings.remediate && settings.remediate.length) {
+                if (settings.remediate && settings.remediate.length) {
+                    async.forEach(failedResources, (resource, rcb) => {
                         if (settings.remediate.indexOf(key) > -1) {
                             var event = {};
                             event['remediation_file'] = {};
@@ -177,10 +177,10 @@ var engine = function(cloudConfig, settings) {
                                 return rcb();
                             });
                         }
-                    }
-                }, (err) => {
-                    if (err) return console.log(err);
-                });
+                    }, (err) => {
+                        if (err) return console.log(err);
+                    });
+                }
                 setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
             });
         }, function(err) {
