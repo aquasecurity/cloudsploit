@@ -3,17 +3,17 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'App-Tier EC2 Instance IAM Role',
+    title: 'Web-Tier EC2 Instance IAM Role',
     category: 'EC2',
-    description: 'Ensure IAM roles attached with App-Tier EC2 instances have IAM policies attached.',
+    description: 'Ensure IAM roles attached with Web-Tier EC2 instances have IAM policies attached.',
     more_info: 'EC2 instances should have IAM roles configured with necessary permission to access other AWS services',
     link: 'https://aws.amazon.com/blogs/security/new-attach-an-aws-iam-role-to-an-existing-amazon-ec2-instance-by-using-the-aws-cli/',
     recommended_action: 'Modify EC2 instances to attach IAM roles with required IAM policies',
     apis: ['EC2:describeInstances', 'EC2:describeTags', 'IAM:listRoles', 'IAM:listRolePolicies', 'IAM:listAttachedRolePolicies'],
     settings: {
-        ec2_app_tier_tag_key: {
-            name: 'EC2 App-Tier Tag Key',
-            description: 'Tag key to indicate App-Tier EC2 instances',
+        ec2_web_tier_tag_key: {
+            name: 'EC2 Web-Tier Tag Key',
+            description: 'Tag key to indicate Web-Tier EC2 instances',
             regex: '^.*$s',
             default: ''
         },
@@ -26,10 +26,10 @@ module.exports = {
 
         var awsOrGov = helpers.defaultPartition(settings);
         var config = {
-            ec2_app_tier_tag_key: settings.ec2_app_tier_tag_key || this.settings.ec2_app_tier_tag_key.default
+            ec2_web_tier_tag_key: settings.ec2_web_tier_tag_key || this.settings.ec2_web_tier_tag_key.default
         };
 
-        if (!config.ec2_app_tier_tag_key.length) return callback(null, results, source);
+        if (!config.ec2_web_tier_tag_key.length) return callback(null, results, source);
 
         async.each(regions.ec2, function(region, rcb){
             var describeInstances = helpers.addSource(
@@ -72,14 +72,14 @@ module.exports = {
                         let tag = describeTags.data[t];
 
                         if(tag.ResourceId && tag.ResourceId === entry.InstanceId &&
-                            tag.Key && tag.Key === config.ec2_app_tier_tag_key) {
+                            tag.Key && tag.Key === config.ec2_web_tier_tag_key) {
                             tagFound = true;
                             break;
                         }
                     }
 
                     if (!tagFound) {
-                        helpers.addResult(results, 0, 'Instance does not have App-Tier tag key', region, resource);
+                        helpers.addResult(results, 0, 'Instance does not have Web-Tier tag key', region, resource);
                         return cb();
                     }
 
