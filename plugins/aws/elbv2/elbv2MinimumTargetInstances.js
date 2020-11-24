@@ -7,7 +7,7 @@ module.exports = {
     description: 'Ensures that there is a minimum number of two healthy target instances associated with each AWS ELBv2 load balancer.',
     more_info: 'There should be a minimum number of two healthy target instances associated with each AWS ELBv2 load balancer to ensure fault tolerance.',
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-groups.html',
-    recommended_action: 'Associate atleasst two healthy target instances to AWS ELBv2 load balancer',
+    recommended_action: 'Associate at least two healthy target instances to AWS ELBv2 load balancer',
     apis: ['ELBv2:describeLoadBalancers', 'ELBv2:describeTargetGroups', 'ELBv2:describeTargetHealth'],
 
     run: function(cache, settings, callback) {
