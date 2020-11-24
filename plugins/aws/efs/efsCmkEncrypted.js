@@ -54,7 +54,7 @@ module.exports = {
 
             var aliasId;
             var kmsAliases = {};
-            var ckmUnencryptedEFS = [];
+            var cmkUnencryptedEFS = [];
             var danglingKeys = [];
 
             listAliases.data.forEach(function(alias){
@@ -65,19 +65,19 @@ module.exports = {
             describeFileSystems.data.forEach(function(efs){
                 if (efs.Encrypted && efs.KmsKeyId){
                     if (kmsAliases[efs.KmsKeyId] && kmsAliases[efs.KmsKeyId] === 'alias/aws/elasticfilesystem') {
-                        ckmUnencryptedEFS.push(efs);
+                        cmkUnencryptedEFS.push(efs);
                     } else if (!kmsAliases[efs.KmsKeyId]) {
                         danglingKeys.push(efs);
                     }
                 }
             });
 
-            if (ckmUnencryptedEFS.length > cmk_unencrypted_threshold) {
+            if (cmkUnencryptedEFS.length > cmk_unencrypted_threshold) {
                 helpers.addResult(results, 2, `More than ${cmk_unencrypted_threshold} EFS systems are not using CMK for encryption`, region);
-            } else if (ckmUnencryptedEFS.length) {
-                for (let u in ckmUnencryptedEFS) {
-                    let resource = ckmUnencryptedEFS[u].FileSystemArn;
-                    helpers.addResult(results, 2, `EFS "${ckmUnencryptedEFS[u].FileSystemId}" is not CMK encrypted`, region, resource);
+            } else if (cmkUnencryptedEFS.length) {
+                for (let u in cmkUnencryptedEFS) {
+                    let resource = cmkUnencryptedEFS[u].FileSystemArn;
+                    helpers.addResult(results, 2, `EFS "${cmkUnencryptedEFS[u].FileSystemId}" is not CMK encrypted`, region, resource);
                 }
             } else {
                 helpers.addResult(results, 0, 'No AWS managed key encrypted file systems found', region);
