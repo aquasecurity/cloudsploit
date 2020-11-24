@@ -39,7 +39,7 @@ module.exports = {
             describeNetworkInterfaces.data.forEach(function(eni){
                 var resource = `arn:${awsOrGov}:ec2:${region}:${accountId}:network-interface/${eni.NetworkInterfaceId}`;
 
-                if (eni.Status === 'in-use') {
+                if (eni.Status && eni.Status === 'in-use') {
                     helpers.addResult(results, 0,
                         `AWS ENI "${eni.NetworkInterfaceId}" is in use`,
                         region, resource);
