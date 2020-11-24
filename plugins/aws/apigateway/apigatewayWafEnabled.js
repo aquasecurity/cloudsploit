@@ -35,43 +35,41 @@ module.exports = {
             }
 
             async.each(getRestApis.data, function(api, cb){
-                var resource = `arn:${awsOrGov}:apigateway:${region}::/restapis/${api.id}`;
-                var unassociatedStages = [];
+                if (!api.id) return cb();
+
+                var apiArn = `arn:${awsOrGov}:apigateway:${region}::/restapis/${api.id}`;
 
                 var getStages = helpers.addSource(cache, source,
                     ['apigateway', 'getStages', region, api.id]);
 
-                if (!getStages) return cb();
-
-                if (getStages.err || !getStages.data) {
+                if (!getStages || getStages.err || !getStages.data) {
                     helpers.addResult(results, 3,
                         `Unable to query for API Gateway Rest API Stages: ${helpers.addError(getStages)}`,
-                        region, resource);
+                        region, apiArn);
                     return cb();
                 }
 
                 if (!getStages.data.item || !getStages.data.item.length) {
                     helpers.addResult(results, 0,
-                        'No API Gateway Rest API Stages found',
-                        region, resource);
+                        'No Rest API Stages found',
+                        region, apiArn);
                     return cb();
                 }
 
                 getStages.data.item.forEach(stage => {
-                    if (!stage.webAclArn && stage.stageName) {
-                        unassociatedStages.push(stage.stageName);
+                    if (!stage.stageName) return;
+
+                    var stageArn = `arn:${awsOrGov}:apigateway:${region}::/restapis/${api.id}/stages/${stage.stageName}`;
+                    if (stage.webAclArn) {
+                        helpers.addResult(results, 0,
+                            'API Gateway Stage has WAF enable',
+                            region, stageArn);
+                    } else {
+                        helpers.addResult(results, 2,
+                            'API Gateway Stage does not have WAF enabled',
+                            region, stageArn);
                     }
                 });
-
-                if (!unassociatedStages.length) {
-                    helpers.addResult(results, 0,
-                        `API Gateway API "${api.id}" has WAF enabled for all stages`,
-                        region, resource);
-                } else {
-                    helpers.addResult(results, 2,
-                        `API Gateway API "${api.id}" does not have WAF enabled for these stages: ${unassociatedStages.join(', ')}`,
-                        region, resource);
-                }
 
                 cb();
             });
