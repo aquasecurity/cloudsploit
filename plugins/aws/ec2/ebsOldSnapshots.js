@@ -5,7 +5,7 @@ module.exports = {
     title: 'EBS Volumes Too Old Snapshots',
     category: 'EC2',
     description: 'Ensure that EBS volume snapshots are deleted after defined time period.',
-    more_info: 'EBS volume snapshots older than should be deleted after defined time period for cost optimization.',
+    more_info: 'EBS volume snapshots older than indicated should be deleted after defined time period for cost optimization.',
     link: 'https://docs.amazonaws.cn/en_us/AWSEC2/latest/UserGuide/ebs-deleting-snapshot.html',
     recommended_action: 'Delete the EBS snapshots past their defined expiration date',
     apis: ['EC2:describeSnapshots'],
