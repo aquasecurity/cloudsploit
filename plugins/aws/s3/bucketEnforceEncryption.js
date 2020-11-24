@@ -87,8 +87,22 @@ module.exports = {
                     'global', bucketResource);
             } else {
                 try {
-                    var policyJson = JSON.parse(getBucketPolicy.data.Policy);
-                    getBucketPolicy.data.Policy = policyJson;
+                    var policyJson;
+
+                    if (typeof getBucketPolicy.data.Policy == 'object') {
+                        policyJson = getBucketPolicy.data.Policy;
+
+                    } else {
+                        try {
+                            policyJson = JSON.parse(getBucketPolicy.data.Policy);
+                        }
+                        catch(e) {
+                            helpers.addResult(results, 3,
+                                `Error querying for bucket policy for bucket: "${bucket.Name}". Policy JSON could not be parsed`,
+                                'global', bucketResource);
+                            return;
+                        }
+                    }
 
                     if (!policyJson || !policyJson.Statement) {
                         helpers.addResult(results, 3,

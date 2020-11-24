@@ -33,9 +33,10 @@ module.exports = {
                 return rcb();
             }
 
-            listDomainNames.data.forEach(function(domain){
+            async.each(listDomainNames.data, function(domain, cb){
                 var describeElasticsearchDomain = helpers.addSource(cache, source,
                     ['es', 'describeElasticsearchDomain', region, domain.DomainName]);
+
                 var resource = domain.ARN;
 
                 if (!describeElasticsearchDomain ||
@@ -45,6 +46,7 @@ module.exports = {
                     helpers.addResult(
                         results, 3,
                         'Unable to query for ES domain config: ' + helpers.addError(describeElasticsearchDomain), region, resource);
+                    return cb();
                 }
 
                 var goodStatements = [];
@@ -76,9 +78,12 @@ module.exports = {
                     helpers.addResult(results, 2,
                         'No access policy found', region, resource);
                 }
-            });
 
-            rcb();
+                cb();
+            }, function() {
+                rcb();
+            });
+            
         }, function() {
             callback(null, results, source);
         });
