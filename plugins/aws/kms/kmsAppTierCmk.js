@@ -12,7 +12,7 @@ module.exports = {
     settings: {
         kms_cmk_tag_key: {
             name: 'KMS CMK Tag Key',
-            description: 'When this tag key exists in the AWS account, there should also exist a KMS CMK having same tag key',
+            description: 'When this tag key exists in the AWS account, there should also exist a KMS CMK with the same tag key',
             regex: '^.*$',
             default: ''
         },
