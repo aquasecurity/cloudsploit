@@ -79,7 +79,8 @@ module.exports = {
                         break;
                     }
 
-                    if (statement.Condition && statement.Condition.IpAddress && statement.Condition.IpAddress['aws:SourceIp']) {
+                    if (statement.Condition && statement.Condition.IpAddress &&
+                        statement.Condition.IpAddress['aws:SourceIp'] && statement.Condition.IpAddress['aws:SourceIp'].length) {
                         statement.Condition.IpAddress['aws:SourceIp'].forEach(ip => {
                             if (whitelisted_ip_addresses.indexOf(ip) < 0) intruderIps.push(ip);
                         });
