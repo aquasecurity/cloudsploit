@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/azure/');
 //var compareVersions = require('compare-versions');
 
 module.exports = {
-    title: 'Kubernetes Latest Version',
+    title: 'Kubernetes Version For Agent Pools',
     category: 'Kubernetes Service',
     description: 'Ensures the kubernetes version is same across the node pools with the cluster.',
     more_info: 'AKS supports provisioning clusters from several versions of Kubernetes. Node pools should be at per with the cluster kubernetes version.',
@@ -45,10 +45,10 @@ module.exports = {
                         if (agentPoolProfile.orchestratorVersion &&
                             helpers.compareVersions(agentPoolProfile.orchestratorVersion,kubernetesVersion) === -1 ) {
                             helpers.addResult(results, 2,
-                                `The node pool ${agentPoolProfile.name} does not have the latest Kubernetes version: ${kubernetesVersion}`, location, managedCluster.id);
+                                `The node pool ${agentPoolProfile.name} does not have the cluster Kubernetes version: ${kubernetesVersion}`, location, managedCluster.id);
                         } else {
                             helpers.addResult(results, 0,
-                                `The node pool ${agentPoolProfile.name} has the latest Kubernetes version`, location, managedCluster.id);
+                                `The node pool ${agentPoolProfile.name} has the cluster Kubernetes version`, location, managedCluster.id);
                         }
                     });
                 }

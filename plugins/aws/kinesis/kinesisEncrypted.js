@@ -16,6 +16,18 @@ module.exports = {
                 'AWS KMS encryption ensures that the Kinesis message payload meets the ' +
                 'encryption in transit and at rest requirements of HIPAA.'
     },
+    remediation_description: 'Encryption for the affected Kinesis streams will be enabled.',
+    remediation_min_version: '202010301919',
+    apis_remediate: ['Kinesis:listStreams', 'Kinesis:describeStream'],
+    actions: {
+        remediate: ['Kinesis:startStreamEncryption'],
+        rollback: ['Kinesis:stopStreamEncryption']
+    },
+    permissions: {
+        remediate: ['kinesis:StartStreamEncryption'],
+        rollback: ['kinesis:StopStreamEncryption']
+    },
+    realtime_triggers: ['kinesis:CreateStream', 'kinesis:StopStreamEncryption'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -63,7 +75,7 @@ module.exports = {
                     return cb();
                 }
                 
-                var streamArn = describeStream.data.StreamDescription.StreamArn;
+                var streamArn = describeStream.data.StreamDescription.StreamARN;
 
                 if (describeStream.data.StreamDescription.KeyId) {
                     if (describeStream.data.StreamDescription.KeyId === defaultKmsKey) {
@@ -88,6 +100,70 @@ module.exports = {
         }, function(){
             callback(null, results, source);
         });
+    },
+
+    remediate: function(config, cache, settings, resource, callback) {
+        var putCall = this.actions.remediate;
+        var pluginName = 'kinesisEncrypted';
+        var streamNameArr = resource.split(':');
+        var streamName = streamNameArr[streamNameArr.length - 1].split('/');
+        streamName = streamName[streamName.length - 1];
+        // find the location of the Kinesis Stream needing to be remediated
+        var streamLocation = streamNameArr[3];
+        var err;
+        if (!streamLocation) {
+            err = 'Unable to get stream location';
+            return callback(err, null);
+        }
+        // add the location of the Kinesis Stream to the config
+        config.region = streamLocation;
+        var params = {};
+        // create the params necessary for the remediation
+        if (settings.input &&
+            settings.input.kmsKeyIdforKinesis) {
+            params = {
+                EncryptionType: 'KMS', /* required */
+                KeyId: settings.input.kmsKeyIdforKinesis, /* required */
+                StreamName: streamName /* required */
+            };
+        } else {
+            params = {
+                EncryptionType: 'KMS', /* required */
+                KeyId: defaultKmsKey, /* required */
+                StreamName: streamName /* required */
+            };
+        }
+
+        var remediation_file = settings.remediation_file;
+
+        remediation_file['pre_remediate']['actions'][pluginName][resource] = {
+            'Encryption': 'Disabled',
+            'SQS': streamName
+        };
+
+        // passes the config, put call, and params to the remediate helper function
+        helpers.remediatePlugin(config, putCall[0], params, function(err) {
+            if (err) {
+                remediation_file['remediate']['actions'][pluginName]['error'] = err;
+                return callback(err, null);
+            }
+
+            let action = params;
+            action.action = putCall;
+
+            remediation_file['post_remediate']['actions'][pluginName][resource] = action;
+            remediation_file['remediate']['actions'][pluginName][resource] = {
+                'Action': 'ENCRYPTED',
+                'Kinesis Stream': streamName
+            };
+            settings.remediation_file = remediation_file;
+            return callback(null, action);
+        });
+    },
+
+    rollback: function(config, cache, settings, resource, callback) {
+        console.log('Rollback support for this plugin has not yet been implemented');
+        console.log(config, cache, settings, resource);
+        callback();
     }
 };
-

@@ -95,12 +95,29 @@ function findOpenPorts(ngs, protocols, service, location, results) {
                                     if (strings.indexOf(string) === -1) strings.push(string);
                                     found = true;
                                 }
-                            } else if (securityRule.properties['destinationPortRanges'] &&
-                                securityRule.properties['destinationPortRanges'].toString().indexOf(port) > -1) {
-                                var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
-                                    ` port ` + ports + ` open to ` + sourceFilter;
-                                if (strings.indexOf(string) === -1) strings.push(string);
-                                found = true;
+                            } else if (securityRule.properties['destinationPortRanges']) {
+                                if (securityRule.properties['destinationPortRanges'].toString().indexOf(port) > -1) {
+                                    var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
+                                        ` port ` + ports + ` open to ` + sourceFilter;
+                                    if (strings.indexOf(string) === -1) strings.push(string);
+                                    found = true;
+                                } else {
+                                    for (let portRange of securityRule.properties['destinationPortRanges']){
+                                        if (portRange.toString().indexOf("-") > -1) {
+                                            portRange = portRange.split("-");
+                                            let startPort = portRange[0];
+                                            let endPort = portRange[1];
+                                            if (parseInt(startPort) <= port && parseInt(endPort) >= port){
+                                                var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
+                                                    ` port ` + ports + ` open to ` + sourceFilter;
+                                                strings.push(string);
+                                                if (strings.indexOf(string) === -1) strings.push(string);
+                                                found = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
