@@ -12,7 +12,7 @@ module.exports = {
                 'analysis.',
     link: 'http://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html',
     recommended_action: 'Enable ELB request logging',
-    apis: ['ELB:describeLoadBalancers', 'ELB:describeLoadBalancerAttributes'],
+    apis: ['ELB:describeLoadBalancers', 'ELB:describeLoadBalancerAttributes', 'STS:getCallerIdentity'],
     compliance: {
         hipaa: 'HIPAA requires access logging to be enabled for the auditing ' +
                 'of services serving HIPAA data. All ELBs providing this access ' +
@@ -26,6 +26,10 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+
+        var acctRegion = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
+        var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
         async.each(regions.elb, function(region, rcb){
             var describeLoadBalancers = helpers.addSource(cache, source,
@@ -45,6 +49,9 @@ module.exports = {
             }
 
             async.each(describeLoadBalancers.data, function(lb, cb){
+                // arn:aws:elasticloadbalancing:region:account-id:loadbalancer/name
+                var elbArn = `arn:${awsOrGov}:elasticloadbalancing:${region}:${accountId}:loadbalancer/${lb.LoadBalancerName}`;
+
                 // loop through listeners
                 var describeLoadBalancerAttributes = helpers.addSource(cache, source,
                     ['elb', 'describeLoadBalancerAttributes', region, lb.DNSName]);
@@ -54,13 +61,12 @@ module.exports = {
                     describeLoadBalancerAttributes.data.LoadBalancerAttributes.AccessLog) {
                     var accessLog = describeLoadBalancerAttributes.data.LoadBalancerAttributes.AccessLog;
                     
-                    //console.log(lb.DNSName)
                     if (accessLog.Enabled){
                         helpers.addResult(results, 0,
-                            'Logging enabled for ' + lb.DNSName, region, lb.DNSName);
+                            'Logging enabled for ' + lb.DNSName, region, elbArn);
                     } else {
                         helpers.addResult(results, 2,
-                            'Logging not enabled for ' + lb.DNSName, region, lb.DNSName);
+                            'Logging not enabled for ' + lb.DNSName, region, elbArn);
                     }
                 }
                 cb();

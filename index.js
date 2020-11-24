@@ -3,6 +3,7 @@
 const { ArgumentParser } = require('argparse');
 const engine = require('./engine');
 
+
 console.log(`
    _____ _                 _  _____       _       _ _   
   / ____| |               | |/ ____|     | |     (_) |  
@@ -62,6 +63,10 @@ parser.add_argument('--skip-paginate', {
 });
 parser.add_argument('--suppress', {
     help: 'Suppress results matching the provided Regex. Format: pluginId:region:resourceId',
+    action: 'append'
+});
+parser.add_argument('--remediate', {
+    help: 'Run remediation the provided plugin',
     action: 'append'
 });
 
