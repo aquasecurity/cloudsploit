@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Amazon EBS Public Snapshots',
     category: 'EC2',
-    description: 'Ensure that your Amazon EBS volume snapshots are not shared to all AWS accounts.',
+    description: 'Ensure that Amazon EBS volume snapshots are not shared to all AWS accounts.',
     more_info: 'AWS Elastic Block Store (EBS) volume snapshots should not be not publicly shared with other AWS account to avoid data exposure.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-modifying-snapshot-permissions.html',
     recommended_action: 'Modify the permissions of public snapshots to remove public access.',
@@ -56,8 +56,7 @@ module.exports = {
                         var perm = describeSnapshotAttribute.data.CreateVolumePermissions[p];
 
                         if (perm.Group && perm.Group === 'all') {
-                            var arn = `arn:${awsOrGov}:${region}:${snapshot.OwnerId}:snapshot/${snapshot.SnapshotId}`;
-                            publicSnapshots.push(arn);
+                            publicSnapshots.push(resource);
                             break;
                         }
                     }
