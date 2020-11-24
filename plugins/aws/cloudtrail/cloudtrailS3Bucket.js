@@ -12,7 +12,7 @@ module.exports = {
     settings: {
         trail_s3_bucket_name: {
             name: 'Trail S3 Bucket Name',
-            description: 'Amazon S3 bucket name designated for CloudTrail trains',
+            description: 'Amazon S3 bucket name designated for CloudTrail trails',
             regex: '^.*$',
             default: ''
         }
@@ -48,7 +48,7 @@ module.exports = {
             }
 
             async.each(describeTrails.data, function(trail, cb){
-                if (!trail.TrailARN || trail.S3BucketName == helpers.CLOUDSPLOIT_EVENTS_BUCKET) return cb();
+                if (!trail.TrailARN || (trail.S3BucketName && trail.S3BucketName == helpers.CLOUDSPLOIT_EVENTS_BUCKET)) return cb();
 
                 var resource = trail.TrailARN;
 
