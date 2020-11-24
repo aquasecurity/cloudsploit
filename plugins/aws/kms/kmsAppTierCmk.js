@@ -46,7 +46,7 @@ module.exports = {
             }
 
             if (!getTagKeys.data.includes(config.kms_cmk_tag_key)) {
-                helpers.addResult(results, 0,
+                helpers.addResult(results, 2,
                     `No key with "${config.kms_cmk_tag_key}" tag found`, region);
                 return rcb();
             }
