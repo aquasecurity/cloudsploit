@@ -34,7 +34,7 @@ module.exports = {
             }
 
             describeTrails.data.forEach(trail => {
-                if (!trail.TrailARN || trail.S3BucketName == helpers.CLOUDSPLOIT_EVENTS_BUCKET) return;
+                if (!trail.TrailARN || (trail.S3BucketName && trail.S3BucketName == helpers.CLOUDSPLOIT_EVENTS_BUCKET)) return;
 
                 if(!globalTrails.includes(trail.TrailARN) && trail.IncludeGlobalServiceEvents) {
                     globalTrails.push(trail.Name);
