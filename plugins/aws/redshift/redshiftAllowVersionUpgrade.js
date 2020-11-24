@@ -42,7 +42,7 @@ module.exports = {
                 var clusterIdentifier = cluster.ClusterIdentifier;
                 var resource = `arn:${awsOrGov}:redshift:${region}:${accountId}:cluster:${clusterIdentifier}`;
 
-                if (cluster.AllowVersionUpgrade && cluster.AllowVersionUpgrade === true) {
+                if (cluster.AllowVersionUpgrade) {
                     helpers.addResult(results, 0,
                         `Redshift cluster "${clusterIdentifier}" is configured to allow version upgrade`,
                         region, resource);
