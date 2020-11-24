@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'VPC Endpoint Exposed',
     category: 'EC2',
-    description: 'Ensure Amazon VPC endpoints are not exposed to everyone.',
+    description: 'Ensure Amazon VPC endpoints are not publicly exposed.',
     more_info: 'VPC endpoints should not be publicly accessible in order to avoid any unsigned requests made to the services inside VPC.',
     recommended_action: 'Update VPC endpoint access policy in order to stop any unsigned requests',
     link: 'https://docs.aws.amazon.com/vpc/latest/userguide/vpc-endpoints-access.html',
@@ -60,7 +60,7 @@ module.exports = {
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `VPC endpoint ${endpoint.VpcEndpointId} is exposed to everyone`,
+                        `VPC endpoint ${endpoint.VpcEndpointId} is publicly exposed`,
                         region, resource);
                 }
             }

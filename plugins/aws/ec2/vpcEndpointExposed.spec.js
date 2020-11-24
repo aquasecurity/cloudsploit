@@ -97,7 +97,7 @@ describe('vpcEndpointExposed', function () {
             });
         });
 
-        it('should FAIL if VPC endpoint is exposed to everyone', function (done) {
+        it('should FAIL if VPC endpoint is publicly exposed', function (done) {
             const cache = createCache([vpcEndpoints[1]]);
             vpcEndpointExposed.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
