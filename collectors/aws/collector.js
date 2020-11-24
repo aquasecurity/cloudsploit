@@ -474,6 +474,12 @@ var calls = {
             paginate: 'Marker'
         }
     },
+    ResourceGroupsTaggingAPI: {
+        getTagKeys: {
+            property: 'TagKeys',
+            paginate: 'PaginationToken'
+        }
+    },
     Route53Domains: {
         listDomains: {
             property: 'Domains',
@@ -1263,6 +1269,7 @@ var collect = function(AWSConfig, settings, callback) {
         }, function() {
             callback(null, collection);
         });
+        // console.log(JSON.stringify(collection, null, 2));
     });
 };
 

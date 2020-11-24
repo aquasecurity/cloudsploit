@@ -4,7 +4,7 @@ const kmsAppTierCmk = require('./kmsAppTierCmk');
 const listKeys = [
     {
         KeyId: '60c4f21b-e271-4e97-86ae-6403618a9467',
-        KeyArn: 'arn:aws:kms:us-east-1:560213429563:key/60c4f21b-e271-4e97-86ae-6403618a9467'
+        KeyArn: 'arn:aws:kms:us-east-1:112233445566:key/60c4f21b-e271-4e97-86ae-6403618a9467'
     }
 ];
 
@@ -27,7 +27,7 @@ const listKeyResources = [
 
 ]
 
-const createCache = (keys, tags) => {
+const createCache = (keys, getTagKeys, tags) => {
     var keyId = (keys && keys.length) ? keys[0].KeyId : null;
     return {
         kms:{
@@ -44,6 +44,13 @@ const createCache = (keys, tags) => {
                 },
             },
         },
+        resourcegroupstaggingapi: {
+            getTagKeys: {
+                'us-east-1': {
+                    data: getTagKeys
+                }
+            }
+        }
     };
 };
 
@@ -65,6 +72,15 @@ const createErrorCache = () => {
                     },
                 },
             },
+        },
+        resourcegroupstaggingapi: {
+            getTagKeys: {
+                'us-east-1': {
+                    err: {
+                        message: 'error fetching tag keys'
+                    }
+                }
+            }
         }
     };
 };
@@ -79,32 +95,46 @@ const createNullCache = () => {
                 'us-east-1': null
             },
         },
+        resourcegroupstaggingapi: {
+            getTagKeys: {
+                'us-east-1': null
+            }
+        }
     };
 };
 
 describe('kmsAppTierCmk', function () {
     describe('run', function () {
-        it('should PASS if App-Tier KMS CMK is in use', function (done) {
-            const cache = createCache([listKeys[0]], listKeyResources[0]);
-            kmsAppTierCmk.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                done();
-            });
-        });
-
-        it('should FAIL if App-Tier KMS CMK is not in use', function (done) {
-            const cache = createCache([listKeys[0]], listKeyResources[1]);
-            kmsAppTierCmk.run(cache, {}, (err, results) => {
+        it('should FAIL if no KMS CMK found for tag-key', function (done) {
+            const cache = createCache([listKeys[0]], [ 'App_Tier' ], listKeyResources[0]);
+            kmsAppTierCmk.run(cache, { kms_cmk_tag_key: 'App_Tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
             });
         });
 
-        it('should PASS if no KMS keys found', function (done) {
-            const cache = createCache([]);
-            kmsAppTierCmk.run(cache, {}, (err, results) => {
+        it('should PASS if KMS CMK is present for tag-key', function (done) {
+            const cache = createCache([listKeys[0]], [ 'app_tier' ], listKeyResources[0]);
+            kmsAppTierCmk.run(cache, { kms_cmk_tag_key: 'app_tier' }, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
+
+        it('should FAIL if no KMS keys found', function (done) {
+            const cache = createCache([], [ 'app_tier' ], listKeyResources[0]);
+            kmsAppTierCmk.run(cache, { kms_cmk_tag_key: 'app_tier' }, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                done();
+            });
+        });
+
+        it('should PASS if no tag keys found', function (done) {
+            const cache = createCache([listKeys[0]], [], listKeyResources[0]);
+            kmsAppTierCmk.run(cache, { kms_cmk_tag_key: 'app_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -113,7 +143,7 @@ describe('kmsAppTierCmk', function () {
 
         it('should UNKNOWN if unable to list KMS keys', function (done) {
             const cache = createErrorCache();
-            kmsAppTierCmk.run(cache, {}, (err, results) => {
+            kmsAppTierCmk.run(cache, { kms_cmk_tag_key: 'app_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -121,6 +151,14 @@ describe('kmsAppTierCmk', function () {
         });
 
         it('should not return any result if list keys response is not found', function (done) {
+            const cache = createNullCache();
+            kmsAppTierCmk.run(cache, { kms_cmk_tag_key: 'app_tier' }, (err, results) => {
+                expect(results.length).to.equal(0);
+                done();
+            });
+        });
+
+        it('should not return any result if KMS CMK tag key not provided in settings', function (done) {
             const cache = createNullCache();
             kmsAppTierCmk.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
