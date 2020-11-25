@@ -177,6 +177,8 @@ function normalizePolicyDocument(doc) {
 }
 
 function globalPrincipal(principal) {
+    if (!principal) return false;
+
     if (typeof principal === 'string' && principal === '*') {
         return true;
     }

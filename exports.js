@@ -66,6 +66,7 @@ module.exports = {
         'openFTP'                       : require(__dirname + '/plugins/aws/ec2/openFTP.js'),
         'openHadoopNameNode'            : require(__dirname + '/plugins/aws/ec2/openHadoopNameNode.js'),
         'openHadoopNameNodeWebUI'       : require(__dirname + '/plugins/aws/ec2/openHadoopNameNodeWebUI.js'),
+        'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/aws/ec2/openOracleAutoDataWarehouse.js'),
         'openKibana'                    : require(__dirname + '/plugins/aws/ec2/openKibana.js'),
         'openMySQL'                     : require(__dirname + '/plugins/aws/ec2/openMySQL.js'),
         'openOracle'                    : require(__dirname + '/plugins/aws/ec2/openOracle.js'),

@@ -157,7 +157,7 @@ var engine = function(cloudConfig, settings) {
                     // Write out the result (to console or elsewhere)
                     outputHandler.writeResult(results[r], plugin, key, complianceMsg);
 
-                    // Add this to our tracking fo the worst status to calculate
+                    // Add this to our tracking for the worst status to calculate
                     // the exit code
                     maximumStatus = Math.max(maximumStatus, results[r].status);
                     // Remediation
