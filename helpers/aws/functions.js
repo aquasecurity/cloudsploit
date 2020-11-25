@@ -196,6 +196,15 @@ function globalPrincipal(principal) {
     return false;
 }
 
+function userGlobalAccess(statement, restrictedPermissions) {
+    if (statement.Effect && statement.Effect === 'Allow' &&
+        statement.Action && restrictedPermissions.some(permission=> statement.Action.includes(permission))) {
+        return true;
+    }
+    
+    return false;
+}
+
 function crossAccountPrincipal(principal, accountId) {
     if (typeof principal === 'string' &&
         /^[0-9]{12}$/.test(principal) &&
@@ -546,6 +555,7 @@ module.exports = {
     waitForCredentialReport: waitForCredentialReport,
     normalizePolicyDocument: normalizePolicyDocument,
     globalPrincipal: globalPrincipal,
+    userGlobalAccess: userGlobalAccess,
     crossAccountPrincipal: crossAccountPrincipal,
     defaultRegion: defaultRegion,
     defaultPartition: defaultPartition,
