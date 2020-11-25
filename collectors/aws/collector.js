@@ -58,6 +58,13 @@ var calls = {
             params: {
                 MaxRecords: 100
             }
+        },
+        describeLaunchConfigurations: {
+            property: 'LaunchConfigurations',
+            paginate: 'NextToken',
+            params: {
+                MaxRecords: 100
+            }
         }
     },
     CloudFormation: {
@@ -321,6 +328,12 @@ var calls = {
             paginate: 'nextToken'
         }
     },
+    ECS: {
+        listClusters: {
+            property: 'clusterArns',
+            paginate: 'nextToken'
+        }
+    },
     ElasticBeanstalk: {
         describeEnvironments: {
             property: 'Environments',
@@ -357,7 +370,12 @@ var calls = {
     EMR: {
         listClusters: {
             property: 'Clusters',
-            paginate: 'Marker'
+            paginate: 'Marker',
+            params: {
+                ClusterStates: [
+                    'RUNNING'
+                ]
+            }
         }
     },
     ES: {
@@ -555,6 +573,10 @@ var calls = {
                 MaxResults: 50
             },
             paginate: 'NextToken'
+        },
+        listAssociations: {
+            property: 'Associations',
+            paginate: 'NextToken'
         }
     },
     STS: {
@@ -616,6 +638,11 @@ var postcalls = [
         },
         AutoScaling: {
             describeNotificationConfigurations: {
+                reliesOnService: 'autoscaling',
+                reliesOnCall: 'describeAutoScalingGroups',
+                override: true
+            },
+            describeLaunchConfigurations: {
                 reliesOnService: 'autoscaling',
                 reliesOnCall: 'describeAutoScalingGroups',
                 override: true
@@ -746,6 +773,23 @@ var postcalls = [
         EKS: {
             describeCluster: {
                 reliesOnService: 'eks',
+                reliesOnCall: 'listClusters',
+                override: true
+            },
+            listNodegroups: {
+                reliesOnService: 'eks',
+                reliesOnCall: 'listClusters',
+                override: true
+            }
+        },
+        ECS: {
+            describeCluster: {
+                reliesOnService: 'ecs',
+                reliesOnCall: 'listClusters',
+                override: true
+            },
+            listContainerInstances: {
+                reliesOnService: 'ecs',
                 reliesOnCall: 'listClusters',
                 override: true
             }
@@ -919,6 +963,13 @@ var postcalls = [
                 filterValue: 'DBParameterGroupName'
             }
         },
+        S3Control: {
+            getPublicAccessBlock: {
+                reliesOnService: 'sts',
+                reliesOnCall: 'getCallerIdentity',
+                override: true
+            }
+        },
         Redshift: {
             describeClusterParameters: {
                 reliesOnService: 'redshift',
@@ -1018,6 +1069,13 @@ var postcalls = [
                 reliesOnCall: 'listRoles',
                 filterKey: 'RoleName',
                 filterValue: 'RoleName'
+            }
+        },
+        EKS:{
+            describeNodegroups: {
+                reliesOnService: 'eks',
+                reliesOnCall: 'listClusters',
+                override: true
             }
         }
     }
@@ -1166,7 +1224,8 @@ var collect = function(AWSConfig, settings, callback) {
                             !collection[callObj.reliesOnService][callObj.reliesOnCall] ||
                             !collection[callObj.reliesOnService][callObj.reliesOnCall][region] ||
                             !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data ||
-                            !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data.length)) return regionCb();
+                            !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data.length))
+                            return regionCb();
 
                         var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
                         if (callObj.deleteRegion) {
