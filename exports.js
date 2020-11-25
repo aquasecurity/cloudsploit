@@ -39,6 +39,7 @@ module.exports = {
         'cloudtrailObjectLock'          : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailObjectLock.js'),
         'cloudtrailToCloudwatch'        : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailToCloudwatch.js'),
         'cloudtrailBucketPrivate'       : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailBucketPrivate.js'),
+        'cloudtrailDeliveryFailing'     : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailDeliveryFailing.js'),
         'cloudtrailS3Bucket'            : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailS3Bucket.js'),
 
         'configServiceEnabled'          : require(__dirname + '/plugins/aws/configservice/configServiceEnabled.js'),
