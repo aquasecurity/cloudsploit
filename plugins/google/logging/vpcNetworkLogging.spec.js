@@ -30,7 +30,7 @@ describe('vpcNetworkLogging', function () {
         it('should give passing result if no metrics are found', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
-                expect(results[0].status).to.equal(0);
+                expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('No log metrics found');
                 expect(results[0].region).to.equal('global');
                 done()
@@ -48,7 +48,7 @@ describe('vpcNetworkLogging', function () {
         it('should give passing result if no alert policies are found', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
-                expect(results[0].status).to.equal(0);
+                expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('No log alert policies found');
                 expect(results[0].region).to.equal('global');
                 done()

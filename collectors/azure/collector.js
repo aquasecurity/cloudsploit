@@ -216,6 +216,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/blobServices/default/containers?api-version=2019-06-01'
         }
     },
+    blobServices: {
+        list: {
+            reliesOnPath: 'storageAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/blobServices?api-version=2019-06-01'
+        }
+    },
     fileShares: {
         list: {
             reliesOnPath: 'storageAccounts.list',
