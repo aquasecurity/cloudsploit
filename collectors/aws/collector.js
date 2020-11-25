@@ -496,6 +496,13 @@ var calls = {
             paginate: 'Marker'
         }
     },
+    Route53: {
+        listHostedZones: {
+            property: 'HostedZones',
+            paginate: 'NextPageMarker',
+            paginateReqProp: 'Marker'
+        },
+    },
     Route53Domains: {
         listDomains: {
             property: 'Domains',
@@ -962,6 +969,14 @@ var postcalls = [
                 filterKey: 'DBParameterGroupName',
                 filterValue: 'DBParameterGroupName'
             }
+        },
+        Route53: {
+            listResourceRecordSets: {
+                reliesOnService: 'route53',
+                reliesOnCall: 'listHostedZones',
+                filterKey: 'HostedZoneId',
+                filterValue: 'Id'
+            },
         },
         S3Control: {
             getPublicAccessBlock: {
