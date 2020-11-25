@@ -51,7 +51,7 @@ module.exports = {
                 var db = describeDBInstances.data[i];
                 var dbResource = db.DBInstanceArn;
 
-                // skip if it is read only replica Source Indentifier for PostgreSQL
+                // skip if it is read only replica Source Identifier for PostgreSQL
                 if (db.Engine === 'postgresql' && db.ReadReplicaSourceDBInstanceIdentifier){
                     continue;
                 }
