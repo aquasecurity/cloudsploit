@@ -19,7 +19,7 @@ module.exports = {
             name: 'S3 Enforce Encryption Allow Pattern',
             description: 'When set, whitelists buckets matching the given pattern. Useful for overriding buckets outside the account control.',
             regex: '^.{1,255}$',
-            default: false
+            default: ''
         }
     },
 

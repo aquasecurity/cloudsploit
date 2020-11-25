@@ -48,7 +48,7 @@ module.exports = {
             var describeSubnets = helpers.addSource(cache, source,
                 ['ec2', 'describeSubnets', region, vpcId]);
 
-            if (!describeSubnets || describeSubnets.err || !describeSubnets.data) {
+            if (!describeSubnets || describeSubnets.err || !describeSubnets.data || !describeSubnets.data.Subnets) {
                 helpers.addResult(results, 3,
                     'Unable to query for subnets in VPC: ' + helpers.addError(describeSubnets), region, vpcId);
                 return rcb();

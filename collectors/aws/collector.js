@@ -42,6 +42,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    APIGateway: {
+        getRestApis: {
+            property: 'items',
+            paginate: 'NextToken'
+        }
+    },
     Athena: {
         listWorkGroups: {
             property: 'WorkGroups',
@@ -297,6 +303,10 @@ var calls = {
             property: 'ServiceDetails',
             paginate: 'NextToken'
         },
+        describeVpcEndpoints: {
+            property: 'VpcEndpoints',
+            paginate: 'NextToken'
+        },
         describeRouteTables: {
             property: 'RouteTables',
             paginate: 'NextToken'
@@ -500,6 +510,13 @@ var calls = {
             paginate: 'Marker'
         }
     },
+    Route53: {
+        listHostedZones: {
+            property: 'HostedZones',
+            paginate: 'NextPageMarker',
+            paginateReqProp: 'Marker'
+        },
+    },
     Route53Domains: {
         listDomains: {
             property: 'Domains',
@@ -632,6 +649,14 @@ var postcalls = [
                 filterValue: 'CertificateArn'
             }
         },
+        APIGateway: {
+            getStages: {
+                reliesOnService: 'apigateway',
+                reliesOnCall: 'getRestApis',
+                filterKey: 'restApiId',
+                filterValue: 'id'
+            }
+        },
         Athena: {
             getWorkGroup: {
                 reliesOnService: 'athena',
@@ -670,6 +695,12 @@ var postcalls = [
                 reliesOnService: 'cloudtrail',
                 reliesOnCall: 'describeTrails',
                 override: true
+            },
+            getEventSelectors: {
+                reliesOnService: 'cloudtrail',
+                reliesOnCall: 'describeTrails',
+                filterKey: 'TrailName',
+                filterValue: 'TrailARN'
             }
         },
         DynamoDB: {
@@ -765,6 +796,11 @@ var postcalls = [
                 reliesOnCall: 'describeVpcs',
                 override: true
             },
+            describeSnapshotAttribute: {
+                reliesOnService: 'ec2',
+                reliesOnCall: 'describeSnapshots',
+                override: true
+            }
         },
         ECR: {
             getRepositoryPolicy: {
@@ -966,6 +1002,14 @@ var postcalls = [
                 filterKey: 'DBParameterGroupName',
                 filterValue: 'DBParameterGroupName'
             }
+        },
+        Route53: {
+            listResourceRecordSets: {
+                reliesOnService: 'route53',
+                reliesOnCall: 'listHostedZones',
+                filterKey: 'HostedZoneId',
+                filterValue: 'Id'
+            },
         },
         S3Control: {
             getPublicAccessBlock: {
