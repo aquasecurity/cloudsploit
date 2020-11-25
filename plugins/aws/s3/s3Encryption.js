@@ -17,7 +17,7 @@ function statementTargetsAction(statement, targetAction) {
 }
 
 /**
- * Return the encryption level for the satement
+ * Return the encryption level for the statement
  * If multiple conditions in StringNotEquals, return the least-restrictive condition found first (sse)
  */
 function getEncryptionLevel(statement) {
@@ -58,12 +58,7 @@ module.exports = {
     settings: {
         s3_required_encryption_level: {
             name: 'S3 Minimum Default Encryption Level',
-            description: 'In order (lowest to highest) \
-                sse=Server-Side Encryption; \
-                awskms=AWS-managed KMS; \
-                awscmk=Customer managed KMS; \
-                externalcmk=Customer managed externally sourced KMS; \
-                cloudhsm=Customer managed CloudHSM sourced KMS',
+            description: 'In order (low to high) sse=Server-Side Encryption; awskms=AWS KMS; awscmk=Customer KMS; externalcmk=Customer external KMS; cloudhsm=Customer CloudHSM',
             regex: '^(sse|awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'sse',
         }

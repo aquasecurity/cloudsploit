@@ -17,7 +17,7 @@ module.exports = {
             name: 'IAM Role Policies Ignore Path',
             description: 'Ignores roles that contain the provided exact-match path',
             regex: '^[0-9A-Za-z/._-]{3,512}$',
-            default: false
+            default: ''
         }
     },
 
