@@ -68,7 +68,7 @@ module.exports = {
     
                         if (!parameters.data.Parameters || !parameters.data.Parameters.length) {
                             helpers.addResult(results, 3,
-                                `No parameters found for RDS paramater group "${groupName}"`,
+                                `No parameters found for RDS parameter group "${groupName}"`,
                                 region, resource);
                             return cb();
                         }

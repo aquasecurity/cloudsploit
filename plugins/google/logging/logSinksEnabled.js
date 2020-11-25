@@ -27,7 +27,7 @@ module.exports = {
             }
 
             if (!sinks.data.length) {
-                helpers.addResult(results, 0, 'No sinks found', region);
+                helpers.addResult(results, 2, 'No sinks found', region);
                 return rcb();
             }
             var noSinks = true;
