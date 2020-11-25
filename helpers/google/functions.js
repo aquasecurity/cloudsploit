@@ -45,7 +45,7 @@ function findOpenPorts(ngs, protocols, service, location, results) {
                                             if (strings.indexOf(string) === -1) strings.push(string);
                                             found = true;
                                         }
-                                    } else if (portRange === port) {
+                                    } else if (parseInt(portRange) === port) {
                                         var string = `` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
                                         ` port ` + port + ` open to ` + sourcefilter;
                                         if (strings.indexOf(string) === -1) strings.push(string);
