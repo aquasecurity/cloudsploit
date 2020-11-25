@@ -60,6 +60,7 @@ module.exports = {
     logProfiles: ['global'],
     profiles: ['global'],
     managementLocks: ['global'],
+    blobServices: locations,
     networkWatchers: locations,
     managedClusters: locations,
     virtualMachineScaleSets: locations,
