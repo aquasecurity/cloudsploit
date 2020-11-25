@@ -687,6 +687,12 @@ var postcalls = [
                 reliesOnService: 'cloudtrail',
                 reliesOnCall: 'describeTrails',
                 override: true
+            },
+            getEventSelectors: {
+                reliesOnService: 'cloudtrail',
+                reliesOnCall: 'describeTrails',
+                filterKey: 'TrailName',
+                filterValue: 'TrailARN'
             }
         },
         DynamoDB: {
