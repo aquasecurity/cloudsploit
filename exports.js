@@ -40,6 +40,7 @@ module.exports = {
         'cloudtrailToCloudwatch'        : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailToCloudwatch.js'),
         'cloudtrailBucketPrivate'       : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailBucketPrivate.js'),
         'cloudtrailDeliveryFailing'     : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailDeliveryFailing.js'),
+        'cloudtrailS3Bucket'            : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailS3Bucket.js'),
 
         'configServiceEnabled'          : require(__dirname + '/plugins/aws/configservice/configServiceEnabled.js'),
 
@@ -48,6 +49,7 @@ module.exports = {
         'dynamoKmsEncryption'           : require(__dirname + '/plugins/aws/dynamodb/dynamoKmsEncryption.js'),
         'daxClusterEncryption'          : require(__dirname + '/plugins/aws/dynamodb/daxClusterEncryption.js'),
 
+        'appTierInstanceIamRole'        : require(__dirname + '/plugins/aws/ec2/appTierInstanceIamRole.js'),
         'defaultSecurityGroup'          : require(__dirname + '/plugins/aws/ec2/defaultSecurityGroup.js'),
         'launchWizardSecurityGroups'    : require(__dirname + '/plugins/aws/ec2/launchWizardSecurityGroups'),
         'securityGroupRfc1918'          : require(__dirname + '/plugins/aws/ec2/securityGroupRfc1918.js'),
@@ -67,6 +69,7 @@ module.exports = {
         'openFTP'                       : require(__dirname + '/plugins/aws/ec2/openFTP.js'),
         'openHadoopNameNode'            : require(__dirname + '/plugins/aws/ec2/openHadoopNameNode.js'),
         'openHadoopNameNodeWebUI'       : require(__dirname + '/plugins/aws/ec2/openHadoopNameNodeWebUI.js'),
+        'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/aws/ec2/openOracleAutoDataWarehouse.js'),
         'openKibana'                    : require(__dirname + '/plugins/aws/ec2/openKibana.js'),
         'openMySQL'                     : require(__dirname + '/plugins/aws/ec2/openMySQL.js'),
         'openOracle'                    : require(__dirname + '/plugins/aws/ec2/openOracle.js'),
@@ -103,6 +106,7 @@ module.exports = {
         'allowedCustomPorts'            : require(__dirname + '/plugins/aws/ec2/allowedCustomPorts.js'),
         'ebsUnusedVolumes'              : require(__dirname + '/plugins/aws/ec2/ebsUnusedVolumes.js'),
         'publicIpAddress'               : require(__dirname + '/plugins/aws/ec2/publicIpAddress.js'),
+        'webTierInstanceIamRole'        : require(__dirname + '/plugins/aws/ec2/webTierInstanceIamRole.js'),
 
         'efsEncryptionEnabled'          : require(__dirname + '/plugins/aws/efs/efsEncryptionEnabled.js'),
 
@@ -192,6 +196,7 @@ module.exports = {
         'domainAutoRenew'               : require(__dirname + '/plugins/aws/route53/domainAutoRenew.js'),
         'domainExpiry'                  : require(__dirname + '/plugins/aws/route53/domainExpiry.js'),
         'domainTransferLock'            : require(__dirname + '/plugins/aws/route53/domainTransferLock.js'),
+        'danglingDnsRecords'            : require(__dirname + '/plugins/aws/route53/danglingDnsRecords.js'),
 
         'bucketEncryptionInTransit'     : require(__dirname + '/plugins/aws/s3/bucketEncryptionInTransit.js'),
         'bucketAllUsersPolicy'          : require(__dirname + '/plugins/aws/s3/bucketAllUsersPolicy.js'),
