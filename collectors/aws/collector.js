@@ -303,6 +303,10 @@ var calls = {
             property: 'ServiceDetails',
             paginate: 'NextToken'
         },
+        describeVpcEndpoints: {
+            property: 'VpcEndpoints',
+            paginate: 'NextToken'
+        },
         describeRouteTables: {
             property: 'RouteTables',
             paginate: 'NextToken'
