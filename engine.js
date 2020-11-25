@@ -135,7 +135,7 @@ var engine = function(cloudConfig, settings) {
             if (skippedPlugins.indexOf(key) > -1) return pluginDone(null, 0);
 
             plugin.run(collection, settings, function(err, results) {
-                if (!results.length) return console.log('ERROR: Nothing to report...');
+                if (!results || !results.length) return console.log('ERROR: Nothing to report...');
                 for (var r in results) {
                     // If we have suppressed this result, then don't process it
                     // so that it doesn't affect the return code.
@@ -157,7 +157,7 @@ var engine = function(cloudConfig, settings) {
                     // Write out the result (to console or elsewhere)
                     outputHandler.writeResult(results[r], plugin, key, complianceMsg);
 
-                    // Add this to our tracking fo the worst status to calculate
+                    // Add this to our tracking for the worst status to calculate
                     // the exit code
                     maximumStatus = Math.max(maximumStatus, results[r].status);
                     // Remediation

@@ -16,8 +16,22 @@ module.exports = {
             'Preventing default storage account access behavior enables a more granular level ' +
             'of access controls.'
     },
+    settings: {
+        storage_account_encryption_allow_pattern: {
+            name: 'Storage Accounts Encryption Allow Pattern',
+            description: 'When set, whitelists storage accounts matching the given pattern. Useful for overriding storage accounts that require default encryption.',
+            regex: '^.{1,255}$',
+            default: '^aquaacct([a-f0-9]){16}$'
+        }
+    },
 
     run: function(cache, settings, callback) {
+        var config = {
+            storage_account_encryption_allow_pattern: settings.storage_account_encryption_allow_pattern || this.settings.storage_account_encryption_allow_pattern.default
+        };
+
+        var custom = helpers.isCustom(settings, this.settings);
+
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
@@ -40,21 +54,30 @@ module.exports = {
                 return rcb();
             }
 
+            var allowRegex = (config.storage_account_encryption_allow_pattern &&
+                config.storage_account_encryption_allow_pattern.length) ? new RegExp(config.storage_account_encryption_allow_pattern) : false;
+
             for (var acct in storageAccount.data) {
                 const account = storageAccount.data[acct];
 
                 // Different versions of the Azure API return different response
                 // formats for this property, hence the extra check.
-                if (account.networkRuleSet &&
-                    account.networkRuleSet.defaultAction &&
-                    account.networkRuleSet.defaultAction.toLowerCase() === 'deny') {
-                    helpers.addResult(results, 0, 'Storage Account default network access rule set to deny', location, account.id);
-                } else if (account.networkAcls &&
-                    account.networkAcls.defaultAction &&
-                    account.networkAcls.defaultAction.toLowerCase() === 'deny') {
-                    helpers.addResult(results, 0, 'Storage Account default network access rule set to deny', location, account.id);
+                if (allowRegex && allowRegex.test(account.name)) {
+                    helpers.addResult(results, 0,
+                        'Storage account: ' + account.name + ' is whitelisted via custom setting.',
+                        location, account.id, custom);
                 } else {
-                    helpers.addResult(results, 2, 'Storage Account default network access rule set to allow from all networks', location, account.id);
+                    if (account.networkRuleSet &&
+                        account.networkRuleSet.defaultAction &&
+                        account.networkRuleSet.defaultAction.toLowerCase() === 'deny') {
+                        helpers.addResult(results, 0, 'Storage Account default network access rule set to deny', location, account.id);
+                    } else if (account.networkAcls &&
+                        account.networkAcls.defaultAction &&
+                        account.networkAcls.defaultAction.toLowerCase() === 'deny') {
+                        helpers.addResult(results, 0, 'Storage Account default network access rule set to deny', location, account.id);
+                    } else {
+                        helpers.addResult(results, 2, 'Storage Account default network access rule set to allow from all networks', location, account.id);
+                    }
                 }
             }
             rcb();
