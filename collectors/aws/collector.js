@@ -673,7 +673,12 @@ var postcalls = [
                 reliesOnService: 'dynamodb',
                 reliesOnCall: 'listTables',
                 override: true
-            }
+            },
+            describeContinuousBackups: {
+                reliesOnService: 'dynamodb',
+                reliesOnCall: 'listTables',
+                override: true
+            },
         },
         ES: {
             describeElasticsearchDomain: {
