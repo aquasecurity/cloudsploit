@@ -5,7 +5,6 @@ var govLocations = require('./regions_gov.js');
 
 var async = require('async');
 var sshpk = require('sshpk');
-var assert = require('assert-plus');
 
 // REST Oracle
 var oci = require( '../../other_modules/oci' );
@@ -51,8 +50,9 @@ function OracleExecutor(OracleConfig) {
                         }
                         try {
                             OracleConfig.privateKey = sshpk.parsePrivateKey(OracleConfig.keyValue, 'pem');
-                            assert.ok(sshpk.PrivateKey.isPrivateKey(OracleConfig.privateKey, [1, 2]),
-                                'options.key must be a sshpk.PrivateKey');
+                            if (!sshpk.PrivateKey.isPrivateKey(OracleConfig.privateKey, [1, 2])) {
+                                throw 'options.key must be a sshpk.PrivateKey';
+                            }
                             (!OracleConfig.RESTversion ? OracleConfig.RESTversion = '/20160918' : false );
                         } catch (e) {
                             console.log('Could not read the Oracle Private Key.');
@@ -102,8 +102,9 @@ function OracleExecutor(OracleConfig) {
 
             try {
                 OracleConfig.privateKey = sshpk.parsePrivateKey(OracleConfig.keyValue, 'pem');
-                assert.ok(sshpk.PrivateKey.isPrivateKey(OracleConfig.privateKey, [1, 2]),
-                    'options.key must be a sshpk.PrivateKey');
+                if (!sshpk.PrivateKey.isPrivateKey(OracleConfig.privateKey, [1, 2])) {
+                    throw 'options.key must be a sshpk.PrivateKey';
+                }
                 (!OracleConfig.RESTversion ? OracleConfig.RESTversion = '/20160918' : false );
 
             } catch (e) {
