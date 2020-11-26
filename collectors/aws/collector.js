@@ -42,6 +42,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    APIGateway: {
+        getRestApis: {
+            property: 'items',
+            paginate: 'NextToken'
+        }
+    },
     Athena: {
         listWorkGroups: {
             property: 'WorkGroups',
@@ -295,6 +301,10 @@ var calls = {
         },
         describeVpcEndpointServices: {
             property: 'ServiceDetails',
+            paginate: 'NextToken'
+        },
+        describeVpcEndpoints: {
+            property: 'VpcEndpoints',
             paginate: 'NextToken'
         },
         describeRouteTables: {
@@ -635,6 +645,14 @@ var postcalls = [
                 filterValue: 'CertificateArn'
             }
         },
+        APIGateway: {
+            getStages: {
+                reliesOnService: 'apigateway',
+                reliesOnCall: 'getRestApis',
+                filterKey: 'restApiId',
+                filterValue: 'id'
+            }
+        },
         Athena: {
             getWorkGroup: {
                 reliesOnService: 'athena',
@@ -673,6 +691,12 @@ var postcalls = [
                 reliesOnService: 'cloudtrail',
                 reliesOnCall: 'describeTrails',
                 override: true
+            },
+            getEventSelectors: {
+                reliesOnService: 'cloudtrail',
+                reliesOnCall: 'describeTrails',
+                filterKey: 'TrailName',
+                filterValue: 'TrailARN'
             }
         },
         DynamoDB: {
@@ -768,6 +792,11 @@ var postcalls = [
                 reliesOnCall: 'describeVpcs',
                 override: true
             },
+            describeSnapshotAttribute: {
+                reliesOnService: 'ec2',
+                reliesOnCall: 'describeSnapshots',
+                override: true
+            }
         },
         ECR: {
             getRepositoryPolicy: {
