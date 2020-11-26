@@ -194,7 +194,7 @@ function globalPrincipal(principal) {
     return false;
 }
 
-function crossAccountPrincipal(principal, accountId, fetchPrincipals = false) {
+function crossAccountPrincipal(principal, accountId, fetchPrincipals) {
     if (typeof principal === 'string' &&
         /^[0-9]{12}$/.test(principal) &&
         principal !== accountId) {
@@ -548,5 +548,5 @@ module.exports = {
     remediatePlugin: remediatePlugin,
     nullArray: nullArray,
     remediatePasswordPolicy:remediatePasswordPolicy,
-    remediateOpenPorts: remediateOpenPorts,
+    remediateOpenPorts: remediateOpenPorts
 };
