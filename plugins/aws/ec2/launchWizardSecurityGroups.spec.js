@@ -20,7 +20,7 @@ const securityGroups = [
                 "UserIdGroupPairs": []
               }
             ],
-            "OwnerId": "560213429563",
+            "OwnerId": "123456654321",
             "GroupId": "sg-0ff1642cae23c309a",
             "IpPermissionsEgress": [
               {
@@ -42,7 +42,7 @@ const securityGroups = [
             "Description": "Allows SSh access to developer",
             "GroupName": "spec-test-sg",
             "IpPermissions": [],
-            "OwnerId": "560213429563",
+            "OwnerId": "123456654321",
             "GroupId": "sg-0b5f2771716acfee4",
             "IpPermissionsEgress": [
               {

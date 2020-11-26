@@ -14,7 +14,7 @@ module.exports = {
             name: 'RDS Encryption KMS Alias',
             description: 'If set, RDS encryption must be configured using the KMS key alias specified. Be sure to include the alias/ prefix.',
             regex: '^alias/[a-zA-Z0-9_/-]{0,256}$',
-            default: false
+            default: ''
         }
     },
     compliance: {

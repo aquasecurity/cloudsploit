@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Minimum Password Length',
     category: 'IAM',
-    description: 'Ensures password policy requires a password of at least 14 characters',
+    description: 'Ensures password policy requires a password of at least a minimum number of characters',
     more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
     recommended_action: 'Increase the minimum length requirement for the password policy',
@@ -11,6 +11,20 @@ module.exports = {
     remediation_description: 'The password policy for minimum password length will be set to the value set by the user. Otherwise, it will default to 14.',
     remediation_min_version: '202006221808',
     apis_remediate: ['IAM:getAccountPasswordPolicy'],
+    remediation_inputs: {
+        minPasswordLength: {
+            name: '(Optional) Minimum Password Length',
+            description: 'The minimum password length to use in the account policy 6-128',
+            regex: '^([6-9]|[0-9]{2}|11[0-9]|12[0-8])$',
+            required: false
+        },
+        minPasswordLengthCreatePolicy: {
+            name: 'Create Password Policy',
+            description: 'Whether to create a new password policy if one does not already exist.',
+            regex: '^(true|false)$',
+            required: false
+        }
+    },
     actions: {remediate: ['IAM:updateAccountPasswordPolicy'], rollback: ['IAM:updateAccountPasswordPolicy']},
     permissions: {remediate: ['iam:UpdateAccountPasswordPolicy'], rollback: ['iam:UpdateAccountPasswordPolicy']},
     compliance: {
@@ -70,11 +84,11 @@ module.exports = {
         if (!passwordPolicy.MinimumPasswordLength) {
             helpers.addResult(results, 2, 'Password policy does not specify a minimum password length');
         } else if (passwordPolicy.MinimumPasswordLength < config.min_password_length_fail) {
-            helpers.addResult(results, 2, 'Minimum password length of: ' + passwordPolicy.MinimumPasswordLength + ' is less than 10 characters', 'global', null, custom);
+            helpers.addResult(results, 2, `Minimum password length of: ${passwordPolicy.MinimumPasswordLength} is less than ${config.min_password_length_fail} characters`, 'global', null, custom);
         } else if (passwordPolicy.MinimumPasswordLength < config.min_password_length_warn) {
-            helpers.addResult(results, 1, 'Minimum password length of: ' + passwordPolicy.MinimumPasswordLength + ' is less than 14 characters', 'global', null, custom);
+            helpers.addResult(results, 1, `Minimum password length of: ${passwordPolicy.MinimumPasswordLength} is less than ${config.min_password_length_warn} characters`, 'global', null, custom);
         } else {
-            helpers.addResult(results, 0, 'Minimum password length of: ' + passwordPolicy.MinimumPasswordLength + ' is suitable', 'global', null, custom);
+            helpers.addResult(results, 0, `Minimum password length of: ${passwordPolicy.MinimumPasswordLength} is suitable`, 'global', null, custom);
         }
 
         callback(null, results, source);

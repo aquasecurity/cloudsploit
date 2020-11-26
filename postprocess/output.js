@@ -1,4 +1,3 @@
-var csvWriter = require('csv-write-stream');
 var fs = require('fs');
 var ttytable = require('tty-table');
 
@@ -85,6 +84,7 @@ module.exports = {
         var headers = ['category', 'title', 'description',
             'resource', 'region', 'statusWord', 'message'];
         if (settings.compliance) headers.push('compliance');
+        var csvWriter = require('csv-write-stream');
         var writer = csvWriter({headers: headers});
         writer.pipe(stream);
 

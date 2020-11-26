@@ -177,6 +177,8 @@ function normalizePolicyDocument(doc) {
 }
 
 function globalPrincipal(principal) {
+    if (!principal) return false;
+
     if (typeof principal === 'string' && principal === '*') {
         return true;
     }
@@ -191,6 +193,15 @@ function globalPrincipal(principal) {
         return true;
     }
 
+    return false;
+}
+
+function userGlobalAccess(statement, restrictedPermissions) {
+    if (statement.Effect && statement.Effect === 'Allow' &&
+        statement.Action && restrictedPermissions.some(permission=> statement.Action.includes(permission))) {
+        return true;
+    }
+    
     return false;
 }
 
@@ -258,6 +269,14 @@ function nullArray(object) {
     }
     return object;
 }
+
+let divideArray = function(array, size) {
+    var arrayOfArrays = [];
+    while (array.length > 0) {
+        arrayOfArrays.push(array.splice(0, size));
+    }
+    return arrayOfArrays;
+};
 
 function remediatePasswordPolicy(putCall, pluginName, remediation_file, passwordKey, config, cache, settings, resource, input, callback) {
     config.region = defaultRegion({});
@@ -542,11 +561,13 @@ module.exports = {
     waitForCredentialReport: waitForCredentialReport,
     normalizePolicyDocument: normalizePolicyDocument,
     globalPrincipal: globalPrincipal,
+    userGlobalAccess: userGlobalAccess,
     crossAccountPrincipal: crossAccountPrincipal,
     defaultRegion: defaultRegion,
     defaultPartition: defaultPartition,
     remediatePlugin: remediatePlugin,
     nullArray: nullArray,
+    divideArray:divideArray,
     remediatePasswordPolicy:remediatePasswordPolicy,
     remediateOpenPorts: remediateOpenPorts
 };
