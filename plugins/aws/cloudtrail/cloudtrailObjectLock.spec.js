@@ -131,11 +131,11 @@ describe('cloudtrailObjectLock', function () {
             });
         });
 
-        it('should PASS if no trails found', function (done) {
+        it('should FAIL if CloudTrail is not enabled', function (done) {
             const cache = createCache([]);
             cloudtrailObjectLock.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
+                expect(results[0].status).to.equal(2);
                 done();
             });
         });

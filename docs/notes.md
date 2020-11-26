@@ -26,7 +26,7 @@ To create a cross-account role:
 ```
 
 ## CloudSploit Supplemental Policy
-Allows read only accesss to services not included in the SecurityAudit AWS Managed policy but that are also tested by the CSPM scans.
+Allows read only access to services not included in the SecurityAudit AWS Managed policy but that are also tested by the CSPM scans.
 
 ```$xslt
 {

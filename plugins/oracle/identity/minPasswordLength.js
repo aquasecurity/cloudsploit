@@ -53,7 +53,7 @@ module.exports = {
                 }  else if (passwordPolicy &&
                     passwordPolicy.minimumPasswordLength &&
                     passwordPolicy.minimumPasswordLength < 10) {
-                    helpers.addResult(results, 2, 'Minimum password length of: ' + passwordPolicy.minimumPasswordLength + ' is less than the recommded 14 characters', 'global', authenticationPolicy.data.compartmentId);
+                    helpers.addResult(results, 2, 'Minimum password length of: ' + passwordPolicy.minimumPasswordLength + ' is less than the recommended 14 characters', 'global', authenticationPolicy.data.compartmentId);
                 } else if (passwordPolicy &&
                     passwordPolicy.minimumPasswordLength &&
                     passwordPolicy.minimumPasswordLength < 14) {
