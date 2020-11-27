@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Update XRay encryption configuration to use a CMK.',
     apis: ['XRay:getEncryptionConfig'],
     remediation_description: 'Encryption for the affected Cloud trails will be enabled.',
-    remediation_min_version: '202010302230',
+    remediation_min_version: '202011271430',
     apis_remediate: ['XRay:getEncryptionConfig'],
     actions: {
         remediate: ['XRay:putEncryptionConfig'],
