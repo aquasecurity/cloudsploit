@@ -84,7 +84,7 @@ const listGroups = [
         "Path": "/",
         "GroupName": "group1",
         "GroupId": "AGPAYE32SRU5VIDOFGQPO",
-        "Arn": "arn:aws:iam::560213429563:group/group1",
+        "Arn": "arn:aws:iam::123456654321:group/group1",
         "CreateDate": "2020-10-24T14:50:04.000Z"
     }
 ];
