@@ -94,6 +94,15 @@ describe('exports', function () {
 
                     expect(lTest.remediation_min_version, `Test: ${test} remediation_min_version parameter is not a string`).to.be.a('string');
                     expect(lTest.remediation_min_version.length, `Test: ${test} remediation_min_version parameter  length is not 12`).to.equal(12);
+
+                    if (lTest.remediation_inputs) {
+                        expect(lTest.remediation_inputs, `Test: ${test} remediation_inputs is not an object`).to.be.an('object');
+                        Object.keys(lTest.remediation_inputs).forEach(function(rInput){
+                            expect(lTest.remediation_inputs[rInput].name, `Test: ${test} remediation_inputs.${rInput}.name is not a string`).to.be.a('string');
+                            expect(lTest.remediation_inputs[rInput].description, `Test: ${test} remediation_inputs.${rInput}.description is not a string`).to.be.a('string');
+                            expect(lTest.remediation_inputs[rInput].regex, `Test: ${test} remediation_inputs.${rInput}.regex is not a string`).to.be.a('string');
+                        });
+                    }
                 }
 
                 if (lTest.rollback) {

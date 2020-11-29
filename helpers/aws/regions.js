@@ -26,6 +26,7 @@ module.exports = {
     all: regions,
     optin: ['ap-east-1', 'me-south-1'],   // Regions that AWS disables by default
     acm: regions,
+    apigateway: regions,
     athena: ['us-east-1', 'us-east-2', 'us-west-2', 'ca-central-1',
         'eu-west-1', 'eu-central-1', 'eu-west-2', 'ap-southeast-1',
         'ap-northeast-1', 'ap-southeast-2', 'ap-northeast-2', 'ap-south-1'],
@@ -73,7 +74,6 @@ module.exports = {
     flowlogs: regions,
     rds: regions,
     redshift: regions,
-    apigateway: regions,
     cloudwatch: regions,
     ecs: regions,
     sagemaker: [
@@ -102,8 +102,8 @@ module.exports = {
         'sa-east-1', 'eu-west-1', 'eu-central-1', 'eu-west-2',
         'ap-southeast-1', 'ap-northeast-1', 'ap-southeast-2', 'ap-northeast-2',
         'ap-south-1'],
-    efs: [ 'eu-west-2', 'eu-west-1', 'ap-northeast-2', 'ap-northeast-1', 'ap-southeast-1',
-        'ap-southeast-2', 'eu-central-1', 'us-east-1', 'us-east-2', 'us-west-1', 'us-west-2'],
+    efs: ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'eu-west-2', 'eu-west-1',
+        'ap-northeast-2', 'ap-northeast-1', 'ap-southeast-1', 'ap-southeast-2', 'eu-central-1'],
     support: ['us-east-1'],
     wafregional: ['us-east-1'],
     organizations: ['us-east-1'],

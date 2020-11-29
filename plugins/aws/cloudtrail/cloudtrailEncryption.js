@@ -15,6 +15,14 @@ module.exports = {
     remediation_description: 'Encryption for the affected Cloud trails will be enabled.',
     remediation_min_version: '202010302230',
     apis_remediate: ['CloudTrail:describeTrails'],
+    remediation_inputs: {
+        kmsKeyIdforCt: {
+            name: '(Mandatory) KMS Key ID',
+            description: 'The KMS Key ID used for encryption',
+            regex: '^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$',
+            required: true
+        }
+    },
     actions: {
         remediate: ['CloudTrail:updateTrail'],
         rollback: ['CloudTrail:updateTrail']

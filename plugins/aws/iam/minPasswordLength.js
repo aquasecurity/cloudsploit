@@ -11,6 +11,20 @@ module.exports = {
     remediation_description: 'The password policy for minimum password length will be set to the value set by the user. Otherwise, it will default to 14.',
     remediation_min_version: '202006221808',
     apis_remediate: ['IAM:getAccountPasswordPolicy'],
+    remediation_inputs: {
+        minPasswordLength: {
+            name: '(Optional) Minimum Password Length',
+            description: 'The minimum password length to use in the account policy 6-128',
+            regex: '^([6-9]|[0-9]{2}|11[0-9]|12[0-8])$',
+            required: false
+        },
+        minPasswordLengthCreatePolicy: {
+            name: 'Create Password Policy',
+            description: 'Whether to create a new password policy if one does not already exist.',
+            regex: '^(true|false)$',
+            required: false
+        }
+    },
     actions: {remediate: ['IAM:updateAccountPasswordPolicy'], rollback: ['IAM:updateAccountPasswordPolicy']},
     permissions: {remediate: ['iam:UpdateAccountPasswordPolicy'], rollback: ['iam:UpdateAccountPasswordPolicy']},
     compliance: {

@@ -177,6 +177,8 @@ function normalizePolicyDocument(doc) {
 }
 
 function globalPrincipal(principal) {
+    if (!principal) return false;
+
     if (typeof principal === 'string' && principal === '*') {
         return true;
     }
@@ -191,6 +193,15 @@ function globalPrincipal(principal) {
         return true;
     }
 
+    return false;
+}
+
+function userGlobalAccess(statement, restrictedPermissions) {
+    if (statement.Effect && statement.Effect === 'Allow' &&
+        statement.Action && restrictedPermissions.some(permission=> statement.Action.includes(permission))) {
+        return true;
+    }
+    
     return false;
 }
 
@@ -544,6 +555,7 @@ module.exports = {
     waitForCredentialReport: waitForCredentialReport,
     normalizePolicyDocument: normalizePolicyDocument,
     globalPrincipal: globalPrincipal,
+    userGlobalAccess: userGlobalAccess,
     crossAccountPrincipal: crossAccountPrincipal,
     defaultRegion: defaultRegion,
     defaultPartition: defaultPartition,
