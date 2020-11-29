@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'EBS snapshots should have at-rest encryption enabled through AWS using KMS. If the volume was not encrypted and a snapshot was taken the snapshot will be unencrypted.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSSnapshots.html#encryption-support',
     recommended_action: 'Configure volume encryption and delete unencrypted EBS snapshots.',
-    apis: ['EC2:describeSnapshots', 'STS:getCallerIdentity'],
+    apis: ['EC2:describeSnapshots'],
     compliance: {
         hipaa: 'HIPAA requires that all data is encrypted, including data at rest. ' +
                 'EBS is a HIPAA-compliant solution that provides automated encryption ' +
