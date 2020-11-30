@@ -14,7 +14,7 @@ const vpcEndpointServices = [
         "us-east-1a",
         "us-east-1b"
         ],
-        "Owner": "560213429563",
+        "Owner": "123456654321",
         "BaseEndpointDnsNames": [
         "vpce-svc-09d3a6a098dce6e8c.us-east-1.vpce.amazonaws.com"
         ],
@@ -36,7 +36,7 @@ const vpcEndpointServices = [
           "us-east-1b",
           "us-east-1c"
         ],
-        "Owner": "560213429563",
+        "Owner": "123456654321",
         "BaseEndpointDnsNames": [
           "vpce-svc-09145867a106679a3.us-east-1.vpce.amazonaws.com"
         ],
