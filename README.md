@@ -1,6 +1,6 @@
 [<img src="https://cloudsploit.com/images/logos/cloudsploit_by_aqua_A02.png" height="130">](https://cloud.aquasec.com/signup)
 
-[![Build Status](https://travis-ci.org/cloudsploit/scans.svg?branch=master)](https://travis-ci.org/cloudsploit/scans)
+[![Build Status](https://travis-ci.com/aquasecurity/cloudsploit.svg?branch=master)](https://travis-ci.com/aquasecurity/cloudsploit)
 
 CloudSploit by Aqua - Cloud Security Scans
 =================
@@ -347,5 +347,8 @@ CloudSploit works in two phases. First, it queries the cloud infrastructure APIs
 ## Writing a Plugin
 Please see our [contribution guidelines](.github/CONTRIBUTING.md) and [complete guide](docs/writing-plugins.md) to writing CloudSploit plugins.
 
+## Writing a remediation
+The `--remediate` flag can be used if you want to run remediation for the plugins mentioned as part of this argument. This takes a list of plugin names.
+Please see our [developing remediation guide](docs/writing-remediation.md) for more details.
 ## Other Notes
 For other details about the Aqua Wave SaaS product, AWS security policies, and more, [click here](docs/notes.md).

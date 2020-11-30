@@ -14,6 +14,12 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/elb-security-policy-options.html',
     recommended_action: 'Remove non-HTTPS listeners from load balancer.',
     apis: ['ELB:describeLoadBalancers', 'STS:getCallerIdentity'],
+    remediation_description: 'All HTTP Listeners will be deleted',
+    remediation_min_version: '202011062139',
+    apis_remediate: ['ELB:describeLoadBalancers'],
+    actions: {remediate: ['ELB:deleteLoadBalancerListeners'], rollback: ['ELB:createLoadBalancerListeners']},
+    permissions: {remediate: ['elasticloadbalancing:DeleteLoadBalancerListeners'], rollback: ['elasticloadbalancing:CreateLoadBalancerListeners']},
+    realtime_triggers: ['elasticloadbalancing:CreateLoadBalancerListeners','elasticloadbalancing:CreateLoadBalancer'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -56,7 +62,7 @@ module.exports = {
                 var non_https_listeners = [];
                 lb.ListenerDescriptions.forEach(function(listener){
                     // if it is not https add errors to results
-                    if (listener.Listener.Protocol !== 'HTTPS'){
+                    if (listener.Listener.Protocol !== 'HTTPS' && listener.Listener.Protocol !== 'SSL'){
                         non_https_listeners.push(
                             `${listener.Listener.Protocol}/${listener.Listener.LoadBalancerPort}`
                         );
@@ -79,6 +85,81 @@ module.exports = {
             });
         }, function(){
             callback(null, results, source);
+        });
+    },
+    remediate: function(config, cache, settings, resource, callback) {
+        var putCall = this.actions.remediate;
+        var pluginName = 'elbHttpsOnly';
+        var elbName;
+
+        if (resource && resource.length) {
+            elbName = resource.split('/')[1];
+            config.region = resource.split(':')[3];
+        } else {
+            return callback('No resource to remediate');
+        }
+        var describeLoadBalancers;
+        if (cache['elb'] &&
+            cache['elb']['describeLoadBalancers'] &&
+            cache['elb']['describeLoadBalancers'][config.region] &&
+            cache['elb']['describeLoadBalancers'][config.region].data) {
+            describeLoadBalancers = cache['elb']['describeLoadBalancers'][config.region].data;
+        } else {
+            return callback('Unable to query for ELB');
+        }
+
+        var failingLoadBalancer = describeLoadBalancers.find(loadBalancer => {
+            if (loadBalancer.LoadBalancerName === elbName) {
+                return loadBalancer;
+            }
+        });
+
+        var failingIps = [];
+        if (failingLoadBalancer && failingLoadBalancer.ListenerDescriptions && failingLoadBalancer.ListenerDescriptions.length) {
+            failingLoadBalancer.ListenerDescriptions.forEach(listener => {
+                if (listener.Listener.Protocol === 'HTTP') {
+                    failingIps.push(listener.Listener.LoadBalancerPort);
+                }
+            });
+        } else {
+            return callback(`No listeners found for ELB: ${resource}`);
+        }
+
+        if (!failingIps.length) {
+            return callback('No failing listeners found');
+        }
+
+        var params = {
+            'LoadBalancerName': elbName,
+            'LoadBalancerPorts': failingIps
+        };
+
+
+        var remediation_file = settings.remediation_file;
+        remediation_file['pre_remediate']['actions'][pluginName][resource] = {
+            'Listener': 'Deleted',
+            'LoadBalancerName': elbName,
+            'LoadBalancerPorts': failingIps
+        };
+
+        // passes the config, put call, and params to the remediate helper function
+        helpers.remediatePlugin(config, putCall[0], params, function(err) {
+            if (err) {
+                remediation_file['remediate']['actions'][pluginName]['error'] = err;
+                return callback(err, null);
+            }
+
+            let action = params;
+            action.action = putCall;
+
+            remediation_file['post_remediate']['actions'][pluginName][resource] = action;
+            remediation_file['remediate']['actions'][pluginName][resource] = {
+                'Action': 'LISTENERS_DELETED',
+                'LoadBalancerName': elbName,
+                'LoadBalancerPorts': failingIps
+            };
+            settings.remediation_file = remediation_file;
+            return callback(null, action);
         });
     }
 };
