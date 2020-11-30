@@ -116,6 +116,7 @@ module.exports = {
         'publicIpAddress'               : require(__dirname + '/plugins/aws/ec2/publicIpAddress.js'),
         'webTierInstanceIamRole'        : require(__dirname + '/plugins/aws/ec2/webTierInstanceIamRole.js'),
 
+        'efsCmkEncrypted'               : require(__dirname + '/plugins/aws/efs/efsCmkEncrypted.js'),
         'efsEncryptionEnabled'          : require(__dirname + '/plugins/aws/efs/efsEncryptionEnabled.js'),
 
         'ecrRepositoryPolicy'           : require(__dirname + '/plugins/aws/ecr/ecrRepositoryPolicy.js'),
@@ -247,7 +248,9 @@ module.exports = {
         'redshiftClusterCmkEncrypted'   : require(__dirname + '/plugins/aws/redshift/redshiftClusterCmkEncrypted.js'),
         'redshiftEncryptionEnabled'     : require(__dirname + '/plugins/aws/redshift/redshiftEncryptionEnabled.js'),
         'redshiftPubliclyAccessible'    : require(__dirname + '/plugins/aws/redshift/redshiftPubliclyAccessible.js'),
+        'redshiftAllowVersionUpgrade'   : require(__dirname + '/plugins/aws/redshift/redshiftAllowVersionUpgrade.js'),
         'redshiftSSLEnabled'            : require(__dirname + '/plugins/aws/redshift/redshiftSSLEnabled.js'),
+        'userActivityLoggingEnabled'    : require(__dirname + '/plugins/aws/redshift/userActivityLoggingEnabled.js'),
 
         'transferLoggingEnabled'        : require(__dirname + '/plugins/aws/transfer/transferLoggingEnabled.js'),
 
