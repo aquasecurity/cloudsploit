@@ -43,6 +43,7 @@ module.exports = {
         'cloudtrailBucketPrivate'       : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailBucketPrivate.js'),
         'cloudtrailDeliveryFailing'     : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailDeliveryFailing.js'),
         'cloudtrailS3Bucket'            : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailS3Bucket.js'),
+        'globalLoggingDuplicated'       : require(__dirname + '/plugins/aws/cloudtrail/globalLoggingDuplicated.js'),
 
         'configServiceEnabled'          : require(__dirname + '/plugins/aws/configservice/configServiceEnabled.js'),
 
@@ -97,6 +98,7 @@ module.exports = {
         'encryptedAmi'                  : require(__dirname + '/plugins/aws/ec2/encryptedAmi.js'),
         'instanceIamRole'               : require(__dirname + '/plugins/aws/ec2/instanceIamRole.js'),
         'ebsEncryptionEnabled'          : require(__dirname + '/plugins/aws/ec2/ebsEncryptionEnabled.js'),
+        'ebsSnapshotLifecycle'          : require(__dirname + '/plugins/aws/ec2/ebsSnapshotLifecycle.js'),
         'ebsOldSnapshots'               : require(__dirname + '/plugins/aws/ec2/ebsOldSnapshots.js'),
         'ebsSnapshotPrivate'            : require(__dirname + '/plugins/aws/ec2/ebsSnapshotPrivate.js'),
         'ebsSnapshotPublic'            : require(__dirname + '/plugins/aws/ec2/ebsSnapshotPublic.js'),
@@ -110,10 +112,12 @@ module.exports = {
         'ebsEncryptedSnapshots'         : require(__dirname + '/plugins/aws/ec2/ebsEncryptedSnapshots.js'),
         'ec2MetadataOptions'            : require(__dirname + '/plugins/aws/ec2/ec2MetadataOptions.js'),
         'unusedAmi'                     : require(__dirname + '/plugins/aws/ec2/unusedAmi.js'),
+        'unusedVpcInternetGateways'     : require(__dirname + '/plugins/aws/ec2/unusedVpcInternetGateways.js'),
         'managedNatGateway'             : require(__dirname + '/plugins/aws/ec2/managedNatGateway.js'),
         'allowedCustomPorts'            : require(__dirname + '/plugins/aws/ec2/allowedCustomPorts.js'),
         'ebsUnusedVolumes'              : require(__dirname + '/plugins/aws/ec2/ebsUnusedVolumes.js'),
         'publicIpAddress'               : require(__dirname + '/plugins/aws/ec2/publicIpAddress.js'),
+        'unusedVirtualPrivateGateway'   : require(__dirname + '/plugins/aws/ec2/unusedVirtualPrivateGateway.js'),
         'webTierInstanceIamRole'        : require(__dirname + '/plugins/aws/ec2/webTierInstanceIamRole.js'),
 
         'efsCmkEncrypted'               : require(__dirname + '/plugins/aws/efs/efsCmkEncrypted.js'),
@@ -139,6 +143,7 @@ module.exports = {
         'elbv2HttpsOnly'                  : require(__dirname + '/plugins/aws/elbv2/elbv2HttpsOnly.js'),
         'elbv2NoInstances'                : require(__dirname + '/plugins/aws/elbv2/elbv2NoInstances.js'),
         'elbv2WafEnabled'                 : require(__dirname + '/plugins/aws/elbv2/elbv2WafEnabled.js'),
+        'elbv2MinimumTargetInstances'    : require(__dirname + '/plugins/aws/elbv2/elbv2MinimumTargetInstances.js'),
         'elbv2NlbListenerSecurity'      : require(__dirname + '/plugins/aws/elbv2/elbv2NlbListenerSecurity.js'),
 
         'emrEncryptionInTransit'        : require(__dirname + '/plugins/aws/emr/emrEncryptionInTransit.js'),
@@ -191,6 +196,7 @@ module.exports = {
         'kmsScheduledDeletion'          : require(__dirname + '/plugins/aws/kms/kmsScheduledDeletion.js'),
         'kmsKeyPolicy'                  : require(__dirname + '/plugins/aws/kms/kmsKeyPolicy.js'),
         'kmsDefaultKeyUsage'            : require(__dirname + '/plugins/aws/kms/kmsDefaultKeyUsage.js'),
+        'kmsAppTierCmk'                 : require(__dirname + '/plugins/aws/kms/kmsAppTierCmk.js'),
 
         'rdsAutomatedBackups'           : require(__dirname + '/plugins/aws/rds/rdsAutomatedBackups.js'),
         'rdsEncryptionEnabled'          : require(__dirname + '/plugins/aws/rds/rdsEncryptionEnabled.js'),
