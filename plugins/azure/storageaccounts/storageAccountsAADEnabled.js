@@ -15,13 +15,22 @@ module.exports = {
             description: 'When set to true Plugin will check if storage account has any active file shares',
             regex: '^(true|false)$',
             default: 'false'
+        },
+        storage_account_encryption_allow_pattern: {
+            name: 'Storage Accounts Encryption Allow Pattern',
+            description: 'When set, whitelists storage accounts matching the given pattern. Useful for overriding storage accounts that require default encryption.',
+            regex: '^.{1,255}$',
+            default: '^aquaacct([a-f0-9]){16}$'
         }
     },
     run: function(cache, settings, callback) {
         var config = {
             storage_account_check_file_share: settings.storage_account_check_file_share || this.settings.storage_account_check_file_share.default,
+            storage_account_encryption_allow_pattern: settings.storage_account_encryption_allow_pattern || this.settings.storage_account_encryption_allow_pattern.default
         };
         config.storage_account_check_file_share = (config.storage_account_check_file_share == 'true');
+
+        var custom = helpers.isCustom(settings, this.settings);
 
         var results = [];
         var source = {};
@@ -44,26 +53,36 @@ module.exports = {
                 return rcb();
             }
 
-            storageAccounts.data.forEach(function(storageAccount){
-                if (storageAccount.enableAzureFilesAadIntegration) {
-                    helpers.addResult(results, 0, 'Storage Account is configured with AAD Authentication', location, storageAccount.id);
-                } else if (config.storage_account_check_file_share) {
-                    var fileShares = helpers.addSource(cache, source,
-                        ['fileShares', 'list', location, storageAccount.id]);
+            var allowRegex = (config.storage_account_encryption_allow_pattern &&
+                config.storage_account_encryption_allow_pattern.length) ? new RegExp(config.storage_account_encryption_allow_pattern) : false;
 
-                    if (!fileShares || fileShares.err && !fileShares.data) {
-                        helpers.addResult(results, 3,
-                            'Unable to query for file shares: ' + helpers.addError(fileShares), location, storageAccount.id);
-                    } else {
-                        if (!fileShares.data.length) {
-                            helpers.addResult(results, 0, 'Storage Account is not configured with AAD Authentication but no file shares are present', location, storageAccount.id);
-                        } else {
-                            helpers.addResult(results, 2, 'Storage Account is not configured with AAD Authentication', location, storageAccount.id);
-                        }
-                    }
+            storageAccounts.data.forEach(function(storageAccount){
+                if (allowRegex && allowRegex.test(storageAccount.name)) {
+                    helpers.addResult(results, 0,
+                        'Storage account: ' + storageAccount.name + ' is whitelisted via custom setting.',
+                        location, storageAccount.id, custom);
                 } else {
-                    helpers.addResult(results, 2, 'Storage Account is not configured with AAD Authentication', location, storageAccount.id);
+                    if (storageAccount.enableAzureFilesAadIntegration) {
+                        helpers.addResult(results, 0, 'Storage Account is configured with AAD Authentication', location, storageAccount.id);
+                    } else if (config.storage_account_check_file_share) {
+                        var fileShares = helpers.addSource(cache, source,
+                            ['fileShares', 'list', location, storageAccount.id]);
+
+                        if (!fileShares || fileShares.err && !fileShares.data) {
+                            helpers.addResult(results, 3,
+                                'Unable to query for file shares: ' + helpers.addError(fileShares), location, storageAccount.id);
+                        } else {
+                            if (!fileShares.data.length) {
+                                helpers.addResult(results, 0, 'Storage Account is not configured with AAD Authentication but no file shares are present', location, storageAccount.id);
+                            } else {
+                                helpers.addResult(results, 2, 'Storage Account is not configured with AAD Authentication', location, storageAccount.id);
+                            }
+                        }
+                    } else {
+                        helpers.addResult(results, 2, 'Storage Account is not configured with AAD Authentication', location, storageAccount.id);
+                    }
                 }
+
             });
             
             rcb();
