@@ -22,6 +22,14 @@ module.exports = {
     remediation_description: 'Encryption for the affected SQS queues will be enabled.',
     remediation_min_version: '202010302230',
     apis_remediate: ['SQS:listQueues', 'SQS:getQueueAttributes'],
+    remediation_inputs: {
+        kmsKeyIdforSqs: {
+            name: '(Optional) KMS Key ID',
+            description: 'The KMS Key ID used for encryption',
+            regex: '^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$',
+            required: false
+        }
+    },
     actions: {
         remediate: ['SQS:setQueueAttributes'],
         rollback: ['SQS:setQueueAttributes']
