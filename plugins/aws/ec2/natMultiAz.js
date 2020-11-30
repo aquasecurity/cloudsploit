@@ -72,7 +72,7 @@ module.exports = {
                     var vpcArn = 'arn:aws:ec2:' + region +
                                  ':' + accountId + ':vpc/' + v;
 
-                    if (numSubnets.length === 1) {
+                    if (numSubnets === 1) {
                         helpers.addResult(results, 1,
                             'VPC is using NAT gateways in only 1 subnet', region, vpcArn);
                     } else {

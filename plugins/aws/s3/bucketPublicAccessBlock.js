@@ -13,7 +13,7 @@ module.exports = {
             name: 'S3 Public Access Block Allow Pattern',
             description: 'When set, whitelists buckets matching the given pattern. Useful for overriding buckets outside the account control.',
             regex: '^.{1,255}$',
-            default: false
+            default: ''
         }
     },
 

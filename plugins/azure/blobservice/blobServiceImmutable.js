@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Immutable storage helps store data securely by protecting critical data against deletion.',
     recommended_action: 'Enable a data immutability policy for all storage containers in the Azure storage account.',
     link: 'https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-immutable-storage#Getting-started',
-    apis: ['storageAccounts:list', 'blobContainers:list'],
+    apis: ['storageAccounts:list', 'blobContainers:list', 'blobServices:list'],
     compliance: {
         hipaa: 'Blob immutability preserves the integrity of stored data and protects against ' +
             'accidental or malicious destruction.'
@@ -39,29 +39,68 @@ module.exports = {
                 return rcb();
             }
 
-            storageAccounts.data.forEach(function(storageAccount) {
-                const blobContainers = helpers.addSource(
-                    cache, source, ['blobContainers', 'list', location, storageAccount.id]
-                );
+            async.each(storageAccounts.data, function(storageAccount, cb) {
+                let failingBlobs = [];
 
-                if (!blobContainers || blobContainers.err || !blobContainers.data) {
+                const blobServices = helpers.addSource(cache, source,
+                    ['blobServices', 'list', location, storageAccount.id]);
+
+                if (!blobServices || blobServices.err || !blobServices.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query Blob Containers: ' + helpers.addError(blobContainers),
+                        'Unable to query Blob Services: ' + helpers.addError(blobServices),
                         location, storageAccount.id);
-                } else if (!blobContainers.data.length) {
-                    helpers.addResult(results, 0, 'Storage Account does not contain blob containers', location, storageAccount.id);
+                    return cb();
+                } else if (!blobServices.data.length) {
+                    helpers.addResult(results, 0, 'Storage Account does not contain blob services', location, storageAccount.id);
+                    return cb();
                 } else {
-                    blobContainers.data.forEach(function(blob) {
-                        if (blob.hasImmutabilityPolicy) {
+                    async.each(blobServices.data, function(blob, bcb) {
+                        if (blob.deleteRetentionPolicy && blob.deleteRetentionPolicy.enabled) {
                             helpers.addResult(results, 0, 'Immutability has been configured for the blob service', location, blob.id);
                         } else {
-                            helpers.addResult(results, 2, 'Immutability has not been configured for the blob service', location, blob.id);
+                            if (blob.id) {
+                                let failingStorageName = blob.id.split('/');
+                                failingStorageName.splice(failingStorageName.length - 2, 2);
+                                failingStorageName = failingStorageName.join('/');
+                                failingBlobs.push(failingStorageName);
+
+                            }
                         }
+                        bcb();
+                    }, function() {
+                        async.each(failingBlobs, function(storageAccountId, scb) {
+                            const blobContainers = helpers.addSource(cache, source,
+                                ['blobContainers', 'list', location, storageAccountId]);
+
+                            if (!blobContainers || blobContainers.err || !blobContainers.data) {
+                                helpers.addResult(results, 3,
+                                    'Unable to query Blob Containers: ' + helpers.addError(blobContainers),
+                                    location, storageAccount.id);
+                                return scb();
+                            } else if (!blobContainers.data.length) {
+                                helpers.addResult(results, 0, 'Storage Account does not contain blob containers', location, storageAccount.id);
+                                return scb();
+                            } else {
+                                async.each(blobContainers.data, function(blobContainer, ccb) {
+                                    if (blobContainer.hasImmutabilityPolicy) {
+                                        helpers.addResult(results, 0, 'Immutability has been configured for the blob container', location, blobContainer.id);
+                                    } else {
+                                        helpers.addResult(results, 2, 'Immutability has not been configured for the blob container', location, blobContainer.id);
+                                    }
+                                    ccb();
+                                }, function() {
+                                    scb();
+                                });
+                            }
+                        }, function() {
+                            cb();
+                        });
                     });
                 }
+            }, function() {
+                rcb();
             });
 
-            rcb();
         }, function() {
             callback(null, results, source);
         });

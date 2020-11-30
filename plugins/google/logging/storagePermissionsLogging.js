@@ -45,12 +45,12 @@ module.exports = {
             }
 
             if (!metrics.data.length > 0) {
-                helpers.addResult(results, 0, 'No log metrics found', region);
+                helpers.addResult(results, 2, 'No log metrics found', region);
                 return rcb();
             }
 
             if (!alertPolicies.data.length > 0) {
-                helpers.addResult(results, 0, 'No log alert policies found', region);
+                helpers.addResult(results, 2, 'No log alert policies found', region);
                 return rcb();
             }
 

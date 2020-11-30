@@ -52,14 +52,21 @@ module.exports = {
                     'global', resource);
             }
             else {
-                try {
-                    var policyJson = JSON.parse(getBucketPolicy.data.Policy);
-                }
-                catch(e) {
-                    helpers.addResult(results, 3,
-                        `Error querying for bucket policy for bucket: "${bucket.Name}". Policy JSON could not be parsed`,
-                        'global', resource);
-                    return;
+                var policyJson;
+
+                if (typeof getBucketPolicy.data.Policy == 'object') {
+                    policyJson = getBucketPolicy.data.Policy;
+
+                } else {
+                    try {
+                        policyJson = JSON.parse(getBucketPolicy.data.Policy);
+                    }
+                    catch(e) {
+                        helpers.addResult(results, 3,
+                            `Error querying for bucket policy for bucket: "${bucket.Name}". Policy JSON could not be parsed`,
+                            'global', resource);
+                        return;
+                    }
                 }
 
                 if (!policyJson || !policyJson.Statement) {
