@@ -42,6 +42,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    APIGateway: {
+        getRestApis: {
+            property: 'items',
+            paginate: 'NextToken'
+        }
+    },
     Athena: {
         listWorkGroups: {
             property: 'WorkGroups',
@@ -165,6 +171,11 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    DLM: {
+        getLifecyclePolicies: {
+            property: 'Policies'
+        }
+    },
     DMS: {
         describeReplicationInstances: {
             property: 'ReplicationInstances',
@@ -250,6 +261,12 @@ var calls = {
                 ]
             }
         },
+        describeInternetGateways: {
+            property: 'InternetGateways'
+        },
+        describeEgressOnlyInternetGateways: {
+            property: 'EgressOnlyInternetGateways'
+        },
         describeNatGateways: {
             property: 'NatGateways',
             paginate: 'NextToken',
@@ -297,6 +314,10 @@ var calls = {
             property: 'ServiceDetails',
             paginate: 'NextToken'
         },
+        describeVpcEndpoints: {
+            property: 'VpcEndpoints',
+            paginate: 'NextToken'
+        },
         describeRouteTables: {
             property: 'RouteTables',
             paginate: 'NextToken'
@@ -305,6 +326,10 @@ var calls = {
             property: 'Tags',
             paginate: 'NextToken',
         },
+        describeNetworkInterfaces: {
+            property: 'NetworkInterfaces',
+            paginate: 'NextToken',
+        }
     },
     ECR: {
         describeRepositories: {
@@ -362,6 +387,11 @@ var calls = {
             paginateReqProp: 'Marker'
         },
         describeTargetGroups: {
+            property: 'TargetGroups',
+            paginate: 'NextMarker',
+            paginateReqProp: 'Marker'
+        },
+        describeTargetHealth: {
             property: 'TargetGroups',
             paginate: 'NextMarker',
             paginateReqProp: 'Marker'
@@ -496,6 +526,19 @@ var calls = {
             paginate: 'Marker'
         }
     },
+    ResourceGroupsTaggingAPI: {
+        getTagKeys: {
+            property: 'TagKeys',
+            paginate: 'PaginationToken'
+        }
+    },
+    Route53: {
+        listHostedZones: {
+            property: 'HostedZones',
+            paginate: 'NextPageMarker',
+            paginateReqProp: 'Marker'
+        },
+    },
     Route53Domains: {
         listDomains: {
             property: 'Domains',
@@ -628,6 +671,14 @@ var postcalls = [
                 filterValue: 'CertificateArn'
             }
         },
+        APIGateway: {
+            getStages: {
+                reliesOnService: 'apigateway',
+                reliesOnCall: 'getRestApis',
+                filterKey: 'restApiId',
+                filterValue: 'id'
+            }
+        },
         Athena: {
             getWorkGroup: {
                 reliesOnService: 'athena',
@@ -666,6 +717,12 @@ var postcalls = [
                 reliesOnService: 'cloudtrail',
                 reliesOnCall: 'describeTrails',
                 override: true
+            },
+            getEventSelectors: {
+                reliesOnService: 'cloudtrail',
+                reliesOnCall: 'describeTrails',
+                filterKey: 'TrailName',
+                filterValue: 'TrailARN'
             }
         },
         DynamoDB: {
@@ -761,6 +818,11 @@ var postcalls = [
                 reliesOnCall: 'describeVpcs',
                 override: true
             },
+            describeSnapshotAttribute: {
+                reliesOnService: 'ec2',
+                reliesOnCall: 'describeSnapshots',
+                override: true
+            }
         },
         ECR: {
             getRepositoryPolicy: {
@@ -842,6 +904,14 @@ var postcalls = [
                 reliesOnCall: 'listClusters',
                 filterKey: 'ClusterId',
                 filterValue: 'Id'
+            }
+        },
+        DLM: {
+            getLifecyclePolicy: {
+                reliesOnService: 'dlm',
+                reliesOnCall: 'getLifecyclePolicies',
+                filterKey: 'PolicyId',
+                filterValue: 'PolicyId'
             }
         },
         IAM: {
@@ -938,6 +1008,12 @@ var postcalls = [
                 reliesOnService: 'kms',
                 reliesOnCall: 'listKeys',
                 override: true
+            },
+            listResourceTags: {
+                reliesOnService: 'kms',
+                reliesOnCall: 'listKeys',
+                filterKey: 'KeyId',
+                filterValue: 'KeyId'
             }
         },
         Lambda: {
@@ -962,6 +1038,14 @@ var postcalls = [
                 filterKey: 'DBParameterGroupName',
                 filterValue: 'DBParameterGroupName'
             }
+        },
+        Route53: {
+            listResourceRecordSets: {
+                reliesOnService: 'route53',
+                reliesOnCall: 'listHostedZones',
+                filterKey: 'HostedZoneId',
+                filterValue: 'Id'
+            },
         },
         S3Control: {
             getPublicAccessBlock: {

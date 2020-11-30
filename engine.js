@@ -165,7 +165,6 @@ var engine = function(cloudConfig, settings) {
                         if (suppressionFilter([key, results[r].region || 'any', results[r].resource || 'any'].join(':'))) {
                             continue;
                         }
-
                         var complianceMsg = [];
                         if (settings.compliance && settings.compliance.length) {
                             settings.compliance.forEach(function(c) {
@@ -197,6 +196,7 @@ var engine = function(cloudConfig, settings) {
                                         return console.log(result);
                                     });
                                 }
+
                             }
                         }
                     }
