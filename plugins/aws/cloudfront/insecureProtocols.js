@@ -73,13 +73,13 @@ module.exports = {
                         'global', distribution.ARN, custom);
                 }
             } else if (distribution.ViewerCertificate.MinimumProtocolVersion === 'SSLv3') {
-                helpers.addResult(results, 1, 'Distribution is using insecure SSLv3',
+                helpers.addResult(results, 2, 'Distribution is using insecure SSLv3',
                     'global', distribution.ARN);
             } else if (distribution.ViewerCertificate.MinimumProtocolVersion === 'TLSv1') {
-                helpers.addResult(results, 1, 'Distribution is using insecure TLSv1.0',
+                helpers.addResult(results, 2, 'Distribution is using insecure TLSv1.0',
                     'global', distribution.ARN);
             } else if (distribution.ViewerCertificate.MinimumProtocolVersion === 'TLSv1_2016') {
-                helpers.addResult(results, 1, 'Distribution is using insecure TLSv1_2016',
+                helpers.addResult(results, 2, 'Distribution is using insecure TLSv1_2016',
                     'global', distribution.ARN);
             } else if (distribution.ViewerCertificate.MinimumProtocolVersion === 'TLSv1.1_2016') {
                 helpers.addResult(results, 0, 'Distribution is using secure TLSv1.1_2016',

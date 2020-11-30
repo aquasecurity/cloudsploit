@@ -4,6 +4,7 @@ module.exports = {
     aws : {
         'acmValidation'                 : require(__dirname + '/plugins/aws/acm/acmValidation.js'),
         'acmCertificateExpiry'          : require(__dirname + '/plugins/aws/acm/acmCertificateExpiry.js'),
+        'apigatewayWafEnabled'          : require(__dirname + '/plugins/aws/apigateway/apigatewayWafEnabled.js'),
         'asgMultiAz'                    : require(__dirname + '/plugins/aws/autoscaling/asgMultiAz.js'),
         'asgActiveNotifications'        : require(__dirname + '/plugins/aws/autoscaling/asgActiveNotifications.js'),
         'emptyASG'                      : require(__dirname + '/plugins/aws/autoscaling/emptyASG.js'),
@@ -33,12 +34,15 @@ module.exports = {
 
         'cloudtrailBucketAccessLogging' : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailBucketAccessLogging.js'),
         'cloudtrailBucketDelete'        : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailBucketDelete.js'),
+        'cloudtrailDataEvents'          : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailDataEvents.js'),
         'cloudtrailEnabled'             : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailEnabled.js'),
         'cloudtrailEncryption'          : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailEncryption.js'),
         'cloudtrailFileValidation'      : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailFileValidation.js'),
         'cloudtrailObjectLock'          : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailObjectLock.js'),
         'cloudtrailToCloudwatch'        : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailToCloudwatch.js'),
         'cloudtrailBucketPrivate'       : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailBucketPrivate.js'),
+        'cloudtrailDeliveryFailing'     : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailDeliveryFailing.js'),
+        'cloudtrailS3Bucket'            : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailS3Bucket.js'),
 
         'configServiceEnabled'          : require(__dirname + '/plugins/aws/configservice/configServiceEnabled.js'),
 
@@ -47,6 +51,7 @@ module.exports = {
         'dynamoKmsEncryption'           : require(__dirname + '/plugins/aws/dynamodb/dynamoKmsEncryption.js'),
         'daxClusterEncryption'          : require(__dirname + '/plugins/aws/dynamodb/daxClusterEncryption.js'),
 
+        'appTierInstanceIamRole'        : require(__dirname + '/plugins/aws/ec2/appTierInstanceIamRole.js'),
         'defaultSecurityGroup'          : require(__dirname + '/plugins/aws/ec2/defaultSecurityGroup.js'),
         'launchWizardSecurityGroups'    : require(__dirname + '/plugins/aws/ec2/launchWizardSecurityGroups'),
         'securityGroupRfc1918'          : require(__dirname + '/plugins/aws/ec2/securityGroupRfc1918.js'),
@@ -66,6 +71,7 @@ module.exports = {
         'openFTP'                       : require(__dirname + '/plugins/aws/ec2/openFTP.js'),
         'openHadoopNameNode'            : require(__dirname + '/plugins/aws/ec2/openHadoopNameNode.js'),
         'openHadoopNameNodeWebUI'       : require(__dirname + '/plugins/aws/ec2/openHadoopNameNodeWebUI.js'),
+        'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/aws/ec2/openOracleAutoDataWarehouse.js'),
         'openKibana'                    : require(__dirname + '/plugins/aws/ec2/openKibana.js'),
         'openMySQL'                     : require(__dirname + '/plugins/aws/ec2/openMySQL.js'),
         'openOracle'                    : require(__dirname + '/plugins/aws/ec2/openOracle.js'),
@@ -92,18 +98,25 @@ module.exports = {
         'instanceIamRole'               : require(__dirname + '/plugins/aws/ec2/instanceIamRole.js'),
         'ebsEncryptionEnabled'          : require(__dirname + '/plugins/aws/ec2/ebsEncryptionEnabled.js'),
         'ebsSnapshotLifecycle'          : require(__dirname + '/plugins/aws/ec2/ebsSnapshotLifecycle.js'),
+        'ebsOldSnapshots'               : require(__dirname + '/plugins/aws/ec2/ebsOldSnapshots.js'),
         'ebsSnapshotPrivate'            : require(__dirname + '/plugins/aws/ec2/ebsSnapshotPrivate.js'),
+        'ebsSnapshotPublic'            : require(__dirname + '/plugins/aws/ec2/ebsSnapshotPublic.js'),
+
         'natMultiAz'                    : require(__dirname + '/plugins/aws/ec2/natMultiAz.js'),
         'defaultVpcInUse'               : require(__dirname + '/plugins/aws/ec2/defaultVpcInUse.js'),
         'defaultVpcExists'              : require(__dirname + '/plugins/aws/ec2/defaultVpcExists.js'),
         'crossVpcPublicPrivate'         : require(__dirname + '/plugins/aws/ec2/crossVpcPublicPrivate.js'),
         'vpcEndpointAcceptance'         : require(__dirname + '/plugins/aws/ec2/vpcEndpointAcceptance'),
+        'vpcEndpointExposed'            : require(__dirname + '/plugins/aws/ec2/vpcEndpointExposed.js'),
         'ebsEncryptedSnapshots'         : require(__dirname + '/plugins/aws/ec2/ebsEncryptedSnapshots.js'),
         'ec2MetadataOptions'            : require(__dirname + '/plugins/aws/ec2/ec2MetadataOptions.js'),
+        'managedNatGateway'             : require(__dirname + '/plugins/aws/ec2/managedNatGateway.js'),
         'allowedCustomPorts'            : require(__dirname + '/plugins/aws/ec2/allowedCustomPorts.js'),
         'ebsUnusedVolumes'              : require(__dirname + '/plugins/aws/ec2/ebsUnusedVolumes.js'),
         'publicIpAddress'               : require(__dirname + '/plugins/aws/ec2/publicIpAddress.js'),
+        'webTierInstanceIamRole'        : require(__dirname + '/plugins/aws/ec2/webTierInstanceIamRole.js'),
 
+        'efsCmkEncrypted'               : require(__dirname + '/plugins/aws/efs/efsCmkEncrypted.js'),
         'efsEncryptionEnabled'          : require(__dirname + '/plugins/aws/efs/efsEncryptionEnabled.js'),
 
         'ecrRepositoryPolicy'           : require(__dirname + '/plugins/aws/ecr/ecrRepositoryPolicy.js'),
@@ -126,10 +139,12 @@ module.exports = {
         'elbv2HttpsOnly'                  : require(__dirname + '/plugins/aws/elbv2/elbv2HttpsOnly.js'),
         'elbv2NoInstances'                : require(__dirname + '/plugins/aws/elbv2/elbv2NoInstances.js'),
         'elbv2WafEnabled'                 : require(__dirname + '/plugins/aws/elbv2/elbv2WafEnabled.js'),
+        'elbv2NlbListenerSecurity'      : require(__dirname + '/plugins/aws/elbv2/elbv2NlbListenerSecurity.js'),
 
         'emrEncryptionInTransit'        : require(__dirname + '/plugins/aws/emr/emrEncryptionInTransit.js'),
         'emrEncryptionAtRest'           : require(__dirname + '/plugins/aws/emr/emrEncryptionAtRest.js'),
 
+        'esAccessFromIps'               : require(__dirname + '/plugins/aws/es/esAccessFromIps.js'),
         'esPublicEndpoint'              : require(__dirname + '/plugins/aws/es/esPublicEndpoint.js'),
         'esRequireIAMAuth'              : require(__dirname + '/plugins/aws/es/esRequireIAMAuth.js'),
         'esEncryptedDomain'             : require(__dirname + '/plugins/aws/es/esEncryptedDomain.js'),
@@ -192,6 +207,7 @@ module.exports = {
         'domainAutoRenew'               : require(__dirname + '/plugins/aws/route53/domainAutoRenew.js'),
         'domainExpiry'                  : require(__dirname + '/plugins/aws/route53/domainExpiry.js'),
         'domainTransferLock'            : require(__dirname + '/plugins/aws/route53/domainTransferLock.js'),
+        'danglingDnsRecords'            : require(__dirname + '/plugins/aws/route53/danglingDnsRecords.js'),
 
         'bucketEncryptionInTransit'     : require(__dirname + '/plugins/aws/s3/bucketEncryptionInTransit.js'),
         'bucketAllUsersPolicy'          : require(__dirname + '/plugins/aws/s3/bucketAllUsersPolicy.js'),
@@ -232,7 +248,9 @@ module.exports = {
         'redshiftClusterCmkEncrypted'   : require(__dirname + '/plugins/aws/redshift/redshiftClusterCmkEncrypted.js'),
         'redshiftEncryptionEnabled'     : require(__dirname + '/plugins/aws/redshift/redshiftEncryptionEnabled.js'),
         'redshiftPubliclyAccessible'    : require(__dirname + '/plugins/aws/redshift/redshiftPubliclyAccessible.js'),
+        'redshiftAllowVersionUpgrade'   : require(__dirname + '/plugins/aws/redshift/redshiftAllowVersionUpgrade.js'),
         'redshiftSSLEnabled'            : require(__dirname + '/plugins/aws/redshift/redshiftSSLEnabled.js'),
+        'userActivityLoggingEnabled'    : require(__dirname + '/plugins/aws/redshift/userActivityLoggingEnabled.js'),
 
         'transferLoggingEnabled'        : require(__dirname + '/plugins/aws/transfer/transferLoggingEnabled.js'),
 

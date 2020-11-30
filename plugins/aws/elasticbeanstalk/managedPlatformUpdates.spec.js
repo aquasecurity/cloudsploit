@@ -23,7 +23,7 @@ const environments = [
           "Version": "1.0"
         },
         "EnvironmentLinks": [],
-        "EnvironmentArn": "arn:aws:elasticbeanstalk:us-east-1:560213429563:environment/akhtar-681/Akhtar681-env-2"
+        "EnvironmentArn": "arn:aws:elasticbeanstalk:us-east-1:123456654321:environment/akhtar-681/Akhtar681-env-2"
     },
     {
         "EnvironmentName": "Akhtar681-env-1",
@@ -46,7 +46,7 @@ const environments = [
           "Version": "1.0"
         },
         "EnvironmentLinks": [],
-        "EnvironmentArn": "arn:aws:elasticbeanstalk:us-east-1:560213429563:environment/akhtar-681/Akhtar681-env-1"
+        "EnvironmentArn": "arn:aws:elasticbeanstalk:us-east-1:123456654321:environment/akhtar-681/Akhtar681-env-1"
     }
 ];
 
@@ -73,7 +73,7 @@ const configurationSettings = [
             {
                 Namespace: 'aws:elasticbeanstalk:managedactions',
                 OptionName: 'ServiceRoleForManagedUpdates',
-                Value: 'arn:aws:iam::560213429563:role/aws-elasticbeanstalk-service-role'
+                Value: 'arn:aws:iam::123456654321:role/aws-elasticbeanstalk-service-role'
             },
             {
                 Namespace: 'aws:elasticbeanstalk:managedactions:platformupdate',
@@ -104,7 +104,7 @@ const configurationSettings = [
             {
                 Namespace: 'aws:elasticbeanstalk:managedactions',
                 OptionName: 'ServiceRoleForManagedUpdates',
-                Value: 'arn:aws:iam::560213429563:role/aws-elasticbeanstalk-service-role'
+                Value: 'arn:aws:iam::123456654321:role/aws-elasticbeanstalk-service-role'
             },
             {
                 Namespace: 'aws:elasticbeanstalk:managedactions:platformupdate',

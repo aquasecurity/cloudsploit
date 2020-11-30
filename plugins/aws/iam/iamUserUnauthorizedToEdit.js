@@ -5,6 +5,8 @@ var adminAccessArn = 'arn:aws:iam::aws:policy/AdministratorAccess';
 var iamFullAccessArn = 'arn:aws:iam::aws:policy/IAMFullAccess';
 
 var iamEditAccessPermissions = [
+    '*',
+    'iam:*',
     'iam:CreatePolicy',
     'iam:CreatePolicyVersion',
     'iam:DeleteGroupPolicy',
@@ -137,9 +139,7 @@ module.exports = {
                         for (var s in statements) {
                             let statement = statements[s];
 
-                            if (statement.Effect === 'Allow' &&
-                                (statement.Action.indexOf('iam:*') > -1 ||
-                                iamEditAccessPermissions.some(permission=> statement.Action.includes(permission)))) {
+                            if (helpers.userGlobalAccess(statement, iamEditAccessPermissions)) {
                                 addPolicyToUserObj(restrictedUser, user, policyName);
                             }
                         }
@@ -199,9 +199,7 @@ module.exports = {
                                 for (s in statementsGroup) {
                                     let statementGroup = statementsGroup[s];
 
-                                    if (statementGroup.Effect === 'Allow' &&
-                                        (statementGroup.Action.indexOf('iam:*') > -1 ||
-                                        iamEditAccessPermissions.some(permission=> statementGroup.Action.includes(permission)))) {
+                                    if (helpers.userGlobalAccess(statementGroup, iamEditAccessPermissions)) {
                                         addPolicyToUserObj(restrictedUser, user, policyGroupName);
                                     }
                                 }

@@ -26,7 +26,7 @@ permissions: {
 },
 realtime_triggers: ['s3:CreateBucket'],
 ```
-##### Description of the fileds mentioned above:
+##### Description of the fields mentioned above:
 * ```remediation_description```(string): A short description on what action will be performed to remediate the vulnerability.
 * ```remediation_min_version```(string): Timestamp when this remediation is available in `YYYYMMDDhhmm` format.
 * ```apis_remediate```(string): These are the api calls to collect the data needed for remediation.
