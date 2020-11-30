@@ -19,7 +19,7 @@ module.exports = {
             name: 'Check Global Block',
             description: 'When set, check account level public access for S3 and override bucket level public access check.',
             regex: '^(true|false)$',
-            default: 'true'
+            default: 'false'
         }
     },
 
@@ -74,13 +74,9 @@ module.exports = {
         for (let { Name: bucket } of listBuckets.data) {
             if (config.check_global_block) { 
                 if (!globalMissingBlocks.length) {
-                    helpers.addResult(results, 0, 'AWS account has public access block fully enabled', 'global');
-                } else {
-                    helpers.addResult(results, 2,
-                        `AWS account is missing public access blocks: ${globalMissingBlocks.join(', ')}`, 'global');
+                    helpers.addResult(results, 0, 'AWS account has public access block fully enabled', 'global', `arn:aws:s3:::${bucket}`);
+                    continue;
                 }
-
-                continue;
             }
 
             var getPublicAccessBlock = helpers.addSource(cache, source, ['s3', 'getPublicAccessBlock', region, bucket]);
@@ -89,7 +85,7 @@ module.exports = {
             if (allowRegex && allowRegex.test(bucket)) {
                 helpers.addResult(results, 0,
                     'Bucket: ' + bucket + ' is whitelisted via custom setting.',
-                    'global', 'arn:aws:s3:::' + bucket, custom);
+                    'global', `arn:aws:s3:::${bucket}`, custom);
             } else {
                 if (getPublicAccessBlock.err && getPublicAccessBlock.err.code === 'NoSuchPublicAccessBlockConfiguration') {
                     helpers.addResult(results, 2, 'S3 bucket does not have Public Access Block enabled', 'global', `arn:aws:s3:::${bucket}`);
