@@ -48,7 +48,7 @@ module.exports = {
 
             if (!describeInstances || describeInstances.err || !describeInstances.data) {
                 helpers.addResult(results, 3,
-                    `Unable to query EC2 instaces: ${helpers.addError(describeInstances)}`, region);
+                    `Unable to query EC2 instances: ${helpers.addError(describeInstances)}`, region);
                 return rcb();
             }
 
