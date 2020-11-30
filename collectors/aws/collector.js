@@ -261,6 +261,12 @@ var calls = {
                 ]
             }
         },
+        describeInternetGateways: {
+            property: 'InternetGateways'
+        },
+        describeEgressOnlyInternetGateways: {
+            property: 'EgressOnlyInternetGateways'
+        },
         describeNatGateways: {
             property: 'NatGateways',
             paginate: 'NextToken',
