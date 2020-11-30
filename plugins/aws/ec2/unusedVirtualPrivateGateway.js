@@ -41,12 +41,14 @@ module.exports = {
             describeVpnGateways.data.forEach(function(vpn){
                 var resource = `arn:${awsOrGov}:vpc:${region}:${accountId}:vpn-gateway/${vpn.VpnGatewayId}`;
                 var vpnAttached = false;
-                if (vpn.VpcAttachments && vpn.VpcAttachments) {
-                    vpn.VpcAttachments.forEach(function(attachment){
+                if (vpn.VpcAttachments && vpn.VpcAttachments.length) {
+                    for(var v in vpn.VpcAttachments) {
+                        var attachment = vpn.VpcAttachments[v];
                         if(attachment.State && attachment.State === 'attached') {
                             vpnAttached = true;
+                            break;
                         }
-                    });
+                    }
                 }
 
                 if(vpnAttached) {
