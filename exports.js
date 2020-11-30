@@ -111,6 +111,7 @@ module.exports = {
         'vpcEndpointExposed'            : require(__dirname + '/plugins/aws/ec2/vpcEndpointExposed.js'),
         'ebsEncryptedSnapshots'         : require(__dirname + '/plugins/aws/ec2/ebsEncryptedSnapshots.js'),
         'ec2MetadataOptions'            : require(__dirname + '/plugins/aws/ec2/ec2MetadataOptions.js'),
+        'unusedAmi'                     : require(__dirname + '/plugins/aws/ec2/unusedAmi.js'),
         'unusedVpcInternetGateways'     : require(__dirname + '/plugins/aws/ec2/unusedVpcInternetGateways.js'),
         'managedNatGateway'             : require(__dirname + '/plugins/aws/ec2/managedNatGateway.js'),
         'allowedCustomPorts'            : require(__dirname + '/plugins/aws/ec2/allowedCustomPorts.js'),
