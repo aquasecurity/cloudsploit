@@ -1,6 +1,5 @@
 var async = require('async');
 var helpers = require('../../../helpers/aws');
-const { isValid } = require('../../../helpers/aws/functions');
 
 module.exports = {
     title: 'Redshift Cluster In VPC',
