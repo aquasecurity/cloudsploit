@@ -106,6 +106,14 @@ module.exports = {
         return Object.keys(object)[0];
     },
 
+    isValidArray: function(value){
+        return (Array.isArray(value) && value.length > 0);
+    },
+
+    isValidObject: function(value){
+        return (value && (typeof value === 'object') && (value.constructor === Object));
+    },
+
     compareVersions: function compareVersions(v1, v2) {
         var s1 = v1.split('.');
         var s2 = v2.split('.');

@@ -1,4 +1,4 @@
-FROM node:8-alpine
+FROM node:lts-alpine3.12
 
 # Define a build argment that can be supplied when building the container
 # You can then do the following:
@@ -9,9 +9,10 @@ FROM node:8-alpine
 # You could also use this to specify a particular version number.
 ARG PACKAGENAME=cloudsploit
 
+COPY . /var/scan/cloudsploit/
+
 # Install cloudsploit/scan into the container using npm from NPM
-RUN mkdir /var/scan \
-&& cd /var/scan \
+RUN cd /var/scan \
 && npm init --yes \
 && npm install ${PACKAGENAME}
 
@@ -23,5 +24,5 @@ ENV PATH "$PATH:/var/scan/node_modules/.bin"
 # command line arguments to the run command to control how this executes.
 # Thus, you can use the parameters that you would normally give to index.js
 # when running in a container.
-ENTRYPOINT ["cloudsploitscan"]
+ENTRYPOINT ["cloudsploit-scan"]
 CMD []
