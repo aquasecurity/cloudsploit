@@ -171,6 +171,11 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    DLM: {
+        getLifecyclePolicies: {
+            property: 'Policies'
+        }
+    },
     DMS: {
         describeReplicationInstances: {
             property: 'ReplicationInstances',
@@ -889,6 +894,14 @@ var postcalls = [
                 reliesOnCall: 'listClusters',
                 filterKey: 'ClusterId',
                 filterValue: 'Id'
+            }
+        },
+        DLM: {
+            getLifecyclePolicy: {
+                reliesOnService: 'dlm',
+                reliesOnCall: 'getLifecyclePolicies',
+                filterKey: 'PolicyId',
+                filterValue: 'PolicyId'
             }
         },
         IAM: {

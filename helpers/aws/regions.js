@@ -49,6 +49,7 @@ module.exports = {
         'ap-southeast-2', 'ap-south-1', 'sa-east-1'
     ],
     dynamodb: regions,
+    dlm: regions,
     dms: regions,
     ec2: regions,
     ecr: regions,
