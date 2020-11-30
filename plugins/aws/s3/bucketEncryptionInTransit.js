@@ -26,7 +26,18 @@ module.exports = {
     recommended_action: 'Add statements to the bucket policy that deny all S3 actions when SecureTransport is false. Resources must be list of bucket ARN and bucket ARN with wildcard.',
     link: 'https://aws.amazon.com/premiumsupport/knowledge-center/s3-bucket-policy-for-config-rule/',
     apis: ['S3:listBuckets', 'S3:getBucketPolicy'],
-
+    remediation_description: 'The policy that deny all S3 actions when SecureTransport is false will be added in the impacted buckets.',
+    remediation_min_version: '202006020730',
+    apis_remediate: ['S3:listBuckets', 'S3:getBucketPolicy'],
+    actions: {
+        remediate: ['S3:putBucketPolicy'],
+        rollback: ['S3:putBucketPolicy']
+    },
+    permissions: {
+        remediate: ['s3:PutBucketPolicy'],
+        rollback: ['s3:PutBucketPolicy ']
+    },
+    realtime_triggers: ['s3:putBucketPolicy', 's3:CreateBucket'],
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
@@ -86,5 +97,103 @@ module.exports = {
             }
         }
         callback(null, results, source);
+    },
+    remediate: function(config, cache, settings, resource, callback) {
+        var putCall = this.actions.remediate;
+        var pluginName = 'bucketEncryptionInTransit';
+        var bucketNameArr = resource.split(':');
+        var bucketName = bucketNameArr[bucketNameArr.length - 1];
+
+        // find the location of the bucket needing to be remediated
+        var bucketPolicies = cache['s3']['getBucketPolicy'];
+        var bucketLocation;
+        var err;
+        if ( !bucketPolicies || bucketPolicies.err || Object.keys(bucketPolicies).length){
+            err = bucketLocation.err || 'Unable to get bucket location';
+            return callback(err, null);
+        }
+
+        for (var key in bucketPolicies) {
+            if (bucketPolicies[key][bucketName]) {
+                bucketLocation = key;
+                break;
+            }
+        }
+        var policy = bucketPolicies[key][bucketName];
+        // add the location of the bucket to the config
+        if (!bucketLocation) {
+            err = 'Unable to get bucket location';
+            return callback(err, null);
+        }
+
+        // create the params necessary for the remediation
+        var params = {};
+        var SecureTransport = {
+            'Sid':'DenyInSecureTransport',
+            'Effect': 'Deny',
+            'Principal': '*',
+            'Action': 's3:*',
+            'Resource': [resource,resource+'/*'],
+            'Condition': {
+                'Bool': {
+                    'aws:SecureTransport': 'false'
+                }
+            }
+        };
+        var policyBody = {
+            'Version': '2012-10-17'
+        };
+        if (policy.err && policy.err.code &&
+            policy.err.code === 'NoSuchBucketPolicy'){
+            policyBody['Statement'] = SecureTransport;
+            params = {
+                'Bucket': bucketName,
+                'Policy': JSON.stringify(policyBody)
+            };
+        } else {
+            if(policy.data && policy.data.Policy){
+                var policyJson;
+                if (typeof policy.data.Policy === 'string') {
+                    policyJson = JSON.parse(policy.data.Policy);
+                } else {
+                    policyJson = policy.data.Policy;
+                }
+                policyJson.Statement.push(SecureTransport);
+                params = {
+                    'Bucket': bucketName,
+                    'Policy': JSON.stringify(policyJson)
+                };
+            }
+        }
+        var remediation_file = settings.remediation_file;
+
+        remediation_file['pre_remediate']['actions'][pluginName][resource] = {
+            'VersioningConfiguration': 'Suspended',
+            'Bucket': bucketName
+        };
+
+        // passes the config, put call, and params to the remediate helper function
+        helpers.remediatePlugin(config, putCall[0], params, function(err) {
+            if (err) {
+                remediation_file['remediate']['actions'][pluginName]['error'] = err;
+                return callback(err, null);
+            }
+
+            let action = params;
+            action.action = putCall;
+
+            remediation_file['post_remediate']['actions'][pluginName][resource] = action;
+            remediation_file['remediate']['actions'][pluginName][resource] = {
+                'VersioningConfiguration': 'Enabled',
+                'Bucket': bucketName
+            };
+            settings.remediation_file = remediation_file;
+            return callback(null, action);
+        });
+    },
+    rollback: function(config, cache, settings, resource, callback){
+        console.log('Rollback support for this plugin has not yet been implemented');
+        console.log(config, cache, settings, resource);
+        callback();
     }
 };
