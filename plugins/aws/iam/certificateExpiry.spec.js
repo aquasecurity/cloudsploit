@@ -1,6 +1,13 @@
 var expect = require('chai').expect;
 const certificateExpiry = require('./certificateExpiry');
 
+var certWarn = new Date();
+certWarn.setMonth(certWarn.getMonth() + 1);
+var certPass = new Date();
+certPass.setMonth(certPass.getMonth() + 2);
+var certFail = new Date();
+certFail.setMonth(certFail.getMonth() - 1);
+
 const listServerCertificates = [
     {
         "Path": "/",
@@ -8,7 +15,7 @@ const listServerCertificates = [
         "ServerCertificateId": "ASCAYE32SRU5Z4FTTGYXD",
         "Arn": "arn:aws:iam::560213429563:server-certificate/ExampleCertificate",
         "UploadDate": "2020-08-13T11:37:27Z",
-        "Expiration": "2030-08-10T20:19:51Z"
+        "Expiration": certPass
     },
     {
         "Path": "/",
@@ -16,7 +23,7 @@ const listServerCertificates = [
         "ServerCertificateId": "ASCAYE32SRU5QZ74UU3W2",
         "Arn": "arn:aws:iam::560213429563:server-certificate/myServerCertificate",
         "UploadDate": "2020-08-15T15:16:31Z",
-        "Expiration": "2020-12-20T20:19:51Z"
+        "Expiration": certWarn
     },
     {
         "Path": "/",
@@ -24,15 +31,7 @@ const listServerCertificates = [
         "ServerCertificateId": "ASCAYE32SRU5QZ74UU3W2",
         "Arn": "arn:aws:iam::560213429563:server-certificate/myServerCertificate",
         "UploadDate": "2020-08-15T15:16:31Z",
-        "Expiration": "2020-11-30T20:19:51Z"
-    },
-    {
-        "Path": "/",
-        "ServerCertificateName": "myServerCertificate",
-        "ServerCertificateId": "ASCAYE32SRU5QZ74UU3W2",
-        "Arn": "arn:aws:iam::560213429563:server-certificate/myServerCertificate",
-        "UploadDate": "2020-08-15T15:16:31Z",
-        "Expiration": "2020-10-10T20:19:51Z"
+        "Expiration": certFail
     }
 ];
 
@@ -91,7 +90,7 @@ describe('certificateExpiry', function () {
             const cache = createCache([listServerCertificates[1]]);
             var settings = {
                 certificate_expiry_pass: 45,
-                certificate_expiry_warn: 30
+                certificate_expiry_warn: 25
             };
             certificateExpiry.run(cache, settings, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -101,10 +100,10 @@ describe('certificateExpiry', function () {
         });
 
         it('should FAIL if certificate expires in less than warn limit', function (done) {
-            const cache = createCache([listServerCertificates[2]]);
+            const cache = createCache([listServerCertificates[1]]);
             var settings = {
                 certificate_expiry_pass: 45,
-                certificate_expiry_warn: 30
+                certificate_expiry_warn: 35
             };
             certificateExpiry.run(cache, settings, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -114,7 +113,7 @@ describe('certificateExpiry', function () {
         });
 
         it('should FAIL if certificate expired already', function (done) {
-            const cache = createCache([listServerCertificates[3]]);
+            const cache = createCache([listServerCertificates[2]]);
             var settings = {
                 certificate_expiry_pass: 45,
                 certificate_expiry_warn: 30
