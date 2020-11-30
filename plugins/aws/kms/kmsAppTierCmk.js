@@ -12,7 +12,7 @@ module.exports = {
     settings: {
         kms_cmk_tag_key: {
             name: 'KMS CMK Tag Key',
-            description: 'When this tag key exists in the AWS account, there should also exist a KMS CMK having same tag key',
+            description: 'When this tag key exists in the AWS account, there should also exist a KMS CMK with the same tag key',
             regex: '^.*$',
             default: ''
         },
@@ -46,7 +46,7 @@ module.exports = {
             }
 
             if (!getTagKeys.data.includes(config.kms_cmk_tag_key)) {
-                helpers.addResult(results, 0,
+                helpers.addResult(results, 2,
                     `No key with "${config.kms_cmk_tag_key}" tag found`, region);
                 return rcb();
             }
