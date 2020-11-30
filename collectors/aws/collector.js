@@ -506,6 +506,12 @@ var calls = {
             paginate: 'Marker'
         }
     },
+    ResourceGroupsTaggingAPI: {
+        getTagKeys: {
+            property: 'TagKeys',
+            paginate: 'PaginationToken'
+        }
+    },
     Route53: {
         listHostedZones: {
             property: 'HostedZones',
@@ -974,6 +980,12 @@ var postcalls = [
                 reliesOnService: 'kms',
                 reliesOnCall: 'listKeys',
                 override: true
+            },
+            listResourceTags: {
+                reliesOnService: 'kms',
+                reliesOnCall: 'listKeys',
+                filterKey: 'KeyId',
+                filterValue: 'KeyId'
             }
         },
         Lambda: {
