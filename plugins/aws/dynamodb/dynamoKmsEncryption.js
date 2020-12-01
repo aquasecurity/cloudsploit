@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'DynamoDB tables can be encrypted using AWS-owned or customer-owned KMS keys. Customer keys should be used to ensure control over the encryption seed data.',
     link: 'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/EncryptionAtRest.html',
     recommended_action: 'Create a new DynamoDB table using a CMK KMS key.',
-    apis: ['DynamoDB:listTables', 'DynamoDB:describeTable'],
+    apis: ['DynamoDB:listTables', 'DynamoDB:describeTable', 'STS:getCallerIdentity'],
     remediation_description: 'The impacted DynamoDB table will be configured to use either KMS encryption with AWS managed CMK, or CMK-based encryption if a KMS key ID is provided.',
     remediation_min_version: '202001121300',
     apis_remediate: ['DynamoDB:listTables'],
@@ -31,10 +31,13 @@ module.exports = {
     realtime_triggers: ['DynamoDB:UpdateTable', 'DynamoDB:CreateTable'],
 
     run: function(cache, settings, callback) {
-
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+
+        var acctRegion = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
+        var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
         async.each(regions.dynamodb, function(region, rcb){
             var listTables = helpers.addSource(cache, source,
@@ -59,13 +62,14 @@ module.exports = {
                 var describeTable = helpers.addSource(cache, source,
                     ['dynamodb', 'describeTable', region, table]);
 
+                var resource = `arn:${awsOrGov}:dynamodb:${region}:${accountId}:table/${table}`;
+
                 if (describeTable.err || !describeTable.data || !describeTable.data.Table) {
                     helpers.addResult(results, 3,
                         'Unable to describe DynamoDB table: ' + helpers.addError(describeTable), region, resource);
                     return rcb();
                 }
 
-                var resource = describeTable.data.Table.TableArn;
 
                 if (describeTable.data.Table.SSEDescription &&
                     describeTable.data.Table.SSEDescription.Status &&
@@ -105,7 +109,7 @@ module.exports = {
                     'Enabled': true,
                     'KMSMasterKeyId': settings.input.kmsKeyIdforDynamo,
                     'SSEType': 'KMS'
-                  }
+                }
             };
         } else {
             params = {
@@ -113,7 +117,7 @@ module.exports = {
                 'SSESpecification': {
                     'Enabled': true,
                     'SSEType': 'KMS'
-                  }
+                }
             };
         }
 

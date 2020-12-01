@@ -116,11 +116,11 @@ const createNullCache = () => {
 
 describe('dynamoKmsEncryption', function () {
     describe('run', function () {
-        it('should WARN if table is using default encryption with AWS-owned key', function (done) {
+        it('should FAIL if table is using default encryption with AWS-owned key', function (done) {
             const cache = createCache([tables[0]], describeTable[0]);
             dynamoKmsEncryption.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(1);
+                expect(results[0].status).to.equal(2);
                 done();
             });
         });
