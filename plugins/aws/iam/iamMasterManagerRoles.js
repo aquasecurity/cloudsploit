@@ -50,7 +50,7 @@ const managerRoleActions = {
         'iam:AttachRolePolicy',
         'iam:DeleteRolePolicy',
         'iam:CreatePolicyVersion',
-        'iam:DeletePolicyVersion',
+        'iam:DeletePolicyVersion'
     ]
 };
 
@@ -148,8 +148,11 @@ module.exports = {
             return callback(null, results, source);
         }
 
+        var masterRoleFound = false;
+        var managerRoleFound = false;
+
         async.each(listRoles.data, function(role, cb){
-            if (!role.RoleName) return cb();
+            if (!role.RoleName || !role.AssumeRolePolicyDocument) return cb();
 
             // Skip roles with user-defined paths
             if (config.iam_role_policies_ignore_path &&
@@ -166,14 +169,94 @@ module.exports = {
             var getRolePolicy = helpers.addSource(cache, source,
                 ['iam', 'getRolePolicy', region, role.RoleName]);
 
-            if (listRolePolicies.err) {
+            if (listRolePolicies.err || !listRolePolicies.data || !listRolePolicies.data.PolicyNames) {
                 helpers.addResult(results, 3,
                     'Unable to query for IAM role policy for role: ' + role.RoleName + ': ' + helpers.addError(listRolePolicies), 'global', role.Arn);
                 return cb();
             }
 
+            var assumeRolePolicy = helpers.normalizePolicyDocument(role.AssumeRolePolicyDocument);
+
+            if (!assumeRolePolicy || !assumeRolePolicy.length) return cb();
+
+            var roleAssumable = false;
+            for (var a in assumeRolePolicy) {
+                var policyStatement = assumeRolePolicy[a];
+
+                if (policyStatement.Effect &&
+                    policyStatement.Effect.toUpperCase() === 'ALLOW' &&
+                    policyStatement.Action &&
+                    policyStatement.Action.indexOf('sts:AssumeRole') > -1 &&
+                    policyStatement.Principal &&
+                    policyStatement.Principal.Service &&
+                    policyStatement.Principal.Service.indexOf('iam.amazonaws.com') > -1) {
+                    roleAssumable = true;
+                    break;
+                }
+            }
+
+            if (!roleAssumable) return cb();
+
+            var rolePermissions = { allow: [], deny: [] };
+
+            for (var p in listRolePolicies.data.PolicyNames) {
+                var policyName = listRolePolicies.data.PolicyNames[p];
+
+                if (getRolePolicy &&
+                    getRolePolicy[policyName] && 
+                    getRolePolicy[policyName].data &&
+                    getRolePolicy[policyName].data.PolicyDocument) {
+
+                    var statements = helpers.normalizePolicyDocument(
+                        getRolePolicy[policyName].data.PolicyDocument);
+                    if (!statements) break;
+
+                    for (var s in statements) {
+                        var statement = statements[s];
+                        if (statement.Action && statement.Action.length && !statement.Condition) {
+                            if (statement.Effect && statement.Effect.toUpperCase() === 'ALLOW') {
+                                statement.Action.forEach(perm => {
+                                    if (!rolePermissions.allow.includes(perm)) rolePermissions.allow.push(perm);
+                                });
+                                continue;
+                            }
+
+                            if (statement.Effect && statement.Effect.toUpperCase() === 'DENY') {
+                                statement.Action.forEach(perm => {
+                                    if (!rolePermissions.deny.includes(perm)) rolePermissions.deny.push(perm);
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (masterRoleActions.allow.every(permission => rolePermissions.allow.includes(permission)) &&
+                masterRoleActions.deny.every(permission => rolePermissions.deny.includes(permission))) {
+                masterRoleFound = true;
+            }
+
+            if (managerRoleActions.allow.every(permission => rolePermissions.allow.includes(permission)) &&
+                managerRoleActions.deny.every(permission => rolePermissions.deny.includes(permission))) {
+                managerRoleFound = true;
+            }
+
             cb();
         }, function(){
+            if (managerRoleFound && masterRoleFound) {
+                helpers.addResult(results, 0,
+                    'IAM Master and Manager Roles found', 'global');
+            } else if (!managerRoleFound && !masterRoleFound) {
+                helpers.addResult(results, 2,
+                    'IAM Master and Manager Roles not found', 'global');
+            } else if (!managerRoleFound) {
+                helpers.addResult(results, 2,
+                    'IAM Manager Role not found', 'global');
+            } else {
+                helpers.addResult(results, 2,
+                    'IAM Master Role not found', 'global');
+            }
+
             callback(null, results, source);
         });
     }
