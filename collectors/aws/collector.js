@@ -492,6 +492,10 @@ var calls = {
         listHandshakesForAccount: {
             property: 'Handshakes',
         },
+        listAccounts: {
+            property: 'Accounts',
+            paginate: 'NextToken'
+        },
     },
     RDS: {
         describeDBInstances: {
