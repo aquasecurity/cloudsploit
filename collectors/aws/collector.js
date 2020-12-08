@@ -329,7 +329,13 @@ var calls = {
         describeNetworkInterfaces: {
             property: 'NetworkInterfaces',
             paginate: 'NextToken',
-        }
+        },
+        getEbsEncryptionByDefault: {
+            property: 'EbsEncryptionByDefault'
+        },
+        getEbsDefaultKmsKeyId: {
+            property: 'KmsKeyId'
+        },
     },
     ECR: {
         describeRepositories: {
