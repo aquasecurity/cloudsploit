@@ -18,19 +18,36 @@ module.exports = {
             description: 'Ignores roles that contain the provided exact-match path',
             regex: '^[0-9A-Za-z/._-]{3,512}$',
             default: ''
-        }
+        },
+        ignore_service_specific_wildcards: {
+            name: 'Ignore Service Specific Wildcards',
+            description: 'enable this to consider only those roles which allow all actions',
+            regex: '^(true|false)$', // string true or boolean true to enable, string false or boolean false to disable
+            default: 'false'
+        },
+        ignore_identity_federation_roles: {
+            name: 'Ignore Identity Federation Roles',
+            description: 'enable this to ignore idp/saml trust roles',
+            regex: '^(true|false)$', // string true or boolean true to enable, string false or boolean false to disable
+            default: 'false'
+        },
     },
 
     run: function(cache, settings, callback) {
         var config = {
-            iam_role_policies_ignore_path: settings.iam_role_policies_ignore_path || this.settings.iam_role_policies_ignore_path.default
+            iam_role_policies_ignore_path: settings.iam_role_policies_ignore_path || this.settings.iam_role_policies_ignore_path.default,
+            ignore_service_specific_wildcards: settings.ignore_service_specific_wildcards || this.settings.ignore_service_specific_wildcards.default,
+            ignore_identity_federation_roles: settings.ignore_identity_federation_roles || this.settings.ignore_identity_federation_roles.default
         };
+
+        config.ignore_service_specific_wildcards = (config.ignore_service_specific_wildcards === 'true');
+        config.ignore_identity_federation_roles = (config.ignore_identity_federation_roles === 'true');
 
         var custom = helpers.isCustom(settings, this.settings);
 
         var results = [];
         var source = {};
-        
+
         var region = helpers.defaultRegion(settings);
 
         var listRoles = helpers.addSource(cache, source,
@@ -57,6 +74,14 @@ module.exports = {
                 config.iam_role_policies_ignore_path.length &&
                 role.Path &&
                 role.Path.indexOf(config.iam_role_policies_ignore_path) > -1) {
+                return cb();
+            }
+
+            if (config.ignore_identity_federation_roles &&
+                helpers.hasFederatedUserRole(helpers.normalizePolicyDocument(role.AssumeRolePolicyDocument))) {
+                helpers.addResult(results, 0,
+                    'Role is federated user role',
+                    'global', role.Arn, custom);
                 return cb();
             }
 
@@ -130,7 +155,7 @@ module.exports = {
                                     failMsg = 'Role inline policy allows all actions on all resources';
                                 } else if (statement.Action.indexOf('*') > -1) {
                                     failMsg = 'Role inline policy allows all actions on selected resources';
-                                } else if (statement.Action && statement.Action.length) {
+                                } else if (statement.Action && statement.Action.length && !config.ignore_service_specific_wildcards) {
                                     // Check each action for wildcards
                                     var wildcards = [];
                                     for (a in statement.Action) {

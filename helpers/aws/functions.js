@@ -227,6 +227,19 @@ function crossAccountPrincipal(principal, accountId) {
     return false;
 }
 
+
+function hasFederatedUserRole(policyDocument) {
+    // true iff every statement refers to federated user access 
+    for (let statement of policyDocument) {
+        if (statement.Action &&
+            !statement.Action.includes('sts:AssumeRoleWithSAML') &&
+            !statement.Action.includes('sts:AssumeRoleWithWebIdentity')){
+            return false;
+        }
+    }
+    return true;
+}
+
 function defaultRegion(settings) {
     if (settings.govcloud) return 'us-gov-west-1';
     if (settings.china) return 'cn-north-1';
@@ -563,5 +576,6 @@ module.exports = {
     nullArray: nullArray,
     divideArray:divideArray,
     remediatePasswordPolicy:remediatePasswordPolicy,
-    remediateOpenPorts: remediateOpenPorts
+    remediateOpenPorts: remediateOpenPorts,
+    hasFederatedUserRole: hasFederatedUserRole,
 };
