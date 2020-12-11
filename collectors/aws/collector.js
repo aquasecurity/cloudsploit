@@ -557,6 +557,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    SecretsManager: {
+        listSecrets: {
+            property: 'SecretList',
+            paginate: 'NextToken'
+        }
+    },
     ServiceQuotas: {
         listServiceQuotas: {
             property: 'Quotas',
@@ -1068,6 +1074,14 @@ var postcalls = [
                 reliesOnCall: 'listNotebookInstances',
                 filterKey: 'NotebookInstanceName',
                 filterValue: 'NotebookInstanceName'
+            }
+        },
+        SecretsManager: {
+            describeSecret: {
+                reliesOnService: 'secretsmanager',
+                reliesOnCall: 'listSecrets',
+                filterKey: 'SecretId',
+                filterValue: 'ARN',
             }
         },
         SES: {

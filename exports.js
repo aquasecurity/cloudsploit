@@ -263,6 +263,8 @@ module.exports = {
 
         'transferLoggingEnabled'        : require(__dirname + '/plugins/aws/transfer/transferLoggingEnabled.js'),
 
+        'secretsmanagerEncrypted'       : require(__dirname + '/plugins/aws/secretsmanager/secretsmanagerEncrypted.js'),
+
         'shieldAdvancedEnabled'         : require(__dirname + '/plugins/aws/shield/shieldAdvancedEnabled.js'),
         'shieldEmergencyContacts'       : require(__dirname + '/plugins/aws/shield/shieldEmergencyContacts.js'),
         'shieldProtections'             : require(__dirname + '/plugins/aws/shield/shieldProtections.js'),
