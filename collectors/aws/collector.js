@@ -1125,6 +1125,13 @@ var postcalls = [
         },
     },
     {
+        APIGateway: {
+            getClientCertificate: {
+                reliesOnService: 'apigateway',
+                reliesOnCall: 'getRestApis',
+                override: true
+            }
+        },
         EMR: {
             describeSecurityConfiguration: {
                 reliesOnService: 'emr',
