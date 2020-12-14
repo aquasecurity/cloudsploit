@@ -37,22 +37,22 @@ module.exports = {
             }
 
             async.each(listTables.data, function(table, cb) {
+                var resource = `arn:${awsOrGov}:dynamodb:${region}:${accountId}:table/${table}`;
+
                 var describeContinuousBackups = helpers.addSource(cache, source,
                     ['dynamodb', 'describeContinuousBackups', region, table]);
 
-                var resource = `arn:${awsOrGov}:dynamodb:${region}:${accountId}:table/${table}`;
-
                 if (!describeContinuousBackups || describeContinuousBackups.err || !describeContinuousBackups.data ||
-                    !describeContinuousBackups.data.ContinuousBackupsDescription ||
-                    !describeContinuousBackups.data.ContinuousBackupsDescription.ContinuousBackupsStatus ||
-                    !describeContinuousBackups.data.ContinuousBackupsDescription.PointInTimeRecoveryDescription) {
+                    !describeContinuousBackups.data.ContinuousBackupsDescription) {
                     helpers.addResult(results, 3,
                         `Unable to describe DynamoDB table continuous backups: ${helpers.addError(describeContinuousBackups)}`,
                         region, resource);
                     return cb();
                 }
 
-                if (describeContinuousBackups.data.ContinuousBackupsDescription.ContinuousBackupsStatus === 'ENABLED' &&
+                if (describeContinuousBackups.data.ContinuousBackupsDescription.ContinuousBackupsStatus &&
+                    describeContinuousBackups.data.ContinuousBackupsDescription.ContinuousBackupsStatus === 'ENABLED' &&
+                    describeContinuousBackups.data.ContinuousBackupsDescription.PointInTimeRecoveryDescription &&
                     describeContinuousBackups.data.ContinuousBackupsDescription.PointInTimeRecoveryDescription.PointInTimeRecoveryStatus &&
                     describeContinuousBackups.data.ContinuousBackupsDescription.PointInTimeRecoveryDescription.PointInTimeRecoveryStatus === 'ENABLED') {
                     helpers.addResult(results, 0,

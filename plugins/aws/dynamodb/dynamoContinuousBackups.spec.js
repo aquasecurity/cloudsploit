@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-const continuousBackups = require('./continuousBackups');
+const continuousBackups = require('./dynamoContinuousBackups');
 
 const listTables = [
     "akd-03"
@@ -63,7 +63,7 @@ const createErrorCache = () => {
             describeContinuousBackups: {
                 'us-east-1': {
                     err: {
-                        message: 'error describing continuous backups'
+                        message: 'error describing property'
                     },
                 },
             },
@@ -124,15 +124,6 @@ describe('continuousBackups', function () {
 
         it('should UNKNOWN if unable to describe DynamoDB table continuous backups', function (done) {
             const cache = createCache(listTables);
-            continuousBackups.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(3);
-                done();
-            });
-        });
-
-        it('should UNKNOWN if DynamoDB table continuous backups does not have PointInTimeRecoveryDescription property', function (done) {
-            const cache = createCache(listTables, describeContinuousBackups[2]);
             continuousBackups.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
