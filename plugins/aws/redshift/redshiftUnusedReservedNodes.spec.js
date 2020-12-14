@@ -171,14 +171,14 @@ const createErrorCache = () => {
             describeClusters: {
                 'us-east-1': {
                     err: {
-                        message: 'error describing redshift clusters'
+                        message: 'error while describing redshift clusters'
                     },
                 },
             },
             describeReservedNodes: {
                 'us-east-1': {
                     err: {
-                        message: 'error describing redshift reserved nodes'
+                        message: 'error while describing redshift reserved nodes'
                     },
                 },
             },
@@ -212,7 +212,7 @@ describe('redshiftUnusedReservedNodes', function () {
 
         it('should FAIL if Redshift reserved node is not being used', function (done) {
             const cache = createCache([describeClusters[0]], [describeReservedNodes[1]]);
-            redshiftUnusedReservedNodes.run(cache, {}, (err, results) => {
+        redshiftUnusedReservedNodes.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
