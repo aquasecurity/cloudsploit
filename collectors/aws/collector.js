@@ -413,6 +413,12 @@ var calls = {
             property: 'DomainNames'
         }
     },
+    Glue: {
+        getSecurityConfigurations: {
+            property: 'SecurityConfigurations',
+            paginate: 'NextMarker'
+        }
+    },
     IAM: {
         listServerCertificates: {
             property: 'ServerCertificateMetadataList',
