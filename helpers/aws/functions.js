@@ -272,6 +272,22 @@ let divideArray = function(array, size) {
     return arrayOfArrays;
 };
 
+function getEncryptionLevel(kmsKey) {
+    if (kmsKey.Origin === 'AWS_KMS') {
+        if (kmsKey.KeyManager === 'AWS') {
+            return 2;
+        } else if (kmsKey.KeyManager === 'CUSTOMER') {
+            return 3;
+        }
+    }
+    if (kmsKey.Origin === 'EXTERNAL') {
+        return 4;
+    }
+    if (kmsKey.Origin === 'AWS_CLOUDHSM') {
+        return 5;
+    }
+}
+
 function remediatePasswordPolicy(putCall, pluginName, remediation_file, passwordKey, config, cache, settings, resource, input, callback) {
     config.region = defaultRegion({});
     var params;
@@ -563,5 +579,6 @@ module.exports = {
     nullArray: nullArray,
     divideArray:divideArray,
     remediatePasswordPolicy:remediatePasswordPolicy,
-    remediateOpenPorts: remediateOpenPorts
+    remediateOpenPorts: remediateOpenPorts,
+    getEncryptionLevel: getEncryptionLevel
 };
