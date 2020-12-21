@@ -119,6 +119,12 @@ describe('corporateEmailsOnly', function () {
                                 "members": [
                                     "serviceAccount:service-281330800462@gcp-sa-websecurityscanner.iam.gserviceaccount.com"
                                 ]
+                            },
+                            {
+                                "role": "roles/iap.httpsResourceAccessor",
+                                "members": [
+                                    "domain:example.com"
+                                ]
                             }
                         ]
                     }

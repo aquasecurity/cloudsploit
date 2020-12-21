@@ -10,12 +10,12 @@ module.exports = {
     recommended_action: 'Ensure that no users are actively using their Gmail accounts to access GCP.',
     apis: ['projects:getIamPolicy'],
 
-    run: function(cache, settings, callback) {
+    run: function (cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions();
 
-        async.each(regions.projects, function(region, rcb){
+        async.each(regions.projects, function (region, rcb) {
             let iamPolicies = helpers.addSource(cache, source,
                 ['projects', 'getIamPolicy', region]);
 
@@ -31,15 +31,21 @@ module.exports = {
                 return rcb();
             }
 
+            console.log(iamPolicies)
+
             var iamPolicy = iamPolicies.data[0];
             var gmailUsers = [];
+            console.log(iamPolicy)
             iamPolicy.bindings.forEach(roleBinding => {
+                console.log(roleBinding)
                 if (roleBinding.members && roleBinding.members.length) {
                     roleBinding.members.forEach(member => {
                         var emailArr = member.split('@');
-                        var provider = emailArr[1].split('.');
-                        if (provider[0] === 'gmail' && (gmailUsers.indexOf(member) === -1)) {
-                            gmailUsers.push(member);
+                        if (emailArr.length > 1) {
+                            var provider = emailArr[1].split('.');
+                            if (provider[0] === 'gmail' && (gmailUsers.indexOf(member) === -1)) {
+                                gmailUsers.push(member);
+                            }
                         }
                     })
                 }
@@ -55,7 +61,7 @@ module.exports = {
 
 
             rcb();
-        }, function(){
+        }, function () {
             // Global checking goes here
             callback(null, results, source);
         });
