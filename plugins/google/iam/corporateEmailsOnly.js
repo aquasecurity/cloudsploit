@@ -31,13 +31,9 @@ module.exports = {
                 return rcb();
             }
 
-            console.log(iamPolicies)
-
             var iamPolicy = iamPolicies.data[0];
             var gmailUsers = [];
-            console.log(iamPolicy)
             iamPolicy.bindings.forEach(roleBinding => {
-                console.log(roleBinding)
                 if (roleBinding.members && roleBinding.members.length) {
                     roleBinding.members.forEach(member => {
                         var emailArr = member.split('@');
