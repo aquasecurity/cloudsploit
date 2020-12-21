@@ -157,9 +157,9 @@ describe('dnsSecSigningAlgorithm', function () {
         it('should give passing result if the managed zone does not have DNSSEC configuration', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
-                expect(results[1].status).to.equal(0);
-                expect(results[1].message).to.include('RSASHA1 algorithm is not being used for zone signing');
-                expect(results[1].region).to.equal('global');
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('RSASHA1 algorithm is not being used for zone signing');
+                expect(results[0].region).to.equal('global');
                 done()
             };
 
