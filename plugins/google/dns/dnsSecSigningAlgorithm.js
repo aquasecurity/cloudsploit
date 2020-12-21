@@ -10,12 +10,12 @@ module.exports = {
     recommended_action: 'Ensure that all managed zones using DNSSEC are not using the RSASHA1 algorithm for key or zone signing.',
     apis: ['managedZones:list'],
 
-    run: function(cache, settings, callback) {
+    run: function (cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions();
 
-        async.each(regions.managedZones, function(region, rcb){
+        async.each(regions.managedZones, function (region, rcb) {
             let managedZones = helpers.addSource(cache, source,
                 ['managedZones', 'list', region]);
 
@@ -32,14 +32,12 @@ module.exports = {
                 return rcb();
             }
 
-            var dnsSecEnabled = false;
             managedZones.data.forEach(managedZone => {
                 if (managedZone.dnssecConfig &&
                     managedZone.dnssecConfig.state &&
                     managedZone.dnssecConfig.state === 'on' &&
                     managedZone.dnssecConfig.defaultKeySpecs &&
                     managedZone.dnssecConfig.defaultKeySpecs.length) {
-                    dnsSecEnabled = true;
                     managedZone.dnssecConfig.defaultKeySpecs.forEach(keySpec => {
                         if (keySpec.keyType === 'keySigning') {
                             if (keySpec.algorithm.toLowerCase() === 'rsasha1') {
@@ -59,14 +57,15 @@ module.exports = {
                             }
                         }
                     });
-                    helpers.addResult(results, 2,
-                        'DNSSEC is not enabled on the managed zone', region, managedZone.id);
-
+                } else {
+                    // DNSSEC not enabled
+                    helpers.addResult(results, 0,
+                        'RSASHA1 algorithm is not being used for zone signing', region, managedZone.id);
                 }
             });
 
             rcb();
-        }, function(){
+        }, function () {
             // Global checking goes here
             callback(null, results, source);
         });
