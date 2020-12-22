@@ -10,12 +10,12 @@ module.exports = {
     recommended_action: 'Ensure that no users are actively using their Gmail accounts to access GCP.',
     apis: ['projects:getIamPolicy'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions();
 
-        async.each(regions.projects, function (region, rcb) {
+        async.each(regions.projects, function(region, rcb){
             let iamPolicies = helpers.addSource(cache, source,
                 ['projects', 'getIamPolicy', region]);
 
@@ -57,7 +57,7 @@ module.exports = {
 
 
             rcb();
-        }, function () {
+        }, function(){
             // Global checking goes here
             callback(null, results, source);
         });
