@@ -51,7 +51,7 @@ describe('shieldEmergencyContacts', function () {
 
             const cache = createCache(
                 null,
-                []
+                { EmergencyContactList: []}
             );
 
             shield.run(cache, {}, callback);
@@ -67,11 +67,13 @@ describe('shieldEmergencyContacts', function () {
 
             const cache = createCache(
                 null,
-                [
-                    {
-                        EmailAddress: 'test@example.com'
-                    }
-                ]
+                {
+                    EmergencyContactList: [
+                        {
+                            EmailAddress: 'test@example.com'
+                        }
+                    ]
+                }
             );
 
             shield.run(cache, {}, callback);

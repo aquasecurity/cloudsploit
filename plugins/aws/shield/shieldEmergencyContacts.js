@@ -26,13 +26,15 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        if (describeEmergencyContactSettings.err || !describeEmergencyContactSettings.data) {
+        if (describeEmergencyContactSettings.err ||
+            !describeEmergencyContactSettings.data ||
+            !describeEmergencyContactSettings.data.EmergencyContactList) {
             helpers.addResult(results, 3,
                 'Unable to query for Shield emergency contacts: ' + helpers.addError(describeEmergencyContactSettings));
             return callback(null, results, source);
         }
 
-        if (!describeEmergencyContactSettings.data.length) {
+        if (!describeEmergencyContactSettings.data.EmergencyContactList.length) {
             helpers.addResult(results, 2, 'Shield emergency contacts are not configured');
         } else {
             helpers.addResult(results, 0, 'Shield emergency contacts are configured with: ' + describeEmergencyContactSettings.data.length + ' contacts');
