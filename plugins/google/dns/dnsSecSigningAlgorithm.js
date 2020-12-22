@@ -10,12 +10,12 @@ module.exports = {
     recommended_action: 'Ensure that all managed zones using DNSSEC are not using the RSASHA1 algorithm for key or zone signing.',
     apis: ['managedZones:list'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions();
 
-        async.each(regions.managedZones, function (region, rcb) {
+        async.each(regions.managedZones, function(region, rcb){
             let managedZones = helpers.addSource(cache, source,
                 ['managedZones', 'list', region]);
 
@@ -65,7 +65,7 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function(){
             // Global checking goes here
             callback(null, results, source);
         });
