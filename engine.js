@@ -136,6 +136,8 @@ var engine = function(cloudConfig, settings) {
 
             plugin.run(collection, settings, function(err, results) {
                 if (!results || !results.length) return console.log('ERROR: Nothing to report...');
+                var failedResources = [];
+              
                 for (var r in results) {
                     // If we have suppressed this result, then don't process it
                     // so that it doesn't affect the return code.
@@ -160,21 +162,25 @@ var engine = function(cloudConfig, settings) {
                     // Add this to our tracking for the worst status to calculate
                     // the exit code
                     maximumStatus = Math.max(maximumStatus, results[r].status);
-                    // Remediation
-                    if (settings.remediate && settings.remediate.length) {
-                        if (settings.remediate.indexOf(key) > -1) {
-                            if (results[r].status === 2) {
-                                var resource = results[r].resource;
-                                var event = {};
-                                event['remediation_file'] = {};
-                                event['remediation_file'] = initializeFile(event['remediation_file'], 'execute', key, resource);
-                                plugin.remediate(cloudConfig, collection, event, resource, (err, result) => {
-                                    if (err) return console.log(err);
-                                    return console.log(result);
-                                });
-                            }
-                        }
+                    if (results[r].status === 2 && failedResources.indexOf(results[r].resource) === -1){
+                        failedResources.push(results[r].resource);
                     }
+                }
+                if (settings.remediate && settings.remediate.length) {
+                    async.forEach(failedResources, (resource, rcb) => {
+                        if (settings.remediate.indexOf(key) > -1) {
+                            var event = {};
+                            event['remediation_file'] = {};
+                            event['remediation_file'] = initializeFile(event['remediation_file'], 'execute', key, resource);
+                            plugin.remediate(cloudConfig, collection, event, resource, (err, result) => {
+                                if (err) return rcb(err);
+                                console.log(result);
+                                return rcb();
+                            });
+                        }
+                    }, (err) => {
+                        if (err) return console.log(err);
+                    });
                 }
                 setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
             });
