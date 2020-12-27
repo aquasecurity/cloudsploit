@@ -161,6 +161,8 @@ module.exports = {
         'esUpgradeAvailable'            : require(__dirname + '/plugins/aws/es/esUpgradeAvailable.js'),
         'esHttpsOnly'                   : require(__dirname + '/plugins/aws/es/esHttpsOnly.js'),
 
+        'bookmarkEncryptionEnabled'     : require(__dirname + '/plugins/aws/glue/bookmarkEncryptionEnabled.js'),
+
         'accessKeysExtra'               : require(__dirname + '/plugins/aws/iam/accessKeysExtra.js'),
         'accessKeysLastUsed'            : require(__dirname + '/plugins/aws/iam/accessKeysLastUsed.js'),
         'accessKeysRotated'             : require(__dirname + '/plugins/aws/iam/accessKeysRotated.js'),
