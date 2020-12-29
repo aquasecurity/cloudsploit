@@ -1,5 +1,6 @@
 var shared = require(__dirname + '/../shared.js');
 var functions = require('./functions.js');
+var enums = require('./enum.js');
 var regRegions = require('./regions.js');
 var govRegions = require('./regions_gov.js');
 var chinaRegions = require('./regions_china.js');
@@ -19,5 +20,6 @@ var helpers = {
 
 for (var s in shared) helpers[s] = shared[s];
 for (var f in functions) helpers[f] = functions[f];
+for (var e in enums) helpers[e] = enums[e];
 
 module.exports = helpers;

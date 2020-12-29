@@ -239,6 +239,22 @@ function defaultPartition(settings) {
     return 'aws';
 }
 
+function getEncryptionLevel(kmsKey) {
+    if (kmsKey.Origin === 'AWS_KMS') {
+        if (kmsKey.KeyManager === 'AWS') {
+            return 2;
+        } else if (kmsKey.KeyManager === 'CUSTOMER') {
+            return 3;
+        }
+    }
+    if (kmsKey.Origin === 'EXTERNAL') {
+        return 4;
+    }
+    if (kmsKey.Origin === 'AWS_CLOUDHSM') {
+        return 5;
+    }
+}
+
 function remediatePlugin(config, call, params, callback) {
     var service = call.split(':')[0];
     var callKey = call.split(':')[1];
@@ -563,5 +579,6 @@ module.exports = {
     nullArray: nullArray,
     divideArray:divideArray,
     remediatePasswordPolicy:remediatePasswordPolicy,
-    remediateOpenPorts: remediateOpenPorts
+    remediateOpenPorts: remediateOpenPorts,
+    getEncryptionLevel: getEncryptionLevel
 };

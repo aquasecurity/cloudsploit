@@ -65,6 +65,7 @@ module.exports = {
     elbv2: regions,
     emr: regions,
     es: regions,
+    glue: regions,
     kinesis: regions,
     firehose: ['us-east-1', 'us-east-2', 'us-west-2', 'us-west-1',
         'ca-central-1', 'eu-central-1', 'eu-west-1', 'eu-west-2', 'eu-west-3', 'eu-north-1',
