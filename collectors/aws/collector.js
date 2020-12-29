@@ -329,7 +329,11 @@ var calls = {
         describeNetworkInterfaces: {
             property: 'NetworkInterfaces',
             paginate: 'NextToken',
-        }
+        },
+        describeVpnConnections: {
+            property: 'VpnConnections',
+            paginate: 'NextToken'
+        },
     },
     ECR: {
         describeRepositories: {
