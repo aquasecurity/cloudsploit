@@ -33,9 +33,9 @@ module.exports = {
         restricted_open_ports.forEach(port => {
             var [protocol, portNo] = port.split(':');
             if (ports[protocol]) {
-                ports[protocol].push(Number(portNo));
+                ports[protocol].push(portNo);
             } else {
-                ports[protocol] = [Number(portNo)];
+                ports[protocol] = [portNo];
             }
         });
 
