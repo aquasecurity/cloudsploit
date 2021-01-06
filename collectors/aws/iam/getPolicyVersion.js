@@ -23,7 +23,6 @@ module.exports = function(AWSConfig, collection, callback) {
 
         var versionId = collection.iam.getPolicy[AWSConfig.region][policy.Arn].data.Policy.DefaultVersionId;
         collection.iam.getPolicyVersion[AWSConfig.region][policy.Arn] = {};
-        collection.iam.getPolicyVersion[AWSConfig.region][policy.Arn][versionId] = {};
 
         iam.getPolicyVersion({
             PolicyArn: policy.Arn,
