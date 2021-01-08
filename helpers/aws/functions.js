@@ -67,6 +67,7 @@ function findOpenPorts(groups, ports, service, region, results) {
     var found = false;
 
     for (var g in groups) {
+        var string;
         var openV4Ports = [];
         var openV6Ports = [];
         var resource = `arn:aws:ec2:${region}:${groups[g].OwnerId}:security-group/${groups[g].GroupId}`;
@@ -85,9 +86,9 @@ function findOpenPorts(groups, ports, service, region, results) {
                             var rangeFrom = portRange[0];
                             var rangeTo = portRange[1];
 
-                            for (var i = rangeFrom; i <= rangeTo; i++) {
+                            for (let i = rangeFrom; i <= rangeTo; i++) {
                                 if (permission.FromPort <= i && permission.ToPort >= i) {
-                                    var string = `some of ${permission.IpProtocol.toUpperCase()}:${port}`;
+                                    string = `some of ${permission.IpProtocol.toUpperCase()}:${port}`;
                                     openV4Ports.push(string);
                                     found = true;
                                     break;
@@ -96,7 +97,7 @@ function findOpenPorts(groups, ports, service, region, results) {
                         } else {
                             port = Number(port);
                             if (permission.FromPort <= port && permission.ToPort >= port) {
-                                var string = `${permission.IpProtocol.toUpperCase()}:${port}`;
+                                string = `${permission.IpProtocol.toUpperCase()}:${port}`;
                                 if (openV4Ports.indexOf(string) === -1) openV4Ports.push(string);
                                 found = true;
                             }
@@ -112,13 +113,13 @@ function findOpenPorts(groups, ports, service, region, results) {
                     for (var portIndexV6 in ports[permission.IpProtocol]) {
                         var portV6 = ports[permission.IpProtocol][portIndexV6];
                         if (portV6.indexOf('-') > -1) {
-                            var portRange = portV6.split('-');
-                            var rangeFrom = portRange[0];
-                            var rangeTo = portRange[1];
+                            var portRangeV6 = portV6.split('-');
+                            var rangeFromV6 = portRangeV6[0];
+                            var rangeToV6 = portRangeV6[1];
 
-                            for (var i = rangeFrom; i <= rangeTo; i++) {
+                            for (let i = rangeFromV6; i <= rangeToV6; i++) {
                                 if (permission.FromPort <= i && permission.ToPort >= i) {
-                                    var string = `some of ${permission.IpProtocol.toUpperCase()}:${portV6}`;
+                                    string = `some of ${permission.IpProtocol.toUpperCase()}:${portV6}`;
                                     openV6Ports.push(string);
                                     found = true;
                                     break;
