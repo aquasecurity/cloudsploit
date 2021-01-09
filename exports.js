@@ -228,6 +228,7 @@ module.exports = {
         'bucketWebsiteEnabled'          : require(__dirname + '/plugins/aws/s3/bucketWebsiteEnabled.js'),
         'bucketEnforceEncryption'       : require(__dirname + '/plugins/aws/s3/bucketEnforceEncryption.js'),
         'bucketSecureTransportEnabled'  : require(__dirname + '/plugins/aws/s3/bucketSecureTransportEnabled.js'),
+        'bucketAccelerationEnabled'     : require(__dirname + '/plugins/aws/s3/bucketAccelerationEnabled'),
 
         'notebookDataEncrypted'         : require(__dirname + '/plugins/aws/sagemaker/notebookDataEncrypted.js'),
         'notebookDirectInternetAccess'  : require(__dirname + '/plugins/aws/sagemaker/notebookDirectInternetAccess.js'),
