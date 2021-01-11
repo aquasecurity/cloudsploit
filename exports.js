@@ -220,6 +220,7 @@ module.exports = {
         'bucketEncryptionInTransit'     : require(__dirname + '/plugins/aws/s3/bucketEncryptionInTransit.js'),
         'bucketAllUsersPolicy'          : require(__dirname + '/plugins/aws/s3/bucketAllUsersPolicy.js'),
         'bucketAllUsersAcl'             : require(__dirname + '/plugins/aws/s3/bucketAllUsersAcl.js'),
+        'bucketPolicyCloudFrontOai'     : require(__dirname + '/plugins/aws/s3/bucketPolicyCloudFrontOai.js'),
         'bucketVersioning'              : require(__dirname + '/plugins/aws/s3/bucketVersioning.js'),
         'bucketLogging'                 : require(__dirname + '/plugins/aws/s3/bucketLogging.js'),
         's3Encryption'                  : require(__dirname + '/plugins/aws/s3/s3Encryption.js'),

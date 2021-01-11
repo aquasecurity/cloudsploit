@@ -227,6 +227,31 @@ function crossAccountPrincipal(principal, accountId) {
     return false;
 }
 
+function extractStatementPrincipals(statement) {
+    let response = [];
+    if (statement.Principal) {
+        let principal = statement.Principal;
+        
+        if (typeof principal === 'string' &&
+        /^[0-9]{12}$/.test(principal)) {
+            return [principal];
+        }
+
+        var awsPrincipals = principal.AWS;
+        if(!Array.isArray(awsPrincipals)) {
+            awsPrincipals = [awsPrincipals];
+        }
+
+        for (let a in awsPrincipals) {
+            if (/^arn:aws:iam|sts::[0-9]{12}.*/.test(awsPrincipals[a])) {
+                response.push(awsPrincipals[a]);
+            }
+        }
+    }
+
+    return response;
+}
+
 function defaultRegion(settings) {
     if (settings.govcloud) return 'us-gov-west-1';
     if (settings.china) return 'cn-north-1';
@@ -563,5 +588,6 @@ module.exports = {
     nullArray: nullArray,
     divideArray:divideArray,
     remediatePasswordPolicy:remediatePasswordPolicy,
-    remediateOpenPorts: remediateOpenPorts
+    remediateOpenPorts: remediateOpenPorts,
+    extractStatementPrincipals: extractStatementPrincipals
 };
