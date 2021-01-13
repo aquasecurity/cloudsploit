@@ -42,6 +42,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    APIGateway: {
+        getRestApis: {
+            property: 'items',
+            paginate: 'NextToken'
+        }
+    },
     Athena: {
         listWorkGroups: {
             property: 'WorkGroups',
@@ -54,6 +60,13 @@ var calls = {
     AutoScaling: {
         describeAutoScalingGroups: {
             property: 'AutoScalingGroups',
+            paginate: 'NextToken',
+            params: {
+                MaxRecords: 100
+            }
+        },
+        describeLaunchConfigurations: {
+            property: 'LaunchConfigurations',
             paginate: 'NextToken',
             params: {
                 MaxRecords: 100
@@ -158,6 +171,11 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    DLM: {
+        getLifecyclePolicies: {
+            property: 'Policies'
+        }
+    },
     DMS: {
         describeReplicationInstances: {
             property: 'ReplicationInstances',
@@ -243,6 +261,12 @@ var calls = {
                 ]
             }
         },
+        describeInternetGateways: {
+            property: 'InternetGateways'
+        },
+        describeEgressOnlyInternetGateways: {
+            property: 'EgressOnlyInternetGateways'
+        },
         describeNatGateways: {
             property: 'NatGateways',
             paginate: 'NextToken',
@@ -290,6 +314,10 @@ var calls = {
             property: 'ServiceDetails',
             paginate: 'NextToken'
         },
+        describeVpcEndpoints: {
+            property: 'VpcEndpoints',
+            paginate: 'NextToken'
+        },
         describeRouteTables: {
             property: 'RouteTables',
             paginate: 'NextToken'
@@ -298,6 +326,10 @@ var calls = {
             property: 'Tags',
             paginate: 'NextToken',
         },
+        describeNetworkInterfaces: {
+            property: 'NetworkInterfaces',
+            paginate: 'NextToken',
+        }
     },
     ECR: {
         describeRepositories: {
@@ -318,6 +350,12 @@ var calls = {
     EKS: {
         listClusters: {
             property: 'clusters',
+            paginate: 'nextToken'
+        }
+    },
+    ECS: {
+        listClusters: {
+            property: 'clusterArns',
             paginate: 'nextToken'
         }
     },
@@ -352,12 +390,22 @@ var calls = {
             property: 'TargetGroups',
             paginate: 'NextMarker',
             paginateReqProp: 'Marker'
+        },
+        describeTargetHealth: {
+            property: 'TargetGroups',
+            paginate: 'NextMarker',
+            paginateReqProp: 'Marker'
         }
     },
     EMR: {
         listClusters: {
             property: 'Clusters',
-            paginate: 'Marker'
+            paginate: 'Marker',
+            params: {
+                ClusterStates: [
+                    'RUNNING'
+                ]
+            }
         }
     },
     ES: {
@@ -472,7 +520,24 @@ var calls = {
         describeClusters: {
             property: 'Clusters',
             paginate: 'Marker'
+        },
+        describeClusterParameterGroups: {
+            property: 'ParameterGroups',
+            paginate: 'Marker'
         }
+    },
+    ResourceGroupsTaggingAPI: {
+        getTagKeys: {
+            property: 'TagKeys',
+            paginate: 'PaginationToken'
+        }
+    },
+    Route53: {
+        listHostedZones: {
+            property: 'HostedZones',
+            paginate: 'NextPageMarker',
+            paginateReqProp: 'Marker'
+        },
     },
     Route53Domains: {
         listDomains: {
@@ -551,6 +616,10 @@ var calls = {
                 MaxResults: 50
             },
             paginate: 'NextToken'
+        },
+        listAssociations: {
+            property: 'Associations',
+            paginate: 'NextToken'
         }
     },
     STS: {
@@ -602,6 +671,14 @@ var postcalls = [
                 filterValue: 'CertificateArn'
             }
         },
+        APIGateway: {
+            getStages: {
+                reliesOnService: 'apigateway',
+                reliesOnCall: 'getRestApis',
+                filterKey: 'restApiId',
+                filterValue: 'id'
+            }
+        },
         Athena: {
             getWorkGroup: {
                 reliesOnService: 'athena',
@@ -612,6 +689,11 @@ var postcalls = [
         },
         AutoScaling: {
             describeNotificationConfigurations: {
+                reliesOnService: 'autoscaling',
+                reliesOnCall: 'describeAutoScalingGroups',
+                override: true
+            },
+            describeLaunchConfigurations: {
                 reliesOnService: 'autoscaling',
                 reliesOnCall: 'describeAutoScalingGroups',
                 override: true
@@ -635,6 +717,12 @@ var postcalls = [
                 reliesOnService: 'cloudtrail',
                 reliesOnCall: 'describeTrails',
                 override: true
+            },
+            getEventSelectors: {
+                reliesOnService: 'cloudtrail',
+                reliesOnCall: 'describeTrails',
+                filterKey: 'TrailName',
+                filterValue: 'TrailARN'
             }
         },
         DynamoDB: {
@@ -730,6 +818,11 @@ var postcalls = [
                 reliesOnCall: 'describeVpcs',
                 override: true
             },
+            describeSnapshotAttribute: {
+                reliesOnService: 'ec2',
+                reliesOnCall: 'describeSnapshots',
+                override: true
+            }
         },
         ECR: {
             getRepositoryPolicy: {
@@ -742,6 +835,23 @@ var postcalls = [
         EKS: {
             describeCluster: {
                 reliesOnService: 'eks',
+                reliesOnCall: 'listClusters',
+                override: true
+            },
+            listNodegroups: {
+                reliesOnService: 'eks',
+                reliesOnCall: 'listClusters',
+                override: true
+            }
+        },
+        ECS: {
+            describeCluster: {
+                reliesOnService: 'ecs',
+                reliesOnCall: 'listClusters',
+                override: true
+            },
+            listContainerInstances: {
+                reliesOnService: 'ecs',
                 reliesOnCall: 'listClusters',
                 override: true
             }
@@ -757,8 +867,7 @@ var postcalls = [
             describeLoadBalancerPolicies: {
                 reliesOnService: 'elb',
                 reliesOnCall: 'describeLoadBalancers',
-                filterKey: 'LoadBalancerName',
-                filterValue: 'LoadBalancerName'
+                override: true
             },
             describeLoadBalancerAttributes: {
                 reliesOnService: 'elb',
@@ -800,6 +909,14 @@ var postcalls = [
                 reliesOnCall: 'listClusters',
                 filterKey: 'ClusterId',
                 filterValue: 'Id'
+            }
+        },
+        DLM: {
+            getLifecyclePolicy: {
+                reliesOnService: 'dlm',
+                reliesOnCall: 'getLifecyclePolicies',
+                filterKey: 'PolicyId',
+                filterValue: 'PolicyId'
             }
         },
         IAM: {
@@ -896,6 +1013,12 @@ var postcalls = [
                 reliesOnService: 'kms',
                 reliesOnCall: 'listKeys',
                 override: true
+            },
+            listResourceTags: {
+                reliesOnService: 'kms',
+                reliesOnCall: 'listKeys',
+                filterKey: 'KeyId',
+                filterValue: 'KeyId'
             }
         },
         Lambda: {
@@ -919,6 +1042,29 @@ var postcalls = [
                 reliesOnCall: 'describeDBParameterGroups',
                 filterKey: 'DBParameterGroupName',
                 filterValue: 'DBParameterGroupName'
+            }
+        },
+        Route53: {
+            listResourceRecordSets: {
+                reliesOnService: 'route53',
+                reliesOnCall: 'listHostedZones',
+                filterKey: 'HostedZoneId',
+                filterValue: 'Id'
+            },
+        },
+        S3Control: {
+            getPublicAccessBlock: {
+                reliesOnService: 'sts',
+                reliesOnCall: 'getCallerIdentity',
+                override: true
+            }
+        },
+        Redshift: {
+            describeClusterParameters: {
+                reliesOnService: 'redshift',
+                reliesOnCall: 'describeClusterParameterGroups',
+                filterKey: 'ParameterGroupName',
+                filterValue: 'ParameterGroupName'
             }
         },
         SageMaker: {
@@ -1012,6 +1158,13 @@ var postcalls = [
                 reliesOnCall: 'listRoles',
                 filterKey: 'RoleName',
                 filterValue: 'RoleName'
+            }
+        },
+        EKS:{
+            describeNodegroups: {
+                reliesOnService: 'eks',
+                reliesOnCall: 'listClusters',
+                override: true
             }
         }
     }
@@ -1160,7 +1313,8 @@ var collect = function(AWSConfig, settings, callback) {
                             !collection[callObj.reliesOnService][callObj.reliesOnCall] ||
                             !collection[callObj.reliesOnService][callObj.reliesOnCall][region] ||
                             !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data ||
-                            !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data.length)) return regionCb();
+                            !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data.length))
+                            return regionCb();
 
                         var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
                         if (callObj.deleteRegion) {

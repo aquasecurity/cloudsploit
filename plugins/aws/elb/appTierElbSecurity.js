@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Update App-Tier ELB reference security policy to latest predefined security policy to secure the connection between client and ELB',
     apis: ['ELB:describeLoadBalancers', 'ELB:describeLoadBalancerPolicies', 'ELB:describeTags', 'STS:getCallerIdentity'],
     settings: {
-        app_tier_tag_key: {
+        elb_app_tier_tag_key: {
             name: 'App-Tier Tag Key',
             description: 'App-Tier tag key used by ELBs to indicate App-Tier groups',
             regex: '^.*$',
@@ -30,11 +30,12 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var config = {
-            app_tier_tag_key : settings.app_tier_tag_key || this.settings.app_tier_tag_key.default,
+            elb_app_tier_tag_key : settings.elb_app_tier_tag_key || this.settings.elb_app_tier_tag_key.default,
             latest_security_policies : settings.latest_security_policies || this.settings.latest_security_policies.default
         };
 
-        if (!config.app_tier_tag_key.length) return callback();
+        if (!config.elb_app_tier_tag_key.length) return callback(null, results, source);
+
         config.latest_security_policies = config.latest_security_policies.split(',');
 
         var acctRegion = helpers.defaultRegion(settings);
@@ -61,8 +62,6 @@ module.exports = {
 
             var appTierElbFound = false;
             async.each(describeLoadBalancers.data, function(lb, cb){
-                // if (lb.LoadBalancerName !== 'clb-1') return cb();
-                console.log(lb);
                 var describeTags = helpers.addSource(cache, source,
                     ['elb', 'describeTags', region, lb.LoadBalancerName]);
 
@@ -81,7 +80,7 @@ module.exports = {
                     if(Tags && Tags.Tags) {
                         for (var i in Tags.Tags){
                             var td = Tags.Tags[i];
-                            if(td.Key === config.app_tier_tag_key) {
+                            if(td.Key === config.elb_app_tier_tag_key) {
                                 appTierTag = true;
                                 appTierElbFound = true;
                                 break;
@@ -106,38 +105,30 @@ module.exports = {
                         return cb();
                     }
 
-                    if (!describeLoadBalancerPolicies.data.PolicyDescriptions.length) {
-                        helpers.addResult(results, 2,
-                            `ELB "${lb.LoadBalancerName}" is not using secure protocols`,
-                            region, resource);
-                        return cb();
-                    }
-
-                    var insecurePolicies = false;
+                    var insecurePolicy = false;
                     var securityPolicyFound = false;
                     describeLoadBalancerPolicies.data.PolicyDescriptions.forEach(function(policyDesc) {
                         if(policyDesc.PolicyAttributeDescriptions) {
-                            for (var i in policyDesc.PolicyAttributeDescriptions) {
-                                var policyAttrDesc = policyDesc.PolicyAttributeDescriptions[i];
+                            for (var policyAttrDesc of policyDesc.PolicyAttributeDescriptions) {
                                 if (policyAttrDesc.AttributeName === 'Reference-Security-Policy') {
                                     securityPolicyFound = true;
                                     if(!config.latest_security_policies.includes(policyAttrDesc.AttributeValue)) {
-                                        insecurePolicies = true;
+                                        insecurePolicy = true;
+                                        break;
                                     }
-                                    break;
                                 }
                             }
                         }
                     });
 
                     if(securityPolicyFound) {
-                        if (!insecurePolicies) {
+                        if (!insecurePolicy) {
                             helpers.addResult(results, 0,
-                                `ELB  "${lb.LoadBalancerName}" is using latest predefined policy`,
+                                `ELB  "${lb.LoadBalancerName}" is using latest predefined security policy`,
                                 region, resource);
                         } else {
                             helpers.addResult(results, 2,
-                                `ELB "${lb.LoadBalancerName}" is not using latest predefined policy`,
+                                `ELB "${lb.LoadBalancerName}" is not using latest predefined security policy`,
                                 region, resource);
                         }
                     } else {

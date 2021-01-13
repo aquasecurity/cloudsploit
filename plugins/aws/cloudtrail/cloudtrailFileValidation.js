@@ -9,6 +9,12 @@ module.exports = {
     recommended_action: 'Enable CloudTrail file validation for all regions',
     link: 'http://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-log-file-validation-enabling.html',
     apis: ['CloudTrail:describeTrails'],
+    remediation_description: 'File validation will be enabled for the trail',
+    remediation_min_version: '202010311808',
+    apis_remediate: ['CloudTrail:describeTrails'],
+    actions: {remediate: ['CloudTrail:updateTrail'], rollback: ['CloudTrail:updateTrail']},
+    permissions: {remediate: ['cloudtrail:UpdateTrail'], rollback: ['cloudtrail:UpdateTrail']},
+    realtime_triggers: ['cloudtrail:CreateTrail', 'cloudtrail:UpdateTrail'],
     compliance: {
         hipaa: 'The auditing requirements of HIPAA require logs to be kept securely ' +
                 'in a manner that prevents tampering. CloudTrail log validation ' +
@@ -53,6 +59,49 @@ module.exports = {
             rcb();
         }, function(){
             callback(null, results, source);
+        });
+    },
+    remediate: function(config, cache, settings, resource, callback) {
+        var putCall = this.actions.remediate;
+        var pluginName = 'cloudtrailFileValidation';
+        var trailName;
+
+        if (resource && resource.length) {
+            trailName = resource.split('/')[1];
+            config.region = resource.split(':')[3];
+        } else {
+            return callback('No resource to remediate');
+        }
+
+        var params = {
+            'Name': trailName,
+            'EnableLogFileValidation': true
+        };
+
+
+        var remediation_file = settings.remediation_file;
+        remediation_file['pre_remediate']['actions'][pluginName][resource] = {
+            'File Validation': 'Enabled',
+            'Name': trailName
+        };
+
+        // passes the config, put call, and params to the remediate helper function
+        helpers.remediatePlugin(config, putCall[0], params, function(err) {
+            if (err) {
+                remediation_file['remediate']['actions'][pluginName]['error'] = err;
+                return callback(err, null);
+            }
+
+            let action = params;
+            action.action = putCall;
+
+            remediation_file['post_remediate']['actions'][pluginName][resource] = action;
+            remediation_file['remediate']['actions'][pluginName][resource] = {
+                'Action': 'ENABLED',
+                'Name': trailName
+            };
+            settings.remediation_file = remediation_file;
+            return callback(null, action);
         });
     }
 };

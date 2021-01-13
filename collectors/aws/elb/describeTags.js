@@ -14,8 +14,8 @@ module.exports = function(AWSConfig, collection, callback) {
             if (err) {
                 collection.elb.describeTags[AWSConfig.region][lb.LoadBalancerName].err = err;
             }
-                collection.elb.describeTags[AWSConfig.region][lb.LoadBalancerName].data = data;
 
+            collection.elb.describeTags[AWSConfig.region][lb.LoadBalancerName].data = data;
             cb();
         });
     }, function(){

@@ -135,45 +135,45 @@ const describeLoadBalancers = [
 
 const describeLoadBalancerPolicies = [
     {
-        ResponseMetadata: { RequestId: '4344d6c8-5047-4610-94a4-70ca01fdffc6' },
-        PolicyDescriptions: [
+        "ResponseMetadata": { "RequestId": '4344d6c8-5047-4610-94a4-70ca01fdffc6' },
+        "PolicyDescriptions": [
             {
-                PolicyName: 'AWSConsole-SSLNegotiationPolicy-test-84-2-1601575981803',
-                PolicyTypeName: 'SSLNegotiationPolicyType',
-                PolicyAttributeDescriptions: [
+                "PolicyName": 'AWSConsole-SSLNegotiationPolicy-test-84-2-1601575981803',
+                "PolicyTypeName": 'SSLNegotiationPolicyType',
+                "PolicyAttributeDescriptions": [
                     {
-                        AttributeName: 'Reference-Security-Policy',
-                        AttributeValue: 'ELBSecurityPolicy-2016-08'
+                        "AttributeName": 'Reference-Security-Policy',
+                        "AttributeValue": 'ELBSecurityPolicy-2016-08'
                     },
                 ],
             },
         ],
     },
     {
-        ResponseMetadata: { RequestId: '4344d6c8-5047-4610-94a4-70ca01fdffc6' },
-        PolicyDescriptions: [
+        "ResponseMetadata": { "RequestId": '4344d6c8-5047-4610-94a4-70ca01fdffc6' },
+        "PolicyDescriptions": [
             {
-                PolicyName: 'AWSConsole-SSLNegotiationPolicy-test-84-2-1601575981803',
-                PolicyTypeName: 'SSLNegotiationPolicyType',
-                PolicyAttributeDescriptions: [
+                "PolicyName": 'AWSConsole-SSLNegotiationPolicy-test-84-2-1601575981803',
+                "PolicyTypeName": 'SSLNegotiationPolicyType',
+                "PolicyAttributeDescriptions": [
                     {
-                        AttributeName: 'Reference-Security-Policy',
-                        AttributeValue: 'ELBSecurityPolicy-2015-08'
+                        "AttributeName": 'Reference-Security-Policy',
+                        "AttributeValue": 'ELBSecurityPolicy-2015-08'
                     },
                 ],
             },
         ],
     },
     {
-        ResponseMetadata: { RequestId: '4344d6c8-5047-4610-94a4-70ca01fdffc6' },
-        PolicyDescriptions: [
+        "ResponseMetadata": { "RequestId": '4344d6c8-5047-4610-94a4-70ca01fdffc6' },
+        "PolicyDescriptions": [
             {
-                PolicyName: 'AWSConsole-SSLNegotiationPolicy-test-84-2-1601575981803',
-                PolicyTypeName: 'SSLNegotiationPolicyType',
-                PolicyAttributeDescriptions: [
+                "PolicyName": 'AWSConsole-SSLNegotiationPolicy-test-84-2-1601575981803',
+                "PolicyTypeName": 'SSLNegotiationPolicyType',
+                "PolicyAttributeDescriptions": [
                     {
-                        AttributeName: 'Policy',
-                        AttributeValue: 'ELBSecurityPolicy-2015-08'
+                        "AttributeName": 'Policy',
+                        "AttributeValue": 'ELBSecurityPolicy-2015-08'
                     },
                 ],
             },
@@ -212,7 +212,7 @@ const describeTags = [
 
 const createCache = (elb, tags, policy) => {
     if (elb && elb.length) {
-        var lbDnsName = elb[0].DNSName;
+        var loadBalancerName = elb[0].LoadBalancerName;
         var lbName = elb[0].LoadBalancerName;
     }
     return {
@@ -231,7 +231,7 @@ const createCache = (elb, tags, policy) => {
             },
             describeLoadBalancerPolicies: {
                 'us-east-1': {
-                    [lbDnsName]: {
+                    [loadBalancerName]: {
                         data: policy
                     },
                 },
@@ -288,7 +288,7 @@ describe('appTierElbSecurity', function () {
     describe('run', function () {
         it('should PASS if app-tier load balancer is using latest predefined policies', function (done) {
             const cache = createCache([describeLoadBalancers[0]], describeTags[0], describeLoadBalancerPolicies[0]);
-            appTierElbSecurity.run(cache, {}, (err, results) => {
+            appTierElbSecurity.run(cache, { elb_app_tier_tag_key: 'app_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -297,7 +297,7 @@ describe('appTierElbSecurity', function () {
 
         it('should FAIL if app-tier load balancer is not using latest predefined policies', function (done) {
             const cache = createCache([describeLoadBalancers[0]], describeTags[0], describeLoadBalancerPolicies[1]);
-            appTierElbSecurity.run(cache, {}, (err, results) => {
+            appTierElbSecurity.run(cache, { elb_app_tier_tag_key: 'app_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -306,16 +306,16 @@ describe('appTierElbSecurity', function () {
 
         it('should FAIL if app-tier load balancer is not using any reference security policy', function (done) {
             const cache = createCache([describeLoadBalancers[0]], describeTags[0], describeLoadBalancerPolicies[2]);
-            appTierElbSecurity.run(cache, {}, (err, results) => {
+            appTierElbSecurity.run(cache, { elb_app_tier_tag_key: 'app_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
             });
         });
         
-        it('should PASS if load balancer is not using app-tier tag', function (done) {
+        it('should PASS if no App-Tier ELB found', function (done) {
             const cache = createCache([describeLoadBalancers[0]], describeTags[1], describeLoadBalancerPolicies[2]);
-            appTierElbSecurity.run(cache, {}, (err, results) => {
+            appTierElbSecurity.run(cache, { elb_app_tier_tag_key: 'app_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -324,7 +324,7 @@ describe('appTierElbSecurity', function () {
         
         it('should UNKNOWN if unable to describe load balancers', function (done) {
             const cache = createErrorCache();
-            appTierElbSecurity.run(cache, {}, (err, results) => {
+            appTierElbSecurity.run(cache, { elb_app_tier_tag_key: 'app_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -333,7 +333,7 @@ describe('appTierElbSecurity', function () {
 
         it('should UNKNOWN if unable to describe load balancer tags', function (done) {
             const cache = createCache([describeLoadBalancers[0]], null, null);
-            appTierElbSecurity.run(cache, {}, (err, results) => {
+            appTierElbSecurity.run(cache, { elb_app_tier_tag_key: 'app_tier' }, (err, results) => {
                 expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -342,7 +342,7 @@ describe('appTierElbSecurity', function () {
 
         it('should UNKNOWN if unable to describe load balancer policy', function (done) {
             const cache = createCache([describeLoadBalancers[0]], describeTags[0], null);
-            appTierElbSecurity.run(cache, {}, (err, results) => {
+            appTierElbSecurity.run(cache, { elb_app_tier_tag_key: 'app_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -351,11 +351,18 @@ describe('appTierElbSecurity', function () {
         
         it('should not return anything if describe load balancers response is not found', function (done) {
             const cache = createNullCache();
-            appTierElbSecurity.run(cache, {}, (err, results) => {
+            appTierElbSecurity.run(cache, { elb_app_tier_tag_key: 'app_tier' }, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });
         });
 
+        it('should not return anything if elb app-tier tag key is not provided in settings', function (done) {
+            const cache = createNullCache();
+            appTierElbSecurity.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(0);
+                done();
+            });
+        });
     });
 });
