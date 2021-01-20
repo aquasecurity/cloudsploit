@@ -61,7 +61,7 @@ module.exports = {
 
                     if (stage.clientCertificateId) {
                         helpers.addResult(results, 0,
-                            'API Gateway API stage uses client certificate',
+                            'API Gateway API stage uses a client certificate',
                             region, stageArn);
                     } else {
                         helpers.addResult(results, 2,
