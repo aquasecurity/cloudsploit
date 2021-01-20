@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Redshift Unused Reserved Nodes',
     category: 'Redshift',
-    description: 'Ensures that your Amazon Redshift Reserved Nodes are being utilized.',
+    description: 'Ensures that Amazon Redshift Reserved Nodes are being utilized.',
     more_info: 'Amazon Redshift reserved nodes must be utilized to avoid unnecessary billing.',
     link: 'https://docs.aws.amazon.com/redshift/latest/mgmt/purchase-reserved-node-instance.html',
     recommended_action: 'Provision new Redshift clusters matching the criteria of reserved nodes',
