@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'API Gateway Client Certificate',
     category: 'API Gateway',
-    description: 'Ensures that Amazon API Gateway API stages that use client certificates.',
+    description: 'Ensures that Amazon API Gateway API stages use client certificates.',
     more_info: 'API Gateway API stages should use client certificate to ensure API security authorization.',
     recommended_action: 'Attach client certificate to API Gateway API stages',
     link: 'https://docs.aws.amazon.com/apigateway/latest/developerguide/getting-started-client-side-ssl-authentication.html',
