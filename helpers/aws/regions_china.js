@@ -66,6 +66,8 @@ module.exports = {
     organizations: ['cn-north-1'],
     guardduty: [],
     wafregional: [],
+    wafv2: [],
     workspaces: ['cn-northwest-1'],
-    xray: regions
+    xray: regions,
+    resourcegroupstaggingapi: regions
 };
