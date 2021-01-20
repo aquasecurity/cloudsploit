@@ -145,7 +145,8 @@ var engine = function(cloudConfig, settings) {
 
             var postRun = function(err, results) {
                 if (err) return console.log(`ERROR: ${err}`);
-                if (!results || !results.length) return console.log('ERROR: Nothing to report...');
+                if (!results || !results.length) console.log(`Plugin ${plugin.title} returned no results. There may be a problem with this plugin.`);
+              
                 for (var r in results) {
                     // If we have suppressed this result, then don't process it
                     // so that it doesn't affect the return code.
