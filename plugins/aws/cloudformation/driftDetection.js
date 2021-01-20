@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'CloudFormation Drift Detection',
     category: 'CloudFormation',
-    description: 'Ensures that AWS CloudFormation stacks have not been drifted.',
+    description: 'Ensures that AWS CloudFormation stacks are not in a drifted state.',
     more_info: 'AWS CloudFormation stack should not be in drifted state to ensure that stack template is aligned with the resources.',
     link: 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resource-import-resolve-drift.html',
     recommended_action: 'Resolve CloudFormation stack drift by importing drifted resource back to the stack.',
