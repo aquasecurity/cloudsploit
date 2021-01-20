@@ -65,7 +65,7 @@ module.exports = {
                             region, stageArn);
                     } else {
                         helpers.addResult(results, 2,
-                            'API Gateway API stage does not use client certificate',
+                            'API Gateway API stage does not use a client certificate',
                             region, stageArn);
                     }
                 });
