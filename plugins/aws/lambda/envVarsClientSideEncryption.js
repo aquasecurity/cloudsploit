@@ -14,7 +14,7 @@ module.exports = {
     settings: {
         lambda_sensitive_env_vars: {
             name: 'Lambda Sensitive Environment Varibales',
-            description: 'A comma-delimited list of known lambda function Environment Varibales that should be encrypted',
+            description: 'A comma-delimited list of known lambda function Environment Variables that should be encrypted',
             regex: '^.{1,255}$',
             default: ''
         }
