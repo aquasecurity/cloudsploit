@@ -40,7 +40,7 @@ module.exports = {
                 if (!lambdaFunc.FunctionArn) return fcb();
 
                 var resource = lambdaFunc.FunctionArn;
-                var adminPriveleged;
+                var adminPrivileged;
 
                 if (!lambdaFunc.Role) {
                     helpers.addResult(results, 2,
@@ -80,7 +80,7 @@ module.exports = {
 
                     if (policy.PolicyArn === managedAdminPolicy) {
                         helpers.addResult(results, 2,
-                            'Function has admin priveleges', region, resource);
+                            'Function has admin privileges', region, resource);
                         return fcb();
                     }
 
@@ -107,14 +107,14 @@ module.exports = {
                                 if (statement.Effect && statement.Effect.toUpperCase() === 'ALLOW' &&
                                 statement.Action && statement.Action.indexOf('*') > -1 &&
                                 statement.Resource && statement.Resource.indexOf('*') > -1) {
-                                    adminPriveleged = true;
+                                    adminPrivileged = true;
                                     break;
                                 }
                             }
                         }
                     }
 
-                    if (adminPriveleged) break;
+                    if (adminPrivileged) break;
                 }
 
                 for (var policyName of listRolePolicies.data.PolicyNames) {
@@ -131,19 +131,19 @@ module.exports = {
                             if (statement.Effect && statement.Effect.toUpperCase() === 'ALLOW' &&
                             statement.Action && statement.Action.indexOf('*') > -1 &&
                             statement.Resource && statement.Resource.indexOf('*') > -1) {
-                                adminPriveleged = true;
+                                adminPrivileged = true;
                                 break;
                             }
                         }
                     }
                 }
 
-                if (!adminPriveleged) {
+                if (!adminPrivileged) {
                     helpers.addResult(results, 0,
-                        'Function does not have admin priveleges', region, resource);
+                        'Function does not have admin privileges', region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'Function has admin priveleges', region, resource);
+                        'Function has admin privileges', region, resource);
                 }
 
                 fcb();

@@ -246,7 +246,7 @@ module.exports = {
         'ssmAgentLatestVersion'         : require(__dirname + '/plugins/aws/ssm/ssmAgentLatestVersion.js'),
         'ssmAgentAutoUpdateEnabled'     : require(__dirname + '/plugins/aws/ssm/ssmAgentAutoUpdateEnabled'),
 
-        'lambdaAdminPriveleges'         : require(__dirname + '/plugins/aws/lambda/lambdaAdminPriveleges.js'),
+        'lambdaAdminPrivileges'         : require(__dirname + '/plugins/aws/lambda/lambdaAdminPrivileges.js'),
         'lambdaOldRuntimes'             : require(__dirname + '/plugins/aws/lambda/lambdaOldRuntimes.js'),
         'lambdaVpcConfig'               : require(__dirname + '/plugins/aws/lambda/lambdaVpcConfig.js'),
         'lambdaPublicAccess'            : require(__dirname + '/plugins/aws/lambda/lambdaPublicAccess.js'),

@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-var lambdaAdminPriveleges = require('./lambdaAdminPriveleges');
+var lambdaAdminPrivileges = require('./lambdaAdminPrivileges');
 
 const listFunctions = [
     {
@@ -210,12 +210,12 @@ const createNullCache = () => {
     };
 };
 
-describe('lambdaAdminPriveleges', function () {
+describe('lambdaAdminPrivileges', function () {
     describe('run', function () {
 
         it('should PASS if fcuntion does not have amdin priveleges', function (done) {
             const cache = createCache([listFunctions[0]], [listRoles[0]], listAttachedRolePolicies[1], listRolePolicies[0], getRolePolicy[0]);
-            lambdaAdminPriveleges.run(cache, {}, (err, results) => {
+            lambdaAdminPrivileges.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -224,7 +224,7 @@ describe('lambdaAdminPriveleges', function () {
 
         it('should FAIL if function had admin priveleges', function (done) {
             const cache = createCache([listFunctions[1]], [listRoles[1]], listAttachedRolePolicies[0], listRolePolicies[0], {}, getPolicy[0], getPolicyVersion[0]);
-            lambdaAdminPriveleges.run(cache, { }, (err, results) => {
+            lambdaAdminPrivileges.run(cache, { }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -233,7 +233,7 @@ describe('lambdaAdminPriveleges', function () {
 
         it('should PASS if no Lambda functons found', function (done) {
             const cache = createCache([]);
-            lambdaAdminPriveleges.run(cache, {}, (err, results) => {
+            lambdaAdminPrivileges.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -242,7 +242,7 @@ describe('lambdaAdminPriveleges', function () {
 
         it('should UNKNOWN if unable to list Lambda functions', function (done) {
             const cache = createErrorCache();
-            lambdaAdminPriveleges.run(cache, {}, (err, results) => {
+            lambdaAdminPrivileges.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -251,7 +251,7 @@ describe('lambdaAdminPriveleges', function () {
 
         it('should UNKNOWN if unable to list attached role policies', function (done) {
             const cache = createCache([listFunctions[1]], [listRoles[1]], null);
-            lambdaAdminPriveleges.run(cache, {}, (err, results) => {
+            lambdaAdminPrivileges.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -260,7 +260,7 @@ describe('lambdaAdminPriveleges', function () {
 
         it('should UNKNOWN if unable to list role policies', function (done) {
             const cache = createCache([listFunctions[1]], [listRoles[1]], listAttachedRolePolicies[0], null);
-            lambdaAdminPriveleges.run(cache, {}, (err, results) => {
+            lambdaAdminPrivileges.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -269,7 +269,7 @@ describe('lambdaAdminPriveleges', function () {
 
         it('should not return anything if list Lambda functions response not found', function (done) {
             const cache = createNullCache();
-            lambdaAdminPriveleges.run(cache, {}, (err, results) => {
+            lambdaAdminPrivileges.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });
