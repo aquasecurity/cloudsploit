@@ -39,7 +39,7 @@ module.exports = {
 
                 if (!describeStacks || describeStacks.err || !describeStacks.data ||
                     !describeStacks.data.Stacks || !describeStacks.data.Stacks.length) {
-                    helpers.addResult(results, 3, `Unable to query for CloudFormation stack detils: ${helpers.addError(describeStacks)}`,
+                    helpers.addResult(results, 3, `Unable to query for CloudFormation stack details: ${helpers.addError(describeStacks)}`,
                         region, stack.StackId);
                     return cb();
                 }
@@ -59,9 +59,9 @@ module.exports = {
                 }
 
                 cb();
+            }, function(){
+                rcb();
             });
-
-            return rcb();
         }, function(){
             callback(null, results, source);
         });
