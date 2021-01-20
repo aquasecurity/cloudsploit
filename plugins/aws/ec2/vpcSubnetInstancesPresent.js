@@ -56,11 +56,11 @@ module.exports = {
             describeSubnets.data.forEach(subnet => {
                 if(subnet.SubnetId && instanceSubnets[subnet.SubnetId]) {
                     helpers.addResult(results, 0,
-                        `Subnet "${subnet.SubnetId}" has ${instanceSubnets[subnet.SubnetId]} instances attached`,
+                        `Subnet has ${instanceSubnets[subnet.SubnetId]} instances attached`,
                         region, subnet.SubnetArn);
                 } else {
                     helpers.addResult(results, 2,
-                        `Subnet "${subnet.SubnetId}" does not have any instance attached`,
+                        'Subnet does not have any instance attached',
                         region, subnet.SubnetArn);
                 }
             });
