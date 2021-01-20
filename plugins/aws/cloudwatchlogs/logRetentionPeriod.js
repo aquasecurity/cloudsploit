@@ -14,7 +14,7 @@ module.exports = {
             name: 'CloudWatch Log Minimum Retention Period',
             description: 'If set, CloudWatch Logs log groups should have a retention setting greater or equal to this value',
             regex: '^[0-9]*$',
-            default: 0
+            default: 90
         }
     },
 
@@ -22,8 +22,6 @@ module.exports = {
         var config = {
             minimum_log_retention_period: settings.minimum_log_retention_period || this.settings.minimum_log_retention_period.default
         };
-
-        if (config.minimum_log_retention_period === false) return callback();
 
         var results = [];
         var source = {};
