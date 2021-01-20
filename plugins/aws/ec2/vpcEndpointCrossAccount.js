@@ -56,6 +56,7 @@ module.exports = {
 
                 if (endpoint.PolicyDocument) {
                     var statements = helpers.normalizePolicyDocument(endpoint.PolicyDocument);
+
                     for (var statement of statements) {
                         if (statement.Effect && statement.Effect.toUpperCase() === 'ALLOW' && statement.Principal) {
                             var principals = helpers.crossAccountPrincipal(statement.Principal, accountId, true);

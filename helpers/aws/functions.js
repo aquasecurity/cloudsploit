@@ -222,7 +222,7 @@ function crossAccountPrincipal(principal, accountId, fetchPrincipals) {
     var response = false;
 
     for (var a in awsPrincipals) {
-        if (/^arn:aws:iam|sts::[0-9]{12}.*/.test(awsPrincipals[a]) &&
+        if (/^arn:aws:(iam|sts)::[0-9]{12}.*/.test(awsPrincipals[a]) &&
             awsPrincipals[a].indexOf(accountId) === -1) {
             if (!fetchPrincipals) return true;
             principals.push(awsPrincipals[a]);
