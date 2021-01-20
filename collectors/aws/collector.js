@@ -171,6 +171,11 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    DLM: {
+        getLifecyclePolicies: {
+            property: 'Policies'
+        }
+    },
     DMS: {
         describeReplicationInstances: {
             property: 'ReplicationInstances',
@@ -256,6 +261,12 @@ var calls = {
                 ]
             }
         },
+        describeInternetGateways: {
+            property: 'InternetGateways'
+        },
+        describeEgressOnlyInternetGateways: {
+            property: 'EgressOnlyInternetGateways'
+        },
         describeNatGateways: {
             property: 'NatGateways',
             paginate: 'NextToken',
@@ -315,6 +326,10 @@ var calls = {
             property: 'Tags',
             paginate: 'NextToken',
         },
+        describeNetworkInterfaces: {
+            property: 'NetworkInterfaces',
+            paginate: 'NextToken',
+        }
     },
     ECR: {
         describeRepositories: {
@@ -372,6 +387,11 @@ var calls = {
             paginateReqProp: 'Marker'
         },
         describeTargetGroups: {
+            property: 'TargetGroups',
+            paginate: 'NextMarker',
+            paginateReqProp: 'Marker'
+        },
+        describeTargetHealth: {
             property: 'TargetGroups',
             paginate: 'NextMarker',
             paginateReqProp: 'Marker'
@@ -504,6 +524,12 @@ var calls = {
         describeClusterParameterGroups: {
             property: 'ParameterGroups',
             paginate: 'Marker'
+        }
+    },
+    ResourceGroupsTaggingAPI: {
+        getTagKeys: {
+            property: 'TagKeys',
+            paginate: 'PaginationToken'
         }
     },
     Route53: {
@@ -880,6 +906,14 @@ var postcalls = [
                 filterValue: 'Id'
             }
         },
+        DLM: {
+            getLifecyclePolicy: {
+                reliesOnService: 'dlm',
+                reliesOnCall: 'getLifecyclePolicies',
+                filterKey: 'PolicyId',
+                filterValue: 'PolicyId'
+            }
+        },
         IAM: {
             getGroup: {
                 reliesOnService: 'iam',
@@ -974,6 +1008,12 @@ var postcalls = [
                 reliesOnService: 'kms',
                 reliesOnCall: 'listKeys',
                 override: true
+            },
+            listResourceTags: {
+                reliesOnService: 'kms',
+                reliesOnCall: 'listKeys',
+                filterKey: 'KeyId',
+                filterValue: 'KeyId'
             }
         },
         Lambda: {
