@@ -5,7 +5,7 @@ module.exports = {
     title: 'Workspaces IP Access Control',
     category: 'Workspaces',
     description: 'Ensures enforced IP Access Control on Workspaces',
-    more_info: 'Checking the existence of IP Access control on Workspaces and no open IP to any Workspaces',
+    more_info: 'Checking the existence of IP Access control on Workspaces and ensuring that no Workspaces are open',
     link: 'https://docs.aws.amazon.com/workspaces/latest/adminguide/amazon-workspaces-ip-access-control-groups.html',
     recommended_action: 'Enable proper IP Access Controls for all workspaces',
     apis: ['WorkSpaces:describeWorkspaces', 'WorkSpaces:describeWorkspaceDirectories', 'WorkSpaces:describeIpGroups', 'STS:getCallerIdentity'],
@@ -55,12 +55,12 @@ module.exports = {
 
                 var workspaceDirectory = listDirectories.find(directory => directory.DirectoryId === workspace.DirectoryId);
 
-                if (workspaceDirectory.ipGroupIds) {
+                if (workspaceDirectory && workspaceDirectory.ipGroupIds) {
                     let openToEverything = false;
                     for (var workspaceIPGroup of workspaceDirectory.ipGroupIds){
                         var ipGroup = listIPGroups.find(o => o.groupId === workspaceIPGroup);
 
-                        if (ipGroup.userRules) {
+                        if (ipGroup && ipGroup.userRules) {
                             if (ipGroup.userRules.find(o => o.ipRule === '0.0.0.0/0')) {
                                 openToEverything = true;
                                 break;
