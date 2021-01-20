@@ -7,7 +7,7 @@ module.exports = {
     description: 'Ensures that each AWS Virtual Private Network (VPN) connection has all tunnels up.',
     more_info: 'AWS Virtual Private Network (VPN) should have tunnels up to ensure network traffic flow over Virtual Private Network.',
     link: 'https://docs.aws.amazon.com/vpn/latest/s2svpn/VPNTunnels.html',
-    recommended_action: 'Establish a successfull VPN connection using IKE or IPsec configuration',
+    recommended_action: 'Establish a successful VPN connection using IKE or IPsec configuration',
     apis: ['EC2:describeVpnConnections', 'STS:getCallerIdentity'],
 
     run: function(cache, settings, callback) {
