@@ -6,7 +6,7 @@ module.exports = {
     category: 'Glue',
     description: 'Ensures that AWS Glue job bookmark encryption is enabled.',
     more_info: 'AWS Glue security configuration should have job bookmark encryption enabled in order to encrypt the bookmark data before it is sent to Amazon S3.',
-    recommended_action: 'Recreate Glue security configurations and enabled job bookmark encryption',
+    recommended_action: 'Recreate Glue security configurations and enable job bookmark encryption',
     link: 'https://docs.aws.amazon.com/glue/latest/dg/console-security-configurations.html',
     apis: ['Glue:getSecurityConfigurations', 'STS:getCallerIdentity'],
 
