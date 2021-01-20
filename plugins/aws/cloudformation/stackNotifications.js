@@ -7,7 +7,7 @@ module.exports = {
     description: 'Ensures that AWS CloudFormation stacks have SNS topic associated.',
     more_info: 'AWS CloudFormation stacks should have SNS topic associated to ensure stack events monitoring.',
     link: 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-console-view-stack-data-resources.html',
-    recommended_action: 'Associate an Amazon SNS topic to CloudFormation stack',
+    recommended_action: 'Associate an Amazon SNS topic to all CloudFormation stacks',
     apis: ['CloudFormation:listStacks', 'CloudFormation:describeStacks'],
 
     run: function(cache, settings, callback) {
