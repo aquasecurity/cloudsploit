@@ -2,6 +2,7 @@ var async = require('async');
 var exports = require('./exports.js');
 var suppress = require('./postprocess/suppress.js');
 var output = require('./postprocess/output.js');
+var gslRunner = require('./helpers/gsl.js');
 
 /**
  * The main function to execute CloudSploit scans.
@@ -19,6 +20,14 @@ var engine = function(cloudConfig, settings) {
     var collector = require(`./collectors/${settings.cloud}/collector.js`);
     var plugins = exports[settings.cloud];
     var apiCalls = [];
+
+    // Load resource mappings
+    var resourceMap;
+    try {
+        resourceMap = require(`./helpers/${settings.cloud}/resources.js`);
+    } catch (e) {
+        resourceMap = {};
+    }
 
     // Print customization options
     if (settings.compliance) console.log(`INFO: Using compliance modes: ${settings.compliance.join(', ')}`);
@@ -134,8 +143,10 @@ var engine = function(cloudConfig, settings) {
         async.mapValuesLimit(plugins, 10, function(plugin, key, pluginDone) {
             if (skippedPlugins.indexOf(key) > -1) return pluginDone(null, 0);
 
-            plugin.run(collection, settings, function(err, results) {
+            var postRun = function(err, results) {
+                if (err) return console.log(`ERROR: ${err}`);
                 if (!results || !results.length) console.log(`Plugin ${plugin.title} returned no results. There may be a problem with this plugin.`);
+              
                 for (var r in results) {
                     // If we have suppressed this result, then don't process it
                     // so that it doesn't affect the return code.
@@ -177,7 +188,16 @@ var engine = function(cloudConfig, settings) {
                     }
                 }
                 setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
-            });
+            };
+
+            if (plugin.gsl) {
+                console.log(`INFO: Using custom GSL for plugin: ${plugin.title}`);
+                // Inject APIs and resource maps
+                plugin.gsl.apis = plugin.apis;
+                gslRunner(collection, plugin.gsl, resourceMap, postRun);
+            } else {
+                plugin.run(collection, settings, postRun);
+            }
         }, function(err) {
             if (err) return console.log(err);
             // console.log(JSON.stringify(collection, null, 2));

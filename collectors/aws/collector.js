@@ -648,6 +648,15 @@ var calls = {
             paginate: 'NextMarker'
         }
     },
+    WAFV2: {
+        listWebACLs: {
+            property: 'WebACLs',
+            paginate: 'NextMarker',
+            params: {
+                Scope: 'REGIONAL'
+            }
+        }
+    },
     WorkSpaces: {
         describeWorkspaces: {
             property: 'Workspaces',
@@ -1107,6 +1116,16 @@ var postcalls = [
                 reliesOnCall: 'listWebACLs',
                 filterKey: 'WebACLId',
                 filterValue: 'WebACLId',
+                checkMultiple: ['APPLICATION_LOAD_BALANCER', 'API_GATEWAY'],
+                checkMultipleKey: 'ResourceType'
+            }
+        },
+        WAFV2: {
+            listResourcesForWebACL: {
+                reliesOnService: 'wafv2',
+                reliesOnCall: 'listWebACLs',
+                filterKey: 'WebACLArn',
+                filterValue: 'ARN',
                 checkMultiple: ['APPLICATION_LOAD_BALANCER', 'API_GATEWAY'],
                 checkMultipleKey: 'ResourceType'
             }
