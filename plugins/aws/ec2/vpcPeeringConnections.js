@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'VPC Peering Connections To Accounts Outside AWS Organization',
+    title: 'Cross Organization VPC Peering Connections',
     category: 'EC2',
     description: 'Ensures that VPC peering communication is only between AWS accounts, members of the same AWS Organization.',
     more_info: 'VPC peering communication should be only between AWS accounts to keep organization resources private and isolated.',
