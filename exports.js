@@ -4,7 +4,9 @@ module.exports = {
     aws : {
         'acmValidation'                 : require(__dirname + '/plugins/aws/acm/acmValidation.js'),
         'acmCertificateExpiry'          : require(__dirname + '/plugins/aws/acm/acmCertificateExpiry.js'),
+
         'apigatewayWafEnabled'          : require(__dirname + '/plugins/aws/apigateway/apigatewayWafEnabled.js'),
+
         'asgMultiAz'                    : require(__dirname + '/plugins/aws/autoscaling/asgMultiAz.js'),
         'asgActiveNotifications'        : require(__dirname + '/plugins/aws/autoscaling/asgActiveNotifications.js'),
         'emptyASG'                      : require(__dirname + '/plugins/aws/autoscaling/emptyASG.js'),
@@ -13,13 +15,17 @@ module.exports = {
         'webTierAsgAssociatedElb'       : require(__dirname + '/plugins/aws/autoscaling/webTierAsgAssociatedElb.js'),
         'elbHealthCheckActive'          : require(__dirname + '/plugins/aws/autoscaling/elbHealthCheckActive.js'),
         'asgSuspendedProcesses'         : require(__dirname + '/plugins/aws/autoscaling/asgSuspendedProcesses.js'),
+        'appTierAsgApprovedAmi'         : require(__dirname + '/plugins/aws/autoscaling/appTierAsgApprovedAmi.js'),
+        'webTierAsgApprovedAmi'         : require(__dirname + '/plugins/aws/autoscaling/webTierAsgApprovedAmi.js'),
         'appTierAsgCloudwatchLogs'      : require(__dirname + '/plugins/aws/autoscaling/appTierAsgCloudwatchLogs.js'),
         'webTierAsgCloudwatchLogs'      : require(__dirname + '/plugins/aws/autoscaling/webTierAsgCloudwatchLogs.js'),
         'asgMissingSecurityGroups'      : require(__dirname + '/plugins/aws/autoscaling/asgMissingSecurityGroups.js'),
         'webTierIamRole'                : require(__dirname + '/plugins/aws/autoscaling/webTierIamRole.js'),
         'appTierIamRole'                : require(__dirname + '/plugins/aws/autoscaling/appTierIamRole.js'),
+
         'workgroupEncrypted'            : require(__dirname + '/plugins/aws/athena/workgroupEncrypted.js'),
         'workgroupEnforceConfiguration' : require(__dirname + '/plugins/aws/athena/workgroupEnforceConfiguration.js'),
+
         'publicS3Origin'                : require(__dirname + '/plugins/aws/cloudfront/publicS3Origin.js'),
         'secureOrigin'                  : require(__dirname + '/plugins/aws/cloudfront/secureOrigin.js'),
         'insecureProtocols'             : require(__dirname + '/plugins/aws/cloudfront/insecureProtocols.js'),
