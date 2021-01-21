@@ -171,6 +171,11 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    DLM: {
+        getLifecyclePolicies: {
+            property: 'Policies'
+        }
+    },
     DMS: {
         describeReplicationInstances: {
             property: 'ReplicationInstances',
@@ -256,6 +261,12 @@ var calls = {
                 ]
             }
         },
+        describeInternetGateways: {
+            property: 'InternetGateways'
+        },
+        describeEgressOnlyInternetGateways: {
+            property: 'EgressOnlyInternetGateways'
+        },
         describeNatGateways: {
             property: 'NatGateways',
             paginate: 'NextToken',
@@ -315,6 +326,14 @@ var calls = {
             property: 'Tags',
             paginate: 'NextToken',
         },
+        describeNetworkInterfaces: {
+            property: 'NetworkInterfaces',
+            paginate: 'NextToken',
+        },
+        describeNetworkAcls: {
+            property: 'NetworkAcls',
+            paginate: 'NextToken',
+        }
     },
     ECR: {
         describeRepositories: {
@@ -372,6 +391,11 @@ var calls = {
             paginateReqProp: 'Marker'
         },
         describeTargetGroups: {
+            property: 'TargetGroups',
+            paginate: 'NextMarker',
+            paginateReqProp: 'Marker'
+        },
+        describeTargetHealth: {
             property: 'TargetGroups',
             paginate: 'NextMarker',
             paginateReqProp: 'Marker'
@@ -472,6 +496,10 @@ var calls = {
         listHandshakesForAccount: {
             property: 'Handshakes',
         },
+        listAccounts: {
+            property: 'Accounts',
+            paginate: 'NextToken'
+        },
     },
     RDS: {
         describeDBInstances: {
@@ -508,6 +536,12 @@ var calls = {
         describeReservedNodes: {
             property: 'ReservedNodes',
             paginate: 'Marker'
+        }
+    },
+    ResourceGroupsTaggingAPI: {
+        getTagKeys: {
+            property: 'TagKeys',
+            paginate: 'PaginationToken'
         }
     },
     Route53: {
@@ -626,9 +660,26 @@ var calls = {
             paginate: 'NextMarker'
         }
     },
+    WAFV2: {
+        listWebACLs: {
+            property: 'WebACLs',
+            paginate: 'NextMarker',
+            params: {
+                Scope: 'REGIONAL'
+            }
+        }
+    },
     WorkSpaces: {
         describeWorkspaces: {
             property: 'Workspaces',
+            paginate: 'NextToken'
+        },
+        describeWorkspaceDirectories:{
+            property: 'Directories',
+            paginate: 'NextToken'
+        },
+        describeIpGroups:{
+            property: 'Result',
             paginate: 'NextToken'
         }
     },
@@ -884,6 +935,14 @@ var postcalls = [
                 filterValue: 'Id'
             }
         },
+        DLM: {
+            getLifecyclePolicy: {
+                reliesOnService: 'dlm',
+                reliesOnCall: 'getLifecyclePolicies',
+                filterKey: 'PolicyId',
+                filterValue: 'PolicyId'
+            }
+        },
         IAM: {
             getGroup: {
                 reliesOnService: 'iam',
@@ -978,6 +1037,12 @@ var postcalls = [
                 reliesOnService: 'kms',
                 reliesOnCall: 'listKeys',
                 override: true
+            },
+            listResourceTags: {
+                reliesOnService: 'kms',
+                reliesOnCall: 'listKeys',
+                filterKey: 'KeyId',
+                filterValue: 'KeyId'
             }
         },
         Lambda: {
@@ -1071,6 +1136,16 @@ var postcalls = [
                 reliesOnCall: 'listWebACLs',
                 filterKey: 'WebACLId',
                 filterValue: 'WebACLId',
+                checkMultiple: ['APPLICATION_LOAD_BALANCER', 'API_GATEWAY'],
+                checkMultipleKey: 'ResourceType'
+            }
+        },
+        WAFV2: {
+            listResourcesForWebACL: {
+                reliesOnService: 'wafv2',
+                reliesOnCall: 'listWebACLs',
+                filterKey: 'WebACLArn',
+                filterValue: 'ARN',
                 checkMultiple: ['APPLICATION_LOAD_BALANCER', 'API_GATEWAY'],
                 checkMultipleKey: 'ResourceType'
             }
