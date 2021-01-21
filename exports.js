@@ -4,7 +4,9 @@ module.exports = {
     aws : {
         'acmValidation'                 : require(__dirname + '/plugins/aws/acm/acmValidation.js'),
         'acmCertificateExpiry'          : require(__dirname + '/plugins/aws/acm/acmCertificateExpiry.js'),
+
         'apigatewayWafEnabled'          : require(__dirname + '/plugins/aws/apigateway/apigatewayWafEnabled.js'),
+
         'asgMultiAz'                    : require(__dirname + '/plugins/aws/autoscaling/asgMultiAz.js'),
         'asgActiveNotifications'        : require(__dirname + '/plugins/aws/autoscaling/asgActiveNotifications.js'),
         'emptyASG'                      : require(__dirname + '/plugins/aws/autoscaling/emptyASG.js'),
@@ -13,13 +15,17 @@ module.exports = {
         'webTierAsgAssociatedElb'       : require(__dirname + '/plugins/aws/autoscaling/webTierAsgAssociatedElb.js'),
         'elbHealthCheckActive'          : require(__dirname + '/plugins/aws/autoscaling/elbHealthCheckActive.js'),
         'asgSuspendedProcesses'         : require(__dirname + '/plugins/aws/autoscaling/asgSuspendedProcesses.js'),
+        'appTierAsgApprovedAmi'         : require(__dirname + '/plugins/aws/autoscaling/appTierAsgApprovedAmi.js'),
+        'webTierAsgApprovedAmi'         : require(__dirname + '/plugins/aws/autoscaling/webTierAsgApprovedAmi.js'),
         'appTierAsgCloudwatchLogs'      : require(__dirname + '/plugins/aws/autoscaling/appTierAsgCloudwatchLogs.js'),
         'webTierAsgCloudwatchLogs'      : require(__dirname + '/plugins/aws/autoscaling/webTierAsgCloudwatchLogs.js'),
         'asgMissingSecurityGroups'      : require(__dirname + '/plugins/aws/autoscaling/asgMissingSecurityGroups.js'),
         'webTierIamRole'                : require(__dirname + '/plugins/aws/autoscaling/webTierIamRole.js'),
         'appTierIamRole'                : require(__dirname + '/plugins/aws/autoscaling/appTierIamRole.js'),
+
         'workgroupEncrypted'            : require(__dirname + '/plugins/aws/athena/workgroupEncrypted.js'),
         'workgroupEnforceConfiguration' : require(__dirname + '/plugins/aws/athena/workgroupEnforceConfiguration.js'),
+
         'publicS3Origin'                : require(__dirname + '/plugins/aws/cloudfront/publicS3Origin.js'),
         'secureOrigin'                  : require(__dirname + '/plugins/aws/cloudfront/secureOrigin.js'),
         'insecureProtocols'             : require(__dirname + '/plugins/aws/cloudfront/insecureProtocols.js'),
@@ -109,6 +115,7 @@ module.exports = {
         'crossVpcPublicPrivate'         : require(__dirname + '/plugins/aws/ec2/crossVpcPublicPrivate.js'),
         'vpcEndpointAcceptance'         : require(__dirname + '/plugins/aws/ec2/vpcEndpointAcceptance'),
         'vpcEndpointExposed'            : require(__dirname + '/plugins/aws/ec2/vpcEndpointExposed.js'),
+        'vpcPeeringConnections'         : require(__dirname + '/plugins/aws/ec2/vpcPeeringConnections.js'),
         'ebsEncryptedSnapshots'         : require(__dirname + '/plugins/aws/ec2/ebsEncryptedSnapshots.js'),
         'ebsDefaultEncryptionEnabled'   : require(__dirname + '/plugins/aws/ec2/ebsDefaultEncryptionEnabled.js'), 
         'ec2MetadataOptions'            : require(__dirname + '/plugins/aws/ec2/ec2MetadataOptions.js'),
@@ -120,7 +127,9 @@ module.exports = {
         'ebsUnusedVolumes'              : require(__dirname + '/plugins/aws/ec2/ebsUnusedVolumes.js'),
         'publicIpAddress'               : require(__dirname + '/plugins/aws/ec2/publicIpAddress.js'),
         'unusedVirtualPrivateGateway'   : require(__dirname + '/plugins/aws/ec2/unusedVirtualPrivateGateway.js'),
+        'vpcSubnetInstancesPresent'     : require(__dirname + '/plugins/aws/ec2/vpcSubnetInstancesPresent.js'),
         'webTierInstanceIamRole'        : require(__dirname + '/plugins/aws/ec2/webTierInstanceIamRole.js'),
+        'networkAclOutboundTraffic'     : require(__dirname + '/plugins/aws/ec2/networkAclOutboundTraffic.js'),
 
         'efsCmkEncrypted'               : require(__dirname + '/plugins/aws/efs/efsCmkEncrypted.js'),
         'efsEncryptionEnabled'          : require(__dirname + '/plugins/aws/efs/efsEncryptionEnabled.js'),
@@ -169,6 +178,7 @@ module.exports = {
         'crossAccountMfaExtIdAccess'    : require(__dirname + '/plugins/aws/iam/crossAccountMfaExtIdAccess.js'),
         'emptyGroups'                   : require(__dirname + '/plugins/aws/iam/emptyGroups.js'),
         'groupInlinePolicies'           : require(__dirname + '/plugins/aws/iam/groupInlinePolicies.js'),
+        'iamMasterManagerRoles'         : require(__dirname + '/plugins/aws/iam/iamMasterManagerRoles.js'),
         'iamUserAdmins'                 : require(__dirname + '/plugins/aws/iam/iamUserAdmins.js'),
         'iamUserNameRegex'              : require(__dirname + '/plugins/aws/iam/iamUserNameRegex.js'),
         'iamUserUnauthorizedToEdit'     : require(__dirname + '/plugins/aws/iam/iamUserUnauthorizedToEdit'),
@@ -260,7 +270,13 @@ module.exports = {
         'redshiftPubliclyAccessible'    : require(__dirname + '/plugins/aws/redshift/redshiftPubliclyAccessible.js'),
         'redshiftAllowVersionUpgrade'   : require(__dirname + '/plugins/aws/redshift/redshiftAllowVersionUpgrade.js'),
         'redshiftSSLEnabled'            : require(__dirname + '/plugins/aws/redshift/redshiftSSLEnabled.js'),
+        'redshiftClusterInVpc'          : require(__dirname + '/plugins/aws/redshift/redshiftClusterInVpc.js'),
+        'redshiftClusterDefaultPort'    : require(__dirname + '/plugins/aws/redshift/redshiftClusterDefaultPort.js'),
+        'redshiftClusterMasterUsername' : require(__dirname + '/plugins/aws/redshift/redshiftClusterMasterUsername.js'),
+        'snapshotRetentionPeriod'       : require(__dirname + '/plugins/aws/redshift/snapshotRetentionPeriod.js'),
+
         'userActivityLoggingEnabled'    : require(__dirname + '/plugins/aws/redshift/userActivityLoggingEnabled.js'),
+        'redshiftDesiredNodeType'       : require(__dirname + '/plugins/aws/redshift/redshiftDesiredNodeType.js'),
 
         'transferLoggingEnabled'        : require(__dirname + '/plugins/aws/transfer/transferLoggingEnabled.js'),
 

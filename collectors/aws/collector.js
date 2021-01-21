@@ -336,6 +336,11 @@ var calls = {
         getEbsDefaultKmsKeyId: {
             property: 'KmsKeyId'
         },
+        describeNetworkAcls: {
+            property: 'NetworkAcls',
+            paginate: 'NextToken',
+        }
+
     },
     ECR: {
         describeRepositories: {
@@ -498,6 +503,10 @@ var calls = {
         listHandshakesForAccount: {
             property: 'Handshakes',
         },
+        listAccounts: {
+            property: 'Accounts',
+            paginate: 'NextToken'
+        },
     },
     RDS: {
         describeDBInstances: {
@@ -652,6 +661,15 @@ var calls = {
         listWebACLs: {
             property: 'WebACLs',
             paginate: 'NextMarker'
+        }
+    },
+    WAFV2: {
+        listWebACLs: {
+            property: 'WebACLs',
+            paginate: 'NextMarker',
+            params: {
+                Scope: 'REGIONAL'
+            }
         }
     },
     WorkSpaces: {
@@ -1113,6 +1131,16 @@ var postcalls = [
                 reliesOnCall: 'listWebACLs',
                 filterKey: 'WebACLId',
                 filterValue: 'WebACLId',
+                checkMultiple: ['APPLICATION_LOAD_BALANCER', 'API_GATEWAY'],
+                checkMultipleKey: 'ResourceType'
+            }
+        },
+        WAFV2: {
+            listResourcesForWebACL: {
+                reliesOnService: 'wafv2',
+                reliesOnCall: 'listWebACLs',
+                filterKey: 'WebACLArn',
+                filterValue: 'ARN',
                 checkMultiple: ['APPLICATION_LOAD_BALANCER', 'API_GATEWAY'],
                 checkMultipleKey: 'ResourceType'
             }
