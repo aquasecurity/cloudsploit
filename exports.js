@@ -125,6 +125,7 @@ module.exports = {
         'ebsUnusedVolumes'              : require(__dirname + '/plugins/aws/ec2/ebsUnusedVolumes.js'),
         'publicIpAddress'               : require(__dirname + '/plugins/aws/ec2/publicIpAddress.js'),
         'unusedVirtualPrivateGateway'   : require(__dirname + '/plugins/aws/ec2/unusedVirtualPrivateGateway.js'),
+        'vpcSubnetInstancesPresent'     : require(__dirname + '/plugins/aws/ec2/vpcSubnetInstancesPresent.js'),
         'webTierInstanceIamRole'        : require(__dirname + '/plugins/aws/ec2/webTierInstanceIamRole.js'),
 
         'efsCmkEncrypted'               : require(__dirname + '/plugins/aws/efs/efsCmkEncrypted.js'),
