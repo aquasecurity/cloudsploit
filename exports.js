@@ -7,6 +7,7 @@ module.exports = {
 
         'apigatewayTracingEnabled'      : require(__dirname + '/plugins/aws/apigateway/apigatewayTracingEnabled.js'),
         'apigatewayWafEnabled'          : require(__dirname + '/plugins/aws/apigateway/apigatewayWafEnabled.js'),
+        'apigatewayClientCertificate'   : require(__dirname + '/plugins/aws/apigateway/apigatewayClientCertificate.js'),
 
         'asgMultiAz'                    : require(__dirname + '/plugins/aws/autoscaling/asgMultiAz.js'),
         'asgActiveNotifications'        : require(__dirname + '/plugins/aws/autoscaling/asgActiveNotifications.js'),
