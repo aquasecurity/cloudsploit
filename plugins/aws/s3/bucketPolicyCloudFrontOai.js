@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Access to CloudFront origins should only happen via ClouFront URL and not from S3 URL or any source in order to restrict access to private data.',
     link: 'https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html',
     recommended_action: 'Review the access policy for S3 bucket which is an origin to a CloudFront distribution. Make sure S3 bucket is origin to only one distribution. ' +
-        'Modify S3 bucket access policy to only allow CloudFront OAI for associated CloudFront distribution only and restrict access from any other source.',
+        'Modify the S3 bucket access policy to allow CloudFront OAI for only the associated CloudFront distribution and restrict access from any other source.',
     apis: ['CloudFront:listDistributions', 'S3:listBuckets', 'S3:getBucketPolicy'],
     compliance: {
         hipaa: 'HIPAA requires that access to protected information is controlled and audited. ' +
