@@ -329,6 +329,10 @@ var calls = {
         describeNetworkInterfaces: {
             property: 'NetworkInterfaces',
             paginate: 'NextToken',
+        },
+        describeNetworkAcls: {
+            property: 'NetworkAcls',
+            paginate: 'NextToken',
         }
     },
     ECR: {
