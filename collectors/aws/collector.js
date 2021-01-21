@@ -532,6 +532,10 @@ var calls = {
         describeClusterParameterGroups: {
             property: 'ParameterGroups',
             paginate: 'Marker'
+        },
+        describeReservedNodes: {
+            property: 'ReservedNodes',
+            paginate: 'Marker'
         }
     },
     ResourceGroupsTaggingAPI: {
