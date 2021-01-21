@@ -330,6 +330,10 @@ var calls = {
             property: 'NetworkInterfaces',
             paginate: 'NextToken',
         },
+        describeVpnConnections: {
+            property: 'VpnConnections',
+            paginate: 'NextToken'
+        },
         describeNetworkAcls: {
             property: 'NetworkAcls',
             paginate: 'NextToken',
