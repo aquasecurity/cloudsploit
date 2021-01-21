@@ -38,6 +38,7 @@ module.exports = {
     es: regions,
     kinesis: [],
     firehose: [],
+    glue: regions,
     kms: regions,
     vpc: regions,
     flowlogs: regions,

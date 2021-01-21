@@ -133,7 +133,7 @@ describe('vpnTunnelState', function () {
     describe('run', function () {
         it('should PASS if VPN connection has all tunnels UP', function (done) {
             const cache = createCache([describeVpnConnections[0]], null);
-            vpnTunnelState.run(cache, {}, (err, results) => {
+            vpnTunnelState.run(cache, { enable_vpn_tunnel_state: 'true' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -142,7 +142,7 @@ describe('vpnTunnelState', function () {
 
         it('should FAIL if VPN connection has tunnel down', function (done) {
             const cache = createCache([describeVpnConnections[1]], null);
-            vpnTunnelState.run(cache, {}, (err, results) => {
+            vpnTunnelState.run(cache, { enable_vpn_tunnel_state: 'true' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -151,7 +151,7 @@ describe('vpnTunnelState', function () {
 
         it('should FAIL if VPN connection does not have any tunnel configured', function (done) {
             const cache = createCache([describeVpnConnections[2]], null);
-            vpnTunnelState.run(cache, {}, (err, results) => {
+            vpnTunnelState.run(cache, { enable_vpn_tunnel_state: 'true' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -160,7 +160,7 @@ describe('vpnTunnelState', function () {
 
         it('should PASS if no VPN connections found', function (done) {
             const cache = createCache([], null);
-            vpnTunnelState.run(cache, {}, (err, results) => {
+            vpnTunnelState.run(cache, { enable_vpn_tunnel_state: 'true' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -169,7 +169,7 @@ describe('vpnTunnelState', function () {
 
         it('should UNKNWON if unable to query for VPN connections', function (done) {
             const cache = createCache([], { message: 'Unable to query for VPN connections'});
-            vpnTunnelState.run(cache, {}, (err, results) => {
+            vpnTunnelState.run(cache, { enable_vpn_tunnel_state: 'true' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -178,7 +178,7 @@ describe('vpnTunnelState', function () {
 
         it('should not return anything if describe VPN connections response not found', function (done) {
             const cache = createNullCache();
-            vpnTunnelState.run(cache, {}, (err, results) => {
+            vpnTunnelState.run(cache, { enable_vpn_tunnel_state: 'true' }, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });

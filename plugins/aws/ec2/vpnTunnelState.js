@@ -9,11 +9,23 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/vpn/latest/s2svpn/VPNTunnels.html',
     recommended_action: 'Establish a successful VPN connection using IKE or IPsec configuration',
     apis: ['EC2:describeVpnConnections', 'STS:getCallerIdentity'],
+    settings: {
+        enable_vpn_tunnel_state: {
+            name: 'Enable VPN Tunnel State',
+            description: 'This is an opt-in plugin. This value should be set to true to enable this plugin',
+            regex: '^(true|false)$',
+            default: 'false'
+        }
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+
+        var enable_vpn_tunnel_state = (settings.enable_vpn_tunnel_state || this.settings.enable_vpn_tunnel_state.default);
+
+        if (!enable_vpn_tunnel_state || enable_vpn_tunnel_state == 'false') return callback(null, results, source);
 
         var acctRegion = helpers.defaultRegion(settings);
         var awsOrGov = helpers.defaultPartition(settings);
