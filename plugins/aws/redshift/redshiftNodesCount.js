@@ -13,15 +13,14 @@ module.exports = {
         redshift_nodes_count: {
             name: 'Amazon Redshift Nodes Count',
             description: 'Maximum Amazon Redshift nodes count per region',
-            regex: '^.*$',
-            default: 'false'
+            regex: '^[0-9]{0,3}',
+            default: 5
         },
     },
 
     run: function(cache, settings, callback) {
         var redshift_nodes_count = settings.redshift_nodes_count || this.settings.redshift_nodes_count.default;
 
-        if (redshift_nodes_count === 'false') return callback();
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
