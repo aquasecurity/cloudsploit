@@ -329,6 +329,10 @@ var calls = {
         describeNetworkInterfaces: {
             property: 'NetworkInterfaces',
             paginate: 'NextToken',
+        },
+        describeNetworkAcls: {
+            property: 'NetworkAcls',
+            paginate: 'NextToken',
         }
     },
     ECR: {
@@ -500,6 +504,10 @@ var calls = {
         listHandshakesForAccount: {
             property: 'Handshakes',
         },
+        listAccounts: {
+            property: 'Accounts',
+            paginate: 'NextToken'
+        },
     },
     RDS: {
         describeDBInstances: {
@@ -531,6 +539,10 @@ var calls = {
         },
         describeClusterParameterGroups: {
             property: 'ParameterGroups',
+            paginate: 'Marker'
+        },
+        describeReservedNodes: {
+            property: 'ReservedNodes',
             paginate: 'Marker'
         }
     },
@@ -656,9 +668,26 @@ var calls = {
             paginate: 'NextMarker'
         }
     },
+    WAFV2: {
+        listWebACLs: {
+            property: 'WebACLs',
+            paginate: 'NextMarker',
+            params: {
+                Scope: 'REGIONAL'
+            }
+        }
+    },
     WorkSpaces: {
         describeWorkspaces: {
             property: 'Workspaces',
+            paginate: 'NextToken'
+        },
+        describeWorkspaceDirectories:{
+            property: 'Directories',
+            paginate: 'NextToken'
+        },
+        describeIpGroups:{
+            property: 'Result',
             paginate: 'NextToken'
         }
     },
@@ -738,7 +767,12 @@ var postcalls = [
                 reliesOnService: 'dynamodb',
                 reliesOnCall: 'listTables',
                 override: true
-            }
+            },
+            describeContinuousBackups: {
+                reliesOnService: 'dynamodb',
+                reliesOnCall: 'listTables',
+                override: true
+            },
         },
         ES: {
             describeElasticsearchDomain: {
@@ -1115,6 +1149,16 @@ var postcalls = [
                 reliesOnCall: 'listWebACLs',
                 filterKey: 'WebACLId',
                 filterValue: 'WebACLId',
+                checkMultiple: ['APPLICATION_LOAD_BALANCER', 'API_GATEWAY'],
+                checkMultipleKey: 'ResourceType'
+            }
+        },
+        WAFV2: {
+            listResourcesForWebACL: {
+                reliesOnService: 'wafv2',
+                reliesOnCall: 'listWebACLs',
+                filterKey: 'WebACLArn',
+                filterValue: 'ARN',
                 checkMultiple: ['APPLICATION_LOAD_BALANCER', 'API_GATEWAY'],
                 checkMultipleKey: 'ResourceType'
             }
