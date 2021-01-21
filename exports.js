@@ -175,6 +175,7 @@ module.exports = {
         'crossAccountMfaExtIdAccess'    : require(__dirname + '/plugins/aws/iam/crossAccountMfaExtIdAccess.js'),
         'emptyGroups'                   : require(__dirname + '/plugins/aws/iam/emptyGroups.js'),
         'groupInlinePolicies'           : require(__dirname + '/plugins/aws/iam/groupInlinePolicies.js'),
+        'iamMasterManagerRoles'         : require(__dirname + '/plugins/aws/iam/iamMasterManagerRoles.js'),
         'iamUserAdmins'                 : require(__dirname + '/plugins/aws/iam/iamUserAdmins.js'),
         'iamUserNameRegex'              : require(__dirname + '/plugins/aws/iam/iamUserNameRegex.js'),
         'iamUserUnauthorizedToEdit'     : require(__dirname + '/plugins/aws/iam/iamUserUnauthorizedToEdit'),
