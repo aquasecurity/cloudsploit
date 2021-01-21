@@ -669,6 +669,14 @@ var calls = {
         describeWorkspaces: {
             property: 'Workspaces',
             paginate: 'NextToken'
+        },
+        describeWorkspaceDirectories:{
+            property: 'Directories',
+            paginate: 'NextToken'
+        },
+        describeIpGroups:{
+            property: 'Result',
+            paginate: 'NextToken'
         }
     },
     XRay: {
