@@ -145,47 +145,50 @@ var engine = function(cloudConfig, settings) {
 
             var postRun = function(err, results) {
                 if (err) return console.log(`ERROR: ${err}`);
-                if (!results || !results.length) console.log(`Plugin ${plugin.title} returned no results. There may be a problem with this plugin.`);
-              
-                for (var r in results) {
-                    // If we have suppressed this result, then don't process it
-                    // so that it doesn't affect the return code.
-                    if (suppressionFilter([key, results[r].region || 'any', results[r].resource || 'any'].join(':'))) {
-                        continue;
-                    }
+                if (!results || !results.length) {
+                    console.log(`Plugin ${plugin.title} returned no results. There may be a problem with this plugin.`);
+                } else {
+                    for (var r in results) {
+                        // If we have suppressed this result, then don't process it
+                        // so that it doesn't affect the return code.
+                        if (suppressionFilter([key, results[r].region || 'any', results[r].resource || 'any'].join(':'))) {
+                            continue;
+                        }
 
-                    var complianceMsg = [];
-                    if (settings.compliance && settings.compliance.length) {
-                        settings.compliance.forEach(function(c) {
-                            if (plugin.compliance && plugin.compliance[c]) {
-                                complianceMsg.push(`${c.toUpperCase()}: ${plugin.compliance[c]}`);
-                            }
-                        });
-                    }
-                    complianceMsg = complianceMsg.join('; ');
-                    if (!complianceMsg.length) complianceMsg = null;
+                        var complianceMsg = [];
+                        if (settings.compliance && settings.compliance.length) {
+                            settings.compliance.forEach(function(c) {
+                                if (plugin.compliance && plugin.compliance[c]) {
+                                    complianceMsg.push(`${c.toUpperCase()}: ${plugin.compliance[c]}`);
+                                }
+                            });
+                        }
+                        complianceMsg = complianceMsg.join('; ');
+                        if (!complianceMsg.length) complianceMsg = null;
 
-                    // Write out the result (to console or elsewhere)
-                    outputHandler.writeResult(results[r], plugin, key, complianceMsg);
+                        // Write out the result (to console or elsewhere)
+                        outputHandler.writeResult(results[r], plugin, key, complianceMsg);
 
-                    // Add this to our tracking for the worst status to calculate
-                    // the exit code
-                    maximumStatus = Math.max(maximumStatus, results[r].status);
-                    // Remediation
-                    if (settings.remediate && settings.remediate.length) {
-                        if (settings.remediate.indexOf(key) > -1) {
-                            if (results[r].status === 2) {
-                                var resource = results[r].resource;
-                                var event = {};
-                                event['remediation_file'] = {};
-                                event['remediation_file'] = initializeFile(event['remediation_file'], 'execute', key, resource);
-                                plugin.remediate(cloudConfig, collection, event, resource, (err, result) => {
-                                    if (err) return console.log(err);
-                                    return console.log(result);
-                                });
+                        // Add this to our tracking for the worst status to calculate
+                        // the exit code
+                        maximumStatus = Math.max(maximumStatus, results[r].status);
+                        // Remediation
+                        if (settings.remediate && settings.remediate.length) {
+                            if (settings.remediate.indexOf(key) > -1) {
+                                if (results[r].status === 2) {
+                                    var resource = results[r].resource;
+                                    var event = {};
+                                    event['remediation_file'] = {};
+                                    event['remediation_file'] = initializeFile(event['remediation_file'], 'execute', key, resource);
+                                    plugin.remediate(cloudConfig, collection, event, resource, (err, result) => {
+                                        if (err) return console.log(err);
+                                        return console.log(result);
+                                    });
+                                }
                             }
                         }
                     }
+
                 }
                 setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
             };
