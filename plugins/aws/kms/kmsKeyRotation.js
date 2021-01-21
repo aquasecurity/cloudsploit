@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'All KMS keys should have key rotation enabled. AWS will handle the rotation of the encryption key itself, as well as storage of previous keys, so previous data does not need to be re-encrypted before the rotation occurs.',
     recommended_action: 'Enable yearly rotation for the KMS key',
     link: 'http://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html',
-    apis: ['KMS:listKeys', 'KMS:describeKey', 'KMS:getKeyRotationStatus'],
+    apis: ['KMS:listKeys', 'KMS:describeKey', 'KMS:getKeyRotationStatus', 'KMS:getKeyPolicy'],
     compliance: {
         pci: 'PCI has strict requirements regarding the use of encryption keys ' +
              'to protect cardholder data. These requirements include rotating ' +
@@ -16,11 +16,30 @@ module.exports = {
              'should be enabled.',
         cis2: '2.8 Ensure rotation for customer created CMKs is enabled'
     },
+    settings: {
+        kms_key_policy_whitelisted_policy_ids: {
+            name: 'KMS Key Policy Whitelisted Policy IDs',
+            description: 'A comma-delimited list of known Key Policy IDs that should be trusted',
+            regex: '^.{1,255}$',
+            default: 'aqua-cspm'
+        }
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+
+        var config = {
+            kms_key_policy_whitelisted_policy_ids: settings.kms_key_policy_whitelisted_policy_ids || this.settings.kms_key_policy_whitelisted_policy_ids.default
+        };
+
+        if (config.kms_key_policy_whitelisted_policy_ids &&
+            config.kms_key_policy_whitelisted_policy_ids.length) {
+            config.kms_key_policy_whitelisted_policy_ids = config.kms_key_policy_whitelisted_policy_ids.split(',');
+        } else {
+            config.kms_key_policy_whitelisted_policy_ids = [];
+        }
 
         async.each(regions.kms, function(region, rcb){
             
@@ -43,6 +62,25 @@ module.exports = {
             async.each(listKeys.data, function(kmsKey, kcb){
                 var describeKey = helpers.addSource(cache, source,
                     ['kms', 'describeKey', region, kmsKey.KeyId]);
+
+                var getKeyPolicy = helpers.addSource(cache, source,
+                    ['kms', 'getKeyPolicy', region, kmsKey.KeyId]);
+
+                if (!getKeyPolicy || getKeyPolicy.err || !getKeyPolicy.data){
+                    helpers.addResult(results, 3,
+                        'Unable to get key policy: ' + helpers.addError(getKeyPolicy),
+                        region, kmsKey.KeyArn);
+                    return kcb();
+                }
+
+                // Auq-CSPM keys for Remediations should be skipped. 
+                // The only way to distinguish these keys is the Policy Id.
+                if (getKeyPolicy.data.Id &&
+                    config.kms_key_policy_whitelisted_policy_ids.length &&
+                    config.kms_key_policy_whitelisted_policy_ids.indexOf(getKeyPolicy.data.Id)>-1) {
+                    helpers.addResult(results, 0, 'The key ' + kmsKey.KeyArn + ' is whitelisted.', region, kmsKey.KeyArn);
+                    return kcb();
+                }
 
                 var getKeyRotationStatus = helpers.addSource(cache, source,
                     ['kms', 'getKeyRotationStatus', region, kmsKey.KeyId]);
