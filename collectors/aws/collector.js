@@ -434,6 +434,14 @@ var calls = {
             property: 'Roles',
             paginate: 'Marker'
         },
+        listPolicies: {
+            property: 'Policies',
+            paginate: 'Marker',
+            params: {
+                OnlyAttached: true,
+                Scope: 'Local'
+            }
+        },
         listVirtualMFADevices: {
             property: 'VirtualMFADevices',
             paginate: 'Marker'
@@ -1192,6 +1200,12 @@ var postcalls = [
                 reliesOnCall: 'listRoles',
                 override: true
             },
+            getPolicy: {
+                reliesOnService: 'iam',
+                reliesOnCall: 'listPolicies',
+                filterKey: 'PolicyArn',
+                filterValue: 'Arn'
+            },
             getRole: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listRoles',
@@ -1203,6 +1217,15 @@ var postcalls = [
             describeNodegroups: {
                 reliesOnService: 'eks',
                 reliesOnCall: 'listClusters',
+                override: true
+            }
+        }
+    },
+    {
+        IAM: {
+            getPolicyVersion: {
+                reliesOnService: 'iam',
+                reliesOnCall: 'listPolicies',
                 override: true
             }
         }
