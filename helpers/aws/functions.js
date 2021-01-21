@@ -243,7 +243,7 @@ function extractStatementPrincipals(statement) {
         }
 
         for (let a in awsPrincipals) {
-            if (/^arn:aws:iam|sts::[0-9]{12}.*/.test(awsPrincipals[a])) {
+            if (/^arn:aws:(iam|sts)::.+/.test(awsPrincipals[a])) {
                 response.push(awsPrincipals[a]);
             }
         }
