@@ -23,7 +23,8 @@ module.exports = {
         var source = {};
         
         var region = helpers.defaultRegion(settings);
-        var account = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', region, 'data']);
+        var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', region, 'data']);
+
         var listRoles = helpers.addSource(cache, source,
             ['iam', 'listRoles', region]);
 
@@ -40,42 +41,50 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        var rolesFound = false;
-
         listRoles.data.forEach(role => {
-            if (!role.AssumeRolePolicyDocument) return;
+            if (!role.Arn || !role.AssumeRolePolicyDocument) return;
 
             var statements = helpers.normalizePolicyDocument(role.AssumeRolePolicyDocument);
+
+            if (!statements || !statements.length) {
+                helpers.addResult(results, 0,
+                    'IAM role does not contain trust relationship statements',
+                    'global', role.Arn);
+            }
+
             var restrictedAccountPrincipals = [];
             var crossAccountRole = false;
+
             for (var s in statements) {
                 var statement = statements[s];
-                var principals = helpers.crossAccountPrincipal(statement.Principal, account, true);
-                if (principals.length){
+
+                if (statement.Principal && helpers.crossAccountPrincipal(statement.Principal, accountId)) {
                     crossAccountRole = true;
-                    rolesFound = true;
-                    principals.forEach(principal => {
-                        if (!whitelisted_aws_account_principals.includes(principal) &&
-                                !restrictedAccountPrincipals.includes(principal)) restrictedAccountPrincipals.push(principal);
-                    });
+                    var principals = helpers.crossAccountPrincipal(statement.Principal, accountId, true);
+                    if (principals.length) {
+                        principals.forEach(principal => {
+                            if (!whitelisted_aws_account_principals.includes(principal) &&
+                                    !restrictedAccountPrincipals.includes(principal)) restrictedAccountPrincipals.push(principal);
+                        });
+                    }
                 }
             }
 
             if (crossAccountRole && !restrictedAccountPrincipals.length) {
                 helpers.addResult(results, 0,
-                    `Cross-account role "${role.RoleName}" contains trusted account pricipals`,
+                    `Cross-account role "${role.RoleName}" contains trusted account pricipals only`,
                     'global', role.Arn);
             }
             else if (crossAccountRole) {
                 helpers.addResult(results, 2,
                     `Cross-account role "${role.RoleName}" contains these untrusted account principals: ${restrictedAccountPrincipals.join(', ')}`,
                     'global', role.Arn);
+            } else {
+                helpers.addResult(results, 0,
+                    `IAM Role "${role.RoleName}" does not contain cross-account statements`,
+                    'global', role.Arn);
             }
         });
-
-        if (!rolesFound) {
-            helpers.addResult(results, 0, 'No cross-account IAM roles found', 'global');
-        }
         
         callback(null, results, source);
     }

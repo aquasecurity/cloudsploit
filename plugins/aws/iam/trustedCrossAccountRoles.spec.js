@@ -109,6 +109,7 @@ describe('trustedCrossAccountRoles', function () {
             trustedCrossAccountRoles.run(cache, { whitelisted_aws_account_principals:'arn:aws:iam::123456654321:root' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('global');
                 done();
             });
         });
@@ -118,15 +119,17 @@ describe('trustedCrossAccountRoles', function () {
             trustedCrossAccountRoles.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('global');
                 done();
             });
         });
 
-        it('should PASS if no cross-account IAM role found', function (done) {
-            const cache = createCache([roles[0], roles[2]]);
+        it('should PASS if role does not contain cross-account statements', function (done) {
+            const cache = createCache([roles[0]]);
             trustedCrossAccountRoles.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0)
+                expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('global');
                 done();
             });
         });
@@ -136,6 +139,7 @@ describe('trustedCrossAccountRoles', function () {
             trustedCrossAccountRoles.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('global');
                 done();
             });
         });

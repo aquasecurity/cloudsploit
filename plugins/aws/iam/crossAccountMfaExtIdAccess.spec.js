@@ -18,7 +18,7 @@ const roles = [
         "RoleId": "AROAYE32SRU5VULODBGFK",
         "Arn": "arn:aws:iam::123456654321:role/test-role-MFA-true",
         "CreateDate": "2020-08-30T17:48:45Z",
-        "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22AWS%22%3A%22arn%3Aaws%3Aiam%3A%111122223333%3Aroot%22%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%2C%22Condition%22%3A%7B%22Bool%22%3A%7B%22aws%3AMultiFactorAuthPresent%22%3A%22true%22%7D%7D%7D%5D%7D",
+        "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22AWS%22%3A%22arn%3Aaws%3Aiam%3A%3A123456654321%3Aroot%22%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%2C%22Condition%22%3A%7B%22Bool%22%3A%7B%22aws%3AMultiFactorAuthPresent%22%3A%22true%22%7D%7D%7D%5D%7D",
         "MaxSessionDuration": 3600
     },
     {
@@ -36,7 +36,7 @@ const roles = [
         "RoleId": "AROAYE32SRU52JAKJR5YY",
         "Arn": "arn:aws:iam::123456654321:role/test-role-external-id",
         "CreateDate": "2020-08-30T21:18:35Z",
-        "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22AWS%22%3A%22arn%3Aaws%3Aiam%3A%111122223333%3Aroot%22%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%2C%22Condition%22%3A%7B%22StringEquals%22%3A%7B%22sts%3AExternalId%22%3A%2212345%22%7D%7D%7D%5D%7D",
+        "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22AWS%22%3A%22arn%3Aaws%3Aiam%3A%3A123456654321%3Aroot%22%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%2C%22Condition%22%3A%7B%22StringEquals%22%3A%7B%22sts%3AExternalId%22%3A%2212345%22%7D%7D%7D%5D%7D",
         "MaxSessionDuration": 3600
     },
     {
@@ -45,16 +45,7 @@ const roles = [
         "RoleId": "AROAYE32SRU5ZCTFXUN6O",
         "Arn": "arn:aws:iam::123456654321:role/test-role-MFA-externalid-false",
         "CreateDate": "2020-08-30T19:09:22Z",
-        "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22AWS%22%3A%22arn%3Aaws%3Aiam%3A%555555555555%3Aroot%22%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%2C%22Condition%22%3A%7B%7D%7D%5D%7D",
-        "MaxSessionDuration": 3600
-    },
-    {
-        "Path": "/",
-        "RoleName": "test-role-MFA-externalid-false",
-        "RoleId": "AROAYE32SRU5ZCTFXUN6O",
-        "Arn": "arn:aws:iam::123456654321:role/test-role-MFA-externalid-false",
-        "CreateDate": "2020-08-30T19:09:22Z",
-        "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%",
+        "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22AWS%22%3A%22arn%3Aaws%3Aiam%3A%3A123456654321%3Aroot%22%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%2C%22Condition%22%3A%7B%7D%7D%5D%7D",
         "MaxSessionDuration": 3600
     }
 ];
@@ -125,17 +116,8 @@ describe('crossAccountMfaExtIdAccess', function () {
             });
         });
 
-        it('should PASS if IAM role does not contain cross-account statements', function (done) {
+        it('should PASS if no cross-account IAM role found', function (done) {
             const cache = createCache([roles[0], roles[2]]);
-            crossAccountMfaExtIdAccess.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(2);
-                expect(results[0].status).to.equal(0)
-                done();
-            });
-        });
-
-        it('should PASS if IAM role does not contain trust relationship statements', function (done) {
-            const cache = createCache([roles[5]]);
             crossAccountMfaExtIdAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0)
