@@ -42,7 +42,7 @@ module.exports = {
                 var clusterIdentifier = cluster.ClusterIdentifier;
                 var resource = `arn:${awsOrGov}:redshift:${region}:${accountId}:cluster:${clusterIdentifier}`;
 
-                if (helpers.isValid(cluster.VpcId)) {
+                if (cluster.VpcId && cluster.VpcId.length) {
                     helpers.addResult(results, 0,
                         'Redshift cluster is launched within a VPC', region, resource);    
                 } else {

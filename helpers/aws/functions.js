@@ -3,10 +3,6 @@ var regions = require(__dirname + '/regions');
 var AWS = require('aws-sdk');
 var helpers = require('../shared.js');
 
-function isValid(value) {
-    return (value !== undefined && value !== '' && value !== null);
-}
-
 function waitForCredentialReport(iam, callback, CREDENTIAL_DOWNLOAD_STARTED) {
     if (!CREDENTIAL_DOWNLOAD_STARTED) {
         iam.generateCredentialReport(function(err, data){
@@ -554,7 +550,6 @@ function remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, 
 }
 
 module.exports = {
-    isValid: isValid,
     addResult: addResult,
     findOpenPorts: findOpenPorts,
     waitForCredentialReport: waitForCredentialReport,
