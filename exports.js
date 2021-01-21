@@ -145,6 +145,7 @@ module.exports = {
         'eksKubernetesVersion'          : require(__dirname + '/plugins/aws/eks/eksKubernetesVersion.js'),
         'eksLoggingEnabled'             : require(__dirname + '/plugins/aws/eks/eksLoggingEnabled.js'),
         'eksPrivateEndpoint'            : require(__dirname + '/plugins/aws/eks/eksPrivateEndpoint.js'),
+        'eksSecretsEncrypted'           : require(__dirname + '/plugins/aws/eks/eksSecretsEncrypted.js'),
         'eksSecurityGroups'             : require(__dirname + '/plugins/aws/eks/eksSecurityGroups.js'),
 
         'insecureCiphers'               : require(__dirname + '/plugins/aws/elb/insecureCiphers.js'),
