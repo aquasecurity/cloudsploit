@@ -60,9 +60,9 @@ module.exports = {
                 }
 
                 cb();
+            }, function(){
+                rcb();
             });
-
-            return rcb();
         }, function(){
             callback(null, results, source);
         });

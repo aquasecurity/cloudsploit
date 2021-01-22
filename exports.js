@@ -31,7 +31,7 @@ module.exports = {
         'outputResultEncryption'        : require(__dirname + '/plugins/aws/comprehend/outputResultEncryption.js'),
 
         'plainTextParameters'           :  require(__dirname + '/plugins/aws/cloudformation/plainTextParameters.js'),
-        'terminationProtection'         : require(__dirname + '/plugins/aws/cloudformation/terminationProtection.js'),
+        'stackTerminationProtection'         : require(__dirname + '/plugins/aws/cloudformation/stackTerminationProtection.js'),
 
         'cloudtrailBucketAccessLogging' : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailBucketAccessLogging.js'),
         'cloudtrailBucketDelete'        : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailBucketDelete.js'),

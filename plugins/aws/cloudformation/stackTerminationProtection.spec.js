@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-const terminationProtection = require('./terminationProtection');
+const stackTerminationProtection = require('./stackTerminationProtection');
 
 const listStacks = [
     {
@@ -113,11 +113,11 @@ const createNullCache = () => {
     };
 };
 
-describe('terminationProtection', function () {
+describe('stackTerminationProtection', function () {
     describe('run', function () {
         it('should PASS if CloudFormation stack has SNS topic associated', function (done) {
             const cache = createCache([listStacks[0]], describeStacks[0]);
-            terminationProtection.run(cache, {}, (err, results) => {
+            stackTerminationProtection.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -126,7 +126,7 @@ describe('terminationProtection', function () {
 
         it('should FAIL if CloudFormation stack does not have SNS topic associated', function (done) {
             const cache = createCache([listStacks[0]], describeStacks[1]);
-            terminationProtection.run(cache, {}, (err, results) => {
+            stackTerminationProtection.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -135,7 +135,7 @@ describe('terminationProtection', function () {
 
         it('should PASS if no CloudFormation stacks found', function (done) {
             const cache = createCache([]);
-            terminationProtection.run(cache, {}, (err, results) => {
+            stackTerminationProtection.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -144,7 +144,7 @@ describe('terminationProtection', function () {
 
         it('should UNKNOWN if No stack details found', function (done) {
             const cache = createCache([listStacks[0]], {"Stacks": [] });
-            terminationProtection.run(cache, {}, (err, results) => {
+            stackTerminationProtection.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -153,7 +153,7 @@ describe('terminationProtection', function () {
 
         it('should UNKNOWN if unable to list stacks', function (done) {
             const cache = createErrorCache();
-            terminationProtection.run(cache, {}, (err, results) => {
+            stackTerminationProtection.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -162,7 +162,7 @@ describe('terminationProtection', function () {
 
         it('should UNKNOWN if unable to describe stacks', function (done) {
             const cache = createCache([listStacks[0]], []);
-            terminationProtection.run(cache, {}, (err, results) => {
+            stackTerminationProtection.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -171,7 +171,7 @@ describe('terminationProtection', function () {
 
         it('should not return any results if list stacks response is not found', function (done) {
             const cache = createNullCache();
-            terminationProtection.run(cache, {}, (err, results) => {
+            stackTerminationProtection.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });
