@@ -10,8 +10,8 @@ module.exports = {
     recommended_action: 'Remove or redeploy the CloudFormation failed stack.',
     apis: ['CloudFormation:listStacks', 'CloudFormation:describeStackEvents'],
     settings: {
-        failed_hours_limit: {
-            name: 'CloudFormation Stack Failed Hours Limit',
+        stack_failed_state_hours_limit: {
+            name: 'CloudFormation Stack Failed State Limit',
             description: 'A value to be used as a maximum limit in hours in which a CloudFormation stack can stay in failed state',
             regex: '^[0-9]{1,4}$',
             default: 0
@@ -23,7 +23,7 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
 
-        var failed_hours_limit = ('failed_hours_limit' in settings) ? parseInt(settings.failed_hours_limit) : this.settings.failed_hours_limit.default;
+        var stack_failed_state_hours_limit = ('stack_failed_state_hours_limit' in settings) ? parseInt(settings.stack_failed_state_hours_limit) : this.settings.stack_failed_state_hours_limit.default;
 
         async.each(regions.cloudformation, function(region, rcb){
             var listStacks = helpers.addSource(cache, source,
@@ -69,13 +69,13 @@ module.exports = {
                     var then = new Date(latestEvent.Timestamp);
                     var difference = Math.abs(helpers.hoursBetween(then, now));
 
-                    if (difference > failed_hours_limit) {
+                    if (difference > stack_failed_state_hours_limit) {
                         helpers.addResult(results, 2,
-                            `CloudFormation stack "${stack.StackName}" is in failed state for more than the failed hours limit`,
+                            `CloudFormation stack "${stack.StackName}" is in failed state for ${difference} hours of ${stack_failed_state_hours_limit} limit`,
                             region, resource);
                     } else {
-                        helpers.addResult(results, 2,
-                            `CloudFormation stack "${stack.StackName}" is in failed state for less than the failed hours limit`,
+                        helpers.addResult(results, 0,
+                            `CloudFormation stack "${stack.StackName}" is in failed state for ${difference} hours of ${stack_failed_state_hours_limit} limit`,
                             region, resource);
                     }
 

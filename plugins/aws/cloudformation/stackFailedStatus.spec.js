@@ -131,13 +131,13 @@ describe('stackFailedStatus', function () {
             });
         });
 
-        it('should FAIL if CloudFormation stack is in failed state for less than the failed hours limit', function (done) {
+        it('should PASS if CloudFormation stack is in failed state for less than the failed hours limit', function (done) {
             const cache = createCache([listStacks[1]], [describeStackEvents[0]]);
             const settings = {failed_hours_limit: 10};
 
             stackFailedStatus.run(cache, settings, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
+                expect(results[0].status).to.equal(0);
                 done();
             });
         });
