@@ -89,14 +89,14 @@ function findOpenPorts(ngs, protocols, service, location, results) {
                                         if (strings.indexOf(string) === -1) strings.push(string);
                                         found = true;
                                     }
-                                } else if (securityRule.properties['destinationPortRange'].toString().indexOf(port) > -1) {
+                                } else if (parseInt(securityRule.properties['destinationPortRange']) === port ) {
                                     var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
                                         (ports === '*' ? ` and all ports` : ` port ` + ports) + ` open to ` + sourceFilter;
                                     if (strings.indexOf(string) === -1) strings.push(string);
                                     found = true;
                                 }
                             } else if (securityRule.properties['destinationPortRanges']) {
-                                if (securityRule.properties['destinationPortRanges'].toString().indexOf(port) > -1) {
+                                if (securityRule.properties['destinationPortRanges'].indexOf(port.toString()) > -1) {
                                     var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
                                         ` port ` + ports + ` open to ` + sourceFilter;
                                     if (strings.indexOf(string) === -1) strings.push(string);
@@ -154,7 +154,7 @@ function checkPolicyAssignment(policyAssignments, param, text, results, location
     }
 
     const policyAssignment = policyAssignments.data.find((policyAssignment) => {
-        return (policyAssignment && 
+        return (policyAssignment &&
                 policyAssignment.displayName &&
                 policyAssignment.displayName.toLowerCase().includes('asc default'));
     });
@@ -298,7 +298,7 @@ function checkServerConfigs(servers, cache, source, location, results, serverTyp
         addResult(results, 0, 'No existing ' + serverType + ' Servers found', location);
         return;
     }
-    
+
     servers.data.forEach(function(server) {
         const configurations = shared.addSource(cache, source,
             ['configurations', 'listByServer', location, server.id]);
@@ -333,6 +333,55 @@ function processCall(config, method, body, baseUrl, resource, callback) {
     auth.call(params, callback);
 }
 
+function remediateOpenPortsHelper( putCall, pluginName, protocols, ports, config, cache, settings, resource, remediation_file, baseUrl, method, actions, errors, callback) {
+    var params = {
+        properties: {
+            securityRules: []
+        },
+        location: config.region
+    };
+    // we need this to make sure that invocation of this function call is making this true. it should not be left true from
+    // some previous calls.
+    config.ruleChanged = false;
+    async.each(protocols, function (protocol, ocb) {
+        async.eachOf(ports, function (port, p, cb) {
+            //var protocol = protocols[p];
+            remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, settings, resource, remediation_file, baseUrl, method, params,function (error, action) {
+                if (error && (error.length || Object.keys(error).length)) {
+                    errors.push(error);
+                } else if (action && (action.length || Object.keys(action).length)) {
+                    actions.push(action);
+                }
+                cb();
+            });
+        }, function() {
+            ocb();
+        });
+    }, function () {
+        if (config.ruleChanged) {
+            // wait for callback
+            remediatePlugin(config, method, params, baseUrl, resource, remediation_file, putCall, pluginName, function (err) {
+                if (err) errors.push(err);
+
+                if (errors && errors.length) {
+                    remediation_file['post_remediate']['actions'][pluginName]['error'] = errors.join(', ');
+                    settings.remediation_file = remediation_file;
+                    callback(errors, null);
+                } else if (actions && actions.length) {
+                    remediation_file['post_remediate']['actions'][pluginName][resource] = actions;
+                    settings.remediation_file = remediation_file;
+                    callback(null, actions);
+                } else {
+                    callback('No action taken');
+                }
+            });
+        }
+        else {
+            callback();
+        }
+    });
+}
+
 function remediatePlugin(config, method, body, baseUrl, resource, remediation_file, putCall, pluginName, callback) {
     processCall(config, method, body, baseUrl, resource, function(err) {
         if (err) {
@@ -346,9 +395,7 @@ function remediatePlugin(config, method, body, baseUrl, resource, remediation_fi
     })
 }
 
-function remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, settings, resource, remediation_file, baseUrl, method, cb) {
-
-
+function remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, settings, resource, remediation_file, baseUrl, method, params, cb) {
     var failingPermissions = [];
     var passingSecurityRules = [];
     var sgName;
@@ -356,6 +403,7 @@ function remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, 
         var sgNameArr = resource.split('/');
         sgName = sgNameArr[sgNameArr.length -1];
         config.region = settings.regions[resource];
+        params.location = config.region;
     } else {
         return cb('No resource provided');
     }
@@ -386,7 +434,7 @@ function remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, 
             let portRange = portToCheck.split("-");
             let startPort = portRange[0];
             let endPort = portRange[1];
-            if  (parseInt(startPort) <= port && parseInt(endPort) >= port && protocolToCheck && protocolToCheck === protocol) {
+            if  (parseInt(startPort) <= port && parseInt(endPort) >= port && protocolToCheck && (protocolToCheck === protocol || protocol === '*')) {
                 if (passingPermission) {
                     passingPermission = false;
                 }
@@ -396,8 +444,8 @@ function remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, 
                 passingSecurityRules.push(rule);
             }
         } else if (portToCheck &&
-            portToCheck.toString().indexOf(port) > -1) {
-            if (portToCheck <= port && portToCheck >= port && protocolToCheck && protocolToCheck === protocol) {
+            portToCheck.toString().indexOf(port.toString()) > -1) {
+            if (portToCheck <= port && portToCheck >= port && protocolToCheck && (protocolToCheck === protocol || protocol === '*' )) {
                 if (passingPermission) {
                     passingPermission = false;
                 }
@@ -412,6 +460,7 @@ function remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, 
     var failingRulePortIndex = {};
 
     securityGroup.securityRules.forEach(rule => {
+        passingPermission = true;
         if (rule.properties['destinationPortRange']) {
             findPortRange(rule.properties['destinationPortRange'], rule.properties.protocol, rule);
         } else if (rule.properties['destinationPortRanges'] && rule.properties['destinationPortRanges'].length) {
@@ -423,18 +472,25 @@ function remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, 
                     break;
                 }
             }
-
-            if (!passingPermission) {
-                failingPermissions.push(rule);
-            } else {
-                passingSecurityRules.push(rule);
-            }
-
-
+        }
+        if (passingPermission) {
+            passingSecurityRules.push(rule);
         }
     });
-
-    if (!failingPermissions.length) return cb();
+    if (passingSecurityRules.length){
+        for ( var i in passingSecurityRules){
+            var foundPass = params.properties.securityRules.findIndex(rule => rule.name === passingSecurityRules[i].name);
+            if (foundPass === -1){
+                params.properties.securityRules.push(passingSecurityRules[i]);
+            }
+        }
+    }
+    if (!failingPermissions.length) {
+        return cb();
+    }
+    else {
+        config.ruleChanged = true;
+    }
 
     // because this changed to async need a way to aggregate errors and actions without stopping the whole function
     var errors = [];
@@ -458,7 +514,9 @@ function remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, 
             // I had to parse > stringify because it was using the final state instead of the current state of failingPermission.properties
             remediation_file['pre_remediate']['actions'][pluginName][resource].push(JSON.parse(JSON.stringify(failingPermission.properties)));
 
-            sourceAddressArr = failingPermission.properties.sourceAddressPrefixes;
+            if ( failingPermission.properties.sourceAddressPrefixes ) {
+                sourceAddressArr = failingPermission.properties.sourceAddressPrefixes;
+            }
             if (failingPermission.properties.sourceAddressPrefix) sourceAddressArr.push(failingPermission.properties.sourceAddressPrefix);
 
             function checkIp(inputKey, ipType, publicString) {
@@ -477,9 +535,12 @@ function remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, 
                     // this is if there is no input and the failing port is in an array (destinationPortRanges). Will remove the port from the array
                     } else if ((!settings.input || !settings.input[inputKey]) && (failingRulePortIndex[failingPermission.name]) && !spliced) {
                         spliced = true;
-                        failingPermission.properties['destinationPortRanges'].splice([failingRulePortIndex[failingPermission.name]], 1)
-
-                        // this is if there is no input and the failing port is not an array
+                        failingPermission.properties['destinationPortRanges'].splice([failingRulePortIndex[failingPermission.name]], 1);
+                        if ( failingPermission.properties['destinationPortRanges'].length === 0 ){
+                            sourceAddressArr = [];
+                        }
+                        // this is if there is no input and the failing port is not an array,we will remove the  public
+                        // string. thus in below section nothing will be added in param and this rule will be deleted eventually
                     } else if (!settings.input || !settings.input[inputKey]) {
                         sourceAddressArr.splice(sourceAddressArr.indexOf(publicString), 1);
                     }
@@ -503,78 +564,87 @@ function remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, 
             return fpCb();
         }
 
-        if (!openIpv6Range && !openIpRange) return fpCb();
+        if (!openIpv6Range && !openIpRange) {
+            // here we need to clear the ip addressprefix changes we made earlier as this rule does not have any violating ips
+            if (sourceAddressArr && sourceAddressArr.length && sourceAddressArr.length === 1) {
+                failingPermission.properties.sourceAddressPrefix = sourceAddressArr.join(', ');
+                if (failingPermission.properties.sourceAddressPrefixes) delete failingPermission.properties.sourceAddressPrefixes;
+            } else if (sourceAddressArr && sourceAddressArr.length && sourceAddressArr.length > 1) {
+                failingPermission.properties.sourceAddressPrefixes = sourceAddressArr
+                if (failingPermission.properties.sourceAddressPrefix) delete failingPermission.properties.sourceAddressPrefix;
+            }
+            return fpCb();
+        }
 
         if (openIpRange && openIpv6Range) return fpCb('Invalid format, only IP or IPv6 can be remediated at one time');
 
-        var params = {
-            properties: {
-                securityRules: passingSecurityRules
-            },
-            location: config.region
-        };
-
+        // checking if we are modifying the same rule. if so we can add the further changes in same rule,rather than adding it as separate
+        var found = params.properties.securityRules.findIndex(rule => rule.name === failingPermission.name);
         // this ensures that the failing security rule actually has an ip address. if not we do not pass it and it gets deleted
         if (sourceAddressArr && sourceAddressArr.length && sourceAddressArr.length === 1) {
             failingPermission.properties.sourceAddressPrefix = sourceAddressArr.join(', ');
             if (failingPermission.properties.sourceAddressPrefixes) delete failingPermission.properties.sourceAddressPrefixes;
+            if (found > -1){
+                // remove the previous one and add the latest one with new adjustments
+                params.properties.securityRules.splice(found, 1);
+            }
             params.properties.securityRules.push(failingPermission);
         } else if (sourceAddressArr && sourceAddressArr.length && sourceAddressArr.length > 1) {
             failingPermission.properties.sourceAddressPrefixes = sourceAddressArr
             if (failingPermission.properties.sourceAddressPrefix) delete failingPermission.properties.sourceAddressPrefix;
+            if (found > -1){
+                // remove the previous one and add the latest one with new adjustments.
+                params.properties.securityRules.splice(found, 1);
+            }
             params.properties.securityRules.push(failingPermission);
+        } else {
+            // we are here means there are no source ips at all,remove the rule from the params. It will be deleted.
+            if (found > -1){
+                params.properties.securityRules.splice(found, 1);
+            }
+        }
+        // Remediation file savings
+        if (openIpv6Range && !localIpV6Exists && settings.input && settings.input[ipv6InputKey]) {
+            remediation_file['remediate']['actions'][pluginName][resource]['steps'].push({
+                'inboundRule': settings.input[ipv6InputKey],
+                'action': 'ADDED'
+            });
+        } else if (openIpv6Range && localIpV6Exists && settings.input && settings.input[ipv6InputKey]) {
+            remediation_file['remediate']['actions'][pluginName][resource]['steps'].push({
+                'inboundRule': settings.input[ipv6InputKey],
+                'action': 'Already Exists'
+            });
         }
 
-        remediatePlugin(config, method, params, baseUrl, resource, remediation_file, putCall, pluginName, function(err) {
-            if (err) {
-                errors.push(err);
-                return fpCb(err);
-            } else {
-                if (openIpv6Range && !localIpV6Exists && settings.input && settings.input[ipv6InputKey]) {
-                    remediation_file['remediate']['actions'][pluginName][resource]['steps'].push({
-                        'inboundRule': settings.input[ipv6InputKey],
-                        'action': 'ADDED'
-                    });
-                } else if (openIpv6Range && localIpV6Exists && settings.input && settings.input[ipv6InputKey]) {
-                    remediation_file['remediate']['actions'][pluginName][resource]['steps'].push({
-                        'inboundRule': settings.input[ipv6InputKey],
-                        'action': 'Already Exists'
-                    });
-                 }
+        if (openIpv6Range) {
+            remediation_file['remediate']['actions'][pluginName][resource]['steps'].push({
+                'inboundRule': '::/0',
+                'action': 'DELETED'
+            });
+        }
 
-                if (openIpv6Range) {
-                    remediation_file['remediate']['actions'][pluginName][resource]['steps'].push({
-                        'inboundRule': '::/0',
-                        'action': 'DELETED'
-                    });
-                }
+        if (openIpRange && !localIpExists && settings.input && settings.input[ipv4InputKey]) {
+            remediation_file['remediate']['actions'][pluginName][resource]['steps'].push({
+                'inboundRule': settings.input[ipv4InputKey],
+                'action': 'ADDED'
+            });
 
-                if (openIpRange && !localIpExists && settings.input && settings.input[ipv4InputKey]) {
-                    remediation_file['remediate']['actions'][pluginName][resource]['steps'].push({
-                        'inboundRule': settings.input[ipv4InputKey],
-                        'action': 'ADDED'
-                    });
+        } else if (openIpRange && localIpExists && settings.input && settings.input[ipv4InputKey]){
+            remediation_file['remediate']['actions'][pluginName][resource]['steps'].push({
+                'inboundRule': settings.input[ipv4InputKey],
+                'action': 'Already Exists'
+            });
+        }
 
-                } else if (openIpRange && localIpExists && settings.input && settings.input[ipv4InputKey]){
-                    remediation_file['remediate']['actions'][pluginName][resource]['steps'].push({
-                        'inboundRule': settings.input[ipv4InputKey],
-                        'action': 'Already Exists'
-                    });
-                }
+        if (openIpRange) {
+            remediation_file['remediate']['actions'][pluginName][resource]['steps'].push({
+                'inboundRule': '0.0.0.0/0',
+                'action': 'DELETED'
+            });
+        }
 
-                if (openIpRange) {
-                    remediation_file['remediate']['actions'][pluginName][resource]['steps'].push({
-                        'inboundRule': '0.0.0.0/0',
-                        'action': 'DELETED'
-                    });
-                }
-
-                actions.push(params);
-                return fpCb();
-            }
-        });
-
-
+        actions.push(params);
+        fpCb();
     }, function(err) {
         if (errors && errors.length) {
             cb(errors.join(', '));
@@ -595,5 +665,6 @@ module.exports = {
     checkServerConfigs: checkServerConfigs,
     remediatePlugin: remediatePlugin,
     processCall: processCall,
-    remediateOpenPorts: remediateOpenPorts
+    remediateOpenPorts: remediateOpenPorts,
+    remediateOpenPortsHelper: remediateOpenPortsHelper
 };
