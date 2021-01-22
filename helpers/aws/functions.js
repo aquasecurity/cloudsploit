@@ -219,7 +219,6 @@ function crossAccountPrincipal(principal, accountId, fetchPrincipals) {
     }
 
     var principals = [];
-    var response = false;
 
     for (var a in awsPrincipals) {
         if (/^arn:aws:(iam|sts)::[0-9]{12}.*/.test(awsPrincipals[a]) &&
@@ -229,8 +228,8 @@ function crossAccountPrincipal(principal, accountId, fetchPrincipals) {
         }
     }
 
-    if (fetchPrincipals) response = principals;
-    return response;
+    if (fetchPrincipals) return principals;
+    return false;
 }
 
 function defaultRegion(settings) {
