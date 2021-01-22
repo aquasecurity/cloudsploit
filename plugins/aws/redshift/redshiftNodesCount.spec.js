@@ -36,7 +36,7 @@ const describeClusters = [
         "PendingModifiedValues": {},
         "ClusterVersion": "1.0",
         "AllowVersionUpgrade": true,
-        "NumberOfNodes": 1,
+        "NumberOfNodes": 5,
         "PubliclyAccessible": false,
         "Encrypted": false,
         "ClusterPublicKey": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCfPK8qflrCru2M5kL3A7i0tIj+FAPOVLdrDm7vPwhAWBNKQlfqmt4+a8ob+Ql7Hrlu+pu8eYdFFjzcmRtsI9m3onlbQ6jIKiW6WwsqYvPSucPq/78rFYGcxrGc213OL2XF1xZnZTpGleeH/BH1q/7hTiwYVmZ17k3ZL320jRUTFm2WEvcQoDWu8DderPPjllJ7Zz/JtJx1x3XM5kP9e4zSSWaUfAG3kKKxDeHbNUAq5JRk/yYA8iel1I7qIbl6NZpDgOOgLI9fUmICwH0u740PEDVoSrh2qFepQgMnRg1sPgdvoPFaSIpiQzNwUNqQiZhNstZDWu73Fjyqzv9m7ZxH Amazon-Redshift\n",
@@ -150,51 +150,54 @@ const createNullCache = () => {
 
 describe('redshiftNodesCount', function () {
     describe('run', function () {
-        it('should PASS if Account contains provisioned Redshift nodes less than the limit', function (done) {
-            const cache = createCache(describeClusters);
-            const settings = { redshift_nodes_count: 5 };
+        it('should PASS if region contains provisioned Redshift nodes less than or equal to the limit', function (done) {
+            const cache = createCache([describeClusters[1]]);
+            const settings = { redshift_nodes_count: '5' };
 
             redshiftNodesCount.run(cache, settings, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
 
-        it('should FAIL if Account contains provisioned Redshift nodes equal or more than the limit', function (done) {
-            const cache = createCache(describeClusters);
-            const settings = { redshift_nodes_count: 1 };
+        it('should FAIL if region contains provisioned Redshift nodes more than the limit', function (done) {
+            const cache = createCache([describeClusters[0]]);
+            const settings = { redshift_nodes_count: '4' };
 
             redshiftNodesCount.run(cache, settings, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
 
         it('should PASS if no Redshift clusters found', function (done) {
             const cache = createCache([]);
-            redshiftNodesCount.run(cache, { redshift_nodes_count: 5 }, (err, results) => {
-                expect(results.length).to.equal(2);
+            redshiftNodesCount.run(cache, { redshift_nodes_count: '5' }, (err, results) => {
+                expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
 
         it('should UNKNOWN if unable to describe clusters', function (done) {
             const cache = createErrorCache();
-            redshiftNodesCount.run(cache, { redshift_nodes_count: 5 }, (err, results) => {
-                expect(results.length).to.equal(2);
+            redshiftNodesCount.run(cache, { redshift_nodes_count: '5' }, (err, results) => {
+                expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
 
-        it('should PASS if describe clusters response is not found', function (done) {
+        it('should not return anything if describe clusters response is not found', function (done) {
             const cache = createNullCache();
-            redshiftNodesCount.run(cache, { redshift_nodes_count: 5 }, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
+            redshiftNodesCount.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(0);
                 done();
             });
         });

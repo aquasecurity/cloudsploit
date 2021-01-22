@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Redshift Nodes Count',
     category: 'Redshift',
-    description: 'Ensures that your AWS account has not reached the limit set for the number of Redshift cluster nodes.',
+    description: 'Ensures that each AWS region has not reached the limit set for the number of Redshift cluster nodes.',
     more_info: 'The number of provisioned Amazon Redshift cluster nodes must be less than the provided nodes limit to avoid reaching the limit and exceeding the set budget.',
     link: 'https://docs.aws.amazon.com/redshift/latest/mgmt/working-with-clusters.html#working-with-clusters-overview',
     recommended_action: 'Remove Redshift clusters over defined limit',
@@ -14,18 +14,16 @@ module.exports = {
             name: 'Amazon Redshift Nodes Count',
             description: 'Maximum Amazon Redshift nodes count per region',
             regex: '^[0-9]{0,3}',
-            default: 5
+            default: '100'
         },
     },
 
     run: function(cache, settings, callback) {
-        var redshift_nodes_count = settings.redshift_nodes_count || this.settings.redshift_nodes_count.default;
+        var redshift_nodes_count = parseInt(settings.redshift_nodes_count || this.settings.redshift_nodes_count.default);
 
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
-
-        var nodesCount = 0;
 
         async.each(regions.redshift, function(region, rcb){
             var describeClusters = helpers.addSource(cache, source,
@@ -44,6 +42,7 @@ module.exports = {
                 return rcb();
             }
 
+            var nodesCount = 0;
             describeClusters.data.forEach(cluster => {
                 if (!cluster.ClusterIdentifier) return;
 
@@ -52,16 +51,16 @@ module.exports = {
                 }
             });
 
-            rcb();
-        }, function(){
             if (nodesCount <= redshift_nodes_count) {
                 helpers.addResult(results, 0,
-                    `Account contains "${nodesCount}" provisioned Redshift nodes of "${redshift_nodes_count}" limit`);
+                    `Region contains "${nodesCount}" provisioned Redshift nodes of "${redshift_nodes_count}" limit`, region);
             } else {
                 helpers.addResult(results, 2,
-                    `Account contains "${nodesCount}" provisioned Redshift nodes of "${redshift_nodes_count}" limit`);
+                    `Region contains "${nodesCount}" provisioned Redshift nodes of "${redshift_nodes_count}" limit`, region);
             }
 
+            rcb();
+        }, function(){
             callback(null, results, source);
         });
     }
