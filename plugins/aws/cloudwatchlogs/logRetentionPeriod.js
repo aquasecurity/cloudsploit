@@ -14,13 +14,13 @@ module.exports = {
             name: 'CloudWatch Log Minimum Retention Period',
             description: 'If set, CloudWatch Logs log groups should have a retention setting greater or equal to this value',
             regex: '^[0-9]*$',
-            default: 90
+            default: '90'
         }
     },
 
     run: function(cache, settings, callback) {
         var config = {
-            minimum_log_retention_period: settings.minimum_log_retention_period || this.settings.minimum_log_retention_period.default
+            minimum_log_retention_period: parseInt(settings.minimum_log_retention_period || this.settings.minimum_log_retention_period.default)
         };
 
         var results = [];
@@ -56,7 +56,7 @@ module.exports = {
                 }
             }
 
-            return rcb();
+            rcb();
         }, function(){
             callback(null, results, source);
         });
