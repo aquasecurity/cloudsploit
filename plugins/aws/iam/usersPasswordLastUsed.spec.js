@@ -1,6 +1,13 @@
 var expect = require('chai').expect;
 const usersPasswordLastUsed = require('./usersPasswordLastUsed');
 
+var warnDate = new Date();
+warnDate.setMonth(warnDate.getMonth() - 4);
+var passDate = new Date();
+passDate.setMonth(passDate.getMonth() - 2);
+var failDate = new Date();
+failDate.setMonth(failDate.getMonth() - 7);
+
 const generateCredentialReport = [
     {
         "user": "<root_account>",
@@ -31,7 +38,7 @@ const generateCredentialReport = [
         "arn": "arn:aws:iam::111122223333:user/cloudsploit",
         "user_creation_time": "2020-09-12T16:58:32+00:00",
         "password_enabled": true,
-        "password_last_used": "2020-10-13T16:14:00+00:00",
+        "password_last_used": passDate,
         "password_last_changed": "2020-10-13T16:14:00+00:00",
         "password_next_rotation": null,
         "mfa_active": false,
@@ -55,7 +62,7 @@ const generateCredentialReport = [
         "arn": "arn:aws:iam::111122223333:user/cloudsploit",
         "user_creation_time": "2019-09-12T16:58:32+00:00",
         "password_enabled": true,
-        "password_last_used": "2020-07-13T16:14:00+00:00",
+        "password_last_used": warnDate,
         "password_last_changed": "2020-07-13T16:14:00+00:00",
         "password_next_rotation": null,
         "mfa_active": false,
@@ -79,7 +86,7 @@ const generateCredentialReport = [
         "arn": "arn:aws:iam::111122223333:user/cloudsploit",
         "user_creation_time": "2019-09-12T16:58:32+00:00",
         "password_enabled": true,
-        "password_last_used": "2020-02-13T16:14:00+00:00",
+        "password_last_used": failDate,
         "password_last_changed": "2020-02-13T16:14:00+00:00",
         "password_next_rotation": null,
         "mfa_active": false,
@@ -101,7 +108,7 @@ const generateCredentialReport = [
     {
         "user": "cloudsploit",
         "arn": "arn:aws:iam::111122223333:user/cloudsploit",
-        "user_creation_time": "2020-09-12T16:58:32+00:00",
+        "user_creation_time": passDate,
         "password_enabled": true,
         "password_last_used": null,
         "password_last_changed": "2020-10-13T16:14:00+00:00",
@@ -125,7 +132,7 @@ const generateCredentialReport = [
     {
         "user": "cloudsploit",
         "arn": "arn:aws:iam::111122223333:user/cloudsploit",
-        "user_creation_time": "2020-09-12T16:58:32+00:00",
+        "user_creation_time": warnDate,
         "password_enabled": true,
         "password_last_used": null,
         "password_last_changed": "2020-07-13T16:14:00+00:00",
@@ -149,7 +156,7 @@ const generateCredentialReport = [
     {
         "user": "cloudsploit",
         "arn": "arn:aws:iam::111122223333:user/cloudsploit",
-        "user_creation_time": "2019-09-12T16:58:32+00:00",
+        "user_creation_time": failDate,
         "password_enabled": true,
         "password_last_used": null,
         "password_last_changed": "2020-02-13T16:14:00+00:00",
@@ -210,7 +217,7 @@ const createNullCache = () => {
 
 describe('usersPasswordLastUsed', function () {
     describe('run', function () {
-        it('should PASS if the user access key was last rotated within the pass limit', function (done) {
+        it('should PASS if the user password was last used within the pass limit', function (done) {
             const cache = createCache([generateCredentialReport[0],generateCredentialReport[0],generateCredentialReport[1]]);
             var settings = {
                 users_password_last_used_fail: 180,
@@ -236,11 +243,11 @@ describe('usersPasswordLastUsed', function () {
             });
         });
 
-        it('should WARN if the user access key was last rotated within the warn limit', function (done) {
-            const cache = createCache([generateCredentialReport[0],generateCredentialReport[0],generateCredentialReport[1]]);
+        it('should WARN if the password was last used within the warn limit', function (done) {
+            const cache = createCache([generateCredentialReport[0],generateCredentialReport[0],generateCredentialReport[2]]);
             var settings = {
                 users_password_last_used_fail: 180,
-                users_password_last_used_warn: 30
+                users_password_last_used_warn: 90
             };
             usersPasswordLastUsed.run(cache, settings, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -253,7 +260,7 @@ describe('usersPasswordLastUsed', function () {
             const cache = createCache([generateCredentialReport[0],generateCredentialReport[0],generateCredentialReport[5]]);
             var settings = {
                 users_password_last_used_fail: 180,
-                users_password_last_used_warn: 30
+                users_password_last_used_warn: 90
             };
             usersPasswordLastUsed.run(cache, settings, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -262,7 +269,7 @@ describe('usersPasswordLastUsed', function () {
             });
         });
 
-        it('should FAIL if the user access key was last rotated more than the fail limit', function (done) {
+        it('should FAIL if the user password was last used more than the fail limit', function (done) {
             const cache = createCache([generateCredentialReport[0],generateCredentialReport[0],generateCredentialReport[3]]);
             var settings = {
                 users_password_last_used_fail: 180,
