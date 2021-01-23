@@ -120,7 +120,7 @@ describe('ssmEncryptedParameters', function () {
     describe('run', function () {
         it('should PASS if parameter is encrypted to minimum desired encryption level', function (done) {
             const cache = createCache([describeParameters[0]], listKeys, listAliases, describeKey[0]);
-            ssmEncryptedParameters.run(cache, {}, (err, results) => {
+            ssmEncryptedParameters.run(cache, { ssm_encryption_level: 'awskms' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();

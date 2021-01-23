@@ -24,7 +24,7 @@ module.exports = {
                 externalcmk=Customer managed externally sourced KMS; \
                 cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awskms',
+            default: 'awscmk',
         },
         allow_ssm_non_secure_strings: {
             name: 'Allow SSM Non-Secure Strings',
@@ -49,8 +49,9 @@ module.exports = {
         };
 
         config.allow_ssm_non_secure_strings = (config.allow_ssm_non_secure_strings == 'true');
+
         var desiredEncryptionLevelString = settings.ssm_encryption_level || this.settings.ssm_encryption_level.default;
-        var desiredEncryptionLevel = helpers.encryptionLevelMap[desiredEncryptionLevelString];
+        var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(desiredEncryptionLevelString);
 
         async.each(regions.ssm, function(region, rcb){
             var describeParameters = helpers.addSource(cache, source,
@@ -83,7 +84,9 @@ module.exports = {
                 if (param.Type != 'SecureString' && !config.allow_ssm_non_secure_strings) {
                     helpers.addResult(results, 2, 'Non-SecureString Parameters present', region, arn);
                     return pcb();
-                } else if (param.Type != 'SecureString' && config.allow_ssm_non_secure_strings) {
+                }
+
+                if (param.Type != 'SecureString' && config.allow_ssm_non_secure_strings) {
                     helpers.addResult(results, 0, 'Non-SecureString Parameters present but are allowed', region, arn);
                     return pcb();
                 }
@@ -96,12 +99,11 @@ module.exports = {
 
                 if(param.KeyId.includes('alias')) {
                     var alias = aliases.data.find(a => a.AliasName === param.KeyId);
-                    if (!alias) {
+                    if (!alias || !alias.TargetKeyId) {
                         helpers.addResult(results, 3, `Unable to locate alias: ${param.KeyId} for SSM Parameter`, region, arn);
                         return pcb();
-                    } else {
-                        keyId = alias.TargetKeyId;
                     }
+                    keyId = alias.TargetKeyId;
                 } else {
                     keyId = param.KeyId.split('/')[1];
                 }
@@ -113,8 +115,8 @@ module.exports = {
                     return pcb();
                 }
 
-                var currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata);
-                var currentEncryptionLevelString = helpers.encryptionLevelMap[currentEncryptionLevel];
+                var currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
+                var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
 
                 if (currentEncryptionLevel < desiredEncryptionLevel) {
                     helpers.addResult(results, 2, 
@@ -127,9 +129,9 @@ module.exports = {
                 }
 
                 pcb();
+            }, function(){
+                rcb();
             });
-
-            rcb();
         }, function(){
             callback(null, results, source);
         });
