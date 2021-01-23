@@ -8,6 +8,7 @@ var regions = [
 module.exports = {
     default: ['us-gov-west-1'],
     all: regions,
+    optin: [],
     acm: regions,
     apigateway: regions,
     athena: ['us-gov-west-1'],
@@ -30,6 +31,7 @@ module.exports = {
     ec2: regions,
     ecr: regions,
     eks: [],
+    efs: regions,
     elasticbeanstalk: regions,
     elastictranscoder: [],
     elb: regions,
@@ -38,6 +40,7 @@ module.exports = {
     es: regions,
     kinesis: [],
     firehose: [],
+    glue: regions,
     kms: regions,
     vpc: regions,
     flowlogs: regions,
@@ -48,6 +51,8 @@ module.exports = {
     sagemaker: [],
     secretsmanager: regions,
     ses: [],
+    servicequotas: [],
+    shield: [],
     sns: regions,
     sqs: regions,
     ssm: regions,
@@ -55,12 +60,16 @@ module.exports = {
     // even though SQS is supported in all regions.
     sqs_encrypted: regions,
     sts: regions,
+    support: [],
     transfer: [],
     lambda: regions,
     directconnect: regions,
     directoryservice: [],
     organizations: regions,
     guardduty: ['us-gov-west-1'],
+    wafregional: [],
+    wafv2: regions,
     workspaces: ['us-gov-west-1'],
-    xray: []
+    xray: [],
+    resourcegroupstaggingapi: regions
 };

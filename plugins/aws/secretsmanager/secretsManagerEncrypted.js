@@ -34,7 +34,7 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var desiredEncryptionLevelString = settings.secretsmanager_minimum_encryption_level || this.settings.secretsmanager_minimum_encryption_level.default;
-        var desiredEncryptionLevel = helpers.encryptionLevelMap[desiredEncryptionLevelString];
+        var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(desiredEncryptionLevelString);
 
         async.each(regions.secretsmanager, (region, rcb) => {
             var listSecrets = helpers.addSource(cache, source, ['secretsmanager', 'listSecrets', region]);
@@ -63,15 +63,15 @@ module.exports = {
 
                     const describeKey = helpers.addSource(cache, source, ['kms', 'describeKey', region, keyId]);
 
-                    if (!describeKey || describeKey.err || !describeKey.data) {
+                    if (!describeKey || describeKey.err || !describeKey.data || !describeKey.data.KeyMetadata) {
                         helpers.addResult(results, 3, `Unable to query for KMS Key: ${helpers.addError(describeKey)}`, region, keyId);
                         continue;
                     }
 
-                    encryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata);
+                    encryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
                 }
 
-                encryptionLevelString = helpers.encryptionLevelMap[encryptionLevel];
+                encryptionLevelString = helpers.ENCRYPTION_LEVELS[encryptionLevel];
 
                 if (encryptionLevel < desiredEncryptionLevel) {
                     helpers.addResult(results, 2, `Secret configured to use ${encryptionLevelString} instead of ${desiredEncryptionLevelString}`, region, secret.ARN);

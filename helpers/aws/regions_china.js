@@ -8,10 +8,12 @@ var regions = [
 module.exports = {
     default: ['cn-north-1'],
     all: regions,
+    optin: [],
     acm: [],
     apigateway: regions,
     athena: [],
     cloudfront: [],
+    efs: [],
     autoscaling: regions,
     iam: ['cn-north-1'],
     route53: [],
@@ -38,6 +40,7 @@ module.exports = {
     es: regions,
     kinesis: [],
     firehose: regions,
+    glue: regions,
     kms: regions,
     vpc: regions,
     flowlogs: regions,
@@ -48,6 +51,8 @@ module.exports = {
     sagemaker: [],
     secretsmanager: regions,
     ses: [],
+    servicequotas: [],
+    shield: [],
     sns: regions,
     sqs: regions,
     ssm: regions,
@@ -55,12 +60,16 @@ module.exports = {
     // even though SQS is supported in all regions.
     sqs_encrypted: regions,
     sts: regions,
+    support: [],
     transfer: [],
     lambda: regions,
     directconnect: regions,
     directoryservice: [],
     organizations: ['cn-north-1'],
     guardduty: [],
+    wafregional: [],
+    wafv2: [],
     workspaces: ['cn-northwest-1'],
-    xray: regions
+    xray: regions,
+    resourcegroupstaggingapi: regions
 };
