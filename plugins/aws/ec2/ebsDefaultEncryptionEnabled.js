@@ -5,7 +5,7 @@ module.exports = {
     title: 'EBS Encryption Enabled By Default',
     category: 'EC2',
     description: 'Ensure the setting for encryption by default is enabled',
-    more_info: 'An AWS account may be configured such that, for a particular region(s), it will be mandatory that new EBS volumes and snapshot copies are encrypted.',
+    more_info: 'AWS account should be configured to enable encryption for new EBS volumes and snapshots for all regions.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSEncryption.html#encryption-by-default',
     recommended_action: 'Enable EBS Encryption by Default',
     apis: ['EC2:getEbsEncryptionByDefault', 'EC2:getEbsDefaultKmsKeyId', 'KMS:describeKey', 'KMS:listKeys', 'KMS:listAliases'],
@@ -22,7 +22,8 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
-        var targetEncryptionLevel = helpers.encryptionLevelMap[settings.ebs_encryption_level || this.settings.ebs_encryption_level.default];
+        var ebs_encryption_level = settings.ebs_encryption_level || this.settings.ebs_encryption_level.default;
+        var targetEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(ebs_encryption_level);
 
         async.each(regions.ec2, function(region, rcb){
             var getEbsEncryptionByDefault = helpers.addSource(cache, source,
@@ -79,23 +80,23 @@ module.exports = {
             if (!isPredefinedAlias) {
                 var describeKey = helpers.addSource(cache, source, ['kms', 'describeKey', region, kmsKeyId]);
                 
-                if (!describeKey || describeKey.err || !describeKey.data) {
+                if (!describeKey || describeKey.err || !describeKey.data || !describeKey.data.KeyMetadata) {
                     helpers.addResult(results, 3,
-                        'Unable to query for describe key: ' + helpers.addError(describeKey), region);
+                        'Unable to query kms key: ' + helpers.addError(describeKey), region);
                     return rcb();
                 }
 
-                encryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata);
+                encryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
             } else {
                 encryptionLevel = 2; //awskms
             }
 
             if (encryptionLevel < targetEncryptionLevel) {
                 helpers.addResult(results, 2,
-                    `EBS default encryption is enabled but current encryption level ${helpers.encryptionLevelMap[encryptionLevel]} is less than the target level ${helpers.encryptionLevelMap[targetEncryptionLevel]}`, region);
+                    `EBS default encryption is enabled but current encryption level ${helpers.ENCRYPTION_LEVELS[encryptionLevel]} is less than the target level ${helpers.ENCRYPTION_LEVELS[targetEncryptionLevel]}`, region);
             } else {
                 helpers.addResult(results, 0,
-                    `EBS default encryption is enabled and current encryption level ${helpers.encryptionLevelMap[encryptionLevel]} is greater than or equal to the target level ${helpers.encryptionLevelMap[targetEncryptionLevel]}`, region);
+                    `EBS default encryption is enabled and current encryption level ${helpers.ENCRYPTION_LEVELS[encryptionLevel]} is greater than or equal to the target level ${helpers.ENCRYPTION_LEVELS[targetEncryptionLevel]}`, region);
             }
 
             rcb();

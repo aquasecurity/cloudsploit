@@ -7,18 +7,12 @@ const createCache = (boolValue) => {
             getEbsEncryptionByDefault: {
                 'us-east-1': {
                     data: boolValue,
-                },
-                'us-east-2': {
-                    data: boolValue,
-                },
+                }
             },
             getEbsDefaultKmsKeyId: {
                 'us-east-1': {
-                    data: 'foo/0987dcba-09fe-87dc-65ba-ab0987654321',
-                },
-                'us-east-2': {
-                    data: 'alias/aws/ebs',
-                },
+                    data: 'key/0987dcba-09fe-87dc-65ba-ab0987654321',
+                }
             },
         },
         kms: {
@@ -32,27 +26,12 @@ const createCache = (boolValue) => {
                             },
                         }
                     },
-                },
-                'us-east-2': {
-                    '1234abcd-12ab-34cd-56ef-1234567890ab': {
-                        data: {
-                            KeyMetadata: {
-                                Origin: 'AWS_KMS',
-                                KeyManager: 'AWS',
-                            },
-                        },
-                    },
-                },
+                }
             },
             listAliases: {
                 'us-east-1': {
                         data: [],
-                },
-                'us-east-2': {
-                        data: [{
-                            AliasName: 'alias/aws/ebs', TargetKeyId: '1234abcd-12ab-34cd-56ef-1234567890ab'
-                        }],
-                },
+                }
             },
             listKeys: {
                 'us-east-1': {
@@ -62,15 +41,7 @@ const createCache = (boolValue) => {
                             'KeyArn': 'arn:aws:kms:us-east-1:0123456789101:key/0987dcba-09fe-87dc-65ba-ab0987654321'
                         }
                     ]
-                },
-                'us-east-2': {
-                    data: [
-                        {
-                            'KeyId': '1234abcd-12ab-34cd-56ef-1234567890ab',
-                            'KeyArn': 'arn:aws:kms:us-east-2:0123456789101:key/1234abcd-12ab-34cd-56ef-1234567890ab'
-                        }
-                    ]
-                },
+                }
             },
         },
     };
@@ -84,9 +55,8 @@ describe('ebsDefaultEncryptionEnabled', function () {
             const settings = {};
 
             ebsDefaultEncryptionEnabled.run(cache, settings, (err, results) => {
-                expect(results.length).to.equal(2);
+                expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[1].status).to.equal(2);
                 done();
             });
         });
@@ -96,9 +66,8 @@ describe('ebsDefaultEncryptionEnabled', function () {
             const settings = {};
 
             ebsDefaultEncryptionEnabled.run(cache, settings, (err, results) => {
-                expect(results.length).to.equal(2);
+                expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[1].status).to.equal(0);
                 done();
             });
         });
@@ -110,9 +79,8 @@ describe('ebsDefaultEncryptionEnabled', function () {
             };
 
             ebsDefaultEncryptionEnabled.run(cache, settings, (err, results) => {
-                expect(results.length).to.equal(2);
+                expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[1].status).to.equal(2);
                 done();
             });
         });
