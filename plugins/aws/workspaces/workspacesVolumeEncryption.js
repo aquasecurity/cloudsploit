@@ -28,7 +28,7 @@ module.exports = {
 
         var desiredEncryptionLevelString = settings.workspace_encryption_level || this.settings.workspace_encryption_level.default;
 
-        var desiredEncryptionLevel = helpers.encryptionLevelMap[desiredEncryptionLevelString];
+        var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(desiredEncryptionLevelString);
         var currentEncryptionLevel;
 
         var regions = helpers.regions(settings);
@@ -87,7 +87,7 @@ module.exports = {
                         return rcb();
                     }
 
-                    currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata);
+                    currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
 
                     if (workspace.UserVolumeEncryptionEnabled && workspace.RootVolumeEncryptionEnabled && (desiredEncryptionLevel <= currentEncryptionLevel)) {
                         helpers.addResult(results, 0, enabledString, region, arn);
