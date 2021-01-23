@@ -47,7 +47,7 @@ module.exports = {
                     return rcb();
                 }
 
-                if (helpers.getEncryptionLevel(describeKey.data.KeyMetadata) == 3) {
+                if (helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS) == 3) {
                     helpers.addResult(results, 0,
                         'Glue data catalog has encryption at-rest enabled for metadata using Customer Master Key',
                         region);
