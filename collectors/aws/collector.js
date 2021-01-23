@@ -336,6 +336,10 @@ var calls = {
         getEbsDefaultKmsKeyId: {
             property: 'KmsKeyId'
         },
+        describeVpnConnections: {
+            property: 'VpnConnections',
+            paginate: 'NextToken'
+        },
         describeNetworkAcls: {
             property: 'NetworkAcls',
             paginate: 'NextToken',
@@ -424,6 +428,12 @@ var calls = {
             property: 'DomainNames'
         }
     },
+    Glue: {
+        getSecurityConfigurations: {
+            property: 'SecurityConfigurations',
+            paginate: 'NextMarker'
+        }
+    },
     IAM: {
         listServerCertificates: {
             property: 'ServerCertificateMetadataList',
@@ -440,6 +450,14 @@ var calls = {
         listRoles: {
             property: 'Roles',
             paginate: 'Marker'
+        },
+        listPolicies: {
+            property: 'Policies',
+            paginate: 'Marker',
+            params: {
+                OnlyAttached: true,
+                Scope: 'Local'
+            }
         },
         listVirtualMFADevices: {
             property: 'VirtualMFADevices',
@@ -538,6 +556,10 @@ var calls = {
         },
         describeClusterParameterGroups: {
             property: 'ParameterGroups',
+            paginate: 'Marker'
+        },
+        describeReservedNodes: {
+            property: 'ReservedNodes',
             paginate: 'Marker'
         }
     },
@@ -676,6 +698,14 @@ var calls = {
         describeWorkspaces: {
             property: 'Workspaces',
             paginate: 'NextToken'
+        },
+        describeWorkspaceDirectories:{
+            property: 'Directories',
+            paginate: 'NextToken'
+        },
+        describeIpGroups:{
+            property: 'Result',
+            paginate: 'NextToken'
         }
     },
     XRay: {
@@ -754,7 +784,12 @@ var postcalls = [
                 reliesOnService: 'dynamodb',
                 reliesOnCall: 'listTables',
                 override: true
-            }
+            },
+            describeContinuousBackups: {
+                reliesOnService: 'dynamodb',
+                reliesOnCall: 'listTables',
+                override: true
+            },
         },
         ES: {
             describeElasticsearchDomain: {
@@ -1159,6 +1194,13 @@ var postcalls = [
         },
     },
     {
+        APIGateway: {
+            getClientCertificate: {
+                reliesOnService: 'apigateway',
+                reliesOnCall: 'getRestApis',
+                override: true
+            }
+        },
         EMR: {
             describeSecurityConfiguration: {
                 reliesOnService: 'emr',
@@ -1182,6 +1224,12 @@ var postcalls = [
                 reliesOnCall: 'listRoles',
                 override: true
             },
+            getPolicy: {
+                reliesOnService: 'iam',
+                reliesOnCall: 'listPolicies',
+                filterKey: 'PolicyArn',
+                filterValue: 'Arn'
+            },
             getRole: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listRoles',
@@ -1193,6 +1241,15 @@ var postcalls = [
             describeNodegroups: {
                 reliesOnService: 'eks',
                 reliesOnCall: 'listClusters',
+                override: true
+            }
+        }
+    },
+    {
+        IAM: {
+            getPolicyVersion: {
+                reliesOnService: 'iam',
+                reliesOnCall: 'listPolicies',
                 override: true
             }
         }
