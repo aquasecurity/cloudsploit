@@ -27,7 +27,7 @@ module.exports = {
             glue_s3_encryption_level: settings.glue_s3_encryption_level || this.settings.glue_s3_encryption_level.default,
         };
 
-        var desiredEncryptionLevel = helpers.encryptionLevelMap[config.glue_s3_encryption_level];
+        var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(config.glue_s3_encryption_level);
         var currentEncryptionLevel;
 
         var acctRegion = helpers.defaultRegion(settings);
@@ -65,7 +65,7 @@ module.exports = {
                         if (encryptionConfig.S3EncryptionMode && encryptionConfig.S3EncryptionMode.toUpperCase() !== 'DISABLED') {
                             encryptionEnabled = true;
                             if (encryptionConfig.S3EncryptionMode.toUpperCase() === 'SSE-S3') {
-                                currentEncryptionLevel = helpers.encryptionLevelMap['sse'];
+                                currentEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf('sse');
                             } else {
                                 if (encryptionConfig.KmsKeyArn) {
                                     var keyId = encryptionConfig.KmsKeyArn.split('/')[1];
@@ -79,7 +79,7 @@ module.exports = {
                                         return cb();
                                     }
 
-                                    currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata);
+                                    currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
                                 } else {
                                     helpers.addResult(results, 3, 'Unable to find associated KMS key for security configuration',
                                         region, resource);
@@ -94,11 +94,11 @@ module.exports = {
                 if (encryptionEnabled) {
                     if (currentEncryptionLevel >= desiredEncryptionLevel) {
                         helpers.addResult(results, 0,
-                            `Glue security configuration "${configuration.Name}" has S3 encryption enabled at encryption level: ${currentEncryptionLevel}`,
+                            `Glue security configuration "${configuration.Name}" has S3 encryption enabled at encryption level ${currentEncryptionLevel} which is greater than or equal to target level ${desiredEncryptionLevel}`,
                             region, resource);    
                     } else {
                         helpers.addResult(results, 2,
-                            `Glue security configuration "${configuration.Name}" has S3 encryption enabled at encryption level ${currentEncryptionLevel}`,
+                            `Glue security configuration "${configuration.Name}" has S3 encryption enabled at encryption level ${currentEncryptionLevel} which is less than target level ${desiredEncryptionLevel}`,
                             region, resource);
                     }
                 } else {
