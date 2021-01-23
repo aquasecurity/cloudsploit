@@ -24,7 +24,7 @@ module.exports = {
                 externalcmk=Customer managed externally sourced KMS; \
                 cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk',
+            default: 'awskms',
         },
         allow_ssm_non_secure_strings: {
             name: 'Allow SSM Non-Secure Strings',

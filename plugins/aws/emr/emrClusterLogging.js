@@ -49,10 +49,10 @@ module.exports = {
                 if (describeCluster.data.Cluster.LogUri &&
                     describeCluster.data.Cluster.LogUri !== '') {
                     helpers.addResult(results, 0,
-                        `EMR cluster logging is enabled for "${cluster.Name}" cluster`, resource, region);
+                        `EMR cluster logging is enabled for "${cluster.Name}" cluster`, region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `EMR cluster logging is not enabled for "${cluster.Name}" cluster`, resource, region);
+                        `EMR cluster logging is not enabled for "${cluster.Name}" cluster`, region, resource);
                 }
 
                 ccb();
