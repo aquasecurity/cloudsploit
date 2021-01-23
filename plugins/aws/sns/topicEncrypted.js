@@ -14,10 +14,10 @@ module.exports = {
     apis_remediate: ['SNS:listTopics', 'SNS:getTopicAttributes'],
     remediation_inputs: {
         kmsKeyIdforSns: {
-            name: '(Optional) KMS Key ID',
+            name: '(Mandatory) KMS Key ID',
             description: 'The KMS Key ID used for encryption',
             regex: '^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$',
-            required: false
+            required: true
         }
     },
     actions: {

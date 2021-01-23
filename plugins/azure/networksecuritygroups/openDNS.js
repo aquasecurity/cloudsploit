@@ -74,31 +74,11 @@ module.exports = {
         var baseUrl = 'https://management.azure.com/{resource}?api-version=2020-05-01';
         var method = 'PUT';
         var protocols = ['TCP','UDP','*'];
-        var port = 53;
+        var ports = [53];
         var errors = [];
         var actions = [];
 
         // create the params necessary for the remediation
-        async.each(protocols,function(protocol, cb) {
-            helpers.remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, settings, resource, remediation_file, baseUrl, method,function(error, action) {
-                if (error && (error.length || Object.keys(error).length)) {
-                    errors.push(error);
-                } else if (action && (action.length || Object.keys(action).length)){
-                    actions.push(action);
-                }
-
-                cb();
-            });
-        }, function() {
-            if (errors && errors.length) {
-                remediation_file['post_remediate']['actions'][pluginName]['error'] = errors.join(', ');
-                settings.remediation_file = remediation_file;
-                return callback(errors, null);
-            } else {
-                remediation_file['post_remediate']['actions'][pluginName][resource] = actions;
-                settings.remediation_file = remediation_file;
-                return callback(null, actions);
-            }
-        });
+        helpers.remediateOpenPortsHelper( putCall, pluginName, protocols, ports, config, cache, settings, resource, remediation_file, baseUrl, method, actions, errors, callback);
     }
 };
