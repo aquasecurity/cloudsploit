@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-var bucketAccelerationEnabled = require('./bucketAccelerationEnabled');
+var bucketTransferAcceleration = require('./bucketTransferAcceleration');
 
 const listBuckets = [
     {
@@ -49,38 +49,41 @@ const createNullCache = () => {
     };
 };
 
-describe('bucketAccelerationEnabled', function () {
+describe('bucketTransferAcceleration', function () {
     describe('run', function () {
         it('should PASS if S3 bucket has transfer acceleration enabled', function (done) {
-            const cache = createCache([listBuckets[0]], getBucketAccelerateConfiguration[0], null, null);
-            bucketAccelerationEnabled.run(cache, {}, (err, results) => {
+            const cache = createCache([{Name: 'bucket-1'}], { Status: 'Enabled' }, null, null);
+            bucketTransferAcceleration.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('global');
                 done();
             });
         });
 
         it('should FAIL if S3 bucket does not have transfer acceleration enabled', function (done) {
-            const cache = createCache([listBuckets[0]], {}, null, null);
-            bucketAccelerationEnabled.run(cache, {}, (err, results) => {
+            const cache = createCache([{Name: 'bucket-1'}], {}, null, null);
+            bucketTransferAcceleration.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('global');
                 done();
             });
         });
 
         it('should FAIL if S3 bucket has transfer acceleration suspended', function (done) {
-            const cache = createCache([listBuckets[0]], getBucketAccelerateConfiguration[1], null);
-            bucketAccelerationEnabled.run(cache, {}, (err, results) => {
+            const cache = createCache([{Name: 'bucket-1'}], { Status: 'Suspended' }, null);
+            bucketTransferAcceleration.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('global');
                 done();
             });
         });
 
         it('should PASS if no S3 buckets found', function (done) {
             const cache = createCache([]);
-            bucketAccelerationEnabled.run(cache, {}, (err, results) => {
+            bucketTransferAcceleration.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -89,8 +92,7 @@ describe('bucketAccelerationEnabled', function () {
 
         it('should UNKNOWN if unable to list S3 buckets', function (done) {
             const cache = createCache(null, null, { message: "Unable to list buckets" }, null);
-            bucketAccelerationEnabled.run(cache, {}, (err, results) => {
-                console.log(results);
+            bucketTransferAcceleration.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -98,9 +100,8 @@ describe('bucketAccelerationEnabled', function () {
         });
 
         it('should UNKNOWN if unable to get bucket acceleration configuration', function (done) {
-            const cache = createCache([listBuckets[0]], null, null, { message: "Unable to get bucket acceleration configuration"});
-            bucketAccelerationEnabled.run(cache, {}, (err, results) => {
-                console.log(results);
+            const cache = createCache([{Name: 'bucket-1'}], null, null, { message: "Unable to get bucket acceleration configuration"});
+            bucketTransferAcceleration.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -109,7 +110,7 @@ describe('bucketAccelerationEnabled', function () {
 
         it('should not return anything if list S3 buckets response not found', function (done) {
             const cache = createNullCache();
-            bucketAccelerationEnabled.run(cache, {}, (err, results) => {
+            bucketTransferAcceleration.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });

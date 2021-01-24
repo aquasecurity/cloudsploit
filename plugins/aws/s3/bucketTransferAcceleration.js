@@ -4,8 +4,8 @@ module.exports = {
     title: 'S3 Transfer Acceleration Enabled',
     category: 'S3',
     description: 'Ensures that S3 buckets have transfer acceleration enabled to increase the speed of data transfers.',
-    more_info: 'S3 bucket should have transfer acceleration enabled to increase the speed of data transfers.',
-    recommended_action: 'Update S3 bucket permissions and enable Transfer Acceleration.',
+    more_info: 'S3 buckets should have transfer acceleration enabled to increase the speed of data transfers in and out of Amazon S3 using AWS edge network.',
+    recommended_action: 'Modify S3 bucket to enable transfer acceleration.',
     link: 'https://docs.aws.amazon.com/AmazonS3/latest/dev/transfer-acceleration.html',
     apis: ['S3:listBuckets', 'S3:getBucketAccelerateConfiguration'],
 
@@ -40,21 +40,21 @@ module.exports = {
             if (!getBucketAccelerateConfiguration || getBucketAccelerateConfiguration.err || !getBucketAccelerateConfiguration.data) {
                 helpers.addResult(results, 3,
                     `Unable to get bucket acceleration configuration: ${helpers.addError(getBucketAccelerateConfiguration)}`,
-                    region, resource);
-                    return;
+                    'global', resource);
+                return;
             }
 
             if (getBucketAccelerateConfiguration.data.Status && getBucketAccelerateConfiguration.data.Status.toUpperCase() === 'ENABLED') {
                 helpers.addResult(results, 0,
                     `S3 bucket ${bucket.Name} has transfer acceleration enabled`,
-                    region, resource);
+                    'global', resource);
             } else {
                 helpers.addResult(results, 2,
                     `S3 bucket ${bucket.Name} does not have transfer acceleration enabled`,
-                    region, resource);
+                    'global', resource);
             }
         });
 
         callback(null, results, source);
-    },
+    }
 };
