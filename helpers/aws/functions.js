@@ -239,20 +239,27 @@ function defaultPartition(settings) {
     return 'aws';
 }
 
-function getEncryptionLevel(kmsKey) {
-    if (kmsKey.Origin === 'AWS_KMS') {
-        if (kmsKey.KeyManager === 'AWS') {
-            return 2;
-        } else if (kmsKey.KeyManager === 'CUSTOMER') {
-            return 3;
+function getEncryptionLevel(kmsKey, encryptionLevels) {
+    if (kmsKey.Origin) {
+        if (kmsKey.Origin === 'AWS_KMS') {
+            if (kmsKey.KeyManager) {
+                if (kmsKey.KeyManager === 'AWS') {
+                    return encryptionLevels.indexOf('awskms');
+                }
+                if (kmsKey.KeyManager === 'CUSTOMER') {
+                    return encryptionLevels.indexOf('awscmk');
+                }
+            }
+        }
+        if (kmsKey.Origin === 'EXTERNAL') {
+            return encryptionLevels.indexOf('externalcmk');
+        }
+        if (kmsKey.Origin === 'AWS_CLOUDHSM') {
+            return encryptionLevels.indexOf('cloudhsm');
         }
     }
-    if (kmsKey.Origin === 'EXTERNAL') {
-        return 4;
-    }
-    if (kmsKey.Origin === 'AWS_CLOUDHSM') {
-        return 5;
-    }
+
+    return encryptionLevels.indexOf('none');
 }
 
 function remediatePlugin(config, call, params, callback) {

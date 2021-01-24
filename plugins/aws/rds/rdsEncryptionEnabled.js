@@ -39,7 +39,7 @@ module.exports = {
             desiredEncryptionLevelString: settings.rds_encryption_level || this.settings.rds_encryption_level.default
         };
 
-        var desiredEncryptionLevel = helpers.encryptionLevelMap[config.desiredEncryptionLevelString];
+        var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(config.desiredEncryptionLevelString);
         var currentEncryptionLevel;
 
         var custom = helpers.isCustom(settings, this.settings);
@@ -108,7 +108,7 @@ module.exports = {
                         continue;
                     }
 
-                    currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata);
+                    currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
 
                     if (config.rds_encryption_kms_alias) {
                         if (aliasId == kmsKey) {
