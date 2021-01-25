@@ -297,6 +297,7 @@ module.exports = {
         'redshiftClusterMasterUsername' : require(__dirname + '/plugins/aws/redshift/redshiftClusterMasterUsername.js'),
         'snapshotRetentionPeriod'       : require(__dirname + '/plugins/aws/redshift/snapshotRetentionPeriod.js'),
         'userActivityLoggingEnabled'    : require(__dirname + '/plugins/aws/redshift/userActivityLoggingEnabled.js'),
+        'redshiftNodesCount'            : require(__dirname + '/plugins/aws/redshift/redshiftNodesCount.js'),
         'redshiftUnusedReservedNodes'   : require(__dirname + '/plugins/aws/redshift/redshiftUnusedReservedNodes.js'),
         'redshiftDesiredNodeType'       : require(__dirname + '/plugins/aws/redshift/redshiftDesiredNodeType.js'),
 
