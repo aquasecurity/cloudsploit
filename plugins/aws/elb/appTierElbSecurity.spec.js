@@ -178,7 +178,7 @@ const describeLoadBalancerPolicies = [
                 ],
             },
         ],
-    }
+    },
 ];
 
 const describeTags = [
@@ -211,10 +211,8 @@ const describeTags = [
 ];
 
 const createCache = (elb, tags, policy) => {
-    if (elb && elb.length) {
-        var loadBalancerName = elb[0].LoadBalancerName;
-        var lbName = elb[0].LoadBalancerName;
-    }
+    var lbDnsName = (elb && elb.length) ? elb[0].DNSName : null;
+    var loadBalancerName = (elb && elb.length) ? elb[0].LoadBalancerName : null;
     return {
         elb:{
             describeLoadBalancers: {
@@ -224,14 +222,14 @@ const createCache = (elb, tags, policy) => {
             },
             describeTags: {
                 'us-east-1': {
-                    [lbName]: {
+                    [loadBalancerName]: {
                         data: tags
                     },
                 },
             },
             describeLoadBalancerPolicies: {
                 'us-east-1': {
-                    [loadBalancerName]: {
+                    [lbDnsName]: {
                         data: policy
                     },
                 },
@@ -291,6 +289,7 @@ describe('appTierElbSecurity', function () {
             appTierElbSecurity.run(cache, { elb_app_tier_tag_key: 'app_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
@@ -300,6 +299,7 @@ describe('appTierElbSecurity', function () {
             appTierElbSecurity.run(cache, { elb_app_tier_tag_key: 'app_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
@@ -309,6 +309,7 @@ describe('appTierElbSecurity', function () {
             appTierElbSecurity.run(cache, { elb_app_tier_tag_key: 'app_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
@@ -318,6 +319,7 @@ describe('appTierElbSecurity', function () {
             appTierElbSecurity.run(cache, { elb_app_tier_tag_key: 'app_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
@@ -327,6 +329,7 @@ describe('appTierElbSecurity', function () {
             appTierElbSecurity.run(cache, { elb_app_tier_tag_key: 'app_tier' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
@@ -336,20 +339,12 @@ describe('appTierElbSecurity', function () {
             appTierElbSecurity.run(cache, { elb_app_tier_tag_key: 'app_tier' }, (err, results) => {
                 expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
 
-        it('should UNKNOWN if unable to describe load balancer policy', function (done) {
-            const cache = createCache([describeLoadBalancers[0]], describeTags[0], null);
-            appTierElbSecurity.run(cache, { elb_app_tier_tag_key: 'app_tier' }, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(3);
-                done();
-            });
-        });
-        
-        it('should not return anything if describe load balancers response is not found', function (done) {
+        it('should not return anything if describe load balancers response not found', function (done) {
             const cache = createNullCache();
             appTierElbSecurity.run(cache, { elb_app_tier_tag_key: 'app_tier' }, (err, results) => {
                 expect(results.length).to.equal(0);

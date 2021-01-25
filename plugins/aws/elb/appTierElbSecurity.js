@@ -14,7 +14,7 @@ module.exports = {
             name: 'App-Tier Tag Key',
             description: 'App-Tier tag key used by ELBs to indicate App-Tier groups',
             regex: '^.*$',
-            default: 'app-tier'
+            default: ''
         },
         latest_security_policies: {
             name: 'ELB Latest Predefined Security Policy Versions',
@@ -90,15 +90,18 @@ module.exports = {
                 });
 
                 if (appTierTag) {
+                    if (!lb.LoadBalancerName || !lb.DNSName) return cb();
+
                     var resource = `arn:${awsOrGov}:elasticloadbalancing:${region}:${accountId}:loadbalancer/${lb.LoadBalancerName}`;
 
                     var describeLoadBalancerPolicies = helpers.addSource(cache, source,
-                        ['elb', 'describeLoadBalancerPolicies', region, lb.LoadBalancerName]);
+                        ['elb', 'describeLoadBalancerPolicies', region, lb.DNSName]);
 
                     if (!describeLoadBalancerPolicies ||
-                        describeLoadBalancerPolicies.err ||
-                        !describeLoadBalancerPolicies.data ||
-                        !describeLoadBalancerPolicies.data.PolicyDescriptions) {
+                        (!describeLoadBalancerPolicies.err && !describeLoadBalancerPolicies.data)) return cb();
+
+                    if (describeLoadBalancerPolicies.err ||
+                        !describeLoadBalancerPolicies.data) {
                         helpers.addResult(results, 3,
                             `Unable to query policies for ELB "${lb.LoadBalancerName}": ${helpers.addError(describeLoadBalancerPolicies)}`,
                             region, resource);
@@ -140,17 +143,14 @@ module.exports = {
 
                 cb();
             }, function(){
+                if (!appTierElbFound) {
+                    helpers.addResult(results, 0,
+                        'No App-Tier ELB found', region);
+                }
                 rcb();
             });
-
-            if (!appTierElbFound) {
-                helpers.addResult(results, 0,
-                    'No App-Tier ELB found', region);
-            }
         }, function(){
             callback(null, results, source);
         });
-        
-
     }
 };
