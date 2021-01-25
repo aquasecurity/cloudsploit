@@ -13,7 +13,7 @@ module.exports = {
         redshift_nodes_count: {
             name: 'Amazon Redshift Nodes Count',
             description: 'Maximum Amazon Redshift nodes count per region',
-            regex: '^[0-9]{0,3}',
+            regex: '^[0-9]{0,4}',
             default: '100'
         },
     },
