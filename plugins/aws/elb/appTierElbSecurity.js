@@ -113,7 +113,7 @@ module.exports = {
                     describeLoadBalancerPolicies.data.PolicyDescriptions.forEach(function(policyDesc) {
                         if(policyDesc.PolicyAttributeDescriptions) {
                             for (var policyAttrDesc of policyDesc.PolicyAttributeDescriptions) {
-                                if (policyAttrDesc.AttributeName === 'Reference-Security-Policy') {
+                                if (policyAttrDesc.AttributeName && policyAttrDesc.AttributeName === 'Reference-Security-Policy') {
                                     securityPolicyFound = true;
                                     if(!config.latest_security_policies.includes(policyAttrDesc.AttributeValue)) {
                                         insecurePolicy = true;
