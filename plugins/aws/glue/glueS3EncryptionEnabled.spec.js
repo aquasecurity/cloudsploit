@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var s3EncryptionMode = require('./s3EncryptionMode');
+var s3EncryptionMode = require('./glueS3EncryptionEnabled');
 
 const getSecurityConfigurations = [
     {
@@ -165,7 +165,7 @@ describe('s3EncryptionMode', function () {
             });
         });
 
-        it('should not return anything if get security configurations response is not found', function (done) {
+        it('should not return anything if get security configurations response not found', function (done) {
             const cache = createNullCache();
             s3EncryptionMode.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
