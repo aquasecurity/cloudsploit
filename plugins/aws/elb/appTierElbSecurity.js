@@ -80,7 +80,7 @@ module.exports = {
                     if(Tags && Tags.Tags) {
                         for (var i in Tags.Tags){
                             var td = Tags.Tags[i];
-                            if(td.Key === config.elb_app_tier_tag_key) {
+                            if(td.Key && td.Key === config.elb_app_tier_tag_key) {
                                 appTierTag = true;
                                 appTierElbFound = true;
                                 break;
