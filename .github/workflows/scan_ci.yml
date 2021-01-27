@@ -10,7 +10,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 'stable'
+          node-version: '14.x'
       - run: npm install
       - run: npm test
       - run: npm run lint
