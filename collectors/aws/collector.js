@@ -872,7 +872,13 @@ var postcalls = [
                 deleteRegion: true,
                 signatureVersion: 'v4',
                 override: true
-            }
+            },
+            getBucketAccelerateConfiguration: {
+                reliesOnService: 's3',
+                reliesOnCall: 'listBuckets',
+                filterKey: 'Bucket',
+                filterValue: 'Name'
+            },
         },
         EC2: {
             describeSubnets: {
