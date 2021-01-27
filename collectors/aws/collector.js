@@ -330,6 +330,12 @@ var calls = {
             property: 'NetworkInterfaces',
             paginate: 'NextToken',
         },
+        getEbsEncryptionByDefault: {
+            property: 'EbsEncryptionByDefault'
+        },
+        getEbsDefaultKmsKeyId: {
+            property: 'KmsKeyId'
+        },
         describeVpnConnections: {
             property: 'VpnConnections',
             paginate: 'NextToken'
@@ -338,6 +344,7 @@ var calls = {
             property: 'NetworkAcls',
             paginate: 'NextToken',
         }
+
     },
     ECR: {
         describeRepositories: {
@@ -422,6 +429,9 @@ var calls = {
         }
     },
     Glue: {
+        getDataCatalogEncryptionSettings: {
+            property: 'DataCatalogEncryptionSettings',
+        },
         getSecurityConfigurations: {
             property: 'SecurityConfigurations',
             paginate: 'NextMarker'
