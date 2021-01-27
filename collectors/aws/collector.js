@@ -429,6 +429,9 @@ var calls = {
         }
     },
     Glue: {
+        getDataCatalogEncryptionSettings: {
+            property: 'DataCatalogEncryptionSettings',
+        },
         getSecurityConfigurations: {
             property: 'SecurityConfigurations',
             paginate: 'NextMarker'

@@ -181,6 +181,7 @@ module.exports = {
         'esUpgradeAvailable'            : require(__dirname + '/plugins/aws/es/esUpgradeAvailable.js'),
         'esHttpsOnly'                   : require(__dirname + '/plugins/aws/es/esHttpsOnly.js'),
 
+        'dataCatalogCmkEncrypted'       : require(__dirname + '/plugins/aws/glue/dataCatalogCmkEncrypted.js'),
         'bookmarkEncryptionEnabled'     : require(__dirname + '/plugins/aws/glue/bookmarkEncryptionEnabled.js'),
 
         'accessKeysExtra'               : require(__dirname + '/plugins/aws/iam/accessKeysExtra.js'),
@@ -312,6 +313,7 @@ module.exports = {
         'guardDutyEnabled'              : require(__dirname + '/plugins/aws/guardduty/guarddutyEnabled.js'),
         'guardDutyMaster'               : require(__dirname + '/plugins/aws/guardduty/guarddutyMaster.js'),
 
+        'workspacesVolumeEncryption'    : require(__dirname + '/plugins/aws/workspaces/workspacesVolumeEncryption.js'),
         'workspacesIpAccessControl'     : require(__dirname + '/plugins/aws/workspaces/workspacesIpAccessControl.js'),
 
         'xrayEncryptionEnabled'         : require(__dirname + '/plugins/aws/xray/xrayEncryptionEnabled.js'),
