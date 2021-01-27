@@ -958,6 +958,12 @@ var postcalls = [
                 reliesOnService: 'elbv2',
                 reliesOnCall: 'describeLoadBalancers',
                 override: true
+            },
+            describeTargetGroupAttributes: {
+                reliesOnService: 'elbv2',
+                reliesOnCall: 'describeTargetGroups',
+                filterKey: 'TargetGroupArn',
+                filterValue: 'TargetGroupArn'
             }
         },
         EMR: {

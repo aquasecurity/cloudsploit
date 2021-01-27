@@ -166,6 +166,7 @@ module.exports = {
         'elbv2WafEnabled'                 : require(__dirname + '/plugins/aws/elbv2/elbv2WafEnabled.js'),
         'elbv2MinimumTargetInstances'    : require(__dirname + '/plugins/aws/elbv2/elbv2MinimumTargetInstances.js'),
         'elbv2NlbListenerSecurity'      : require(__dirname + '/plugins/aws/elbv2/elbv2NlbListenerSecurity.js'),
+        'elbv2DeregistrationDelay'      : require(__dirname + '/plugins/aws/elbv2/elbv2DeregistrationDelay.js'),
 
         'emrClusterLogging'             : require(__dirname + '/plugins/aws/emr/emrClusterLogging.js'),
         'emrEncryptionInTransit'        : require(__dirname + '/plugins/aws/emr/emrEncryptionInTransit.js'),
