@@ -13,6 +13,18 @@ const describeTrails = [
         "HasCustomEventSelectors": false,
         "HasInsightSelectors": false,
         "IsOrganizationTrail": false
+    },
+    {
+        "Name": "trail-1",
+        "S3BucketName": "aws-cloudtrail-logs-111122223333-119d2f9a",
+        "IncludeGlobalServiceEvents": true,
+        "IsMultiRegionTrail": true,
+        "HomeRegion": "us-east-1",
+        "TrailARN": "arn:aws:cloudtrail:us-east-1:111122223333:trail/trail-1",
+        "LogFileValidationEnabled": false,
+        "HasCustomEventSelectors": false,
+        "HasInsightSelectors": false,
+        "IsOrganizationTrail": false
     }
 ];
 
@@ -105,15 +117,27 @@ describe('cloudtrailDeliveryFailing', function () {
             cloudtrailDeliveryFailing.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
-        
+
+        it('should PASS if CloudTrail trail is set to pass without checking logs delivery status', function (done) {
+            const cache = createCache(describeTrails, getTrailStatus[0]);
+            cloudtrailDeliveryFailing.run(cache, { trails_to_check: 'trail-1' }, (err, results) => {
+                expect(results.length).to.equal(2);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
+                done();
+            });
+        });
+
         it('should FAIL if logs for CloudTrail trail are not being delivered', function (done) {
             const cache = createCache([describeTrails[0]], getTrailStatus[1]);
             cloudtrailDeliveryFailing.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
@@ -123,6 +147,7 @@ describe('cloudtrailDeliveryFailing', function () {
             cloudtrailDeliveryFailing.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
@@ -132,6 +157,7 @@ describe('cloudtrailDeliveryFailing', function () {
             cloudtrailDeliveryFailing.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
@@ -141,6 +167,7 @@ describe('cloudtrailDeliveryFailing', function () {
             cloudtrailDeliveryFailing.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
