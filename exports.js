@@ -154,6 +154,7 @@ module.exports = {
         'eksSecretsEncrypted'           : require(__dirname + '/plugins/aws/eks/eksSecretsEncrypted.js'),
         'eksSecurityGroups'             : require(__dirname + '/plugins/aws/eks/eksSecurityGroups.js'),
 
+        'crosszoneLoadBalancing'        : require(__dirname + '/plugins/aws/elb/crosszoneLoadBalancing.js'),
         'insecureCiphers'               : require(__dirname + '/plugins/aws/elb/insecureCiphers.js'),
         'elbHttpsOnly'                  : require(__dirname + '/plugins/aws/elb/elbHttpsOnly.js'),
         'elbLoggingEnabled'             : require(__dirname + '/plugins/aws/elb/elbLoggingEnabled.js'),
