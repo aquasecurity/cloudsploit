@@ -160,11 +160,11 @@ module.exports = {
         'elbNoInstances'                : require(__dirname + '/plugins/aws/elb/elbNoInstances.js'),
 
         'elbv2DeletionProtection'       : require(__dirname + '/plugins/aws/elbv2/elbv2DeletionProtection.js'),
-        'elbv2LoggingEnabled'             : require(__dirname + '/plugins/aws/elbv2/elbv2LoggingEnabled.js'),
-        'elbv2HttpsOnly'                  : require(__dirname + '/plugins/aws/elbv2/elbv2HttpsOnly.js'),
-        'elbv2NoInstances'                : require(__dirname + '/plugins/aws/elbv2/elbv2NoInstances.js'),
-        'elbv2WafEnabled'                 : require(__dirname + '/plugins/aws/elbv2/elbv2WafEnabled.js'),
-        'elbv2MinimumTargetInstances'    : require(__dirname + '/plugins/aws/elbv2/elbv2MinimumTargetInstances.js'),
+        'elbv2LoggingEnabled'           : require(__dirname + '/plugins/aws/elbv2/elbv2LoggingEnabled.js'),
+        'elbv2HttpsOnly'                : require(__dirname + '/plugins/aws/elbv2/elbv2HttpsOnly.js'),
+        'elbv2NoInstances'              : require(__dirname + '/plugins/aws/elbv2/elbv2NoInstances.js'),
+        'elbv2WafEnabled'               : require(__dirname + '/plugins/aws/elbv2/elbv2WafEnabled.js'),
+        'elbv2MinimumTargetInstances'   : require(__dirname + '/plugins/aws/elbv2/elbv2MinimumTargetInstances.js'),
         'elbv2NlbListenerSecurity'      : require(__dirname + '/plugins/aws/elbv2/elbv2NlbListenerSecurity.js'),
 
         'emrClusterLogging'             : require(__dirname + '/plugins/aws/emr/emrClusterLogging.js'),
@@ -181,6 +181,7 @@ module.exports = {
         'esUpgradeAvailable'            : require(__dirname + '/plugins/aws/es/esUpgradeAvailable.js'),
         'esHttpsOnly'                   : require(__dirname + '/plugins/aws/es/esHttpsOnly.js'),
 
+        'glueS3EncryptionEnabled'       : require(__dirname + '/plugins/aws/glue/glueS3EncryptionEnabled.js'),
         'dataCatalogCmkEncrypted'       : require(__dirname + '/plugins/aws/glue/dataCatalogCmkEncrypted.js'),
         'bookmarkEncryptionEnabled'     : require(__dirname + '/plugins/aws/glue/bookmarkEncryptionEnabled.js'),
 
