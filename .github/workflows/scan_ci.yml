@@ -1,5 +1,5 @@
 name: 
-on: [push, pull_request, create, delete]
+on: [push, pull_request, create, delete, issue_comment, repository_dispatch]
 
 jobs:
   build:
@@ -12,6 +12,9 @@ jobs:
         with:
           node-version: '14.x'
       - run: npm install
-      - run: npm test
-      - run: npm run lint
-      - run: npm run spellcheck
+
+      - name: NPM Test
+        run: npm test
+
+      - name: Lint
+        run: npm run lint
