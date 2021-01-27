@@ -12,12 +12,6 @@ jobs:
         with:
           node-version: 'stable'
       - run: npm install
-
-      - name: NPM test
       - run: npm test
-
-      - name: Lint
       - run: npm run lint
-
-      - name: Spell-check
       - run: npm run spellcheck
