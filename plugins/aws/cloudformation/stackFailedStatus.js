@@ -53,13 +53,13 @@ module.exports = {
                     var describeStackEvents = helpers.addSource(cache, source,
                         ['cloudformation', 'describeStackEvents', region, stack.StackName]);
 
-                    if (!describeStackEvents || describeStackEvents.err || !describeStackEvents.data
-                        || !describeStackEvents.data.StackEvents || !describeStackEvents.data.StackEvents.length) {
+                    if (!describeStackEvents || describeStackEvents.err || !describeStackEvents.data) {
                         helpers.addResult(results, 3, `Unable to query for CloudFormation stack events: ${helpers.addError(describeStackEvents)}`, region);
                         return cb();
                     }
 
-                    if (!describeStackEvents.data.StackEvents.length) {
+                    if (!describeStackEvents.data.StackEvents ||
+                        !describeStackEvents.data.StackEvents.length) {
                         helpers.addResult(results, 0, 'No CloudFormation stack events found', region);
                         return cb();
                     }
@@ -67,7 +67,7 @@ module.exports = {
                     var latestEvent = describeStackEvents.data.StackEvents[0];
                     var now = new Date();
                     var then = new Date(latestEvent.Timestamp);
-                    var difference = Math.abs(helpers.hoursBetween(then, now));
+                    var difference = helpers.hoursBetween(then, now);
 
                     if (difference > stack_failed_state_hours_limit) {
                         helpers.addResult(results, 2,
