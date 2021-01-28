@@ -83,8 +83,8 @@ function findOpenPorts(groups, ports, service, region, results) {
                         var port = ports[permission.IpProtocol][portIndex];
                         if (port.toString().indexOf('-') > -1) {
                             var portRange = port.split('-');
-                            var rangeFrom = portRange[0];
-                            var rangeTo = portRange[1];
+                            var rangeFrom = Number(portRange[0]);
+                            var rangeTo = Number(portRange[1]);
 
                             for (let i = rangeFrom; i <= rangeTo; i++) {
                                 if (permission.FromPort <= i && permission.ToPort >= i) {
@@ -113,8 +113,8 @@ function findOpenPorts(groups, ports, service, region, results) {
                     for (var portIndexV6 in ports[permission.IpProtocol]) {
                         var portV6 = ports[permission.IpProtocol][portIndexV6];
                         if (portV6.toString().indexOf('-') > -1) {
-                            var portRangeV6 = portV6.split('-');
-                            var rangeFromV6 = portRangeV6[0];
+                            var portRangeV6 = Number(portV6.split('-'));
+                            var rangeFromV6 = Number(portRangeV6[0]);
                             var rangeToV6 = portRangeV6[1];
 
                             for (let i = rangeFromV6; i <= rangeToV6; i++) {
@@ -158,7 +158,7 @@ function findOpenPorts(groups, ports, service, region, results) {
     }
 
     if (!found) {
-        addResult(results, 0, 'No public open ports found', region);
+        addResult(results, 0, 'No public open ports found', region, resource);
     }
 
     return;
