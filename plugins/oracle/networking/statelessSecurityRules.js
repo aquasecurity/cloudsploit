@@ -22,7 +22,7 @@ module.exports = {
                 var securityLists = helpers.addSource(cache, source,
                     ['securityList', 'list', region]);
 
-                if (!securityLists || securityLists.err)  {
+                if (!securityLists || securityLists.err || !securityLists.data)  {
                     helpers.addResult(results, 3,
                         'Unable to query for security lists: ' + helpers.addError(securityLists), region);
                     return rcb();
