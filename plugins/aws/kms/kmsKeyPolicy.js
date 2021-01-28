@@ -26,6 +26,12 @@ module.exports = {
             description: 'A comma-delimited list of known third-party AWS account IDs that should be trusted',
             regex: '^\\d{12}(?:,\\d{12})*$',
             default: ''
+        },
+        kms_key_policy_whitelisted_policy_ids: {
+            name: 'KMS Key Policy Whitelisted Policy IDs',
+            description: 'A comma-delimited list of known Key Policy IDs that should be trusted',
+            regex: '^.{1,255}$',
+            default: 'aqua-cspm'
         }
     },
 
@@ -33,13 +39,20 @@ module.exports = {
         var config = {
             kms_key_policy_max_user_count: settings.kms_key_policy_max_user_count || this.settings.kms_key_policy_max_user_count.default,
             kms_key_policy_max_third_parties_count: settings.kms_key_policy_max_third_parties_count || this.settings.kms_key_policy_max_third_parties_count.default,
-            kms_key_policy_whitelisted_account_ids: settings.kms_key_policy_whitelisted_account_ids || this.settings.kms_key_policy_whitelisted_account_ids.default
+            kms_key_policy_whitelisted_account_ids: settings.kms_key_policy_whitelisted_account_ids || this.settings.kms_key_policy_whitelisted_account_ids.default,
+            kms_key_policy_whitelisted_policy_ids: settings.kms_key_policy_whitelisted_policy_ids || this.settings.kms_key_policy_whitelisted_policy_ids.default
         };
 
         if (config.kms_key_policy_whitelisted_account_ids && config.kms_key_policy_whitelisted_account_ids.length) {
             config.kms_key_policy_whitelisted_account_ids = config.kms_key_policy_whitelisted_account_ids.split(',');
         } else {
             config.kms_key_policy_whitelisted_account_ids = [];
+        }
+
+        if (config.kms_key_policy_whitelisted_policy_ids && config.kms_key_policy_whitelisted_policy_ids.length) {
+            config.kms_key_policy_whitelisted_policy_ids = config.kms_key_policy_whitelisted_policy_ids.split(',');
+        } else {
+            config.kms_key_policy_whitelisted_policy_ids = [];
         }
 
         var custom = helpers.isCustom(settings, this.settings);
@@ -80,7 +93,16 @@ module.exports = {
                         region, kmsKey.KeyArn);
                     return kcb();
                 }
-                
+
+                // Auq-CSPM keys for Remediations should be skipped.
+                // The only way to distinguish these keys is the Policy Id.
+                if (getKeyPolicy.data.Id &&
+                    config.kms_key_policy_whitelisted_policy_ids.length &&
+                    config.kms_key_policy_whitelisted_policy_ids.indexOf(getKeyPolicy.data.Id)>-1) {
+                    helpers.addResult(results, 0, 'The key ' + kmsKey.KeyArn + ' is whitelisted.', region, kmsKey.KeyArn);
+                    return kcb();
+                }
+
                 var found = false;
                 var wildcardTrusted = 0;
                 var thirdPartyTrusted = 0;
