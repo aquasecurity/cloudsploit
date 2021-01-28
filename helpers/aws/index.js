@@ -14,7 +14,8 @@ var helpers = {
     regions: regions,
     MAX_REGIONS_AT_A_TIME: 6,
     CLOUDSPLOIT_EVENTS_BUCKET: 'cloudsploit-engine-trails',
-    CLOUDSPLOIT_EVENTS_SNS: 'aqua-cspm-sns-'
+    CLOUDSPLOIT_EVENTS_SNS: 'aqua-cspm-sns-',
+    ENCRYPTION_LEVELS: ['none', 'sse', 'awskms', 'awscmk', 'externalcmk', 'cloudhsm']
 };
 
 for (var s in shared) helpers[s] = shared[s];
