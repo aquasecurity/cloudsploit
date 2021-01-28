@@ -10,8 +10,7 @@ module.exports = {
     more_info: 'Policies attached to IAM roles should be scoped to least-privileged access and avoid the use of wildcards.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html',
     recommended_action: 'Ensure that all IAM roles are scoped to specific services and API calls.',
-    apis: ['IAM:listRoles', 'IAM:listRolePolicies', 'IAM:listAttachedRolePolicies',
-        'IAM:getPolicy', 'IAM:getRolePolicy'],
+    apis: ['IAM:listRoles', 'IAM:listRolePolicies', 'IAM:listAttachedRolePolicies', 'IAM:getRolePolicy'],
     settings: {
         iam_role_policies_ignore_path: {
             name: 'IAM Role Policies Ignore Path',
