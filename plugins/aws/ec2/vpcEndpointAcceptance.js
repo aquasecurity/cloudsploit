@@ -12,7 +12,7 @@ module.exports = {
     settings: {
         allow_blank_whitelisted_principals: {
             name: 'Allow If Blank Whitelisted Principals',
-            description: 'Return a passing result if there are no whitelisted principals for endpoint ',
+            description: 'Return a passing result if there are no whitelisted principals for endpoint',
             regex: '^(true|false)$',
             default: 'false'
         },
@@ -66,15 +66,15 @@ module.exports = {
 
                         if (!describeVpcEndpointServicePermissions ||
                             describeVpcEndpointServicePermissions.err ||
-                            !describeVpcEndpointServicePermissions.data ||
-                            !describeVpcEndpointServicePermissions.data.AllowedPrincipals) {
+                            !describeVpcEndpointServicePermissions.data) {
                             helpers.addResult(results, 3,
                                 `Unable to query VPC endpoint service permissions: ${describeVpcEndpointServicePermissions}`,
                                 region, resource);
                             continue;
                         }
 
-                        if (!describeVpcEndpointServicePermissions.data.AllowedPrincipals.length) {
+                        if (!describeVpcEndpointServicePermissions.data.AllowedPrincipals ||
+                            !describeVpcEndpointServicePermissions.data.AllowedPrincipals.length) {
                             helpers.addResult(results, 0,
                                 `VPC endpoint service ${service.ServiceId} does not require acceptance by the service owner but no allowed principals found`,
                                 region, resource);    
