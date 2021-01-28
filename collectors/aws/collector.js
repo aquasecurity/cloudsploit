@@ -330,6 +330,12 @@ var calls = {
             property: 'NetworkInterfaces',
             paginate: 'NextToken',
         },
+        getEbsEncryptionByDefault: {
+            property: 'EbsEncryptionByDefault'
+        },
+        getEbsDefaultKmsKeyId: {
+            property: 'KmsKeyId'
+        },
         describeVpnConnections: {
             property: 'VpnConnections',
             paginate: 'NextToken'
@@ -338,6 +344,7 @@ var calls = {
             property: 'NetworkAcls',
             paginate: 'NextToken',
         }
+
     },
     ECR: {
         describeRepositories: {
@@ -422,6 +429,9 @@ var calls = {
         }
     },
     Glue: {
+        getDataCatalogEncryptionSettings: {
+            property: 'DataCatalogEncryptionSettings',
+        },
         getSecurityConfigurations: {
             property: 'SecurityConfigurations',
             paginate: 'NextMarker'
@@ -862,7 +872,13 @@ var postcalls = [
                 deleteRegion: true,
                 signatureVersion: 'v4',
                 override: true
-            }
+            },
+            getBucketAccelerateConfiguration: {
+                reliesOnService: 's3',
+                reliesOnCall: 'listBuckets',
+                filterKey: 'Bucket',
+                filterValue: 'Name'
+            },
         },
         EC2: {
             describeSubnets: {
@@ -922,6 +938,11 @@ var postcalls = [
                 override: true
             },
             describeLoadBalancerAttributes: {
+                reliesOnService: 'elb',
+                reliesOnCall: 'describeLoadBalancers',
+                override: true
+            },
+            describeTags: {
                 reliesOnService: 'elb',
                 reliesOnCall: 'describeLoadBalancers',
                 override: true

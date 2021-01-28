@@ -71,7 +71,7 @@ module.exports = {
             }
 
             var aliases = helpers.addSource(cache, source, ['kms', 'listAliases', region]);
-                    
+
             if (!aliases || aliases.err || !aliases.data) {
                 helpers.addResult(results, 3, `Unable to query KMS Aliases: ${helpers.addError(aliases)}`, region);
                 return rcb();
