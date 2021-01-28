@@ -269,29 +269,6 @@ function defaultPartition(settings) {
     return 'aws';
 }
 
-function getEncryptionLevel(kmsKey, encryptionLevels) {
-    if (kmsKey.Origin) {
-        if (kmsKey.Origin === 'AWS_KMS') {
-            if (kmsKey.KeyManager) {
-                if (kmsKey.KeyManager === 'AWS') {
-                    return encryptionLevels.indexOf('awskms');
-                }
-                if (kmsKey.KeyManager === 'CUSTOMER') {
-                    return encryptionLevels.indexOf('awscmk');
-                }
-            }
-        }
-        if (kmsKey.Origin === 'EXTERNAL') {
-            return encryptionLevels.indexOf('externalcmk');
-        }
-        if (kmsKey.Origin === 'AWS_CLOUDHSM') {
-            return encryptionLevels.indexOf('cloudhsm');
-        }
-    }
-
-    return encryptionLevels.indexOf('none');
-}
-
 function remediatePlugin(config, call, params, callback) {
     var service = call.split(':')[0];
     var callKey = call.split(':')[1];

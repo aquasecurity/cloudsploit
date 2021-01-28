@@ -103,7 +103,7 @@ module.exports = {
                     var keyId = kmsKey.split('/')[1];
                     var describeKey = helpers.addSource(cache, source, ['kms', 'describeKey', region, keyId]);
 
-                    if (!describeKey || describeKey.err || !describeKey.data) {
+                    if (!describeKey || describeKey.err || !describeKey.data || !describeKey.data.KeyMetadata) {
                         helpers.addResult(results, 3, `Unable to query for KMS Key: ${helpers.addError(describeKey)}`, region);
                         continue;
                     }
