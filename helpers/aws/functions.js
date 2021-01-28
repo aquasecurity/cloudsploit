@@ -81,7 +81,7 @@ function findOpenPorts(groups, ports, service, region, results) {
                 if (range.CidrIp === '0.0.0.0/0' && ports[permission.IpProtocol]) {
                     for (var portIndex in ports[permission.IpProtocol]) {
                         var port = ports[permission.IpProtocol][portIndex];
-                        if (port.indexOf('-') > -1) {
+                        if (port.toString().indexOf('-') > -1) {
                             var portRange = port.split('-');
                             var rangeFrom = portRange[0];
                             var rangeTo = portRange[1];
@@ -112,7 +112,7 @@ function findOpenPorts(groups, ports, service, region, results) {
                 if (rangeV6.CidrIpv6 === '::/0' && ports[permission.IpProtocol]) {
                     for (var portIndexV6 in ports[permission.IpProtocol]) {
                         var portV6 = ports[permission.IpProtocol][portIndexV6];
-                        if (portV6.indexOf('-') > -1) {
+                        if (portV6.toString().indexOf('-') > -1) {
                             var portRangeV6 = portV6.split('-');
                             var rangeFromV6 = portRangeV6[0];
                             var rangeToV6 = portRangeV6[1];
@@ -243,10 +243,11 @@ function userGlobalAccess(statement, restrictedPermissions) {
     return false;
 }
 
-function crossAccountPrincipal(principal, accountId) {
+function crossAccountPrincipal(principal, accountId, fetchPrincipals) {
     if (typeof principal === 'string' &&
         /^[0-9]{12}$/.test(principal) &&
         principal !== accountId) {
+        if (fetchPrincipals) return [principal];
         return true;
     }
 
@@ -255,14 +256,43 @@ function crossAccountPrincipal(principal, accountId) {
         awsPrincipals = [awsPrincipals];
     }
 
+    var principals = [];
+
     for (var a in awsPrincipals) {
-        if (/^arn:aws:iam::[0-9]{12}.*/.test(awsPrincipals[a]) &&
+        if (/^arn:aws:(iam|sts)::[0-9]{12}.*/.test(awsPrincipals[a]) &&
             awsPrincipals[a].indexOf(accountId) === -1) {
-            return true;
+            if (!fetchPrincipals) return true;
+            principals.push(awsPrincipals[a]);
         }
     }
 
+    if (fetchPrincipals) return principals;
     return false;
+}
+
+function extractStatementPrincipals(statement) {
+    let response = [];
+    if (statement.Principal) {
+        let principal = statement.Principal;
+        
+        if (typeof principal === 'string' &&
+        /^[0-9]{12}$/.test(principal)) {
+            return [principal];
+        }
+
+        var awsPrincipals = principal.AWS;
+        if(!Array.isArray(awsPrincipals)) {
+            awsPrincipals = [awsPrincipals];
+        }
+
+        for (let a in awsPrincipals) {
+            if (/^arn:aws:(iam|sts)::.+/.test(awsPrincipals[a])) {
+                response.push(awsPrincipals[a]);
+            }
+        }
+    }
+
+    return response;
 }
 
 function defaultRegion(settings) {
@@ -309,6 +339,29 @@ let divideArray = function(array, size) {
     }
     return arrayOfArrays;
 };
+
+function getEncryptionLevel(kmsKey, encryptionLevels) {
+    if (kmsKey.Origin) {
+        if (kmsKey.Origin === 'AWS_KMS') {
+            if (kmsKey.KeyManager) {
+                if (kmsKey.KeyManager === 'AWS') {
+                    return encryptionLevels.indexOf('awskms');
+                }
+                if (kmsKey.KeyManager === 'CUSTOMER') {
+                    return encryptionLevels.indexOf('awscmk');
+                }
+            }
+        }
+        if (kmsKey.Origin === 'EXTERNAL') {
+            return encryptionLevels.indexOf('externalcmk');
+        }
+        if (kmsKey.Origin === 'AWS_CLOUDHSM') {
+            return encryptionLevels.indexOf('cloudhsm');
+        }
+    }
+
+    return encryptionLevels.indexOf('none');
+}
 
 function remediatePasswordPolicy(putCall, pluginName, remediation_file, passwordKey, config, cache, settings, resource, input, callback) {
     config.region = defaultRegion({});
@@ -601,5 +654,7 @@ module.exports = {
     nullArray: nullArray,
     divideArray:divideArray,
     remediatePasswordPolicy:remediatePasswordPolicy,
-    remediateOpenPorts: remediateOpenPorts
+    remediateOpenPorts: remediateOpenPorts,
+    getEncryptionLevel: getEncryptionLevel,
+    extractStatementPrincipals: extractStatementPrincipals
 };
