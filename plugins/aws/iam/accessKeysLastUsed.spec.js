@@ -1,6 +1,13 @@
 var expect = require('chai').expect;
 const accessKeysLastUsed = require('./accessKeysLastUsed');
 
+var warnDate = new Date();
+warnDate.setMonth(warnDate.getMonth() - 4);
+var passDate = new Date();
+passDate.setMonth(passDate.getMonth() - 1);
+var failDate = new Date();
+failDate.setMonth(failDate.getMonth() - 7);
+
 const generateCredentialReport = [
     {
         "user": "<root_account>",
@@ -37,12 +44,12 @@ const generateCredentialReport = [
         "mfa_active": false,
         "access_key_1_active": true,
         "access_key_1_last_rotated": "2020-09-12T16:58:34+00:00",
-        "access_key_1_last_used_date": "2020-10-13T16:14:00+00:00",
+        "access_key_1_last_used_date": passDate,
         "access_key_1_last_used_region": "us-east-1",
         "access_key_1_last_used_service": "kms",
         "access_key_2_active": true,
         "access_key_2_last_rotated": null,
-        "access_key_2_last_used_date": "2020-10-13T16:14:00+00:00",
+        "access_key_2_last_used_date": passDate,
         "access_key_2_last_used_region": null,
         "access_key_2_last_used_service": null,
         "cert_1_active": false,
@@ -61,12 +68,12 @@ const generateCredentialReport = [
         "mfa_active": false,
         "access_key_1_active": true,
         "access_key_1_last_rotated": "2020-07-13T16:14:00+00:00",
-        "access_key_1_last_used_date": "2020-07-13T16:14:00+00:00",
+        "access_key_1_last_used_date": warnDate,
         "access_key_1_last_used_region": "us-east-1",
         "access_key_1_last_used_service": "kms",
         "access_key_2_active": true,
         "access_key_2_last_rotated": "2020-07-13T16:14:00+00:00",
-        "access_key_2_last_used_date": "2020-07-13T16:14:00+00:00",
+        "access_key_2_last_used_date": warnDate,
         "access_key_2_last_used_region": null,
         "access_key_2_last_used_service": null,
         "cert_1_active": false,
@@ -85,12 +92,12 @@ const generateCredentialReport = [
         "mfa_active": false,
         "access_key_1_active": true,
         "access_key_1_last_rotated": "2020-02-12T16:58:34+00:00",
-        "access_key_1_last_used_date": "2020-02-13T16:14:00+00:00",
+        "access_key_1_last_used_date": failDate,
         "access_key_1_last_used_region": "us-east-1",
         "access_key_1_last_used_service": "kms",
         "access_key_2_active": true,
         "access_key_2_last_rotated": "2020-02-13T16:14:00+00:00",
-        "access_key_2_last_used_date": "2020-02-13T16:14:00+00:00",
+        "access_key_2_last_used_date": failDate,
         "access_key_2_last_used_region": null,
         "access_key_2_last_used_service": null,
         "cert_1_active": false,
@@ -147,7 +154,7 @@ describe('accessKeysLastUsed', function () {
             accessKeysLastUsed.run(cache, settings, (err, results) => {
                 expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(0);
-                expect(results[1].status).to.equal(0);
+                expect(results[0].status).to.equal(0);
                 done();
             });
         });
