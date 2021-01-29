@@ -158,7 +158,7 @@ function findOpenPorts(groups, ports, service, region, results) {
     }
 
     if (!found) {
-        addResult(results, 0, 'No public open ports found', region, resource);
+        addResult(results, 0, 'No public open ports found', region);
     }
 
     return;
