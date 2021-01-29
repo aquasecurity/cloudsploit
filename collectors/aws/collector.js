@@ -74,10 +74,32 @@ var calls = {
         }
     },
     CloudFormation: {
-        describeStacks: {
-            property: 'Stacks',
-            paginate: 'NextToken'
-        }
+        listStacks: {
+            property: 'StackSummaries',
+            params: {
+                'StackStatusFilter': [
+                    'CREATE_IN_PROGRESS',
+                    'CREATE_COMPLETE',
+                    'ROLLBACK_IN_PROGRESS',
+                    'ROLLBACK_FAILED',
+                    'ROLLBACK_COMPLETE',
+                    'DELETE_FAILED',
+                    'UPDATE_IN_PROGRESS',
+                    'UPDATE_COMPLETE_CLEANUP_IN_PROGRESS',
+                    'UPDATE_COMPLETE',
+                    'UPDATE_ROLLBACK_IN_PROGRESS',
+                    'UPDATE_ROLLBACK_FAILED',
+                    'UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS',
+                    'UPDATE_ROLLBACK_COMPLETE',
+                    'REVIEW_IN_PROGRESS',
+                    'IMPORT_IN_PROGRESS',
+                    'IMPORT_COMPLETE',
+                    'IMPORT_ROLLBACK_IN_PROGRESS',
+                    'IMPORT_ROLLBACK_FAILED',
+                    'IMPORT_ROLLBACK_COMPLETE',
+                ]
+            }
+        },
     },
     CloudFront: {
         // TODO: Pagination is using an older format
@@ -754,6 +776,14 @@ var postcalls = [
                 reliesOnService: 'autoscaling',
                 reliesOnCall: 'describeAutoScalingGroups',
                 override: true
+            }
+        },
+        CloudFormation: {
+            describeStacks: {
+                reliesOnService: 'cloudformation',
+                reliesOnCall: 'listStacks',
+                filterKey: 'StackName',
+                filterValue: 'StackName'
             }
         },
         CloudFront: {
