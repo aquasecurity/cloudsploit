@@ -920,6 +920,12 @@ var postcalls = [
                 reliesOnService: 'ec2',
                 reliesOnCall: 'describeSnapshots',
                 override: true
+            },
+            describeVpcEndpointServicePermissions: {
+                reliesOnService: 'ec2',
+                reliesOnCall: 'describeVpcEndpointServices',
+                filterKey: 'ServiceId',
+                filterValue: 'ServiceId'
             }
         },
         ECR: {
