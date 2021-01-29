@@ -1149,14 +1149,6 @@ var postcalls = [
                 filterValue: 'NotebookInstanceName'
             }
         },
-        SecretsManager: {
-            describeSecret: {
-                reliesOnService: 'secretsmanager',
-                reliesOnCall: 'listSecrets',
-                filterKey: 'SecretId',
-                filterValue: 'ARN',
-            }
-        },
         SES: {
             getIdentityDkimAttributes: {
                 reliesOnService: 'ses',

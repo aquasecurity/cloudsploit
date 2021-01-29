@@ -7,7 +7,7 @@ module.exports = {
     description: 'Ensures Secrets Manager Secrets are encrypted',
     more_info: 'Secrets Manager Secrets should be encrypted. This allows their values to be used by approved systems, while restricting access to other users of the account.',
     recommended_action: 'Encrypt Secrets Manager Secrets',
-    apis: ['SecretsManager:listSecrets', 'SecretsManager:describeSecret', 'KMS:listKeys', 'KMS:describeKey'],
+    apis: ['SecretsManager:listSecrets', 'KMS:listKeys', 'KMS:describeKey'],
     link: 'https://docs.aws.amazon.com/secretsmanager/latest/userguide/data-protection.html',
     compliance: {
         hipaa: 'HIPAA requires that all data is encrypted, including data at rest',
