@@ -778,6 +778,14 @@ var postcalls = [
                 override: true
             }
         },
+        CloudFormation: {
+            describeStacks: {
+                reliesOnService: 'cloudformation',
+                reliesOnCall: 'listStacks',
+                filterKey: 'StackName',
+                filterValue: 'StackName'
+            }
+        },
         CloudFront: {
             getDistribution: {
                 reliesOnService: 'cloudfront',

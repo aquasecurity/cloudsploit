@@ -232,6 +232,18 @@ function crossAccountPrincipal(principal, accountId, fetchPrincipals) {
     return false;
 }
 
+function hasFederatedUserRole(policyDocument) {
+    // true iff every statement refers to federated user access 
+    for (let statement of policyDocument) {
+        if (statement.Action &&
+            !statement.Action.includes('sts:AssumeRoleWithSAML') &&
+            !statement.Action.includes('sts:AssumeRoleWithWebIdentity')){
+            return false;
+        }
+    }
+    return true;
+}
+
 function extractStatementPrincipals(statement) {
     let response = [];
     if (statement.Principal) {
@@ -643,6 +655,7 @@ module.exports = {
     divideArray:divideArray,
     remediatePasswordPolicy:remediatePasswordPolicy,
     remediateOpenPorts: remediateOpenPorts,
+    hasFederatedUserRole: hasFederatedUserRole,
     getEncryptionLevel: getEncryptionLevel,
     extractStatementPrincipals: extractStatementPrincipals,
     getDefaultKeyId: getDefaultKeyId
