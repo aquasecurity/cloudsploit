@@ -10,7 +10,7 @@ module.exports = {
     more_info: 'Messages sent to SQS queues can be encrypted using KMS server-side encryption. Existing queues can be modified to add encryption with minimal overhead.',
     recommended_action: 'Enable encryption using KMS for all SQS queues.',
     link: 'http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-server-side-encryption.html',
-    apis: ['SQS:listQueues', 'SQS:getQueueAttributes'],
+    apis: ['SQS:listQueues', 'SQS:getQueueAttributes', 'KMS:listKeys', 'KMS:describeKey'],
     compliance: {
         hipaa: 'SQS encryption must be used when processing any HIPAA-related data. ' +
                 'AWS KMS encryption ensures that the SQS message payload meets the ' +
@@ -21,13 +21,13 @@ module.exports = {
     },
     remediation_description: 'Encryption for the affected SQS queues will be enabled.',
     remediation_min_version: '202010302230',
-    apis_remediate: ['SQS:listQueues', 'SQS:getQueueAttributes'],
+    apis_remediate: ['SQS:listQueues', 'SQS:getQueueAttributes', 'KMS:listKeys', 'KMS:describeKey'],
     remediation_inputs: {
         kmsKeyIdforSqs: {
-            name: '(Mandatory) KMS Key ID',
+            name: '(Optional) KMS Key ID',
             description: 'The KMS Key ID used for encryption',
             regex: '^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$',
-            required: true
+            required: false
         }
     },
     actions: {
@@ -113,6 +113,7 @@ module.exports = {
         var pluginName = 'sqsEncrypted';
         var queueNameArr = resource.split(':');
         var queueName = queueNameArr[queueNameArr.length - 1];
+        let defaultKeyDesc = 'Default master key that protects my SQS messages when no other key is defined';
 
         // find the location of the Queue needing to be remediated
         var queAttributes = cache['sqs']['getQueueAttributes'];
@@ -143,17 +144,20 @@ module.exports = {
             settings.input.kmsKeyIdforSqs) {
             params = {
                 Attributes: {
-                    'KmsMasterKeyId': settings.input.kmsKeyIdforSqs,
+                    'KmsMasterKeyId': settings.input.kmsKeyIdforSqs
                 },
                 QueueUrl: queueUrl
             };
         } else {
+            let defaultKmsKeyId = helpers.getDefaultKeyId(cache, config.region, defaultKeyDesc);
+            if (!defaultKmsKeyId) return callback(`No default SQS key for the region ${config.region}`);
             params = {
                 Attributes: {
-                    'KmsMasterKeyId': defaultKmsKey,
+                    'KmsMasterKeyId': defaultKmsKeyId
                 },
                 QueueUrl: queueUrl
             };
+
         }
 
         var remediation_file = settings.remediation_file;
