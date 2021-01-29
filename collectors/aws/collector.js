@@ -778,7 +778,13 @@ var postcalls = [
                 override: true
             }
         },
-        CloudFormation: {
+        CloudFormation: {    
+            describeStackEvents: {
+                reliesOnService: 'cloudformation',
+                reliesOnCall: 'listStacks',
+                filterKey: 'StackName',
+                filterValue: 'StackName'
+            },
             describeStacks: {
                 reliesOnService: 'cloudformation',
                 reliesOnCall: 'listStacks',
@@ -920,6 +926,12 @@ var postcalls = [
                 reliesOnService: 'ec2',
                 reliesOnCall: 'describeSnapshots',
                 override: true
+            },
+            describeVpcEndpointServicePermissions: {
+                reliesOnService: 'ec2',
+                reliesOnCall: 'describeVpcEndpointServices',
+                filterKey: 'ServiceId',
+                filterValue: 'ServiceId'
             }
         },
         ECR: {
