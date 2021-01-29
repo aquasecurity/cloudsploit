@@ -8,8 +8,8 @@ const listEnvironments = [
 const getEnvironment = [
     {
         "Environment": {
-            "Arn": "arn:aws:airflow:us-east-1:560213429563:environment/env-1",
-            "ExecutionRoleArn": "arn:aws:iam::560213429563:role/service-role/AmazonMWAA-role-1",
+            "Arn": "arn:aws:airflow:us-east-1:000011112222:environment/env-1",
+            "ExecutionRoleArn": "arn:aws:iam::000011112222:role/service-role/AmazonMWAA-role-1",
             "Name": "env-1",
             "NetworkConfiguration": {
                 "SecurityGroupIds": [
@@ -26,8 +26,8 @@ const getEnvironment = [
     },
     {
         "Environment": {
-            "Arn": "arn:aws:airflow:us-east-1:560213429563:environment/env-1",
-            "ExecutionRoleArn": "arn:aws:iam::560213429563:role/service-role/AmazonMWAA-role-2",
+            "Arn": "arn:aws:airflow:us-east-1:000011112222:environment/env-1",
+            "ExecutionRoleArn": "arn:aws:iam::000011112222:role/service-role/AmazonMWAA-role-2",
             "Name": "env-1",
             "NetworkConfiguration": {
                 "SecurityGroupIds": [
