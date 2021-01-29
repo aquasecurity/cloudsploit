@@ -11,7 +11,7 @@ module.exports = {
     apis: ['EC2:describeVpcEndpointServices', 'EC2:describeVpcEndpointServicePermissions'],
     settings: {
         allow_blank_whitelisted_principals: {
-            name: 'Allow If Blank Whitelisted Principals',
+            name: 'Allow If no Whitelisted Principals found',
             description: 'Return a passing result if there are no whitelisted principals for endpoint',
             regex: '^(true|false)$',
             default: 'false'
