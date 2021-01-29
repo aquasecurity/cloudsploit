@@ -785,6 +785,12 @@ var postcalls = [
                 filterKey: 'StackName',
                 filterValue: 'StackName'
             },
+            describeStacks: {
+                reliesOnService: 'cloudformation',
+                reliesOnCall: 'listStacks',
+                filterKey: 'StackName',
+                filterValue: 'StackName'
+            }
         },
         CloudFront: {
             getDistribution: {
