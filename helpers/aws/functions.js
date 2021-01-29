@@ -614,6 +614,32 @@ function remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, 
     });
 }
 
+function getDefaultKeyId(cache, region, defaultKeyDesc) {
+    var source = {};
+
+    var listKeys = helpers.addSource(cache, source, ['kms', 'listKeys', region]);
+
+    if (!listKeys || listKeys.err || !listKeys.data || !listKeys.data.length) {
+        return false;
+    }
+
+    var defaultKey = listKeys.data.find(key => {
+        var describeKey = helpers.addSource(cache, source, ['kms', 'describeKey', region, key.KeyId]);
+
+        if (describeKey && describeKey.data && describeKey.data.KeyMetadata) {
+            var keyToAdd = describeKey.data.KeyMetadata;
+
+            if (keyToAdd.KeyManager && keyToAdd.KeyManager === 'AWS' && keyToAdd.Description &&
+                keyToAdd.Description.indexOf(defaultKeyDesc) === 0) {
+                return keyToAdd;
+            }
+        }
+    });
+
+    if (defaultKey) return defaultKey.KeyId;
+
+    return false;
+}
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
@@ -631,5 +657,6 @@ module.exports = {
     remediateOpenPorts: remediateOpenPorts,
     hasFederatedUserRole: hasFederatedUserRole,
     getEncryptionLevel: getEncryptionLevel,
-    extractStatementPrincipals: extractStatementPrincipals
+    extractStatementPrincipals: extractStatementPrincipals,
+    getDefaultKeyId: getDefaultKeyId
 };

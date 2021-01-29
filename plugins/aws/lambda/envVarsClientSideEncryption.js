@@ -6,7 +6,7 @@ module.exports = {
     category: 'Lambda',
     description: 'Ensure that all sensitive AWS Lambda environment variable values are client side encrypted.',
     more_info: 'AWS Lambda lets you encrypt environment variable values prior to sending them to Lambda. ' +
-        'Environment variables are often used to store sensitve information such as passwords. Such variable valuesshould be ' +
+        'Environment variables are often used to store sensitive information such as passwords. Such variable valuesshould be ' +
         'encrypted for security best practices.',
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html',
     recommended_action: 'Encrypt environment variables that store sensitive information',
