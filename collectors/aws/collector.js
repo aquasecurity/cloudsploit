@@ -778,7 +778,13 @@ var postcalls = [
                 override: true
             }
         },
-        CloudFormation: {
+        CloudFormation: {    
+            describeStackEvents: {
+                reliesOnService: 'cloudformation',
+                reliesOnCall: 'listStacks',
+                filterKey: 'StackName',
+                filterValue: 'StackName'
+            },
             describeStacks: {
                 reliesOnService: 'cloudformation',
                 reliesOnCall: 'listStacks',
