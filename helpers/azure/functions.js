@@ -91,7 +91,7 @@ function findOpenPorts(ngs, protocols, service, location, results) {
                                     }
                                 } else if (parseInt(securityRule.properties['destinationPortRange']) === port ) {
                                     var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
-                                        (ports === '*' ? ` and all ports` : ` port ` + ports) + ` open to ` + sourceFilter;
+                                        ` port ` + ports + ` open to ` + sourceFilter;
                                     if (strings.indexOf(string) === -1) strings.push(string);
                                     found = true;
                                 }
