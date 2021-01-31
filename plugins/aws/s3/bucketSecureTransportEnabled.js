@@ -8,7 +8,7 @@ module.exports = {
                'to deny unencrypted HTTP requests when dealing with sensitive data.',
     recommended_action: 'Update S3 bucket policy to enforse SSL to secure data in transit.',
     link: 'https://aws.amazon.com/premiumsupport/knowledge-center/s3-bucket-policy-for-config-rule/',
-    apis: ['S3:listBuckets', 'S3:getBucketPolicy'],
+    apis: ['S3:listBuckets', 'S3:getBucketPolicy', 'S3:getBucketLocation'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -36,6 +36,7 @@ module.exports = {
             if (!bucket.Name) return;
 
             var resource = 'arn:aws:s3:::' + bucket.Name;
+            var bucketLocation = helpers.getS3BucketLocation(cache, region, bucket.Name);
 
             var getBucketPolicy = helpers.addSource(cache, source,
                 ['s3', 'getBucketPolicy', region, bucket.Name]);
@@ -43,13 +44,13 @@ module.exports = {
             // Check the bucket policy
             if (getBucketPolicy && getBucketPolicy.err &&
                 getBucketPolicy.err.code && getBucketPolicy.err.code === 'NoSuchBucketPolicy') {
-                helpers.addResult(results, 2, 'No bucket policy found', 'global', resource);
+                helpers.addResult(results, 2, 'No bucket policy found', bucketLocation, resource);
             }
             else if (!getBucketPolicy || getBucketPolicy.err ||
                        !getBucketPolicy.data || !getBucketPolicy.data.Policy) {
                 helpers.addResult(results, 3,
                     `Error querying for bucket policy for bucket "${bucket.Name}" ${helpers.addError(getBucketPolicy)}`,
-                    'global', resource);
+                    bucketLocation, resource);
             }
             else {
                 var policyJson;
@@ -64,7 +65,7 @@ module.exports = {
                     catch(e) {
                         helpers.addResult(results, 3,
                             `Error querying for bucket policy for bucket: "${bucket.Name}". Policy JSON could not be parsed`,
-                            'global', resource);
+                            bucketLocation, resource);
                         return;
                     }
                 }
@@ -72,12 +73,12 @@ module.exports = {
                 if (!policyJson || !policyJson.Statement) {
                     helpers.addResult(results, 3,
                         `Error querying for bucket policy for bucket: "${bucket.Name}". Policy JSON is invalid or does not contain valid statements.`,
-                        'global', resource);
+                        bucketLocation, resource);
                 }
                 else if (!policyJson.Statement.length) {
                     helpers.addResult(results, 2,
                         'Bucket policy does not contain any statements',
-                        'global', resource);
+                        bucketLocation, resource);
                 } else {
                     var sslEnforced = false;
                     for (var s in policyJson.Statement) {
@@ -98,12 +99,12 @@ module.exports = {
                     if(sslEnforced){
                         helpers.addResult(results, 0,
                             `Bucket Policy for bucket "${bucket.Name}" enforces SSL to secure data in transit`,
-                            'global', resource);
+                            bucketLocation, resource);
                     }
                     else {
                         helpers.addResult(results, 2,
                             `Bucket Policy for bucket "${bucket.Name}" does not enforce SSL to secure data in transit`,
-                            'global', resource);
+                            bucketLocation, resource);
                     }
                 }
             }

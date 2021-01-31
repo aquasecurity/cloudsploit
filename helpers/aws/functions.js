@@ -319,6 +319,17 @@ function defaultPartition(settings) {
     return 'aws';
 }
 
+function getS3BucketLocation(cache, region, bucketName) {
+    var getBucketLocation = helpers.addSource(cache, {},
+        ['s3', 'getBucketLocation', region, bucketName]);
+
+    if (getBucketLocation && getBucketLocation.data) {
+        if (getBucketLocation.data.LocationConstraint) return getBucketLocation.data.LocationConstraint;
+        else return 'us-east-1';
+    }
+    return 'global';
+}
+
 function remediatePlugin(config, call, params, callback) {
     var service = call.split(':')[0];
     var callKey = call.split(':')[1];
@@ -696,5 +707,6 @@ module.exports = {
     hasFederatedUserRole: hasFederatedUserRole,
     getEncryptionLevel: getEncryptionLevel,
     extractStatementPrincipals: extractStatementPrincipals,
-    getDefaultKeyId: getDefaultKeyId
+    getDefaultKeyId: getDefaultKeyId,
+    getS3BucketLocation: getS3BucketLocation
 };
