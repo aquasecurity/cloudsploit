@@ -93,7 +93,7 @@ module.exports = {
 
                 var keyId;
                 if (!param.KeyId) {
-                    helpers.addResult(results, 2, 'SSM Paramters is not encrypted', region, arn);
+                    helpers.addResult(results, 2, 'SSM Parameters is not encrypted', region, arn);
                     return pcb();
                 }
 

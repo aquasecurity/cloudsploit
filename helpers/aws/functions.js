@@ -67,10 +67,10 @@ function findOpenPorts(groups, ports, service, region, results) {
     var found = false;
 
     for (var g in groups) {
-        var strings = [];
-        var resource = 'arn:aws:ec2:' + region + ':' +
-                       groups[g].OwnerId + ':security-group/' +
-                       groups[g].GroupId;
+        var string;
+        var openV4Ports = [];
+        var openV6Ports = [];
+        var resource = `arn:aws:ec2:${region}:${groups[g].OwnerId}:security-group/${groups[g].GroupId}`;
 
         for (var p in groups[g].IpPermissions) {
             var permission = groups[g].IpPermissions[p];
@@ -81,12 +81,26 @@ function findOpenPorts(groups, ports, service, region, results) {
                 if (range.CidrIp === '0.0.0.0/0' && ports[permission.IpProtocol]) {
                     for (var portIndex in ports[permission.IpProtocol]) {
                         var port = ports[permission.IpProtocol][portIndex];
+                        if (port.toString().indexOf('-') > -1) {
+                            var portRange = port.split('-');
+                            var rangeFrom = Number(portRange[0]);
+                            var rangeTo = Number(portRange[1]);
 
-                        if (permission.FromPort <= port && permission.ToPort >= port) {
-                            var string = permission.IpProtocol.toUpperCase() +
-                                ' port ' + port + ' open to 0.0.0.0/0';
-                            if (strings.indexOf(string) === -1) strings.push(string);
-                            found = true;
+                            for (let i = rangeFrom; i <= rangeTo; i++) {
+                                if (permission.FromPort <= i && permission.ToPort >= i) {
+                                    string = `some of ${permission.IpProtocol.toUpperCase()}:${port}`;
+                                    openV4Ports.push(string);
+                                    found = true;
+                                    break;
+                                }
+                            }
+                        } else {
+                            port = Number(port);
+                            if (permission.FromPort <= port && permission.ToPort >= port) {
+                                string = `${permission.IpProtocol.toUpperCase()}:${port}`;
+                                if (openV4Ports.indexOf(string) === -1) openV4Ports.push(string);
+                                found = true;
+                            }
                         }
                     }
                 }
@@ -98,24 +112,48 @@ function findOpenPorts(groups, ports, service, region, results) {
                 if (rangeV6.CidrIpv6 === '::/0' && ports[permission.IpProtocol]) {
                     for (var portIndexV6 in ports[permission.IpProtocol]) {
                         var portV6 = ports[permission.IpProtocol][portIndexV6];
+                        if (portV6.toString().indexOf('-') > -1) {
+                            var portRangeV6 = Number(portV6.split('-'));
+                            var rangeFromV6 = Number(portRangeV6[0]);
+                            var rangeToV6 = portRangeV6[1];
 
-                        if (permission.FromPort <= portV6 && permission.ToPort >= portV6) {
-                            var stringV6 = permission.IpProtocol.toUpperCase() +
-                                ' port ' + portV6 + ' open to ::/0';
-                            if (strings.indexOf(stringV6) === -1) strings.push(stringV6);
-                            found = true;
+                            for (let i = rangeFromV6; i <= rangeToV6; i++) {
+                                if (permission.FromPort <= i && permission.ToPort >= i) {
+                                    string = `some of ${permission.IpProtocol.toUpperCase()}:${portV6}`;
+                                    openV6Ports.push(string);
+                                    found = true;
+                                    break;
+                                }
+                            }
+                        } else {
+                            portV6 = Number(portV6);
+                            if (permission.FromPort <= portV6 && permission.ToPort >= portV6) {
+                                var stringV6 = `${permission.IpProtocol.toUpperCase()}:${portV6}`;
+                                if (openV6Ports.indexOf(stringV6) === -1) openV6Ports.push(stringV6);
+                                found = true;
+                            }
                         }
                     }
                 }
             }
         }
 
-        if (strings.length) {
-            addResult(results, 2,
-                'Security group: ' + groups[g].GroupId +
-                ' (' + groups[g].GroupName +
-                ') has ' + service + ': ' + strings.join(' and '), region,
-                resource);
+        if (openV4Ports.length || openV6Ports.length) {
+            var resultsString = '';
+            if (openV4Ports.length) {
+                resultsString = `Security group: ${groups[g].GroupId} (${groups[g].GroupName}) has ${service}:${openV4Ports.join(' and ')} open to 0.0.0.0/0`;
+            }
+
+            if (openV6Ports.length) {
+                if (resultsString.length) {
+                    resultsString = `${resultsString} and ${openV6Ports.join(' and ')} open to ::/0`;
+                } else {
+                    resultsString = `Security group: ${groups[g].GroupId} (${groups[g].GroupName}) has ${service}:${openV6Ports.join(' and ')} open to ::/0`;
+                }
+            }
+
+            addResult(results, 2, resultsString,
+                region, resource);
         }
     }
 
