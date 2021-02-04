@@ -51,9 +51,7 @@ module.exports = {
                     helpers.addResult(results, 3,
                         `Unable to describe logging status for cluster "${clusterIdentifier}": ${helpers.addError(describeLoggingStatus)}`,
                         region, resource);
-                }
-
-                if (describeLoggingStatus.data.LoggingEnabled &&
+                } else if (describeLoggingStatus.data.LoggingEnabled &&
                     describeLoggingStatus.data.LoggingEnabled === true) {
                     helpers.addResult(results, 0,
                         `Redshift cluster "${clusterIdentifier}" has audit logging enabled`,
