@@ -1,166 +1,205 @@
 const expect = require('chai').expect;
-const iamRolePolicies = require('./iamRolePolicies');
+var iamRolePolicies = require('./iamRolePolicies');
+
 
 const listRoles = [
     {
         "Path": "/",
-        "RoleName": "iam-role-1",
-        "RoleId": "AROAYE32SRU5TQY4O5JBW",
-        "Arn": "arn:aws:iam::111122223333:role/iam-role-1",
-        "CreateDate": "2020-12-02T06:34:08.000Z",
-        "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%22iam.amazonaws.com%22%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D",
-        "Description": "Iam role.",
-        "MaxSessionDuration": 3600,
-        "Tags": []
+        "RoleName": "test-role-1",
+        "RoleId": "AROAYE32SRU5VIMXXL3BH",
+        "Arn": "arn:aws:iam::000011112222:role/test-role-1",
+        "CreateDate": "2020-11-21T23:56:33Z",
+        "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Principal": {
+                        "AWS": "arn:aws:iam::000011112222:root"
+                    },
+                    "Action": "sts:AssumeRoleWithSAML",
+                    "Condition": {}
+                }
+            ]
+        },
+        "MaxSessionDuration": 3600
     },
     {
         "Path": "/",
-        "RoleName": "iam-role-2",
-        "RoleId": "AROAYE32SRU5R232MB5LZ",
-        "Arn": "arn:aws:iam::111122223333:role/iam-role-2",
-        "CreateDate": "2020-11-30T07:58:42.000Z",
-        "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Sid%22%3A%22%22%2C%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%22iam.amazonaws.com%22%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D",
-        "Description": "Iam role",
-        "MaxSessionDuration": 3600,
-        "Tags": []
-    },
-    {
-        "Path": "/",
-        "RoleName": "iam-role-3",
-        "RoleId": "AROAYE32SRU5R232MB5LZ",
-        "Arn": "arn:aws:iam::111122223333:role/iam-role-3",
-        "CreateDate": "2020-11-30T07:58:42.000Z",
-        "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Sid%22%3A%22%22%2C%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%22iam.amazonaws.com%22%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D",
-        "Description": "Iam role",
-        "MaxSessionDuration": 3600,
-        "Tags": []
-    },
-    {
-        "Path": "/",
-        "RoleName": "iam-role-4",
-        "RoleId": "AROAYE32SRU5R232MB5LZ",
-        "Arn": "arn:aws:iam::111122223333:role/iam-role-4",
-        "CreateDate": "2020-11-30T07:58:42.000Z",
-        "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Sid%22%3A%22%22%2C%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%22iam.amazonaws.com%22%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D",
-        "Description": "Iam role",
-        "MaxSessionDuration": 3600,
-        "Tags": []
+        "RoleName": "test-role-2",
+        "RoleId": "AROAYE32SRU5VIMXXL3BH",
+        "Arn": "arn:aws:iam::000011112222:role/test-role-2",
+        "CreateDate": "2020-11-21T23:56:33Z",
+        "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Principal": {
+                        "AWS": "arn:aws:iam::000011112222:root"
+                    },
+                    "Action": "sts:AssumeRoleWithSAML",
+                    "Condition": {}
+                }
+            ]
+        },
+        "MaxSessionDuration": 3600
     }
 ];
 
 const listRolePolicies = [
     {
-        "ResponseMetadata": { 
-            "RequestId": '32c83dc4-bbdb-4b20-b9b7-b461a6942e04'
+       "PolicyNames": [
+           "S3-Full"
+       ]
+    },
+    {
+        "PolicyNames": [
+            "All-Action-Resources"
+        ]
+    }
+];
+
+const listAttachedRolePolicies = [
+    {
+        "ResponseMetadata": {
+            "RequestId": 'f7d427cc-970b-47af-9b7d-3e06121f83da'
         },
-        "PolicyNames": [ 'test1-role-policy' ],
+        "AttachedPolicies": [
+            {
+                "PolicyName": 'AdministratorAccess',
+                "PolicyArn": 'arn:aws:iam::aws:policy/AdministratorAccess'
+            }
+        ],
         "IsTruncated": false
     },
     {
         "ResponseMetadata": {
-            "RequestId": 'ecfb7061-b67c-47de-afe4-e5505bb17a97'
+            "RequestId": 'b06a66ed-53af-4737-b0d3-7ef9031d2c2e'
         },
-        "PolicyNames": [ 'test2-role-policy' ],
+        "AttachedPolicies": [
+            {
+                "PolicyName": 'EC2-Full',
+                "PolicyArn": 'arn:aws:iam::000011112222:policy/EC2-Full'
+            }
+        ],
         "IsTruncated": false
     },
     {
         "ResponseMetadata": {
-            "RequestId": 'ecfb7061-b67c-47de-afe4-e5505bb17a97'
+            "RequestId": 'b06a66ed-53af-4737-b0d3-7ef9031d2c2e'
         },
-        "PolicyNames": [ 'test3-role-policy' ],
-        "IsTruncated": false
-    },
-    {
-        "ResponseMetadata": {
-            "RequestId": 'ecfb7061-b67c-47de-afe4-e5505bb17a97'
-        },
-        "PolicyNames": [ 'test4-role-policy' ],
+        "AttachedPolicies": [
+            {
+                "PolicyName": 'EC2-Wildcard',
+                "PolicyArn": 'arn:aws:iam::000011112222:policy/EC2-Wildcard'
+            }
+        ],
         "IsTruncated": false
     }
 ];
 
 const getRolePolicy = [
     {
-        "test1-role-policy": {
-            "data": {
-                "ResponseMetadata": [{}],
-                "RoleName": 'iam-role-1',
-                "PolicyName": 'test1-role-policy',
-                "PolicyDocument": '%7B%0A%20%20%20%20%22Version%22%3A%20%222012-10-17%22%2C%0A%20%20%20%20%22Statement%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22VisualEditor0%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%22iam%3A%2A%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%22arn%3Aaws%3As3%3A%3A%3Aperm-data%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%0A%7D'
-            }
-        }
+        "RoleName": 'test-role-2',
+        "PolicyName": 'S3-Full',
+        "PolicyDocument": '%7B%0A%20%20%20%20%22Version%22%3A%20%222012-10-17%22%2C%0A%20%20%20%20%22Statement%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22VisualEditor0%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%22s3%3A%2A%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%22%2A%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%0A%7D'
     },
     {
-        "test2-role-policy": {
-            "data": {
-                "ResponseMetadata": [{}],
-                "RoleName": 'iam-role-2',
-                "PolicyName": 'test2-role-policy',
-                "PolicyDocument": '%7B%0A%20%20%20%20%22Version%22%3A%20%222012-10-17%22%2C%0A%20%20%20%20%22Statement%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22VisualEditor0%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%22%2A%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%22arn%3Aaws%3As3%3A%3A%3Aperm-data%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%0A%7D'
-            }
-        }
+        "RoleName": 'test-role-2',
+        "PolicyName": 'S3-WildCard',
+        "PolicyDocument": '%7B%0A%20%20%20%20%22Version%22%3A%20%222012-10-17%22%2C%0A%20%20%20%20%22Statement%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22VisualEditor1%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%22s3%3Ag%2A%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%22%2A%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%0A%7D'
     },
     {
-        "test3-role-policy": {
-            "data": {
-                "ResponseMetadata": [{}],
-                "RoleName": 'iam-role-3',
-                "PolicyName": 'test3-role-policy',
-                "PolicyDocument": '%7B%0A%20%20%20%20%22Version%22%3A%20%222012-10-17%22%2C%0A%20%20%20%20%22Statement%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22VisualEditor0%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%22%2A%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%22%2A%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%0A%7D'
-            }
-        }
+        "RoleName": 'test-role-2',
+        "PolicyName": 'S3-Limited',
+        "PolicyDocument": '%7B%0A%20%20%20%20%22Version%22%3A%20%222012-10-17%22%2C%0A%20%20%20%20%22Statement%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22VisualEditor1%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%22s3%3AGetObject%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%22%2A%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%0A%7D' 
     },
     {
-        "test4-role-policy": {
-            "data": {
-                "ResponseMetadata": [{}],
-                "RoleName": 'iam-role-3',
-                "PolicyName": 'test3-role-policy',
-                "PolicyDocument": '%7B%0A%20%20%20%20%22Version%22%3A%20%222012-10-17%22%2C%0A%20%20%20%20%22Statement%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22VisualEditor0%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%22iam%3AGetRole%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%22arn%3Aaws%3As3%3A%3A%3Aperm-data%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%0A%7D'
-            }
+        "RoleName": 'test-role-2',
+        "PolicyName": 'All-Action-Resources',
+        "PolicyDocument":'%7B%0A%20%20%20%20%22Version%22%3A%20%222012-10-17%22%2C%0A%20%20%20%20%22Statement%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22VisualEditor1%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%22%2A%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%22%2A%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%0A%7D'
+    },
+    {
+        "RoleName": 'test-role-2',
+        "PolicyName": 'All-Actions',
+        "PolicyDocument": '%7B%0A%20%20%20%20%22Version%22%3A%20%222012-10-17%22%2C%0A%20%20%20%20%22Statement%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22VisualEditor1%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%22%2A%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%22arn%3Aaws%3As3%3A%3A%3A%2A%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%0A%7D'
+    }
+];
+
+const getPolicy = [
+    {
+        "Policy": {
+            "PolicyName": 'EC2-Wildcard',
+            "PolicyId": 'ANPAYE32SRU57UHNCIGCT',
+            "Arn": 'arn:aws:iam::000011112222:policy/EC2-Wildcard',
+            "Path": '/',
+            "DefaultVersionId": 'v5',
+            "AttachmentCount": 2,
+            "PermissionsBoundaryUsageCount": 0,
+            "IsAttachable": true
         }
     }
 ];
 
-const listAttachedRolePolicies = [
+const getPolicyVersion = [
     {
-        "AttachedPolicies": [
-            {
-                "PolicyName": "AdministratorAccess",
-                "PolicyArn": "arn:aws:iam::aws:policy/AdministratorAccess"
-            },
-        ]
-    },
-    {
-        "AttachedPolicies": []
+        "PolicyVersion": {
+            "Document": '%7B%0A%20%20%20%20%22Version%22%3A%20%222012-10-17%22%2C%0A%20%20%20%20%22Statement%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22VisualEditor1%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%22s3%3Ag%2A%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%22%2A%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%0A%7D',
+            "VersionId": 'v5',
+        }
     }
 ];
 
-const createCache = (listRoles, listRolePolicies, getRolePolicy, listAttachedRolePolicies) => {
+
+const createCache = (listRoles, listAttachedRolePolicies, listRolePolicies, getRolePolicy, getPolicy, getPolicyVersion, listRolesErr, listRolePoliciesErr, listAttachedRolePoliciesErr) => {
     var roleName = (listRoles && listRoles.length) ? listRoles[0].RoleName : null;
+    var policyArn = (listAttachedRolePolicies && listAttachedRolePolicies.AttachedPolicies) ? listAttachedRolePolicies.AttachedPolicies[0].PolicyArn : null;
+    var policyName = (listRolePolicies && listRolePolicies.PolicyNames) ? listRolePolicies.PolicyNames[0] : null;
     return {
         iam: {
             listRoles: {
                 'us-east-1': {
-                    data: listRoles,
-                },
-            },
-            listRolePolicies: {
-                'us-east-1': {
-                    [roleName]: {
-                        data: listRolePolicies
-                    }
-                }
-            },
-            getRolePolicy: {
-                'us-east-1': {
-                    [roleName]: getRolePolicy
+                    err: listRolesErr,
+                    data: listRoles
                 }
             },
             listAttachedRolePolicies: {
                 'us-east-1': {
                     [roleName]: {
+                        err: listAttachedRolePoliciesErr,
                         data: listAttachedRolePolicies
+                    }
+                }
+            },
+            listRolePolicies: {
+                'us-east-1': {
+                    [roleName]: {
+                        err: listRolePoliciesErr,
+                        data: listRolePolicies
+                    }
+                }
+            },
+            getPolicy: {
+                'us-east-1': {
+                    [policyArn]: {
+                        data: getPolicy
+                    }
+                }
+            },
+            getRolePolicy: {
+                'us-east-1': {
+                    [roleName]: {
+                        [policyName]: {
+                            data: getRolePolicy
+                        }
+                    }
+                }
+            },
+            getPolicyVersion: {
+                'us-east-1': {
+                    [policyArn]: {
+                        data: getPolicyVersion
                     }
                 }
             }
@@ -170,69 +209,19 @@ const createCache = (listRoles, listRolePolicies, getRolePolicy, listAttachedRol
 
 const createNullCache = () => {
     return {
-        iam: {
+        lambda: {
             listRoles: {
-                'us-east-1': null,
-            },
-        },
-    };
-};
-
-const createErrorCache = () => {
-    return {
-        iam: {
-            listRoles: {
-                'us-east-1': {
-                    err: {
-                        message: 'error listing IAM users'
-                    },
-                },
-            },
-        },
+                'us-east-1': null
+            }
+        }
     };
 };
 
 describe('iamRolePolicies', function () {
     describe('run', function () {
 
-        it('should FAIL if role has managed AdministratorAccess policy', function (done) {
-            const cache = createCache([listRoles[2]], [], [], listAttachedRolePolicies[0]);
-            iamRolePolicies.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                done();
-            });
-        });
-
-        it('should FAIL if role inline policy allows all actions on all resources', function (done) {
-            const cache = createCache([listRoles[2]], listRolePolicies[2], getRolePolicy[2], []);
-            iamRolePolicies.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                done();
-            });
-        });
-
-        it('should FAIL if role inline policy allows all actions on selected resources', function (done) {
-            const cache = createCache([listRoles[1]], listRolePolicies[1], getRolePolicy[1], []);
-            iamRolePolicies.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                done();
-            });
-        });
-
-        it('should FAIL if role inline policy allows wildcard actions', function (done) {
-            const cache = createCache([listRoles[0]], listRolePolicies[0], getRolePolicy[0], []);
-            iamRolePolicies.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                done();
-            });
-        });
-
         it('should PASS if role does not have overly-permissive policy', function (done) {
-            const cache = createCache([listRoles[3]], listRolePolicies[3], getRolePolicy[3], []);
+            const cache = createCache([listRoles[0]], listAttachedRolePolicies[2], listRolePolicies[0], getRolePolicy[2]);
             iamRolePolicies.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -240,7 +229,34 @@ describe('iamRolePolicies', function () {
             });
         });
 
-        it('should PASS if no IAM users found', function (done) {
+        it('should FAIL if role policy allows wildcard actions', function (done) {
+            const cache = createCache([listRoles[0]], listAttachedRolePolicies[2], null, null, getPolicy[0], getPolicyVersion[0]);
+            iamRolePolicies.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                done();
+            });
+        });
+
+        it('should FAIL if role policy allows all actions on selected resources', function (done) {
+            const cache = createCache([listRoles[0]], {}, listRolePolicies[1], getRolePolicy[4]);
+            iamRolePolicies.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                done();
+            });
+        });
+
+        it('should FAIL if role policy allows all actions on all resources', function (done) {
+            const cache = createCache([listRoles[1]], {}, listRolePolicies[1], getRolePolicy[3]);
+            iamRolePolicies.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                done();
+            });
+        });
+
+        it('should PASS if on IAM roles found', function (done) {
             const cache = createCache([]);
             iamRolePolicies.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -249,8 +265,8 @@ describe('iamRolePolicies', function () {
             });
         });
 
-        it('should UNKNOWN if uanble to list IAM users', function (done) {
-            const cache = createErrorCache();
+        it('should UNKNOWN if unable to list', function (done) {
+            const cache = createCache(null, null, null, null, null, null, { message: 'Unable to list IAM roles'});
             iamRolePolicies.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
@@ -258,7 +274,25 @@ describe('iamRolePolicies', function () {
             });
         });
 
-        it('should not return any results if list IAM users response not found', function (done) {
+        it('should UNKNOWN if unable to list attached role policies', function (done) {
+            const cache = createCache([listRoles[1]], {}, null, null, null, null, null, null, { message: 'Unable to list attached role policies'});
+            iamRolePolicies.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
+                done();
+            });
+        });
+
+        it('should UNKNOWN if unable to list role policies', function (done) {
+            const cache = createCache([listRoles[1]], listAttachedRolePolicies[0], {}, null, null, null, null, { message: 'Unable to query role policies'});
+            iamRolePolicies.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
+                done();
+            });
+        });
+
+        it('should not return anything if list roles response not found', function (done) {
             const cache = createNullCache();
             iamRolePolicies.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
