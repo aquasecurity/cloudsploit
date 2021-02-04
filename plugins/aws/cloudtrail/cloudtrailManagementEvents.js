@@ -2,11 +2,11 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'CloudTrail Include Management Events',
+    title: 'CloudTrail Management Events',
     category: 'CloudTrail',
     description: 'Ensures that AWS CloudTrail trails are configured to log management events.',
-    more_info: 'AWS CloudTrail trails should be configured to log management events to record all the events other than data events.',
-    recommended_action: 'Update CloudTrail and enable management events logging',
+    more_info: 'AWS CloudTrail trails should be configured to log management events to record management operations that are performed on resources in your AWS account.',
+    recommended_action: 'Update CloudTrail to enable management events logging',
     link: 'https://docs.aws.amazon.com/awscloudtrail/latest/userguide/logging-management-events-with-cloudtrail.html',
     apis: ['CloudTrail:describeTrails', 'CloudTrail:getEventSelectors'],
 
@@ -28,7 +28,7 @@ module.exports = {
             }
 
             if (!describeTrails.data.length) {
-                helpers.addResult(results, 0, 'No CloudTrail trails found', region);
+                helpers.addResult(results, 2, 'CloudTrail is not enabled', region);
                 return rcb();
             }
 

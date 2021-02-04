@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-const includeManagementEvents = require('./includeManagementEvents');
+const cloudtrailManagementEvents = require('./cloudtrailManagementEvents');
 
 const describeTrails = [
     {
@@ -92,11 +92,11 @@ const createNullCache = () => {
     };
 };
 
-describe('includeManagementEvents', function () {
+describe('cloudtrailManagementEvents', function () {
     describe('run', function () {
         it('should PASS if CloudTrail trail is configured to log management events', function (done) {
             const cache = createCache([describeTrails[0]], getEventSelectors[0]);
-            includeManagementEvents.run(cache, {}, (err, results) => {
+            cloudtrailManagementEvents.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -106,7 +106,7 @@ describe('includeManagementEvents', function () {
 
         it('should FAIL if CloudTrail trail is not configured to log management events', function (done) {
             const cache = createCache([describeTrails[1]], getEventSelectors[1]);
-            includeManagementEvents.run(cache, {}, (err, results) => {
+            cloudtrailManagementEvents.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
@@ -114,11 +114,11 @@ describe('includeManagementEvents', function () {
             });
         });
 
-        it('should PASS if no CloudTrail trails found', function (done) {
+        it('should FAIL if CloudTrail is not enabled', function (done) {
             const cache = createCache([]);
-            includeManagementEvents.run(cache, {}, (err, results) => {
+            cloudtrailManagementEvents.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
+                expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
@@ -126,7 +126,7 @@ describe('includeManagementEvents', function () {
 
         it('should UNKNOWN if unable to query for trails', function (done) {
             const cache = createCache(null, null, { message: "Unable to describe trails" }, null);
-            includeManagementEvents.run(cache, {}, (err, results) => {
+            cloudtrailManagementEvents.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
@@ -136,7 +136,7 @@ describe('includeManagementEvents', function () {
 
         it('should UNKNOWN if unable to query for event selectors', function (done) {
             const cache = createCache([describeTrails[0]], getEventSelectors[0], null, { message: "Unable to get event selectors" });
-            includeManagementEvents.run(cache, {}, (err, results) => {
+            cloudtrailManagementEvents.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
@@ -146,7 +146,7 @@ describe('includeManagementEvents', function () {
 
         it('should not return any results describe trails response not found', function (done) {
             const cache = createNullCache();
-            includeManagementEvents.run(cache, {}, (err, results) => {
+            cloudtrailManagementEvents.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });
