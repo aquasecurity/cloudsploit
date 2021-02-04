@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-const crossZoneLoadBalancing = require('./crossZoneLoadBalancing');
+const crosszoneLoadBalancing = require('./crosszoneLoadBalancing');
 
 const describeLoadBalancers = [
     {
@@ -160,11 +160,11 @@ const createNullCache = () => {
     };
 };
 
-describe('crossZoneLoadBalancing', function () {
+describe('crosszoneLoadBalancing', function () {
     describe('run', function () {
         it('should PASS if AWS ELB has cross zone load balancing enabled', function (done) {
             const cache = createCache([describeLoadBalancers[0]], describeLoadBalancerAttributes[0]);
-            crossZoneLoadBalancing.run(cache, {}, (err, results) => {
+            crosszoneLoadBalancing.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -174,7 +174,7 @@ describe('crossZoneLoadBalancing', function () {
 
         it('should FAIL if AWS ELB does not have cross zone load balancing enabled', function (done) {
             const cache = createCache([describeLoadBalancers[0]], describeLoadBalancerAttributes[1]);
-            crossZoneLoadBalancing.run(cache, {}, (err, results) => {
+            crosszoneLoadBalancing.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
@@ -184,7 +184,7 @@ describe('crossZoneLoadBalancing', function () {
 
         it('should PASS if no load balancers found', function (done) {
             const cache = createCache([]);
-            crossZoneLoadBalancing.run(cache, {}, (err, results) => {
+            crosszoneLoadBalancing.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -194,7 +194,7 @@ describe('crossZoneLoadBalancing', function () {
 
         it('should UNKNOWN if unable to query for load balancer attributes', function (done) {
             const cache = createCache([describeLoadBalancers[0]], describeLoadBalancerAttributes[1], { message: 'Unable to query for load balancers' });
-            crossZoneLoadBalancing.run(cache, {}, (err, results) => {
+            crosszoneLoadBalancing.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
@@ -204,7 +204,7 @@ describe('crossZoneLoadBalancing', function () {
 
         it('should UNKNOWN if unable to query for load balancer attributes', function (done) {
             const cache = createCache([describeLoadBalancers[0]], null, null, { message: 'Unable to query for load balancers attributes' });
-            crossZoneLoadBalancing.run(cache, {}, (err, results) => {
+            crosszoneLoadBalancing.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
@@ -214,7 +214,7 @@ describe('crossZoneLoadBalancing', function () {
 
         it('should not return anything if describe load balancers response is not found', function (done) {
             const cache = createNullCache();
-            crossZoneLoadBalancing.run(cache, {}, (err, results) => {
+            crosszoneLoadBalancing.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });
