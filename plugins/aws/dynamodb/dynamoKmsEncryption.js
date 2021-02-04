@@ -8,10 +8,10 @@ module.exports = {
     more_info: 'DynamoDB tables can be encrypted using AWS-owned or customer-owned KMS keys. Customer keys should be used to ensure control over the encryption seed data.',
     link: 'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/EncryptionAtRest.html',
     recommended_action: 'Create a new DynamoDB table using a CMK KMS key.',
-    apis: ['DynamoDB:listTables', 'DynamoDB:describeTable', 'STS:getCallerIdentity'],
+    apis: ['DynamoDB:listTables', 'DynamoDB:describeTable', 'STS:getCallerIdentity', 'KMS:listKeys', 'KMS:describeKey'],
     remediation_description: 'The impacted DynamoDB table will be configured to use either KMS encryption with AWS managed CMK, or CMK-based encryption if a KMS key ID is provided.',
     remediation_min_version: '202001121300',
-    apis_remediate: ['DynamoDB:listTables'],
+    apis_remediate: ['DynamoDB:listTables', 'KMS:listKeys', 'KMS:describeKey'],
     actions: {
         remediate: ['DynamoDB:updateTable'],
         rollback: ['DynamoDB:updateTable']
@@ -92,6 +92,7 @@ module.exports = {
         var pluginName = 'dynamoKmsEncryption';
         var tableNameArr = resource.split(':');
         var tableName = tableNameArr[tableNameArr.length - 1].split('/')[1];
+        let defaultKeyDesc = 'Default master key that protects my DynamoDB data when no other key is defined';
 
         // find the location of the table needing to be remediated
         var tableLocation = tableNameArr[3];
@@ -112,10 +113,13 @@ module.exports = {
                 }
             };
         } else {
+            let defaultKmsKeyId = helpers.getDefaultKeyId(cache, config.region, defaultKeyDesc);
+            if (!defaultKmsKeyId) return callback(`No default DynamoDB key for the region ${config.region}`);
             params = {
                 'TableName': tableName,
                 'SSESpecification': {
                     'Enabled': true,
+                    'KMSMasterKeyId': defaultKmsKeyId,
                     'SSEType': 'KMS'
                 }
             };

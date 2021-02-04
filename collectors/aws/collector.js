@@ -42,6 +42,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    APIGateway: {
+        getRestApis: {
+            property: 'items',
+            paginate: 'NextToken'
+        }
+    },
     Athena: {
         listWorkGroups: {
             property: 'WorkGroups',
@@ -68,10 +74,32 @@ var calls = {
         }
     },
     CloudFormation: {
-        describeStacks: {
-            property: 'Stacks',
-            paginate: 'NextToken'
-        }
+        listStacks: {
+            property: 'StackSummaries',
+            params: {
+                'StackStatusFilter': [
+                    'CREATE_IN_PROGRESS',
+                    'CREATE_COMPLETE',
+                    'ROLLBACK_IN_PROGRESS',
+                    'ROLLBACK_FAILED',
+                    'ROLLBACK_COMPLETE',
+                    'DELETE_FAILED',
+                    'UPDATE_IN_PROGRESS',
+                    'UPDATE_COMPLETE_CLEANUP_IN_PROGRESS',
+                    'UPDATE_COMPLETE',
+                    'UPDATE_ROLLBACK_IN_PROGRESS',
+                    'UPDATE_ROLLBACK_FAILED',
+                    'UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS',
+                    'UPDATE_ROLLBACK_COMPLETE',
+                    'REVIEW_IN_PROGRESS',
+                    'IMPORT_IN_PROGRESS',
+                    'IMPORT_COMPLETE',
+                    'IMPORT_ROLLBACK_IN_PROGRESS',
+                    'IMPORT_ROLLBACK_FAILED',
+                    'IMPORT_ROLLBACK_COMPLETE',
+                ]
+            }
+        },
     },
     CloudFront: {
         // TODO: Pagination is using an older format
@@ -165,6 +193,11 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    DLM: {
+        getLifecyclePolicies: {
+            property: 'Policies'
+        }
+    },
     DMS: {
         describeReplicationInstances: {
             property: 'ReplicationInstances',
@@ -250,6 +283,12 @@ var calls = {
                 ]
             }
         },
+        describeInternetGateways: {
+            property: 'InternetGateways'
+        },
+        describeEgressOnlyInternetGateways: {
+            property: 'EgressOnlyInternetGateways'
+        },
         describeNatGateways: {
             property: 'NatGateways',
             paginate: 'NextToken',
@@ -297,6 +336,10 @@ var calls = {
             property: 'ServiceDetails',
             paginate: 'NextToken'
         },
+        describeVpcEndpoints: {
+            property: 'VpcEndpoints',
+            paginate: 'NextToken'
+        },
         describeRouteTables: {
             property: 'RouteTables',
             paginate: 'NextToken'
@@ -305,6 +348,25 @@ var calls = {
             property: 'Tags',
             paginate: 'NextToken',
         },
+        describeNetworkInterfaces: {
+            property: 'NetworkInterfaces',
+            paginate: 'NextToken',
+        },
+        getEbsEncryptionByDefault: {
+            property: 'EbsEncryptionByDefault'
+        },
+        getEbsDefaultKmsKeyId: {
+            property: 'KmsKeyId'
+        },
+        describeVpnConnections: {
+            property: 'VpnConnections',
+            paginate: 'NextToken'
+        },
+        describeNetworkAcls: {
+            property: 'NetworkAcls',
+            paginate: 'NextToken',
+        }
+
     },
     ECR: {
         describeRepositories: {
@@ -365,6 +427,11 @@ var calls = {
             property: 'TargetGroups',
             paginate: 'NextMarker',
             paginateReqProp: 'Marker'
+        },
+        describeTargetHealth: {
+            property: 'TargetGroups',
+            paginate: 'NextMarker',
+            paginateReqProp: 'Marker'
         }
     },
     EMR: {
@@ -383,6 +450,15 @@ var calls = {
             property: 'DomainNames'
         }
     },
+    Glue: {
+        getDataCatalogEncryptionSettings: {
+            property: 'DataCatalogEncryptionSettings',
+        },
+        getSecurityConfigurations: {
+            property: 'SecurityConfigurations',
+            paginate: 'NextMarker'
+        }
+    },
     IAM: {
         listServerCertificates: {
             property: 'ServerCertificateMetadataList',
@@ -399,6 +475,14 @@ var calls = {
         listRoles: {
             property: 'Roles',
             paginate: 'Marker'
+        },
+        listPolicies: {
+            property: 'Policies',
+            paginate: 'Marker',
+            params: {
+                OnlyAttached: true,
+                Scope: 'Local'
+            }
         },
         listVirtualMFADevices: {
             property: 'VirtualMFADevices',
@@ -462,6 +546,10 @@ var calls = {
         listHandshakesForAccount: {
             property: 'Handshakes',
         },
+        listAccounts: {
+            property: 'Accounts',
+            paginate: 'NextToken'
+        },
     },
     RDS: {
         describeDBInstances: {
@@ -494,7 +582,24 @@ var calls = {
         describeClusterParameterGroups: {
             property: 'ParameterGroups',
             paginate: 'Marker'
+        },
+        describeReservedNodes: {
+            property: 'ReservedNodes',
+            paginate: 'Marker'
         }
+    },
+    ResourceGroupsTaggingAPI: {
+        getTagKeys: {
+            property: 'TagKeys',
+            paginate: 'PaginationToken'
+        }
+    },
+    Route53: {
+        listHostedZones: {
+            property: 'HostedZones',
+            paginate: 'NextPageMarker',
+            paginateReqProp: 'Marker'
+        },
     },
     Route53Domains: {
         listDomains: {
@@ -605,9 +710,26 @@ var calls = {
             paginate: 'NextMarker'
         }
     },
+    WAFV2: {
+        listWebACLs: {
+            property: 'WebACLs',
+            paginate: 'NextMarker',
+            params: {
+                Scope: 'REGIONAL'
+            }
+        }
+    },
     WorkSpaces: {
         describeWorkspaces: {
             property: 'Workspaces',
+            paginate: 'NextToken'
+        },
+        describeWorkspaceDirectories:{
+            property: 'Directories',
+            paginate: 'NextToken'
+        },
+        describeIpGroups:{
+            property: 'Result',
             paginate: 'NextToken'
         }
     },
@@ -626,6 +748,14 @@ var postcalls = [
                 reliesOnCall: 'listCertificates',
                 filterKey: 'CertificateArn',
                 filterValue: 'CertificateArn'
+            }
+        },
+        APIGateway: {
+            getStages: {
+                reliesOnService: 'apigateway',
+                reliesOnCall: 'getRestApis',
+                filterKey: 'restApiId',
+                filterValue: 'id'
             }
         },
         Athena: {
@@ -648,6 +778,20 @@ var postcalls = [
                 override: true
             }
         },
+        CloudFormation: {    
+            describeStackEvents: {
+                reliesOnService: 'cloudformation',
+                reliesOnCall: 'listStacks',
+                filterKey: 'StackName',
+                filterValue: 'StackName'
+            },
+            describeStacks: {
+                reliesOnService: 'cloudformation',
+                reliesOnCall: 'listStacks',
+                filterKey: 'StackName',
+                filterValue: 'StackName'
+            }
+        },
         CloudFront: {
             getDistribution: {
                 reliesOnService: 'cloudfront',
@@ -666,6 +810,12 @@ var postcalls = [
                 reliesOnService: 'cloudtrail',
                 reliesOnCall: 'describeTrails',
                 override: true
+            },
+            getEventSelectors: {
+                reliesOnService: 'cloudtrail',
+                reliesOnCall: 'describeTrails',
+                filterKey: 'TrailName',
+                filterValue: 'TrailARN'
             }
         },
         DynamoDB: {
@@ -673,7 +823,12 @@ var postcalls = [
                 reliesOnService: 'dynamodb',
                 reliesOnCall: 'listTables',
                 override: true
-            }
+            },
+            describeContinuousBackups: {
+                reliesOnService: 'dynamodb',
+                reliesOnCall: 'listTables',
+                override: true
+            },
         },
         ES: {
             describeElasticsearchDomain: {
@@ -753,7 +908,13 @@ var postcalls = [
                 deleteRegion: true,
                 signatureVersion: 'v4',
                 override: true
-            }
+            },
+            getBucketAccelerateConfiguration: {
+                reliesOnService: 's3',
+                reliesOnCall: 'listBuckets',
+                filterKey: 'Bucket',
+                filterValue: 'Name'
+            },
         },
         EC2: {
             describeSubnets: {
@@ -761,6 +922,17 @@ var postcalls = [
                 reliesOnCall: 'describeVpcs',
                 override: true
             },
+            describeSnapshotAttribute: {
+                reliesOnService: 'ec2',
+                reliesOnCall: 'describeSnapshots',
+                override: true
+            },
+            describeVpcEndpointServicePermissions: {
+                reliesOnService: 'ec2',
+                reliesOnCall: 'describeVpcEndpointServices',
+                filterKey: 'ServiceId',
+                filterValue: 'ServiceId'
+            }
         },
         ECR: {
             getRepositoryPolicy: {
@@ -811,6 +983,11 @@ var postcalls = [
                 reliesOnService: 'elb',
                 reliesOnCall: 'describeLoadBalancers',
                 override: true
+            },
+            describeTags: {
+                reliesOnService: 'elb',
+                reliesOnCall: 'describeLoadBalancers',
+                override: true
             }
         },
         ELBv2: {
@@ -842,6 +1019,14 @@ var postcalls = [
                 reliesOnCall: 'listClusters',
                 filterKey: 'ClusterId',
                 filterValue: 'Id'
+            }
+        },
+        DLM: {
+            getLifecyclePolicy: {
+                reliesOnService: 'dlm',
+                reliesOnCall: 'getLifecyclePolicies',
+                filterKey: 'PolicyId',
+                filterValue: 'PolicyId'
             }
         },
         IAM: {
@@ -938,6 +1123,12 @@ var postcalls = [
                 reliesOnService: 'kms',
                 reliesOnCall: 'listKeys',
                 override: true
+            },
+            listResourceTags: {
+                reliesOnService: 'kms',
+                reliesOnCall: 'listKeys',
+                filterKey: 'KeyId',
+                filterValue: 'KeyId'
             }
         },
         Lambda: {
@@ -962,6 +1153,14 @@ var postcalls = [
                 filterKey: 'DBParameterGroupName',
                 filterValue: 'DBParameterGroupName'
             }
+        },
+        Route53: {
+            listResourceRecordSets: {
+                reliesOnService: 'route53',
+                reliesOnCall: 'listHostedZones',
+                filterKey: 'HostedZoneId',
+                filterValue: 'Id'
+            },
         },
         S3Control: {
             getPublicAccessBlock: {
@@ -1027,6 +1226,16 @@ var postcalls = [
                 checkMultipleKey: 'ResourceType'
             }
         },
+        WAFV2: {
+            listResourcesForWebACL: {
+                reliesOnService: 'wafv2',
+                reliesOnCall: 'listWebACLs',
+                filterKey: 'WebACLArn',
+                filterValue: 'ARN',
+                checkMultiple: ['APPLICATION_LOAD_BALANCER', 'API_GATEWAY'],
+                checkMultipleKey: 'ResourceType'
+            }
+        },
         GuardDuty: {
             getDetector: {
                 reliesOnService: 'guardduty',
@@ -1041,6 +1250,13 @@ var postcalls = [
         },
     },
     {
+        APIGateway: {
+            getClientCertificate: {
+                reliesOnService: 'apigateway',
+                reliesOnCall: 'getRestApis',
+                override: true
+            }
+        },
         EMR: {
             describeSecurityConfiguration: {
                 reliesOnService: 'emr',
@@ -1064,6 +1280,12 @@ var postcalls = [
                 reliesOnCall: 'listRoles',
                 override: true
             },
+            getPolicy: {
+                reliesOnService: 'iam',
+                reliesOnCall: 'listPolicies',
+                filterKey: 'PolicyArn',
+                filterValue: 'Arn'
+            },
             getRole: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listRoles',
@@ -1075,6 +1297,15 @@ var postcalls = [
             describeNodegroups: {
                 reliesOnService: 'eks',
                 reliesOnCall: 'listClusters',
+                override: true
+            }
+        }
+    },
+    {
+        IAM: {
+            getPolicyVersion: {
+                reliesOnService: 'iam',
+                reliesOnCall: 'listPolicies',
                 override: true
             }
         }

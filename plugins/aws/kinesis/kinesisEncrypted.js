@@ -10,7 +10,7 @@ module.exports = {
     more_info: 'Data sent to Kinesis Streams can be encrypted using KMS server-side encryption. Existing streams can be modified to add encryption with minimal overhead.',
     recommended_action: 'Enable encryption using KMS for all Kinesis Streams.',
     link: 'https://docs.aws.amazon.com/streams/latest/dev/server-side-encryption.html',
-    apis: ['Kinesis:listStreams', 'Kinesis:describeStream'],
+    apis: ['Kinesis:listStreams', 'Kinesis:describeStream', 'KMS:listKeys', 'KMS:describeKey'],
     compliance: {
         hipaa: 'Kinesis encryption must be used when processing any HIPAA-related data. ' +
                 'AWS KMS encryption ensures that the Kinesis message payload meets the ' +
@@ -18,7 +18,15 @@ module.exports = {
     },
     remediation_description: 'Encryption for the affected Kinesis streams will be enabled.',
     remediation_min_version: '202010301919',
-    apis_remediate: ['Kinesis:listStreams', 'Kinesis:describeStream'],
+    apis_remediate: ['Kinesis:listStreams', 'Kinesis:describeStream', 'KMS:listKeys', 'KMS:describeKey'],
+    remediation_inputs: {
+        kmsKeyIdforKinesis: {
+            name: '(Optional) KMS Key ID',
+            description: 'The KMS Key ID used for encryption',
+            regex: '^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$',
+            required: false
+        }
+    },
     actions: {
         remediate: ['Kinesis:startStreamEncryption'],
         rollback: ['Kinesis:stopStreamEncryption']
@@ -107,6 +115,7 @@ module.exports = {
         var pluginName = 'kinesisEncrypted';
         var streamNameArr = resource.split(':');
         var streamName = streamNameArr[streamNameArr.length - 1].split('/');
+        var defaultKeyDesc = 'Default master key that protects my Kinesis data when no other key is defined';
         streamName = streamName[streamName.length - 1];
         // find the location of the Kinesis Stream needing to be remediated
         var streamLocation = streamNameArr[3];
@@ -127,18 +136,21 @@ module.exports = {
                 StreamName: streamName /* required */
             };
         } else {
+            var defaultKmsKeyId = helpers.getDefaultKeyId(cache, config.region, defaultKeyDesc);
+            if (!defaultKmsKeyId) return callback(`No default Kinesis key for the region ${config.region}`);
             params = {
                 EncryptionType: 'KMS', /* required */
-                KeyId: defaultKmsKey, /* required */
+                KeyId: defaultKmsKeyId, /* required */
                 StreamName: streamName /* required */
             };
+
         }
 
         var remediation_file = settings.remediation_file;
 
         remediation_file['pre_remediate']['actions'][pluginName][resource] = {
             'Encryption': 'Disabled',
-            'SQS': streamName
+            'KinesisStream': streamName
         };
 
         // passes the config, put call, and params to the remediate helper function
@@ -154,7 +166,7 @@ module.exports = {
             remediation_file['post_remediate']['actions'][pluginName][resource] = action;
             remediation_file['remediate']['actions'][pluginName][resource] = {
                 'Action': 'ENCRYPTED',
-                'Kinesis Stream': streamName
+                'KinesisStream': streamName
             };
             settings.remediation_file = remediation_file;
             return callback(null, action);
