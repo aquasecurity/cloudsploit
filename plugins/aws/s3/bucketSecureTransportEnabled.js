@@ -43,7 +43,7 @@ module.exports = {
             // Check the bucket policy
             if (getBucketPolicy && getBucketPolicy.err &&
                 getBucketPolicy.err.code && getBucketPolicy.err.code === 'NoSuchBucketPolicy') {
-                helpers.addResult(results, 0, 'No bucket policy found', 'global', resource);
+                helpers.addResult(results, 2, 'No bucket policy found', 'global', resource);
             }
             else if (!getBucketPolicy || getBucketPolicy.err ||
                        !getBucketPolicy.data || !getBucketPolicy.data.Policy) {
@@ -55,7 +55,7 @@ module.exports = {
                 var statements = helpers.normalizePolicyDocument(getBucketPolicy.data.Policy);
 
                 if (!statements || !statements.length) {
-                    helpers.addResult(results, 0,
+                    helpers.addResult(results, 2,
                         'Bucket policy does not contain any statements',
                         'global', resource);
                     return;
@@ -68,6 +68,14 @@ module.exports = {
                                 !statement.Condition.Bool ||
                                 !statement.Condition.Bool['aws:SecureTransport'] ||
                                 statement.Condition.Bool['aws:SecureTransport'] === 'false') {
+                            sslEnforced = false;
+                            break;
+                        }
+                    } else if (statement.Effect && statement.Effect === 'Deny') {
+                        if (statement.Condition &&
+                                statement.Condition.Bool &&
+                                statement.Condition.Bool['aws:SecureTransport'] &&
+                                statement.Condition.Bool['aws:SecureTransport'] === 'true') {
                             sslEnforced = false;
                             break;
                         }
