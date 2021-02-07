@@ -22,7 +22,7 @@ module.exports = {
     },
     remediation_inputs: {
         kmsKeyIdforXray: {
-            name: '(Optional) XRay KMS Key ID',
+            name: '(Mandatory) XRay KMS Key ID',
             description: 'The KMS Key ID used for encryption',
             regex: '^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$',
             required: true
