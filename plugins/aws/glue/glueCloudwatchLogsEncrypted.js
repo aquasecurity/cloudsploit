@@ -4,9 +4,9 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'AWS Glue CloudWatch Encrypted Logs',
     category: 'AWS Glue',
-    description: 'Ensures that encryption at-rest is enabled when writing Amazon Glue logs to Amazon CloudWatch.',
-    more_info: 'AWS Glue should have encryption at-rest enabled for Amazon Glue logs to ensure security of AWS Glue logs.',
-    recommended_action: 'Enable CloudWatch logs encryption at-rest in AWS Glue Security Configurations',
+    description: 'Ensures that encryption at-rest is enabled when writing AWS Glue logs to Amazon CloudWatch.',
+    more_info: 'AWS Glue should have encryption at-rest enabled for AWS Glue logs to ensure security of AWS Glue logs.',
+    recommended_action: 'Modify Glue Security Configurations to enable CloudWatch logs encryption at-rest',
     link: 'https://docs.aws.amazon.com/glue/latest/dg/console-security-configurations.html',
     apis: ['Glue:getSecurityConfigurations', 'STS:getCallerIdentity'],
 
@@ -27,31 +27,31 @@ module.exports = {
 
             if (getSecurityConfigurations.err || !getSecurityConfigurations.data) {
                 helpers.addResult(results, 3,
-                    `Unable to query for AWS Glue security configurations: ${helpers.addError(getSecurityConfigurations)}`, region);
+                    `Unable to query for Glue security configurations: ${helpers.addError(getSecurityConfigurations)}`, region);
                 return rcb();
             }
 
             if (!getSecurityConfigurations.data.length) {
                 helpers.addResult(results, 0,
-                    'No AWS Glue security configurations found', region);
+                    'No Glue security configurations found', region);
                 return rcb();
             }
 
             getSecurityConfigurations.data.forEach(configuration => {
-                if (!configuration || !configuration.Name) return;
+                if (!configuration.Name) return;
 
                 var resource = `arn:${awsOrGov}:glue:${region}:${accountId}:/securityConfiguration/${configuration.Name}`;
 
-                if(!configuration || !configuration.EncryptionConfiguration ||
-                    !configuration.EncryptionConfiguration.CloudWatchEncryption ||
-                    !configuration.EncryptionConfiguration.CloudWatchEncryption.CloudWatchEncryptionMode ||
-                    configuration.EncryptionConfiguration.CloudWatchEncryption.CloudWatchEncryptionMode.toUpperCase() === 'DISABLED') {
-                    helpers.addResult(results, 2,
-                        `AWS Glue Security Configuration "${configuration.Name}" has CloudWatch logs encryption disabled`,
+                if(configuration.EncryptionConfiguration &&
+                    configuration.EncryptionConfiguration.CloudWatchEncryption &&
+                    configuration.EncryptionConfiguration.CloudWatchEncryption.CloudWatchEncryptionMode &&
+                    configuration.EncryptionConfiguration.CloudWatchEncryption.CloudWatchEncryptionMode === 'SSE-KMS') {
+                    helpers.addResult(results, 0,
+                        `Glue Security Configuration "${configuration.Name}" has CloudWatch logs encryption enabled`,
                         region, resource);
                 } else {
-                    helpers.addResult(results, 0,
-                        `AWS Glue Security Configuration "${configuration.Name}" has CloudWatch logs encryption enabled`,
+                    helpers.addResult(results, 2,
+                        `Glue Security Configuration "${configuration.Name}" has CloudWatch logs encryption disabled`,
                         region, resource);
                 }
 
