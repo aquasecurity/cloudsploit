@@ -2,7 +2,7 @@ var expect = require('chai').expect;
 const stackFailedStatus = require('./stackFailedStatus');
 
 var stackFailTime = new Date();
-stackFailTime.setMonth(stackFailTime.getDay() - 1);
+stackFailTime.setMonth(stackFailTime.getMonth() - 1);
 
 const listStacks = [
     {
