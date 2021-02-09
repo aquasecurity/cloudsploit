@@ -109,18 +109,18 @@ module.exports = {
                     }
 
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
-
+                    var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
                     if (config.rds_encryption_kms_alias) {
                         if (aliasId == kmsKey) {
                             if (desiredEncryptionLevel <= currentEncryptionLevel) {
                                 helpers.addResult(results, 0,
-                                    `Encryption at rest is enabled via expected KMS key: ${(kmsKey || 'Unknown')} at level ${currentEncryptionLevel} which is ` +
-                                    `greater than or equal to the desired level ${desiredEncryptionLevel}`,
+                                    `Encryption at rest is enabled via expected KMS key: ${(kmsKey || 'Unknown')} at level ${currentEncryptionLevelString} which is ` +
+                                    `greater than or equal to the desired level ${config.desiredEncryptionLevelString}`,
                                     region, dbResource, custom);
                             } else {
                                 helpers.addResult(results, 2,
-                                    `Encryption at rest is enabled via expected KMS key: ${(kmsKey || 'Unknown')} at level ${currentEncryptionLevel} which is ` +
-                                    `less than the desired level ${desiredEncryptionLevel}`,
+                                    `Encryption at rest is enabled via expected KMS key: ${(kmsKey || 'Unknown')} at level ${currentEncryptionLevelString} which is ` +
+                                    `less than the desired level ${config.desiredEncryptionLevelString}`,
                                     region, dbResource, custom);
                             }
                         } else {
@@ -131,13 +131,13 @@ module.exports = {
                     } else {
                         if (desiredEncryptionLevel <= currentEncryptionLevel) {
                             helpers.addResult(results, 0,
-                                `Encryption at rest is enabled via KMS key: ${(kmsKey || 'Unknown')} at level ${currentEncryptionLevel} which is ` +
-                                `greater than or equal to the desired level ${desiredEncryptionLevel}`,
+                                `Encryption at rest is enabled via KMS key: ${(kmsKey || 'Unknown')} at level ${currentEncryptionLevelString} which is ` +
+                                `greater than or equal to the desired level ${config.desiredEncryptionLevelString}`,
                                 region, dbResource);
                         } else {
                             helpers.addResult(results, 2,
-                                `Encryption at rest is enabled via KMS key: ${(kmsKey || 'Unknown')} at level ${currentEncryptionLevel} which is ` +
-                                `less than the desired level ${desiredEncryptionLevel}`,
+                                `Encryption at rest is enabled via KMS key: ${(kmsKey || 'Unknown')} at level ${currentEncryptionLevelString} which is ` +
+                                `less than the desired level ${config.desiredEncryptionLevelString}`,
                                 region, dbResource);
                         }
                     }

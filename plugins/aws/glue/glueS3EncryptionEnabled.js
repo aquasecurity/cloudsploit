@@ -91,14 +91,15 @@ module.exports = {
                     }
                 }
 
+                var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
                 if (encryptionEnabled) {
                     if (currentEncryptionLevel >= desiredEncryptionLevel) {
                         helpers.addResult(results, 0,
-                            `Glue security configuration "${configuration.Name}" has S3 encryption enabled at encryption level ${currentEncryptionLevel} which is greater than or equal to target level ${desiredEncryptionLevel}`,
+                            `Glue security configuration "${configuration.Name}" has S3 encryption enabled at encryption level ${currentEncryptionLevelString} which is greater than or equal to target level ${config.glue_s3_encryption_level}`,
                             region, resource);    
                     } else {
                         helpers.addResult(results, 2,
-                            `Glue security configuration "${configuration.Name}" has S3 encryption enabled at encryption level ${currentEncryptionLevel} which is less than target level ${desiredEncryptionLevel}`,
+                            `Glue security configuration "${configuration.Name}" has S3 encryption enabled at encryption level ${currentEncryptionLevelString} which is less than target level ${config.glue_s3_encryption_level}`,
                             region, resource);
                     }
                 } else {
@@ -108,9 +109,9 @@ module.exports = {
                 }
 
                 cb();
+            }, function(){
+                rcb();
             });
-
-            rcb();
         }, function(){
             callback(null, results, source);
         });
