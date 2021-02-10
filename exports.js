@@ -6,6 +6,7 @@ module.exports = {
         'acmCertificateExpiry'          : require(__dirname + '/plugins/aws/acm/acmCertificateExpiry.js'),
 
         'apigatewayCertificateRotation' : require(__dirname + '/plugins/aws/apigateway/apigatewayCertificateRotation.js'),
+        'apigatewayCloudwatchLogs'      : require(__dirname + '/plugins/aws/apigateway/apigatewayCloudwatchLogs.js'),
         'apigatewayPrivateEndpoints'    : require(__dirname + '/plugins/aws/apigateway/apigatewayPrivateEndpoints.js'),
         'apigatewayContentEncoding'     : require(__dirname + '/plugins/aws/apigateway/apigatewayContentEncoding.js'),
         'apigatewayTracingEnabled'      : require(__dirname + '/plugins/aws/apigateway/apigatewayTracingEnabled.js'),
