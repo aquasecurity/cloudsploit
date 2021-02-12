@@ -11,7 +11,7 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html',
     recommended_action: 'Keep two users with admin permissions but ensure other IAM users have more limited permissions.',
     apis: ['IAM:listUsers', 'IAM:listUserPolicies', 'IAM:listAttachedUserPolicies',
-        'IAM:listGroupsForUser',
+        'IAM:listPolicies' ,'IAM:getPolicy', 'IAM:getPolicyVersion' ,'IAM:listGroupsForUser',
         'IAM:listGroups', 'IAM:listGroupPolicies', 'IAM:listAttachedGroupPolicies',
         'IAM:getUserPolicy', 'IAM:getGroupPolicy'],
     compliance: {
@@ -44,12 +44,19 @@ module.exports = {
                 ? parseInt(settings.iam_admin_count_maximum)
                 : this.settings.iam_admin_count_maximum.default,
         };
+
         var custom = helpers.isCustom(settings, this.settings);
 
         var results = [];
         var source = {};
 
         var region = helpers.defaultRegion(settings);
+
+        if (config.iam_admin_count_maximum < config.iam_admin_count_minimum) {
+            helpers.addResult(results, 3,
+                'IAM Admin Count Maximum cannot be less than IAM Admin Count Minimum');
+            return callback(null, results, source);
+        }
 
         var listUsers = helpers.addSource(cache, source,
             ['iam', 'listUsers', region]);
@@ -86,42 +93,71 @@ module.exports = {
             var getUserPolicy = helpers.addSource(cache, source,
                 ['iam', 'getUserPolicy', region, user.UserName]);
 
-            if (listAttachedUserPolicies.err) {
+            if (!listAttachedUserPolicies || listAttachedUserPolicies.err) {
                 helpers.addResult(results, 3,
                     'Unable to query for IAM attached policy for user: ' + user.UserName + ': ' + helpers.addError(listAttachedUserPolicies), 'global', user.Arn);
                 return cb();
             }
 
-            if (listUserPolicies.err) {
+            if (!listUserPolicies || listUserPolicies.err) {
                 helpers.addResult(results, 3,
                     'Unable to query for IAM user policy for user: ' + user.UserName + ': ' + helpers.addError(listUserPolicies), 'global', user.Arn);
                 return cb();
             }
 
-            if (listGroupsForUser.err) {
+            if (!listGroupsForUser || listGroupsForUser.err) {
                 helpers.addResult(results, 3,
                     'Unable to query for IAM user groups for user: ' + user.UserName + ': ' + helpers.addError(listGroupsForUser), 'global', user.Arn);
                 return cb();
             }
 
             // See if user has admin managed policy
-            if (listAttachedUserPolicies &&
-                listAttachedUserPolicies.data &&
+            if (listAttachedUserPolicies.data &&
                 listAttachedUserPolicies.data.AttachedPolicies) {
-
                 for (var a in listAttachedUserPolicies.data.AttachedPolicies) {
                     var policy = listAttachedUserPolicies.data.AttachedPolicies[a];
+                    
+                    if (!policy.PolicyArn) continue;
 
                     if (policy.PolicyArn === managedAdminPolicy) {
                         userAdmins.push({name: user.UserName, arn: user.Arn});
                         return cb();
                     }
+
+                    var getPolicy = helpers.addSource(cache, source,
+                        ['iam', 'getPolicy', region, policy.PolicyArn]);
+
+                    if (getPolicy &&
+                        getPolicy.data &&
+                        getPolicy.data.Policy &&
+                        getPolicy.data.Policy.DefaultVersionId) {
+                        var getPolicyVersion = helpers.addSource(cache, source,
+                            ['iam', 'getPolicyVersion', region, policy.PolicyArn]);
+
+                        if (getPolicyVersion &&
+                            getPolicyVersion.data &&
+                            getPolicyVersion.data.PolicyVersion &&
+                            getPolicyVersion.data.PolicyVersion.Document) {
+                            let statements = helpers.normalizePolicyDocument(
+                                getPolicyVersion.data.PolicyVersion.Document);
+                            if (!statements) break;
+
+                            // Loop through statements to see if admin privileges
+                            for (let statement of statements) {
+                                if (statement.Effect && statement.Effect.toUpperCase() === 'ALLOW' &&
+                                statement.Action && statement.Action.indexOf('*') > -1 &&
+                                statement.Resource && statement.Resource.indexOf('*') > -1) {
+                                    userAdmins.push({name: user.UserName, arn: user.Arn});
+                                    return cb();
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
             // See if user has admin inline policy
-            if (listUserPolicies &&
-                listUserPolicies.data &&
+            if (listUserPolicies.data &&
                 listUserPolicies.data.PolicyNames) {
 
                 for (var p in listUserPolicies.data.PolicyNames) {
@@ -153,8 +189,7 @@ module.exports = {
             }
 
             // See if user is in a group allowing admin access
-            if (listGroupsForUser &&
-                listGroupsForUser.data &&
+            if (listGroupsForUser.data &&
                 listGroupsForUser.data.Groups) {
 
                 for (var g in listGroupsForUser.data.Groups) {

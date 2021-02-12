@@ -36,7 +36,6 @@ module.exports = {
                 return rcb();
             }
 
-            var classicLBFound = false;
             async.each(describeLoadBalancers.data, function(lb, cb){
                 var elbArn = `arn:${awsOrGov}:elasticloadbalancing:${region}:${accountId}:loadbalancer/${lb.LoadBalancerName}`;
 
@@ -47,23 +46,24 @@ module.exports = {
                     return cb();
                 }
 
-                for (var listener of lb.ListenerDescriptions){
-                    if (lb.Instances && lb.Instances.length && listener.Listener && ( listener.Listener.Protocol === 'HTTP' || listener.Listener.Protocol === 'HTTPS')) {
-                        classicLBFound = true;
-                        helpers.addResult(results, 2,
-                            `HTTP/HTTPS application is using "${lb.LoadBalancerName}" Classic load balancer`,
-                            region, elbArn);
-                    }
+                let found;
+
+                if (lb.Instances && lb.Instances.length) {
+                    found = lb.ListenerDescriptions.find(listener => listener.Listener && (listener.Listener.Protocol === 'HTTP' || listener.Listener.Protocol === 'HTTPS'));
+                }
+
+                if (!found) {
+                    helpers.addResult(results, 0,
+                        `Classic load balancer "${lb.LoadBalancerName}" is not in use`,
+                        region, elbArn);
+                } else {
+                    helpers.addResult(results, 2,
+                        `Classic load balancer "${lb.LoadBalancerName}" is in use`,
+                        region, elbArn);
                 }
 
                 cb();
             }, function(){
-                if (!classicLBFound) {
-                    helpers.addResult(results, 0,
-                        'No HTTP/HTTPS application using Classic load balancer found',
-                        region);
-                }
-
                 rcb();
             });
         }, function(){

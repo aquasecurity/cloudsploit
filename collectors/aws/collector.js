@@ -74,10 +74,32 @@ var calls = {
         }
     },
     CloudFormation: {
-        describeStacks: {
-            property: 'Stacks',
-            paginate: 'NextToken'
-        }
+        listStacks: {
+            property: 'StackSummaries',
+            params: {
+                'StackStatusFilter': [
+                    'CREATE_IN_PROGRESS',
+                    'CREATE_COMPLETE',
+                    'ROLLBACK_IN_PROGRESS',
+                    'ROLLBACK_FAILED',
+                    'ROLLBACK_COMPLETE',
+                    'DELETE_FAILED',
+                    'UPDATE_IN_PROGRESS',
+                    'UPDATE_COMPLETE_CLEANUP_IN_PROGRESS',
+                    'UPDATE_COMPLETE',
+                    'UPDATE_ROLLBACK_IN_PROGRESS',
+                    'UPDATE_ROLLBACK_FAILED',
+                    'UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS',
+                    'UPDATE_ROLLBACK_COMPLETE',
+                    'REVIEW_IN_PROGRESS',
+                    'IMPORT_IN_PROGRESS',
+                    'IMPORT_COMPLETE',
+                    'IMPORT_ROLLBACK_IN_PROGRESS',
+                    'IMPORT_ROLLBACK_FAILED',
+                    'IMPORT_ROLLBACK_COMPLETE',
+                ]
+            }
+        },
     },
     CloudFront: {
         // TODO: Pagination is using an older format
@@ -330,6 +352,12 @@ var calls = {
             property: 'NetworkInterfaces',
             paginate: 'NextToken',
         },
+        getEbsEncryptionByDefault: {
+            property: 'EbsEncryptionByDefault'
+        },
+        getEbsDefaultKmsKeyId: {
+            property: 'KmsKeyId'
+        },
         describeVpnConnections: {
             property: 'VpnConnections',
             paginate: 'NextToken'
@@ -338,6 +366,7 @@ var calls = {
             property: 'NetworkAcls',
             paginate: 'NextToken',
         }
+
     },
     ECR: {
         describeRepositories: {
@@ -422,6 +451,9 @@ var calls = {
         }
     },
     Glue: {
+        getDataCatalogEncryptionSettings: {
+            property: 'DataCatalogEncryptionSettings',
+        },
         getSecurityConfigurations: {
             property: 'SecurityConfigurations',
             paginate: 'NextMarker'
@@ -746,6 +778,20 @@ var postcalls = [
                 override: true
             }
         },
+        CloudFormation: {    
+            describeStackEvents: {
+                reliesOnService: 'cloudformation',
+                reliesOnCall: 'listStacks',
+                filterKey: 'StackName',
+                filterValue: 'StackName'
+            },
+            describeStacks: {
+                reliesOnService: 'cloudformation',
+                reliesOnCall: 'listStacks',
+                filterKey: 'StackName',
+                filterValue: 'StackName'
+            }
+        },
         CloudFront: {
             getDistribution: {
                 reliesOnService: 'cloudfront',
@@ -862,7 +908,13 @@ var postcalls = [
                 deleteRegion: true,
                 signatureVersion: 'v4',
                 override: true
-            }
+            },
+            getBucketAccelerateConfiguration: {
+                reliesOnService: 's3',
+                reliesOnCall: 'listBuckets',
+                filterKey: 'Bucket',
+                filterValue: 'Name'
+            },
         },
         EC2: {
             describeSubnets: {
@@ -874,6 +926,12 @@ var postcalls = [
                 reliesOnService: 'ec2',
                 reliesOnCall: 'describeSnapshots',
                 override: true
+            },
+            describeVpcEndpointServicePermissions: {
+                reliesOnService: 'ec2',
+                reliesOnCall: 'describeVpcEndpointServices',
+                filterKey: 'ServiceId',
+                filterValue: 'ServiceId'
             }
         },
         ECR: {
@@ -922,6 +980,11 @@ var postcalls = [
                 override: true
             },
             describeLoadBalancerAttributes: {
+                reliesOnService: 'elb',
+                reliesOnCall: 'describeLoadBalancers',
+                override: true
+            },
+            describeTags: {
                 reliesOnService: 'elb',
                 reliesOnCall: 'describeLoadBalancers',
                 override: true
@@ -1187,6 +1250,13 @@ var postcalls = [
         },
     },
     {
+        APIGateway: {
+            getClientCertificate: {
+                reliesOnService: 'apigateway',
+                reliesOnCall: 'getRestApis',
+                override: true
+            }
+        },
         EMR: {
             describeSecurityConfiguration: {
                 reliesOnService: 'emr',
