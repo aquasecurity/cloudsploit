@@ -12,9 +12,9 @@ module.exports = {
     settings: {
         restricted_open_ports: {
             name: 'Restricted Open Ports',
-            description: 'Comma separated list of ports that should be restricted and not publicly open. Example: tcp:80,tcp:443',
+            description: 'Comma separated list of ports/port-ranges that should be restricted and not publicly open. Example: tcp:80,tcp:443,tcp:80-443',
             regex: '[a-zA-Z0-9,:]',
-            default: ''
+            default: 'tcp:22-30'
         },
     },
 
@@ -33,9 +33,9 @@ module.exports = {
         restricted_open_ports.forEach(port => {
             var [protocol, portNo] = port.split(':');
             if (ports[protocol]) {
-                ports[protocol].push(Number(portNo));
+                ports[protocol].push(portNo);
             } else {
-                ports[protocol] = [Number(portNo)];
+                ports[protocol] = [portNo];
             }
         });
 
