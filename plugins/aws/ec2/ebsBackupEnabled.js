@@ -45,32 +45,27 @@ module.exports = {
                 return rcb();
             }
 
-            let snapshotVolumeMapping = {};
-            describeVolumes.data.forEach(function(volume) {
-                if (volume.VolumeId) {
-                    snapshotVolumeMapping[volume.VolumeId] = [];
-                }
-            });
+            let volumeSet = new Set();
+
 
             describeSnapshots.data.forEach(function(snapshot){
                 if(snapshot.VolumeId){
-                    if(snapshot.VolumeId in snapshotVolumeMapping){
-                        let snapshotsForVolume = snapshotVolumeMapping[snapshot.VolumeId];
-                        snapshotsForVolume.push(snapshot.SnapshotId);
-                    }
+                    volumeSet.add(snapshot.VolumeId);
                 }
             });
 
-            Object.keys(snapshotVolumeMapping).forEach(function(volumeId){
-                let volumeArn = 'arn:' + awsOrGov + ':ec2:' + region + ':' + accountId + ':volume/' + volumeId;
-                if(!snapshotVolumeMapping[volumeId].length){
-                    helpers.addResult(results, 2,
-                        'EBS Volume is not backed up',
-                        region, volumeArn);
-                }else{
-                    helpers.addResult(results, 0,
-                        'EBS Volume is backed up',
-                        region, volumeArn);
+            describeVolumes.data.forEach(function(volume) {
+                let volumeArn = 'arn:' + awsOrGov + ':ec2:' + region + ':' + accountId + ':volume/' + volume.VolumeId;
+                if (volume.VolumeId) {
+                    if(volumeSet.has(volume.VolumeId)){
+                        helpers.addResult(results, 0,
+                            'EBS Volume is backed up',
+                            region, volumeArn);
+                    }else{
+                        helpers.addResult(results, 2,
+                            'EBS Volume is not backed up',
+                            region, volumeArn);
+                    }
                 }
             });
             rcb();
