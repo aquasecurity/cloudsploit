@@ -570,6 +570,7 @@ module.exports = {
     },
     google: {
         'excessiveFirewallRules'        : require(__dirname + '/plugins/google/vpcnetwork/excessiveFirewallRules.js'),
+        'openCassandra'                 : require(__dirname + '/plugins/google/vpcnetwork/openCassandra.js'),
         'openDNS'                       : require(__dirname + '/plugins/google/vpcnetwork/openDNS.js'),
         'openDocker'                    : require(__dirname + '/plugins/google/vpcnetwork/openDocker.js'),
         'openSSH'                       : require(__dirname + '/plugins/google/vpcnetwork/openSSH.js'),
