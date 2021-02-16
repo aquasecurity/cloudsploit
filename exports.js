@@ -584,6 +584,7 @@ module.exports = {
         'openOracle'                    : require(__dirname + '/plugins/google/vpcnetwork/openOracle.js'),
         'openPostgreSQL'                : require(__dirname + '/plugins/google/vpcnetwork/openPostgreSQL.js'),
         'openRDP'                       : require(__dirname + '/plugins/google/vpcnetwork/openRDP.js'),
+        'openRedis'                     : require(__dirname + '/plugins/google/vpcnetwork/openRedis.js'),
         'openRPC'                       : require(__dirname + '/plugins/google/vpcnetwork/openRPC.js'),
         'openSalt'                      : require(__dirname + '/plugins/google/vpcnetwork/openSalt.js'),
         'openSMBoTCP'                   : require(__dirname + '/plugins/google/vpcnetwork/openSMBoTCP.js'),
