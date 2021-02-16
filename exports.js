@@ -579,6 +579,7 @@ module.exports = {
         'openHadoopNameNode'            : require(__dirname + '/plugins/google/vpcnetwork/openHadoopNameNode.js'),
         'openHadoopNameNodeWebUI'       : require(__dirname + '/plugins/google/vpcnetwork/openHadoopNameNodeWebUI.js'),
         'openKibana'                    : require(__dirname + '/plugins/google/vpcnetwork/openKibana.js'),
+        'openMongo'                     : require(__dirname + '/plugins/google/vpcnetwork/openMongo.js'),
         'openMySQL'                     : require(__dirname + '/plugins/google/vpcnetwork/openMySQL.js'),
         'openNetBIOS'                   : require(__dirname + '/plugins/google/vpcnetwork/openNetBIOS.js'),
         'openOracle'                    : require(__dirname + '/plugins/google/vpcnetwork/openOracle.js'),
