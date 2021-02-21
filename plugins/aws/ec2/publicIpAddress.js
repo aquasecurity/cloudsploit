@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'EC2 instances should not have a public IP address attached in order to block public access to the instances.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html',
     recommended_action: 'Remove the public IP address from the EC2 instances to block public access to the instance',
-    apis: ['EC2:describeInstances', 'STS:getCallerIdentity'],
+    apis: ['EC2:describeInstances', 'STS:getCallerIdentity', 'EC2:describeSecurityGroups'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -36,6 +36,27 @@ module.exports = {
                 return rcb();
             }
 
+            var describeSecurityGroups = helpers.addSource(cache, source,
+                ['ec2', 'describeSecurityGroups', region]);
+
+            if (!describeSecurityGroups || describeSecurityGroups.err || !describeSecurityGroups.data) {
+                helpers.addResult(results, 3, `Unable to query security groups: ${helpers.addError(describeSecurityGroups)}`, region);
+                return rcb();
+            }
+
+            var openSgs = [];
+
+            for (var group of describeSecurityGroups.data) {
+                for (var permissions of group.IpPermissions) {
+                    for (var range of permissions.IpRanges) {
+                        if (range.CidrIp === '0.0.0.0/0') openSgs.push(group.GroupId);
+                    }
+                    for (var v6range of permissions.Ipv6Ranges) {
+                        if (v6range.CidrIpv6 === '::/0') openSgs.push(group.GroupId);
+                    }
+                }
+            }
+
             describeInstances.data.forEach(function(instance){
                 if(!instance.Instances || !instance.Instances.length) {
                     helpers.addResult(results, 0, 
@@ -45,10 +66,18 @@ module.exports = {
 
                 instance.Instances.forEach(function(element){
                     var resource = `arn:${awsOrGov}:ec2:${region}:${accountId}:/instance/${element.InstanceId}`;
+                    var openSg = false;
+                    for (var sg of element.SecurityGroups) {
+                        if (openSgs.includes(sg.GroupId)) openSg = true;
+                    }
 
-                    if(element.PublicIpAddress && element.PublicIpAddress.length) {
+                    if(element.PublicIpAddress && element.PublicIpAddress.length && openSg) {
                         helpers.addResult(results, 2,
                             `EC2 instance "${element.InstanceId}" has a public IP address attached`,
+                            region, resource);
+                    } else if (element.PublicIpAddress && element.PublicIpAddress.length && !openSg) {
+                        helpers.addResult(results, 0,
+                            `EC2 instance "${element.InstanceId}" has a public IP address attached but attached security group is not open to public`,
                             region, resource);
                     } else {
                         helpers.addResult(results, 0,
