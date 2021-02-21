@@ -70,5 +70,6 @@ module.exports = {
     wafv2: regions,
     workspaces: ['us-gov-west-1'],
     xray: [],
-    resourcegroupstaggingapi: regions
+    resourcegroupstaggingapi: regions,
+    neptune: regions
 };

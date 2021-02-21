@@ -539,6 +539,13 @@ var calls = {
             paginateReqProp: 'Marker'
         }
     },
+    Neptune: {
+        describeDBClusters: {
+            property: 'DBClusters',
+            paginate: 'Marker',
+            MaxRecords: 100
+        }
+    },
     Organizations: {
         describeOrganization: {
             property: 'Organization',
