@@ -311,6 +311,8 @@ module.exports = {
 
         'transferLoggingEnabled'        : require(__dirname + '/plugins/aws/transfer/transferLoggingEnabled.js'),
 
+        'secretRotationEnabled'         : require(__dirname + '/plugins/aws/secretsmanager/secretRotationEnabled.js'),
+
         'shieldAdvancedEnabled'         : require(__dirname + '/plugins/aws/shield/shieldAdvancedEnabled.js'),
         'shieldEmergencyContacts'       : require(__dirname + '/plugins/aws/shield/shieldEmergencyContacts.js'),
         'shieldProtections'             : require(__dirname + '/plugins/aws/shield/shieldProtections.js'),

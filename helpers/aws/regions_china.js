@@ -49,6 +49,7 @@ module.exports = {
     cloudwatch: regions,
     ecs: regions,
     sagemaker: [],
+    secretsmanager: regions,
     ses: [],
     servicequotas: [],
     shield: [],
