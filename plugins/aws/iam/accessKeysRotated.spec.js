@@ -2,7 +2,7 @@ var expect = require('chai').expect;
 const accessKeysRotated = require('./accessKeysRotated');
 
 var warnDate = new Date();
-warnDate.setMonth(warnDate.getMonth() - 3);
+warnDate.setMonth(warnDate.getMonth() - 4);
 var passDate = new Date();
 passDate.setMonth(passDate.getMonth() - 2);
 var failDate = new Date();
