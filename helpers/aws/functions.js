@@ -307,7 +307,7 @@ function extractStatementPrincipals(statement) {
     return response;
 }
 
-function isValidCondition(statement, allowedConditionKeys, iamConditionOperators, fetchConditionValues) {
+function isValidCondition(statement, allowedConditionKeys, iamConditionOperators, fetchConditionPrincipals) {
     if (statement.Condition && statement.Effect) {
         var effect = statement.Effect;
         var values = [];
@@ -322,8 +322,8 @@ function isValidCondition(statement, allowedConditionKeys, iamConditionOperators
                 var value = subCondition[key];
                 if (iamConditionOperators.string[effect].includes(defaultOperator) ||
                 iamConditionOperators.arn[effect].includes(defaultOperator)) {
-                    if (!value.length || value.includes('*')) return false;
-                    else values.push(value);
+                    if (!value.length || value === '*') return false;
+                    else if (/^[0-9]{12}$/.test(value) || /^arn:aws:(iam|sts)::.+/.test(value)) values.push(value);
                 } else if (defaultOperator === 'Bool') {
                     if ((effect === 'Allow' && !value) || effect === 'Deny' && value) return false;
                 } else if (iamConditionOperators.ipaddress[effect].includes(defaultOperator)) {
@@ -331,9 +331,9 @@ function isValidCondition(statement, allowedConditionKeys, iamConditionOperators
                 } else return false;
             }
         }
+        if (fetchConditionPrincipals) return values;
     }
 
-    if (fetchConditionValues) return values;
     return true;
 }
 

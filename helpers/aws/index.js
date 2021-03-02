@@ -18,12 +18,12 @@ var helpers = {
     ENCRYPTION_LEVELS: ['none', 'sse', 'awskms', 'awscmk', 'externalcmk', 'cloudhsm'],
     IAM_CONDITION_OPERATORS: {
         string: {
-            Allow: ['StringEquals', 'StringEqualsIgnoreCase'],
-            Deny: ['StringNotEquals', 'StringNotEqualsIgnoreCase']
+            Allow: ['StringEquals', 'StringEqualsIgnoreCase', 'StringLike'],
+            Deny: ['StringNotEquals', 'StringNotEqualsIgnoreCase', 'StringNotLike']
         },
         arn: {
-            Allow: 'ArnEquals',
-            Deny: 'ArnNotEquals'
+            Allow: ['ArnEquals', 'ArnLike'],
+            Deny: ['ArnNotEquals', 'ArnNotLike']
         },
         ipaddress: {
             Allow: 'IpAddress',
