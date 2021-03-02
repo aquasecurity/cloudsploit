@@ -67,7 +67,7 @@ module.exports = {
         }
 
         var allowedConditionKeys = config.kms_key_policy_condition_keys.split(',');
-        allowedConditionKeys.push('kms:CallerAccount', 'kms:ViaService')
+        allowedConditionKeys.push('kms:CallerAccount', 'kms:ViaService');
 
         var custom = helpers.isCustom(settings, this.settings);
         if (config.kms_key_policy_whitelisted_account_ids.length) custom = true;
