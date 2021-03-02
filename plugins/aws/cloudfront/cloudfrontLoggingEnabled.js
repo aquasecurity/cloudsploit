@@ -60,6 +60,11 @@ module.exports = {
             var getDistribution = helpers.addSource(cache, source,
                 ['cloudfront', 'getDistribution', region, Distribution.Id]);
 
+            if (!getDistribution || getDistribution.err || !getDistribution.data || !getDistribution.data.Distribution) {
+                helpers.addResult(results, 3,
+                    `Unable to get CloudFront distribution: ${helpers.addError(getDistribution)}`)
+            }
+    
             if (getDistribution.data &&
                 getDistribution.data.Distribution &&
                 getDistribution.data.Distribution.DistributionConfig &&
