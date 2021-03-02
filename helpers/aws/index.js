@@ -22,8 +22,12 @@ var helpers = {
             Deny: ['StringNotEquals', 'StringNotEqualsIgnoreCase']
         },
         arn: {
-            Allow: ['ArnEquals'],
-            Deny: ['ArnNotEquals']
+            Allow: 'ArnEquals',
+            Deny: 'ArnNotEquals'
+        },
+        ipaddress: {
+            Allow: 'IpAddress',
+            Deny: 'NotIpAddress'
         }
     },
 };

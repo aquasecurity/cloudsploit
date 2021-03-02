@@ -307,9 +307,10 @@ function extractStatementPrincipals(statement) {
     return response;
 }
 
-function isValidCondition(statement, allowedConditionKeys, iamConditionOperators) {
+function isValidCondition(statement, allowedConditionKeys, iamConditionOperators, fetchConditionValues) {
     if (statement.Condition && statement.Effect) {
         var effect = statement.Effect;
+        var values = [];
         for (var operator of Object.keys(statement.Condition)) {
             var defaultOperator = operator;
             if (operator.includes(':')) defaultOperator = operator.split(':')[1];
@@ -322,11 +323,17 @@ function isValidCondition(statement, allowedConditionKeys, iamConditionOperators
                 if (iamConditionOperators.string[effect].includes(defaultOperator) ||
                 iamConditionOperators.arn[effect].includes(defaultOperator)) {
                     if (!value.length || value.includes('*')) return false;
+                    else values.push(value);
+                } else if (defaultOperator === 'Bool') {
+                    if ((effect === 'Allow' && !value) || effect === 'Deny' && value) return false;
+                } else if (iamConditionOperators.ipaddress[effect].includes(defaultOperator)) {
+                    if (value === '0.0.0.0/0' || value === '::/0') return false;
                 } else return false;
             }
         }
     }
 
+    if (fetchConditionValues) return values;
     return true;
 }
 
