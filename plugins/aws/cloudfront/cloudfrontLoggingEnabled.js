@@ -20,18 +20,18 @@ module.exports = {
              'for PCI. Enable CloudFront logging to log requests sent to ' +
              'applications in a PCI environment.'
     },
-    // gsl: {
-    //     conditions: [
-    //         {
-    //             service: 'cloudfront',
-    //             api: 'getDistribution',
-    //             property: 'Distribution.DistributionConfig.Logging.Enabled',
-    //             transform: 'STRING',
-    //             op: 'EQ',
-    //             value: 'true'
-    //         }
-    //     ]
-    // },
+    asl: {
+        conditions: [
+            {
+                service: 'cloudfront',
+                api: 'getDistribution',
+                property: 'Distribution.DistributionConfig.Logging.Enabled',
+                transform: 'STRING',
+                op: 'EQ',
+                value: 'true'
+            }
+        ]
+    },
 
     run: function(cache, settings, callback) {
 

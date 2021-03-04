@@ -5,5 +5,21 @@ module.exports = {
     cloudfront: {
         listDistributions: 'ARN',
         getDistribution: 'Distribution.ARN'
+    },
+    s3: {
+        listBuckets: 'name',
+    },
+    sns:{
+        listTopics: 'describeKey',
+        getTopicAttributes: 'Attributes.TopicArn'
+    },
+    kms:{
+        describeKey: 'KeyMetadata.Arn'
+    },
+    iam:{
+        generateCredentialReport: 'arn',
+        listServerCertificates: 'Arn',
+        getGroup: 'Arn',
+        getRole: 'Role.Arn'
     }
 };
