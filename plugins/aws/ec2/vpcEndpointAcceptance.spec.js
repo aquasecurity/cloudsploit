@@ -45,9 +45,24 @@ const vpcEndpointServices = [
         "ManagesVpcEndpoints": false,
         "Tags": []
     },
-]
+];
 
-const createCache = (ServiceDetails) => {
+const describeVpcEndpointServicePermissions = [
+    {
+        "AllowedPrincipals": [
+            {
+                "PrincipalType": 'Account',
+                "Principal": 'arn:aws:iam::978540733285:root'
+            }
+        ]
+    },
+    {
+        "AllowedPrincipals": []
+    },
+];
+
+const createCache = (ServiceDetails, servicePermissions) => {
+    var serviceId = (ServiceDetails && ServiceDetails.length) ? ServiceDetails[0].ServiceId : null;
     return {
         ec2: {
             describeVpcEndpointServices: {
@@ -55,6 +70,13 @@ const createCache = (ServiceDetails) => {
                     data: ServiceDetails
                 },
             },
+            describeVpcEndpointServicePermissions: {
+                'us-east-1': {
+                    [serviceId]: {
+                        data: servicePermissions
+                    }
+                }
+            }
         },
     };
 };
@@ -94,9 +116,27 @@ describe('vpcEndpointAcceptance', function () {
             });
         });
 
+        it('should PASS if VPC endpoint service does not require acceptance by the service owner but no allowed principals found', function (done) {
+            const cache = createCache([vpcEndpointServices[1]], describeVpcEndpointServicePermissions[1]);
+            vpcEndpointAcceptance.run(cache, { allow_blank_whitelisted_principals: 'true' }, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
+
         it('should FAIL if VPC endpoint service does not require acceptance by the service owner', function (done) {
             const cache = createCache([vpcEndpointServices[1]]);
             vpcEndpointAcceptance.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                done();
+            });
+        });
+
+        it('should FAIL if VPC endpoint service does not require acceptance by the service owner for allowed principals', function (done) {
+            const cache = createCache([vpcEndpointServices[1]], describeVpcEndpointServicePermissions[0]);
+            vpcEndpointAcceptance.run(cache, { allow_blank_whitelisted_principals: 'true' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
