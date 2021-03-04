@@ -163,7 +163,7 @@ describe('accessKeysRotated', function () {
             const cache = createCache([generateCredentialReport[0], generateCredentialReport[1]]);
             var settings = {
                 access_keys_rotated_fail: 180,
-                access_keys_rotated_warn: 100
+                access_keys_rotated_warn: 80
             };
             accessKeysRotated.run(cache, settings, (err, results) => {
                 expect(results.length).to.equal(2);
