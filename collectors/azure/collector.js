@@ -202,6 +202,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/configurations?api-version=2017-12-01'
         }
     },
+    serverAdministrators: {
+        list: {
+            reliesOnPath: 'servers.listPostgres',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/administrators?api-version=2017-12-01'
+        }
+    },
     virtualMachineExtensions: {
         list: {
             reliesOnPath: 'virtualMachines.listAll',
