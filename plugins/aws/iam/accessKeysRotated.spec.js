@@ -2,7 +2,7 @@ var expect = require('chai').expect;
 const accessKeysRotated = require('./accessKeysRotated');
 
 var warnDate = new Date();
-warnDate.setMonth(warnDate.getMonth() - 3);
+warnDate.setMonth(warnDate.getMonth() - 4);
 var passDate = new Date();
 passDate.setMonth(passDate.getMonth() - 2);
 var failDate = new Date();
@@ -148,8 +148,8 @@ describe('accessKeysRotated', function () {
         it('should PASS if the user access key was last rotated within the pass limit', function (done) {
             const cache = createCache([generateCredentialReport[0], generateCredentialReport[2]]);
             var settings = {
-                access_keys_last_rotated_fail: 180,
-                access_keys_last_rotated_warn: 90
+                access_keys_rotated_fail: 180,
+                access_keys_rotated_warn: 90
             };
             accessKeysRotated.run(cache, settings, (err, results) => {
                 expect(results.length).to.equal(2);
@@ -162,8 +162,8 @@ describe('accessKeysRotated', function () {
         it('should WARN if the user access key was last rotated within the warn limit', function (done) {
             const cache = createCache([generateCredentialReport[0], generateCredentialReport[1]]);
             var settings = {
-                access_keys_last_rotated_fail: 180,
-                access_keys_last_rotated_warn: 100
+                access_keys_rotated_fail: 180,
+                access_keys_rotated_warn: 100
             };
             accessKeysRotated.run(cache, settings, (err, results) => {
                 expect(results.length).to.equal(2);
@@ -176,8 +176,8 @@ describe('accessKeysRotated', function () {
         it('should FAIL if the user access key was last rotated more than the fail limit', function (done) {
             const cache = createCache([generateCredentialReport[0],generateCredentialReport[0],generateCredentialReport[3]]);
             var settings = {
-                access_keys_last_rotated_fail: 180,
-                access_keys_last_rotated_warn: 90
+                access_keys_rotated_fail: 180,
+                access_keys_rotated_warn: 90
             };
             accessKeysRotated.run(cache, settings, (err, results) => {
                 expect(results.length).to.equal(2);
