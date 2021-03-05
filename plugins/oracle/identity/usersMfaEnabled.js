@@ -1,4 +1,3 @@
-var async = require('async');
 var helpers = require('../../../helpers/oracle');
 
 module.exports = {
@@ -21,24 +20,23 @@ module.exports = {
     run: function (cache, settings, callback) {
         var results = [];
         var source = {};
-        var regions = helpers.regions(settings.govcloud);
-        var noMFAUsers = [];
 
-        async.each(regions.user, function (region, rcb) {
+        var region = helpers.objectFirstKey(cache['regionSubscription']['list']);
+
             var users = helpers.addSource(cache, source,
                 ['user', 'list', region]);
 
-            if (!users) return rcb();
+            if (!users) return callback(null, results, source);
 
             if (users.err || !users.data) {
                 helpers.addResult(results, 3,
                     'Unable to query for user MFA status: ' + helpers.addError(users));
-                return rcb();
+                return callback(null, results, source);
             }
 
             if (users.data.length < 2) {
                 helpers.addResult(results, 0, 'No user accounts found');
-                return rcb();
+                return callback(null, results, source);
             }
 
             users.data.forEach(user => {
@@ -48,10 +46,7 @@ module.exports = {
                     helpers.addResult(results, 2, 'The user has MFA disabled', 'global', user.id);
                 }
             });
-            rcb();
-        }, function () {
-            // Global checking goes here
+
             callback(null, results, source);
-        });
     }
 };

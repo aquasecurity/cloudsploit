@@ -34,19 +34,21 @@ module.exports = {
                 helpers.addResult(results, 0, 'No storage buckets found', region);
                 return rcb();
             }
+            var bucketFound = false;
             buckets.data.forEach(bucket => {
                 if (bucket.id) {
-                    if (bucket.logging &&
-                        bucket.logging.logObjectPrefix == 'AccessLog') {
+                    bucketFound = true;
+                    if (bucket.logging && bucket.logging.logObjectPrefix && bucket.logging.logObjectPrefix.length) {
                         helpers.addResult(results, 0, 'Bucket Logging Enabled', region, bucket.id);
                     } else {
                         helpers.addResult(results, 2, 'Bucket Logging not Enabled', region, bucket.id);
                     }
-                } else {
-                    helpers.addResult(results, 0, 'No storage buckets found', region);
-                    return;
                 }
             });
+
+            if (!bucketFound) {
+                helpers.addResult(results, 0, 'No storage buckets found', region);
+            }
 
             rcb();
         }, function(){
