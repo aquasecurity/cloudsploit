@@ -35,6 +35,18 @@ module.exports = {
             default: 'true'
         }
     },
+    asl: {
+        conditions: [
+            {
+                service: 'iam',
+                api: 'getRole',
+                property: 'Role.RoleLastUsed.LastUsedDate',
+                transform: 'DAYSFROM',
+                op: 'GT',
+                value: 90
+            }
+        ]
+    },
 
     run: function(cache, settings, callback) {
         var config = {

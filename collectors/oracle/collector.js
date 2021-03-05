@@ -20,7 +20,7 @@ var async = require('async');
 
 var helpers = require(__dirname + '/../../helpers/oracle');
 
-const regionSubscriptionService = {name: 'regionSubscription', call: 'list', region: helpers.regions(false).default};
+var regionSubscriptionService;
 
 var globalServices = [
     'core'
@@ -396,6 +396,10 @@ var processCall = function(OracleConfig, collection, settings, regions, call, se
         if (!collection[service][callKey]) collection[service][callKey] = {};
 
         async.eachLimit(regions[service], helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb) {
+            if (region === 'default') {
+                region = OracleConfig.region ? OracleConfig.region : 'us-ashburn-1';
+            }
+
             if (settings.skip_regions &&
                 settings.skip_regions.indexOf(region) > -1 &&
                 globalServices.indexOf(service) === -1) return regionCb();
@@ -458,7 +462,6 @@ var processCall = function(OracleConfig, collection, settings, regions, call, se
 var getRegionSubscription = function(OracleConfig, collection, settings, calls, service, callKey, region, serviceCb) {
 
     var LocalOracleConfig = JSON.parse(JSON.stringify(OracleConfig));
-    LocalOracleConfig.region = region;
     LocalOracleConfig.service = service;
 
     if (!collection[service]) collection[service] = {};
@@ -482,9 +485,10 @@ var getRegionSubscription = function(OracleConfig, collection, settings, calls, 
 // Loop through all of the top-level collectors for each service
 var collect = function(OracleConfig, settings, callback) {
     var collection = {};
-
+    OracleConfig.region = OracleConfig.region ? OracleConfig.region : 'us-ashburn-1';
     OracleConfig.maxRetries = 5;
     OracleConfig.retryDelayOptions = {base: 300};
+    regionSubscriptionService = {name: 'regionSubscription', call: 'list', region: OracleConfig.region};
 
     var regions = helpers.regions(settings.govcloud);
 
