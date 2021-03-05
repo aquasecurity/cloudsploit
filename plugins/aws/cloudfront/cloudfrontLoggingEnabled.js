@@ -20,18 +20,18 @@ module.exports = {
              'for PCI. Enable CloudFront logging to log requests sent to ' +
              'applications in a PCI environment.'
     },
-    // gsl: {
-    //     conditions: [
-    //         {
-    //             service: 'cloudfront',
-    //             api: 'getDistribution',
-    //             property: 'Distribution.DistributionConfig.Logging.Enabled',
-    //             transform: 'STRING',
-    //             op: 'EQ',
-    //             value: 'true'
-    //         }
-    //     ]
-    // },
+    asl: {
+        conditions: [
+            {
+                service: 'cloudfront',
+                api: 'getDistribution',
+                property: 'Distribution.DistributionConfig.Logging.Enabled',
+                transform: 'STRING',
+                op: 'EQ',
+                value: 'true'
+            }
+        ]
+    },
 
     run: function(cache, settings, callback) {
 
@@ -62,7 +62,7 @@ module.exports = {
 
             if (!getDistribution || getDistribution.err || !getDistribution.data || !getDistribution.data.Distribution) {
                 helpers.addResult(results, 3,
-                    `Unable to get CloudFront distribution: ${helpers.addError(getDistribution)}`)
+                    `Unable to get CloudFront distribution: ${helpers.addError(getDistribution)}`);
             }
     
             if (getDistribution.data &&
