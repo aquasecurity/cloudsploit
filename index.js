@@ -169,13 +169,12 @@ if (config.credentials.aws.credential_file) {
 } else if (config.credentials.oracle.credential_file) {
     settings.cloud = 'oracle';
     cloudConfig = loadHelperFile(config.credentials.oracle.credential_file);
-    if (!cloudConfig || !cloudConfig.tenancyId || !cloudConfig.compartmentId || !cloudConfig.userId || !cloudConfig.keyValue) {
-        console.error('ERROR: Oracle credential file does not have tenancyId, compartmentId, userId, or keyValue');
+    if (!cloudConfig || !cloudConfig.tenancyId || !cloudConfig.compartmentId || !cloudConfig.userId || !cloudConfig.keyValue || !cloudConfig.region) {
+        console.error('ERROR: Oracle credential file does not have tenancyId, compartmentId, userId, region, or keyValue');
         process.exit(1);
     }
 
     cloudConfig.RESTversion = '/20160918';
-    cloudConfig.region = 'us-ashburn-1';
 } else if (config.credentials.oracle.tenancy_id) {
     settings.cloud = 'oracle';
     checkRequiredKeys(config.credentials.oracle, ['compartment_id', 'user_id', 'key_fingerprint', 'key_value']);
@@ -186,7 +185,7 @@ if (config.credentials.aws.credential_file) {
         userId: config.credentials.oracle.user_id,
         keyFingerprint: config.credentials.oracle.key_fingerprint,
         keyValue: config.credentials.oracle.key_value,
-        region: 'us-ashburn-1',
+        region: config.credentials.oracle.region,
     };
 } else if (config.credentials.github.credential_file) {
     settings.cloud = 'github';

@@ -9,6 +9,18 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_WorkingWithGroupsAndUsers.html',
     recommended_action: 'Remove unused groups without users',
     apis: ['IAM:listGroups', 'IAM:getGroup'],
+    asl: {
+        conditions: [
+            {
+                service: 'iam',
+                api: 'getGroup',
+                property: 'Users',
+                transform: 'COUNT',
+                op: 'GT',
+                value: 0
+            }
+        ]
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
