@@ -11,6 +11,20 @@ module.exports = {
     remediation_description: 'The password policy for maximum password age will be set to the value set by the user. Otherwise, it will default to 179.',
     remediation_min_version: '202006221808',
     apis_remediate: ['IAM:getAccountPasswordPolicy'],
+    remediation_inputs: {
+        maxPasswordAge: {
+            name: '(Optional) Maximum Password Age',
+            description: 'The maximum age of passwords to allow in the account policy 1-1095',
+            regex: '^([1-9][0-9]{0,2}|10[0-9][0-5])$',
+            required: false
+        },
+        maxPasswordAgeCreatePolicy: {
+            name: 'Create Password Policy',
+            description: 'Whether to create a new password policy if one does not already exist.',
+            regex: '^(true|false)$',
+            required: false
+        }
+    },
     actions: {remediate: ['IAM:updateAccountPasswordPolicy'], rollback: ['IAM:updateAccountPasswordPolicy']},
     permissions: {remediate: ['iam:UpdateAccountPasswordPolicy'], rollback: ['iam:UpdateAccountPasswordPolicy']},
     compliance: {
@@ -31,7 +45,18 @@ module.exports = {
             default: 180
         }
     },
-
+    asl: {
+        conditions: [
+            {
+                service: 'iam',
+                api: 'getAccountPasswordPolicy',
+                property: 'MaxPasswordAge',
+                transform: 'INTEGER',
+                op: 'GT',
+                value: 90
+            }
+        ]
+    },
     run: function(cache, settings, callback) {
         var config = {
             max_password_age_fail: settings.max_password_age_fail || this.settings.max_password_age_fail.default,

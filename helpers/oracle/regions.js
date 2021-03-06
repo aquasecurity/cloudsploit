@@ -16,14 +16,14 @@ var regions = [
 ];
 
 module.exports = {
-    default: ['us-ashburn-1'],
+    default: ['default'],
     all: regions,
     vcn: regions,
     group: regions,
     publicIp: regions,
     securityList: regions,
     loadBalancer: regions,
-    user: ['us-ashburn-1'],
+    user: ['default'],
     userGroupMembership: regions,
     authenticationPolicy: regions,
     exprt: regions,
@@ -45,13 +45,13 @@ module.exports = {
     volume: regions,
     volumeBackup: regions,
     bootVolumeAttachment: regions,
-    availabilityDomain: ['us-ashburn-1'],
+    availabilityDomain: ['default'],
     volumeGroup: regions,
     volumeGroupBackup: regions,
     volumeBackupPolicy: regions,
     volumeBackupPolicyAssignment: regions,
     preAuthenticatedRequest: regions,
-    configuration: ['us-ashburn-1'],
+    configuration: ['default'],
     dbSystem: regions,
     mountTarget: regions,
     namespace: regions

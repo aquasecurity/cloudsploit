@@ -14,6 +14,12 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/elb-security-policy-options.html',
     recommended_action: 'Remove non-HTTPS listeners from load balancer.',
     apis: ['ELBv2:describeLoadBalancers', 'ELBv2:describeListeners'],
+    remediation_description: 'All HTTP Listeners will be deleted',
+    remediation_min_version: '202011062139',
+    apis_remediate: ['ELBv2:describeLoadBalancers','ELBv2:describeListeners'],
+    actions: {remediate: ['ELBv2:deleteListener'], rollback: ['ELBv2:createListener']},
+    permissions: {remediate: ['elasticloadbalancing:DeleteListener'], rollback: ['elasticloadbalancing:CreateListener']},
+    realtime_triggers: ['elasticloadbalancing:CreateListener','elasticloadbalancing:CreateLoadBalancer'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -49,7 +55,7 @@ module.exports = {
                     noListeners = false;
                     describeListeners.data.Listeners.forEach(function(listener){
                         // if it is not https add errors to results
-                        if (listener.Protocol != 'HTTPS'){
+                        if (listener.Protocol && listener.Port && (listener.Protocol !== 'HTTPS' && listener.Protocol !== 'SSL')) {
                             non_https_listener.push(
                                 listener.Protocol + ' / ' +
                                 listener.Port
@@ -73,6 +79,91 @@ module.exports = {
             });
         }, function(){
             callback(null, results, source);
+        });
+    },
+    remediate: function(config, cache, settings, resource, callback) {
+        var remediation_file = settings.remediation_file;
+        var putCall = this.actions.remediate;
+        var pluginName = 'elbv2HttpsOnly';
+        var actions = [];
+        var errors = [];
+
+        if (resource && resource.length) {
+            config.region = resource.split(':')[3];
+        } else {
+            return callback('No resource to remediate');
+        }
+        var describeLoadBalancers;
+
+        if (cache['elbv2'] &&
+            cache['elbv2']['describeLoadBalancers'] &&
+            cache['elbv2']['describeLoadBalancers'][config.region] &&
+            cache['elbv2']['describeLoadBalancers'][config.region].data &&
+            cache['elbv2']['describeLoadBalancers'][config.region].data.length) {
+            describeLoadBalancers = cache['elbv2']['describeLoadBalancers'][config.region].data;
+        } else {
+            return callback('Unable to query for load balancers');
+        }
+
+        resource = resource.replace('listener', 'loadbalancer');
+        resource = resource.split('/');
+        resource.pop();
+        resource = resource.join('/');
+
+        var failingLoadBalancer = describeLoadBalancers.find(loadBalancer => {
+            return loadBalancer.LoadBalancerArn === resource;
+        });
+
+        if (!failingLoadBalancer || !failingLoadBalancer.DNSName) {
+            return callback('Unable to query for ELBv2 Listeners');
+        }
+        var failingDNSName = failingLoadBalancer.DNSName;
+        var describeListeners;
+
+        if (cache['elbv2'] &&
+            cache['elbv2']['describeListeners'] &&
+            cache['elbv2']['describeListeners'][config.region] &&
+            cache['elbv2']['describeListeners'][config.region][failingDNSName] &&
+            cache['elbv2']['describeListeners'][config.region][failingDNSName].data &&
+            cache['elbv2']['describeListeners'][config.region][failingDNSName].data.Listeners) {
+            describeListeners = cache['elbv2']['describeListeners'][config.region][failingDNSName].data.Listeners;
+        } else {
+            return callback('Unable to query for ELBv2 Listeners');
+        }
+
+        var failingListeners = describeListeners.filter(listener => {
+            if (listener.Protocol === 'HTTP') {
+                return listener;
+            }
+        });
+        if (!failingListeners || !failingListeners.length) {
+            return callback('No failing listeners found');
+        }
+
+        async.each(failingListeners, function(failingListener, cb) {
+            var params = {
+                'ListenerArn': failingListener.ListenerArn
+            };
+
+            helpers.remediatePlugin(config, putCall[0], params, function(error, action) {
+                if (error && (error.length || Object.keys(error).length)) {
+                    errors.push(error);
+                } else if (action && (action.length || Object.keys(action).length)){
+                    actions.push(action);
+                }
+
+                cb();
+            });
+        }, function() {
+            if (errors && errors.length) {
+                remediation_file['post_remediate']['actions'][pluginName]['error'] = errors.join(', ');
+                settings.remediation_file = remediation_file;
+                return callback(errors, null);
+            } else {
+                remediation_file['post_remediate']['actions'][pluginName][resource] = actions;
+                settings.remediation_file = remediation_file;
+                return callback(null, actions);
+            }
         });
     }
 };

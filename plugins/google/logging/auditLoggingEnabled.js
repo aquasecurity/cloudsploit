@@ -27,7 +27,7 @@ module.exports = {
             }
 
             if (!iamPolicies.data.length) {
-                helpers.addResult(results, 0, 'No IAM policies found.', region);
+                helpers.addResult(results, 2, 'No IAM policies found.', region);
                 return rcb();
             }
 

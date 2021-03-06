@@ -109,6 +109,7 @@ var calls = {
     securityContacts: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Security/securityContacts?api-version=2017-08-01-preview',
+            ignoreLocation: true
         }
     },
     subscriptions: {
@@ -214,6 +215,13 @@ var postcalls = {
             reliesOnPath: 'storageAccounts.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/blobServices/default/containers?api-version=2019-06-01'
+        }
+    },
+    blobServices: {
+        list: {
+            reliesOnPath: 'storageAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/blobServices?api-version=2019-06-01'
         }
     },
     fileShares: {
@@ -437,10 +445,10 @@ var collect = function(AzureConfig, settings, callback) {
                     var regionsToLoop = parseCollection(subCallObj.reliesOnPath, collection);
                     if (regionsToLoop && Object.keys(regionsToLoop).length) {
                         // Loop through regions
-                        async.eachOf(regionsToLoop, function(regionObj, region, regionCb) {
+                        async.eachOfLimit(regionsToLoop, 5, function(regionObj, region, regionCb) {
                             if (regionObj && regionObj.data && regionObj.data.length) {
                                 if (!collectionObj[region]) collectionObj[region] = {};
-                                async.each(regionObj.data, function(regionData, regionDataCb) {
+                                async.eachLimit(regionObj.data, 10, function(regionData, regionDataCb) {
                                     var localReq = {
                                         url: subCallObj.url,
                                         post: subCallObj.post,
@@ -516,7 +524,7 @@ var collect = function(AzureConfig, settings, callback) {
                         async.eachOf(regionsToLoop, function(regionObj, region, regionCb) {
                             if (!collectionObj[region]) collectionObj[region] = {};
                             // Loop through the resources
-                            async.eachOf(regionObj, function(resourceObj, resourceId, resourceCb){
+                            async.eachOfLimit(regionObj, 5, function(resourceObj, resourceId, resourceCb){
                                 function processResource(resourceData, resourceDataCb) {
                                     var localReq = {
                                         url: subCallObj.url,
@@ -554,14 +562,14 @@ var collect = function(AzureConfig, settings, callback) {
                                 }
                                 
                                 if (Array.isArray(resourceObj)) {
-                                    async.each(resourceObj, function(resourceData, resourceDataCb) {
+                                    async.eachLimit(resourceObj, 10, function(resourceData, resourceDataCb) {
                                         processResource(resourceData, resourceDataCb);
                                     }, function(){
                                         resourceCb();
                                     });
                                 } else {
                                     if (resourceObj && resourceObj.data && resourceObj.data.length) {
-                                        async.each(resourceObj.data, function(resourceData, resourceDataCb) {
+                                        async.eachLimit(resourceObj.data, 10, function(resourceData, resourceDataCb) {
                                             processResource(resourceData, resourceDataCb);
                                         }, function() {
                                             resourceCb();

@@ -20,6 +20,14 @@ module.exports = {
         remediate: ['s3:PutEncryptionConfiguration'],
         rollback: ['s3:PutEncryptionConfiguration']
     },
+    remediation_inputs: {
+        kmsKeyId: {
+            name: '(Optional) KMS Key ID',
+            description: 'The KMS Key ID used for encryption',
+            regex: '^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$',
+            required: false
+        }
+    },
     realtime_triggers: ['s3:DeleteBucketEncryption', 's3:CreateBucket'],
     settings: {
         s3_encryption_require_cmk: {
@@ -32,13 +40,13 @@ module.exports = {
             name: 'S3 Encryption Allow Pattern',
             description: 'When set, whitelists buckets matching the given pattern. Useful for overriding buckets outside the account control.',
             regex: '^.{1,255}$',
-            default: false
+            default: ''
         },
         s3_encryption_kms_alias: {
             name: 'S3 Encryption KMS Alias',
             description: 'If set, S3 encryption must be configured using the KMS key alias specified. Be sure to include the alias/ prefix. Comma-delimited.',
             regex: '^alias/[a-zA-Z0-9_/-,]{0,256}$',
-            default: false
+            default: ''
         },
         s3_encryption_allow_cloudfront: {
             name: 'S3 Encryption Allow CloudFront',

@@ -1,11 +1,18 @@
 var ONE_DAY = 24*60*60*1000;
+var ONE_HOUR = 60*60*1000;
 
 var daysBetween = function(date1, date2) {
     return Math.round(Math.abs((new Date(date1).getTime() - new Date(date2).getTime())/(ONE_DAY)));
 };
 
+var hoursBetween = function(date1, date2) {
+    return Math.round(Math.abs((new Date(date1).getTime() - new Date(date2).getTime())/(ONE_HOUR)));
+};
+
 module.exports = {
     daysBetween: daysBetween,
+
+    hoursBetween: hoursBetween,
 
     daysAgo: function(date) {
         return daysBetween(date, new Date());
@@ -104,5 +111,27 @@ module.exports = {
 
     objectFirstKey: function(object) {
         return Object.keys(object)[0];
+    },
+
+    isValidArray: function(value){
+        return (Array.isArray(value) && value.length > 0);
+    },
+
+    isValidObject: function(value){
+        return (value && (typeof value === 'object') && (value.constructor === Object));
+    },
+
+    compareVersions: function compareVersions(v1, v2) {
+        var s1 = v1.split('.');
+        var s2 = v2.split('.');
+
+        for (var i = 0; i < Math.max(s1.length - 1, s2.length - 1); i++) {
+            var n1 = parseInt(s1[i] || 0, 10);
+            var n2 = parseInt(s2[i] || 0, 10);
+
+            if (n1 > n2) return 1;
+            if (n2 > n1) return -1;
+        }
+        return 0;
     }
 };

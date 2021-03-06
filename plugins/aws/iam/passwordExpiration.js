@@ -11,12 +11,32 @@ module.exports = {
     remediation_description: 'The password policy for password expiration will be set to true.',
     remediation_min_version: '202006221808',
     apis_remediate: ['IAM:getAccountPasswordPolicy'],
+    remediation_inputs: {
+        passwordExpirationCreatePolicy: {
+            name: 'Create Password Policy',
+            description: 'Whether to create a new password policy if one does not already exist.',
+            regex: '^(true|false)$',
+            required: false
+        }
+    },
     actions: {remediate: ['IAM:updateAccountPasswordPolicy'], rollback: ['IAM:updateAccountPasswordPolicy']},
     permissions: {remediate: ['iam:UpdateAccountPasswordPolicy'], rollback: ['iam:UpdateAccountPasswordPolicy']},
     compliance: {
         pci: 'PCI requires that user passwords are rotated every 90 days. Forcing ' +
              'password expirations enforces this policy.',
         cis1: '1.11 Ensure IAM password policy expires passwords within 90 days or less'
+    },
+    asl: {
+        conditions: [
+            {
+                service: 'iam',
+                api: 'getAccountPasswordPolicy',
+                property: 'MaxPasswordAge',
+                transform: 'INTEGER',
+                op: 'GT',
+                value: 90
+            }
+        ]
     },
 
     run: function(cache, settings, callback) {

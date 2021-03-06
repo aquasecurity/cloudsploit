@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'To provide additional security, CloudTrail logging buckets should require an MFA token to delete objects',
     recommended_action: 'Enable MFA delete on the CloudTrail bucket',
     link: 'http://docs.aws.amazon.com/AmazonS3/latest/dev/Versioning.html#MultiFactorAuthenticationDelete',
-    apis: ['CloudTrail:describeTrails', 'S3:getBucketVersioning'],
+    apis: ['CloudTrail:describeTrails', 'S3:getBucketVersioning', 'S3:listBuckets'],
     compliance: {
         hipaa: 'An MFA delete policy helps ensure that individuals attempting to ' +
                 'delete CloudTrail logs have verified their identity. HIPAA requires ' +

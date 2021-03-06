@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'CloudFormation supports the NoEcho property for sensitive values, which should be used to ensure secrets are not exposed in the CloudFormation UI and APIs.',
     link: 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html',
     recommended_action: 'Update the sensitive parameters to use the NoEcho property.',
-    apis: ['CloudFormation:describeStacks'],
+    apis: ['CloudFormation:listStacks', 'CloudFormation:describeStacks'],
     settings: {
         plain_text_parameters: {
             name: 'CloudFormation Plaintext Parameters',
@@ -23,52 +23,67 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
         var secretWords = this.settings.plain_text_parameters.default;
-        async.each(regions.cloudformation, function(region, rcb){
+        secretWords = secretWords.split(',');
+        async.each(regions.cloudformation, function(region, rcb) {
+            var listStacks = helpers.addSource(cache, source,
+                ['cloudformation', 'listStacks', region]);
 
-            var describeStacks = helpers.addSource(cache, source,
-                ['cloudformation', 'describeStacks', region]);
-            if (!describeStacks) return rcb();
+            if (!listStacks) return rcb();
 
-            if (describeStacks.err || !describeStacks.data) {
-                helpers.addResult(results, 3,
-                    'Unable to describe stacks: ' + helpers.addError(describeStacks), region);
+            if (listStacks.err || !listStacks.data) {
+                helpers.addResult(results, 3, `Unable to query for  CloudFormation stacks: ${helpers.addError(listStacks)}`, region);
                 return rcb();
             }
 
-            if (!describeStacks.data.length) {
+            if (!listStacks.data.length) {
                 helpers.addResult(results, 0, 'No CloudFormation stacks found', region);
                 return rcb();
             }
-            
-            for (var s in describeStacks.data){
-                // arn:aws:cloudformation:region:account-id:stack/stack-name/stack-id
-                var stack = describeStacks.data[s];
-                var resource = stack.StackId;
-                let foundStrings = [];
 
-                if(!stack.Parameters || !stack.Parameters.length) {
-                    helpers.addResult(results, 0,
-                        'Template does not contain any parameters', region, resource);
-                    continue;
+            async.each(listStacks.data, function(stack, cb) {
+                if (!stack.StackId || !stack.StackName) return cb();
+
+                var describeStacks = helpers.addSource(cache, source,
+                    ['cloudformation', 'describeStacks', region, stack.StackName]);
+
+                if (!describeStacks || describeStacks.err || !describeStacks.data ||
+                    !describeStacks.data.Stacks || !describeStacks.data.Stacks.length) {
+                    helpers.addResult(results, 3, `Unable to query for CloudFormation stack detils: ${helpers.addError(describeStacks)}`,
+                        region, stack.StackId);
+                    return cb();
                 }
 
-                stack.Parameters.forEach(function(parameter){
-                    if(parameter.ParameterKey && secretWords.includes(parameter.ParameterKey.toLowerCase()) && !parameter.ParameterValue.match('^[*]+$')) {
-                        foundStrings.push(parameter.ParameterKey);
+                for (var stackDetails of describeStacks.data.Stacks) {
+                    var resource = stackDetails.StackId;
+                    let foundStrings = [];
+
+                    if (!stackDetails.Parameters || !stackDetails.Parameters.length) {
+                        helpers.addResult(results, 0,
+                            'Template does not contain any parameters', region, resource);
+                        continue;
                     }
-                });
 
-                if(foundStrings && foundStrings.length) {
-                    helpers.addResult(results, 2,
-                        'Template contains the following potentially-sensitive parameters: ' + foundStrings, region, resource);
-                }
-                else {
-                    helpers.addResult(results, 0,
-                        'Template does not contain any potentially-sensitive parameters', region, resource);
-                }
-            }
+                    for (var parameter of stackDetails.Parameters) {
+                        if (parameter.ParameterKey && secretWords.includes(parameter.ParameterKey.toLowerCase()) && !parameter.ParameterValue.match('^[*]+$')) {
+                            foundStrings.push(parameter.ParameterKey);
+                        }
+                    }
 
-            rcb();
+                    if (foundStrings && foundStrings.length) {
+                        helpers.addResult(results, 2,
+                            `Template contains these potentially-sensitive parameters: ${foundStrings.join(', ')}`,
+                            region, resource);
+                    } else {
+                        helpers.addResult(results, 0,
+                            'Template does not contain any potentially-sensitive parameters',
+                            region, resource);
+                    }
+                }
+
+                cb();
+            }, function(){
+                rcb();
+            });
         }, function(){
             callback(null, results, source);
         });
