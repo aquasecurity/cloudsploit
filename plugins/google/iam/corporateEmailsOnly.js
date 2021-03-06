@@ -36,8 +36,8 @@ module.exports = {
             iamPolicy.bindings.forEach(roleBinding => {
                 if (roleBinding.members && roleBinding.members.length) {
                     roleBinding.members.forEach(member => {
-                        var emailArr = member.split('@');
-                        if (emailArr.length && emailArr.length > 1) {
+                        if (member.indexOf('@') >= 0 ) {
+                            var emailArr = member.split('@');
                             var provider = emailArr[1].split('.');
                             if (provider[0] === 'gmail' && (gmailUsers.indexOf(member) === -1)) {
                                 gmailUsers.push(member);
