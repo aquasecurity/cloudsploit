@@ -60,7 +60,7 @@ module.exports = {
                     if (!stackDetails.Parameters || !stackDetails.Parameters.length) {
                         helpers.addResult(results, 0,
                             'Template does not contain any parameters', region, resource);
-                        return;
+                        continue;
                     }
 
                     for (var parameter of stackDetails.Parameters) {

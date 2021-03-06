@@ -43,7 +43,7 @@ module.exports = {
             }
 
             describeVpcEndpointServices.data = describeVpcEndpointServices.data.filter(service => service.Owner != 'amazon');
-            
+
             if (!describeVpcEndpointServices.data.length) {
                 helpers.addResult(results, 0,
                     'No user owned VPC endpoint services present', region);
@@ -54,7 +54,7 @@ module.exports = {
                 if (!service.ServiceId) continue;
 
                 var resource = `arn:${defaultPartition}:ec2:${region}:${service.Owner}:vpc-endpoint-service/${service.ServiceId}`;
-                
+
                 if (service.AcceptanceRequired) {
                     helpers.addResult(results, 0,
                         `VPC endpoint service ${service.ServiceId} requires acceptance by the service owner`,
@@ -77,7 +77,7 @@ module.exports = {
                             !describeVpcEndpointServicePermissions.data.AllowedPrincipals.length) {
                             helpers.addResult(results, 0,
                                 `VPC endpoint service ${service.ServiceId} does not require acceptance by the service owner but no allowed principals found`,
-                                region, resource);    
+                                region, resource);
                         } else {
                             helpers.addResult(results, 2,
                                 `VPC endpoint service ${service.ServiceId} does not require acceptance by the service owner for allowed principals`,
