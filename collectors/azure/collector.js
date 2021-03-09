@@ -187,13 +187,6 @@ var calls = {
 };
 
 var postcalls = {
-    advancedThreatProtection: {
-        get: {
-            reliesOnPath: 'databaseAccounts.list',
-            properties: ['id'],
-            url: 'https://management.azure.com/{id}/providers/Microsoft.Security/advancedThreatProtectionSettings/current?api-version=2017-08-01-preview'
-        }
-    },
     serverBlobAuditingPolicies: {
         get: {
             reliesOnPath: 'servers.listSql',

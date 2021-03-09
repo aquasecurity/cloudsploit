@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var advancedThreatProtection = require('./advancedThreatProtection');
+var automaticFailoverEnabled = require('./automaticFailoverEnabled');
 
 const databaseAccounts = [
     {
@@ -11,7 +11,7 @@ const databaseAccounts = [
         "provisioningState": "Succeeded",
         "documentEndpoint": "https://aqua-cosmos.documents.azure.com:443/",
         "publicNetworkAccess": "Enabled",
-        "enableAutomaticFailover": false,
+        "enableAutomaticFailover": true,
         "enableMultipleWriteLocations": false,
         "enablePartitionKeyMonitor": false,
         "isVirtualNetworkFilterEnabled": false,
@@ -46,23 +46,7 @@ const databaseAccounts = [
     }
 ];
 
-const atpGet = [
-    {
-        id: 'subscriptions/123/resourceGroups/test-rg/providers/Microsoft.DocumentDB/databaseAccounts/aqua-cosmos/providers/Microsoft.Security/advancedThreatProtectionSettings/current',
-        type: 'Microsoft.Security/advancedThreatProtectionSettings',
-        name: 'current',
-        isEnabled: true
-    },
-    {
-        id: 'subscriptions/123/resourceGroups/test-rg/providers/Microsoft.DocumentDB/databaseAccounts/aqua-cosmos/providers/Microsoft.Security/advancedThreatProtectionSettings/current',
-        type: 'Microsoft.Security/advancedThreatProtectionSettings',
-        name: 'current',
-        isEnabled: false
-    }
-];
-
-const createCache = (accounts, accountsErr, atpGet, atpErr) => {
-    const id = (accounts && accounts.length) ? accounts[0].id : null;
+const createCache = (accounts, accountsErr) => {
     return {
         databaseAccounts: {
             list: {
@@ -71,27 +55,17 @@ const createCache = (accounts, accountsErr, atpGet, atpErr) => {
                     data: accounts
                 }
             }
-        },
-        advancedThreatProtection: {
-            get: {
-                'eastus': {
-                    [id]: {
-                        err: atpErr,
-                        data: atpGet
-                    }
-                }
-            }
         }
     }
 };
 
-describe('advancedThreatProtection', function() {
+describe('automaticFailoverEnabled', function() {
     describe('run', function() {
-        it('should give passing result if no CosmosDB database accounts found', function(done) {
+        it('should give passing result if no Cosmos DB accounts found', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No CosmosDB database accounts found');
+                expect(results[0].message).to.include('No Cosmos DB accounts found');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
@@ -100,76 +74,56 @@ describe('advancedThreatProtection', function() {
                 []
             );
 
-            advancedThreatProtection.run(cache, {}, callback);
+            automaticFailoverEnabled.run(cache, {}, callback);
         });
 
-        it('should give passing result if Advanced threat protection feature is not supported for current resource', function(done) {
+        it('should give passing result if automatic failover is enabled for Cosmos DB account', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Advanced threat protection feature is not supported');
+                expect(results[0].message).to.include('Automatic failover is enabled for Cosmos DB account');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
 
             const cache = createCache(
-                [databaseAccounts[1]]
+                [databaseAccounts[0]]
             );
 
-            advancedThreatProtection.run(cache, {}, callback);
+            automaticFailoverEnabled.run(cache, {}, callback);
         });
 
-        it('should give failing result if Advanced threat protection is not enabled for CosmosDB database account', function(done) {
+        it('should give failing result if automatic failover is not enabled for Cosmos DB account', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Advanced threat protection is not enabled');
+                expect(results[0].message).to.include('Automatic failover is not enabled for Cosmos DB account');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
 
             const cache = createCache(
-                [databaseAccounts[0]],
-                null,
-                atpGet[1]
+                [databaseAccounts[1]],
             );
 
-            advancedThreatProtection.run(cache, {}, callback);
+            automaticFailoverEnabled.run(cache, {}, callback);
         });
 
-        it('should give passing result if Advanced threat protection is enabled for CosmosDB database account', function(done) {
-            const callback = (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Advanced threat protection is enabled');
-                expect(results[0].region).to.equal('eastus');
-                done()
-            };
-
-            const cache = createCache(
-                [databaseAccounts[0]],
-                null,
-                atpGet[0]
-            );
-
-            advancedThreatProtection.run(cache, {}, callback);
-        });
-
-        it('should give unknown result if unable to query for CosmosDB database accounts', function(done) {
+        it('should give unknown result if unable to query for Cosmos DB accounts', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for CosmosDB database accounts');
+                expect(results[0].message).to.include('Unable to query for Cosmos DB accounts');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
 
             const cache = createCache(
                 [],
-                { message: 'Unable to query CosmosDB accounts'}
+                { message: 'Unable to query Cosmos DB accounts'}
             );
 
-            advancedThreatProtection.run(cache, {}, callback);
+            automaticFailoverEnabled.run(cache, {}, callback);
         });
     })
-})
+});
