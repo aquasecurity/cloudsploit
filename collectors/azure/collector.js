@@ -178,10 +178,22 @@ var calls = {
         listPostgres: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.DBforPostgreSQL/servers?api-version=2017-12-01'
         }
+    },
+    databaseAccounts: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.DocumentDB/databaseAccounts?api-version=2020-06-01-preview'
+        }
     }
 };
 
 var postcalls = {
+    advancedThreatProtection: {
+        get: {
+            reliesOnPath: 'databaseAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/Microsoft.Security/advancedThreatProtectionSettings/current?api-version=2017-08-01-preview'
+        }
+    },
     serverBlobAuditingPolicies: {
         get: {
             reliesOnPath: 'servers.listSql',
