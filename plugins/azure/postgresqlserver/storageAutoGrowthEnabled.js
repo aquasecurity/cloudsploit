@@ -38,8 +38,8 @@ module.exports = {
                 if (storageProfile) {
                     if (storageProfile.storageAutogrow &&
                         storageProfile.storageAutogrow.toLowerCase() == 'enabled') {
-                            helpers.addResult(results, 0,
-                                'Storage Auto Growth is enabled for PostgreSQL Server', location, postgresServer.id);
+                        helpers.addResult(results, 0,
+                            'Storage Auto Growth is enabled for PostgreSQL Server', location, postgresServer.id);
                     } else {
                         helpers.addResult(results, 2,
                             'Storage Auto Growth is not enabled for PostgreSQL Server', location, postgresServer.id);
