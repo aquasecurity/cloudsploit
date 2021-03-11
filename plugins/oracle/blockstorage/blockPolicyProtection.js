@@ -1,4 +1,4 @@
-var async = require('async');
+    var async = require('async');
 var helpers = require('../../../helpers/oracle');
 
 module.exports = {
@@ -12,8 +12,8 @@ module.exports = {
     settings: {
         policy_group_admins: {
             name: 'Admin groups with delete permissions.',
-            description: 'The admin groups allowed to delete resources.',
-            regex: '(?im)^([a-z_](?:\\.\\-\\w|\\-\\.\\w|\\-\\w|\\.\\w|\\w)+)$',
+            description: 'Comma separated list of the admin groups allowed to delete resources.',
+            regex: '^.{1,255}$',
             default: 'Administrators'
         },
     },
@@ -24,25 +24,43 @@ module.exports = {
         var regions = helpers.regions(settings.govcloud);
         var config = {
             policy_group_admins: settings.policy_group_admins || this.settings.policy_group_admins.default
-
         };
 
-        async.each(regions.default, function (region, rcb) {
+        var region = helpers.objectFirstKey(cache['regionSubscription']['list'])
+        
+        var policies = helpers.addSource(cache, source,
+            ['policy', 'list', region]);
 
-            var policies = helpers.addSource(cache, source,
-                ['policy', 'list', region]);
+        if (!policies) return callback(null, results, source);
 
-            if (!policies) return rcb();
+        if (policies.err || !policies.data) {
+            helpers.addResult(results, 3,
+                'Unable to query for policies: ' + helpers.addError(policies), region);
+            return callback(null, results, source);
+        }
 
-            if (policies.err || !policies.data) {
-                helpers.addResult(results, 3,
-                    'Unable to query for policies: ' + helpers.addError(policies), region);
-                return rcb();
-            }
+        if (!policies.data.length) {
+            helpers.addResult(results, 0, 'No policies found', region);
+            return callback(null, results, source);
+        }
+        var policyProtection = true;
+        var entered = false;
+        var resourceTypes = ['volume', 'volume-backups', 'volume-attachments', 'volume-family'];
+        policies.data.forEach(policy => {
+            if (policy.statements &&
+                policy.statements.length) {
+                entered = true;
+                policy.statements.forEach(statement => {
+                    var statementObj = helpers.normalizePolicyStatement(statement);
+                    var statementPasses = helpers.testStatement(statementObj, resourceTypes, config.policy_group_admins);
 
-            if (!policies.data.length) {
-                helpers.addResult(results, 0, 'No policies found', region);
-                return rcb();
+                    if (!statementPasses) {
+                        policyProtection = false;
+
+                        helpers.addResult(results, 2,
+                            `${statementObj['subjectType']}${statementObj['subject']} has the ability to delete all block storage volumes in ${statementObj['location']}`, region, policy.id);
+                    }
+                });
             }
             var policyProtection = true;
             var entered = false;
