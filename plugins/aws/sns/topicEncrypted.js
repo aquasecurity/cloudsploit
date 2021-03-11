@@ -29,6 +29,18 @@ module.exports = {
         rollback: ['sns:SetTopicAttributes']
     },
     realtime_triggers: ['sns:CreateTopic', 'sns:SetTopicAttributes'],
+    asl: {
+        conditions: [
+            {
+                service: 'sns',
+                api: 'getTopicAttributes',
+                property: 'Attributes.KmsMasterKeyId',
+                transform: 'STRING',
+                op: 'NE',
+                value: null
+            }
+        ]
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

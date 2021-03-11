@@ -2,7 +2,7 @@ var async = require('async');
 var exports = require('./exports.js');
 var suppress = require('./postprocess/suppress.js');
 var output = require('./postprocess/output.js');
-var gslRunner = require('./helpers/gsl.js');
+var aslRunner = require('./helpers/asl.js');
 
 /**
  * The main function to execute CloudSploit scans.
@@ -193,11 +193,11 @@ var engine = function(cloudConfig, settings) {
                 setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
             };
 
-            if (plugin.gsl) {
-                console.log(`INFO: Using custom GSL for plugin: ${plugin.title}`);
+            if (plugin.asl) {
+                console.log(`INFO: Using custom ASL for plugin: ${plugin.title}`);
                 // Inject APIs and resource maps
-                plugin.gsl.apis = plugin.apis;
-                gslRunner(collection, plugin.gsl, resourceMap, postRun);
+                plugin.asl.apis = plugin.apis;
+                aslRunner(collection, plugin.asl, resourceMap, postRun);
             } else {
                 plugin.run(collection, settings, postRun);
             }

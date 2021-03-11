@@ -1,4 +1,3 @@
-var async = require('async');
 var helpers = require('../../../helpers/oracle');
 
 module.exports = {
@@ -21,7 +20,7 @@ module.exports = {
     run: function (cache, settings, callback) {
         var results = [];
         var source = {};
-        var regions = helpers.regions(settings.govcloud);
+
         var config = {
             policy_group_admins: settings.policy_group_admins || this.settings.policy_group_admins.default
         };
@@ -63,10 +62,12 @@ module.exports = {
                     }
                 });
             }
-            rcb();
-        }, function () {
-            // Global checking goes here
-            callback(null, results, source);
         });
+
+        if (policyProtection && entered) {
+            helpers.addResult(results, 0, 'All policies have database delete protection enabled', region);
+        }
+
+        callback(null, results, source);
     }
 };

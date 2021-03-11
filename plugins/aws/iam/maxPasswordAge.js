@@ -45,7 +45,18 @@ module.exports = {
             default: 180
         }
     },
-
+    asl: {
+        conditions: [
+            {
+                service: 'iam',
+                api: 'getAccountPasswordPolicy',
+                property: 'MaxPasswordAge',
+                transform: 'INTEGER',
+                op: 'GT',
+                value: 90
+            }
+        ]
+    },
     run: function(cache, settings, callback) {
         var config = {
             max_password_age_fail: settings.max_password_age_fail || this.settings.max_password_age_fail.default,

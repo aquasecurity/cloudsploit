@@ -160,7 +160,7 @@ module.exports = {
                         if (dv.location &&
                             dv.location.toLowerCase().replace(/ /g, '') == location.toLowerCase()) {
                             return true;
-                        } else if (location.toLowerCase() == 'global' && !dv.location) {
+                        } else if (location.toLowerCase() == 'global' && (!dv.location || obj.ignoreLocation)) {
                             return true;
                         }
                         return false;
