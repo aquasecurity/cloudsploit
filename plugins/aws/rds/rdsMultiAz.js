@@ -12,7 +12,7 @@ module.exports = {
     settings: {
         rds_multi_az_ignore_replicas: {
             name: 'RDS Multiple AZ Ignore Replicas',
-            description: 'When true RDS read replicas will not require multi-AZ configuration',
+            description: 'When set to true, RDS read replicas which does not require multi-AZ configuration will PASS',
             regex: '^(true|false)$',
             default: 'false'
         }

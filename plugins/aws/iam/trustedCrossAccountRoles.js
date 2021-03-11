@@ -11,7 +11,7 @@ module.exports = {
     settings: {
         whitelisted_aws_account_principals: {
             name: 'Whitelisted AWS Account Principals',
-            description: 'Return a failing result if cross-account role contains any AWS account principal other than these principals',
+            description: 'A comma-separated list of trusted cross account principals',
             regex: '^.*$',
             default: ''
         }

@@ -12,7 +12,7 @@ module.exports = {
     settings: {
         allow_blank_whitelisted_principals: {
             name: 'Allow If no Whitelisted Principals found',
-            description: 'Return a passing result if there are no whitelisted principals for endpoint',
+            description: 'When set to true, VPC PrivateLink endpoints having zero/blank whitelisted pricipals will PASS',
             regex: '^(true|false)$',
             default: 'false'
         },
