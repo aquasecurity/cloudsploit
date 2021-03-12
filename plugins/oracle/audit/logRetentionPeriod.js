@@ -1,4 +1,3 @@
-var async = require('async');
 var helpers = require('../../../helpers/oracle/');
 
 module.exports = {
@@ -30,43 +29,39 @@ module.exports = {
         };
 
         var results = [];
-        var source = {};
-        var regions = helpers.regions(settings.govcloud);
+        var source = {}
+        var region = helpers.objectFirstKey(cache['regionSubscription']['list']);
 
-        async.each(regions.configuration, function(region, rcb){
-            if (helpers.checkRegionSubscription(cache, source, results, region)) {
+        if (helpers.checkRegionSubscription(cache, source, results, region)) {
 
-                var configurations = helpers.addSource(cache, source,
-                    ['configuration', 'get', region]);
+            var configurations = helpers.addSource(cache, source,
+                ['configuration', 'get', region]);
 
-                if (!configurations) return rcb();
+            if (!configurations) return callback(null, results, source);
 
-                if (configurations.err || !configurations.data) {
-                    helpers.addResult(results, 3,
-                        'Unable to query for audit configurations: ' + helpers.addError(configurations), region);
-                    return rcb();
-                }
-
-                if (!Object.keys(configurations.data).length) {
-                    helpers.addResult(results, 0, 'No audit configurations found', region);
-                    return rcb();
-                }
-                var configuration = configurations.data;
-
-                if (configuration.retentionPeriodDays &&
-                config.audit_log_retention_days &&
-                configuration.retentionPeriodDays >= config.audit_log_retention_days) {
-                    helpers.addResult(results, 0,
-                        `Audit configuration period is ${configuration.retentionPeriodDays} days`, region);
-                } else {
-                    helpers.addResult(results, 2,
-                        `Audit configuration period is ${configuration.retentionPeriodDays} days`, region);
-                }
+            if (configurations.err || !configurations.data) {
+                helpers.addResult(results, 3,
+                    'Unable to query for audit configurations: ' + helpers.addError(configurations), region);
+                return callback(null, results, source);
             }
-            rcb();
-        }, function(){
-            // Global checking goes here
-            callback(null, results, source);
-        });
+
+            if (!Object.keys(configurations.data).length) {
+                helpers.addResult(results, 0, 'No audit configurations found', region);
+                return callback(null, results, source);
+            }
+            var configuration = configurations.data;
+
+            if (configuration.retentionPeriodDays &&
+            config.audit_log_retention_days &&
+            configuration.retentionPeriodDays >= config.audit_log_retention_days) {
+                helpers.addResult(results, 0,
+                    `Audit configuration period is ${configuration.retentionPeriodDays} days`, region);
+            } else {
+                helpers.addResult(results, 2,
+                    `Audit configuration period is ${configuration.retentionPeriodDays} days`, region);
+            }
+        }
+
+        callback(null, results, source);
     }
 };

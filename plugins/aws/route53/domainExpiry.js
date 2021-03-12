@@ -38,9 +38,9 @@ module.exports = {
                 var difference = helpers.daysAgo(domain.Expiry);
                 var returnMsg = 'Domain: ' + domain.DomainName + ' expires in ' + difference + ' days';
 
-                if (difference > 45) {
+                if (difference > 30) {
                     helpers.addResult(results, 0, returnMsg, 'global', domain.DomainName);
-                } else if (difference > 30) {
+                } else if (difference > 20) {
                     helpers.addResult(results, 1, returnMsg, 'global', domain.DomainName);
                 } else if (difference > 0) {
                     helpers.addResult(results, 2, returnMsg, 'global', domain.DomainName);

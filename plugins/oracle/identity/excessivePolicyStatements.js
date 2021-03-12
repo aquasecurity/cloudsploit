@@ -1,4 +1,3 @@
-var async = require('async');
 var helpers = require('../../../helpers/oracle/');
 
 module.exports = {
@@ -30,51 +29,48 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-        var regions = helpers.regions(settings.govcloud);
         var config = {
             excessive_policy_statement_fail: settings.excessive_policy_statement_fail || this.settings.excessive_policy_statement_fail.default,
             excessive_policy_statement_warn: settings.excessive_policy_statement_warn || this.settings.excessive_policy_statement_warn.default
         };
 
         var custom = helpers.isCustom(settings, this.settings);
+        
+        var region = helpers.objectFirstKey(cache['regionSubscription']['list'])
+        
 
-        async.each(regions.default, function(region, rcb){
+        if (helpers.checkRegionSubscription(cache, source, results, region)) {
 
-            if (helpers.checkRegionSubscription(cache, source, results, region)) {
+            var policies = helpers.addSource(cache, source,
+                ['policy', 'list', region]);
 
-                var policies = helpers.addSource(cache, source,
-                    ['policy', 'list', region]);
+            if (!policies) return callback(null, results, source);
 
-                if (!policies) return rcb();
-
-                if (policies.err || !policies.data) {
-                    helpers.addResult(results, 3,
-                        'Unable to query for policies: ' + helpers.addError(policies), region);
-                    return rcb();
-                }
-
-                if (!policies.data.length) {
-                    helpers.addResult(results, 0, 'No policies found', region);
-                    return rcb();
-                }
-
-                policies.data.forEach(policy => {
-                    var policyAmt = policy.statements.length;
-                    var returnMsg = ' number of policy statements: ' + policyAmt + ' found';
-    
-                    if (policyAmt > config.excessive_policy_statement_fail) {
-                        helpers.addResult(results, 2, 'Excessive' + returnMsg, region, policy.id, custom);
-                    } else if (policyAmt > config.excessive_policy_statement_warn) {
-                        helpers.addResult(results, 1, 'Large' + returnMsg, region, policy.id, custom);
-                    } else {
-                        helpers.addResult(results, 0, 'Acceptable' + returnMsg, region, policy.id, custom);
-                    }
-                });
+            if (policies.err || !policies.data) {
+                helpers.addResult(results, 3,
+                    'Unable to query for policies: ' + helpers.addError(policies), region);
+                return callback(null, results, source);
             }
-            rcb();
-        }, function(){
-            // Global checking goes here
-            callback(null, results, source);
-        });
+
+            if (!policies.data.length) {
+                helpers.addResult(results, 0, 'No policies found', region);
+                return callback(null, results, source);
+            }
+
+            policies.data.forEach(policy => {
+                var policyAmt = policy.statements.length;
+                var returnMsg = ' number of policy statements: ' + policyAmt + ' found';
+
+                if (policyAmt > config.excessive_policy_statement_fail) {
+                    helpers.addResult(results, 2, 'Excessive' + returnMsg, region, policy.id, custom);
+                } else if (policyAmt > config.excessive_policy_statement_warn) {
+                    helpers.addResult(results, 1, 'Large' + returnMsg, region, policy.id, custom);
+                } else {
+                    helpers.addResult(results, 0, 'Acceptable' + returnMsg, region, policy.id, custom);
+                }
+            });
+        }
+
+        callback(null, results, source);
     }
 };

@@ -668,7 +668,7 @@ function getDefaultKeyId(cache, region, defaultKeyDesc) {
             var keyToAdd = describeKey.data.KeyMetadata;
 
             if (keyToAdd.KeyManager && keyToAdd.KeyManager === 'AWS' && keyToAdd.Description &&
-                keyToAdd.Description.indexOf(defaultKeyDesc) === 0) {
+                keyToAdd.Description.indexOf(defaultKeyDesc) === 0 && keyToAdd.Enabled && keyToAdd.KeyState && keyToAdd.KeyState === 'Enabled') {
                 return keyToAdd;
             }
         }
