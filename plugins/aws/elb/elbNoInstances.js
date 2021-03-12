@@ -84,7 +84,7 @@ module.exports = {
 
         var remediation_file = settings.remediation_file;
         remediation_file['pre_remediate']['actions'][pluginName][resource] = {
-            'Deletion': 'NotDeleted',
+            'Deletion': 'NOT DELETED',
             'ELB': resource
         };
         // passes the config, put call, and params to the remediate helper function
