@@ -159,7 +159,7 @@ module.exports = {
                 'Action': 'TLS1.2ENABLED',
                 'ParameterGroup': pgName
             };
-            1;
+            
             settings.remediation_file = remediation_file;
             return callback(null, action);
         });
