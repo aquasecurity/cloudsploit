@@ -14,7 +14,7 @@ module.exports = {
             name: 'Restricted Open Ports',
             description: 'Comma separated list of ports/port-ranges that should be restricted and not publicly open. Example: tcp:80,tcp:443,tcp:80-443',
             regex: '[a-zA-Z0-9,:]',
-            default: 'tcp:22-30'
+            default: ''
         },
     },
 
