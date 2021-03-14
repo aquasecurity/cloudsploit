@@ -13,10 +13,10 @@ module.exports = {
     remediation_min_version: '202114032330',
     apis_remediate: ['Glue:getDataCatalogEncryptionSettings'],
     remediation_inputs: {
-        kmsKeyIdforSqs: {
-            name: '(Mandatory) KMS Key ID',
-            description: 'The KMS Key ID used for encryption',
-            regex: '^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$',
+        kmsKeyArnforDataCatalog: {
+            name: '(Mandatory) KMS Key Arn',
+            description: 'The KMS Key Arn used for encryption',
+            regex: '^arn:(aws|aws-cn|aws-us-gov):(kms):.+',
             required: true
         }
     },
@@ -25,7 +25,7 @@ module.exports = {
         rollback: ['Glue:putDataCatalogEncryptionSettings']
     },
     permissions: {
-        remediate: ['glue:PutDataCatalogEncryptionSettings+'],
+        remediate: ['glue:PutDataCatalogEncryptionSettings'],
         rollback: ['glue:PutDataCatalogEncryptionSettings']
     },
     realtime_triggers: ['glue:PutDataCatalogEncryptionSettings'],
@@ -59,8 +59,7 @@ module.exports = {
                 var describeKey = helpers.addSource(cache, source,
                     ['kms', 'describeKey', region, kmsKeyId]);
 
-                if (!describeKey || describeKey.err || !describeKey.data ||
-                    !describeKey.data.KeyMetadata || !describeKey.data.KeyMetadata) {
+                if (!describeKey || describeKey.err || !describeKey.data || !describeKey.data.KeyMetadata) {
                     helpers.addResult(results, 3,
                         `Unable to query KMS key: ${helpers.addError(describeKey)}`,
                         region, kmsKeyId);
@@ -92,35 +91,31 @@ module.exports = {
         var putCall = this.actions.remediate;
         var pluginName = 'dataCatalogCmkEncrypted';
 
-        // add the location of the Queue to the config
-        config.region = queueLocation;
+        var region = settings.region;
+
+        config.region = region;
         var params = {};
+
         // create the params necessary for the remediation
         if (settings.input &&
-            settings.input.kmsKeyIdforSqs) {
+            settings.input.kmsKeyIdforDataCatalog) {
             params = {
-                Attributes: {
-                    'KmsMasterKeyId': settings.input.kmsKeyIdforSqs
-                },
-                QueueUrl: queueUrl
+                DataCatalogEncryptionSettings: {
+                    EncryptionAtRest: {
+                        CatalogEncryptionMode: 'SSE-KMS',
+                        SseAwsKmsKeyId: settings.input.kmsKeyIdforDataCatalog
+                    }
+                }
             };
         } else {
-            let defaultKmsKeyId = helpers.getDefaultKeyId(cache, config.region, defaultKeyDesc);
-            if (!defaultKmsKeyId) return callback(`No default SQS key for the region ${config.region}`);
-            params = {
-                Attributes: {
-                    'KmsMasterKeyId': defaultKmsKeyId
-                },
-                QueueUrl: queueUrl
-            };
-
+            return callback('KMS key arn is mandatory to CMK encrypt Glue data catalog');
         }
 
         var remediation_file = settings.remediation_file;
 
-        remediation_file['pre_remediate']['actions'][pluginName][resource] = {
-            'Encryption': 'Disabled',
-            'Queue': queueName
+        remediation_file['pre_remediate']['actions'][pluginName][region] = {
+            'DataCatalogCMKEncryption': 'Disabled',
+            'Glue': region
         };
 
         // passes the config, put call, and params to the remediate helper function
@@ -135,17 +130,11 @@ module.exports = {
 
             remediation_file['post_remediate']['actions'][pluginName][resource] = action;
             remediation_file['remediate']['actions'][pluginName][resource] = {
-                'Action': 'ENCRYPTED',
-                'Queue': queueName
+                'Action': 'DATA_CATALOG_CMK_ENCRYPTED',
+                'Glue': region
             };
             settings.remediation_file = remediation_file;
             return callback(null, action);
         });
-    },
-
-    rollback: function(config, cache, settings, resource, callback) {
-        console.log('Rollback support for this plugin has not yet been implemented');
-        console.log(config, cache, settings, resource);
-        callback();
     }
 };
