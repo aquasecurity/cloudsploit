@@ -9,6 +9,26 @@ module.exports = {
     recommended_action: 'Modify Glue data catalog to use CMK instead of AWS-managed Key to encrypt Metadata',
     link: 'https://docs.aws.amazon.com/glue/latest/dg/encrypt-glue-data-catalog.html',
     apis: ['Glue:getDataCatalogEncryptionSettings', 'KMS:listKeys', 'KMS:describeKey'],
+    remediation_description: 'Glue data catalog Encryption for the affected regions will be enabled.',
+    remediation_min_version: '202114032330',
+    apis_remediate: ['Glue:getDataCatalogEncryptionSettings'],
+    remediation_inputs: {
+        kmsKeyIdforSqs: {
+            name: '(Mandatory) KMS Key ID',
+            description: 'The KMS Key ID used for encryption',
+            regex: '^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$',
+            required: true
+        }
+    },
+    actions: {
+        remediate: ['Glue:putDataCatalogEncryptionSettings'],
+        rollback: ['Glue:putDataCatalogEncryptionSettings']
+    },
+    permissions: {
+        remediate: ['glue:PutDataCatalogEncryptionSettings+'],
+        rollback: ['glue:PutDataCatalogEncryptionSettings']
+    },
+    realtime_triggers: ['glue:PutDataCatalogEncryptionSettings'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -66,5 +86,66 @@ module.exports = {
         }, function(){
             callback(null, results, source);
         });
+    },
+
+    remediate: function(config, cache, settings, resource, callback) {
+        var putCall = this.actions.remediate;
+        var pluginName = 'dataCatalogCmkEncrypted';
+
+        // add the location of the Queue to the config
+        config.region = queueLocation;
+        var params = {};
+        // create the params necessary for the remediation
+        if (settings.input &&
+            settings.input.kmsKeyIdforSqs) {
+            params = {
+                Attributes: {
+                    'KmsMasterKeyId': settings.input.kmsKeyIdforSqs
+                },
+                QueueUrl: queueUrl
+            };
+        } else {
+            let defaultKmsKeyId = helpers.getDefaultKeyId(cache, config.region, defaultKeyDesc);
+            if (!defaultKmsKeyId) return callback(`No default SQS key for the region ${config.region}`);
+            params = {
+                Attributes: {
+                    'KmsMasterKeyId': defaultKmsKeyId
+                },
+                QueueUrl: queueUrl
+            };
+
+        }
+
+        var remediation_file = settings.remediation_file;
+
+        remediation_file['pre_remediate']['actions'][pluginName][resource] = {
+            'Encryption': 'Disabled',
+            'Queue': queueName
+        };
+
+        // passes the config, put call, and params to the remediate helper function
+        helpers.remediatePlugin(config, putCall[0], params, function(err) {
+            if (err) {
+                remediation_file['remediate']['actions'][pluginName]['error'] = err;
+                return callback(err, null);
+            }
+
+            let action = params;
+            action.action = putCall;
+
+            remediation_file['post_remediate']['actions'][pluginName][resource] = action;
+            remediation_file['remediate']['actions'][pluginName][resource] = {
+                'Action': 'ENCRYPTED',
+                'Queue': queueName
+            };
+            settings.remediation_file = remediation_file;
+            return callback(null, action);
+        });
+    },
+
+    rollback: function(config, cache, settings, resource, callback) {
+        console.log('Rollback support for this plugin has not yet been implemented');
+        console.log(config, cache, settings, resource);
+        callback();
     }
 };
