@@ -78,7 +78,7 @@ describe('enforceMySQLSSLConnection', function() {
             });
         });
 
-        it('should give unknown result if DDoS standard protection is not enabled for postgresql server', function(done) {
+        it('should give unknown result if unable to query for MySQL servers', function(done) {
             const cache = createErrorCache();
             server.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
