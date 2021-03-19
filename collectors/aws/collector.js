@@ -625,6 +625,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    SecretsManager: {
+        listSecrets: {
+            property: 'SecretList',
+            paginate: 'NextToken'
+        }
+    },
     ServiceQuotas: {
         listServiceQuotas: {
             property: 'Quotas',
