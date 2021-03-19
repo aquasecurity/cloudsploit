@@ -66,8 +66,7 @@ module.exports = {
                     if (alias.AliasName === getEbsDefaultKmsKeyId.data) {
                         if (alias.TargetKeyId) {
                             kmsKeyId = alias.TargetKeyId;
-                        }
-                        else {
+                        } else {
                             isPredefinedAlias = true;
                         }
                     }

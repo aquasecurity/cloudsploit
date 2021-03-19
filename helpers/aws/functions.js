@@ -222,7 +222,7 @@ function globalPrincipal(principal) {
     }
 
     var awsPrincipals = principal.AWS;
-    if(!Array.isArray(awsPrincipals)) {
+    if (!Array.isArray(awsPrincipals)) {
         awsPrincipals = [awsPrincipals];
     }
 
@@ -252,7 +252,7 @@ function crossAccountPrincipal(principal, accountId, fetchPrincipals) {
     }
 
     var awsPrincipals = principal.AWS;
-    if(!Array.isArray(awsPrincipals)) {
+    if (!Array.isArray(awsPrincipals)) {
         awsPrincipals = [awsPrincipals];
     }
 
@@ -293,7 +293,7 @@ function extractStatementPrincipals(statement) {
         }
 
         var awsPrincipals = principal.AWS;
-        if(!Array.isArray(awsPrincipals)) {
+        if (!Array.isArray(awsPrincipals)) {
             awsPrincipals = [awsPrincipals];
         }
 

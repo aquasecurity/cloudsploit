@@ -66,14 +66,12 @@ module.exports = {
                         parameters.data.Parameters[param].ParameterName === 'rds.tls10') {
                         
                         tls10 = parameters.data.Parameters[param].ParameterValue;
-                    }
-                    else if (parameters.data.Parameters[param] &&
+                    } else if (parameters.data.Parameters[param] &&
                         parameters.data.Parameters[param].ParameterName &&
                         parameters.data.Parameters[param].ParameterName === 'rds.tls11') {
                         
                         tls11 = parameters.data.Parameters[param].ParameterValue;
-                    }
-                    else if (parameters.data.Parameters[param] &&
+                    } else if (parameters.data.Parameters[param] &&
                         parameters.data.Parameters[param].ParameterName &&
                         parameters.data.Parameters[param].ParameterName === 'rds.tls12') {
                         
@@ -86,8 +84,7 @@ module.exports = {
                     helpers.addResult(results, 0,
                         'DB parameter group ' + (group.DBParameterGroupName) + ' uses TLS 1.2',
                         region, resource);
-                }
-                else {
+                } else {
                     helpers.addResult(results, 2,
                         'DB parameter group ' + (group.DBParameterGroupName) + ' does not require TLS 1.2',
                         region, resource);

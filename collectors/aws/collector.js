@@ -783,13 +783,15 @@ var postcalls = [
                 reliesOnService: 'cloudformation',
                 reliesOnCall: 'listStacks',
                 filterKey: 'StackName',
-                filterValue: 'StackName'
+                filterValue: 'StackName',
+                rateLimit: 100 // ms to rate limit between stacks
             },
             describeStacks: {
                 reliesOnService: 'cloudformation',
                 reliesOnCall: 'listStacks',
                 filterKey: 'StackName',
-                filterValue: 'StackName'
+                filterValue: 'StackName',
+                rateLimit: 100 // ms to rate limit between stacks
             }
         },
         CloudFront: {
@@ -1318,6 +1320,11 @@ var collect = function(AWSConfig, settings, callback) {
     if (settings.gather) {
         return callback(null, calls, postcalls);
     }
+
+    // Configure an opt-in debug logger
+    var AWSXRay;
+    var debugMode = settings.debug_mode;
+    if (debugMode) AWSXRay = require('aws-xray-sdk');
     
     AWSConfig.maxRetries = 8;
     AWSConfig.retryDelayOptions = {base: 100};
@@ -1325,17 +1332,13 @@ var collect = function(AWSConfig, settings, callback) {
     var regions = helpers.regions(settings);
 
     var collection = {};
-    var myDate = new Date();
-    var callsTime = myDate.getTime();
-    var debugTime = settings.debugTime;
 
     async.eachOfLimit(calls, 10, function(call, service, serviceCb) {
         var serviceLower = service.toLowerCase();
-
         if (!collection[serviceLower]) collection[serviceLower] = {};
 
         // Loop through each of the service's functions
-        async.eachOfLimit(call, 10, function(callObj, callKey, callCb) {
+        async.eachOfLimit(call, 15, function(callObj, callKey, callCb) {
             if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
             if (!collection[serviceLower][callKey]) collection[serviceLower][callKey] = {};
 
@@ -1367,17 +1370,9 @@ var collect = function(AWSConfig, settings, callback) {
                         }
                     });
                 } else {
-                    var executor = new AWS[service](LocalAWSConfig);
+                    var executor = debugMode ? (AWSXRay.captureAWSClient(new AWS[service](LocalAWSConfig))) : new AWS[service](LocalAWSConfig);
                     var paginating = false;
                     var executorCb = function(err, data) {
-                        if (debugTime) {
-                            var innerDate = new Date();
-                            var callInnerTime = innerDate.getTime();
-                            var thisTime = callInnerTime - callsTime;
-
-                            console.log(`${callKey} - ${thisTime}`);
-                        }
-
                         if (err) collection[serviceLower][callKey][region].err = err;
 
                         if (!data) return regionCb();
@@ -1478,7 +1473,7 @@ var collect = function(AWSConfig, settings, callback) {
                                 }
                             });
                         } else {
-                            var executor = new AWS[service](LocalAWSConfig);
+                            var executor = debugMode ? (AWSXRay.captureAWSClient(new AWS[service](LocalAWSConfig))) : new AWS[service](LocalAWSConfig);
 
                             if (!collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region] ||
                                 !collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region].data) {
@@ -1495,13 +1490,6 @@ var collect = function(AWSConfig, settings, callback) {
                                         filter[callObj.checkMultipleKey] = thisCheck;
 
                                         executor[callKey](filter, function(err, data) {
-                                            if (debugTime) {
-                                                var innerDate = new Date();
-                                                var callInnerTime = innerDate.getTime();
-                                                var thisTime = callInnerTime - callsTime;
-
-                                                console.log(`${callKey} - ${thisTime}`);
-                                            }
                                             if (err) {
                                                 collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = err;
                                             }
@@ -1521,18 +1509,16 @@ var collect = function(AWSConfig, settings, callback) {
                                     var filter = {};
                                     filter[callObj.filterKey] = dep[callObj.filterValue];
                                     executor[callKey](filter, function(err, data) {
-                                        if (debugTime) {
-                                            var innerDate = new Date();
-                                            var callInnerTime = innerDate.getTime();
-                                            var thisTime = callInnerTime - callsTime;
-
-                                            console.log(`${callKey} - ${thisTime}`);
-                                        }
                                         if (err) {
                                             collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = err;
-                                            depCb();
                                         } else {
-                                            collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = data;
+                                            collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = data;   
+                                        }
+                                        if (callObj.rateLimit) {
+                                            setTimeout(function() {
+                                                depCb();
+                                            }, callObj.rateLimit);
+                                        } else {
                                             depCb();
                                         }
                                     });

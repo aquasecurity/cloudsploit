@@ -46,7 +46,7 @@ module.exports = {
 
                 if (lb.Instances.length){
                     helpers.addResult(results, 0, 'ELB has ' + lb.Instances.length + ' backend instances', region, elbArn);
-                }else{
+                } else {
                     helpers.addResult(results, 1, 'ELB does not have backend instances', region, elbArn);
                 }
                 cb();

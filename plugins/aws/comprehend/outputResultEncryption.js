@@ -25,7 +25,7 @@ module.exports = {
                         
                     if (!listEntitiesDetectionJobs) return lcb();
 
-                    if(listEntitiesDetectionJobs.err || !listEntitiesDetectionJobs.data) {
+                    if (listEntitiesDetectionJobs.err || !listEntitiesDetectionJobs.data) {
                         helpers.addResult(results, 3,
                             'Unable to query for entities detections jobs', region);
                         return lcb();
