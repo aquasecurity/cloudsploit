@@ -62,6 +62,7 @@ module.exports = {
     support: [],
     transfer: [],
     lambda: regions,
+    mwaa: regions,
     directconnect: regions,
     directoryservice: [],
     organizations: regions,

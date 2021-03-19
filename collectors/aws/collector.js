@@ -539,6 +539,12 @@ var calls = {
             paginateReqProp: 'Marker'
         }
     },
+    MWAA: {
+        listEnvironments: {
+            property: 'Environments',
+            paginate: 'NextToken'
+        }
+    },
     Organizations: {
         describeOrganization: {
             property: 'Organization',
@@ -1146,6 +1152,13 @@ var postcalls = [
                 reliesOnCall: 'listFunctions',
                 filterKey: 'Resource',
                 filterValue: 'FunctionArn'
+            }
+        },
+        MWAA: {
+            getEnvironment: {
+                reliesOnService: 'mwaa',
+                reliesOnCall: 'listEnvironments',
+                override: true
             }
         },
         RDS: {
