@@ -12,6 +12,18 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-backend-instances.html',
     recommended_action: 'Delete old ELBs that no longer have backend resources.',
     apis: ['ELB:describeLoadBalancers', 'STS:getCallerIdentity'],
+    remediation_description: 'ELBs that have no instances attached will be deleted.',
+    remediation_min_version: '202101071800',
+    apis_remediate: ['ELB:describeLoadBalancers'],
+    actions: {
+        remediate: ['ELB:deleteLoadBalancer'],
+        rollback: ['ELB:createLoadBalancer']
+    },
+    permissions: {
+        remediate: ['elasticloadbalancing:DeleteLoadBalancer'],
+        rollback: ['elasticloadbalancing:CreateLoadBalancer']
+    },
+    realtime_triggers: [],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -46,8 +58,13 @@ module.exports = {
 
                 if (lb.Instances.length){
                     helpers.addResult(results, 0, 'ELB has ' + lb.Instances.length + ' backend instances', region, elbArn);
+<<<<<<< HEAD
                 } else {
                     helpers.addResult(results, 1, 'ELB does not have backend instances', region, elbArn);
+=======
+                }else{
+                    helpers.addResult(results, 2, 'ELB does not have backend instances', region, elbArn);
+>>>>>>> 4bcc3613ac268e953357ba029d4c75ae2d806e2f
                 }
                 cb();
             }, function(){
@@ -55,6 +72,44 @@ module.exports = {
             });
         }, function(){
             callback(null, results, source);
+        });
+    },
+    remediate: function(config, cache, settings, resource, callback) {
+        var putCall = this.actions.remediate;
+        var pluginName = 'elbNoInstances';
+        var lbNameArr = resource.split(':');
+        var lbName = lbNameArr[5].substring(lbNameArr[5].lastIndexOf('/') + 1);
+
+        config.region = lbNameArr[3];
+
+        // create the params necessary for the remediation
+        var params = {
+            'LoadBalancerName': lbName
+        };
+
+        var remediation_file = settings.remediation_file;
+        remediation_file['pre_remediate']['actions'][pluginName][resource] = {
+            'Deletion': 'NOT_DELETED',
+            'ELB': resource
+        };
+        // passes the config, put call, and params to the remediate helper function
+        helpers.remediatePlugin(config, putCall[0], params, function(err) {
+            if (err) {
+                remediation_file['remediate']['actions'][pluginName]['error'] = err;
+                return callback(err, null);
+            }
+
+            let action = params;
+            action.action = putCall;
+
+            remediation_file['post_remediate']['actions'][pluginName][resource] = action;
+            remediation_file['remediate']['actions'][pluginName][resource] = {
+                'Action': 'DELETED',
+                'ELB': resource
+            };
+
+            settings.remediation_file = remediation_file;
+            return callback(null, action);
         });
     }
 };

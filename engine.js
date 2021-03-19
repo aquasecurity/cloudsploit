@@ -177,6 +177,7 @@ var engine = function(cloudConfig, settings) {
                                 if (results[r].status === 2) {
                                     var resource = results[r].resource;
                                     var event = {};
+                                    event.region = results[r].region;
                                     event['remediation_file'] = {};
                                     event['remediation_file'] = initializeFile(event['remediation_file'], 'execute', key, resource);
                                     plugin.remediate(cloudConfig, collection, event, resource, (err, result) => {
