@@ -181,6 +181,12 @@ var calls = {
             property: 'ConfigurationRecordersStatus'
         }
     },
+    DevOpsGuru: {
+        listNotificationChannels: {
+            property: 'Channels',
+            paginate: 'NextToken'
+        }
+    },
     DirectConnect: {
         describeDirectConnectGateways: {
             property: 'directConnectGateways',

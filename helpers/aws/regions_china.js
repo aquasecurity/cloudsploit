@@ -28,6 +28,7 @@ module.exports = {
     dlm: regions,
     dms: regions,
     dax: ['cn-northwest-1'],
+    devopsguru: regions,
     dynamodb: regions,
     ec2: regions,
     ecr: regions,
