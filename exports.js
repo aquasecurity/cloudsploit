@@ -63,7 +63,7 @@ module.exports = {
 
         'configServiceEnabled'          : require(__dirname + '/plugins/aws/configservice/configServiceEnabled.js'),
 
-        'devopsguruNotificationEnabled' : require(__dirname + '/plugins/aws/devopsguru/devopsguruNotificationEnabled.js'),
+        'devOpsGuruNotificationEnabled' : require(__dirname + '/plugins/aws/devopsguru/devOpsGuruNotificationEnabled.js'),
 
         'dmsEncryptionEnabled'          : require(__dirname + '/plugins/aws/dms/dmsEncryptionEnabled.js'),
 
