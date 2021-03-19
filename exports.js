@@ -291,6 +291,7 @@ module.exports = {
         'lambdaLogGroups'               : require(__dirname + '/plugins/aws/lambda/lambdaLogGroups.js'),
         'lambdaTracingEnabled'          : require(__dirname + '/plugins/aws/lambda/lambdaTracingEnabled.js'),
 
+        'webServerPublicAccess'         : require(__dirname + '/plugins/aws/mwaa/webServerPublicAccess.js'),
         'environmentAdminPrivileges'    : require(__dirname + '/plugins/aws/mwaa/environmentAdminPrivileges.js'),
 
         'monitoringMetrics'             : require(__dirname + '/plugins/aws/cloudwatchlogs/monitoringMetrics.js'),
