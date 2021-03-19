@@ -287,8 +287,7 @@ function extractStatementPrincipals(statement) {
     if (statement.Principal) {
         let principal = statement.Principal;
         
-        if (typeof principal === 'string' &&
-        /^[0-9]{12}$/.test(principal)) {
+        if (typeof principal === 'string') {
             return [principal];
         }
 
@@ -297,14 +296,103 @@ function extractStatementPrincipals(statement) {
             awsPrincipals = [awsPrincipals];
         }
 
-        for (let a in awsPrincipals) {
-            if (/^arn:aws:(iam|sts)::.+/.test(awsPrincipals[a])) {
-                response.push(awsPrincipals[a]);
+        response.push.apply(response, awsPrincipals)
+    }
+
+    return response;
+}
+
+function getDenyPermissionsMap(statements, excludeStatementId) {
+    let permissionsMap = {};
+
+    for (let statement of statements) {
+        if ((statement.Sid && statement.Sid == excludeStatementId) || (statement.Effect && statement.Effect.toUpperCase() !== 'DENY')) continue;
+
+        let principals = extractStatementPrincipals(statement);
+        principals.forEach(principal => {
+            let permissionsObj = JSON.parse(JSON.stringify(getDenyActionResourceMap([statement])));
+            if (permissionsMap[principal]) permissionsMap[principal] = {...permissionsMap[principal], ...permissionsObj};
+            else permissionsMap[principal] = permissionsObj;
+        });
+    }
+
+    return permissionsMap;
+}
+
+function getDenyActionResourceMap(statements, excludeStatementId) {
+    let denyActionResourceMap = {};
+    for (let statement of statements) {
+        if (statement.Sid && statement.Sid != excludeStatementId &&
+            statement.Effect && statement.Effect == 'Deny' && statement.Resource && statement.Action) {
+            statement.Action.forEach(action => {
+                if (denyActionResourceMap[action]) denyActionResourceMap[action].push.apply(denyActionResourceMap[action], statement.Resource);
+                else denyActionResourceMap[action] = statement.Resource;
+            });
+        }
+    }
+
+    return denyActionResourceMap;
+}
+
+function filterDenyPermissionsByPrincipal(permissionsMap, principal) {
+    let response= {};
+    Object.keys(permissionsMap).forEach(key => {
+        if (matchKeys(key, principal)) {
+            Object.keys(permissionsMap[key]).forEach(action => {
+                if (response[action]) response[action].push.apply(response[action], permissionsMap[key][action]);
+                else response[action] = permissionsMap[key][action];
+            })
+        }
+    });
+    return response;
+}
+
+function isEffectivePolicyStatement(statement, denyActionResourceMap) {
+let statementActionResourceMap = {};
+    if (statement.Action && statement.Resource) {
+        for (let action of statement.Action) {
+            statementActionResourceMap[action] = statement.Resource;
+        }
+    }
+
+    for (let action of Object.keys(statementActionResourceMap)) {
+        for (let key of Object.keys(denyActionResourceMap)) {
+            if (matchKeys(key, action)) {
+                statementActionResourceMap[action] = statementActionResourceMap[action].filter(resource => !denyActionResourceMap[key].includes(resource));
             }
         }
     }
 
-    return response;
+    for (let action of Object.keys(statementActionResourceMap)) {
+        if (statementActionResourceMap[action].length) return true;
+    }
+
+    return false;
+}
+
+function isEffectiveStatement(statement, denyPermissionsMap) {
+    var principals = extractStatementPrincipals(statement);
+
+    for (let principal of principals) {
+        let denyActionResourceMap = filterDenyPermissionsByPrincipal(denyPermissionsMap, principal);
+        if (isEffectivePolicyStatement(statement, denyActionResourceMap)) return true;
+    }
+
+    return false;
+}
+
+function matchKeys(first, second) {
+    if (!first.length && !second.length) return true;
+
+    if (first.length > 1 && first[0] == '*' && !second.length) return false;
+
+    if ((first.length > 1 && first[0] == '?') || (first.length && second.length && first[0] == second[0])) return matchKeys(first.slice(1), second.slice(1));
+
+    if (first.length && first[0] == '*') {
+        return matchKeys(first.slice(1), second) || matchKeys(first,second.slice(1));
+    }
+
+    return false;
 }
 
 function defaultRegion(settings) {
@@ -696,5 +784,9 @@ module.exports = {
     hasFederatedUserRole: hasFederatedUserRole,
     getEncryptionLevel: getEncryptionLevel,
     extractStatementPrincipals: extractStatementPrincipals,
-    getDefaultKeyId: getDefaultKeyId
+    getDefaultKeyId: getDefaultKeyId,
+    isEffectiveStatement: isEffectiveStatement,
+    getDenyActionResourceMap: getDenyActionResourceMap,
+    getDenyPermissionsMap: getDenyPermissionsMap,
+    isEffectivePolicyStatement: isEffectivePolicyStatement
 };
