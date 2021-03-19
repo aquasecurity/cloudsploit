@@ -1,11 +1,18 @@
 var ONE_DAY = 24*60*60*1000;
+var ONE_HOUR = 60*60*1000;
 
 var daysBetween = function(date1, date2) {
     return Math.round(Math.abs((new Date(date1).getTime() - new Date(date2).getTime())/(ONE_DAY)));
 };
 
+var hoursBetween = function(date1, date2) {
+    return Math.round(Math.abs((new Date(date1).getTime() - new Date(date2).getTime())/(ONE_HOUR)));
+};
+
 module.exports = {
     daysBetween: daysBetween,
+
+    hoursBetween: hoursBetween,
 
     daysAgo: function(date) {
         return daysBetween(date, new Date());

@@ -122,7 +122,7 @@ describe('allowedCustomPorts', function () {
     describe('run', function () {
         it('should FAIL if security group has open ports', function (done) {
             const cache = createCache([securityGroups[0]]);
-            allowedCustomPorts.run(cache, { whitelisted_open_ports: 'tcp:80,tcp:443' }, (err, results) => {
+            allowedCustomPorts.run(cache, { whitelisted_open_ports: 'tcp:80-82,tcp:443' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -131,7 +131,7 @@ describe('allowedCustomPorts', function () {
 
         it('should PASS if security group does not have open ports', function (done) {
             const cache = createCache([securityGroups[1]]);
-            allowedCustomPorts.run(cache, { whitelisted_open_ports: 'tcp:80,tcp:443' }, (err, results) => {
+            allowedCustomPorts.run(cache, { whitelisted_open_ports: 'tcp:80-85,tcp:443' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();

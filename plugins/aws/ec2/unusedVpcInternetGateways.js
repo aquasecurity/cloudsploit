@@ -78,7 +78,7 @@ function loopGWForResults(gateways, results, region, resource, type = '') {
         let gatewayId = gateway.EgressOnlyInternetGatewayId || gateway.InternetGatewayId;
         resource = `${resource}/${gatewayId}`;
         
-        if(gateway.Attachments && gateway.Attachments.length) {
+        if (gateway.Attachments && gateway.Attachments.length) {
             helpers.addResult(results, 0,
                 `${type} Internet Gateway "${gatewayId}" is in use`,
                 region, resource);

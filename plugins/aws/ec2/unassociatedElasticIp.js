@@ -25,13 +25,13 @@ module.exports = {
 
             if (!describeAddresses) return rcb();
 
-            if(describeAddresses.err || !describeAddresses.data) {
+            if (describeAddresses.err || !describeAddresses.data) {
                 helpers.addResult(results, 3,
                     `Unable to query for Elastic IP Addresses: ${helpers.addError(describeAddresses)}`, region);
                 return rcb();
             }
 
-            if(!describeAddresses.data.length) {
+            if (!describeAddresses.data.length) {
                 helpers.addResult(results, 0, 'No Elastic IP Addresses found', region);
                 return rcb();
             }
@@ -39,7 +39,7 @@ module.exports = {
             describeAddresses.data.forEach(function(elasticIp){
                 var resource = `arn:${awsOrGov}:ec2:${region}:${accountId}:eip/${elasticIp.AllocationId}`;
 
-                if(elasticIp.AssociationId) {
+                if (elasticIp.AssociationId) {
                     helpers.addResult(results, 0, `Elastic IP address ${elasticIp.AllocationId} is associated to a resource`,
                         region, resource);
                 } else {
