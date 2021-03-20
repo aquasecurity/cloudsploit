@@ -3,32 +3,32 @@ var server = require('./enforceMySQLSSLConnection');
 
 const servers = [
     {
-        sku: [Object],
-        location: 'eastus',
-        tags: {},
-        id: '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.DBforMySQL/servers/test-server',
-        name: 'test-server',
-        type: 'Microsoft.DBforMySQL/servers',
-        sslEnforcement: 'Enabled',
-        userVisibleState: 'Ready',
-        fullyQualifiedDomainName: 'test-server.mysql.database.azure.com',
-        earliestRestoreDate: '2021-03-14T17:53:38.68+00:00',
-        infrastructureEncryption: 'Disabled',
-        publicNetworkAccess: 'Enabled'
+        "sku": [Object],
+        "location": 'eastus',
+        "tags": {},
+        "id": '/subscriptions/123/resourceGroups/aqua-resource-group/prov"id"ers/Microsoft.DBforMySQL/servers/test-server',
+        "name": 'test-server',
+        "type": 'Microsoft.DBforMySQL/servers',
+        "sslEnforcement": 'Enabled',
+        "userVisibleState": 'Ready',
+        "fullyQualifiedDomainName": 'test-server.mysql.database.azure.com',
+        "earliestRestoreDate": '2021-03-14T17:53:38.68+00:00',
+        "infrastructureEncryption": 'Disabled',
+        "publicNetworkAccess": 'Enabled'
     },
     {
-        sku: [Object],
-        location: 'eastus',
-        tags: {},
-        id: '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.DBforMySQL/servers/test-server',
-        name: 'test-server',
-        type: 'Microsoft.DBforMySQL/servers',
-        sslEnforcement: 'Disabled',
-        userVisibleState: 'Ready',
-        fullyQualifiedDomainName: 'test-server.mysql.database.azure.com',
-        earliestRestoreDate: '2021-03-14T17:53:38.68+00:00',
-        infrastructureEncryption: 'Disabled',
-        publicNetworkAccess: 'Enabled'
+        "sku": [Object],
+        "location": 'eastus',
+        "tags": {},
+        "id": '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.DBforMySQL/servers/test-server',
+        "name": 'test-server',
+        "type": 'Microsoft.DBforMySQL/servers',
+        "sslEnforcement": 'Disabled',
+        "userVisibleState": 'Ready',
+        "fullyQualifiedDomainName": 'test-server.mysql.database.azure.com',
+        "earliestRestoreDate": '2021-03-14T17:53:38.68+00:00',
+        "infrastructureEncryption": 'Disabled',
+        "publicNetworkAccess": 'Enabled'
     }
 ];
 
