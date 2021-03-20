@@ -15,7 +15,7 @@ module.exports = {
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.servers, (location, rcb) => {
+        async.each(locations.virtualNetworks, (location, rcb) => {
             var virtualNetworks = helpers.addSource(cache, source, 
                 ['virtualNetworks', 'listAll', location]);
 

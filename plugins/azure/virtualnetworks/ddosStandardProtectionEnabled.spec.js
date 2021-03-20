@@ -3,22 +3,22 @@ var ddosStandardProtectionEnabled = require('./ddosStandardProtectionEnabled');
 
 const virtualNetworks = [
     {
-        name: 'test-vnet',
-        id: '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/virtualNetworks/test-vnet',
-        type: 'Microsoft.Network/virtualNetworks',
-        location: 'eastus',
-        provisioningState: 'Succeeded',
-        virtualNetworkPeerings: [],
-        enableDdosProtection: true
+        "name": 'test-vnet',
+        "id": '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/virtualNetworks/test-vnet',
+        "type": 'Microsoft.Network/virtualNetworks',
+        "location": 'eastus',
+        "provisioningState": 'Succeeded',
+        "virtualNetworkPeerings": [],
+        "enableDdosProtection": true
     },
     {
-        name: 'test-vnet',
-        id: '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/virtualNetworks/test-vnet',
-        type: 'Microsoft.Network/virtualNetworks',
-        location: 'eastus',
-        provisioningState: 'Succeeded',
-        virtualNetworkPeerings: [],
-        enableDdosProtection: false
+        "name": 'test-vnet',
+        "id": '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/virtualNetworks/test-vnet',
+        "type": 'Microsoft.Network/virtualNetworks',
+        "location": 'eastus',
+        "provisioningState": 'Succeeded',
+        "virtualNetworkPeerings": [],
+        "enableDdosProtection": false
     }
 ];
 
@@ -46,7 +46,7 @@ const createErrorCache = () => {
 
 describe('ddosStandardProtectionEnabled', function() {
     describe('run', function() {
-        it('should give passing result if no servers', function(done) {
+        it('should give passing result if no virtual networks', function(done) {
             const cache = createCache([]);
             ddosStandardProtectionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -68,7 +68,7 @@ describe('ddosStandardProtectionEnabled', function() {
             });
         });
 
-        it('should give unknown result if DDoS standard protection is not enabled for virtual network', function(done) {
+        it('should give unknown result if Unable to query for Virtual Networks', function(done) {
             const cache = createErrorCache();
             ddosStandardProtectionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
