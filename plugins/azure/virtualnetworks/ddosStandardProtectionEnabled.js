@@ -31,7 +31,7 @@ module.exports = {
             }
                 
             virtualNetworks.data.forEach(virtualNetwork => {
-                if(virtualNetwork.enableDdosProtection) {
+                if (virtualNetwork.enableDdosProtection) {
                     helpers.addResult(results, 0,
                         'DDoS Standard Protection is enabled for Microsoft Azure Virtual Network', location, virtualNetwork.id);
                 } else {
