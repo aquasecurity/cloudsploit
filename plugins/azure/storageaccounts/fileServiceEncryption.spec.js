@@ -50,7 +50,7 @@ const createErrorCache = () => {
     };
 };
 
-describe('blobServiceEncryption', function() {
+describe('fileServiceIEncryption', function() {
     describe('run', function() {
         it('should give passing result if no storage accounts', function(done) {
             const cache = createCache([]);
