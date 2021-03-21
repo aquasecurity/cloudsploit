@@ -3,12 +3,12 @@ var adminSecurityAlertsEnabled = require('./adminSecurityAlertsEnabled');
 
 const securityContacts = [
     {
-        'id': '"/subscriptions/123/providers/Microsoft.Security/securityContacts/contact1"',
+        'id': '/subscriptions/123/providers/Microsoft.Security/securityContacts/contact1',
         'name': 'contact1',
         'alertsToAdmins': 'On'
     },
     {
-        'id': '"/subscriptions/123/providers/Microsoft.Security/securityContacts/contact1"',
+        'id': '/subscriptions/123/providers/Microsoft.Security/securityContacts/contact1',
         'name': 'contact1',
         'alertsToAdmins': 'Off'
     }
