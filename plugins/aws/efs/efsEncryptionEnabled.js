@@ -36,7 +36,7 @@ module.exports = {
                 return rcb();
             }
 
-            if(describeFileSystems.data.length === 0){
+            if (describeFileSystems.data.length === 0){
                 helpers.addResult(results, 0, 'No EFS file systems present', region);
                 return rcb();
             }
