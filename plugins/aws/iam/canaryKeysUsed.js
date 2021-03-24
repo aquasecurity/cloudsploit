@@ -17,7 +17,20 @@ module.exports = {
             default: ''
         }
     },
-
+    //we need to check if (canary_user && access_key_1_last_used_date) || (canary_user && access_key_2_last_used_date) [SOP]
+    // canary_user && (access_key_1_last_used_date || access_key_2_last_used_date)
+    asl: {
+        conditions: [
+            {
+                service: 'iam',
+                api: 'generateCredentialReport',
+                property: 'access_key_1_last_rotated',
+                transform: 'DAYSFROM',
+                op: 'GT',
+                value: 90
+            }
+        ]
+    },
     run: function(cache, settings, callback) {
         var config = {
             canary_user: settings.canary_user || this.settings.canary_user.default

@@ -46,7 +46,7 @@ module.exports = {
 
                 if (!endpoints || endpoints.err || !endpoints.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for CDN Profile endpoints: ' + helpers.addError(endpoints), profile.id);
+                        'Unable to query for CDN Profile endpoints: ' + helpers.addError(endpoints), location, profile.id);
                 } else {
                     if (!endpoints.data.length) {
                         helpers.addResult(results, 0,

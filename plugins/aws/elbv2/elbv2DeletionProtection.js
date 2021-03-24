@@ -47,7 +47,7 @@ module.exports = {
                     return cb();
                 }
 
-                if(!elbv2Attributes.data.Attributes || !elbv2Attributes.data.Attributes.length){
+                if (!elbv2Attributes.data.Attributes || !elbv2Attributes.data.Attributes.length){
                     helpers.addResult(results, 2,
                         'Application/Network load balancer attributes not found',
                         region, resource);

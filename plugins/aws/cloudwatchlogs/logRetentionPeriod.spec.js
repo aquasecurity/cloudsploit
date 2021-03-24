@@ -41,9 +41,9 @@ describe('CloudWatch Log Retention Period', function () {
             logs.run(cache, { minimum_log_retention_period: 10 }, callback);
         });
 
-        it('should FAIL if a CloudWatch Logs log group does not have retention rate', function (done) {
+        it('should PASS if a Log group retention period is set to never expire', function (done) {
             const callback = (err, results) => {
-                expect(results[0].status).to.equal(2);
+                expect(results[0].status).to.equal(0);
                 done()
             };
 

@@ -79,7 +79,7 @@ module.exports = {
                         return;
                     }
 
-                    if(!getClientCertificate.data.expirationDate) {
+                    if (!getClientCertificate.data.expirationDate) {
                         helpers.addResult(results, 0,
                             'No Client Certificate information found',
                             region, stageArn);

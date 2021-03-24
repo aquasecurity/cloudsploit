@@ -49,7 +49,7 @@ module.exports = {
             var organizationAccounts = [];
             if (listAccounts.data.length) {
                 listAccounts.data.forEach(account => {
-                    if(account.Arn && account.Id) {
+                    if (account.Arn && account.Id) {
                         organizationAccounts.push(account.Id);
                     }
                 });
@@ -58,7 +58,7 @@ module.exports = {
             describeVpcPeeringConnections.data.forEach(connection => {
                 var resource = `arn:${awsOrGov}:ec2:${region}:${accountId}:vpc-peering-connection/${connection.VpcPeeringConnectionId}`;
 
-                if(connection.RequesterVpcInfo &&
+                if (connection.RequesterVpcInfo &&
                     connection.RequesterVpcInfo.OwnerId &&
                     organizationAccounts.includes(connection.RequesterVpcInfo.OwnerId) &&
                     connection.AccepterVpcInfo &&
