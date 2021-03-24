@@ -73,7 +73,7 @@ parser.add_argument('--remediate', {
 let settings = parser.parse_args();
 let cloudConfig = {};
 
-settings.cloud = 'google';
+settings.cloud = 'aws';
 
 // Now execute the scans using the defined configuration information.
 if (!settings.config) {
