@@ -929,6 +929,13 @@ var postcalls = [
                 signatureVersion: 'v4',
                 override: true
             },
+            getBucketLifecycleConfiguration: {
+                reliesOnService: 's3',
+                reliesOnCall: 'listBuckets',
+                deleteRegion: true,
+                signatureVersion: 'v4',
+                override: true
+            },
             getBucketAccelerateConfiguration: {
                 reliesOnService: 's3',
                 reliesOnCall: 'listBuckets',
