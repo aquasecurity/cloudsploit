@@ -222,7 +222,7 @@ function globalPrincipal(principal) {
     }
 
     var awsPrincipals = principal.AWS;
-    if(!Array.isArray(awsPrincipals)) {
+    if (!Array.isArray(awsPrincipals)) {
         awsPrincipals = [awsPrincipals];
     }
 
@@ -252,7 +252,7 @@ function crossAccountPrincipal(principal, accountId, fetchPrincipals) {
     }
 
     var awsPrincipals = principal.AWS;
-    if(!Array.isArray(awsPrincipals)) {
+    if (!Array.isArray(awsPrincipals)) {
         awsPrincipals = [awsPrincipals];
     }
 
@@ -293,7 +293,7 @@ function extractStatementPrincipals(statement) {
         }
 
         var awsPrincipals = principal.AWS;
-        if(!Array.isArray(awsPrincipals)) {
+        if (!Array.isArray(awsPrincipals)) {
             awsPrincipals = [awsPrincipals];
         }
 
@@ -668,7 +668,7 @@ function getDefaultKeyId(cache, region, defaultKeyDesc) {
             var keyToAdd = describeKey.data.KeyMetadata;
 
             if (keyToAdd.KeyManager && keyToAdd.KeyManager === 'AWS' && keyToAdd.Description &&
-                keyToAdd.Description.indexOf(defaultKeyDesc) === 0) {
+                keyToAdd.Description.indexOf(defaultKeyDesc) === 0 && keyToAdd.Enabled && keyToAdd.KeyState && keyToAdd.KeyState === 'Enabled') {
                 return keyToAdd;
             }
         }

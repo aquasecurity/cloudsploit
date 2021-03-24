@@ -133,7 +133,7 @@ module.exports = {
                         unknownPrincipals.push(principal);
                     }
 
-                    if(statement.Effect &&
+                    if (statement.Effect &&
                                 statement.Effect.toUpperCase() === 'DENY' &&
                                 s3BucketAssociations[bucketName][distributionId].includes(principal) &&  
                                 !restrictedOrigins.includes(principal)) {

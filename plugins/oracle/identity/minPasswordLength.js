@@ -1,4 +1,3 @@
-var async = require('async');
 var helpers = require('../../../helpers/oracle');
 
 module.exports = {
@@ -18,15 +17,8 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-        var defaultRegion = '';
 
-        if (cache.authenticationPolicy &&
-            cache.authenticationPolicy.get &&
-            Object.keys(cache.authenticationPolicy.get).length) {
-            defaultRegion = helpers.objectFirstKey(cache.authenticationPolicy.get);
-        } else {
-            return callback(null, results, source);
-        }
+        var defaultRegion = helpers.objectFirstKey(cache['regionSubscription']['list']);
 
         var authenticationPolicy = helpers.addSource(cache, source,
             ['authenticationPolicy', 'get', defaultRegion]);
@@ -48,7 +40,7 @@ module.exports = {
             var passwordPolicy = policy.passwordPolicy;
             if (passwordPolicy &&
                 passwordPolicy.minimumPasswordLength) {
-                if (passwordPolicy.minimumPasswordLength > 14) {
+                if (passwordPolicy.minimumPasswordLength >= 14) {
                     helpers.addResult(results, 0, 'Minimum password length of: ' + passwordPolicy.minimumPasswordLength + ' is suitable', 'global', authenticationPolicy.data.compartmentId);
                 }  else if (passwordPolicy &&
                     passwordPolicy.minimumPasswordLength &&

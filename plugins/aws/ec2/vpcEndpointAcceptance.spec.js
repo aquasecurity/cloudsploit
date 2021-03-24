@@ -6,17 +6,17 @@ const vpcEndpointServices = [
         "ServiceName": "com.amazonaws.vpce.us-east-1.vpce-svc-09d3a6a098dce6e8c",
         "ServiceId": "vpce-svc-09d3a6a098dce6e8c",
         "ServiceType": [
-        {
-            "ServiceType": "Interface"
-        }
+            {
+                "ServiceType": "Interface"
+            }
         ],
         "AvailabilityZones": [
-        "us-east-1a",
-        "us-east-1b"
+            "us-east-1a",
+            "us-east-1b"
         ],
         "Owner": "123456654321",
         "BaseEndpointDnsNames": [
-        "vpce-svc-09d3a6a098dce6e8c.us-east-1.vpce.amazonaws.com"
+            "vpce-svc-09d3a6a098dce6e8c.us-east-1.vpce.amazonaws.com"
         ],
         "VpcEndpointPolicySupported": false,
         "AcceptanceRequired": true,
@@ -27,18 +27,18 @@ const vpcEndpointServices = [
         "ServiceName": "com.amazonaws.vpce.us-east-1.vpce-svc-09145867a106679a3",
         "ServiceId": "vpce-svc-09145867a106679a3",
         "ServiceType": [
-          {
-            "ServiceType": "Interface"
-          }
+            {
+                "ServiceType": "Interface"
+            }
         ],
         "AvailabilityZones": [
-          "us-east-1a",
-          "us-east-1b",
-          "us-east-1c"
+            "us-east-1a",
+            "us-east-1b",
+            "us-east-1c"
         ],
         "Owner": "123456654321",
         "BaseEndpointDnsNames": [
-          "vpce-svc-09145867a106679a3.us-east-1.vpce.amazonaws.com"
+            "vpce-svc-09145867a106679a3.us-east-1.vpce.amazonaws.com"
         ],
         "VpcEndpointPolicySupported": false,
         "AcceptanceRequired": false,

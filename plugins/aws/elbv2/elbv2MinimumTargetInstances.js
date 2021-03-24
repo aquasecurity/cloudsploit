@@ -48,7 +48,7 @@ module.exports = {
                     return cb();
                 }
 
-                if(!describeTargetGroups.data.TargetGroups || !describeTargetGroups.data.TargetGroups.length){
+                if (!describeTargetGroups.data.TargetGroups || !describeTargetGroups.data.TargetGroups.length){
                     helpers.addResult(results, 2,
                         'No Application/Network load balancer target groups found',
                         region, resource);
@@ -65,7 +65,7 @@ module.exports = {
                     }
 
                     describeTargetHealth.data.TargetHealthDescriptions.forEach(healthDescription => {
-                        if(healthDescription.Target && healthDescription.Target.Id &&
+                        if (healthDescription.Target && healthDescription.Target.Id &&
                             healthDescription.TargetHealth && healthDescription.TargetHealth.State === 'healthy') {
                             healthyInstances = healthyInstances + 1;
                         }
@@ -74,7 +74,7 @@ module.exports = {
                     tcb();
                 });
 
-                if(healthyInstances >= 2) {
+                if (healthyInstances >= 2) {
                     helpers.addResult(results, 0,
                         `Application/Network load balancer has ${healthyInstances} healthy instance(s) associated`,
                         region, resource);

@@ -92,7 +92,6 @@ describe('nfsPolicyProtection', function () {
                     {
                         "statements": [
                             "ALLOW GROUP Developers to manage all-resources IN TENANCY",
-                            "Allow group Developers to manage file-systems in tenancy where request.permission!='FILE_SYSTEM_DELETE'",
                             "ALLOW GROUP ADMINISTRATORS to manage all-resources IN TENANCY"
                         ],
                         "id": "ocid1.policy.oc1..aaaaaaaapil3afuz45oxyvd3u73otqbsj4atjdorao6nvfr3yjqumnniscka",
@@ -170,7 +169,7 @@ describe('nfsPolicyProtection', function () {
                 [
                     {
                         "statements": [
-                            "Allow group Developers to manage file-systems in tenancy where request.permission!='FILE_SYSTEM_DELETE'",
+                            "Allow group Developers to read file-systems in tenancy where request.permission != 'FILE_SYSTEM_DELETE'",
                         ],
                         "id": "ocid1.policy.oc1..aaaaaaaapil3afuz45oxyvd3u73otqbsj4atjdorao6nvfr3yjqumnniscka",
                         "compartmentId": "ocid1.tenancy.oc1..aaaaaaaao43aqdrzuacodg7ffqv2zeauftjyjkwhnbrugt44ympzeiblxx7q",

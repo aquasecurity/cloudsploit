@@ -28,7 +28,7 @@ module.exports = {
                 return rcb();
             }
 
-            if(!describeTargetGroups.data.length){
+            if (!describeTargetGroups.data.length) {
                 helpers.addResult(results, 0,
                     'No Application/Network load balancer target groups found', region);
                 return rcb();
