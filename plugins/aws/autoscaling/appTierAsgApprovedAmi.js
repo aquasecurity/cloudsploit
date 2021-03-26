@@ -59,10 +59,10 @@ module.exports = {
             var appTierAsgFound = false;
             async.each(describeAutoScalingGroups.data, function(asg, cb){
                 var appTierTag = false;
-                if(asg.Tags && asg.Tags.length){
+                if (asg.Tags && asg.Tags.length){
                     for (var t in asg.Tags) {
                         var tag = asg.Tags[t];
-                        if(tag.Key && tag.Key === config.app_tier_tag_key) {
+                        if (tag.Key && tag.Key === config.app_tier_tag_key) {
                             appTierTag = true;
                             appTierAsgFound = true;
                             break;
@@ -78,7 +78,7 @@ module.exports = {
                     var imageFound = false;
                     var unapprovedAmis = [];
 
-                    if(!describeLaunchConfigurations ||
+                    if (!describeLaunchConfigurations ||
                         describeLaunchConfigurations.err ||
                         !describeLaunchConfigurations.data ||
                         !describeLaunchConfigurations.data.LaunchConfigurations ||
@@ -90,16 +90,16 @@ module.exports = {
                     }
 
                     describeLaunchConfigurations.data.LaunchConfigurations.forEach(function(launchConfig){
-                        if(launchConfig.ImageId) {
+                        if (launchConfig.ImageId) {
                             imageFound = true;
-                            if(config.approved_amis.indexOf(launchConfig.ImageId) === -1){
+                            if (config.approved_amis.indexOf(launchConfig.ImageId) === -1){
                                 unapprovedAmis.push(launchConfig.ImageId);
                             }
                         }
                     });
 
-                    if(imageFound) {
-                        if(!unapprovedAmis.length) {
+                    if (imageFound) {
+                        if (!unapprovedAmis.length) {
                             helpers.addResult(results, 0,
                                 `Launch Configuration for App-Tier Auto Scaling group "${asg.AutoScalingGroupName}" is using approved AMI`,
                                 region, resource);

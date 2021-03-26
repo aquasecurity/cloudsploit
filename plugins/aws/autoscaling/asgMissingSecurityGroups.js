@@ -57,8 +57,7 @@ module.exports = {
                     helpers.addResult(results, 0,
                         `Auto Scaling launch configuration "${config.LaunchConfigurationName}" does not have any security groups associated`,
                         region, resource);
-                }
-                else {
+                } else {
                     var missingSecurityGroups = [];
 
                     config.SecurityGroups.forEach(function(group){
@@ -67,7 +66,7 @@ module.exports = {
                         }
                     });
 
-                    if(missingSecurityGroups.length) {
+                    if (missingSecurityGroups.length) {
                         helpers.addResult(results, 2,
                             `Auto Scaling launch configuration "${config.LaunchConfigurationName}" references these missing EC2 security groups: ${missingSecurityGroups.join(', ')}`,
                             region, resource);

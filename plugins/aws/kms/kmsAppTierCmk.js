@@ -81,7 +81,7 @@ module.exports = {
                     return kcb();
                 }
 
-                if(listResourceTags.data.Tags.length) {
+                if (listResourceTags.data.Tags.length) {
                     for (var i in listResourceTags.data.Tags) {
                         var kmsTag = listResourceTags.data.Tags[i];
                         if (kmsTag.TagKey && kmsTag.TagKey === config.kms_cmk_tag_key) {
@@ -93,7 +93,7 @@ module.exports = {
 
                 kcb();
             }, function(){
-                if(appTierKmsKey) {
+                if (appTierKmsKey) {
                     helpers.addResult(results, 0,
                         `KMS Customer Master key with "${config.kms_cmk_tag_key}" tag is present`,
                         region);
