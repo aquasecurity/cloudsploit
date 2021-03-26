@@ -90,7 +90,7 @@ module.exports = {
                     if (!statement.Principal) continue;
 
                     if (helpers.globalPrincipal(statement.Principal)) {
-                        if(!statement.Condition ||
+                        if (!statement.Condition ||
                             (statement.Condition.StringEquals && (
                                 !statement.Condition.StringEquals['AWS:SourceOwner'] ||
                                 statement.Condition.StringEquals['AWS:SourceOwner'] == '*') ||

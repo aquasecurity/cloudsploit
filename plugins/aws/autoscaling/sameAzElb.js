@@ -50,7 +50,7 @@ module.exports = {
             
             if (elasticLoadBalancers.data.length) {
                 elasticLoadBalancers.data.forEach(function(elb) {
-                    if(elb.LoadBalancerName) {
+                    if (elb.LoadBalancerName) {
                         loadBalancers[elb.LoadBalancerName] =  elb;
                     }
                 });
@@ -58,7 +58,7 @@ module.exports = {
 
             if (elasticLoadBalancersV2.data.length) {
                 elasticLoadBalancersV2.data.forEach(function(elbv2) {
-                    if(elbv2.LoadBalancerName) {
+                    if (elbv2.LoadBalancerName) {
                         loadBalancers[elbv2.LoadBalancerName] =  elbv2;
                     }
                 });
@@ -69,28 +69,27 @@ module.exports = {
                 var distinctAzs = [];
                 var resource = asg.AutoScalingGroupARN;
 
-                if(asg.HealthCheckType == 'ELB') {
+                if (asg.HealthCheckType == 'ELB') {
                     if (asg.LoadBalancerNames && asg.LoadBalancerNames.length) {
 
                         asg.LoadBalancerNames.forEach(function(elbName) {
-                            if(loadBalancers[elbName]) {
+                            if (loadBalancers[elbName]) {
                                 var loadBalancer = loadBalancers[elbName];
                                 var elbAvailabilityZones = loadBalancer.AvailabilityZones;
 
                                 if (elbAvailabilityZones && elbAvailabilityZones.length) {
                                     elbAvailabilityZones.forEach(function(elbAz) {
-                                        if(asgAvailabilityZones && asgAvailabilityZones.length && !asgAvailabilityZones.includes(elbAz)) {
+                                        if (asgAvailabilityZones && asgAvailabilityZones.length && !asgAvailabilityZones.includes(elbAz)) {
                                             distinctAzs.push(elbAz);
                                         }
                                     });
                                 }
 
-                                if(distinctAzs.length) {
+                                if (distinctAzs.length) {
                                     helpers.addResult(results, 2,
                                         'Auto scaling group "' + asg.AutoScalingGroupName + '" has load balancers in these different availability zones: ' + distinctAzs.join(', '),
                                         region, resource);
-                                }
-                                else {
+                                } else {
                                     helpers.addResult(results, 0,
                                         'Auto scaling group "' + asg.AutoScalingGroupName + '" has all load balancers in same availability zones',
                                         region, resource);
@@ -101,12 +100,10 @@ module.exports = {
                                     region, resource);
                             }
                         });
-                    }
-                    else {
+                    } else {
                         helpers.addResult(results, 0, 'AutoScaling group does not have any Load Balancer associated', region, resource);
                     }
-                }
-                else {
+                } else {
                     helpers.addResult(results, 0, 'AutoScaling group does not utilize a load balancer', region, resource);
                 }
             });
