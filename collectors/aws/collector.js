@@ -181,6 +181,12 @@ var calls = {
             property: 'ConfigurationRecordersStatus'
         }
     },
+    DevOpsGuru: {
+        listNotificationChannels: {
+            property: 'Channels',
+            paginate: 'NextToken'
+        }
+    },
     DirectConnect: {
         describeDirectConnectGateways: {
             property: 'directConnectGateways',
@@ -539,6 +545,12 @@ var calls = {
             paginateReqProp: 'Marker'
         }
     },
+    MWAA: {
+        listEnvironments: {
+            property: 'Environments',
+            paginate: 'NextToken'
+        }
+    },
     Organizations: {
         describeOrganization: {
             property: 'Organization',
@@ -616,6 +628,12 @@ var calls = {
     SageMaker: {
         listNotebookInstances: {
             property: 'NotebookInstances',
+            paginate: 'NextToken'
+        }
+    },
+    SecretsManager: {
+        listSecrets: {
+            property: 'SecretList',
             paginate: 'NextToken'
         }
     },
@@ -911,6 +929,13 @@ var postcalls = [
                 signatureVersion: 'v4',
                 override: true
             },
+            getBucketLifecycleConfiguration: {
+                reliesOnService: 's3',
+                reliesOnCall: 'listBuckets',
+                deleteRegion: true,
+                signatureVersion: 'v4',
+                override: true
+            },
             getBucketAccelerateConfiguration: {
                 reliesOnService: 's3',
                 reliesOnCall: 'listBuckets',
@@ -1013,6 +1038,12 @@ var postcalls = [
                 reliesOnService: 'elbv2',
                 reliesOnCall: 'describeLoadBalancers',
                 override: true
+            },
+            describeTargetGroupAttributes: {
+                reliesOnService: 'elbv2',
+                reliesOnCall: 'describeTargetGroups',
+                filterKey: 'TargetGroupArn',
+                filterValue: 'TargetGroupArn'
             }
         },
         EMR: {
@@ -1148,6 +1179,13 @@ var postcalls = [
                 filterValue: 'FunctionArn'
             }
         },
+        MWAA: {
+            getEnvironment: {
+                reliesOnService: 'mwaa',
+                reliesOnCall: 'listEnvironments',
+                override: true
+            }
+        },
         RDS: {
             describeDBParameters: {
                 reliesOnService: 'rds',
@@ -1185,6 +1223,14 @@ var postcalls = [
                 reliesOnCall: 'listNotebookInstances',
                 filterKey: 'NotebookInstanceName',
                 filterValue: 'NotebookInstanceName'
+            }
+        },
+        SecretsManager: {
+            describeSecret: {
+                reliesOnService: 'secretsmanager',
+                reliesOnCall: 'listSecrets',
+                filterKey: 'SecretId',
+                filterValue: 'ARN',
             }
         },
         SES: {

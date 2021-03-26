@@ -78,5 +78,6 @@ module.exports = {
     autoscaleSettings: locations,
     resourceGroups: locations,
     policyDefinitions: locations,
-    diagnosticSettingsOperations: ['global']
+    diagnosticSettingsOperations: ['global'],
+    databaseAccounts: locations
 };
