@@ -52,7 +52,9 @@ module.exports = {
             }
         }
 
-        if (!found) {
+        if (settings.govcloud && !found) {
+            helpers.addResult(results, 0, 'Root MFA is not required for AWS GovCloud');
+        } else if (!found) {
             helpers.addResult(results, 3, 'Unable to query for root user');
         }
 

@@ -256,6 +256,15 @@ describe('iamRolePolicies', function () {
             });
         });
 
+        it('should PASS if role policy allows wildcard actions but ignore service specific roles setting is enabled', function (done) {
+            const cache = createCache([listRoles[0]], listAttachedRolePolicies[2], null, null, getPolicy[0], getPolicyVersion[0]);
+            iamRolePolicies.run(cache, { ignore_service_specific_wildcards: 'true' }, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
+
         it('should PASS if on IAM roles found', function (done) {
             const cache = createCache([]);
             iamRolePolicies.run(cache, {}, (err, results) => {
