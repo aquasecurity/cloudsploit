@@ -44,14 +44,12 @@ module.exports = {
             if (getBucketPolicy && getBucketPolicy.err &&
                 getBucketPolicy.err.code && getBucketPolicy.err.code === 'NoSuchBucketPolicy') {
                 helpers.addResult(results, 2, 'No bucket policy found', 'global', resource);
-            }
-            else if (!getBucketPolicy || getBucketPolicy.err ||
+            } else if (!getBucketPolicy || getBucketPolicy.err ||
                        !getBucketPolicy.data || !getBucketPolicy.data.Policy) {
                 helpers.addResult(results, 3,
                     `Error querying for bucket policy for bucket "${bucket.Name}" ${helpers.addError(getBucketPolicy)}`,
                     'global', resource);
-            }
-            else {
+            } else {
                 var statements = helpers.normalizePolicyDocument(getBucketPolicy.data.Policy);
 
                 if (!statements || !statements.length) {
@@ -86,8 +84,7 @@ module.exports = {
                     helpers.addResult(results, 0,
                         `Bucket Policy for bucket "${bucket.Name}" enforces SSL to secure data in transit`,
                         'global', resource);
-                }
-                else {
+                } else {
                     helpers.addResult(results, 2,
                         `Bucket Policy for bucket "${bucket.Name}" does not enforce SSL to secure data in transit`,
                         'global', resource);

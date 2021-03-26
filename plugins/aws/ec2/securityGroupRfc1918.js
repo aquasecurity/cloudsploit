@@ -61,13 +61,13 @@ module.exports = {
                     for (var r in permission.IpRanges) {
                         var cidrIp = permission.IpRanges[r].CidrIp;
                         if (cidrIp && privateCidrs.includes(cidrIp)) {
-                            if(!privateCidrsFound.includes(cidrIp)) {
+                            if (!privateCidrsFound.includes(cidrIp)) {
                                 privateCidrsFound.push(cidrIp);
                             }
                         }
                     }
 
-                    if(!privateCidrsFound.length) {
+                    if (!privateCidrsFound.length) {
                         helpers.addResult(results, 0,
                             'Security group "' + group.GroupName + '" is not configured to allow traffic from any reserved private addresses',
                             region, resource);

@@ -62,15 +62,14 @@ module.exports = {
                         }
                     }
 
-                    if(webTierTagFound) {
+                    if (webTierTagFound) {
                         webTierAsgFound = true;
 
-                        if(asg.LoadBalancerNames && asg.LoadBalancerNames.length) {
+                        if (asg.LoadBalancerNames && asg.LoadBalancerNames.length) {
                             helpers.addResult(results, 0,
                                 `Auto Scaling group "${asg.AutoScalingGroupName}" has load balancers associated`,
                                 region, resource);
-                        }
-                        else {
+                        } else {
                             helpers.addResult(results, 2,
                                 `Auto Scaling group "${asg.AutoScalingGroupName}" does have any load balancers associated`,
                                 region, resource);

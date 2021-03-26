@@ -41,16 +41,16 @@ module.exports = {
                 var resource = `arn:${awsOrGov}:ec2:${region}:${accountId}:network-acl/${acl.NetworkAclId}`;
                 var unrestrictedAcl = false;
 
-                if(acl.Entries && acl.Entries.length) {
+                if (acl.Entries && acl.Entries.length) {
                     for (var entry of acl.Entries) {
-                        if(entry.Egress && entry.RuleAction.toUpperCase() === 'ALLOW' && !entry.PortRange) {
+                        if (entry.Egress && entry.RuleAction.toUpperCase() === 'ALLOW' && !entry.PortRange) {
                             unrestrictedAcl = true;
                             break;
                         }
                     }
                 }
 
-                if(!unrestrictedAcl) {
+                if (!unrestrictedAcl) {
                     helpers.addResult(results, 0,
                         `Network ACL "${acl.NetworkAclId}" does not allow unrestricted access`,
                         region, resource);
