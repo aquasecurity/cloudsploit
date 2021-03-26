@@ -42,7 +42,7 @@ module.exports = {
 
                 var resource = `arn:${awsOrGov}:glue:${region}:${accountId}:/securityConfiguration/${configuration.Name}`;
 
-                if(configuration.EncryptionConfiguration &&
+                if (configuration.EncryptionConfiguration &&
                     configuration.EncryptionConfiguration.CloudWatchEncryption &&
                     configuration.EncryptionConfiguration.CloudWatchEncryption.CloudWatchEncryptionMode &&
                     configuration.EncryptionConfiguration.CloudWatchEncryption.CloudWatchEncryptionMode === 'SSE-KMS') {
