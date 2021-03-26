@@ -28,6 +28,7 @@ module.exports = {
 
             if (!virtualNetworks.data.length) {
                 helpers.addResult(results, 0, 'No existing Virtual Networks found', location);
+                return rcb();
             }
                 
             virtualNetworks.data.forEach(virtualNetwork => {
