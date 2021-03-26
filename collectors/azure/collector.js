@@ -229,6 +229,11 @@ var postcalls = {
             reliesOnPath: 'storageAccounts.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/blobServices?api-version=2019-06-01'
+        },
+        getServiceProperties: {
+            reliesOnPath: 'storageAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/blobServices/default?api-version=2019-06-01'
         }
     },
     fileShares: {
