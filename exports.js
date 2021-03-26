@@ -167,6 +167,7 @@ module.exports = {
         'elbHttpsOnly'                  : require(__dirname + '/plugins/aws/elb/elbHttpsOnly.js'),
         'elbLoggingEnabled'             : require(__dirname + '/plugins/aws/elb/elbLoggingEnabled.js'),
         'elbNoInstances'                : require(__dirname + '/plugins/aws/elb/elbNoInstances.js'),
+        'classicELBInUse'               : require(__dirname + '/plugins/aws/elb/classicELBInUse.js'),
         'connectionDrainingEnabled'     : require(__dirname + '/plugins/aws/elb/connectionDrainingEnabled.js'),
         'appTierElbSecurity'            : require(__dirname + '/plugins/aws/elb/appTierElbSecurity.js'),
 
