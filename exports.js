@@ -416,6 +416,7 @@ module.exports = {
         'logConnectionsEnabled'         : require(__dirname + '/plugins/azure/postgresqlserver/logConnectionsEnabled.js'),
         'logCheckpointsEnabled'         : require(__dirname + '/plugins/azure/postgresqlserver/logCheckpointsEnabled.js'),
         'enforcePostgresSSLConnection'  : require(__dirname + '/plugins/azure/postgresqlserver/enforcePostgresSSLConnection.js'),
+        'geoRedundantBackupEnabled'     : require(__dirname + '/plugins/azure/postgresqlserver/geoRedundantBackupEnabled.js'),
 
         'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/azure/networksecuritygroups/openOracleAutoDataWarehouse.js'),
         'networkWatcherEnabled'         : require(__dirname + '/plugins/azure/networksecuritygroups/networkWatcherEnabled.js'),
