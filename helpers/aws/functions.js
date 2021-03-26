@@ -222,7 +222,7 @@ function globalPrincipal(principal) {
     }
 
     var awsPrincipals = principal.AWS;
-    if(!Array.isArray(awsPrincipals)) {
+    if (!Array.isArray(awsPrincipals)) {
         awsPrincipals = [awsPrincipals];
     }
 
@@ -252,7 +252,7 @@ function crossAccountPrincipal(principal, accountId, fetchPrincipals) {
     }
 
     var awsPrincipals = principal.AWS;
-    if(!Array.isArray(awsPrincipals)) {
+    if (!Array.isArray(awsPrincipals)) {
         awsPrincipals = [awsPrincipals];
     }
 
@@ -293,7 +293,7 @@ function extractStatementPrincipals(statement) {
         }
 
         var awsPrincipals = principal.AWS;
-        if(!Array.isArray(awsPrincipals)) {
+        if (!Array.isArray(awsPrincipals)) {
             awsPrincipals = [awsPrincipals];
         }
 
@@ -317,6 +317,17 @@ function defaultPartition(settings) {
     if (settings.govcloud) return 'aws-us-gov';
     if (settings.china) return 'aws-cn';
     return 'aws';
+}
+
+function getS3BucketLocation(cache, region, bucketName) {
+    var getBucketLocation = helpers.addSource(cache, {},
+        ['s3', 'getBucketLocation', region, bucketName]);
+
+    if (getBucketLocation && getBucketLocation.data) {
+        if (getBucketLocation.data.LocationConstraint) return getBucketLocation.data.LocationConstraint;
+        else return 'us-east-1';
+    }
+    return 'global';
 }
 
 function remediatePlugin(config, call, params, callback) {
@@ -668,7 +679,7 @@ function getDefaultKeyId(cache, region, defaultKeyDesc) {
             var keyToAdd = describeKey.data.KeyMetadata;
 
             if (keyToAdd.KeyManager && keyToAdd.KeyManager === 'AWS' && keyToAdd.Description &&
-                keyToAdd.Description.indexOf(defaultKeyDesc) === 0) {
+                keyToAdd.Description.indexOf(defaultKeyDesc) === 0 && keyToAdd.Enabled && keyToAdd.KeyState && keyToAdd.KeyState === 'Enabled') {
                 return keyToAdd;
             }
         }
@@ -696,5 +707,6 @@ module.exports = {
     hasFederatedUserRole: hasFederatedUserRole,
     getEncryptionLevel: getEncryptionLevel,
     extractStatementPrincipals: extractStatementPrincipals,
-    getDefaultKeyId: getDefaultKeyId
+    getDefaultKeyId: getDefaultKeyId,
+    getS3BucketLocation: getS3BucketLocation
 };

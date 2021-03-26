@@ -50,6 +50,19 @@
         ],
         "no-eval": [
             "error"
+        ],
+        "keyword-spacing": [
+            "error",
+            {
+                "before": true
+            }
+        ],
+        "brace-style": [
+            "error",
+            "1tbs",
+            {
+                "allowSingleLine": true
+            }
         ]
     }
 }

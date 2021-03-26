@@ -45,14 +45,14 @@ module.exports = {
                 }
 
                 for (var stackDetails of describeStacks.data.Stacks) {
-                    if(!stackDetails.StackId) continue;
+                    if (!stackDetails.StackId) continue;
 
                     var resource = stackDetails.StackId;
-                    if(stackDetails.EnableTerminationProtection) {
+                    if (stackDetails.EnableTerminationProtection) {
                         helpers.addResult(results, 0,
                             `CloudFormation stack "${stackDetails.StackName}" has termination protection enabled`,
                             region, resource);
-                    } else{
+                    } else {
                         helpers.addResult(results, 2,
                             `CloudFormation stack "${stackDetails.StackName}" does not have termination protection enabled`,
                             region, resource);
