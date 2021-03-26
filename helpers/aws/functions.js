@@ -296,7 +296,7 @@ function extractStatementPrincipals(statement) {
             awsPrincipals = [awsPrincipals];
         }
 
-        response.push.apply(response, awsPrincipals)
+        response.push.apply(response, awsPrincipals);
     }
 
     return response;
@@ -341,14 +341,14 @@ function filterDenyPermissionsByPrincipal(permissionsMap, principal) {
             Object.keys(permissionsMap[key]).forEach(action => {
                 if (response[action]) response[action].push.apply(response[action], permissionsMap[key][action]);
                 else response[action] = permissionsMap[key][action];
-            })
+            });
         }
     });
     return response;
 }
 
 function isEffectivePolicyStatement(statement, denyActionResourceMap) {
-let statementActionResourceMap = {};
+    let statementActionResourceMap = {};
     if (statement.Action && statement.Resource) {
         for (let action of statement.Action) {
             statementActionResourceMap[action] = statement.Resource;
@@ -405,6 +405,17 @@ function defaultPartition(settings) {
     if (settings.govcloud) return 'aws-us-gov';
     if (settings.china) return 'aws-cn';
     return 'aws';
+}
+
+function getS3BucketLocation(cache, region, bucketName) {
+    var getBucketLocation = helpers.addSource(cache, {},
+        ['s3', 'getBucketLocation', region, bucketName]);
+
+    if (getBucketLocation && getBucketLocation.data) {
+        if (getBucketLocation.data.LocationConstraint) return getBucketLocation.data.LocationConstraint;
+        else return 'us-east-1';
+    }
+    return 'global';
 }
 
 function remediatePlugin(config, call, params, callback) {
@@ -788,5 +799,6 @@ module.exports = {
     isEffectiveStatement: isEffectiveStatement,
     getDenyActionResourceMap: getDenyActionResourceMap,
     getDenyPermissionsMap: getDenyPermissionsMap,
-    isEffectivePolicyStatement: isEffectivePolicyStatement
+    isEffectivePolicyStatement: isEffectivePolicyStatement,
+    getS3BucketLocation: getS3BucketLocation
 };
