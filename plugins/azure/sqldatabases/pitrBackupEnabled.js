@@ -3,7 +3,7 @@ const helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Point in Time Restore (PITR) Backup Retention Period',
-    category: 'SQL Server',
+    category: 'SQL Databases',
     description: 'Ensures that Microsoft Azure SQL databases have a sufficient Point in Time Restore (PITR) backup retention period configured',
     more_info: 'Point-in-time restore is a self-service capability, allowing customers to restore a Basic, Standard or Premium database from these backups to any point within the retention period.',
     recommended_action: 'Ensure that an optimal backup retention period is set for Azure SQL databases.',
