@@ -201,6 +201,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/securityAlertPolicies?api-version=2017-03-01-preview'
         }
     },
+    failOverGroups: {
+        listByServer: {
+            reliesOnPath: 'servers.listSql',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/failoverGroups?api-version=2017-03-01-preview'
+        }
+    },
     configurations: {
         listByServer: {
             reliesOnPath: 'servers.listPostgres',
