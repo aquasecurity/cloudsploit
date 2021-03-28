@@ -5,9 +5,9 @@ module.exports = {
     title: 'SQL Server Private Endpoints Configured',
     category: 'SQL Server',
     description: 'Ensures that SQL Servers are accessible only through private endpoints',
-    more_info: '',
-    recommended_action: '',
-    link: '',
+    more_info: 'Azure Private Link enables you to access Azure PaaS Services and Azure hosted customer-owned/partner services over a private endpoint in your virtual network',
+    recommended_action: 'Ensure that Private Endpoints are configured properly and Network Access is disabled for SQL Server',
+    link: 'https://docs.microsoft.com/en-us/azure/private-link/private-link-overview',
     apis: ['servers:listSql'],
 
     run: function(cache, settings, callback) {
