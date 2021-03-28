@@ -50,13 +50,13 @@ module.exports = {
                 if (!databases || databases.err || !databases.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for SQL server databases: ' + helpers.addError(databases), location, server.id);
-                    scb();
+                    return scb();
                 }
                 
                 if (!databases.data.length) {
                     helpers.addResult(results, 0,
                         'No databases found for SQL server', location, server.id);
-                    scb();
+                    return scb();
                 }
                 
                 for (const database of databases.data) {
