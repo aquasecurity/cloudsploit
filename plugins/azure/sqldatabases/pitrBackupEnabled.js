@@ -2,18 +2,18 @@ var async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Point in Time Restore (PITR) Backup Retention Period',
+    title: 'Point in Time Restore (PITR) Backup Retention Period Configured',
     category: 'SQL Databases',
     description: 'Ensures that Microsoft Azure SQL databases have a sufficient Point in Time Restore (PITR) backup retention period configured',
-    more_info: 'Point-in-time restore is a self-service capability, allowing customers to restore a Basic, Standard or Premium database from these backups to any point within the retention period.',
+    more_info: 'Point-in-time restore is a self-service capability, which enabled you to restore a database from backups to any point within the retention period. Point-in-time restore is useful in recovery scenarios, such as incidents caused by errors, incorrectly loaded data, or deletion of crucial data.',
     recommended_action: 'Ensure that an optimal backup retention period is set for Azure SQL databases.',
     link: 'https://azure.microsoft.com/en-us/blog/azure-sql-database-point-in-time-restore/',
     apis: ['servers:listSql', 'databases:listByServer', 'databases:shortTermRetentionPolicy'],
     settings: {
-        ShortTemRetentionDays: {
-            name: 'Short Term Retention Period (Days)',
-            default: 7,
-            description: 'Number of days for which backups will be retained.',
+        pitr_backup_retention_period: {
+            name: 'Point in Time Restore Backup Retention Period',
+            default: '7',
+            description: 'Desired number of days for which backups will be retained.',
             regex: '^(3[0-5]|2[0-9]|1[0-9]|[1-9])$'
         }
     },
@@ -24,7 +24,7 @@ module.exports = {
         const locations = helpers.locations(settings.govcloud);
 
         const config = {
-            retentionDays: parseInt(settings.ShortTemRetentionDays || this.settings.ShortTemRetentionDays.default)
+            retentionDays: parseInt(settings.pitr_backup_retention_period || this.settings.pitr_backup_retention_period.default)
         };
 
         async.each(locations.servers, function(location, rcb) {
@@ -43,20 +43,20 @@ module.exports = {
                 helpers.addResult(results, 0, 'No SQL servers found', location);
             }
 
-            for (const server of servers.data) {
+            async.each(servers.data, function(server, scb) {
                 const databases = helpers.addSource(cache, source,
                     ['databases', 'listByServer', location, server.id]);
 
                 if (!databases || databases.err || !databases.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for SQL server databases: ' + helpers.addError(databases), location, server.id);
-                    continue;
+                    scb();
                 }
                 
                 if (!databases.data.length) {
                     helpers.addResult(results, 0,
                         'No databases found for SQL server', location, server.id);
-                    continue;
+                    scb();
                 }
                 
                 for (const database of databases.data) {
@@ -92,9 +92,10 @@ module.exports = {
                         }
                     }
                 }
-            }
-
-            rcb();
+                scb();
+            }, function() {
+                rcb();
+            });
         }, function() {
             callback(null, results, source);
         });
