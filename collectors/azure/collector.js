@@ -201,6 +201,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/securityAlertPolicies?api-version=2017-03-01-preview'
         }
     },
+    flowLogs: {
+        listAll: {
+            reliesOnPath: 'networkWatchers.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/flowLogs?api-version=2020-11-01'
+        }
+    },
     configurations: {
         listByServer: {
             reliesOnPath: 'servers.listPostgres',

@@ -452,6 +452,8 @@ module.exports = {
         'openSMBoTCP'                   : require(__dirname + '/plugins/azure/networksecuritygroups/openSMBoTCP.js'),
         'openSQLServer'                 : require(__dirname + '/plugins/azure/networksecuritygroups/openSQLServer.js'),
 
+        'nsgFlowLogsRetentionPeriod'    : require(__dirname + '/plugins/azure/networkwatchers/nsgFlowLogsRetentionPeriod.js'),
+
         'resourceUsageLimit'            : require(__dirname + '/plugins/azure/resources/resourceUsageLimit.js'),
         'managementLockEnabled'         : require(__dirname + '/plugins/azure/resources/managementLockEnabled.js'),
 
