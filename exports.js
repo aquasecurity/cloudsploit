@@ -460,6 +460,7 @@ module.exports = {
         'advancedDataSecurityEnabled'   : require(__dirname + '/plugins/azure/sqlserver/advancedDataSecurityEnabled.js'),
         'tdeProtectorEncrypted'         : require(__dirname + '/plugins/azure/sqlserver/tdeProtectorEncrypted.js'),
         'noPublicAccess'                : require(__dirname + '/plugins/azure/sqlserver/noPublicAccess.js'),
+        'privateEndpointsConfigured'    : require(__dirname + '/plugins/azure/sqlserver/privateEndpointsConfigured.js'), 
         'auditRetentionPolicy'          : require(__dirname + '/plugins/azure/sqlserver/auditRetentionPolicy.js'),
         'auditActionGroupsEnabled'      : require(__dirname + '/plugins/azure/sqlserver/auditActionGroupsEnabled.js'),
         'serverAuditingEnabled'         : require(__dirname + '/plugins/azure/sqlserver/serverAuditingEnabled.js'),
