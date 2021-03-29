@@ -93,7 +93,7 @@ function OracleExecutor(OracleConfig) {
             ociMany(callObj, OracleConfig);
         } else {
             for (var filter in callObj.filterKey){
-                if(callObj.filterLiteral && callObj.filterLiteral[filter]) {
+                if (callObj.filterLiteral && callObj.filterLiteral[filter]) {
                     parameters[callObj.filterKey[filter]] = callObj.filterValue[filter];
                 } else {
                     parameters[callObj.filterKey[filter]] = OracleConfig[callObj.filterValue[filter]];

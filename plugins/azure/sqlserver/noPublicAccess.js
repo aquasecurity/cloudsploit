@@ -39,7 +39,7 @@ module.exports = {
 
                 if (!firewallRules || firewallRules.err || !firewallRules.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for Database Threat Detection Policies: ' + helpers.addError(firewallRules), location, server.id);
+                        'Unable to query SQL Server Firewall Rules: ' + helpers.addError(firewallRules), location, server.id);
                 } else {
                     if (!firewallRules.data.length) {
                         helpers.addResult(results, 0, 'No existing SQL Server Firewall Rules found', location, server.id);
@@ -50,9 +50,8 @@ module.exports = {
                             const startIpAddr = firewallRule['startIpAddress'];
                             const endIpAddr = firewallRule['endIpAddress'];
 
-                            if (startIpAddr && startIpAddr.toString().indexOf('0.0.0.0') > -1) {
-                                publicAccess = true;
-                            } else if (endIpAddr && endIpAddr.toString().indexOf('0.0.0.0') > -1) {
+                            if ((startIpAddr && startIpAddr.toString().indexOf('0.0.0.0') > -1) ||
+                            (endIpAddr && endIpAddr.toString().indexOf('0.0.0.0') > -1)) {
                                 publicAccess = true;
                             }
                         });

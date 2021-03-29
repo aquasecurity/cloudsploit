@@ -79,13 +79,14 @@ function findOpenAllPorts(ngs, location, results) {
         if (sgroups.allowed && sgroups.allowed.length) {
             let firewallRules = sgroups.allowed;
             let sourceAddressPrefix = sgroups.sourceRanges;
+
             if (!sourceAddressPrefix || !sourceAddressPrefix.length) continue;
 
             for (let firewallRule of firewallRules) {
                 for (let protocol in protocols) {
                     if (sgroups['direction'] && (sgroups['direction'] === 'INGRESS') &&
                     firewallRule['IPProtocol'] && (firewallRule['IPProtocol'] === protocol) &&
-                    sgroups['disabled'] && (sgroups['disabled'] === false) &&
+                    !sgroups['disabled'] &&
                     sourceAddressPrefix &&
                     (sourceAddressPrefix.includes('*') || sourceAddressPrefix.includes('') || sourceAddressPrefix.includes('0.0.0.0/0') || sourceAddressPrefix.includes('<nw>/0') || sourceAddressPrefix.includes('/0') || sourceAddressPrefix.includes('internet'))) {
                         if (firewallRule['ports']) {
@@ -108,7 +109,7 @@ function findOpenAllPorts(ngs, location, results) {
                         }
                     } else if (sgroups['direction'] && (sgroups['direction'] === 'INGRESS') &&
                         firewallRule['IPProtocol'] && (firewallRule['IPProtocol'] === 'all') &&
-                        sgroups['disabled'] && (sgroups['disabled'] === false) &&
+                        !sgroups['disabled'] &&
                         sourceAddressPrefix &&
                         (sourceAddressPrefix.includes('*') || sourceAddressPrefix.includes('') || sourceAddressPrefix.includes('0.0.0.0/0') || sourceAddressPrefix.includes('<nw>/0') || sourceAddressPrefix.includes('/0') || sourceAddressPrefix.includes('internet'))) {
                         var string = 'all ports open to the public';

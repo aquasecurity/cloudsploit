@@ -48,6 +48,7 @@ module.exports = {
 
             servers.data.forEach(function(server) {
                 if (!server.id) return;
+
                 if (server.minimalTlsVersion) {
                     if (parseFloat(server.minimalTlsVersion) >= desiredVersion) {
                         helpers.addResult(results, 0,

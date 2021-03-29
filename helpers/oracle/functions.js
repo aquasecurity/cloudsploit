@@ -312,8 +312,71 @@ function checkRegionSubscription (cache, source, results, region) {
     }
 }
 
+function normalizePolicyStatement(policyStatement) {
+    let statement = policyStatement.toLowerCase();
+    statement = statement.replace('  ', ' ');
+    let statementArr = statement.split(' ');
+    var statementObj = {};
+
+    if (statementArr[1] === 'any-user') {
+        statementObj['subject'] = 'any-user';
+        statementObj['subjectType'] = '';
+    } else {
+        statementObj['subject'] = statementArr.slice(2, statementArr.indexOf('to'));
+        statementObj['subject'] = statementObj['subject'].join(' ');
+        statementObj['subjectType'] = statementArr[1] + ' ';
+        statementObj['subject'] = statementObj['subject'].replace(',', '');
+    }
+
+    statementObj['verb'] = statementArr[statementArr.indexOf('to') + 1];
+    statementObj['resourceType'] = statementArr[statementArr.indexOf('to') + 2];
+
+    if (statementArr[statementArr.indexOf('in') + 1] === 'tenancy') {
+        statementObj['location'] = statementArr[statementArr.indexOf('in') + 1]
+    } else {
+        statementObj['location'] = 'compartment ' + statementArr[statementArr.indexOf('in') + 2]
+    }
+
+    if (statementArr.indexOf('where') > -1) statementObj['condition'] = statementArr.slice(statementArr.indexOf('where') + 1, statementArr.length)
+    return statementObj;
+}
+
+function testStatement(statementObj, resourceTypes, policyAdmins, verbs) {
+    let whereNames = ['request.user.id', 'request.user.name', 'request.groups.id', 'request.group.name', 'request.networkSource.name', 'target.user.name', 'request.instance.compartment.id', 'request.ad'];
+
+    if (resourceTypes.indexOf('all-resources') === -1) resourceTypes.push('all-resources');
+
+    let subjectArr = statementObj['subject'].split(' ');
+    policyAdmins = policyAdmins.toLowerCase();
+    subjectArr.forEach(subject => {
+        if (policyAdmins.indexOf(subject) > -1) subjectArr.splice(subjectArr.indexOf(subject), 1);
+    })
+
+    if (!subjectArr.length) return true;
+    statementObj['subject'] = subjectArr.join(', ')
+
+    if (verbs && verbs.indexOf(statementObj['verb']) === -1) return true;
+    else if (statementObj['verb'] !== 'manage') return true;
+
+    if (resourceTypes.indexOf(statementObj['resourceType']) === -1) return true;
+
+    if (statementObj['condition']) {
+        let passingCondition = false;
+        whereNames.forEach(conditionName => {
+            if (statementObj['condition'].indexOf(conditionName) > -1) {
+                passingCondition = true;
+            }
+        })
+
+        return passingCondition;
+    }
+
+    return false;
+}
 module.exports = {
     findOpenPorts: findOpenPorts,
     findOpenPortsAll: findOpenPortsAll,
-    checkRegionSubscription: checkRegionSubscription
+    checkRegionSubscription: checkRegionSubscription,
+    normalizePolicyStatement: normalizePolicyStatement,
+    testStatement: testStatement
 };

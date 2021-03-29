@@ -50,7 +50,7 @@ module.exports = {
             
             if (elasticLoadBalancers.data.length) {
                 elasticLoadBalancers.data.forEach(function(elb) {
-                    if(elb.LoadBalancerName) {
+                    if (elb.LoadBalancerName) {
                         elbNames.push(elb.LoadBalancerName);
                     }
                 });
@@ -58,7 +58,7 @@ module.exports = {
 
             if (elasticLoadBalancersV2.data.length) {
                 elasticLoadBalancersV2.data.forEach(function(elbv2) {
-                    if(elbv2.LoadBalancerName) {
+                    if (elbv2.LoadBalancerName) {
                         elbNames.push(elbv2.LoadBalancerName);
                     }
                 });
@@ -67,10 +67,10 @@ module.exports = {
             autoScalingGroups.data.forEach(function(asg){
                 var resource = asg.AutoScalingGroupARN;
                 var inactiveElbs = [];
-                if(asg.HealthCheckType && asg.HealthCheckType === 'ELB') {
+                if (asg.HealthCheckType && asg.HealthCheckType === 'ELB') {
                     if (asg.LoadBalancerNames && asg.LoadBalancerNames.length) {
                         asg.LoadBalancerNames.forEach(function(elbName){
-                            if(!elbNames.length || !elbNames.includes(elbName)) {
+                            if (!elbNames.length || !elbNames.includes(elbName)) {
                                 inactiveElbs.push(elbName);
                             }
                         });
@@ -84,13 +84,11 @@ module.exports = {
                                 'Auto Scaling group: ' + asg.AutoScalingGroupName + ' utilizes active load balancers',
                                 region, resource);
                         }
-                    }
-                    else {
+                    } else {
                         helpers.addResult(results, 2,
                             'Auto Scaling group does not have any Load Balancer associated', region, resource);
                     }
-                }
-                else {
+                } else {
                     helpers.addResult(results, 0,
                         'Auto Scaling group does not utilize a load balancer', region, resource);
                 }
