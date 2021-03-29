@@ -119,7 +119,7 @@ module.exports = {
 
                 if (recordSet.Type && recordSet.Type === 'A' &&
                     recordSet.Name && !bucketNames.includes(recordSet.Name) &&
-                    recordSet.AliasTarget && recordSet.AliasTarget.DNSName && recordSet.AliasTarget.DNSName.startsWith('s3-website-')) {
+                    recordSet.AliasTarget && recordSet.AliasTarget.DNSName && recordSet.AliasTarget.DNSName.startsWith('s3-website')) {
                     danglingDnsRecords.push(recordSet.Name);
                 }
             });
