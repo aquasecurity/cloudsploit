@@ -30,7 +30,7 @@ module.exports = {
 
             if (storageAccounts.err || !storageAccounts.data) {
                 helpers.addResult(results, 3, 
-                    'Unable to query for for storage accounts: ' + helpers.addError(storageAccounts), location);
+                    'Unable to query for storage accounts: ' + helpers.addError(storageAccounts), location);
                 return rcb();
             }
 

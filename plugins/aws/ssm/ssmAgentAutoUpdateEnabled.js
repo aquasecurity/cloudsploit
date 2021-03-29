@@ -35,7 +35,7 @@ module.exports = {
                 return rcb();
             }
 
-            if(!describeInstanceInformation.data.length) {
+            if (!describeInstanceInformation.data.length) {
                 helpers.addResult(results, 0,
                     'No managed instances found', region);
                 return rcb();
@@ -53,9 +53,9 @@ module.exports = {
                 listAssociations.data.forEach(association => {
                     if (association.Name && association.Name === 'AWS-UpdateSSMAgent' && association.Targets && association.Targets.length) {
                         association.Targets.forEach(function(target){
-                            if(target.Key && target.Key === 'InstanceIds' && target.Values && target.Values.length) {
+                            if (target.Key && target.Key === 'InstanceIds' && target.Values && target.Values.length) {
                                 target.Values.forEach(function(instanceId){
-                                    if(!associatedInstances.includes(instanceId) && association.ScheduleExpression){
+                                    if (!associatedInstances.includes(instanceId) && association.ScheduleExpression){
                                         associatedInstances.push(instanceId);
                                     }
                                 });
@@ -71,8 +71,7 @@ module.exports = {
                 if (associatedInstances.includes(resource) || associatedInstances.includes('*')) {
                     helpers.addResult(results, 0, 
                         'Instance has SSM Agent auto update enabled', region, resource);
-                }
-                else {
+                } else {
                     helpers.addResult(results, 2, 
                         'Instance does not have SSM Agent auto update enabled', region, resource);
                 }

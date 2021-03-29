@@ -125,7 +125,7 @@ module.exports = {
             return callback(err, null);
         }
 
-        for(var qUrl in queAttributes[queueLocation]){
+        for (var qUrl in queAttributes[queueLocation]){
             if (queAttributes[queueLocation][qUrl].data.Attributes.QueueArn === resource){
                 queueUrl = qUrl;
                 break;

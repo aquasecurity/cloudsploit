@@ -74,8 +74,7 @@ module.exports = {
                                 `Redshift cluster "${cluster.ClusterIdentifier}"is not encrypted using KMS customer master key(CMK)`,
                                 region, resource);
                         }
-                    }
-                    else {
+                    } else {
                         helpers.addResult(results, 2,
                             `Redshift cluster encryption key "${cluster.KmsKeyId}" not found`,
                             region, resource);

@@ -17,6 +17,18 @@ module.exports = {
             default: '^.*$',
         },
     },
+    asl: {
+        conditions: [
+            {
+                service: 'iam',
+                api: 'generateCredentialReport',
+                property: 'user',
+                transform: 'STRING',
+                op: 'MATCHES',
+                value: '^.*$'
+            }
+        ]
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

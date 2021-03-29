@@ -36,7 +36,7 @@ module.exports = {
             describeTrails.data.forEach(trail => {
                 if (!trail.TrailARN || (trail.S3BucketName && trail.S3BucketName == helpers.CLOUDSPLOIT_EVENTS_BUCKET)) return;
 
-                if(!globalTrails.includes(trail.TrailARN) && trail.IncludeGlobalServiceEvents) {
+                if (!globalTrails.includes(trail.TrailARN) && trail.IncludeGlobalServiceEvents) {
                     globalTrails.push(trail.Name);
                 }
             });
@@ -46,8 +46,7 @@ module.exports = {
             if (!globalTrails.length) {
                 helpers.addResult(results, 2,
                     'CloudTrail global services event logging is not enabled');
-            }
-            else if (globalTrails.length < 2) {
+            } else if (globalTrails.length < 2) {
                 helpers.addResult(results, 0,
                     'CloudTrail global services event logs are not being duplicated');
             } else {

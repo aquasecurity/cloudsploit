@@ -58,7 +58,7 @@ module.exports = {
             }
 
             describeInstances.data.forEach(function(instance){
-                if(!instance.Instances || !instance.Instances.length) {
+                if (!instance.Instances || !instance.Instances.length) {
                     helpers.addResult(results, 0, 
                         'EC2 instance description is not found', region);
                     return;

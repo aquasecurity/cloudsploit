@@ -9,11 +9,27 @@ module.exports = {
     recommended_action: 'Modify CloudTrail trail configurations so that logs are being delivered',
     link: 'https://docs.aws.amazon.com/awscloudtrail/latest/userguide/how-cloudtrail-works.html',
     apis: ['CloudTrail:describeTrails', 'CloudTrail:getTrailStatus'],
+    settings: {
+        trails_to_check: {
+            name: 'CloudTrail Trails to Check',
+            description: 'Comma separated string of CloudTrail trail names. If provided, only check provided trails and pass all other without checking',
+            regex: '^[0-9A-Za-z._-]{3,128}$',
+            default: ''
+        }
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+
+        var config = {
+            trails_to_check: settings.trails_to_check || this.settings.trails_to_check.default
+        };
+
+        var checkProvidedOnly = (config.trails_to_check.length) ? true : false;
+
+        config.trails_to_check = config.trails_to_check.split(',');
 
         async.each(regions.cloudtrail, function(region, rcb){
 
@@ -37,6 +53,13 @@ module.exports = {
                 if (!trail.TrailARN || (trail.S3BucketName && trail.S3BucketName == helpers.CLOUDSPLOIT_EVENTS_BUCKET)) return cb();
 
                 var resource = trail.TrailARN;
+
+                if (checkProvidedOnly && trail.Name && !config.trails_to_check.includes(trail.Name)) {
+                    helpers.addResult(results, 0,
+                        `CloudTrail trail "${trail.Name}" is set to pass without checking logs delivery status`,
+                        region, resource);
+                    return cb();
+                }
 
                 var getTrailStatus = helpers.addSource(cache, source,
                     ['cloudtrail', 'getTrailStatus', region, trail.TrailARN]);
