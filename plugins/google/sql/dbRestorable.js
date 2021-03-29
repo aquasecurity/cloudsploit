@@ -39,7 +39,7 @@ module.exports = {
             sqlInstances.data.forEach(sqlInstance => {
                 if (sqlInstance.settings &&
                     sqlInstance.settings.backupConfiguration &&
-                    sqlInstance.settings.backupConfiguration.binaryLogEnabled) {
+                    sqlInstance.settings.backupConfiguration.enabled) {
                     helpers.addResult(results, 0, 
                         'SQL instance has point-in-time recovery enabled', region, sqlInstance.name);
                 } else {

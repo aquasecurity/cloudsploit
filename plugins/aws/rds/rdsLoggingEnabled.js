@@ -56,8 +56,7 @@ module.exports = {
                     var matchingDBEngineVersions = eligibleDBEngineVersions.filter(function(dbEngine) {
                         return dbEngine.Engine === db.Engine && dbEngine.EngineVersion === db.EngineVersion;
                     });
-                    if (matchingDBEngineVersions.length)
-                    {
+                    if (matchingDBEngineVersions.length) {
                         helpers.addResult(results, 2, 'Logging is not enabled', region, dbResource);
                     } else {
                         helpers.addResult(results, 0, 'Logging is not enabled, but cannot be enabled', region, dbResource);

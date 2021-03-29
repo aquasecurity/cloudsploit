@@ -119,7 +119,7 @@ module.exports = {
                         'Unable to query for RDS instances: ' + helpers.addError(describeDBInstances), region);
                 } else {
                     for (var l in describeDBInstances.data){
-                        if(describeDBInstances.data[l].StorageEncrypted &&
+                        if (describeDBInstances.data[l].StorageEncrypted &&
                             describeDBInstances.data[l].KmsKeyId){
                             services.push({
                                 serviceName: 'RDS',
@@ -140,7 +140,7 @@ module.exports = {
                         'Unable to query for Redshift clusters: ' + helpers.addError(describeClusters), region);
                 } else {
                     for (var m in describeClusters.data){
-                        if(describeClusters.data[m].KmsKeyId){
+                        if (describeClusters.data[m].KmsKeyId){
                             services.push({
                                 serviceName: 'Redshift',
                                 resource: 'arn:aws:redshift:' + region + ':' + accountId + ':cluster:' + describeClusters.data[m].ClusterIdentifier,
