@@ -26,7 +26,6 @@ module.exports = {
                 ['ec2', 'describeSnapshots', region]);
 
             if (!describeVolumes) return rcb();
-            if (!describeSnapshots) return rcb();
 
             if (describeVolumes.err || !describeVolumes.data) {
                 helpers.addResult(results, 3,
