@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'EBS volumes should have backups in the form of snapshots.',
     recommended_action: 'Ensure that each EBS volumes contain at least .',
     link: 'https://docs.aws.amazon.com/prescriptive-guidance/latest/backup-recovery/new-ebs-volume-backups.html',
-    apis: ['EC2:describeInstances', 'EC2:describeVolumes', 'EC2:describeSnapshots', 'EC2:describeSnapshotAttribute', 'STS:getCallerIdentity'],
+    apis: ['EC2:describeVolumes', 'EC2:describeSnapshots', 'STS:getCallerIdentity'],
 
     run: function(cache, settings, callback) {
         let results = [];
