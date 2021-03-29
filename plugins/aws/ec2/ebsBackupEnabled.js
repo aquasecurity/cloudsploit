@@ -39,7 +39,7 @@ module.exports = {
                 return rcb();
             }
 
-            if (describeSnapshots.err || !describeSnapshots.data) {
+            if (!describeSnapshots || describeSnapshots.err || !describeSnapshots.data) {
                 helpers.addResult(results, 3,
                     `Unable to query for EBS Snapshots: ${helpers.addError(describeSnapshots)}`, region);
                 return rcb();
