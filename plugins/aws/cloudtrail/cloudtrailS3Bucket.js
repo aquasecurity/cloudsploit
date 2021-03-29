@@ -15,6 +15,12 @@ module.exports = {
             description: 'Amazon S3 bucket name designated for CloudTrail trails',
             regex: '^.*$',
             default: ''
+        },
+        trails_to_check: {
+            name: 'CloudTrail Trails to Check',
+            description: 'Comma separated string of CloudTrail trail names. If provided, only check provided trails and pass all other without checking',
+            regex: '^[0-9A-Za-z._-]{3,128}$',
+            default: ''
         }
     },
 
@@ -24,10 +30,15 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var config = {
-            trail_s3_bucket_name: settings.trail_s3_bucket_name || this.settings.trail_s3_bucket_name.default
+            trail_s3_bucket_name: settings.trail_s3_bucket_name || this.settings.trail_s3_bucket_name.default,
+            trails_to_check: settings.trails_to_check || this.settings.trails_to_check.default
         };
 
         if (!config.trail_s3_bucket_name.length) return callback(null, results, source);
+
+        var checkProvidedOnly = (config.trails_to_check.length) ? true : false;
+
+        config.trails_to_check = config.trails_to_check.split(',');
 
         async.each(regions.cloudtrail, function(region, rcb){
 
@@ -51,6 +62,13 @@ module.exports = {
                 if (!trail.TrailARN || (trail.S3BucketName && trail.S3BucketName == helpers.CLOUDSPLOIT_EVENTS_BUCKET)) return cb();
 
                 var resource = trail.TrailARN;
+
+                if (checkProvidedOnly && trail.Name && !config.trails_to_check.includes(trail.Name)) {
+                    helpers.addResult(results, 0,
+                        `CloudTrail trail "${trail.Name}" is set to pass without checking S3 bucket name`,
+                        region, resource);
+                    return cb();
+                }
 
                 if (trail.S3BucketName && trail.S3BucketName === config.trail_s3_bucket_name) {
                     helpers.addResult(results, 0,
