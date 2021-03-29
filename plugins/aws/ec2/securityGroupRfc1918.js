@@ -62,7 +62,7 @@ module.exports = {
                         var cidrIp = permission.IpRanges[r].CidrIp;
                       
                         if (cidrIp && private_cidrs.includes(cidrIp)) {
-                            if(!privateCidrsFound.includes(cidrIp)) {
+                            if (!privateCidrsFound.includes(cidrIp)) {
                                 privateCidrsFound.push(cidrIp);
                             }
                         }
