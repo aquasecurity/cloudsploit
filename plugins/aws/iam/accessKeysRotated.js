@@ -32,6 +32,18 @@ module.exports = {
             default: 90
         }
     },
+    asl: {
+        conditions: [
+            {
+                service: 'iam',
+                api: 'generateCredentialReport',
+                property: 'access_key_1_last_rotated',
+                transform: 'DAYSFROM',
+                op: 'GT',
+                value: 90
+            }
+        ]
+    },
 
     run: function(cache, settings, callback) {
         var config = {

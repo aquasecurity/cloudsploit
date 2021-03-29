@@ -29,6 +29,18 @@ module.exports = {
         rollback: ['sns:SetTopicAttributes']
     },
     realtime_triggers: ['sns:CreateTopic', 'sns:SetTopicAttributes'],
+    asl: {
+        conditions: [
+            {
+                service: 'sns',
+                api: 'getTopicAttributes',
+                property: 'Attributes.KmsMasterKeyId',
+                transform: 'STRING',
+                op: 'NE',
+                value: null
+            }
+        ]
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -59,7 +71,7 @@ module.exports = {
                 var accountId = resource.split(':')[4];
                 var cloudsploitSNS = helpers.CLOUDSPLOIT_EVENTS_SNS + accountId;
 
-                if( resource.indexOf(cloudsploitSNS) > -1){
+                if ( resource.indexOf(cloudsploitSNS) > -1){
                     helpers.addResult(results, 0,
                         'This SNS topic is auto-allowed as part of a cross-account notification topic used by the real-time events service',
                         region, resource);
@@ -81,8 +93,7 @@ module.exports = {
                     helpers.addResult(results, 0,
                         'Server-Side Encryption is enabled for SNS topic',
                         region, resource);
-                } 
-                else {
+                } else {
                     helpers.addResult(results, 2,
                         'Server-Side Encryption is not enabled for SNS topic',
                         region, resource);

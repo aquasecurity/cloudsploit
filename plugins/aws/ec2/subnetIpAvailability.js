@@ -56,7 +56,7 @@ module.exports = {
                 return rcb();
             }
 
-            for(var i in describeSubnets.data){
+            for (var i in describeSubnets.data){
                 var subnetSize = helpers.cidrSize(describeSubnets.data[i].CidrBlock);
                 var consumedIPs = subnetSize - describeSubnets.data[i].AvailableIpAddressCount;
                 var percentageConsumed = Math.ceil((consumedIPs / subnetSize) * 100);

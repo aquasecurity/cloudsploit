@@ -50,7 +50,7 @@ module.exports = {
                 return rcb();
             }
 
-            if(describeRepositories.data.length === 0){
+            if (describeRepositories.data.length === 0){
                 helpers.addResult(results, 0, 'No ECR repositories present', region);
                 return rcb();
             }

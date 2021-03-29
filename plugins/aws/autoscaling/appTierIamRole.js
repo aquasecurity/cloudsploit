@@ -76,7 +76,7 @@ module.exports = {
 
                 var resource = asg.AutoScalingGroupARN;
 
-                if(asg.LaunchConfigurationName && asg.LaunchConfigurationName.length){
+                if (asg.LaunchConfigurationName && asg.LaunchConfigurationName.length){
                     launchConfigurationAsgFound = true;
 
                     if (asg.Tags && asg.Tags.length) {
@@ -93,7 +93,7 @@ module.exports = {
                         }
 
                         if (appTierTag) {
-                            if(launchConfigurations[asg.LaunchConfigurationName]) {
+                            if (launchConfigurations[asg.LaunchConfigurationName]) {
                                 helpers.addResult(results, 0,
                                     `Launch configuration for App-Tier group "${asg.AutoScalingGroupName}" has customer created IAM role configured`,
                                     region, resource);
