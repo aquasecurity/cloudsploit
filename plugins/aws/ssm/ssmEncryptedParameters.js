@@ -93,11 +93,11 @@ module.exports = {
 
                 var keyId;
                 if (!param.KeyId) {
-                    helpers.addResult(results, 2, 'SSM Paramters is not encrypted', region, arn);
+                    helpers.addResult(results, 2, 'SSM Parameters is not encrypted', region, arn);
                     return pcb();
                 }
 
-                if(param.KeyId.includes('alias')) {
+                if (param.KeyId.includes('alias')) {
                     var alias = aliases.data.find(a => a.AliasName === param.KeyId);
                     if (!alias || !alias.TargetKeyId) {
                         helpers.addResult(results, 3, `Unable to locate alias: ${param.KeyId} for SSM Parameter`, region, arn);

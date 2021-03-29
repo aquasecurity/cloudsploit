@@ -26,6 +26,18 @@ module.exports = {
              'password expirations enforces this policy.',
         cis1: '1.11 Ensure IAM password policy expires passwords within 90 days or less'
     },
+    asl: {
+        conditions: [
+            {
+                service: 'iam',
+                api: 'getAccountPasswordPolicy',
+                property: 'MaxPasswordAge',
+                transform: 'INTEGER',
+                op: 'GT',
+                value: 90
+            }
+        ]
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

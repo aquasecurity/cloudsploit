@@ -46,7 +46,7 @@ module.exports = {
             describeClusters.data.forEach(cluster => {
                 if (!cluster.ClusterIdentifier) return;
 
-                if(cluster.NumberOfNodes) {
+                if (cluster.NumberOfNodes) {
                     nodesCount = nodesCount + cluster.NumberOfNodes;
                 }
             });

@@ -34,7 +34,7 @@ module.exports = {
         for (var bucket of listBuckets.data) {
             var resource = `arn:aws:s3:::${bucket.Name}`;
             var bucketLocation = helpers.getS3BucketLocation(cache, region, bucket.Name);
-            if(bucket.Name && bucket.Name.indexOf('.') === -1) {
+            if (bucket.Name && bucket.Name.indexOf('.') === -1) {
                 helpers.addResult(results, 0,
                     'S3 bucket name is compliant with DNS naming requirements',
                     bucketLocation, resource);

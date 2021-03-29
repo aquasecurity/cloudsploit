@@ -123,7 +123,7 @@ module.exports = {
                                 bucketLocation, bucketResource);
                         }
                     }
-                } catch(e) {
+                } catch (e) {
                     helpers.addResult(results, 3,
                         'Error querying for bucket policy for bucket: ' + bucket.Name +
                         ': Policy JSON could not be parsed.',

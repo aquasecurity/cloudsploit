@@ -69,7 +69,7 @@ module.exports = {
         var source = {};
 
         var desiredEncryptionLevelString = settings.s3_required_encryption_level || this.settings.s3_required_encryption_level.default;
-        if(!desiredEncryptionLevelString.match(this.settings.s3_required_encryption_level.regex)) {
+        if (!desiredEncryptionLevelString.match(this.settings.s3_required_encryption_level.regex)) {
             helpers.addResult(results, 3, 'Settings misconfigured for S3 Encryption Enforcement.');
             return callback(null, results, source);
         }
@@ -111,7 +111,7 @@ module.exports = {
                 } else {
                     policyJson = getBucketPolicy.data.Policy;
                 }
-            } catch(e) {
+            } catch (e) {
                 helpers.addResult(results, 3, `Bucket policy on bucket [${bucket.Name}] could not be parsed.`, bucketLocation, bucketResource);
                 continue;
             }

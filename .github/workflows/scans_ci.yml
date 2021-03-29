@@ -11,12 +11,15 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
+      - uses: codespell-project/actions-codespell@master
+        with:
+          check_filenames: true
+          skip: ./.github/*,.git,./package.json,./node_modules,./tests,./config,*.png,Dockerfile,./scripts,*.spec.js,./plugins/azure/storageaccounts/storageAccountsAADEnabled.js,./plugins/aws/cloudtrail/cloudtrailBucketAccessLogging.js,./helpers/google/index.js,*zip
+          ignore_words_list: iam,\"tRe\",AKS,aks,optin,callInt,callInt
       - run: npm install
-
-      - name: NPM Test
-        run: npm test
 
       - name: Lint
         run: npm run lint
 
-      
+      - name: NPM Test
+        run: npm test

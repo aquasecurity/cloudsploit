@@ -37,7 +37,7 @@ module.exports = {
             }
 
             describeInstances.data.forEach(function(instance){
-                if(!instance.Instances || !instance.Instances.length) {
+                if (!instance.Instances || !instance.Instances.length) {
                     helpers.addResult(results, 0, 
                         'EC2 instance description is not found', region);
                     return;
@@ -46,7 +46,7 @@ module.exports = {
                 instance.Instances.forEach(function(element){
                     var resource = `arn:${awsOrGov}:ec2:${region}:${accountId}:/instance/${element.InstanceId}`;
 
-                    if(element.PublicIpAddress && element.PublicIpAddress.length) {
+                    if (element.PublicIpAddress && element.PublicIpAddress.length) {
                         helpers.addResult(results, 2,
                             `EC2 instance "${element.InstanceId}" has a public IP address attached`,
                             region, resource);

@@ -51,7 +51,7 @@ module.exports = {
                 // arn:aws:elasticloadbalancing:region:account-id:loadbalancer/name
                 var elbArn = `arn:${awsOrGov}:elasticloadbalancing:${region}:${accountId}:loadbalancer/${lb.LoadBalancerName}`;
 
-                if(!lb.ListenerDescriptions.length) {
+                if (!lb.ListenerDescriptions.length) {
                     helpers.addResult(results, 0,
                         `ELB "${lb.LoadBalancerName}" is not using any listeners`,
                         region, elbArn);
