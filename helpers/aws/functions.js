@@ -323,7 +323,9 @@ function getDenyActionResourceMap(statements, excludeStatementId) {
     let denyActionResourceMap = {};
     for (let statement of statements) {
         if (statement.Sid && statement.Sid != excludeStatementId &&
-            statement.Effect && statement.Effect == 'Deny' && statement.Resource && statement.Action) {
+            statement.Effect && statement.Effect == 'Deny' &&
+            statement.Resource && statement.Resource.length &&
+            statement.Action && statement.Action.length) {
             statement.Action.forEach(action => {
                 if (denyActionResourceMap[action]) denyActionResourceMap[action].push.apply(denyActionResourceMap[action], statement.Resource);
                 else denyActionResourceMap[action] = statement.Resource;
@@ -335,7 +337,7 @@ function getDenyActionResourceMap(statements, excludeStatementId) {
 }
 
 function filterDenyPermissionsByPrincipal(permissionsMap, principal) {
-    let response= {};
+    let response = {};
     Object.keys(permissionsMap).forEach(key => {
         if (matchKeys(key, principal)) {
             Object.keys(permissionsMap[key]).forEach(action => {
@@ -361,9 +363,7 @@ function isEffectivePolicyStatement(statement, denyActionResourceMap) {
                 statementActionResourceMap[action] = statementActionResourceMap[action].filter(resource => !denyActionResourceMap[key].includes(resource));
             }
         }
-    }
 
-    for (let action of Object.keys(statementActionResourceMap)) {
         if (statementActionResourceMap[action].length) return true;
     }
 
