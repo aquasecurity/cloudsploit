@@ -71,7 +71,7 @@ module.exports = {
                         if (openSgs.includes(sg.GroupId)) openSg = true;
                     }
 
-                    if(element.PublicIpAddress && element.PublicIpAddress.length && openSg) {
+                    if (element.PublicIpAddress && element.PublicIpAddress.length && openSg) {
                         helpers.addResult(results, 2,
                             `EC2 instance "${element.InstanceId}" has a public IP address attached`,
                             region, resource);
