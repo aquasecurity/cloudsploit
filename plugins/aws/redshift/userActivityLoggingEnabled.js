@@ -87,7 +87,7 @@ module.exports = {
                             }
                         }
 
-                        if(loggingEnabled) break;
+                        if (loggingEnabled) break;
                     }
                 }
                 

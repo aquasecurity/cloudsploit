@@ -178,6 +178,11 @@ var calls = {
         listPostgres: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.DBforPostgreSQL/servers?api-version=2017-12-01'
         }
+    },
+    databaseAccounts: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.DocumentDB/databaseAccounts?api-version=2020-06-01-preview'
+        }
     }
 };
 
@@ -203,6 +208,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/configurations?api-version=2017-12-01'
         }
     },
+    serverAdministrators: {
+        list: {
+            reliesOnPath: 'servers.listPostgres',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/administrators?api-version=2017-12-01'
+        }
+    },
     virtualMachineExtensions: {
         list: {
             reliesOnPath: 'virtualMachines.listAll',
@@ -222,6 +234,11 @@ var postcalls = {
             reliesOnPath: 'storageAccounts.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/blobServices?api-version=2019-06-01'
+        },
+        getServiceProperties: {
+            reliesOnPath: 'storageAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/blobServices/default?api-version=2019-06-01'
         }
     },
     fileShares: {

@@ -63,6 +63,7 @@ module.exports = {
             if (!getDistribution || getDistribution.err || !getDistribution.data || !getDistribution.data.Distribution) {
                 helpers.addResult(results, 3,
                     `Unable to get CloudFront distribution: ${helpers.addError(getDistribution)}`);
+                return;
             }
     
             if (getDistribution.data &&

@@ -191,11 +191,11 @@ describe('elbNoInstances', function () {
             });
         });
         
-        it('should WARN if ELB does not have backend instances', function (done) {
+        it('should FAIL if ELB does not have backend instances', function (done) {
             const cache = createCache([describeLoadBalancers[1]]);
             elbNoInstances.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(1);
+                expect(results[0].status).to.equal(2);
                 done();
             });
         });

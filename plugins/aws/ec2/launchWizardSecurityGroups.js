@@ -36,7 +36,7 @@ module.exports = {
                 var sg = describeSecurityGroups.data[s];
                 var resource = 'arn:aws:ec2:' + region + ':' + sg.OwnerId + ':security-group/' + sg.GroupId;
 
-                if(!sg.GroupName) {
+                if (!sg.GroupName) {
                     helpers.addResult(results, 2,
                         'Unable to get group name of security group',
                         region, resource);
