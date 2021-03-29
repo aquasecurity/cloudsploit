@@ -48,15 +48,19 @@ module.exports = {
 
             servers.data.forEach(function(server) {
                 if (!server.id) return;
-
-                if (server.minimalTlsVersion &&
-                    parseFloat(server.minimalTlsVersion) >= desiredVersion) {
-                    helpers.addResult(results, 0,
-                        `SQL server is using TLS version ${server.minimalTlsVersion} which is equal to or higher than desired TLS version ${config.sql_server_min_tls_version}`,
-                        location, server.id);
+                if (server.minimalTlsVersion) {
+                    if (parseFloat(server.minimalTlsVersion) >= desiredVersion) {
+                        helpers.addResult(results, 0,
+                            `SQL server is using TLS version ${server.minimalTlsVersion} which is equal to or higher than desired TLS version ${config.sql_server_min_tls_version}`,
+                            location, server.id);
+                    } else {
+                        helpers.addResult(results, 2,
+                            `SQL server is using TLS version ${server.minimalTlsVersion} which is less than desired TLS version ${config.sql_server_min_tls_version}`,
+                            location, server.id);   
+                    }
                 } else {
                     helpers.addResult(results, 2,
-                        `SQL server is using TLS version ${server.minimalTlsVersion} which is less than desired TLS version ${config.sql_server_min_tls_version}`,
+                        'SQL server allows all TLS versions',
                         location, server.id);
                 }
             });

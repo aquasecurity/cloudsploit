@@ -16,6 +16,20 @@ const servers = [
         "privateEndpointConnections": [],
         "minimalTlsVersion": "1.1",
         "publicNetworkAccess": "Enabled"
+    },
+    {
+        "kind": "v12.0",
+        "location": "eastus",
+        "tags": {},
+        "id": "/subscriptions/123/resourceGroups/akhtar-rg/providers/Microsoft.Sql/servers/test-server",
+        "name": "test-server",
+        "type": "Microsoft.Sql/servers",
+        "administratorLogin": "aqua",
+        "version": "12.0",
+        "state": "Ready",
+        "fullyQualifiedDomainName": "test-server.database.windows.net",
+        "privateEndpointConnections": [],
+        "publicNetworkAccess": "Enabled"
     }
 ];
 
@@ -60,7 +74,23 @@ describe('sqlServerTlsVersion', function() {
             };
 
             const cache = createCache(
-                servers,
+                [servers[0]],
+            );
+
+            sqlServerTlsVersion.run(cache, { sql_server_min_tls_version: '1.2' }, callback);
+        });
+
+        it('should give failing result if SQL server allows all TLS versions', function(done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('SQL server allows all TLS versions');
+                expect(results[0].region).to.equal('eastus');
+                done()
+            };
+
+            const cache = createCache(
+                [servers[1]],
             );
 
             sqlServerTlsVersion.run(cache, { sql_server_min_tls_version: '1.2' }, callback);
@@ -76,7 +106,7 @@ describe('sqlServerTlsVersion', function() {
             };
 
             const cache = createCache(
-                servers
+                [servers[0]]
             );
 
             sqlServerTlsVersion.run(cache, { sql_server_min_tls_version: '1.0' }, callback);
