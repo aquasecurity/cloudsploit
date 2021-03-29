@@ -56,7 +56,7 @@ module.exports = {
             describeVolumes.data.forEach(function(volume) {
                 let volumeArn = 'arn:' + awsOrGov + ':ec2:' + region + ':' + accountId + ':volume/' + volume.VolumeId;
                 if (volume.VolumeId) {
-                    if(volumeSet.has(volume.VolumeId)){
+                    if (volumeSet.has(volume.VolumeId)) {
                         helpers.addResult(results, 0,
                             'EBS Volume is backed up',
                             region, volumeArn);
