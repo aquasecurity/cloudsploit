@@ -222,7 +222,7 @@ function globalPrincipal(principal) {
     }
 
     var awsPrincipals = principal.AWS;
-    if(!Array.isArray(awsPrincipals)) {
+    if (!Array.isArray(awsPrincipals)) {
         awsPrincipals = [awsPrincipals];
     }
 
@@ -252,7 +252,7 @@ function crossAccountPrincipal(principal, accountId, fetchPrincipals) {
     }
 
     var awsPrincipals = principal.AWS;
-    if(!Array.isArray(awsPrincipals)) {
+    if (!Array.isArray(awsPrincipals)) {
         awsPrincipals = [awsPrincipals];
     }
 
@@ -293,7 +293,7 @@ function extractStatementPrincipals(statement) {
         }
 
         var awsPrincipals = principal.AWS;
-        if(!Array.isArray(awsPrincipals)) {
+        if (!Array.isArray(awsPrincipals)) {
             awsPrincipals = [awsPrincipals];
         }
 
@@ -347,6 +347,17 @@ function defaultPartition(settings) {
     if (settings.govcloud) return 'aws-us-gov';
     if (settings.china) return 'aws-cn';
     return 'aws';
+}
+
+function getS3BucketLocation(cache, region, bucketName) {
+    var getBucketLocation = helpers.addSource(cache, {},
+        ['s3', 'getBucketLocation', region, bucketName]);
+
+    if (getBucketLocation && getBucketLocation.data) {
+        if (getBucketLocation.data.LocationConstraint) return getBucketLocation.data.LocationConstraint;
+        else return 'us-east-1';
+    }
+    return 'global';
 }
 
 function remediatePlugin(config, call, params, callback) {
@@ -727,5 +738,6 @@ module.exports = {
     getEncryptionLevel: getEncryptionLevel,
     extractStatementPrincipals: extractStatementPrincipals,
     getDefaultKeyId: getDefaultKeyId,
-    isValidCondition: isValidCondition
+    isValidCondition: isValidCondition,
+    getS3BucketLocation: getS3BucketLocation
 };

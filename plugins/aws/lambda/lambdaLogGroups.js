@@ -51,7 +51,26 @@ module.exports = {
                     if (found) {
                         result = [0, 'Function has log group: ' + found.logGroupName];
                     } else {
-                        result = [2, 'Function has no log group'];
+                        // check for lambda@edge log groups
+                        var lambdaEdgeLogGroupName = '/aws/lambda/' + region + '.' + func.FunctionName;
+                        for (var cloudwatchRegion of regions.cloudwatchlogs) {
+                            var regionLogGroups = helpers.addSource(cache, source,
+                                ['cloudwatchlogs', 'describeLogGroups', cloudwatchRegion]) || {};
+
+                            if (regionLogGroups.err || !regionLogGroups.data) {
+                                continue;
+                            }
+
+                            var foundLogGroup = regionLogGroups.data.find(logGroup => logGroup.logGroupName === lambdaEdgeLogGroupName);
+                            if (foundLogGroup) {
+                                result = [0, 'Function has lambda@edge log group: ' + foundLogGroup.logGroupName + ' in region: ' + cloudwatchRegion];
+                                break;
+                            }
+                        }
+
+                        if (result[1] === '') {
+                            result = [2, 'Function has no log group'];
+                        }
                     }
                 } else {
                     result = [3, 'Unable to obtain log groups for Lambda'];

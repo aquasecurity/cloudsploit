@@ -2,7 +2,6 @@ var async = require('async');
 var exports = require('./exports.js');
 var suppress = require('./postprocess/suppress.js');
 var output = require('./postprocess/output.js');
-var gslRunner = require('./helpers/gsl.js');
 
 /**
  * The main function to execute CloudSploit scans.
@@ -178,6 +177,7 @@ var engine = function(cloudConfig, settings) {
                                 if (results[r].status === 2) {
                                     var resource = results[r].resource;
                                     var event = {};
+                                    event.region = results[r].region;
                                     event['remediation_file'] = {};
                                     event['remediation_file'] = initializeFile(event['remediation_file'], 'execute', key, resource);
                                     plugin.remediate(cloudConfig, collection, event, resource, (err, result) => {
@@ -193,11 +193,14 @@ var engine = function(cloudConfig, settings) {
                 setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
             };
 
-            if (plugin.gsl) {
-                console.log(`INFO: Using custom GSL for plugin: ${plugin.title}`);
+            if (plugin.asl) {
+                console.log(`INFO: Using custom ASL for plugin: ${plugin.title}`);
                 // Inject APIs and resource maps
-                plugin.gsl.apis = plugin.apis;
-                gslRunner(collection, plugin.gsl, resourceMap, postRun);
+                plugin.asl.apis = plugin.apis;
+                var aslConfig = require('./helpers/asl/config.json');
+                var aslVersion = plugin.asl.version ? plugin.asl.version : aslConfig.current_version;
+                var aslRunner = require(`./helpers/asl/asl-${aslVersion}.js`);
+                aslRunner(collection, plugin.asl, resourceMap, postRun);
             } else {
                 plugin.run(collection, settings, postRun);
             }

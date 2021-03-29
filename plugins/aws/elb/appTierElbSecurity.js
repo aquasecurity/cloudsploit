@@ -77,10 +77,10 @@ module.exports = {
 
                 var appTierTag = false;
                 describeTags.data.TagDescriptions.forEach(function(Tags) {
-                    if(Tags && Tags.Tags) {
+                    if (Tags && Tags.Tags) {
                         for (var i in Tags.Tags){
                             var td = Tags.Tags[i];
-                            if(td.Key && td.Key === config.elb_app_tier_tag_key) {
+                            if (td.Key && td.Key === config.elb_app_tier_tag_key) {
                                 appTierTag = true;
                                 appTierElbFound = true;
                                 break;
@@ -111,11 +111,11 @@ module.exports = {
                     var insecurePolicy = false;
                     var securityPolicyFound = false;
                     describeLoadBalancerPolicies.data.PolicyDescriptions.forEach(function(policyDesc) {
-                        if(policyDesc.PolicyAttributeDescriptions) {
+                        if (policyDesc.PolicyAttributeDescriptions) {
                             for (var policyAttrDesc of policyDesc.PolicyAttributeDescriptions) {
                                 if (policyAttrDesc.AttributeName && policyAttrDesc.AttributeName === 'Reference-Security-Policy') {
                                     securityPolicyFound = true;
-                                    if(!config.latest_security_policies.includes(policyAttrDesc.AttributeValue)) {
+                                    if (!config.latest_security_policies.includes(policyAttrDesc.AttributeValue)) {
                                         insecurePolicy = true;
                                         break;
                                     }
@@ -124,7 +124,7 @@ module.exports = {
                         }
                     });
 
-                    if(securityPolicyFound) {
+                    if (securityPolicyFound) {
                         if (!insecurePolicy) {
                             helpers.addResult(results, 0,
                                 `ELB  "${lb.LoadBalancerName}" is using latest predefined security policy`,

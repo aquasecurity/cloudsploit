@@ -42,16 +42,16 @@ module.exports = {
                 var resource = `arn:${awsOrGov}:vpc:${region}:${accountId}:vpn-gateway/${vpn.VpnGatewayId}`;
                 var vpnAttached = false;
                 if (vpn.VpcAttachments && vpn.VpcAttachments.length) {
-                    for(var v in vpn.VpcAttachments) {
+                    for (var v in vpn.VpcAttachments) {
                         var attachment = vpn.VpcAttachments[v];
-                        if(attachment.State && attachment.State === 'attached') {
+                        if (attachment.State && attachment.State === 'attached') {
                             vpnAttached = true;
                             break;
                         }
                     }
                 }
 
-                if(vpnAttached) {
+                if (vpnAttached) {
                     helpers.addResult(results, 0,
                         `Virtual Private Gateway "${vpn.VpnGatewayId}" is in use`,
                         region, resource);

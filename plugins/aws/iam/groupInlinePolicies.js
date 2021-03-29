@@ -49,7 +49,7 @@ module.exports = {
                 helpers.addResult(results, 0,
                     'Group: ' + group.GroupName + ' does not contain any inline policy',
                     'global', group.Arn);
-            }else {
+            } else {
                 helpers.addResult(results, 2,
                     'Group: ' + group.GroupName + ' contains ' + listGroupPolicies.data.PolicyNames.length + ' inline policy(s)',
                     'global', group.Arn);

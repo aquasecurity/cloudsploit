@@ -69,8 +69,7 @@ module.exports = {
                             let logStr = cloudWatchDisabled.join(', ').replace(/_/g, ' ');
                             helpers.addResult(results, 2,
                                 `ES domain logging is enabled but logs are not configured to be sent to CloudWatch for: ${logStr}`, region, localDomain.ARN);
-                        }
-                        else {
+                        } else {
                             let logStr = logSelectionArr.join(', ').replace(/_/g, ' ');
                             helpers.addResult(results, 2,
                                 `The following logs are not configured for the ES domain: ${logStr}`, region, localDomain.ARN);

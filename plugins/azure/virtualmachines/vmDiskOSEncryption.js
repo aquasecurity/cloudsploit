@@ -36,7 +36,7 @@ module.exports = {
                 helpers.addResult(results, 0, 'No existing disks found', location);
             } else {
                 var found = false;
-                for(var i in disks.data) {
+                for (var i in disks.data) {
                     var disk = disks.data[i];
                     if (disk.name &&
                         disk.name.length &&

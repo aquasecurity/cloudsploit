@@ -49,7 +49,7 @@ module.exports = {
 
             if (describeNatGateways.data.length) {
                 describeNatGateways.data.forEach(function(nat){
-                    if(nat.VpcId && !foundVpcIds.includes(nat.VpcId)) {
+                    if (nat.VpcId && !foundVpcIds.includes(nat.VpcId)) {
                         foundVpcIds.push(nat.VpcId);
                     }
                 });
@@ -62,8 +62,7 @@ module.exports = {
                     helpers.addResult(results, 0,
                         `VPC "${vpc.VpcId}" is using managed NAT Gateway`,
                         region, resource);
-                }
-                else {
+                } else {
                     helpers.addResult(results, 2,
                         `VPC "${vpc.VpcId}" is not using managed NAT Gateway`,
                         region, resource);
