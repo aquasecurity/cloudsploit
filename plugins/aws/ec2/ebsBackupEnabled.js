@@ -48,7 +48,7 @@ module.exports = {
 
 
             describeSnapshots.data.forEach(function(snapshot){
-                if(snapshot.VolumeId){
+                if (snapshot.VolumeId) {
                     volumeSet.add(snapshot.VolumeId);
                 }
             });
