@@ -35,7 +35,7 @@ module.exports = {
             async.each(databaseAccounts.data, (account, cb) => {
                 if (!account.id) return cb();
 
-                if(account.EnabledApiTypes &&
+                if (account.EnabledApiTypes &&
                     account.EnabledApiTypes === 'Sql') {
                     var advancedThreatProtection = helpers.addSource(cache, source,
                         ['advancedThreatProtection', 'get', location, account.id]);
