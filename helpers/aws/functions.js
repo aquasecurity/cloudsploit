@@ -349,6 +349,36 @@ function filterDenyPermissionsByPrincipal(permissionsMap, principal) {
     return response;
 }
 
+function isValidCondition(statement, allowedConditionKeys, iamConditionOperators, fetchConditionPrincipals) {
+    if (statement.Condition && statement.Effect) {
+        var effect = statement.Effect;
+        var values = [];
+        for (var operator of Object.keys(statement.Condition)) {
+            var defaultOperator = operator;
+            if (operator.includes(':')) defaultOperator = operator.split(':')[1];
+
+            var subCondition = statement.Condition[operator];
+            for (var key of Object.keys(subCondition)) {
+                if (!allowedConditionKeys.some(conditionKey=> key.includes(conditionKey))) return false;
+
+                var value = subCondition[key];
+                if (iamConditionOperators.string[effect].includes(defaultOperator) ||
+                iamConditionOperators.arn[effect].includes(defaultOperator)) {
+                    if (!value.length || value === '*') return false;
+                    else if (/^[0-9]{12}$/.test(value) || /^arn:aws:(iam|sts)::.+/.test(value)) values.push(value);
+                } else if (defaultOperator === 'Bool') {
+                    if ((effect === 'Allow' && !value) || effect === 'Deny' && value) return false;
+                } else if (iamConditionOperators.ipaddress[effect].includes(defaultOperator)) {
+                    if (value === '0.0.0.0/0' || value === '::/0') return false;
+                } else return false;
+            }
+        }
+        if (fetchConditionPrincipals) return values;
+    }
+
+    return true;
+}
+
 function isEffectivePolicyStatement(statement, denyActionResourceMap) {
     let statementActionResourceMap = {};
     if (statement.Action && statement.Resource) {
@@ -796,6 +826,7 @@ module.exports = {
     getEncryptionLevel: getEncryptionLevel,
     extractStatementPrincipals: extractStatementPrincipals,
     getDefaultKeyId: getDefaultKeyId,
+    isValidCondition: isValidCondition,
     isEffectiveStatement: isEffectiveStatement,
     getDenyActionResourceMap: getDenyActionResourceMap,
     getDenyPermissionsMap: getDenyPermissionsMap,

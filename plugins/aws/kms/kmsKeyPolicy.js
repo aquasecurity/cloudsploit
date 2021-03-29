@@ -32,6 +32,16 @@ module.exports = {
             description: 'A comma-delimited list of known Key Policy IDs that should be trusted',
             regex: '^.{1,255}$',
             default: 'aqua-cspm'
+        },
+        kms_key_policy_condition_keys: {
+            name: 'KMS Key Policy Allowed Condition Keys',
+            description: 'Comma separated list of AWS IAM condition keys that should be allowed i.e. aws:SourceAccount,kms:CallerAccount.' +
+                'This setting assumes following rules:' +
+                '1. As a best practice, "Deny" with "StringNotLike" and "Allow" with "StringLike" are used to prevent accidental privileged access' +
+                '2. IAM condition keys which work with "Numeric" or "Date" operators are not used' +
+                '3. Bool values are set to "true" with "Allow" and "false" with "Deny"',
+            regex: '^.*$',
+            default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceAccount,aws:SourceArn,kms:CallerAccount'
         }
     },
 
@@ -40,7 +50,8 @@ module.exports = {
             kms_key_policy_max_user_count: settings.kms_key_policy_max_user_count || this.settings.kms_key_policy_max_user_count.default,
             kms_key_policy_max_third_parties_count: settings.kms_key_policy_max_third_parties_count || this.settings.kms_key_policy_max_third_parties_count.default,
             kms_key_policy_whitelisted_account_ids: settings.kms_key_policy_whitelisted_account_ids || this.settings.kms_key_policy_whitelisted_account_ids.default,
-            kms_key_policy_whitelisted_policy_ids: settings.kms_key_policy_whitelisted_policy_ids || this.settings.kms_key_policy_whitelisted_policy_ids.default
+            kms_key_policy_whitelisted_policy_ids: settings.kms_key_policy_whitelisted_policy_ids || this.settings.kms_key_policy_whitelisted_policy_ids.default,
+            kms_key_policy_condition_keys: settings.kms_key_policy_condition_keys || this.settings.kms_key_policy_condition_keys.default
         };
 
         if (config.kms_key_policy_whitelisted_account_ids && config.kms_key_policy_whitelisted_account_ids.length) {
@@ -54,6 +65,9 @@ module.exports = {
         } else {
             config.kms_key_policy_whitelisted_policy_ids = [];
         }
+
+        var allowedConditionKeys = config.kms_key_policy_condition_keys.split(',');
+        allowedConditionKeys.push('kms:CallerAccount', 'kms:ViaService');
 
         var custom = helpers.isCustom(settings, this.settings);
         if (config.kms_key_policy_whitelisted_account_ids.length) custom = true;
@@ -83,7 +97,6 @@ module.exports = {
             }
 
             async.each(listKeys.data, function(kmsKey, kcb){
-
                 var getKeyPolicy = helpers.addSource(cache, source,
                     ['kms', 'getKeyPolicy', region, kmsKey.KeyId]);
 
@@ -136,19 +149,20 @@ module.exports = {
 
                     var conditionalCaller = null;
 
-                    if (statement.Condition &&
-                        statement.Condition.StringEquals &&
-                        statement.Condition.StringEquals['kms:CallerAccount']) {
-                        conditionalCaller = statement.Condition.StringEquals['kms:CallerAccount'];
+                    if (statement.Condition) {
+                        conditionalCaller = helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, true);
                     }
 
                     // Check for wildcards without condition
                     if (principal.AWS.indexOf('*') > -1 && !conditionalCaller) {
                         wildcardTrusted += 1;
-                    } else if (conditionalCaller &&
-                        conditionalCaller !== accountId &&
-                        config.kms_key_policy_whitelisted_account_ids.indexOf(conditionalCaller) === -1) {
-                        thirdPartyTrusted += 1;
+                    } else if (conditionalCaller) {
+                        for (var caller of conditionalCaller) {
+                            if (caller !== accountId &&
+                                config.kms_key_policy_whitelisted_account_ids.indexOf(caller) === -1) {
+                                thirdPartyTrusted += 1; 
+                            }
+                        }
                     } else if (!conditionalCaller) {
                         for (var u in principal.AWS) {
                             if (principal.AWS[u] !== '*' &&
