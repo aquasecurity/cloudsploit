@@ -39,8 +39,7 @@ module.exports = {
                 ]
             }` +
             'If ignore_service_specific_wildcards is true, a PASS result will be generated. ' +
-            'If ignore_service_specific_wildcards is false, a FAIL result will be generated.'
-            , 
+            'If ignore_service_specific_wildcards is false, a FAIL result will be generated.', 
             regex: '^(true|false)$',
             default: 'false'
         },
