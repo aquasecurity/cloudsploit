@@ -34,7 +34,7 @@ module.exports = {
         var ports = {};
         whitelisted_open_ports.forEach(port => {
             var [protocol, portNo] = port.split(':');
-            if(portNo.indexOf('-') > -1) {
+            if (portNo.indexOf('-') > -1) {
                 var portRange = portNo.split('-');
                 var rangeFrom = portRange[0];
                 var rangeTo = portRange[1];

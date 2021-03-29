@@ -160,7 +160,7 @@ module.exports = {
                                 getPolicyVersion.data.PolicyVersion.Document);
                             if (!statements) break;
 
-                            addRoleFailures(roleFailures, statements, 'managed');
+                            addRoleFailures(roleFailures, statements, 'managed', config.ignore_service_specific_wildcards);
                         }
                     }
                 }
@@ -179,7 +179,7 @@ module.exports = {
                         var statements = helpers.normalizePolicyDocument(
                             getRolePolicy[policyName].data.PolicyDocument);
                         if (!statements) break;
-                        addRoleFailures(roleFailures, statements, 'inline');
+                        addRoleFailures(roleFailures, statements, 'inline', config.ignore_service_specific_wildcards);
                     }
                 }
             }
@@ -201,7 +201,7 @@ module.exports = {
     }
 };
 
-function addRoleFailures(roleFailures, statements, policyType) {
+function addRoleFailures(roleFailures, statements, policyType, ignoreServiceSpecific) {
     for (var statement of statements) {
         if (statement.Effect === 'Allow' &&
             !statement.Condition) {
@@ -213,7 +213,7 @@ function addRoleFailures(roleFailures, statements, policyType) {
                 failMsg = `Role ${policyType} policy allows all actions on all resources`;
             } else if (statement.Action.indexOf('*') > -1) {
                 failMsg = `Role ${policyType} policy allows all actions on selected resources`;
-            } else if (statement.Action && statement.Action.length) {
+            } else if (!ignoreServiceSpecific && statement.Action && statement.Action.length) {
                 // Check each action for wildcards
                 let wildcards = [];
                 for (var a in statement.Action) {

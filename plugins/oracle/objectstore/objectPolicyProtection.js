@@ -15,8 +15,8 @@ module.exports = {
     settings: {
         policy_group_admins: {
             name: 'Admin groups with delete permissions.',
-            description: 'The admin groups allowed to delete resources.',
-            regex: '(?im)^([a-z_](?:\\.\\-\\w|\\-\\.\\w|\\-\\w|\\.\\w|\\w)+)$',
+            description: 'Comma separated list of the admin groups allowed to delete resources.',
+            regex: '^.{1,255}$',
             default: 'Administrators'
         },
     },
@@ -49,52 +49,21 @@ module.exports = {
         }
         var policyProtection = true;
         var entered = false;
+
+        var resourceTypes = ['objects', 'buckets'];
         policies.data.forEach(policy => {
             if (policy.statements &&
                 policy.statements.length) {
                 entered = true;
                 policy.statements.forEach(statement => {
+                    var statementObj = helpers.normalizePolicyStatement(statement);
+                    var statementPasses = helpers.testStatement(statementObj, resourceTypes, config.policy_group_admins);
 
-                    const statementLower = statement.toLowerCase();
-
-                    if (statementLower.indexOf('allow') > -1 &&
-                        (statementLower.indexOf('manage') > -1 ||
-                            statementLower.indexOf('use') > -1) &&
-                        (statementLower.indexOf('request.permission') === -1 &&
-                            statementLower.indexOf('!=') === -1 &&
-                            statementLower.indexOf('_delete') === -1 &&
-                            (statementLower.indexOf('object_') === -1 ||
-                                statementLower.indexOf('bucket_') === -1)) &&
-                        (statementLower.indexOf('objects') > -1 ||
-                            statementLower.indexOf('buckets') > -1 ||
-                            statementLower.indexOf('all-resources') > -1)) {
-
+                    if (!statementPasses) {
                         policyProtection = false;
-                        var statementArr = statementLower.split(' ');
-                        var statementNormalArr = statement.split(' ');
-                        var severity = 2;
 
-                        if (statementArr[1] === 'any-user' || statementArr[1] === 'dynamic-group') {
-                            var groupName = statementArr[2] === 'to' ? '' : statementNormalArr[2];
-                            var compartment = statementArr[6] === 'tenancy' ? 'tenancy' : statementArr[6];
-                            var compartmentName = (!statementArr[7] || statementArr[7] === 'tenancy') ? '' : statementNormalArr[7];
-                            var groupType = statementArr[1];
-                        } else {
-                            var groupName = statementArr[2] === 'to' ? '' : statementNormalArr[2];
-                            var compartment = statementArr[7] === 'tenancy' ? 'tenancy' : statementArr[7];
-                            var compartmentName = (!statementArr[7] || statementArr[7] === 'tenancy') ? '' : statementNormalArr[8];
-                            var groupType = 'The ' + statementArr[1];
-                        }
-
-                        if (groupName === config.policy_group_admins.toLowerCase()) return;
-                        if (statementArr.indexOf('request.user.name') > -1) {
-                            groupType = 'The user';
-                            groupName = statementArr[statementArr.length - 1];
-                            severity = 1;
-                        }
-
-                        helpers.addResult(results, severity,
-                            `${groupType} ${groupName} has the ability to delete all object store services in ${compartment} ${compartmentName}`, region, policy.id);
+                        helpers.addResult(results, 2,
+                            `${statementObj['subjectType']}${statementObj['subject']} has the ability to delete all object store services in ${statementObj['location']}`, region, policy.id);
                     }
                 });
             }

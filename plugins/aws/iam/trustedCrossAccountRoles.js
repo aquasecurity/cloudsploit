@@ -74,8 +74,7 @@ module.exports = {
                 helpers.addResult(results, 0,
                     `Cross-account role "${role.RoleName}" contains trusted account pricipals only`,
                     'global', role.Arn);
-            }
-            else if (crossAccountRole) {
+            } else if (crossAccountRole) {
                 helpers.addResult(results, 2,
                     `Cross-account role "${role.RoleName}" contains these untrusted account principals: ${restrictedAccountPrincipals.join(', ')}`,
                     'global', role.Arn);
