@@ -60,7 +60,7 @@ module.exports = {
                         helpers.addResult(results, 0,
                             'EBS Volume is backed up',
                             region, volumeArn);
-                    }else{
+                    } else {
                         helpers.addResult(results, 2,
                             'EBS Volume is not backed up',
                             region, volumeArn);
