@@ -64,8 +64,7 @@ module.exports = {
                                 `RDS DB instance "${db.DBInstanceIdentifier}" is using Customer Master Key for encryption`,
                                 region, dbResource);
                         }
-                    }
-                    else {
+                    } else {
                         helpers.addResult(results, 2,
                             `RDS DB instance encryption key "${db.KmsKeyId}" not found`,
                             region, dbResource);

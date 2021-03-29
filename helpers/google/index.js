@@ -275,8 +275,7 @@ var execute = function(LocalGoogleConfig, collection, service, callObj, callKey,
                     } else {
                         collection[service][callKey][region].data.push(data.data[service]);
                     }
-                }
-                else if (data.data.accounts) {
+                } else if (data.data.accounts) {
                     if (data.data.accounts.constructor.name === 'Array') {
                         collection[service][callKey][region].data = collection[service][callKey][region].data.concat(data.data.accounts);
                     } else {
@@ -308,7 +307,7 @@ var execute = function(LocalGoogleConfig, collection, service, callObj, callKey,
     if (callObj.nested && callObj.parent) {
         parentParams = {auth: callObj.params.auth, parent: callObj.params.parent};
         executor['projects']['locations'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
-    } else if(callObj.nested) {
+    } else if (callObj.nested) {
         parentParams = {auth: callObj.params.auth, parent: callObj.params.parent};
         executor['projects']['locations']['keyRings'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
     } else if (callObj.resource) {

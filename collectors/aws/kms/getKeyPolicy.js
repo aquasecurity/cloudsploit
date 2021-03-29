@@ -23,7 +23,7 @@ module.exports = function(AWSConfig, collection, callback) {
             var policyData;
             try {
                 policyData = JSON.parse(data.Policy);
-            } catch(e) {
+            } catch (e) {
                 policyData = null;
             }
             

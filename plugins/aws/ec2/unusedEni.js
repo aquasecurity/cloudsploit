@@ -25,13 +25,13 @@ module.exports = {
 
             if (!describeNetworkInterfaces) return rcb();
 
-            if(describeNetworkInterfaces.err || !describeNetworkInterfaces.data) {
+            if (describeNetworkInterfaces.err || !describeNetworkInterfaces.data) {
                 helpers.addResult(results, 3,
                     `Unable to query AWS ENIs: ${helpers.addError(describeNetworkInterfaces)}`, region);
                 return rcb();
             }
 
-            if(!describeNetworkInterfaces.data.length) {
+            if (!describeNetworkInterfaces.data.length) {
                 helpers.addResult(results, 0, 'No AWS ENIs found', region);
                 return rcb();
             }

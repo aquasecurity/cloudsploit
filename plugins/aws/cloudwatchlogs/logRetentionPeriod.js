@@ -52,7 +52,7 @@ module.exports = {
                             logGroup.arn);
                     }
                 } else {
-                    helpers.addResult(results, 2, 'Log group does not have a retention period', region, logGroup.arn);
+                    helpers.addResult(results, 0, 'Log group retention period is set to never expire', region, logGroup.arn);
                 }
             }
 
