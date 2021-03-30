@@ -84,7 +84,7 @@ module.exports = {
                         }
                     }
 
-                    if(requireSsl) break;
+                    if (requireSsl) break;
                 }
                 
                 if (requireSsl) {

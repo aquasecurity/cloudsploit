@@ -44,14 +44,12 @@ module.exports = {
             if (getBucketPolicy && getBucketPolicy.err &&
                 getBucketPolicy.err.code && getBucketPolicy.err.code === 'NoSuchBucketPolicy') {
                 helpers.addResult(results, 2, 'No bucket policy found', 'global', resource);
-            }
-            else if (!getBucketPolicy || getBucketPolicy.err ||
+            } else if (!getBucketPolicy || getBucketPolicy.err ||
                        !getBucketPolicy.data || !getBucketPolicy.data.Policy) {
                 helpers.addResult(results, 3,
                     `Error querying for bucket policy for bucket "${bucket.Name}" ${helpers.addError(getBucketPolicy)}`,
                     'global', resource);
-            }
-            else {
+            } else {
                 var statements = helpers.normalizePolicyDocument(getBucketPolicy.data.Policy);
 
                 if (!statements || !statements.length) {
@@ -61,9 +59,11 @@ module.exports = {
                     return;
                 }
 
+                var denyPermissionsMap = helpers.getDenyPermissionsMap(statements);
                 var sslEnforced = true;
                 for (var statement of statements) {
-                    if (statement.Effect && statement.Effect === 'Allow') {
+                    if (statement.Effect && statement.Effect === 'Allow' && statement.Principal && !statement.Principal.Service) {
+                        if (!helpers.isEffectiveStatement(statement, denyPermissionsMap)) continue;
                         if (!statement.Condition ||
                                 !statement.Condition.Bool ||
                                 !statement.Condition.Bool['aws:SecureTransport'] ||
@@ -71,10 +71,12 @@ module.exports = {
                             sslEnforced = false;
                             break;
                         }
-                    } else if (statement.Effect && statement.Effect === 'Deny') {
-                        if (statement.Condition &&
-                                statement.Condition.Bool &&
-                                statement.Condition.Bool['aws:SecureTransport'] &&
+                    } else if (statement.Effect && statement.Effect === 'Deny' && statement.Principal && !statement.Principal.Service && statement.Sid) {
+                        var denyActionResourceMap = helpers.getDenyPermissionsMap(statements, statement.Sid);
+                        if (!helpers.isEffectiveStatement(statement, denyActionResourceMap)) continue;
+                        if (!statement.Condition ||
+                                !statement.Condition.Bool ||
+                                !statement.Condition.Bool['aws:SecureTransport'] ||
                                 statement.Condition.Bool['aws:SecureTransport'] === 'true') {
                             sslEnforced = false;
                             break;
@@ -86,8 +88,7 @@ module.exports = {
                     helpers.addResult(results, 0,
                         `Bucket Policy for bucket "${bucket.Name}" enforces SSL to secure data in transit`,
                         'global', resource);
-                }
-                else {
+                } else {
                     helpers.addResult(results, 2,
                         `Bucket Policy for bucket "${bucket.Name}" does not enforce SSL to secure data in transit`,
                         'global', resource);
