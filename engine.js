@@ -2,17 +2,16 @@ var async = require('async');
 var exports = require('./exports.js');
 var suppress = require('./postprocess/suppress.js');
 var output = require('./postprocess/output.js');
-var aslRunner = require('./helpers/asl.js');
 var azureHelper = require('./helpers/azure/auth.js');
 
-function runAuth(settings, cloudConfig, callback) {
+function runAuth(settings, remediateConfig, callback) {
     if (settings.cloud && settings.cloud == 'azure') {
-        azureHelper.login(cloudConfig.remediate, function(err, loginData) {
+        azureHelper.login(remediateConfig, function(err, loginData) {
             if (err) return (callback(err));
-            cloudConfig.remediate.token = loginData.token;
+            remediateConfig.token = loginData.token;
+            return callback();
         });
-    }
-    return callback();
+    } else callback();
 }
 /**
  * The main function to execute CloudSploit scans.
@@ -209,6 +208,9 @@ var engine = function(cloudConfig, settings) {
                     console.log(`INFO: Using custom ASL for plugin: ${plugin.title}`);
                     // Inject APIs and resource maps
                     plugin.asl.apis = plugin.apis;
+                    var aslConfig = require('./helpers/asl/config.json');
+                    var aslVersion = plugin.asl.version ? plugin.asl.version : aslConfig.current_version;
+                    var aslRunner = require(`./helpers/asl/asl-${aslVersion}.js`);
                     aslRunner(collection, plugin.asl, resourceMap, postRun);
                 } else {
                     plugin.run(collection, settings, postRun);
@@ -227,10 +229,10 @@ var engine = function(cloudConfig, settings) {
             });
         }
         
-        if (settings.remediate && settings.remediate.length) {
-            runAuth(settings, cloudConfig, function(err) {
+        if (settings.remediate && settings.remediate.length && cloudConfig.remediate) {
+            runAuth(settings, cloudConfig.remediate, function(err) {
                 if (err) return console.log(err);
-                executePlugins(cloudConfig.remediate || cloudConfig);
+                executePlugins(cloudConfig.remediate);
             });
         } else {
             executePlugins();
