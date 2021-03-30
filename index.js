@@ -97,7 +97,7 @@ console.log(`INFO: Using CloudSploit config file: ${settings.config}`);
 
 try {
     var config = require(settings.config);
-} catch(e) {
+} catch (e) {
     console.error('ERROR: Config file could not be loaded. Please ensure you have copied the config_example.js file to config.js');
     process.exit(1);
 }

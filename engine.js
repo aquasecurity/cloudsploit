@@ -8,7 +8,7 @@ var azureHelper = require('./helpers/azure/auth.js');
 function runAuth(settings, cloudConfig, callback) {
     if (settings.cloud && settings.cloud == 'azure') {
         azureHelper.login(cloudConfig.remediate, function(err, loginData) {
-            if (err) return(callback(err));
+            if (err) return (callback(err));
             cloudConfig.remediate.token = loginData.token;
         });
     }

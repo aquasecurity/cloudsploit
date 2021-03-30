@@ -71,7 +71,7 @@ module.exports = {
                     for (let t in describeTags.data) {
                         let tag = describeTags.data[t];
 
-                        if(tag.ResourceId && tag.ResourceId === entry.InstanceId &&
+                        if (tag.ResourceId && tag.ResourceId === entry.InstanceId &&
                             tag.Key && tag.Key === config.ec2_web_tier_tag_key) {
                             tagFound = true;
                             break;
