@@ -9,12 +9,6 @@ module.exports = {
     recommended_action: 'Ensure the connection security of each Azure Database for MySQL is configured to enforce SSL connections.',
     link: 'https://docs.microsoft.com/en-us/azure/mysql/concepts-ssl-connection-security',
     apis: ['servers:listMysql'],
-    remediation_min_version: '202103181500',
-    remediation_description: 'The SSL enforcement option will be enabled for the MySQL servers',
-    apis_remediate: ['servers:listMysql'],
-    actions: {remediate:['servers:write'], rollback:['servers:write']},
-    permissions: {remediate: ['servers:write'], rollback: ['server:write']},      //verify
-    realtime_triggers: ['microsoftdbformysql:servers:write'],           //verify
     compliance: {
         hipaa: 'HIPAA requires all data to be transmitted over secure channels. ' +
             'MySQL SSL connection should be used to ensure internal ' +
@@ -60,49 +54,5 @@ module.exports = {
             // Global checking goes here
             callback(null, results, source);
         });
-    },
-
-    remediate: function(config, cache, settings, resource, callback) {
-        var remediation_file = settings.remediation_file;
-        var putCall = this.actions.remediate;
-
-        // inputs specific to the plugin
-        var pluginName = 'enforceMySQLSSLConnection';
-        var baseUrl = 'https://management.azure.com/{resource}?api-version=2017-12-01';
-        var method = 'PATCH';
-
-        // for logging purposes
-        var serverNameArr = resource.split('/');
-        var serverName = serverNameArr[serverNameArr.length - 1];
-
-        // create the params necessary for the remediation
-        if (settings.region) {
-            var body = {
-                'properties': {
-                    'sslEnforcement': 'Enabled'
-                }
-            };
-
-            // logging
-            remediation_file['pre_remediate']['actions'][pluginName][resource] = {
-                'SSLEnforcement': 'Disabled',
-                'Server': serverName
-            };
-
-            helpers.remediatePlugin(config, method, body, baseUrl, resource, remediation_file, putCall, pluginName, function(err, action) {
-                if (err) return callback(err);
-                if (action) action.action = putCall;
-
-
-                remediation_file['post_remediate']['actions'][pluginName][resource] = action;
-                remediation_file['remediate']['actions'][pluginName][resource] = {
-                    'Action': 'Enabled'
-                };
-
-                callback(null, action);
-            });
-        } else {
-            callback('No region found');
-        }
     }
 };

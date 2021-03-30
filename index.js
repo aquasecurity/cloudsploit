@@ -204,5 +204,42 @@ if (config.credentials.aws.credential_file) {
     process.exit(1);
 }
 
+if (settings.remediate && settings.remediate.length) {
+    if (!config.credentials[`${settings.cloud}_remediate`]) {
+        console.error('ERROR: No credentials provided for remediation.');
+        process.exit(1);
+    }
+    if (config.credentials.aws_remediate && config.credentials.aws_remediate.credential_file) {
+        cloudConfig.remediate = loadHelperFile(config.credentials.aws_remediate.credential_file);
+        if (!cloudConfig.remediate || !cloudConfig.remediate.accessKeyId || !cloudConfig.remediate.secretAccessKey) {
+            console.error('ERROR: AWS credential file for remediation does not have accessKeyId or secretAccessKey properties');
+            process.exit(1);
+        }
+    } else if (config.credentials.aws_remediate && config.credentials.aws_remediate.access_key) {
+        checkRequiredKeys(config.credentials.aws_remediate, ['secret_access_key']);
+        cloudConfig.remediate = {
+            accessKeyId: config.credentials.aws_remediate.access_key,
+            secretAccessKey: config.credentials.aws_remediate.secret_access_key,
+            sessionToken: config.credentials.aws_remediate.session_token
+        };
+    } else if (config.credentials.azure_remediate && config.credentials.azure_remediate.credential_file) {
+        cloudConfig.remediate = loadHelperFile(config.credentials.azure_remediate.credential_file);
+        if (!cloudConfig.remediate || !cloudConfig.remediate.ApplicationID || !cloudConfig.remediate.KeyValue || !cloudConfig.remediate.DirectoryID || !cloudConfig.remediate.SubscriptionID) {
+            console.error('ERROR: Azure credential file for remediation does not have ApplicationID, KeyValue, DirectoryID, or SubscriptionID');
+            process.exit(1);
+        }
+    } else if (config.credentials.azure_remediate && config.credentials.azure_remediate.application_id) {
+        checkRequiredKeys(config.credentials.azure_remediate, ['key_value', 'directory_id', 'subscription_id']);
+        cloudConfig.remediate = {
+            ApplicationID: config.credentials.azure_remediate.application_id,
+            KeyValue: config.credentials.azure_remediate.key_value,
+            DirectoryID: config.credentials.azure_remediate.directory_id,
+            SubscriptionID: config.credentials.azure_remediate.subscription_id
+        };
+    } else {
+        console.error('ERROR: Config file does not contain any valid credential configs for remediation.');
+        process.exit(1);
+    }
+}
 // Now execute the scans using the defined configuration information.
 engine(cloudConfig, settings);
