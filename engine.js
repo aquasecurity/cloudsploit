@@ -5,14 +5,14 @@ var output = require('./postprocess/output.js');
 var aslRunner = require('./helpers/asl.js');
 var azureHelper = require('./helpers/azure/auth.js');
 
-function runAuth(settings, cloudConfig, callback) {
+function runAuth(settings, remediateConfig, callback) {
     if (settings.cloud && settings.cloud == 'azure') {
-        azureHelper.login(cloudConfig.remediate, function(err, loginData) {
+        azureHelper.login(remediateConfig, function(err, loginData) {
             if (err) return (callback(err));
-            cloudConfig.remediate.token = loginData.token;
+            remediateConfig.token = loginData.token;
+            return callback();
         });
-    }
-    return callback();
+    } else callback();
 }
 /**
  * The main function to execute CloudSploit scans.
@@ -227,10 +227,10 @@ var engine = function(cloudConfig, settings) {
             });
         }
         
-        if (settings.remediate && settings.remediate.length) {
-            runAuth(settings, cloudConfig, function(err) {
+        if (settings.remediate && settings.remediate.length && cloudConfig.remediate) {
+            runAuth(settings, cloudConfig.remediate, function(err) {
                 if (err) return console.log(err);
-                executePlugins(cloudConfig.remediate || cloudConfig);
+                executePlugins(cloudConfig.remediate);
             });
         } else {
             executePlugins();
