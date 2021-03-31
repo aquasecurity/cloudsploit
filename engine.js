@@ -12,7 +12,7 @@ function runAuth(settings, remediateConfig, callback) {
             remediateConfig.token = loginData.token;
             return callback();
         });
-    } else return callback();
+    } else callback();
 }
 /**
  * The main function to execute CloudSploit scans.
