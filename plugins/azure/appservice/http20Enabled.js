@@ -9,11 +9,11 @@ module.exports = {
     recommended_action: 'Enable HTTP 2.0 support in the general settings for all App Services',
     link: 'https://azure.microsoft.com/en-us/blog/announcing-http-2-support-in-azure-app-service/',
     apis: ['webApps:list', 'webApps:listConfigurations'],
-    remediation_min_version: '202103312200',
+    remediation_min_version: '202103311945',
     remediation_description: 'The HTTP 2.0 option will be enabled for the web app',
     apis_remediate: ['webApps:list'],
-    actions: {remediate:['webApps:write'], rollback:['webApps:write']},
-    permissions: {remediate: ['webApps:write'], rollback: ['webApps:write']},
+    actions: {remediate:['webApps:updateConfiguration'], rollback:['webApps:updateConfiguration']},
+    permissions: {remediate: ['webApps:updateConfiguration'], rollback: ['webApps:updateConfiguration']},
     realtime_triggers: ['microsoftweb:sites:write'],
 
     run: function(cache, settings, callback) {
@@ -71,8 +71,8 @@ module.exports = {
 
         // inputs specific to the plugin
         var pluginName = 'http20Enabled';
-        var baseUrl = 'https://management.azure.com/{resource}?api-version=2019-08-01';
-        var method = 'PUT';
+        var baseUrl = 'https://management.azure.com/{resource}/config/web?api-version=2019-08-01';
+        var method = 'PATCH';
 
         // for logging purposes
         var webAppNameArr = resource.split('/');
