@@ -235,7 +235,7 @@ var engine = function(cloudConfig, settings) {
                 executePlugins(cloudConfig.remediate);
             });
         } else {
-            executePlugins();
+            executePlugins(cloudConfig);
         }
     });
 };
