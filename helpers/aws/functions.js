@@ -291,6 +291,8 @@ function extractStatementPrincipals(statement) {
             return [principal];
         }
 
+        if (!principal.AWS) return response;
+
         var awsPrincipals = principal.AWS;
         if (!Array.isArray(awsPrincipals)) {
             awsPrincipals = [awsPrincipals];

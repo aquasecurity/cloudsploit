@@ -49,25 +49,25 @@ module.exports = {
                     return cb();
                 }
 
-                var goodStatements = [];
+                var exposed;
 
                 if (describeElasticsearchDomain.data.DomainStatus.AccessPolicies) {
-                    var accessPolicies = JSON.parse(describeElasticsearchDomain.data.DomainStatus.AccessPolicies);
+                    var statements = helpers.normalizePolicyDocument(describeElasticsearchDomain.data.DomainStatus.AccessPolicies);
 
-                    if (accessPolicies.Statement && accessPolicies.Statement.length) {
-                        accessPolicies.Statement.forEach(statement => {
-                            if (statement.Principal && statement.Principal.AWS && statement.Principal.AWS != '*') {
-                                goodStatements.push(statement);
-                            }
-                        });
-        
-                        if (goodStatements.length === accessPolicies.Statement.length) {
-                            helpers.addResult(results, 0,
-                                'Domain :' + domain.DomainName + ': is not exposed to all AWS accounts',
-                                region, resource);
-                        } else {
+                    if (statements && statements.length) {
+                        for (let statement of statements) {
+                            var statementPrincipals = helpers.extractStatementPrincipals(statement);
+                            exposed = statementPrincipals.find(principal => principal == '*');
+                            if (exposed) break;
+                        }
+
+                        if (exposed) {
                             helpers.addResult(results, 2,
                                 'Domain :' + domain.DomainName + ': is exposed to all AWS accounts',
+                                region, resource);
+                        } else {
+                            helpers.addResult(results, 0,
+                                'Domain :' + domain.DomainName + ': is not exposed to all AWS accounts',
                                 region, resource);
                         }
                     } else {
