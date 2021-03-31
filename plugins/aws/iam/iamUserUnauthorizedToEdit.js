@@ -42,7 +42,7 @@ module.exports = {
         iam_authorized_user_arns: {
             name: 'IAM Authorized User ARNs',
             description: 'A comma delimited list of user ARNs athorized to contain edit IAM access policies permission',
-            regex: '^((?:{12}|arn:aws:iam::{12}:(?:root|user[A-Za-z0-9]+)),?*)*',
+            regex: '^arn:(aws[a-zA-Z-]*)?:iam::[0-9]{12}:.+$',
             default: ''
         }
     },

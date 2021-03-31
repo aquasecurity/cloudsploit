@@ -1,4 +1,3 @@
-var async = require('async');
 var helpers = require('../../../helpers/oracle');
 
 module.exports = {
@@ -16,16 +15,8 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-        var defaultRegion = '';
 
-        if (cache.authenticationPolicy &&
-            cache.authenticationPolicy.get &&
-            Object.keys(cache.authenticationPolicy.get).length &&
-            Object.keys(cache.authenticationPolicy.get).length > 0) {
-            defaultRegion = helpers.objectFirstKey(cache.authenticationPolicy.get);
-        } else {
-            return callback(null, results, source);
-        }
+        var defaultRegion = helpers.objectFirstKey(cache['regionSubscription']['list']);
 
         var authenticationPolicy = helpers.addSource(cache, source,
             ['authenticationPolicy', 'get', defaultRegion]);

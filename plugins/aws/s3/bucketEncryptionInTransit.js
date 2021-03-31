@@ -77,7 +77,7 @@ module.exports = {
                 } else {
                     policyJson = getBucketPolicy.data.Policy;
                 }
-            } catch(e) {
+            } catch (e) {
                 helpers.addResult(results, 3, `Bucket policy on bucket ${bucket.Name} could not be parsed.`, 'global', bucketResource);
                 continue;
             }
@@ -151,7 +151,7 @@ module.exports = {
                 'Policy': JSON.stringify(policyBody)
             };
         } else {
-            if(policy.data && policy.data.Policy){
+            if (policy.data && policy.data.Policy){
                 var policyJson;
                 if (typeof policy.data.Policy === 'string') {
                     policyJson = JSON.parse(policy.data.Policy);
