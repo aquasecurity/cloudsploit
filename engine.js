@@ -2,7 +2,17 @@ var async = require('async');
 var exports = require('./exports.js');
 var suppress = require('./postprocess/suppress.js');
 var output = require('./postprocess/output.js');
+var azureHelper = require('./helpers/azure/auth.js');
 
+function runAuth(settings, remediateConfig, callback) {
+    if (settings.cloud && settings.cloud == 'azure') {
+        azureHelper.login(remediateConfig, function(err, loginData) {
+            if (err) return (callback(err));
+            remediateConfig.token = loginData.token;
+            return callback();
+        });
+    } else callback();
+}
 /**
  * The main function to execute CloudSploit scans.
  * @param cloudConfig The configuration for the cloud provider.
@@ -138,84 +148,95 @@ var engine = function(cloudConfig, settings) {
         console.log('INFO: Analysis complete. Scan report to follow...');
 
         var maximumStatus = 0;
-
-        async.mapValuesLimit(plugins, 10, function(plugin, key, pluginDone) {
-            if (skippedPlugins.indexOf(key) > -1) return pluginDone(null, 0);
-
-            var postRun = function(err, results) {
-                if (err) return console.log(`ERROR: ${err}`);
-                if (!results || !results.length) {
-                    console.log(`Plugin ${plugin.title} returned no results. There may be a problem with this plugin.`);
-                } else {
-                    for (var r in results) {
-                        // If we have suppressed this result, then don't process it
-                        // so that it doesn't affect the return code.
-                        if (suppressionFilter([key, results[r].region || 'any', results[r].resource || 'any'].join(':'))) {
-                            continue;
-                        }
-
-                        var complianceMsg = [];
-                        if (settings.compliance && settings.compliance.length) {
-                            settings.compliance.forEach(function(c) {
-                                if (plugin.compliance && plugin.compliance[c]) {
-                                    complianceMsg.push(`${c.toUpperCase()}: ${plugin.compliance[c]}`);
-                                }
-                            });
-                        }
-                        complianceMsg = complianceMsg.join('; ');
-                        if (!complianceMsg.length) complianceMsg = null;
-
-                        // Write out the result (to console or elsewhere)
-                        outputHandler.writeResult(results[r], plugin, key, complianceMsg);
-
-                        // Add this to our tracking for the worst status to calculate
-                        // the exit code
-                        maximumStatus = Math.max(maximumStatus, results[r].status);
-                        // Remediation
-                        if (settings.remediate && settings.remediate.length) {
-                            if (settings.remediate.indexOf(key) > -1) {
-                                if (results[r].status === 2) {
-                                    var resource = results[r].resource;
-                                    var event = {};
-                                    event.region = results[r].region;
-                                    event['remediation_file'] = {};
-                                    event['remediation_file'] = initializeFile(event['remediation_file'], 'execute', key, resource);
-                                    plugin.remediate(cloudConfig, collection, event, resource, (err, result) => {
-                                        if (err) return console.log(err);
-                                        return console.log(result);
-                                    });
+        
+        function executePlugins(cloudRemediateConfig) {
+            async.mapValuesLimit(plugins, 10, function(plugin, key, pluginDone) {
+                if (skippedPlugins.indexOf(key) > -1) return pluginDone(null, 0);
+    
+                var postRun = function(err, results) {
+                    if (err) return console.log(`ERROR: ${err}`);
+                    if (!results || !results.length) {
+                        console.log(`Plugin ${plugin.title} returned no results. There may be a problem with this plugin.`);
+                    } else {
+                        for (var r in results) {
+                            // If we have suppressed this result, then don't process it
+                            // so that it doesn't affect the return code.
+                            if (suppressionFilter([key, results[r].region || 'any', results[r].resource || 'any'].join(':'))) {
+                                continue;
+                            }
+    
+                            var complianceMsg = [];
+                            if (settings.compliance && settings.compliance.length) {
+                                settings.compliance.forEach(function(c) {
+                                    if (plugin.compliance && plugin.compliance[c]) {
+                                        complianceMsg.push(`${c.toUpperCase()}: ${plugin.compliance[c]}`);
+                                    }
+                                });
+                            }
+                            complianceMsg = complianceMsg.join('; ');
+                            if (!complianceMsg.length) complianceMsg = null;
+    
+                            // Write out the result (to console or elsewhere)
+                            outputHandler.writeResult(results[r], plugin, key, complianceMsg);
+    
+                            // Add this to our tracking for the worst status to calculate
+                            // the exit code
+                            maximumStatus = Math.max(maximumStatus, results[r].status);
+                            // Remediation
+                            if (settings.remediate && settings.remediate.length) {
+                                if (settings.remediate.indexOf(key) > -1) {
+                                    if (results[r].status === 2) {
+                                        var resource = results[r].resource;
+                                        var event = {};
+                                        event.region = results[r].region;
+                                        event['remediation_file'] = {};
+                                        event['remediation_file'] = initializeFile(event['remediation_file'], 'execute', key, resource);
+                                        plugin.remediate(cloudRemediateConfig, collection, event, resource, (err, result) => {
+                                            if (err) return console.log(err);
+                                            return console.log(result);
+                                        });
+                                    }
                                 }
                             }
                         }
+    
                     }
-
+                    setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
+                };
+    
+                if (plugin.asl) {
+                    console.log(`INFO: Using custom ASL for plugin: ${plugin.title}`);
+                    // Inject APIs and resource maps
+                    plugin.asl.apis = plugin.apis;
+                    var aslConfig = require('./helpers/asl/config.json');
+                    var aslVersion = plugin.asl.version ? plugin.asl.version : aslConfig.current_version;
+                    var aslRunner = require(`./helpers/asl/asl-${aslVersion}.js`);
+                    aslRunner(collection, plugin.asl, resourceMap, postRun);
+                } else {
+                    plugin.run(collection, settings, postRun);
                 }
-                setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
-            };
-
-            if (plugin.asl) {
-                console.log(`INFO: Using custom ASL for plugin: ${plugin.title}`);
-                // Inject APIs and resource maps
-                plugin.asl.apis = plugin.apis;
-                var aslConfig = require('./helpers/asl/config.json');
-                var aslVersion = plugin.asl.version ? plugin.asl.version : aslConfig.current_version;
-                var aslRunner = require(`./helpers/asl/asl-${aslVersion}.js`);
-                aslRunner(collection, plugin.asl, resourceMap, postRun);
-            } else {
-                plugin.run(collection, settings, postRun);
-            }
-        }, function(err) {
-            if (err) return console.log(err);
-            // console.log(JSON.stringify(collection, null, 2));
-            outputHandler.close();
-            if (settings.exit_code) {
-                // The original cloudsploit always has a 0 exit code. With this option, we can have
-                // the exit code depend on the results (useful for integration with CI systems)
-                console.log(`INFO: Exiting with exit code: ${maximumStatus}`);
-                process.exitCode = maximumStatus;
-            }
-            console.log('INFO: Scan complete');
-        });
+            }, function(err) {
+                if (err) return console.log(err);
+                // console.log(JSON.stringify(collection, null, 2));
+                outputHandler.close();
+                if (settings.exit_code) {
+                    // The original cloudsploit always has a 0 exit code. With this option, we can have
+                    // the exit code depend on the results (useful for integration with CI systems)
+                    console.log(`INFO: Exiting with exit code: ${maximumStatus}`);
+                    process.exitCode = maximumStatus;
+                }
+                console.log('INFO: Scan complete');
+            });
+        }
+        
+        if (settings.remediate && settings.remediate.length && cloudConfig.remediate) {
+            runAuth(settings, cloudConfig.remediate, function(err) {
+                if (err) return console.log(err);
+                executePlugins(cloudConfig.remediate);
+            });
+        } else {
+            executePlugins(cloudConfig);
+        }
     });
 };
 

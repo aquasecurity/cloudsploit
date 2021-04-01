@@ -22,7 +22,7 @@ module.exports = {
     apis_remediate: ['servers:listSql'],
     actions: {remediate:['servers:update'], rollback:['servers:update']},
     permissions: {remediate: ['servers:update'], rollback: ['servers:update']},
-    realtime_triggers: [''],
+    realtime_triggers: ['microsoftsql:servers:write'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -83,7 +83,7 @@ module.exports = {
 
         // inputs specific to the plugin
         var pluginName = 'sqlServerTlsVersion';
-        var baseUrl = 'https://management.azure.com/{resource}?api-version=2017-12-01';
+        var baseUrl = 'https://management.azure.com/{resource}?api-version=2020-08-01-preview';
         var method = 'PATCH';
 
         // for logging purposes
@@ -95,7 +95,7 @@ module.exports = {
             var body = {
                 'location': settings.region,
                 'properties': {
-                    'sslEnforcement': 'Enabled'
+                    'minimalTlsVersion': '1.2'
                 }
             };
 
