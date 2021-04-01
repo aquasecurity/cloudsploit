@@ -76,7 +76,7 @@ module.exports = {
 
         // inputs specific to the plugin
         var pluginName = 'authEnabled';
-        var baseUrl = 'https://management.azure.com/{resource}}/config/authsettings?api-version=2019-08-01';
+        var baseUrl = 'https://management.azure.com/{resource}/config/authsettings?api-version=2019-08-01';
         var method = 'PUT';
 
         // for logging purposes
