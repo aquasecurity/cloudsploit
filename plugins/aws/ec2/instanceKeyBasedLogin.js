@@ -12,15 +12,15 @@ module.exports = {
     settings: {
         instance_keypair_threshold: {
             name: 'Instance Key Pair Threshold',
-            description: 'If more than this number of instances are missing an ssh key pair, results will be collapsed into a single result to avoid excessive result counts. Max is 299.',
+            description: 'Plugin results will become aggregated when this value is breached. Max is 299.',
             regex: '^[1-2]{1}[0-9]{0,2}$',
-            default: 10
+            default: '10'
         }
     },
 
     run: function(cache, settings, callback) {
         var config = {
-            instance_keypair_threshold: settings.instance_keypair_threshold || this.settings.instance_keypair_threshold.default
+            instance_keypair_threshold: parseInt(settings.instance_keypair_threshold || this.settings.instance_keypair_threshold.default)
         };
 
         var custom = helpers.isCustom(settings, this.settings);
