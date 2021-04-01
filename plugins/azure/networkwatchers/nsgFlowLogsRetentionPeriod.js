@@ -6,9 +6,9 @@ module.exports = {
     category: 'Network Watcher',
     description: 'Ensures that Azure Network Security Groups (NSGs) have a sufficient flow log retention period',
     more_info: 'A flow log data retention period of 90 days or more, allows you to collect the necessary amount of logging data required to check for anomalies and provide details about any potential security breach.',
-    recommended_action: 'Ensure that Network Security Groups (NSG) flow logs retention period is 90 days or more',
+    recommended_action: 'Modify NSG flow logs and set desired value in days for retention period',
     link: 'https://docs.microsoft.com/en-us/azure/network-watcher/network-watcher-nsg-flow-logging-portal',
-    apis: ['networkWatchers:listAll', 'flowLogs:listAll'],
+    apis: ['networkWatchers:listAll', 'flowLogs:list'],
     settings: {
         nsg_flowlog_retention_period: {
             name: 'NSG Flow Log Retention Period',
@@ -46,7 +46,7 @@ module.exports = {
 
             async.each(networkWatchers.data, function(networkWatcher, scb) {
                 const flowLogs = helpers.addSource(cache, source,
-                    ['flowLogs', 'listAll', location, networkWatcher.id]);
+                    ['flowLogs', 'list', location, networkWatcher.id]);
 
                 if (!flowLogs || flowLogs.err || !flowLogs.data) {
                     helpers.addResult(results, 3,
@@ -60,19 +60,19 @@ module.exports = {
                 }
 
                 for (const flowLog of flowLogs.data) {
+                    if (!flowLog.id) continue;
                     let retentionDays = 0;
-                    if (flowLog.retentionPolicy &&
-                        flowLog.retentionPolicy.days) {
+                    if (flowLog.retentionPolicy && flowLog.retentionPolicy.days) {
                         retentionDays = flowLog.retentionPolicy.days;
                     }
 
                     if (retentionDays >= config.retentionDays) {
                         helpers.addResult(results, 0,
-                            `NSG FLow Logs Data retention policy is set to ${retentionDays} of ${config.retentionDays} days desired limit`,
+                            `NSG fLow log has retention period set to ${retentionDays} of ${config.retentionDays} days desired limit`,
                             location, flowLog.id);
                     } else {
                         helpers.addResult(results, 2,
-                            `NSG FLow Logs Data retention policy is set to ${retentionDays} of ${config.retentionDays} days desired limit`,
+                            `NSG fLow log has retention period set to ${retentionDays} of ${config.retentionDays} days desired limit`,
                             location, flowLog.id);
                     }
                 }

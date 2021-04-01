@@ -45,7 +45,7 @@ const createCache = (Watchers, flowLogs) => {
             }
         },
         flowLogs: {
-            listAll: {
+            list: {
                 'eastus': logs
             }
         }
@@ -71,7 +71,7 @@ const createErrorCache = (key) => {
                 }
             },
             flowLogs: {
-                listAll: {
+                list: {
                     'eastus': {}
                 }
             }
@@ -130,7 +130,7 @@ describe('nsgFlowLogsRetentionPeriod', function() {
             nsgFlowLogsRetentionPeriod.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('NSG FLow Logs Data retention policy is set to 100 of 90 days desired limit');
+                expect(results[0].message).to.include('NSG fLow log has retention period set to 100 of 90 days desired limit');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -141,7 +141,7 @@ describe('nsgFlowLogsRetentionPeriod', function() {
             nsgFlowLogsRetentionPeriod.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('NSG FLow Logs Data retention policy is set to 45 of 90 days desired limit');
+                expect(results[0].message).to.include('NSG fLow log has retention period set to 45 of 90 days desired limit');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

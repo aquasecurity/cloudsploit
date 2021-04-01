@@ -202,7 +202,7 @@ var postcalls = {
         }
     },
     flowLogs: {
-        listAll: {
+        list: {
             reliesOnPath: 'networkWatchers.listAll',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/flowLogs?api-version=2020-11-01'
