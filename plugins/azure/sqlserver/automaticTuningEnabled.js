@@ -6,7 +6,7 @@ module.exports = {
     category: 'SQL Server',
     description: 'Ensures Microsoft Azure SQL Servers have Automatic Tuning configured.',
     more_info: 'Automatic tuning is a fully managed intelligent performance service that uses built-in intelligence to continuously monitor queries executed on a database, and it automatically improves their performance.',
-    recommended_action: 'On SQL Server overview page, select Automatic Tuning under Intelligent Performance section slect Revert to Defaults to let the database server to inherit the automatic tuning settings from Azure Defaults.',
+    recommended_action: 'On SQL Server overview page, select Automatic Tuning under Intelligent Performance section select Revert to Defaults to let the database server to inherit the automatic tuning settings from Azure Defaults.',
     link: 'https://docs.microsoft.com/en-us/azure/azure-sql/database/automatic-tuning-overview',
     apis: ['servers:listSql', 'tuningConfig:get'],
 
