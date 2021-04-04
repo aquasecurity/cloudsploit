@@ -116,7 +116,7 @@ const createBlobContainersErrorCache = () => {
     };
 };
 
-describe('blobServiceEncryption', function() {
+describe('logStorageEncryption', function() {
     describe('run', function() {
         it('should give passing result if no diagnostic settings found', function(done) {
             const cache = createCache([], [], []);

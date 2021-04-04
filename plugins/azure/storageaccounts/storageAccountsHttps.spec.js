@@ -36,7 +36,7 @@ const createStorageAccountsErrorCache = () => {
     };
 };
 
-describe('blobServiceEncryption', function() {
+describe('storageAccountsHttps', function() {
     describe('run', function() {
         it('should give passing result if no storage accounts found', function(done) {
             const cache = createCache([]);
