@@ -83,7 +83,7 @@ describe('autoFailoverGroupsEnabled', function() {
             autoFailoverGroupsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Auto-Failover groups are configured for the SQL Server');
+                expect(results[0].message).to.include('Auto-failover groups are configured for the SQL server');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -94,7 +94,7 @@ describe('autoFailoverGroupsEnabled', function() {
             autoFailoverGroupsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Auto-Failover groups are not configured for the SQL Server');
+                expect(results[0].message).to.include('Auto-failover groups are not configured for the SQL server');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
