@@ -4,11 +4,11 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'SQL Server Automatic Tuning Enabled',
     category: 'SQL Server',
-    description: 'Ensures Microsoft Azure SQL Servers have Automatic Tuning configured.',
+    description: 'Ensures that Microsoft Azure SQL servers have automatic tuning configured.',
     more_info: 'Automatic tuning is a fully managed intelligent performance service that uses built-in intelligence to continuously monitor queries executed on a database, and it automatically improves their performance.',
-    recommended_action: 'On SQL Server overview page, select Automatic Tuning under Intelligent Performance section, select Revert to Defaults to let the database server to inherit the automatic tuning settings from Azure Defaults.',
+    recommended_action: 'Modify SQL server to enable automatic tuning',
     link: 'https://docs.microsoft.com/en-us/azure/azure-sql/database/automatic-tuning-overview',
-    apis: ['servers:listSql', 'tuningConfig:get'],
+    apis: ['servers:listSql', 'serverAutomaticTuning:get'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -34,31 +34,44 @@ module.exports = {
 
             async.each(servers.data, function(server, scb) {
                 const configs = helpers.addSource(cache, source,
-                    ['tuningConfig', 'get', location, server.id]);
+                    ['serverAutomaticTuning', 'get', location, server.id]);
 
                 if (!configs || configs.err || !configs.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for SQL Server Atomatic Tuning Configurations: ' + helpers.addError(servers), location);
+                        'Unable to query for SQL server automatic tuning configurations: ' + helpers.addError(servers), location);
                     return scb();
                 }
 
                 const config = configs.data.options;
                 if (!config) {
                     helpers.addResult(results, 2,
-                        'No Automatic Tuning Configurations found for SQL Server', location);
+                        'No automatic tuning configurations found for SQL server', location, server.id);
                     return scb();
                 }
 
-                if (config.createIndex && config.dropIndex && config.forceLastGoodPlan &&
-                    config.createIndex.reasonDesc && config.dropIndex.reasonDesc && config.forceLastGoodPlan.reasonDesc &&
-                    config.createIndex.reasonDesc.toLowerCase() === 'autoconfigured' &&
-                    config.dropIndex.reasonDesc.toLowerCase() === 'autoconfigured' &&
+                let configuredFlagsCount = 0;
+
+                if (config.createIndex && config.createIndex.reasonDesc &&
+                    config.createIndex.reasonDesc.toLowerCase() === 'autoconfigured') {
+                    configuredFlagsCount++;
+                }
+
+                if (config.dropIndex && config.dropIndex.reasonDesc &&
+                    config.dropIndex.reasonDesc.toLowerCase() === 'autoconfigured') {
+                    configuredFlagsCount++;
+                }
+
+                if (config.forceLastGoodPlan && config.forceLastGoodPlan.reasonDesc &&
                     config.forceLastGoodPlan.reasonDesc.toLowerCase() === 'autoconfigured') {
+                    configuredFlagsCount++;
+                }
+
+                if (configuredFlagsCount === 3) {
                     helpers.addResult(results, 0,
-                        'SQL Server is configured to use Azure Default Automatic Tuning settings.', location);
+                        'SQL server has Azure automatic tuning enabled', location, server.id);
                 } else {
                     helpers.addResult(results, 2,
-                        'SQL Server is not configured to use Azure Default Automatic Tuning settings.', location);
+                        'SQL server does not have Azure automatic tuning enabled', location, server.id);
                 }
                 scb();
             }, function() {

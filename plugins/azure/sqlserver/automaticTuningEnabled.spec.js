@@ -86,7 +86,7 @@ const createCache = (servers, tuningConfigs) => {
                 'eastus': server
             }
         },
-        tuningConfig: {
+        serverAutomaticTuning: {
             get: {
                 'eastus': configs
             }
@@ -118,45 +118,45 @@ describe('automaticTuningEnabled', function() {
             });
         });
 
-        it('should give failing result if no Automatic Tuning Configurations found for SQL Server', function(done) {
+        it('should give failing result if no automatic tuning configurations found for SQL server', function(done) {
             const cache = createCache([servers[0]], {});
             automaticTuningEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('No Automatic Tuning Configurations found for SQL Server');
+                expect(results[0].message).to.include('No automatic tuning configurations found for SQL server');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
         });
 
-        it('should give unknown result if unable to query for SQL Server Atomatic Tuning Configurations', function(done) {
+        it('should give unknown result if unable to query for SQL server automatic tuning configurations', function(done) {
             const cache = createCache([servers[0]], null);
             automaticTuningEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for SQL Server Atomatic Tuning Configurations:');
+                expect(results[0].message).to.include('Unable to query for SQL server automatic tuning configurations');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
         });
 
-        it('should give passing result if SQL Server is configured to use Azure Default Automatic Tuning settings.', function(done) {
+        it('should give passing result if SQL server has Azure automatic tuning enabled', function(done) {
             const cache = createCache([servers[0]], automaticTuningSetting[0]);
             automaticTuningEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('SQL Server is configured to use Azure Default Automatic Tuning settings.');
+                expect(results[0].message).to.include('SQL server has Azure automatic tuning enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
         });
 
-        it('should give failing result if SQL Server is not configured to use Azure Default Automatic Tuning settings.', function(done) {
+        it('should give failing result if SQL server does not have Azure automatic tuning enabled', function(done) {
             const cache = createCache([servers[0]], automaticTuningSetting[1]);
             automaticTuningEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('SQL Server is not configured to use Azure Default Automatic Tuning settings.');
+                expect(results[0].message).to.include('SQL server does not have Azure automatic tuning enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

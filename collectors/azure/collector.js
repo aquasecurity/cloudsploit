@@ -208,7 +208,7 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/securityAlertPolicies?api-version=2017-03-01-preview'
         }
     },
-    tuningConfig: {
+    serverAutomaticTuning: {
         get: {
             reliesOnPath: 'servers.listSql',
             properties: ['id'],
