@@ -35,7 +35,7 @@ const createCache = (servers, failoverGroups) => {
                 'eastus': server
             }
         },
-        failOverGroups: {
+        failoverGroups: {
             listByServer: {
                 'eastus': groups
             }
@@ -79,7 +79,7 @@ describe('autoFailoverGroupsEnabled', function() {
         });
 
         it('should give passing result if auto-failover groups are configured', function(done) {
-            const cache = createCache([servers[0]], [servers[0]]);
+            const cache = createCache([servers[0]], [failoverGroups[0]]);
             autoFailoverGroupsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);

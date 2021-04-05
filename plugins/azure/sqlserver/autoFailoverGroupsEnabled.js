@@ -4,11 +4,11 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Auto-Failover Groups Enabled',
     category: 'SQL Server',
-    description: 'Ensures that Auto-Failover Groups are configured for Azure SQL database servers',
-    more_info: 'In case of any outage that impacts one or more SQL databases, automatic failover process switches all secondary databases in the group to primary databases to ensure high availability',
-    recommended_action: 'Ensure that Auto-Failover Groups are configured for Azure SQL database server',
+    description: 'Ensures that auto-failover groups are configured for Azure SQL database servers.',
+    more_info: 'In case of any outage that impacts one or more SQL databases, automatic failover process switches all secondary databases in the group to primary databases to ensure high availability.',
+    recommended_action: 'Ensure that auto-failover Groups are configured for Azure SQL database servers',
     link: 'https://docs.microsoft.com/en-us/azure/azure-sql/database/auto-failover-group-overview',
-    apis: ['servers:listSql', 'failOverGroups:listByServer'],
+    apis: ['servers:listSql', 'failoverGroups:listByServer'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -35,18 +35,18 @@ module.exports = {
 
             for (const server of servers.data) {
                 const failoverGroups = helpers.addSource(cache, source,
-                    ['failOverGroups', 'listByServer', location, server.id]);
+                    ['failoverGroups', 'listByServer', location, server.id]);
 
                 if (!failoverGroups || failoverGroups.err || !failoverGroups.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for auto-failover groups: ' + helpers.addError(failoverGroups), location);
+                        'Unable to query for auto-failover groups: ' + helpers.addError(failoverGroups), location, server.id);
                     return rcb();
                 }
 
-                if (failoverGroups.data.length && failoverGroups.data.length > 0) {
-                    helpers.addResult(results, 0, 'Auto-Failover groups are configured for the SQL Server', location, server.id);
+                if (failoverGroups.data.length) {
+                    helpers.addResult(results, 0, 'Auto-failover groups are configured for the SQL server', location, server.id);
                 } else {
-                    helpers.addResult(results, 2, 'Auto-Failover groups are not configured for the SQL Server', location, server.id);
+                    helpers.addResult(results, 2, 'Auto-failover groups are not configured for the SQL server', location, server.id);
                 }
             }
 
