@@ -1,14 +1,14 @@
 module.exports = {
     aws: {
-        bucketVersioning:{
+        bucketVersioning2:{
             title: 'S3 Bucket Versioning through OPA',
             category: 'S3',
             description: 'Ensures object versioning is enabled on S3 buckets',
-            path: './plugins/aws/s3/bucketversioning.rego',
+            path: './plugins/aws/s3/bucketversioning2.rego',
             apis: ['S3:listBuckets', 'S3:getBucketVersioning', 'S3:getBucketLocation'],
             rules: {
-                2: 'data.s3.bucketversioning.s3regionviolation',
-                0: 'data.s3.bucketversioning.s3regionallowed'
+                2: 'data.s3.bucketversioning.fail',
+                0: 'data.s3.bucketversioning.pass'
             },
             messages: {
                 arnTemplate: 'arn:aws:s3:::',

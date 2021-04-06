@@ -25,7 +25,17 @@ var engine = function(cloudConfig, settings) {
     var collector = require(`./collectors/${settings.cloud}/collector.js`);
     var plugins = exports[settings.cloud];
     var apiCalls = [];
-
+    if (settings.opa) {
+        plugins = opaExports[settings.cloud];
+        var osType = os.type();
+        var opaPath;
+        if ( osType === 'Windows_NT') {
+            opaPath = 'opa.exe';
+        }
+        else {
+            opaPath = 'opa';
+        }
+    }
     // Print customization options
     if (settings.compliance) console.log(`INFO: Using compliance modes: ${settings.compliance.join(', ')}`);
     if (settings.govcloud) console.log('INFO: Using AWS GovCloud mode');
@@ -38,17 +48,7 @@ var engine = function(cloudConfig, settings) {
         if (!plugins[settings.plugin]) return console.log(`ERROR: Invalid plugin: ${settings.plugin}`);
         console.log(`INFO: Testing plugin: ${plugins[settings.plugin].title}`);
     }
-    if (settings.opa) {
-        plugins = opaExports[settings.cloud];
-        var osType = os.type();
-        var opaPath;
-        if ( osType === 'Windows_NT') {
-            opaPath = 'opa.exe';
-        }
-        else {
-            opaPath = 'opa';
-        }
-    }
+
     // STEP 1 - Obtain API calls to make
     console.log('INFO: Determining API calls to make...');
 
@@ -204,7 +204,8 @@ var engine = function(cloudConfig, settings) {
                         pluginDone(err, maximumStatus);
                     }, 0);
                 });
-            } else{
+            }
+            else{
                 opaHelper.downloadOPAforOs((err) => {
                     if (err) {
                         return console.log(err);
