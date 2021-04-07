@@ -26,42 +26,15 @@ var opaEval = (data, input, opaPath, rules, messages,callback) => {
         }
         var finalresults = [];
         for ( var res in results ){
-            var locations = results[res];
-            Object.keys(locations).forEach(location => {
-                var resources = locations[location];
-                var region;
-                var targetResource;
-                resources.forEach(resource => {
-                    var newMassage = messages[res];
-                    if ( messages[res].includes('resource.Name') ) {
-                        newMassage = messages[res].replace('resource.Name', resource);
-                    }
-                    if ( messages.region){
-                        region = messages.region;
-                    }
-                    else {
-                        region = location;
-                    }
-
-                    if ( messages.arnTemplate ){
-                        targetResource = messages.arnTemplate + resource;
-                    }
-                    else {
-                        targetResource =  resource;
-                    }
-                    helpers.addResult(finalresults, parseInt(res),
-                        newMassage,
-                        region, targetResource);
-                    // if ( res.includes('denied') ){
-                    //     helpers.addResult(finalresults, 2,
-                    //         messages.failed.replace('resource.Name', resource),
-                    //         'global', messages.arnTemplate + resource);
-                    // } else if( res.includes('allowed') ){
-                    //     helpers.addResult(finalresults, 0,
-                    //         messages.passed.replace('resource.Name', resource),
-                    //         'global', messages.arnTemplate + resource);
-                    // }
-                });
+            var caseResult = results[res];
+            caseResult.forEach(resultItem => {
+                var resource = resultItem.arn;
+                var region = resultItem.region;
+                var newMassage = resultItem.msg;
+                var status = resultItem.status;
+                helpers.addResult(finalresults, parseInt(status),
+                    newMassage,
+                    region, resource);
             });
         }
         return callback(null, finalresults);
