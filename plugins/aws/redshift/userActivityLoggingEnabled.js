@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Redshift User Activity Loggin Enabled',
+    title: 'Redshift User Activity Logging Enabled',
     category: 'Redshift',
     description: 'Ensure that user activity logging is enabled for your Amazon Redshift clusters.',
     more_info: 'Redshift clusters associated parameter groups should have user activity logging enabled in order to log user activities performed.',
@@ -87,7 +87,7 @@ module.exports = {
                             }
                         }
 
-                        if(loggingEnabled) break;
+                        if (loggingEnabled) break;
                     }
                 }
                 

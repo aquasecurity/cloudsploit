@@ -12,7 +12,7 @@ module.exports = {
     settings: {
         whitelisted_open_ports: {
             name: 'Whitelisted Open Ports',
-            description: 'A comma-delimited list of ports that indicates open ports allowed for any connection. Example: tcp:80,tcp:443',
+            description: 'A comma-separated list of ports/port-ranges that indicates open ports allowed for any connection. Example: tcp:80,tcp:443,tcp:80-443',
             regex: '[a-zA-Z0-9,:]',
             default: ''
         }
@@ -34,10 +34,23 @@ module.exports = {
         var ports = {};
         whitelisted_open_ports.forEach(port => {
             var [protocol, portNo] = port.split(':');
-            if (ports[protocol]) {
-                ports[protocol].push(Number(portNo));
+            if (portNo.indexOf('-') > -1) {
+                var portRange = portNo.split('-');
+                var rangeFrom = portRange[0];
+                var rangeTo = portRange[1];
+                for (var i = rangeFrom; i <= rangeTo; i++) {
+                    if (ports[protocol]) {
+                        ports[protocol].push(Number(i));
+                    } else {
+                        ports[protocol] = [Number(i)];
+                    }
+                }
             } else {
-                ports[protocol] = [Number(portNo)];
+                if (ports[protocol]) {
+                    ports[protocol].push(Number(portNo));
+                } else {
+                    ports[protocol] = [Number(portNo)];
+                }
             }
         });
 

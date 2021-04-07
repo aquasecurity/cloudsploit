@@ -44,67 +44,54 @@ module.exports = {
             if (getBucketPolicy && getBucketPolicy.err &&
                 getBucketPolicy.err.code && getBucketPolicy.err.code === 'NoSuchBucketPolicy') {
                 helpers.addResult(results, 2, 'No bucket policy found', 'global', resource);
-            }
-            else if (!getBucketPolicy || getBucketPolicy.err ||
+            } else if (!getBucketPolicy || getBucketPolicy.err ||
                        !getBucketPolicy.data || !getBucketPolicy.data.Policy) {
                 helpers.addResult(results, 3,
                     `Error querying for bucket policy for bucket "${bucket.Name}" ${helpers.addError(getBucketPolicy)}`,
                     'global', resource);
-            }
-            else {
-                var policyJson;
+            } else {
+                var statements = helpers.normalizePolicyDocument(getBucketPolicy.data.Policy);
 
-                if (typeof getBucketPolicy.data.Policy == 'object') {
-                    policyJson = getBucketPolicy.data.Policy;
-
-                } else {
-                    try {
-                        policyJson = JSON.parse(getBucketPolicy.data.Policy);
-                    }
-                    catch(e) {
-                        helpers.addResult(results, 3,
-                            `Error querying for bucket policy for bucket: "${bucket.Name}". Policy JSON could not be parsed`,
-                            'global', resource);
-                        return;
-                    }
-                }
-
-                if (!policyJson || !policyJson.Statement) {
-                    helpers.addResult(results, 3,
-                        `Error querying for bucket policy for bucket: "${bucket.Name}". Policy JSON is invalid or does not contain valid statements.`,
-                        'global', resource);
-                }
-                else if (!policyJson.Statement.length) {
+                if (!statements || !statements.length) {
                     helpers.addResult(results, 2,
                         'Bucket policy does not contain any statements',
                         'global', resource);
-                } else {
-                    var sslEnforced = false;
-                    for (var s in policyJson.Statement) {
-                        var statement = policyJson.Statement[s];
-                        if (statement.Effect &&
-                            statement.Condition &&
-                            statement.Condition.Bool &&
-                            statement.Condition.Bool['aws:SecureTransport']) {
-                            var secureTransport = statement.Condition.Bool['aws:SecureTransport'];
-                            var statementEffect = statement.Effect;
+                    return;
+                }
 
-                            if (secureTransport === 'false' && statementEffect === 'Deny') {
-                                sslEnforced = true;
-                            }
+                var denyPermissionsMap = helpers.getDenyPermissionsMap(statements);
+                var sslEnforced = true;
+                for (var statement of statements) {
+                    if (statement.Effect && statement.Effect === 'Allow' && statement.Principal && !statement.Principal.Service) {
+                        if (!helpers.isEffectiveStatement(statement, denyPermissionsMap)) continue;
+                        if (!statement.Condition ||
+                                !statement.Condition.Bool ||
+                                !statement.Condition.Bool['aws:SecureTransport'] ||
+                                statement.Condition.Bool['aws:SecureTransport'] === 'false') {
+                            sslEnforced = false;
+                            break;
+                        }
+                    } else if (statement.Effect && statement.Effect === 'Deny' && statement.Principal && !statement.Principal.Service && statement.Sid) {
+                        var denyActionResourceMap = helpers.getDenyPermissionsMap(statements, statement.Sid);
+                        if (!helpers.isEffectiveStatement(statement, denyActionResourceMap)) continue;
+                        if (!statement.Condition ||
+                                !statement.Condition.Bool ||
+                                !statement.Condition.Bool['aws:SecureTransport'] ||
+                                statement.Condition.Bool['aws:SecureTransport'] === 'true') {
+                            sslEnforced = false;
+                            break;
                         }
                     }
+                }
 
-                    if(sslEnforced){
-                        helpers.addResult(results, 0,
-                            `Bucket Policy for bucket "${bucket.Name}" enforces SSL to secure data in transit`,
-                            'global', resource);
-                    }
-                    else {
-                        helpers.addResult(results, 2,
-                            `Bucket Policy for bucket "${bucket.Name}" does not enforce SSL to secure data in transit`,
-                            'global', resource);
-                    }
+                if (sslEnforced) {
+                    helpers.addResult(results, 0,
+                        `Bucket Policy for bucket "${bucket.Name}" enforces SSL to secure data in transit`,
+                        'global', resource);
+                } else {
+                    helpers.addResult(results, 2,
+                        `Bucket Policy for bucket "${bucket.Name}" does not enforce SSL to secure data in transit`,
+                        'global', resource);
                 }
             }
         });

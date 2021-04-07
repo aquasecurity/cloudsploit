@@ -67,10 +67,10 @@ module.exports = {
             async.each(describeAutoScalingGroups.data, function(asg, cb){
 
                 var webTierTag = false;
-                if(asg.Tags && asg.Tags.length){
+                if (asg.Tags && asg.Tags.length){
                     for (var t in asg.Tags) {
                         var tag = asg.Tags[t];
-                        if(tag && tag.Key && tag.Key === config.web_tier_tag_key) {
+                        if (tag && tag.Key && tag.Key === config.web_tier_tag_key) {
                             webTierTag = true;
                             webTierAsgFound = true;
                             break;
@@ -84,7 +84,7 @@ module.exports = {
                     var describeLaunchConfigurations = helpers.addSource(cache, source,
                         ['autoscaling', 'describeLaunchConfigurations', region, asg.AutoScalingGroupARN]);
 
-                    if(!describeLaunchConfigurations ||
+                    if (!describeLaunchConfigurations ||
                         describeLaunchConfigurations.err ||
                         !describeLaunchConfigurations.data ||
                         !describeLaunchConfigurations.data.LaunchConfigurations ||
@@ -100,7 +100,7 @@ module.exports = {
                         
                         config.cw_log_agent_install_command = config.cw_log_agent_install_command.replace('<AWS_REGION>', region);
                         config.cw_log_agent_install_command = config.cw_log_agent_install_command.replace('<S3_CLOUDWATCH_AGENT_CONFIG_FILE_LOCATION>', config.s3_cw_agent_config_file);
-                        if(launchConfig.UserData &&
+                        if (launchConfig.UserData &&
                             launchConfig.UserData.indexOf(config.cw_log_agent_install_command) > -1) {
                             logsEnabled = true;
                         }

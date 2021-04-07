@@ -14,7 +14,22 @@ var helpers = {
     regions: regions,
     MAX_REGIONS_AT_A_TIME: 6,
     CLOUDSPLOIT_EVENTS_BUCKET: 'cloudsploit-engine-trails',
-    CLOUDSPLOIT_EVENTS_SNS: 'aqua-cspm-sns-'
+    CLOUDSPLOIT_EVENTS_SNS: 'aqua-cspm-sns-',
+    ENCRYPTION_LEVELS: ['none', 'sse', 'awskms', 'awscmk', 'externalcmk', 'cloudhsm'],
+    IAM_CONDITION_OPERATORS: {
+        string: {
+            Allow: ['StringEquals', 'StringEqualsIgnoreCase', 'StringLike'],
+            Deny: ['StringNotEquals', 'StringNotEqualsIgnoreCase', 'StringNotLike']
+        },
+        arn: {
+            Allow: ['ArnEquals', 'ArnLike'],
+            Deny: ['ArnNotEquals', 'ArnNotLike']
+        },
+        ipaddress: {
+            Allow: 'IpAddress',
+            Deny: 'NotIpAddress'
+        }
+    },
 };
 
 for (var s in shared) helpers[s] = shared[s];

@@ -32,7 +32,7 @@ module.exports = {
     settings: {
         s3_encryption_require_cmk: {
             name: 'S3 Encryption Require CMK',
-            description: 'When set to true S3 encryption using default KMS keys or AES will be marked as failing',
+            description: 'When set to true, S3 encryption using default KMS keys or AES will be marked as failing',
             regex: '^(true|false)$',
             default: 'false'
         },
@@ -50,7 +50,7 @@ module.exports = {
         },
         s3_encryption_allow_cloudfront: {
             name: 'S3 Encryption Allow CloudFront',
-            description: 'When set to true buckets that serve as CloudFront origins will not be required to have CMK encryption (which is unsupported by CloudFront).',
+            description: 'When set to true, buckets that serve as CloudFront origins will not be required to have CMK encryption (which is unsupported by CloudFront).',
             regex: '^(true|false)$',
             default: 'false'
         }

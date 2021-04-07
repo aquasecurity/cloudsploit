@@ -23,6 +23,35 @@ module.exports = {
         rollback: ['s3:PutBucketVersioning']
     },
     realtime_triggers: ['s3:CreateBucket', 's3:PutBucketVersioning'],
+    asl: {
+        conditions: [
+            {
+                service: 's3',
+                api: 'getBucketVersioning',
+                property: 'Status',
+                transform: 'STRING',
+                op: 'EXISTS',
+            },
+            {
+                service: 's3',
+                api: 'getBucketVersioning',
+                property: 'Status',
+                transform: 'STRING',
+                op: 'EQ',
+                value: 'Enabled',
+                logical: 'AND'
+            },
+            {
+                service: 's3',
+                api: 'getBucketVersioning',
+                property: 'Status',
+                transform: 'STRING',
+                op: 'MATCHES',
+                value: '^[A-Z]{1}[a-z]+$',
+                logical: 'AND'
+            }
+        ]
+    },
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

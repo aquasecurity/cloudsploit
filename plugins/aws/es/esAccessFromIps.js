@@ -12,7 +12,7 @@ module.exports = {
     settings: {
         whitelisted_ip_addresses: {
             name: 'Whitelisted IP Addresses',
-            description: 'Comma separated list of IP addresses allowed to access ES domains',
+            description: 'A comma-separated list of trusted IP addresses allowed to access ES domains',
             regex: '/^(?=.*[^.]$)((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).?){4}/([1-9]|1[0-9]){1}$/',
             default: ''
         }

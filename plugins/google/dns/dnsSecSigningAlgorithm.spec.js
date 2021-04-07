@@ -154,6 +154,39 @@ describe('dnsSecSigningAlgorithm', function () {
             plugin.run(cache, {}, callback);
         });
 
+        it('should give passing result if the managed zone does not have DNSSEC configuration', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('RSASHA1 algorithm is not being used for zone signing');
+                expect(results[0].region).to.equal('global');
+                done()
+            };
+
+            const cache = createCache(
+                null,
+                [
+                    {
+                        "name": "giotestdnszone1",
+                        "dnsName": "cloudsploit.com.",
+                        "description": "",
+                        "id": "4534388710135378441",
+                        "nameServers": [
+                            "ns-cloud-e1.googledomains.com.",
+                            "ns-cloud-e2.googledomains.com.",
+                            "ns-cloud-e3.googledomains.com.",
+                            "ns-cloud-e4.googledomains.com."
+                        ],
+                        "creationTime": "2019-10-03T21:11:18.894Z",
+                        "visibility": "public",
+                        "kind": "dns#managedZone"
+                    }
+                ]
+            );
+
+            plugin.run(cache, {}, callback);
+        });
+
         it('should give failing result if the managed zone has key signing using RSASHA1', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);

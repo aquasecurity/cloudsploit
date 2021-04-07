@@ -46,10 +46,10 @@ module.exports = {
             }
 
             var usedEbsVolumes = [];
-            if(describeInstances.data.length) {
+            if (describeInstances.data.length) {
                 describeInstances.data.forEach(function(instances) {
                     instances.Instances.forEach(function(instance) {
-                        if(instance.BlockDeviceMappings && instance.BlockDeviceMappings.length) {
+                        if (instance.BlockDeviceMappings && instance.BlockDeviceMappings.length) {
                             instance.BlockDeviceMappings.forEach(function(ebsMapping) {
                                 usedEbsVolumes.push(ebsMapping.Ebs.VolumeId);
                             });
@@ -61,12 +61,11 @@ module.exports = {
             describeVolumes.data.forEach(function(volume) {
                 if (volume.VolumeId) {
                     var volumeArn = 'arn:' + awsOrGov + ':ec2:' + region + ':' + accountId + ':volume/' + volume.VolumeId;
-                    if(!usedEbsVolumes.includes(volume.VolumeId)) {
+                    if (!usedEbsVolumes.includes(volume.VolumeId)) {
                         helpers.addResult(results, 2,
                             'EBS Volume is not attached to any EC2 instance',
                             region, volumeArn);
-                    }
-                    else {
+                    } else {
                         helpers.addResult(results, 0,
                             'EBS Volume is attached to an EC2 instance',
                             region, volumeArn);

@@ -8,10 +8,10 @@ module.exports = {
     more_info: 'SNS topics should enforce Server-Side Encryption (SSE) to secure data at rest. SSE protects the contents of messages in Amazon SNS topics using keys managed in AWS Key Management Service (AWS KMS).',
     recommended_action: 'Enable Server-Side Encryption to protect the content of SNS topic messages.',
     link: 'https://docs.aws.amazon.com/sns/latest/dg/sns-server-side-encryption.html',
-    apis: ['SNS:listTopics', 'SNS:getTopicAttributes'],
+    apis: ['SNS:listTopics', 'SNS:getTopicAttributes', 'KMS:listKeys', 'KMS:describeKey'],
     remediation_description: 'Server-Side Encryption to protect the content of SNS topic messages will be enabled.',
     remediation_min_version: '202011182332',
-    apis_remediate: ['SNS:listTopics', 'SNS:getTopicAttributes'],
+    apis_remediate: ['SNS:listTopics', 'SNS:getTopicAttributes', 'KMS:listKeys', 'KMS:describeKey'],
     remediation_inputs: {
         kmsKeyIdforSns: {
             name: '(Optional) KMS Key ID',
@@ -29,6 +29,18 @@ module.exports = {
         rollback: ['sns:SetTopicAttributes']
     },
     realtime_triggers: ['sns:CreateTopic', 'sns:SetTopicAttributes'],
+    asl: {
+        conditions: [
+            {
+                service: 'sns',
+                api: 'getTopicAttributes',
+                property: 'Attributes.KmsMasterKeyId',
+                transform: 'STRING',
+                op: 'NE',
+                value: null
+            }
+        ]
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -59,7 +71,7 @@ module.exports = {
                 var accountId = resource.split(':')[4];
                 var cloudsploitSNS = helpers.CLOUDSPLOIT_EVENTS_SNS + accountId;
 
-                if( resource.indexOf(cloudsploitSNS) > -1){
+                if ( resource.indexOf(cloudsploitSNS) > -1){
                     helpers.addResult(results, 0,
                         'This SNS topic is auto-allowed as part of a cross-account notification topic used by the real-time events service',
                         region, resource);
@@ -81,8 +93,7 @@ module.exports = {
                     helpers.addResult(results, 0,
                         'Server-Side Encryption is enabled for SNS topic',
                         region, resource);
-                } 
-                else {
+                } else {
                     helpers.addResult(results, 2,
                         'Server-Side Encryption is not enabled for SNS topic',
                         region, resource);
@@ -103,7 +114,7 @@ module.exports = {
         var pluginName = 'topicEncrypted';
         var topicNameArr = resource.split(':');
         var topicName = topicNameArr[topicNameArr.length - 1];
-
+        var defaultKeyDesc = 'Default master key that protects my SNS data when no other key is defined';
         // find the location of the topic needing to be remediate
         var topicLocation = topicNameArr[3];
         // add the location of the topic to the config
@@ -118,10 +129,12 @@ module.exports = {
                 AttributeValue: settings.input.kmsKeyIdforSns
             };
         } else {
+            var defaultKmsKeyId = helpers.getDefaultKeyId(cache, config.region, defaultKeyDesc);
+            if (!defaultKmsKeyId) return callback(`No default SNS key for the region ${config.region}`);
             params = {
                 AttributeName: 'KmsMasterKeyId',
                 TopicArn: resource,
-                AttributeValue: 'alias/aws/sns'
+                AttributeValue: defaultKmsKeyId
             };
         }
 

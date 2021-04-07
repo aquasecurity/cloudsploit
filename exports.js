@@ -4,7 +4,16 @@ module.exports = {
     aws : {
         'acmValidation'                 : require(__dirname + '/plugins/aws/acm/acmValidation.js'),
         'acmCertificateExpiry'          : require(__dirname + '/plugins/aws/acm/acmCertificateExpiry.js'),
+
+        'apigatewayCertificateRotation' : require(__dirname + '/plugins/aws/apigateway/apigatewayCertificateRotation.js'),
+        'apigatewayCloudwatchLogs'      : require(__dirname + '/plugins/aws/apigateway/apigatewayCloudwatchLogs.js'),
+        'apigatewayPrivateEndpoints'    : require(__dirname + '/plugins/aws/apigateway/apigatewayPrivateEndpoints.js'),
+        'apigatewayContentEncoding'     : require(__dirname + '/plugins/aws/apigateway/apigatewayContentEncoding.js'),
+        'apigatewayTracingEnabled'      : require(__dirname + '/plugins/aws/apigateway/apigatewayTracingEnabled.js'),
         'apigatewayWafEnabled'          : require(__dirname + '/plugins/aws/apigateway/apigatewayWafEnabled.js'),
+        'detailedCloudWatchMetrics'     : require(__dirname + '/plugins/aws/apigateway/detailedCloudWatchMetrics.js'),
+        'apigatewayClientCertificate'   : require(__dirname + '/plugins/aws/apigateway/apigatewayClientCertificate.js'),
+
         'asgMultiAz'                    : require(__dirname + '/plugins/aws/autoscaling/asgMultiAz.js'),
         'asgActiveNotifications'        : require(__dirname + '/plugins/aws/autoscaling/asgActiveNotifications.js'),
         'emptyASG'                      : require(__dirname + '/plugins/aws/autoscaling/emptyASG.js'),
@@ -13,13 +22,17 @@ module.exports = {
         'webTierAsgAssociatedElb'       : require(__dirname + '/plugins/aws/autoscaling/webTierAsgAssociatedElb.js'),
         'elbHealthCheckActive'          : require(__dirname + '/plugins/aws/autoscaling/elbHealthCheckActive.js'),
         'asgSuspendedProcesses'         : require(__dirname + '/plugins/aws/autoscaling/asgSuspendedProcesses.js'),
+        'appTierAsgApprovedAmi'         : require(__dirname + '/plugins/aws/autoscaling/appTierAsgApprovedAmi.js'),
+        'webTierAsgApprovedAmi'         : require(__dirname + '/plugins/aws/autoscaling/webTierAsgApprovedAmi.js'),
         'appTierAsgCloudwatchLogs'      : require(__dirname + '/plugins/aws/autoscaling/appTierAsgCloudwatchLogs.js'),
         'webTierAsgCloudwatchLogs'      : require(__dirname + '/plugins/aws/autoscaling/webTierAsgCloudwatchLogs.js'),
         'asgMissingSecurityGroups'      : require(__dirname + '/plugins/aws/autoscaling/asgMissingSecurityGroups.js'),
         'webTierIamRole'                : require(__dirname + '/plugins/aws/autoscaling/webTierIamRole.js'),
         'appTierIamRole'                : require(__dirname + '/plugins/aws/autoscaling/appTierIamRole.js'),
+
         'workgroupEncrypted'            : require(__dirname + '/plugins/aws/athena/workgroupEncrypted.js'),
         'workgroupEnforceConfiguration' : require(__dirname + '/plugins/aws/athena/workgroupEnforceConfiguration.js'),
+
         'publicS3Origin'                : require(__dirname + '/plugins/aws/cloudfront/publicS3Origin.js'),
         'secureOrigin'                  : require(__dirname + '/plugins/aws/cloudfront/secureOrigin.js'),
         'insecureProtocols'             : require(__dirname + '/plugins/aws/cloudfront/insecureProtocols.js'),
@@ -30,7 +43,11 @@ module.exports = {
         'volumeEncryption'              : require(__dirname + '/plugins/aws/comprehend/volumeEncryption.js'),
         'outputResultEncryption'        : require(__dirname + '/plugins/aws/comprehend/outputResultEncryption.js'),
 
-        'plainTextParameters'           :  require(__dirname + '/plugins/aws/cloudformation/plainTextParameters.js'),
+        'plainTextParameters'           : require(__dirname + '/plugins/aws/cloudformation/plainTextParameters.js'),
+        'stackFailedStatus'             : require(__dirname + '/plugins/aws/cloudformation/stackFailedStatus.js'),
+        'driftDetection'                :  require(__dirname + '/plugins/aws/cloudformation/driftDetection.js'),
+        'stackTerminationProtection'    : require(__dirname + '/plugins/aws/cloudformation/stackTerminationProtection.js'),
+        'stackNotifications'            : require(__dirname + '/plugins/aws/cloudformation/stackNotifications.js'),
 
         'cloudtrailBucketAccessLogging' : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailBucketAccessLogging.js'),
         'cloudtrailBucketDelete'        : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailBucketDelete.js'),
@@ -42,15 +59,19 @@ module.exports = {
         'cloudtrailToCloudwatch'        : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailToCloudwatch.js'),
         'cloudtrailBucketPrivate'       : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailBucketPrivate.js'),
         'cloudtrailDeliveryFailing'     : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailDeliveryFailing.js'),
+        'cloudtrailManagementEvents'    : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailManagementEvents.js'),
         'cloudtrailS3Bucket'            : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailS3Bucket.js'),
         'globalLoggingDuplicated'       : require(__dirname + '/plugins/aws/cloudtrail/globalLoggingDuplicated.js'),
 
         'configServiceEnabled'          : require(__dirname + '/plugins/aws/configservice/configServiceEnabled.js'),
 
+        'devOpsGuruNotificationEnabled' : require(__dirname + '/plugins/aws/devopsguru/devOpsGuruNotificationEnabled.js'),
+
         'dmsEncryptionEnabled'          : require(__dirname + '/plugins/aws/dms/dmsEncryptionEnabled.js'),
 
         'dynamoKmsEncryption'           : require(__dirname + '/plugins/aws/dynamodb/dynamoKmsEncryption.js'),
         'daxClusterEncryption'          : require(__dirname + '/plugins/aws/dynamodb/daxClusterEncryption.js'),
+        'dynamoContinuousBackups'       : require(__dirname + '/plugins/aws/dynamodb/dynamoContinuousBackups.js'),
 
         'appTierInstanceIamRole'        : require(__dirname + '/plugins/aws/ec2/appTierInstanceIamRole.js'),
         'defaultSecurityGroup'          : require(__dirname + '/plugins/aws/ec2/defaultSecurityGroup.js'),
@@ -97,6 +118,7 @@ module.exports = {
         'publicAmi'                     : require(__dirname + '/plugins/aws/ec2/publicAmi.js'),
         'encryptedAmi'                  : require(__dirname + '/plugins/aws/ec2/encryptedAmi.js'),
         'instanceIamRole'               : require(__dirname + '/plugins/aws/ec2/instanceIamRole.js'),
+        'ebsBackupEnabled'              : require(__dirname + '/plugins/aws/ec2/ebsBackupEnabled.js'),
         'ebsEncryptionEnabled'          : require(__dirname + '/plugins/aws/ec2/ebsEncryptionEnabled.js'),
         'ebsSnapshotLifecycle'          : require(__dirname + '/plugins/aws/ec2/ebsSnapshotLifecycle.js'),
         'ebsOldSnapshots'               : require(__dirname + '/plugins/aws/ec2/ebsOldSnapshots.js'),
@@ -109,7 +131,10 @@ module.exports = {
         'crossVpcPublicPrivate'         : require(__dirname + '/plugins/aws/ec2/crossVpcPublicPrivate.js'),
         'vpcEndpointAcceptance'         : require(__dirname + '/plugins/aws/ec2/vpcEndpointAcceptance'),
         'vpcEndpointExposed'            : require(__dirname + '/plugins/aws/ec2/vpcEndpointExposed.js'),
+        'vpcEndpointCrossAccount'       : require(__dirname + '/plugins/aws/ec2/vpcEndpointCrossAccount.js'),
+        'vpcPeeringConnections'         : require(__dirname + '/plugins/aws/ec2/vpcPeeringConnections.js'),
         'ebsEncryptedSnapshots'         : require(__dirname + '/plugins/aws/ec2/ebsEncryptedSnapshots.js'),
+        'ebsDefaultEncryptionEnabled'   : require(__dirname + '/plugins/aws/ec2/ebsDefaultEncryptionEnabled.js'), 
         'ec2MetadataOptions'            : require(__dirname + '/plugins/aws/ec2/ec2MetadataOptions.js'),
         'unusedEni'                     : require(__dirname + '/plugins/aws/ec2/unusedEni.js'),
         'unusedAmi'                     : require(__dirname + '/plugins/aws/ec2/unusedAmi.js'),
@@ -119,7 +144,10 @@ module.exports = {
         'ebsUnusedVolumes'              : require(__dirname + '/plugins/aws/ec2/ebsUnusedVolumes.js'),
         'publicIpAddress'               : require(__dirname + '/plugins/aws/ec2/publicIpAddress.js'),
         'unusedVirtualPrivateGateway'   : require(__dirname + '/plugins/aws/ec2/unusedVirtualPrivateGateway.js'),
+        'vpcSubnetInstancesPresent'     : require(__dirname + '/plugins/aws/ec2/vpcSubnetInstancesPresent.js'),
         'webTierInstanceIamRole'        : require(__dirname + '/plugins/aws/ec2/webTierInstanceIamRole.js'),
+        'vpnTunnelState'                : require(__dirname + '/plugins/aws/ec2/vpnTunnelState.js'),
+        'networkAclOutboundTraffic'     : require(__dirname + '/plugins/aws/ec2/networkAclOutboundTraffic.js'),
 
         'efsCmkEncrypted'               : require(__dirname + '/plugins/aws/efs/efsCmkEncrypted.js'),
         'efsEncryptionEnabled'          : require(__dirname + '/plugins/aws/efs/efsEncryptionEnabled.js'),
@@ -132,20 +160,26 @@ module.exports = {
         'eksKubernetesVersion'          : require(__dirname + '/plugins/aws/eks/eksKubernetesVersion.js'),
         'eksLoggingEnabled'             : require(__dirname + '/plugins/aws/eks/eksLoggingEnabled.js'),
         'eksPrivateEndpoint'            : require(__dirname + '/plugins/aws/eks/eksPrivateEndpoint.js'),
+        'eksSecretsEncrypted'           : require(__dirname + '/plugins/aws/eks/eksSecretsEncrypted.js'),
         'eksSecurityGroups'             : require(__dirname + '/plugins/aws/eks/eksSecurityGroups.js'),
 
+        'crosszoneLoadBalancing'        : require(__dirname + '/plugins/aws/elb/crosszoneLoadBalancing.js'),
         'insecureCiphers'               : require(__dirname + '/plugins/aws/elb/insecureCiphers.js'),
         'elbHttpsOnly'                  : require(__dirname + '/plugins/aws/elb/elbHttpsOnly.js'),
         'elbLoggingEnabled'             : require(__dirname + '/plugins/aws/elb/elbLoggingEnabled.js'),
         'elbNoInstances'                : require(__dirname + '/plugins/aws/elb/elbNoInstances.js'),
+        'classicELBInUse'               : require(__dirname + '/plugins/aws/elb/classicELBInUse.js'),
+        'connectionDrainingEnabled'     : require(__dirname + '/plugins/aws/elb/connectionDrainingEnabled.js'),
+        'appTierElbSecurity'            : require(__dirname + '/plugins/aws/elb/appTierElbSecurity.js'),
 
         'elbv2DeletionProtection'       : require(__dirname + '/plugins/aws/elbv2/elbv2DeletionProtection.js'),
-        'elbv2LoggingEnabled'             : require(__dirname + '/plugins/aws/elbv2/elbv2LoggingEnabled.js'),
-        'elbv2HttpsOnly'                  : require(__dirname + '/plugins/aws/elbv2/elbv2HttpsOnly.js'),
-        'elbv2NoInstances'                : require(__dirname + '/plugins/aws/elbv2/elbv2NoInstances.js'),
-        'elbv2WafEnabled'                 : require(__dirname + '/plugins/aws/elbv2/elbv2WafEnabled.js'),
-        'elbv2MinimumTargetInstances'    : require(__dirname + '/plugins/aws/elbv2/elbv2MinimumTargetInstances.js'),
+        'elbv2LoggingEnabled'           : require(__dirname + '/plugins/aws/elbv2/elbv2LoggingEnabled.js'),
+        'elbv2HttpsOnly'                : require(__dirname + '/plugins/aws/elbv2/elbv2HttpsOnly.js'),
+        'elbv2NoInstances'              : require(__dirname + '/plugins/aws/elbv2/elbv2NoInstances.js'),
+        'elbv2WafEnabled'               : require(__dirname + '/plugins/aws/elbv2/elbv2WafEnabled.js'),
+        'elbv2MinimumTargetInstances'   : require(__dirname + '/plugins/aws/elbv2/elbv2MinimumTargetInstances.js'),
         'elbv2NlbListenerSecurity'      : require(__dirname + '/plugins/aws/elbv2/elbv2NlbListenerSecurity.js'),
+        'elbv2DeregistrationDelay'      : require(__dirname + '/plugins/aws/elbv2/elbv2DeregistrationDelay.js'),
 
         'emrClusterLogging'             : require(__dirname + '/plugins/aws/emr/emrClusterLogging.js'),
         'emrEncryptionInTransit'        : require(__dirname + '/plugins/aws/emr/emrEncryptionInTransit.js'),
@@ -161,6 +195,12 @@ module.exports = {
         'esUpgradeAvailable'            : require(__dirname + '/plugins/aws/es/esUpgradeAvailable.js'),
         'esHttpsOnly'                   : require(__dirname + '/plugins/aws/es/esHttpsOnly.js'),
 
+        'glueCloudwatchLogsEncrypted'   : require(__dirname + '/plugins/aws/glue/glueCloudwatchLogsEncrypted.js'),
+        'glueS3EncryptionEnabled'       : require(__dirname + '/plugins/aws/glue/glueS3EncryptionEnabled.js'),
+        'dataCatalogCmkEncrypted'       : require(__dirname + '/plugins/aws/glue/dataCatalogCmkEncrypted.js'),
+        'bookmarkEncryptionEnabled'     : require(__dirname + '/plugins/aws/glue/bookmarkEncryptionEnabled.js'),
+        'dataCatalogEncryptionEnabled'  : require(__dirname + '/plugins/aws/glue/dataCatalogEncryptionEnabled.js'),
+
         'accessKeysExtra'               : require(__dirname + '/plugins/aws/iam/accessKeysExtra.js'),
         'accessKeysLastUsed'            : require(__dirname + '/plugins/aws/iam/accessKeysLastUsed.js'),
         'accessKeysRotated'             : require(__dirname + '/plugins/aws/iam/accessKeysRotated.js'),
@@ -168,6 +208,7 @@ module.exports = {
         'crossAccountMfaExtIdAccess'    : require(__dirname + '/plugins/aws/iam/crossAccountMfaExtIdAccess.js'),
         'emptyGroups'                   : require(__dirname + '/plugins/aws/iam/emptyGroups.js'),
         'groupInlinePolicies'           : require(__dirname + '/plugins/aws/iam/groupInlinePolicies.js'),
+        'iamMasterManagerRoles'         : require(__dirname + '/plugins/aws/iam/iamMasterManagerRoles.js'),
         'iamUserAdmins'                 : require(__dirname + '/plugins/aws/iam/iamUserAdmins.js'),
         'iamUserNameRegex'              : require(__dirname + '/plugins/aws/iam/iamUserNameRegex.js'),
         'iamUserUnauthorizedToEdit'     : require(__dirname + '/plugins/aws/iam/iamUserUnauthorizedToEdit'),
@@ -188,6 +229,7 @@ module.exports = {
         'rootHardwareMfa'               : require(__dirname + '/plugins/aws/iam/rootHardwareMfa.js'),
         'rootMfaEnabled'                : require(__dirname + '/plugins/aws/iam/rootMfaEnabled.js'),
         'sshKeysRotated'                : require(__dirname + '/plugins/aws/iam/sshKeysRotated.js'),
+        'trustedCrossAccountRoles'      : require(__dirname + '/plugins/aws/iam/trustedCrossAccountRoles.js'),
         'usersMfaEnabled'               : require(__dirname + '/plugins/aws/iam/usersMfaEnabled.js'),
         'usersPasswordAndKeys'          : require(__dirname + '/plugins/aws/iam/usersPasswordAndKeys.js'),
         'usersPasswordLastUsed'         : require(__dirname + '/plugins/aws/iam/usersPasswordLastUsed.js'),
@@ -200,6 +242,7 @@ module.exports = {
         'kmsDefaultKeyUsage'            : require(__dirname + '/plugins/aws/kms/kmsDefaultKeyUsage.js'),
         'kmsAppTierCmk'                 : require(__dirname + '/plugins/aws/kms/kmsAppTierCmk.js'),
 
+        'iamDbAuthenticationEnabled'    : require(__dirname + '/plugins/aws/rds/iamDbAuthenticationEnabled.js'),
         'rdsAutomatedBackups'           : require(__dirname + '/plugins/aws/rds/rdsAutomatedBackups.js'),
         'rdsEncryptionEnabled'          : require(__dirname + '/plugins/aws/rds/rdsEncryptionEnabled.js'),
         'rdsCmkEncryptionEnabled'       : require(__dirname + '/plugins/aws/rds/rdsCmkEncryptionEnabled.js'),
@@ -211,6 +254,7 @@ module.exports = {
         'rdsMinorVersionUpgrade'        : require(__dirname + '/plugins/aws/rds/rdsMinorVersionUpgrade.js'),
         'sqlServerTLSVersion'           : require(__dirname + '/plugins/aws/rds/sqlServerTLSVersion'),
         'rdsTransportEncryption'        : require(__dirname + '/plugins/aws/rds/rdsTransportEncryption'),
+        'rdsDeletionProtectionEnabled'  : require(__dirname + '/plugins/aws/rds/rdsDeletionProtectionEnabled.js'),
 
         'domainAutoRenew'               : require(__dirname + '/plugins/aws/route53/domainAutoRenew.js'),
         'domainExpiry'                  : require(__dirname + '/plugins/aws/route53/domainExpiry.js'),
@@ -220,6 +264,7 @@ module.exports = {
         'bucketEncryptionInTransit'     : require(__dirname + '/plugins/aws/s3/bucketEncryptionInTransit.js'),
         'bucketAllUsersPolicy'          : require(__dirname + '/plugins/aws/s3/bucketAllUsersPolicy.js'),
         'bucketAllUsersAcl'             : require(__dirname + '/plugins/aws/s3/bucketAllUsersAcl.js'),
+        'bucketPolicyCloudFrontOai'     : require(__dirname + '/plugins/aws/s3/bucketPolicyCloudFrontOai.js'),
         'bucketVersioning'              : require(__dirname + '/plugins/aws/s3/bucketVersioning.js'),
         'bucketLogging'                 : require(__dirname + '/plugins/aws/s3/bucketLogging.js'),
         's3Encryption'                  : require(__dirname + '/plugins/aws/s3/s3Encryption.js'),
@@ -228,6 +273,9 @@ module.exports = {
         'bucketWebsiteEnabled'          : require(__dirname + '/plugins/aws/s3/bucketWebsiteEnabled.js'),
         'bucketEnforceEncryption'       : require(__dirname + '/plugins/aws/s3/bucketEnforceEncryption.js'),
         'bucketSecureTransportEnabled'  : require(__dirname + '/plugins/aws/s3/bucketSecureTransportEnabled.js'),
+        'bucketLifecycleConfiguration'  : require(__dirname + '/plugins/aws/s3/bucketLifecycleConfiguration'),
+        'bucketTransferAcceleration'    : require(__dirname + '/plugins/aws/s3/bucketTransferAcceleration'),
+        'bucketDnsCompliantName'        : require(__dirname + '/plugins/aws/s3/bucketDnsCompliantName.js'),
 
         'notebookDataEncrypted'         : require(__dirname + '/plugins/aws/sagemaker/notebookDataEncrypted.js'),
         'notebookDirectInternetAccess'  : require(__dirname + '/plugins/aws/sagemaker/notebookDirectInternetAccess.js'),
@@ -238,30 +286,50 @@ module.exports = {
         'topicPolicies'                 : require(__dirname + '/plugins/aws/sns/topicPolicies.js'),
         'topicCmkEncrypted'             : require(__dirname + '/plugins/aws/sns/topicCmkEncrypted.js'),
         'sqsCrossAccount'               : require(__dirname + '/plugins/aws/sqs/sqsCrossAccount.js'),
+        'sqsDeadLetterQueue'            : require(__dirname + '/plugins/aws/sqs/sqsDeadLetterQueue.js'),
         'sqsEncrypted'                  : require(__dirname + '/plugins/aws/sqs/sqsEncrypted.js'),
         'sqsPublicAccess'               : require(__dirname + '/plugins/aws/sqs/sqsPublicAccess.js'),
+        'queueUnprocessedMessages'      : require(__dirname + '/plugins/aws/sqs/queueUnprocessedMessages.js'),
 
         'ssmEncryptedParameters'        : require(__dirname + '/plugins/aws/ssm/ssmEncryptedParameters.js'),
         'ssmActiveOnAllInstances'       : require(__dirname + '/plugins/aws/ssm/ssmActiveOnAllInstances.js'),
         'ssmAgentLatestVersion'         : require(__dirname + '/plugins/aws/ssm/ssmAgentLatestVersion.js'),
         'ssmAgentAutoUpdateEnabled'     : require(__dirname + '/plugins/aws/ssm/ssmAgentAutoUpdateEnabled'),
 
+
+        'lambdaAdminPrivileges'         : require(__dirname + '/plugins/aws/lambda/lambdaAdminPrivileges.js'),
+        'envVarsClientSideEncryption'   : require(__dirname + '/plugins/aws/lambda/envVarsClientSideEncryption.js'),
         'lambdaOldRuntimes'             : require(__dirname + '/plugins/aws/lambda/lambdaOldRuntimes.js'),
         'lambdaVpcConfig'               : require(__dirname + '/plugins/aws/lambda/lambdaVpcConfig.js'),
         'lambdaPublicAccess'            : require(__dirname + '/plugins/aws/lambda/lambdaPublicAccess.js'),
         'lambdaLogGroups'               : require(__dirname + '/plugins/aws/lambda/lambdaLogGroups.js'),
+        'lambdaTracingEnabled'          : require(__dirname + '/plugins/aws/lambda/lambdaTracingEnabled.js'),
+
+        'webServerPublicAccess'         : require(__dirname + '/plugins/aws/mwaa/webServerPublicAccess.js'),
+        'environmentAdminPrivileges'    : require(__dirname + '/plugins/aws/mwaa/environmentAdminPrivileges.js'),
 
         'monitoringMetrics'             : require(__dirname + '/plugins/aws/cloudwatchlogs/monitoringMetrics.js'),
+        'logRetentionPeriod'            : require(__dirname + '/plugins/aws/cloudwatchlogs/logRetentionPeriod.js'),
 
-        'auditLoggingEnabled'            : require(__dirname + '/plugins/aws/redshift/auditLoggingEnabled.js'),
+        'auditLoggingEnabled'           : require(__dirname + '/plugins/aws/redshift/auditLoggingEnabled.js'),
         'redshiftClusterCmkEncrypted'   : require(__dirname + '/plugins/aws/redshift/redshiftClusterCmkEncrypted.js'),
         'redshiftEncryptionEnabled'     : require(__dirname + '/plugins/aws/redshift/redshiftEncryptionEnabled.js'),
         'redshiftPubliclyAccessible'    : require(__dirname + '/plugins/aws/redshift/redshiftPubliclyAccessible.js'),
         'redshiftAllowVersionUpgrade'   : require(__dirname + '/plugins/aws/redshift/redshiftAllowVersionUpgrade.js'),
         'redshiftSSLEnabled'            : require(__dirname + '/plugins/aws/redshift/redshiftSSLEnabled.js'),
+        'redshiftClusterInVpc'          : require(__dirname + '/plugins/aws/redshift/redshiftClusterInVpc.js'),
+        'redshiftClusterDefaultPort'    : require(__dirname + '/plugins/aws/redshift/redshiftClusterDefaultPort.js'),
+        'redshiftClusterMasterUsername' : require(__dirname + '/plugins/aws/redshift/redshiftClusterMasterUsername.js'),
+        'snapshotRetentionPeriod'       : require(__dirname + '/plugins/aws/redshift/snapshotRetentionPeriod.js'),
         'userActivityLoggingEnabled'    : require(__dirname + '/plugins/aws/redshift/userActivityLoggingEnabled.js'),
+        'redshiftNodesCount'            : require(__dirname + '/plugins/aws/redshift/redshiftNodesCount.js'),
+        'redshiftUnusedReservedNodes'   : require(__dirname + '/plugins/aws/redshift/redshiftUnusedReservedNodes.js'),
+        'redshiftDesiredNodeType'       : require(__dirname + '/plugins/aws/redshift/redshiftDesiredNodeType.js'),
 
         'transferLoggingEnabled'        : require(__dirname + '/plugins/aws/transfer/transferLoggingEnabled.js'),
+
+        'secretRotationEnabled'         : require(__dirname + '/plugins/aws/secretsmanager/secretRotationEnabled.js'),
+        'secretsManagerEncrypted'       : require(__dirname + '/plugins/aws/secretsmanager/secretsManagerEncrypted.js'),
 
         'shieldAdvancedEnabled'         : require(__dirname + '/plugins/aws/shield/shieldAdvancedEnabled.js'),
         'shieldEmergencyContacts'       : require(__dirname + '/plugins/aws/shield/shieldEmergencyContacts.js'),
@@ -271,6 +339,9 @@ module.exports = {
         'organizationInvite'            : require(__dirname + '/plugins/aws/organizations/organizationInvite.js'),
         'guardDutyEnabled'              : require(__dirname + '/plugins/aws/guardduty/guarddutyEnabled.js'),
         'guardDutyMaster'               : require(__dirname + '/plugins/aws/guardduty/guarddutyMaster.js'),
+
+        'workspacesVolumeEncryption'    : require(__dirname + '/plugins/aws/workspaces/workspacesVolumeEncryption.js'),
+        'workspacesIpAccessControl'     : require(__dirname + '/plugins/aws/workspaces/workspacesIpAccessControl.js'),
 
         'xrayEncryptionEnabled'         : require(__dirname + '/plugins/aws/xray/xrayEncryptionEnabled.js'),
     },
@@ -284,6 +355,7 @@ module.exports = {
         'storageAccountsAADEnabled'     : require(__dirname + '/plugins/azure/storageaccounts/storageAccountsAADEnabled.js'),
         'blobServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/blobServiceEncryption.js'),
         'trustedMsAccessEnabled'        : require(__dirname + '/plugins/azure/storageaccounts/trustedMsAccessEnabled.js'),
+        'blobSoftDeletionEnabled'       : require(__dirname + '/plugins/azure/storageaccounts/blobSoftDeletionEnabled.js'),
 
         'blobContainersPrivateAccess'   : require(__dirname + '/plugins/azure/blobservice/blobContainersPrivateAccess.js'),
         'blobServiceImmutable'          : require(__dirname + '/plugins/azure/blobservice/blobServiceImmutable.js'),
@@ -293,6 +365,7 @@ module.exports = {
         'queueServiceAllAccessAcl'      : require(__dirname + '/plugins/azure/queueservice/queueServiceAllAccessAcl.js'),
 
         'multipleSubnets'               : require(__dirname + '/plugins/azure/virtualnetworks/multipleSubnets.js'),
+        'ddosStandardProtectionEnabled' : require(__dirname + '/plugins/azure/virtualnetworks/ddosStandardProtectionEnabled.js'),
 
         'vmInstanceLimit'               : require(__dirname + '/plugins/azure/virtualmachines/vmInstanceLimit.js'),
         'classicInstances'              : require(__dirname + '/plugins/azure/virtualmachines/classicInstances.js'),
@@ -349,6 +422,9 @@ module.exports = {
         'logConnectionsEnabled'         : require(__dirname + '/plugins/azure/postgresqlserver/logConnectionsEnabled.js'),
         'logCheckpointsEnabled'         : require(__dirname + '/plugins/azure/postgresqlserver/logCheckpointsEnabled.js'),
         'enforcePostgresSSLConnection'  : require(__dirname + '/plugins/azure/postgresqlserver/enforcePostgresSSLConnection.js'),
+        'storageAutoGrowthEnabled'      : require(__dirname + '/plugins/azure/postgresqlserver/storageAutoGrowthEnabled.js'),
+        'activeDirectoryAdminEnabled'   : require(__dirname + '/plugins/azure/postgresqlserver/activeDirectoryAdminEnabled.js'),
+        'geoRedundantBackupEnabled'     : require(__dirname + '/plugins/azure/postgresqlserver/geoRedundantBackupEnabled.js'),
 
         'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/azure/networksecuritygroups/openOracleAutoDataWarehouse.js'),
         'networkWatcherEnabled'         : require(__dirname + '/plugins/azure/networksecuritygroups/networkWatcherEnabled.js'),
@@ -389,6 +465,7 @@ module.exports = {
         'auditActionGroupsEnabled'      : require(__dirname + '/plugins/azure/sqlserver/auditActionGroupsEnabled.js'),
         'serverAuditingEnabled'         : require(__dirname + '/plugins/azure/sqlserver/serverAuditingEnabled.js'),
         'azureADAdminEnabled'           : require(__dirname + '/plugins/azure/sqlserver/azureADAdminEnabled.js'),
+        'sqlServerTlsVersion'           : require(__dirname + '/plugins/azure/sqlserver/sqlServerTlsVersion.js'),
 
         'javaVersion'                   : require(__dirname + '/plugins/azure/appservice/javaVersion.js'),
         'phpVersion'                    : require(__dirname + '/plugins/azure/appservice/phpVersion.js'),
@@ -428,6 +505,10 @@ module.exports = {
         'kvRecoveryEnabled'             : require(__dirname + '/plugins/azure/keyvaults/kvRecoveryEnabled.js'),
         'keyExpirationEnabled'          : require(__dirname + '/plugins/azure/keyvaults/keyExpirationEnabled.js'),
         'secretExpirationEnabled'       : require(__dirname + '/plugins/azure/keyvaults/secretExpirationEnabled.js'),
+
+        'advancedThreatProtection'      : require(__dirname + '/plugins/azure/cosmosdb/advancedThreatProtection.js'),
+        'cosmosPublicAccessDisabled'    : require(__dirname + '/plugins/azure/cosmosdb/cosmosPublicAccessDisabled.js'),
+        'automaticFailoverEnabled'      : require(__dirname + '/plugins/azure/cosmosdb/automaticFailoverEnabled.js'),
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
@@ -519,6 +600,7 @@ module.exports = {
     },
     google: {
         'excessiveFirewallRules'        : require(__dirname + '/plugins/google/vpcnetwork/excessiveFirewallRules.js'),
+        'openCassandra'                 : require(__dirname + '/plugins/google/vpcnetwork/openCassandra.js'),
         'openDNS'                       : require(__dirname + '/plugins/google/vpcnetwork/openDNS.js'),
         'openDocker'                    : require(__dirname + '/plugins/google/vpcnetwork/openDocker.js'),
         'openSSH'                       : require(__dirname + '/plugins/google/vpcnetwork/openSSH.js'),
@@ -528,11 +610,14 @@ module.exports = {
         'openHadoopNameNode'            : require(__dirname + '/plugins/google/vpcnetwork/openHadoopNameNode.js'),
         'openHadoopNameNodeWebUI'       : require(__dirname + '/plugins/google/vpcnetwork/openHadoopNameNodeWebUI.js'),
         'openKibana'                    : require(__dirname + '/plugins/google/vpcnetwork/openKibana.js'),
+        'openMongo'                     : require(__dirname + '/plugins/google/vpcnetwork/openMongo.js'),
+        'openMsSQL'                     : require(__dirname + '/plugins/google/vpcnetwork/openMsSQL.js'),
         'openMySQL'                     : require(__dirname + '/plugins/google/vpcnetwork/openMySQL.js'),
         'openNetBIOS'                   : require(__dirname + '/plugins/google/vpcnetwork/openNetBIOS.js'),
         'openOracle'                    : require(__dirname + '/plugins/google/vpcnetwork/openOracle.js'),
         'openPostgreSQL'                : require(__dirname + '/plugins/google/vpcnetwork/openPostgreSQL.js'),
         'openRDP'                       : require(__dirname + '/plugins/google/vpcnetwork/openRDP.js'),
+        'openRedis'                     : require(__dirname + '/plugins/google/vpcnetwork/openRedis.js'),
         'openRPC'                       : require(__dirname + '/plugins/google/vpcnetwork/openRPC.js'),
         'openSalt'                      : require(__dirname + '/plugins/google/vpcnetwork/openSalt.js'),
         'openSMBoTCP'                   : require(__dirname + '/plugins/google/vpcnetwork/openSMBoTCP.js'),
@@ -569,6 +654,7 @@ module.exports = {
         'bucketVersioning'              : require(__dirname + '/plugins/google/storage/bucketVersioning.js'),
         'bucketLogging'                 : require(__dirname + '/plugins/google/storage/bucketLogging.js'),
         'bucketAllUsersPolicy'          : require(__dirname + '/plugins/google/storage/bucketAllUsersPolicy.js'),
+        'bucketRetentionPolicy'         : require(__dirname + '/plugins/google/storage/bucketRetentionPolicy.js'),
 
         'clbHttpsOnly'                  : require(__dirname + '/plugins/google/clb/clbHttpsOnly.js'),
         'clbNoInstances'                : require(__dirname + '/plugins/google/clb/clbNoInstances.js'),
@@ -601,6 +687,7 @@ module.exports = {
         'podSecurityPolicyEnabled'      : require(__dirname + '/plugins/google/kubernetes/podSecurityPolicyEnabled.js'),
         'privateClusterEnabled'         : require(__dirname + '/plugins/google/kubernetes/privateClusterEnabled.js'),
         'basicAuthenticationDisabled'   : require(__dirname + '/plugins/google/kubernetes/basicAuthenticationDisabled.js'),
+        'kubernetesAlphaDisabled'       : require(__dirname + '/plugins/google/kubernetes/kubernetesAlphaDisabled.js'),
 
         'dnsSecEnabled'                 : require(__dirname + '/plugins/google/dns/dnsSecEnabled.js'),
         'dnsSecSigningAlgorithm'        : require(__dirname + '/plugins/google/dns/dnsSecSigningAlgorithm.js'),

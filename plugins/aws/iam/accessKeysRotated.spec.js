@@ -1,6 +1,13 @@
 var expect = require('chai').expect;
 const accessKeysRotated = require('./accessKeysRotated');
 
+var warnDate = new Date();
+warnDate.setMonth(warnDate.getMonth() - 4);
+var passDate = new Date();
+passDate.setMonth(passDate.getMonth() - 2);
+var failDate = new Date();
+failDate.setMonth(failDate.getMonth() - 7);
+
 const generateCredentialReport = [
     {
         "user": "<root_account>",
@@ -12,7 +19,7 @@ const generateCredentialReport = [
         "password_next_rotation": "not_supported",
         "mfa_active": false,
         "access_key_1_active": true,
-        "access_key_1_last_rotated": "2020-08-18T14:36:56+00:00",
+        "access_key_1_last_rotated": "2020-08-18T15:24:00+00:00",
         "access_key_1_last_used_date": "2020-08-18T15:24:00+00:00",
         "access_key_1_last_used_region": "us-east-1",
         "access_key_1_last_used_service": "iam",
@@ -36,12 +43,12 @@ const generateCredentialReport = [
         "password_next_rotation": null,
         "mfa_active": false,
         "access_key_1_active": true,
-        "access_key_1_last_rotated": "2020-09-12T16:58:34+00:00",
+        "access_key_1_last_rotated": warnDate,
         "access_key_1_last_used_date": "2020-10-13T16:14:00+00:00",
         "access_key_1_last_used_region": "us-east-1",
         "access_key_1_last_used_service": "kms",
         "access_key_2_active": true,
-        "access_key_2_last_rotated": "2020-10-13T16:14:00+00:00",
+        "access_key_2_last_rotated": warnDate,
         "access_key_2_last_used_date": "2020-10-13T16:14:00+00:00",
         "access_key_2_last_used_region": null,
         "access_key_2_last_used_service": null,
@@ -60,12 +67,12 @@ const generateCredentialReport = [
         "password_next_rotation": null,
         "mfa_active": false,
         "access_key_1_active": true,
-        "access_key_1_last_rotated": "2020-07-13T16:14:00+00:00",
+        "access_key_1_last_rotated": passDate,
         "access_key_1_last_used_date": "2020-07-13T16:14:00+00:00",
         "access_key_1_last_used_region": "us-east-1",
         "access_key_1_last_used_service": "kms",
         "access_key_2_active": true,
-        "access_key_2_last_rotated": "2020-07-13T16:14:00+00:00",
+        "access_key_2_last_rotated": passDate,
         "access_key_2_last_used_date": "2020-07-13T16:14:00+00:00",
         "access_key_2_last_used_region": null,
         "access_key_2_last_used_service": null,
@@ -84,12 +91,12 @@ const generateCredentialReport = [
         "password_next_rotation": null,
         "mfa_active": false,
         "access_key_1_active": true,
-        "access_key_1_last_rotated": "2020-02-12T16:58:34+00:00",
+        "access_key_1_last_rotated": failDate,
         "access_key_1_last_used_date": "2020-02-13T16:14:00+00:00",
         "access_key_1_last_used_region": "us-east-1",
         "access_key_1_last_used_service": "kms",
         "access_key_2_active": true,
-        "access_key_2_last_rotated": "2020-02-13T16:14:00+00:00",
+        "access_key_2_last_rotated": failDate,
         "access_key_2_last_used_date": "2020-02-13T16:14:00+00:00",
         "access_key_2_last_used_region": null,
         "access_key_2_last_used_service": null,
@@ -139,10 +146,10 @@ const createNullCache = () => {
 describe('accessKeysRotated', function () {
     describe('run', function () {
         it('should PASS if the user access key was last rotated within the pass limit', function (done) {
-            const cache = createCache([generateCredentialReport[0],generateCredentialReport[0],generateCredentialReport[1]]);
+            const cache = createCache([generateCredentialReport[0], generateCredentialReport[2]]);
             var settings = {
-                access_keys_last_rotated_fail: 180,
-                access_keys_last_rotated_warn: 90
+                access_keys_rotated_fail: 180,
+                access_keys_rotated_warn: 90
             };
             accessKeysRotated.run(cache, settings, (err, results) => {
                 expect(results.length).to.equal(2);
@@ -153,10 +160,10 @@ describe('accessKeysRotated', function () {
         });
 
         it('should WARN if the user access key was last rotated within the warn limit', function (done) {
-            const cache = createCache([generateCredentialReport[0],generateCredentialReport[0],generateCredentialReport[2]]);
+            const cache = createCache([generateCredentialReport[0], generateCredentialReport[1]]);
             var settings = {
-                access_keys_last_rotated_fail: 180,
-                access_keys_last_rotated_warn: 90
+                access_keys_rotated_fail: 180,
+                access_keys_rotated_warn: 80
             };
             accessKeysRotated.run(cache, settings, (err, results) => {
                 expect(results.length).to.equal(2);
@@ -169,8 +176,8 @@ describe('accessKeysRotated', function () {
         it('should FAIL if the user access key was last rotated more than the fail limit', function (done) {
             const cache = createCache([generateCredentialReport[0],generateCredentialReport[0],generateCredentialReport[3]]);
             var settings = {
-                access_keys_last_rotated_fail: 180,
-                access_keys_last_rotated_warn: 90
+                access_keys_rotated_fail: 180,
+                access_keys_rotated_warn: 90
             };
             accessKeysRotated.run(cache, settings, (err, results) => {
                 expect(results.length).to.equal(2);

@@ -46,6 +46,18 @@ module.exports = {
             default: 14
         }
     },
+    asl: {
+        conditions: [
+            {
+                service: 'iam',
+                api: 'getAccountPasswordPolicy',
+                property: 'MinimumPasswordLength',
+                transform: 'INTEGER',
+                op: 'GT',
+                value: 90
+            }
+        ]
+    },
 
     run: function(cache, settings, callback) {
         var config = {

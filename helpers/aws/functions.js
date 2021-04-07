@@ -67,10 +67,10 @@ function findOpenPorts(groups, ports, service, region, results) {
     var found = false;
 
     for (var g in groups) {
-        var strings = [];
-        var resource = 'arn:aws:ec2:' + region + ':' +
-                       groups[g].OwnerId + ':security-group/' +
-                       groups[g].GroupId;
+        var string;
+        var openV4Ports = [];
+        var openV6Ports = [];
+        var resource = `arn:aws:ec2:${region}:${groups[g].OwnerId}:security-group/${groups[g].GroupId}`;
 
         for (var p in groups[g].IpPermissions) {
             var permission = groups[g].IpPermissions[p];
@@ -81,12 +81,26 @@ function findOpenPorts(groups, ports, service, region, results) {
                 if (range.CidrIp === '0.0.0.0/0' && ports[permission.IpProtocol]) {
                     for (var portIndex in ports[permission.IpProtocol]) {
                         var port = ports[permission.IpProtocol][portIndex];
+                        if (port.toString().indexOf('-') > -1) {
+                            var portRange = port.split('-');
+                            var rangeFrom = Number(portRange[0]);
+                            var rangeTo = Number(portRange[1]);
 
-                        if (permission.FromPort <= port && permission.ToPort >= port) {
-                            var string = permission.IpProtocol.toUpperCase() +
-                                ' port ' + port + ' open to 0.0.0.0/0';
-                            if (strings.indexOf(string) === -1) strings.push(string);
-                            found = true;
+                            for (let i = rangeFrom; i <= rangeTo; i++) {
+                                if (permission.FromPort <= i && permission.ToPort >= i) {
+                                    string = `some of ${permission.IpProtocol.toUpperCase()}:${port}`;
+                                    openV4Ports.push(string);
+                                    found = true;
+                                    break;
+                                }
+                            }
+                        } else {
+                            port = Number(port);
+                            if (permission.FromPort <= port && permission.ToPort >= port) {
+                                string = `${permission.IpProtocol.toUpperCase()}:${port}`;
+                                if (openV4Ports.indexOf(string) === -1) openV4Ports.push(string);
+                                found = true;
+                            }
                         }
                     }
                 }
@@ -98,24 +112,48 @@ function findOpenPorts(groups, ports, service, region, results) {
                 if (rangeV6.CidrIpv6 === '::/0' && ports[permission.IpProtocol]) {
                     for (var portIndexV6 in ports[permission.IpProtocol]) {
                         var portV6 = ports[permission.IpProtocol][portIndexV6];
+                        if (portV6.toString().indexOf('-') > -1) {
+                            var portRangeV6 = Number(portV6.split('-'));
+                            var rangeFromV6 = Number(portRangeV6[0]);
+                            var rangeToV6 = portRangeV6[1];
 
-                        if (permission.FromPort <= portV6 && permission.ToPort >= portV6) {
-                            var stringV6 = permission.IpProtocol.toUpperCase() +
-                                ' port ' + portV6 + ' open to ::/0';
-                            if (strings.indexOf(stringV6) === -1) strings.push(stringV6);
-                            found = true;
+                            for (let i = rangeFromV6; i <= rangeToV6; i++) {
+                                if (permission.FromPort <= i && permission.ToPort >= i) {
+                                    string = `some of ${permission.IpProtocol.toUpperCase()}:${portV6}`;
+                                    openV6Ports.push(string);
+                                    found = true;
+                                    break;
+                                }
+                            }
+                        } else {
+                            portV6 = Number(portV6);
+                            if (permission.FromPort <= portV6 && permission.ToPort >= portV6) {
+                                var stringV6 = `${permission.IpProtocol.toUpperCase()}:${portV6}`;
+                                if (openV6Ports.indexOf(stringV6) === -1) openV6Ports.push(stringV6);
+                                found = true;
+                            }
                         }
                     }
                 }
             }
         }
 
-        if (strings.length) {
-            addResult(results, 2,
-                'Security group: ' + groups[g].GroupId +
-                ' (' + groups[g].GroupName +
-                ') has ' + service + ': ' + strings.join(' and '), region,
-                resource);
+        if (openV4Ports.length || openV6Ports.length) {
+            var resultsString = '';
+            if (openV4Ports.length) {
+                resultsString = `Security group: ${groups[g].GroupId} (${groups[g].GroupName}) has ${service}:${openV4Ports.join(' and ')} open to 0.0.0.0/0`;
+            }
+
+            if (openV6Ports.length) {
+                if (resultsString.length) {
+                    resultsString = `${resultsString} and ${openV6Ports.join(' and ')} open to ::/0`;
+                } else {
+                    resultsString = `Security group: ${groups[g].GroupId} (${groups[g].GroupName}) has ${service}:${openV6Ports.join(' and ')} open to ::/0`;
+                }
+            }
+
+            addResult(results, 2, resultsString,
+                region, resource);
         }
     }
 
@@ -184,7 +222,7 @@ function globalPrincipal(principal) {
     }
 
     var awsPrincipals = principal.AWS;
-    if(!Array.isArray(awsPrincipals)) {
+    if (!Array.isArray(awsPrincipals)) {
         awsPrincipals = [awsPrincipals];
     }
 
@@ -205,23 +243,183 @@ function userGlobalAccess(statement, restrictedPermissions) {
     return false;
 }
 
-function crossAccountPrincipal(principal, accountId) {
+function crossAccountPrincipal(principal, accountId, fetchPrincipals) {
     if (typeof principal === 'string' &&
         /^[0-9]{12}$/.test(principal) &&
         principal !== accountId) {
+        if (fetchPrincipals) return [principal];
         return true;
     }
 
     var awsPrincipals = principal.AWS;
-    if(!Array.isArray(awsPrincipals)) {
+    if (!Array.isArray(awsPrincipals)) {
         awsPrincipals = [awsPrincipals];
     }
 
+    var principals = [];
+
     for (var a in awsPrincipals) {
-        if (/^arn:aws:iam::[0-9]{12}.*/.test(awsPrincipals[a]) &&
+        if (/^arn:aws:(iam|sts)::[0-9]{12}.*/.test(awsPrincipals[a]) &&
             awsPrincipals[a].indexOf(accountId) === -1) {
-            return true;
+            if (!fetchPrincipals) return true;
+            principals.push(awsPrincipals[a]);
         }
+    }
+
+    if (fetchPrincipals) return principals;
+    return false;
+}
+
+function hasFederatedUserRole(policyDocument) {
+    // true iff every statement refers to federated user access 
+    for (let statement of policyDocument) {
+        if (statement.Action &&
+            !statement.Action.includes('sts:AssumeRoleWithSAML') &&
+            !statement.Action.includes('sts:AssumeRoleWithWebIdentity')){
+            return false;
+        }
+    }
+    return true;
+}
+
+function extractStatementPrincipals(statement) {
+    let response = [];
+    if (statement.Principal) {
+        let principal = statement.Principal;
+        
+        if (typeof principal === 'string') {
+            return [principal];
+        }
+
+        var awsPrincipals = principal.AWS;
+        if (!Array.isArray(awsPrincipals)) {
+            awsPrincipals = [awsPrincipals];
+        }
+
+        response.push.apply(response, awsPrincipals);
+    }
+
+    return response;
+}
+
+function getDenyPermissionsMap(statements, excludeStatementId) {
+    let permissionsMap = {};
+
+    for (let statement of statements) {
+        if ((statement.Sid && statement.Sid == excludeStatementId) || (statement.Effect && statement.Effect.toUpperCase() !== 'DENY')) continue;
+
+        let principals = extractStatementPrincipals(statement);
+        principals.forEach(principal => {
+            let permissionsObj = JSON.parse(JSON.stringify(getDenyActionResourceMap([statement])));
+            if (permissionsMap[principal]) permissionsMap[principal] = {...permissionsMap[principal], ...permissionsObj};
+            else permissionsMap[principal] = permissionsObj;
+        });
+    }
+
+    return permissionsMap;
+}
+
+function getDenyActionResourceMap(statements, excludeStatementId) {
+    let denyActionResourceMap = {};
+    for (let statement of statements) {
+        if (statement.Sid && statement.Sid != excludeStatementId &&
+            statement.Effect && statement.Effect == 'Deny' &&
+            statement.Resource && statement.Resource.length &&
+            statement.Action && statement.Action.length) {
+            statement.Action.forEach(action => {
+                if (denyActionResourceMap[action]) denyActionResourceMap[action].push.apply(denyActionResourceMap[action], statement.Resource);
+                else denyActionResourceMap[action] = statement.Resource;
+            });
+        }
+    }
+
+    return denyActionResourceMap;
+}
+
+function filterDenyPermissionsByPrincipal(permissionsMap, principal) {
+    let response = {};
+    Object.keys(permissionsMap).forEach(key => {
+        if (matchKeys(key, principal)) {
+            Object.keys(permissionsMap[key]).forEach(action => {
+                if (response[action]) response[action].push.apply(response[action], permissionsMap[key][action]);
+                else response[action] = permissionsMap[key][action];
+            });
+        }
+    });
+    return response;
+}
+
+function isValidCondition(statement, allowedConditionKeys, iamConditionOperators, fetchConditionPrincipals) {
+    if (statement.Condition && statement.Effect) {
+        var effect = statement.Effect;
+        var values = [];
+        for (var operator of Object.keys(statement.Condition)) {
+            var defaultOperator = operator;
+            if (operator.includes(':')) defaultOperator = operator.split(':')[1];
+
+            var subCondition = statement.Condition[operator];
+            for (var key of Object.keys(subCondition)) {
+                if (!allowedConditionKeys.some(conditionKey=> key.includes(conditionKey))) return false;
+
+                var value = subCondition[key];
+                if (iamConditionOperators.string[effect].includes(defaultOperator) ||
+                iamConditionOperators.arn[effect].includes(defaultOperator)) {
+                    if (!value.length || value === '*') return false;
+                    else if (/^[0-9]{12}$/.test(value) || /^arn:aws:(iam|sts)::.+/.test(value)) values.push(value);
+                } else if (defaultOperator === 'Bool') {
+                    if ((effect === 'Allow' && !value) || effect === 'Deny' && value) return false;
+                } else if (iamConditionOperators.ipaddress[effect].includes(defaultOperator)) {
+                    if (value === '0.0.0.0/0' || value === '::/0') return false;
+                } else return false;
+            }
+        }
+        if (fetchConditionPrincipals) return values;
+    }
+
+    return true;
+}
+
+function isEffectivePolicyStatement(statement, denyActionResourceMap) {
+    let statementActionResourceMap = {};
+    if (statement.Action && statement.Resource) {
+        for (let action of statement.Action) {
+            statementActionResourceMap[action] = statement.Resource;
+        }
+    }
+
+    for (let action of Object.keys(statementActionResourceMap)) {
+        for (let key of Object.keys(denyActionResourceMap)) {
+            if (matchKeys(key, action)) {
+                statementActionResourceMap[action] = statementActionResourceMap[action].filter(resource => !denyActionResourceMap[key].includes(resource));
+            }
+        }
+
+        if (statementActionResourceMap[action].length) return true;
+    }
+
+    return false;
+}
+
+function isEffectiveStatement(statement, denyPermissionsMap) {
+    var principals = extractStatementPrincipals(statement);
+
+    for (let principal of principals) {
+        let denyActionResourceMap = filterDenyPermissionsByPrincipal(denyPermissionsMap, principal);
+        if (isEffectivePolicyStatement(statement, denyActionResourceMap)) return true;
+    }
+
+    return false;
+}
+
+function matchKeys(first, second) {
+    if (!first.length && !second.length) return true;
+
+    if (first.length > 1 && first[0] == '*' && !second.length) return false;
+
+    if ((first.length > 1 && first[0] == '?') || (first.length && second.length && first[0] == second[0])) return matchKeys(first.slice(1), second.slice(1));
+
+    if (first.length && first[0] == '*') {
+        return matchKeys(first.slice(1), second) || matchKeys(first,second.slice(1));
     }
 
     return false;
@@ -237,6 +435,17 @@ function defaultPartition(settings) {
     if (settings.govcloud) return 'aws-us-gov';
     if (settings.china) return 'aws-cn';
     return 'aws';
+}
+
+function getS3BucketLocation(cache, region, bucketName) {
+    var getBucketLocation = helpers.addSource(cache, {},
+        ['s3', 'getBucketLocation', region, bucketName]);
+
+    if (getBucketLocation && getBucketLocation.data) {
+        if (getBucketLocation.data.LocationConstraint) return getBucketLocation.data.LocationConstraint;
+        else return 'us-east-1';
+    }
+    return 'global';
 }
 
 function remediatePlugin(config, call, params, callback) {
@@ -271,6 +480,29 @@ let divideArray = function(array, size) {
     }
     return arrayOfArrays;
 };
+
+function getEncryptionLevel(kmsKey, encryptionLevels) {
+    if (kmsKey.Origin) {
+        if (kmsKey.Origin === 'AWS_KMS') {
+            if (kmsKey.KeyManager) {
+                if (kmsKey.KeyManager === 'AWS') {
+                    return encryptionLevels.indexOf('awskms');
+                }
+                if (kmsKey.KeyManager === 'CUSTOMER') {
+                    return encryptionLevels.indexOf('awscmk');
+                }
+            }
+        }
+        if (kmsKey.Origin === 'EXTERNAL') {
+            return encryptionLevels.indexOf('externalcmk');
+        }
+        if (kmsKey.Origin === 'AWS_CLOUDHSM') {
+            return encryptionLevels.indexOf('cloudhsm');
+        }
+    }
+
+    return encryptionLevels.indexOf('none');
+}
 
 function remediatePasswordPolicy(putCall, pluginName, remediation_file, passwordKey, config, cache, settings, resource, input, callback) {
     config.region = defaultRegion({});
@@ -549,6 +781,32 @@ function remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, 
     });
 }
 
+function getDefaultKeyId(cache, region, defaultKeyDesc) {
+    var source = {};
+
+    var listKeys = helpers.addSource(cache, source, ['kms', 'listKeys', region]);
+
+    if (!listKeys || listKeys.err || !listKeys.data || !listKeys.data.length) {
+        return false;
+    }
+
+    var defaultKey = listKeys.data.find(key => {
+        var describeKey = helpers.addSource(cache, source, ['kms', 'describeKey', region, key.KeyId]);
+
+        if (describeKey && describeKey.data && describeKey.data.KeyMetadata) {
+            var keyToAdd = describeKey.data.KeyMetadata;
+
+            if (keyToAdd.KeyManager && keyToAdd.KeyManager === 'AWS' && keyToAdd.Description &&
+                keyToAdd.Description.indexOf(defaultKeyDesc) === 0 && keyToAdd.Enabled && keyToAdd.KeyState && keyToAdd.KeyState === 'Enabled') {
+                return keyToAdd;
+            }
+        }
+    });
+
+    if (defaultKey) return defaultKey.KeyId;
+
+    return false;
+}
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
@@ -563,5 +821,15 @@ module.exports = {
     nullArray: nullArray,
     divideArray:divideArray,
     remediatePasswordPolicy:remediatePasswordPolicy,
-    remediateOpenPorts: remediateOpenPorts
+    remediateOpenPorts: remediateOpenPorts,
+    hasFederatedUserRole: hasFederatedUserRole,
+    getEncryptionLevel: getEncryptionLevel,
+    extractStatementPrincipals: extractStatementPrincipals,
+    getDefaultKeyId: getDefaultKeyId,
+    isValidCondition: isValidCondition,
+    isEffectiveStatement: isEffectiveStatement,
+    getDenyActionResourceMap: getDenyActionResourceMap,
+    getDenyPermissionsMap: getDenyPermissionsMap,
+    isEffectivePolicyStatement: isEffectivePolicyStatement,
+    getS3BucketLocation: getS3BucketLocation
 };

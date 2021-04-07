@@ -48,7 +48,7 @@ module.exports = {
 
             if (!describeInstances || describeInstances.err || !describeInstances.data) {
                 helpers.addResult(results, 3,
-                    `Unable to query EC2 instaces: ${helpers.addError(describeInstances)}`, region);
+                    `Unable to query EC2 instances: ${helpers.addError(describeInstances)}`, region);
                 return rcb();
             }
 
@@ -62,7 +62,7 @@ module.exports = {
                 describeInstances.data.forEach(instance => {
                     if (instance.Instances && instance.Instances.length) {
                         instance.Instances.forEach(element => {
-                            if(element.ImageId && !usedAmis.includes(element.ImageId)) {
+                            if (element.ImageId && !usedAmis.includes(element.ImageId)) {
                                 usedAmis.push(element.ImageId);
                             }
                         });
@@ -72,7 +72,7 @@ module.exports = {
 
             if (describeLaunchConfigurations.data.length) {
                 describeLaunchConfigurations.data.forEach(config => {
-                    if(config.ImageId && !usedAmis.includes(config.ImageId)) {
+                    if (config.ImageId && !usedAmis.includes(config.ImageId)) {
                         usedAmis.push(config.ImageId);
                     }
                 });

@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'AWS EFS CMK Encrypted',
+    title: 'EFS CMK Encrypted',
     category: 'EFS',
     description: 'Ensure EFS file systems are encrypted using Customer Master Keys (CMKs).',
     more_info: 'EFS file systems should use KMS Customer Master Keys (CMKs) instead of AWS managed keys for encryption in order to have full control over data encryption and decryption.',
@@ -12,7 +12,7 @@ module.exports = {
     settings: {
         cmk_unencrypted_threshold: {
             name: 'Threshold for EFS CMK Unencrypted Individual Reporting.',
-            description: 'Sets the value where EFS CMK unencryption reporting becomes aggregated once breached.',
+            description: 'Plugin results will become aggregated once this value is breached',
             regex: '^[0-9]*$',
             default: 20
         }
@@ -37,7 +37,7 @@ module.exports = {
                 return rcb();
             }
 
-            if(!describeFileSystems.data.length){
+            if (!describeFileSystems.data.length){
                 helpers.addResult(results, 0, 'No EFS file systems found', region);
                 return rcb();
             }

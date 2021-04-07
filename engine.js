@@ -36,6 +36,15 @@ var engine = function(cloudConfig, settings) {
             opaPath = 'opa';
         }
     }
+
+    // Load resource mappings
+    var resourceMap;
+    try {
+        resourceMap = require(`./helpers/${settings.cloud}/resources.js`);
+    } catch (e) {
+        resourceMap = {};
+    }
+
     // Print customization options
     if (settings.compliance) console.log(`INFO: Using compliance modes: ${settings.compliance.join(', ')}`);
     if (settings.govcloud) console.log('INFO: Using AWS GovCloud mode');
@@ -156,15 +165,18 @@ var engine = function(cloudConfig, settings) {
         }
         async.mapValuesLimit(plugins, 10, function(plugin, key, pluginDone) {
             if (skippedPlugins.indexOf(key) > -1) return pluginDone(null, 0);
-            if ( !settings.opa ) {
-                plugin.run(collection, settings, function(err, results) {
-                    if (!results.length) return console.log('ERROR: Nothing to report...');
+            var postRun = function(err, results) {
+                if (err) return console.log(`ERROR: ${err}`);
+                if (!results || !results.length) {
+                    console.log(`Plugin ${plugin.title} returned no results. There may be a problem with this plugin.`);
+                } else {
                     for (var r in results) {
                         // If we have suppressed this result, then don't process it
                         // so that it doesn't affect the return code.
                         if (suppressionFilter([key, results[r].region || 'any', results[r].resource || 'any'].join(':'))) {
                             continue;
                         }
+
                         var complianceMsg = [];
                         if (settings.compliance && settings.compliance.length) {
                             settings.compliance.forEach(function(c) {
@@ -179,7 +191,7 @@ var engine = function(cloudConfig, settings) {
                         // Write out the result (to console or elsewhere)
                         outputHandler.writeResult(results[r], plugin, key, complianceMsg);
 
-                        // Add this to our tracking fo the worst status to calculate
+                        // Add this to our tracking for the worst status to calculate
                         // the exit code
                         maximumStatus = Math.max(maximumStatus, results[r].status);
                         // Remediation
@@ -188,44 +200,54 @@ var engine = function(cloudConfig, settings) {
                                 if (results[r].status === 2) {
                                     var resource = results[r].resource;
                                     var event = {};
+                                    event.region = results[r].region;
                                     event['remediation_file'] = {};
-                                    event['remediation_file'] =
-                                        initializeFile(event['remediation_file'], 'execute', key, resource);
+                                    event['remediation_file'] = initializeFile(event['remediation_file'], 'execute', key, resource);
                                     plugin.remediate(cloudConfig, collection, event, resource, (err, result) => {
                                         if (err) return console.log(err);
                                         return console.log(result);
                                     });
                                 }
-
                             }
                         }
                     }
-                    setTimeout(function(){
-                        pluginDone(err, maximumStatus);
-                    }, 0);
-                });
-            }
-            else{
+
+                }
+                setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
+            };
+
+            if (plugin.asl) {
+                console.log(`INFO: Using custom ASL for plugin: ${plugin.title}`);
+                // Inject APIs and resource maps
+                plugin.asl.apis = plugin.apis;
+                var aslConfig = require('./helpers/asl/config.json');
+                var aslVersion = plugin.asl.version ? plugin.asl.version : aslConfig.current_version;
+                var aslRunner = require(`./helpers/asl/asl-${aslVersion}.js`);
+                aslRunner(collection, plugin.asl, resourceMap, postRun);
+            } else if (settings.opa) {
                 opaHelper.downloadOPAforOs((err) => {
                     if (err) {
                         return console.log(err);
                     }
-                    opaPolicyEval.opaEval(plugin.path, collectionFile, opaPath, plugin.rules, plugin.messages,
-                        (err, results) => {
-                            if (err) {
-                                return console.log(err);
-                            }
-                            // Write out the result (to console or elsewhere)
-                            var complianceMsg = [];
-                            for (var r in results) {
-                                outputHandler.writeResult(results[r], plugin, key, complianceMsg);
-                                maximumStatus = Math.max(maximumStatus, results[r].status);
-                            }
-                            setTimeout(function(){
-                                pluginDone(err, maximumStatus);
-                            }, 0);
-                        });
+                    opaPolicyEval.opaEval(plugin.path, collectionFile, opaPath, plugin.rules, plugin.messages, postRun
+                        // (err, results) => {
+                        //     if (err) {
+                        //         return console.log(err);
+                        //     }
+                        //     // Write out the result (to console or elsewhere)
+                        //     var complianceMsg = [];
+                        //     for (var r in results) {
+                        //         outputHandler.writeResult(results[r], plugin, key, complianceMsg);
+                        //         maximumStatus = Math.max(maximumStatus, results[r].status);
+                        //     }
+                        //     setTimeout(function () {
+                        //         pluginDone(err, maximumStatus);
+                        //     }, 0);
+                        // }
+                        );
                 });
+            } else {
+                plugin.run(collection, settings, postRun);
             }
         }, function(err) {
             if (err) return console.log(err);
