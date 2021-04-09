@@ -129,6 +129,12 @@ var calls = {
             }
         }
     },
+    CodeStar: {
+        listProjects: {
+            property: 'projects',
+            paginate: 'nextToken'
+        }
+    },
     Comprehend: {
         listEntitiesDetectionJobs: {
             property: 'EntitiesDetectionJobPropertiesList',
@@ -836,6 +842,14 @@ var postcalls = [
                 reliesOnCall: 'describeTrails',
                 filterKey: 'TrailName',
                 filterValue: 'TrailARN'
+            }
+        },
+        CodeStar: {
+            describeProject: {
+                reliesOnService: 'codestar',
+                reliesOnCall: 'listProjects',
+                filterKey: 'id',
+                filterValue: 'projectId'
             }
         },
         DynamoDB: {
