@@ -36,7 +36,6 @@ pass[res] {
 	input.s3.getBucketVersioning[location][name].data.Status
 	versioning := input.s3.getBucketVersioning[region][name].data.Status
 	versioning == "Enabled"
-
 	res := {
     	    "msg": sprintf("Bucket : %s has versioning enabled",[name]),
     	    "arn": concat("",["arn:aws:s3:::",name]),

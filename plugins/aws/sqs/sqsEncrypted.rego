@@ -14,38 +14,48 @@ violation[name] {
 }
 
 # encryption disabled
-sqsencdis[region]  =  sqsNames {
-    name := input.sqs.getQueueAttributes[location][_].data.Attributes.QueueArn
+fail[res]  {
 	region := location
 	input.sqs.getQueueAttributes[location][_].data.Attributes
-    sqsNames := [name |
-					name := input.sqs.getQueueAttributes[location][i].data.Attributes.QueueArn
-					not input.sqs.getQueueAttributes[location][i].data.Attributes.KmsMasterKeyId
-					]
+	name := input.sqs.getQueueAttributes[location][i].data.Attributes.QueueArn
+    not input.sqs.getQueueAttributes[location][i].data.Attributes.KmsMasterKeyId
+
+     res := {
+        	    "msg": sprintf("Bucket : 'The SQS queue %s does not use a KMS key for SSE'",[name]),
+        	    "arn": name,
+        	    "region": region,
+        	    "status": 2
+        	}
 }
 
 
 # encryption enabled with default key
-sqsencdefault[region]  =  sqsNames {
-    name := input.sqs.getQueueAttributes[location][_].data.Attributes.QueueArn
+warn[res]  {
 	region := location
 	input.sqs.getQueueAttributes[location][_].data.Attributes
-    sqsNames := [name |
-					name := input.sqs.getQueueAttributes[location][i].data.Attributes.QueueArn
-					input.sqs.getQueueAttributes[location][i].data.Attributes.KmsMasterKeyId
-					input.sqs.getQueueAttributes[location][i].data.Attributes.KmsMasterKeyId == "alias/aws/sqs"
-					]
+	name := input.sqs.getQueueAttributes[location][i].data.Attributes.QueueArn
+	input.sqs.getQueueAttributes[location][i].data.Attributes.KmsMasterKeyId
+	input.sqs.getQueueAttributes[location][i].data.Attributes.KmsMasterKeyId == "alias/aws/sqs"
+    res := {
+                "msg": sprintf("Bucket : 'The SQS queue %s does not use a KMS key for SSE'",[name]),
+                "arn": name,
+                "region": region,
+                "status": 1
+            }
 }
 
 
 # encryption enabled with CMK key
-sqsenccmk[region]  =  sqsNames {
-    name := input.sqs.getQueueAttributes[location][_].data.Attributes.QueueArn
+pass[res] {
 	region := location
 	input.sqs.getQueueAttributes[location][_].data.Attributes
-    sqsNames := [name |
-					name := input.sqs.getQueueAttributes[location][i].data.Attributes.QueueArn
-					input.sqs.getQueueAttributes[location][i].data.Attributes.KmsMasterKeyId
-					input.sqs.getQueueAttributes[location][i].data.Attributes.KmsMasterKeyId != "alias/aws/sqs"
-					]
+    name := input.sqs.getQueueAttributes[location][i].data.Attributes.QueueArn
+	input.sqs.getQueueAttributes[location][i].data.Attributes.KmsMasterKeyId
+	input.sqs.getQueueAttributes[location][i].data.Attributes.KmsMasterKeyId != "alias/aws/sqs"
+	res := {
+               "msg": sprintf("Bucket : 'The SQS queue %s does not use a KMS key for SSE'",[name]),
+               "arn": name,
+               "region": region,
+               "status": 0
+           }
 }

@@ -229,7 +229,8 @@ var engine = function(cloudConfig, settings) {
                     if (err) {
                         return console.log(err);
                     }
-                    opaPolicyEval.opaEval(plugin.path, collectionFile, opaPath, plugin.rules, plugin.messages, postRun
+                    //opaPolicyEval.opaEval(plugin.path, collectionFile, opaPath, plugin, resourceMap, postRun
+                    opaPolicyEval.opaRunner(collection, opaPath, plugin, resourceMap, postRun
                         // (err, results) => {
                         //     if (err) {
                         //         return console.log(err);
