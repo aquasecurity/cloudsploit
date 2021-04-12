@@ -98,7 +98,7 @@ var opaEvalSingle = (data, collectionFile, opaPath, rules, callback) => {
         if( fs.existsSync(collectionFile) && finalresults.length){
             fs.unlinkSync(collectionFile);
         }
-        return callback(finalresults);
+        return callback(null, finalresults);
     });
 };
 
@@ -149,7 +149,8 @@ var opaRunner = function(source, opaPath, plugin, resourceMap, callback) {
                 });
             });
         } else {
-            async.eachOfLimit(regionVal, 10, function(resourceObj, resourceName,rNcb){if (resourceObj.err) {
+            async.eachOfLimit(regionVal, 10, function(resourceObj, resourceName,rNcb){
+                if (resourceObj.err) {
                 results.push({
                     status: 3,
                     resource: resourceName,
@@ -168,13 +169,20 @@ var opaRunner = function(source, opaPath, plugin, resourceMap, callback) {
             } else {
                 var parsedResource = parse(resourceObj.data, resourcePath);
                 if (typeof parsedResource !== 'string') parsedResource = null;
+                if (resourceName.indexOf('https') !== -1){
+                    resourceName = resourceName.split('/');
+                    resourceName = resourceName[resourceName.length-1];
+                }
                 var collectionFile = './single_'+region+'_'+resourceName+'.json';
                 if( fs.existsSync(collectionFile)){
                     fs.unlinkSync(collectionFile);
                 }
                 // write the collection
                 fs.writeFileSync(collectionFile, JSON.stringify(resourceObj, null, 4));
-                opaEvalSingle(plugin.path, collectionFile, opaPath, plugin.rules, function (finalResults){
+                opaEvalSingle(plugin.path, collectionFile, opaPath, plugin.rules, function (err, finalResults){
+                    if (err) {
+                        return rNcb(err);
+                    }
                     if (!finalResults || !finalResults.length){
                         results.push({
                             status: 3,
@@ -182,7 +190,7 @@ var opaRunner = function(source, opaPath, plugin, resourceMap, callback) {
                             message: 'No data returned',
                             region: region
                         });
-                        rNcb();
+                        return rNcb();
                     }
                     finalResults.forEach(resultElement => {
                         results.push({

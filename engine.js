@@ -41,6 +41,12 @@ var engine = function(cloudConfig, settings) {
     var resourceMap;
     try {
         resourceMap = require(`./helpers/${settings.cloud}/resources.js`);
+        // var fsData = fs.readFileSync('./plugins/aws/s3/bucketversioning3.rego', 'utf8');
+        // var meta = fsData.toString().split('#-');
+        // meta = meta[0].split(':=');
+        // var meta1 = meta[1];
+        // var metaData = JSON.parse(meta1.toString());
+
     } catch (e) {
         resourceMap = {};
     }
@@ -62,11 +68,17 @@ var engine = function(cloudConfig, settings) {
     console.log('INFO: Determining API calls to make...');
 
     var skippedPlugins = [];
-
+    var opaPlugins = {};
     Object.entries(plugins).forEach(function(p){
         var pluginId = p[0];
         var plugin = p[1];
-
+        if (settings.opa) {
+            // creating new plugins list to loop over later with the metadata
+            opaPlugins[pluginId] = opaHelper.getMetaData(plugin);
+            opaPlugins[pluginId].path = plugin;
+            // we need to have the metadata here also to get the plugin.apis
+            plugin = opaPlugins[pluginId];
+        }
         // Skip plugins that don't match the ID flag
         var skip = false;
         if (settings.plugin && settings.plugin !== pluginId) {
@@ -163,6 +175,7 @@ var engine = function(cloudConfig, settings) {
             // write the collection
             fs.writeFileSync(collectionFile, JSON.stringify(collection, null, 4));
         }
+        if (settings.opa) plugins = opaPlugins;
         async.mapValuesLimit(plugins, 10, function(plugin, key, pluginDone) {
             if (skippedPlugins.indexOf(key) > -1) return pluginDone(null, 0);
             var postRun = function(err, results) {
