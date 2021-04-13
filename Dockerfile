@@ -10,6 +10,7 @@ FROM node:lts-alpine3.12
 ARG PACKAGENAME=cloudsploit
 
 COPY . /var/scan/cloudsploit/
+COPY package-lock.json /var/scan
 
 # Install cloudsploit/scan into the container using npm from NPM
 RUN cd /var/scan \
