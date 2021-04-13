@@ -1,4 +1,3 @@
-var assert = require('assert');
 var expect = require('chai').expect;
 var plugin = require('./dbRestorable');
 
@@ -33,7 +32,7 @@ describe('dbRestorable', function () {
             );
             plugin.run(cache, {}, callback);
         });
-        it('should give valid result if no sql instances found', function (done) {
+        it('should give passing result if no sql instances found', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
