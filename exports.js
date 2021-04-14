@@ -650,6 +650,9 @@ module.exports = {
         'dbPubliclyAccessible'          : require(__dirname + '/plugins/google/sql/dbPubliclyAccessible.js'),
         'dbSSLEnabled'                  : require(__dirname + '/plugins/google/sql/dbSSLEnabled.js'),
         'anyHostRootAccess'             : require(__dirname + '/plugins/google/sql/anyHostRootAccess.js'),
+        'mySqlLocalInfileDisabled'      : require(__dirname + '/plugins/google/sql/mySqlLocalInfileDisabled.js'),
+        'postgresSqlLogConnectionsEnabled'      : require(__dirname + '/plugins/google/sql/postgresSqlLogConnectionsEnabled.js'),
+        'postgresSqlLogDisconnectionsEnabled'      : require(__dirname + '/plugins/google/sql/postgresSqlLogDisconnectionsEnabled.js'),
 
         'bucketVersioning'              : require(__dirname + '/plugins/google/storage/bucketVersioning.js'),
         'bucketLogging'                 : require(__dirname + '/plugins/google/storage/bucketLogging.js'),
