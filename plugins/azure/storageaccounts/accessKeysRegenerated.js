@@ -43,23 +43,19 @@ module.exports = {
                 }
 
                 if (!activityLogs.data.length) {
-                    helpers.addResult(results, 2, 'Storage account access keys are not being regenerated periodically', location, storageAccount.id);
+                    helpers.addResult(results, 2, 'Storage account access keys were not regenerated in last 90 days', location, storageAccount.id);
                     return scb();
                 }
 
-                let regenerated = false;
-                for (const log of activityLogs.data) {
-                    if (log.authorization && log.authorization.action &&
-                        log.authorization.action === 'Microsoft.Storage/storageAccounts/regenerateKey/action') {
-                        regenerated = true;
-                        continue;
-                    }
-                }
+                let regenerated = activityLogs.data.find((log) => {
+                    return (log.authorization && log.authorization.action &&
+                        log.authorization.action === 'Microsoft.Storage/storageAccounts/regenerateKey/action');
+                });
 
                 if (regenerated) {
-                    helpers.addResult(results, 0, 'Storage account access keys are being regenerated periodically', location, storageAccount.id);
+                    helpers.addResult(results, 0, 'Storage account access keys were regenerated in last 90 days', location, storageAccount.id);
                 } else {
-                    helpers.addResult(results, 2, 'Storage account access keys are not being regenerated periodically', location, storageAccount.id);
+                    helpers.addResult(results, 2, 'Storage account access keys were not regenerated in last 90 days', location, storageAccount.id);
                 }
                 scb();
             }, function() {

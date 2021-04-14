@@ -187,7 +187,7 @@ var calls = {
 };
 
 let dateNow = new Date().toISOString();
-let datePast = new Date(new Date().setDate(new Date().getDate()-1)).toISOString();
+let datePast = new Date(new Date().setDate(new Date().getDate()-90)).toISOString();
 var postcalls = {
     advancedThreatProtection: {
         get: {

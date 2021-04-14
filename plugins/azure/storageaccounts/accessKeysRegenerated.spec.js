@@ -80,7 +80,7 @@ describe('accessKeysRegenerated', function() {
             accessKeysRegenerated.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Storage account access keys are not being regenerated periodically');
+                expect(results[0].message).to.include('Storage account access keys were not regenerated in last 90 days');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -102,7 +102,7 @@ describe('accessKeysRegenerated', function() {
             accessKeysRegenerated.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Storage account access keys are being regenerated periodically');
+                expect(results[0].message).to.include('Storage account access keys were regenerated in last 90 days');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -113,7 +113,7 @@ describe('accessKeysRegenerated', function() {
             accessKeysRegenerated.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Storage account access keys are not being regenerated periodically');
+                expect(results[0].message).to.include('Storage account access keys were not regenerated in last 90 days');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
