@@ -168,7 +168,7 @@ describe('postgresqlLogCheckpoints', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('SQL instance does not support log_checkpoints flag');
+                expect(results[0].message).to.include('SQL instance databse version is not of PosgreSQL type');
                 expect(results[0].region).to.equal('global');
                 done()
             };
