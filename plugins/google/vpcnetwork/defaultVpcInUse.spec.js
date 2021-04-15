@@ -74,10 +74,10 @@ describe('defaultVpcInUse', function () {
                         creationTimestamp: "2021-02-16T22:03:12.817-08:00",
                         name: "app-vpc",
                         description: "App VPC",
-                        selfLink: "https://www.googleapis.com/compute/v1/projects/aqua-dev-akhtar/global/networks/app-vpc",
+                        selfLink: "https://www.googleapis.com/compute/v1/projects/test-project/global/networks/app-vpc",
                         autoCreateSubnetworks: false,
                         subnetworks: [
-                          "https://www.googleapis.com/compute/v1/projects/aqua-dev-akhtar/regions/us-east1/subnetworks/oregon-subnet",
+                          "https://www.googleapis.com/compute/v1/projects/test-project/regions/us-east1/subnetworks/oregon-subnet",
                         ],
                         routingConfig: {
                           routingMode: "GLOBAL",
@@ -105,10 +105,10 @@ describe('defaultVpcInUse', function () {
                         creationTimestamp: "2021-02-16T22:03:12.817-08:00",
                         name: "default",
                         description: "App VPC",
-                        selfLink: "https://www.googleapis.com/compute/v1/projects/aqua-dev-akhtar/global/networks/app-vpc",
+                        selfLink: "https://www.googleapis.com/compute/v1/projects/test-project/global/networks/app-vpc",
                         autoCreateSubnetworks: false,
                         subnetworks: [
-                          "https://www.googleapis.com/compute/v1/projects/aqua-dev-akhtar/regions/us-east1/subnetworks/oregon-subnet",
+                          "https://www.googleapis.com/compute/v1/projects/test-project/regions/us-east1/subnetworks/oregon-subnet",
                         ],
                         routingConfig: {
                           routingMode: "GLOBAL",
@@ -124,14 +124,14 @@ describe('defaultVpcInUse', function () {
                                 tags: {
                                     fingerprint: "42WmSpB8rSM=",
                                 },
-                                machineType: "https://www.googleapis.com/compute/v1/projects/aqua-dev-akhtar/zones/us-central1-a/machineTypes/e2-micro",
+                                machineType: "https://www.googleapis.com/compute/v1/projects/test-project/zones/us-central1-a/machineTypes/e2-micro",
                                 status: "RUNNING",
-                                zone: "https://www.googleapis.com/compute/v1/projects/aqua-dev-akhtar/zones/us-central1-a",
+                                zone: "https://www.googleapis.com/compute/v1/projects/test-project/zones/us-central1-a",
                                 canIpForward: false,
                                 networkInterfaces: [
                                     {
-                                    network: "https://www.googleapis.com/compute/v1/projects/aqua-dev-akhtar/global/networks/default-vpc",
-                                    subnetwork: "https://www.googleapis.com/compute/v1/projects/aqua-dev-akhtar/regions/us-central1/subnetworks/default-vpc",
+                                    network: "https://www.googleapis.com/compute/v1/projects/test-project/global/networks/default-vpc",
+                                    subnetwork: "https://www.googleapis.com/compute/v1/projects/test-project/regions/us-central1/subnetworks/default-vpc",
                                     networkIP: "10.128.0.2",
                                     name: "nic0",
                                     accessConfigs: [
@@ -170,10 +170,10 @@ describe('defaultVpcInUse', function () {
                         creationTimestamp: "2021-02-16T22:03:12.817-08:00",
                         name: "default",
                         description: "App VPC",
-                        selfLink: "https://www.googleapis.com/compute/v1/projects/aqua-dev-akhtar/global/networks/default",
+                        selfLink: "https://www.googleapis.com/compute/v1/projects/test-project/global/networks/default",
                         autoCreateSubnetworks: false,
                         subnetworks: [
-                          "https://www.googleapis.com/compute/v1/projects/aqua-dev-akhtar/regions/us-east1/subnetworks/oregon-subnet",
+                          "https://www.googleapis.com/compute/v1/projects/test-project/regions/us-east1/subnetworks/oregon-subnet",
                         ],
                         routingConfig: {
                           routingMode: "GLOBAL",
@@ -189,14 +189,14 @@ describe('defaultVpcInUse', function () {
                                 tags: {
                                     fingerprint: "42WmSpB8rSM=",
                                 },
-                                machineType: "https://www.googleapis.com/compute/v1/projects/aqua-dev-akhtar/zones/us-central1-a/machineTypes/e2-micro",
+                                machineType: "https://www.googleapis.com/compute/v1/projects/test-project/zones/us-central1-a/machineTypes/e2-micro",
                                 status: "RUNNING",
-                                zone: "https://www.googleapis.com/compute/v1/projects/aqua-dev-akhtar/zones/us-central1-a",
+                                zone: "https://www.googleapis.com/compute/v1/projects/test-project/zones/us-central1-a",
                                 canIpForward: false,
                                 networkInterfaces: [
                                     {
-                                    network: "https://www.googleapis.com/compute/v1/projects/aqua-dev-akhtar/global/networks/default",
-                                    subnetwork: "https://www.googleapis.com/compute/v1/projects/aqua-dev-akhtar/regions/us-central1/subnetworks/default-vpc",
+                                    network: "https://www.googleapis.com/compute/v1/projects/test-project/global/networks/default",
+                                    subnetwork: "https://www.googleapis.com/compute/v1/projects/test-project/regions/us-central1/subnetworks/default-vpc",
                                     networkIP: "10.128.0.2",
                                     name: "nic0",
                                     accessConfigs: [

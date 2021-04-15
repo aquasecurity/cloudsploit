@@ -60,10 +60,10 @@ describe('multipleSubnets', function () {
                         creationTimestamp: "2021-02-16T22:03:12.817-08:00",
                         name: "app-vpc",
                         description: "App VPC",
-                        selfLink: "https://www.googleapis.com/compute/v1/projects/aqua-dev-akhtar/global/networks/app-vpc",
+                        selfLink: "https://www.googleapis.com/compute/v1/projects/test-project/global/networks/app-vpc",
                         autoCreateSubnetworks: false,
                         subnetworks: [
-                          "https://www.googleapis.com/compute/v1/projects/aqua-dev-akhtar/regions/us-east1/subnetworks/oregon-subnet",
+                          "https://www.googleapis.com/compute/v1/projects/test-project/regions/us-east1/subnetworks/oregon-subnet",
                         ],
                         routingConfig: {
                           routingMode: "GLOBAL",
@@ -91,11 +91,11 @@ describe('multipleSubnets', function () {
                         creationTimestamp: "2021-02-16T22:03:12.817-08:00",
                         name: "app-vpc",
                         description: "App VPC",
-                        selfLink: "https://www.googleapis.com/compute/v1/projects/aqua-dev-akhtar/global/networks/app-vpc",
+                        selfLink: "https://www.googleapis.com/compute/v1/projects/test-project/global/networks/app-vpc",
                         autoCreateSubnetworks: false,
                         subnetworks: [
-                          "https://www.googleapis.com/compute/v1/projects/aqua-dev-akhtar/regions/us-east1/subnetworks/oregon-subnet",
-                          "https://www.googleapis.com/compute/v1/projects/aqua-dev-akhtar/regions/us-east1/subnetworks/oregon-subnet1",
+                          "https://www.googleapis.com/compute/v1/projects/test-project/regions/us-east1/subnetworks/oregon-subnet",
+                          "https://www.googleapis.com/compute/v1/projects/test-project/regions/us-east1/subnetworks/oregon-subnet1",
                         ],
                         routingConfig: {
                           routingMode: "GLOBAL",
@@ -123,10 +123,10 @@ describe('multipleSubnets', function () {
                         creationTimestamp: "2021-02-16T22:03:12.817-08:00",
                         name: "app-vpc",
                         description: "App VPC",
-                        selfLink: "https://www.googleapis.com/compute/v1/projects/aqua-dev-akhtar/global/networks/app-vpc",
+                        selfLink: "https://www.googleapis.com/compute/v1/projects/test-project/global/networks/app-vpc",
                         autoCreateSubnetworks: false,
                         subnetworks: [
-                          "https://www.googleapis.com/compute/v1/projects/aqua-dev-akhtar/regions/us-east1/subnetworks/default",
+                          "https://www.googleapis.com/compute/v1/projects/test-project/regions/us-east1/subnetworks/default",
                         ],
                         routingConfig: {
                           routingMode: "GLOBAL",
@@ -154,7 +154,7 @@ describe('multipleSubnets', function () {
                         creationTimestamp: "2021-02-16T22:03:12.817-08:00",
                         name: "app-vpc",
                         description: "App VPC",
-                        selfLink: "https://www.googleapis.com/compute/v1/projects/aqua-dev-akhtar/global/networks/app-vpc",
+                        selfLink: "https://www.googleapis.com/compute/v1/projects/test-project/global/networks/app-vpc",
                         autoCreateSubnetworks: false,
                         subnetworks: [
                         ],
