@@ -41,7 +41,7 @@ module.exports = {
                 var subnets = network.subnetworks;
 
                 subnetRegions = regions.zones;
-                if (subnets.length) {
+                if (subnets && subnets.length) {
                     subnets.forEach(subnet => {
                         var splitSubnet = subnet.split('/');
                         subnetName = splitSubnet[10];
