@@ -72,53 +72,6 @@ describe('postgresSqlLogDisconnectionsEnabled', function () {
 
             plugin.run(cache, {}, callback);
         });
-        it('should give passing result if sql instances does not have any flags', function (done) {
-            const callback = (err, results) => {
-                expect(results.length).to.be.above(0);
-                expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('SQL instance does not have any flag');
-                expect(results[0].region).to.equal('global');
-                done()
-            };
-
-            const cache = createCache(
-                null,
-                [{
-                    name: "testing-instance",
-                    databaseVersion: "POSTGRES_13",
-                    settings: {
-                      databaseFlags: [
-                        
-                      ]}
-                }],
-            );
-            plugin.run(cache, {}, callback);
-        });
-        it('should give passing result if sql instances does not have log_disconnections flag', function (done) {
-            const callback = (err, results) => {
-                expect(results.length).to.be.above(0);
-                expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('SQL instance does not have log_disconnections flag');
-                expect(results[0].region).to.equal('global');
-                done()
-            };
-
-            const cache = createCache(
-                null,
-                [{
-                    name: "testing-instance",
-                    databaseVersion: "POSTGRES_13",
-                    settings: {
-                      databaseFlags: [
-                        {
-                            name: "log_checkpoints",
-                            value: "on",
-                        },
-                      ]}
-                }],
-            );
-            plugin.run(cache, {}, callback);
-        });
         it('should give passing result if sql instances have log_disconnections flag enabled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
@@ -131,6 +84,7 @@ describe('postgresSqlLogDisconnectionsEnabled', function () {
             const cache = createCache(
                 null,
                 [{
+                    instanceType: "CLOUD_SQL_INSTANCE",
                     name: "testing-instance",
                     databaseVersion: "POSTGRES_13",
                     settings: {
@@ -142,13 +96,14 @@ describe('postgresSqlLogDisconnectionsEnabled', function () {
                       ]}
                 }],
             );
+            
             plugin.run(cache, {}, callback);
         });
-        it('should give passing result if sql instances have log_disconnections flag disabled', function (done) {
+        it('should give failing result if sql instances does not have log_disconnections flag enabled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('SQL instance have log_disconnections flag disabled');
+                expect(results[0].message).to.include('SQL instance does not have log_disconnections flag enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -156,6 +111,7 @@ describe('postgresSqlLogDisconnectionsEnabled', function () {
             const cache = createCache(
                 null,
                 [{
+                    instanceType: "CLOUD_SQL_INSTANCE",
                     name: "testing-instance",
                     databaseVersion: "POSTGRES_13",
                     settings: {
@@ -167,6 +123,57 @@ describe('postgresSqlLogDisconnectionsEnabled', function () {
                       ]}
                 }],
             );
+
+            plugin.run(cache, {}, callback);
+        });
+        it('should give failing result if sql instances does not have log_disconnections flag enabled', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('SQL instance does not have log_disconnections flag enabled');
+                expect(results[0].region).to.equal('global');
+                done()
+            };
+
+            const cache = createCache(
+                null,
+                [{
+                    instanceType: "CLOUD_SQL_INSTANCE",
+                    name: "testing-instance",
+                    databaseVersion: "POSTGRES_13",
+                    settings: {
+                      databaseFlags: [
+                        {
+                            name: "log_checkpoints",
+                            value: "on",
+                        },
+                      ]}
+                }],
+            );
+
+            plugin.run(cache, {}, callback);
+        });
+        it('should give failing result if sql instances does not have log_disconnections flag enabled', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('SQL instance does not have log_disconnections flag enabled');
+                expect(results[0].region).to.equal('global');
+                done()
+            };
+
+            const cache = createCache(
+                null,
+                [{
+                    instanceType: "CLOUD_SQL_INSTANCE",
+                    name: "testing-instance",
+                    databaseVersion: "POSTGRES_13",
+                    settings: {
+                      databaseFlags: []
+                    }
+                }],
+            );
+
             plugin.run(cache, {}, callback);
         });
     })

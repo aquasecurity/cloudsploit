@@ -32,33 +32,36 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
-                if (!sqlInstance.databaseVersion.toLowerCase().includes('mysql')) {
+                if (sqlInstance.databaseVersion && !sqlInstance.databaseVersion.toLowerCase().includes('mysql')) {
                     helpers.addResult(results, 0, 
-                        'No SQL instance found with mySQL type', region, sqlInstance.name);
+                        'No SQL instance found with MySQL type', region, sqlInstance.name);
                     return;
                 }
-                if (!sqlInstance.settings.databaseFlags.length) {
-                    helpers.addResult(results, 0, 
-                        'SQL instance does not have any flag', region, sqlInstance.name);
-                    return;
+
+                if (sqlInstance.instanceType != "READ_REPLICA_INSTANCE" &&
+                    sqlInstance.settings &&
+                    sqlInstance.settings.databaseFlags &&
+                    sqlInstance.settings.databaseFlags.length) {
+                        flags = sqlInstance.settings.databaseFlags
+                        flag_disabled = false
+                        flags.forEach(flag => {
+                            if(flag.name == 'local_infile' && flag.value == 'off') {
+                                flag_disabled = true
+                            }
+                        })
+                        if(flag_disabled == true) {
+                            helpers.addResult(results, 0, 
+                                'SQL instance does not have local_infile flag enabled', region, sqlInstance.name);
+                            return;
+                        }else {
+                            helpers.addResult(results, 2,
+                                'SQL instance have local_infile flag enabled', region, sqlInstance.name);
+                        }
+                } else if (sqlInstance.instanceType == "READ_REPLICA_INSTANCE"){
+                } else {
+                    helpers.addResult(results, 2, 
+                        'SQL instance have local_infile flag enabled', region, sqlInstance.name);
                 }
-                flags = sqlInstance.settings.databaseFlags
-                flags.forEach(flag => {
-                    if(!(flag.name == 'local_infile')) {
-                        helpers.addResult(results, 0, 
-                            'SQL instance does not have local_infile flag', region, sqlInstance.name);
-                        return;
-                    }
-                    
-                    if(flag.value == 'off') {
-                        helpers.addResult(results, 0, 
-                            'SQL instance have local_infile flag disabled', region, sqlInstance.name);
-                    }
-                    else {
-                        helpers.addResult(results, 2, 
-                            'SQL instance have local_infile flag enabled', region, sqlInstance.name);
-                    }
-                })
             });
 
             rcb();

@@ -32,33 +32,36 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
-                if (!sqlInstance.databaseVersion.toLowerCase().includes('postgres')) {
+                if (sqlInstance.databaseVersion && !sqlInstance.databaseVersion.toLowerCase().includes('postgres')) {
                     helpers.addResult(results, 0, 
                         'No SQL instance found with postgreSQL type', region, sqlInstance.name);
                     return;
                 }
-                if (!sqlInstance.settings.databaseFlags.length) {
-                    helpers.addResult(results, 0, 
-                        'SQL instance does not have any flag', region, sqlInstance.name);
-                    return;
+
+                if (sqlInstance.instanceType != "READ_REPLICA_INSTANCE" &&
+                    sqlInstance.settings &&
+                    sqlInstance.settings.databaseFlags &&
+                    sqlInstance.settings.databaseFlags.length) {
+                        flags = sqlInstance.settings.databaseFlags
+                        flag_enabled = false
+                        flags.forEach(flag => {
+                            if(flag.name == 'log_connections' && flag.value == 'on') {
+                                flag_enabled = true
+                            }
+                        })
+                        if(flag_enabled == true) {
+                            helpers.addResult(results, 0, 
+                                'SQL instance have log_connections flag enabled', region, sqlInstance.name);
+                            return;
+                        }else {
+                            helpers.addResult(results, 2,
+                                'SQL instance does not have log_connections flag enabled', region, sqlInstance.name);
+                        }
+                } else if (sqlInstance.instanceType == "READ_REPLICA_INSTANCE"){
+                } else {
+                    helpers.addResult(results, 2, 
+                        'SQL instance does not have log_connections flag enabled', region, sqlInstance.name);
                 }
-                flags = sqlInstance.settings.databaseFlags
-                flags.forEach(flag => {
-                    if(!(flag.name == 'log_connections')) {
-                        helpers.addResult(results, 0, 
-                            'SQL instance does not have log_connections flag', region, sqlInstance.name);
-                        return;
-                    }
-                    
-                    if(flag.value == 'on') {
-                        helpers.addResult(results, 0, 
-                            'SQL instance have log_connections flag enabled', region, sqlInstance.name);
-                    }
-                    else {
-                        helpers.addResult(results, 2, 
-                            'SQL instance have log_connections flag disabled', region, sqlInstance.name);
-                    }
-                })
             });
 
             rcb();
