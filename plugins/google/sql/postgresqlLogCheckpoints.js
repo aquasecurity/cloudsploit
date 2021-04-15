@@ -33,7 +33,7 @@ module.exports = {
 
             sqlInstances.data.forEach(sqlInstance => {
                 if (sqlInstance.databaseVersion && !sqlInstance.databaseVersion.toUpperCase().startsWith('POSTGRES')) {
-                    helpers.addResult(results, 0, 'SQL instance does not support log_checkpoints flag', region, sqlInstance.name);
+                    helpers.addResult(results, 0, 'SQL instance databse version is not of PosgreSQL type', region, sqlInstance.name);
                     return;
                 }
 
