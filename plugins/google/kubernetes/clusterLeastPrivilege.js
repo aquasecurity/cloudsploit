@@ -43,9 +43,8 @@ module.exports = {
                 'https://www.googleapis.com/auth/trace.append'
             ];
 
-            let otherScope = false;
-
             clusters.data.forEach(cluster => {
+                let otherScope = false;
                 if (cluster.nodeConfig &&
                     cluster.nodeConfig.serviceAccount &&
                     cluster.nodeConfig.serviceAccount == 'default') {

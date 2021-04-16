@@ -37,7 +37,7 @@ module.exports = {
 
                 if (cluster.SSEDescription &&
                     cluster.SSEDescription.Status &&
-                    cluster.SSEDescription.Status === 'ENABLED') {
+                    cluster.SSEDescription.Status.toUpperCase() === 'ENABLED') {
                     helpers.addResult(results, 0,
                         'Encryption is enabled for DAX :' + cluster.ClusterName, region, resource);
                 } else {

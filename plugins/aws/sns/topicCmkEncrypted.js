@@ -56,14 +56,12 @@ module.exports = {
                         helpers.addResult(results, 2,
                             'SNS topic is using default KMS key for Server-Side Encryption',
                             region, resource);
-                    }
-                    else {
+                    } else {
                         helpers.addResult(results, 0,
                             'SNS topic is using CMK key for Server-Side Encryption',
                             region, resource);
                     }
-                }
-                else {
+                } else {
                     helpers.addResult(results, 2,
                         'Server-Side Encryption is not enabled for SNS topic',
                         region, resource);
