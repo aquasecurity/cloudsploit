@@ -190,7 +190,6 @@ var engine = function(cloudConfig, settings) {
                     }
 
                 }
-                setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
             };
 
             if (plugin.asl) {
@@ -204,6 +203,8 @@ var engine = function(cloudConfig, settings) {
             } else {
                 plugin.run(collection, settings, postRun);
             }
+
+            setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
         }, function(err) {
             if (err) return console.log(err);
             // console.log(JSON.stringify(collection, null, 2));
