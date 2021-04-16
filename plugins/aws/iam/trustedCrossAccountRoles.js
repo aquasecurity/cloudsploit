@@ -11,14 +11,26 @@ module.exports = {
     settings: {
         whitelisted_aws_account_principals: {
             name: 'Whitelisted AWS Account Principals',
-            description: 'Return a failing result if cross-account role contains any AWS account principal other than these principals',
+            description: 'A comma-separated list of trusted cross account principals',
+            regex: '^.*$',
+            default: ''
+        },
+        whitelisted_aws_account_principals_regex: {
+            name: 'Whitelisted AWS Account Principals Regex',
+            description: 'If set, plugin will compare cross account principals against this regex instead of otherwise given comma-separated list' +
+                'Example regex: ^arn:aws:iam::(111111111111|222222222222|):.+$',
             regex: '^.*$',
             default: ''
         }
     },
 
     run: function(cache, settings, callback) {
-        var whitelisted_aws_account_principals = settings.whitelisted_aws_account_principals || this.settings.whitelisted_aws_account_principals.default;
+        var config= {
+            whitelisted_aws_account_principals : settings.whitelisted_aws_account_principals || this.settings.whitelisted_aws_account_principals.default,
+            whitelisted_aws_account_principals_regex : settings.whitelisted_aws_account_principals_regex || this.settings.whitelisted_aws_account_principals_regex.default
+        };
+        var makeRegexBased = (config.whitelisted_aws_account_principals_regex.length) ? true : false;
+        config.whitelisted_aws_account_principals_regex = new RegExp(config.whitelisted_aws_account_principals_regex);
         var results = [];
         var source = {};
         
@@ -63,7 +75,10 @@ module.exports = {
                     var principals = helpers.crossAccountPrincipal(statement.Principal, accountId, true);
                     if (principals.length) {
                         principals.forEach(principal => {
-                            if (!whitelisted_aws_account_principals.includes(principal) &&
+                            if (makeRegexBased) {
+                                if (!config.whitelisted_aws_account_principals_regex.test(principal) &&
+                                    !restrictedAccountPrincipals.includes(principal)) restrictedAccountPrincipals.push(principal);
+                            } else if (!config.whitelisted_aws_account_principals.includes(principal) &&
                                     !restrictedAccountPrincipals.includes(principal)) restrictedAccountPrincipals.push(principal);
                         });
                     }
@@ -72,7 +87,7 @@ module.exports = {
 
             if (crossAccountRole && !restrictedAccountPrincipals.length) {
                 helpers.addResult(results, 0,
-                    `Cross-account role "${role.RoleName}" contains trusted account pricipals only`,
+                    `Cross-account role "${role.RoleName}" contains trusted account principals only`,
                     'global', role.Arn);
             } else if (crossAccountRole) {
                 helpers.addResult(results, 2,
