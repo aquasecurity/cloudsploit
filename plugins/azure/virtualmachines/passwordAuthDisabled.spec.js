@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var passwordAuthenticationDisabled = require('./passwordAuthenticationDisabled');
+var passwordAuthDisabled = require('./passwordAuthDisabled');
 
 const virtualMachines = [
     {
@@ -40,11 +40,11 @@ const createCache = (virtualMachines) => {
     };
 };
 
-describe('passwordAuthenticationDisabled', function() {
+describe('passwordAuthDisabled', function() {
     describe('run', function() {
         it('should give passing result if no virtual machines', function(done) {
             const cache = createCache([]);
-            passwordAuthenticationDisabled.run(cache, {}, (err, results) => {
+            passwordAuthDisabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No existing Virtual Machines found');
@@ -55,7 +55,7 @@ describe('passwordAuthenticationDisabled', function() {
 
         it('should give unknown result if unable to query for virtual machines', function(done) {
             const cache = createCache(null);
-            passwordAuthenticationDisabled.run(cache, {}, (err, results) => {
+            passwordAuthDisabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for virtualMachines');
@@ -66,7 +66,7 @@ describe('passwordAuthenticationDisabled', function() {
 
         it('should give passing result if Password authentication is disabled on virtual machine', function(done) {
             const cache = createCache([virtualMachines[0]]);
-            passwordAuthenticationDisabled.run(cache, {}, (err, results) => {
+            passwordAuthDisabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Password authentication is disabled on virtual machine');
@@ -77,7 +77,7 @@ describe('passwordAuthenticationDisabled', function() {
 
         it('should give failing result if Password authentication is not disabled on virtual machine', function(done) {
             const cache = createCache([virtualMachines[1]]);
-            passwordAuthenticationDisabled.run(cache, {}, (err, results) => {
+            passwordAuthDisabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Password authentication is not disabled on virtual machine');

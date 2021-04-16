@@ -1,5 +1,5 @@
 var async = require('async');
-var helpers = require('../../../helpers/azure/');
+var helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Password Authentication Disabled',
@@ -33,11 +33,15 @@ module.exports = {
             }
 
             virtualMachines.data.forEach(virtualMachine => {
-                if (virtualMachine.osProfile && virtualMachine.osProfile.linuxConfiguration &&
-                    virtualMachine.osProfile.linuxConfiguration.disablePasswordAuthentication) {
-                    helpers.addResult(results, 0, 'Password authentication is disabled on virtual machine', location, virtualMachine.id);
+                if(virtualMachine.osProfile && virtualMachine.osProfile.windowsConfiguration) {
+                    helpers.addResult(results, 0, 'SSH authentication is not supported in Windows VM', location, virtualMachine.id);
                 } else {
-                    helpers.addResult(results, 2, 'Password authentication is not disabled on virtual machine', location, virtualMachine.id);
+                    if (virtualMachine.osProfile && virtualMachine.osProfile.linuxConfiguration &&
+                        virtualMachine.osProfile.linuxConfiguration.disablePasswordAuthentication) {
+                        helpers.addResult(results, 0, 'Password authentication is disabled on virtual machine', location, virtualMachine.id);
+                    } else {
+                        helpers.addResult(results, 2, 'Password authentication is not disabled on virtual machine', location, virtualMachine.id);
+                    }
                 }
             });
 

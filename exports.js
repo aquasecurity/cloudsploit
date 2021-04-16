@@ -378,7 +378,7 @@ module.exports = {
         'scaleSetMultiAz'               : require(__dirname + '/plugins/azure/virtualmachines/scaleSetMultiAz.js'),
         'scaleSetAutoscaleEnabled'      : require(__dirname + '/plugins/azure/virtualmachines/scaleSetAutoscaleEnabled.js'),
         'vmAvailabilitySetLimit'        : require(__dirname + '/plugins/azure/virtualmachines/vmAvailabilitySetLimit.js'),
-        'passwordAuthenticationDisabled': require(__dirname + '/plugins/azure/virtualmachines/passwordAuthenticationDisabled.js'),
+        'passwordAuthDisabled'          : require(__dirname + '/plugins/azure/virtualmachines/passwordAuthDisabled.js'),
 
         'lbLogAnalyticsEnabled'         : require(__dirname + '/plugins/azure/monitor/lbLogAnalyticsEnabled.js'),
         'kvLogAnalyticsEnabled'         : require(__dirname + '/plugins/azure/monitor/kvLogAnalyticsEnabled.js'),
