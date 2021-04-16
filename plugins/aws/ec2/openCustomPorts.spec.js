@@ -19,7 +19,7 @@ const securityGroups = [
                 }
             ],
             "PrefixListIds": [],
-            "ToPort": 30,
+            "ToPort": 160,
             "UserIdGroupPairs": []
         }],
         "OwnerId": "12345654321",
@@ -122,7 +122,7 @@ describe('openCustomPorts', function () {
     describe('run', function () {
         it('should FAIL if security group has open ports', function (done) {
             const cache = createCache([securityGroups[0]]);
-            openCustomPorts.run(cache, { restricted_open_ports: 'tcp:25,tcp:26' }, (err, results) => {
+            openCustomPorts.run(cache, { restricted_open_ports: 'tcp:0-500,tcp:33-39,tcp:55' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();

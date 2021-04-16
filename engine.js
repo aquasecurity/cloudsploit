@@ -2,6 +2,7 @@ var async = require('async');
 var exports = require('./exports.js');
 var suppress = require('./postprocess/suppress.js');
 var output = require('./postprocess/output.js');
+var aslRunner = require('./helpers/asl.js');
 
 /**
  * The main function to execute CloudSploit scans.
@@ -19,6 +20,14 @@ var engine = function(cloudConfig, settings) {
     var collector = require(`./collectors/${settings.cloud}/collector.js`);
     var plugins = exports[settings.cloud];
     var apiCalls = [];
+
+    // Load resource mappings
+    var resourceMap;
+    try {
+        resourceMap = require(`./helpers/${settings.cloud}/resources.js`);
+    } catch (e) {
+        resourceMap = {};
+    }
 
     // Print customization options
     if (settings.compliance) console.log(`INFO: Using compliance modes: ${settings.compliance.join(', ')}`);
@@ -134,50 +143,64 @@ var engine = function(cloudConfig, settings) {
         async.mapValuesLimit(plugins, 10, function(plugin, key, pluginDone) {
             if (skippedPlugins.indexOf(key) > -1) return pluginDone(null, 0);
 
-            plugin.run(collection, settings, function(err, results) {
-                if (!results || !results.length) return console.log('ERROR: Nothing to report...');
-                for (var r in results) {
-                    // If we have suppressed this result, then don't process it
-                    // so that it doesn't affect the return code.
-                    if (suppressionFilter([key, results[r].region || 'any', results[r].resource || 'any'].join(':'))) {
-                        continue;
-                    }
+            var postRun = function(err, results) {
+                if (err) return console.log(`ERROR: ${err}`);
+                if (!results || !results.length) {
+                    console.log(`Plugin ${plugin.title} returned no results. There may be a problem with this plugin.`);
+                } else {
+                    for (var r in results) {
+                        // If we have suppressed this result, then don't process it
+                        // so that it doesn't affect the return code.
+                        if (suppressionFilter([key, results[r].region || 'any', results[r].resource || 'any'].join(':'))) {
+                            continue;
+                        }
 
-                    var complianceMsg = [];
-                    if (settings.compliance && settings.compliance.length) {
-                        settings.compliance.forEach(function(c) {
-                            if (plugin.compliance && plugin.compliance[c]) {
-                                complianceMsg.push(`${c.toUpperCase()}: ${plugin.compliance[c]}`);
-                            }
-                        });
-                    }
-                    complianceMsg = complianceMsg.join('; ');
-                    if (!complianceMsg.length) complianceMsg = null;
+                        var complianceMsg = [];
+                        if (settings.compliance && settings.compliance.length) {
+                            settings.compliance.forEach(function(c) {
+                                if (plugin.compliance && plugin.compliance[c]) {
+                                    complianceMsg.push(`${c.toUpperCase()}: ${plugin.compliance[c]}`);
+                                }
+                            });
+                        }
+                        complianceMsg = complianceMsg.join('; ');
+                        if (!complianceMsg.length) complianceMsg = null;
 
-                    // Write out the result (to console or elsewhere)
-                    outputHandler.writeResult(results[r], plugin, key, complianceMsg);
+                        // Write out the result (to console or elsewhere)
+                        outputHandler.writeResult(results[r], plugin, key, complianceMsg);
 
-                    // Add this to our tracking for the worst status to calculate
-                    // the exit code
-                    maximumStatus = Math.max(maximumStatus, results[r].status);
-                    // Remediation
-                    if (settings.remediate && settings.remediate.length) {
-                        if (settings.remediate.indexOf(key) > -1) {
-                            if (results[r].status === 2) {
-                                var resource = results[r].resource;
-                                var event = {};
-                                event['remediation_file'] = {};
-                                event['remediation_file'] = initializeFile(event['remediation_file'], 'execute', key, resource);
-                                plugin.remediate(cloudConfig, collection, event, resource, (err, result) => {
-                                    if (err) return console.log(err);
-                                    return console.log(result);
-                                });
+                        // Add this to our tracking for the worst status to calculate
+                        // the exit code
+                        maximumStatus = Math.max(maximumStatus, results[r].status);
+                        // Remediation
+                        if (settings.remediate && settings.remediate.length) {
+                            if (settings.remediate.indexOf(key) > -1) {
+                                if (results[r].status === 2) {
+                                    var resource = results[r].resource;
+                                    var event = {};
+                                    event['remediation_file'] = {};
+                                    event['remediation_file'] = initializeFile(event['remediation_file'], 'execute', key, resource);
+                                    plugin.remediate(cloudConfig, collection, event, resource, (err, result) => {
+                                        if (err) return console.log(err);
+                                        return console.log(result);
+                                    });
+                                }
                             }
                         }
                     }
+
                 }
                 setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
-            });
+            };
+
+            if (plugin.asl) {
+                console.log(`INFO: Using custom ASL for plugin: ${plugin.title}`);
+                // Inject APIs and resource maps
+                plugin.asl.apis = plugin.apis;
+                aslRunner(collection, plugin.asl, resourceMap, postRun);
+            } else {
+                plugin.run(collection, settings, postRun);
+            }
         }, function(err) {
             if (err) return console.log(err);
             // console.log(JSON.stringify(collection, null, 2));
