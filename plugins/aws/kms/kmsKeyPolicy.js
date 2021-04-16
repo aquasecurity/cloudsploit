@@ -109,14 +109,14 @@ module.exports = {
                 if (config.kms_ignore_aws_managed_keys) {
                     var describeKey = helpers.addSource(cache, source,
                         ['kms', 'describeKey', region, kmsKey.KeyId]);
-
+                
                     if (!describeKey || describeKey.err || !describeKey.data || !describeKey.data.KeyMetadata) {
                         helpers.addResult(results, 3, `Unable to query for KMS Key: ${helpers.addError(describeKey)}`, region);
                         return kcb();
                     }
-
+    
                     let keyLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
-
+    
                     if (keyLevel == 2) {
                         helpers.addResult(results, 0,
                             'KMS key is AWS-managed', region, kmsKey.KeyArn);
