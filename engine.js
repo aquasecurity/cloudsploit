@@ -199,7 +199,14 @@ var engine = function(cloudConfig, settings) {
                 plugin.asl.apis = plugin.apis;
                 var aslConfig = require('./helpers/asl/config.json');
                 var aslVersion = plugin.asl.version ? plugin.asl.version : aslConfig.current_version;
-                var aslRunner = require(`./helpers/asl/asl-${aslVersion}.js`);
+                let aslRunner;
+                try {
+                    aslRunner = require(`./helpers/asl/asl-${aslVersion}.js`);
+
+                } catch (e) {
+                    postRun('Error: ASL: Wrong ASL Version: ', e);
+                }
+
                 aslRunner(collection, plugin.asl, resourceMap, postRun);
             } else {
                 plugin.run(collection, settings, postRun);

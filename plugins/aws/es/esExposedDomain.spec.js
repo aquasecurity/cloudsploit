@@ -261,7 +261,7 @@ const createNullCache = () => {
 describe('esExposedDomain', function () {
     describe('run', function () {
         it('should FAIL if domain is exposed to all AWS accounts', function (done) {
-            const cache = createCache([domainNames[1]], domains[0]);
+            const cache = createCache([domainNames[1]], domains[1]);
             esExposedDomain.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
