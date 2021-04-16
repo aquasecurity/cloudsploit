@@ -7,7 +7,7 @@ module.exports = {
     more_info: 'KMS key policies should be designed to limit the number of users who can perform encrypt and decrypt operations. Each application should use its own key to avoid over exposure.',
     recommended_action: 'Modify the KMS key policy to remove any wildcards and limit the number of users and roles that can perform encrypt and decrypt operations using the key.',
     link: 'http://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html',
-    apis: ['KMS:listKeys', 'STS:getCallerIdentity', 'KMS:getKeyPolicy'],
+    apis: ['KMS:listKeys', 'STS:getCallerIdentity', 'KMS:getKeyPolicy', 'KMS:describeKey'],
     settings: {
         kms_key_policy_max_user_count: {
             name: 'KMS Key Policy Max User Count',
@@ -42,6 +42,12 @@ module.exports = {
                 '3. Bool values are set to "true" with "Allow" and "false" with "Deny"',
             regex: '^.*$',
             default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceAccount,aws:SourceArn,kms:CallerAccount'
+        },
+        kms_ignore_aws_managed_keys: {
+            name: 'KMS Ignore AWS-managed Keys',
+            description: 'If set to true, ignore key policy for AWS-managed KMS keys',
+            regex: '^(true|false)$',
+            default: 'false'
         }
     },
 
@@ -51,7 +57,8 @@ module.exports = {
             kms_key_policy_max_third_parties_count: settings.kms_key_policy_max_third_parties_count || this.settings.kms_key_policy_max_third_parties_count.default,
             kms_key_policy_whitelisted_account_ids: settings.kms_key_policy_whitelisted_account_ids || this.settings.kms_key_policy_whitelisted_account_ids.default,
             kms_key_policy_whitelisted_policy_ids: settings.kms_key_policy_whitelisted_policy_ids || this.settings.kms_key_policy_whitelisted_policy_ids.default,
-            kms_key_policy_condition_keys: settings.kms_key_policy_condition_keys || this.settings.kms_key_policy_condition_keys.default
+            kms_key_policy_condition_keys: settings.kms_key_policy_condition_keys || this.settings.kms_key_policy_condition_keys.default,
+            kms_ignore_aws_managed_keys: settings.kms_ignore_aws_managed_keys || this.settings.kms_ignore_aws_managed_keys.default
         };
 
         if (config.kms_key_policy_whitelisted_account_ids && config.kms_key_policy_whitelisted_account_ids.length) {
@@ -65,6 +72,8 @@ module.exports = {
         } else {
             config.kms_key_policy_whitelisted_policy_ids = [];
         }
+
+        config.kms_ignore_aws_managed_keys = (config.kms_ignore_aws_managed_keys == 'true');
 
         var allowedConditionKeys = config.kms_key_policy_condition_keys.split(',');
         allowedConditionKeys.push('kms:CallerAccount', 'kms:ViaService');
@@ -97,6 +106,24 @@ module.exports = {
             }
 
             async.each(listKeys.data, function(kmsKey, kcb){
+                if (config.kms_ignore_aws_managed_keys) {
+                    var describeKey = helpers.addSource(cache, source,
+                        ['kms', 'describeKey', region, kmsKey.KeyId]);
+
+                    if (!describeKey || describeKey.err || !describeKey.data || !describeKey.data.KeyMetadata) {
+                        helpers.addResult(results, 3, `Unable to query for KMS Key: ${helpers.addError(describeKey)}`, region);
+                        return kcb();
+                    }
+
+                    let keyLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
+
+                    if (keyLevel == 2) {
+                        helpers.addResult(results, 0,
+                            'KMS key is AWS-managed', region, kmsKey.KeyArn);
+                        return kcb();
+                    }
+                }
+
                 var getKeyPolicy = helpers.addSource(cache, source,
                     ['kms', 'getKeyPolicy', region, kmsKey.KeyId]);
 
@@ -150,7 +177,7 @@ module.exports = {
                     var conditionalCaller = null;
 
                     if (statement.Condition) {
-                        conditionalCaller = helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, true);
+                        conditionalCaller = helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, true, accountId);
                     }
 
                     // Check for wildcards without condition
@@ -160,7 +187,7 @@ module.exports = {
                         for (var caller of conditionalCaller) {
                             if (caller !== accountId &&
                                 config.kms_key_policy_whitelisted_account_ids.indexOf(caller) === -1) {
-                                thirdPartyTrusted += 1; 
+                                thirdPartyTrusted += 1;
                             }
                         }
                     } else if (!conditionalCaller) {
@@ -199,11 +226,11 @@ module.exports = {
                     helpers.addResult(results, 2, 'Key trusts ' + wildcardTrusted +
                         ' principals with wildcards', region, kmsKey.KeyArn, custom);
                 }
-                
+
                 if (!found){
                     helpers.addResult(results, 0, 'Key policy is sufficient', region, kmsKey.KeyArn, custom);
                 }
-                
+
                 kcb();
             }, function(){
                 rcb();
