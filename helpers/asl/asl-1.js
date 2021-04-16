@@ -43,6 +43,18 @@ var transform = function(val, transformation) {
 };
 
 var compositeResult = function(inputResultsArr, resource, region, results, logical) {
+    let failingResults = [];
+    let passingResults = [];
+    inputResultsArr.forEach(localResult => {
+        if (localResult.status === 2) {
+            failingResults.push(localResult.message);
+        }
+
+        if (localResult.status === 0) {
+            passingResults.push(localResult.message);
+        }
+    });
+
     if (!logical) {
         results.push({
             status: inputResultsArr[0].status,
@@ -51,42 +63,34 @@ var compositeResult = function(inputResultsArr, resource, region, results, logic
             region: region
         });
     } else if (logical === 'AND') {
-        var failingResult = inputResultsArr.find(localResult => {
-            return localResult.status === 2;
-        });
-
-        if (failingResult) {
+        if (failingResults && failingResults.length) {
             results.push({
-                status: failingResult.status,
+                status: 2,
                 resource: resource,
-                message: failingResult.message,
+                message: failingResults.join(' and '),
                 region: region
             });
         } else {
             results.push({
                 status: 0,
                 resource: resource,
-                message: 'All conditions passed',
+                message: passingResults.join(' and '),
                 region: region
             });
         }
     } else {
-        var passingResult = inputResultsArr.find(localResult => {
-            return localResult.status === 0;
-        });
-
-        if (passingResult) {
+        if (passingResults && passingResults.length) {
             results.push({
-                status: passingResult.status,
+                status: 0,
                 resource: resource,
-                message: passingResult.message,
+                message: passingResults.join(' and '),
                 region: region
             });
         } else {
             results.push({
                 status: 2,
                 resource: resource,
-                message: 'All conditions failed',
+                message: failingResults.join(' and '),
                 region: region
             });
         }
@@ -99,14 +103,14 @@ function evaluateCondition(obj, condition, inputResultsArr){
 }
 
 var validate = function(obj, condition, inputResultsArr) {
-    var result = 0;
-    var message = [];
-    var override = false;
+    let result = 0;
+    let message = [];
+    let override = false;
 
     // Extract the values for the conditions
     if (condition.property) {
-        var conditionResult = 0;
-        var property;
+        let conditionResult = 0;
+        let property;
 
         if (condition.property.length === 1) property = condition.property[0];
         else if (condition.property.length > 1) property = condition.property;
@@ -251,14 +255,64 @@ var validate = function(obj, condition, inputResultsArr) {
     return resultObj;
 };
 
+var runConditions = function(input, data, results, resourcePath, resourceName, region) {
+    let dataToValidate;
+    let newPath;
+    let newData;
+    let validated;
+    let parsedResource;
+
+    let inputResultsArr = [];
+    let logical;
+    let localInput = JSON.parse(JSON.stringify(input));
+    localInput.conditions.forEach(condition => {
+        logical = condition.logical;
+        if (condition.property && condition.property.indexOf('[*]') > -1) {
+            dataToValidate = parse(data, condition.property);
+            newPath = dataToValidate[1];
+            newData = dataToValidate[0];
+            condition.property = newPath;
+
+            condition.validated = evaluateCondition(newData, condition, inputResultsArr);
+            parsedResource = parse(data, resourcePath)[0];
+            if (typeof parsedResource !== 'string') parsedResource = null;
+        } else {
+            dataToValidate = parse(data, condition.property);
+            if (dataToValidate.length === 1) {
+                validated = evaluateCondition(data, condition, inputResultsArr);
+                parsedResource = parse(data, resourcePath)[0];
+                if (typeof parsedResource !== 'string') parsedResource = null;
+            } else {
+                newPath = dataToValidate[1];
+                newData = dataToValidate[0];
+                condition.property = newPath;
+                newData.forEach(element =>{
+                    condition.validated = evaluateCondition(element, condition, inputResultsArr);
+                    parsedResource = parse(data, resourcePath)[0];
+                    if (typeof parsedResource !== 'string') parsedResource = null;
+
+                    results.push({
+                        status: validated.status,
+                        resource: parsedResource ? parsedResource : resourceName,
+                        message: validated.message,
+                        region: region
+                    });
+                });
+            }
+        }
+    });
+
+    compositeResult(inputResultsArr, parsedResource, region, results, logical);
+};
+
 var asl = function(source, input, resourceMap, callback) {
     if (!source || !input) return callback('No source or input provided');
     if (!input.apis || !input.apis[0]) return callback('No APIs provided for input');
     if (!input.conditions || !input.conditions.length) return callback('No conditions provided for input');
 
-    var service = input.conditions[0].service;
-    var api = input.conditions[0].api;
-    var resourcePath;
+    let service = input.conditions[0].service;
+    let api = input.conditions[0].api;
+    let resourcePath;
     if (resourceMap &&
         resourceMap[service] &&
         resourceMap[service][api]) {
@@ -268,15 +322,9 @@ var asl = function(source, input, resourceMap, callback) {
     if (!source[service]) return callback(`Source data did not contain service: ${service}`);
     if (!source[service][api]) return callback(`Source data did not contain API: ${api}`);
 
-    var results = [];
-    var dataToValidate;
-    var newData;
-    var newPath;
-    var validated;
-    var parsedResource;
-
-    for (var region in source[service][api]) {
-        var regionVal = source[service][api][region];
+    let results = [];
+    for (let region in source[service][api]) {
+        let regionVal = source[service][api][region];
         if (typeof regionVal !== 'object') continue;
         if (regionVal.err) {
             results.push({
@@ -293,58 +341,11 @@ var asl = function(source, input, resourceMap, callback) {
                 });
             } else {
                 regionVal.data.forEach(function(regionData) {
-                    dataToValidate = parse(regionData, input.conditions.property);
-                    var inputResultsArr = [];
-                    var logical;
-                    var localInput = JSON.parse(JSON.stringify(input));
-                    localInput.conditions.forEach(condition => {
-                        logical = condition.logical;
-                        if (dataToValidate.length === 1) {
-                            validated = evaluateCondition(regionData, condition, inputResultsArr);
-                            parsedResource = parse(regionData, resourcePath)[0];
-                            if (typeof parsedResource !== 'string') parsedResource = null;
-
-                        } else {
-                            newPath = dataToValidate[1];
-                            newData = dataToValidate[0];
-                            condition.property = newPath;
-                            newData.forEach(element => {
-                                validated = evaluateCondition(element, condition, inputResultsArr);
-                                parsedResource = parse(newData, resourcePath)[0];
-                                if (typeof parsedResource !== 'string') parsedResource = null;
-
-                            });
-                        }
-                    });
-                    compositeResult(inputResultsArr, parsedResource, region, results, logical);
+                    runConditions(input, regionData, results, resourcePath, '', region);
                 });
             }
         } else if (regionVal.data && Object.keys(regionVal.data).length > 0) {
-            dataToValidate = parse(regionVal.data, input.conditions.property);
-            let inputResultsArr = [];
-            let logical;
-            let localInput = JSON.parse(JSON.stringify(input));
-            localInput.conditions.forEach(condition => {
-                logical = condition.logical;
-                if (dataToValidate.length === 1) {
-                    validated = evaluateCondition(regionVal.data, condition, inputResultsArr);
-                    parsedResource = parse(regionVal.data, resourcePath)[0];
-                    if (typeof parsedResource !== 'string') parsedResource = null;
-
-                } else {
-                    newPath = dataToValidate[1];
-                    newData = dataToValidate[0];
-                    condition.property = newPath;
-                    newData.forEach(element => {
-                        validated = evaluateCondition(element, condition, inputResultsArr);
-                        parsedResource = parse(newData, resourcePath)[0];
-                        if (typeof parsedResource !== 'string') parsedResource = null;
-
-                    });
-                }
-            });
-            compositeResult(inputResultsArr, parsedResource, region, results, logical);
-
+            runConditions(input, regionVal.data, results, resourcePath, '', region);
         } else {
             if (!Object.keys(regionVal).length) {
                 results.push({
@@ -353,8 +354,8 @@ var asl = function(source, input, resourceMap, callback) {
                     region: region
                 });
             } else {
-                for (var resourceName in regionVal) {
-                    var resourceObj = regionVal[resourceName];
+                for (let resourceName in regionVal) {
+                    let resourceObj = regionVal[resourceName];
                     if (resourceObj.err) {
                         results.push({
                             status: 3,
@@ -370,47 +371,7 @@ var asl = function(source, input, resourceMap, callback) {
                             region: region
                         });
                     } else {
-                        var inputResultsArr = [];
-                        var logical;
-                        var localInput = JSON.parse(JSON.stringify(input));
-                        localInput.conditions.forEach(condition => {
-                            logical = condition.logical;
-                            if (condition.property && condition.property.indexOf('[*]') > -1) {
-                                dataToValidate = parse(resourceObj.data, condition.property);
-                                newPath = dataToValidate[1];
-                                newData = dataToValidate[0];
-                                condition.property = newPath;
-
-                                condition.validated = evaluateCondition(newData, condition, inputResultsArr);
-                                parsedResource = parse(resourceObj.data, resourcePath)[0];
-                                if (typeof parsedResource !== 'string') parsedResource = null;
-                            } else {
-                                dataToValidate = parse(resourceObj.data, condition.property);
-                                if (dataToValidate.length === 1) {
-                                    validated = evaluateCondition(resourceObj.data, condition, inputResultsArr);
-                                    parsedResource = parse(resourceObj.data, resourcePath)[0];
-                                    if (typeof parsedResource !== 'string') parsedResource = null;
-                                } else {
-                                    newPath = dataToValidate[1];
-                                    newData = dataToValidate[0];
-                                    condition.property = newPath;
-                                    newData.forEach(element =>{
-                                        condition.validated = evaluateCondition(element, condition, inputResultsArr);
-                                        parsedResource = parse(resourceObj.data, resourcePath)[0];
-                                        if (typeof parsedResource !== 'string') parsedResource = null;
-
-                                        results.push({
-                                            status: validated.status,
-                                            resource: parsedResource ? parsedResource : resourceName,
-                                            message: validated.message,
-                                            region: region
-                                        });
-                                    });
-                                }
-                            }
-                        });
-                        console.log(inputResultsArr);
-                        compositeResult(inputResultsArr, parsedResource ? parsedResource : resourceName, region, results, logical);
+                        runConditions(input, resourceObj.data, results, resourcePath, resourceName, region);
                     }
                 }
             }
