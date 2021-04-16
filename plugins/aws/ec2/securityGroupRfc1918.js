@@ -10,9 +10,9 @@ module.exports = {
     recommended_action: 'Modify the security group to deny private reserved addresses for inbound traffic',
     apis: ['EC2:describeSecurityGroups'],
     settings: {
-        privateCidrs: {
+        private_cidrs: {
             name: 'EC2 RFC 1918 CIDR Addresses',
-            description: 'A comma-delimited list of CIDRs that indicates reserved private addresses',
+            description: 'A comma-separated list of CIDRs that indicates reserved private addresses',
             regex: '/^(?=.*[^.]$)((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).?){4}$/',
             default: '10.0.0.0/8,172.16.0.0/12,192.168.0.0/16'
         }
@@ -24,8 +24,8 @@ module.exports = {
         var regions = helpers.regions(settings);
         var awsOrGov = helpers.defaultPartition(settings);
 
-        var privateCidrs = settings.privateCidrs || this.settings.privateCidrs.default;
-        privateCidrs = privateCidrs.split(',');
+        var private_cidrs = settings.private_cidrs || this.settings.private_cidrs.default;
+        private_cidrs = private_cidrs.split(',');
 
         async.each(regions.ec2, function(region, rcb){
             var describeSecurityGroups = helpers.addSource(cache, source,
@@ -60,7 +60,8 @@ module.exports = {
 
                     for (var r in permission.IpRanges) {
                         var cidrIp = permission.IpRanges[r].CidrIp;
-                        if (cidrIp && privateCidrs.includes(cidrIp)) {
+                      
+                        if (cidrIp && private_cidrs.includes(cidrIp)) {
                             if (!privateCidrsFound.includes(cidrIp)) {
                                 privateCidrsFound.push(cidrIp);
                             }

@@ -12,7 +12,7 @@ module.exports = {
     settings: {
         vpc_trusted_cross_account_arns: {
             name: 'VPC Trusted Cross Account ARNs',
-            description: 'Comma separated string of trusted cross account ARNs',
+            description: 'A comma-separated list of trusted cross account ARNs i.e. \'arn:aws:iam::000111222333:user/user1,arn:aws:iam::000111222333:user/user2\'',
             regex: '^.*$',
             default: ''
         }

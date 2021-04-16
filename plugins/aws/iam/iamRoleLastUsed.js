@@ -30,7 +30,7 @@ module.exports = {
         },
         skip_aws_service_roles: {
             name: 'Skip AWS Service Roles',
-            description: 'Ignores AWS service roles',
+            description: 'If set to true, plugin will Ignore AWS service roles',
             regex: '^(true|false)$',
             default: 'true'
         }
