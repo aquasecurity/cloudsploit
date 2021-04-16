@@ -15,22 +15,42 @@ module.exports = {
     settings: {
         iam_role_policies_ignore_path: {
             name: 'IAM Role Policies Ignore Path',
-            description: 'Ignores roles that contain the provided exact-match path',
+            description: 'A comma-separated list indicating role paths which should PASS without checking',
             regex: '^[0-9A-Za-z/._-]{3,512}$',
             default: ''
         },
         ignore_service_specific_wildcards: {
             name: 'Ignore Service Specific Wildcards',
-            description: 'enable this to consider only those roles which allow all actions',
-            regex: '^(true|false)$', // string true or boolean true to enable, string false or boolean false to disable
+            description: 'This allows enables you to allow attached policies (inline and managed) to use service specific wildcards in Action. ' +
+            'Example: Consider a role has following inline policy' +
+            `{
+                "Version": "2012-10-17",
+                "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                                "cognito-sync:*",
+                                "cognito-identity:*"
+                            ],
+                            "Resource": [
+                                "*"
+                            ]
+                        }
+                ]
+            }` +
+            'If ignore_service_specific_wildcards is true, a PASS result will be generated. ' +
+            'If ignore_service_specific_wildcards is false, a FAIL result will be generated.', 
+            regex: '^(true|false)$',
             default: 'false'
         },
         ignore_identity_federation_roles: {
             name: 'Ignore Identity Federation Roles',
-            description: 'enable this to ignore idp/saml trust roles',
-            regex: '^(true|false)$', // string true or boolean true to enable, string false or boolean false to disable
+            description: 'This setting allows you to skip IdP/SAML based roles ' +
+                'i.e. if for a role, all trust relationship statements have "Action" either "sts:AssumeRoleWithWebIdentity" or "sts:AssumeRoleWithSAML" '+
+                'and value for this setting is set to true, a PASS results will be generated.',
+            regex: '^(true|false)$',
             default: 'false'
-        },
+        }
     },
 
     run: function(cache, settings, callback) {
@@ -140,7 +160,7 @@ module.exports = {
                                 getPolicyVersion.data.PolicyVersion.Document);
                             if (!statements) break;
 
-                            addRoleFailures(roleFailures, statements, 'managed');
+                            addRoleFailures(roleFailures, statements, 'managed', config.ignore_service_specific_wildcards);
                         }
                     }
                 }
@@ -159,7 +179,7 @@ module.exports = {
                         var statements = helpers.normalizePolicyDocument(
                             getRolePolicy[policyName].data.PolicyDocument);
                         if (!statements) break;
-                        addRoleFailures(roleFailures, statements, 'inline');
+                        addRoleFailures(roleFailures, statements, 'inline', config.ignore_service_specific_wildcards);
                     }
                 }
             }
@@ -181,7 +201,7 @@ module.exports = {
     }
 };
 
-function addRoleFailures(roleFailures, statements, policyType) {
+function addRoleFailures(roleFailures, statements, policyType, ignoreServiceSpecific) {
     for (var statement of statements) {
         if (statement.Effect === 'Allow' &&
             !statement.Condition) {
@@ -193,7 +213,7 @@ function addRoleFailures(roleFailures, statements, policyType) {
                 failMsg = `Role ${policyType} policy allows all actions on all resources`;
             } else if (statement.Action.indexOf('*') > -1) {
                 failMsg = `Role ${policyType} policy allows all actions on selected resources`;
-            } else if (statement.Action && statement.Action.length) {
+            } else if (!ignoreServiceSpecific && statement.Action && statement.Action.length) {
                 // Check each action for wildcards
                 let wildcards = [];
                 for (var a in statement.Action) {

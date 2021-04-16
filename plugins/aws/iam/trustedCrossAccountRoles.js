@@ -11,7 +11,7 @@ module.exports = {
     settings: {
         whitelisted_aws_account_principals: {
             name: 'Whitelisted AWS Account Principals',
-            description: 'Return a failing result if cross-account role contains any AWS account principal other than these principals',
+            description: 'A comma-separated list of trusted cross account principals',
             regex: '^.*$',
             default: ''
         }
@@ -74,8 +74,7 @@ module.exports = {
                 helpers.addResult(results, 0,
                     `Cross-account role "${role.RoleName}" contains trusted account pricipals only`,
                     'global', role.Arn);
-            }
-            else if (crossAccountRole) {
+            } else if (crossAccountRole) {
                 helpers.addResult(results, 2,
                     `Cross-account role "${role.RoleName}" contains these untrusted account principals: ${restrictedAccountPrincipals.join(', ')}`,
                     'global', role.Arn);

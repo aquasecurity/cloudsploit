@@ -170,7 +170,7 @@ describe('blockPolicyProtection', function () {
                 [
                     {
                         "statements": [
-                            "Allow group Developers to manage volumes in tenancy where request.permission!='VOLUME_DELETE'",
+                            "Allow group Developers to read volumes in tenancy where request.permission != 'VOLUME_DELETE'",
                         ],
                         "id": "ocid1.policy.oc1..aaaaaaaapil3afuz45oxyvd3u73otqbsj4atjdorao6nvfr3yjqumnniscka",
                         "compartmentId": "ocid1.tenancy.oc1..aaaaaaaao43aqdrzuacodg7ffqv2zeauftjyjkwhnbrugt44ympzeiblxx7q",

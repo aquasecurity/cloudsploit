@@ -40,7 +40,7 @@ module.exports = {
             const storageAccount = helpers.addSource(cache, source,
                 ['storageAccounts', 'list', location]);
 
-            if(!storageAccount) return rcb();
+            if (!storageAccount) return rcb();
 
             if (storageAccount.err || !storageAccount.data) {
                 helpers.addResult(results, 3,

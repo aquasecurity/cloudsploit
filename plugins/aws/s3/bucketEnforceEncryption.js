@@ -95,8 +95,7 @@ module.exports = {
                     } else {
                         try {
                             policyJson = JSON.parse(getBucketPolicy.data.Policy);
-                        }
-                        catch(e) {
+                        } catch (e) {
                             helpers.addResult(results, 3,
                                 `Error querying for bucket policy for bucket: "${bucket.Name}". Policy JSON could not be parsed`,
                                 'global', bucketResource);
@@ -157,7 +156,7 @@ module.exports = {
                                 'global', bucketResource);
                         }
                     }
-                } catch(e) {
+                } catch (e) {
                     helpers.addResult(results, 3,
                         'Error querying for bucket policy for bucket: ' + bucket.Name +
                         ': Policy JSON could not be parsed.',

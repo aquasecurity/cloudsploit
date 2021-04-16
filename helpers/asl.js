@@ -49,36 +49,30 @@ function evaluateConditions(obj, conditions){
             if ( i == 0){
                 // first element in the condition list,so set the preVal
                 preVal = value;
-            }
-            // error as no logical condition and not the first element
-            else{
+            } else {
+                // error as no logical condition and not the first element
                 //err
                 console.error('No logical operator found and this is not the first element');
             }
-        }
-        else{
+        } else {
             if ( i == 0){
                 // first element in the condition list,and with logical operation. Error case
                 console.error('logical operator found in first element');
-            }
-            else{
+            } else {
                 // this is not first element in array and also logical op is here. use the preVal and evaluate it
-                if(preVal){
+                if (preVal){
                     //as this is not first element in array  preVal  should be set.
                     //other wise the condition is not properly formed as AND OR are binary ops
-                    if( condition.logical === 'OR'){
+                    if ( condition.logical === 'OR'){
                         preVal.status = preVal.status || value.status;
-                    }
-                    else if (condition.logical === 'AND'){
+                    } else if (condition.logical === 'AND'){
                         preVal.status = preVal.status && value.status;
-                    }
-                    else{
+                    } else {
                         // unsupported operator.
                         console.error('wrong logical operator mentioned');
                     }
                     preVal.message = preVal.message.concat(', ',value.message);
-                }
-                else{
+                } else {
                     //condition is not properly formed as AND OR are binary ops
                     console.error('condition is malformed');
                 }
@@ -109,8 +103,7 @@ var validate = function(obj, condition) {
         if (condition.parsed === 'not set'){
             conditionResult = 2;
             message.push(`${condition.property}: not set to any value`);
-        }
-        else if (condition.op) {
+        } else if (condition.op) {
             if (condition.op == 'EQ') {
                 if (condition.parsed == condition.value) {
                     message.push(`${condition.property}: ${condition.parsed} matched: ${condition.value}`);
@@ -229,7 +222,7 @@ var asl = function(source, input, resourceMap, callback) {
                 message: regionVal.err.message || 'Error',
                 region: region
             });
-        } else if (regionVal.data) {
+        } else if (regionVal.data && regionVal.data.length) {
             // It's an array, loop
             regionVal.data.forEach(function(regionData) {
                 var validated = evaluateConditions(regionData, input.conditions);

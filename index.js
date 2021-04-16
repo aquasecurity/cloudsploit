@@ -97,7 +97,7 @@ console.log(`INFO: Using CloudSploit config file: ${settings.config}`);
 
 try {
     var config = require(settings.config);
-} catch(e) {
+} catch (e) {
     console.error('ERROR: Config file could not be loaded. Please ensure you have copied the config_example.js file to config.js');
     process.exit(1);
 }
@@ -157,6 +157,7 @@ if (config.credentials.aws.credential_file) {
 } else if (config.credentials.google.credential_file) {
     settings.cloud = 'google';
     cloudConfig = loadHelperFile(config.credentials.google.credential_file);
+    cloudConfig.project = cloudConfig.project_id;
 } else if (config.credentials.google.project) {
     settings.cloud = 'google';
     checkRequiredKeys(config.credentials.google, ['client_email', 'private_key']);

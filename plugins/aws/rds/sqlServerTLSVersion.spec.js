@@ -96,7 +96,7 @@ const groupParameters = [
 ];
 
 const createCache = (parameterGroups, groupParameters) => {
-    if (parameterGroups.length) var dbParameterGroupName = parameterGroups[0]['DBParameterGroupName'];
+    var dbParameterGroupName = (parameterGroups.length)? parameterGroups[0]['DBParameterGroupName'] : null;
     return {
         rds: {
             describeDBParameterGroups: {
@@ -144,27 +144,8 @@ const createNullCache = () => {
 
 describe('sqlServerTLSVersion', function () {
     describe('run', function () {
-
-        it('should PASS if unable to get parameter groups', function (done) {
-            const cache = createCache([]);
-            sqlServerTLSVersion.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                done();
-            });
-        });
-
-        it('should FAIL if unable to get group parameters', function (done) {
-            const cache = createCache([parameterGroups[0]],[]);
-            sqlServerTLSVersion.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                done();
-            });
-        });
-
         it('should FAIL if parameter group does not use TLS version 1.2', function (done) {
-            const cache = createCache([parameterGroups[0]], groupParameters[0]);
+            const cache = createCache([parameterGroups[1]], groupParameters[0]);
             sqlServerTLSVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -174,6 +155,15 @@ describe('sqlServerTLSVersion', function () {
 
         it('should PASS if parameter group uses TLS version 1.2', function (done) {
             const cache = createCache([parameterGroups[1]], groupParameters[1]);
+            sqlServerTLSVersion.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
+
+        it('should PASS if no parameter groups found', function (done) {
+            const cache = createCache([]);
             sqlServerTLSVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
