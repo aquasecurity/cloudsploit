@@ -33,7 +33,7 @@ module.exports = {
             }
 
             virtualMachines.data.forEach(virtualMachine => {
-                if(virtualMachine.osProfile && virtualMachine.osProfile.windowsConfiguration) {
+                if (virtualMachine.osProfile && virtualMachine.osProfile.windowsConfiguration) {
                     helpers.addResult(results, 0, 'SSH authentication is not supported in Windows VM', location, virtualMachine.id);
                 } else {
                     if (virtualMachine.osProfile && virtualMachine.osProfile.linuxConfiguration &&
