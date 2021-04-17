@@ -229,6 +229,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/extensions?api-version=2019-12-01'
         }
     },
+    virtualMachineScaleSetVMs: {
+        list: {
+            reliesOnPath: 'virtualMachineScaleSets.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/virtualMachines?api-version=2020-12-01'
+        }
+    },
     blobContainers: {
         list: {
             reliesOnPath: 'storageAccounts.list',
