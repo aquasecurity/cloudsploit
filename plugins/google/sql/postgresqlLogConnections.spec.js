@@ -1,6 +1,6 @@
 var assert = require('assert');
 var expect = require('chai').expect;
-var plugin = require('./mySqlLocalInfileDisabled');
+var plugin = require('./postgresqlLogConnections');
 
 const createCache = (err, data) => {
     return {
@@ -17,7 +17,7 @@ const createCache = (err, data) => {
     }
 };
 
-describe('mySqlLocalInfileDisabled', function () {
+describe('postgresqlLogConnections', function () {
     describe('run', function () {
         it('should give unknown result if a sql instance error is passed or no data is present', function (done) {
             const callback = (err, results) => {
@@ -53,11 +53,11 @@ describe('mySqlLocalInfileDisabled', function () {
             plugin.run(cache, {}, callback);
         });
 
-        it('should give passing result if no sql instances are found with MySQL type', function (done) {
+        it('should give passing result if sql instance database type is not of postgreSQL type', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No SQL instance found with MySQL type');
+                expect(results[0].message).to.include('SQL instance database type is not of postgreSQL type');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -66,17 +66,17 @@ describe('mySqlLocalInfileDisabled', function () {
                 null,
                 [{
                     name: "testing-instance",
-                    databaseVersion: "POSTGRES_13",
+                    databaseVersion: "MYSQL_5_7",
                 }],
             );
 
             plugin.run(cache, {}, callback);
         });
-        it('should give passing result if sql instances does have local_infile flag enabled', function (done) {
+        it('should give passing result if sql instances have log_connections flag enabled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('SQL instance does not have local_infile flag enabled');
+                expect(results[0].message).to.include('SQL instance have log_connections flag enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -86,12 +86,12 @@ describe('mySqlLocalInfileDisabled', function () {
                 [{
                     instanceType: "CLOUD_SQL_INSTANCE",
                     name: "testing-instance",
-                    databaseVersion: "MYSQL_5_7",
+                    databaseVersion: "POSTGRES_13",
                     settings: {
                       databaseFlags: [
                         {
-                            name: "local_infile",
-                            value: "off",
+                            name: "log_connections",
+                            value: "on",
                         },
                       ]}
                 }],
@@ -99,11 +99,11 @@ describe('mySqlLocalInfileDisabled', function () {
             
             plugin.run(cache, {}, callback);
         });
-        it('should give failing result if sql instances have local_infile flag enabled', function (done) {
+        it('should give failing result if sql instances does not have log_connections flag enabled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('SQL instance have local_infile flag enabled');
+                expect(results[0].message).to.include('SQL instance does not have log_connections flag enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -113,12 +113,12 @@ describe('mySqlLocalInfileDisabled', function () {
                 [{
                     instanceType: "CLOUD_SQL_INSTANCE",
                     name: "testing-instance",
-                    databaseVersion: "MYSQL_5_7",
+                    databaseVersion: "POSTGRES_13",
                     settings: {
                       databaseFlags: [
                         {
-                            name: "local_infile",
-                            value: "on",
+                            name: "log_connections",
+                            value: "off",
                         },
                       ]}
                 }],
@@ -126,11 +126,11 @@ describe('mySqlLocalInfileDisabled', function () {
 
             plugin.run(cache, {}, callback);
         });
-        it('should give failing result if sql instances have local_infile flag enabled', function (done) {
+        it('should give failing result if sql instances does not have log_connections flag enabled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('SQL instance have local_infile flag enabled');
+                expect(results[0].message).to.include('SQL instance does not have log_connections flag enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -140,7 +140,7 @@ describe('mySqlLocalInfileDisabled', function () {
                 [{
                     instanceType: "CLOUD_SQL_INSTANCE",
                     name: "testing-instance",
-                    databaseVersion: "MYSQL_5_7",
+                    databaseVersion: "POSTGRES_13",
                     settings: {
                       databaseFlags: [
                         {
@@ -153,11 +153,11 @@ describe('mySqlLocalInfileDisabled', function () {
 
             plugin.run(cache, {}, callback);
         });
-        it('should give failing result if sql instances have local_infile flag enabled', function (done) {
+        it('should give failing result if sql instances does not have log_connections flag enabled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('SQL instance have local_infile flag enabled');
+                expect(results[0].message).to.include('SQL instance does not have log_connections flag enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -167,7 +167,7 @@ describe('mySqlLocalInfileDisabled', function () {
                 [{
                     instanceType: "CLOUD_SQL_INSTANCE",
                     name: "testing-instance",
-                    databaseVersion: "MYSQL_5_7",
+                    databaseVersion: "POSTGRES_13",
                     settings: {
                       databaseFlags: []
                     }

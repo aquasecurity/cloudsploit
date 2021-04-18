@@ -2,10 +2,10 @@ var async = require('async');
 var helpers = require('../../../helpers/google');
 
 module.exports = {
-    title: 'MySQL local infile disabled',
+    title: 'MySQL Local Infile Disabled',
     category: 'SQL',
     description: 'Ensures SQL instances for MySQL type does not have local infile flag enabled.',
-    more_info: 'Ensures MySQL db does not have local infile flag enabled, it control the load data statements for database. For security reasons it should be disabled.',
+    more_info: 'SQL instances for MySQL type database provides local_infile flag, which can be used to load data from client or server systems. It control the load data statements for database. Using this server can have access of any file on the client system. For security reasons it should be disabled.',
     link: 'https://cloud.google.com/sql/docs/mysql/flags',
     recommended_action: 'Ensure that local infile flag is disabled for all MySQL instances.',
     apis: ['instances:sql:list'],
@@ -34,7 +34,7 @@ module.exports = {
             sqlInstances.data.forEach(sqlInstance => {
                 if (sqlInstance.databaseVersion && !sqlInstance.databaseVersion.toLowerCase().includes('mysql')) {
                     helpers.addResult(results, 0, 
-                        'No SQL instance found with MySQL type', region, sqlInstance.name);
+                        'SQL instance database type is not of MySQL type', region, sqlInstance.name);
                     return;
                 }
 
@@ -42,18 +42,13 @@ module.exports = {
                     sqlInstance.settings &&
                     sqlInstance.settings.databaseFlags &&
                     sqlInstance.settings.databaseFlags.length) {
-                        flags = sqlInstance.settings.databaseFlags
-                        flag_disabled = false
-                        flags.forEach(flag => {
-                            if(flag.name == 'local_infile' && flag.value == 'off') {
-                                flag_disabled = true
-                            }
-                        })
-                        if(flag_disabled == true) {
+                        let found = sqlInstance.settings.databaseFlags.find(flag => flag.name && flag.name == 'local_infile' &&
+                                                                        flag.value && flag.value == 'off');
+                        
+                        if (found) {
                             helpers.addResult(results, 0, 
                                 'SQL instance does not have local_infile flag enabled', region, sqlInstance.name);
-                            return;
-                        }else {
+                        } else {
                             helpers.addResult(results, 2,
                                 'SQL instance have local_infile flag enabled', region, sqlInstance.name);
                         }

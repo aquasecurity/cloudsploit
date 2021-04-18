@@ -2,10 +2,10 @@ var async = require('async');
 var helpers = require('../../../helpers/google');
 
 module.exports = {
-    title: 'PostgreSQL log connections flag enabled',
+    title: 'PostgreSQL Log Connections Flag Enabled',
     category: 'SQL',
     description: 'Ensures SQL instances for PostgreSQL type have log connections flag enabled.',
-    more_info: 'Ensures PostgreSQL databases to have log connections flag enabled as it is not enabled by default. Enabling it will make sure to log all connection tries',
+    more_info: 'SQL instance for PostgreSQL databases provides log_connections flag. It is used to log every attempt to connect to the db server. It is not enabled by default. Enabling it will make sure to log all connection tries',
     link: 'https://cloud.google.com/sql/docs/postgres/flags',
     recommended_action: 'Ensure that log connections flag is enabled for all PostgreSQL instances.',
     apis: ['instances:sql:list'],
@@ -34,7 +34,7 @@ module.exports = {
             sqlInstances.data.forEach(sqlInstance => {
                 if (sqlInstance.databaseVersion && !sqlInstance.databaseVersion.toLowerCase().includes('postgres')) {
                     helpers.addResult(results, 0, 
-                        'No SQL instance found with postgreSQL type', region, sqlInstance.name);
+                        'SQL instance database type is not of postgreSQL type', region, sqlInstance.name);
                     return;
                 }
 
@@ -42,18 +42,13 @@ module.exports = {
                     sqlInstance.settings &&
                     sqlInstance.settings.databaseFlags &&
                     sqlInstance.settings.databaseFlags.length) {
-                        flags = sqlInstance.settings.databaseFlags
-                        flag_enabled = false
-                        flags.forEach(flag => {
-                            if(flag.name == 'log_connections' && flag.value == 'on') {
-                                flag_enabled = true
-                            }
-                        })
-                        if(flag_enabled == true) {
+                        let found = sqlInstance.settings.databaseFlags.find(flag => flag.name && flag.name == 'log_connections' &&
+                                                                        flag.value && flag.value == 'on');
+
+                        if (found) {
                             helpers.addResult(results, 0, 
                                 'SQL instance have log_connections flag enabled', region, sqlInstance.name);
-                            return;
-                        }else {
+                        } else {
                             helpers.addResult(results, 2,
                                 'SQL instance does not have log_connections flag enabled', region, sqlInstance.name);
                         }
