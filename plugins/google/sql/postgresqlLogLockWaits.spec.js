@@ -1,6 +1,6 @@
 var assert = require('assert');
 var expect = require('chai').expect;
-var plugin = require('./postgresSqlLogLockWaitsEnabled');
+var plugin = require('./postgresqlLogLockWaits');
 
 const createCache = (err, data) => {
     return {
@@ -17,7 +17,7 @@ const createCache = (err, data) => {
     }
 };
 
-describe('postgresSqlLogLockWaitsEnabled', function () {
+describe('postgresqlLogLockWaits', function () {
     describe('run', function () {
         it('should give unknown result if a sql instance error is passed or no data is present', function (done) {
             const callback = (err, results) => {
@@ -53,11 +53,11 @@ describe('postgresSqlLogLockWaitsEnabled', function () {
             plugin.run(cache, {}, callback);
         });
 
-        it('should give passing result if no sql instances are found with postgreSQL type', function (done) {
+        it('should give passing result if sql instance database type is not of postgreSQL type', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No SQL instance found with postgreSQL type');
+                expect(results[0].message).to.include('SQL instance database type is not of postgreSQL type');
                 expect(results[0].region).to.equal('global');
                 done()
             };
