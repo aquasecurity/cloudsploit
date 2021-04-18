@@ -379,6 +379,7 @@ module.exports = {
         'scaleSetAutoscaleEnabled'      : require(__dirname + '/plugins/azure/virtualmachines/scaleSetAutoscaleEnabled.js'),
         'vmAvailabilitySetLimit'        : require(__dirname + '/plugins/azure/virtualmachines/vmAvailabilitySetLimit.js'),
         'dailyBackupRetention'          : require(__dirname + '/plugins/azure/virtualmachines/dailyBackupRetention.js'),
+        'vmBackupsEnabled'              : require(__dirname + '/plugins/azure/virtualmachines/vmBackupsEnabled.js'),
 
         'lbLogAnalyticsEnabled'         : require(__dirname + '/plugins/azure/monitor/lbLogAnalyticsEnabled.js'),
         'kvLogAnalyticsEnabled'         : require(__dirname + '/plugins/azure/monitor/kvLogAnalyticsEnabled.js'),
