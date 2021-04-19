@@ -205,6 +205,16 @@ if (config.credentials.aws.credential_file && (!settings.cloud || (settings.clou
         organization: config.credentials.github.organization,
         login: config.credentials.github.login
     };
+} else if (config.credentials.alibaba.credential_file && (!settings.cloud || (settings.cloud == 'alibaba'))) {
+    settings.cloud = 'alibaba';
+    cloudConfig = loadHelperFile(config.credentials.alibaba.credential_file);
+} else if (config.credentials.alibaba.token && (!settings.cloud || (settings.cloud == 'alibaba'))) {
+    settings.cloud = 'alibaba';
+    checkRequiredKeys(config.credentials.alibaba, ['access_key_secret']);
+    cloudConfig = {
+        accessKeyId: config.credentials.aws.access_key_id,
+        accessKeySecret: config.credentials.aws.access_key_secret
+    };
 } else {
     console.error('ERROR: Config file does not contain any valid credential configs.');
     process.exit(1);
