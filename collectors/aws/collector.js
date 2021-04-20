@@ -129,6 +129,12 @@ var calls = {
             }
         }
     },
+    CodeBuild: {
+        listProjects: {
+            property: 'projects',
+            paginate: 'nextToken'
+        }
+    },
     Comprehend: {
         listEntitiesDetectionJobs: {
             property: 'EntitiesDetectionJobPropertiesList',
@@ -836,6 +842,13 @@ var postcalls = [
                 reliesOnCall: 'describeTrails',
                 filterKey: 'TrailName',
                 filterValue: 'TrailARN'
+            }
+        },
+        CodeBuild: {
+            batchGetProjects: {
+                reliesOnService: 'codebuild',
+                reliesOnCall: 'listProjects',
+                override: true
             }
         },
         DynamoDB: {
