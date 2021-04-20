@@ -135,6 +135,12 @@ var calls = {
             paginate: 'nextToken'
         }
     },
+    CodeBuild: {
+        listProjects: {
+            property: 'projects',
+            paginate: 'nextToken'
+        }
+    },
     Comprehend: {
         listEntitiesDetectionJobs: {
             property: 'EntitiesDetectionJobPropertiesList',
@@ -850,6 +856,13 @@ var postcalls = [
                 reliesOnCall: 'listProjects',
                 filterKey: 'id',
                 filterValue: 'projectId'
+            }
+        },
+        CodeBuild: {
+            batchGetProjects: {
+                reliesOnService: 'codebuild',
+                reliesOnCall: 'listProjects',
+                override: true
             }
         },
         DynamoDB: {

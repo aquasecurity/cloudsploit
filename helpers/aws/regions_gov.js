@@ -74,5 +74,6 @@ module.exports = {
     workspaces: ['us-gov-west-1'],
     xray: [],
     resourcegroupstaggingapi: regions,
-    codestar: regions
+    codestar: regions,
+    codebuild: regions
 };
