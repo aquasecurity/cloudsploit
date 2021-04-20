@@ -91,7 +91,7 @@ module.exports = {
 
             if (difference.length) {
                 helpers.addResult(results, 2,
-                    `IAM role does not have these required policies attached: ${difference.join(', ')}`, region, role.RoleName);
+                    `IAM role does not have these required policies attached: ${difference.join(', ')}`, region, role.Arn);
             } else {
                 helpers.addResult(results, 0,
                     'IAM role has all required policies attached', region, role.RoleName);
