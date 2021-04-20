@@ -11,9 +11,9 @@ module.exports = {
     apis: ['CodeStar:listProjects', 'CodeStar:describeProject'],
     settings: {
         codestar_disallowed_repo_providers: {
-            name: 'CodeBuild Disallowed Repository Providers',
+            name: 'CodeStar Disallowed Repository Providers',
             description: 'A comma-separated list of repository providers which should not be used',
-            regex: '^((codecommit|github|),? ?){1,5}$',
+            regex: '^((codecommit|github|),? ?){1,2}$',
             default: ''
         }
     },
