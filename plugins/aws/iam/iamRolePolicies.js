@@ -50,6 +50,18 @@ module.exports = {
                 'and value for this setting is set to true, a PASS results will be generated.',
             regex: '^(true|false)$',
             default: 'false'
+        },
+        ignore_aws_managed_iam_policies: {
+            name: 'Ignore AWS-Managed IAM Policies',
+            description: 'If set to true, skip AWS-managed policies attached to the role with the exception of AWS-managed AdministratorAccess policy',
+            regex: '^(true|false)$',
+            default: 'false'
+        },
+        ignore_customer_managed_iam_policies: {
+            name: 'Ignore Customer-Managed IAM Policies',
+            description: 'If set to true, skip customer-managed policies attached to the role',
+            regex: '^(true|false)$',
+            default: 'false'
         }
     },
 
@@ -57,11 +69,15 @@ module.exports = {
         var config = {
             iam_role_policies_ignore_path: settings.iam_role_policies_ignore_path || this.settings.iam_role_policies_ignore_path.default,
             ignore_service_specific_wildcards: settings.ignore_service_specific_wildcards || this.settings.ignore_service_specific_wildcards.default,
-            ignore_identity_federation_roles: settings.ignore_identity_federation_roles || this.settings.ignore_identity_federation_roles.default
+            ignore_identity_federation_roles: settings.ignore_identity_federation_roles || this.settings.ignore_identity_federation_roles.default,
+            ignore_aws_managed_iam_policies: settings.ignore_aws_managed_iam_policies || this.settings.ignore_aws_managed_iam_policies.default,
+            ignore_customer_managed_iam_policies: settings.ignore_customer_managed_iam_policies || this.settings.ignore_customer_managed_iam_policies.default
         };
 
         config.ignore_service_specific_wildcards = (config.ignore_service_specific_wildcards === 'true');
         config.ignore_identity_federation_roles = (config.ignore_identity_federation_roles === 'true');
+        config.ignore_aws_managed_iam_policies = (config.ignore_aws_managed_iam_policies === 'true');
+        config.ignore_customer_managed_iam_policies = (config.ignore_customer_managed_iam_policies === 'true');
 
         var custom = helpers.isCustom(settings, this.settings);
 
@@ -134,13 +150,15 @@ module.exports = {
             if (listAttachedRolePolicies.data &&
                 listAttachedRolePolicies.data.AttachedPolicies) {
 
-                for (var a in listAttachedRolePolicies.data.AttachedPolicies) {
-                    var policy = listAttachedRolePolicies.data.AttachedPolicies[a];
-
+                for (var policy of listAttachedRolePolicies.data.AttachedPolicies) {
                     if (policy.PolicyArn === managedAdminPolicy) {
                         roleFailures.push('Role has managed AdministratorAccess policy');
                         break;
                     }
+
+                    if (config.ignore_aws_managed_iam_policies && /^arn:aws:iam::aws:.*/.test(policy.PolicyArn)) continue;
+
+                    if (config.ignore_customer_managed_iam_policies && /^arn:aws:iam::[0-9]{12}:.*/.test(policy.PolicyArn)) continue;
 
                     var getPolicy = helpers.addSource(cache, source,
                         ['iam', 'getPolicy', region, policy.PolicyArn]);

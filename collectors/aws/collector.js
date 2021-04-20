@@ -492,8 +492,7 @@ var calls = {
             property: 'Policies',
             paginate: 'Marker',
             params: {
-                OnlyAttached: true,
-                Scope: 'Local'
+                OnlyAttached: true
             }
         },
         listVirtualMFADevices: {
