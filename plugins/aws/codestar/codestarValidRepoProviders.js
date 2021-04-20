@@ -65,7 +65,7 @@ module.exports = {
                 } else {
                     helpers.addResult(results, 0,
                         `CodeStar project is using ${repoProvider} as repository provider`,
-                        region, project.projectId);
+                        region, project.projectArn);
                 }
                 cb();
             }, function(){
