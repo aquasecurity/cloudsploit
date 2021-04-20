@@ -7,6 +7,33 @@ const {JWT}       = require('google-auth-library');
 
 var async         = require('async');
 
+var getProjects = async function(client, filter, callback) {
+    const cloudresourcemanager = google.cloudresourcemanager('v1');
+
+    const request = {
+        auth: client,
+        filter: `lifecycleState: ${filter}`
+    };
+
+    let response;
+    let projects = [];
+
+    do {
+        if (response && response.nextPageToken) {
+            request.pageToken = response.nextPageToken;
+        }
+        response = (await cloudresourcemanager.projects.list(request)).data;
+        const projectsPage = response.projects;
+        if (projectsPage) {
+            for (let i = 0; i < projectsPage.length; i++) {
+                projects.push(projectsPage[i]);
+            }
+        }
+    } while (response.nextPageToken);
+
+    return callback(projects);
+};
+
 var regions = function() {
     return regRegions;
 };
@@ -18,6 +45,23 @@ var authenticate = async function(GoogleConfig) {
         scopes: ['https://www.googleapis.com/auth/cloud-platform'],
     });
     return client;
+};
+
+var projectsList = function(client, cb) {
+    getProjects(client, 'ACTIVE', function(projects) {
+        cb(projects);
+    });
+};
+
+var deletedProjectsList = function(client, cb) {
+    let deletedProjects = [];
+
+    getProjects(client, 'DELETE_REQUESTED', function(delReqProjects) {
+        getProjects(client, 'DELETE_IN_PROGRESS', function(delInProgress) {
+            deletedProjects = delReqProjects.concat(delInProgress);
+            cb(deletedProjects);
+        });
+    });
 };
 
 var processCall = function(GoogleConfig, collection, settings, regions, call, service, client, serviceCb) {
@@ -333,7 +377,9 @@ var helpers = {
     regions: regions,
     MAX_REGIONS_AT_A_TIME: 6,
     authenticate: authenticate,
-    processCall: processCall
+    processCall: processCall,
+    projectsList: projectsList,
+    deletedProjectsList: deletedProjectsList
 };
 
 for (var s in shared) helpers[s] = shared[s];
