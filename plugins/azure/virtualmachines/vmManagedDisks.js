@@ -7,7 +7,7 @@ module.exports = {
     description: 'Ensures that Azure virtual machines are configured to use Azure managed disks.',
     more_info: 'Azure managed disks are block-level storage volumes that are managed by Azure are like physical disks in an on-premises server but, virtualized. Azure managed disks provide high durability and security.',
     recommended_action: 'Migrate virtual machine disks to Azure managed disks',
-    link: '',
+    link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/managed-disks-overview',
     apis: ['virtualMachines:listAll'],
 
     run: function(cache, settings, callback) {

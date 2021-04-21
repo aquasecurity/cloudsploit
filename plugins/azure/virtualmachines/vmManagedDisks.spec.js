@@ -30,7 +30,7 @@ const virtualMachines = [
                 'name': 'test-vm-disk',
                 'managedDisk': {
                     'storageAccountType': 'Premium_LRS',
-                    'id': '/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Ali-Recource_Group/providers/Microsoft.Compute/disks/test-vm-disk'
+                    'id': '/subscriptions/123/resourceGroups/aqua-resource_group/providers/Microsoft.Compute/disks/test-vm-disk'
                 },
                 'diskSizeGB': 30
             },
@@ -39,7 +39,7 @@ const virtualMachines = [
                     'name': 'test-vm-data-disk',
                     'managedDisk': {
                         'storageAccountType': 'Standard_LRS',
-                        'id': '/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/ALI-RECOURCE_GROUP/providers/Microsoft.Compute/disks/test-vm-data-disk'
+                        'id': '/subscriptions/123/resourceGroups/AQUA-RESOURCE_GROUP/providers/Microsoft.Compute/disks/test-vm-data-disk'
                     },
                     'diskSizeGB': 32,
                 }
