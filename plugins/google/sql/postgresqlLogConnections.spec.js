@@ -57,7 +57,7 @@ describe('postgresqlLogConnections', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('SQL instance database type is not of postgreSQL type');
+                expect(results[0].message).to.include('SQL instance database type is not of PostgreSQL type');
                 expect(results[0].region).to.equal('global');
                 done()
             };
