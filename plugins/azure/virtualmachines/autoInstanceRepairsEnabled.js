@@ -40,6 +40,7 @@ module.exports = {
             });
             rcb();
         }, function() {
+            console.log(results)
             callback(null, results, source);
         });
     }

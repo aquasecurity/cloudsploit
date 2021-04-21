@@ -65,7 +65,7 @@ describe('autoInstanceRepairsEnabled', function() {
             autoInstanceRepairsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Automatic instance repair is enabled for virtual machine scale set');
+                expect(results[0].message).to.include('Automatic instance repairs is enabled for virtual machine scale set');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -76,7 +76,7 @@ describe('autoInstanceRepairsEnabled', function() {
             autoInstanceRepairsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Automatic instance repair is not enabled for virtual machine scale set');
+                expect(results[0].message).to.include('Automatic instance repairs is not enabled for virtual machine scale set');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
