@@ -34,7 +34,7 @@ module.exports = {
             sqlInstances.data.forEach(sqlInstance => {
                 if (sqlInstance.databaseVersion && !sqlInstance.databaseVersion.toLowerCase().includes('postgres')) {
                     helpers.addResult(results, 0, 
-                        'SQL instance database type is not of postgreSQL type', region, sqlInstance.name);
+                        'SQL instance database type is not of PostgreSQL type', region, sqlInstance.name);
                     return;
                 }
 
