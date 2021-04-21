@@ -93,8 +93,8 @@ const createCache = (virtualMachines, recoveryVaults, backupProtectedItem, backu
                 'eastus': machines
             }
         },
-        recoveryVaults: {
-            list: {
+        vaults: {
+            listBySubscriptionId: {
                 'eastus': vaults
             }
         },
@@ -140,7 +140,7 @@ describe('dailyBackupRetention', function() {
             dailyBackupRetention.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('No backup recovery vaults found for the virtual machine');
+                expect(results[0].message).to.include('No backup recovery vaults found');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

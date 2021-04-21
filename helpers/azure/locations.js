@@ -53,7 +53,6 @@ module.exports = {
     disks: locations,
     activityLogAlerts: ['global'],
     vaults: locations,
-    recoveryVaults: locations,
     policyAssignments: locations.concat(['global']),
     backupPolicies: locations,
     backupProtectedItems: locations,

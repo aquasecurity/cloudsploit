@@ -55,8 +55,8 @@ const createCache = (virtualMachines, recoveryVaults, backupProtectedItem) => {
                 'eastus': machines
             }
         },
-        recoveryVaults: {
-            list: {
+        vaults: {
+            listBySubscriptionId: {
                 'eastus': vaults
             }
         },
@@ -97,7 +97,7 @@ describe('vmBackupsEnabled', function() {
             vmBackupsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('No backup vaults found for the virtual machine');
+                expect(results[0].message).to.include('No backup vaults found');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -130,7 +130,7 @@ describe('vmBackupsEnabled', function() {
             vmBackupsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Azure virtual machine backups are not enabled');
+                expect(results[0].message).to.include('Azure virtual machine does not have backups enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -141,7 +141,7 @@ describe('vmBackupsEnabled', function() {
             vmBackupsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Azure virtual machine backups are enabled');
+                expect(results[0].message).to.include('Azure virtual machine has backups enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

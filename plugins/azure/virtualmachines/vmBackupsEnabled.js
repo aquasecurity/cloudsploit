@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Azure Backup provides independent and isolated backups to guard against unintended destruction of the data on your VMs.',
     recommended_action: 'Enable Azure virtual machine backups',
     link: 'https://docs.microsoft.com/en-us/azure/backup/backup-azure-vms-introduction',
-    apis: ['virtualMachines:listAll', 'recoveryVaults:list', 'backupProtectedItems:list'],
+    apis: ['virtualMachines:listAll', 'vaults:listBySubscriptionId', 'backupProtectedItems:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -32,7 +32,7 @@ module.exports = {
             }
 
             const recoveryVaults = helpers.addSource(cache, source,
-                ['recoveryVaults', 'list', location]);
+                ['vaults', 'listBySubscriptionId', location]);
 
             if (!recoveryVaults || recoveryVaults.err || !recoveryVaults.data) {
                 helpers.addResult(results, 3, 'Unable to query for backup vaults: ' + helpers.addError(recoveryVaults), location);
@@ -40,7 +40,7 @@ module.exports = {
             }
 
             if (!recoveryVaults.data.length) {
-                helpers.addResult(results, 2, 'No backup vaults found for the virtual machine', location);
+                helpers.addResult(results, 2, 'No backup vaults found', location);
                 return rcb();
             }
 
@@ -79,9 +79,9 @@ module.exports = {
                 }
 
                 if (vmBackupsEnabled) {
-                    helpers.addResult(results, 0, 'Azure virtual machine backups are enabled', location, virtualMachine.id);
+                    helpers.addResult(results, 0, 'Azure virtual machine has backups enabled', location, virtualMachine.id);
                 } else {
-                    helpers.addResult(results, 2, 'Azure virtual machine backups are not enabled', location, virtualMachine.id);
+                    helpers.addResult(results, 2, 'Azure virtual machine does not have backups enabled', location, virtualMachine.id);
                 }
             }
             rcb();

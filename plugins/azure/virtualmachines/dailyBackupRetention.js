@@ -4,17 +4,17 @@ var helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'VM Daily Backup Retention Period',
     category: 'Virtual Machines',
-    description: 'Ensures that VM daily backup retention policy is configured to retain backups for desired number of days',
+    description: 'Ensures that VM daily backup retention policy is configured to retain backups for the desired number of days.',
     more_info: 'Azure Backup provides independent and isolated backups to guard against unintended destruction of the data on your VMs. These backups should be retained for a specific amount of time to recover destroyed VM.',
     recommended_action: 'Configure virtual machine daily backup retention policy to retain backups for desired number of days',
     link: 'https://docs.microsoft.com/en-us/azure/backup/backup-azure-vms-introduction',
-    apis: ['virtualMachines:listAll', 'recoveryVaults:list', 'backupProtectedItems:list', 'backupPolicies:list'],
+    apis: ['virtualMachines:listAll', 'vaults:listBySubscriptionId', 'backupProtectedItems:list', 'backupPolicies:list'],
     settings: {
-        daily_backup_retention_period: {
+        vm_daily_backup_retention_period: {
             name: 'VM Daily Backup Retention Period',
-            default: '30',
             description: 'Number of days that a VM backup will be retained until it is permanently deleted',
-            regex: '^([7-9]|1[0-9]|2[0-9]|30)$'
+            regex: '^([7-9]|1[0-9]|2[0-9]|30)$',
+            default: '30'
         }
     },
 
@@ -24,7 +24,7 @@ module.exports = {
         var locations = helpers.locations(settings.govcloud);
 
         const config = {
-            retentionPeriod: parseInt(settings.daily_backup_retention_period || this.settings.daily_backup_retention_period.default)
+            retentionPeriod: parseInt(settings.vm_daily_backup_retention_period || this.settings.vm_daily_backup_retention_period.default)
         };
 
         async.each(locations.virtualMachines, function(location, rcb) {
@@ -44,7 +44,7 @@ module.exports = {
             }
 
             const recoveryVaults = helpers.addSource(cache, source,
-                ['recoveryVaults', 'list', location]);
+                ['vaults', 'listBySubscriptionId', location]);
 
             if (!recoveryVaults || recoveryVaults.err || !recoveryVaults.data) {
                 helpers.addResult(results, 3, 'Unable to query for backup recovery vaults: ' + helpers.addError(recoveryVaults), location);
@@ -52,7 +52,7 @@ module.exports = {
             }
 
             if (!recoveryVaults.data.length) {
-                helpers.addResult(results, 2, 'No backup recovery vaults found for the virtual machine', location);
+                helpers.addResult(results, 2, 'No backup recovery vaults found', location);
                 return rcb();
             }
 
@@ -62,11 +62,16 @@ module.exports = {
             for (const vault of recoveryVaults.data) {
                 const backupProtectedItems = helpers.addSource(cache, source,
                     ['backupProtectedItems', 'list', location, vault.id]);
+
+                if (!backupProtectedItems || backupProtectedItems.err || !backupProtectedItems.data) {
+                    helpers.addResult(results, 3, 'Unable to query for backup retention policies : ' + helpers.addError(recoveryVaults), location);
+                    return rcb();
+                }
+
                 const backupPolicies = helpers.addSource(cache, source,
                     ['backupPolicies', 'list', location, vault.id]);
 
-                if (!backupProtectedItems || backupProtectedItems.err || !backupProtectedItems.data ||
-                    !backupPolicies || backupPolicies.err || !backupPolicies.data) {
+                if (!backupPolicies || backupPolicies.err || !backupPolicies.data) {
                     helpers.addResult(results, 3, 'Unable to query for backup retention policies : ' + helpers.addError(recoveryVaults), location);
                     return rcb();
                 }
@@ -88,7 +93,7 @@ module.exports = {
             async.each(virtualMachines.data, function(virtualMachine, scb) {
                 const vmPolicies = vmPoliciesMap.get(virtualMachine.id.toLowerCase());
                 if (vmPolicies && vmPolicies.length) {
-                    for (const vmPolicy of vmPoliciesMap.get(virtualMachine.id.toLowerCase())) {
+                    for (const vmPolicy of vmPolicies) {
                         const backupPolicy = backupPoliciesMap.get(vmPolicy);
 
                         let retentionDays = 0;
