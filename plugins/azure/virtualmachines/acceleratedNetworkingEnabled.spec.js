@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var acceleratedNetworking = require('./acceleratedNetworking');
+var acceleratedNetworkingEnabled = require('./acceleratedNetworkingEnabled');
 
 const virtualMachines = [
     {
@@ -56,11 +56,11 @@ const createCache = (virtualMachines, networkInterfaces) => {
     };
 };
 
-describe('acceleratedNetworking', function() {
+describe('acceleratedNetworkingEnabled', function() {
     describe('run', function() {
         it('should give passing result if no virtual machines', function(done) {
             const cache = createCache([], null);
-            acceleratedNetworking.run(cache, {}, (err, results) => {
+            acceleratedNetworkingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No existing Virtual Machines found');
@@ -71,7 +71,7 @@ describe('acceleratedNetworking', function() {
 
         it('should give unknown result if unable to query for virtual machines', function(done) {
             const cache = createCache(null, null);
-            acceleratedNetworking.run(cache, {}, (err, results) => {
+            acceleratedNetworkingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for virtualMachines');
@@ -82,7 +82,7 @@ describe('acceleratedNetworking', function() {
 
         it('should give unknown result if no network interfaces found', function(done) {
             const cache = createCache([virtualMachines[0]], []);
-            acceleratedNetworking.run(cache, {}, (err, results) => {
+            acceleratedNetworkingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for network interfaces');
@@ -93,7 +93,7 @@ describe('acceleratedNetworking', function() {
 
         it('should give unknown result if unable to query for network interfaces', function(done) {
             const cache = createCache([virtualMachines[0]], null);
-            acceleratedNetworking.run(cache, {}, (err, results) => {
+            acceleratedNetworkingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for network interfaces');
@@ -104,7 +104,7 @@ describe('acceleratedNetworking', function() {
 
         it('should give passing result if accelerated networking is enabled', function(done) {
             const cache = createCache([virtualMachines[0]], [networkInterfaces[0]]);
-            acceleratedNetworking.run(cache, {}, (err, results) => {
+            acceleratedNetworkingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Accelerated Networking is enabled on Azure Virtual Machine(VM)');
@@ -115,7 +115,7 @@ describe('acceleratedNetworking', function() {
 
         it('should give failing result if accelerated networking is not enabled', function(done) {
             const cache = createCache([virtualMachines[0]], [networkInterfaces[1]]);
-            acceleratedNetworking.run(cache, {}, (err, results) => {
+            acceleratedNetworkingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Accelerated Networking is not enabled on Azure Virtual Machine(VM)');

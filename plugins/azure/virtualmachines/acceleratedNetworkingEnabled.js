@@ -1,11 +1,11 @@
 var async = require('async');
-var helpers = require('../../../helpers/azure/');
+var helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Accelerated Networking Enabled',
     category: 'Virtual Machines',
-    description: 'Ensures that accelerated networking is enable on Azure virtual machines(VM)',
-    more_info: 'Accelerated networking enables single root I/O virtualization (SR-IOV) to a VM, greatly improving its networking performance',
+    description: 'Ensures that accelerated networking is enabled on Azure virtual machines(VM).',
+    more_info: 'Accelerated networking enables single root I/O virtualization (SR-IOV) to a VM, greatly improving its networking performance.',
     recommended_action: 'Enable accelerated networking in virtual machine network interfaces',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-network/create-vm-accelerated-networking-powershell',
     apis: ['virtualMachines:listAll', 'networkInterfaces:listAll'],
@@ -48,9 +48,9 @@ module.exports = {
                 let acclNetwrork = false;
                 if (virtualMachine.networkProfile && virtualMachine.networkProfile.networkInterfaces &&
                     virtualMachine.networkProfile.networkInterfaces.length > 0) {
-                    virtualMachine.networkProfile.networkInterfaces.forEach(interface => {
+                    acclNetwrork = virtualMachine.networkProfile.networkInterfaces.find(interface => {
                         if (nicMap.get(interface.id)) {
-                            acclNetwrork = true;
+                            return true;
                         }
                     });
                 }
