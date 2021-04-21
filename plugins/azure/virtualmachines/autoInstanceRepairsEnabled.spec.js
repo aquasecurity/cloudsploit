@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var autoInstanceRepair = require('./autoInstanceRepair');
+var autoInstanceRepairsEnabled = require('./autoInstanceRepairsEnabled');
 
 const virtualMachineScaleSets = [
     {
@@ -36,11 +36,11 @@ const createCache = (virtualMachineScaleSets) => {
     };
 };
 
-describe('autoInstanceRepair', function() {
+describe('autoInstanceRepairsEnabled', function() {
     describe('run', function() {
         it('should give passing result if no virtual machine scale sets', function(done) {
             const cache = createCache([], null);
-            autoInstanceRepair.run(cache, {}, (err, results) => {
+            autoInstanceRepairsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No existing virtual machines scale sets');
@@ -51,7 +51,7 @@ describe('autoInstanceRepair', function() {
 
         it('should give unknown result if unable to query for virtual machine scale sets', function(done) {
             const cache = createCache(null, null);
-            autoInstanceRepair.run(cache, {}, (err, results) => {
+            autoInstanceRepairsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for virtual machine scale sets');
@@ -62,7 +62,7 @@ describe('autoInstanceRepair', function() {
 
         it('should give passing result if virtual machine scale set has automatic instance repair enabled', function(done) {
             const cache = createCache([virtualMachineScaleSets[0]]);
-            autoInstanceRepair.run(cache, {}, (err, results) => {
+            autoInstanceRepairsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Automatic instance repair is enabled for virtual machine scale set');
@@ -73,7 +73,7 @@ describe('autoInstanceRepair', function() {
 
         it('should give failing result if virtual machine scale set dows not have automatic instance repair enabled', function(done) {
             const cache = createCache([virtualMachineScaleSets[1]]);
-            autoInstanceRepair.run(cache, {}, (err, results) => {
+            autoInstanceRepairsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Automatic instance repair is not enabled for virtual machine scale set');

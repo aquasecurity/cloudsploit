@@ -1,12 +1,12 @@
 var async = require('async');
-var helpers = require('../../../helpers/azure/');
+var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Automatic Instance Repair Enabled',
+    title: 'Automatic Instance Repairs Enabled',
     category: 'Virtual Machines',
-    description: 'Ensures that automatic instance repair is enabled for Azure Virtual ',
+    description: 'Ensures that automatic instance repairs is enabled for Azure virtual machine scale sets.',
     more_info: 'Enabling automatic instance repairs for Azure virtual machine scale sets helps achieve high availability for applications by maintaining a set of healthy instances.',
-    recommended_action: 'Enable automatic instance repair for Azure virtual machine scale set',
+    recommended_action: 'Enable automatic instance repairs for Azure virtual machine scale sets',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-automatic-instance-repairs',
     apis: ['virtualMachineScaleSets:listAll'],
 
@@ -33,9 +33,9 @@ module.exports = {
 
             virtualMachineScaleSets.data.forEach(scaleSet => {
                 if (scaleSet.automaticRepairsPolicy && scaleSet.automaticRepairsPolicy.enabled) {
-                    helpers.addResult(results, 0, 'Automatic instance repair is enabled for virtual machine scale set', location, scaleSet.id);
+                    helpers.addResult(results, 0, 'Automatic instance repairs is enabled for virtual machine scale set', location, scaleSet.id);
                 } else {
-                    helpers.addResult(results, 2, 'Automatic instance repair is not enabled for virtual machine scale set', location, scaleSet.id);
+                    helpers.addResult(results, 2, 'Automatic instance repairs is not enabled for virtual machine scale set', location, scaleSet.id);
                 }
             });
             rcb();
