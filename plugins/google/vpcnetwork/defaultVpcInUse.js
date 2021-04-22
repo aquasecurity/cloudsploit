@@ -59,7 +59,7 @@ module.exports = {
                     } else if (instances.data.length) {
                         instances.data.forEach(instance => {
                             instance.networkInterfaces.forEach(interface => {
-                                if (interface.network = vpcUrl) {
+                                if (interface.network == vpcUrl) {
                                     numInstances += 1;
                                 }
                             });
