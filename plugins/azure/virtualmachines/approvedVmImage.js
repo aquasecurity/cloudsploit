@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'Managed VM Machine Image',
     category: 'Virtual Machines',
-    description: 'Ensures that VM is launced from a managed VM image.',
+    description: 'Ensures that VM is launched from a managed VM image.',
     more_info: 'A managed VM image contains the information necessary to create a VM, including the OS and data disks. Virtual Machines should be launched using managed images to ensure security practices and consistency across all the instances.',
     recommended_action: 'Ensure that VM is launced using managed VM image',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/windows/create-vm-generalized-managed',
