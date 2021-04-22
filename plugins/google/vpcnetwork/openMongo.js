@@ -2,9 +2,9 @@ var async = require('async');
 var helpers = require('../../../helpers/google');
 
 module.exports = {
-    title: 'Open MySQL',
+    title: 'Open MongoDB',
     category: 'VPC Network',
-    description: 'Determines if TCP port 27017 for Mongo is open to the public',
+    description: 'Determines if TCP port 27017 for MongoDB is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Mongo should be restricted to known IP addresses.',
     link: 'https://cloud.google.com/vpc/docs/using-firewalls',
     recommended_action: 'Restrict TCP ports 27017 to known IP addresses.',
