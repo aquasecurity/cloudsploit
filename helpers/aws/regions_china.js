@@ -73,5 +73,7 @@ module.exports = {
     wafv2: [],
     workspaces: ['cn-northwest-1'],
     xray: regions,
-    resourcegroupstaggingapi: regions
+    resourcegroupstaggingapi: regions,
+    codestar: regions,
+    codebuild: regions
 };

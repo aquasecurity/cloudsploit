@@ -17,7 +17,7 @@ module.exports = {
             default: 'awskms',
         }
     },
-    remediation_description: 'Encryption for the affected Cloud trails will be enabled.',
+    remediation_description: 'Encryption for the affected XRay traces will be enabled.',
     remediation_min_version: '202011271430',
     apis_remediate: ['XRay:getEncryptionConfig', 'KMS:listKeys', 'KMS:describeKey'],
     actions: {
