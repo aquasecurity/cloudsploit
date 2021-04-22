@@ -474,6 +474,7 @@ module.exports = {
         'serverAuditingEnabled'         : require(__dirname + '/plugins/azure/sqlserver/serverAuditingEnabled.js'),
         'azureADAdminEnabled'           : require(__dirname + '/plugins/azure/sqlserver/azureADAdminEnabled.js'),
         'sqlServerTlsVersion'           : require(__dirname + '/plugins/azure/sqlserver/sqlServerTlsVersion.js'),
+        'automaticTuningEnabled'        : require(__dirname + '/plugins/azure/sqlserver/automaticTuningEnabled.js'),
 
         'javaVersion'                   : require(__dirname + '/plugins/azure/appservice/javaVersion.js'),
         'phpVersion'                    : require(__dirname + '/plugins/azure/appservice/phpVersion.js'),

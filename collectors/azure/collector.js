@@ -208,6 +208,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/securityAlertPolicies?api-version=2017-03-01-preview'
         }
     },
+    serverAutomaticTuning: {
+        get: {
+            reliesOnPath: 'servers.listSql',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/automaticTuning/current?api-version=2020-08-01-preview'
+        }
+    },
     flowLogs: {
         list: {
             reliesOnPath: 'networkWatchers.listAll',
