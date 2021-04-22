@@ -9,6 +9,12 @@ module.exports = {
     recommended_action: 'Enable HTTP 2.0 support in the general settings for all App Services',
     link: 'https://azure.microsoft.com/en-us/blog/announcing-http-2-support-in-azure-app-service/',
     apis: ['webApps:list', 'webApps:listConfigurations'],
+    remediation_min_version: '202103311945',
+    remediation_description: 'The HTTP 2.0 option will be enabled for the web app',
+    apis_remediate: ['webApps:list'],
+    actions: {remediate:['webApps:updateConfiguration'], rollback:['webApps:updateConfiguration']},
+    permissions: {remediate: ['webApps:updateConfiguration'], rollback: ['webApps:updateConfiguration']},
+    realtime_triggers: ['microsoftweb:sites:write'],
 
     run: function(cache, settings, callback) {
         const results = [];
@@ -57,5 +63,51 @@ module.exports = {
             // Global checking goes here
             callback(null, results, source);
         });
+    },
+
+    remediate: function(config, cache, settings, resource, callback) {
+        var remediation_file = settings.remediation_file;
+        var putCall = this.actions.remediate;
+
+        // inputs specific to the plugin
+        var pluginName = 'http20Enabled';
+        var baseUrl = 'https://management.azure.com/{resource}/config/web?api-version=2019-08-01';
+        var method = 'PATCH';
+
+        // for logging purposes
+        var webAppNameArr = resource.split('/');
+        var webAppName = webAppNameArr[webAppNameArr.length - 1];
+
+        // create the params necessary for the remediation
+        if (settings.region) {
+            var body = {
+                'location': settings.region,
+                'properties': {
+                    'http20Enabled': true
+                }
+
+            };
+
+            // logging
+            remediation_file['pre_remediate']['actions'][pluginName][resource] = {
+                'Http2.0': 'Disabled',
+                'WebApp': webAppName
+            };
+
+            helpers.remediatePlugin(config, method, body, baseUrl, resource, remediation_file, putCall, pluginName, function(err, action) {
+                if (err) return callback(err);
+                if (action) action.action = putCall;
+
+
+                remediation_file['post_remediate']['actions'][pluginName][resource] = action;
+                remediation_file['remediate']['actions'][pluginName][resource] = {
+                    'Action': 'Enabled'
+                };
+
+                callback(null, action);
+            });
+        } else {
+            callback('No region found');
+        }
     }
 };
