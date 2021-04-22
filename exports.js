@@ -383,6 +383,7 @@ module.exports = {
         'scaleSetMultiAz'               : require(__dirname + '/plugins/azure/virtualmachines/scaleSetMultiAz.js'),
         'scaleSetAutoscaleEnabled'      : require(__dirname + '/plugins/azure/virtualmachines/scaleSetAutoscaleEnabled.js'),
         'vmAvailabilitySetLimit'        : require(__dirname + '/plugins/azure/virtualmachines/vmAvailabilitySetLimit.js'),
+        'acceleratedNetworkingEnabled'  : require(__dirname + '/plugins/azure/virtualmachines/acceleratedNetworkingEnabled.js'),
         'passwordAuthDisabled'          : require(__dirname + '/plugins/azure/virtualmachines/passwordAuthDisabled.js'),
         'approvedVmImage'               : require(__dirname + '/plugins/azure/virtualmachines/approvedVmImage.js'),
         'autoOsUpgradesEnabled'         : require(__dirname + '/plugins/azure/virtualmachines/autoOsUpgradesEnabled.js'),

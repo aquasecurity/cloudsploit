@@ -56,6 +56,11 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/networkSecurityGroups?api-version=2020-03-01'
         }
     },
+    networkInterfaces: {
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/networkInterfaces?api-version=2020-11-01'
+        }
+    },
     vaults: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.KeyVault/vaults?api-version=2019-09-01'
