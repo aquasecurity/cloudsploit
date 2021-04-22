@@ -129,6 +129,18 @@ var calls = {
             }
         }
     },
+    CodeStar: {
+        listProjects: {
+            property: 'projects',
+            paginate: 'nextToken'
+        }
+    },
+    CodeBuild: {
+        listProjects: {
+            property: 'projects',
+            paginate: 'nextToken'
+        }
+    },
     Comprehend: {
         listEntitiesDetectionJobs: {
             property: 'EntitiesDetectionJobPropertiesList',
@@ -486,8 +498,7 @@ var calls = {
             property: 'Policies',
             paginate: 'Marker',
             params: {
-                OnlyAttached: true,
-                Scope: 'Local'
+                OnlyAttached: true
             }
         },
         listVirtualMFADevices: {
@@ -836,6 +847,21 @@ var postcalls = [
                 reliesOnCall: 'describeTrails',
                 filterKey: 'TrailName',
                 filterValue: 'TrailARN'
+            }
+        },
+        CodeStar: {
+            describeProject: {
+                reliesOnService: 'codestar',
+                reliesOnCall: 'listProjects',
+                filterKey: 'id',
+                filterValue: 'projectId'
+            }
+        },
+        CodeBuild: {
+            batchGetProjects: {
+                reliesOnService: 'codebuild',
+                reliesOnCall: 'listProjects',
+                override: true
             }
         },
         DynamoDB: {
