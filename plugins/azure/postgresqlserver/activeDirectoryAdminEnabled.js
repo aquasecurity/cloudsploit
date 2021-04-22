@@ -2,7 +2,7 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Azure Active Directory Admin Cofigured',
+    title: 'Azure Active Directory Admin Configured',
     category: 'PostgreSQL Server',
     description: 'Ensures that Active Directory admin is set up on all PostgreSQL servers.',
     more_info: 'Using Azure Active Directory authentication allows key rotation and permission management to be managed in one location for all servers. This can be done are configuring an Active Directory administrator.',

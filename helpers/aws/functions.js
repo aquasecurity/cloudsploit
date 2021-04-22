@@ -291,6 +291,8 @@ function extractStatementPrincipals(statement) {
             return [principal];
         }
 
+        if (!principal.AWS) return response;
+        
         var awsPrincipals = principal.AWS;
         if (!Array.isArray(awsPrincipals)) {
             awsPrincipals = [awsPrincipals];
@@ -349,7 +351,7 @@ function filterDenyPermissionsByPrincipal(permissionsMap, principal) {
     return response;
 }
 
-function isValidCondition(statement, allowedConditionKeys, iamConditionOperators, fetchConditionPrincipals) {
+function isValidCondition(statement, allowedConditionKeys, iamConditionOperators, fetchConditionPrincipals, accountId) {
     if (statement.Condition && statement.Effect) {
         var effect = statement.Effect;
         var values = [];
@@ -360,10 +362,13 @@ function isValidCondition(statement, allowedConditionKeys, iamConditionOperators
             var subCondition = statement.Condition[operator];
             for (var key of Object.keys(subCondition)) {
                 if (!allowedConditionKeys.some(conditionKey=> key.includes(conditionKey))) return false;
-
                 var value = subCondition[key];
                 if (iamConditionOperators.string[effect].includes(defaultOperator) ||
                 iamConditionOperators.arn[effect].includes(defaultOperator)) {
+                    if (key === 'kms:CallerAccount' && typeof value === 'string' && effect === 'Allow' &&  value === accountId) {
+                        values.push(value);
+                        return values;
+                    } 
                     if (!value.length || value === '*') return false;
                     else if (/^[0-9]{12}$/.test(value) || /^arn:aws:(iam|sts)::.+/.test(value)) values.push(value);
                 } else if (defaultOperator === 'Bool') {
