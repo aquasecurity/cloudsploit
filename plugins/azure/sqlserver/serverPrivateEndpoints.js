@@ -34,7 +34,7 @@ module.exports = {
             }
 
             for (const server of servers.data) {
-                if (server.privateEndpointConnections && server.privateEndpointConnections.length > 0) {
+                if (server.privateEndpointConnections && server.privateEndpointConnections.length) {
                     helpers.addResult(results, 0, 'Private Endpoints are configured for the SQL Server', location, server.id);
                 } else {
                     helpers.addResult(results, 2, 'Private Endpoints are not configured for the SQL Server', location, server.id);
