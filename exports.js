@@ -663,6 +663,7 @@ module.exports = {
         'dbPubliclyAccessible'          : require(__dirname + '/plugins/google/sql/dbPubliclyAccessible.js'),
         'dbSSLEnabled'                  : require(__dirname + '/plugins/google/sql/dbSSLEnabled.js'),
         'anyHostRootAccess'             : require(__dirname + '/plugins/google/sql/anyHostRootAccess.js'),
+        'postgresqlLogCheckpoints'      : require(__dirname + '/plugins/google/sql/postgresqlLogCheckpoints.js'),
 
         'bucketVersioning'              : require(__dirname + '/plugins/google/storage/bucketVersioning.js'),
         'bucketLogging'                 : require(__dirname + '/plugins/google/storage/bucketLogging.js'),
