@@ -2,10 +2,10 @@ var async = require('async');
 var helpers = require('../../../helpers/google');
 
 module.exports = {
-    title: 'PostgreSQL Log Min Duration Statement Flag Disabled',
+    title: 'PostgreSQL Log Min Duration Statement',
     category: 'SQL',
     description: 'Ensures SQL instances for PostgreSQL type have log min duration statement flag disabled.',
-    more_info: 'SQL instance for PostgreSQL databases provides log_min_duration_statement flag. It is used to log the duration of every completed statement. We should always disable it.',
+    more_info: 'SQL instance for PostgreSQL databases provides log_min_duration_statement flag. It is used to log the duration of every completed statement. We should always disable it as there can be sensitive information as well that should not be recorded in the logs.',
     link: 'https://cloud.google.com/sql/docs/postgres/flags',
     recommended_action: 'Ensure that log_min_duration_statement flag is disabled for all PostgreSQL instances.',
     apis: ['instances:sql:list'],
