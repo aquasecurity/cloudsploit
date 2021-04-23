@@ -47,15 +47,15 @@ module.exports = {
 
                         if (found) {
                             helpers.addResult(results, 0, 
-                                'SQL instance have log_min_duration_statement flag enabled', region, sqlInstance.name);
+                                'SQL instance does not have log_min_duration_statement flag enabled', region, sqlInstance.name);
                         } else {
                             helpers.addResult(results, 2,
-                                'SQL instance does not have log_min_duration_statement flag enabled', region, sqlInstance.name);
+                                'SQL instance have log_min_duration_statement flag enabled', region, sqlInstance.name);
                         }
                 } else if (sqlInstance.instanceType == "READ_REPLICA_INSTANCE") {
                 } else {
                     helpers.addResult(results, 2, 
-                        'SQL instance does not have log_min_duration_statement flag enabled', region, sqlInstance.name);
+                        'SQL instance have log_min_duration_statement flag enabled', region, sqlInstance.name);
                 }
             });
 
