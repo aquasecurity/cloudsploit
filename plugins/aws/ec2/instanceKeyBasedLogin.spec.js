@@ -75,7 +75,7 @@ describe('instanceKeyBasedLogin', function () {
         it('should PASS if instance has associated keys for password-less SSH login', function (done) {
             const cache = createCache([describeInstances[0]]);
             var settings = {
-                instance_keypair_threshold: 2,
+                instance_keypair_threshold: '2',
             };
             instanceKeyBasedLogin.run(cache, settings, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -87,7 +87,7 @@ describe('instanceKeyBasedLogin', function () {
         it('should FAIL if instance does not have associated keys for password-less SSH login', function (done) {
             const cache = createCache([describeInstances[1]]);
             var settings = {
-                instance_keypair_threshold: 2,
+                instance_keypair_threshold: '2',
             };
             instanceKeyBasedLogin.run(cache, settings, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -99,7 +99,7 @@ describe('instanceKeyBasedLogin', function () {
         it('should FAIL if EC2 instances do not have associated keys for password-less SSH login', function (done) {
             const cache = createCache([describeInstances[1],describeInstances[1],describeInstances[1]]);
             var settings = {
-                instance_keypair_threshold: 2,
+                instance_keypair_threshold: '2',
             };
             instanceKeyBasedLogin.run(cache, settings, (err, results) => {
                 expect(results.length).to.equal(1);

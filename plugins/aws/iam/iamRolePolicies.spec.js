@@ -238,6 +238,15 @@ describe('iamRolePolicies', function () {
             });
         });
 
+        it('should PASS if role policy allows wildcard actions but ignore managed iam policies is set to true', function (done) {
+            const cache = createCache([listRoles[0]], listAttachedRolePolicies[2], null, null, getPolicy[0], getPolicyVersion[0]);
+            iamRolePolicies.run(cache, { ignore_customer_managed_iam_policies : 'true' }, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
+
         it('should FAIL if role policy allows all actions on selected resources', function (done) {
             const cache = createCache([listRoles[0]], {}, listRolePolicies[1], getRolePolicy[4]);
             iamRolePolicies.run(cache, {}, (err, results) => {

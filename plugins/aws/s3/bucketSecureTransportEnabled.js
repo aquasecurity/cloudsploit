@@ -59,9 +59,11 @@ module.exports = {
                     return;
                 }
 
+                var denyPermissionsMap = helpers.getDenyPermissionsMap(statements);
                 var sslEnforced = true;
                 for (var statement of statements) {
-                    if (statement.Effect && statement.Effect === 'Allow') {
+                    if (statement.Effect && statement.Effect === 'Allow' && statement.Principal && !statement.Principal.Service) {
+                        if (!helpers.isEffectiveStatement(statement, denyPermissionsMap)) continue;
                         if (!statement.Condition ||
                                 !statement.Condition.Bool ||
                                 !statement.Condition.Bool['aws:SecureTransport'] ||
@@ -69,10 +71,12 @@ module.exports = {
                             sslEnforced = false;
                             break;
                         }
-                    } else if (statement.Effect && statement.Effect === 'Deny') {
-                        if (statement.Condition &&
-                                statement.Condition.Bool &&
-                                statement.Condition.Bool['aws:SecureTransport'] &&
+                    } else if (statement.Effect && statement.Effect === 'Deny' && statement.Principal && !statement.Principal.Service && statement.Sid) {
+                        var denyActionResourceMap = helpers.getDenyPermissionsMap(statements, statement.Sid);
+                        if (!helpers.isEffectiveStatement(statement, denyActionResourceMap)) continue;
+                        if (!statement.Condition ||
+                                !statement.Condition.Bool ||
+                                !statement.Condition.Bool['aws:SecureTransport'] ||
                                 statement.Condition.Bool['aws:SecureTransport'] === 'true') {
                             sslEnforced = false;
                             break;
