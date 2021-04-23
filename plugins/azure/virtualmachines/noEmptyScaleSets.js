@@ -6,7 +6,7 @@ module.exports = {
     category: 'Virtual Machines',
     description: 'Ensures that virtual machine scale sets have virtual machine instances attached.',
     more_info: 'Azure virtual machine scale sets let you create and manage a group of load balanced VMs. Scale sets with no vm instances should be deleted to save cost of unused resources',
-    recommended_action: 'Delete virtual machine scale sets having no virtual machines instances',
+    recommended_action: 'Delete virtual machine scale sets that have no virtual machine instances',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview',
     apis: ['virtualMachineScaleSets:listAll', 'virtualMachineScaleSetVMs:list'],
 
