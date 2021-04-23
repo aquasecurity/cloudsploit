@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Point-in-time restore is a self-service capability, which enabled you to restore a database from backups to any point within the retention period. Point-in-time restore is useful in recovery scenarios, such as incidents caused by errors, incorrectly loaded data, or deletion of crucial data.',
     recommended_action: 'Ensure that an optimal backup retention period is set for Azure SQL databases.',
     link: 'https://azure.microsoft.com/en-us/blog/azure-sql-database-point-in-time-restore/',
-    apis: ['servers:listSql', 'databases:listByServer', 'databases:shortTermRetentionPolicy'],
+    apis: ['servers:listSql', 'databases:listByServer', 'backupShortTermRetentionPolicies:listByDatabase'],
     settings: {
         pitr_backup_retention_period: {
             name: 'Point in Time Restore Backup Retention Period',
@@ -61,7 +61,7 @@ module.exports = {
                 
                 for (const database of databases.data) {
                     const policies = helpers.addSource(cache, source,
-                        ['databases', 'shortTermRetentionPolicy', location, database.id]);
+                        ['backupShortTermRetentionPolicies', 'listByDatabase', location, database.id]);
                     
                     if (!policies || policies.err || !policies.data) {
                         helpers.addResult(results, 3,
