@@ -55,8 +55,10 @@ const createCache = (servers, databases, policies) => {
         databases: {
             listByServer: {
                 'eastus': db
-            },
-            shortTermRetentionPolicy:{
+            }
+        },
+        backupShortTermRetentionPolicies:{
+            listByDatabase: {
                 'eastus': retentionPolicy
             }
         }
