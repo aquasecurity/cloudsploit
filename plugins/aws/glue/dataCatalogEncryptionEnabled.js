@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'AWS Glue Data Catalog CMK Encrypted',
+    title: 'AWS Glue Data Catalog Encryption Enabled',
     category: 'Glue',
     description: 'Ensures that AWS Glue Data Catalogs has encryption at-rest enabled.',
     more_info: 'Encryption should be enabled for metadata objects stored in your AWS Glue Data Catalog to secure sensitive data.',
