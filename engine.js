@@ -41,7 +41,7 @@ var engine = function(cloudConfig, settings) {
     var resourceMap;
     try {
         resourceMap = require(`./helpers/${settings.cloud}/resources.js`);
-        // var fsData = fs.readFileSync('./plugins/aws/s3/bucketversioning3.rego', 'utf8');
+        // var fsData = fs.readFileSync('./plugins/aws/sqs/sqsEncrypted2.rego', 'utf8');
         // var meta = fsData.toString().split('#-');
         // meta = meta[0].split(':=');
         // var meta1 = meta[1];
@@ -74,7 +74,8 @@ var engine = function(cloudConfig, settings) {
         var plugin = p[1];
         if (settings.opa) {
             // creating new plugins list to loop over later with the metadata
-            opaPlugins[pluginId] = opaHelper.getMetaData(plugin);
+            var pluginFileData = fs.readFileSync(plugin, 'utf8');
+            opaPlugins[pluginId] = opaHelper.getMetaData(pluginFileData);
             opaPlugins[pluginId].path = plugin;
             // we need to have the metadata here also to get the plugin.apis
             plugin = opaPlugins[pluginId];

@@ -92,9 +92,7 @@ var opaEvalSingle = (data, collectionFile, opaPath, rules, callback) => {
                 });
             }
         }
-        if(!finalresults.length){
-            console.log("test");
-        }
+
         if( fs.existsSync(collectionFile) && finalresults.length){
             fs.unlinkSync(collectionFile);
         }
