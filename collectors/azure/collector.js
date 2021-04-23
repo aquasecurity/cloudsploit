@@ -56,6 +56,11 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/networkSecurityGroups?api-version=2020-03-01'
         }
     },
+    networkInterfaces: {
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/networkInterfaces?api-version=2020-11-01'
+        }
+    },
     vaults: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.KeyVault/vaults?api-version=2019-09-01'
@@ -206,6 +211,20 @@ var postcalls = {
             reliesOnPath: 'servers.listSql',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/securityAlertPolicies?api-version=2017-03-01-preview'
+        }
+    },
+    serverAutomaticTuning: {
+        get: {
+            reliesOnPath: 'servers.listSql',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/automaticTuning/current?api-version=2020-08-01-preview'
+        }
+    },
+    flowLogs: {
+        list: {
+            reliesOnPath: 'networkWatchers.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/flowLogs?api-version=2020-11-01'
         }
     },
     configurations: {
