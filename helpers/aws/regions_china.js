@@ -28,6 +28,7 @@ module.exports = {
     dlm: regions,
     dms: regions,
     dax: ['cn-northwest-1'],
+    devopsguru: regions,
     dynamodb: regions,
     ec2: regions,
     ecr: regions,
@@ -49,6 +50,7 @@ module.exports = {
     cloudwatch: regions,
     ecs: regions,
     sagemaker: [],
+    secretsmanager: regions,
     ses: [],
     servicequotas: [],
     shield: [],
@@ -62,6 +64,7 @@ module.exports = {
     support: [],
     transfer: [],
     lambda: regions,
+    mwaa: regions,
     directconnect: regions,
     directoryservice: [],
     organizations: ['cn-north-1'],
@@ -70,5 +73,7 @@ module.exports = {
     wafv2: [],
     workspaces: ['cn-northwest-1'],
     xray: regions,
-    resourcegroupstaggingapi: regions
+    resourcegroupstaggingapi: regions,
+    codestar: regions,
+    codebuild: regions
 };

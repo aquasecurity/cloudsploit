@@ -12,8 +12,8 @@ module.exports = {
     settings: {
         glue_datacatalog_encryption_level: {
             name: 'Glue Data Catalog Target Encryption Level',
-            description: 'In order (lowest to highest) none=No encryption; awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
-            regex: '^(none|awskms|awscmk|externalcmk|cloudhsm)$',
+            description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
+            regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awskms',
         }
     },
@@ -25,7 +25,7 @@ module.exports = {
             name: '(Optional) KMS Key ID',
             description: 'The KMS Key ID used for encryption',
             regex: '^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$',
-            required: true
+            required: false
         }
     },
     actions: {
@@ -97,15 +97,9 @@ module.exports = {
                         region);
                 }
             } else {
-                if (config.desiredEncryptionLevelString == 'none') {
-                    helpers.addResult(results, 0,
-                        'Glue data catalog does not have encryption at-rest enabled for metadata but target encryption level is none',
-                        region);
-                } else {
-                    helpers.addResult(results, 2,
-                        'Glue data catalog does not have encryption at-rest enabled for metadata',
-                        region);
-                }
+                helpers.addResult(results, 2,
+                    'Glue data catalog does not have encryption at-rest enabled for metadata',
+                    region);
             }
 
             rcb();
@@ -151,7 +145,7 @@ module.exports = {
         var remediation_file = settings.remediation_file;
 
         remediation_file['pre_remediate']['actions'][pluginName][region] = {
-            'DataCatalogCMKEncryption': 'Disabled',
+            'DataCatalogEncryption': 'Disabled',
             'Glue': region
         };
 
@@ -167,7 +161,7 @@ module.exports = {
 
             remediation_file['post_remediate']['actions'][pluginName][resource] = action;
             remediation_file['remediate']['actions'][pluginName][resource] = {
-                'Action': 'DATA_CATALOG_CMK_ENCRYPTED',
+                'Action': 'DATA_CATALOG_ENCRYPTED',
                 'Glue': region
             };
             settings.remediation_file = remediation_file;

@@ -62,6 +62,7 @@ module.exports = {
     managementLocks: ['global'],
     blobServices: locations,
     networkWatchers: locations,
+    networkInterfaces: locations,
     managedClusters: locations,
     virtualMachineScaleSets: locations,
     autoProvisioningSettings: ['global'],
@@ -78,5 +79,6 @@ module.exports = {
     autoscaleSettings: locations,
     resourceGroups: locations,
     policyDefinitions: locations,
-    diagnosticSettingsOperations: ['global']
+    diagnosticSettingsOperations: ['global'],
+    databaseAccounts: locations
 };

@@ -56,6 +56,11 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/networkSecurityGroups?api-version=2020-03-01'
         }
     },
+    networkInterfaces: {
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/networkInterfaces?api-version=2020-11-01'
+        }
+    },
     vaults: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.KeyVault/vaults?api-version=2019-09-01'
@@ -178,10 +183,22 @@ var calls = {
         listPostgres: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.DBforPostgreSQL/servers?api-version=2017-12-01'
         }
+    },
+    databaseAccounts: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.DocumentDB/databaseAccounts?api-version=2020-06-01-preview'
+        }
     }
 };
 
 var postcalls = {
+    advancedThreatProtection: {
+        get: {
+            reliesOnPath: 'databaseAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/Microsoft.Security/advancedThreatProtectionSettings/current?api-version=2017-08-01-preview'
+        }
+    },
     serverBlobAuditingPolicies: {
         get: {
             reliesOnPath: 'servers.listSql',
@@ -196,11 +213,32 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/securityAlertPolicies?api-version=2017-03-01-preview'
         }
     },
+    serverAutomaticTuning: {
+        get: {
+            reliesOnPath: 'servers.listSql',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/automaticTuning/current?api-version=2020-08-01-preview'
+        }
+    },
+    flowLogs: {
+        list: {
+            reliesOnPath: 'networkWatchers.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/flowLogs?api-version=2020-11-01'
+        }
+    },
     configurations: {
         listByServer: {
             reliesOnPath: 'servers.listPostgres',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/configurations?api-version=2017-12-01'
+        }
+    },
+    serverAdministrators: {
+        list: {
+            reliesOnPath: 'servers.listPostgres',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/administrators?api-version=2017-12-01'
         }
     },
     virtualMachineExtensions: {
@@ -222,6 +260,11 @@ var postcalls = {
             reliesOnPath: 'storageAccounts.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/blobServices?api-version=2019-06-01'
+        },
+        getServiceProperties: {
+            reliesOnPath: 'storageAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/blobServices/default?api-version=2019-06-01'
         }
     },
     fileShares: {

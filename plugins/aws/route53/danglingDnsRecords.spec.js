@@ -43,6 +43,20 @@ const listResourceRecordSets = [
             },
         ]
     },
+    {
+        ResourceRecordSets:  [
+            {
+                "Name": "s3rec.testfr.com.",
+                "Type": "A",
+                "ResourceRecords": [],
+                "AliasTarget": {
+                    "HostedZoneId": 'Z3AQBSTGFYJSTF',
+                    "DNSName": 's3-website-us-east-1.amazonaws.com.',
+                    "EvaluateTargetHealth": true
+                  }
+            },
+        ]
+    },
 ];
 
 const describeAddresses = [
@@ -55,7 +69,7 @@ const describeAddresses = [
     }
 ];
 
-const createCache = (zones, recordSets, addresses) => {
+const createCache = (zones, recordSets, addresses, listBuckets) => {
     var zoneId = (zones && zones.length && zones[0].Id) ? zones[0].Id : null;
     return {
         route53: {
@@ -79,6 +93,13 @@ const createCache = (zones, recordSets, addresses) => {
                 },
             },
         },
+        s3: {
+            listBuckets: {
+                'us-east-1': {
+                    data: listBuckets
+                }
+            }
+        }
     };
 };
 
@@ -133,7 +154,7 @@ const createNullCache = () => {
 describe('danglingDnsRecords', function () {
     describe('run', function () {
         it('should PASS if Hosted Zone does not have any dangling DNS records', function (done) {
-            const cache = createCache([listHostedZones[0]], listResourceRecordSets[0], [describeAddresses[0]]);
+            const cache = createCache([listHostedZones[0]], listResourceRecordSets[0], [describeAddresses[0]], []);
             danglingDnsRecords.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -141,8 +162,8 @@ describe('danglingDnsRecords', function () {
             });
         });
 
-        it('should FAIL if Hosted Zone has DNS records', function (done) {
-            const cache = createCache([listHostedZones[0]], listResourceRecordSets[1], [describeAddresses[0]]);
+        it('should FAIL if Hosted Zone has dangling DNS records', function (done) {
+            const cache = createCache([listHostedZones[0]], listResourceRecordSets[1], [describeAddresses[0]], []);
             danglingDnsRecords.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -150,8 +171,17 @@ describe('danglingDnsRecords', function () {
             });
         });
 
-        it('should FAIL if Hosted Zone has DNS records', function (done) {
-            const cache = createCache([listHostedZones[0]], listResourceRecordSets[1], []);
+        it('should FAIL if Hosted Zone has dangling DNS records', function (done) {
+            const cache = createCache([listHostedZones[0]], listResourceRecordSets[1], [], []);
+            danglingDnsRecords.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                done();
+            });
+        });
+
+        it('should FAIL if Hosted Zone has dangling DNS records pointing to deleted S3 bucket', function (done) {
+            const cache = createCache([listHostedZones[0]], listResourceRecordSets[1], [], []);
             danglingDnsRecords.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -169,7 +199,7 @@ describe('danglingDnsRecords', function () {
         });
 
         it('should PASS if no resource record sets found', function (done) {
-            const cache = createCache([listHostedZones[0]], {}, []);
+            const cache = createCache([listHostedZones[0]], {}, [], []);
             danglingDnsRecords.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -196,7 +226,7 @@ describe('danglingDnsRecords', function () {
         });
         
         it('should UNKNOWN if unable to describe elastic IP addresses', function (done) {
-            const cache = createCache([listHostedZones[0]], []);
+            const cache = createCache([listHostedZones[0]], [], null, []);
             danglingDnsRecords.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(3);

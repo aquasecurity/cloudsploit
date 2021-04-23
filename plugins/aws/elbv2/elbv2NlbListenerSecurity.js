@@ -50,7 +50,7 @@ module.exports = {
                         return cb();
                     }
 
-                    if(!describeListeners.data.Listeners || !describeListeners.data.Listeners.length){
+                    if (!describeListeners.data.Listeners || !describeListeners.data.Listeners.length){
                         helpers.addResult(results, 2,
                             'No Network Load Balancer listeners found',
                             region, resource);
@@ -59,13 +59,13 @@ module.exports = {
 
                     for (var l in describeListeners.data.Listeners) {
                         var listener = describeListeners.data.Listeners[l];
-                        if(listener.Protocol && listener.Protocol === 'TLS') {
+                        if (listener.Protocol && listener.Protocol === 'TLS') {
                             securedListenerFound = true;
                             break;
                         }
                     }
 
-                    if(securedListenerFound) {
+                    if (securedListenerFound) {
                         helpers.addResult(results, 0,
                             'Network Load Balancer has secure listener configured',
                             region, resource);
