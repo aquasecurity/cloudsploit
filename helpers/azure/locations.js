@@ -54,6 +54,7 @@ module.exports = {
     activityLogAlerts: ['global'],
     vaults: locations,
     policyAssignments: locations.concat(['global']),
+    recoveryServiceVaults: locations,
     backupPolicies: locations,
     backupProtectedItems: locations,
     webApps: locations,

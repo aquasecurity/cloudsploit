@@ -93,18 +93,18 @@ const createCache = (virtualMachines, recoveryVaults, backupProtectedItem, backu
                 'eastus': machines
             }
         },
-        vaults: {
+        recoveryServiceVaults: {
             listBySubscriptionId: {
                 'eastus': vaults
             }
         },
         backupProtectedItems: {
-            list: {
+            listByVault: {
                 'eastus': protectedItems
             }
         },
         backupPolicies: {
-            list: {
+            listByVault: {
                 'eastus': policy
             }
         }

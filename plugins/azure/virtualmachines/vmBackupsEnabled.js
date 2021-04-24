@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Azure Backup provides independent and isolated backups to guard against unintended destruction of the data on your VMs.',
     recommended_action: 'Enable Azure virtual machine backups',
     link: 'https://docs.microsoft.com/en-us/azure/backup/backup-azure-vms-introduction',
-    apis: ['virtualMachines:listAll', 'vaults:listBySubscriptionId', 'backupProtectedItems:list'],
+    apis: ['virtualMachines:listAll', 'recoveryServiceVaults:listBySubscriptionId', 'backupProtectedItems:listByVault'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -32,7 +32,7 @@ module.exports = {
             }
 
             const recoveryVaults = helpers.addSource(cache, source,
-                ['vaults', 'listBySubscriptionId', location]);
+                ['recoveryServiceVaults', 'listBySubscriptionId', location]);
 
             if (!recoveryVaults || recoveryVaults.err || !recoveryVaults.data) {
                 helpers.addResult(results, 3, 'Unable to query for backup vaults: ' + helpers.addError(recoveryVaults), location);
@@ -48,7 +48,7 @@ module.exports = {
 
             for (const vault of recoveryVaults.data) {
                 const backupProtectedItems = helpers.addSource(cache, source,
-                    ['backupProtectedItems', 'list', location, vault.id]);
+                    ['backupProtectedItems', 'listByVault', location, vault.id]);
 
                 if (!backupProtectedItems || backupProtectedItems.err || !backupProtectedItems.data) {
                     helpers.addResult(results, 3, 'Unable to query for backups : ' + helpers.addError(recoveryVaults), location);
@@ -70,12 +70,7 @@ module.exports = {
 
                 let vmBackupsEnabled = false;
                 if (vmPolicies && vmPolicies.length) {
-                    for (const policy of vmPolicies) {
-                        if (policy && policy !== '') {
-                            vmBackupsEnabled = true;
-                            break;
-                        }
-                    }
+                    vmBackupsEnabled = vmPolicies.some(policy => (policy && policy !== ''))
                 }
 
                 if (vmBackupsEnabled) {

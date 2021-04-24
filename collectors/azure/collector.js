@@ -59,7 +59,9 @@ var calls = {
     vaults: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.KeyVault/vaults?api-version=2019-09-01'
-        },
+        }
+    },
+    recoveryServiceVaults: {
         listBySubscriptionId: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.RecoveryServices/vaults?api-version=2016-06-01'
         }
@@ -198,15 +200,15 @@ var postcalls = {
         }
     },
     backupProtectedItems: {
-        list: {
-            reliesOnPath: 'vaults.listBySubscriptionId',
+        listByVault: {
+            reliesOnPath: 'recoveryServiceVaults.listBySubscriptionId',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/backupProtectedItems?api-version=2019-05-13'
         }
     },
     backupPolicies: {
-        list: {
-            reliesOnPath: 'vaults.listBySubscriptionId',
+        listByVault: {
+            reliesOnPath: 'recoveryServiceVaults.listBySubscriptionId',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/backupPolicies?api-version=2019-05-13'
         }
