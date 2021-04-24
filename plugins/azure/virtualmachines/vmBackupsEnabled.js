@@ -70,7 +70,7 @@ module.exports = {
 
                 let vmBackupsEnabled = false;
                 if (vmPolicies && vmPolicies.length) {
-                    vmBackupsEnabled = vmPolicies.some(policy => (policy && policy !== ''))
+                    vmBackupsEnabled = vmPolicies.some(policy => (policy && policy !== ''));
                 }
 
                 if (vmBackupsEnabled) {
