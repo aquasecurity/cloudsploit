@@ -54,8 +54,8 @@ module.exports = {
                         }
                 } else if (sqlInstance.instanceType == "READ_REPLICA_INSTANCE") {
                 } else {
-                    helpers.addResult(results, 2, 
-                        'SQL instance have log_min_duration_statement flag enabled', region, sqlInstance.name);
+                    helpers.addResult(results, 0, 
+                        'SQL instance does not have log_min_duration_statement flag enabled', region, sqlInstance.name);
                 }
             });
 
