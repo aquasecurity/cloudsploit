@@ -56,6 +56,11 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/networkSecurityGroups?api-version=2020-03-01'
         }
     },
+    networkInterfaces: {
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/networkInterfaces?api-version=2020-11-01'
+        }
+    },
     vaults: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.KeyVault/vaults?api-version=2019-09-01'
@@ -243,6 +248,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/extensions?api-version=2019-12-01'
         }
     },
+    virtualMachineScaleSetVMs: {
+        list: {
+            reliesOnPath: 'virtualMachineScaleSets.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/virtualMachines?api-version=2020-12-01'
+        }
+    },
     blobContainers: {
         list: {
             reliesOnPath: 'storageAccounts.list',
@@ -383,6 +395,13 @@ var tertiarycalls = {
             reliesOnPath: 'networkSecurityGroups.listAll',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2017-05-01-preview'
+        }
+    },
+    backupShortTermRetentionPolicies: {
+        listByDatabase: {
+            reliesOnPath: 'databases.listByServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/backupShortTermRetentionPolicies?api-version=2017-10-01-preview'
         }
     }
 };

@@ -384,6 +384,12 @@ module.exports = {
         'scaleSetAutoscaleEnabled'      : require(__dirname + '/plugins/azure/virtualmachines/scaleSetAutoscaleEnabled.js'),
         'vmAvailabilitySetLimit'        : require(__dirname + '/plugins/azure/virtualmachines/vmAvailabilitySetLimit.js'),
         'premiumSsdDisabled'            : require(__dirname + '/plugins/azure/virtualmachines/premiumSsdDisabled.js'),
+        'vmManagedDisks'                : require(__dirname + '/plugins/azure/virtualmachines/vmManagedDisks.js'),
+        'autoInstanceRepairsEnabled'    : require(__dirname + '/plugins/azure/virtualmachines/autoInstanceRepairsEnabled.js'),
+        'noEmptyScaleSets'              : require(__dirname + '/plugins/azure/virtualmachines/noEmptyScaleSets.js'),
+        'acceleratedNetworkingEnabled'  : require(__dirname + '/plugins/azure/virtualmachines/acceleratedNetworkingEnabled.js'),
+        'passwordAuthDisabled'          : require(__dirname + '/plugins/azure/virtualmachines/passwordAuthDisabled.js'),
+        'approvedVmImage'               : require(__dirname + '/plugins/azure/virtualmachines/approvedVmImage.js'),
         'autoOsUpgradesEnabled'         : require(__dirname + '/plugins/azure/virtualmachines/autoOsUpgradesEnabled.js'),
         'noUnattachedDisks'             : require(__dirname + '/plugins/azure/virtualmachines/noUnattachedDisks.js'),
 
@@ -510,6 +516,7 @@ module.exports = {
         'dbAuditingEnabled'             : require(__dirname + '/plugins/azure/sqldatabases/dbAuditingEnabled.js'),
         'sqlDbMultiAz'                  : require(__dirname + '/plugins/azure/sqldatabases/sqlDbMultiAz.js'),
         'dbRestorable'                  : require(__dirname + '/plugins/azure/sqldatabases/dbRestorable.js'),
+        'pitrBackupEnabled'             : require(__dirname + '/plugins/azure/sqldatabases/pitrBackupEnabled.js'),
 
         'lbHttpsOnly'                   : require(__dirname + '/plugins/azure/loadbalancer/lbHttpsOnly.js'),
         'lbNoInstances'                 : require(__dirname + '/plugins/azure/loadbalancer/lbNoInstances.js'),
@@ -662,6 +669,11 @@ module.exports = {
         'dbPubliclyAccessible'          : require(__dirname + '/plugins/google/sql/dbPubliclyAccessible.js'),
         'dbSSLEnabled'                  : require(__dirname + '/plugins/google/sql/dbSSLEnabled.js'),
         'anyHostRootAccess'             : require(__dirname + '/plugins/google/sql/anyHostRootAccess.js'),
+        'postgresqlLogLockWaits'        : require(__dirname + '/plugins/google/sql/postgresqlLogLockWaits.js'),
+        'mysqlLocalInfile'              : require(__dirname + '/plugins/google/sql/mysqlLocalInfile.js'),
+        'postgresqlLogConnections'      : require(__dirname + '/plugins/google/sql/postgresqlLogConnections.js'),
+        'postgresqlLogDisconnections'   : require(__dirname + '/plugins/google/sql/postgresqlLogDisconnections.js'),
+        'postgresqlLogCheckpoints'      : require(__dirname + '/plugins/google/sql/postgresqlLogCheckpoints.js'),
 
         'bucketVersioning'              : require(__dirname + '/plugins/google/storage/bucketVersioning.js'),
         'bucketLogging'                 : require(__dirname + '/plugins/google/storage/bucketLogging.js'),
