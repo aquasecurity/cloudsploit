@@ -8,12 +8,11 @@ var metadata ="package service.testTitle\
     \r\n    \"description\": \"testDescription\",\
     \r\n    \"apis\": apiList,\
     \r\n    \"rules\": {\
-    \r\n                    \"2\": \"data.service.testTitle.fail\",\
     \r\n                    \"0\": \"data.service.testTitle.pass\"\
     \r\n            }\
 \r\n}"
 
-var failRule = "\r\nfail[res]  {conditionProperty\r\n\tres := {\r\n\t\t\t\t\"msg\": \"The service resource property value is not set to condition.value\",\r\n\t\t\t\t\"status\": 2\r\n\t\t\t}\r\n}\r\n\r\n\r\n";
+// var failRule = "\r\nfail[res]  {conditionProperty\r\n\tres := {\r\n\t\t\t\t\"msg\": \"The service resource property value is not set to condition.value\",\r\n\t\t\t\t\"status\": 2\r\n\t\t\t}\r\n}\r\n\r\n\r\n";
 var passRule = "\r\npass[res] {conditionProperty\r\n\tres := {\r\n\t\t\t   \"msg\": \"The service resource property value is set to condition.value\",\r\n\t\t\t   \"status\": 0\r\n\t\t   }\r\n}\r\n\r\n\r\n"
 //var warnRule = "\r\nwarn[res]  {\r\n\tinput.data.Attributes\r\n\tinput.data.Attributes.KmsMasterKeyId\r\n\tinput.data.Attributes.KmsMasterKeyId == \"alias/aws/sqs\"\r\n\tres := {\r\n\t\t\t\t\"msg\": \"The SQS queue does not use a KMS key for SSE\",\r\n\t\t\t\t\"status\": 1\r\n\t\t   \t}\r\n}\r\n\r\n\r\n"
 
@@ -40,9 +39,9 @@ var convertToOpa = function(asl){
     newMetadata = newMetadata.replace("testDescription", asl.description);
     var regoApi = [];
     var regoPassingCondition = [];
-    var regoFailingCondition = [];
-    var failingRuleDone = {};
-    failingRule = failRule;
+    //var regoFailingCondition = [];
+    // var failingRuleDone = {};
+    // failingRule = failRule;
     passingRule = passRule;
     for ( api of asl.asl.apis){
         regoApi.push('"'+api+'"');
@@ -63,9 +62,9 @@ var convertToOpa = function(asl){
              if (regoPassingCondition.indexOf('\r\n\t' + prop) === -1) {
                  regoPassingCondition.push('\r\n\t' + prop);
              }
-             if (regoFailingCondition.indexOf('\r\n\tnot ' + prop) === -1) {
-                 regoFailingCondition.push('\r\n\tnot ' + prop);
-             }
+             // if (regoFailingCondition.indexOf('\r\n\tnot ' + prop) === -1) {
+             //     regoFailingCondition.push('\r\n\tnot ' + prop);
+             // }
         }
         condition.property = prop; // change the property to be like input.data.a.b.c
         if (conditionProperties.indexOf(prop) === -1) conditionProperties.push(prop);
@@ -81,25 +80,24 @@ var convertToOpa = function(asl){
                 //TBD
             } else if (condition.op == 'EQ') {
                 regoPassingCondition.push('\r\n\t' + condition.property + ' == ' + condition.value);
-                regoFailingCondition.push('\r\n\t' + condition.property + ' != ' + condition.value);
+                //regoFailingCondition.push('\r\n\t' + condition.property + ' != ' + condition.value);
             } else if (condition.op == 'GT') {
                 regoPassingCondition.push('\r\n\t' + condition.property + ' > ' + condition.value);
-                regoFailingCondition.push('\r\n\tnot' + condition.property + ' > ' + condition.value);
+                //regoFailingCondition.push('\r\n\tnot' + condition.property + ' > ' + condition.value);
             } else if (condition.op == 'NE') {
                 regoPassingCondition.push('\r\n\t' + condition.property + ' != ' + condition.value);
-                regoFailingCondition.push('\r\n\tnot' + condition.property + ' == ' + condition.value);
+                //regoFailingCondition.push('\r\n\tnot' + condition.property + ' == ' + condition.value);
             } else if (condition.op == 'MATCHES') {
                 //TBD
                 //output := regex.match(pattern, value)
             } else if (condition.op == 'EXISTS') {
-                //regoFailingCondition.push('\r\n\tnot ' + condition.property);
                 condition.value = "exist";
             } else if (condition.op == 'ISTRUE') {
                 regoPassingCondition.push('\r\n\t' + condition.property + ' == true');
-                regoFailingCondition.push('\r\n\t' + condition.property + ' != true');
+                //regoFailingCondition.push('\r\n\t' + condition.property + ' != true');
             } else if (condition.op == 'ISFALSE') {
                 regoPassingCondition.push('\r\n\t' + condition.property + ' == false');
-                regoFailingCondition.push('\r\n\t' + condition.property + ' != false');
+                //regoFailingCondition.push('\r\n\t' + condition.property + ' != false');
             } else if (condition.op == 'CONTAINS') {
                 // TBD
                 // contains(string, search)
@@ -113,47 +111,26 @@ var convertToOpa = function(asl){
                 if (!noLogicalOp && conditions[1].logical == 'AND') logicalAnd = true;
                 let andProp = condition.property;
                 let andVal =  condition.value;
-                regoFailingCondition.forEach(failC => {
-                    if(!failingRuleDone[failC]){
-                        failingRule = failRule;
-                        if (failC.includes('not')) {
-                            andProp = failC.split(" ");
-                            andProp = andProp[1];
-                            andVal = "exist";
-                        } else {
-                            andVal =  failC.split(" ");
-                            andVal = andVal[andVal.length - 1].replace(/"/g,'');
-                        }
-                        failingRule = failingRule.replace('property', andProp);  // replace property name
-                        failingRule = failingRule.replace('service', asl.category); //replace service name
-                        failingRule = failingRule.replace('condition.value', andVal); //replace value
-                        failingRule = failingRule.replace('conditionProperty', failC);
-                        rules += failingRule;
-                        failingRuleDone[failC] = true;
-                    }
-                });
-                regoFailingCondition = [];
-
-                // if (logicalAnd) {
-                //     failingRule = failRule;
-                //     failingRule = failingRule.replace('property', condition.property);  // replace property name
-                //     failingRule = failingRule.replace('service', asl.category); //replace service name
-                //     failingRule = failingRule.replace('condition.value', condition.value); //replace value
-                //     // replace the conditions formed
-                //     failingRule = failingRule.replace('conditionProperty', regoFailingCondition.join(" "));
-                //     rules += failingRule;
-                //     regoFailingCondition = [];
-                //
-                // } else{
-                //     regoFailingCondition.forEach(failC => {
+                // regoFailingCondition.forEach(failC => {
+                //     if(!failingRuleDone[failC]){
                 //         failingRule = failRule;
-                //         failingRule = failingRule.replace('property', condition.property);  // replace property name
+                //         if (failC.includes('not')) {
+                //             andProp = failC.split(" ");
+                //             andProp = andProp[1];
+                //             andVal = "exist";
+                //         } else {
+                //             andVal =  failC.split(" ");
+                //             andVal = andVal[andVal.length - 1].replace(/"/g,'');
+                //         }
+                //         failingRule = failingRule.replace('property', andProp);  // replace property name
                 //         failingRule = failingRule.replace('service', asl.category); //replace service name
-                //         failingRule = failingRule.replace('condition.value', condition.value); //replace value
+                //         failingRule = failingRule.replace('condition.value', andVal); //replace value
                 //         failingRule = failingRule.replace('conditionProperty', failC);
                 //         rules += failingRule;
-                //     });
-                // }
+                //         failingRuleDone[failC] = true;
+                //     }
+                // });
+                // regoFailingCondition = [];
             } else {
                 passingRule = passRule;
                 passingRule = passingRule.replace('property', condition.property); // replace property
@@ -172,13 +149,14 @@ var convertToOpa = function(asl){
         passingRule = passingRule.replace('The service resource property value is set to condition.value', `all of ${conditionProperties.join(",")} properties of ${ asl.category} resource are matching the value`);
         passingRule = passingRule.replace('conditionProperty', regoPassingCondition.join(" "));
         rules += passingRule;
-    } else {
-        // if "or" all the failing conditions should be in a single partial rule (logical and)(D.Morgan's)
-        failingRule = failingRule.replace("\conditionProperty", regoFailingCondition.join(" "));
-        failingRule = failingRule.replace('property value is not set to condition.value', `${conditionProperties.join(",")} properties of ${ asl.category} resource are not matching the value`);
-        rules += failingRule;
     }
-    rego = newMetadata + rules;
+    // else {
+    //     /*if "or" all the failing conditions should be in a single partial rule (logical and)(D.Morgan's)*/
+    //     failingRule = failingRule.replace("\conditionProperty", regoFailingCondition.join(" "));
+    //     failingRule = failingRule.replace('property value is not set to condition.value', `${conditionProperties.join(",")} properties of ${ asl.category} resource are not matching the value`);
+    //     rules += failingRule;
+    // }
+    rego = newMetadata + '\n' + rules;
     console.log("Rego is : \n" + rego);
 }
 

@@ -79,13 +79,55 @@ var downloadOPAforOs = (callback) => {
     });
 };
 
-var getMetaData = function(plugin){
+// var getMetaData = function(plugin){
+//     try {
+//         var fsData = fs.readFileSync(plugin, 'utf8');
+//         if (fsData.includes('__rego_metadata__')) {
+//             var braces = [];
+//             var metaData = [];
+//             var meta = fsData.toString().split(':=');
+//             var meta1 = meta[1];
+//             for (let c of meta1) {
+//                 if (c == '{') {
+//                     braces.push(c);
+//                     metaData.push(c);
+//                 } else if (c == '}') {
+//                     if (braces.length) {
+//                         braces.pop();
+//                         metaData.push(c);
+//                         if (braces.length == 0) {
+//                             break;
+//                         }
+//                     } else {
+//                         return console.log('Malformed metadata');
+//                     }
+//                 } else {
+//                     metaData.push(c);
+//                 }
+//             }
+//             metaData = metaData.join('');
+//             try {
+//                 var metaDataobj = JSON.parse(metaData);
+//                 return metaDataobj;
+//             } catch (e) {
+//                 return console.log("Error in parsing the metadata: " + e);
+//             }
+//         } else {
+//             return console.error(" No metadata in the file specified");
+//         }
+//     } catch (e){
+//         return console.error("Can not read the file:" + e);
+//     }
+//
+// };
+
+var getMetaData = function(pluginData){
     try {
-        var fsData = fs.readFileSync(plugin, 'utf8');
-        if (fsData.includes('__rego_metadata__')) {
+        //var fsData = fs.readFileSync(plugin, 'utf8');
+        if (pluginData.includes('__rego_metadata__')) {
             var braces = [];
             var metaData = [];
-            var meta = fsData.toString().split(':=');
+            var meta = pluginData.toString().split(':=');
             var meta1 = meta[1];
             for (let c of meta1) {
                 if (c == '{') {
@@ -110,13 +152,13 @@ var getMetaData = function(plugin){
                 var metaDataobj = JSON.parse(metaData);
                 return metaDataobj;
             } catch (e) {
-                return console.log("Error in parsing the metadata: " + e);
+                return console.log('Error in parsing the metadata: ' + e);
             }
         } else {
-            return console.error(" No metadata in the file specified");
+            return console.error('No metadata in the file specified');
         }
     } catch (e){
-        return console.error("Can not read the file:" + e);
+        return console.error('Can not read the file:' + e);
     }
 
 };

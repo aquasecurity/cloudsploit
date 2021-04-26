@@ -183,9 +183,9 @@ var opaRunner = function(source, opaPath, plugin, resourceMap, callback) {
                     }
                     if (!finalResults || !finalResults.length){
                         results.push({
-                            status: 3,
+                            status: 2/*3*/,
                             resource: resourceName,
-                            message: 'No data returned',
+                            message: 'Resource property did not match the condition'/*'No data returned'*/,
                             region: region
                         });
                         return rNcb();
