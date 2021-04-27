@@ -67,6 +67,6 @@ module.exports = {
     },
     settings: {
         lambda_sensitive_env_vars: 'AWS_SECRET_KEY_ID',
-	instance_count_region_threshold_us_east_2: 100,
+        instance_count_region_threshold_us_east_2: 100,
     }
 };
