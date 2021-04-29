@@ -184,6 +184,14 @@ var calls = {
             parent: true
         }
     },
+    datasets: {
+        list: {
+            api: 'bigquery',
+            version: 'v2',
+            location: null,
+            project: true
+        }
+    }
 };
 
 var postcalls = {
@@ -244,9 +252,19 @@ var postcalls = {
             filterKey: ['instance'],
             filterValue: ['name'],
         }
+    },
+    datasets: {
+        get: {
+            api: 'bigquery',
+            version: 'v2',
+            location: null,
+            reliesOnService: ['datasets'],
+            reliesOnCall: ['list'],
+            filterKey: ['datasetId'],
+            filterValue: ['id'],
+            project: true
+        }
     }
-
-
 };
 
 var collect = function(GoogleConfig, settings, callback) {

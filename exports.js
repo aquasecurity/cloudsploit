@@ -725,5 +725,7 @@ module.exports = {
         'vpcNetworkRouteLogging'        : require(__dirname + '/plugins/google/logging/vpcNetworkRouteLogging.js'),
         'vpcNetworkLogging'             : require(__dirname + '/plugins/google/logging/vpcNetworkLogging.js'),
         'logSinksEnabled'               : require(__dirname + '/plugins/google/logging/logSinksEnabled.js'),
+
+        'datasetAllUsersPolicy'         : require(__dirname + '/plugins/google/bigquery/datasetAllUsersPolicy.js')
     }
 };

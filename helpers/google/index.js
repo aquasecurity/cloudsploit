@@ -208,7 +208,9 @@ var run = function(GoogleConfig, collection, settings, service, callObj, callKey
                 records = collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][region].data;
                 async.eachLimit(records, 10, function(record, recordCb) {
                     for (var filter in callObj.filterKey) {
-                        callObj.params[callObj.filterKey[filter]] = record[callObj.filterValue[filter]];
+                        callObj.params[callObj.filterKey[filter]] = (record[callObj.filterValue[filter]].includes(':')) ?
+                            record[callObj.filterValue[filter]].split(':')[1] :
+                            record[callObj.filterValue[filter]];
                         options.version = callObj.version;
                     }
                     if (callObj.parent) {
@@ -348,6 +350,7 @@ var execute = function(LocalGoogleConfig, collection, service, callObj, callKey,
         }
     };
     var parentParams;
+    if (callObj.project) callObj.params.projectId = LocalGoogleConfig.project;
     if (callObj.nested && callObj.parent) {
         parentParams = {auth: callObj.params.auth, parent: callObj.params.parent};
         executor['projects']['locations'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
@@ -355,7 +358,7 @@ var execute = function(LocalGoogleConfig, collection, service, callObj, callKey,
         parentParams = {auth: callObj.params.auth, parent: callObj.params.parent};
         executor['projects']['locations']['keyRings'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
     } else if (callObj.resource) {
-        parentParams = {auth: callObj.auth, resource_: LocalGoogleConfig.project};
+        parentParams = {auth: callObj.auth};
         executor[service][callKey](parentParams, LocalGoogleConfig, executorCb);
     } else if (callObj.serviceAccount) {
         parentParams = {auth: callObj.params.auth, name: callObj.params.parent};
