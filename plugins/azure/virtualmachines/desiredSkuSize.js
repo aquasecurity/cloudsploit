@@ -44,9 +44,9 @@ module.exports = {
             }
 
             async.each(virtualMachines.data, function(virtualMachine, scb) {
-                let vmSkuSize = ''
+                let vmSkuSize = '';
                 if (virtualMachine.hardwareProfile && virtualMachine.hardwareProfile.vmSize) {
-                    vmSkuSize = virtualMachine.hardwareProfile.vmSize.toLowerCase()
+                    vmSkuSize = virtualMachine.hardwareProfile.vmSize.toLowerCase();
                 }
 
                 if (vmSkuSize === config.desiredSkuSize.toLowerCase()) {

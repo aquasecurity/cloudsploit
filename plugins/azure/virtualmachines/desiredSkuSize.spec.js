@@ -1,23 +1,22 @@
 var expect = require('chai').expect;
 var desiredSkuSize = require('./desiredSkuSize');
-var helpers = require('../../../helpers/azure');
 
 const virtualMachines = [
     {
         'name': 'test-vm',
         'id': '/subscriptions/123/resourceGroups/AQUA-RESOURCE_GROUP/providers/Microsoft.Compute/virtualMachines/test-vm',
         'type': 'Microsoft.Compute/virtualMachines',
-        "hardwareProfile": {
-            "vmSize": "Standard_DS3_v2"
-          }
+        'hardwareProfile': {
+            'vmSize': 'Standard_DS3_v2'
+        }
     },
     {
         'name': 'test-vm',
         'id': '/subscriptions/123/resourceGroups/AQUA-RESOURCE_GROUP/providers/Microsoft.Compute/virtualMachines/test-vm',
         'type': 'Microsoft.Compute/virtualMachines',
-        "hardwareProfile": {
-            "vmSize": "Standard_B1ls"
-          }
+        'hardwareProfile': {
+            'vmSize': 'Standard_B1ls'
+        }
     }
 ];
 
@@ -64,7 +63,7 @@ describe('desiredSkuSize', function() {
             desiredSkuSize.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include(`Virtual machine is using the desired SKU size of 'standard_ds3_v2'`);
+                expect(results[0].message).to.include('Virtual machine is using the desired SKU size of \'standard_ds3_v2\'');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -75,7 +74,7 @@ describe('desiredSkuSize', function() {
             desiredSkuSize.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include(`Virtual machine is not using the desired SKU size of 'standard_ds3_v2'`);
+                expect(results[0].message).to.include('Virtual machine is not using the desired SKU size of \'standard_ds3_v2\'');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
