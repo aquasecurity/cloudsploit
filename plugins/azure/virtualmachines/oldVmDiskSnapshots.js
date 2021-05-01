@@ -10,9 +10,9 @@ module.exports = {
     link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/windows/snapshot-copy-managed-disk',
     apis: ['snapshots:list'],
     settings: {
-        Days_Since_Snapshot_Creation: {
-            name: 'Days since the creation of snapshot',
-            description: 'The number of days since snapshot was created',
+        days_since_snapshot_creation: {
+            name: 'Days Since Snapshot Creation',
+            description: 'The number of days since snapshot was created. Snapshots older than this value of days should be deleted',
             regex: '^[0-9]*',
             default: '30'
         }
@@ -24,7 +24,7 @@ module.exports = {
         var locations = helpers.locations(settings.govcloud);
 
         const config = {
-            daysSinceCreation: parseInt(settings.Days_Since_Snapshot_Creation || this.settings.Days_Since_Snapshot_Creation.default)
+            daysSinceCreation: parseInt(settings.days_since_snapshot_creation || this.settings.days_since_snapshot_creation.default)
         };
 
         async.each(locations.snapshots, function(location, rcb) {
@@ -44,15 +44,12 @@ module.exports = {
             }
 
             async.each(snapshots.data, function(snapshot, scb) {
-                const createdDate = new Date(snapshot.timeCreated);
-                const dateNow = new Date();
-                const diffTime = Math.abs(dateNow - createdDate);
-                const daysCreated = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                const daysCreated = helpers.daysBetween(new Date(), new Date(snapshot.timeCreated));
 
                 if (daysCreated <= config.daysSinceCreation) {
-                    helpers.addResult(results, 0, `VM disk snapshot is ${daysCreated} days older than ${config.daysSinceCreation} days desired limit`, location, snapshot.id);
+                    helpers.addResult(results, 0, `VM disk snapshot is ${daysCreated} days older which is equal to or less than ${config.daysSinceCreation} days limit`, location, snapshot.id);
                 } else {
-                    helpers.addResult(results, 2, `VM disk snapshot is ${daysCreated} days older than ${config.daysSinceCreation} days desired limit`, location, snapshot.id);
+                    helpers.addResult(results, 2, `VM disk snapshot is ${daysCreated} days older which is more than ${config.daysSinceCreation} days limit`, location, snapshot.id);
                 }
 
                 scb();
