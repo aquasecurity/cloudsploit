@@ -72,11 +72,11 @@ describe('sqlCrossDbOwnership', function () {
 
             plugin.run(cache, {}, callback);
         });
-        it('should give passing result if sql instances does not have cross db ownership chaining flag enabled', function (done) {
+        it('should give passing result if sql instances does not have cross DB ownership chaining flag enabled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('SQL instance does not have cross db ownership chaining flag enabled');
+                expect(results[0].message).to.include('SQL instance does not have cross DB ownership chaining flag enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -99,11 +99,11 @@ describe('sqlCrossDbOwnership', function () {
             
             plugin.run(cache, {}, callback);
         });
-        it('should give failing result if sql instances have cross db ownership chaining flag enabled', function (done) {
+        it('should give failing result if sql instances has cross DB ownership chaining flag enabled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('SQL instance have cross db ownership chaining flag enabled');
+                expect(results[0].message).to.include('SQL instance has cross DB ownership chaining flag enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -126,11 +126,11 @@ describe('sqlCrossDbOwnership', function () {
 
             plugin.run(cache, {}, callback);
         });
-        it('should give failing result if sql instances have cross db ownership chaining flag enabled', function (done) {
+        it('should give failing result if sql instances has cross DB ownership chaining flag enabled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('SQL instance have cross db ownership chaining flag enabled');
+                expect(results[0].message).to.include('SQL instance has cross DB ownership chaining flag enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -153,11 +153,11 @@ describe('sqlCrossDbOwnership', function () {
 
             plugin.run(cache, {}, callback);
         });
-        it('should give failing result if sql instances have cross db ownership chaining flag enabled', function (done) {
+        it('should give failing result if sql instances has cross DB ownership chaining flag enabled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('SQL instance have cross db ownership chaining flag enabled');
+                expect(results[0].message).to.include('SQL instance has cross DB ownership chaining flag enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
