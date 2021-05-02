@@ -241,6 +241,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/administrators?api-version=2017-12-01'
         }
     },
+    virtualMachines: {
+        get: {
+            reliesOnPath: 'virtualMachines.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}?api-version=2020-12-01'
+        }
+    },
     virtualMachineExtensions: {
         list: {
             reliesOnPath: 'virtualMachines.listAll',
