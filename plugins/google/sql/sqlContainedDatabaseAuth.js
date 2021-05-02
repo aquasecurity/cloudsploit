@@ -55,7 +55,7 @@ module.exports = {
                 } else if (sqlInstance.instanceType == "READ_REPLICA_INSTANCE") {
                 } else {
                     helpers.addResult(results, 2, 
-                        'SQL instance have contained database authentication flag enabled', region, sqlInstance.name);
+                        'SQL instance has contained database authentication flag enabled', region, sqlInstance.name);
                 }
             });
 
