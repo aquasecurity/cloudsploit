@@ -5,7 +5,7 @@ module.exports = {
     title: 'SQLServer Contained Database Authentication',
     category: 'SQL',
     description: 'Ensures SQL instances for SQLServer type have Contained Database Authentication flag disabled.',
-    more_info: 'SQL instance for SQLServer databases provides Contained Database Authentication flag. It is used to shift the user authentication prcoess from database engine level to database level. It is enabled by default. We should always disable it to keep the authentication enabled for security.',
+    more_info: 'SQL instance for SQLServer databases provides Contained Database Authentication flag. It is used to shift the user authentication process from database engine level to database level. It is enabled by default and should always be disabled to keep the authentication enabled for security.',
     link: 'https://cloud.google.com/sql/docs/sqlserver/flags',
     recommended_action: 'Ensure that Contained Database Authentication flag is disabled for all SQLServer instances.',
     apis: ['instances:sql:list'],
