@@ -393,6 +393,7 @@ module.exports = {
         'approvedVmImage'               : require(__dirname + '/plugins/azure/virtualmachines/approvedVmImage.js'),
         'autoOsUpgradesEnabled'         : require(__dirname + '/plugins/azure/virtualmachines/autoOsUpgradesEnabled.js'),
         'noUnattachedDisks'             : require(__dirname + '/plugins/azure/virtualmachines/noUnattachedDisks.js'),
+        'instantRestoreRetention'       : require(__dirname + '/plugins/azure/virtualmachines/instantRestoreRetention.js'),
 
         'lbLogAnalyticsEnabled'         : require(__dirname + '/plugins/azure/monitor/lbLogAnalyticsEnabled.js'),
         'kvLogAnalyticsEnabled'         : require(__dirname + '/plugins/azure/monitor/kvLogAnalyticsEnabled.js'),
