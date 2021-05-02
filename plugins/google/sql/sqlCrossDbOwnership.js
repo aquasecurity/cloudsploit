@@ -5,7 +5,7 @@ module.exports = {
     title: 'SQLServer Cross Db Ownership Chaining',
     category: 'SQL',
     description: 'Ensures SQL instances for SQLServer type have cross db ownership chaining flag disabled.',
-    more_info: 'SQL instance for SQLServer databases provides cross db ownership chaining flag. It is used to configure cross database ownership chaining for all databases. It is enabled by default. We should disabled it for security unless all databases agrees for this setting.',
+    more_info: 'SQL instance for SQLServer databases provides cross DB ownership chaining flag. It is used to configure cross-database ownership chaining for all databases. It is enabled by default and should be disabled for security unless all databases agree for this setting.',
     link: 'https://cloud.google.com/sql/docs/sqlserver/flags',
     recommended_action: 'Ensure that cross db ownership chaining flag is disabled for all SQLServer instances.',
     apis: ['instances:sql:list'],
