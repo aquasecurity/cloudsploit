@@ -50,7 +50,7 @@ module.exports = {
                                 'SQL instance does not have cross db ownership chaining flag enabled', region, sqlInstance.name);
                         } else {
                             helpers.addResult(results, 2,
-                                'SQL instance have cross db ownership chaining flag enabled', region, sqlInstance.name);
+                                'SQL instance has cross DB ownership chaining flag enabled', region, sqlInstance.name);
                         }
                 } else if (sqlInstance.instanceType == "READ_REPLICA_INSTANCE") {
                 } else {
