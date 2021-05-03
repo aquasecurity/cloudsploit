@@ -28,8 +28,10 @@ var regions = [
 
 module.exports = {
     default: ['cn-hangzhou'],
-    ecs: regions,
     all: regions,
+    ecs: regions,
+    polardb: regions,
     ram: ['cn-hangzhou'],
     vpc: regions,
+    rds: regions,
 };
