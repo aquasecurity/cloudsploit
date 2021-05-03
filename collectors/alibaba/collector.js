@@ -32,6 +32,7 @@ var calls = {
             property: 'Instances',
             subProperty: 'Instance',
             paginate: 'NextToken',
+            apiVersion: '2014-05-26'
         }
     },
     RAM: {
@@ -42,7 +43,8 @@ var calls = {
         },
         ListUsers: {
             property: 'Users',
-            subProperty: 'User'
+            subProperty: 'User',
+            paginate: 'Marker'
         }
     },
     GBDB: {
@@ -65,11 +67,37 @@ var calls = {
             apiVersion: '2016-04-28',
             paginate: 'Pages'
         }
+    },
+    RDS: {
+        DescribeDBInstances: {
+            property: 'Items',
+            subProperty: 'DBInstance',
+            apiVersion: '2014-08-15',
+            paginate: 'Pages'
+        }
+    },
+    POLARDB: {
+        DescribeDBClusters: {
+            property: 'Items',
+            subProperty: 'DBCluster',
+            apiVersion: '2017-08-01',
+            paginate: 'Pages'
+        }
     }
 };
 
 var postcalls = [
     {
+        ECS: {
+            DescribeInstanceStatus: {
+                reliesOnService: 'ecs',
+                reliesOnCall: 'DescribeInstances',
+                filterKey: ['InstanceId'],
+                filterValue: ['InstanceId'],
+                resultKey: 'InstanceId',
+                apiVersion: '2014-05-26'
+            }
+        },
         RAM: {
             GetPolicy: {
                 reliesOnService: 'ram',
@@ -77,8 +105,17 @@ var postcalls = [
                 filterKey: ['PolicyName', 'PolicyType'],
                 filterValue: ['PolicyName', 'PolicyType'],
                 resultKey: 'PolicyName',
-                apiVersion: '2016-05-03',
+                apiVersion: '2015-05-01',
                 resultFilter: 'DefaultPolicyVersion'
+            },
+            GetUser: {
+                reliesOnService: 'ram',
+                reliesOnCall: 'ListUsers',
+                filterKey: ['UserName'],
+                filterValue: ['UserName'],
+                resultKey: 'UserName',
+                apiVersion: '2015-05-01',
+                resultFilter: 'User'
             }
         }
     }
@@ -231,7 +268,8 @@ var collect = function(AlibabaConfig, settings, callback) {
                                 if (err) collection[serviceLower][callKey][region][val[callObj.resultKey]].err = err;
                                 if (!data) return valCb();
 
-                                collection[serviceLower][callKey][region][val[callObj.resultKey]].data = data;
+                                collection[serviceLower][callKey][region][val[callObj.resultKey]].data = (callObj.resultFilter && data[callObj.resultFilter]) ?
+                                    data[callObj.resultFilter] : data;
 
                                 if (callObj.rateLimit) {
                                     setTimeout(function() {
