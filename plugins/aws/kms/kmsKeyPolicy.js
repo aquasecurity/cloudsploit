@@ -177,7 +177,7 @@ module.exports = {
                     var conditionalCaller = null;
 
                     if (statement.Condition) {
-                        conditionalCaller = helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, true);
+                        conditionalCaller = helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, true, accountId);
                     }
 
                     // Check for wildcards without condition
@@ -187,7 +187,7 @@ module.exports = {
                         for (var caller of conditionalCaller) {
                             if (caller !== accountId &&
                                 config.kms_key_policy_whitelisted_account_ids.indexOf(caller) === -1) {
-                                thirdPartyTrusted += 1; 
+                                thirdPartyTrusted += 1;
                             }
                         }
                     } else if (!conditionalCaller) {
@@ -226,11 +226,11 @@ module.exports = {
                     helpers.addResult(results, 2, 'Key trusts ' + wildcardTrusted +
                         ' principals with wildcards', region, kmsKey.KeyArn, custom);
                 }
-                
+
                 if (!found){
                     helpers.addResult(results, 0, 'Key policy is sufficient', region, kmsKey.KeyArn, custom);
                 }
-                
+
                 kcb();
             }, function(){
                 rcb();
