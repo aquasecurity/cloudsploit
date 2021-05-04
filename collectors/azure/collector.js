@@ -248,6 +248,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/extensions?api-version=2019-12-01'
         }
     },
+    virtualMachineScaleSetVMs: {
+        list: {
+            reliesOnPath: 'virtualMachineScaleSets.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/virtualMachines?api-version=2020-12-01'
+        }
+    },
     blobContainers: {
         list: {
             reliesOnPath: 'storageAccounts.list',
@@ -388,6 +395,13 @@ var tertiarycalls = {
             reliesOnPath: 'networkSecurityGroups.listAll',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2017-05-01-preview'
+        }
+    },
+    backupShortTermRetentionPolicies: {
+        listByDatabase: {
+            reliesOnPath: 'databases.listByServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/backupShortTermRetentionPolicies?api-version=2017-10-01-preview'
         }
     }
 };
