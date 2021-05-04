@@ -78,8 +78,6 @@ parser.add_argument('--cloud', {
 
 let settings = parser.parse_args();
 let cloudConfig = {};
-settings.config = 'C:\\Users\\Lenovo\\Documents\\scans_config.js'
-settings.cloud = 'alibaba'
 // Now execute the scans using the defined configuration information.
 if (!settings.config) {
     settings.cloud = 'aws';

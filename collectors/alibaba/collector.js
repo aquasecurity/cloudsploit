@@ -83,6 +83,12 @@ var calls = {
             apiVersion: '2017-08-01',
             paginate: 'Pages'
         }
+    },
+    STS: {
+        GetCallerIdentity: {
+            property: 'AccountId',
+            apiVersion: '2015-04-01'
+        }
     }
 };
 
@@ -105,7 +111,6 @@ var postcalls = [
                 filterKey: ['PolicyName', 'PolicyType'],
                 filterValue: ['PolicyName', 'PolicyType'],
                 resultKey: 'PolicyName',
-                apiVersion: '2015-05-01',
                 resultFilter: 'DefaultPolicyVersion'
             },
             GetUser: {
@@ -114,8 +119,14 @@ var postcalls = [
                 filterKey: ['UserName'],
                 filterValue: ['UserName'],
                 resultKey: 'UserName',
-                apiVersion: '2015-05-01',
                 resultFilter: 'User'
+            },
+            GetUserMFAInfo: {
+                reliesOnService: 'ram',
+                reliesOnCall: 'ListUsers',
+                filterKey: ['UserName'],
+                filterValue: ['UserName'],
+                resultKey: 'UserName'
             }
         }
     }
