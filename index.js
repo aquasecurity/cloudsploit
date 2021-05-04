@@ -128,12 +128,14 @@ function checkRequiredKeys(obj, keys) {
 }
 
 if (config.credentials.aws.credential_file && (!settings.cloud || (settings.cloud == 'aws'))) {
+    settings.cloud = 'aws';
     cloudConfig = loadHelperFile(config.credentials.aws.credential_file);
     if (!cloudConfig || !cloudConfig.accessKeyId || !cloudConfig.secretAccessKey) {
         console.error('ERROR: AWS credential file does not have accessKeyId or secretAccessKey properties');
         process.exit(1);
     }
 } else if (config.credentials.aws.access_key && (!settings.cloud || (settings.cloud == 'aws'))) {
+    settings.cloud = 'aws';
     checkRequiredKeys(config.credentials.aws, ['secret_access_key']);
     cloudConfig = {
         accessKeyId: config.credentials.aws.access_key,
@@ -212,8 +214,8 @@ if (config.credentials.aws.credential_file && (!settings.cloud || (settings.clou
     settings.cloud = 'alibaba';
     checkRequiredKeys(config.credentials.alibaba, ['access_key_secret']);
     cloudConfig = {
-        accessKeyId: config.credentials.aws.access_key_id,
-        accessKeySecret: config.credentials.aws.access_key_secret
+        accessKeyId: config.credentials.alibaba.access_key_id,
+        accessKeySecret: config.credentials.alibaba.access_key_secret
     };
 } else {
     console.error('ERROR: Config file does not contain any valid credential configs.');
