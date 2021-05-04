@@ -9,12 +9,21 @@ module.exports = {
     link: 'https://cloud.google.com/sql/docs/postgres/flags',
     recommended_action: 'Ensure that log_min_error_statement flag is set to Error for all PostgreSQL instances.',
     apis: ['instances:sql:list'],
+    settings: {
+        log_min_error_statement: {
+            name: 'Log Min Error Statement',
+            description: 'Return a passing result if the flag value is used from the setting list.',
+            regex: '^(LOG|FATAL|PANIC)$',
+            default: 'ERROR'
+        }
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions();
-
+        
+        var log_min_error_statement = settings.log_min_error_statement || this.settings.log_min_error_statement.default;
         async.each(regions.instances.sql, function(region, rcb) {
             let sqlInstances = helpers.addSource(
                 cache, source, ['instances', 'sql', 'list', region]);
@@ -43,8 +52,8 @@ module.exports = {
                     sqlInstance.settings.databaseFlags &&
                     sqlInstance.settings.databaseFlags.length) {
                         let found = sqlInstance.settings.databaseFlags.find(flag => flag.name && flag.name == 'log_min_error_statement' &&
-                                                                        flag.value && flag.value == 'ERROR');
-
+                                                                        flag.value && flag.value == log_min_error_statement);
+                       
                         if (found) {
                             helpers.addResult(results, 0, 
                                 'SQL instance have log_min_error_statement flag set to Error', region, sqlInstance.name);

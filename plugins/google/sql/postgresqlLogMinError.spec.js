@@ -99,6 +99,35 @@ describe('postgresqlLogMinError', function () {
 
             plugin.run(cache, {}, callback);
         });
+
+        it('should give passing result if sql instances have log_min_error_statement flag set to Error or Stricter', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('SQL instance have log_min_error_statement flag set to Error');
+                expect(results[0].region).to.equal('global');
+                done()
+            };
+
+            const cache = createCache(
+                null,
+                [{
+                    instanceType: "CLOUD_SQL_INSTANCE",
+                    name: "testing-instance",
+                    databaseVersion: "POSTGRES_13",
+                    settings: {
+                      databaseFlags: [
+                        {
+                            name: "log_min_error_statement",
+                            value: 'FATAL',
+                        },
+                      ]}
+                }],
+            );
+
+            plugin.run(cache, { log_min_error_statement: 'FATAL' }, callback);
+        });
+
         it('should give failing result if sql instances does not have log_min_error_statement flag set to Error', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
