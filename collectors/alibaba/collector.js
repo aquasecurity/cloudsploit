@@ -45,6 +45,9 @@ var calls = {
             property: 'Users',
             subProperty: 'User',
             paginate: 'Marker'
+        },
+        GetPasswordPolicy: {
+            property: 'PasswordPolicy',
         }
     },
     GBDB: {
