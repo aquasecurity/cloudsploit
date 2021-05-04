@@ -20,7 +20,7 @@ var alicloud = require('@alicloud/pop-core');
 var async = require('async');
 var helpers = require(__dirname + '/../../helpers/alibaba');
 
-var apiVersion = '2015-05-01'
+var apiVersion = '2015-05-01';
 
 var globalServices = [
     'RAM'
@@ -189,7 +189,7 @@ var collect = function(AlibabaConfig, settings, callback) {
                                 paginating = true;
                                 pageNumber += 1;
                                 let paginateParams = { PageNumber: pageNumber, PageSize: pageSize};
-                                return execute(null, paginateParams)
+                                return execute(null, paginateParams);
                             }
                         }
                     }
@@ -259,7 +259,7 @@ var collect = function(AlibabaConfig, settings, callback) {
 
                         var LocalAlibabaConfig = JSON.parse(JSON.stringify(AlibabaConfig));
 
-                        LocalAlibabaConfig['endpoint'] = `https://${serviceLower}.aliyuncs.com`;;
+                        LocalAlibabaConfig['endpoint'] = `https://${serviceLower}.aliyuncs.com`;
                         LocalAlibabaConfig['apiVersion'] = callObj.apiVersion || apiVersion;
                         var client = new alicloud(LocalAlibabaConfig);
 
@@ -289,7 +289,7 @@ var collect = function(AlibabaConfig, settings, callback) {
                                 } else {
                                     valCb();
                                 }
-                            }
+                            };
 
                             var execute = function() {  
                                 client.request(callKey, params, requestOption).then((result) => {
@@ -297,7 +297,7 @@ var collect = function(AlibabaConfig, settings, callback) {
                                 }, (err) => {
                                     requestCb(err);
                                 });
-                            }
+                            };
 
                             execute();
                         }, function() {
@@ -320,7 +320,6 @@ var collect = function(AlibabaConfig, settings, callback) {
             });
         }, function() {
             callback(null, collection);
-            // console.log(JSON.stringify(collection));
         });
     });
 };

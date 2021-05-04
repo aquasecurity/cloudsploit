@@ -78,6 +78,7 @@ parser.add_argument('--cloud', {
 
 let settings = parser.parse_args();
 let cloudConfig = {};
+
 // Now execute the scans using the defined configuration information.
 if (!settings.config) {
     settings.cloud = 'aws';
