@@ -21,6 +21,10 @@ var async = require('async');
 var helpers = require(__dirname + '/../../helpers/alibaba');
 
 var apiVersion = '2015-05-01';
+var regionEndpointMap = {
+    rds: ['cn-zhangjiakou', 'cn-huhehaote', 'cn-chengdu', 'ap-southeast-2', 'ap-southeast-3', 'ap-southeast-5',
+        'ap-northeast-1', 'ap-south-1', 'eu-central-1', 'eu-west-1', 'me-east-1']
+};
 
 var globalServices = [
     'RAM'
@@ -130,7 +134,7 @@ var postcalls = [
             }
         },
         RDS: {
-            DescribeDBInstanceSSL: {
+            DescribeParameters: {
                 reliesOnService: 'rds',
                 reliesOnCall: 'DescribeDBInstances',
                 filterKey: ['DBInstanceId'],
@@ -170,7 +174,8 @@ var collect = function(AlibabaConfig, settings, callback) {
 
                 var LocalAlibabaConfig = JSON.parse(JSON.stringify(AlibabaConfig));
 
-                var endpoint = `https://${serviceLower}.aliyuncs.com`;
+                var endpoint = (callObj.regionalEndpoint || (regionEndpointMap[serviceLower] && regionEndpointMap[serviceLower].includes(region))) ?
+                    `https://${serviceLower}.${region}.aliyuncs.com` : `https://${serviceLower}.aliyuncs.com`;
                 LocalAlibabaConfig['endpoint'] = endpoint;
                 LocalAlibabaConfig['apiVersion'] = callObj.apiVersion || apiVersion;
                 var client = new alicloud(LocalAlibabaConfig);
@@ -269,7 +274,8 @@ var collect = function(AlibabaConfig, settings, callback) {
 
                         var LocalAlibabaConfig = JSON.parse(JSON.stringify(AlibabaConfig));
 
-                        LocalAlibabaConfig['endpoint'] = `https://${serviceLower}.aliyuncs.com`;
+                        LocalAlibabaConfig['endpoint'] = (callObj.regionalEndpoint || (regionEndpointMap[serviceLower] && regionEndpointMap[serviceLower].includes(region))) ?
+                            `https://${serviceLower}.${region}.aliyuncs.com` : `https://${serviceLower}.aliyuncs.com`;
                         LocalAlibabaConfig['apiVersion'] = callObj.apiVersion || apiVersion;
                         var client = new alicloud(LocalAlibabaConfig);
 
