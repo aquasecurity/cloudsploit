@@ -83,6 +83,12 @@ var calls = {
             apiVersion: '2017-08-01',
             paginate: 'Pages'
         }
+    },
+    STS: {
+        GetCallerIdentity: {
+            property: 'AccountId',
+            apiVersion: '2015-04-01'
+        }
     }
 };
 
@@ -114,6 +120,23 @@ var postcalls = [
                 filterValue: ['UserName'],
                 resultKey: 'UserName',
                 resultFilter: 'User'
+            },
+            GetUserMFAInfo: {
+                reliesOnService: 'ram',
+                reliesOnCall: 'ListUsers',
+                filterKey: ['UserName'],
+                filterValue: ['UserName'],
+                resultKey: 'UserName'
+            }
+        },
+        RDS: {
+            DescribeDBInstanceSSL: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'DescribeDBInstances',
+                filterKey: ['DBInstanceId'],
+                filterValue: ['DBInstanceId'],
+                resultKey: 'DBInstanceId',
+                apiVersion: '2014-08-15'
             }
         }
     }
