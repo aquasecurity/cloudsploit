@@ -34,5 +34,6 @@ module.exports = {
     ram: ['cn-hangzhou'],
     vpc: regions,
     rds: regions,
-    sts: ['cn-hangzhou']
+    sts: ['cn-hangzhou'],
+    oss: ['cn-hangzhou']
 };
