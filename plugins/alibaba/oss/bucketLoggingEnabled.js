@@ -2,14 +2,12 @@ var async = require('async');
 var helpers = require('../../../helpers/alibaba');
 
 module.exports = {
-    title: 'OSS Bucket Private',
+    title: 'Bucket Logging Enabled',
     category: 'OSS',
-    description: 'Ensure that OSS bucket is not publicly accessible.',
-    more_info: 'When you allow public-access on an OSS bucket, all Internet users can access the objects in the bucket ' +
-        'and write data to the bucket. This may cause unexpected access to the data in your bucket, and cause an increase in your fees. ' +
-        'If a user uploads prohibited data or information, it may affect your legitimate interests and rights. ',
-    recommended_action: 'Modify bucket ACL to restrict access to be private.',
-    link: 'https://www.alibabacloud.com/help/doc-detail/31843.htm',
+    description: 'Ensure that OSS buckets has logging enabled.',
+    more_info: 'Enabling logging for OSS buckets provides visibility into request made to access bucket objects which can be useful in auditing and security workflows.',
+    recommended_action: 'Modify OSS buckets to enable logging.',
+    link: 'https://www.alibabacloud.com/help/doc-detail/31900.htm',
     apis: ['OSS:listBuckets', 'OSS:getBucketInfo', 'STS:GetCallerIdentity'],
 
     run: function(cache, settings, callback) {
@@ -49,15 +47,15 @@ module.exports = {
                 return cb();
             }
 
-            if (getBucketInfo.data.AccessControlList &&
-                getBucketInfo.data.AccessControlList.Grant &&
-                getBucketInfo.data.AccessControlList.Grant == 'private') {
+            if (getBucketInfo.data.BucketPolicy &&
+                getBucketInfo.data.BucketPolicy.LogBucket &&
+                getBucketInfo.data.BucketPolicy.LogBucket.length) {
                 helpers.addResult(results, 0,
-                    `Bucket ACL allows ${getBucketInfo.data.AccessControlList.Grant} access`,
+                    'Bucket has logging enabled',
                     bucketLocation, resource);
             } else {
                 helpers.addResult(results, 2,
-                    `Bucket ACL allows ${getBucketInfo.data.AccessControlList.Grant} access`,
+                    'Bucket does not have logging enabled',
                     bucketLocation, resource);
             }
 
