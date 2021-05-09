@@ -1,0 +1,82 @@
+var async = require('async');
+
+var helpers = require('../../../helpers/azure/');
+
+module.exports = {
+    title: 'VM Approved Extensions',
+    category: 'Virtual Machines',
+    description: 'Ensures that approved virtual machine extensions are installed.',
+    more_info: 'Extensions are small applications that provide post-deployment configuration and automation on Azure VMs. VMs installed should be approved by the organization to meet the organizational security requirements.',
+    recommended_action: 'Uninstall unapproved virtual machine extensions',
+    link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/extensions/overview',
+    apis: ['virtualMachines:listAll', 'virtualMachineExtensions:list'],
+    settings: {
+        vm_approved_extensions: {
+            name: 'Approved VM extensions',
+            description: 'Comma separated approved extension names',
+            default: '',
+            regex: '^.*$'
+        }
+    },
+
+    run: function(cache, settings, callback) {
+        var results = [];
+        var source = {};
+        var locations = helpers.locations(settings.govcloud);
+
+        const config = {
+            approvedExtensions: (settings.vm_approved_extensions || this.settings.vm_approved_extensions.default)
+        };
+
+        async.each(locations.virtualMachines, function(location, rcb){
+            var virtualMachines = helpers.addSource(cache, source,
+                ['virtualMachines', 'listAll', location]);
+
+            if (!virtualMachines) return rcb();
+
+            if (virtualMachines.err || !virtualMachines.data) {
+                helpers.addResult(results, 3, 'Unable to query for Virtual Machines: ' + helpers.addError(virtualMachines), location);
+                return rcb();
+            }
+
+            if (!virtualMachines.data.length) {
+                helpers.addResult(results, 0, 'No Virtual Machines found', location);
+                return rcb();
+            }
+
+            async.each(virtualMachines.data, function(virtualMachine, scb){
+                const virtualMachineExtensions = helpers.addSource(cache, source,
+                    ['virtualMachineExtensions', 'list', location, virtualMachine.id]);
+
+                if (!virtualMachineExtensions || virtualMachineExtensions.err || !virtualMachineExtensions.data) {
+                    helpers.addResult(results, 3, 'Unable to query for VM Extensions: ' + helpers.addError(virtualMachineExtensions), location, virtualMachine.id);
+                    return scb();
+                }
+                
+                if (!virtualMachineExtensions.data.length) {
+                    helpers.addResult(results, 0, 'No VM Extensions found', location, virtualMachine.id);
+                    return scb();
+                }      
+                
+                virtualMachineExtensions.data.forEach(function(virtualMachineExtension) {
+                    if (config.approvedExtensions.length) {
+                        let extensionsList = config.approvedExtensions.split(',');
+                        let found = extensionsList.some(extension => extension.trim() === virtualMachineExtension.name);
+                        if (found) {
+                            helpers.addResult(results, 0, 'Installed extension is approved by the organization', location, virtualMachineExtension.id);
+                        } else {
+                            helpers.addResult(results, 2, 'Installed extension is not approved by the organization', location, virtualMachineExtension.id);
+                        }
+                    } else {
+                        helpers.addResult(results, 0, 'No organizational restrictions for VM extensions', location, virtualMachine.id);
+                    }
+                });
+                scb();
+            }, function() {
+                rcb();
+            });
+        }, function() {
+            callback(null, results, source);
+        });
+    }
+};
