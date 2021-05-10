@@ -20,7 +20,7 @@ var alicloud = require('@alicloud/pop-core');
 var async = require('async');
 var helpers = require(__dirname + '/../../helpers/alibaba');
 
-var regions = helpers.regions(settings);
+var regions = helpers.regions();
 
 var globalServices = [
     'RAM'
@@ -39,13 +39,13 @@ var calls = {
         ListPolicies: {
             property: 'Policies',
             subProperty: 'Policy',
-            apiVersion = '2015-05-01',
+            apiVersion: '2015-05-01',
             paginate: 'Marker'
         },
         ListUsers: {
             property: 'Users',
             subProperty: 'User',
-            apiVersion = '2015-05-01',
+            apiVersion: '2015-05-01',
             paginate: 'Marker'
         }
     },
@@ -53,7 +53,7 @@ var calls = {
         DescribeDBInstances: {
             property: 'Items',
             subProperty: 'DBInstance',
-            apiVersion = '2015-05-01',
+            apiVersion: '2015-05-01',
             paginate: 'Pages'
         }
     },
@@ -107,7 +107,7 @@ var postcalls = [
                 filterKey: ['PolicyName', 'PolicyType'],
                 filterValue: ['PolicyName', 'PolicyType'],
                 resultFilter: 'DefaultPolicyVersion',
-                apiVersion = '2015-05-01'
+                apiVersion: '2015-05-01'
             },
             GetUser: {
                 reliesOnService: 'ram',
@@ -115,7 +115,7 @@ var postcalls = [
                 filterKey: ['UserName'],
                 filterValue: ['UserName'],
                 resultFilter: 'User',
-                apiVersion = '2015-05-01'
+                apiVersion: '2015-05-01'
             }
         }
     }
@@ -149,7 +149,7 @@ var collect = function(AlibabaConfig, settings, callback) {
 
                 let endpoint = `https://${serviceLower}.aliyuncs.com`;
                 LocalAlibabaConfig['endpoint'] = endpoint;
-                LocalAlibabaConfig['apiVersion'] = callObj.apiVersion || apiVersion;
+                LocalAlibabaConfig['apiVersion'] = callObj.apiVersion;
                 let client = new alicloud(LocalAlibabaConfig);
                 let paginating = false;
                 let pageNumber = 1;
@@ -247,7 +247,7 @@ var collect = function(AlibabaConfig, settings, callback) {
                         let LocalAlibabaConfig = JSON.parse(JSON.stringify(AlibabaConfig));
 
                         LocalAlibabaConfig['endpoint'] = `https://${serviceLower}.aliyuncs.com`;
-                        LocalAlibabaConfig['apiVersion'] = callObj.apiVersion || apiVersion;
+                        LocalAlibabaConfig['apiVersion'] = callObj.apiVersion;
                         let client = new alicloud(LocalAlibabaConfig);
 
                         async.eachLimit(collection[callObj.reliesOnService][callObj.reliesOnCall][region].data, 10, function(val, valCb) {
