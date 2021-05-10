@@ -22,7 +22,7 @@ var helpers = require(__dirname + '/../../helpers/alibaba');
 
 var apiVersion = '2015-05-01';
 var regionEndpointMap = {
-    ecs: ['cn-wulanchabu', 'cn-zhangjiak', 'cn-huhehaote', 'cn-heyuan', 'cn-chengdu', 'ap-southeast-2', 'cn-guangzhou',
+    ecs: ['cn-wulanchabu', 'cn-zhangjiakou', 'cn-huhehaote', 'cn-heyuan', 'cn-chengdu', 'ap-southeast-2', 'cn-guangzhou',
         'ap-southeast-3', 'ap-southeast-5', 'ap-northeast-1', 'ap-south-1', 'eu-central-1', 'eu-west-1', 'me-east-1']
 };
 
@@ -33,16 +33,10 @@ var globalServices = [
  
 var calls = {
     ECS: {
-        DescribeInstances: {
-            property: 'Instances',
-            subProperty: 'Instance',
-            paginate: 'NextToken',
-            apiVersion: '2014-05-26'
-        },
-        DescribeDisks: {
-            property: 'Disks',
-            subProperty: 'Disk',
-            paginate: 'NextToken',
+        DescribeSecurityGroups: {
+            property: 'SecurityGroups',
+            subProperty: 'SecurityGroup',
+            paginate: 'Pages',
             apiVersion: '2014-05-26'
         }
     },
@@ -114,12 +108,12 @@ var calls = {
 var postcalls = [
     {
         ECS: {
-            DescribeInstanceStatus: {
+            DescribeSecurityGroupAttribute: {
                 reliesOnService: 'ecs',
-                reliesOnCall: 'DescribeInstances',
-                filterKey: ['InstanceId'],
-                filterValue: ['InstanceId'],
-                resultKey: 'InstanceId',
+                reliesOnCall: 'DescribeSecurityGroups',
+                filterKey: ['SecurityGroupId'],
+                filterValue: ['SecurityGroupId'],
+                resultKey: 'SecurityGroupId',
                 apiVersion: '2014-05-26'
             }
         },
@@ -181,7 +175,10 @@ var collect = function(AlibabaConfig, settings, callback) {
             if (!collection[serviceLower][callKey]) collection[serviceLower][callKey] = {};
 
             var callRegions = regions[serviceLower];
-            var requestOption = { method: callObj.method || 'POST' };
+            var requestOption = {
+                timeout: 5000, //default 3000 ms
+                method: callObj.method || 'POST'
+            };
 
             async.eachLimit(callRegions, helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb) {
                 if (settings.skip_regions &&

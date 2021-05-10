@@ -727,6 +727,6 @@ module.exports = {
         'logSinksEnabled'               : require(__dirname + '/plugins/google/logging/logSinksEnabled.js'),
     },
     alibaba: {
-        'dataDisksEncrypted'            : require(__dirname + '/plugins/alibaba/ecs/dataDisksEncrypted.js')
+        'openSSH'                       : require(__dirname + '/plugins/alibaba/ecs/openSSH.js')
     }
 };
