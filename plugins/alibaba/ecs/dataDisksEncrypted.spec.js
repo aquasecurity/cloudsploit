@@ -263,7 +263,7 @@ describe('dataDisksEncrypted', function () {
             dataDisksEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Data disk is unencrypted');
+                expect(results[0].message).to.include('Data disk is not encrypted');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
@@ -280,12 +280,12 @@ describe('dataDisksEncrypted', function () {
             });
         });
 
-        it('should PASS if All data disks are encrypted', function (done) {
+        it('should PASS if data disks are encrypted', function (done) {
             const cache = createCache([describeDisks[0], describeDisks[2]], listKeys);
             dataDisksEncrypted.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
+                expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('All data disks are encrypted');
+                expect(results[0].message).to.include('Data disk is encrypted');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
@@ -302,12 +302,12 @@ describe('dataDisksEncrypted', function () {
             });
         });
 
-        it('should PASS if no ECS disks present', function (done) {
+        it('should PASS if no ECS disks found', function (done) {
             const cache = createCache([]);
             dataDisksEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No ECS disks present');
+                expect(results[0].message).to.include('No ECS disks found');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
@@ -323,16 +323,5 @@ describe('dataDisksEncrypted', function () {
                 done();
             });
         });
-
-        // it('should UNKNOWN if unable to query RDS instance SSL info', function (done) {
-        //     const cache = createCache([describeDBInstances[0]], {}, null, { err: 'Unable to query RDS instance SSL info' });
-        //     dataDisksEncrypted.run(cache, {}, (err, results) => {
-        //         expect(results.length).to.equal(1);
-        //         expect(results[0].status).to.equal(3);
-        //         expect(results[0].message).to.include('Unable to query RDS instance SSL info');
-        //         expect(results[0].region).to.equal('cn-hangzhou');
-        //         done();
-        //     });
-        // });
     })
 })

@@ -68,7 +68,7 @@ module.exports = {
             }
 
             if (!describeDisks.data.length) {
-                helpers.addResult(results, 0, 'No ECS disks present', region);
+                helpers.addResult(results, 0, 'No ECS disks found', region);
                 return rcb();
             }
 
@@ -79,22 +79,24 @@ module.exports = {
                 return rcb();
             }
 
-            var unencryptedVolumes = [];
-            var poorlyEncryptedVolumes = [];
+            var encryptionFailing = [];
+            var encryptionPassing = [];
             var keyErrors = [];
-            
+            var found = false;
+          
             async.each(describeDisks.data, (disk, dcb) => {
-                if (!disk.DiskId || disk.Type.toLowerCase() != 'data') return dcb();
+                if (!disk.DiskId || disk.Type.toLowerCase() !== 'data') return dcb();
 
+                found = true;
                 if (!disk.Encrypted) {
-                    unencryptedVolumes.push(disk.DiskId);
+                    encryptionFailing.push(disk.DiskId);
                     return dcb();
                 }
 
                 if (!disk.KMSKeyId || !disk.KMSKeyId.length) {
                     if (targetEncryptionLevel > 2) {
-                        poorlyEncryptedVolumes.push(disk.DiskId);
-                    }
+                        encryptionFailing.push(disk.DiskId);
+                    } else encryptionPassing.push(disk.DiskId);
                     return dcb();
                 }
 
@@ -108,26 +110,15 @@ module.exports = {
                 var currentEncryptionLevel = getEncryptionLevel(describeKey.data);
 
                 if (currentEncryptionLevel < targetEncryptionLevel) {
-                    poorlyEncryptedVolumes.push(disk.DiskId);
-                }
-
+                    encryptionFailing.push(disk.DiskId);
+                } else encryptionPassing.push(disk.DiskId);
                 dcb();
             }, function() {
-                if (unencryptedVolumes.length) {
-                    if (unencryptedVolumes.length > disksResultLimit) {
-                        helpers.addResult(results, 2, `More than ${disksResultLimit} data disk volumes are unencrypted`, region);
-                    } else {
-                        unencryptedVolumes.forEach(diskId => {
-                            let resource = helpers.createArn('ecs', accountId, 'disk', diskId, region);
-                            helpers.addResult(results, 2, 'Data disk is unencrypted', region, resource);
-                        });
-                    }
-                }
-                if (poorlyEncryptedVolumes.length) {
-                    if (poorlyEncryptedVolumes.length > disksResultLimit) {
+                if (encryptionFailing.length) {
+                    if (encryptionFailing.length > disksResultLimit) {
                         helpers.addResult(results, 2, `More than ${disksResultLimit} data disks are not encrypted to ${encryptionLevels[targetEncryptionLevel]}`, region);
                     } else {
-                        poorlyEncryptedVolumes.forEach(diskId => {
+                        encryptionFailing.forEach(diskId => {
                             let resource = helpers.createArn('ecs', accountId, 'disk', diskId, region);
                             helpers.addResult(results, 2, `Data disk is not encrypted to ${encryptionLevels[targetEncryptionLevel]}`, region, resource);
                         });
@@ -145,8 +136,21 @@ module.exports = {
                     }
                 }
 
-                if (!unencryptedVolumes.length && !poorlyEncryptedVolumes.length && !keyErrors.length) {
-                    helpers.addResult(results, 0, `All data disks are encrypted to at least ${encryptionLevels[targetEncryptionLevel]}`, region);
+                if (encryptionPassing.length) {
+                    if (encryptionPassing.length > disksResultLimit) {
+                        helpers.addResult(results, 0, `More than ${disksResultLimit} data disks are encrypted to at least ${encryptionLevels[targetEncryptionLevel]}`,
+                            region);
+                    } else {
+                        encryptionPassing.forEach(diskId => {
+                            let resource = helpers.createArn('ecs', accountId, 'disk', diskId, region);
+                            helpers.addResult(results, 0, `Data disk is encrypted to at least ${encryptionLevels[targetEncryptionLevel]}`,
+                                region, resource);
+                        });
+                    }
+                }
+
+                if (!found) {
+                    helpers.addResult(results, 0, 'No ECS data disks found', region);
                 }
                 rcb();
             });
