@@ -44,7 +44,7 @@ module.exports = {
 
             if (resourceGroups.err || !resourceGroups.data) {
                 helpers.addResult(results, 3, 
-                    'Unable to query Resource Groups: ' + helpers.addError(availabilitySets), location);
+                    'Unable to query Resource Groups: ' + helpers.addError(resourceGroups), location);
                 return rcb();
             }
 
@@ -94,7 +94,7 @@ module.exports = {
 
                 scb();
             }, function(){
-                rcb()
+                rcb();
             });
         }, function(){
             callback(null, results, source);
