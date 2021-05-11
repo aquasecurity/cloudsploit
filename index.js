@@ -210,7 +210,7 @@ if (config.credentials.aws.credential_file && (!settings.cloud || (settings.clou
 } else if (config.credentials.alibaba.credential_file && (!settings.cloud || (settings.cloud == 'alibaba'))) {
     settings.cloud = 'alibaba';
     cloudConfig = loadHelperFile(config.credentials.alibaba.credential_file);
-} else if (config.credentials.alibaba.token && (!settings.cloud || (settings.cloud == 'alibaba'))) {
+} else if (config.credentials.alibaba.access_key_id && (!settings.cloud || (settings.cloud == 'alibaba'))) {
     settings.cloud = 'alibaba';
     checkRequiredKeys(config.credentials.alibaba, ['access_key_secret']);
     cloudConfig = {
