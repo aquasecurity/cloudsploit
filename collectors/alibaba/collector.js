@@ -88,6 +88,12 @@ var calls = {
             apiVersion: '2017-08-01',
             paginate: 'Pages'
         }
+    },
+    STS: {
+        GetCallerIdentity: {
+            property: 'AccountId',
+            apiVersion: '2015-04-01'
+        }
     }
 };
 
