@@ -50,13 +50,11 @@ module.exports = {
                 if (getUserProfile.data.LoginProfile) {
                     helpers.addResult(results, 2,
                         'RAM user inactive for 90 or more days is enabled ', region, resource);
-                }
-                else {
+                } else {
                     helpers.addResult(results, 0,
                         'RAM user inactive for 90 or more days is not enabled', region, resource);
                 }
-            }
-            else {
+            } else {
                 helpers.addResult(results, 0,
                     'RAM user inactive for 90 or more days is not enabled', region, resource);
             }
