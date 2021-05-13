@@ -24,6 +24,8 @@ var regions = helpers.regions();
 
 var regionEndpointMap = {};
 
+var apiVersion = '2015-05-01';
+
 var globalServices = [
     'RAM'
 ];
@@ -49,6 +51,9 @@ var calls = {
             subProperty: 'User',
             apiVersion: '2015-05-01',
             paginate: 'Marker'
+        },
+        GetPasswordPolicy: {
+            property: 'PasswordPolicy',
         }
     },
     GBDB: {
@@ -166,7 +171,7 @@ var collect = function(AlibabaConfig, settings, callback) {
                 let endpoint = (regionEndpointMap[serviceLower] && regionEndpointMap[serviceLower].includes(region)) ?
                     `https://${serviceLower}.${region}.aliyuncs.com` : `https://${serviceLower}.aliyuncs.com`;
                 LocalAlibabaConfig['endpoint'] = endpoint;
-                LocalAlibabaConfig['apiVersion'] = callObj.apiVersion;
+                LocalAlibabaConfig['apiVersion'] = callObj.apiVersion || apiVersion;
                 let client = new alicloud(LocalAlibabaConfig);
                 let paginating = false;
                 let pageNumber = 1;
@@ -265,7 +270,7 @@ var collect = function(AlibabaConfig, settings, callback) {
 
                         LocalAlibabaConfig['endpoint'] = (regionEndpointMap[serviceLower] && regionEndpointMap[serviceLower].includes(region)) ?
                             `https://${serviceLower}.${region}.aliyuncs.com` : `https://${serviceLower}.aliyuncs.com`;
-                        LocalAlibabaConfig['apiVersion'] = callObj.apiVersion;
+                        LocalAlibabaConfig['apiVersion'] = callObj.apiVersion || apiVersion;
                         let client = new alicloud(LocalAlibabaConfig);
 
                         async.eachLimit(collection[callObj.reliesOnService][callObj.reliesOnCall][region].data, 10, function(val, valCb) {
