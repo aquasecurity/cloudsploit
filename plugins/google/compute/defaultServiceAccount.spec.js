@@ -1,8 +1,7 @@
-var assert = require('assert');
 var expect = require('chai').expect;
-var plugin = require('./instancePublicAccess');
+var plugin = require('./defaultServiceAccount');
 
-const createCache = (instanceData, instanceDatab, error) => {
+const createCache = (instanceData, instanceDatab, projectData, error) => {
     return {
         instances: {
             compute: {
@@ -25,11 +24,19 @@ const createCache = (instanceData, instanceDatab, error) => {
                     }
                 }
             }
+        },
+        projects : {
+            get: {
+                'global': {
+                    data: projectData,
+                    err: error
+                }
+            }
         }
     }
 };
 
-describe('instancePublicAccess', function () {
+describe('defaultServiceAccount', function () {
     describe('run', function () {
 
         it('should give unknown if an instance error occurs', function (done) {
@@ -44,6 +51,13 @@ describe('instancePublicAccess', function () {
             const cache = createCache(
                 [],
                 [],
+                [
+                    {
+                        kind: "compute#project",
+                        id: "7392252869865909896",
+                        defaultServiceAccount: "779980017373-compute@developer.gserviceaccount.com",
+                    }
+                ],
                 ['null']
             );
 
@@ -62,17 +76,24 @@ describe('instancePublicAccess', function () {
             const cache = createCache(
                 [],
                 [],
+                [
+                    {
+                        kind: "compute#project",
+                        id: "7392252869865909896",
+                        defaultServiceAccount: "779980017373-compute@developer.gserviceaccount.com",
+                    }
+                ],
                 null
             );
 
             plugin.run(cache, {}, callback);
         });
 
-        it('should fail with no block project-wide ssh keys', function (done) {
+        it('should fail if any compute instance is using the default service account', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Public access is enabled for following instances');
+                expect(results[0].message).to.include('Default service account is used for following instances');
                 expect(results[0].region).to.equal('us-central1');
                 done()
             };
@@ -82,40 +103,40 @@ describe('instancePublicAccess', function () {
                     {
                         id: "1719867382827328572",
                         name: "testing-instance",
-                        zone: "https://www.googleapis.com/compute/v1/projects/akhtar-dev-aqua/zones/us-central1-a",
-                        networkInterfaces: [
-                          {
-                            network: "https://www.googleapis.com/compute/v1/projects/akhtar-dev-aqua/global/networks/default",
-                            subnetwork: "https://www.googleapis.com/compute/v1/projects/akhtar-dev-aqua/regions/us-central1/subnetworks/default",
-                            networkIP: "10.128.0.3",
-                            name: "nic0",
-                            accessConfigs: [
-                              {
-                                type: "ONE_TO_ONE_NAT",
-                                name: "External NAT",
-                                natIP: "34.72.52.155",
-                                networkTier: "PREMIUM",
-                                kind: "compute#accessConfig",
-                              },
-                            ],
-                            fingerprint: "d6n46SySJeI=",
-                            kind: "compute#networkInterface",
-                          },
-                        ],
+                        serviceAccounts: [
+                            {
+                              email: "779980017373-compute@developer.gserviceaccount.com",
+                              scopes: [
+                                "https://www.googleapis.com/auth/devstorage.read_only",
+                                "https://www.googleapis.com/auth/logging.write",
+                                "https://www.googleapis.com/auth/monitoring.write",
+                                "https://www.googleapis.com/auth/servicecontrol",
+                                "https://www.googleapis.com/auth/service.management.readonly",
+                                "https://www.googleapis.com/auth/trace.append",
+                              ],
+                            },
+                          ],
                     }
                 ],
                 [],
+                [
+                    {
+                        kind: "compute#project",
+                        id: "7392252869865909896",
+                        defaultServiceAccount: "779980017373-compute@developer.gserviceaccount.com",
+                    }
+                ],
                 null
             );
 
             plugin.run(cache, {}, callback);
         })
 
-        it('should pass with block project-wide ssh key', function (done) {
+        it('should pass if the compute instance is not using the default service account', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Public access is disabled for following instances');
+                expect(results[0].message).to.include('Default service account is not used for following instances');
                 expect(results[0].region).to.equal('us-central1');
                 done()
             };
@@ -125,23 +146,63 @@ describe('instancePublicAccess', function () {
                     {
                         id: "3736210870233209587",
                         name: "testing-instance2",
-                        zone: "https://www.googleapis.com/compute/v1/projects/akhtar-dev-aqua/zones/us-central1-a",
-                        networkInterfaces: [
-                          {
-                            network: "https://www.googleapis.com/compute/v1/projects/akhtar-dev-aqua/global/networks/default",
-                            subnetwork: "https://www.googleapis.com/compute/v1/projects/akhtar-dev-aqua/regions/us-central1/subnetworks/default",
-                            networkIP: "10.128.0.4",
-                            name: "nic0",
-                            fingerprint: "grGInqLIF64=",
-                            kind: "compute#networkInterface",
-                          },
+                        serviceAccounts: [
+                            {
+                              email: "Temp-1234-compute@developer.gserviceaccount.com",
+                              scopes: [
+                                "https://www.googleapis.com/auth/devstorage.read_only",
+                                "https://www.googleapis.com/auth/logging.write",
+                                "https://www.googleapis.com/auth/monitoring.write",
+                                "https://www.googleapis.com/auth/servicecontrol",
+                                "https://www.googleapis.com/auth/service.management.readonly",
+                                "https://www.googleapis.com/auth/trace.append",
+                              ],
+                            },
                         ],
-                      }
-                ]
+                    }
+                ],
+                [],
+                [
+                    {
+                        kind: "compute#project",
+                        id: "7392252869865909896",
+                        defaultServiceAccount: "779980017373-compute@developer.gserviceaccount.com",
+                    }
+                ],
+                null
             );
 
             plugin.run(cache, {}, callback);
         })
 
+        it('should pass if the compute instance is not using any service account', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Default service account is not used for following instances');
+                expect(results[0].region).to.equal('us-central1');
+                done()
+            };
+
+            const cache = createCache(
+                [
+                    {
+                        id: "3736210870233209587",
+                        name: "testing-instance2",
+                    }
+                ],
+                [],
+                [
+                    {
+                        kind: "compute#project",
+                        id: "7392252869865909896",
+                        defaultServiceAccount: "779980017373-compute@developer.gserviceaccount.com",
+                    }
+                ],
+                null
+            );
+
+            plugin.run(cache, {}, callback);
+        })
     })
 })

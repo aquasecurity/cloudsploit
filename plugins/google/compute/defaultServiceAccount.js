@@ -2,26 +2,28 @@ var async   = require('async');
 var helpers = require('../../../helpers/google');
 
 module.exports = {
-    title: 'Instance Public Access Disabled',
+    title: 'Default Service Account',
     category: 'Compute',
-    description: 'Ensures that instances are not configured to allow public access',
-    more_info: 'Public IP address can cause security issues. To avoid the public access external ips should not be enabled.',
-    link: 'https://www.assured.se/2019/12/19/gcp-security/',
-    recommended_action: 'Ensure external access is disabled for all the instances.',
-    apis: ['instances:compute:list'],
+    description: 'Ensures that instances are not configured to use the default service account',
+    more_info: 'Default service account has the editor role permissions. Due to security reasons it should not be used in any instance.',
+    link: 'https://code.kiwi.com/towards-secure-by-default-google-cloud-platform-service-accounts-244ad9fc772',
+    recommended_action: 'Ensure that default service account is not used for all the instances.',
+    apis: ['instances:compute:list', 'projects:get'],
 
     run: function(cache, settings, callback) {
-
         var results = [];
         var source = {};
         var regions = helpers.regions();
+        var project = helpers.addSource(cache, source,
+            ['projects', 'get', 'global']);
+        var defaultServiceAccount = project.data[0].defaultServiceAccount;
 
         async.each(regions.instances.compute, (region, rcb) => {
             var zones = regions.zones;
             var myError = {};
             var noInstances = {};
-            var publicAccessInstances = [];
-            var privateInstances = [];
+            var defaultServiceAccountInstances = [];
+            var validServiceAccountInstances = [];
             async.each(zones[region], function(zone, zcb) {
                 var instances = helpers.addSource(cache, source,
                     ['instances', 'compute','list', zone]);
@@ -45,16 +47,17 @@ module.exports = {
                 }
 
                 instances.data.forEach(instance => {
-                    if (instance.networkInterfaces &&
-                        instance.networkInterfaces.length) {
-                        var networkObject = instance.networkInterfaces.find(
-                            networkObject => networkObject.accessConfigs && networkObject.accessConfigs);
-                        if (networkObject) {
-                            publicAccessInstances.push(instance.id)
+                    if (instance.serviceAccounts &&
+                        instance.serviceAccounts.length) {
+                        var found = instance.serviceAccounts.find(account => account.email == defaultServiceAccount);
+                        if (found) {
+                            defaultServiceAccountInstances.push(instance.id)
                         }
                         else {
-                            privateInstances.push(instance.id)
+                            validServiceAccountInstances.push(instance.id)
                         }
+                    } else {
+                        validServiceAccountInstances.push(instance.id)
                     }
                 });
             });
@@ -67,14 +70,14 @@ module.exports = {
                 zones[region] &&
                 (noInstances[region].join(',') === zones[region].join(','))) {
                 helpers.addResult(results, 0, 'No instances found in the region' , region);
-            } if (publicAccessInstances.length) {
-                var myInstanceStr = publicAccessInstances.join(", ");
+            } if (defaultServiceAccountInstances.length) {
+                var myInstanceStr = defaultServiceAccountInstances.join(", ");
                 helpers.addResult(results, 2,
-                    `Public access is enabled for following instances: ${myInstanceStr}`, region);
-            } if (privateInstances.length) {
-                var myInstanceStr = privateInstances.join(", ");
+                    `Default service account is used for following instances: ${myInstanceStr}`, region);
+            } if (validServiceAccountInstances.length) {
+                var myInstanceStr = validServiceAccountInstances.join(", ");
                 helpers.addResult(results, 0,
-                    `Public access is disabled for following instances: ${myInstanceStr}`, region);
+                    `Default service account is not used for following instances: ${myInstanceStr}`, region);
             }
 
             rcb();
