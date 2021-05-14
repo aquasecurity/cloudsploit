@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var passwordRequiresLowercase = require('./passwordRequiresLowercase')
+var passwordRequiresSymbols = require('./passwordRequiresSymbols')
 
 const getPasswordPolicy = [
     {
@@ -11,7 +11,7 @@ const getPasswordPolicy = [
         PasswordReusePrevention:0,
         HardExpiry:false,
         RequireUppercaseCharacters:false,
-        RequireSymbols:false
+        RequireSymbols:true
     },
     {
         MinimumPasswordLength:8,
@@ -39,25 +39,25 @@ const createCache = (data, err) => {
     }
 }
 
-describe('passwordRequiresLowercase', function () {
+describe('passwordRequiresSymbols', function () {
     describe('run', function () {
-        it('should FAIL if RAM password security policy does not require lowercase characters', function (done) {
+        it('should FAIL if RAM password security policy does not require symbols', function (done) {
             const cache = createCache(getPasswordPolicy[1]);
-            passwordRequiresLowercase.run(cache, {}, (err, results) => {
+            passwordRequiresSymbols.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('RAM password security policy does not require lowercase characters');
+                expect(results[0].message).to.include('RAM password security policy does not require symbols');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
         });
 
-        it('should PASS if RAM password security policy requires lowercase characters', function (done) {
+        it('should PASS if RAM password security policy requires symbols', function (done) {
             const cache = createCache(getPasswordPolicy[0]);
-            passwordRequiresLowercase.run(cache, {}, (err, results) => {
+            passwordRequiresSymbols.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('RAM password security policy requires lowercase characters');
+                expect(results[0].message).to.include('RAM password security policy require symbols');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
@@ -65,7 +65,7 @@ describe('passwordRequiresLowercase', function () {
 
         it('should UNKNOWN if unable to query RAM password policy', function (done) {
             const cache = createCache({});
-            passwordRequiresLowercase.run(cache, {}, (err, results) => {
+            passwordRequiresSymbols.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query RAM password policy');

@@ -727,6 +727,6 @@ module.exports = {
         'logSinksEnabled'               : require(__dirname + '/plugins/google/logging/logSinksEnabled.js'),
     },
     alibaba: {
-        'passwordRequiresLowercase'     : require(__dirname + '/plugins/alibaba/ram/passwordRequiresLowercase.js')
+        'passwordRequiresSymbols'       : require(__dirname + '/plugins/alibaba/ram/passwordRequiresSymbols.js')
     }
 };

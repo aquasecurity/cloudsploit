@@ -1,12 +1,12 @@
 var helpers = require('../../../helpers/alibaba');
 
 module.exports = {
-    title: 'Password Requires Lowercase',
+    title: 'Password Requires Symbols',
     category: 'RAM',
-    description: 'Ensure that RAM password security settings require at least one lowercase character.',
+    description: 'Ensure that RAM password security settings require at least one symbol.',
     more_info: 'A strong password policy enforces minimum length, expiration, reuse, and symbol usage.',
     link: 'https://www.alibabacloud.com/help/doc-detail/116413.htm',
-    recommended_action: 'Update the password security settings to require the use of lowercase characters.',
+    recommended_action: 'Update the password security settings to require the use symbols.',
     apis: ['RAM:GetPasswordPolicy'],
     compliance: {
         pci: 'PCI requires a strong password policy. Setting Identity password ' +
@@ -28,12 +28,12 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        if (getPasswordPolicy.data.RequireLowercaseCharacters) {
+        if (getPasswordPolicy.data.RequireSymbols) {
             helpers.addResult(results, 0,
-                'RAM password security policy requires lowercase characters', region);
+                'RAM password security policy require symbols', region);
         } else {
             helpers.addResult(results, 2,
-                'RAM password security policy does not require lowercase characters', region);
+                'RAM password security policy does not require symbols', region);
         }
 
         callback(null, results, source);
