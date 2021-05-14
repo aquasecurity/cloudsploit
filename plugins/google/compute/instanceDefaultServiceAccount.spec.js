@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var plugin = require('./defaultServiceAccount');
+var plugin = require('./instanceDefaultServiceAccount');
 
 const createCache = (instanceData, instanceDatab, projectData, error) => {
     return {
@@ -28,15 +28,14 @@ const createCache = (instanceData, instanceDatab, projectData, error) => {
         projects : {
             get: {
                 'global': {
-                    data: projectData,
-                    err: error
+                    data: projectData
                 }
             }
         }
     }
 };
 
-describe('defaultServiceAccount', function () {
+describe('instanceDefaultServiceAccount', function () {
     describe('run', function () {
 
         it('should give unknown if an instance error occurs', function (done) {
@@ -54,11 +53,11 @@ describe('defaultServiceAccount', function () {
                 [
                     {
                         kind: "compute#project",
-                        id: "7392252869865909896",
+                        id: "00000111112222233333",
                         defaultServiceAccount: "779980017373-compute@developer.gserviceaccount.com",
                     }
                 ],
-                ['null']
+                { message: 'error'}
             );
 
             plugin.run(cache, {}, callback);
@@ -79,7 +78,7 @@ describe('defaultServiceAccount', function () {
                 [
                     {
                         kind: "compute#project",
-                        id: "7392252869865909896",
+                        id: "00000111112222233333",
                         defaultServiceAccount: "779980017373-compute@developer.gserviceaccount.com",
                     }
                 ],
@@ -122,7 +121,7 @@ describe('defaultServiceAccount', function () {
                 [
                     {
                         kind: "compute#project",
-                        id: "7392252869865909896",
+                        id: "00000111112222233333",
                         defaultServiceAccount: "779980017373-compute@developer.gserviceaccount.com",
                     }
                 ],
@@ -144,7 +143,7 @@ describe('defaultServiceAccount', function () {
             const cache = createCache(
                 [
                     {
-                        id: "3736210870233209587",
+                        id: "000001111112222222",
                         name: "testing-instance2",
                         serviceAccounts: [
                             {
@@ -165,7 +164,7 @@ describe('defaultServiceAccount', function () {
                 [
                     {
                         kind: "compute#project",
-                        id: "7392252869865909896",
+                        id: "00000111112222233333",
                         defaultServiceAccount: "779980017373-compute@developer.gserviceaccount.com",
                     }
                 ],
@@ -187,7 +186,7 @@ describe('defaultServiceAccount', function () {
             const cache = createCache(
                 [
                     {
-                        id: "3736210870233209587",
+                        id: "000001111112222222",
                         name: "testing-instance2",
                     }
                 ],
@@ -195,7 +194,7 @@ describe('defaultServiceAccount', function () {
                 [
                     {
                         kind: "compute#project",
-                        id: "7392252869865909896",
+                        id: "00000111112222233333",
                         defaultServiceAccount: "779980017373-compute@developer.gserviceaccount.com",
                     }
                 ],

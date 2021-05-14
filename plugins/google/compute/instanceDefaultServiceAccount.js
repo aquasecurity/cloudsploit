@@ -2,21 +2,38 @@ var async   = require('async');
 var helpers = require('../../../helpers/google');
 
 module.exports = {
-    title: 'Default Service Account',
+    title: 'Instance Default Service Account',
     category: 'Compute',
-    description: 'Ensures that instances are not configured to use the default service account',
-    more_info: 'Default service account has the editor role permissions. Due to security reasons it should not be used in any instance.',
-    link: 'https://code.kiwi.com/towards-secure-by-default-google-cloud-platform-service-accounts-244ad9fc772',
-    recommended_action: 'Ensure that default service account is not used for all the instances.',
+    description: 'Ensures that compute instances are not configured to use the default service account.',
+    more_info: 'Default service account has the editor role permissions. Due to security reasons it should not be used for any instance.',
+    link: 'https://cloud.google.com/compute/docs/access/service-accounts',
+    recommended_action: 'Make sure that compute instances are not using default service account',
     apis: ['instances:compute:list', 'projects:get'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions();
-        var project = helpers.addSource(cache, source,
-            ['projects', 'get', 'global']);
-        var defaultServiceAccount = project.data[0].defaultServiceAccount;
+
+        let projects = helpers.addSource(cache, source,
+            ['projects','get', 'global']);
+
+        if (!projects) return callback(null, results, source);
+
+        if (projects.err || !projects.data) {
+            helpers.addResult(results, 3,
+                'Unable to query for projects: ' + helpers.addError(projects), 'global');
+            return callback(null, results, source);
+        }
+
+        if (!projects.data.length) {
+            helpers.addResult(results, 0, 'No projects found', 'global');
+            return callback(null, results, source);
+        }
+
+        var defaultServiceAccount = projects.data[0].defaultServiceAccount;
+
+        if (!defaultServiceAccount) return callback(null, results, source);
 
         async.each(regions.instances.compute, (region, rcb) => {
             var zones = regions.zones;
@@ -24,18 +41,18 @@ module.exports = {
             var noInstances = {};
             var defaultServiceAccountInstances = [];
             var validServiceAccountInstances = [];
-            async.each(zones[region], function(zone, zcb) {
+            zones[region].forEach(zone => {
                 var instances = helpers.addSource(cache, source,
                     ['instances', 'compute','list', zone]);
 
-                if (!instances) return zcb();
+                if (!instances) return;
 
                 if (instances.err || !instances.data) {
                     if (!myError[region]) {
                         myError[region] = [];
                     }
                     myError[region].push(zone);
-                    return zcb();
+                    return;
                 }
 
                 if (!instances.data.length) {
@@ -43,7 +60,7 @@ module.exports = {
                         noInstances[region] = [];
                     }
                     noInstances[region].push(zone);
-                    return zcb();
+                    return;
                 }
 
                 instances.data.forEach(instance => {
