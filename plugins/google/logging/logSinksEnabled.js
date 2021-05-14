@@ -22,7 +22,7 @@ module.exports = {
             if (!sinks) return rcb();
 
             if (sinks.err || !sinks.data) {
-                helpers.addResult(results, 3, 'Unable to query sinks: ' + helpers.addError(sinks), region);
+                helpers.addResult(results, 3, 'Unable to query sinks: ' + helpers.addError(sinks), region, null, null, sinks.err);
                 return rcb();
             }
 
@@ -51,7 +51,7 @@ module.exports = {
                     ['buckets', 'list', region]);
 
                 if (!buckets || buckets.err || !buckets.data) {
-                    helpers.addResult(results, 3, 'Unable to query buckets: ' + helpers.addError(buckets), region);
+                    helpers.addResult(results, 3, 'Unable to query buckets: ' + helpers.addError(buckets), region, null, null, buckets.err);
                 } else if (!buckets.data.length) {
                     helpers.addResult(results, 2, 'No log bucket found', region);
                     rcb();
