@@ -11,8 +11,6 @@ var locations = [
     'southcentralus',
     'northeurope',
     'westeurope',
-    'germanycentral',
-    'germanynortheast',
     'germanywestcentral',
     'germanynorth',
     'switzerlandnorth',
