@@ -205,6 +205,7 @@ function checkLogAlerts(activityLogAlerts, conditionResource, text, results, loc
     let alertCreateDeleteEnabled = false;
     let subscriptionId;
 
+
     for (let res in activityLogAlerts.data) {
         const activityLogAlertResource = activityLogAlerts.data[res];
         subscriptionId = '/subscriptions/' + activityLogAlertResource.id.split('/')[2];
@@ -215,14 +216,15 @@ function checkLogAlerts(activityLogAlerts, conditionResource, text, results, loc
         const allConditions = activityLogAlertResource.condition;
 
         if (!allConditions || !allConditions.allOf || !allConditions.allOf.length) continue;
-
+        
 
         var conditionOperation = allConditions.allOf.filter((d) => {
             return (d.equals && d.equals.toLowerCase().indexOf(conditionResource) > -1);
         });
         if (conditionOperation && conditionOperation.length) {
-            allConditions.allOf.forEach(condition => {
-                if (condition.field && (condition.field === 'resourceType') && (condition.equals && (condition.equals.toLowerCase() === conditionResource))) {
+		allConditions.allOf.forEach(condition => {
+        if (condition.equals != null) {
+                if (condition.field && (condition.field === 'resourceType') &&  (condition.equals.toLowerCase() === conditionResource)) {
                     alertCreateDeleteEnabled = (!alertCreateDeleteEnabled && activityLogAlertResource.enabled ? true : alertCreateDeleteEnabled);
                 } else if (condition.equals.toLowerCase().indexOf(conditionResource + '/write') > -1) {
                     alertCreateUpdateEnabled = (!alertCreateUpdateEnabled && activityLogAlertResource.enabled ? true : alertCreateUpdateEnabled);
@@ -230,7 +232,8 @@ function checkLogAlerts(activityLogAlerts, conditionResource, text, results, loc
                 if (condition.equals.toLowerCase().indexOf(conditionResource + '/delete') > -1) {
                     alertDeleteEnabled = (!alertDeleteEnabled && activityLogAlertResource.enabled ? true : alertDeleteEnabled);
                 }
-            })
+            }})
+        
         }
     }
 
