@@ -18,18 +18,6 @@ module.exports = {
         cis1: '1.2 Ensure multi-factor authentication (MFA) is enabled for all ' +
               'IAM users that have a console password'
     },
-    asl: {
-        conditions: [
-            {
-                service: 'iam',
-                api: 'generateCredentialReport',
-                property: 'mfa_active',
-                transform: 'STRING',
-                op: 'EQ',
-                value: 'true'
-            }
-        ]
-    },
 
     run: function(cache, settings, callback) {
         var results = [];

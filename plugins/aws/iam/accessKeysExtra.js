@@ -9,23 +9,7 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/ManagingCredentials.html',
     recommended_action: 'Remove the extra access key for the specified user.',
     apis: ['IAM:generateCredentialReport'],
-    asl: {
-        conditions: [
-            {
-                service: 'iam',
-                api: 'generateCredentialReport',
-                property: 'access_key_1_active',
-                op: 'ISFALSE'
-            },
-            {
-                service: 'iam',
-                api: 'generateCredentialReport',
-                property: 'access_key_2_active',
-                op: 'ISFALSE',
-                logical: 'OR'
-            }
-        ]
-    },
+
     run: function(cache, settings, callback) {
 
         var results = [];
@@ -72,4 +56,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-};
+};  

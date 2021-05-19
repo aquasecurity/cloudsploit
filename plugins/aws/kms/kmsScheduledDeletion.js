@@ -9,18 +9,6 @@ module.exports = {
     recommended_action: 'Disable the key deletion before the scheduled deletion time.',
     link: 'http://docs.aws.amazon.com/kms/latest/developerguide/deleting-keys.html',
     apis: ['KMS:listKeys', 'KMS:describeKey'],
-    asl: {
-        conditions: [
-            {
-                service: 'kms',
-                api: 'describeKey',
-                property: 'KeyMetadata.KeyState',
-                transform: 'STRING',
-                op: 'EQ',
-                value: 'PendingDeletion'
-            }
-        ]
-    },
 
     run: function(cache, settings, callback) {
         var results = [];

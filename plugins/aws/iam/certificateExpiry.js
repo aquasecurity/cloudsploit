@@ -22,18 +22,6 @@ module.exports = {
             default: 30
         }
     },
-    asl: {
-        conditions: [
-            {
-                service: 'iam',
-                api: 'listServerCertificates',
-                property: 'Expiration',
-                transform: 'DAYSFROM',
-                op: 'GT',
-                value: 90
-            }
-        ]
-    },
 
     run: function(cache, settings, callback) {
         var config = {
