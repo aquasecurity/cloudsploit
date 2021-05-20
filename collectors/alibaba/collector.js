@@ -21,7 +21,6 @@ var async = require('async');
 var helpers = require(__dirname + '/../../helpers/alibaba');
 
 var apiVersion = '2015-05-01';
-
 var globalServices = [
     'RAM'
 ];
