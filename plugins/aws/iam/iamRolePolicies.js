@@ -22,8 +22,8 @@ module.exports = {
         ignore_service_specific_wildcards: {
             name: 'Ignore Service Specific Wildcards',
             description: 'This allows enables you to allow attached policies (inline and managed) to use service specific wildcards in Action. ' +
-            'Example: Consider a role has following inline policy' +
-            `{
+                'Example: Consider a role has following inline policy' +
+                `{
                 "Version": "2012-10-17",
                 "Statement": [
                         {
@@ -38,8 +38,8 @@ module.exports = {
                         }
                 ]
             }` +
-            'If ignore_service_specific_wildcards is true, a PASS result will be generated. ' +
-            'If ignore_service_specific_wildcards is false, a FAIL result will be generated.', 
+                'If ignore_service_specific_wildcards is true, a PASS result will be generated. ' +
+                'If ignore_service_specific_wildcards is false, a FAIL result will be generated.',
             regex: '^(true|false)$',
             default: 'false'
         },
@@ -191,7 +191,7 @@ module.exports = {
                     var policyName = listRolePolicies.data.PolicyNames[p];
 
                     if (getRolePolicy &&
-                        getRolePolicy[policyName] && 
+                        getRolePolicy[policyName] &&
                         getRolePolicy[policyName].data &&
                         getRolePolicy[policyName].data.PolicyDocument) {
                         var statements = helpers.normalizePolicyDocument(
