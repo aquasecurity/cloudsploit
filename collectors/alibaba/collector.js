@@ -60,6 +60,9 @@ var calls = {
             subProperty: 'User',
             apiVersion: '2015-05-01',
             paginate: 'Marker'
+        },
+        GetPasswordPolicy: {
+            property: 'PasswordPolicy',
         }
     },
     GBDB: {
@@ -97,7 +100,8 @@ var calls = {
             property: 'Items',
             subProperty: 'DBCluster',
             apiVersion: '2017-08-01',
-            paginate: 'Pages'        }
+            paginate: 'Pages'
+        }
     },
     STS: {
         GetCallerIdentity: {
@@ -124,6 +128,7 @@ var postcalls = [
                 reliesOnCall: 'DescribeInstances',
                 filterKey: ['InstanceId'],
                 filterValue: ['InstanceId'],
+                resultKey: 'InstanceId',
                 apiVersion: '2014-05-26'
             }
         },
@@ -133,8 +138,9 @@ var postcalls = [
                 reliesOnCall: 'ListPolicies',
                 filterKey: ['PolicyName', 'PolicyType'],
                 filterValue: ['PolicyName', 'PolicyType'],
-                resultFilter: 'DefaultPolicyVersion',
-                apiVersion: '2015-05-01'
+                apiVersion: '2015-05-01',
+                resultKey: 'PolicyName',
+                resultFilter: 'DefaultPolicyVersion'
             },
             GetUser: {
                 reliesOnService: 'ram',
@@ -152,7 +158,25 @@ var postcalls = [
                 filterKey: ['KeyId'],
                 filterValue: ['KeyId'],
                 resultFilter: 'KeyMetadata',
-                apiVersion: '2016-01-20'
+                apiVersion: '2016-01-20',
+                resultKey: 'UserName',
+            },
+            GetUserMFAInfo: {
+                reliesOnService: 'ram',
+                reliesOnCall: 'ListUsers',
+                filterKey: ['UserName'],
+                filterValue: ['UserName'],
+                resultKey: 'UserName'
+            }
+        },
+        RDS: {
+            DescribeDBInstanceSSL: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'DescribeDBInstances',
+                filterKey: ['DBInstanceId'],
+                filterValue: ['DBInstanceId'],
+                resultKey: 'DBInstanceId',
+                apiVersion: '2014-08-15'
             }
         }
     }
