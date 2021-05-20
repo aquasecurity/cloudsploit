@@ -277,12 +277,12 @@ var collect = function(AlibabaConfig, settings, callback) {
                             }
                         }
 
-                        var nextToken = callObj.paginate;
-                        if (settings.paginate && nextToken && data[nextToken]) {
-                            paginating = true;
-                            var paginateProp = callObj.paginateReqProp ? callObj.paginateReqProp : nextToken;
-                            return execute([paginateProp, data[nextToken]]);
-                        }
+                    var nextToken = callObj.paginate;
+                    if (settings.paginate && nextToken && data[nextToken]) {
+                        paginating = true;
+                        var paginateProp = callObj.paginateReqProp ? callObj.paginateReqProp : nextToken;
+                        return execute([paginateProp, data[nextToken]]);
+                    }
 
                         if (callObj.rateLimit) {
                             setTimeout(function() {
