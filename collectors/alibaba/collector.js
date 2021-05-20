@@ -25,7 +25,9 @@ var regions = helpers.regions();
 var regionEndpointMap = {
     ecs: ['cn-wulanchabu', 'cn-zhangjiak', 'cn-huhehaote', 'cn-heyuan', 'cn-chengdu', 'ap-southeast-2', 'cn-guangzhou',
         'ap-southeast-3', 'ap-southeast-5', 'ap-northeast-1', 'ap-south-1', 'eu-central-1', 'eu-west-1', 'me-east-1'],
-    kms: regions['kms']
+    kms: regions['kms'],
+    rds: ['cn-zhangjiakou', 'cn-huhehaote', 'cn-chengdu', 'ap-southeast-2', 'ap-southeast-3', 'ap-southeast-5',
+        'ap-northeast-1', 'ap-south-1', 'eu-central-1', 'eu-west-1', 'me-east-1']
 };
 
 var globalServices = [
@@ -170,6 +172,14 @@ var postcalls = [
             }
         },
         RDS: {
+            DescribeParameters: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'DescribeDBInstances',
+                filterKey: ['DBInstanceId'],
+                filterValue: ['DBInstanceId'],
+                resultKey: 'DBInstanceId',
+                apiVersion: '2014-08-15'
+            },
             DescribeDBInstanceSSL: {
                 reliesOnService: 'rds',
                 reliesOnCall: 'DescribeDBInstances',

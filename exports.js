@@ -727,6 +727,7 @@ module.exports = {
         'logSinksEnabled'               : require(__dirname + '/plugins/google/logging/logSinksEnabled.js'),
     },
     alibaba: {
+        'rdsLogDuration'                : require(__dirname + '/plugins/alibaba/rds/rdsLogDuration.js'),
         'dataDisksEncrypted'            : require(__dirname + '/plugins/alibaba/ecs/dataDisksEncrypted.js'),
         'rdsSslEncryptionEnabled'       : require(__dirname + '/plugins/alibaba/rds/rdsSslEncryptionEnabled.js'),
         'passwordRequiresUppercase'     : require(__dirname + '/plugins/alibaba/ram/passwordRequiresUppercase.js'),
