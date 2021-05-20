@@ -263,10 +263,10 @@ var collect = function(AlibabaConfig, settings, callback) {
                             collection[serviceLower][callKey][region].data = dataToAdd;
                         }
 
-                        if (callObj.paginate && callObj.paginate == 'Pages' && settings.paginate) {
-                            if (data['PageNumber'] && data['PageSize'] && data['TotalCount']) {
-                                let pageSize = callObj.pageSize || parseInt(data['PageSize']);
-                                let totalCount = parseInt(data['TotalCount']);
+                    if (callObj.paginate && callObj.paginate == 'Pages' && settings.paginate) {
+                        if (data['PageNumber'] && data['PageSize'] && data['TotalCount']) {
+                            let pageSize = callObj.pageSize || parseInt(data['PageSize']);
+                            let totalCount = parseInt(data['TotalCount']);
 
                                 if ((pageNumber*pageSize) < totalCount) {
                                     paginating = true;
