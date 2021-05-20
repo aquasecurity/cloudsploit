@@ -727,6 +727,13 @@ module.exports = {
         'logSinksEnabled'               : require(__dirname + '/plugins/google/logging/logSinksEnabled.js'),
     },
     alibaba: {
-        'openSSH'                       : require(__dirname + '/plugins/alibaba/ecs/openSSH.js')
+        'openSSH'                       : require(__dirname + '/plugins/alibaba/ecs/openSSH.js'),
+        'bucketLoggingEnabled'          : require(__dirname + '/plugins/alibaba/oss/bucketLoggingEnabled.js'),
+        'ossBucketPrivate'              : require(__dirname + '/plugins/alibaba/oss/ossBucketPrivate.js'),
+        'rdsLogDuration'                : require(__dirname + '/plugins/alibaba/rds/rdsLogDuration.js'),
+        'dataDisksEncrypted'            : require(__dirname + '/plugins/alibaba/ecs/dataDisksEncrypted.js'),
+        'rdsSslEncryptionEnabled'       : require(__dirname + '/plugins/alibaba/rds/rdsSslEncryptionEnabled.js'),
+        'passwordRequiresUppercase'     : require(__dirname + '/plugins/alibaba/ram/passwordRequiresUppercase.js'),
+        'usersMfaEnabled'               : require(__dirname + '/plugins/alibaba/ram/usersMfaEnabled.js')
     }
 };
