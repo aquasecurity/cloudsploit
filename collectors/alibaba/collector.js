@@ -130,6 +130,16 @@ var postcalls = [
                 filterValue: ['UserName'],
                 resultKey: 'UserName'
             }
+        },
+        RDS: {
+            DescribeDBInstanceSSL: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'DescribeDBInstances',
+                filterKey: ['DBInstanceId'],
+                filterValue: ['DBInstanceId'],
+                resultKey: 'DBInstanceId',
+                apiVersion: '2014-08-15'
+            }
         }
     }
 ];
