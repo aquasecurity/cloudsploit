@@ -19,6 +19,7 @@ Arguments:
 var alicloud = require('@alicloud/pop-core');
 var async = require('async');
 var helpers = require(__dirname + '/../../helpers/alibaba');
+var collectors = require(__dirname + '/../../collectors/alibaba');
 
 var regions = helpers.regions();
 
@@ -31,11 +32,15 @@ var regionEndpointMap = {
 };
 
 var globalServices = [
-    'RAM',
-    'OSS'
+    'RAM'
 ];
  
 var calls = {
+    OSS: {
+        listBuckets: {
+            override: true
+        }
+    },
     ECS: {
         DescribeInstances: {
             property: 'Instances',
@@ -150,6 +155,7 @@ var postcalls = [
                 filterKey: ['UserName'],
                 filterValue: ['UserName'],
                 resultFilter: 'User',
+                resultKey: 'UserName',
                 apiVersion: '2015-05-01'
             }
         },
@@ -188,6 +194,13 @@ var postcalls = [
                 resultKey: 'DBInstanceId',
                 apiVersion: '2014-08-15'
             }
+        },
+        OSS: {
+            getBucketInfo: {
+                reliesOnService: 'oss',
+                reliesOnCall: 'listBuckets',
+                override: true
+            }
         }
     }
 ];
@@ -218,71 +231,83 @@ var collect = function(AlibabaConfig, settings, callback) {
 
                 let LocalAlibabaConfig = JSON.parse(JSON.stringify(AlibabaConfig));
 
-                let endpoint = (regionEndpointMap[serviceLower] && regionEndpointMap[serviceLower].includes(region)) ?
-                    `https://${serviceLower}.${region}.aliyuncs.com` : `https://${serviceLower}.aliyuncs.com`;
-                LocalAlibabaConfig['endpoint'] = endpoint;
-                LocalAlibabaConfig['apiVersion'] = callObj.apiVersion;
-                let client = new alicloud(LocalAlibabaConfig);
-                let paginating = false;
-                let pageNumber = 1;
-                var clientCb = function(err, data) {
-                    if (err) collection[serviceLower][callKey][region].err = err;
-                    if (!data) return regionCb();
-                    if (callObj.property && !data[callObj.property]) return regionCb();
-                    if (callObj.subProperty && !data[callObj.property][callObj.subProperty]) return regionCb();
+                if (callObj.override) {
+                    collectors[serviceLower][callKey](LocalAlibabaConfig, collection, region, function() {
+                        if (callObj.rateLimit) {
+                            setTimeout(function() {
+                                regionCb();
+                            }, callObj.rateLimit);
+                        } else {
+                            regionCb();
+                        }
+                    });
+                } else {
+                    let endpoint = (regionEndpointMap[serviceLower] && regionEndpointMap[serviceLower].includes(region)) ?
+                        `https://${serviceLower}.${region}.aliyuncs.com` : `https://${serviceLower}.aliyuncs.com`;
+                    LocalAlibabaConfig['endpoint'] = endpoint;
+                    LocalAlibabaConfig['apiVersion'] = callObj.apiVersion;
+                    let client = new alicloud(LocalAlibabaConfig);
+                    let paginating = false;
+                    let pageNumber = 1;
+                    var clientCb = function(err, data) {
+                        if (err) collection[serviceLower][callKey][region].err = err;
+                        if (!data) return regionCb();
+                        if (callObj.property && !data[callObj.property]) return regionCb();
+                        if (callObj.subProperty && !data[callObj.property][callObj.subProperty]) return regionCb();
 
-                    var dataToAdd = callObj.subProperty ? data[callObj.property][callObj.subProperty] : data[callObj.property];
+                        var dataToAdd = callObj.subProperty ? data[callObj.property][callObj.subProperty] : data[callObj.property];
 
-                    if (paginating) {
-                        collection[serviceLower][callKey][region].data = collection[serviceLower][callKey][region].data.concat(dataToAdd);
-                    } else {
-                        collection[serviceLower][callKey][region].data = dataToAdd;
-                    }
+                        if (paginating) {
+                            collection[serviceLower][callKey][region].data = collection[serviceLower][callKey][region].data.concat(dataToAdd);
+                        } else {
+                            collection[serviceLower][callKey][region].data = dataToAdd;
+                        }
 
-                    if (callObj.paginate && callObj.paginate == 'Pages' && settings.paginate) {
-                        if (data['PageNumber'] && data['PageSize'] && data['TotalCount']) {
-                            let pageSize = callObj.pageSize || parseInt(data['PageSize']);
-                            let totalCount = parseInt(data['TotalCount']);
+                        if (callObj.paginate && callObj.paginate == 'Pages' && settings.paginate) {
+                            if (data['PageNumber'] && data['PageSize'] && data['TotalCount']) {
+                                let pageSize = callObj.pageSize || parseInt(data['PageSize']);
+                                let totalCount = parseInt(data['TotalCount']);
 
-                            if ((pageNumber*pageSize) < totalCount) {
-                                paginating = true;
-                                pageNumber += 1;
-                                let paginateParams = { PageNumber: pageNumber, PageSize: pageSize};
-                                return execute(null, paginateParams);
+                                if ((pageNumber*pageSize) < totalCount) {
+                                    paginating = true;
+                                    pageNumber += 1;
+                                    let paginateParams = { PageNumber: pageNumber, PageSize: pageSize};
+                                    return execute(null, paginateParams);
+                                }
                             }
                         }
-                    }
 
-                    var nextToken = callObj.paginate;
-                    if (settings.paginate && nextToken && data[nextToken]) {
-                        paginating = true;
-                        var paginateProp = callObj.paginateReqProp ? callObj.paginateReqProp : nextToken;
-                        return execute([paginateProp, data[nextToken]]);
-                    }
+                        var nextToken = callObj.paginate;
+                        if (settings.paginate && nextToken && data[nextToken]) {
+                            paginating = true;
+                            var paginateProp = callObj.paginateReqProp ? callObj.paginateReqProp : nextToken;
+                            return execute([paginateProp, data[nextToken]]);
+                        }
 
-                    if (callObj.rateLimit) {
-                        setTimeout(function() {
+                        if (callObj.rateLimit) {
+                            setTimeout(function() {
+                                regionCb();
+                            }, callObj.rateLimit);
+                        } else {
                             regionCb();
-                        }, callObj.rateLimit);
-                    } else {
-                        regionCb();
+                        }
+                    };
+
+                    function execute(nextToken, paginateParams) { // eslint-disable-line no-inner-declarations
+                        var localParams = JSON.parse(JSON.stringify(callObj.params || {}));
+                        localParams['RegionId'] = region;
+                        if (nextToken) localParams[nextToken[0]] = nextToken[1];
+                        else if (paginateParams) localParams = {...localParams, ...paginateParams};
+
+                        client.request(callKey, localParams, requestOption).then((result) => {
+                            clientCb(null, result);
+                        }, (err) => {
+                            clientCb(err);
+                        });
                     }
-                };
 
-                function execute(nextToken, paginateParams) {
-                    var localParams = JSON.parse(JSON.stringify(callObj.params || {}));
-                    localParams['RegionId'] = region;
-                    if (nextToken) localParams[nextToken[0]] = nextToken[1];
-                    else if (paginateParams) localParams = {...localParams, ...paginateParams};
-
-                    client.request(callKey, localParams, requestOption).then((result) => {
-                        clientCb(null, result);
-                    }, (err) => {
-                        clientCb(err);
-                    });
+                    execute();
                 }
-
-                execute();
             }, function() {
                 callCb();
             });
@@ -318,58 +343,70 @@ var collect = function(AlibabaConfig, settings, callback) {
 
                         let LocalAlibabaConfig = JSON.parse(JSON.stringify(AlibabaConfig));
 
-                        LocalAlibabaConfig['endpoint'] = (regionEndpointMap[serviceLower] && regionEndpointMap[serviceLower].includes(region)) ?
-                            `https://${serviceLower}.${region}.aliyuncs.com` : `https://${serviceLower}.aliyuncs.com`;
-                        LocalAlibabaConfig['apiVersion'] = callObj.apiVersion;
-                        let client = new alicloud(LocalAlibabaConfig);
-
-                        async.eachLimit(collection[callObj.reliesOnService][callObj.reliesOnCall][region].data, 10, function(val, valCb) {
-                            let resultKey = callObj.filterValue[0];
-                            collection[serviceLower][callKey][region][val[resultKey]] = {};
-
-                            let params = {};
-                            if (callObj.params) params = JSON.parse(JSON.stringify(callObj.params));
-
-                            for (let key in callObj.filterKey) {
-                                params[callObj.filterKey[key]] = val[callObj.filterValue[key]];
-                            }
-
-                            params['RegionId'] = region;
-
-                            var requestCb = function(err, data) {
-                                if (err) collection[serviceLower][callKey][region][val[resultKey]].err = err;
-                                if (!data) return valCb();
-
-                                collection[serviceLower][callKey][region][val[resultKey]].data = (callObj.resultFilter && data[callObj.resultFilter]) ?
-                                    data[callObj.resultFilter] : data;
-
+                        if (callObj.override) {
+                            collectors[serviceLower][callKey](LocalAlibabaConfig, collection, region, function() {
                                 if (callObj.rateLimit) {
                                     setTimeout(function() {
-                                        valCb();
+                                        regionCb();
                                     }, callObj.rateLimit);
                                 } else {
-                                    valCb();
-                                }
-                            };
-
-                            var execute = function() {  
-                                client.request(callKey, params, requestOption).then((result) => {
-                                    requestCb(null, result);
-                                }, (err) => {
-                                    requestCb(err);
-                                });
-                            };
-
-                            execute();
-                        }, function() {
-                            if (callObj.rateLimit) {
-                                setTimeout(function() {
                                     regionCb();
-                                }, callObj.rateLimit);
-                            } else {
-                                regionCb();
-                            }
-                        });
+                                }
+                            });
+                        } else {
+                            LocalAlibabaConfig['endpoint'] = (regionEndpointMap[serviceLower] && regionEndpointMap[serviceLower].includes(region)) ?
+                                `https://${serviceLower}.${region}.aliyuncs.com` : `https://${serviceLower}.aliyuncs.com`;
+                            LocalAlibabaConfig['apiVersion'] = callObj.apiVersion;
+                            let client = new alicloud(LocalAlibabaConfig);
+
+                            async.eachLimit(collection[callObj.reliesOnService][callObj.reliesOnCall][region].data, 10, function(val, valCb) {
+                                let resultKey = callObj.filterValue[0];
+                                collection[serviceLower][callKey][region][val[resultKey]] = {};
+
+                                let params = {};
+                                if (callObj.params) params = JSON.parse(JSON.stringify(callObj.params));
+
+                                for (let key in callObj.filterKey) {
+                                    params[callObj.filterKey[key]] = val[callObj.filterValue[key]];
+                                }
+
+                                params['RegionId'] = region;
+
+                                var requestCb = function(err, data) {
+                                    if (err) collection[serviceLower][callKey][region][val[resultKey]].err = err;
+                                    if (!data) return valCb();
+
+                                    collection[serviceLower][callKey][region][val[resultKey]].data = (callObj.resultFilter && data[callObj.resultFilter]) ?
+                                        data[callObj.resultFilter] : data;
+
+                                    if (callObj.rateLimit) {
+                                        setTimeout(function() {
+                                            valCb();
+                                        }, callObj.rateLimit);
+                                    } else {
+                                        valCb();
+                                    }
+                                };
+
+                                var execute = function() {  
+                                    client.request(callKey, params, requestOption).then((result) => {
+                                        requestCb(null, result);
+                                    }, (err) => {
+                                        requestCb(err);
+                                    });
+                                };
+
+                                execute();
+                            }, function() {
+                                if (callObj.rateLimit) {
+                                    setTimeout(function() {
+                                        regionCb();
+                                    }, callObj.rateLimit);
+                                } else {
+                                    regionCb();
+                                }
+                            });
+                        }
                     }, function() {
                         callCb();
                     });

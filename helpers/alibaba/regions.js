@@ -35,5 +35,6 @@ module.exports = {
     vpc: regions,
     rds: regions,
     sts: ['cn-hangzhou'],
+    oss: ['cn-hangzhou'],
     kms: regions
 };
