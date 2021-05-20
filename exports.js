@@ -727,6 +727,7 @@ module.exports = {
         'logSinksEnabled'               : require(__dirname + '/plugins/google/logging/logSinksEnabled.js'),
     },
     alibaba: {
+        'openSSH'                       : require(__dirname + '/plugins/alibaba/ecs/openSSH.js'),
         'bucketLoggingEnabled'          : require(__dirname + '/plugins/alibaba/oss/bucketLoggingEnabled.js'),
         'ossBucketPrivate'              : require(__dirname + '/plugins/alibaba/oss/ossBucketPrivate.js'),
         'rdsLogDuration'                : require(__dirname + '/plugins/alibaba/rds/rdsLogDuration.js'),

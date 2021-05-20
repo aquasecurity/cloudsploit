@@ -42,6 +42,12 @@ var calls = {
         }
     },
     ECS: {
+        DescribeSecurityGroups: {
+            property: 'SecurityGroups',
+            subProperty: 'SecurityGroup',
+            paginate: 'Pages',
+            apiVersion: '2014-05-26'
+        },
         DescribeInstances: {
             property: 'Instances',
             subProperty: 'Instance',
@@ -137,6 +143,14 @@ var postcalls = [
                 filterValue: ['InstanceId'],
                 resultKey: 'InstanceId',
                 apiVersion: '2014-05-26'
+            },
+            DescribeSecurityGroupAttribute: {
+                reliesOnService: 'ecs',
+                reliesOnCall: 'DescribeSecurityGroups',
+                filterKey: ['SecurityGroupId'],
+                filterValue: ['SecurityGroupId'],
+                resultKey: 'SecurityGroupId',
+                apiVersion: '2014-05-26'
             }
         },
         RAM: {
@@ -221,7 +235,10 @@ var collect = function(AlibabaConfig, settings, callback) {
             if (!collection[serviceLower][callKey]) collection[serviceLower][callKey] = {};
 
             let callRegions = regions[serviceLower];
-            let requestOption = { method: callObj.method || 'POST' };
+            let requestOption = {
+                timeout: 5000, //default 3000 ms
+                method: callObj.method || 'POST'
+            };
 
             async.eachLimit(callRegions, helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb) {
                 if (settings.skip_regions &&
