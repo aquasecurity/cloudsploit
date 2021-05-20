@@ -128,12 +128,14 @@ function checkRequiredKeys(obj, keys) {
 }
 
 if (config.credentials.aws.credential_file && (!settings.cloud || (settings.cloud == 'aws'))) {
+    settings.cloud = 'aws';
     cloudConfig = loadHelperFile(config.credentials.aws.credential_file);
     if (!cloudConfig || !cloudConfig.accessKeyId || !cloudConfig.secretAccessKey) {
         console.error('ERROR: AWS credential file does not have accessKeyId or secretAccessKey properties');
         process.exit(1);
     }
 } else if (config.credentials.aws.access_key && (!settings.cloud || (settings.cloud == 'aws'))) {
+    settings.cloud = 'aws';
     checkRequiredKeys(config.credentials.aws, ['secret_access_key']);
     cloudConfig = {
         accessKeyId: config.credentials.aws.access_key,
@@ -257,5 +259,6 @@ if (settings.remediate && settings.remediate.length) {
         process.exit(1);
     }
 }
+
 // Now execute the scans using the defined configuration information.
 engine(cloudConfig, settings);

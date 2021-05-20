@@ -43,7 +43,7 @@ module.exports = {
             if (!projects) return rcb();
 
             if (projects.err || !projects.data) {
-                helpers.addResult(results, 3, 'Unable to query projects: ' + helpers.addError(projects), region);
+                helpers.addResult(results, 3, 'Unable to query projects', region, null, null, projects.err);
                 return rcb();
             };
 
