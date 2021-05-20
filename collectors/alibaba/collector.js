@@ -20,9 +20,7 @@ var alicloud = require('@alicloud/pop-core');
 var async = require('async');
 var helpers = require(__dirname + '/../../helpers/alibaba');
 
-var regions = helpers.regions();
-
-var regionEndpointMap = {};
+var apiVersion = '2015-05-01';
 
 var globalServices = [
     'RAM'
@@ -41,13 +39,11 @@ var calls = {
         ListPolicies: {
             property: 'Policies',
             subProperty: 'Policy',
-            apiVersion: '2015-05-01',
             paginate: 'Marker'
         },
         ListUsers: {
             property: 'Users',
             subProperty: 'User',
-            apiVersion: '2015-05-01',
             paginate: 'Marker'
         }
     },
@@ -55,7 +51,6 @@ var calls = {
         DescribeDBInstances: {
             property: 'Items',
             subProperty: 'DBInstance',
-            apiVersion: '2015-05-01',
             paginate: 'Pages'
         }
     },
@@ -88,6 +83,12 @@ var calls = {
             apiVersion: '2017-08-01',
             paginate: 'Pages'
         }
+    },
+    STS: {
+        GetCallerIdentity: {
+            property: 'AccountId',
+            apiVersion: '2015-04-01'
+        }
     }
 };
 
@@ -99,6 +100,7 @@ var postcalls = [
                 reliesOnCall: 'DescribeInstances',
                 filterKey: ['InstanceId'],
                 filterValue: ['InstanceId'],
+                resultKey: 'InstanceId',
                 apiVersion: '2014-05-26'
             }
         },
@@ -108,16 +110,23 @@ var postcalls = [
                 reliesOnCall: 'ListPolicies',
                 filterKey: ['PolicyName', 'PolicyType'],
                 filterValue: ['PolicyName', 'PolicyType'],
-                resultFilter: 'DefaultPolicyVersion',
-                apiVersion: '2015-05-01'
+                resultKey: 'PolicyName',
+                resultFilter: 'DefaultPolicyVersion'
             },
             GetUser: {
                 reliesOnService: 'ram',
                 reliesOnCall: 'ListUsers',
                 filterKey: ['UserName'],
                 filterValue: ['UserName'],
-                resultFilter: 'User',
-                apiVersion: '2015-05-01'
+                resultKey: 'UserName',
+                resultFilter: 'User'
+            },
+            GetUserMFAInfo: {
+                reliesOnService: 'ram',
+                reliesOnCall: 'ListUsers',
+                filterKey: ['UserName'],
+                filterValue: ['UserName'],
+                resultKey: 'UserName'
             }
         }
     }
@@ -128,18 +137,20 @@ var collect = function(AlibabaConfig, settings, callback) {
         return callback(null, calls, postcalls);
     }
 
+    var regions = helpers.regions(settings);
+
     var collection = {};
 
     async.eachOfLimit(calls, 10, function(call, service, serviceCb) {
-        let serviceLower = service.toLowerCase();
+        var serviceLower = service.toLowerCase();
         if (!collection[serviceLower]) collection[serviceLower] = {};
 
         async.eachOfLimit(call, 15, function(callObj, callKey, callCb) {
             if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
             if (!collection[serviceLower][callKey]) collection[serviceLower][callKey] = {};
 
-            let callRegions = regions[serviceLower];
-            let requestOption = { method: callObj.method || 'POST' };
+            var callRegions = regions[serviceLower];
+            var requestOption = { method: callObj.method || 'POST' };
 
             async.eachLimit(callRegions, helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb) {
                 if (settings.skip_regions &&
@@ -147,15 +158,14 @@ var collect = function(AlibabaConfig, settings, callback) {
                     globalServices.indexOf(service) === -1) return regionCb();
                 if (!collection[serviceLower][callKey][region]) collection[serviceLower][callKey][region] = {};
 
-                let LocalAlibabaConfig = JSON.parse(JSON.stringify(AlibabaConfig));
+                var LocalAlibabaConfig = JSON.parse(JSON.stringify(AlibabaConfig));
 
-                let endpoint = (regionEndpointMap[serviceLower] && regionEndpointMap[serviceLower].includes(region)) ?
-                    `https://${serviceLower}.${region}.aliyuncs.com` : `https://${serviceLower}.aliyuncs.com`;
+                var endpoint = `https://${serviceLower}.aliyuncs.com`;
                 LocalAlibabaConfig['endpoint'] = endpoint;
-                LocalAlibabaConfig['apiVersion'] = callObj.apiVersion;
-                let client = new alicloud(LocalAlibabaConfig);
-                let paginating = false;
-                let pageNumber = 1;
+                LocalAlibabaConfig['apiVersion'] = callObj.apiVersion || apiVersion;
+                var client = new alicloud(LocalAlibabaConfig);
+                var paginating = false;
+                var pageNumber = 1;
                 var clientCb = function(err, data) {
                     if (err) collection[serviceLower][callKey][region].err = err;
                     if (!data) return regionCb();
@@ -200,10 +210,10 @@ var collect = function(AlibabaConfig, settings, callback) {
                     }
                 };
 
-                function execute(nextToken, paginateParams) {
-                    let localParams = JSON.parse(JSON.stringify(callObj.params || {}));
+                function execute(nextTokens, paginateParams) {
+                    var localParams = JSON.parse(JSON.stringify(callObj.params || {}));
                     localParams['RegionId'] = region;
-                    if (nextToken) localParams[nextToken[0]] = nextToken[1];
+                    if (nextTokens) localParams[nextTokens[0]] = nextTokens[1];
                     else if (paginateParams) localParams = {...localParams, ...paginateParams};
 
                     client.request(callKey, localParams, requestOption).then((result) => {
@@ -247,18 +257,16 @@ var collect = function(AlibabaConfig, settings, callback) {
                             !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data.length))
                             return regionCb();
 
-                        let LocalAlibabaConfig = JSON.parse(JSON.stringify(AlibabaConfig));
+                        var LocalAlibabaConfig = JSON.parse(JSON.stringify(AlibabaConfig));
 
-                        LocalAlibabaConfig['endpoint'] = (regionEndpointMap[serviceLower] && regionEndpointMap[serviceLower].includes(region)) ?
-                            `https://${serviceLower}.${region}.aliyuncs.com` : `https://${serviceLower}.aliyuncs.com`;
-                        LocalAlibabaConfig['apiVersion'] = callObj.apiVersion;
-                        let client = new alicloud(LocalAlibabaConfig);
+                        LocalAlibabaConfig['endpoint'] = `https://${serviceLower}.aliyuncs.com`;
+                        LocalAlibabaConfig['apiVersion'] = callObj.apiVersion || apiVersion;
+                        var client = new alicloud(LocalAlibabaConfig);
 
                         async.eachLimit(collection[callObj.reliesOnService][callObj.reliesOnCall][region].data, 10, function(val, valCb) {
-                            let resultKey = callObj.filterValue[0];
-                            collection[serviceLower][callKey][region][val[resultKey]] = {};
+                            collection[serviceLower][callKey][region][val[callObj.resultKey]] = {};
 
-                            let params = {};
+                            var params = {};
                             if (callObj.params) params = JSON.parse(JSON.stringify(callObj.params));
 
                             for (let key in callObj.filterKey) {
@@ -268,10 +276,10 @@ var collect = function(AlibabaConfig, settings, callback) {
                             params['RegionId'] = region;
 
                             var requestCb = function(err, data) {
-                                if (err) collection[serviceLower][callKey][region][val[resultKey]].err = err;
+                                if (err) collection[serviceLower][callKey][region][val[callObj.resultKey]].err = err;
                                 if (!data) return valCb();
 
-                                collection[serviceLower][callKey][region][val[resultKey]].data = (callObj.resultFilter && data[callObj.resultFilter]) ?
+                                collection[serviceLower][callKey][region][val[callObj.resultKey]].data = (callObj.resultFilter && data[callObj.resultFilter]) ?
                                     data[callObj.resultFilter] : data;
 
                                 if (callObj.rateLimit) {
