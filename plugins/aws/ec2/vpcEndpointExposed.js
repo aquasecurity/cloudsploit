@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/vpc/latest/userguide/vpc-endpoints-access.html',
     apis: ['EC2:describeVpcEndpoints', 'STS:getCallerIdentity'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
@@ -19,7 +19,7 @@ module.exports = {
         var awsOrGov = helpers.defaultPartition(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
-        async.each(regions.ec2, function (region, rcb) {
+        async.each(regions.ec2, function(region, rcb) {
             var describeVpcEndpoints = helpers.addSource(cache, source,
                 ['ec2', 'describeVpcEndpoints', region]);
 
@@ -68,7 +68,7 @@ module.exports = {
             }
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }
