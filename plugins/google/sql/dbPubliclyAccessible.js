@@ -32,7 +32,7 @@ module.exports = {
             if (!sqlInstances) return rcb();
 
             if (sqlInstances.err || !sqlInstances.data) {
-                helpers.addResult(results, 3, 'Unable to query SQL instances: ' + helpers.addError(sqlInstances), region);
+                helpers.addResult(results, 3, 'Unable to query SQL instances: ' + helpers.addError(sqlInstances), region, null, null, sqlInstances.err);
                 return rcb();
             }
 

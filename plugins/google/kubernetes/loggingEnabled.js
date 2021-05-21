@@ -27,7 +27,7 @@ module.exports = {
 
             if (clusters.err || !clusters.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query Kubernetes clusters: ' + helpers.addError(clusters), region);
+                    'Unable to query Kubernetes clusters', region, null, null, clusters.err);
                 return rcb();
             }
 
