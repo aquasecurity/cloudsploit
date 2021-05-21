@@ -259,5 +259,6 @@ if (settings.remediate && settings.remediate.length) {
         process.exit(1);
     }
 }
+
 // Now execute the scans using the defined configuration information.
 engine(cloudConfig, settings);
