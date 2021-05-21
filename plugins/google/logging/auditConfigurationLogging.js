@@ -32,7 +32,7 @@ module.exports = {
 
             if ((metrics.err && metrics.err.length > 0) || !metrics.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for log metrics: ' + helpers.addError(metrics), region);
+                    'Unable to query for log metrics: ' + helpers.addError(metrics), region, null, null, metrics.err);
                 return rcb();
             }
 
