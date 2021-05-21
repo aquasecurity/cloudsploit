@@ -169,6 +169,7 @@ var postcalls = [
                 filterKey: ['UserName'],
                 filterValue: ['UserName'],
                 resultFilter: 'User',
+                resultKey: 'UserName',
                 apiVersion: '2015-05-01'
             },
             GetLoginProfile: {
