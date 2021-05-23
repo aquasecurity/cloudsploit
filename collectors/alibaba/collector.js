@@ -76,7 +76,7 @@ var calls = {
         },
         GetPasswordPolicy: {
             property: 'PasswordPolicy',
-        }
+        },
     },
     GBDB: {
         DescribeDBInstances: {
@@ -170,6 +170,14 @@ var postcalls = [
                 filterValue: ['UserName'],
                 resultFilter: 'User',
                 resultKey: 'UserName',
+                apiVersion: '2015-05-01'
+            },
+            ListAccessKeys: {
+                reliesOnService: 'ram',
+                reliesOnCall: 'ListUsers',
+                filterKey: ['UserName'],
+                filterValue: ['UserName'],
+                resultFilter: 'User',
                 apiVersion: '2015-05-01'
             }
         },
