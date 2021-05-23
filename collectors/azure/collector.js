@@ -255,6 +255,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/virtualMachines?api-version=2020-12-01'
         }
     },
+    NetworkGatewayConnections: {
+        listByResourceGroup: {
+            reliesOnPath: 'resourceGroups.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/Microsoft.Network/connections?api-version=2020-11-01'
+        }
+    },
     blobContainers: {
         list: {
             reliesOnPath: 'storageAccounts.list',
