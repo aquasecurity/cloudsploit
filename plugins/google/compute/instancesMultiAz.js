@@ -23,7 +23,7 @@ module.exports = {
             helpers.addResult(results, 3, 'Unable to query instance groups', region);
             return callback(null, results, source);
         } else if (instanceGroups.err || !instanceGroups.data) {
-            helpers.addResult(results, 3, 'Unable to query instance groups: ' + helpers.addError(instanceGroups), region);
+            helpers.addResult(results, 3, 'Unable to query instance groups', region, null, null, instanceGroups.err);
             return callback(null, results, source);
         } else {
             var groupName = [];
