@@ -32,6 +32,7 @@ var regionEndpointMap = {
 };
 
 var globalServices = [
+    'OSS',
     'RAM'
 ];
  
@@ -76,6 +77,7 @@ var calls = {
         },
         GetPasswordPolicy: {
             property: 'PasswordPolicy',
+            apiVersion: '2015-05-01',
         }
     },
     GBDB: {
@@ -127,8 +129,7 @@ var calls = {
             property: 'Keys',
             subProperty: 'Key',
             apiVersion: '2016-01-20',
-            paginate: 'Pages',
-            regionalEndpoint: true
+            paginate: 'Pages'
         }
     }
 };
@@ -141,7 +142,6 @@ var postcalls = [
                 reliesOnCall: 'DescribeInstances',
                 filterKey: ['InstanceId'],
                 filterValue: ['InstanceId'],
-                resultKey: 'InstanceId',
                 apiVersion: '2014-05-26'
             },
             DescribeSecurityGroupAttribute: {
@@ -149,7 +149,6 @@ var postcalls = [
                 reliesOnCall: 'DescribeSecurityGroups',
                 filterKey: ['SecurityGroupId'],
                 filterValue: ['SecurityGroupId'],
-                resultKey: 'SecurityGroupId',
                 apiVersion: '2014-05-26'
             }
         },
@@ -160,7 +159,6 @@ var postcalls = [
                 filterKey: ['PolicyName', 'PolicyType'],
                 filterValue: ['PolicyName', 'PolicyType'],
                 apiVersion: '2015-05-01',
-                resultKey: 'PolicyName',
                 resultFilter: 'DefaultPolicyVersion'
             },
             GetUser: {
@@ -169,7 +167,13 @@ var postcalls = [
                 filterKey: ['UserName'],
                 filterValue: ['UserName'],
                 resultFilter: 'User',
-                resultKey: 'UserName',
+                apiVersion: '2015-05-01'
+            },
+            GetUserMFAInfo: {
+                reliesOnService: 'ram',
+                reliesOnCall: 'ListUsers',
+                filterKey: ['UserName'],
+                filterValue: ['UserName'],
                 apiVersion: '2015-05-01'
             },
             GetLoginProfile: {
@@ -188,17 +192,7 @@ var postcalls = [
                 filterKey: ['KeyId'],
                 filterValue: ['KeyId'],
                 resultFilter: 'KeyMetadata',
-                apiVersion: '2016-01-20',
-                resultKey: 'UserName',
-            },
-            GetUserMFAInfo: {
-                reliesOnService: 'ram',
-                reliesOnCall: 'ListUsers',
-                filterKey: ['UserName'],
-                filterValue: ['UserName'],
-                resultFilter: 'User',
-                apiVersion: '2015-05-01',
-                resultKey: 'UserName'
+                apiVersion: '2016-01-20'
             }
         },
         RDS: {
@@ -207,7 +201,6 @@ var postcalls = [
                 reliesOnCall: 'DescribeDBInstances',
                 filterKey: ['DBInstanceId'],
                 filterValue: ['DBInstanceId'],
-                resultKey: 'DBInstanceId',
                 apiVersion: '2014-08-15'
             },
             DescribeDBInstanceSSL: {
@@ -215,7 +208,6 @@ var postcalls = [
                 reliesOnCall: 'DescribeDBInstances',
                 filterKey: ['DBInstanceId'],
                 filterValue: ['DBInstanceId'],
-                resultKey: 'DBInstanceId',
                 apiVersion: '2014-08-15'
             }
         },
