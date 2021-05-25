@@ -47,7 +47,7 @@ module.exports = {
 
             var getUserMfa = helpers.addSource(cache, source,
                 ['ram', 'GetUserMFAInfo', region, user.UserName]);
-            
+
             var resource = helpers.createArn('ram', accountId, 'user', user.UserName);
 
             if (getUserMfa && getUserMfa.err && getUserMfa.err.code && getUserMfa.err.code === 'EntityNotExist.User.MFADevice') {
