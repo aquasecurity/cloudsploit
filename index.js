@@ -72,7 +72,7 @@ parser.add_argument('--remediate', {
 });
 parser.add_argument('--cloud', {
     help: 'The name of cloud to run plugins for. If not provided, logic will assume cloud from config.js file based on provided credetials',
-    choices: ['aws', 'azure', 'github', 'google', 'oracle'],
+    choices: ['aws', 'azure', 'github', 'google', 'oracle','alibaba'],
     action: 'append'
 });
 

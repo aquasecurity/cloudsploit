@@ -76,6 +76,7 @@ var calls = {
         },
         GetPasswordPolicy: {
             property: 'PasswordPolicy',
+            apiVersion: '2015-05-01'
         }
     },
     GBDB: {
@@ -171,6 +172,14 @@ var postcalls = [
                 resultFilter: 'User',
                 resultKey: 'UserName',
                 apiVersion: '2015-05-01'
+            },
+            GetUserMFAInfo: {
+                reliesOnService: 'ram',
+                reliesOnCall: 'ListUsers',
+                filterKey: ['UserName'],
+                filterValue: ['UserName'],
+                resultKey: 'UserName',
+                apiVersion: '2015-05-01',
             }
         },
         KMS: {
@@ -182,13 +191,6 @@ var postcalls = [
                 resultFilter: 'KeyMetadata',
                 apiVersion: '2016-01-20',
                 resultKey: 'UserName',
-            },
-            GetUserMFAInfo: {
-                reliesOnService: 'ram',
-                reliesOnCall: 'ListUsers',
-                filterKey: ['UserName'],
-                filterValue: ['UserName'],
-                resultKey: 'UserName'
             }
         },
         RDS: {
