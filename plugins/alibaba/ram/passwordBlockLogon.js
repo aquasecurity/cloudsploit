@@ -8,10 +8,7 @@ module.exports = {
     link: 'https://www.alibabacloud.com/help/doc-detail/116413.htm',
     recommended_action: 'Update the password security settings to require logon to be blocked after maximum of 5 or less incorrect login attempts.',
     apis: ['RAM:GetPasswordPolicy'],
-    compliance: {
-        pci: 'PCI requires a strong password policy. Setting Identity password ' +
-             'requirements enforces this policy.'
-    },
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
