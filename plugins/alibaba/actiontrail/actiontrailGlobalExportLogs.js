@@ -17,7 +17,6 @@ module.exports = {
 
         var globalTrailFound = false;
         var globalTrailOSS = false;
-        var globalTrails = [];
         async.each(regions.actiontrail, function(region, rcb) {
             var describeTrails = helpers.addSource(cache, source, ['actiontrail', 'DescribeTrails', region]);
             if (!describeTrails) return rcb();
@@ -36,7 +35,6 @@ module.exports = {
 
                     if (trail.OssBucketName && trail.OssBucketName.length) {
                         globalTrailOSS = true;
-                        globalTrails.push(trail.Name);
                     }
                 }
 

@@ -104,7 +104,7 @@ describe('actiontrailGlobalExportLogs', function () {
             actiontrailGlobalExportLogs.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('ActionTrail has these global trails to log all events');
+                expect(results[0].message).to.include('ActionTrail has a global trail to log all events');
                 expect(results[0].region).to.equal('global');
                 done();
             });
