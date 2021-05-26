@@ -37,7 +37,13 @@ module.exports = {
             var getUser = helpers.addSource(cache, source,
                 ['ram', 'GetUser', region, user.UserName]);
             
-            let lastLoginDate = getUser.data.LastLoginDate.length ? getUser.data.LastLoginDate:getUser.data.CreateDate ;
+            if (getUser.err || !getUser.data) {
+                helpers.addResult(results, 3,
+                    'Unable to query RAM user' + helpers.addError(getUser), region);
+                return callback(null, results, source);
+            }
+
+            let lastLoginDate = (getUser.data.LastLoginDate && getUser.data.LastLoginDate.length) ? getUser.data.LastLoginDate:getUser.data.CreateDate ;
             var currentDate = new Date();
             var loginDate = new Date(lastLoginDate);
             var resource = helpers.createArn('ram', accountId, 'user', user.UserName);
@@ -47,16 +53,16 @@ module.exports = {
                 var getUserProfile = helpers.addSource(cache, source,
                     ['ram', 'GetLoginProfile', region, user.UserName]);
 
-                if (getUserProfile.data.LoginProfile) {
-                    helpers.addResult(results, 2,
-                        'RAM user inactive for 90 or more days is enabled ', region, resource);
+                if (getUserProfile && getUserProfile.err && getUserProfile.err.Code && getUserProfile.err.Code == 'EntityNotExist.User.LoginProfile') {
+                    helpers.addResult(results, 0, `RAM user inactive for ${diffInDays} days is not enabled`, region, resource);
+                } else if (getUserProfile.err || !getUserProfile.data) {
+                    helpers.addResult(results, 3, `Unable to query user login profile: ${helpers.addError(getUserProfile)}`, region, resource);
                 } else {
-                    helpers.addResult(results, 0,
-                        'RAM user inactive for 90 or more days is not enabled', region, resource);
+                    helpers.addResult(results, 2, `RAM user inactive for ${diffInDays} days is enabled`, region, resource);
                 }
             } else {
                 helpers.addResult(results, 0,
-                    'RAM user inactive for 90 or more days is not enabled', region, resource);
+                    `RAM user last activity was ${diffInDays} days ago`, region, resource);
             }
         }
 

@@ -181,7 +181,6 @@ var postcalls = [
                 reliesOnCall: 'ListUsers',
                 filterKey: ['UserName'],
                 filterValue: ['UserName'],
-                resultFilter: 'User',
                 apiVersion: '2015-05-01'
             }
         },

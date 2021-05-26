@@ -1,6 +1,8 @@
 var expect = require('chai').expect;
+var helpers = require('../../../helpers/alibaba');
 var inactiveUserDisabled = require('./inactiveUserDisabled')
 
+const currentDate = new Date();
 const listUsers = [
     {
         "UserName": "aqua",
@@ -38,7 +40,7 @@ const getUserLoginProfile = [
     }
 ];
 
-const createCache = (users, userData, userProfile, error) => {
+const createCache = (users, userData, userProfile, userProfileError, error) => {
     let userName = (users && users.length) ? users[0].UserName : null;
     return {
         ram: {
@@ -60,7 +62,7 @@ const createCache = (users, userData, userProfile, error) => {
                 'cn-hangzhou': {
                     [userName]: {
                         data: userProfile,
-                        err: error
+                        err: userProfileError
                     }
                 }
             },
@@ -70,39 +72,42 @@ const createCache = (users, userData, userProfile, error) => {
 
 describe('inactiveUserDisabled', function () {
     describe('run', function () {
-        it('should FAIL if RAM user is enabled on being logged on for 90 or more days', function (done) {
-            const cache = createCache([listUsers[0]], getUserData[0], getUserLoginProfile[0], null);
+        it('should FAIL if RAM user is enabled on being inactive for 90 or more days', function (done) {
+            const loginDate = new Date(getUserData[0].LastLoginDate);
+            const diffInDays = helpers.daysBetween(currentDate, loginDate);
+            const cache = createCache([listUsers[0]], getUserData[0], getUserLoginProfile[0], null, null);
             inactiveUserDisabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('RAM user inactive for 90 or more days is enabled');
+                expect(results[0].message).to.include(`RAM user inactive for ${diffInDays} days is enabled`);
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
         });
-
-        it('should PASS if RAM user is disabled on being logged on for 90 or more days', function (done) {
-            const cache = createCache([listUsers[0]], getUserData[0], getUserLoginProfile[1], null);
+        it('should PASS if RAM user is disabled on being inactive for 90 or more days', function (done) {
+            const loginDate = new Date(getUserData[0].LastLoginDate);
+            const diffInDays = helpers.daysBetween(currentDate, loginDate);
+            const cache = createCache([listUsers[0]], getUserData[0], getUserLoginProfile[1], {Code : 'EntityNotExist.User.LoginProfile'}, null);
             inactiveUserDisabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('RAM user inactive for 90 or more days is not enabled');
+                expect(results[0].message).to.include(`RAM user inactive for ${diffInDays} days is not enabled`);
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
         });
-
-        it('should PASS if RAM user has logged on before 90 days period', function (done) {
-            const cache = createCache([listUsers[1]], getUserData[1], getUserLoginProfile[0], null);
+        it('should PASS if RAM user last activity was before 90 days', function (done) {
+            const loginDate = new Date(getUserData[1].LastLoginDate);
+            const diffInDays = helpers.daysBetween(currentDate, loginDate);
+            const cache = createCache([listUsers[1]], getUserData[1], getUserLoginProfile[0], null, null);
             inactiveUserDisabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('RAM user inactive for 90 or more days is not enabled');
+                expect(results[0].message).to.include(`RAM user last activity was ${diffInDays} days ago`);
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
         });
-
         it('should PASS if No RAM users found', function (done) {
             const cache = createCache([]);
             inactiveUserDisabled.run(cache, {}, (err, results) => {
@@ -113,7 +118,16 @@ describe('inactiveUserDisabled', function () {
                 done();
             });
         });
-
+        it('should UNKNOWN if Unable to query login profile', function (done) {
+            const cache = createCache([listUsers[0]], getUserData[0], getUserLoginProfile[0], {}, null);
+            inactiveUserDisabled.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query user login profile');
+                expect(results[0].region).to.equal('cn-hangzhou');
+                done();
+            });
+        });
         it('should UNKNOWN if Unable to query RAM users', function (done) {
             const cache = createCache(null, null, null, null);
             inactiveUserDisabled.run(cache, {}, (err, results) => {
