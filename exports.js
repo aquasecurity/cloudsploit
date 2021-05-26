@@ -759,6 +759,8 @@ module.exports = {
         'ossBucketPrivate'              : require(__dirname + '/plugins/alibaba/oss/ossBucketPrivate.js'),
       
         'rdsLogDuration'                : require(__dirname + '/plugins/alibaba/rds/rdsLogDuration.js'),
-        'rdsSslEncryptionEnabled'       : require(__dirname + '/plugins/alibaba/rds/rdsSslEncryptionEnabled.js')
+        'rdsSslEncryptionEnabled'       : require(__dirname + '/plugins/alibaba/rds/rdsSslEncryptionEnabled.js'),
+      
+        'actiontrailGlobalExportLogs'   : require(__dirname + '/plugins/alibaba/actiontrail/actiontrailGlobalExportLogs.js')
     }
 };
