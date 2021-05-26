@@ -737,6 +737,7 @@ module.exports = {
         'passwordNoReuse'               : require(__dirname + '/plugins/alibaba/ram/passwordNoReuse.js'),
         'passwordExpiry'                : require(__dirname + '/plugins/alibaba/ram/passwordExpiry.js'),
         'passwordBlockLogon'            : require(__dirname + '/plugins/alibaba/ram/passwordBlockLogon.js'),
+        'ramPolicyAttachments'          : require(__dirname + '/plugins/alibaba/ram/ramPolicyAttachments.js'),
       
         'openSSH'                       : require(__dirname + '/plugins/alibaba/ecs/openSSH.js'),
         'dataDisksEncrypted'            : require(__dirname + '/plugins/alibaba/ecs/dataDisksEncrypted.js'),
