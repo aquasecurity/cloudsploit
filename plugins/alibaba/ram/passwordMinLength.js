@@ -28,12 +28,12 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        if (getPasswordPolicy.data.MinimumPasswordLength > 13) {
+        if (getPasswordPolicy.data.MinimumPasswordLength >= 14) {
             helpers.addResult(results, 0,
-                'RAM password security policy require minimum length greater than 13', region);
+                'RAM password security policy require minimum length of 14', region);
         } else {
             helpers.addResult(results, 2,
-                'RAM password security policy does not require minimum length greater than 13', region);
+                'RAM password security policy does not require minimum length of 14', region);
         }
 
         callback(null, results, source);
