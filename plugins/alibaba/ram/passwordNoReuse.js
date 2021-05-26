@@ -33,7 +33,7 @@ module.exports = {
                 'RAM password security policy requires to prevent reusing 5 previous passwords', region);
         } else {
             helpers.addResult(results, 2,
-                'RAM password security policy does not requires to prevent reusing 5 previous passwords', region);
+                'RAM password security policy does not require to prevent reusing 5 previous passwords', region);
         }
 
         callback(null, results, source);
