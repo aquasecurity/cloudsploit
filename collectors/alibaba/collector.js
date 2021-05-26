@@ -77,7 +77,7 @@ var calls = {
         },
         GetPasswordPolicy: {
             property: 'PasswordPolicy',
-            apiVersion: '2015-05-01',
+            apiVersion: '2015-05-01'
         }
     },
     GBDB: {
