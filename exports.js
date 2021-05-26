@@ -736,6 +736,7 @@ module.exports = {
         'usersMfaEnabled'               : require(__dirname + '/plugins/alibaba/ram/usersMfaEnabled.js'),
         'passwordNoReuse'               : require(__dirname + '/plugins/alibaba/ram/passwordNoReuse.js'),
         'passwordExpiry'                : require(__dirname + '/plugins/alibaba/ram/passwordExpiry.js'),
+        'passwordBlockLogon'            : require(__dirname + '/plugins/alibaba/ram/passwordBlockLogon.js'),
       
         'openSSH'                       : require(__dirname + '/plugins/alibaba/ecs/openSSH.js'),
         'dataDisksEncrypted'            : require(__dirname + '/plugins/alibaba/ecs/dataDisksEncrypted.js'),
