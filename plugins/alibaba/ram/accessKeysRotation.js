@@ -55,10 +55,10 @@ module.exports = {
                         var diffInDays = helpers.daysBetween(currentDate, createDateFormat);
                         if (diffInDays >= 90) {
                             helpers.addResult(results, 2,
-                                `RAM user access keys are not rotated for ${diffInDays} days`, region, resource);
+                                `RAM user access key is not rotated for ${diffInDays} days`, region, resource);
                         } else {
                             helpers.addResult(results, 0,
-                                `RAM user access keys are rotated for ${diffInDays} days`, region, resource);
+                                `RAM user access key is rotated for ${diffInDays} days`, region, resource);
                         }
                     }
                 }
