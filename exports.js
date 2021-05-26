@@ -727,14 +727,22 @@ module.exports = {
         'logSinksEnabled'               : require(__dirname + '/plugins/google/logging/logSinksEnabled.js'),
     },
     alibaba: {
-        'openSSH'                       : require(__dirname + '/plugins/alibaba/ecs/openSSH.js'),
-        'bucketLoggingEnabled'          : require(__dirname + '/plugins/alibaba/oss/bucketLoggingEnabled.js'),
-        'ossBucketPrivate'              : require(__dirname + '/plugins/alibaba/oss/ossBucketPrivate.js'),
-        'rdsLogDuration'                : require(__dirname + '/plugins/alibaba/rds/rdsLogDuration.js'),
-        'dataDisksEncrypted'            : require(__dirname + '/plugins/alibaba/ecs/dataDisksEncrypted.js'),
-        'rdsSslEncryptionEnabled'       : require(__dirname + '/plugins/alibaba/rds/rdsSslEncryptionEnabled.js'),
+        'passwordMinLength'             : require(__dirname + '/plugins/alibaba/ram/passwordMinLength.js'),
+        'passwordRequiresNumbers'       : require(__dirname + '/plugins/alibaba/ram/passwordRequiresNumbers.js'),
+        'passwordRequiresSymbols'       : require(__dirname + '/plugins/alibaba/ram/passwordRequiresSymbols.js'),
+        'passwordRequiresLowercase'     : require(__dirname + '/plugins/alibaba/ram/passwordRequiresLowercase.js'),
+        'inactiveUserDisabled'          : require(__dirname + '/plugins/alibaba/ram/inactiveUserDisabled.js'),
         'passwordRequiresUppercase'     : require(__dirname + '/plugins/alibaba/ram/passwordRequiresUppercase.js'),
         'usersMfaEnabled'               : require(__dirname + '/plugins/alibaba/ram/usersMfaEnabled.js'),
         'passwordNoReuse'               : require(__dirname + '/plugins/alibaba/ram/passwordNoReuse.js'),
+      
+        'openSSH'                       : require(__dirname + '/plugins/alibaba/ecs/openSSH.js'),
+        'dataDisksEncrypted'            : require(__dirname + '/plugins/alibaba/ecs/dataDisksEncrypted.js'),
+      
+        'bucketLoggingEnabled'          : require(__dirname + '/plugins/alibaba/oss/bucketLoggingEnabled.js'),
+        'ossBucketPrivate'              : require(__dirname + '/plugins/alibaba/oss/ossBucketPrivate.js'),
+      
+        'rdsLogDuration'                : require(__dirname + '/plugins/alibaba/rds/rdsLogDuration.js'),
+        'rdsSslEncryptionEnabled'       : require(__dirname + '/plugins/alibaba/rds/rdsSslEncryptionEnabled.js')
     }
 };
