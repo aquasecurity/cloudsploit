@@ -41,12 +41,12 @@ const createCache = (data, err) => {
 
 describe('passwordExpiry', function () {
     describe('run', function () {
-        it('should FAIL if RAM password security policy does not requires password to be expired after 90 days', function (done) {
+        it('should FAIL if RAM password security policy does not require password to be expired after 90 days', function (done) {
             const cache = createCache(getPasswordPolicy[0]);
             passwordExpiry.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('RAM password security policy does not requires password to be expired after 90 days');
+                expect(results[0].message).to.include('RAM password security policy does not require password to be expired after 90 days');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
