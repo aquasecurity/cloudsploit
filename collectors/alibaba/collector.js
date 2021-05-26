@@ -77,7 +77,7 @@ var calls = {
         },
         GetPasswordPolicy: {
             property: 'PasswordPolicy',
-            apiVersion: '2015-05-01',
+            apiVersion: '2015-05-01'
         }
     },
     GBDB: {
@@ -170,6 +170,20 @@ var postcalls = [
                 apiVersion: '2015-05-01'
             },
             GetUserMFAInfo: {
+                reliesOnService: 'ram',
+                reliesOnCall: 'ListUsers',
+                filterKey: ['UserName'],
+                filterValue: ['UserName'],
+                apiVersion: '2015-05-01'
+            },
+            ListPoliciesForUser: {
+                reliesOnService: 'ram',
+                reliesOnCall: 'ListUsers',
+                filterKey: ['UserName'],
+                filterValue: ['UserName'],
+                apiVersion: '2015-05-01'
+            },
+            GetLoginProfile: {
                 reliesOnService: 'ram',
                 reliesOnCall: 'ListUsers',
                 filterKey: ['UserName'],
