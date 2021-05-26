@@ -37,25 +37,34 @@ module.exports = {
             var getAccessKey = helpers.addSource(cache, source,
                 ['ram', 'ListAccessKeys', region, user.UserName]);
             
+            if (getAccessKey.err || !getAccessKey.data) {
+                helpers.addResult(results, 3,
+                    'Unable to query user access keys' + helpers.addError(getAccessKey), region);
+                continue;
+            }
+            
             var resource = helpers.createArn('ram', accountId, 'user', user.UserName);
-            var accessKey = getAccessKey.data.AccessKeys.AccessKey.find(key => key.Status && key.Status == 'Active');
-
-            if (accessKey) {
-                let createDate = accessKey.CreateDate;
-                var currentDate = new Date();
-                var createDateFormat = new Date(createDate);
-
-                var diffInDays = helpers.daysBetween(currentDate, createDateFormat);
-                if (diffInDays >= 90) {
-                    helpers.addResult(results, 2,
-                        'RAM user access keys are not rotated every 90 days or less ', region, resource);
-                } else {
-                    helpers.addResult(results, 0,
-                        'RAM user access keys are rotated every 90 days or less', region, resource);
+            if (getAccessKey.data.AccessKeys && getAccessKey.data.AccessKeys.AccessKey && getAccessKey.data.AccessKeys.AccessKey.length) {
+                var accessKeysList = getAccessKey.data.AccessKeys.AccessKey
+                for (var accessKey of accessKeysList) {
+                    if (accessKey.Status == 'Active') {
+                        let createDate = accessKey.CreateDate;
+                        var currentDate = new Date();
+                        var createDateFormat = new Date(createDate);
+        
+                        var diffInDays = helpers.daysBetween(currentDate, createDateFormat);
+                        if (diffInDays >= 90) {
+                            helpers.addResult(results, 2,
+                                `RAM user access keys are not rotated for ${diffInDays} days`, region, resource);
+                        } else {
+                            helpers.addResult(results, 0,
+                                `RAM user access keys are rotated for ${diffInDays} days`, region, resource);
+                        }
+                    }
                 }
             } else {
                 helpers.addResult(results, 0,
-                    'RAM user access keys does not exist ', region, resource);
+                    'RAM user does not have any active access keys', region, resource);
             }
         }
 
