@@ -18,11 +18,11 @@ module.exports = function(AlibabaConfig, collection, region, callback) {
     var callCB = function(err, data) {
         if (err) {
             collection.oss.listBuckets[region].err = err;
-            callback();
+            return callback();
         }
         collection.oss.listBuckets[region].data = collection.oss.listBuckets[region].data.concat(data.buckets);
         if (data.nextMarker) execute(data.nextMarker);
-        else callback();
+        else return callback();
     };
 
     execute();
