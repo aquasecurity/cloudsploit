@@ -47,7 +47,7 @@ module.exports = {
         }, function(){
             if (globalTrailFound && globalTrailOSS) {
                 helpers.addResult(results, 0,
-                    `ActionTrail has these global trails to log all events: ${globalTrails.join(', ')}`, 'global');
+                    'ActionTrail has a global trail to log all events', 'global');
             } else if (globalTrailFound){
                 helpers.addResult(results, 2,
                     'ActionTrail has global trail to log all events but does not export logs to OSS bucket', 'global');
