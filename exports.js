@@ -727,11 +727,12 @@ module.exports = {
         'logSinksEnabled'               : require(__dirname + '/plugins/google/logging/logSinksEnabled.js'),
     },
     alibaba: {
+        'passwordRequiresSymbols'       : require(__dirname + '/plugins/alibaba/ram/passwordRequiresSymbols.js'),
         'passwordRequiresLowercase'     : require(__dirname + '/plugins/alibaba/ram/passwordRequiresLowercase.js'),
         'inactiveUserDisabled'          : require(__dirname + '/plugins/alibaba/ram/inactiveUserDisabled.js'),
         'passwordRequiresUppercase'     : require(__dirname + '/plugins/alibaba/ram/passwordRequiresUppercase.js'),
         'usersMfaEnabled'               : require(__dirname + '/plugins/alibaba/ram/usersMfaEnabled.js'),
-      
+
         'openSSH'                       : require(__dirname + '/plugins/alibaba/ecs/openSSH.js'),
         'dataDisksEncrypted'            : require(__dirname + '/plugins/alibaba/ecs/dataDisksEncrypted.js'),
       
