@@ -3,8 +3,8 @@ var helpers = require('../../../helpers/alibaba');
 module.exports = {
     title: 'Access Keys Rotation',
     category: 'RAM',
-    description: 'Ensure that user access keys are rotated after regular interval of time.',
-    more_info: 'Access keys needs to be rotated for the sake of security.',
+    description: 'Ensure that RAM user access keys are rotated after regular interval of time.',
+    more_info: 'Access keys should be rotated to avoid having them accidentally exposed.',
     link: 'https://www.alibabacloud.com/help/doc-detail/152682.htm',
     recommended_action: 'Rotate the access keys every 90 days or less.',
     apis: ['RAM:ListUsers', 'RAM:ListAccessKeys', 'STS:GetCallerIdentity'],
@@ -45,7 +45,7 @@ module.exports = {
             
             var resource = helpers.createArn('ram', accountId, 'user', user.UserName);
             if (getAccessKey.data.AccessKeys && getAccessKey.data.AccessKeys.AccessKey && getAccessKey.data.AccessKeys.AccessKey.length) {
-                var accessKeysList = getAccessKey.data.AccessKeys.AccessKey
+                var accessKeysList = getAccessKey.data.AccessKeys.AccessKey;
                 for (var accessKey of accessKeysList) {
                     if (accessKey.Status == 'Active') {
                         let createDate = accessKey.CreateDate;
@@ -55,10 +55,10 @@ module.exports = {
                         var diffInDays = helpers.daysBetween(currentDate, createDateFormat);
                         if (diffInDays >= 90) {
                             helpers.addResult(results, 2,
-                                `RAM user access key is not rotated for ${diffInDays} days`, region, resource);
+                                `RAM user access key was last rotated ${diffInDays} days ago`, region, resource);
                         } else {
                             helpers.addResult(results, 0,
-                                `RAM user access key is rotated for ${diffInDays} days`, region, resource);
+                                `RAM user access key was last rotated ${diffInDays} days ago`, region, resource);
                         }
                     }
                 }
