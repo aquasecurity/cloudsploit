@@ -28,7 +28,8 @@ var regionEndpointMap = {
         'ap-southeast-3', 'ap-southeast-5', 'ap-northeast-1', 'ap-south-1', 'eu-central-1', 'eu-west-1', 'me-east-1'],
     kms: regions['kms'],
     rds: ['cn-zhangjiakou', 'cn-huhehaote', 'cn-chengdu', 'ap-southeast-2', 'ap-southeast-3', 'ap-southeast-5',
-        'ap-northeast-1', 'ap-south-1', 'eu-central-1', 'eu-west-1', 'me-east-1']
+        'ap-northeast-1', 'ap-south-1', 'eu-central-1', 'eu-west-1', 'me-east-1'],
+    actiontrail: regions['actiontrail']
 };
 
 var globalServices = [
@@ -131,6 +132,12 @@ var calls = {
             apiVersion: '2016-01-20',
             paginate: 'Pages'
         }
+    },
+    ActionTrail: {
+        DescribeTrails: {
+            property: 'TrailList',
+            apiVersion: '2020-07-06'
+        }
     }
 };
 
@@ -230,7 +237,7 @@ var collect = function(AlibabaConfig, settings, callback) {
 
             let callRegions = regions[serviceLower];
             let requestOption = {
-                timeout: 5000, //default 3000 ms
+                timeout: 10000, //default 3000 ms
                 method: callObj.method || 'POST'
             };
 
