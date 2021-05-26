@@ -8,10 +8,7 @@ module.exports = {
     link: 'https://www.alibabacloud.com/help/doc-detail/116413.htm',
     recommended_action: 'Update the password security settings to prevent reusing 5 old passwords.',
     apis: ['RAM:GetPasswordPolicy'],
-    compliance: {
-        pci: 'PCI requires a strong password policy. Setting Identity password ' +
-             'requirements enforces this policy.'
-    },
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
@@ -28,12 +25,12 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        if (getPasswordPolicy.data.PasswordReusePrevention == 5) {
+        if (getPasswordPolicy.data.PasswordReusePrevention >= 5) {
             helpers.addResult(results, 0,
-                'RAM password security policy requires to prevent reusing 5 previous passwords', region);
+                'RAM password security policy requires to prevent reusing previous 5 or more passwords', region);
         } else {
             helpers.addResult(results, 2,
-                'RAM password security policy does not require to prevent reusing 5 previous passwords', region);
+                'RAM password security policy does not require to prevent reusing previous 5 passwords', region);
         }
 
         callback(null, results, source);
