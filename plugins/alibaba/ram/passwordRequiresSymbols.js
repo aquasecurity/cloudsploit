@@ -12,6 +12,7 @@ module.exports = {
         pci: 'PCI requires a strong password policy. Setting Identity password ' +
              'requirements enforces this policy.'
     },
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
@@ -30,7 +31,7 @@ module.exports = {
 
         if (getPasswordPolicy.data.RequireSymbols) {
             helpers.addResult(results, 0,
-                'RAM password security policy require symbols', region);
+                'RAM password security policy requires symbols', region);
         } else {
             helpers.addResult(results, 2,
                 'RAM password security policy does not require symbols', region);

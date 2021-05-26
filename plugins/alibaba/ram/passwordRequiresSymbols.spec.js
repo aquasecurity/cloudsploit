@@ -57,7 +57,7 @@ describe('passwordRequiresSymbols', function () {
             passwordRequiresSymbols.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('RAM password security policy require symbols');
+                expect(results[0].message).to.include('RAM password security policy requires symbols');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
