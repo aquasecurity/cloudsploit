@@ -3,10 +3,10 @@ var helpers = require('../../../helpers/alibaba');
 module.exports = {
     title: 'Inactive User Disabled',
     category: 'RAM',
-    description: 'Ensures a ram user inactive for 90 or more days is disabled',
+    description: 'Ensure that RAM users inactive for 90 or more days are disabled.',
     more_info: 'RAM User should not have the console access enabled on being inactive for 90 or more days.',
     link: 'https://alibaba-cloud.medium.com/11-security-recommendations-for-production-instances-on-alibaba-cloud-960e3e8442d4',
-    recommended_action: 'Disable a ram user if its inactive for 90 or more days',
+    recommended_action: 'Disable RAM user if its inactive for 90 or more days',
     apis: ['RAM:ListUsers', 'RAM:GetUser', 'RAM:GetLoginProfile', 'STS:GetCallerIdentity'],
 
     run: function(cache, settings, callback) {
@@ -40,10 +40,11 @@ module.exports = {
             if (getUser.err || !getUser.data) {
                 helpers.addResult(results, 3,
                     'Unable to query RAM user' + helpers.addError(getUser), region);
-                return callback(null, results, source);
+                continue;
             }
 
-            let lastLoginDate = (getUser.data.LastLoginDate && getUser.data.LastLoginDate.length) ? getUser.data.LastLoginDate:getUser.data.CreateDate ;
+            let lastLoginDate = (getUser.data.LastLoginDate && getUser.data.LastLoginDate.length) ?
+                getUser.data.LastLoginDate : getUser.data.CreateDate ;
             var currentDate = new Date();
             var loginDate = new Date(lastLoginDate);
             var resource = helpers.createArn('ram', accountId, 'user', user.UserName);
