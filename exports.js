@@ -735,7 +735,8 @@ module.exports = {
         'passwordRequiresUppercase'     : require(__dirname + '/plugins/alibaba/ram/passwordRequiresUppercase.js'),
         'usersMfaEnabled'               : require(__dirname + '/plugins/alibaba/ram/usersMfaEnabled.js'),
         'accessKeysRotation'            : require(__dirname + '/plugins/alibaba/ram/accessKeysRotation.js'),
-
+        'passwordNoReuse'               : require(__dirname + '/plugins/alibaba/ram/passwordNoReuse.js'),
+      
         'openSSH'                       : require(__dirname + '/plugins/alibaba/ecs/openSSH.js'),
         'dataDisksEncrypted'            : require(__dirname + '/plugins/alibaba/ecs/dataDisksEncrypted.js'),
       

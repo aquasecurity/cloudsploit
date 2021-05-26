@@ -2,7 +2,11 @@ var expect = require('chai').expect;
 var helpers = require('../../../helpers/alibaba');
 var accessKeysRotation = require('./accessKeysRotation')
 
-const currentDate = new Date();
+var passDate = new Date();
+passDate.setMonth(passDate.getMonth() - 2);
+var failDate = new Date();
+failDate.setMonth(failDate.getMonth() - 7);
+
 const listUsers = [
     {
         "UserName": "aqua",
@@ -21,7 +25,7 @@ const getUserLoginProfile = [
               {
                 Status: "Active",
                 AccessKeyId: "LTAI5tD6ekrSssrWq5rNa4JQ",
-                CreateDate: "2021-01-11T16:37:58Z",
+                CreateDate: failDate,
               },
             ],
         },
@@ -32,15 +36,14 @@ const getUserLoginProfile = [
               {
                 Status: "Active",
                 AccessKeyId: "LTAI5tD6ekrSssrWq5rNa4JQ",
-                CreateDate: "2021-05-11T16:37:58Z",
+                CreateDate: passDate,
               },
             ],
         },
     },
     {
         AccessKeys: {
-            AccessKey: [
-            ],
+            AccessKey: [],
         },
     }
 ];
@@ -70,37 +73,33 @@ const createCache = (users, accessKeys, accessKeysError, error) => {
 describe('accessKeysRotation', function () {
     describe('run', function () {
         it('should FAIL if RAM user access keys are not rotated every 90 days or less', function (done) {
-            const createDate = new Date(getUserLoginProfile[0].AccessKeys.AccessKey[0].CreateDate);
-            const diffInDays = helpers.daysBetween(currentDate, createDate);
             const cache = createCache([listUsers[0]], getUserLoginProfile[0], null, null);
             accessKeysRotation.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('RAM user access key was last rotated');
+                expect(results[0].message).to.include('which is greater than');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
         });
 
         it('should PASS if RAM user access keys are not rotated every 90 days or less', function (done) {
-            const createDate = new Date(getUserLoginProfile[1].AccessKeys.AccessKey[0].CreateDate);
-            const diffInDays = helpers.daysBetween(currentDate, createDate);
             const cache = createCache([listUsers[0]], getUserLoginProfile[1], null, null);
             accessKeysRotation.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('RAM user access key was last rotated');
+                expect(results[0].message).to.include('which is equal to or less than');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
         });
 
-        it('should PASS if RAM user does not have any active access keys', function (done) {
+        it('should PASS if RAM user does not have any access keys', function (done) {
             const cache = createCache([listUsers[1]], getUserLoginProfile[2], null, null);
             accessKeysRotation.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('RAM user does not have any active access keys');
+                expect(results[0].message).to.include('RAM user does not have any access keys');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
