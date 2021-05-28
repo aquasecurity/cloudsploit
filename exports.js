@@ -734,14 +734,33 @@ module.exports = {
         'inactiveUserDisabled'          : require(__dirname + '/plugins/alibaba/ram/inactiveUserDisabled.js'),
         'passwordRequiresUppercase'     : require(__dirname + '/plugins/alibaba/ram/passwordRequiresUppercase.js'),
         'usersMfaEnabled'               : require(__dirname + '/plugins/alibaba/ram/usersMfaEnabled.js'),
-
+        'passwordNoReuse'               : require(__dirname + '/plugins/alibaba/ram/passwordNoReuse.js'),
+        'passwordExpiry'                : require(__dirname + '/plugins/alibaba/ram/passwordExpiry.js'),
+        'passwordBlockLogon'            : require(__dirname + '/plugins/alibaba/ram/passwordBlockLogon.js'),
+        'ramPolicyAttachments'          : require(__dirname + '/plugins/alibaba/ram/ramPolicyAttachments.js'),
+      
         'openSSH'                       : require(__dirname + '/plugins/alibaba/ecs/openSSH.js'),
+        'openRDP'                       : require(__dirname + '/plugins/alibaba/ecs/openRDP.js'),
+        'openDNS'                       : require(__dirname + '/plugins/alibaba/ecs/openDNS.js'),
+        'openCIFS'                      : require(__dirname + '/plugins/alibaba/ecs/openCIFS.js'),
+        'openDocker'                    : require(__dirname + '/plugins/alibaba/ecs/openDocker.js'),
+        'openPostgreSQL'                : require(__dirname + '/plugins/alibaba/ecs/openPostgreSQL.js'),
+        'openElasticsearch'             : require(__dirname + '/plugins/alibaba/ecs/openElasticsearch.js'),
+        'openFTP'                       : require(__dirname + '/plugins/alibaba/ecs/openFTP.js'),
+        'openHadoopNameNode'            : require(__dirname + '/plugins/alibaba/ecs/openHadoopNameNode.js'),
+        'openHadoopNameNodeWebUI'       : require(__dirname + '/plugins/alibaba/ecs/openHadoopNameNodeWebUI.js'),
+        'openKibana'                    : require(__dirname + '/plugins/alibaba/ecs/openKibana.js'),
+        'openMySQL'                     : require(__dirname + '/plugins/alibaba/ecs/openMySQL.js'),
+        'openNetBIOS'                   : require(__dirname + '/plugins/alibaba/ecs/openNetBIOS.js'),
+        'openOracle'                    : require(__dirname + '/plugins/alibaba/ecs/openOracle.js'),
         'dataDisksEncrypted'            : require(__dirname + '/plugins/alibaba/ecs/dataDisksEncrypted.js'),
       
         'bucketLoggingEnabled'          : require(__dirname + '/plugins/alibaba/oss/bucketLoggingEnabled.js'),
         'ossBucketPrivate'              : require(__dirname + '/plugins/alibaba/oss/ossBucketPrivate.js'),
       
         'rdsLogDuration'                : require(__dirname + '/plugins/alibaba/rds/rdsLogDuration.js'),
-        'rdsSslEncryptionEnabled'       : require(__dirname + '/plugins/alibaba/rds/rdsSslEncryptionEnabled.js')
+        'rdsSslEncryptionEnabled'       : require(__dirname + '/plugins/alibaba/rds/rdsSslEncryptionEnabled.js'),
+      
+        'actiontrailGlobalExportLogs'   : require(__dirname + '/plugins/alibaba/actiontrail/actiontrailGlobalExportLogs.js')
     }
 };
