@@ -46,18 +46,18 @@ describe('passwordExpiry', function () {
             passwordExpiry.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('RAM password security policy does not require password to be expired after 90 days');
+                expect(results[0].message).to.include('RAM password security policy requires password to be expired after 91 days which is greater than desired limit of 90');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
         });
 
-        it('should PASS if RAM password security policy requires password to be expired after 90 days', function (done) {
+        it('should PASS if RAM password security policy requires password to be expired after set days', function (done) {
             const cache = createCache(getPasswordPolicy[1]);
-            passwordExpiry.run(cache, {}, (err, results) => {
+            passwordExpiry.run(cache, { ram_password_expiry: '100' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('RAM password security policy requires password to be expired after 90 days');
+                expect(results[0].message).to.include('RAM password security policy requires password to be expired after 10 days which is equal to or less than desired limit of 100');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });

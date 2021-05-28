@@ -2,12 +2,12 @@ var async = require('async');
 var helpers = require('../../../helpers/alibaba');
 
 module.exports = {
-    title: 'Open SSH',
+    title: 'Open Salt',
     category: 'ECS',
-    description: 'Ensure that security groups does not have TCP port 22 for SSH open to the public.',
-    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as SSH should be restricted to known IP addresses.',
+    description: 'Ensure that security groups does not have TCP ports 4505 or 4506 for the Salt master open to the public.',
+    more_info: 'Active Salt vulnerabilities, CVE-2020-11651 and CVE-2020-11652 are exploiting Salt instances exposed to the internet. These ports should be closed immediately.',
     link: 'https://www.alibabacloud.com/help/doc-detail/25471.htm',
-    recommended_action: 'Restrict TCP port 22 to known IP addresses',
+    recommended_action: 'Restrict TCP ports 4505 and 4506 to known IP addresses',
     apis: ['ECS:DescribeSecurityGroups', 'ECS:DescribeSecurityGroupAttribute', 'STS:GetCallerIdentity'],
 
     run: function(cache, settings, callback) {
@@ -16,10 +16,10 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var ports = {
-            'tcp': [22]
+            'tcp': [4505, 4506]
         };
 
-        var service = 'SSH';
+        var service = 'Salt';
 
         async.each(regions.ecs, function(region, rcb){
             var describeSecurityGroups = helpers.addSource(cache, source,

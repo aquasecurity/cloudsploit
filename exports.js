@@ -560,6 +560,7 @@ module.exports = {
         'excessivePolicies'             : require(__dirname + '/plugins/oracle/identity/excessivePolicies.js'),
         'excessivePolicyStatements'     : require(__dirname + '/plugins/oracle/identity/excessivePolicyStatements.js'),
         'policyLeastPrivilege'          : require(__dirname + '/plugins/oracle/identity/policyLeastPrivilege.js'),
+        'usersEmailVerified'            : require(__dirname + '/plugins/oracle/identity/usersEmailVerified.js'),
 
         'openSSH'                       : require(__dirname + '/plugins/oracle/networking/openSSH.js'),
         'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/oracle/networking/openOracleAutoDataWarehouse.js'),
@@ -755,6 +756,14 @@ module.exports = {
         'openOracle'                    : require(__dirname + '/plugins/alibaba/ecs/openOracle.js'),
         'dataDisksEncrypted'            : require(__dirname + '/plugins/alibaba/ecs/dataDisksEncrypted.js'),
         'openCustomPorts'               : require(__dirname + '/plugins/alibaba/ecs/openCustomPorts.js'),
+        'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/alibaba/ecs/openOracleAutoDataWarehouse.js'),
+        'openSalt'                      : require(__dirname + '/plugins/alibaba/ecs/openSalt.js'),
+        'openSMTP'                      : require(__dirname + '/plugins/alibaba/ecs/openSMTP.js'),
+        'openSMBoTCP'                   : require(__dirname + '/plugins/alibaba/ecs/openSMBoTCP.js'),
+        'openSQLServer'                 : require(__dirname + '/plugins/alibaba/ecs/openSQLServer.js'),
+        'openTelnet'                    : require(__dirname + '/plugins/alibaba/ecs/openTelnet.js'),
+        'openVNCClient'                 : require(__dirname + '/plugins/alibaba/ecs/openVNCClient.js'),
+        'openVNCServer'                 : require(__dirname + '/plugins/alibaba/ecs/openVNCServer.js'),
       
         'bucketLoggingEnabled'          : require(__dirname + '/plugins/alibaba/oss/bucketLoggingEnabled.js'),
         'ossBucketPrivate'              : require(__dirname + '/plugins/alibaba/oss/ossBucketPrivate.js'),

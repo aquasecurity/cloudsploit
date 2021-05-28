@@ -19,7 +19,7 @@ const getPasswordPolicy = [
         RequireNumbers:false,
         MaxLoginAttemps:0,
         MaxPasswordAge:0,
-        PasswordReusePrevention:0,
+        PasswordReusePrevention:3,
         HardExpiry:false,
         RequireUppercaseCharacters:true,
         RequireSymbols:false
@@ -46,7 +46,7 @@ describe('passwordNoReuse', function () {
             passwordNoReuse.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('RAM password security policy does not require to prevent reusing previous 5 passwords');
+                expect(results[0].message).to.include('RAM password security policy requires to prevent reusing previous 3 passwords which is less than desired limit of 5');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
@@ -57,7 +57,7 @@ describe('passwordNoReuse', function () {
             passwordNoReuse.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('RAM password security policy requires to prevent reusing previous 5 or more passwords');
+                expect(results[0].message).to.include('RAM password security policy requires to prevent reusing previous 5 passwords which is equal to or greater than desired limit of 5');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
