@@ -669,6 +669,7 @@ module.exports = {
         'dbPubliclyAccessible'          : require(__dirname + '/plugins/google/sql/dbPubliclyAccessible.js'),
         'dbSSLEnabled'                  : require(__dirname + '/plugins/google/sql/dbSSLEnabled.js'),
         'anyHostRootAccess'             : require(__dirname + '/plugins/google/sql/anyHostRootAccess.js'),
+        'postgresqlLogMinError'         : require(__dirname + '/plugins/google/sql/postgresqlLogMinError.js'),
         'postgresqlLogTempFiles'        : require(__dirname + '/plugins/google/sql/postgresqlLogTempFiles.js'),
         'postgresqlLogMinDuration'      : require(__dirname + '/plugins/google/sql/postgresqlLogMinDuration.js'),
         'postgresqlLogLockWaits'        : require(__dirname + '/plugins/google/sql/postgresqlLogLockWaits.js'),
