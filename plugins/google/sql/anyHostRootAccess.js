@@ -23,7 +23,7 @@ module.exports = {
             if (!users) return rcb();
 
             if (users.err || !users.data) {
-                helpers.addResult(results, 3, 'Unable to query SQL users: ' + helpers.addError(users), region);
+                helpers.addResult(results, 3, 'Unable to query SQL users: ' + helpers.addError(users), region, null, null, users.err);
                 return rcb();
             }
 
