@@ -56,7 +56,7 @@ module.exports = {
             if (getAccessKey.data.AccessKeys && getAccessKey.data.AccessKeys.AccessKey && getAccessKey.data.AccessKeys.AccessKey.length) {
                 let activeKeyFound = false;
                 for (var accessKey of getAccessKey.data.AccessKeys.AccessKey) {
-                    if (accessKey.Status == 'Active') {
+                    if (accessKey.Status && accessKey.Status == 'Active') {
                         activeKeyFound = true;
                         resource = resource + ':' + accessKey.AccessKeyId;
                         let createDate = accessKey.CreateDate;
