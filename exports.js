@@ -755,6 +755,7 @@ module.exports = {
         'openNetBIOS'                   : require(__dirname + '/plugins/alibaba/ecs/openNetBIOS.js'),
         'openOracle'                    : require(__dirname + '/plugins/alibaba/ecs/openOracle.js'),
         'dataDisksEncrypted'            : require(__dirname + '/plugins/alibaba/ecs/dataDisksEncrypted.js'),
+        'openCustomPorts'               : require(__dirname + '/plugins/alibaba/ecs/openCustomPorts.js'),
         'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/alibaba/ecs/openOracleAutoDataWarehouse.js'),
         'openSalt'                      : require(__dirname + '/plugins/alibaba/ecs/openSalt.js'),
         'openSMTP'                      : require(__dirname + '/plugins/alibaba/ecs/openSMTP.js'),
