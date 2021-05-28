@@ -738,6 +738,7 @@ module.exports = {
         'inactiveUserDisabled'          : require(__dirname + '/plugins/alibaba/ram/inactiveUserDisabled.js'),
         'passwordRequiresUppercase'     : require(__dirname + '/plugins/alibaba/ram/passwordRequiresUppercase.js'),
         'usersMfaEnabled'               : require(__dirname + '/plugins/alibaba/ram/usersMfaEnabled.js'),
+        'accessKeysRotation'            : require(__dirname + '/plugins/alibaba/ram/accessKeysRotation.js'),
         'passwordNoReuse'               : require(__dirname + '/plugins/alibaba/ram/passwordNoReuse.js'),
         'passwordExpiry'                : require(__dirname + '/plugins/alibaba/ram/passwordExpiry.js'),
         'passwordBlockLogon'            : require(__dirname + '/plugins/alibaba/ram/passwordBlockLogon.js'),
