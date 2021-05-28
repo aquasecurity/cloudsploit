@@ -560,6 +560,7 @@ module.exports = {
         'excessivePolicies'             : require(__dirname + '/plugins/oracle/identity/excessivePolicies.js'),
         'excessivePolicyStatements'     : require(__dirname + '/plugins/oracle/identity/excessivePolicyStatements.js'),
         'policyLeastPrivilege'          : require(__dirname + '/plugins/oracle/identity/policyLeastPrivilege.js'),
+        'usersEmailVerified'            : require(__dirname + '/plugins/oracle/identity/usersEmailVerified.js'),
 
         'openSSH'                       : require(__dirname + '/plugins/oracle/networking/openSSH.js'),
         'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/oracle/networking/openOracleAutoDataWarehouse.js'),
