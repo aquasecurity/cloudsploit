@@ -754,6 +754,7 @@ module.exports = {
         'openNetBIOS'                   : require(__dirname + '/plugins/alibaba/ecs/openNetBIOS.js'),
         'openOracle'                    : require(__dirname + '/plugins/alibaba/ecs/openOracle.js'),
         'dataDisksEncrypted'            : require(__dirname + '/plugins/alibaba/ecs/dataDisksEncrypted.js'),
+        'openCustomPorts'               : require(__dirname + '/plugins/alibaba/ecs/openCustomPorts.js'),
       
         'bucketLoggingEnabled'          : require(__dirname + '/plugins/alibaba/oss/bucketLoggingEnabled.js'),
         'ossBucketPrivate'              : require(__dirname + '/plugins/alibaba/oss/ossBucketPrivate.js'),
