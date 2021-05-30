@@ -660,6 +660,7 @@ module.exports = {
         'connectSerialPortsDisabled'    : require(__dirname + '/plugins/google/compute/connectSerialPortsDisabled.js'),
         'csekEncryptionEnabled'         : require(__dirname + '/plugins/google/compute/csekEncryptionEnabled.js'),
         'osLoginEnabled'                : require(__dirname + '/plugins/google/compute/osLoginEnabled.js'),
+        'shieldedVmEnabled'             : require(__dirname + '/plugins/google/compute/shieldedVmEnabled.js'),
 
         'keyRotation'                   : require(__dirname + '/plugins/google/cryptographickeys/keyRotation.js'),
 
