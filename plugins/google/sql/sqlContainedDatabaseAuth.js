@@ -2,12 +2,13 @@ var async = require('async');
 var helpers = require('../../../helpers/google');
 
 module.exports = {
-    title: 'SQLServer Contained Database Authentication',
+    title: 'SQL Contained Database Authentication',
     category: 'SQL',
-    description: 'Ensures SQL instances for SQLServer type have Contained Database Authentication flag disabled.',
-    more_info: 'SQL instance for SQLServer databases provides Contained Database Authentication flag. It is used to shift the user authentication process from database engine level to database level. It is enabled by default and should always be disabled to keep the authentication enabled for security.',
+    description: 'Ensures SQL instances of SQL Server type have Contained Database Authentication flag disabled.',
+    more_info: 'Enabling Contained Database Authentication flag allows users to connect to the database without authenticating ' +
+        'a login at the Database Engine level along with other security threats.',
     link: 'https://cloud.google.com/sql/docs/sqlserver/flags',
-    recommended_action: 'Ensure that Contained Database Authentication flag is disabled for all SQLServer instances.',
+    recommended_action: 'Ensure that Contained Database Authentication flag is disabled for all SQL Server instances.',
     apis: ['instances:sql:list'],
 
     run: function(cache, settings, callback) {
@@ -32,30 +33,30 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
+                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() == "READ_REPLICA_INSTANCE") return;
+
                 if (sqlInstance.databaseVersion && !sqlInstance.databaseVersion.toLowerCase().includes('sqlserver')) {
                     helpers.addResult(results, 0, 
-                        'SQL instance database type is not of SQLServer type', region, sqlInstance.name);
+                        'SQL instance database type is not of SQL Server type', region, sqlInstance.name);
                     return;
                 }
 
-                if (sqlInstance.instanceType != "READ_REPLICA_INSTANCE" &&
-                    sqlInstance.settings &&
+                if (sqlInstance.settings &&
                     sqlInstance.settings.databaseFlags &&
                     sqlInstance.settings.databaseFlags.length) {
-                        let found = sqlInstance.settings.databaseFlags.find(flag => flag.name && flag.name == 'contained database authentication' &&
-                                                                        flag.value && flag.value == 'off');
+                        let found = sqlInstance.settings.databaseFlags.find(flag => flag.name &&
+                            flag.name == 'contained database authentication' && flag.value && flag.value == 'off');
 
                         if (found) {
-                            helpers.addResult(results, 0, 
-                                'SQL instance does not have contained database authentication flag enabled', region, sqlInstance.name);
+                            helpers.addResult(results, 0,
+                                'SQL instance has contained database authentication flag disabled', region, sqlInstance.name);
                         } else {
                             helpers.addResult(results, 2,
                                 'SQL instance has contained database authentication flag enabled', region, sqlInstance.name);
                         }
-                } else if (sqlInstance.instanceType == "READ_REPLICA_INSTANCE") {
                 } else {
-                    helpers.addResult(results, 2, 
-                        'SQL instance has contained database authentication flag enabled', region, sqlInstance.name);
+                    helpers.addResult(results, 0, 
+                        'SQL instance does not have any flags', region, sqlInstance.name);
                 }
             });
 

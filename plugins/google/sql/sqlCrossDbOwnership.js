@@ -2,10 +2,11 @@ var async = require('async');
 var helpers = require('../../../helpers/google');
 
 module.exports = {
-    title: 'SQLServer Cross Db Ownership Chaining',
+    title: 'SQL Cross DB Ownership Chaining',
     category: 'SQL',
-    description: 'Ensures SQL instances for SQLServer type have cross db ownership chaining flag disabled.',
-    more_info: 'SQL instance for SQLServer databases provides cross DB ownership chaining flag. It is used to configure cross-database ownership chaining for all databases. It is enabled by default and should be disabled for security unless all databases agree for this setting.',
+    description: 'Ensures SQL database instances of SQL Server type have cross db ownership chaining flag disabled.',
+    more_info: 'SQL databases of SQL Server provide cross DB ownership chaining flag. It is used to configure cross-database ownership chaining ' +
+        'for all databases. It is enabled by default and should be disabled for security unless all required.',
     link: 'https://cloud.google.com/sql/docs/sqlserver/flags',
     recommended_action: 'Ensure that cross DB ownership chaining flag is disabled for all SQLServer instances.',
     apis: ['instances:sql:list'],
@@ -32,30 +33,30 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
+                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() == 'READ_REPLICA_INSTANCE') return;
+
                 if (sqlInstance.databaseVersion && !sqlInstance.databaseVersion.toLowerCase().includes('sqlserver')) {
                     helpers.addResult(results, 0, 
-                        'SQL instance database type is not of SQLServer type', region, sqlInstance.name);
+                        'SQL instance database type is not of SQL Server type', region, sqlInstance.name);
                     return;
                 }
 
-                if (sqlInstance.instanceType != "READ_REPLICA_INSTANCE" &&
-                    sqlInstance.settings &&
+                if (sqlInstance.settings &&
                     sqlInstance.settings.databaseFlags &&
                     sqlInstance.settings.databaseFlags.length) {
-                        let found = sqlInstance.settings.databaseFlags.find(flag => flag.name && flag.name == 'cross db ownership chaining' &&
-                                                                        flag.value && flag.value == 'off');
+                    let found = sqlInstance.settings.databaseFlags.find(flag => flag.name &&
+                        flag.name == 'cross db ownership chaining' && flag.value && flag.value == 'off');
 
-                        if (found) {
-                            helpers.addResult(results, 0, 
-                                'SQL instance does not have cross DB ownership chaining flag enabled', region, sqlInstance.name);
-                        } else {
-                            helpers.addResult(results, 2,
-                                'SQL instance has cross DB ownership chaining flag enabled', region, sqlInstance.name);
-                        }
-                } else if (sqlInstance.instanceType == "READ_REPLICA_INSTANCE") {
+                    if (found) {
+                        helpers.addResult(results, 0, 
+                            'SQL instance has cross DB ownership chaining flag disabled', region, sqlInstance.name);
+                    } else {
+                        helpers.addResult(results, 2,
+                            'SQL instance has cross DB ownership chaining flag enabled', region, sqlInstance.name);
+                    }
                 } else {
-                    helpers.addResult(results, 2, 
-                        'SQL instance has cross DB ownership chaining flag enabled', region, sqlInstance.name);
+                    helpers.addResult(results, 0, 
+                        'SQL instance does not have any flags', region, sqlInstance.name);
                 }
             });
 

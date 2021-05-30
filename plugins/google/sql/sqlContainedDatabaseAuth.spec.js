@@ -53,11 +53,11 @@ describe('sqlContainedDatabaseAuth', function () {
             plugin.run(cache, {}, callback);
         });
 
-        it('should give passing result if sql instance database type is not of SQLServer type', function (done) {
+        it('should give passing result if sql instance database type is not of SQL Server type', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('SQL instance database type is not of SQLServer type');
+                expect(results[0].message).to.include('SQL instance database type is not of SQL Server type');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -72,11 +72,11 @@ describe('sqlContainedDatabaseAuth', function () {
 
             plugin.run(cache, {}, callback);
         });
-        it('should give passing result if sql instances does not have contained database authentication flag enabled', function (done) {
+        it('should give passing result if SQL instance has contained database authentication flag disabled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('SQL instance does not have contained database authentication flag enabled');
+                expect(results[0].message).to.include('SQL instance has contained database authentication flag disabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -153,11 +153,11 @@ describe('sqlContainedDatabaseAuth', function () {
 
             plugin.run(cache, {}, callback);
         });
-        it('should give failing result if sql instances has contained database authentication flag enabled', function (done) {
+        it('should give passing result if sql instances does not have any flags', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
-                expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('SQL instance has contained database authentication flag enabled');
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('SQL instance does not have any flags');
                 expect(results[0].region).to.equal('global');
                 done()
             };
