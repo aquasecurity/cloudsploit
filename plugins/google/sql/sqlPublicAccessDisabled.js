@@ -6,7 +6,7 @@ module.exports = {
     category: 'SQL',
     description: 'Ensures SQL instances does not have public access enabled.',
     more_info: 'Public access can cause security issues. So it should always be disabled.',
-    link: 'https://www.readitquik.com/news/cloud-3/google-cloud-platform-introduces-private-networking-for-cloud-sql/#',
+    link: 'https://cloud.google.com/sql/docs/mysql/configure-private-ip',
     recommended_action: 'Ensure that public access is disabled for all SQL instances.',
     apis: ['instances:sql:list'],
 
@@ -32,19 +32,22 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
-                if (sqlInstance.instanceType != "READ_REPLICA_INSTANCE" &&
-                    sqlInstance.ipAddresses &&
+                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() === "READ_REPLICA_INSTANCE") return;
+
+                if (sqlInstance.ipAddresses &&
                     sqlInstance.ipAddresses.length) {
-                        let found = sqlInstance.ipAddresses.find(address => address.type == 'PRIMARY');
-                       
+                        let found = sqlInstance.ipAddresses.find(address => address.type.toUpperCase() == 'PRIMARY');
+
                         if (found) {
                             helpers.addResult(results, 2, 
-                                'SQL instance have public access enabled', region, sqlInstance.name);
+                                'SQL instance has public IPs', region, sqlInstance.name);
                         } else {
                             helpers.addResult(results, 0,
-                                'SQL instance does not have public access enabled', region, sqlInstance.name);
+                                'SQL instance does not have public IPs', region, sqlInstance.name);
                         }
-                } else if (sqlInstance.instanceType == "READ_REPLICA_INSTANCE") {
+                } else {
+                    helpers.addResult(results, 2, 
+                        'SQL instance does not have public IPs', region, sqlInstance.name);
                 }
             });
 

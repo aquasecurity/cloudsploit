@@ -57,7 +57,7 @@ describe('sqlPublicAccessDisabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('SQL instance does not have public access enabled');
+                expect(results[0].message).to.include('SQL instance does not have public IPs');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -84,7 +84,7 @@ describe('sqlPublicAccessDisabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('SQL instance have public access enabled');
+                expect(results[0].message).to.include('SQL instance has public IPs');
                 expect(results[0].region).to.equal('global');
                 done()
             };
