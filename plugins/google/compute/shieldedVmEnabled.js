@@ -2,7 +2,7 @@ var async   = require('async');
 var helpers = require('../../../helpers/google');
 
 module.exports = {
-    title: 'Instance Level SSH Only',
+    title: 'Shielded VM Enabled',
     category: 'Compute',
     description: 'Ensures that instances are configured with the shielded VM enabled',
     more_info: 'Shielded VM option is provided to defend against the security attacks on the instances.',
