@@ -4,10 +4,10 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Bucket Uniform Level Access',
     category: 'Storage',
-    description: 'Ensures uniform level access is enabled on storage buckets',
-    more_info: 'Uniform level access for buckets can be used for managing access in a simple way. It enables us to use other security features like IAM conditions',
+    description: 'Ensures that uniform level access is enabled on storage buckets.',
+    more_info: 'Uniform level access for buckets can be used for managing access in a simple way. It enables us to use other security features like IAM conditions.',
     link: 'https://cloud.google.com/storage/docs/uniform-bucket-level-access#should-you-use',
-    recommended_action: 'Uniform level access should be enabled for the bucket, it provides simple ways to manage the access. Also enables us to use other security features like domain restricted sharing and IAM conditions',
+    recommended_action: 'Make sure that storage buckets have uniform level access enabled',
     apis: ['buckets:list'],
   
     run: function(cache, settings, callback) {
@@ -30,8 +30,11 @@ module.exports = {
                 helpers.addResult(results, 0, 'No storage buckets found', region);
                 return rcb();
             }
+
+            var bucketFound = false;
             buckets.data.forEach(bucket => {
                 if (bucket.id) {
+                    bucketFound = true;
                     if (bucket.iamConfiguration &&
                         bucket.iamConfiguration.uniformBucketLevelAccess && 
                         bucket.iamConfiguration.uniformBucketLevelAccess.enabled) {
@@ -39,9 +42,10 @@ module.exports = {
                     } else {
                         helpers.addResult(results, 2, 'Bucket does not have uniform bucket level access enabled', region, bucket.id);
                     }
-                } else {
+                }
+
+                if (!bucketFound) {
                     helpers.addResult(results, 0, 'No storage buckets found', region);
-                    return
                 }
             });
 
