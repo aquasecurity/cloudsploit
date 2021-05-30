@@ -47,7 +47,7 @@ module.exports = {
                 }
                 else {
                     helpers.addResult(results, 2, 
-                        'SQL instance does not have the backup available', region, sqlInstance.name);
+                        'SQL instance does not have backups available', region, sqlInstance.name);
                 }
             });
 
