@@ -41,14 +41,15 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
+                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() === "READ_REPLICA_INSTANCE") return;
+
                 if (sqlInstance.databaseVersion && !sqlInstance.databaseVersion.toLowerCase().includes('postgres')) {
                     helpers.addResult(results, 0, 
                         'SQL instance database type is not of PostgreSQL type', region, sqlInstance.name);
                     return;
                 }
 
-                if (sqlInstance.instanceType != "READ_REPLICA_INSTANCE" &&
-                    sqlInstance.settings &&
+                if (sqlInstance.settings &&
                     sqlInstance.settings.databaseFlags &&
                     sqlInstance.settings.databaseFlags.length) {
                         let found = sqlInstance.settings.databaseFlags.find(flag => flag.name && flag.name == 'log_min_error_statement' &&
@@ -61,7 +62,6 @@ module.exports = {
                             helpers.addResult(results, 2,
                                 'SQL instance does not have log_min_error_statement flag set to Error', region, sqlInstance.name);
                         }
-                } else if (sqlInstance.instanceType == "READ_REPLICA_INSTANCE") {
                 } else {
                     helpers.addResult(results, 2, 
                         'SQL instance does not have log_min_error_statement flag set to Error', region, sqlInstance.name);

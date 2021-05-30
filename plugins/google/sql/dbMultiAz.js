@@ -32,12 +32,12 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
-                if (sqlInstance.instanceType != "READ_REPLICA_INSTANCE" &&
-                    sqlInstance.failoverReplica &&
+                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() === "READ_REPLICA_INSTANCE") return;
+
+                if (sqlInstance.failoverReplica &&
                     sqlInstance.failoverReplica.available) {
                     helpers.addResult(results, 0, 
                         'SQL instance has multi-AZ enabled', region, sqlInstance.name);
-                } else if (sqlInstance.instanceType == "READ_REPLICA_INSTANCE"){
                 } else {
                     helpers.addResult(results, 2, 
                         'SQL instance does not have multi-AZ enabled', region, sqlInstance.name);

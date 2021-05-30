@@ -32,13 +32,14 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
+                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() === "READ_REPLICA_INSTANCE") return;
+
                 if (sqlInstance.databaseVersion && !sqlInstance.databaseVersion.toUpperCase().startsWith('POSTGRES')) {
                     helpers.addResult(results, 0, 'SQL instance database version is not of PosgreSQL type', region, sqlInstance.name);
                     return;
                 }
 
-                if (sqlInstance.instanceType != "READ_REPLICA_INSTANCE" &&
-                    sqlInstance.settings &&
+                if (sqlInstance.settings &&
                     sqlInstance.settings.databaseFlags) {
                     let found = sqlInstance.settings.databaseFlags.find(flag => flag.name && flag.name == 'log_checkpoints' &&
                                                                         flag.value && flag.value == 'on');
@@ -50,7 +51,6 @@ module.exports = {
                         helpers.addResult(results, 2,
                             'PostgreSQL instance does not have log_checkpoints flag enabled', region, sqlInstance.name);
                     }
-                } else if (sqlInstance.instanceType == "READ_REPLICA_INSTANCE") {
                 } else {
                     helpers.addResult(results, 2,
                         'PostgreSQL instance does not have log_checkpoints flag enabled', region, sqlInstance.name);

@@ -42,8 +42,9 @@ module.exports = {
             }
             var myIpConfig = {};
             sqlInstances.data.forEach(sqlInstance => {
-                if (sqlInstance.instanceType != "READ_REPLICA_INSTANCE" &&
-                    sqlInstance.settings &&
+                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() === "READ_REPLICA_INSTANCE") return;
+
+                if (sqlInstance.settings &&
                     sqlInstance.settings.ipConfiguration) {
                     myIpConfig = sqlInstance.settings.ipConfiguration
                     if (myIpConfig.privateNetwork && !myIpConfig.ipv4Enabled) {
@@ -68,7 +69,6 @@ module.exports = {
                                             'SQL Instance is not publicly accessible', region, sqlInstance.name);
                                     }
                                 }
-                }else if (sqlInstance.instanceType == "READ_REPLICA_INSTANCE"){
                 }
             })
 
