@@ -38,6 +38,12 @@ module.exports = {
                 return rcb();
             }
 
+            if (!backupRuns || backupRuns.err || !backupRuns.data) {
+                helpers.addResult(results, 3,
+                    `Unable to query SQL backup runs: ${helpers.addError(backupRuns)}`, region);
+                return rcb();
+            }
+
             sqlInstances.data.forEach(sqlInstance => {
                 let found = backupRuns.data.find(backup => backup.instance && sqlInstance.name && backup.instance == sqlInstance.name);
                 

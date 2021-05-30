@@ -77,11 +77,11 @@ describe('dbRestorable', function () {
             );
             plugin.run(cache, {}, callback);
         });
-        it('should give failing result if sql instance does not have the backup available', function (done) {
+        it('should give failing result if sql instance does not have backups available', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('SQL instance does not have the backup available');
+                expect(results[0].message).to.include('SQL instance does not have backups available');
                 expect(results[0].region).to.equal('global');
                 done()
             };
