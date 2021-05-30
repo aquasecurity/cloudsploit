@@ -1,5 +1,4 @@
 var async = require('async');
-const { ConfigurationOptions } = require('aws-sdk');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
