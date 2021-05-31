@@ -5,7 +5,7 @@ module.exports = {
     title: 'RDS Auditing Enabled',
     category: 'RDS',
     description: 'Ensure that RDS DB instances events and activities are being logged to help fix any suspicious activities or security issues.',
-    more_info: 'RDS instances provides auditing feature that can be used to log all the events and activites which can be used later in case of any suspicions or security reasons.',
+    more_info: 'RDS instances provides auditing feature that can be used to log all the events and activities which can be used later in case of any suspicions or security reasons.',
     link: 'https://partners-intl.aliyun.com/help/doc-detail/118678.htm',
     recommended_action: 'Modify RDS DB instances to enable the auditing',
     apis: ['RDS:DescribeDBInstances', 'RDS:DescribeSQLCollectorPolicy', 'STS:GetCallerIdentity'],
