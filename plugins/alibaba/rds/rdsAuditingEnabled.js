@@ -16,7 +16,7 @@ module.exports = {
         var regions = helpers.regions();
         var defaultRegion = helpers.defaultRegion(settings);
 
-        dbEngines = ['sqlserver 2012', 'sqlserver 2016', 'sqlserver 2017', 'mariadb tx']
+        var unsupportedEngines = ['sqlserver 2012', 'sqlserver 2016', 'sqlserver 2017', 'mariadb tx'];
         var accountId = helpers.addSource(cache, source, ['sts', 'GetCallerIdentity', defaultRegion, 'data']);
 
         async.each(regions.rds, function(region, rcb) {
@@ -44,11 +44,11 @@ module.exports = {
 
                 var resource = helpers.createArn('rds', accountId, 'instance', instance.DBInstanceId, region);
 
-                validInstance = false
-                validInstance = dbEngines.find(engine => instance.Engine && instance.EngineVersion && (instance.Engine.toLowerCase() + ' ' + instance.EngineVersion).includes(engine));
-                if (validInstance) {
+                let instanceEngine = (instance.Engine && instance.EngineVersion) ? `${instance.Engine.toLowerCase()} ${instance.EngineVersion}` : '';
+
+                if (unsupportedEngines.includes(instanceEngine)) {
                     helpers.addResult(results, 0,
-                        `SQL auditing is not supported for ${instance.Engine} ${instance.EngineVersion} engine type`,
+                        `SQL auditing is not supported for ${instanceEngine} engine type`,
                         region, resource);
                     return cb();
                 }
