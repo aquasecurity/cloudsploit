@@ -40,7 +40,7 @@ module.exports = {
                 if (!failoverGroups || failoverGroups.err || !failoverGroups.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for auto-failover groups: ' + helpers.addError(failoverGroups), location, server.id);
-                    return rcb();
+                   continue;
                 }
 
                 if (failoverGroups.data.length) {
