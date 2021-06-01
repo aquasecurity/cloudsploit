@@ -1,6 +1,5 @@
 var async = require('async');
 var helpers = require('../../../helpers/azure/');
-const { virtualNetworks } = require('../../../helpers/azure/locations');
 
 module.exports = {
     title: 'No Network Gateways Connections',
@@ -9,7 +8,7 @@ module.exports = {
     more_info: 'To meet your organization\'s security compliance requirements.',
     link: 'https://docs.microsoft.com/en-us/azure/vpn-gateway/tutorial-site-to-site-portal',
     recommended_action: 'Delete network gateway connections',
-    apis: ['resourceGroups:list', 'NetworkGatewayConnections:listByResourceGroup'],
+    apis: ['resourceGroups:list', 'networkGatewayConnections:listByResourceGroup'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -23,7 +22,7 @@ module.exports = {
             if (!resourceGroups) return rcb();
 
             if (resourceGroups.err || !resourceGroups.data) {
-                helpers.addResult(results, 3, 'Unable to query for resource groups: ' + helpers.addError(virtualNetworks), location);
+                helpers.addResult(results, 3, 'Unable to query for resource groups: ' + helpers.addError(resourceGroups), location);
                 return rcb();
             }
 
@@ -34,10 +33,10 @@ module.exports = {
 
             async.each(resourceGroups.data, function(resourceGroup, scb) {
                 let networkGatewayConnections = helpers.addSource(cache, source,
-                    ['NetworkGatewayConnections', 'listByResourceGroup', location, resourceGroup.id]);
+                    ['networkGatewayConnections', 'listByResourceGroup', location, resourceGroup.id]);
 
                 if (!networkGatewayConnections || networkGatewayConnections.err || !networkGatewayConnections.data) {
-                    helpers.addResult(results, 3, 'Unable to query for network gateway connections : ' + helpers.addError(virtualNetworks), location);
+                    helpers.addResult(results, 3, 'Unable to query for network gateway connections : ' + helpers.addError(networkGatewayConnections), location);
                     return scb();
                 }
 

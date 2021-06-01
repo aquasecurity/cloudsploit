@@ -255,7 +255,7 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/virtualMachines?api-version=2020-12-01'
         }
     },
-    NetworkGatewayConnections: {
+    networkGatewayConnections: {
         listByResourceGroup: {
             reliesOnPath: 'resourceGroups.list',
             properties: ['id'],

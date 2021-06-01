@@ -43,7 +43,7 @@ const createCache = (resourceGroups, networkGatewayConnections) => {
                 'eastus': groups
             }
         },
-        NetworkGatewayConnections: {
+         networkGatewayConnections: {
             listByResourceGroup: {
                 'eastus': connections
             }
