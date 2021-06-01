@@ -274,6 +274,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/virtualMachines?api-version=2020-12-01'
         }
     },
+    virtualNetworkGateways: {
+        listByResourceGroup: {
+            reliesOnPath: 'resourceGroups.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/Microsoft.Network/virtualNetworkGateways?api-version=2020-11-01'
+        }
+    },
     networkGatewayConnections: {
         listByResourceGroup: {
             reliesOnPath: 'resourceGroups.list',
