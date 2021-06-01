@@ -4,9 +4,9 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Scale Sets Autoscale Notifications Enabled',
     category: 'Virtual Machines',
-    description: 'Ensures that Virtual Machine scale sets have autoscale notifications enabled',
+    description: 'Ensures that Virtual Machine scale sets have autoscale notifications enabled.',
     more_info: 'Autoscale automatically creates new instances when certain metrics are surpassed, or can destroy instances that are being underutilized. Autoscale notifications should be enabled to know about the status of autoscale operation.',
-    recommended_action: 'Ensure that autoscale notifications are enabled for all Virtual Machine Scale Sets.',
+    recommended_action: 'Ensure that autoscale notifications are enabled for all Virtual Machine Scale Sets',
     link: 'https://docs.microsoft.com/en-us/azure/azure-monitor/autoscale/autoscale-overview',
     apis: ['virtualMachineScaleSets:listAll', 'autoscaleSettings:listBySubscription'],
 
