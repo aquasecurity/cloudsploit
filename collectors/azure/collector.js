@@ -41,6 +41,11 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/virtualNetworks?api-version=2020-03-01'
         }
     },
+    natGateways: {
+        listBySubscription: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/natGateways?api-version=2020-11-01'
+        }
+    },
     virtualMachines: {
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachines?api-version=2019-12-01'
@@ -211,6 +216,13 @@ var postcalls = {
             reliesOnPath: 'servers.listSql',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/securityAlertPolicies?api-version=2017-03-01-preview'
+        }
+    },
+    failoverGroups: {
+        listByServer: {
+            reliesOnPath: 'servers.listSql',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/failoverGroups?api-version=2017-03-01-preview'
         }
     },
     serverAutomaticTuning: {
