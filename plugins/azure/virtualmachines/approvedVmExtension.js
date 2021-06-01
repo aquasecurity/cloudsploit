@@ -6,7 +6,7 @@ module.exports = {
     title: 'VM Approved Extensions',
     category: 'Virtual Machines',
     description: 'Ensures that approved virtual machine extensions are installed.',
-    more_info: 'Extensions are small applications that provide post-deployment configuration and automation on Azure VMs. VMs installed should be approved by the organization to meet the organizational security requirements.',
+    more_info: 'Extensions are small applications that provide post-deployment configuration and automation on Azure VMs. Extensions installed should be approved by the organization to meet the organizational security requirements.',
     recommended_action: 'Uninstall unapproved virtual machine extensions',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/extensions/overview',
     apis: ['virtualMachines:listAll', 'virtualMachineExtensions:list'],
@@ -27,6 +27,8 @@ module.exports = {
         const config = {
             approvedExtensions: (settings.vm_approved_extensions || this.settings.vm_approved_extensions.default)
         };
+
+        var extensionsList = config.approvedExtensions.split(',');
 
         async.each(locations.virtualMachines, function(location, rcb){
             var virtualMachines = helpers.addSource(cache, source,
@@ -60,7 +62,6 @@ module.exports = {
                 
                 virtualMachineExtensions.data.forEach(function(virtualMachineExtension) {
                     if (config.approvedExtensions.length) {
-                        let extensionsList = config.approvedExtensions.split(',');
                         let found = extensionsList.some(extension => extension.trim() === virtualMachineExtension.name);
                         if (found) {
                             helpers.addResult(results, 0, 'Installed extension is approved by the organization', location, virtualMachineExtension.id);
