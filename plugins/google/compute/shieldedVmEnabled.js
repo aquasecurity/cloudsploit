@@ -48,11 +48,8 @@ module.exports = {
                 instances.data.forEach(instance => {
                     if (instance.shieldedInstanceConfig &&
                         instance.shieldedInstanceConfig.enableVtpm &&
-                        instance.shieldedInstanceConfig.enableIntegrityMonitoring) {
-                            shieldedVmInstances.push(instance.id)
-                    } else {
-                            nonShieldedVmInstances.push(instance.id)
-                    }
+                        instance.shieldedInstanceConfig.enableIntegrityMonitoring) shieldedVmInstances.push(instance.id);
+                    else nonShieldedVmInstances.push(instance.id);
                 });
             });
 
