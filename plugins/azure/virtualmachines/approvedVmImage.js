@@ -6,7 +6,7 @@ module.exports = {
     category: 'Virtual Machines',
     description: 'Ensures that VM is launched from a managed VM image.',
     more_info: 'A managed VM image contains the information necessary to create a VM, including the OS and data disks. Virtual Machines should be launched using managed images to ensure security practices and consistency across all the instances.',
-    recommended_action: 'Ensure that VM is launced using managed VM image',
+    recommended_action: 'Ensure that VM is launched using managed VM image',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/windows/create-vm-generalized-managed',
     apis: ['virtualMachines:listAll'],
 
@@ -35,9 +35,9 @@ module.exports = {
             virtualMachines.data.forEach(virtualMachine => {
                 if (virtualMachine.storageProfile && virtualMachine.storageProfile.imageReference &&
                     virtualMachine.storageProfile.imageReference.id) {
-                    helpers.addResult(results, 0, 'VM is launced using Azure managed VM image', location, virtualMachine.id);
+                    helpers.addResult(results, 0, 'VM is launched using Azure managed VM image', location, virtualMachine.id);
                 } else {
-                    helpers.addResult(results, 2, 'VM is not launced using Azure managed VM image', location, virtualMachine.id);
+                    helpers.addResult(results, 2, 'VM is not launched using Azure managed VM image', location, virtualMachine.id);
                 }
             });
 
