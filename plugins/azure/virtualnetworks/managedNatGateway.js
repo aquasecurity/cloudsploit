@@ -51,12 +51,13 @@ module.exports = {
             }
 
             virtualNetworks.data.forEach(virtualNetwork => {
+                if (!virtualNetwork.id) return;
                 let found = (virtualNetwork.subnets && virtualNetwork.subnets.length) ? virtualNetwork.subnets.some(subnet => natSubnets.includes(subnet.id)) : false;
 
                 if (found) {
-                    helpers.addResult(results, 0, 'Virtual Network Managed NAT (Network Address Translation) Gateway service is enabled for Virtual Network', location);
+                    helpers.addResult(results, 0, 'Virtual Network Managed NAT (Network Address Translation) Gateway service is enabled for Virtual Network', location, virtualNetwork.id);
                 } else {
-                    helpers.addResult(results, 2, 'Virtual Network Managed NAT (Network Address Translation) Gateway service is disabled for Virtual Network', location);
+                    helpers.addResult(results, 2, 'Virtual Network Managed NAT (Network Address Translation) Gateway service is disabled for Virtual Network', location, virtualNetwork.id);
                 }
             });
 
