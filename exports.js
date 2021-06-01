@@ -383,6 +383,7 @@ module.exports = {
         'scaleSetMultiAz'               : require(__dirname + '/plugins/azure/virtualmachines/scaleSetMultiAz.js'),
         'scaleSetAutoscaleEnabled'      : require(__dirname + '/plugins/azure/virtualmachines/scaleSetAutoscaleEnabled.js'),
         'vmAvailabilitySetLimit'        : require(__dirname + '/plugins/azure/virtualmachines/vmAvailabilitySetLimit.js'),
+        'premiumSsdDisabled'            : require(__dirname + '/plugins/azure/virtualmachines/premiumSsdDisabled.js'),
         'vmManagedDisks'                : require(__dirname + '/plugins/azure/virtualmachines/vmManagedDisks.js'),
         'autoInstanceRepairsEnabled'    : require(__dirname + '/plugins/azure/virtualmachines/autoInstanceRepairsEnabled.js'),
         'noEmptyScaleSets'              : require(__dirname + '/plugins/azure/virtualmachines/noEmptyScaleSets.js'),
@@ -482,6 +483,7 @@ module.exports = {
         'serverAuditingEnabled'         : require(__dirname + '/plugins/azure/sqlserver/serverAuditingEnabled.js'),
         'azureADAdminEnabled'           : require(__dirname + '/plugins/azure/sqlserver/azureADAdminEnabled.js'),
         'sqlServerTlsVersion'           : require(__dirname + '/plugins/azure/sqlserver/sqlServerTlsVersion.js'),
+        'autoFailoverGroupsEnabled'     : require(__dirname + '/plugins/azure/sqlserver/autoFailoverGroupsEnabled.js'),
         'automaticTuningEnabled'        : require(__dirname + '/plugins/azure/sqlserver/automaticTuningEnabled.js'),
 
         'javaVersion'                   : require(__dirname + '/plugins/azure/appservice/javaVersion.js'),
@@ -495,6 +497,7 @@ module.exports = {
         'httpsOnlyEnabled'              : require(__dirname + '/plugins/azure/appservice/httpsOnlyEnabled.js'),
         'tlsVersionCheck'               : require(__dirname + '/plugins/azure/appservice/tlsVersionCheck.js'),
         'appserviceAutomatedBackups'    : require(__dirname + '/plugins/azure/appservice/appserviceAutomatedBackups.js'),
+        'alwaysOnEnabled'               : require(__dirname + '/plugins/azure/appservice/alwaysOnEnabled.js'),
 
         'rbacEnabled'                   : require(__dirname + '/plugins/azure/kubernetesservice/rbacEnabled.js'),
         'aksLatestVersion'              : require(__dirname + '/plugins/azure/kubernetesservice/aksLatestVersion.js'),
