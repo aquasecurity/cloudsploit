@@ -51,15 +51,7 @@ module.exports = {
             }
 
             virtualNetworks.data.forEach(virtualNetwork => {
-                let found = false;
-                if (virtualNetwork.subnets && virtualNetwork.subnets.length) {
-                    for (let subnet of virtualNetwork.subnets) {
-                        if (natSubnets.includes(subnet.id)) {
-                            found = true;
-                            break;
-                        }
-                    }
-                }
+                let found = (virtualNetwork.subnets && virtualNetwork.subnets.length) ? virtualNetwork.subnets.some(subnet => natSubnets.includes(subnet.id)) : false;
 
                 if (found) {
                     helpers.addResult(results, 0, 'Virtual Network Managed NAT (Network Address Translation) Gateway service is enabled for Virtual Network', location);
