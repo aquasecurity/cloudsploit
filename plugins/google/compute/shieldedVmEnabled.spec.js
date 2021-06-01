@@ -71,7 +71,7 @@ describe('shieldedVmEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Shielded VM security is not enabled for the following instances');
+                expect(results[0].message).to.include('Shielded VM security is not enabled for the these instances');
                 expect(results[0].region).to.equal('us-central1');
                 done()
             };
@@ -81,7 +81,7 @@ describe('shieldedVmEnabled', function () {
                     {
                         id: "1719867382827328572",
                         name: "testing-instance",
-                        zone: "https://www.googleapis.com/compute/v1/projects/akhtar-dev-aqua/zones/us-central1-a",
+                        zone: "https://www.googleapis.com/compute/v1/projects/test-dev-aqua/zones/us-central1-a",
                         shieldedInstanceConfig: {
                             enableSecureBoot: false,
                             enableVtpm: false,
@@ -100,7 +100,7 @@ describe('shieldedVmEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Shielded VM security is enabled for the following instances');
+                expect(results[0].message).to.include('Shielded VM security is enabled for the these instances');
                 expect(results[0].region).to.equal('us-central1');
                 done()
             };
@@ -110,7 +110,7 @@ describe('shieldedVmEnabled', function () {
                     {
                         id: "3736210870233209587",
                         name: "testing-instance2",
-                        zone: "https://www.googleapis.com/compute/v1/projects/akhtar-dev-aqua/zones/us-central1-a",
+                        zone: "https://www.googleapis.com/compute/v1/projects/test-dev-aqua/zones/us-central1-a",
                         shieldedInstanceConfig: {
                             enableSecureBoot: false,
                             enableVtpm: true,

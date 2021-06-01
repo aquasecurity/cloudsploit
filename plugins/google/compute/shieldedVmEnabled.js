@@ -51,28 +51,27 @@ module.exports = {
                         instance.shieldedInstanceConfig.enableIntegrityMonitoring) shieldedVmInstances.push(instance.id);
                     else nonShieldedVmInstances.push(instance.id);
                 });
+                zcb();
+            }, function() {
+                if (myError[region] &&
+                    zones[region] &&
+                    (myError[region].join(',') === zones[region].join(','))) {
+                    helpers.addResult(results, 3, 'Unable to query instances', region, null, null, myError);
+                }
+                if (noInstances[region] &&
+                    zones[region] &&
+                    (noInstances[region].join(',') === zones[region].join(','))) {
+                    helpers.addResult(results, 0, 'No instances found in the region' , region);
+                }
+                if (shieldedVmInstances.length) {
+                    helpers.addResult(results, 0,
+                        `Shielded VM security is enabled for the these instances: ${shieldedVmInstances.join(', ')}`, region);
+                }
+                if (nonShieldedVmInstances.length) {
+                    helpers.addResult(results, 2,
+                        `Shielded VM security is not enabled for the these instances: ${nonShieldedVmInstances.join(', ')}`, region);
+                }
             });
-
-            if (myError[region] &&
-                zones[region] &&
-                (myError[region].join(',') === zones[region].join(','))) {
-                helpers.addResult(results, 3, 'Unable to query instances', region, null, null, myError);
-            } 
-            if (noInstances[region] &&
-                zones[region] &&
-                (noInstances[region].join(',') === zones[region].join(','))) {
-                helpers.addResult(results, 0, 'No instances found in the region' , region);
-            } 
-            if (shieldedVmInstances.length) {
-                helpers.addResult(results, 0,
-                    `Shielded VM security is enabled for the following instances: ${shieldedVmInstances.join(', ')}`, region);
-            } 
-            if (nonShieldedVmInstances.length) {
-                var myInstanceStr = nonShieldedVmInstances.join(", ");
-                helpers.addResult(results, 2,
-                    `Shielded VM security is not enabled for the following instances: ${myInstanceStr}`, region);
-            }
-
             rcb();
         }, function() {
             callback(null, results, source);
