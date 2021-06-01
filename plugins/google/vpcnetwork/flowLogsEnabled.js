@@ -29,7 +29,7 @@ module.exports = {
             if (!subnetworks) return rcb();
 
             if (subnetworks.err || !subnetworks.data) {
-                helpers.addResult(results, 3, 'Unable to query subnets: ' + helpers.addError(subnetworks), region);
+                helpers.addResult(results, 3, 'Unable to query subnets: ' + helpers.addError(subnetworks), region, null, null, subnetworks.err);
                 return rcb();
             }
 

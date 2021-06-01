@@ -25,7 +25,7 @@ module.exports = {
             if (!iamPolicies) return rcb();
 
             if (iamPolicies.err || !iamPolicies.data) {
-                helpers.addResult(results, 3, 'Unable to query for IAM Policies: ' + helpers.addError(iamPolicies), region);
+                helpers.addResult(results, 3, 'Unable to query for IAM Policies', region, null, null, iamPolicies.err);
                 return rcb();
             }
 

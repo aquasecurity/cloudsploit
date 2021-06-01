@@ -30,7 +30,7 @@ module.exports = {
             if (!keys) return rcb();
 
             if (keys.err || !keys.data) {
-                helpers.addResult(results, 3, 'Unable to query service account keys, check permissions.', region);
+                helpers.addResult(results, 3, 'Unable to query service account keys, check permissions.', region, null, null, keys.err);
                 return rcb();
             };
 
