@@ -50,7 +50,7 @@ module.exports = {
             });
 
             if (users && users.length) {
-                helpers.addResult(results, 0, `Group: ${group.name} contains ' + users.length + ' user(s)`, defaultRegion, group.id);
+                helpers.addResult(results, 0, `Group: ${group.name} contains ${users.length} user(s)`, defaultRegion, group.id);
             } else {
                 helpers.addResult(results, 1, `Group: ${group.name} does not contain any users`, defaultRegion,group.id)
             }

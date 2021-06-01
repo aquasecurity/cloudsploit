@@ -21,7 +21,8 @@ console.log(`
 const parser = new ArgumentParser({});
 
 parser.add_argument('--config', {
-    help: 'The path to a CloudSploit config file containing cloud credentials. See config_example.js'
+    help: 'The path to a CloudSploit config file containing cloud credentials. See config_example.js. ' +
+        'If not provided, logic will use default AWS credential chain and will also override provided cloud'
 });
 
 parser.add_argument('--compliance', {
@@ -69,14 +70,18 @@ parser.add_argument('--remediate', {
     help: 'Run remediation the provided plugin',
     action: 'append'
 });
+parser.add_argument('--cloud', {
+    help: 'The name of cloud to run plugins for. If not provided, logic will assume cloud from config.js file based on provided credentials',
+    choices: ['aws', 'azure', 'github', 'google', 'oracle','alibaba'],
+    action: 'append'
+});
 
 let settings = parser.parse_args();
 let cloudConfig = {};
 
-settings.cloud = 'aws';
-
 // Now execute the scans using the defined configuration information.
 if (!settings.config) {
+    settings.cloud = 'aws';
     // AWS will handle the default credential chain without needing a credential file
     console.log('INFO: No config file provided, using default AWS credential chain.');
     return engine(cloudConfig, settings);
@@ -122,13 +127,15 @@ function checkRequiredKeys(obj, keys) {
     });
 }
 
-if (config.credentials.aws.credential_file) {
+if (config.credentials.aws.credential_file && (!settings.cloud || (settings.cloud == 'aws'))) {
+    settings.cloud = 'aws';
     cloudConfig = loadHelperFile(config.credentials.aws.credential_file);
     if (!cloudConfig || !cloudConfig.accessKeyId || !cloudConfig.secretAccessKey) {
         console.error('ERROR: AWS credential file does not have accessKeyId or secretAccessKey properties');
         process.exit(1);
     }
-} else if (config.credentials.aws.access_key) {
+} else if (config.credentials.aws.access_key && (!settings.cloud || (settings.cloud == 'aws'))) {
+    settings.cloud = 'aws';
     checkRequiredKeys(config.credentials.aws, ['secret_access_key']);
     cloudConfig = {
         accessKeyId: config.credentials.aws.access_key,
@@ -136,7 +143,7 @@ if (config.credentials.aws.credential_file) {
         sessionToken: config.credentials.aws.session_token,
         region: 'us-east-1'
     };
-} else if (config.credentials.azure.credential_file) {
+} else if (config.credentials.azure.credential_file && (!settings.cloud || (settings.cloud == 'azure'))) {
     settings.cloud = 'azure';
     cloudConfig = loadHelperFile(config.credentials.azure.credential_file);
     if (!cloudConfig || !cloudConfig.ApplicationID || !cloudConfig.KeyValue || !cloudConfig.DirectoryID || !cloudConfig.SubscriptionID) {
@@ -144,7 +151,7 @@ if (config.credentials.aws.credential_file) {
         process.exit(1);
     }
     cloudConfig.location = 'East US';
-} else if (config.credentials.azure.application_id) {
+} else if (config.credentials.azure.application_id && (!settings.cloud || (settings.cloud == 'azure'))) {
     settings.cloud = 'azure';
     checkRequiredKeys(config.credentials.azure, ['key_value', 'directory_id', 'subscription_id']);
     cloudConfig = {
@@ -154,11 +161,11 @@ if (config.credentials.aws.credential_file) {
         SubscriptionID: config.credentials.azure.subscription_id,
         location: 'East US'
     };
-} else if (config.credentials.google.credential_file) {
+} else if (config.credentials.google.credential_file && (!settings.cloud || (settings.cloud == 'google'))) {
     settings.cloud = 'google';
     cloudConfig = loadHelperFile(config.credentials.google.credential_file);
     cloudConfig.project = cloudConfig.project_id;
-} else if (config.credentials.google.project) {
+} else if (config.credentials.google.project && (!settings.cloud || (settings.cloud == 'google'))) {
     settings.cloud = 'google';
     checkRequiredKeys(config.credentials.google, ['client_email', 'private_key']);
     cloudConfig = {
@@ -167,7 +174,7 @@ if (config.credentials.aws.credential_file) {
         client_email: config.credentials.google.client_email,
         private_key: config.credentials.google.private_key,
     };
-} else if (config.credentials.oracle.credential_file) {
+} else if (config.credentials.oracle.credential_file && (!settings.cloud || (settings.cloud == 'oracle'))) {
     settings.cloud = 'oracle';
     cloudConfig = loadHelperFile(config.credentials.oracle.credential_file);
     if (!cloudConfig || !cloudConfig.tenancyId || !cloudConfig.compartmentId || !cloudConfig.userId || !cloudConfig.keyValue || !cloudConfig.region) {
@@ -176,7 +183,7 @@ if (config.credentials.aws.credential_file) {
     }
 
     cloudConfig.RESTversion = '/20160918';
-} else if (config.credentials.oracle.tenancy_id) {
+} else if (config.credentials.oracle.tenancy_id && (!settings.cloud || (settings.cloud == 'oracle'))) {
     settings.cloud = 'oracle';
     checkRequiredKeys(config.credentials.oracle, ['compartment_id', 'user_id', 'key_fingerprint', 'key_value']);
     cloudConfig = {
@@ -188,10 +195,10 @@ if (config.credentials.aws.credential_file) {
         keyValue: config.credentials.oracle.key_value,
         region: config.credentials.oracle.region,
     };
-} else if (config.credentials.github.credential_file) {
+} else if (config.credentials.github.credential_file && (!settings.cloud || (settings.cloud == 'github'))) {
     settings.cloud = 'github';
     cloudConfig = loadHelperFile(config.credentials.github.credential_file);
-} else if (config.credentials.github.token) {
+} else if (config.credentials.github.token && (!settings.cloud || (settings.cloud == 'github'))) {
     settings.cloud = 'github';
     checkRequiredKeys(config.credentials.github, ['url', 'login']);
     cloudConfig = {
@@ -199,6 +206,16 @@ if (config.credentials.aws.credential_file) {
         url: config.credentials.github.url,
         organization: config.credentials.github.organization,
         login: config.credentials.github.login
+    };
+} else if (config.credentials.alibaba.credential_file && (!settings.cloud || (settings.cloud == 'alibaba'))) {
+    settings.cloud = 'alibaba';
+    cloudConfig = loadHelperFile(config.credentials.alibaba.credential_file);
+} else if (config.credentials.alibaba.access_key_id && (!settings.cloud || (settings.cloud == 'alibaba'))) {
+    settings.cloud = 'alibaba';
+    checkRequiredKeys(config.credentials.alibaba, ['access_key_secret']);
+    cloudConfig = {
+        accessKeyId: config.credentials.alibaba.access_key_id,
+        accessKeySecret: config.credentials.alibaba.access_key_secret
     };
 } else {
     console.error('ERROR: Config file does not contain any valid credential configs.');
@@ -242,5 +259,6 @@ if (settings.remediate && settings.remediate.length) {
         process.exit(1);
     }
 }
+
 // Now execute the scans using the defined configuration information.
 engine(cloudConfig, settings);
