@@ -96,12 +96,12 @@ describe('alwaysOnEnabled', function() {
         });
 
 
-        it('should give passing result if no web app configs', function(done) {
+        it('should give unknown result if no web app configs', function(done) {
             const cache = createCache([webApps[0]], []);
             alwaysOnEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No Web App configs found');
+                expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query for Web App Configs:');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
