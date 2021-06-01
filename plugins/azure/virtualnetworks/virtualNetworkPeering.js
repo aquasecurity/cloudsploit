@@ -2,17 +2,17 @@ var async = require('async');
 var helpers = require('../../../helpers/azure/');
 
 module.exports = {
-    title: 'Cross Subscription Network Peering',
+    title: 'Virtual Network Peering',
     category: 'Virtual Networks',
-    description: 'Ensures that Virtual Network is not connected with a virtual network in whitelisted subscription.',
-    more_info: 'To meet your organization\'s security compliance requirements.',
+    description: 'Ensures that Virtual Network has peering connection only with a virtual network in whitelisted subscription.',
+    more_info: 'Virtual networks should only have peering connections with whitelisted virtual networks to meet your organization\'s security compliance requirements.',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-peering-overview',
     recommended_action: 'Delete Peering Connection with the subscription which are not whitelisted',
     apis: ['virtualNetworks:listAll', 'virtualNetworkPeerings:list'],
     settings: {
-        peering_denied_subscriptions: {
-            name: 'Subcriptions, Virtual Network Peering Denied for',
-            description: 'Subscription Ids, for which Virtual Network Peering in not allowed with current subscription networks',
+        whitelisted_peering_subscriptions: {
+            name: 'Whitelisted Peering Subscriptions',
+            description: 'Subscription Ids for remote virtual networks which should be allowed for peering',
             regex: '/^([a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12},?)+$/',
             default: ''
         }
@@ -24,7 +24,7 @@ module.exports = {
         var locations = helpers.locations(settings.govcloud);
 
         const config = {
-            subscriptions: settings.peering_denied_subscriptions || this.settings.peering_denied_subscriptions.default
+            whiteListedSubscriptions: settings.whitelisted_peering_subscriptions || this.settings.whitelisted_peering_subscriptions.default
         };
 
         async.each(locations.virtualNetworks, function(location, rcb){
@@ -57,19 +57,22 @@ module.exports = {
                     return scb();
                 }
 
+                let unknownSubscriptions = []
                 virtualNetworkPeerings.data.forEach(peering => {
-                    let deniedSubscriptions = config.subscriptions.split(',');
                     let subscriptionId = '';
                     if (peering.remoteVirtualNetwork && peering.remoteVirtualNetwork.id) {
                         subscriptionId = peering.remoteVirtualNetwork.id.split('/')[2];
-                    }
-
-                    if (deniedSubscriptions.length && deniedSubscriptions.includes(subscriptionId)) {
-                        helpers.addResult(results, 2, 'Virtual network is not connected with a virtual network in whitelisted subscription', location, virtualNetwork.id);
-                    } else {
-                        helpers.addResult(results, 0, 'Virtual network is connected with a virtual network in whitelisted subscription', location, virtualNetwork.id);
-                    }
+                        if (!(config.whiteListedSubscriptions && config.whiteListedSubscriptions.includes(subscriptionId))) {
+                            unknownSubscriptions.push(subscriptionId);
+                        }
+                    } 
                 });
+
+                if (unknownSubscriptions.length) {
+                    helpers.addResult(results, 2, `Vitual network has peering with these unknown subscriptions: ${unknownSubscriptions.join(', ')}`, location, virtualNetwork.id);
+                } else {
+                    helpers.addResult(results, 0, 'Virtual network is connected with a virtual network in whitelisted subscription', location, virtualNetwork.id);
+                }
 
                 scb();
             }, function(){

@@ -95,7 +95,7 @@ describe('virtualNetworkPeering', function() {
 
         it('should give passing result if subscription is whitelisted', function(done) {
             const cache = createCache([virtualNetworks[0]], [virtualNetworkPeerings[0]]);
-            virtualNetworkPeering.run(cache, {}, (err, results) => {
+            virtualNetworkPeering.run(cache, { whitelisted_peering_subscriptions: '123' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Virtual network is connected with a virtual network in whitelisted subscription');
@@ -106,10 +106,10 @@ describe('virtualNetworkPeering', function() {
 
         it('should give failing result if subscription is not whitelisted', function(done) {
             const cache = createCache([virtualNetworks[0]], [virtualNetworkPeerings[0]]);
-            virtualNetworkPeering.run(cache, { peering_denied_subscriptions: '123' }, (err, results) => {
+            virtualNetworkPeering.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Virtual network is not connected with a virtual network in whitelisted subscription');
+                expect(results[0].message).to.include('Vitual network has peering with these unknown subscriptions: 123');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
