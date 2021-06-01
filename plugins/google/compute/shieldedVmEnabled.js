@@ -64,9 +64,8 @@ module.exports = {
                 helpers.addResult(results, 0, 'No instances found in the region' , region);
             } 
             if (shieldedVmInstances.length) {
-                var myInstanceStr = shieldedVmInstances.join(", ");
                 helpers.addResult(results, 0,
-                    `Shielded VM security is enabled for the following instances: ${myInstanceStr}`, region);
+                    `Shielded VM security is enabled for the following instances: ${shieldedVmInstances.join(', ')}`, region);
             } 
             if (nonShieldedVmInstances.length) {
                 var myInstanceStr = nonShieldedVmInstances.join(", ");
