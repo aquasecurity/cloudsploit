@@ -64,7 +64,7 @@ module.exports = {
                     ['backupProtectedItems', 'listByVault', location, vault.id]);
 
                 if (!backupProtectedItems || backupProtectedItems.err || !backupProtectedItems.data) {
-                    helpers.addResult(results, 3, 'Unable to query for backup retention policies : ' + helpers.addError(recoveryVaults), location);
+                    helpers.addResult(results, 3, 'Unable to query for backup retention policies : ' + helpers.addError(backupProtectedItems), location);
                     return rcb();
                 }
 
@@ -72,7 +72,7 @@ module.exports = {
                     ['backupPolicies', 'listByVault', location, vault.id]);
 
                 if (!backupPolicies || backupPolicies.err || !backupPolicies.data) {
-                    helpers.addResult(results, 3, 'Unable to query for backup retention policies : ' + helpers.addError(recoveryVaults), location);
+                    helpers.addResult(results, 3, 'Unable to query for backup retention policies : ' + helpers.addError(backupPolicies), location);
                     return rcb();
                 }
 
@@ -99,13 +99,12 @@ module.exports = {
 
                         if (backupPolicy && backupPolicy.instantRpRetentionRangeInDays) {
                             retentionDays = backupPolicy.instantRpRetentionRangeInDays;
-                        } else {
-                            helpers.addResult(results, 0, 'No instant restore backup is configured', location, virtualMachine.id);
-                            return scb();
                         }
                     }
 
-                    if (retentionDays >= config.retentionPeriod) {
+                    if (retentionDays === 0) {
+                        helpers.addResult(results, 0, 'No instant restore backup is configured', location, virtualMachine.id);
+                    } else if (retentionDays >= config.retentionPeriod) {
                         helpers.addResult(results, 0, `VM instant restore backups are configured to be retained for ${retentionDays} of ${config.retentionPeriod} days desired limit`, location, virtualMachine.id);
                     } else {
                         helpers.addResult(results, 2, `VM instant restore backups are configured to be retained for ${retentionDays} of ${config.retentionPeriod} days desired limit`, location, virtualMachine.id);

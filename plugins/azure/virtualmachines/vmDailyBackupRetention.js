@@ -1,5 +1,5 @@
 var async = require('async');
-var helpers = require('../../../helpers/azure/');
+var helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'VM Daily Backup Retention Period',
@@ -12,7 +12,7 @@ module.exports = {
     settings: {
         vm_daily_backup_retention_period: {
             name: 'VM Daily Backup Retention Period',
-            description: 'Number of days that a VM backup will be retained until it is permanently deleted',
+            description: 'Number of days that a VM backup will be retained until it is permanently deleted (7 or above)',
             regex: '^([7-9]|1[0-9]|2[0-9]|30)$',
             default: '30'
         }
@@ -64,7 +64,7 @@ module.exports = {
                     ['backupProtectedItems', 'listByVault', location, vault.id]);
 
                 if (!backupProtectedItems || backupProtectedItems.err || !backupProtectedItems.data) {
-                    helpers.addResult(results, 3, 'Unable to query for backup retention policies : ' + helpers.addError(recoveryVaults), location);
+                    helpers.addResult(results, 3, 'Unable to query for backup retention policies : ' + helpers.addError(backupProtectedItems), location);
                     return rcb();
                 }
 
@@ -72,7 +72,7 @@ module.exports = {
                     ['backupPolicies', 'listByVault', location, vault.id]);
 
                 if (!backupPolicies || backupPolicies.err || !backupPolicies.data) {
-                    helpers.addResult(results, 3, 'Unable to query for backup retention policies : ' + helpers.addError(recoveryVaults), location);
+                    helpers.addResult(results, 3, 'Unable to query for backup retention policies : ' + helpers.addError(backupPolicies), location);
                     return rcb();
                 }
 
@@ -80,8 +80,7 @@ module.exports = {
                     if (vmPoliciesMap.get(bpItem.virtualMachineId.toLowerCase())) {
                         vmPoliciesMap.get(bpItem.virtualMachineId.toLowerCase()).push(bpItem.policyId);
                     } else {
-                        vmPoliciesMap.set(bpItem.virtualMachineId.toLowerCase(), []);
-                        vmPoliciesMap.get(bpItem.virtualMachineId.toLowerCase()).push(bpItem.policyId);
+                        vmPoliciesMap.set(bpItem.virtualMachineId.toLowerCase(), [bpItem.policyId]);
                     }
                 }
 
@@ -99,7 +98,7 @@ module.exports = {
 
                         if (backupPolicy && backupPolicy.retentionPolicy && backupPolicy.retentionPolicy.dailySchedule &&
                             backupPolicy.retentionPolicy.dailySchedule.retentionDuration && backupPolicy.retentionPolicy.dailySchedule.retentionDuration.count &&
-                            backupPolicy.retentionPolicy.dailySchedule.retentionDuration && backupPolicy.retentionPolicy.dailySchedule.retentionDuration.count > retentionDays) {
+                            backupPolicy.retentionPolicy.dailySchedule.retentionDuration.count > retentionDays) {
                             retentionDays = backupPolicy.retentionPolicy.dailySchedule.retentionDuration.count;
                         }
                     }

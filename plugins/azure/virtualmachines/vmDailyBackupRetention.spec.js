@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var dailyBackupRetention = require('./dailyBackupRetention');
+var dailyBackupRetention = require('./vmDailyBackupRetention');
 
 const virtualMachines = [
     {

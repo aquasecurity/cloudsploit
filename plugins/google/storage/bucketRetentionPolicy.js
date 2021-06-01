@@ -34,11 +34,11 @@ module.exports = {
             if (!buckets) return rcb();
 
             if (buckets.err || !buckets.data) {
-                helpers.addResult(results, 3, 'Unable to query storage buckets: ' + helpers.addError(buckets), region);
+                helpers.addResult(results, 3, 'Unable to query storage buckets: ' + helpers.addError(buckets), region, null, null, buckets.err);
                 return rcb();
             }
 
-            if (!buckets.data.length) {
+            if (!helpers.hasBuckets(buckets.data)) {
                 helpers.addResult(results, 0, 'No storage buckets found', region);
                 return rcb();
             }

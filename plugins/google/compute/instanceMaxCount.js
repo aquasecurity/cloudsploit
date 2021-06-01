@@ -223,6 +223,7 @@ module.exports = {
                         myError[region] = [];
                     }
                     myError[region].push(zone);
+                    myError[region][zone] = instances.err;
                     return zcb();
                 }
 
@@ -247,7 +248,7 @@ module.exports = {
             if (myError[region] &&
                 zones[region] &&
                 (myError[region].join(',') === zones[region].join(','))) {
-                helpers.addResult(results, 3, 'Unable to query Instances', region);
+                helpers.addResult(results, 3, 'Unable to query Instances', region, null, null, myError);
 
             } else if (noInstances[region] &&
                 zones[region] &&

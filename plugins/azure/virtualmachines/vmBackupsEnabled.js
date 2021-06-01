@@ -51,7 +51,7 @@ module.exports = {
                     ['backupProtectedItems', 'listByVault', location, vault.id]);
 
                 if (!backupProtectedItems || backupProtectedItems.err || !backupProtectedItems.data) {
-                    helpers.addResult(results, 3, 'Unable to query for backups : ' + helpers.addError(recoveryVaults), location);
+                    helpers.addResult(results, 3, 'Unable to query for backups : ' + helpers.addError(backupProtectedItems), location);
                     return rcb();
                 }
 
@@ -70,7 +70,7 @@ module.exports = {
 
                 let vmBackupsEnabled = false;
                 if (vmPolicies && vmPolicies.length) {
-                    vmBackupsEnabled = vmPolicies.some(policy => (policy && policy !== ''));
+                    vmBackupsEnabled = vmPolicies.some(policy => (policy && policy.length));
                 }
 
                 if (vmBackupsEnabled) {
