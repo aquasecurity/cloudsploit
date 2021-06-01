@@ -11,7 +11,6 @@ function createArn(service, account, resourceType, resourceId, region) {
 }
 
 function findOpenPorts(cache, groups, ports, service, region, results) {
-    // console.log(JSON.stringify(cache, null, 2));
     var found = false;
 
     for (var group of groups) {
@@ -51,7 +50,7 @@ function findOpenPorts(cache, groups, ports, service, region, results) {
                             for (let i = rangeFrom; i <= rangeTo; i++) {
                                 if (fromPort<= i && toPort >= i) {
                                     string = `some of ${permission.IpProtocol}:${port}`;
-                                    openV4Ports.push(string);
+                                    if (openV4Ports.indexOf(string) === -1) openV4Ports.push(string);
                                     found = true;
                                     break;
                                 }

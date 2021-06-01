@@ -2,12 +2,12 @@ var async = require('async');
 var helpers = require('../../../helpers/alibaba');
 
 module.exports = {
-    title: 'Open SSH',
+    title: 'Open CIFS',
     category: 'ECS',
-    description: 'Ensure that security groups does not have TCP port 22 for SSH open to the public.',
-    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as SSH should be restricted to known IP addresses.',
+    description: 'Ensure that security groups does not have UDP port 445 for CIFS open to the public.',
+    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as CIFS should be restricted to known IP addresses.',
     link: 'https://www.alibabacloud.com/help/doc-detail/25471.htm',
-    recommended_action: 'Restrict TCP port 22 to known IP addresses',
+    recommended_action: 'Restrict UDP port 445 for CIFS to known IP addresses',
     apis: ['ECS:DescribeSecurityGroups', 'ECS:DescribeSecurityGroupAttribute', 'STS:GetCallerIdentity'],
 
     run: function(cache, settings, callback) {
@@ -16,10 +16,10 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var ports = {
-            'tcp': [22]
+            'udp': [445]
         };
 
-        var service = 'SSH';
+        var service = 'CIFS';
 
         async.each(regions.ecs, function(region, rcb){
             var describeSecurityGroups = helpers.addSource(cache, source,

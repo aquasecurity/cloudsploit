@@ -28,10 +28,12 @@ var regionEndpointMap = {
         'ap-southeast-3', 'ap-southeast-5', 'ap-northeast-1', 'ap-south-1', 'eu-central-1', 'eu-west-1', 'me-east-1'],
     kms: regions['kms'],
     rds: ['cn-zhangjiakou', 'cn-huhehaote', 'cn-chengdu', 'ap-southeast-2', 'ap-southeast-3', 'ap-southeast-5',
-        'ap-northeast-1', 'ap-south-1', 'eu-central-1', 'eu-west-1', 'me-east-1']
+        'ap-northeast-1', 'ap-south-1', 'eu-central-1', 'eu-west-1', 'me-east-1'],
+    actiontrail: regions['actiontrail']
 };
 
 var globalServices = [
+    'OSS',
     'RAM'
 ];
  
@@ -76,6 +78,7 @@ var calls = {
         },
         GetPasswordPolicy: {
             property: 'PasswordPolicy',
+            apiVersion: '2015-05-01'
         }
     },
     GBDB: {
@@ -127,8 +130,13 @@ var calls = {
             property: 'Keys',
             subProperty: 'Key',
             apiVersion: '2016-01-20',
-            paginate: 'Pages',
-            regionalEndpoint: true
+            paginate: 'Pages'
+        }
+    },
+    ActionTrail: {
+        DescribeTrails: {
+            property: 'TrailList',
+            apiVersion: '2020-07-06'
         }
     }
 };
@@ -141,7 +149,6 @@ var postcalls = [
                 reliesOnCall: 'DescribeInstances',
                 filterKey: ['InstanceId'],
                 filterValue: ['InstanceId'],
-                resultKey: 'InstanceId',
                 apiVersion: '2014-05-26'
             },
             DescribeSecurityGroupAttribute: {
@@ -149,7 +156,6 @@ var postcalls = [
                 reliesOnCall: 'DescribeSecurityGroups',
                 filterKey: ['SecurityGroupId'],
                 filterValue: ['SecurityGroupId'],
-                resultKey: 'SecurityGroupId',
                 apiVersion: '2014-05-26'
             }
         },
@@ -160,7 +166,6 @@ var postcalls = [
                 filterKey: ['PolicyName', 'PolicyType'],
                 filterValue: ['PolicyName', 'PolicyType'],
                 apiVersion: '2015-05-01',
-                resultKey: 'PolicyName',
                 resultFilter: 'DefaultPolicyVersion'
             },
             GetUser: {
@@ -169,7 +174,34 @@ var postcalls = [
                 filterKey: ['UserName'],
                 filterValue: ['UserName'],
                 resultFilter: 'User',
-                resultKey: 'UserName',
+                apiVersion: '2015-05-01'
+            },
+            GetUserMFAInfo: {
+                reliesOnService: 'ram',
+                reliesOnCall: 'ListUsers',
+                filterKey: ['UserName'],
+                filterValue: ['UserName'],
+                apiVersion: '2015-05-01'
+            },
+            ListAccessKeys: {
+                reliesOnService: 'ram',
+                reliesOnCall: 'ListUsers',
+                filterKey: ['UserName'],
+                filterValue: ['UserName'],
+                apiVersion: '2015-05-01'
+            },
+            ListPoliciesForUser: {
+                reliesOnService: 'ram',
+                reliesOnCall: 'ListUsers',
+                filterKey: ['UserName'],
+                filterValue: ['UserName'],
+                apiVersion: '2015-05-01'
+            },
+            GetLoginProfile: {
+                reliesOnService: 'ram',
+                reliesOnCall: 'ListUsers',
+                filterKey: ['UserName'],
+                filterValue: ['UserName'],
                 apiVersion: '2015-05-01'
             }
         },
@@ -180,15 +212,7 @@ var postcalls = [
                 filterKey: ['KeyId'],
                 filterValue: ['KeyId'],
                 resultFilter: 'KeyMetadata',
-                apiVersion: '2016-01-20',
-                resultKey: 'UserName',
-            },
-            GetUserMFAInfo: {
-                reliesOnService: 'ram',
-                reliesOnCall: 'ListUsers',
-                filterKey: ['UserName'],
-                filterValue: ['UserName'],
-                resultKey: 'UserName'
+                apiVersion: '2016-01-20'
             }
         },
         RDS: {
@@ -197,7 +221,6 @@ var postcalls = [
                 reliesOnCall: 'DescribeDBInstances',
                 filterKey: ['DBInstanceId'],
                 filterValue: ['DBInstanceId'],
-                resultKey: 'DBInstanceId',
                 apiVersion: '2014-08-15'
             },
             DescribeDBInstanceSSL: {
@@ -205,7 +228,6 @@ var postcalls = [
                 reliesOnCall: 'DescribeDBInstances',
                 filterKey: ['DBInstanceId'],
                 filterValue: ['DBInstanceId'],
-                resultKey: 'DBInstanceId',
                 apiVersion: '2014-08-15'
             }
         },
@@ -236,7 +258,7 @@ var collect = function(AlibabaConfig, settings, callback) {
 
             let callRegions = regions[serviceLower];
             let requestOption = {
-                timeout: 5000, //default 3000 ms
+                timeout: 10000, //default 3000 ms
                 method: callObj.method || 'POST'
             };
 
