@@ -57,7 +57,7 @@ module.exports = {
                     return scb();
                 }
 
-                let unknownSubscriptions = []
+                let unknownSubscriptions = [];
                 virtualNetworkPeerings.data.forEach(peering => {
                     let subscriptionId = '';
                     if (peering.remoteVirtualNetwork && peering.remoteVirtualNetwork.id) {
@@ -76,7 +76,7 @@ module.exports = {
 
                 scb();
             }, function(){
-                rcb(null, results, source);
+                rcb();
             });
         }, function(){
             callback(null, results, source);
