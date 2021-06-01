@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var automatedBackupsConfigured = require('./automatedBackupsConfigured');
+var appserviceAutomatedBackups = require('./appserviceAutomatedBackups');
 
 const webApps = [
     {
@@ -55,11 +55,11 @@ const createCache = (webApps, backupConfig) => {
     };
 };
 
-describe('automatedBackupsConfigured', function() {
+describe('appserviceAutomatedBackups', function() {
     describe('run', function() {
         it('should give passing result if no web apps', function(done) {
             const cache = createCache([]);
-            automatedBackupsConfigured.run(cache, {}, (err, results) => {
+            appserviceAutomatedBackups.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No existing Web Apps found');
@@ -70,7 +70,7 @@ describe('automatedBackupsConfigured', function() {
 
         it('should give unknown result if unable to query for web apps', function(done) {
             const cache = createCache();
-            automatedBackupsConfigured.run(cache, {}, (err, results) => {
+            appserviceAutomatedBackups.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for Web Apps:');
@@ -81,7 +81,7 @@ describe('automatedBackupsConfigured', function() {
 
         it('should give passing result if app is a function app', function(done) {
             const cache = createCache([webApps[1]]);
-            automatedBackupsConfigured.run(cache, {}, (err, results) => {
+            appserviceAutomatedBackups.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Backups can not be configured for the function App');
@@ -94,7 +94,7 @@ describe('automatedBackupsConfigured', function() {
             const cache = createCache([webApps[0]], {
                 err: 'Unknown error occurred while calling the Azure API'
             });
-            automatedBackupsConfigured.run(cache, {}, (err, results) => {
+            appserviceAutomatedBackups.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Automated Backups are not configured for the webApp');
@@ -105,7 +105,7 @@ describe('automatedBackupsConfigured', function() {
 
         it('should give failing result if no app config found', function(done) {
             const cache = createCache([webApps[0]], {});
-            automatedBackupsConfigured.run(cache, {}, (err, results) => {
+            appserviceAutomatedBackups.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Automated Backups are not configured for the webApp');
@@ -118,7 +118,7 @@ describe('automatedBackupsConfigured', function() {
             const cache = createCache([webApps[0]], {
                 'data': backupConfig
             });
-            automatedBackupsConfigured.run(cache, {}, (err, results) => {
+            appserviceAutomatedBackups.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Automated Backups are configured for the webApp');
