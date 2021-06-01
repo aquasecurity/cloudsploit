@@ -32,7 +32,7 @@ module.exports = {
             }
 
             async.each(webApps.data, function(webApp, scb) {
-                if (webApp && webApp.kind === 'functionapp') {
+                if (webApp && webApp.kind && webApp.kind === 'functionapp') {
                     helpers.addResult(results, 0, 'Always On feature can not be configured for the function App', location, webApp.id);
                     return scb();
                 }
