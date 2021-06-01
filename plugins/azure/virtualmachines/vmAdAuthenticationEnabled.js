@@ -1,11 +1,10 @@
 var async = require('async');
-
-var helpers = require('../../../helpers/azure/');
+var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Azure Active Directory (AD) Authentication Enabled',
+    title: 'VM Active Directory (AD) Authentication Enabled',
     category: 'Virtual Machines',
-    description: 'Ensures that Azure Active Directory (AD) authentication is enabled of virtual machines.',
+    description: 'Ensures that Azure Active Directory (AD) authentication is enabled for virtual machines.',
     more_info: 'Organizations can now improve the security of virtual machines (VMs) in Azure by integrating with Azure Active Directory (AD) authentication. Enabling Azure Active Directory (AD) authentication for Azure virtual machines (VMs) ensures access to VMs from one central point and simplifies access permission management.',
     recommended_action: 'Enable Azure Active Directory (AD) authentication for Azure virtual machines',
     link: 'https://docs.microsoft.com/en-us/azure/active-directory/devices/howto-vm-sign-in-azure-ad-windows',
@@ -47,15 +46,14 @@ module.exports = {
                 }
 
                 var windowsImg = false;
-                if (virtualMachine.storageProfile &&
+                if ((virtualMachine.storageProfile &&
                     virtualMachine.storageProfile.imageReference &&
                     virtualMachine.storageProfile.imageReference.offer &&
-                    virtualMachine.storageProfile.imageReference.offer.toLowerCase().indexOf('windowsserver') > -1) {
-                    windowsImg = true;
-                } else if (virtualMachine.storageProfile &&
+                    virtualMachine.storageProfile.imageReference.offer.toLowerCase().indexOf('windowsserver') > -1) || 
+                    (virtualMachine.storageProfile &&
                     virtualMachine.storageProfile.osDisk &&
                     virtualMachine.storageProfile.osDisk.osType &&
-                    virtualMachine.storageProfile.osDisk.osType.toLowerCase().indexOf('windows') > -1) {
+                    virtualMachine.storageProfile.osDisk.osType.toLowerCase().indexOf('windows') > -1)) {
                     windowsImg = true;
                 }
 

@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var adAuthenticationEnabled = require('./adAuthenticationEnabled');
+var adAuthenticationEnabled = require('./vmAdAuthenticationEnabled');
 
 const virtualMachines = [
     {
