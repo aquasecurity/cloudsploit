@@ -5,7 +5,7 @@ module.exports = {
     title: 'Shielded VM Enabled',
     category: 'Compute',
     description: 'Ensures that instances are configured with the shielded VM enabled',
-    more_info: 'Shielded VM option is provided to defend against the security attacks on the instances.',
+    more_info: 'Shielded VM option should be configured to defend against the security attacks on the instances.',
     link: 'https://cloud.google.com/security/shielded-cloud/shielded-vm',
     recommended_action: 'Enable the shielded VM for all the instances for security reasons.',
     apis: ['instances:compute:list'],
