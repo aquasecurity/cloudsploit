@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var networkGatewaysUsage = require('./networkGatewaysUsage');
+var networkGatewaysUsage = require('./noNetworkGatewaysInUse');
 
 const virtualNetworks = [
     {

@@ -1,11 +1,11 @@
 var async = require('async');
-var helpers = require('../../../helpers/azure/');
+var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Network Gateways Usage',
+    title: 'No Network Gateways In Use',
     category: 'Virtual Networks',
     description: 'Ensures that Virtual Networks are using subnets and network security groups instead of virtual network gateways.',
-    more_info: 'To meet your organization\'s security compliance requirements.',
+    more_info: 'Use subnets and network security groups to control network traffic instead of using virtual network gateways to meet your organization\'s security and compliance requirements.',
     link: 'https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-about-vpngateways',
     recommended_action: 'Configure subnets and network security groups instead of virtual network gateways',
     apis: ['resourceGroups:list','virtualNetworks:listAll','virtualNetworkGateways:listByResourceGroup'],
@@ -35,7 +35,7 @@ module.exports = {
                 ['resourceGroups', 'list', location]);
 
             if (!resourceGroups || resourceGroups.err || !resourceGroups.data) {
-                helpers.addResult(results, 3, 'Unable to query for resource groups: ' + helpers.addError(virtualNetworks), location);
+                helpers.addResult(results, 3, 'Unable to query for resource groups: ' + helpers.addError(resourceGroups), location);
                 return rcb();
             }
 
@@ -48,6 +48,11 @@ module.exports = {
             resourceGroups.data.forEach(resourceGroup => {
                 var virtualNetworkGateways = helpers.addSource(cache, source, 
                     ['virtualNetworkGateways', 'listByResourceGroup', location, resourceGroup.id]);
+
+                if (!virtualNetworkGateways || virtualNetworkGateways.err || !virtualNetworkGateways.data) {
+                    helpers.addResult(results, 3, 'Unable to query for virtual Network Gateways: ' + helpers.addError(virtualNetworkGateways), location);
+                    return rcb();
+                }
                 
                 if (virtualNetworkGateways.data.length) {
                     for (let virtualNetworkGateway of virtualNetworkGateways.data) {
