@@ -73,6 +73,7 @@ module.exports = {
     availabilitySets: locations,
     virtualNetworks: locations,
     virtualNetworkPeerings: locations,
+    natGateways: locations,
     users: ['global'],
     registries: locations,
     pricings: ['global'],

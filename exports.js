@@ -372,6 +372,7 @@ module.exports = {
         'multipleSubnets'               : require(__dirname + '/plugins/azure/virtualnetworks/multipleSubnets.js'),
         'ddosStandardProtectionEnabled' : require(__dirname + '/plugins/azure/virtualnetworks/ddosStandardProtectionEnabled.js'),
         'virtualNetworkPeering'         : require(__dirname + '/plugins/azure/virtualnetworks/virtualNetworkPeering.js'),
+        'managedNatGateway'              : require(__dirname + '/plugins/azure/virtualnetworks/managedNatGateway.js'),
 
         'vmInstanceLimit'               : require(__dirname + '/plugins/azure/virtualmachines/vmInstanceLimit.js'),
         'classicInstances'              : require(__dirname + '/plugins/azure/virtualmachines/classicInstances.js'),
@@ -384,6 +385,7 @@ module.exports = {
         'scaleSetMultiAz'               : require(__dirname + '/plugins/azure/virtualmachines/scaleSetMultiAz.js'),
         'scaleSetAutoscaleEnabled'      : require(__dirname + '/plugins/azure/virtualmachines/scaleSetAutoscaleEnabled.js'),
         'vmAvailabilitySetLimit'        : require(__dirname + '/plugins/azure/virtualmachines/vmAvailabilitySetLimit.js'),
+        'premiumSsdDisabled'            : require(__dirname + '/plugins/azure/virtualmachines/premiumSsdDisabled.js'),
         'vmManagedDisks'                : require(__dirname + '/plugins/azure/virtualmachines/vmManagedDisks.js'),
         'autoInstanceRepairsEnabled'    : require(__dirname + '/plugins/azure/virtualmachines/autoInstanceRepairsEnabled.js'),
         'noEmptyScaleSets'              : require(__dirname + '/plugins/azure/virtualmachines/noEmptyScaleSets.js'),
@@ -483,6 +485,7 @@ module.exports = {
         'serverAuditingEnabled'         : require(__dirname + '/plugins/azure/sqlserver/serverAuditingEnabled.js'),
         'azureADAdminEnabled'           : require(__dirname + '/plugins/azure/sqlserver/azureADAdminEnabled.js'),
         'sqlServerTlsVersion'           : require(__dirname + '/plugins/azure/sqlserver/sqlServerTlsVersion.js'),
+        'autoFailoverGroupsEnabled'     : require(__dirname + '/plugins/azure/sqlserver/autoFailoverGroupsEnabled.js'),
         'automaticTuningEnabled'        : require(__dirname + '/plugins/azure/sqlserver/automaticTuningEnabled.js'),
 
         'javaVersion'                   : require(__dirname + '/plugins/azure/appservice/javaVersion.js'),
@@ -495,6 +498,8 @@ module.exports = {
         'http20Enabled'                 : require(__dirname + '/plugins/azure/appservice/http20Enabled.js'),
         'httpsOnlyEnabled'              : require(__dirname + '/plugins/azure/appservice/httpsOnlyEnabled.js'),
         'tlsVersionCheck'               : require(__dirname + '/plugins/azure/appservice/tlsVersionCheck.js'),
+        'remoteDebuggingDisabled'       : require(__dirname + '/plugins/azure/appservice/remoteDebuggingDisabled.js'),
+        'alwaysOnEnabled'               : require(__dirname + '/plugins/azure/appservice/alwaysOnEnabled.js'),
 
         'rbacEnabled'                   : require(__dirname + '/plugins/azure/kubernetesservice/rbacEnabled.js'),
         'aksLatestVersion'              : require(__dirname + '/plugins/azure/kubernetesservice/aksLatestVersion.js'),
