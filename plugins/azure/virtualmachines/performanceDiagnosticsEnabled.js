@@ -47,15 +47,13 @@ module.exports = {
                 }
 
                 var windowsImg = false;
-                if (virtualMachine.storageProfile &&
+                if ((virtualMachine.storageProfile &&
                     virtualMachine.storageProfile.imageReference &&
                     virtualMachine.storageProfile.imageReference.offer &&
-                    virtualMachine.storageProfile.imageReference.offer.toLowerCase().indexOf('windowsserver') > -1) {
-                    windowsImg = true;
-                } else if (virtualMachine.storageProfile &&
+                    virtualMachine.storageProfile.imageReference.offer.toLowerCase().indexOf('windowsserver') > -1) || (virtualMachine.storageProfile &&
                     virtualMachine.storageProfile.osDisk &&
                     virtualMachine.storageProfile.osDisk.osType &&
-                    virtualMachine.storageProfile.osDisk.osType.toLowerCase().indexOf('windows') > -1) {
+                    virtualMachine.storageProfile.osDisk.osType.toLowerCase().indexOf('windows') > -1)) {
                     windowsImg = true;
                 }
 
