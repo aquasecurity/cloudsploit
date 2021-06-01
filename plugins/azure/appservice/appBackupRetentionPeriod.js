@@ -11,7 +11,7 @@ module.exports = {
     apis: ['webApps:list', 'webApps:listBackupConfig'],
     settings: {
         webApp_backup_retention_period: {
-            name: 'Azure WebApp Backup Retention Period',
+            name: 'Azure Web App Backup Retention Period',
             description: 'Desired number of days for which backups will be retained.',
             regex: '^[0-9]*$',
             default: '30'
@@ -55,8 +55,12 @@ module.exports = {
                         cache, source, ['webApps', 'listBackupConfig', location, webApp.id]
                     );
 
-                    if (!backupConfig || backupConfig.err || !backupConfig.data) {
-                        helpers.addResult(results, 2, 'Backups are not configured for the webApp', location, webApp.id);
+                    if (backupConfig && backupConfig.err && backupConfig.err.includes('Backup configuration not found for site')) {
+                        helpers.addResult(results, 2, 'Backups are not configured for the Web App',
+                            location, webApp.id);
+                    } else if (!backupConfig || backupConfig.err || !backupConfig.data) {
+                        helpers.addResult(results, 3, `Unable to query app backup config: ${helpers.addError(backupConfig)}`,
+                            location, webApp.id);
                         return scb();
                     }
 
@@ -80,7 +84,6 @@ module.exports = {
                 rcb();
             });
         }, function() {
-            // Global checking goes here
             callback(null, results, source);
         });
     }

@@ -105,25 +105,25 @@ describe('appBackupRetentionPeriod', function() {
             });
         });
 
-        it('should give failing result if there is an error in getting backup config', function(done) {
+        it('should give failing result if backups are not configured for the Web App', function(done) {
             const cache = createCache([webApps[0]], {
-                err: 'Unknown error occurred while calling the Azure API'
+                err: 'Backup configuration not found for site'
             });
             appBackupRetentionPeriod.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Backups are not configured for the webApp');
+                expect(results[0].message).to.include('Backups are not configured for the Web App');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
         });
 
-        it('should give failing result if no app config found', function(done) {
-            const cache = createCache([webApps[0]], {});
+        it('should give unknown result if unable to query app backup config', function(done) {
+            const cache = createCache([webApps[0]], {err: 'Unable to query app backup config'});
             appBackupRetentionPeriod.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Backups are not configured for the webApp');
+                expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query app backup config');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
