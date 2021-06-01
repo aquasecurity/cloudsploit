@@ -50,6 +50,7 @@ module.exports = {
     resources: locations,
     storageAccounts: locations,
     virtualMachines: locations,
+    snapshots: locations,
     disks: locations,
     activityLogAlerts: ['global'],
     vaults: locations,
