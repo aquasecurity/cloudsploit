@@ -6,7 +6,7 @@ module.exports = {
     title: 'Disk Volumes BYOK Encryption Enabled',
     category: 'Virtual Machines',
     description: 'Ensures that Azure virtual machine disks have BYOK (Customer-Managed Key) encryption enabled.',
-    more_info: 'Azure Disk Encryption helps protect and safeguard your data to meet organizational security and compliance commitments.',
+    more_info: 'Encrypting virtual machine disk volumes helps protect and safeguard your data to meet organizational security and compliance commitments.',
     recommended_action: 'Ensure that virtual machine disks are created using BYOK encryption',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/windows/disk-encryption-key-vault',
     apis: ['disks:list'],
