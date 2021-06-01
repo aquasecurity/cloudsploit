@@ -30,7 +30,7 @@ module.exports = {
             if (!httpProxies) return rcb();
 
             if (httpProxies.err || !httpProxies.data) {
-                helpers.addResult(results, 3, 'Unable to query firewall rules: ' + helpers.addError(httpProxies), region);
+                helpers.addResult(results, 3, 'Unable to query firewall rules', region, null, null, httpProxies.err);
                 return rcb();
             }
 
