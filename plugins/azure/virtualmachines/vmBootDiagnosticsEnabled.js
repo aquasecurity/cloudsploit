@@ -34,9 +34,9 @@ module.exports = {
             virtualMachines.data.forEach(virtualMachine => {
                 if (virtualMachine.diagnosticsProfile && virtualMachine.diagnosticsProfile.bootDiagnostics && 
                     virtualMachine.diagnosticsProfile.bootDiagnostics.enabled) {
-                    helpers.addResult(results, 0, 'Boot Diagnostics is enabled for this virtual machine', location, virtualMachine.id);
+                    helpers.addResult(results, 0, 'Virtual machine has boot diagnostics enabled', location, virtualMachine.id);
                 } else {
-                    helpers.addResult(results, 2, 'Boot Diagnostics is disabled for this virtual machine', location, virtualMachine.id);
+                    helpers.addResult(results, 2, 'Virtual machine does not have boot diagnostics enabled', location, virtualMachine.id);
                 }
             });
 
