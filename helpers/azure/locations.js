@@ -72,6 +72,7 @@ module.exports = {
     loadBalancers: locations,
     availabilitySets: locations,
     virtualNetworks: locations,
+    networkGatewayConnections: locations,
     natGateways: locations,
     users: ['global'],
     registries: locations,
