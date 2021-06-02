@@ -16,37 +16,34 @@ module.exports = {
         var locations = helpers.locations(settings.govcloud);
 
         async.each(locations.webApps, function(location, rcb) {
-            const webApps = helpers.addSource(
-                cache, source, ['webApps', 'list', location]
+            const webApps = helpers.addSource(cache, source,
+                ['webApps', 'list', location]
             );
 
             if (!webApps) return rcb();
 
             if (webApps.err || !webApps.data) {
-                helpers.addResult(results, 3,
-                    'Unable to query for Web Apps: ' + helpers.addError(webApps), location);
+                helpers.addResult(results, 3, 'Unable to query for Web Apps: ' + helpers.addError(webApps), location);
                 return rcb();
             }
 
             if (!webApps.data.length) {
-                helpers.addResult(
-                    results, 0, 'No existing Web Apps found', location);
+                helpers.addResult(results, 0, 'No existing Web Apps found', location);
                 return rcb();
             }
 
             async.each(webApps.data, function(webApp, scb) {
-                if (webApp.kind && webApp.kind === 'functionapp') {
+                if (webApp.kind && webApp.kind && webApp.kind === 'functionapp') {
                     helpers.addResult(results, 0, 'Backups can not be configured for the function App', location, webApp.id);
                     return scb();
                 }
 
-                const backupConfig = helpers.addSource(
-                    cache, source, ['webApps', 'listBackupConfig', location, webApp.id]
+                const backupConfig = helpers.addSource(cache, source,
+                    ['webApps', 'listBackupConfig', location, webApp.id]
                 );
 
                 if (!backupConfig || backupConfig.err || !backupConfig.data) {
                     helpers.addResult(results, 2, 'Automated Backups are not configured for the webApp', location, webApp.id);
-                    return scb();
                 } else {
                     helpers.addResult(results, 0, 'Automated Backups are configured for the webApp', location, webApp.id);
                 }
