@@ -5,7 +5,7 @@ module.exports = {
     title: 'RDS Public Access',
     category: 'RDS',
     description: 'Ensure that RDS DB instances does not have public access.',
-    more_info: 'Enabling public access increase chances of data security. Public access should always be disabled.',
+    more_info: 'Enabling public access increase chances of data insecurity. Public access should always be disabled and only know IP addresses should be whitelisted.',
     link: 'https://partners-intl.aliyun.com/help/doc-detail/26198.htm',
     recommended_action: 'Modify security settings for RDS DB instances to disable the public access.',
     apis: ['RDS:DescribeDBInstances', 'RDS:DescribeDBInstanceIPArrayList', 'STS:GetCallerIdentity'],
