@@ -12,10 +12,21 @@ module.exports = {
         pci: 'PCI requires a strong password policy. Setting Identity password ' +
              'requirements enforces this policy.'
     },
+    settings: {
+        ram_password_min_length: {
+            name: 'RAM User Password Minimum Length',
+            description: 'Minimum password length required for RAM user login passwords. Should be 14 or above',
+            regex: '^1[4-9]|[2-9]{2,3}$',
+            default: '14'
+        }
+    },
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var region = helpers.defaultRegion(settings);
+
+        var minPasswordLength = parseInt(settings.ram_password_min_length || this.settings.ram_password_min_length.default);
 
         var getPasswordPolicy = helpers.addSource(cache, source,
             ['ram', 'GetPasswordPolicy', region]);
@@ -28,12 +39,12 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        if (getPasswordPolicy.data.MinimumPasswordLength >= 14) {
+        if (getPasswordPolicy.data.MinimumPasswordLength >= minPasswordLength) {
             helpers.addResult(results, 0,
-                'RAM password security policy require minimum length of 14', region);
+                `RAM password security policy requires minimum length of ${getPasswordPolicy.data.MinimumPasswordLength} which is equal to or greater than desired limit of ${minPasswordLength}`, region);
         } else {
             helpers.addResult(results, 2,
-                'RAM password security policy does not require minimum length of 14', region);
+                `RAM password security policy requires minimum length of ${getPasswordPolicy.data.MinimumPasswordLength} which is less than desired limit of ${minPasswordLength}`, region);
         }
 
         callback(null, results, source);
