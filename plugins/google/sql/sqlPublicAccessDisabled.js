@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'SQL Public Access Disabled',
     category: 'SQL',
-    description: 'Ensures SQL instances does not have public access enabled.',
+    description: 'Ensure that SQL instances are using private IPs instead of public IPs.',
     more_info: 'Public access can cause security issues. So it should always be disabled.',
     link: 'https://cloud.google.com/sql/docs/mysql/configure-private-ip',
     recommended_action: 'Ensure that public access is disabled for all SQL instances.',
