@@ -1,6 +1,6 @@
 var assert = require('assert');
 var expect = require('chai').expect;
-var plugin = require('./sqlPublicAccessDisabled');
+var plugin = require('./sqlNoPublicIps');
 
 const createCache = (err, data) => {
     return {
@@ -17,7 +17,7 @@ const createCache = (err, data) => {
     }
 };
 
-describe('sqlPublicAccessDisabled', function () {
+describe('sqlPublicIps', function () {
     describe('run', function () {
         it('should give unknown result if a sql instance error is passed or no data is present', function (done) {
             const callback = (err, results) => {

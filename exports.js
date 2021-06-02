@@ -673,7 +673,7 @@ module.exports = {
         'postgresqlLogConnections'      : require(__dirname + '/plugins/google/sql/postgresqlLogConnections.js'),
         'postgresqlLogDisconnections'   : require(__dirname + '/plugins/google/sql/postgresqlLogDisconnections.js'),
         'postgresqlLogCheckpoints'      : require(__dirname + '/plugins/google/sql/postgresqlLogCheckpoints.js'),
-        'sqlPublicAccessDisabled'       : require(__dirname + '/plugins/google/sql/sqlPublicAccessDisabled.js'),
+        'sqlNoPublicIps'                : require(__dirname + '/plugins/google/sql/sqlNoPublicIps.js'),
 
         'bucketVersioning'              : require(__dirname + '/plugins/google/storage/bucketVersioning.js'),
         'bucketLogging'                 : require(__dirname + '/plugins/google/storage/bucketLogging.js'),

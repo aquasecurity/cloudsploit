@@ -7,7 +7,7 @@ module.exports = {
     description: 'Ensure that SQL instances are using private IPs instead of public IPs.',
     more_info: 'Cloud SQL databases should always use private IP addresses which provide improved network security and lower latency.',
     link: 'https://cloud.google.com/sql/docs/mysql/configure-private-ip',
-    recommended_action: 'Ensure that public access is disabled for all SQL instances.',
+    recommended_action: 'Make sure that SQL databases IP addresses setting does not have IP address of PRIMARY type',
     apis: ['instances:sql:list'],
 
     run: function(cache, settings, callback) {
