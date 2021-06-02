@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/alibaba');
 module.exports = {
     title: 'RDS Public Access',
     category: 'RDS',
-    description: 'Ensure that RDS DB instances does not have public access.',
+    description: 'Ensure that RDS DB instances are not publicly accessible.',
     more_info: 'Enabling public access increase chances of data insecurity. Public access should always be disabled and only know IP addresses should be whitelisted.',
     link: 'https://partners-intl.aliyun.com/help/doc-detail/26198.htm',
     recommended_action: 'Modify security settings for RDS DB instances to disable the public access.',
@@ -44,6 +44,7 @@ module.exports = {
 
                 var describeInstanceWhitelist = helpers.addSource(cache, source,
                     ['rds', 'DescribeDBInstanceIPArrayList', region, instance.DBInstanceId]);
+
                 if (!describeInstanceWhitelist || describeInstanceWhitelist.err || !describeInstanceWhitelist.data) {
                     helpers.addResult(results, 3,
                         `Unable to query DB IP Array List: ${helpers.addError(describeInstanceWhitelist)}`,
@@ -55,7 +56,7 @@ module.exports = {
                     describeInstanceWhitelist.data.Items.DBInstanceIPArray &&
                     describeInstanceWhitelist.data.Items.DBInstanceIPArray.length) {
                     let ipArray =  describeInstanceWhitelist.data.Items.DBInstanceIPArray;
-                    let found = ipArray.find(object => object.SecurityIPList && object.SecurityIPList.includes('0.0.0.0'));
+                    let found = ipArray.find(ipObject => ipObject.SecurityIPList && ipObject.SecurityIPList.includes('0.0.0.0'));
 
                     if (found) {
                         helpers.addResult(results, 2,
@@ -66,6 +67,10 @@ module.exports = {
                             'RDS DB instance is not publicly accessible',
                             region, resource);
                     }
+                } else {
+                    helpers.addResult(results, 0,
+                        'RDS DB instance is not publicly accessible',
+                        region, resource);
                 }
 
                 cb();
