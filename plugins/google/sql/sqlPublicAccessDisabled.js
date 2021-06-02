@@ -5,7 +5,7 @@ module.exports = {
     title: 'SQL Public Access Disabled',
     category: 'SQL',
     description: 'Ensure that SQL instances are using private IPs instead of public IPs.',
-    more_info: 'Public access can cause security issues. So it should always be disabled.',
+    more_info: 'Cloud SQL databases should always use private IP addresses which provide improved network security and lower latency.',
     link: 'https://cloud.google.com/sql/docs/mysql/configure-private-ip',
     recommended_action: 'Ensure that public access is disabled for all SQL instances.',
     apis: ['instances:sql:list'],
