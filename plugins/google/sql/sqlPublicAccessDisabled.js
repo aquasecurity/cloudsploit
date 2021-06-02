@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/google');
 
 module.exports = {
-    title: 'SQL Public Access Disabled',
+    title: 'SQL No Public IPs',
     category: 'SQL',
     description: 'Ensure that SQL instances are using private IPs instead of public IPs.',
     more_info: 'Cloud SQL databases should always use private IP addresses which provide improved network security and lower latency.',
