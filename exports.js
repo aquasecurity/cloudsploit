@@ -507,6 +507,7 @@ module.exports = {
         'tlsVersionCheck'               : require(__dirname + '/plugins/azure/appservice/tlsVersionCheck.js'),
         'automatedBackupsConfigured'    : require(__dirname + '/plugins/azure/appservice/automatedBackupsConfigured.js'),
         'remoteDebuggingDisabled'       : require(__dirname + '/plugins/azure/appservice/remoteDebuggingDisabled.js'),
+        'appserviceAutomatedBackups'    : require(__dirname + '/plugins/azure/appservice/appserviceAutomatedBackups.js'),
         'alwaysOnEnabled'               : require(__dirname + '/plugins/azure/appservice/alwaysOnEnabled.js'),
 
         'rbacEnabled'                   : require(__dirname + '/plugins/azure/kubernetesservice/rbacEnabled.js'),
