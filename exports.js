@@ -123,7 +123,7 @@ module.exports = {
         'ebsSnapshotLifecycle'          : require(__dirname + '/plugins/aws/ec2/ebsSnapshotLifecycle.js'),
         'ebsOldSnapshots'               : require(__dirname + '/plugins/aws/ec2/ebsOldSnapshots.js'),
         'ebsSnapshotPrivate'            : require(__dirname + '/plugins/aws/ec2/ebsSnapshotPrivate.js'),
-        'ebsSnapshotPublic'            : require(__dirname + '/plugins/aws/ec2/ebsSnapshotPublic.js'),
+        'ebsSnapshotPublic'             : require(__dirname + '/plugins/aws/ec2/ebsSnapshotPublic.js'),
 
         'natMultiAz'                    : require(__dirname + '/plugins/aws/ec2/natMultiAz.js'),
         'defaultVpcInUse'               : require(__dirname + '/plugins/aws/ec2/defaultVpcInUse.js'),
@@ -371,8 +371,8 @@ module.exports = {
 
         'multipleSubnets'               : require(__dirname + '/plugins/azure/virtualnetworks/multipleSubnets.js'),
         'ddosStandardProtectionEnabled' : require(__dirname + '/plugins/azure/virtualnetworks/ddosStandardProtectionEnabled.js'),
+        'noNetworkGatewaysInUse'        : require(__dirname + '/plugins/azure/virtualnetworks/noNetworkGatewaysInUse.js'),
         'virtualNetworkPeering'         : require(__dirname + '/plugins/azure/virtualnetworks/virtualNetworkPeering.js'),
-        'noNetworkGatewaysInUse'          : require(__dirname + '/plugins/azure/virtualnetworks/noNetworkGatewaysInUse.js'),
         'noGatewayConnections'          : require(__dirname + '/plugins/azure/virtualnetworks/noGatewayConnections.js'),
         'managedNatGateway'             : require(__dirname + '/plugins/azure/virtualnetworks/managedNatGateway.js'),
 
@@ -399,6 +399,8 @@ module.exports = {
         'autoOsUpgradesEnabled'         : require(__dirname + '/plugins/azure/virtualmachines/autoOsUpgradesEnabled.js'),
         'noUnattachedDisks'             : require(__dirname + '/plugins/azure/virtualmachines/noUnattachedDisks.js'),
         'instantRestoreRetention'       : require(__dirname + '/plugins/azure/virtualmachines/instantRestoreRetention.js'),
+        'desiredSkuSize'                : require(__dirname + '/plugins/azure/virtualmachines/desiredSkuSize.js'),
+        'approvedVmExtension'           : require(__dirname + '/plugins/azure/virtualmachines/approvedVmExtension.js'),
         'guestLevelDiagnosticsEnabled'  : require(__dirname + '/plugins/azure/virtualmachines/guestLevelDiagnosticsEnabled.js'),
         'oldVmDiskSnapshots'            : require(__dirname + '/plugins/azure/virtualmachines/oldVmDiskSnapshots.js'),
         'vmAdAuthenticationEnabled'     : require(__dirname + '/plugins/azure/virtualmachines/vmAdAuthenticationEnabled.js'),
