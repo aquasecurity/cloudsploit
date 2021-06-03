@@ -41,9 +41,19 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/virtualNetworks?api-version=2020-03-01'
         }
     },
+    natGateways: {
+        listBySubscription: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/natGateways?api-version=2020-11-01'
+        }
+    },
     virtualMachines: {
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachines?api-version=2019-12-01'
+        }
+    },
+    snapshots: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/snapshots?api-version=2020-12-01'
         }
     },
     disks: {
@@ -267,6 +277,20 @@ var postcalls = {
             reliesOnPath: 'virtualMachineScaleSets.listAll',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/virtualMachines?api-version=2020-12-01'
+        }
+    },
+    virtualNetworkGateways: {
+        listByResourceGroup: {
+            reliesOnPath: 'resourceGroups.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/Microsoft.Network/virtualNetworkGateways?api-version=2020-11-01'
+        }
+    },
+    networkGatewayConnections: {
+        listByResourceGroup: {
+            reliesOnPath: 'resourceGroups.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/Microsoft.Network/connections?api-version=2020-11-01'
         }
     },
     blobContainers: {
