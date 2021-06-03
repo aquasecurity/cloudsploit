@@ -23,7 +23,7 @@ module.exports = {
 
             if (backendServices.err || !backendServices.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query backend services: ' + helpers.addError(backendServices), region);
+                    'Unable to query backend services', region, null, null, backendServices.err);
                 return rcb();
             }
 

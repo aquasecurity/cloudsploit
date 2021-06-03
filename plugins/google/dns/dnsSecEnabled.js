@@ -22,7 +22,7 @@ module.exports = {
             if (!managedZones) return rcb();
 
             if (managedZones.err || !managedZones.data) {
-                helpers.addResult(results, 3, 'Unable to query DNS managed zones: ' + helpers.addError(managedZones), region);
+                helpers.addResult(results, 3, 'Unable to query DNS managed zones: ' + helpers.addError(managedZones), region, null, null, managedZones.err);
                 return rcb();
             }
 

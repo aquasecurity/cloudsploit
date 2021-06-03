@@ -19,7 +19,7 @@ describe('clusterLeastPrivilege', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.equal('No clusters found');
+                expect(results[0].message).to.equal('No Kubernetes clusters found');
                 expect(results[0].region).to.equal('global');
                 done()
             };

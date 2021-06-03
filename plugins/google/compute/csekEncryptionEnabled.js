@@ -40,6 +40,7 @@ module.exports = {
                         myError[region] = [];
                     }
                     myError[region].push(zone);
+                    myError[region][zone] = disks.err;
                     return zcb();
                 }
 
@@ -65,7 +66,7 @@ module.exports = {
             if (myError[region] &&
                 zones[region] &&
                 (myError[region].join(',') === zones[region].join(','))) {
-                helpers.addResult(results, 3, 'Unable to query disks' , region);
+                helpers.addResult(results, 3, 'Unable to query disks', region, null, null, myError);
             } else if (!goodDisks.length && !badDisks.length) {
                 helpers.addResult(results, 0, 'No disks found in the region' , region);
             } else if (badDisks.length) {
