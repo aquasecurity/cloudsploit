@@ -19,7 +19,7 @@ module.exports = {
             ['instanceGroups', 'aggregatedList', ['global']]);
 
         if (instanceGroupsObj.err || !instanceGroupsObj.data) {
-            helpers.addResult(results, 3, 'Unable to query instance groups: ' + helpers.addError(instanceGroupsObj), 'global');
+            helpers.addResult(results, 3, 'Unable to query instance groups', 'global', null, null, instanceGroupsObj.err);
             return callback(null, results, source);
         }
 
@@ -45,13 +45,13 @@ module.exports = {
                 ['clusters', 'list', ['global']]);
 
             if (clusters.err || !clusters.data) {
-                helpers.addResult(results, 3, 'Unable to query autoscalers: ' + helpers.addError(clusters), 'global');
+                helpers.addResult(results, 3, 'Unable to query autoscalers', 'global', null, null, clusters.err);
             } else if (!clusters.data.length) {
                 helpers.addResult(results, 0, 'No instance groups found', 'global');
             } else {
                 clusters.data.forEach(cluster => {
                     if (cluster.nodePools &&
-                    cluster.nodePools.length) {
+                        cluster.nodePools.length) {
                         cluster.nodePools.forEach(nodePool => {
                             if (nodePool.autoscaling &&
                                 nodePool.autoscaling.enabled &&
@@ -73,7 +73,7 @@ module.exports = {
                 ['autoscalers', 'aggregatedList', ['global']]);
 
             if (autoscalersObj.err || !autoscalersObj.data) {
-                helpers.addResult(results, 3, 'Unable to query autoscalers: ' + helpers.addError(autoscalersObj), 'global');
+                helpers.addResult(results, 3, 'Unable to query autoscalers', 'global', null, null, autoscalersObj.err);
             } else {
                 var autoscalers = Object.values(autoscalersObj.data).filter(autoscaler =>{
                     return !autoscaler.warning;
