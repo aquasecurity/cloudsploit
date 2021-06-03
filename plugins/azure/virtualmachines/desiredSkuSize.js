@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'VM Desired SKU Size',
     category: 'Virtual Machines',
-    description: 'Ensures that virtual machines is using the desired SKU size.',
+    description: 'Ensures that virtual machines is using the desired SKU size. This is an opt in plugin and will not run if no desired SKU size is provided.',
     more_info: 'VM SKU size defines the compute power and data processing speed. VM SKU size should be chosen carefully to address compute requirements for the organization and to save un-necessary costs.',
     recommended_action: 'Resize VM to desired SKU size.',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/sizes',
@@ -12,9 +12,9 @@ module.exports = {
     settings: {
         vm_desired_sku_size: {
             name: 'VM Desired SKU Size',
-            description: 'SKU size for the virtual machines. Created virtual machine SKU sizes should match the desired SKU size',
-            regex: '/(^Basic_A(.*?)$)|(^Standard_(A|B|D|E|F|G|H|L|M|N)(.*?)$)/i',
-            default: 'standard_ds3_v2'
+            description: 'Comma separated desired SKU sizes for the virtual machines. Created virtual machine SKU sizes should match the desired SKU size.Please visit https://docs.microsoft.com/en-us/azure/virtual-machines/sizes for available sizes',
+            regex: '(.*,?)+',
+            default: ''
         }
     },
 
@@ -26,6 +26,10 @@ module.exports = {
         const config = {
             desiredSkuSize: settings.vm_desired_sku_size || this.settings.vm_desired_sku_size.default
         };
+
+        if (!config.desiredSkuSize.length) {
+            return callback(null, results, source);
+        }
 
         async.each(locations.virtualMachines, function(location, rcb) {
             const virtualMachines = helpers.addSource(cache, source,
@@ -44,12 +48,14 @@ module.exports = {
             }
 
             async.each(virtualMachines.data, function(virtualMachine, scb) {
-                let vmSkuSize = '';
+                let vmSkuSize;
                 if (virtualMachine.hardwareProfile && virtualMachine.hardwareProfile.vmSize) {
                     vmSkuSize = virtualMachine.hardwareProfile.vmSize.toLowerCase();
+                } else {
+                    return scb();
                 }
 
-                if (vmSkuSize === config.desiredSkuSize.toLowerCase()) {
+                if ((config.desiredSkuSize.toLowerCase()).includes(vmSkuSize)) {
                     helpers.addResult(results, 0, `Virtual machine is using the desired SKU size of '${config.desiredSkuSize.toLowerCase()}'`, location, virtualMachine.id);
                 } else {
                     helpers.addResult(results, 2, `Virtual machine is not using the desired SKU size of '${config.desiredSkuSize.toLowerCase()}'`, location, virtualMachine.id);
