@@ -56,24 +56,26 @@ module.exports = {
             });
 
             virtualMachineScaleSets.data.forEach(virtualMachineScaleSet => {
-                let autoScaleNotifications = {};
+                let autoScaleNotifications = [];
                 if (virtualMachineScaleSet.id &&
                     asMap[virtualMachineScaleSet.id.toLowerCase()] &&
                     asMap[virtualMachineScaleSet.id.toLowerCase()].notifications &&
                     asMap[virtualMachineScaleSet.id.toLowerCase()].notifications.length) {
-                    autoScaleNotifications = asMap[virtualMachineScaleSet.id.toLowerCase()].notifications[0];
+                    autoScaleNotifications = asMap[virtualMachineScaleSet.id.toLowerCase()].notifications;
                 }
 
-                if ((autoScaleNotifications.email && (
-                    autoScaleNotifications.email.sendToSubscriptionAdministrator ||
-                    autoScaleNotifications.email.sendToSubscriptionCoAdministrators ||
-                    (autoScaleNotifications.email.customEmails && autoScaleNotifications.email.customEmails.length))) || 
-                    (autoScaleNotifications.webhooks && autoScaleNotifications.webhooks.length)) {
-                    helpers.addResult(results, 0,
-                        'Virtual Machine Scale Set has autoscale notifications enabled', location, virtualMachineScaleSet.id);
-                } else {
-                    helpers.addResult(results, 2,
-                        'Virtual Machine Scale Set has autoscale notifications disabled', location, virtualMachineScaleSet.id);
+                for (let notification of autoScaleNotifications) {
+                    if ((notification.email && (
+                        notification.email.sendToSubscriptionAdministrator ||
+                        notification.email.sendToSubscriptionCoAdministrators ||
+                        (notification.email.customEmails && notification.email.customEmails.length))) || 
+                        (notification.webhooks && notification.webhooks.length)) {
+                        helpers.addResult(results, 0,
+                            'Virtual Machine Scale Set has autoscale notifications enabled', location, virtualMachineScaleSet.id);
+                    } else {
+                        helpers.addResult(results, 2,
+                            'Virtual Machine Scale Set has autoscale notifications disabled', location, virtualMachineScaleSet.id);
+                    }
                 }
             });
 
