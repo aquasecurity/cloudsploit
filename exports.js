@@ -690,6 +690,7 @@ module.exports = {
         'postgresqlLogConnections'      : require(__dirname + '/plugins/google/sql/postgresqlLogConnections.js'),
         'postgresqlLogDisconnections'   : require(__dirname + '/plugins/google/sql/postgresqlLogDisconnections.js'),
         'postgresqlLogCheckpoints'      : require(__dirname + '/plugins/google/sql/postgresqlLogCheckpoints.js'),
+        'sqlNoPublicIps'                : require(__dirname + '/plugins/google/sql/sqlNoPublicIps.js'),
         'sqlCrossDbOwnership'           : require(__dirname + '/plugins/google/sql/sqlCrossDbOwnership.js'),
         'sqlContainedDatabaseAuth'      : require(__dirname + '/plugins/google/sql/sqlContainedDatabaseAuth.js'),
 
