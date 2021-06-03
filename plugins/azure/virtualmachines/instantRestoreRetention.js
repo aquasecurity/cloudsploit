@@ -103,7 +103,7 @@ module.exports = {
                     }
 
                     if (retentionDays === 0) {
-                        helpers.addResult(results, 0, 'No instant restore backup is configured', location, virtualMachine.id);
+                        helpers.addResult(results, 2, 'No instant restore backup is configured', location, virtualMachine.id);
                     } else if (retentionDays >= config.retentionPeriod) {
                         helpers.addResult(results, 0, `VM instant restore backups are configured to be retained for ${retentionDays} of ${config.retentionPeriod} days desired limit`, location, virtualMachine.id);
                     } else {
