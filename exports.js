@@ -371,8 +371,8 @@ module.exports = {
 
         'multipleSubnets'               : require(__dirname + '/plugins/azure/virtualnetworks/multipleSubnets.js'),
         'ddosStandardProtectionEnabled' : require(__dirname + '/plugins/azure/virtualnetworks/ddosStandardProtectionEnabled.js'),
-        'virtualNetworkPeering'         : require(__dirname + '/plugins/azure/virtualnetworks/virtualNetworkPeering.js'),
         'noNetworkGatewaysInUse'        : require(__dirname + '/plugins/azure/virtualnetworks/noNetworkGatewaysInUse.js'),
+        'virtualNetworkPeering'         : require(__dirname + '/plugins/azure/virtualnetworks/virtualNetworkPeering.js'),
         'noGatewayConnections'          : require(__dirname + '/plugins/azure/virtualnetworks/noGatewayConnections.js'),
         'managedNatGateway'             : require(__dirname + '/plugins/azure/virtualnetworks/managedNatGateway.js'),
 
@@ -387,6 +387,8 @@ module.exports = {
         'scaleSetMultiAz'               : require(__dirname + '/plugins/azure/virtualmachines/scaleSetMultiAz.js'),
         'scaleSetAutoscaleEnabled'      : require(__dirname + '/plugins/azure/virtualmachines/scaleSetAutoscaleEnabled.js'),
         'vmAvailabilitySetLimit'        : require(__dirname + '/plugins/azure/virtualmachines/vmAvailabilitySetLimit.js'),
+        'vmDailyBackupRetention'        : require(__dirname + '/plugins/azure/virtualmachines/vmDailyBackupRetention.js'),
+        'vmBackupsEnabled'              : require(__dirname + '/plugins/azure/virtualmachines/vmBackupsEnabled.js'),
         'premiumSsdDisabled'            : require(__dirname + '/plugins/azure/virtualmachines/premiumSsdDisabled.js'),
         'vmManagedDisks'                : require(__dirname + '/plugins/azure/virtualmachines/vmManagedDisks.js'),
         'autoInstanceRepairsEnabled'    : require(__dirname + '/plugins/azure/virtualmachines/autoInstanceRepairsEnabled.js'),
@@ -397,6 +399,9 @@ module.exports = {
         'autoOsUpgradesEnabled'         : require(__dirname + '/plugins/azure/virtualmachines/autoOsUpgradesEnabled.js'),
         'noUnattachedDisks'             : require(__dirname + '/plugins/azure/virtualmachines/noUnattachedDisks.js'),
         'autoscaleNotificationsEnabled' : require(__dirname + '/plugins/azure/virtualmachines/autoscaleNotificationsEnabled.js'),
+        'instantRestoreRetention'       : require(__dirname + '/plugins/azure/virtualmachines/instantRestoreRetention.js'),
+        'desiredSkuSize'                : require(__dirname + '/plugins/azure/virtualmachines/desiredSkuSize.js'),
+        'approvedVmExtension'           : require(__dirname + '/plugins/azure/virtualmachines/approvedVmExtension.js'),
         'guestLevelDiagnosticsEnabled'  : require(__dirname + '/plugins/azure/virtualmachines/guestLevelDiagnosticsEnabled.js'),
         'oldVmDiskSnapshots'            : require(__dirname + '/plugins/azure/virtualmachines/oldVmDiskSnapshots.js'),
         'vmAdAuthenticationEnabled'     : require(__dirname + '/plugins/azure/virtualmachines/vmAdAuthenticationEnabled.js'),
