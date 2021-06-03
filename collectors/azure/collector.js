@@ -263,6 +263,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/flowLogs?api-version=2020-11-01'
         }
     },
+    virtualNetworkPeerings: {
+        list: {
+            reliesOnPath: 'virtualNetworks.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/virtualNetworkPeerings?api-version=2020-11-01'
+        }
+    },
     configurations: {
         listByServer: {
             reliesOnPath: 'servers.listPostgres',
@@ -275,6 +282,13 @@ var postcalls = {
             reliesOnPath: 'servers.listPostgres',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/administrators?api-version=2017-12-01'
+        }
+    },
+    virtualMachines: {
+        get: {
+            reliesOnPath: 'virtualMachines.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}?api-version=2020-12-01'
         }
     },
     virtualMachineExtensions: {
