@@ -244,6 +244,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/flowLogs?api-version=2020-11-01'
         }
     },
+    virtualNetworkPeerings: {
+        list: {
+            reliesOnPath: 'virtualNetworks.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/virtualNetworkPeerings?api-version=2020-11-01'
+        }
+    },
     configurations: {
         listByServer: {
             reliesOnPath: 'servers.listPostgres',

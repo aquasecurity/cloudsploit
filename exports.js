@@ -371,6 +371,7 @@ module.exports = {
 
         'multipleSubnets'               : require(__dirname + '/plugins/azure/virtualnetworks/multipleSubnets.js'),
         'ddosStandardProtectionEnabled' : require(__dirname + '/plugins/azure/virtualnetworks/ddosStandardProtectionEnabled.js'),
+        'virtualNetworkPeering'         : require(__dirname + '/plugins/azure/virtualnetworks/virtualNetworkPeering.js'),
         'noNetworkGatewaysInUse'          : require(__dirname + '/plugins/azure/virtualnetworks/noNetworkGatewaysInUse.js'),
         'noGatewayConnections'          : require(__dirname + '/plugins/azure/virtualnetworks/noGatewayConnections.js'),
         'managedNatGateway'              : require(__dirname + '/plugins/azure/virtualnetworks/managedNatGateway.js'),
