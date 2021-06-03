@@ -397,6 +397,7 @@ module.exports = {
         'autoOsUpgradesEnabled'         : require(__dirname + '/plugins/azure/virtualmachines/autoOsUpgradesEnabled.js'),
         'noUnattachedDisks'             : require(__dirname + '/plugins/azure/virtualmachines/noUnattachedDisks.js'),
         'desiredSkuSize'                : require(__dirname + '/plugins/azure/virtualmachines/desiredSkuSize.js'),
+        'approvedVmExtension'           : require(__dirname + '/plugins/azure/virtualmachines/approvedVmExtension.js'),
         'guestLevelDiagnosticsEnabled'  : require(__dirname + '/plugins/azure/virtualmachines/guestLevelDiagnosticsEnabled.js'),
         'oldVmDiskSnapshots'            : require(__dirname + '/plugins/azure/virtualmachines/oldVmDiskSnapshots.js'),
         'vmAdAuthenticationEnabled'     : require(__dirname + '/plugins/azure/virtualmachines/vmAdAuthenticationEnabled.js'),
