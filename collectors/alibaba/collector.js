@@ -236,6 +236,13 @@ var postcalls = [
                 filterKey: ['DBInstanceId'],
                 filterValue: ['DBInstanceId'],
                 apiVersion: '2014-08-15'
+            },
+            DescribeDBInstanceIPArrayList: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'DescribeDBInstances',
+                filterKey: ['DBInstanceId'],
+                filterValue: ['DBInstanceId'],
+                apiVersion: '2014-08-15'
             }
         },
         OSS: {
