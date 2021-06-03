@@ -18,8 +18,8 @@ jobs:
           ignore_words_list: iam,\"tRe\",AKS,aks,optin,callInt,callInt
       - run: npm install
 
-      - name: NPM Test
-        run: npm test
-
       - name: Lint
         run: npm run lint
+
+      - name: NPM Test
+        run: npm test

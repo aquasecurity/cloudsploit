@@ -64,18 +64,18 @@ module.exports = {
                     autoScaleNotifications = asMap[virtualMachineScaleSet.id.toLowerCase()].notifications;
                 }
 
-                for (let notification of autoScaleNotifications) {
-                    if ((notification.email && (
+                let found = autoScaleNotifications.find(notification =>
+                    (notification.email && (
                         notification.email.sendToSubscriptionAdministrator ||
                         notification.email.sendToSubscriptionCoAdministrators ||
                         (notification.email.customEmails && notification.email.customEmails.length))) || 
-                        (notification.webhooks && notification.webhooks.length)) {
-                        helpers.addResult(results, 0,
-                            'Virtual Machine Scale Set has autoscale notifications enabled', location, virtualMachineScaleSet.id);
-                    } else {
-                        helpers.addResult(results, 2,
-                            'Virtual Machine Scale Set has autoscale notifications disabled', location, virtualMachineScaleSet.id);
-                    }
+                        (notification.webhooks && notification.webhooks.length));
+                if (found) {
+                    helpers.addResult(results, 0,
+                        'Virtual Machine Scale Set has autoscale notifications enabled', location, virtualMachineScaleSet.id);
+                } else {
+                    helpers.addResult(results, 2,
+                        'Virtual Machine Scale Set has autoscale notifications disabled', location, virtualMachineScaleSet.id);
                 }
             });
 
