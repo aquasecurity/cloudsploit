@@ -49,9 +49,17 @@ const createCache = (virtualNetworks, virtualNetworkPeerings) => {
 
 describe('virtualNetworkPeering', function() {
     describe('run', function() {
-        it('should give passing result if No existing virtual networks found', function(done) {
+        it('should not run plugin if subscription id is not provided and opt in is set to false', function(done) {
             const cache = createCache([]);
             virtualNetworkPeering.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(0);
+                done();
+            });
+        });
+
+        it('should give passing result if No existing virtual networks found', function(done) {
+            const cache = createCache([]);
+            virtualNetworkPeering.run(cache, { enable_virtual_network_peering: 'true' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No existing Virtual Networks found');
@@ -62,7 +70,7 @@ describe('virtualNetworkPeering', function() {
 
         it('should give unknown result if unable to query for virtual networks', function(done) {
             const cache = createCache();
-            virtualNetworkPeering.run(cache, {}, (err, results) => {
+            virtualNetworkPeering.run(cache, { enable_virtual_network_peering: 'true' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for Virtual Networks');
@@ -73,7 +81,7 @@ describe('virtualNetworkPeering', function() {
 
         it('should give passing result if No existing Virtual Network Peerings found', function(done) {
             const cache = createCache([virtualNetworks[0]], []);
-            virtualNetworkPeering.run(cache, {}, (err, results) => {
+            virtualNetworkPeering.run(cache, { enable_virtual_network_peering: 'true' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No existing Virtual Network Peerings found');
@@ -84,7 +92,7 @@ describe('virtualNetworkPeering', function() {
 
         it('should give unknown result if unable to query for Virtual Network Peerings', function(done) {
             const cache = createCache([virtualNetworks[0]]);
-            virtualNetworkPeering.run(cache, {}, (err, results) => {
+            virtualNetworkPeering.run(cache, { enable_virtual_network_peering: 'true' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for Virtual Network Peerings');
@@ -106,7 +114,7 @@ describe('virtualNetworkPeering', function() {
 
         it('should give failing result if subscription is not whitelisted', function(done) {
             const cache = createCache([virtualNetworks[0]], [virtualNetworkPeerings[0]]);
-            virtualNetworkPeering.run(cache, {}, (err, results) => {
+            virtualNetworkPeering.run(cache, { enable_virtual_network_peering: 'true' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Vitual network has peering with these unknown subscriptions: 123');

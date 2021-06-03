@@ -15,6 +15,12 @@ module.exports = {
             description: 'Subscription Ids for remote virtual networks which should be allowed for peering',
             regex: '/^([a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12},?)+$/',
             default: ''
+        },
+        enable_virtual_network_peering: {
+            name: 'Virtual Network Peering',
+            description: 'This is an opt-in plugin. This value should be set to true to enable this plugin',
+            regex: '^(true|false)$',
+            default: 'false'
         }
     },
 
@@ -24,8 +30,13 @@ module.exports = {
         var locations = helpers.locations(settings.govcloud);
 
         const config = {
+            peeringEnabled: settings.enable_virtual_network_peering || this.settings.enable_virtual_network_peering.default,
             whiteListedSubscriptions: settings.whitelisted_peering_subscriptions || this.settings.whitelisted_peering_subscriptions.default
         };
+
+        if (config.peeringEnabled === 'false' && !config.whiteListedSubscriptions.length) {
+            return callback(null, results, source);
+        }
 
         async.each(locations.virtualNetworks, function(location, rcb){
             var virtualNetworks = helpers.addSource(cache, source, 
