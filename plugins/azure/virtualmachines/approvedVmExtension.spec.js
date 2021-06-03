@@ -46,7 +46,7 @@ describe('approvedVmExtension', function() {
     describe('run', function() {
         it('should give passing result if no virtual machines', function(done) {
             const cache = createCache([]);
-            approvedVmExtension.run(cache, {}, (err, results) => {
+            approvedVmExtension.run(cache, { vm_approved_extensions: 'ext' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No Virtual Machines found');
@@ -57,7 +57,7 @@ describe('approvedVmExtension', function() {
 
         it('should give unknown result if unable to query for virtual machines', function(done) {
             const cache = createCache();
-            approvedVmExtension.run(cache, {}, (err, results) => {
+            approvedVmExtension.run(cache, { vm_approved_extensions: 'ext' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for Virtual Machines');
@@ -68,7 +68,7 @@ describe('approvedVmExtension', function() {
 
         it('should give passing result if no virtual machine extensions', function(done) {
             const cache = createCache([virtualMachines[0]], []);
-            approvedVmExtension.run(cache, {}, (err, results) => {
+            approvedVmExtension.run(cache, { vm_approved_extensions: 'ext' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No VM Extensions found');
@@ -79,21 +79,10 @@ describe('approvedVmExtension', function() {
 
         it('should give unknown result if unable to query for virtual machine extensions', function(done) {
             const cache = createCache([virtualMachines[0]]);
-            approvedVmExtension.run(cache, {}, (err, results) => {
+            approvedVmExtension.run(cache, { vm_approved_extensions: 'ext' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for VM Extensions');
-                expect(results[0].region).to.equal('eastus');
-                done();
-            });
-        });
-
-        it('should give passing result if organization has no restrictions for extensions', function(done) {
-            const cache = createCache([virtualMachines[0]], [virtualMachineExtension[0]]);
-            approvedVmExtension.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No organizational restrictions for VM extensions');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -104,7 +93,7 @@ describe('approvedVmExtension', function() {
             approvedVmExtension.run(cache, { vm_approved_extensions: 'TestExtension' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Installed extension is approved by the organization');
+                expect(results[0].message).to.include('Installed extensions are approved by the organization');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -115,7 +104,7 @@ describe('approvedVmExtension', function() {
             approvedVmExtension.run(cache, { vm_approved_extensions: 'Extension' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Installed extension is not approved by the organization');
+                expect(results[0].message).to.include('Installed extensions are not approved by the organization');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

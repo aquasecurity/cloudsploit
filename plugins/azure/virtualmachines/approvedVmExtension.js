@@ -13,9 +13,9 @@ module.exports = {
     settings: {
         vm_approved_extensions: {
             name: 'Approved VM extensions',
-            description: 'Comma separated approved extension names',
-            default: '',
-            regex: '^.*$'
+            description: 'List of comma separated approved extension names',
+            regex: '^.*$',
+            default: ''
         }
     },
 
@@ -25,8 +25,10 @@ module.exports = {
         var locations = helpers.locations(settings.govcloud);
 
         const config = {
-            approvedExtensions: (settings.vm_approved_extensions || this.settings.vm_approved_extensions.default)
+            approvedExtensions: settings.vm_approved_extensions || this.settings.vm_approved_extensions.default
         };
+
+        if (!config.approvedExtensions.length) return callback(null, results, source);
 
         var extensionsList = config.approvedExtensions.split(',');
 
@@ -61,15 +63,12 @@ module.exports = {
                 }      
                 
                 virtualMachineExtensions.data.forEach(function(virtualMachineExtension) {
-                    if (config.approvedExtensions.length) {
-                        let found = extensionsList.some(extension => extension.trim() === virtualMachineExtension.name);
-                        if (found) {
-                            helpers.addResult(results, 0, 'Installed extension is approved by the organization', location, virtualMachineExtension.id);
-                        } else {
-                            helpers.addResult(results, 2, 'Installed extension is not approved by the organization', location, virtualMachineExtension.id);
-                        }
+                    let found = extensionsList.some(extension => extension.trim() === virtualMachineExtension.name);
+
+                    if (found) {
+                        helpers.addResult(results, 0, 'Installed extensions are approved by the organization', location, virtualMachineExtension.id);
                     } else {
-                        helpers.addResult(results, 0, 'No organizational restrictions for VM extensions', location, virtualMachine.id);
+                        helpers.addResult(results, 2, 'Installed extensions are not approved by the organization', location, virtualMachineExtension.id);
                     }
                 });
                 scb();
