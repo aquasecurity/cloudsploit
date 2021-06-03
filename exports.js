@@ -371,6 +371,7 @@ module.exports = {
 
         'multipleSubnets'               : require(__dirname + '/plugins/azure/virtualnetworks/multipleSubnets.js'),
         'ddosStandardProtectionEnabled' : require(__dirname + '/plugins/azure/virtualnetworks/ddosStandardProtectionEnabled.js'),
+        'virtualNetworkPeering'         : require(__dirname + '/plugins/azure/virtualnetworks/virtualNetworkPeering.js'),
         'noNetworkGatewaysInUse'          : require(__dirname + '/plugins/azure/virtualnetworks/noNetworkGatewaysInUse.js'),
         'noGatewayConnections'          : require(__dirname + '/plugins/azure/virtualnetworks/noGatewayConnections.js'),
         'managedNatGateway'              : require(__dirname + '/plugins/azure/virtualnetworks/managedNatGateway.js'),
@@ -396,6 +397,7 @@ module.exports = {
         'autoOsUpgradesEnabled'         : require(__dirname + '/plugins/azure/virtualmachines/autoOsUpgradesEnabled.js'),
         'noUnattachedDisks'             : require(__dirname + '/plugins/azure/virtualmachines/noUnattachedDisks.js'),
         'approvedVmExtension'           : require(__dirname + '/plugins/azure/virtualmachines/approvedVmExtension.js'),
+        'guestLevelDiagnosticsEnabled'  : require(__dirname + '/plugins/azure/virtualmachines/guestLevelDiagnosticsEnabled.js'),
         'oldVmDiskSnapshots'            : require(__dirname + '/plugins/azure/virtualmachines/oldVmDiskSnapshots.js'),
         'vmAdAuthenticationEnabled'       : require(__dirname + '/plugins/azure/virtualmachines/vmAdAuthenticationEnabled.js'),
         'performanceDiagnosticsEnabled' : require(__dirname + '/plugins/azure/virtualmachines/performanceDiagnosticsEnabled.js'),
@@ -691,11 +693,15 @@ module.exports = {
         'postgresqlLogConnections'      : require(__dirname + '/plugins/google/sql/postgresqlLogConnections.js'),
         'postgresqlLogDisconnections'   : require(__dirname + '/plugins/google/sql/postgresqlLogDisconnections.js'),
         'postgresqlLogCheckpoints'      : require(__dirname + '/plugins/google/sql/postgresqlLogCheckpoints.js'),
+        'sqlNoPublicIps'                : require(__dirname + '/plugins/google/sql/sqlNoPublicIps.js'),
+        'sqlCrossDbOwnership'           : require(__dirname + '/plugins/google/sql/sqlCrossDbOwnership.js'),
+        'sqlContainedDatabaseAuth'      : require(__dirname + '/plugins/google/sql/sqlContainedDatabaseAuth.js'),
 
         'bucketVersioning'              : require(__dirname + '/plugins/google/storage/bucketVersioning.js'),
         'bucketLogging'                 : require(__dirname + '/plugins/google/storage/bucketLogging.js'),
         'bucketAllUsersPolicy'          : require(__dirname + '/plugins/google/storage/bucketAllUsersPolicy.js'),
         'bucketRetentionPolicy'         : require(__dirname + '/plugins/google/storage/bucketRetentionPolicy.js'),
+        'bucketUniformAccess'           : require(__dirname + '/plugins/google/storage/bucketUniformAccess.js'),
 
         'clbHttpsOnly'                  : require(__dirname + '/plugins/google/clb/clbHttpsOnly.js'),
         'clbNoInstances'                : require(__dirname + '/plugins/google/clb/clbNoInstances.js'),
@@ -788,7 +794,9 @@ module.exports = {
       
         'rdsLogDuration'                : require(__dirname + '/plugins/alibaba/rds/rdsLogDuration.js'),
         'rdsSslEncryptionEnabled'       : require(__dirname + '/plugins/alibaba/rds/rdsSslEncryptionEnabled.js'),
-      
+        'rdsAuditingEnabled'            : require(__dirname + '/plugins/alibaba/rds/rdsAuditingEnabled.js'),
+        'rdsPublicAccess'               : require(__dirname + '/plugins/alibaba/rds/rdsPublicAccess.js'),
+
         'actiontrailGlobalExportLogs'   : require(__dirname + '/plugins/alibaba/actiontrail/actiontrailGlobalExportLogs.js')
     }
 };
