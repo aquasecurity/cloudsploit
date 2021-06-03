@@ -398,6 +398,7 @@ module.exports = {
         'approvedVmImage'               : require(__dirname + '/plugins/azure/virtualmachines/approvedVmImage.js'),
         'autoOsUpgradesEnabled'         : require(__dirname + '/plugins/azure/virtualmachines/autoOsUpgradesEnabled.js'),
         'noUnattachedDisks'             : require(__dirname + '/plugins/azure/virtualmachines/noUnattachedDisks.js'),
+        'autoscaleNotificationsEnabled' : require(__dirname + '/plugins/azure/virtualmachines/autoscaleNotificationsEnabled.js'),
         'instantRestoreRetention'       : require(__dirname + '/plugins/azure/virtualmachines/instantRestoreRetention.js'),
         'desiredSkuSize'                : require(__dirname + '/plugins/azure/virtualmachines/desiredSkuSize.js'),
         'approvedVmExtension'           : require(__dirname + '/plugins/azure/virtualmachines/approvedVmExtension.js'),
