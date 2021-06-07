@@ -53,8 +53,7 @@ module.exports = {
                     helpers.addResult(results, 0,
                         'Server-Side Encryption is enabled for SNS topic',
                         region, resource);
-                } 
-                else {
+                } else {
                     helpers.addResult(results, 2,
                         'Server-Side Encryption is not enabled for SNS topic',
                         region, resource);
