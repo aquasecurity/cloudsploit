@@ -10,6 +10,12 @@ module.exports = {
     recommended_action: 'Enable system or user-assigned identities for all App Services and avoid storing credentials in code.',
     link: 'https://docs.microsoft.com/en-us/azure/app-service/overview-managed-identity',
     apis: ['webApps:list'],
+    remediation_min_version: '202101041500',
+    remediation_description: 'The web app will be assigned a system manager identity',
+    apis_remediate: ['webApps:list'],
+    actions: {remediate:['webApps:update'], rollback:['webApps:update']},
+    permissions: {remediate: ['webApps:update'], rollback: ['webApps:update']},
+    realtime_triggers: ['microsoftweb:sites:write'],
 
     run: function(cache, settings, callback) {
         const results = [];
@@ -48,5 +54,50 @@ module.exports = {
             // Global checking goes here
             callback(null, results, source);
         });
+    },
+    remediate: function(config, cache, settings, resource, callback) {
+        var remediation_file = settings.remediation_file;
+        var putCall = this.actions.remediate;
+
+        // inputs specific to the plugin
+        var pluginName = 'identityEnabled';
+        var baseUrl = 'https://management.azure.com/{resource}?api-version=2019-08-01';
+        var method = 'PATCH';
+
+        // for logging purposes
+        var webAppNameArr = resource.split('/');
+        var webAppName = webAppNameArr[webAppNameArr.length - 1];
+
+        // create the params necessary for the remediation
+        if (settings.region) {
+            var body = {
+                'location': settings.region,
+                'identity': {
+                    'type': 'SystemAssigned'
+                }
+
+            };
+
+            // logging
+            remediation_file['pre_remediate']['actions'][pluginName][resource] = {
+                'ManagedIdentity': 'Disabled',
+                'WebApp': webAppName
+            };
+
+            helpers.remediatePlugin(config, method, body, baseUrl, resource, remediation_file, putCall, pluginName, function(err, action) {
+                if (err) return callback(err);
+                if (action) action.action = putCall;
+
+
+                remediation_file['post_remediate']['actions'][pluginName][resource] = action;
+                remediation_file['remediate']['actions'][pluginName][resource] = {
+                    'Action': 'Enabled'
+                };
+
+                callback(null, action);
+            });
+        } else {
+            callback('No region found');
+        }
     }
 };

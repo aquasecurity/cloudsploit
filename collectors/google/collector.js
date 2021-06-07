@@ -259,7 +259,7 @@ var collect = function(GoogleConfig, settings, callback) {
 
     helpers.authenticate(GoogleConfig)
         .then(client => {
-            
+
             async.eachOfLimit(calls, 10, function(call, service, serviceCb) {
                 if (!collection[service]) collection[service] = {};
 

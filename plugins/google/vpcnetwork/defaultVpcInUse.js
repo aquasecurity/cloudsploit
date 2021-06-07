@@ -28,7 +28,7 @@ module.exports = {
             if (!networks) return rcb();
 
             if (networks.err || !networks.data) {
-                helpers.addResult(results, 3, 'Unable to query networks: ' + helpers.addError(networks), region);
+                helpers.addResult(results, 3, 'Unable to query networks: ' + helpers.addError(networks), region, null, null, networks.err);
                 return rcb();
             }
 
@@ -59,7 +59,7 @@ module.exports = {
                     } else if (instances.data.length) {
                         instances.data.forEach(instance => {
                             instance.networkInterfaces.forEach(interface => {
-                                if (interface.network = vpcUrl) {
+                                if (interface.network == vpcUrl) {
                                     numInstances += 1;
                                 }
                             });

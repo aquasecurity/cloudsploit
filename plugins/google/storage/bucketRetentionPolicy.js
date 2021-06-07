@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Storage Bucket Retention Policy',
     category: 'Storage',
-    description: 'Ensures bucket retention policy is set and locked to prevent deletion or updation of bucket objects or retention policy.',
+    description: 'Ensures bucket retention policy is set and locked to prevent deleting or updating of bucket objects or retention policy.',
     more_info: 'Configuring retention policy for bucket prevents accidental deletion as well as modification of bucket objects. This retention policy should also be locked to prevent policy deletion.',
     link: 'https://cloud.google.com/storage/docs/bucket-lock?_ga=2.221806616.-1645770163.1613190642',
     recommended_action: 'Modify bucket to configure retention policy and lock retention policy.',
@@ -34,11 +34,11 @@ module.exports = {
             if (!buckets) return rcb();
 
             if (buckets.err || !buckets.data) {
-                helpers.addResult(results, 3, 'Unable to query storage buckets: ' + helpers.addError(buckets), region);
+                helpers.addResult(results, 3, 'Unable to query storage buckets: ' + helpers.addError(buckets), region, null, null, buckets.err);
                 return rcb();
             }
 
-            if (!buckets.data.length) {
+            if (!helpers.hasBuckets(buckets.data)) {
                 helpers.addResult(results, 0, 'No storage buckets found', region);
                 return rcb();
             }
