@@ -14,15 +14,6 @@ var metadata ="package service.testTitle\
 
 // var failRule = "\r\nfail[res]  {conditionProperty\r\n\tres := {\r\n\t\t\t\t\"msg\": \"The service resource property value is not set to condition.value\",\r\n\t\t\t\t\"status\": 2\r\n\t\t\t}\r\n}\r\n\r\n\r\n";
 var passRule = "\r\npass[res] {conditionProperty\r\n\tres := {\r\n\t\t\t   \"msg\": \"The service resource property value is set to condition.value\",\r\n\t\t\t   \"status\": 0\r\n\t\t   }\r\n}\r\n\r\n\r\n"
-//var warnRule = "\r\nwarn[res]  {\r\n\tinput.data.Attributes\r\n\tinput.data.Attributes.KmsMasterKeyId\r\n\tinput.data.Attributes.KmsMasterKeyId == \"alias/aws/sqs\"\r\n\tres := {\r\n\t\t\t\t\"msg\": \"The SQS queue does not use a KMS key for SSE\",\r\n\t\t\t\t\"status\": 1\r\n\t\t   \t}\r\n}\r\n\r\n\r\n"
-
-// var rego = "package sqs.encryption\r\n\r\n__rego_metadata__ := {\r\n    \"title\": \"SQS Encrypted through OPA\",\r\n    \"category\": \"SQS\",\r\n    \"description\": \"Ensures SQS encryption is enabled\",\r\n    \"apis\": [\"SQS:getQueueAttributes\", \"SQS:listQueues\"],\r\n    \"rules\": {\r\n                \"2\": \"data.sqs.encryption.fail\",\r\n                \"1\": \"data.sqs.encryption.warn\",\r\n                \"0\": \"data.sqs.encryption.pass\"\r\n            }\r\n}\r\n# encryption disabled" +
-//     "\r\nfail[res]  {\r\n\tinput.data.Attributes\r\n    not input.data.Attributes.KmsMasterKeyId\r\n    res := {\r\n        \t    \"msg\": \"The SQS queue does not use a KMS key for SSE\",\r\n        \t    \"status\": 2\r\n        \t}\r\n}" +
-//     "\r\n\r\n\r\n# encryption enabled with default key" +
-//     "\r\nwarn[res]  {\r\n\tinput.data.Attributes\r\n\tinput.data.Attributes.KmsMasterKeyId\r\n\tinput.data.Attributes.KmsMasterKeyId == \"alias/aws/sqs\"\r\n    res := {\r\n                \"msg\": \"The SQS queue does not use a KMS key for SSE\",\r\n                \"status\": 1\r\n           \t}\r\n}" +
-//     "\r\n\r\n\r\n# encryption enabled with CMK key" +
-//     "\r\npass[res] {\r\n    input.data.Attributes\r\n\tinput.data.Attributes.KmsMasterKeyId\r\n\tkeyid := input.data.Attributes.KmsMasterKeyId\r\n\tkeyid != \"alias/aws/sqs\"\r\n\tres := {\r\n               \"msg\": \"The SQS queue does not use a KMS key for SSE\",\r\n               \"status\": 0\r\n           }\r\n}\r\n\r\n\r\n"
-
 
 var convertToOpa = function(asl){
     var rego ,rules;
