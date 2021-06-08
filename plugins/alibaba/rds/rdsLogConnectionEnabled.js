@@ -5,9 +5,10 @@ module.exports = {
     title: 'RDS Log Connection Enabled',
     category: 'RDS',
     description: 'Ensure that log_connections parameter is set to ON for RDS instances.',
-    more_info: 'RDS instance provide the feature of logging details of an attempted or successful connection to the server. Log data can be used to identify, troubleshoot, and repair configuration errors and suboptimal performance.',
-    link: '',
-    recommended_action: 'Modify RDS DB instance log_connection parameter to ON',
+    more_info: 'RDS instance provide the feature of logging details of an attempted or successful connection to the server ' + 
+        'to identify, troubleshoot, and repair configuration errors and suboptimal performance.',
+    link: 'https://partners-intl.aliyun.com/help/doc-detail/26179.htm',
+    recommended_action: 'Modify RDS DB instance to set value for log_connection parameter to ON',
     apis: ['RDS:DescribeDBInstances', 'RDS:DescribeParameters', 'STS:GetCallerIdentity'],
 
     run: function(cache, settings, callback) {
