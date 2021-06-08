@@ -2,6 +2,15 @@
 
 module.exports = {
     credentials: {
+        ali_baba: {
+            // OPTION 1: If using a credential JSON file, enter the path below
+            // credential_file: '/path/to/file.json',
+            // OPTION 2: If using hard-coded credentials, enter them below
+            // access_key: process.env.AWS_ACCESS_KEY_ID || '',
+            // secret_access_key: process.env.AWS_SECRET_ACCESS_KEY || '',
+            // session_token: process.env.AWS_SESSION_TOKEN || '',
+            // plugins_remediate: ['bucketEncryptionInTransit']
+        },
         aws: {
             // OPTION 1: If using a credential JSON file, enter the path below
             // credential_file: '/path/to/file.json',
