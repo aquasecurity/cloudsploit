@@ -2,12 +2,12 @@ var async = require('async');
 var helpers = require('../../../helpers/alibaba');
 
 module.exports = {
-    title: 'RDS Auditing Retention Period',
+    title: 'RDS SQL Audit Log Retention Period',
     category: 'RDS',
-    description: 'Ensure that RDS DB instances SQL Audit Retention is configured to be greater than 90 days',
+    description: 'Ensure that RDS DB instances SQL Audit Log retention period is configured to be greater than 180 days',
     more_info: 'RDS instances provides auditing feature that can be used to log all the events and activities which can be used later in case of any suspicions or security reasons.',
     link: 'https://partners-intl.aliyun.com/help/doc-detail/118678.htm',
-    recommended_action: 'Modify RDS DB instances to set retention period to be greater than 180 days',
+    recommended_action: 'Modify RDS DB instances to set SQL Audit Log retention period to be greater than 180 days',
     apis: ['RDS:DescribeDBInstances', 'RDS:DescribeSQLCollectorRetention', 'STS:GetCallerIdentity'],
 
     run: function(cache, settings, callback) {
@@ -57,31 +57,33 @@ module.exports = {
 
                 var describeSqlAuditRetention = helpers.addSource(cache, source,
                     ['rds', 'DescribeSQLCollectorRetention', region, instance.DBInstanceId]);
-                console.log(JSON.stringify(describeSqlAuditRetention, null, 2));
+                console.log('SQL Detail ', JSON.stringify(describeSqlAuditRetention, null, 2));
 
-        //         if (!describeSqlAuditRetention || describeSqlAuditRetention.err || !describeSqlAuditRetention.data) {
-        //             helpers.addResult(results, 3,
-        //                 `Unable to query DB sql auditing policy: ${helpers.addError(describeSqlAuditRetention)}`,
-        //                 region, resource);
-        //             return cb();
-        //         }
+                if (!describeSqlAuditRetention || describeSqlAuditRetention.err || !describeSqlAuditRetention.data) {
+                    helpers.addResult(results, 3,
+                        `Unable to query DB sql audit log retention: ${helpers.addError(describeSqlAuditRetention)}`,
+                        region, resource);
+                    return cb();
+                }
 
-        //         if (describeSqlAuditRetention.data.SQLCollectorStatus == 'Enable') {
-        //             helpers.addResult(results, 0,
-        //                 'RDS DB instance have sql auditing enabled',
-        //                 region, resource);
-        //         } else {
-        //             helpers.addResult(results, 2,
-        //                 'RDS DB instance does not have sql auditing enabled',
-        //                 region, resource);
-        //         }
+                const currentRetentionPeriod = parseInt(describeSqlAuditRetention.data.ConfigValue);
 
-        //         cb();
-        //     }, function(){
-        //         rcb();
-            // });
-        // }, function(){
-        //     callback(null, results, source);
-        // });
+                if (currentRetentionPeriod >= 180) {
+                    helpers.addResult(results, 0,
+                        'RDS DB instance sql audit log retention is configured to be greater than 180 days',
+                        region, resource);
+                } else {
+                    helpers.addResult(results, 2,
+                        'RDS DB instance sql audit log retention is configured to be less than 180 days',
+                        region, resource);
+                }
+
+                cb();
+            }, function(){
+                rcb();
+            });
+        }, function(){
+            callback(null, results, source);
+        });
     }
 };
