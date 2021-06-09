@@ -801,7 +801,7 @@ module.exports = {
         'rdsSslEncryptionEnabled'       : require(__dirname + '/plugins/alibaba/rds/rdsSslEncryptionEnabled.js'),
         'rdsAuditingEnabled'            : require(__dirname + '/plugins/alibaba/rds/rdsAuditingEnabled.js'),
         'rdsPublicAccess'               : require(__dirname + '/plugins/alibaba/rds/rdsPublicAccess.js'),
-        'rdsSQLAuditRetentionPeriod'       : require(__dirname + '/plugins/alibaba/rds/rdsSQLAuditRetentionPeriod.js'),
+        'rdsSqlAuditRetentionPeriod'    : require(__dirname + '/plugins/alibaba/rds/rdsSqlAuditRetentionPeriod.js'),
 
         'actiontrailGlobalExportLogs'   : require(__dirname + '/plugins/alibaba/actiontrail/actiontrailGlobalExportLogs.js')
     }
