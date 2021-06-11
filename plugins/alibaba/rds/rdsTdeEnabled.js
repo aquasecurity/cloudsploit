@@ -21,7 +21,7 @@ module.exports = {
         var regions = helpers.regions();
         var defaultRegion = helpers.defaultRegion(settings);
 
-        var supportedEngines = ['sqlserver 2012', 'sqlserver 2016', 'sqlserver 2017', 'mysql 5.6'];
+        var supportedEngines = ['sqlserver 2012_ent_ag', 'sqlserver 2016_ent_ag', 'sqlserver 2017_ent_ag', 'sqlserver 2019_ent_ag', 'mysql 5.6'];
         var accountId = helpers.addSource(cache, source, ['sts', 'GetCallerIdentity', defaultRegion, 'data']);
 
         async.each(regions.rds, function(region, rcb) {
@@ -53,22 +53,22 @@ module.exports = {
 
                 if (!supportedEngines.includes(instanceEngine)) {
                     helpers.addResult(results, 0,
-                        `SQL auditing is not supported for ${instanceEngine} engine type`,
+                        `TDE is not supported for ${instanceEngine} engine type`,
                         region, resource);
                     return cb();
                 }
 
-                var describeSqlAudit = helpers.addSource(cache, source,
+                var describeDbInstanceTde = helpers.addSource(cache, source,
                     ['rds', 'DescribeDBInstanceTDE', region, instance.DBInstanceId]);
 
-                if (!describeSqlAudit || describeSqlAudit.err || !describeSqlAudit.data) {
+                if (!describeDbInstanceTde || describeDbInstanceTde.err || !describeDbInstanceTde.data) {
                     helpers.addResult(results, 3,
-                        `Unable to query DB TDE: ${helpers.addError(describeSqlAudit)}`,
+                        `Unable to query DB TDE: ${helpers.addError(describeDbInstanceTde)}`,
                         region, resource);
                     return cb();
                 }
 
-                if (describeSqlAudit.data.SQLCollectorStatus == 'Enable') {
+                if (describeDbInstanceTde.data.TDEStatus == 'Enabled') {
                     helpers.addResult(results, 0,
                         'RDS DB instance have TDE enabled',
                         region, resource);
