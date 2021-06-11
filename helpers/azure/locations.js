@@ -59,6 +59,7 @@ module.exports = {
     backupPolicies: locations,
     backupProtectedItems: locations,
     webApps: locations,
+    appServiceCertificates: locations,
     networkSecurityGroups: locations,
     servers: locations,
     logProfiles: ['global'],
