@@ -6,7 +6,7 @@ module.exports = {
     category: 'RDS',
     description: 'Ensure that RDS instances encrypts data before storage.',
     more_info: 'TDE should be enabled to protect against the threat of malicious activities. Real-time encryption and decryption of the database,' +  
-        'associated backups, and log files is perfomred at rest without requiring any change to the application.',
+        'associated backups, and log files is performed at rest without requiring any change to the application.',
     link: 'https://partners-intl.aliyun.com/help/doc-detail/26256.htm',
     recommended_action: 'Enable TDE for RDS instances',
     apis: ['RDS:DescribeDBInstances', 'RDS:DescribeDBInstanceTDE', 'STS:GetCallerIdentity'],
@@ -63,7 +63,7 @@ module.exports = {
 
                 if (!describeDbInstanceTde || describeDbInstanceTde.err || !describeDbInstanceTde.data) {
                     helpers.addResult(results, 3,
-                        `Unable to query DB TDE: ${helpers.addError(describeDbInstanceTde)}`,
+                        `Unable to query RDS DB instance TDE: ${helpers.addError(describeDbInstanceTde)}`,
                         region, resource);
                     return cb();
                 }
