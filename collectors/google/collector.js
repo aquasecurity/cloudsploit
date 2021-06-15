@@ -184,6 +184,13 @@ var calls = {
             parent: true
         }
     },
+    policies: {
+        list: {
+            api: 'dns',
+            version: 'v1',
+            location: null
+        }
+    }
 };
 
 var postcalls = {
