@@ -333,7 +333,8 @@ var helpers = {
     regions: regions,
     MAX_REGIONS_AT_A_TIME: 6,
     authenticate: authenticate,
-    processCall: processCall
+    processCall: processCall,
+    PROTECTION_LEVELS: ['unspecified', 'cloudcmek', 'cloudhsm', 'external'],
 };
 
 for (var s in shared) helpers[s] = shared[s];
