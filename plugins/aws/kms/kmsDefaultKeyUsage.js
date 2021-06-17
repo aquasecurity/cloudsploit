@@ -8,11 +8,11 @@ module.exports = {
     more_info: 'It is recommended not to use the default key to avoid encrypting disparate sets of data with the same key. Each application should have its own customer-managed KMS key',
     link: 'http://docs.aws.amazon.com/kms/latest/developerguide/concepts.html',
     recommended_action: 'Avoid using the default KMS key',
-    apis: ['KMS:listKeys', 'KMS:describeKey', 'CloudTrail:describeTrails', 'EC2:describeVolumes',
-        'ElasticTranscoder:listPipelines', 'RDS:describeDBInstances', 'Redshift:describeClusters',
-        'S3:listBuckets', 'S3:getBucketEncryption', 'SES:describeActiveReceiptRuleSet',
-        'Workspaces:describeWorkspaces', 'Lambda:listFunctions', 'CloudWatchLogs:describeLogGroups',
-        'EFS:describeFileSystems', 'STS:getCallerIdentity'],
+    apis: ['KMS:listKeys', 'KMS:describeKey', 'KMS:listAliases', 'CloudTrail:describeTrails',
+        'EC2:describeVolumes', 'ElasticTranscoder:listPipelines', 'RDS:describeDBInstances',
+        'Redshift:describeClusters', 'S3:listBuckets', 'S3:getBucketEncryption', 
+        'SES:describeActiveReceiptRuleSet', 'Workspaces:describeWorkspaces', 'Lambda:listFunctions',
+        'CloudWatchLogs:describeLogGroups', 'EFS:describeFileSystems', 'STS:getCallerIdentity'],
     compliance: {
         pci: 'PCI requires vendor defaults to be changed. While KMS keys ' +
              'do not fall into the same category as vendor-default ' +
@@ -42,6 +42,16 @@ module.exports = {
 
             if (!listKeys.data.length) {
                 helpers.addResult(results, 0, 'No KMS keys found', region);
+                return rcb();
+            }
+
+            var listAliases = helpers.addSource(cache, source, ['kms', 'listAliases', region]);
+
+            if (!listAliases) return rcb();
+
+            if (listAliases.err || !listAliases.data) {
+                helpers.addResult(results, 3,
+                    'Unable to list KMS key aliases: ' + helpers.addError(listAliases), region);
                 return rcb();
             }
 
@@ -265,7 +275,6 @@ module.exports = {
             // For S3 Buckets
             if (region === 'us-east-1') {
                 var listBuckets = helpers.addSource(cache, source, ['s3', 'listBuckets', region]);
-
                 if (listBuckets) {
                     if (listBuckets.err || !listBuckets.data) {
                         helpers.addResult(results, 3,
@@ -309,6 +318,13 @@ module.exports = {
                 }
             }
 
+            var aliasIdMap = {};
+            for (let keyAlias of listAliases.data) {
+                if (keyAlias.AliasName && keyAlias.TargetKeyId) {
+                    aliasIdMap[keyAlias.TargetKeyId] = keyAlias.AliasName;
+                }
+            }
+
             // Loop through KMS keys
             var defaultKeys = [];
 
@@ -331,13 +347,15 @@ module.exports = {
                 }
 
                 var defSTR = 'Default master key (.*)';
-                
+
                 for (var x in keysInfo){
                     if (keysInfo[x].Desc.match(defSTR)){
+                        let keyAlias = aliasIdMap[keysInfo[x].keyId];
                         defaultKeys.push(keysInfo[x].keyId);
+                        defaultKeys.push(keyAlias);
                     }
                 }
-                
+
                 kcb();
             }, function(){
                 var reg = 0;
