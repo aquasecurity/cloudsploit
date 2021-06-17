@@ -75,5 +75,6 @@ module.exports = {
     serviceAccounts: ['global'],
     keys: ['global'],
     sinks: ['global'],
-    users: ['global']
+    users: ['global'],
+    topics: ['global']
 };

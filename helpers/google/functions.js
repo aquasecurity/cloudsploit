@@ -198,6 +198,16 @@ function hasBuckets(buckets){
     }
 }
 
+function getProtectionLevel(cryptographickey, encryptionLevels) {
+    if (cryptographickey.versionTemplate && cryptographickey.versionTemplate.protectionLevel) {
+        if (cryptographickey.versionTemplate.protectionLevel == 'SOFTWARE') return encryptionLevels.indexOf('cloudcmek');
+        else if (cryptographickey.versionTemplate.protectionLevel == 'HSM') return encryptionLevels.indexOf('cloudhsm');
+        else if (cryptographickey.versionTemplate.protectionLevel == 'EXTERNAL') return encryptionLevels.indexOf('external');
+    }
+
+    return encryptionLevels.indexOf('unspecified');
+}
+
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
