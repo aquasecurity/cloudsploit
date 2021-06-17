@@ -37,9 +37,14 @@ module.exports = {
                 return rcb();
             }
 
-            for (var e in describeVpcEndpoints.data) {
-                var endpoint = describeVpcEndpoints.data[e];
+            for (var endpoint of describeVpcEndpoints.data) {
                 var resource = `arn:${awsOrGov}:ec2:${region}:${accountId}:vpc-endpoint/${endpoint.VpcEndpointId}`;
+                if (endpoint.VpcEndpointType && endpoint.VpcEndpointType == 'Gateway') {
+                    helpers.addResult(results, 0,
+                        `VPC endpoint is of ${endpoint.VpcEndpointId} is of Gateway type`, region, resource);
+                    continue;
+                }
+
                 var statements = helpers.normalizePolicyDocument(endpoint.PolicyDocument);
                 var publicEndpoint = false;
 
