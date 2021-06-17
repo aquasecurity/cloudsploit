@@ -66,7 +66,7 @@ describe('rdsTdeEnabled', function () {
             rdsTdeEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.be.above(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('RDS DB instance have TDE enabled');
+                expect(results[0].message).to.include('RDS DB instance has TDE enabled');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });

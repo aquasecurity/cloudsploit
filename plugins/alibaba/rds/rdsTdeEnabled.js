@@ -2,19 +2,15 @@ var async = require('async');
 var helpers = require('../../../helpers/alibaba');
 
 module.exports = {
-    title: 'Transparent Data Encryption Enabled',
+    title: 'RDS Transparent Data Encryption Enabled',
     category: 'RDS',
-    description: 'Ensure that RDS instances encrypts data before storage.',
+    description: 'Ensure that RDS instances have Transparent Data Encryption enabled.',
     more_info: 'TDE should be enabled to protect against the threat of malicious activities. Real-time encryption and decryption of the database,' +  
         'associated backups, and log files is performed at rest without requiring any change to the application.',
     link: 'https://partners-intl.aliyun.com/help/doc-detail/26256.htm',
     recommended_action: 'Enable TDE for RDS instances',
     apis: ['RDS:DescribeDBInstances', 'RDS:DescribeDBInstanceTDE', 'STS:GetCallerIdentity'],
-    compliance: {
-        hipaa: 'HIPAA requires all data to be transmitted over secure channels. ' +
-            'RDS SSL connection should be used to ensure internal ' +
-            'services are always connecting over a secure channel.',
-    },
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
@@ -68,9 +64,9 @@ module.exports = {
                     return cb();
                 }
 
-                if (describeDbInstanceTde.data.TDEStatus == 'Enabled') {
+                if (describeDbInstanceTde.data.TDEStatus && describeDbInstanceTde.data.TDEStatus.toUpperCase() == 'ENABLED') {
                     helpers.addResult(results, 0,
-                        'RDS DB instance have TDE enabled',
+                        'RDS DB instance has TDE enabled',
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
