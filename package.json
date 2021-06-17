@@ -39,11 +39,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@alicloud/pop-core": "^1.7.10",
     "@octokit/app": "^3.0.0",
     "@octokit/request": "^3.0.3",
     "@octokit/rest": "^16.3.2",
-    "ali-oss": "^6.15.2",
     "argparse": "^2.0.0",
     "async": "^2.6.1",
     "aws-sdk": "^2.834.0",
@@ -57,9 +55,9 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "eslint": "^6.8.0",
     "mocha": "^6.1.4",
     "nodemon": "^1.19.4",
-    "nyc": "^14.1.1"
+    "nyc": "^14.1.1",
+    "eslint": "^6.8.0"
   }
 }
