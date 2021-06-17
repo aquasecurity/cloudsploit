@@ -78,8 +78,7 @@ module.exports = {
                             return cb();
                         }
 
-                        for (var p in parameters.data.Parameters) {
-                            var param = parameters.data.Parameters[p];
+                        for (var param of parameters.data.Parameters) {
                             if (param.ParameterName && param.ParameterName === parameterMappings[db.Engine] &&
                                 param.ParameterValue && param.ParameterValue !== '0') {
                                 forceSslEnabled = true;

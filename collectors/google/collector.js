@@ -189,7 +189,7 @@ var calls = {
             api: 'bigquery',
             version: 'v2',
             location: null,
-            project: true
+            projectId: true
         }
     }
 };
@@ -262,7 +262,7 @@ var postcalls = {
             reliesOnCall: ['list'],
             filterKey: ['datasetId'],
             filterValue: ['id'],
-            project: true
+            projectId: true
         }
     }
 };

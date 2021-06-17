@@ -40,7 +40,8 @@ module.exports = {
                         for (let property in rolePermission) {
                             if (!rolePermission['role']) continue;
 
-                            if (rolePermission[property].toLowerCase() == 'allusers' || rolePermission[property].toLowerCase() == 'allauthenticatedusers') {
+                            if (rolePermission[property] &&
+                                (rolePermission[property].toLowerCase() == 'allusers' || rolePermission[property].toLowerCase() == 'allauthenticatedusers')) {
                                 permissionStr.push(`${rolePermission['role']} access to ${rolePermission[property]}`);
                             }
                         }

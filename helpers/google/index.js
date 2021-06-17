@@ -7,33 +7,6 @@ const {JWT}       = require('google-auth-library');
 
 var async         = require('async');
 
-var getProjects = async function(client, filter, callback) {
-    const cloudresourcemanager = google.cloudresourcemanager('v1');
-
-    const request = {
-        auth: client,
-        filter: `lifecycleState: ${filter}`
-    };
-
-    let response;
-    let projects = [];
-
-    do {
-        if (response && response.nextPageToken) {
-            request.pageToken = response.nextPageToken;
-        }
-        response = (await cloudresourcemanager.projects.list(request)).data;
-        const projectsPage = response.projects;
-        if (projectsPage) {
-            for (let i = 0; i < projectsPage.length; i++) {
-                projects.push(projectsPage[i]);
-            }
-        }
-    } while (response.nextPageToken);
-
-    return callback(projects);
-};
-
 var regions = function() {
     return regRegions;
 };
@@ -45,23 +18,6 @@ var authenticate = async function(GoogleConfig) {
         scopes: ['https://www.googleapis.com/auth/cloud-platform'],
     });
     return client;
-};
-
-var projectsList = function(client, cb) {
-    getProjects(client, 'ACTIVE', function(projects) {
-        cb(projects);
-    });
-};
-
-var deletedProjectsList = function(client, cb) {
-    let deletedProjects = [];
-
-    getProjects(client, 'DELETE_REQUESTED', function(delReqProjects) {
-        getProjects(client, 'DELETE_IN_PROGRESS', function(delInProgress) {
-            deletedProjects = delReqProjects.concat(delInProgress);
-            cb(deletedProjects);
-        });
-    });
 };
 
 var processCall = function(GoogleConfig, collection, settings, regions, call, service, client, serviceCb) {
@@ -208,7 +164,7 @@ var run = function(GoogleConfig, collection, settings, service, callObj, callKey
                 records = collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][region].data;
                 async.eachLimit(records, 10, function(record, recordCb) {
                     for (var filter in callObj.filterKey) {
-                        callObj.params[callObj.filterKey[filter]] = (record[callObj.filterValue[filter]].includes(':')) ?
+                        callObj.params[callObj.filterKey[filter]] = (record[callObj.filterValue[filter]] && record[callObj.filterValue[filter]].includes(':')) ?
                             record[callObj.filterValue[filter]].split(':')[1] :
                             record[callObj.filterValue[filter]];
                         options.version = callObj.version;
@@ -350,7 +306,7 @@ var execute = function(LocalGoogleConfig, collection, service, callObj, callKey,
         }
     };
     var parentParams;
-    if (callObj.project) callObj.params.projectId = LocalGoogleConfig.project;
+    if (callObj.projectId) callObj.params.projectId = LocalGoogleConfig.project;
     if (callObj.nested && callObj.parent) {
         parentParams = {auth: callObj.params.auth, parent: callObj.params.parent};
         executor['projects']['locations'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
@@ -358,7 +314,7 @@ var execute = function(LocalGoogleConfig, collection, service, callObj, callKey,
         parentParams = {auth: callObj.params.auth, parent: callObj.params.parent};
         executor['projects']['locations']['keyRings'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
     } else if (callObj.resource) {
-        parentParams = {auth: callObj.auth};
+        parentParams = {auth: callObj.auth, resource_: LocalGoogleConfig.project};
         executor[service][callKey](parentParams, LocalGoogleConfig, executorCb);
     } else if (callObj.serviceAccount) {
         parentParams = {auth: callObj.params.auth, name: callObj.params.parent};
@@ -380,9 +336,7 @@ var helpers = {
     regions: regions,
     MAX_REGIONS_AT_A_TIME: 6,
     authenticate: authenticate,
-    processCall: processCall,
-    projectsList: projectsList,
-    deletedProjectsList: deletedProjectsList
+    processCall: processCall
 };
 
 for (var s in shared) helpers[s] = shared[s];
