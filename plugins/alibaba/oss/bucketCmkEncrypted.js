@@ -109,7 +109,7 @@ module.exports = {
                         currentEncryptionLevel = 2; // cloudkms
                     }
                 } else {
-                    currentEncryptionLevel = 1 // oss-managed
+                    currentEncryptionLevel = 1; // oss-managed
                 }
 
                 currentEncryptionLevelStr = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
