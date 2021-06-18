@@ -5,7 +5,8 @@ module.exports = {
     title: 'OSS Bucket Versioning',
     category: 'OSS',
     description: 'Ensure that OSS bucket has versioning enabled.',
-    more_info: '',
+    more_info: 'OSS allows you to configure versioning to protect data in buckets. When versioning is enabled for a bucket, ' +
+        'data that is overwritten or deleted in the bucket is saved as a previous version.',
     recommended_action: 'Modify bucket settings to enabled versioning.',
     link: 'https://www.alibabacloud.com/help/doc-detail/109695.html',
     apis: ['OSS:listBuckets', 'OSS:getBucketInfo', 'STS:GetCallerIdentity'],
@@ -21,6 +22,7 @@ module.exports = {
         var listBuckets = helpers.addSource(cache, source, ['oss', 'listBuckets', region]);
 
         if (!listBuckets) return callback(null, results, source);
+
         if (listBuckets.err || !listBuckets.data) {
             helpers.addResult(results, 3, `Unable to query for OSS buckets: ${helpers.addError(listBuckets)}`, region);
             return callback(null, results, source);
@@ -36,6 +38,7 @@ module.exports = {
 
             var getBucketInfo = helpers.addSource(cache, source,
                 ['oss', 'getBucketInfo', region, bucket.name]);
+
             var bucketLocation = bucket.region || region;
             bucketLocation = bucketLocation.replace('oss-', '');
 
@@ -47,10 +50,10 @@ module.exports = {
                 return cb();
             }
 
-            if (getBucketInfo.data.Versioning && getBucketInfo.data.Versioning == 'Enabled') {
-                helpers.addResult(results, 0, 'Bucket versioning is enabled', bucketLocation, resource);
+            if (getBucketInfo.data.Versioning && getBucketInfo.data.Versioning.toUpperCase() === 'ENABLED') {
+                helpers.addResult(results, 0, 'Bucket has versioning enabled', bucketLocation, resource);
             } else {
-                helpers.addResult(results, 2, 'Bucket versioning is not enabled', bucketLocation, resource);
+                helpers.addResult(results, 2, 'Bucket does not have versioning enabled', bucketLocation, resource);
             }
 
             cb();

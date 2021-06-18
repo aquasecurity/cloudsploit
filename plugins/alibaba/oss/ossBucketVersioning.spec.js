@@ -24,8 +24,8 @@ const getBucketInfo = [
         "StorageClass": "Standard",
         "TransferAcceleration": "Disabled",
         "Owner": {
-            "DisplayName": "5103119194921620",
-            "ID": "5103119194921620"
+            "DisplayName": "0000111122223333",
+            "ID": "0000111122223333"
         },
         "Versioning": "Enabled"
     },
@@ -41,8 +41,8 @@ const getBucketInfo = [
         "StorageClass": "Standard",
         "TransferAcceleration": "Disabled",
         "Owner": {
-            "DisplayName": "5103119194921620",
-            "ID": "5103119194921620"
+            "DisplayName": "0000111122223333",
+            "ID": "0000111122223333"
         },
     }
 ];
@@ -76,7 +76,7 @@ describe('ossBucketVersioning', function () {
             ossBucketVersioning.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Bucket versioning is not enabled');
+                expect(results[0].message).to.include('Bucket does not have versioning enabled');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
@@ -87,7 +87,7 @@ describe('ossBucketVersioning', function () {
             ossBucketVersioning.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Bucket versioning is enabled');
+                expect(results[0].message).to.include('Bucket has versioning enabled');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
