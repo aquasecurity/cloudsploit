@@ -12,11 +12,7 @@ module.exports = {
     settings: {
         sqs_queue_policy_condition_keys: {
             name: 'SQS Queue Policy Allowed Condition Keys',
-            description: 'Comma separated list of AWS IAM condition keys that should be allowed i.e. aws:SourceAccount.' +
-                'This setting assumes following rules:' +
-                '1. As a best practice, "Deny" with "StringNotLike" and "Allow" with "StringLike" are used to prevent accidental privileged access' +
-                '2. IAM condition keys which work with "Numeric" or "Date" operators are not used' +
-                '3. Bool values are set to "true" with "Allow" and "false" with "Deny"',
+            description: 'Comma separated list of AWS IAM condition keys that should be allowed i.e. aws:SourceAccount.',
             regex: '^.*$',
             default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceAccount,aws:SourceArn'
         },
