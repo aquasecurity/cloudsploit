@@ -39,7 +39,7 @@ module.exports = {
 
             for (var endpoint of describeVpcEndpoints.data) {
                 var resource = `arn:${awsOrGov}:ec2:${region}:${accountId}:vpc-endpoint/${endpoint.VpcEndpointId}`;
-                if (endpoint.VpcEndpointType && endpoint.VpcEndpointType == 'Gateway') {
+                if (endpoint.VpcEndpointType && endpoint.VpcEndpointType.toLowerCase() == 'gateway') {
                     helpers.addResult(results, 0,
                         `VPC endpoint is of ${endpoint.VpcEndpointId} is of Gateway type`, region, resource);
                     continue;
