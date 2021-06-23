@@ -198,9 +198,32 @@ function hasBuckets(buckets){
     }
 }
 
+function createResourceName(resourceType, resourceId, project, locationType, location) {
+    let resourceName = '';
+    if (project) resourceName = `projects/${project}/`;
+    switch(locationType) {
+        case 'global':
+            resourceName = `${resourceName}global/${resourceType}/${resourceId}`;
+            break;
+        case 'region':
+            resourceName = `${resourceName}regions/${location}/${resourceType}/${resourceId}`;
+            break;
+        case 'zone':
+            resourceName = `${resourceName}zones/${location}/${resourceType}/${resourceId}`;
+            break;
+        case 'location':
+            resourceName = `${resourceName}locations/${location}/${resourceType}/${resourceId}`;
+            break;
+        default:
+            resourceName = `${resourceName}${resourceType}/${resourceId}`;
+    }
+    return resourceName;
+}
+
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
     findOpenAllPorts: findOpenAllPorts,
-    hasBuckets: hasBuckets
+    hasBuckets: hasBuckets,
+    createResourceName
 };
