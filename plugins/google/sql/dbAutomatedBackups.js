@@ -8,12 +8,23 @@ module.exports = {
     more_info: 'Google provides a simple method of backing up SQL instances at a regular interval. This should be enabled to provide an option for restoring data in the event of a database compromise or hardware failure.',
     link: 'https://cloud.google.com/sql/docs/mysql/instance-settings',
     recommended_action: 'Ensure that all database instances are configured with automatic backups enabled.',
-    apis: ['instances:sql:list'],
+    apis: ['instances:sql:list', 'projects:get'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions();
+
+        let projects = helpers.addSource(cache, source,
+            ['projects','get', 'global']);
+
+        if (!projects || projects.err || !projects.data) {
+            helpers.addResult(results, 3,
+                'Unable to query for projects: ' + helpers.addError(projects), 'global', null, null, projects.err);
+            return callback(null, results, source);
+        }
+
+        let project = projects.data[0].name;
 
         async.each(regions.instances.sql, function(region, rcb){
             let sqlInstances = helpers.addSource(
@@ -32,16 +43,17 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
+                let resource = helpers.createResourceName('instances', sqlInstance.name, project);
                 if (sqlInstance.instanceType != "READ_REPLICA_INSTANCE" &&
                     sqlInstance.settings &&
                     sqlInstance.settings.backupConfiguration &&
                     sqlInstance.settings.backupConfiguration.enabled) {
                     helpers.addResult(results, 0, 
-                        'Automated backups are enabled', region, sqlInstance.name);
+                        'Automated backups are enabled', region, resource);
                 } else if (sqlInstance.instanceType == "READ_REPLICA_INSTANCE"){
                 } else {
                     helpers.addResult(results, 2, 
-                        'Automated backups are not enabled', region, sqlInstance.name);
+                        'Automated backups are not enabled', region, resource);
                 }
             });
 

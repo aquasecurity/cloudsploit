@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Google will maintain a point to which the database can be restored. This point should not drift too far into the past, or else the risk of irrecoverable data loss may occur.',
     link: 'https://cloud.google.com/sql/docs/mysql/instance-settings',
     recommended_action: 'Ensure all database instances are configured with automatic backups and can be restored to a recent point with binary logging enabled.',
-    apis: ['instances:sql:list'],
+    apis: ['instances:sql:list', 'projects:get'],
     compliance: {
         pci: 'PCI requires that security procedures, including restoration of ' +
              'compromised services, be tested frequently. RDS restorable time ' +
@@ -19,6 +19,17 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions();
+
+        let projects = helpers.addSource(cache, source,
+            ['projects','get', 'global']);
+
+        if (!projects || projects.err || !projects.data) {
+            helpers.addResult(results, 3,
+                'Unable to query for projects: ' + helpers.addError(projects), 'global', null, null, projects.err);
+            return callback(null, results, source);
+        }
+
+        let project = projects.data[0].name;
 
         async.each(regions.instances.sql, function(region, rcb){
             let sqlInstances = helpers.addSource(
@@ -37,14 +48,15 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
+                let resource = helpers.createResourceName('instances', sqlInstance.name, project);
                 if (sqlInstance.settings &&
                     sqlInstance.settings.backupConfiguration &&
                     sqlInstance.settings.backupConfiguration.enabled) {
                     helpers.addResult(results, 0, 
-                        'SQL instance has point-in-time recovery enabled', region, sqlInstance.name);
+                        'SQL instance has point-in-time recovery enabled', region, resource);
                 } else {
                     helpers.addResult(results, 2, 
-                        'SQL instance does not have point-in-time recovery enabled', region, sqlInstance.name);
+                        'SQL instance does not have point-in-time recovery enabled', region, resource);
                 }
             });
 

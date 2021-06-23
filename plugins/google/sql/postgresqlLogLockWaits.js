@@ -8,12 +8,23 @@ module.exports = {
     more_info: 'SQL instance for PostgreSQL database provides log_lock_waits flag. It is not enabled by default. Enabling it will make sure that log messages are generated whenever a session waits longer than deadlock_timeout to acquire a lock.',
     link: 'https://cloud.google.com/sql/docs/postgres/flags#config',
     recommended_action: 'Ensure that log_lock_waits flag is enabled for all PostgreSQL instances.',
-    apis: ['instances:sql:list'],
+    apis: ['instances:sql:list', 'projects:get'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions();
+
+        let projects = helpers.addSource(cache, source,
+            ['projects','get', 'global']);
+
+        if (!projects || projects.err || !projects.data) {
+            helpers.addResult(results, 3,
+                'Unable to query for projects: ' + helpers.addError(projects), 'global', null, null, projects.err);
+            return callback(null, results, source);
+        }
+
+        let project = projects.data[0].name;
 
         async.each(regions.instances.sql, function(region, rcb){
             let sqlInstances = helpers.addSource(
@@ -32,9 +43,10 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
+                let resource = helpers.createResourceName('instances', sqlInstance.name, project);
                 if (sqlInstance.databaseVersion && !sqlInstance.databaseVersion.toLowerCase().includes('postgres')) {
                     helpers.addResult(results, 0, 
-                        'SQL instance database type is not of postgreSQL type', region, sqlInstance.name);
+                        'SQL instance database type is not of postgreSQL type', region, resource);
                     return;
                 }
 
@@ -47,15 +59,15 @@ module.exports = {
                         
                         if (found) {
                             helpers.addResult(results, 0, 
-                                'SQL instance have log_lock_waits flag enabled', region, sqlInstance.name);
+                                'SQL instance have log_lock_waits flag enabled', region, resource);
                         } else {
                             helpers.addResult(results, 2,
-                                'SQL instance does not have log_lock_waits flag enabled', region, sqlInstance.name);
+                                'SQL instance does not have log_lock_waits flag enabled', region, resource);
                         }
                 } else if (sqlInstance.instanceType == "READ_REPLICA_INSTANCE"){
                 } else {
                     helpers.addResult(results, 2, 
-                        'SQL instance does not have log_lock_waits flag enabled', region, sqlInstance.name);
+                        'SQL instance does not have log_lock_waits flag enabled', region, resource);
                 }
             });
 
