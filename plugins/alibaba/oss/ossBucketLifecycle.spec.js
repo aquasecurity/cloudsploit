@@ -91,7 +91,7 @@ const createCache = (listBuckets, getBucketLifecycle, listBucketsErr, getBucketL
 describe('bucketLifecycle', function () {
     describe('run', function () {
         it('should FAIL if bucket does not have lifecycle policies', function (done) {
-            const cache = createCache(listBuckets, undefined, undefined, getBucketLifecycleErr);
+            const cache = createCache(listBuckets, getBucketLifecycle[2], undefined, getBucketLifecycleErr);
             bucketLifecycle.run(cache, {}, (err, results) => {
               expect(results.length).to.equal(1);
               expect(results[0].status).to.equal(2);
@@ -102,7 +102,7 @@ describe('bucketLifecycle', function () {
         });
 
         it('should FAIL if bucket lifecycle policy response is malformed', function (done) {
-            const cache = createCache(listBuckets, undefined, undefined, getBucketLifecycleErr);
+            const cache = createCache(listBuckets, getBucketLifecycle[1], undefined, getBucketLifecycleErr);
             bucketLifecycle.run(cache, {}, (err, results) => {
               expect(results.length).to.equal(1);
               expect(results[0].status).to.equal(2);
