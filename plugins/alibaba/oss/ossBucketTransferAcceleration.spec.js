@@ -126,6 +126,17 @@ describe('bucketTransferAcceleration', function () {
             });
         });
 
+        it('should FAIL if bucket info does not have transfer acceleration property', function (done) {
+            const cache = createCache(listBuckets, getBucketInfo[2]);
+            bucketTransferAcceleration.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('Bucket does not have transfer acceleration enabled');
+                expect(results[0].region).to.equal('cn-hangzhou');
+                done();
+            });
+        });
+
         it('should PASS if bucket has transfer acceleration enabled', function (done) {
             const cache = createCache(listBuckets, getBucketInfo[1]);
             bucketTransferAcceleration.run(cache, {}, (err, results) => {
