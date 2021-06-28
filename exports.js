@@ -369,6 +369,8 @@ module.exports = {
         'tableServiceAllAccessAcl'      : require(__dirname + '/plugins/azure/tableservice/tableServiceAllAccessAcl.js'),
         'queueServiceAllAccessAcl'      : require(__dirname + '/plugins/azure/queueservice/queueServiceAllAccessAcl.js'),
 
+        'minimumTlsVersion'             : require(__dirname + '/plugins/azure/redisCache/minimumTlsVersion.js'),
+
         'multipleSubnets'               : require(__dirname + '/plugins/azure/virtualnetworks/multipleSubnets.js'),
         'ddosStandardProtectionEnabled' : require(__dirname + '/plugins/azure/virtualnetworks/ddosStandardProtectionEnabled.js'),
         'noNetworkGatewaysInUse'        : require(__dirname + '/plugins/azure/virtualnetworks/noNetworkGatewaysInUse.js'),

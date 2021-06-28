@@ -86,6 +86,11 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/resources?api-version=2019-10-01'
         }
     },
+    redisCaches: {
+        listBySubscription: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Cache/redis?api-version=2020-06-01'
+        }
+    },
     managedClusters: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.ContainerService/managedClusters?api-version=2020-03-01'
