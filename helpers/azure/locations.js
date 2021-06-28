@@ -82,6 +82,7 @@ module.exports = {
     natGateways: locations,
     users: ['global'],
     registries: locations,
+    redisCaches:locations,
     pricings: ['global'],
     roleDefinitions: ['global'],
     autoscaleSettings: locations,
