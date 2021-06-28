@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Enabling autoscale increases efficiency and improves cost management for resources.',
     link: 'https://cloud.google.com/compute/docs/autoscaler/',
     recommended_action: 'Ensure autoscaling is enabled for all instance groups.',
-    apis: ['instanceGroups:aggregatedList', 'autoscalers:aggregatedList','clusters:list'],
+    apis: ['instanceGroups:aggregatedList', 'autoscalers:aggregatedList','clusters:list', 'projects:get'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -32,6 +32,17 @@ module.exports = {
             return callback(null, results, source);
         }
 
+        let projects = helpers.addSource(cache, source,
+            ['projects','get', 'global']);
+
+        if (!projects || projects.err || !projects.data) {
+            helpers.addResult(results, 3,
+                'Unable to query for projects: ' + helpers.addError(projects), 'global', null, null, projects.err);
+            return callback(null, results, source);
+        }
+
+        var project = projects.data[0].name;
+
         async.each(instanceGroups, function(instanceGroupsInLocation, rcb) {
             instanceGroupsInLocation.instanceGroups.forEach(instanceGroup => {
                 if (instanceGroup.name) {
@@ -45,9 +56,9 @@ module.exports = {
                 ['clusters', 'list', ['global']]);
 
             if (clusters.err || !clusters.data) {
-                helpers.addResult(results, 3, 'Unable to query autoscalers', 'global', null, null, clusters.err);
+                helpers.addResult(results, 3, 'Unable to query clusters', 'global', null, null, clusters.err);
             } else if (!clusters.data.length) {
-                helpers.addResult(results, 0, 'No instance groups found', 'global');
+                helpers.addResult(results, 0, 'No clusters found', 'global');
             } else {
                 clusters.data.forEach(cluster => {
                     if (cluster.nodePools &&
@@ -93,9 +104,26 @@ module.exports = {
                     lcb();
                 }, function() {
                     if (Object.keys(instanceGroupURLObj).length) {
-                        let instanceGroupStr = Object.values(instanceGroupURLObj).map(a => a.id).join(', ');
-                        helpers.addResult(results, 2,
-                            `The following instance groups do not have autoscale enabled: ${instanceGroupStr}`, 'global');
+                        for (let group in instanceGroupURLObj) {
+                            let groupLocArr;
+                            let groupLoc;
+                            let resource;
+                            if (instanceGroupURLObj[group].zone) {
+                                groupLocArr = instanceGroupURLObj[group].zone.split('/');
+                                groupLoc = groupLocArr[groupLocArr.length-1];
+                                resource = helpers.createResourceName('instanceGroups', instanceGroupURLObj[group].name, project, 'zone', groupLoc);
+                            } else if (instanceGroupURLObj[group].region) {
+                                groupLocArr = instanceGroupURLObj[group].zone.split('/');
+                                groupLoc = groupLocArr[groupLocArr.length-1];
+                                resource = helpers.createResourceName('instanceGroups', instanceGroupURLObj[group].name, project, 'region', groupLoc);
+                            } else {
+                                groupLoc = 'global';
+                                resource = helpers.createResourceName('instanceGroups', instanceGroupURLObj[group].name, project, 'global');
+                            }
+
+                            helpers.addResult(results, 2,
+                                'Instance group does not have autoscale enabled', groupLoc, resource);
+                        }
                     } else {
                         helpers.addResult(results, 0,
                             'All instance groups have autoscale enabled', 'global');
@@ -104,9 +132,15 @@ module.exports = {
                 });
             } else {
                 if (Object.keys(instanceGroupURLObj).length) {
-                    let instanceGroupStr = Object.values(instanceGroupURLObj).map(a => a.id).join(', ');
-                    helpers.addResult(results, 2,
-                        `The following instance groups do not have autoscale enabled: ${instanceGroupStr}`, 'global');
+                    for (let group in instanceGroupURLObj) {
+                        let groupLocArr = (instanceGroupURLObj[group].zone) ? instanceGroupURLObj[group].zone.split('/') :
+                            (instanceGroupURLObj[group].region) ? instanceGroupURLObj[group].region.split('/') : 'global';
+                        let groupLoc = groupLocArr[groupLocArr.length-1];
+
+                        let resource = helpers.createResourceName('instanceGroups', instanceGroupURLObj[group].name, project, 'zone', groupLoc);
+                        helpers.addResult(results, 2,
+                            'Instance group does not have autoscale enabled', groupLoc, resource);
+                    }
                 } else {
                     helpers.addResult(results, 0,
                         'All instance groups have autoscale enabled', 'global');

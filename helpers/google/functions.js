@@ -23,7 +23,7 @@ function addResult(results, status, message, region, resource, custom, err, requ
             errorObj.code == 403 &&
             errorObj.message &&
             disabledKeywords.some(substring=>errorObj.message.includes(substring))) {
-            pushResult(required ? 2 : 0, required ? 'Service is not enabled, but it is recommended to run a secure workload in GCP.' : 'Service is not enabled', region, resource, custom);
+            pushResult(required ? 2 : 0, required ? `${message}: Service is not enabled, but it is recommended to run a secure workload in GCP.` : `${message}: Service is not enabled`, region, resource, custom);
         } else if (errorObj &&
             errorObj.code &&
             errorObj.code == 403 &&
@@ -33,7 +33,7 @@ function addResult(results, status, message, region, resource, custom, err, requ
                 if (errError &&
                     errError.message &&
                     disabledKeywords.some(substring=>errError.message.includes(substring))){
-                    pushResult(required ? 2 : 0, required ? 'Service is not enabled, but it is recommended to run a secure workload in GCP.' : 'Service is not enabled', region, resource, custom);
+                    pushResult(required ? 2 : 0, required ? `${message}: Service is not enabled, but it is recommended to run a secure workload in GCP.` : `${message}: Service is not enabled`, region, resource, custom);
                 } else {
                     pushResult(3, (errError.message ? errError.message : message), region, resource, custom);
                 }
@@ -198,9 +198,32 @@ function hasBuckets(buckets){
     }
 }
 
+function createResourceName(resourceType, resourceId, project, locationType, location) {
+    let resourceName = '';
+    if (project) resourceName = `projects/${project}/`;
+    switch(locationType) {
+        case 'global':
+            resourceName = `${resourceName}global/${resourceType}/${resourceId}`;
+            break;
+        case 'region':
+            resourceName = `${resourceName}regions/${location}/${resourceType}/${resourceId}`;
+            break;
+        case 'zone':
+            resourceName = `${resourceName}zones/${location}/${resourceType}/${resourceId}`;
+            break;
+        case 'location':
+            resourceName = `${resourceName}locations/${location}/${resourceType}/${resourceId}`;
+            break;
+        default:
+            resourceName = `${resourceName}${resourceType}/${resourceId}`;
+    }
+    return resourceName;
+}
+
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
     findOpenAllPorts: findOpenAllPorts,
-    hasBuckets: hasBuckets
+    hasBuckets: hasBuckets,
+    createResourceName: createResourceName
 };

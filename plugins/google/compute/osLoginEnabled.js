@@ -37,30 +37,23 @@ module.exports = {
                 return rcb();
             }
 
-             projects.data.forEach(project => {
-                 var metaData = project.commonInstanceMetadata || null;
+            projects.data.forEach(project => {
+                var metaData = project.commonInstanceMetadata || null;
 
-                 if (!metaData || !metaData.items || !metaData.items.length) {
-                     helpers.addResult(results, 0, 'OS login is enabled by default', region);
-                     return;
-                 }
+                if (!metaData || !metaData.items || !metaData.items.length) {
+                    helpers.addResult(results, 0, 'OS login is enabled by default', region);
+                    return;
+                }
 
-                 let isEnabled = false;
+                let isEnabled = metaData.items.find(item => item.key && item.key.toLowerCase() === 'enable-oslogin' &&
+                    item.value && item.value.toLowerCase() === 'true');
 
-                 metaData.items.forEach(item => {
-                     if (item.key.toLowerCase() === 'enable-oslogin' &&
-                         item.value.toLowerCase() === 'true') {
-                         isEnabled = true;
-                     }
-                 });
-
-                 if (isEnabled === true) {
-                     helpers.addResult(results, 0, 'OS login is enabled', region);
-                 } else {
-                     helpers.addResult(results, 2, 'OS login is disabled', region);
-                 }
-
-             });
+                if (isEnabled) {
+                    helpers.addResult(results, 0, 'OS login is enabled', region);
+                } else {
+                    helpers.addResult(results, 2, 'OS login is disabled', region);
+                }
+            });
 
             rcb();
         }, function(){

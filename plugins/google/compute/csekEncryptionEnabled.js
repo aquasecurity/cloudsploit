@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Google encrypts all disks at rest by default. By using CSEK only the users with the key can access the disk. Anyone else, including Google, cannot access the disk data.',
     link: 'https://cloud.google.com/compute/docs/disks/customer-supplied-encryption',
     recommended_action: 'CSEK can only be configured when creating a disk. Delete the disk and redeploy with CSEK.',
-    apis: ['disks:list'],
+    apis: ['disks:list', 'projects:get'],
     compliance: {
         hipaa: 'HIPAA requires that all data is encrypted, including data at rest. ' +
             'Enabling encryption of disk data helps to protect this data.',
@@ -16,17 +16,38 @@ module.exports = {
             'Encryption should be enabled for all disks storing this ' +
             'type of data.'
     },
+    settings: {
+        disk_result_limit: {
+            name: 'Compute Disks Result Limit',
+            description: 'If the number of results is greater than this value, combine them into one result',
+            regex: '^[0-9]*$',
+            default: '20',
+        }
+    },
 
     run: function(cache, settings, callback) {
-
         var results = [];
         var source = {};
         var regions = helpers.regions();
 
+        var config = {
+            disk_result_limit: parseInt(settings.disk_result_limit || this.settings.disk_result_limit.default)
+        };
+
+        let projects = helpers.addSource(cache, source,
+            ['projects','get', 'global']);
+
+        if (!projects || projects.err || !projects.data) {
+            helpers.addResult(results, 3,
+                'Unable to query for projects: ' + helpers.addError(projects), 'global', null, null, projects.err);
+            return callback(null, results, source);
+        }
+
+        var project = projects.data[0].name;
+
         async.each(regions.disks, (region, rcb) => {
+            var noDisks = [];
             var zones = regions.zones;
-            var myError = {};
-            var noDisks = {};
             var badDisks = [];
             var goodDisks = [];
             async.each(zones[region], function(zone, zcb) {
@@ -36,23 +57,18 @@ module.exports = {
                 if (!disks) return zcb();
 
                 if (disks.err || !disks.data) {
-                    if (!myError[region]) {
-                        myError[region] = [];
-                    }
-                    myError[region].push(zone);
-                    myError[region][zone] = disks.err;
+                    helpers.addResult(results, 3,
+                        'Unable to query compute disks', zone, null, null, disks.err);
                     return zcb();
                 }
 
                 if (!disks.data.length) {
-                    if (!noDisks[region]) {
-                        noDisks[region] = [];
-                    }
-                    noDisks[region].push(zone);
+                    noDisks.push(zone);
                     return zcb();
                 }
 
                 disks.data.forEach(disk => {
+                    if (!disk.id) return;
                     if (disk.creationTimestamp &&
                         disk.diskEncryptionKey &&
                         Object.keys(disk.diskEncryptionKey) &&
@@ -62,22 +78,39 @@ module.exports = {
                         badDisks.push(disk.id)
                     }
                 });
+
+                if (badDisks.length) {
+                    if (badDisks.length > config.disk_result_limit) {
+                        helpers.addResult(results, 2,
+                            `CSEK Encryption is disabled for ${badDisks.length} disks`, zone);
+                    } else {
+                        badDisks.forEach(disk=> {
+                            let resource = helpers.createResourceName('disks', disk, project, 'zone', zone);
+                            helpers.addResult(results, 2,
+                                `CSEK Encryption is disabled for disk`, zone, resource);
+                        });
+                    }
+                }
+                if (goodDisks.length) {
+                    if (goodDisks.length > config.disk_result_limit) {
+                        helpers.addResult(results, 0,
+                            `CSEK Encryption is enabled for ${goodDisks.length} disks`, zone);
+                    } else {
+                        goodDisks.forEach(disk=> {
+                            let resource = helpers.createResourceName('disks', disk, project, 'zone', zone);
+                            helpers.addResult(results, 0,
+                                `CSEK Encryption is enabled for disk`, zone, resource);
+                        });
+                    }
+                }
+                if (!goodDisks.length && !badDisks.length) noDisks.push(zone);
+                zcb();
+            }, function(){
+                if (noDisks.length) {
+                    helpers.addResult(results, 0, `No compute disks found in following zones: ${noDisks.join(', ')}`, region);
+                }
+                rcb();
             });
-            if (myError[region] &&
-                zones[region] &&
-                (myError[region].join(',') === zones[region].join(','))) {
-                helpers.addResult(results, 3, 'Unable to query disks', region, null, null, myError);
-            } else if (!goodDisks.length && !badDisks.length) {
-                helpers.addResult(results, 0, 'No disks found in the region' , region);
-            } else if (badDisks.length) {
-                var myInstanceStr = badDisks.join(", ");
-                helpers.addResult(results, 2,
-                    `CSEK Encryption is disabled for the following disks: ${myInstanceStr}`, region);
-            } else if (goodDisks.length) {
-                helpers.addResult(results, 0,
-                    'CSEK Encryption is enabled for all disks in the region', region);
-            }
-            rcb();
         }, function() {
             callback(null, results, source);
         });
