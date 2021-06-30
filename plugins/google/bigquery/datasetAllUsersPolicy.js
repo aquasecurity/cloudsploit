@@ -37,8 +37,8 @@ module.exports = {
                 var permissionStr = [];
                 if (dataset.access) {
                     for (let rolePermission of dataset.access) {
+                        if (!rolePermission['role']) continue;
                         for (let property in rolePermission) {
-                            if (!rolePermission['role']) continue;
 
                             if (rolePermission[property] &&
                                 (rolePermission[property].toLowerCase() == 'allusers' || rolePermission[property].toLowerCase() == 'allauthenticatedusers')) {
