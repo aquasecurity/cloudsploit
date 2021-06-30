@@ -5,7 +5,7 @@ module.exports = {
     title: 'MySQL Slow Query Log Enabled',
     category: 'SQL',
     description: 'Ensures that MySQL instances have slow query log flag enabled.',
-    more_info: 'SQL instances for MySQL type database which helps finding inefficient or time-consuming SQL queries for your MySQL databases.',
+    more_info: 'MySQL instance flag that helps find inefficient or time-consuming SQL queries for MySQL databases.',
     link: 'https://cloud.google.com/sql/docs/mysql/flags',
     recommended_action: 'Ensure that slow query log flag is enabled for all MySQL instances.',
     apis: ['instances:sql:list'],
