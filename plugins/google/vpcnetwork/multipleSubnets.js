@@ -22,7 +22,7 @@ module.exports = {
             if (!networks) return rcb();
 
             if (networks.err || !networks.data) {
-                helpers.addResult(results, 3, 'Unable to query networks: ' + helpers.addError(networks), region);
+                helpers.addResult(results, 3, 'Unable to query networks: ' + helpers.addError(networks), region, null, null, networks.err);
                 return rcb();
             }
 
@@ -41,7 +41,7 @@ module.exports = {
                 var subnets = network.subnetworks;
 
                 subnetRegions = regions.zones;
-                if (subnets) {
+                if (subnets && subnets.length) {
                     subnets.forEach(subnet => {
                         var splitSubnet = subnet.split('/');
                         subnetName = splitSubnet[10];
@@ -74,6 +74,8 @@ module.exports = {
 
                         }
                     });
+                } else {
+                    noNetworks.push(1);
                 }
                 for (var sub in myRegions) {
                     if (Math.floor(myRegions[sub]) > 1) {
@@ -82,8 +84,6 @@ module.exports = {
                         failNetworks.push(sub);
                     } else if (myRegions[sub] == .5) {
                         warnNetworks.push(sub);
-                    } else if(myRegions[sub] == 0) {
-                        noNetworks.push(sub);
                     }
                 }
 

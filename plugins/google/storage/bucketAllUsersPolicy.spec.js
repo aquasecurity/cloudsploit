@@ -2,9 +2,15 @@ var assert = require('assert');
 var expect = require('chai').expect;
 var plugin = require('./bucketAllUsersPolicy');
 
-const createCache = (err, data) => {
+const createCache = (err, data, bucketErr, bucketData) => {
     return {
         buckets: {
+            list: {
+                'global': {
+                    err: bucketErr,
+                    data: bucketData
+                }
+            },
             getIamPolicy: {
                 'global': {
                     err: err,
@@ -29,6 +35,8 @@ describe('bucketAllUsersPolicy', function () {
             const cache = createCache(
                 ['error'],
                 null,
+                ['error'],
+                null,
             );
 
             plugin.run(cache, {}, callback);
@@ -44,12 +52,18 @@ describe('bucketAllUsersPolicy', function () {
 
             const cache = createCache(
                 null,
-                [],
+                null,
+                null,
+                [
+                        {
+                            "kind": "storage#buckets"
+                        }
+                    ]
             );
 
             plugin.run(cache, {}, callback);
         });
-        it('should give passing result if no bucks have anonymous or public access', function (done) {
+        it('should give passing result if no buckets have anonymous or public access', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
@@ -94,6 +108,35 @@ describe('bucketAllUsersPolicy', function () {
                         },
                         "visibility": "public",
                         "kind": "dns#managedZone"
+                    }
+                ],
+                null,
+                [
+                    {
+                        "kind": "storage#bucket",
+                        "selfLink": "https://www.googleapis.com/storage/v1/b/testio",
+                        "id": "testio",
+                        "name": "testio",
+                        "projectNumber": "664367550207",
+                        "metageneration": "1",
+                        "location": "US",
+                        "storageClass": "STANDARD",
+                        "etag": "CAE=",
+                        "defaultEventBasedHold": false,
+                        "timeCreated": "2021-04-06T16:06:14.799Z",
+                        "updated": "2021-04-06T16:06:14.799Z",
+                        "iamConfiguration": {
+                            "bucketPolicyOnly": {
+                                "enabled": true,
+                                "lockedTime": "2021-07-05T16:06:14.799Z"
+                            },
+                            "uniformBucketLevelAccess": {
+                                "enabled": true,
+                                "lockedTime": "2021-07-05T16:06:14.799Z"
+                            }
+                        },
+                        "locationType": "multi-region",
+                        "satisfiesPZS": false
                     }
                 ]
             );
@@ -181,6 +224,35 @@ describe('bucketAllUsersPolicy', function () {
                             }
                         ],
                         "etag": "CAs="
+                    }
+                ],
+                null,
+                [
+                    {
+                        "kind": "storage#bucket",
+                        "selfLink": "https://www.googleapis.com/storage/v1/b/testio",
+                        "id": "testio",
+                        "name": "testio",
+                        "projectNumber": "664367550207",
+                        "metageneration": "1",
+                        "location": "US",
+                        "storageClass": "STANDARD",
+                        "etag": "CAE=",
+                        "defaultEventBasedHold": false,
+                        "timeCreated": "2021-04-06T16:06:14.799Z",
+                        "updated": "2021-04-06T16:06:14.799Z",
+                        "iamConfiguration": {
+                            "bucketPolicyOnly": {
+                                "enabled": true,
+                                "lockedTime": "2021-07-05T16:06:14.799Z"
+                            },
+                            "uniformBucketLevelAccess": {
+                                "enabled": true,
+                                "lockedTime": "2021-07-05T16:06:14.799Z"
+                            }
+                        },
+                        "locationType": "multi-region",
+                        "satisfiesPZS": false
                     }
                 ]
             );
