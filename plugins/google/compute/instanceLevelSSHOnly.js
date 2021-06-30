@@ -32,6 +32,7 @@ module.exports = {
                         myError[region] = [];
                     }
                     myError[region].push(zone);
+                    myError[region][zone] = instances.err;
                     return zcb();
                 }
 
@@ -44,23 +45,23 @@ module.exports = {
                 }
 
                 instances.data.forEach(instance => {
+                    var found;
                     if (instance.metadata &&
                         instance.metadata.items &&
                         instance.metadata.items.length) {
 
-                        instance.metadata.items.forEach(metaItem => {
-                            if (metaItem.key === 'block-project-ssh-keys' && metaItem.value === 'FALSE') {
-                                notBlockedProjectSSHKey.push(instance.id)
-                            }
-                        });
+                        found = instance.metadata.items.find(metaItem => metaItem.key === 'block-project-ssh-keys' &&
+                            metaItem.value && metaItem.value.toUpperCase() === 'TRUE');
                     }
+
+                    if (!found) notBlockedProjectSSHKey.push(instance.id);
                 });
             });
 
             if (myError[region] &&
                 zones[region] &&
                 (myError[region].join(',') === zones[region].join(','))) {
-                helpers.addResult(results, 3, 'Unable to query instances' , region);
+                helpers.addResult(results, 3, 'Unable to query instances', region, null, null, myError);
             } else if (noInstances[region] &&
                 zones[region] &&
                 (noInstances[region].join(',') === zones[region].join(','))) {
