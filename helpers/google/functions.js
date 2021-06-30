@@ -40,7 +40,7 @@ function addResult(results, status, message, region, resource, custom, err, requ
             });
 
         } else {
-            pushResult(3, (errorObj.message ? errorObj.message : 'Unable to query the API: ' + errorObj.code), region, resource, custom);
+            pushResult(3, (errorObj.message ? errorObj.message : 'Unable to query the API: ' + errorObj), region, resource, custom);
         }
     };
 
