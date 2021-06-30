@@ -2,12 +2,12 @@ var async = require('async');
 var helpers = require('../../../helpers/google');
 
 module.exports = {
-    title: 'MySQL Local Infile Disabled',
+    title: 'MySQL Slow Query Log Enabled',
     category: 'SQL',
-    description: 'Ensures SQL instances for MySQL type does not have local infile flag enabled.',
-    more_info: 'SQL instances for MySQL type database provides local_infile flag, which can be used to load data from client or server systems. It controls the load data statements for database. Anyone using this server can access any file on the client system. For security reasons it should be disabled.',
+    description: 'Ensures that MySQL instances have slow query log flag enabled.',
+    more_info: 'MySQL instance flag that helps find inefficient or time-consuming SQL queries for MySQL databases.',
     link: 'https://cloud.google.com/sql/docs/mysql/flags',
-    recommended_action: 'Ensure that local infile flag is disabled for all MySQL instances.',
+    recommended_action: 'Ensure that slow query log flag is enabled for all MySQL instances.',
     apis: ['instances:sql:list'],
 
     run: function(cache, settings, callback) {
@@ -32,30 +32,30 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
+                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() == 'READ_REPLICA_INSTANCE') return;
+
                 if (sqlInstance.databaseVersion && !sqlInstance.databaseVersion.toLowerCase().includes('mysql')) {
                     helpers.addResult(results, 0, 
                         'SQL instance database type is not of MySQL type', region, sqlInstance.name);
                     return;
                 }
 
-                if (sqlInstance.instanceType != "READ_REPLICA_INSTANCE" &&
-                    sqlInstance.settings &&
+                if (sqlInstance.settings &&
                     sqlInstance.settings.databaseFlags &&
                     sqlInstance.settings.databaseFlags.length) {
-                        let found = sqlInstance.settings.databaseFlags.find(flag => flag.name && flag.name == 'local_infile' &&
-                                                                        flag.value && flag.value == 'off');
-                        
+                        let found = sqlInstance.settings.databaseFlags.find(flag => flag.name && flag.name == 'slow_query_log' &&
+                                                                        flag.value && flag.value == 'on');
+
                         if (found) {
                             helpers.addResult(results, 0, 
-                                'SQL instance does not have local_infile flag enabled', region, sqlInstance.name);
+                                'SQL instance has slow query log flag enabled', region, sqlInstance.name);
                         } else {
                             helpers.addResult(results, 2,
-                                'SQL instance has local_infile flag enabled', region, sqlInstance.name);
+                                'SQL instance has slow query log flag disabled', region, sqlInstance.name);
                         }
-                } else if (sqlInstance.instanceType == "READ_REPLICA_INSTANCE"){
                 } else {
                     helpers.addResult(results, 2, 
-                        'SQL instance has local_infile flag enabled', region, sqlInstance.name);
+                        'SQL instance has slow query log flag disabled', region, sqlInstance.name);
                 }
             });
 

@@ -184,6 +184,13 @@ var calls = {
             parent: true
         }
     },
+    topics: {
+        list: {
+            api: 'pubsub',
+            version: 'v1',
+            parent: 'project',
+        }
+    }
 };
 
 var postcalls = {
@@ -245,8 +252,6 @@ var postcalls = {
             filterValue: ['name'],
         }
     }
-
-
 };
 
 var collect = function(GoogleConfig, settings, callback) {
