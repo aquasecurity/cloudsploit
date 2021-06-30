@@ -268,6 +268,18 @@ var postcalls = {
             filterValue: ['name'],
         }
     },
+    backupRuns: {
+        list: {
+            api: 'sqladmin',
+            version: 'v1beta4',
+            location: null,
+            reliesOnService: ['instances'],
+            reliesOnSubService: ['sql'],
+            reliesOnCall: ['list'],
+            filterKey: ['instance'],
+            filterValue: ['name'],
+        }
+    },
     datasets: {
         get: {
             api: 'bigquery',
