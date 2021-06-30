@@ -10,12 +10,12 @@ module.exports = {
     link: 'https://docs.microsoft.com/en-us/azure/azure-cache-for-redis/cache-management-faq#when-should-i-enable-the-non-tlsssl-port-for-connecting-to-redis',
     apis: ['redisCaches:listBySubscription'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.redisCaches, function (location, rcb) {
+        async.each(locations.redisCaches, function(location, rcb) {
             const caches = helpers.addSource(cache, source,
                 ['redisCaches', 'listBySubscription', location]);
 
@@ -40,7 +40,7 @@ module.exports = {
             }
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });

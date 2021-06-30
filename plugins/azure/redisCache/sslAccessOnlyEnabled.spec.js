@@ -3,18 +3,18 @@ var sslAccessOnlyEnabled = require('./sslAccessOnlyEnabled');
 
 const redisCaches = [
     {
-        "id": "/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Cache/Redis/test-cache",
-        "location": "East US",
-        "name": "test-cache",
-        "type": "Microsoft.Cache/Redis",
-        "enableNonSslPort": false,
+        'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Cache/Redis/test-cache',
+        'location': 'East US',
+        'name': 'test-cache',
+        'type': 'Microsoft.Cache/Redis',
+        'enableNonSslPort': false,
     },
     {
-        "id": "/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Cache/Redis/test-cache",
-        "location": "East US",
-        "name": "test-cache",
-        "type": "Microsoft.Cache/Redis",
-        "enableNonSslPort": true,
+        'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Cache/Redis/test-cache',
+        'location': 'East US',
+        'name': 'test-cache',
+        'type': 'Microsoft.Cache/Redis',
+        'enableNonSslPort': true,
     }
 ];
 
@@ -32,9 +32,9 @@ const createCache = (redisCaches) => {
     };
 };
 
-describe('sslAccessOnlyEnabled', function () {
-    describe('run', function () {
-        it('should give passing result if no redis caches', function (done) {
+describe('sslAccessOnlyEnabled', function() {
+    describe('run', function() {
+        it('should give passing result if no redis caches', function(done) {
             const cache = createCache([]);
             sslAccessOnlyEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -45,7 +45,7 @@ describe('sslAccessOnlyEnabled', function () {
             });
         });
 
-        it('should give unknown result if unable to query for redis caches', function (done) {
+        it('should give unknown result if unable to query for redis caches', function(done) {
             const cache = createCache(null);
             sslAccessOnlyEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -56,7 +56,7 @@ describe('sslAccessOnlyEnabled', function () {
             });
         });
 
-        it('should give passing result if redis cache is accessible through SSL only', function (done) {
+        it('should give passing result if redis cache is accessible through SSL only', function(done) {
             const cache = createCache([redisCaches[0]]);
             sslAccessOnlyEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -67,7 +67,7 @@ describe('sslAccessOnlyEnabled', function () {
             });
         });
 
-        it('should give failing result if redis cache is using non SSL port', function (done) {
+        it('should give failing result if redis cache is using non SSL port', function(done) {
             const cache = createCache([redisCaches[1]]);
             sslAccessOnlyEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
