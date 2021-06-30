@@ -40,11 +40,7 @@ module.exports = {
             }
 
             rcb();
-<<<<<<< HEAD
         }, function() {
-=======
-        }, function () {
->>>>>>> f1d3c52dfb2aefd84f36c5b8bb1c0425e1c5f35c
             // Global checking goes here
             callback(null, results, source);
         });
