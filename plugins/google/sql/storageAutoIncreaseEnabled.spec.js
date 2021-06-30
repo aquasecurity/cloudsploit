@@ -1,6 +1,5 @@
-var assert = require('assert');
 var expect = require('chai').expect;
-var plugin = require('./mysqlLocalInfile');
+var plugin = require('./storageAutoIncreaseEnabled');
 
 const createCache = (err, data) => {
     return {
@@ -17,7 +16,7 @@ const createCache = (err, data) => {
     }
 };
 
-describe('mysqlLocalInfile', function () {
+describe('storageAutoIncreaseEnabled', function () {
     describe('run', function () {
         it('should give unknown result if a sql instance error is passed or no data is present', function (done) {
             const callback = (err, results) => {
@@ -53,57 +52,11 @@ describe('mysqlLocalInfile', function () {
             plugin.run(cache, {}, callback);
         });
 
-        it('should give passing result if sql instance database type is not of MySQL type', function (done) {
-            const callback = (err, results) => {
-                expect(results.length).to.be.above(0);
-                expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('SQL instance database type is not of MySQL type');
-                expect(results[0].region).to.equal('global');
-                done()
-            };
-
-            const cache = createCache(
-                null,
-                [{
-                    name: "testing-instance",
-                    databaseVersion: "POSTGRES_13",
-                }],
-            );
-
-            plugin.run(cache, {}, callback);
-        });
-        it('should give passing result if sql instances does have local_infile flag enabled', function (done) {
-            const callback = (err, results) => {
-                expect(results.length).to.be.above(0);
-                expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('SQL instance does not have local_infile flag enabled');
-                expect(results[0].region).to.equal('global');
-                done()
-            };
-
-            const cache = createCache(
-                null,
-                [{
-                    instanceType: "CLOUD_SQL_INSTANCE",
-                    name: "testing-instance",
-                    databaseVersion: "MYSQL_5_7",
-                    settings: {
-                      databaseFlags: [
-                        {
-                            name: "local_infile",
-                            value: "off",
-                        },
-                      ]}
-                }],
-            );
-            
-            plugin.run(cache, {}, callback);
-        });
-        it('should give failing result if sql instances have local_infile flag enabled', function (done) {
+        it('should give failing result if sql instance has storage auto increase disabled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('SQL instance has local_infile flag enabled');
+                expect(results[0].message).to.include('SQL instance has automatic storage increase disabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -113,18 +66,65 @@ describe('mysqlLocalInfile', function () {
                 [{
                     instanceType: "CLOUD_SQL_INSTANCE",
                     name: "testing-instance",
-                    databaseVersion: "MYSQL_5_7",
+                    databaseVersion: "POSTGRES_13",
                     settings: {
-                      databaseFlags: [
-                        {
-                            name: "local_infile",
-                            value: "on",
-                        },
-                      ]}
+                        storageAutoResizeLimit: '100',
+                        storageAutoResize: false,
+                    }
                 }],
             );
 
             plugin.run(cache, {}, callback);
+        });
+
+        it('should give passing result if SQL instance automatic storage increase limit is less than or equal to set limit', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('is less than or equal');
+                expect(results[0].region).to.equal('global');
+                done()
+            };
+
+            const cache = createCache(
+                null,
+                [{
+                    instanceType: "CLOUD_SQL_INSTANCE",
+                    name: "testing-instance",
+                    databaseVersion: "POSTGRES_13",
+                    settings: {
+                        storageAutoResizeLimit: '100',
+                        storageAutoResize: true,
+                    }
+                }],
+            );
+
+            plugin.run(cache, { sql_storage_auto_increase_limit: '150'}, callback);
+        });
+
+        it('should give failing result if SQL instance automatic storage increase limit is greater than set limit', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('is greater than');
+                expect(results[0].region).to.equal('global');
+                done()
+            };
+
+            const cache = createCache(
+                null,
+                [{
+                    instanceType: "CLOUD_SQL_INSTANCE",
+                    name: "testing-instance",
+                    databaseVersion: "POSTGRES_13",
+                    settings: {
+                        storageAutoResizeLimit: '200',
+                        storageAutoResize: true,
+                    }
+                }],
+            );
+
+            plugin.run(cache, { sql_storage_auto_increase_limit: '150'}, callback);
         });
     })
 })
