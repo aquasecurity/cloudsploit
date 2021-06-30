@@ -32,7 +32,9 @@ module.exports = {
             }
 
             for (let cache of caches.data) {
-                if (cache.minimumTlsVersion && (cache.minimumTlsVersion === '1.0' || cache.minimumTlsVersion === '1.1')) {
+                if (!cache.minimumTlsVersion) {
+                    helpers.addResult(results, 2, 'Redis Cache is using the default TLS Version', location, cache.id);
+                } else if (cache.minimumTlsVersion && (cache.minimumTlsVersion === '1.0' || cache.minimumTlsVersion === '1.1')) {
                     helpers.addResult(results, 2, 'Redis Cache is not using the latest TLS Version', location, cache.id);
                 } else {
                     helpers.addResult(results, 0, 'Redis Cache is using the latest TLS Version', location, cache.id);
@@ -40,11 +42,7 @@ module.exports = {
             }
 
             rcb();
-<<<<<<< HEAD
         }, function() {
-=======
-        }, function () {
->>>>>>> f1d3c52dfb2aefd84f36c5b8bb1c0425e1c5f35c
             // Global checking goes here
             callback(null, results, source);
         });

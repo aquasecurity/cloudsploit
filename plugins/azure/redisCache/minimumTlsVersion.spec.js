@@ -22,6 +22,12 @@ const redisCaches = [
         'name': 'test-cache',
         'type': 'Microsoft.Cache/Redis',
         'minimumTlsVersion': '1.0',
+    },
+    {
+        'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Cache/Redis/test-cache',
+        'location': 'East US',
+        'name': 'test-cache',
+        'type': 'Microsoft.Cache/Redis'
     }
 ];
 
@@ -91,6 +97,17 @@ describe('minimumTlsVersion', function() {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Redis Cache is not using the latest TLS Version');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+
+        it('should give failing result if redis cache is using default TLS version', function (done) {
+            const cache = createCache([redisCaches[3]]);
+            minimumTlsVersion.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('Redis Cache is using the default TLS Version');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
