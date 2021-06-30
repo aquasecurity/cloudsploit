@@ -34,7 +34,6 @@ module.exports = {
             }
 
             async.each(describeLoadBalancers.data, function(elb, cb){
-                
                 var resource = elb.LoadBalancerArn;
 
                 var describeListeners = helpers.addSource(cache, source,
@@ -54,24 +53,24 @@ module.exports = {
                     return cb();
                 }
 
-                for (var l in describeListeners.data.Listeners) {
-                    var listener = describeListeners.data.Listeners[l];
-                    if (listener.Certificates && listener.Certificates.length) {
-                        console.log(listener.Certificates, listener.DefaultActions);
-                        helpers.addResult(results, 0,
-                            'Elastic Load Balancer has SSL Termination configured',
-                            region, resource);
-                    } else {
+                let found = !!describeListeners.data.Listeners.find(listener => listener.Certificates && listener.Certificates.length);
+    
+                if (found) {
+                    helpers.addResult(results, 0,
+                        'Elastic Load Balancer has SSL Termination configured',
+                        region, resource);
+                } else {
                     helpers.addResult(results, 2,
                         'Elastic Load Balancer does not have SSL Termination configured',
                         region, resource);
-                    }
                 }
 
                 cb();
+            }, function(){
+
+                rcb();
             });
 
-            rcb();
         }, function(){
             callback(null, results, source);
         });
