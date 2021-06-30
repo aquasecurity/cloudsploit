@@ -1,29 +1,13 @@
 var async = require('async');
 var helpers = require('../../../helpers/alibaba');
 
-var encryptionLevels = ['none', 'sse', 'cloudkms', 'alibabacmk', 'externalcmk', 'cloudhsm'];
-
-function getEncryptionLevel(kmsKey) {
-    if (kmsKey.Origin) {
-        if (kmsKey.Origin === 'Aliyun_KMS') {
-            if (kmsKey.ProtectionLevel) {
-                if (kmsKey.ProtectionLevel.toUpperCase() == 'SOFTWARE') return 3;
-                if (kmsKey.ProtectionLevel.toUpperCase() == 'HSM') return 5;
-            }
-        }
-        if (kmsKey.Origin === 'EXTERNAL') return 4;
-    }
-
-    return 0;
-}
-
 module.exports = {
-    title: 'Data Disks Encrypted',
+    title: 'System Disks Encryption',
     category: 'ECS',
-    description: 'Ensure that encryption is enabled for ECS data disk volumes.',
+    description: 'Ensure that encryption is enabled for ECS system disk volumes.',
     more_info: 'Encryption can help you secure your data stored in Alibaba Cloud ECS and comply with security standards.',
     link: 'https://www.alibabacloud.com/help/doc-detail/59643.htm',
-    recommended_action: 'Enable encryption for ECS data disk volumes.',
+    recommended_action: 'Enable encryption for ECS system disk volumes.',
     apis: ['ECS:DescribeDisks', 'KMS:ListKeys', 'KMS:DescribeKey', 'STS:GetCallerIdentity'],
     compliance: {
         hipaa: 'HIPAA requires that all data is encrypted, including data at rest. ' +
@@ -33,14 +17,14 @@ module.exports = {
              'should be enabled for all disk volumes storing this type of data.'
     },
     settings: {
-        data_disks_encryption_level: {
-            name: 'ECS Data Disks Encryption Level',
+        system_disks_encryption_level: {
+            name: 'ECS system Disks Encryption Level',
             description: 'In order (lowest to highest) cloudkms=Alibaba managed default service KMS; alibabacmk=Customer managed KMS; externalcmk=Customer imported key; cloudhsm=Customer managed CloudHSM sourced Key',
             regex: '^(cloudkms|alibabacmk|externalcmk|cloudhsm)$',
             default: 'cloudkms',
         },
-        data_disks_result_limit: {
-            name: 'Data Disks Result Limit',
+        system_disks_result_limit: {
+            name: 'System Disks Result Limit',
             description: 'If the number of results is greater than this value, combine them into one result',
             regex: '^[0-9]*$',
             default: '20',
@@ -55,8 +39,9 @@ module.exports = {
 
         var accountId = helpers.addSource(cache, source, ['sts', 'GetCallerIdentity', defaultRegion, 'data']);
 
-        var targetEncryptionLevel = encryptionLevels.indexOf(settings.data_disks_encryption_level || this.settings.data_disks_encryption_level.default);
-        var disksResultLimit = parseInt(settings.data_disks_result_limit || this.settings.data_disks_result_limit.default);
+        var targetEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(settings.system_disks_encryption_level || this.settings.system_disks_encryption_level.default);
+
+        var disksResultLimit = parseInt(settings.system_disks_result_limit || this.settings.system_disks_result_limit.default);
 
         async.each(regions.ecs, function(region, rcb) {
             var describeDisks = helpers.addSource(cache, source, ['ecs', 'DescribeDisks', region]);
@@ -85,7 +70,7 @@ module.exports = {
             var found = false;
           
             async.each(describeDisks.data, (disk, dcb) => {
-                if (!disk.DiskId || disk.Type.toLowerCase() !== 'data') return dcb();
+                if (!disk.DiskId || (disk.Type && disk.Type.toLowerCase() !== 'system')) return dcb();
 
                 found = true;
                 if (!disk.Encrypted) {
@@ -93,7 +78,7 @@ module.exports = {
                     return dcb();
                 }
 
-                if (!disk.KMSKeyId || !disk.KMSKeyId.length) {
+                if (!disk.KMSKeyId) {
                     if (targetEncryptionLevel > 2) {
                         encryptionFailing.push(disk.DiskId);
                     } else encryptionPassing.push(disk.DiskId);
@@ -107,21 +92,20 @@ module.exports = {
                     return dcb();
                 }
 
-                var currentEncryptionLevel = getEncryptionLevel(describeKey.data);
+                var currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data);
 
                 if (currentEncryptionLevel < targetEncryptionLevel) {
                     encryptionFailing.push(disk.DiskId);
                 } else encryptionPassing.push(disk.DiskId);
-                
                 dcb();
             }, function() {
                 if (encryptionFailing.length) {
                     if (encryptionFailing.length > disksResultLimit) {
-                        helpers.addResult(results, 2, `More than ${disksResultLimit} data disks are not encrypted to ${encryptionLevels[targetEncryptionLevel]}`, region);
+                        helpers.addResult(results, 2, `More than ${disksResultLimit} system disks are not encrypted to ${helpers.ENCRYPTION_LEVELS[targetEncryptionLevel]}`, region);
                     } else {
                         encryptionFailing.forEach(diskId => {
                             let resource = helpers.createArn('ecs', accountId, 'disk', diskId, region);
-                            helpers.addResult(results, 2, `Data disk is not encrypted to ${encryptionLevels[targetEncryptionLevel]}`, region, resource);
+                            helpers.addResult(results, 2, `System disk is not encrypted to ${helpers.ENCRYPTION_LEVELS[targetEncryptionLevel]}`, region, resource);
                         });
                     }
                 }
@@ -139,21 +123,20 @@ module.exports = {
 
                 if (encryptionPassing.length) {
                     if (encryptionPassing.length > disksResultLimit) {
-                        helpers.addResult(results, 0, `More than ${disksResultLimit} data disks are encrypted to at least ${encryptionLevels[targetEncryptionLevel]}`,
+                        helpers.addResult(results, 0, `More than ${disksResultLimit} system disks are encrypted to at least ${helpers.ENCRYPTION_LEVELS[targetEncryptionLevel]}`,
                             region);
                     } else {
                         encryptionPassing.forEach(diskId => {
                             let resource = helpers.createArn('ecs', accountId, 'disk', diskId, region);
-                            helpers.addResult(results, 0, `Data disk is encrypted to at least ${encryptionLevels[targetEncryptionLevel]}`,
+                            helpers.addResult(results, 0, `System disk is encrypted to at least ${helpers.ENCRYPTION_LEVELS[targetEncryptionLevel]}`,
                                 region, resource);
                         });
                     }
                 }
 
                 if (!found) {
-                    helpers.addResult(results, 0, 'No ECS data disks found', region);
+                    helpers.addResult(results, 0, 'No ECS system disks found', region);
                 }
-                
                 rcb();
             });
         }, function(){
