@@ -395,7 +395,12 @@ function isEffectivePolicyStatement(statement, denyActionResourceMap) {
     for (let action of Object.keys(statementActionResourceMap)) {
         for (let key of Object.keys(denyActionResourceMap)) {
             if (matchKeys(key, action)) {
-                statementActionResourceMap[action] = statementActionResourceMap[action].filter(resource => !denyActionResourceMap[key].includes(resource));
+                var deniedResources = [];
+                for (let stmResource of statementActionResourceMap[action]) {
+                    if (denyActionResourceMap[key].find(deniedResource => matchKeys(deniedResource, stmResource))) deniedResources.push(stmResource);
+                }
+
+                statementActionResourceMap[action] = statementActionResourceMap[action].filter(resource => !deniedResources.includes(resource));
             }
         }
 

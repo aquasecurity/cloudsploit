@@ -13,6 +13,17 @@ var regions = [
     'sa-saopaulo-1',
     'ap-osaka-1',
     'eu-zurich-1',
+    'ap-melbourne-1',
+    'sa-vinhedo-1',
+    'ca-montreal-1',
+    'sa-santiago-1',
+    'ap-hyderabad-1',
+    'eu-amsterdam-1',
+    'me-jeddah-1',
+    'ap-chuncheon-1',
+    'me-dubai-1',
+    'uk-cardiff-1',
+    'us-sanjose-1'
 ];
 
 module.exports = {

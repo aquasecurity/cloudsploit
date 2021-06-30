@@ -1216,8 +1216,7 @@ var postcalls = [
             describeDBParameters: {
                 reliesOnService: 'rds',
                 reliesOnCall: 'describeDBParameterGroups',
-                filterKey: 'DBParameterGroupName',
-                filterValue: 'DBParameterGroupName'
+                override: true
             }
         },
         Route53: {
@@ -1397,14 +1396,17 @@ var collect = function(AWSConfig, settings, callback) {
     var AWSXRay;
     var debugMode = settings.debug_mode;
     if (debugMode) AWSXRay = require('aws-xray-sdk');
-    
+
     AWSConfig.maxRetries = 8;
     AWSConfig.retryDelayOptions = {base: 100};
 
     var regions = helpers.regions(settings);
 
     var collection = {};
-
+    var debugApiCalls = function(call, service, finished) {
+        if (!debugMode) return;
+        finished ? console.log(`[INFO] ${service}:${call} returned`) : console.log(`[INFO] ${service}:${call} invoked`);
+    };
     async.eachOfLimit(calls, 10, function(call, service, serviceCb) {
         var serviceLower = service.toLowerCase();
         if (!collection[serviceLower]) collection[serviceLower] = {};
@@ -1413,7 +1415,7 @@ var collect = function(AWSConfig, settings, callback) {
         async.eachOfLimit(call, 15, function(callObj, callKey, callCb) {
             if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
             if (!collection[serviceLower][callKey]) collection[serviceLower][callKey] = {};
-
+            debugApiCalls(callKey, service);
             var callRegions;
 
             if (callObj.default) {
@@ -1481,17 +1483,16 @@ var collect = function(AWSConfig, settings, callback) {
                         // so that the injection of the NextToken doesn't break other calls
                         var localParams = JSON.parse(JSON.stringify(callObj.params || {}));
                         if (nextTokens) localParams[nextTokens[0]] = nextTokens[1];
-
                         if (callObj.params || nextTokens) {
                             executor[callKey](localParams, executorCb);
                         } else {
                             executor[callKey](executorCb);
                         }
                     }
-
                     execute();
                 }
             }, function() {
+                debugApiCalls(callKey, service, true);
                 callCb();
             });
         }, function() {
@@ -1507,7 +1508,7 @@ var collect = function(AWSConfig, settings, callback) {
                 async.eachOfLimit(serviceObj, 1, function(callObj, callKey, callCb) {
                     if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
                     if (!collection[serviceLower][callKey]) collection[serviceLower][callKey] = {};
-
+                    debugApiCalls(callKey, service);
                     async.eachLimit(regions[serviceLower], helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb) {
                         if (settings.skip_regions &&
                             settings.skip_regions.indexOf(region) > -1 &&
@@ -1560,7 +1561,6 @@ var collect = function(AWSConfig, settings, callback) {
                                         var filter = {};
                                         filter[callObj.filterKey] = dep[callObj.filterValue];
                                         filter[callObj.checkMultipleKey] = thisCheck;
-
                                         executor[callKey](filter, function(err, data) {
                                             if (err) {
                                                 collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = err;
@@ -1606,6 +1606,7 @@ var collect = function(AWSConfig, settings, callback) {
                             });
                         }
                     }, function() {
+                        debugApiCalls(callKey, service, true);
                         callCb();
                     });
                 }, function() {

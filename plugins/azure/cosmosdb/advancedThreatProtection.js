@@ -42,8 +42,9 @@ module.exports = {
 
                     if (!advancedThreatProtection || advancedThreatProtection.err || !advancedThreatProtection.data) {
                         helpers.addResult(results, 3,
-                            `Unable to query advanced threat protection for Cosmos DB account: ${advancedThreatProtection}`,
+                            'Unable to query advanced threat protection for Cosmos DB account: ' + helpers.addError(advancedThreatProtection),
                             location, account.id);
+                        return cb();
                     }
 
                     if (advancedThreatProtection.data.isEnabled) {
@@ -57,9 +58,12 @@ module.exports = {
                     helpers.addResult(results, 0,
                         'Advanced threat protection feature is not supported for current resource', location, account.id);
                 }
+
+                cb();
+            }, function() {
+                rcb();
             });
 
-            rcb();
         }, function() {
             callback(null, results, source);
         });

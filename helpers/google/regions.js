@@ -51,8 +51,8 @@ module.exports = {
     all_regions: regions,
     zones: zones,
     disks: regions,
-    keyRings: regions,
-    cryptoKeys: regions,
+    keyRings: ['global', ...regions],
+    cryptoKeys: ['global', ...regions],
     securityPolicies: ['global'],
     firewalls: ['global'],
     buckets: ['global'],
@@ -76,5 +76,8 @@ module.exports = {
     keys: ['global'],
     sinks: ['global'],
     users: ['global'],
-    backupRuns: ['global']
+    backupRuns: ['global'],
+    datasets: ['global'],
+    policies: ['global'],
+    topics: ['global']
 };
