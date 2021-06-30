@@ -76,5 +76,6 @@ module.exports = {
     keys: ['global'],
     sinks: ['global'],
     users: ['global'],
+    policies: ['global'],
     topics: ['global']
 };
