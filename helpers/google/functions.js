@@ -1,3 +1,4 @@
+var async = require('async');
 var shared = require(__dirname + '/../shared.js');
 
 var disabledKeywords = ['has not been used', 'it is disabled'];
@@ -40,7 +41,7 @@ function addResult(results, status, message, region, resource, custom, err, requ
             });
 
         } else {
-            pushResult(3, (errorObj.message ? errorObj.message : 'Unable to query the API: ' + errorObj.code), region, resource, custom);
+            pushResult(3, (errorObj.message ? errorObj.message : 'Unable to query the API: ' + errorObj), region, resource, custom);
         }
     };
 
@@ -208,10 +209,18 @@ function getProtectionLevel(cryptographickey, encryptionLevels) {
     return encryptionLevels.indexOf('unspecified');
 }
 
+function listToObj(resultObj, listData, onKey) {
+    async.each(listData, function(entry, cb){
+        if (entry[onKey]) resultObj[entry[onKey]] = entry;
+        cb();
+    });
+}
+
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
     findOpenAllPorts: findOpenAllPorts,
     hasBuckets: hasBuckets,
-    getProtectionLevel: getProtectionLevel
+    getProtectionLevel: getProtectionLevel,
+    listToObj: listToObj
 };

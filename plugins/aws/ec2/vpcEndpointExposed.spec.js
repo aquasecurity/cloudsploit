@@ -4,7 +4,7 @@ const vpcEndpointExposed = require('./vpcEndpointExposed');
 const vpcEndpoints = [
     {
         "VpcEndpointId": "vpce-004441c67cb8fb7f7",
-        "VpcEndpointType": "Gateway",
+        "VpcEndpointType": "Interface",
         "VpcId": "vpc-99de2fe4",
         "ServiceName": "com.amazonaws.us-east-1.s3",
         "State": "available",
@@ -47,7 +47,25 @@ const vpcEndpoints = [
         "CreationTimestamp": "2020-10-26T17:39:09.501Z",
         "Tags": [],
         "OwnerId": "112233445566"
-    }
+    },
+    {
+        "VpcEndpointId": "vpce-004441c67cb8fb7f7",
+        "VpcEndpointType": "Gateway",
+        "VpcId": "vpc-99de2fe4",
+        "ServiceName": "com.amazonaws.us-east-1.s3",
+        "State": "available",
+        "PolicyDocument": "{\"Version\":\"2008-10-17\",\"Statement\":[{\"Effect\":\"Deny\",\"Principal\":\"*\",\"Action\":\"*\",\"Resource\":\"*\"}]}",        
+        "RouteTableIds": [],
+        "SubnetIds": [],
+        "Groups": [],
+        "PrivateDnsEnabled": false,
+        "RequesterManaged": false,
+        "NetworkInterfaceIds": [],
+        "DnsEntries": [],
+        "CreationTimestamp": "2020-10-23T05:24:02.000Z",
+        "Tags": [],
+        "OwnerId": "112233445566"
+    },
 ]
 
 const createCache = (vpcEndpoints) => {
@@ -90,6 +108,15 @@ describe('vpcEndpointExposed', function () {
     describe('run', function () {
         it('should PASS if VPC endpoint is not exposed', function (done) {
             const cache = createCache([vpcEndpoints[0]]);
+            vpcEndpointExposed.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
+
+        it('should PASS if VPC endpoint is of Gateway type', function (done) {
+            const cache = createCache([vpcEndpoints[2]]);
             vpcEndpointExposed.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);

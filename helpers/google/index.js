@@ -207,6 +207,59 @@ var run = function(GoogleConfig, collection, settings, service, callObj, callKey
         }
     }
 };
+var handleErrors = function(err) {
+    if (err.code) {
+        if (err.code == 400) {
+            return 'Invalid argument, please contact support.';
+        } else if (err.code == 401) {
+            if (err.response && err.response.data && err.response.data.error_description) {
+                return err.response.data.error_description;
+            } else {
+                return 'Unauthenticated request, please contact support.';
+            }
+        } else if (err.code == 403) {
+            if (err.response) {
+                if (err.config) delete err.config;
+                if (err.response && err.response.config) delete err.response.config;
+                if (err.response && err.response.headers) delete err.response.headers;
+                return err;
+            } else {
+                return 'Permission denied, please check the permissions on the service account.';
+            }
+        } else if (err.code == 404) {
+            if (err.response) {
+                if (err.config) delete err.config;
+                if (err.response && err.response.config) delete err.response.config;
+                if (err.response && err.response.headers) delete err.response.headers;
+                return err;
+            } else {
+                return 'Resource not found.';
+            }
+        } else if (err.code == 429) {
+            return 'Rate limit exceeded.';
+        } else if (err.code == 500) {
+            if (err.response && err.response.data && err.response.data.error_description) {
+                return err.response.data.error_description;
+            } else {
+                return '500 Error from Google';
+            }
+        } else if (err.code == 503) {
+            if (err.response && err.response.data && err.response.data.error_description) {
+                return err.response.data.error_description;
+            } else {
+                return '503 Error from Google';
+            }
+        } else {
+            console.log(`[ERROR] Unhandled error from Google API: Error: ${JSON.stringify(err)}`);
+            return 'Unknown error response from Google';
+        }
+    } else {
+        console.log(`[ERROR] Unhandled error from Google API: Error: ${JSON.stringify(err)}`);
+        return 'Unspecified Google error, please contact support';
+    }
+};
+
+
 
 var addParent = function(GoogleConfig, region, callObj) {
     if (callObj.location && callObj.location == 'global') {
@@ -225,7 +278,8 @@ var execute = function(LocalGoogleConfig, collection, service, callObj, callKey,
     var executorCb = function(err, data) {
         if (myEngine) {
             if (err) {
-                collection[service][myEngine][callKey][region].err = err;
+                let errMessage = handleErrors(err);
+                collection[service][myEngine][callKey][region].err = errMessage;
             }
 
             if (!data) return regionCb();
@@ -253,7 +307,8 @@ var execute = function(LocalGoogleConfig, collection, service, callObj, callKey,
             }
         } else {
             if (err) {
-                collection[service][callKey][region].err = err;
+                let errMessage = handleErrors(err);
+                collection[service][callKey][region].err = errMessage;
             }
 
             if (!data) return regionCb();
@@ -318,6 +373,9 @@ var execute = function(LocalGoogleConfig, collection, service, callObj, callKey,
         executor['projects']['serviceAccounts'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
     } else if (callObj.parent && callObj.parent === 'name') {
         parentParams = {auth: callObj.params.auth, name: callObj.params.parent};
+        executor['projects'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
+    } else if (callObj.parent && callObj.parent === 'project') {
+        parentParams = {auth: callObj.params.auth, project: callObj.params.parent};
         executor['projects'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
     } else if (callObj.parent) {
         parentParams = {auth: callObj.params.auth, parent: callObj.params.parent};
