@@ -1,6 +1,6 @@
 var assert = require('assert');
 var expect = require('chai').expect;
-var plugin = require('./mysqlLocalInfile');
+var plugin = require('./mysqlSlowQueryLog');
 
 const createCache = (err, data) => {
     return {
@@ -17,7 +17,7 @@ const createCache = (err, data) => {
     }
 };
 
-describe('mysqlLocalInfile', function () {
+describe('mysqlSlowQueryLog', function () {
     describe('run', function () {
         it('should give unknown result if a sql instance error is passed or no data is present', function (done) {
             const callback = (err, results) => {
@@ -72,11 +72,11 @@ describe('mysqlLocalInfile', function () {
 
             plugin.run(cache, {}, callback);
         });
-        it('should give passing result if sql instances does have local_infile flag enabled', function (done) {
+        it('should give passing result if sql instance has slow query log flag enabled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('SQL instance does not have local_infile flag enabled');
+                expect(results[0].message).to.include('SQL instance has slow query log flag enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -90,8 +90,8 @@ describe('mysqlLocalInfile', function () {
                     settings: {
                       databaseFlags: [
                         {
-                            name: "local_infile",
-                            value: "off",
+                            name: "slow_query_log",
+                            value: "on",
                         },
                       ]}
                 }],
@@ -99,11 +99,12 @@ describe('mysqlLocalInfile', function () {
             
             plugin.run(cache, {}, callback);
         });
-        it('should give failing result if sql instances have local_infile flag enabled', function (done) {
+
+        it('should give failing result if sql instance has slow query log flag disabled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('SQL instance has local_infile flag enabled');
+                expect(results[0].message).to.include('SQL instance has slow query log flag disabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -117,8 +118,8 @@ describe('mysqlLocalInfile', function () {
                     settings: {
                       databaseFlags: [
                         {
-                            name: "local_infile",
-                            value: "on",
+                            name: "slow_query_log",
+                            value: "off",
                         },
                       ]}
                 }],

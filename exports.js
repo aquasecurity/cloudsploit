@@ -702,6 +702,7 @@ module.exports = {
         'sqlNoPublicIps'                : require(__dirname + '/plugins/google/sql/sqlNoPublicIps.js'),
         'sqlCrossDbOwnership'           : require(__dirname + '/plugins/google/sql/sqlCrossDbOwnership.js'),
         'sqlContainedDatabaseAuth'      : require(__dirname + '/plugins/google/sql/sqlContainedDatabaseAuth.js'),
+        'mysqlSlowQueryLog'             : require(__dirname + '/plugins/google/sql/mysqlSlowQueryLog.js'),
         'storageAutoIncreaseEnabled'    : require(__dirname + '/plugins/google/sql/storageAutoIncreaseEnabled.js'),
         'serverCertificateRotation'     : require(__dirname + '/plugins/google/sql/serverCertificateRotation.js'),
 
