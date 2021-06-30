@@ -671,6 +671,7 @@ module.exports = {
         'defaultVpcInUse'               : require(__dirname + '/plugins/google/vpcnetwork/defaultVpcInUse.js'),
         'flowLogsEnabled'               : require(__dirname + '/plugins/google/vpcnetwork/flowLogsEnabled.js'),
         'privateAccessEnabled'          : require(__dirname + '/plugins/google/vpcnetwork/privateAccessEnabled.js'),
+        'dnsLoggingEnabled'             : require(__dirname + '/plugins/google/vpcnetwork/dnsLoggingEnabled.js'),
 
         'instanceMaxCount'              : require(__dirname + '/plugins/google/compute/instanceMaxCount.js'),
         'instancesMultiAz'              : require(__dirname + '/plugins/google/compute/instancesMultiAz.js'),
