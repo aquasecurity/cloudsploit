@@ -31,14 +31,17 @@ module.exports = {
             }
             
             virtualMachines.data.forEach(virtualMachine => {
+                let foundDisk = false;
                 if (virtualMachine.storageProfile && virtualMachine.storageProfile.osDisk &&
                     virtualMachine.storageProfile.osDisk.managedDisk && 
                     virtualMachine.storageProfile.osDisk.managedDisk.id &&
                     virtualMachine.storageProfile.osDisk.managedDisk.storageAccountType &&
                     virtualMachine.storageProfile.osDisk.managedDisk.storageAccountType.toLowerCase() === 'premium_lrs') {
                     helpers.addResult(results, 2, 'Attached OS disk volume is of Premium SSD type', location, virtualMachine.storageProfile.osDisk.managedDisk.id);
-                } else {
+                    foundDisk = true;
+                } else if (virtualMachine.storageProfile && virtualMachine.storageProfile.osDisk && virtualMachine.storageProfile.osDisk.managedDisk){
                     helpers.addResult(results, 0, 'Attached OS disk volume is not of Premium SSD type', location, virtualMachine.storageProfile.osDisk.managedDisk.id);
+                    foundDisk = true;
                 }
 
                 const dataDisks = (virtualMachine.storageProfile && virtualMachine.storageProfile.dataDisks) ? virtualMachine.storageProfile.dataDisks : [];
@@ -47,10 +50,15 @@ module.exports = {
                     if (dataDisk.managedDisk && dataDisk.managedDisk.storageAccountType && dataDisk.managedDisk.id &&
                         dataDisk.managedDisk.storageAccountType.toLowerCase() === 'premium_lrs') {
                         helpers.addResult(results, 2, 'Attached data disk volume is of Premium SSD type', location, dataDisk.managedDisk.id);
-                    } else {
+                        foundDisk = true;
+                    } else if (dataDisk.managedDisk) {
                         helpers.addResult(results, 0, 'Attached data disk volume is not of Premium SSD type', location, dataDisk.managedDisk.id);
+                        foundDisk = true;
                     }
-                }   
+                }
+                if (!foundDisk) {
+                    helpers.addResult(results, 0, 'No disks found for the Virtual machine', location, virtualMachine.id);
+                }
             });
 
             rcb();
