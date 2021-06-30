@@ -682,6 +682,7 @@ module.exports = {
         'connectSerialPortsDisabled'    : require(__dirname + '/plugins/google/compute/connectSerialPortsDisabled.js'),
         'csekEncryptionEnabled'         : require(__dirname + '/plugins/google/compute/csekEncryptionEnabled.js'),
         'osLoginEnabled'                : require(__dirname + '/plugins/google/compute/osLoginEnabled.js'),
+        'instancePublicAccess'          : require(__dirname + '/plugins/google/compute/instancePublicAccess.js'),
         'instanceDefaultServiceAccount' : require(__dirname + '/plugins/google/compute/instanceDefaultServiceAccount.js'),
         'shieldedVmEnabled'             : require(__dirname + '/plugins/google/compute/shieldedVmEnabled.js'),
         'instanceDeletionProtection'    : require(__dirname + '/plugins/google/compute/instanceDeletionProtection.js'),
