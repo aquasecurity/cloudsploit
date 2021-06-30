@@ -71,8 +71,8 @@ module.exports = {
                     helpers.addResult(results, 2,
                         `Shielded VM security is not enabled for the these instances: ${nonShieldedVmInstances.join(', ')}`, region);
                 }
+                rcb();
             });
-            rcb();
         }, function() {
             callback(null, results, source);
         });
