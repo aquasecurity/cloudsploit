@@ -70,7 +70,7 @@ module.exports = {
                                 found = true;
                             }
     
-                            if (permission.IpProtocol.toUpperCase() === 'ALL') {
+                            if (permission.IpProtocol && permission.IpProtocol.toUpperCase() === 'ALL') {
                                 var stringO = 'all protocols open to 0.0.0.0/0';
                                 if (strings.indexOf(stringO) === -1) strings.push(stringO);
                                 found = true;
