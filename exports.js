@@ -802,6 +802,7 @@ module.exports = {
         'openTelnet'                    : require(__dirname + '/plugins/alibaba/ecs/openTelnet.js'),
         'openVNCClient'                 : require(__dirname + '/plugins/alibaba/ecs/openVNCClient.js'),
         'openVNCServer'                 : require(__dirname + '/plugins/alibaba/ecs/openVNCServer.js'),
+        'openAllPortsProtocols'         : require(__dirname + '/plugins/alibaba/ecs/openAllPortsProtocols.js'),
         'systemDisksEncrypted'          : require(__dirname + '/plugins/alibaba/ecs/systemDisksEncrypted.js'),
       
         'bucketLoggingEnabled'          : require(__dirname + '/plugins/alibaba/oss/bucketLoggingEnabled.js'),
