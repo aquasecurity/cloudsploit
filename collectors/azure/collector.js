@@ -41,9 +41,19 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/virtualNetworks?api-version=2020-03-01'
         }
     },
+    natGateways: {
+        listBySubscription: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/natGateways?api-version=2020-11-01'
+        }
+    },
     virtualMachines: {
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachines?api-version=2019-12-01'
+        }
+    },
+    snapshots: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/snapshots?api-version=2020-12-01'
         }
     },
     disks: {
@@ -64,6 +74,11 @@ var calls = {
     vaults: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.KeyVault/vaults?api-version=2019-09-01'
+        }
+    },
+    recoveryServiceVaults: {
+        listBySubscriptionId: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.RecoveryServices/vaults?api-version=2016-06-01'
         }
     },
     resources: {
@@ -199,6 +214,20 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/providers/Microsoft.Security/advancedThreatProtectionSettings/current?api-version=2017-08-01-preview'
         }
     },
+    backupProtectedItems: {
+        listByVault: {
+            reliesOnPath: 'recoveryServiceVaults.listBySubscriptionId',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/backupProtectedItems?api-version=2019-05-13'
+        }
+    },
+    backupPolicies: {
+        listByVault: {
+            reliesOnPath: 'recoveryServiceVaults.listBySubscriptionId',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/backupPolicies?api-version=2019-05-13'
+        }
+    },
     serverBlobAuditingPolicies: {
         get: {
             reliesOnPath: 'servers.listSql',
@@ -211,6 +240,13 @@ var postcalls = {
             reliesOnPath: 'servers.listSql',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/securityAlertPolicies?api-version=2017-03-01-preview'
+        }
+    },
+    failoverGroups: {
+        listByServer: {
+            reliesOnPath: 'servers.listSql',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/failoverGroups?api-version=2017-03-01-preview'
         }
     },
     serverAutomaticTuning: {
@@ -227,6 +263,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/flowLogs?api-version=2020-11-01'
         }
     },
+    virtualNetworkPeerings: {
+        list: {
+            reliesOnPath: 'virtualNetworks.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/virtualNetworkPeerings?api-version=2020-11-01'
+        }
+    },
     configurations: {
         listByServer: {
             reliesOnPath: 'servers.listPostgres',
@@ -241,6 +284,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/administrators?api-version=2017-12-01'
         }
     },
+    virtualMachines: {
+        get: {
+            reliesOnPath: 'virtualMachines.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}?api-version=2020-12-01'
+        }
+    },
     virtualMachineExtensions: {
         list: {
             reliesOnPath: 'virtualMachines.listAll',
@@ -253,6 +303,20 @@ var postcalls = {
             reliesOnPath: 'virtualMachineScaleSets.listAll',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/virtualMachines?api-version=2020-12-01'
+        }
+    },
+    virtualNetworkGateways: {
+        listByResourceGroup: {
+            reliesOnPath: 'resourceGroups.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/Microsoft.Network/virtualNetworkGateways?api-version=2020-11-01'
+        }
+    },
+    networkGatewayConnections: {
+        listByResourceGroup: {
+            reliesOnPath: 'resourceGroups.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/Microsoft.Network/connections?api-version=2020-11-01'
         }
     },
     blobContainers: {
