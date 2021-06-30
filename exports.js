@@ -762,7 +762,9 @@ module.exports = {
         'vpcNetworkLogging'             : require(__dirname + '/plugins/google/logging/vpcNetworkLogging.js'),
         'logSinksEnabled'               : require(__dirname + '/plugins/google/logging/logSinksEnabled.js'),
 
-        'topicEncryption'               : require(__dirname + '/plugins/google/pubsub/topicEncryption.js'),
+        'datasetAllUsersPolicy'         : require(__dirname + '/plugins/google/bigquery/datasetAllUsersPolicy.js'),
+      
+        'topicEncryption'               : require(__dirname + '/plugins/google/pubsub/topicEncryption.js')
     },
     alibaba: {
         'passwordMinLength'             : require(__dirname + '/plugins/alibaba/ram/passwordMinLength.js'),
