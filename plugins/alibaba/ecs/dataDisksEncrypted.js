@@ -112,6 +112,7 @@ module.exports = {
                 if (currentEncryptionLevel < targetEncryptionLevel) {
                     encryptionFailing.push(disk.DiskId);
                 } else encryptionPassing.push(disk.DiskId);
+                
                 dcb();
             }, function() {
                 if (encryptionFailing.length) {
@@ -152,6 +153,7 @@ module.exports = {
                 if (!found) {
                     helpers.addResult(results, 0, 'No ECS data disks found', region);
                 }
+                
                 rcb();
             });
         }, function(){
