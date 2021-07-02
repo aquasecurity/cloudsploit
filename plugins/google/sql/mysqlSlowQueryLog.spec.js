@@ -1,6 +1,6 @@
 var assert = require('assert');
 var expect = require('chai').expect;
-var plugin = require('./sqlContainedDatabaseAuth');
+var plugin = require('./mysqlSlowQueryLog');
 
 const createCache = (err, data) => {
     return {
@@ -13,18 +13,11 @@ const createCache = (err, data) => {
                     }
                 }
             }
-        },
-        projects: {
-            get: {
-                'global': {
-                    data: [{ name: 'test-project' }]
-                }
-            }
         }
     }
 };
 
-describe('sqlContainedDatabaseAuth', function () {
+describe('mysqlSlowQueryLog', function () {
     describe('run', function () {
         it('should give unknown result if a sql instance error is passed or no data is present', function (done) {
             const callback = (err, results) => {
@@ -60,11 +53,11 @@ describe('sqlContainedDatabaseAuth', function () {
             plugin.run(cache, {}, callback);
         });
 
-        it('should give passing result if sql instance database type is not of SQL Server type', function (done) {
+        it('should give passing result if sql instance database type is not of MySQL type', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('SQL instance database type is not of SQL Server type');
+                expect(results[0].message).to.include('SQL instance database type is not of MySQL type');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -73,17 +66,17 @@ describe('sqlContainedDatabaseAuth', function () {
                 null,
                 [{
                     name: "testing-instance",
-                    databaseVersion: "MYSQL_5_7",
+                    databaseVersion: "POSTGRES_13",
                 }],
             );
 
             plugin.run(cache, {}, callback);
         });
-        it('should give passing result if SQL instance has contained database authentication flag disabled', function (done) {
+        it('should give passing result if sql instance has slow query log flag enabled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('SQL instance has contained database authentication flag disabled');
+                expect(results[0].message).to.include('SQL instance has slow query log flag enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -93,12 +86,12 @@ describe('sqlContainedDatabaseAuth', function () {
                 [{
                     instanceType: "CLOUD_SQL_INSTANCE",
                     name: "testing-instance",
-                    databaseVersion: "SQLSERVER_13",
+                    databaseVersion: "MYSQL_5_7",
                     settings: {
                       databaseFlags: [
                         {
-                            name: "contained database authentication",
-                            value: "off",
+                            name: "slow_query_log",
+                            value: "on",
                         },
                       ]}
                 }],
@@ -106,11 +99,12 @@ describe('sqlContainedDatabaseAuth', function () {
             
             plugin.run(cache, {}, callback);
         });
-        it('should give failing result if sql instances has contained database authentication flag enabled', function (done) {
+
+        it('should give failing result if sql instance has slow query log flag disabled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('SQL instance has contained database authentication flag enabled');
+                expect(results[0].message).to.include('SQL instance has slow query log flag disabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -120,38 +114,14 @@ describe('sqlContainedDatabaseAuth', function () {
                 [{
                     instanceType: "CLOUD_SQL_INSTANCE",
                     name: "testing-instance",
-                    databaseVersion: "SQLSERVER_13",
+                    databaseVersion: "MYSQL_5_7",
                     settings: {
                       databaseFlags: [
                         {
-                            name: "contained database authentication",
-                            value: "on",
+                            name: "slow_query_log",
+                            value: "off",
                         },
                       ]}
-                }],
-            );
-
-            plugin.run(cache, {}, callback);
-        });
-
-        it('should give passing result if sql instances does not have any flags', function (done) {
-            const callback = (err, results) => {
-                expect(results.length).to.be.above(0);
-                expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('SQL instance does not have any flags');
-                expect(results[0].region).to.equal('global');
-                done()
-            };
-
-            const cache = createCache(
-                null,
-                [{
-                    instanceType: "CLOUD_SQL_INSTANCE",
-                    name: "testing-instance",
-                    databaseVersion: "SQLSERVER_13",
-                    settings: {
-                      databaseFlags: []
-                    }
                 }],
             );
 

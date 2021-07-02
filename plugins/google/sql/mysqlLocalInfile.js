@@ -44,6 +44,7 @@ module.exports = {
 
             sqlInstances.data.forEach(sqlInstance => {
                 let resource = helpers.createResourceName('instances', sqlInstance.name, project);
+
                 if (sqlInstance.databaseVersion && !sqlInstance.databaseVersion.toLowerCase().includes('mysql')) {
                     helpers.addResult(results, 0, 
                         'SQL instance database type is not of MySQL type', region, resource);
@@ -63,10 +64,11 @@ module.exports = {
                         } else {
                             helpers.addResult(results, 2,
                                 'SQL instance have local_infile flag enabled', region, resource);
+
                         }
                 } else if (sqlInstance.instanceType == "READ_REPLICA_INSTANCE"){
                 } else {
-                    helpers.addResult(results, 2, 
+                    helpers.addResult(results, 2,
                         'SQL instance have local_infile flag enabled', region, resource);
                 }
             });

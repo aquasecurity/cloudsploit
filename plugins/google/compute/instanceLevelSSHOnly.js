@@ -45,16 +45,16 @@ module.exports = {
                 }
 
                 instances.data.forEach(instance => {
+                    var found;
                     if (instance.metadata &&
                         instance.metadata.items &&
                         instance.metadata.items.length) {
 
-                        instance.metadata.items.forEach(metaItem => {
-                            if (metaItem.key === 'block-project-ssh-keys' && metaItem.value === 'FALSE') {
-                                notBlockedProjectSSHKey.push(instance.id)
-                            }
-                        });
+                        found = instance.metadata.items.find(metaItem => metaItem.key === 'block-project-ssh-keys' &&
+                            metaItem.value && metaItem.value.toUpperCase() === 'TRUE');
                     }
+
+                    if (!found) notBlockedProjectSSHKey.push(instance.id);
                 });
             });
 

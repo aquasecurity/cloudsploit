@@ -1,37 +1,28 @@
+var assert = require('assert');
 var expect = require('chai').expect;
-var plugin = require('./dbRestorable');
+var plugin = require('./serverCertificateRotation');
 
-const createCache = (err, sqlInstances, backupRuns) => {
+var passDate = new Date();
+passDate.setMonth(passDate.getMonth() + 7);
+var failDate = new Date();
+failDate.setMonth(failDate.getMonth() + 1);
+
+const createCache = (err, data) => {
     return {
         instances: {
             sql: {
                 list: {
                     'global': {
                         err: err,
-                        data: sqlInstances
+                        data: data
                     }
-                }
-            }
-        },
-        backupRuns: {            
-            list: {
-                'global': {
-                    err: err,
-                    data: backupRuns
-                }
-            }
-        },
-        projects: {
-            get: {
-                'global': {
-                    data: 'testproj'
                 }
             }
         }
     }
 };
 
-describe('dbRestorable', function () {
+describe('serverCertificateExpiry', function () {
     describe('run', function () {
         it('should give unknown result if a sql instance error is passed or no data is present', function (done) {
             const callback = (err, results) => {
@@ -41,13 +32,16 @@ describe('dbRestorable', function () {
                 expect(results[0].region).to.equal('global');
                 done()
             };
+
             const cache = createCache(
                 ['error'],
                 null,
             );
+
             plugin.run(cache, {}, callback);
         });
-        it('should give passing result if no sql instances found', function (done) {
+
+        it('should give passing result if no sql instances are found', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
@@ -55,55 +49,62 @@ describe('dbRestorable', function () {
                 expect(results[0].region).to.equal('global');
                 done()
             };
+
             const cache = createCache(
                 null,
                 [],
             );
+
             plugin.run(cache, {}, callback);
         });
-        it('should give passing result if sql instance has backup available', function (done) {
+
+        it('should give passing result if SQL instance SSL certificate will expire after more than threshold expiry days', function (done) {
             const callback = (err, results) => {
-                console.log();
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('SQL instance has backup available');
+                expect(results[0].message).to.include('SQL instance SSL certificate will expire after');
                 expect(results[0].region).to.equal('global');
                 done()
             };
+
             const cache = createCache(
                 null,
-                [
-                    {
-                        name: "backup-testing"
+                [{
+                    instanceType: "CLOUD_SQL_INSTANCE",
+                    name: "testing-instance",
+                    databaseVersion: "POSTGRES_13",
+                    serverCaCert: {
+                        expirationTime: passDate
                     }
-                ],
-                [
-                    {
-                        instance: "backup-testing"
-                    }
-                ]
+                }],
             );
-            plugin.run(cache, {}, callback);
+
+            plugin.run(cache, { server_certicate_expiration_threshold: '50' }, callback);
         });
-        it('should give failing result if sql instance does not have backups available', function (done) {
+
+        it('should give failing result if SQL instance SSL certificate will expire less than threshold expiry days', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('SQL instance does not have backups available');
+                expect(results[0].message).to.include('SQL instance SSL certificate will expire after');
                 expect(results[0].region).to.equal('global');
                 done()
             };
+
             const cache = createCache(
                 null,
-                [
-                    {
-                        name: "backup-testing"
+                [{
+                    instanceType: "CLOUD_SQL_INSTANCE",
+                    name: "testing-instance",
+                    databaseVersion: "POSTGRES_13",
+                    serverCaCert: {
+                        expirationTime: failDate
                     }
-                ],
-                [
-                ]
+                }],
             );
-            plugin.run(cache, {}, callback);
+
+            plugin.run(cache, { server_certicate_expiration_threshold: '50' }, callback);
         });
+        
     })
-});
+})
