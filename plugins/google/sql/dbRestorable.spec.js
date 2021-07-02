@@ -24,7 +24,7 @@ const createCache = (err, sqlInstances, backupRuns) => {
         projects: {
             get: {
                 'global': {
-                    data: 'testproj'
+                    data: [{ name: 'test-project' }]
                 }
             }
         }

@@ -53,34 +53,35 @@ module.exports = {
             }
             var myIpConfig = {};
             sqlInstances.data.forEach(sqlInstance => {
+                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() === "READ_REPLICA_INSTANCE") return;
+
                 let resource = helpers.createResourceName('instances', sqlInstance.name, project);
-                if (sqlInstance.instanceType != "READ_REPLICA_INSTANCE" &&
-                    sqlInstance.settings &&
+
+                if (sqlInstance.settings &&
                     sqlInstance.settings.ipConfiguration) {
                     myIpConfig = sqlInstance.settings.ipConfiguration
                     if (myIpConfig.privateNetwork && !myIpConfig.ipv4Enabled) {
                         helpers.addResult(results, 0,
                             'SQL Instance is not publicly accessible', region, resource);
                     } else if (myIpConfig.ipv4Enabled &&
-                                myIpConfig.authorizedNetworks) {
-                                    var openNetwork = false;
-                                    myIpConfig.authorizedNetworks.forEach(network => {
-                                        if (network.value == '0.0.0.0/0') {
-                                           openNetwork = true;
-                                        }
-                                    })
-                                    if (openNetwork) {
-                                        helpers.addResult(results, 2,
-                                            'SQL Instance is publicly accessible by all IP addresses', region, resource);
-                                    } else if (myIpConfig.authorizedNetworks.length){
-                                        helpers.addResult(results, 1,
-                                            'SQL Instance is publicly accessible by specific IP addresses', region, resource);
-                                    } else {
-                                        helpers.addResult(results, 0,
-                                            'SQL Instance is not publicly accessible', region, resource);
-                                    }
+                        myIpConfig.authorizedNetworks) {
+                            var openNetwork = false;
+                            myIpConfig.authorizedNetworks.forEach(network => {
+                                if (network.value == '0.0.0.0/0') {
+                                    openNetwork = true;
                                 }
-                }else if (sqlInstance.instanceType == "READ_REPLICA_INSTANCE"){
+                        });
+                        if (openNetwork) {
+                            helpers.addResult(results, 2,
+                                'SQL Instance is publicly accessible by all IP addresses', region, resource);
+                        } else if (myIpConfig.authorizedNetworks.length){
+                            helpers.addResult(results, 1,
+                                'SQL Instance is publicly accessible by specific IP addresses', region, resource);
+                        } else {
+                            helpers.addResult(results, 0,
+                                'SQL Instance is not publicly accessible', region, resource);
+                        }
+                    }
                 }
             })
 

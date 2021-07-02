@@ -56,14 +56,16 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
+                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() === "READ_REPLICA_INSTANCE") return;
+
                 let resource = helpers.createResourceName('instances', sqlInstance.name, project);
+
                 let found = backupRuns.data.find(backup => backup.instance && sqlInstance.name && backup.instance == sqlInstance.name);
-                
+
                 if (found) {
                     helpers.addResult(results, 0, 
                         'SQL instance has backup available', region, resource);
-                }
-                else {
+                } else {
                     helpers.addResult(results, 2, 
                         'SQL instance does not have backups available', region, resource);
                 }

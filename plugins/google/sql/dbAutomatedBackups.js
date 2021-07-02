@@ -43,14 +43,14 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
+                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() === "READ_REPLICA_INSTANCE") return;
                 let resource = helpers.createResourceName('instances', sqlInstance.name, project);
-                if (sqlInstance.instanceType != "READ_REPLICA_INSTANCE" &&
-                    sqlInstance.settings &&
+
+                if (sqlInstance.settings &&
                     sqlInstance.settings.backupConfiguration &&
                     sqlInstance.settings.backupConfiguration.enabled) {
                     helpers.addResult(results, 0, 
                         'Automated backups are enabled', region, resource);
-                } else if (sqlInstance.instanceType == "READ_REPLICA_INSTANCE"){
                 } else {
                     helpers.addResult(results, 2, 
                         'Automated backups are not enabled', region, resource);

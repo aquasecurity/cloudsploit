@@ -44,8 +44,9 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
-                let resource = helpers.createResourceName('instances', sqlInstance.name, project);
                 if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() == "READ_REPLICA_INSTANCE") return;
+
+                let resource = helpers.createResourceName('instances', sqlInstance.name, project);
 
                 if (sqlInstance.databaseVersion && !sqlInstance.databaseVersion.toLowerCase().includes('sqlserver')) {
                     helpers.addResult(results, 0, 

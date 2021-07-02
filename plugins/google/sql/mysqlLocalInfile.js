@@ -43,6 +43,8 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
+                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() === "READ_REPLICA_INSTANCE") return;
+
                 let resource = helpers.createResourceName('instances', sqlInstance.name, project);
 
                 if (sqlInstance.databaseVersion && !sqlInstance.databaseVersion.toLowerCase().includes('mysql')) {
@@ -51,25 +53,23 @@ module.exports = {
                     return;
                 }
 
-                if (sqlInstance.instanceType != "READ_REPLICA_INSTANCE" &&
-                    sqlInstance.settings &&
+                if (sqlInstance.settings &&
                     sqlInstance.settings.databaseFlags &&
                     sqlInstance.settings.databaseFlags.length) {
-                        let found = sqlInstance.settings.databaseFlags.find(flag => flag.name && flag.name == 'local_infile' &&
+                    let found = sqlInstance.settings.databaseFlags.find(flag => flag.name && flag.name == 'local_infile' &&
                                                                         flag.value && flag.value == 'off');
                         
-                        if (found) {
-                            helpers.addResult(results, 0, 
-                                'SQL instance does not have local_infile flag enabled', region, resource);
-                        } else {
-                            helpers.addResult(results, 2,
-                                'SQL instance have local_infile flag enabled', region, resource);
+                    if (found) {
+                        helpers.addResult(results, 0, 
+                            'SQL instance does not have local_infile flag enabled', region, resource);
+                    } else {
+                        helpers.addResult(results, 2,
+                            'SQL instance has local_infile flag enabled', region, resource);
 
-                        }
-                } else if (sqlInstance.instanceType == "READ_REPLICA_INSTANCE"){
+                    }
                 } else {
                     helpers.addResult(results, 2,
-                        'SQL instance have local_infile flag enabled', region, resource);
+                        'SQL instance has local_infile flag enabled', region, resource);
                 }
             });
 

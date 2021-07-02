@@ -43,20 +43,21 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
-                let resource = helpers.createResourceName('instances', sqlInstance.name, project);
                 if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() === "READ_REPLICA_INSTANCE") return;
+
+                let resource = helpers.createResourceName('instances', sqlInstance.name, project);
 
                 if (sqlInstance.ipAddresses &&
                     sqlInstance.ipAddresses.length) {
-                        let found = sqlInstance.ipAddresses.find(address => address.type.toUpperCase() == 'PRIMARY');
+                    let found = sqlInstance.ipAddresses.find(address => address.type.toUpperCase() == 'PRIMARY');
 
-                        if (found) {
-                            helpers.addResult(results, 2, 
-                                'SQL instance has public IPs', region, resource);
-                        } else {
-                            helpers.addResult(results, 0,
-                                'SQL instance does not have public IPs', region, resource);
-                        }
+                    if (found) {
+                        helpers.addResult(results, 2, 
+                            'SQL instance has public IPs', region, resource);
+                    } else {
+                        helpers.addResult(results, 0,
+                            'SQL instance does not have public IPs', region, resource);
+                    }
                 } else {
                     helpers.addResult(results, 2, 
                         'SQL instance does not have public IPs', region, resource);

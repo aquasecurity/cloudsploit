@@ -43,28 +43,29 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
+                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() === "READ_REPLICA_INSTANCE") return;
+
                 let resource = helpers.createResourceName('instances', sqlInstance.name, project);
+
                 if (sqlInstance.databaseVersion && !sqlInstance.databaseVersion.toLowerCase().includes('postgres')) {
                     helpers.addResult(results, 0, 
                         'SQL instance database type is not of postgreSQL type', region, resource);
                     return;
                 }
 
-                if (sqlInstance.instanceType != "READ_REPLICA_INSTANCE" &&
-                    sqlInstance.settings &&
+                if (sqlInstance.settings &&
                     sqlInstance.settings.databaseFlags &&
                     sqlInstance.settings.databaseFlags.length) {
-                        let found = sqlInstance.settings.databaseFlags.find(flag => flag.name && flag.name == 'log_lock_waits' &&
-                                                                        flag.value && flag.value == 'on');
-                        
-                        if (found) {
-                            helpers.addResult(results, 0, 
-                                'SQL instance have log_lock_waits flag enabled', region, resource);
-                        } else {
-                            helpers.addResult(results, 2,
-                                'SQL instance does not have log_lock_waits flag enabled', region, resource);
-                        }
-                } else if (sqlInstance.instanceType == "READ_REPLICA_INSTANCE"){
+                    let found = sqlInstance.settings.databaseFlags.find(flag => flag.name && flag.name == 'log_lock_waits' &&
+                                                                    flag.value && flag.value == 'on');
+                    
+                    if (found) {
+                        helpers.addResult(results, 0, 
+                            'SQL instance have log_lock_waits flag enabled', region, resource);
+                    } else {
+                        helpers.addResult(results, 2,
+                            'SQL instance does not have log_lock_waits flag enabled', region, resource);
+                    }
                 } else {
                     helpers.addResult(results, 2, 
                         'SQL instance does not have log_lock_waits flag enabled', region, resource);
