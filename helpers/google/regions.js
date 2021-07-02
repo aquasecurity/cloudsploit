@@ -76,6 +76,8 @@ module.exports = {
     keys: ['global'],
     sinks: ['global'],
     users: ['global'],
+    backupRuns: ['global'],
+    datasets: ['global'],
     policies: ['global'],
     topics: ['global']
 };

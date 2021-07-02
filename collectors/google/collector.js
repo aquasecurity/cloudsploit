@@ -184,6 +184,14 @@ var calls = {
             parent: true
         }
     },
+    datasets: {
+        list: {
+            api: 'bigquery',
+            version: 'v2',
+            location: null,
+            projectId: true
+        }
+    },
     policies: {
         list: {
             api: 'dns',
@@ -196,6 +204,7 @@ var calls = {
             api: 'pubsub',
             version: 'v1',
             parent: 'project'
+
         }
     }
 };
@@ -257,6 +266,30 @@ var postcalls = {
             reliesOnCall: ['list'],
             filterKey: ['instance'],
             filterValue: ['name'],
+        }
+    },
+    backupRuns: {
+        list: {
+            api: 'sqladmin',
+            version: 'v1beta4',
+            location: null,
+            reliesOnService: ['instances'],
+            reliesOnSubService: ['sql'],
+            reliesOnCall: ['list'],
+            filterKey: ['instance'],
+            filterValue: ['name'],
+        }
+    },
+    datasets: {
+        get: {
+            api: 'bigquery',
+            version: 'v2',
+            location: null,
+            reliesOnService: ['datasets'],
+            reliesOnCall: ['list'],
+            filterKey: ['datasetId'],
+            filterValue: ['id'],
+            projectId: true
         }
     }
 };
