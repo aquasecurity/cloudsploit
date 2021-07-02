@@ -67,7 +67,6 @@ module.exports = {
 
                 cb();
             }, function(){
-
                 rcb();
             });
 
