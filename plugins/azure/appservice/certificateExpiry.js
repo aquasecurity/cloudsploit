@@ -12,7 +12,7 @@ module.exports = {
     settings: {
         days_to_expire: {
             name: 'Days Before Expiration of Certificate',
-            description: '',
+            description: 'Threshold to reach certificate expiry date (days)',
             regex: '^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-9][0-9]|3[0-5][0-9]|36[0-5])$',
             default: '60',
         }
@@ -48,7 +48,7 @@ module.exports = {
 
                     if (daysToExpire > config.daysToExpire) {
                         helpers.addResult(results, 0, `App Service Certificate expires in ${Math.abs(daysToExpire)} days`, location, certificate.id);
-                    } else if (daysToExpire > 0) {
+                    } else if (daysToExpire >= 0) {
                         helpers.addResult(results, 2, `App Service Certificate expires in ${Math.abs(daysToExpire)} days`, location, certificate.id);
                     } else {
                         helpers.addResult(results, 2, `App Service Certificate expired ${Math.abs(daysToExpire)} days ago`, location, certificate.id);
