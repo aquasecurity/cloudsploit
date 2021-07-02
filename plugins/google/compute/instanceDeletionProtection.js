@@ -2,19 +2,13 @@ var async   = require('async');
 var helpers = require('../../../helpers/google');
 
 module.exports = {
-    title: 'VM Instances Least Privilege',
+    title: 'VM Instance Deletion Protection',
     category: 'Compute',
-    description: 'Ensures that instances are not configured to use the default service account with full access to all cloud APIs',
-    more_info: 'To support the principle of least privilege and prevent potential privilege escalation, it is recommended that instances are not assigned to the default service account, Compute Engine default service account with a scope allowing full access to all cloud APIs.',
-    link: 'https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances',
-    recommended_action: 'For all instances, if the default service account is used, ensure full access to all cloud APIs is not configured.',
+    description: 'Ensure that Virtual Machine instances have deletion protection enabled.',
+    more_info: 'VM instances should have deletion protection enabled in order to prevent them for being accidentally deleted.',
+    link: 'https://cloud.google.com/compute/docs/instances/preventing-accidental-vm-deletion',
+    recommended_action: 'Modify VM instances to enable deletion protection',
     apis: ['instances:compute:list', 'projects:get'],
-    compliance: {
-        pci: 'PCI has explicit requirements around default accounts and ' +
-            'resources. PCI recommends removing all default accounts, ' +
-            'only enabling necessary services as required for the function ' +
-            'of the system'
-    },
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -35,15 +29,14 @@ module.exports = {
         async.each(regions.instances.compute, (region, rcb) => {
             var zones = regions.zones;
             var noInstances = [];
-
             async.each(zones[region], function(zone, zcb) {
                 var instances = helpers.addSource(cache, source,
-                    ['instances', 'compute','list', zone]);
+                    ['instances', 'compute','list', zone ]);
 
                 if (!instances) return zcb();
 
                 if (instances.err || !instances.data) {
-                    helpers.addResult(results, 3, 'Unable to query compute instances', zone, null, null, instances.err);
+                    helpers.addResult(results, 3, 'Unable to query instances', zone, null, null, instances.err);
                     return zcb();
                 }
 
@@ -53,24 +46,18 @@ module.exports = {
                 }
 
                 instances.data.forEach(instance => {
-                    let found = false;
-                    if (instance.serviceAccounts && instance.serviceAccounts.length) {
-                        found = instance.serviceAccounts.find(serviceAccount => serviceAccount.scopes &&
-                            serviceAccount.scopes.indexOf('https://www.googleapis.com/auth/cloud-platform') > -1);
-                    }
-
                     let resource = helpers.createResourceName('instances', instance.name, project, 'zone', zone);
 
-                    if (found) {
+                    if (!instance.deletionProtection) {
                         helpers.addResult(results, 2,
-                            `Instance Service account has full access` , zone, resource);
+                            'Instance deletion protection is disabled', zone, resource);
                     } else {
                         helpers.addResult(results, 0,
-                            'Instance Service account follows least privilege' , zone, resource);
+                            'Instance deletion protection is enabled', zone, resource);
                     }
                 });
-                return zcb();
-            }, function(){
+                zcb();
+            }, function() {
                 if (noInstances.length) {
                     helpers.addResult(results, 0, `No instances found in following zones: ${noInstances.join(', ')}`, region);
                 }

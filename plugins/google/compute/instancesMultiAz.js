@@ -19,9 +19,9 @@ module.exports = {
         let projects = helpers.addSource(cache, source,
             ['projects','get', 'global']);
 
-        if (!projects || projects.err || !projects.data) {
+        if (!projects || projects.err || !projects.data || !projects.data.length) {
             helpers.addResult(results, 3,
-                'Unable to query for projects: ' + helpers.addError(projects), 'global', null, null, projects.err);
+                'Unable to query for projects: ' + helpers.addError(projects), 'global', null, null, (projects) ? projects.err : null);
             return callback(null, results, source);
         }
 

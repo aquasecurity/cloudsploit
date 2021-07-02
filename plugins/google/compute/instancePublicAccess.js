@@ -2,19 +2,14 @@ var async   = require('async');
 var helpers = require('../../../helpers/google');
 
 module.exports = {
-    title: 'VM Instances Least Privilege',
+    title: 'Instance Public Access Disabled',
     category: 'Compute',
-    description: 'Ensures that instances are not configured to use the default service account with full access to all cloud APIs',
-    more_info: 'To support the principle of least privilege and prevent potential privilege escalation, it is recommended that instances are not assigned to the default service account, Compute Engine default service account with a scope allowing full access to all cloud APIs.',
-    link: 'https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances',
-    recommended_action: 'For all instances, if the default service account is used, ensure full access to all cloud APIs is not configured.',
+    description: 'Ensures that compute instances are not configured to allow public access.',
+    more_info: 'Compute Instances should always be configured behind load balancers instead of having public IP addresses ' +
+        'in order to minimize the instance\'s exposure to the internet.',
+    link: 'https://cloud.google.com/compute/docs/ip-addresses/reserve-static-external-ip-address',
+    recommended_action: 'Modify compute instances and set External IP to None for network interface',
     apis: ['instances:compute:list', 'projects:get'],
-    compliance: {
-        pci: 'PCI has explicit requirements around default accounts and ' +
-            'resources. PCI recommends removing all default accounts, ' +
-            'only enabling necessary services as required for the function ' +
-            'of the system'
-    },
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -35,7 +30,6 @@ module.exports = {
         async.each(regions.instances.compute, (region, rcb) => {
             var zones = regions.zones;
             var noInstances = [];
-
             async.each(zones[region], function(zone, zcb) {
                 var instances = helpers.addSource(cache, source,
                     ['instances', 'compute','list', zone]);
@@ -43,7 +37,7 @@ module.exports = {
                 if (!instances) return zcb();
 
                 if (instances.err || !instances.data) {
-                    helpers.addResult(results, 3, 'Unable to query compute instances', zone, null, null, instances.err);
+                    helpers.addResult(results, 3, 'Unable to query instances', zone, null, null, instances.err);
                     return zcb();
                 }
 
@@ -53,24 +47,26 @@ module.exports = {
                 }
 
                 instances.data.forEach(instance => {
-                    let found = false;
-                    if (instance.serviceAccounts && instance.serviceAccounts.length) {
-                        found = instance.serviceAccounts.find(serviceAccount => serviceAccount.scopes &&
-                            serviceAccount.scopes.indexOf('https://www.googleapis.com/auth/cloud-platform') > -1);
-                    }
+                    if (instance.name && instance.name.startsWith('gke-')) return;
 
                     let resource = helpers.createResourceName('instances', instance.name, project, 'zone', zone);
 
+                    let found;
+                    if (instance.networkInterfaces &&
+                        instance.networkInterfaces.length) {
+                        found = instance.networkInterfaces.find(networkObject => networkObject.accessConfigs);
+                    }
+
                     if (found) {
                         helpers.addResult(results, 2,
-                            `Instance Service account has full access` , zone, resource);
+                            'Public access is enabled for the instance', zone, resource);
                     } else {
                         helpers.addResult(results, 0,
-                            'Instance Service account follows least privilege' , zone, resource);
+                            'Public access is disabled for the instance', zone, resource);
                     }
                 });
-                return zcb();
-            }, function(){
+                zcb();
+            }, function() {
                 if (noInstances.length) {
                     helpers.addResult(results, 0, `No instances found in following zones: ${noInstances.join(', ')}`, region);
                 }

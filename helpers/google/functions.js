@@ -1,3 +1,4 @@
+var async = require('async');
 var shared = require(__dirname + '/../shared.js');
 
 var disabledKeywords = ['has not been used', 'it is disabled'];
@@ -23,7 +24,7 @@ function addResult(results, status, message, region, resource, custom, err, requ
             errorObj.code == 403 &&
             errorObj.message &&
             disabledKeywords.some(substring=>errorObj.message.includes(substring))) {
-            pushResult(required ? 2 : 0, required ? `${message}: Service is not enabled, but it is recommended to run a secure workload in GCP.` : `${message}: Service is not enabled`, region, resource, custom);
+            pushResult(required ? 2 : 0, required ? 'Service is not enabled, but it is recommended to run a secure workload in GCP.' : 'Service is not enabled', region, resource, custom);
         } else if (errorObj &&
             errorObj.code &&
             errorObj.code == 403 &&
@@ -33,14 +34,14 @@ function addResult(results, status, message, region, resource, custom, err, requ
                 if (errError &&
                     errError.message &&
                     disabledKeywords.some(substring=>errError.message.includes(substring))){
-                    pushResult(required ? 2 : 0, required ? `${message}: Service is not enabled, but it is recommended to run a secure workload in GCP.` : `${message}: Service is not enabled`, region, resource, custom);
+                    pushResult(required ? 2 : 0, required ? 'Service is not enabled, but it is recommended to run a secure workload in GCP.' : 'Service is not enabled', region, resource, custom);
                 } else {
                     pushResult(3, (errError.message ? errError.message : message), region, resource, custom);
                 }
             });
 
         } else {
-            pushResult(3, (errorObj.message ? errorObj.message : 'Unable to query the API: ' + errorObj.code), region, resource, custom);
+            pushResult(3, (errorObj.message ? errorObj.message : 'Unable to query the API: ' + errorObj), region, resource, custom);
         }
     };
 
@@ -220,10 +221,29 @@ function createResourceName(resourceType, resourceId, project, locationType, loc
     return resourceName;
 }
 
+function getProtectionLevel(cryptographickey, encryptionLevels) {
+    if (cryptographickey.versionTemplate && cryptographickey.versionTemplate.protectionLevel) {
+        if (cryptographickey.versionTemplate.protectionLevel == 'SOFTWARE') return encryptionLevels.indexOf('cloudcmek');
+        else if (cryptographickey.versionTemplate.protectionLevel == 'HSM') return encryptionLevels.indexOf('cloudhsm');
+        else if (cryptographickey.versionTemplate.protectionLevel == 'EXTERNAL') return encryptionLevels.indexOf('external');
+    }
+
+    return encryptionLevels.indexOf('unspecified');
+}
+
+function listToObj(resultObj, listData, onKey) {
+    async.each(listData, function(entry, cb){
+        if (entry[onKey]) resultObj[entry[onKey]] = entry;
+        cb();
+    });
+}
+
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
     findOpenAllPorts: findOpenAllPorts,
     hasBuckets: hasBuckets,
-    createResourceName: createResourceName
+    createResourceName: createResourceName,
+    getProtectionLevel: getProtectionLevel,
+    listToObj: listToObj
 };

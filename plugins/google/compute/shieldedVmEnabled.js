@@ -2,19 +2,13 @@ var async   = require('async');
 var helpers = require('../../../helpers/google');
 
 module.exports = {
-    title: 'VM Instances Least Privilege',
+    title: 'Shielded VM Enabled',
     category: 'Compute',
-    description: 'Ensures that instances are not configured to use the default service account with full access to all cloud APIs',
-    more_info: 'To support the principle of least privilege and prevent potential privilege escalation, it is recommended that instances are not assigned to the default service account, Compute Engine default service account with a scope allowing full access to all cloud APIs.',
-    link: 'https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances',
-    recommended_action: 'For all instances, if the default service account is used, ensure full access to all cloud APIs is not configured.',
+    description: 'Ensures that instances are configured with the shielded VM enabled',
+    more_info: 'Shielded VM option should be configured to defend against the security attacks on the instances.',
+    link: 'https://cloud.google.com/security/shielded-cloud/shielded-vm',
+    recommended_action: 'Enable the shielded VM for all the instances for security reasons.',
     apis: ['instances:compute:list', 'projects:get'],
-    compliance: {
-        pci: 'PCI has explicit requirements around default accounts and ' +
-            'resources. PCI recommends removing all default accounts, ' +
-            'only enabling necessary services as required for the function ' +
-            'of the system'
-    },
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -35,7 +29,6 @@ module.exports = {
         async.each(regions.instances.compute, (region, rcb) => {
             var zones = regions.zones;
             var noInstances = [];
-
             async.each(zones[region], function(zone, zcb) {
                 var instances = helpers.addSource(cache, source,
                     ['instances', 'compute','list', zone]);
@@ -43,7 +36,7 @@ module.exports = {
                 if (!instances) return zcb();
 
                 if (instances.err || !instances.data) {
-                    helpers.addResult(results, 3, 'Unable to query compute instances', zone, null, null, instances.err);
+                    helpers.addResult(results, 3, 'Unable to query instances', zone, null, null, instances.err);
                     return zcb();
                 }
 
@@ -53,24 +46,20 @@ module.exports = {
                 }
 
                 instances.data.forEach(instance => {
-                    let found = false;
-                    if (instance.serviceAccounts && instance.serviceAccounts.length) {
-                        found = instance.serviceAccounts.find(serviceAccount => serviceAccount.scopes &&
-                            serviceAccount.scopes.indexOf('https://www.googleapis.com/auth/cloud-platform') > -1);
-                    }
-
                     let resource = helpers.createResourceName('instances', instance.name, project, 'zone', zone);
 
-                    if (found) {
-                        helpers.addResult(results, 2,
-                            `Instance Service account has full access` , zone, resource);
-                    } else {
+                    if (instance.shieldedInstanceConfig &&
+                        instance.shieldedInstanceConfig.enableVtpm &&
+                        instance.shieldedInstanceConfig.enableIntegrityMonitoring) {
                         helpers.addResult(results, 0,
-                            'Instance Service account follows least privilege' , zone, resource);
+                            'Shielded VM security is enabled for the the instance', zone, resource);
+                    } else {
+                        helpers.addResult(results, 2,
+                            'Shielded VM security is not enabled for the the instance', zone, resource);
                     }
                 });
-                return zcb();
-            }, function(){
+                zcb();
+            }, function() {
                 if (noInstances.length) {
                     helpers.addResult(results, 0, `No instances found in following zones: ${noInstances.join(', ')}`, region);
                 }
