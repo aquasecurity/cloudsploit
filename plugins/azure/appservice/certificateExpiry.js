@@ -48,7 +48,7 @@ module.exports = {
 
                     if (daysToExpire > config.daysToExpire) {
                         helpers.addResult(results, 0, `App Service Certificate expires in ${Math.abs(daysToExpire)} days`, location, certificate.id);
-                    } else if (daysToExpire > 0) {
+                    } else if (daysToExpire >= 0) {
                         helpers.addResult(results, 2, `App Service Certificate expires in ${Math.abs(daysToExpire)} days`, location, certificate.id);
                     } else {
                         helpers.addResult(results, 2, `App Service Certificate expired ${Math.abs(daysToExpire)} days ago`, location, certificate.id);
