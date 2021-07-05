@@ -41,7 +41,7 @@ module.exports = {
             whitelisted_aws_account_principals_regex : settings.whitelisted_aws_account_principals_regex || this.settings.whitelisted_aws_account_principals_regex.default,
             whitelisted_aws_organizations : settings.whitelisted_aws_organizations || this.settings.whitelisted_aws_organizations.default,
         };
-        var makeRegexBased = (config.whitelisted_aws_account_principals_regex.length) ? true : false;
+        // var makeRegexBased = (config.whitelisted_aws_account_principals_regex.length) ? true : false;
         config.whitelisted_aws_account_principals_regex = new RegExp(config.whitelisted_aws_account_principals_regex);
         var results = [];
         var source = {};
