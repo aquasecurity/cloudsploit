@@ -226,10 +226,9 @@ function checkLogAlerts(activityLogAlerts, conditionResource, text, results, loc
             allConditions.allOf.forEach(condition => {
                 if (condition.field && (condition.field === 'resourceType') && (condition.equals && (condition.equals.toLowerCase() === conditionResource))) {
                     alertCreateDeleteEnabled = (!alertCreateDeleteEnabled && activityLogAlertResource.enabled ? true : alertCreateDeleteEnabled);
-                } else if (condition.equals.toLowerCase().indexOf(conditionResource + '/write') > -1) {
+                } else if (condition.equals && condition.equals.toLowerCase().indexOf(conditionResource + '/write') > -1) {
                     alertCreateUpdateEnabled = (!alertCreateUpdateEnabled && activityLogAlertResource.enabled ? true : alertCreateUpdateEnabled);
-                } else
-                if (condition.equals.toLowerCase().indexOf(conditionResource + '/delete') > -1) {
+                } else if (condition.equals && condition.equals.toLowerCase().indexOf(conditionResource + '/delete') > -1) {
                     alertDeleteEnabled = (!alertDeleteEnabled && activityLogAlertResource.enabled ? true : alertDeleteEnabled);
                 }
             })
