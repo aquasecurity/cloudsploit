@@ -50,12 +50,12 @@ module.exports = {
                                 'SQL instance does not have local_infile flag enabled', region, sqlInstance.name);
                         } else {
                             helpers.addResult(results, 2,
-                                'SQL instance have local_infile flag enabled', region, sqlInstance.name);
+                                'SQL instance has local_infile flag enabled', region, sqlInstance.name);
                         }
                 } else if (sqlInstance.instanceType == "READ_REPLICA_INSTANCE"){
                 } else {
                     helpers.addResult(results, 2, 
-                        'SQL instance have local_infile flag enabled', region, sqlInstance.name);
+                        'SQL instance has local_infile flag enabled', region, sqlInstance.name);
                 }
             });
 

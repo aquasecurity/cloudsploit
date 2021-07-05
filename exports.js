@@ -755,6 +755,7 @@ module.exports = {
         'vpcNetworkRouteLogging'            : require(__dirname + '/plugins/google/logging/vpcNetworkRouteLogging.js'),
         'vpcNetworkLogging'                 : require(__dirname + '/plugins/google/logging/vpcNetworkLogging.js'),
         'logSinksEnabled'                   : require(__dirname + '/plugins/google/logging/logSinksEnabled.js'),
+
     },
     alibaba: {
         'passwordMinLength'                 : require(__dirname + '/plugins/alibaba/ram/passwordMinLength.js'),
@@ -769,7 +770,7 @@ module.exports = {
         'passwordExpiry'                    : require(__dirname + '/plugins/alibaba/ram/passwordExpiry.js'),
         'passwordBlockLogon'                : require(__dirname + '/plugins/alibaba/ram/passwordBlockLogon.js'),
         'ramPolicyAttachments'              : require(__dirname + '/plugins/alibaba/ram/ramPolicyAttachments.js'),
-      
+  
         'openSSH'                           : require(__dirname + '/plugins/alibaba/ecs/openSSH.js'),
         'openRDP'                           : require(__dirname + '/plugins/alibaba/ecs/openRDP.js'),
         'openDNS'                           : require(__dirname + '/plugins/alibaba/ecs/openDNS.js'),

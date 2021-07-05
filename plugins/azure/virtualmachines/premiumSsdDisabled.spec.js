@@ -142,9 +142,6 @@ describe('premiumSsdDisabled', function() {
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Attached OS disk volume is not of Premium SSD type');
 
-                expect(results[1].status).to.equal(0);
-                expect(results[1].message).to.include('Attached data disk volume is not of Premium SSD type');
-
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

@@ -56,9 +56,9 @@ module.exports = {
                 }
 
                 for (const bpItem of backupProtectedItems.data) {
-                    if (vmPoliciesMap.get(bpItem.virtualMachineId.toLowerCase())) {
+                    if (bpItem.virtualMachineId && vmPoliciesMap.get(bpItem.virtualMachineId.toLowerCase())) {
                         vmPoliciesMap.get(bpItem.virtualMachineId.toLowerCase()).push(bpItem.policyId);
-                    } else {
+                    } else if (bpItem.virtualMachineId) {
                         vmPoliciesMap.set(bpItem.virtualMachineId.toLowerCase(), []);
                         vmPoliciesMap.get(bpItem.virtualMachineId.toLowerCase()).push(bpItem.policyId);
                     }
