@@ -42,7 +42,7 @@ module.exports = {
             }
 
             storageAccounts.data.forEach(function(storageAccount) {
-                if (storageAccount.allowBlobPublicAccess === false) {
+                if (!storageAccount.allowBlobPublicAccess) {
                     helpers.addResult(results, 0, 'Storage Account does not allow blob containers public access', location, storageAccount.id);
                 } else {
                     const blobContainers = helpers.addSource(
