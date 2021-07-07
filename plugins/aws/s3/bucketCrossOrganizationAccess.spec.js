@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-const bucketOrganizationAccountAccess = require('./bucketOrganizationAccountAccess');
+const bucketOrganizationAccountAccess = require('./bucketCrossOrganizationAccess');
 
 const listBuckets = [
     { 
