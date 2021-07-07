@@ -24,8 +24,8 @@ const getBucketInfo = [
         "StorageClass": "Standard",
         "TransferAcceleration": "Disabled",
         "Owner": {
-            "DisplayName": "5103119194921620",
-            "ID": "5103119194921620"
+            "DisplayName": "0000111122223333",
+            "ID": "0000111122223333"
         },
         "AccessControlList": {
             "Grant": "private"
@@ -50,8 +50,8 @@ const getBucketInfo = [
         "StorageClass": "Standard",
         "TransferAcceleration": "Enabled",
         "Owner": {
-            "DisplayName": "5103119194921620",
-            "ID": "5103119194921620"
+            "DisplayName": "0000111122223333",
+            "ID": "0000111122223333"
         },
         "AccessControlList": {
             "Grant": "public-read-write"
@@ -75,8 +75,8 @@ const getBucketInfo = [
         "Name": "test-bucket",
         "StorageClass": "Standard",
         "Owner": {
-            "DisplayName": "5103119194921620",
-            "ID": "5103119194921620"
+            "DisplayName": "0000111122223333",
+            "ID": "0000111122223333"
         },
         "AccessControlList": {
             "Grant": "public-read-write"
