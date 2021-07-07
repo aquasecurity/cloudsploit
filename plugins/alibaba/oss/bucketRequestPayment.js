@@ -33,8 +33,6 @@ module.exports = {
 
         async.each(listBuckets.data, (bucket, cb) => {
             if (!bucket.name) return cb();
-            
-
             var getBucketRequestPayment = helpers.addSource(cache, source,
                 ['oss', 'getBucketRequestPayment', region, bucket.name]);
             var bucketLocation = bucket.region || region;
