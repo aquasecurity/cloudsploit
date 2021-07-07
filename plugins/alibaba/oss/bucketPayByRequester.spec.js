@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var bucketRequestPayment = require('./bucketRequestPayment.js');
+var bucketRequestPayment = require('./bucketPayByRequester.js');
 
 const listBuckets = [
     {
@@ -50,7 +50,7 @@ describe('bucketRequestPayment', function () {
             bucketRequestPayment.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Bucket does not have pay by requester mode enabled');
+                expect(results[0].message).to.include('Bucket does not have pay-by-requester feature enabled');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
@@ -60,7 +60,7 @@ describe('bucketRequestPayment', function () {
             bucketRequestPayment.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Bucket does not have pay by requester mode enabled');
+                expect(results[0].message).to.include('Bucket does not have pay-by-requester feature enabled');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
@@ -71,7 +71,7 @@ describe('bucketRequestPayment', function () {
             bucketRequestPayment.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Bucket has pay by requester mode enabled');
+                expect(results[0].message).to.include('Bucket has pay-by-requester feature enabled');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });

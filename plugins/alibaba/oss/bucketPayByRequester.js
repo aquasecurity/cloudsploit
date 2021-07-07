@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/alibaba');
 module.exports = {
     title: 'Bucket Pay By Requester Enabled',
     category: 'OSS',
-    description: 'Ensure that OSS buckets have pay per requester enabled.',
+    description: 'Ensure that OSS buckets have pay per requester feature enabled.',
     more_info: 'Enabling pay per requester for OSS buckets ensures that requesters pay the request and traffic fees that are incurred when the requesters access objects in the bucket.',
     recommended_action: 'Modify OSS buckets to enable pay per requester mode.',
     link: 'https://www.alibabacloud.com/help/doc-detail/91383.htm',
@@ -33,7 +33,6 @@ module.exports = {
 
         async.each(listBuckets.data, (bucket, cb) => {
             if (!bucket.name) return cb();
-            
 
             var getBucketRequestPayment = helpers.addSource(cache, source,
                 ['oss', 'getBucketRequestPayment', region, bucket.name]);
@@ -51,11 +50,11 @@ module.exports = {
             if (getBucketRequestPayment.data.payer &&
                 getBucketRequestPayment.data.payer.toLowerCase() === 'requester') {
                 helpers.addResult(results, 0,
-                    'Bucket has pay by requester mode enabled',
+                    'Bucket has pay-by-requester feature enabled',
                     bucketLocation, resource);
             } else {
                 helpers.addResult(results, 2,
-                    'Bucket does not have pay by requester mode enabled',
+                    'Bucket does not have pay-by-requester feature enabled',
                     bucketLocation, resource);
             }
 
