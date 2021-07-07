@@ -36,6 +36,28 @@ const describeVolumes = [
         "Iops": 100,
         "VolumeType": "gp2",
         "MultiAttachEnabled": false
+    },
+    {
+        "Attachments": [
+            {
+                "AttachTime": "2020-08-25T02:21:49.000Z",
+                "Device": "/dev/xvda",
+                "InstanceId": "i-0ceecc81a1c5829f6",
+                "State": "attached",
+                "VolumeId": "vol-025b523c155020b10",
+                "DeleteOnTermination": true
+            }
+        ],
+        "AvailabilityZone": "us-east-1e",
+        "CreateTime": "2020-08-25T02:21:49.073Z",
+        "Encrypted": false,
+        "Size": 8,
+        "SnapshotId": "snap-06d919bfeced8496a",
+        "State": "in-use",
+        "VolumeId": "vol-025b523c155020b10",
+        "Iops": 100,
+        "VolumeType": "gp2",
+        "MultiAttachEnabled": false
     }
 ]
 
@@ -67,8 +89,45 @@ const describeSnapshots = [
     }
 ];
 
+const describeInstances = [
+    {
+        "Instances": [
+            {
+                "AmiLaunchIndex": 0,
+                "ImageId": "ami-0947d2ba12ee1ff75",
+                "InstanceId": "i-0ceecc81a1c5829f6",
+                "InstanceType": "t2.micro",
+                "KeyName": "auto-scaling-test-instance",
+                "LaunchTime": "2020-11-09T21:27:25.000Z",
+                "Monitoring": {
+                    "State": "disabled"
+                },
+                "Placement": {
+                    "AvailabilityZone": "us-east-1b",
+                    "GroupName": "",
+                    "Tenancy": "default"
+                },
+                "PublicIpAddress": "3.84.159.125",
+                "State": {
+                    "Code": 0,
+                    "Name": "running"
+                },
+                "StateTransitionReason": "",
+                "SubnetId": "subnet-673a9a46",
+                "VpcId": "vpc-99de2fe4",
+                "Architecture": "x86_64",
+                "BlockDeviceMappings": [],
+                "ClientToken": "",
+                "EbsOptimized": false,
+                "EnaSupport": true,
+                "Hypervisor": "xen",
+                "InstanceLifecycle": "spot"
+            }
+        ]
+    },
+];
 
-const createCache = (volumes, snapshots) => {
+const createCache = (volumes, snapshots, instances) => {
     return {
         ec2:{
             describeSnapshots: {
@@ -81,6 +140,11 @@ const createCache = (volumes, snapshots) => {
                     data: volumes
                 },
             },
+            describeInstances: {
+                'us-east-1': {
+                    data: instances
+                }
+            }
         },
     };
 };
@@ -120,15 +184,22 @@ const createNullCache = () => {
 describe('ebsBackupEnabled', function () {
     describe('run', function () {
         it('should PASS if EBS snapshots found', function (done) {
-            const cache = createCache([describeVolumes[0]], [describeSnapshots[0]]);
+            const cache = createCache([describeVolumes[0]], [describeSnapshots[0]], describeInstances);
             ebsBackupEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
             });
         });
+        it('should not return anything if EBS volume is attached to a spot instance', function (done) {
+            const cache = createCache([describeVolumes[2]], [describeSnapshots[0]], describeInstances);
+            ebsBackupEnabled.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(0);
+                done();
+            });
+        });
         it('should PASS if snapshot for 1 volume is found and not found for another', function (done) {
-            const cache = createCache(describeVolumes, describeSnapshots);
+            const cache = createCache(describeVolumes, describeSnapshots, describeInstances);
             ebsBackupEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(0);
