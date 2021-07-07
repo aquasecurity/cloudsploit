@@ -5,7 +5,7 @@ module.exports = {
     title: 'RDS Log Connections Enabled',
     category: 'RDS',
     description: 'Ensure that log_connections parameter is set to ON for RDS instances.',
-    more_info: 'RDS instance provide the feature of logging details of termination of a connection to the server ' + 
+    more_info: 'RDS instance provide the feature of logging details of establishing a connection to the server ' +
         'to identify, troubleshoot, and repair configuration errors and suboptimal performance.',
     link: 'https://partners-intl.aliyun.com/help/doc-detail/26179.htm',
     recommended_action: 'Modify RDS DB instance to set value for log_connections parameter to ON',
