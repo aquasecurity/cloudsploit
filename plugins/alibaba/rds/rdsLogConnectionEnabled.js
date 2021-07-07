@@ -57,7 +57,8 @@ module.exports = {
                     describeParameters.data.RunningParameters.DBInstanceParameter &&
                     describeParameters.data.RunningParameters.DBInstanceParameter.length) {
                     let parameters = describeParameters.data.RunningParameters.DBInstanceParameter;
-                    let found = parameters.find(parameter => parameter.ParameterName == 'log_connections' && parameter.ParameterValue.toLowerCase() == 'on');
+                    let found = parameters.find(parameter => parameter.ParameterName == 'log_connections' &&
+                        parameter.ParameterValue && parameter.ParameterValue.toLowerCase() == 'on');
 
                     if (found) {
                         helpers.addResult(results, 0,
