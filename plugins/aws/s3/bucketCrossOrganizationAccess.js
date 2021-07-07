@@ -3,10 +3,10 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Bucket Cross Organization Access',
     category: 'S3',
-    description: 'Ensure S3 buckets are configured only to allow access to accounts under whitelisted AWS Organizations',
-    more_info: 'S3 buckets can be configured to allow the global principal to access the bucket via the bucket policy. This policy should be restricted only to accounts within whitelisted AWS organizations.',
+    description: 'Ensure that S3 buckets are configured only to allow access to whitelisted AWS account principals.',
+    more_info: 'S3 bucket policy should be configured to allow access only to whitelisted/trusted cross-account principals.',
     recommended_action: 'Add condition to restrict access to specific AWS organizations from the bucket policy statements.',
-    link: '',
+    link: 'https://aws.amazon.com/blogs/security/control-access-to-aws-resources-by-using-the-aws-organization-of-iam-principals/',
     apis: ['S3:listBuckets', 'S3:getBucketPolicy'],
     settings: {
         whitelisted_aws_account_principals: {

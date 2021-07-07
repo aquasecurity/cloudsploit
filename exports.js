@@ -277,7 +277,7 @@ module.exports = {
         'bucketLifecycleConfiguration'      : require(__dirname + '/plugins/aws/s3/bucketLifecycleConfiguration'),
         'bucketTransferAcceleration'        : require(__dirname + '/plugins/aws/s3/bucketTransferAcceleration'),
         'bucketDnsCompliantName'            : require(__dirname + '/plugins/aws/s3/bucketDnsCompliantName.js'),
-        'bucketOrganizationAccountAccess'   : require(__dirname + '/plugins/aws/s3/bucketOrganizationAccountAccess.js'),
+        'bucketCrossOrganizationAccess'     : require(__dirname + '/plugins/aws/s3/bucketCrossOrganizationAccess.js'),
 
         'notebookDataEncrypted'             : require(__dirname + '/plugins/aws/sagemaker/notebookDataEncrypted.js'),
         'notebookDirectInternetAccess'      : require(__dirname + '/plugins/aws/sagemaker/notebookDirectInternetAccess.js'),
