@@ -465,7 +465,16 @@ var calls = {
     },
     ES: {
         listDomainNames: {
-            property: 'DomainNames'
+            property: 'DomainNames',
+        }
+    },
+    EventBridge: {
+        listEventBuses: {
+            property: 'EventBuses',
+            paginate: 'NextToken',
+            params:{                
+                Limit: 100,
+            }
         }
     },
     Glue: {
@@ -1080,6 +1089,12 @@ var postcalls = [
                 filterValue: 'Id'
             }
         },
+        // EventBridge: {
+        //     listRules: {
+        //         property: 'Rules',
+        //         paginate: 'NextToken'
+        //     }
+        // },
         DLM: {
             getLifecyclePolicy: {
                 reliesOnService: 'dlm',
