@@ -1089,12 +1089,6 @@ var postcalls = [
                 filterValue: 'Id'
             }
         },
-        // EventBridge: {
-        //     listRules: {
-        //         property: 'Rules',
-        //         paginate: 'NextToken'
-        //     }
-        // },
         DLM: {
             getLifecyclePolicy: {
                 reliesOnService: 'dlm',

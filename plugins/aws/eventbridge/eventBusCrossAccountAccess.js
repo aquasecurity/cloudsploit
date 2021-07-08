@@ -4,7 +4,7 @@ var async = require('async');
 module.exports = {
     title: 'Event Bus Cross Account Access',
     category: 'EventBridge',
-    description: 'Ensure that EventBridge event bus is configured to allow access to whitelisted AWS account principals.',
+    description: 'Ensure that event bus is configured to allow access to whitelisted AWS account principals.',
     more_info: 'Event bus policy should be configured to allow access only to whitelisted/trusted cross-account principals.',
     link: 'https://docs.amazonaws.cn/en_us/eventbridge/latest/userguide/eb-event-bus-perms.html',
     recommended_action: 'Configure event bus policies that allow access to whitelisted/trusted cross-account principals.',

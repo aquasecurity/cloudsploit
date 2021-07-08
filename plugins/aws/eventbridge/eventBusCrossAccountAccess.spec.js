@@ -4,17 +4,17 @@ var eventBusCrossAccountAccess = require('./eventBusCrossAccountAccess');
 const listEventBuses = [
     {
         Name: 'test-bus',
-        Arn: 'arn:aws:events:us-east-2:111111111111:event-bus/test-bus',
-        Policy: '{"Version":"2012-10-17","Statement":[{"Sid":"allow_account_to_put_events","Effect":"Allow","Principal":{"AWS":"arn:aws:iam::211111111111:user/y"},"Action":"events:PutEvents","Resource":"arn:aws:events:us-east-2:111111111111:event-bus/test-bus"}]}'
+        Arn: 'arn:aws:events:us-east-1:111111111111:event-bus/test-bus',
+        Policy: '{"Version":"2012-10-17","Statement":[{"Sid":"allow_account_to_put_events","Effect":"Allow","Principal":{"AWS":"arn:aws:iam::211111111111:user/y"},"Action":"events:PutEvents","Resource":"arn:aws:events:us-east-1:111111111111:event-bus/test-bus"}]}'
     },
     {
         Name: 'test-bus',
-        Arn: 'arn:aws:events:us-east-2:111111111111:event-bus/test-bus',
-        Policy: '{"Version":"2012-10-17","Statement":[{"Sid":"allow_account_to_put_events","Effect":"Allow","Principal":{"AWS":"arn:aws:iam::111111111111:user/x"},"Action":"events:PutEvents","Resource":"arn:aws:events:us-east-2:111111111111:event-bus/test-bus"}]}'
+        Arn: 'arn:aws:events:us-east-1:111111111111:event-bus/test-bus',
+        Policy: '{"Version":"2012-10-17","Statement":[{"Sid":"allow_account_to_put_events","Effect":"Allow","Principal":{"AWS":"arn:aws:iam::111111111111:user/x"},"Action":"events:PutEvents","Resource":"arn:aws:events:us-east-1:111111111111:event-bus/test-bus"}]}'
     },
     {
         Name: 'test-bus',
-        Arn: 'arn:aws:events:us-east-2:111111111111:event-bus/test-bus',
+        Arn: 'arn:aws:events:us-east-1:111111111111:event-bus/test-bus',
     },
 ];
 
