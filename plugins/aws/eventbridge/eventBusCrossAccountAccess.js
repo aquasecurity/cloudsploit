@@ -67,11 +67,11 @@ module.exports = {
                     return cb();
                 }
                 var restrictedAccountPrincipals = [];
-                var crossAccountBucket = false;
+                var crossAccountEventBus = false;
     
                 statements.forEach(statement => {
                     if (statement.Principal && helpers.crossAccountPrincipal(statement.Principal, accountId)) {
-                        crossAccountBucket = true;
+                        crossAccountEventBus = true;
                         var principals = helpers.crossAccountPrincipal(statement.Principal, accountId, true);
                         if (principals.length) {
                             principals.forEach(principal => {
@@ -85,11 +85,11 @@ module.exports = {
                         return;
                     }
                 });
-                if (crossAccountBucket && !restrictedAccountPrincipals.length) {
+                if (crossAccountEventBus && !restrictedAccountPrincipals.length) {
                     helpers.addResult(results, 0,
                         `Event bus "${eventBus.Name}" contains trusted account principals only`, region);
                     return cb();
-                } else if (crossAccountBucket) {
+                } else if (crossAccountEventBus) {
                     helpers.addResult(results, 2,
                         `Event bus "${eventBus.Name}" contains these untrusted account principals: ${restrictedAccountPrincipals.join(', ')}`, region);
                     return cb();
