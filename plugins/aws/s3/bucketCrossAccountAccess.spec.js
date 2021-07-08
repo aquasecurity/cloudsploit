@@ -136,7 +136,6 @@ describe('bucketCrossAccountAccess', function () {
         it('should FAIL if bucket policy does not contain any statements', function (done) {
             const cache = createCache([listBuckets[0]], getBucketPolicy[2]);
             bucketCrossAccountAccess.run(cache, {}, (err, results) => {
-                console.log(results)
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
