@@ -67,11 +67,21 @@ function addResult(results, status, message, region, resource, custom, err, requ
     }
 }
 
-function findOpenPorts(ngs, protocols, service, location, results) {
+function findOpenPorts(ngs, protocols, service, location, results, cache, callback, source) {
+    let projects = shared.addSource(cache, source,
+        ['projects','get', 'global']);
+
+    if (!projects || projects.err || !projects.data) {
+        shared.addResult(results, 3,
+            'Unable to query for projects: ' + shared.addError(projects), 'global', null, null, projects.err);
+        return callback(null, results, source);
+    }
+
+    var project = projects.data[0].name;
     let found = false;
     for (let sgroups of ngs) {
         let strings = [];
-        let resource = sgroups.id;
+        let resource = createResourceName('firewalls', sgroups.name, project, 'global');
         if (sgroups.allowed && sgroups.allowed.length) {
             let firewallRules = sgroups.allowed;
             let sourceAddressPrefix = sgroups.sourceRanges;
@@ -126,12 +136,22 @@ function findOpenPorts(ngs, protocols, service, location, results) {
     }
 }
 
-function findOpenAllPorts(ngs, location, results) {
+function findOpenAllPorts(ngs, location, results, cache, callback, source) {
+    let projects = shared.addSource(cache, source,
+        ['projects','get', 'global']);
+
+    if (!projects || projects.err || !projects.data) {
+        shared.addResult(results, 3,
+            'Unable to query for projects: ' + shared.addError(projects), 'global', null, null, projects.err);
+        return callback(null, results, source);
+    }
+
+    var project = projects.data[0].name;
     let found = false;
     let protocols = {'tcp': '*', 'udp' : '*'};
     for (let sgroups of ngs) {
         let strings = [];
-        let resource = sgroups.id;
+        let resource = createResourceName('firewalls', sgroups.name, project, 'global');
         if (sgroups.allowed && sgroups.allowed.length) {
             let firewallRules = sgroups.allowed;
             let sourceAddressPrefix = sgroups.sourceRanges;
@@ -198,9 +218,32 @@ function hasBuckets(buckets){
     }
 }
 
+function createResourceName(resourceType, resourceId, project, locationType, location) {
+    let resourceName = '';
+    if (project) resourceName = `projects/${project}/`;
+    switch(locationType) {
+        case 'global':
+            resourceName = `${resourceName}global/${resourceType}/${resourceId}`;
+            break;
+        case 'region':
+            resourceName = `${resourceName}regions/${location}/${resourceType}/${resourceId}`;
+            break;
+        case 'zone':
+            resourceName = `${resourceName}zones/${location}/${resourceType}/${resourceId}`;
+            break;
+        case 'location':
+            resourceName = `${resourceName}locations/${location}/${resourceType}/${resourceId}`;
+            break;
+        default:
+            resourceName = `${resourceName}${resourceType}/${resourceId}`;
+    }
+    return resourceName;
+}
+
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
     findOpenAllPorts: findOpenAllPorts,
-    hasBuckets: hasBuckets
+    hasBuckets: hasBuckets,
+    createResourceName: createResourceName
 };
