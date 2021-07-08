@@ -13,7 +13,7 @@ module.exports = {
             name: 'Whitelisted AWS Account Principals',
             description: 'A comma-separated list of trusted cross account principals',
             regex: '^.*$',
-            default: ['arn:aws:iam::452494236181:user/ben@dme-cg.com']
+            default: ''
         },
         whitelisted_aws_account_principals_regex: {
             name: 'Whitelisted AWS Account Principals Regex',
