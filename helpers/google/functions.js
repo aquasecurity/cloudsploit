@@ -1,3 +1,4 @@
+var async = require('async');
 var shared = require(__dirname + '/../shared.js');
 
 var disabledKeywords = ['has not been used', 'it is disabled'];
@@ -40,7 +41,7 @@ function addResult(results, status, message, region, resource, custom, err, requ
             });
 
         } else {
-            pushResult(3, (errorObj.message ? errorObj.message : 'Unable to query the API: ' + errorObj.code), region, resource, custom);
+            pushResult(3, (errorObj.message ? errorObj.message : 'Unable to query the API: ' + errorObj), region, resource, custom);
         }
     };
 
@@ -71,9 +72,9 @@ function findOpenPorts(ngs, protocols, service, location, results, cache, callba
     let projects = shared.addSource(cache, source,
         ['projects','get', 'global']);
 
-    if (!projects || projects.err || !projects.data) {
-        shared.addResult(results, 3,
-            'Unable to query for projects: ' + shared.addError(projects), 'global', null, null, projects.err);
+    if (!projects || projects.err || !projects.data || !projects.data.length) {
+        helpers.addResult(results, 3,
+            'Unable to query for projects: ' + helpers.addError(projects), 'global', null, null, (projects) ? projects.err : null);
         return callback(null, results, source);
     }
 
@@ -140,9 +141,9 @@ function findOpenAllPorts(ngs, location, results, cache, callback, source) {
     let projects = shared.addSource(cache, source,
         ['projects','get', 'global']);
 
-    if (!projects || projects.err || !projects.data) {
-        shared.addResult(results, 3,
-            'Unable to query for projects: ' + shared.addError(projects), 'global', null, null, projects.err);
+    if (!projects || projects.err || !projects.data || !projects.data.length) {
+        helpers.addResult(results, 3,
+            'Unable to query for projects: ' + helpers.addError(projects), 'global', null, null, (projects) ? projects.err : null);
         return callback(null, results, source);
     }
 
@@ -240,10 +241,29 @@ function createResourceName(resourceType, resourceId, project, locationType, loc
     return resourceName;
 }
 
+function getProtectionLevel(cryptographickey, encryptionLevels) {
+    if (cryptographickey.versionTemplate && cryptographickey.versionTemplate.protectionLevel) {
+        if (cryptographickey.versionTemplate.protectionLevel == 'SOFTWARE') return encryptionLevels.indexOf('cloudcmek');
+        else if (cryptographickey.versionTemplate.protectionLevel == 'HSM') return encryptionLevels.indexOf('cloudhsm');
+        else if (cryptographickey.versionTemplate.protectionLevel == 'EXTERNAL') return encryptionLevels.indexOf('external');
+    }
+
+    return encryptionLevels.indexOf('unspecified');
+}
+
+function listToObj(resultObj, listData, onKey) {
+    async.each(listData, function(entry, cb){
+        if (entry[onKey]) resultObj[entry[onKey]] = entry;
+        cb();
+    });
+}
+
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
     findOpenAllPorts: findOpenAllPorts,
     hasBuckets: hasBuckets,
-    createResourceName: createResourceName
+    createResourceName: createResourceName,
+    getProtectionLevel: getProtectionLevel,
+    listToObj: listToObj
 };
