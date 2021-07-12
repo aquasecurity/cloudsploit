@@ -15,19 +15,21 @@ module.exports = {
         var source = {};
 
         var region = helpers.defaultRegion(settings);
-
         var accountId = helpers.addSource(cache, source, ['sts', 'GetCallerIdentity', region, 'data']);
         var listBuckets = helpers.addSource(cache, source, ['oss', 'listBuckets', region]);
 
         if (!listBuckets) return callback(null, results, source);
+
         if (listBuckets.err || !listBuckets.data) {
             helpers.addResult(results, 3, `Unable to query for OSS buckets: ${helpers.addError(listBuckets)}`, region);
             return callback(null, results, source);
         }
+
         if (!listBuckets.data.length) {
             helpers.addResult(results, 0, 'No OSS buckets found', region);
             return callback(null, results, source);
         }
+
         async.forEach(listBuckets.data, (bucket, cb) => {
             if (!bucket.name) return cb();
 
@@ -39,28 +41,28 @@ module.exports = {
 
             var resource = helpers.createArn('oss', accountId, 'bucket', bucket.name, bucketLocation);
 
-            if (!getBucketLifecycle || (getBucketLifecycle.err && getBucketLifecycle.err.code && getBucketLifecycle.err.code == 'NoSuchLifecycle')) {
+            if (getBucketLifecycle && getBucketLifecycle.err && getBucketLifecycle.err.code && getBucketLifecycle.err.code == 'NoSuchLifecycle') {
                 helpers.addResult(results, 2,
                     'No lifecycle policy exists',
                     bucketLocation, resource);
-            } else if (!getBucketLifecycle || !getBucketLifecycle.data || getBucketLifecycle.err) {
+                return cb();
+            }
+
+            if (!getBucketLifecycle || !getBucketLifecycle.data || getBucketLifecycle.err) {
                 helpers.addResult(results, 3,
                     `Unable to get OSS bucket lifecycle policy info: ${helpers.addError(getBucketLifecycle)}`, bucketLocation, resource);
-                return cb();    
-            } else if (getBucketLifecycle.data.Rules){
-                var bucketPolicyExists = false;
-                var bucketPolicyEnabled = false;
-                async.forEach(getBucketLifecycle.data.Rules, (rule, rcb)=>{
-                    if ('Prefix' in rule && rule.Prefix == '' ) bucketPolicyExists = true;
-                    if (rule.Status && rule.Status.toLowerCase() == 'enabled' ) bucketPolicyEnabled = true;
-                    return rcb();
-                });
-                if (bucketPolicyExists && bucketPolicyEnabled){
+                return cb();
+            }
+
+            if (getBucketLifecycle.data.rules && getBucketLifecycle.data.rules.length){
+                let bucketPolicyEnabled = getBucketLifecycle.data.rules.find(rule => rule.status && rule.status.toLowerCase() == 'enabled');
+
+                if (bucketPolicyEnabled){
                     helpers.addResult(results, 0,
-                        'Lifecycle policy for bucket is enabled', bucketLocation, resource);
+                        'OSS bucket has lifecycle policy enabled', bucketLocation, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'Lifecycle policy for bucket is not enabled', bucketLocation, resource);
+                        'OSS bucket does not have lifecycle policy enabled', bucketLocation, resource);
                 }    
             } else {
                 helpers.addResult(results, 2,

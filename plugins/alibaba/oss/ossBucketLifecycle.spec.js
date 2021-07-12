@@ -13,37 +13,29 @@ const listBuckets = [
 
 const getBucketLifecycle = [
   {
-    Rules: [
+    rules: [
       {
         Prefix: '',
-        Status: 'Enabled',
-        Transition: [Object],
-        Id: '5ffcaec2-5f02-47cf-acb0-b19cda007e2c'
+        status: 'Enabled'
       },
     ]
   },
   {
-    Rules: [
+    rules: [
       {
-        Status: 'Enabled',
-        Transition: [Object],
-        Id: '5ffcaec2-5f02-47cf-acb0-b19cda007e2c'
+        status: 'disabled',
       },
     ]
   },
   {
-    Rules: [
+    rules: [
       {
         Prefix: 'test',
-        Status: 'Enabled',
-        Transition: [Object],
-        Id: '5ffcaec2-5f02-47cf-acb0-b19cda007e2c'
+        status: 'Enabled',
       },
       {
         Prefix: 'image',
-        Status: 'Enabled',
-        Transition: [Object],
-        Id: '9b8d4949-1199-4a6a-a32f-afc0a300fb85'
+        status: 'Enabled'
       }
     ]
   },
@@ -53,7 +45,6 @@ const getBucketLifecycleErr = {
   "name": "NoSuchLifecycleError",
   "status": 404,
   "code": "NoSuchLifecycle",
-  "requestId": "60D32E229EAA1A33353B3B66",
   "hostId": "akhtar-made-2.oss-us-west-1.aliyuncs.com",
   "params": {
     "method": "GET",
@@ -91,18 +82,7 @@ const createCache = (listBuckets, getBucketLifecycle, listBucketsErr, getBucketL
 describe('bucketLifecycle', function () {
     describe('run', function () {
         it('should FAIL if bucket does not have lifecycle policies', function (done) {
-            const cache = createCache(listBuckets, getBucketLifecycle[2], undefined, getBucketLifecycleErr);
-            bucketLifecycle.run(cache, {}, (err, results) => {
-              expect(results.length).to.equal(1);
-              expect(results[0].status).to.equal(2);
-              expect(results[0].message).to.include('No lifecycle policy exists');
-              expect(results[0].region).to.equal('cn-hangzhou');
-              done();
-            });
-        });
-
-        it('should FAIL if bucket lifecycle policy response is malformed', function (done) {
-            const cache = createCache(listBuckets, getBucketLifecycle[1], undefined, getBucketLifecycleErr);
+            const cache = createCache(listBuckets, getBucketLifecycle[2], null, getBucketLifecycleErr);
             bucketLifecycle.run(cache, {}, (err, results) => {
               expect(results.length).to.equal(1);
               expect(results[0].status).to.equal(2);
@@ -117,11 +97,22 @@ describe('bucketLifecycle', function () {
             bucketLifecycle.run(cache, {}, (err, results) => {
               expect(results.length).to.equal(1);
               expect(results[0].status).to.equal(0);
-              expect(results[0].message).to.include('Lifecycle policy for bucket is enabled');
+              expect(results[0].message).to.include('OSS bucket has lifecycle policy enabled');
               expect(results[0].region).to.equal('cn-hangzhou');
               done();
             });
         });
+
+        it('should PASS if bucket has lifecycle policies disabled', function (done) {
+          const cache = createCache(listBuckets, getBucketLifecycle[1]);
+          bucketLifecycle.run(cache, {}, (err, results) => {
+            expect(results.length).to.equal(1);
+            expect(results[0].status).to.equal(2);
+            expect(results[0].message).to.include('OSS bucket does not have lifecycle policy enabled');
+            expect(results[0].region).to.equal('cn-hangzhou');
+            done();
+          });
+      });
 
         it('should PASS if no OSS buckets found', function (done) {
             const cache = createCache([]);
