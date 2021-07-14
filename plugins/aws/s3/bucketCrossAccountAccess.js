@@ -7,7 +7,7 @@ module.exports = {
     more_info: 'S3 bucket policy should be configured to allow access only to whitelisted/trusted cross-account principals.',
     recommended_action: 'Add bucket policy to manage cross-account access.',
     link: 'https://aws.amazon.com/premiumsupport/knowledge-center/cross-account-access-s3/',
-    apis: ['S3:listBuckets', 'S3:getBucketPolicy', 'STS:getCallerIdentity'],
+    apis: ['S3:listBuckets', 'S3:getBucketPolicy', 'STS:getCallerIdentity', 'Organizations:listAccounts'],
     settings: {
         whitelisted_aws_account_principals: {
             name: 'Whitelisted AWS Account Principals',
@@ -22,6 +22,12 @@ module.exports = {
             regex: '^.*$',
             default: ''
         },
+        iam_whitelist_aws_organization_accounts: {
+            name: 'Whitelist AWS Organization Accounts',
+            description: 'If true, trust all accounts in current AWS organization',
+            regex: '^(true|false)$',
+            default: 'false'
+        }
     },
     compliance: {
         pci: 'PCI requires that cardholder data can only be accessed by those with ' +
@@ -33,9 +39,11 @@ module.exports = {
     run: function(cache, settings, callback) {
         var config= {
             whitelisted_aws_account_principals : settings.whitelisted_aws_account_principals || this.settings.whitelisted_aws_account_principals.default,
-            whitelisted_aws_account_principals_regex : settings.whitelisted_aws_account_principals_regex || this.settings.whitelisted_aws_account_principals_regex.default
+            whitelisted_aws_account_principals_regex : settings.whitelisted_aws_account_principals_regex || this.settings.whitelisted_aws_account_principals_regex.default,
+            iam_whitelist_aws_organization_accounts: settings.iam_whitelist_aws_organization_accounts || this.settings.iam_whitelist_aws_organization_accounts.default
         };
         var makeRegexBased = (config.whitelisted_aws_account_principals_regex.length) ? true : false;
+        var whitelistOrganization = (config.iam_whitelist_aws_organization_accounts == 'true'); 
         config.whitelisted_aws_account_principals_regex = new RegExp(config.whitelisted_aws_account_principals_regex);
         var results = [];
         var source = {};
@@ -57,6 +65,20 @@ module.exports = {
         if (!listBuckets.data.length) {
             helpers.addResult(results, 0, 'No S3 buckets to check');
             return callback(null, results, source);
+        }
+
+        let organizationAccounts = [];
+        if (whitelistOrganization) {
+            var listAccounts = helpers.addSource(cache, source,
+                ['organizations', 'listAccounts', region]);
+            
+            if (!listAccounts || listAccounts.err || !listAccounts.data) {
+                helpers.addResult(results, 3,
+                    `Unable to query organization accounts: ${helpers.addError(listAccounts)}`, region);
+                return callback(null, results, source);
+            }
+
+            organizationAccounts = helpers.getOrganizationAccounts(listAccounts, accountId);
         }
 
         listBuckets.data.forEach(bucket => {
@@ -87,6 +109,9 @@ module.exports = {
                     var principals = helpers.crossAccountPrincipal(statement.Principal, accountId, true);
                     if (principals.length) {
                         principals.forEach(principal => {
+                            if (whitelistOrganization) {
+                                if (organizationAccounts.find(account => principal.includes(account))) return;
+                            }
                             if (makeRegexBased) {
                                 if (!config.whitelisted_aws_account_principals_regex.test(principal) &&
                                     !restrictedAccountPrincipals.includes(principal)) restrictedAccountPrincipals.push(principal);
@@ -111,9 +136,6 @@ module.exports = {
                     'global', bucketResource);
             }
         });
-
         callback(null, results, source);
-    }
-
-    
+    }    
 };

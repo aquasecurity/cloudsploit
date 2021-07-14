@@ -8,6 +8,27 @@ const listBuckets = [
     }
 ];
 
+const organizationAccounts = [
+    {
+        "Id": "111111111111",
+        "Arn": "arn:aws:organizations::111111111111:account/o-sb9qmv2zif/111111111111",
+        "Email": "xyz@gmail.com",
+        "Name": "test-role",
+        "Status": "ACTIVE",
+        "JoinedMethod": "INVITED",
+        "JoinedTimestamp": "2020-12-27T10:47:14.057Z"
+    },
+    {
+        "Id": "123456654322",
+        "Arn": "arn:aws:organizations::123456654322:account/o-sb9qmv2zif/123456654322",
+        "Email": "xyz@gmail.com",
+        "Name": "test-role",
+        "Status": "ACTIVE",
+        "JoinedMethod": "INVITED",
+        "JoinedTimestamp": "2020-12-27T10:47:14.057Z"
+    }
+]
+
 const getBucketPolicy = [
     {
         Policy: '{"Version": "2012-10-17", "Statement": [{ "Sid": "AllowGetObject","Effect": "Allow","Principal": {"AWS": ["arn:aws:iam::1111111111111:user/x","arn:aws:iam::1111111111111:user/y"]},"Action": "s3:GetObject","Resource": "arn:aws:s3:::ttest-bucket-130/*","Condition": {"StringEquals": {"aws:PrincipalOrgID": "o-sdfasdfdsg546476"}}}]}'
@@ -23,7 +44,7 @@ const getBucketPolicy = [
     },
 ];
 
-const createCache = (buckets, policy) => {
+const createCache = (buckets, policy, accounts) => {
     var bucketName = (buckets && buckets.length) ? buckets[0].Name : null;
     return {
         s3: {
@@ -38,6 +59,13 @@ const createCache = (buckets, policy) => {
                         data: policy
                     },
                 },
+            }
+        },
+        organizations: {
+            listAccounts: {
+                'us-east-1': {
+                    data: organizationAccounts,
+                }
             },
         },
     };
@@ -57,6 +85,13 @@ const createErrorCache = () => {
                 'us-east-1': {
                     err: {
                         message: 'error while getting bucket policy'
+                    },
+                },
+            },
+            listAccounts: {
+                'us-east-1': {
+                    err: {
+                        message: 'error while getting organization accounts'
                     },
                 },
             },
@@ -109,6 +144,15 @@ describe('bucketCrossAccountAccess', function () {
                     'arn:aws:iam::1111111111111:user/y',
                 ]
             }, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
+
+        it('should PASS if cross-account role contains organization account ID and setting to allow organization account is true', function (done) {
+            const cache = createCache([listBuckets[0]], getBucketPolicy[0], organizationAccounts[1]);
+            bucketCrossAccountAccess.run(cache, { iam_whitelist_aws_organization_accounts: 'true' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
