@@ -4,7 +4,7 @@ var async = require('async');
 module.exports = {
     title: 'IAM User Account In Use',
     category: 'IAM',
-    description: 'Ensures the IAM user account is being actively used',
+    description: 'Ensure that IAM user accounts are being actively used.',
     more_info: 'IAM users, roles, and groups should be used for day-to-day account management.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html',
     recommended_action: 'Create IAM users with appropriate group-level permissions for account access. Create an MFA token for the IAM user account, and store its password and token generation QR codes in a secure place.',
