@@ -53,7 +53,7 @@ module.exports = {
 
                 var accessDates = [];
 
-                if (user.password_last_used && user.password_last_used !== null && user.password_last_used !== 'no_information') {
+                if (user.password_last_used && user.password_last_used !== 'no_information') {
                     accessDates.push(user.password_last_used);
                 }
 
