@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'VPC flow logs record all traffic flowing in to and out of a VPC. These logs are critical for auditing and review after security incidents.',
     link: 'https://cloud.google.com/vpc/docs/using-flow-logs',
     recommended_action: 'Enable VPC flow logs for each VPC subnet',
-    apis: ['subnetworks:list'],
+    apis: ['subnetworks:list', 'projects:get'],
     compliance: {
         hipaa: 'VPC Flow Logs provide a detailed traffic log of a VPC network ' +
             'containing HIPAA data. Flow Logs should be enabled to satisfy ' +
@@ -21,6 +21,17 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions();
+
+        let projects = helpers.addSource(cache, source,
+            ['projects','get', 'global']);
+
+        if (!projects || projects.err || !projects.data || !projects.data.length) {
+            helpers.addResult(results, 3,
+                'Unable to query for projects: ' + helpers.addError(projects), 'global', null, null, (projects) ? projects.err : null);
+            return callback(null, results, source);
+        }
+
+        var project = projects.data[0].name;
 
         async.each(regions.subnetworks, function(region, rcb){
             let subnetworks = helpers.addSource(cache, source,
@@ -38,15 +49,23 @@ module.exports = {
                 return rcb();
             }
             
+            let found = false;
             subnetworks.data.forEach(subnet => {
+                let resource = helpers.createResourceName('subnetworks', subnet.name, project, 'region', region);
                 if (subnet.creationTimestamp &&
                     !subnet.enableFlowLogs) {
+                    found = true;
                     helpers.addResult(results, 2,
-                        'The subnet does not have flow logs enabled', region, subnet.id);
+                        'The subnet does not have flow logs enabled', region, resource);
                 } else if (subnet.creationTimestamp) {
-                    helpers.addResult(results, 0, 'The subnet has flow logs enabled', region, subnet.id);
+                    found = true;
+                    helpers.addResult(results, 0, 'The subnet has flow logs enabled', region, resource);
                 }
             });
+
+            if (!found) {
+                helpers.addResult(results, 0, 'No subnetworks present', region);
+            }
 
             rcb();
         }, function(){
