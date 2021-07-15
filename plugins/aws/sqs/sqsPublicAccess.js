@@ -14,7 +14,7 @@ module.exports = {
             name: 'SQS Queue Policy Allowed Condition Keys',
             description: 'Comma separated list of AWS IAM condition keys that should be allowed i.e. aws:SourceAccount.',
             regex: '^.*$',
-            default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceAccount,aws:SourceArn'
+            default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceAccount,aws:SourceArn,aws:SourceOwner'
         },
     },
 
