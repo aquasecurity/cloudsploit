@@ -57,13 +57,9 @@ module.exports = {
                     accessDates.push(user.password_last_used);
                 }
 
-                if (user.access_key_1_last_used_date && user.access_key_1_last_used_date !== null) {
-                    accessDates.push(user.access_key_1_last_used_date);
-                }
+                if (user.access_key_1_last_used_date) accessDates.push(user.access_key_1_last_used_date);
 
-                if (user.access_key_2_last_used_date && user.access_key_2_last_used_date !== null) {
-                    accessDates.push(user.access_key_2_last_used_date);
-                }
+                if (user.access_key_2_last_used_date) accessDates.push(user.access_key_2_last_used_date);
 
                 if (!accessDates.length) {
                     helpers.addResult(results, 0, 'IAM user has not been used', 'global', user.arn);
