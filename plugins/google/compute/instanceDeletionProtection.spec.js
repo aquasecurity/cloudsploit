@@ -1,8 +1,7 @@
-var assert = require('assert');
 var expect = require('chai').expect;
 var plugin = require('./instanceDeletionProtection');
 
-const createCache = (instanceData, instanceDatab, error) => {
+const createCache = (instanceData, error) => {
     return {
         instances: {
             compute: {
@@ -10,19 +9,14 @@ const createCache = (instanceData, instanceDatab, error) => {
                     'us-central1-a': {
                         data: instanceData,
                         err: error
-                    },
-                    'us-central1-b': {
-                        data: instanceDatab,
-                        err: error
-                    },
-                    'us-central1-c': {
-                        data: instanceDatab,
-                        err: error
-                    },
-                    'us-central1-f': {
-                        data: instanceDatab,
-                        err: error
                     }
+                }
+            }
+        },
+        projects: {
+            get: {
+                'global': {
+                    data: 'testproj'
                 }
             }
         }
@@ -35,16 +29,15 @@ describe('instanceDeletionProtection', function () {
         it('should give unknown if an instance error occurs', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
-                expect(results[4].status).to.equal(3);
-                expect(results[4].message).to.include('Unable to query instances');
-                expect(results[4].region).to.equal('us-central1');
+                expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query instances');
+                expect(results[0].region).to.equal('us-central1-a');
                 done()
             };
 
             const cache = createCache(
                 [],
-                [],
-                ['null']
+                ['error']
             );
 
             plugin.run(cache, {}, callback);
@@ -53,14 +46,13 @@ describe('instanceDeletionProtection', function () {
         it('should pass no VM Instances', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
-                expect(results[4].status).to.equal(0);
-                expect(results[4].message).to.include('No instances found');
-                expect(results[4].region).to.equal('us-central1');
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No instances found');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 
             const cache = createCache(
-                [],
                 [],
                 null
             );
@@ -70,10 +62,10 @@ describe('instanceDeletionProtection', function () {
 
         it('should fail if instance deletion protection is disabled', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.above(1);
-                expect(results[4].status).to.equal(2);
-                expect(results[4].message).to.include('Instance deletion protection is disabled');
-                expect(results[4].region).to.equal('us-central1');
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('Instance deletion protection is disabled');
+                expect(results[0].region).to.equal('us-central1-a');
                 done()
             };
 
@@ -94,7 +86,6 @@ describe('instanceDeletionProtection', function () {
                         "kind": "compute#instance"
                     }
                 ],
-                [],
                 null
             );
 
@@ -103,10 +94,10 @@ describe('instanceDeletionProtection', function () {
 
         it('should pass if instance deletion protection is enabled', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.above(1);
-                expect(results[4].status).to.equal(0);
-                expect(results[4].message).to.include('Instance deletion protection is enabled');
-                expect(results[4].region).to.equal('us-central1');
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Instance deletion protection is enabled');
+                expect(results[0].region).to.equal('us-central1-a');
                 done()
             };
 
