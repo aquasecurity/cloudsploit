@@ -9,25 +9,31 @@ module.exports = {
     link: 'https://aws.amazon.com/premiumsupport/knowledge-center/cross-account-access-s3/',
     apis: ['S3:listBuckets', 'S3:getBucketPolicy', 'STS:getCallerIdentity', 'Organizations:listAccounts'],
     settings: {
-        whitelisted_aws_account_principals: {
-            name: 'Whitelisted AWS Account Principals',
+        s3_whitelisted_aws_account_principals: {
+            name: 'S3 Whitelisted AWS Account Principals',
             description: 'A comma-separated list of trusted cross account principals',
             regex: '^.*$',
             default: ''
         },
-        whitelisted_aws_account_principals_regex: {
-            name: 'Whitelisted AWS Account Principals Regex',
+        s3_whitelisted_aws_account_principals_regex: {
+            name: 'S3 Whitelisted AWS Account Principals Regex',
             description: 'If set, plugin will compare cross account principals against this regex instead of otherwise given comma-separated list' +
                 'Example regex: ^arn:aws:iam::(111111111111|222222222222|):.+$',
             regex: '^.*$',
             default: ''
         },
-        iam_whitelist_aws_organization_accounts: {
-            name: 'Whitelist AWS Organization Accounts',
+        s3_whitelisted_aws_organization_accounts: {
+            name: 'S3 Whitelist AWS Organization Accounts',
             description: 'If true, trust all accounts in current AWS organization',
             regex: '^(true|false)$',
             default: 'false'
-        }
+        },
+        s3_policy_condition_keys: {
+            name: 'S3 Policy Allowed Condition Keys',
+            description: 'Comma separated list of AWS IAM condition keys that should be allowed i.e. aws:SourceAccount,aws:PrincipalArn',
+            regex: '^.*$',
+            default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceAccount,aws:SourceArn,aws:SourceOwner'
+        },
     },
     compliance: {
         pci: 'PCI requires that cardholder data can only be accessed by those with ' +
@@ -38,13 +44,15 @@ module.exports = {
 
     run: function(cache, settings, callback) {
         var config= {
-            whitelisted_aws_account_principals : settings.whitelisted_aws_account_principals || this.settings.whitelisted_aws_account_principals.default,
-            whitelisted_aws_account_principals_regex : settings.whitelisted_aws_account_principals_regex || this.settings.whitelisted_aws_account_principals_regex.default,
-            iam_whitelist_aws_organization_accounts: settings.iam_whitelist_aws_organization_accounts || this.settings.iam_whitelist_aws_organization_accounts.default
+            s3_whitelisted_aws_account_principals : settings.s3_whitelisted_aws_account_principals || this.settings.s3_whitelisted_aws_account_principals.default,
+            s3_whitelisted_aws_account_principals_regex : settings.s3_whitelisted_aws_account_principals_regex || this.settings.s3_whitelisted_aws_account_principals_regex.default,
+            s3_whitelisted_aws_organization_accounts: settings.s3_whitelisted_aws_organization_accounts || this.settings.s3_whitelisted_aws_organization_accounts.default,
+            s3_policy_condition_keys: settings.s3_policy_condition_keys || this.settings.s3_policy_condition_keys.default
         };
-        var makeRegexBased = (config.whitelisted_aws_account_principals_regex.length) ? true : false;
-        var whitelistOrganization = (config.iam_whitelist_aws_organization_accounts == 'true'); 
-        config.whitelisted_aws_account_principals_regex = new RegExp(config.whitelisted_aws_account_principals_regex);
+        var makeRegexBased = (config.s3_whitelisted_aws_account_principals_regex.length) ? true : false;
+        var whitelistOrganization = (config.s3_whitelisted_aws_organization_accounts == 'true'); 
+        var allowedConditionKeys = config.s3_policy_condition_keys.split(',');
+        config.s3_whitelisted_aws_account_principals_regex = new RegExp(config.s3_whitelisted_aws_account_principals_regex);
         var results = [];
         var source = {};
         
@@ -71,7 +79,6 @@ module.exports = {
         if (whitelistOrganization) {
             var listAccounts = helpers.addSource(cache, source,
                 ['organizations', 'listAccounts', region]);
-            
             if (!listAccounts || listAccounts.err || !listAccounts.data) {
                 helpers.addResult(results, 3,
                     `Unable to query organization accounts: ${helpers.addError(listAccounts)}`, region);
@@ -90,35 +97,49 @@ module.exports = {
                 ['s3', 'getBucketPolicy', region, bucket.Name]);
             
             if (!getBucketPolicy.data){
-                helpers.addResult(results, 2, 'No bucket policy exists', 'global', bucketResource);
+                helpers.addResult(results, 0, 'No custom bucket policy exists', 'global', bucketResource);
                 return;
             }
             
             var statements = helpers.normalizePolicyDocument(getBucketPolicy.data.Policy);
-            
-            if (!statements){
-                helpers.addResult(results, 3, 'No statement exists for the policy', 'global', bucketResource);
+            if (!statements) {
+                helpers.addResult(results, 3,
+                    `Bucket "${bucket.Name}" does not contain any policy statement`,
+                    'global', bucketResource);
                 return;
             }
             var restrictedAccountPrincipals = [];
             var crossAccountBucket = false;
             
             statements.forEach(statement => {
-                if (statement.Principal && helpers.crossAccountPrincipal(statement.Principal, accountId)) {
-                    crossAccountBucket = true;
-                    var principals = helpers.crossAccountPrincipal(statement.Principal, accountId, true);
-                    if (principals.length) {
-                        principals.forEach(principal => {
-                            if (whitelistOrganization) {
-                                if (organizationAccounts.find(account => principal.includes(account))) return;
-                            }
-                            if (makeRegexBased) {
-                                if (!config.whitelisted_aws_account_principals_regex.test(principal) &&
-                                    !restrictedAccountPrincipals.includes(principal)) restrictedAccountPrincipals.push(principal);
-                            } else if (!config.whitelisted_aws_account_principals.includes(principal) &&
-                                    !restrictedAccountPrincipals.includes(principal)) restrictedAccountPrincipals.push(principal);
+                if (!statement.Principal) return;
+                
+                let conditionalPrincipals = helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, true, accountId);
+                if (helpers.crossAccountPrincipal(statement.Principal, accountId) ||
+                    (conditionalPrincipals && conditionalPrincipals.length)) {
+                    
+                    let crossAccountPrincipals = helpers.crossAccountPrincipal(statement.Principal, accountId, true);
+
+                    if (conditionalPrincipals && conditionalPrincipals.length) {
+                        conditionalPrincipals.forEach(conPrincipal => {
+                            if (!conPrincipal.includes(accountId)) crossAccountPrincipals.push(conPrincipal);
                         });
                     }
+
+                    if (!crossAccountPrincipals.length) return;
+                    
+                    crossAccountBucket = true;
+                    
+                    crossAccountPrincipals.forEach(principal => {
+                        if (whitelistOrganization) {
+                            if (organizationAccounts.find(account => principal.includes(account))) return;
+                        }
+                        if (makeRegexBased) {
+                            if (!config.s3_whitelisted_aws_account_principals_regex.test(principal) &&
+                                !restrictedAccountPrincipals.includes(principal)) restrictedAccountPrincipals.push(principal);
+                        } else if (!config.s3_whitelisted_aws_account_principals.includes(principal) &&
+                                !restrictedAccountPrincipals.includes(principal)) restrictedAccountPrincipals.push(principal);
+                    });
                     return;
                 }
             });
