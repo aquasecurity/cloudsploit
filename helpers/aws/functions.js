@@ -244,7 +244,6 @@ function userGlobalAccess(statement, restrictedPermissions) {
 }
 
 function crossAccountPrincipal(principal, accountId, fetchPrincipals) {
-
     if (typeof principal === 'string' &&
         /^[0-9]{12}$/.test(principal) &&
         principal !== accountId) {

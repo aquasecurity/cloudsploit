@@ -81,7 +81,7 @@ describe('eventBusCrossAccountAccess', function () {
 
         it('should PASS if Event Bus has cross-account access policy attached', function (done) {
             const cache = createCache([listEventBuses[0]]);
-            eventBusCrossAccountAccess.run(cache, {"whitelisted_aws_account_principals":['arn:aws:iam::211111111111:user/y']}, (err, results) => {
+            eventBusCrossAccountAccess.run(cache, {"eventbridge_whitelisted_aws_account_principals":['arn:aws:iam::211111111111:user/y']}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -91,7 +91,7 @@ describe('eventBusCrossAccountAccess', function () {
 
         it('should PASS if cross-account role contains organization account ID and setting to allow organization account is true', function (done) {
             const cache = createCache([listEventBuses[0]], [organizationAccounts[0]]);
-            eventBusCrossAccountAccess.run(cache, { iam_whitelist_aws_organization_accounts: 'true' }, (err, results) => {
+            eventBusCrossAccountAccess.run(cache, { "eventbridge_whitelist_aws_organization_accounts": "true" }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -112,7 +112,7 @@ describe('eventBusCrossAccountAccess', function () {
             const cache = createCache(listEventBuses[2]);
             eventBusCrossAccountAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
+                expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
@@ -122,7 +122,7 @@ describe('eventBusCrossAccountAccess', function () {
             const cache = createCache([]);
             eventBusCrossAccountAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
+                expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });

@@ -10,36 +10,44 @@ module.exports = {
     recommended_action: 'Configure event bus policies that allow access to whitelisted/trusted cross-account principals.',
     apis: ['EventBridge:listEventBuses', 'STS:getCallerIdentity', 'Organizations:listAccounts'],
     settings: {
-        whitelisted_aws_account_principals: {
+        eventbridge_whitelisted_aws_account_principals: {
             name: 'Whitelisted AWS Account Principals',
             description: 'A comma-separated list of trusted cross account principals',
             regex: '^.*$',
             default: ''
         },
-        whitelisted_aws_account_principals_regex: {
+        eventbridge_whitelisted_aws_account_principals_regex: {
             name: 'Whitelisted AWS Account Principals Regex',
             description: 'If set, plugin will compare cross account principals against this regex instead of otherwise given comma-separated list' +
                 'Example regex: ^arn:aws:iam::(111111111111|222222222222|):.+$',
             regex: '^.*$',
             default: ''
         },
-        iam_whitelist_aws_organization_accounts: {
+        eventbridge_whitelist_aws_organization_accounts: {
             name: 'Whitelist AWS Organization Accounts',
             description: 'If true, trust all accounts in current AWS organization',
             regex: '^(true|false)$',
             default: 'false'
-        }
+        },
+        eventbridge_policy_condition_keys: {
+            name: 'SNS Topic Policy Allowed Condition Keys',
+            description: 'Comma separated list of AWS IAM condition keys that should be allowed i.e. aws:SourceAccount,aws:PrincipalArn',
+            regex: '^.*$',
+            default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceAccount,aws:SourceArn,aws:SourceOwner'
+        },
     },
     
     run: function(cache, settings, callback) {
         var config= {
-            whitelisted_aws_account_principals : settings.whitelisted_aws_account_principals || this.settings.whitelisted_aws_account_principals.default,
-            whitelisted_aws_account_principals_regex : settings.whitelisted_aws_account_principals_regex || this.settings.whitelisted_aws_account_principals_regex.default,
-            iam_whitelist_aws_organization_accounts: settings.iam_whitelist_aws_organization_accounts || this.settings.iam_whitelist_aws_organization_accounts.default
+            eventbridge_whitelisted_aws_account_principals : settings.eventbridge_whitelisted_aws_account_principals || this.settings.eventbridge_whitelisted_aws_account_principals.default,
+            eventbridge_whitelisted_aws_account_principals_regex : settings.eventbridge_whitelisted_aws_account_principals_regex || this.settings.eventbridge_whitelisted_aws_account_principals_regex.default,
+            eventbridge_whitelist_aws_organization_accounts: settings.eventbridge_whitelist_aws_organization_accounts || this.settings.eventbridge_whitelist_aws_organization_accounts.default,
+            eventbridge_policy_condition_keys: settings.eventbridge_policy_condition_keys || this.settings.eventbridge_policy_condition_keys.default,
         };
-        var makeRegexBased = (config.whitelisted_aws_account_principals_regex.length) ? true : false;
-        var whitelistOrganization = (config.iam_whitelist_aws_organization_accounts == 'true'); 
-        config.whitelisted_aws_account_principals_regex = new RegExp(config.whitelisted_aws_account_principals_regex);
+        var allowedConditionKeys = config.eventbridge_policy_condition_keys.split(',');
+        var makeRegexBased = (config.eventbridge_whitelisted_aws_account_principals_regex.length) ? true : false;
+        var whitelistOrganization = (config.eventbridge_whitelist_aws_organization_accounts == 'true'); 
+        config.eventbridge_whitelisted_aws_account_principals_regex = new RegExp(config.eventbridge_whitelisted_aws_account_principals_regex);
         var results = [];
         var source = {};
         
@@ -73,12 +81,11 @@ module.exports = {
             }
 
             if (!listEventBuses.data.length) {
-                helpers.addResult(results, 2, 'No Event Bus found', region);
+                helpers.addResult(results, 0, 'Event bus does not use custom policy', region);
                 return rcb();
             }
             
             async.each(listEventBuses.data, function(eventBus, cb){
-                
                 if (!eventBus.Policy) {
                     helpers.addResult(results, 2, `Event Bus ${eventBus.Name} does not contain cross-account policy statement`, region);
                     return cb();
@@ -94,21 +101,31 @@ module.exports = {
                 var crossAccountEventBus = false;
     
                 statements.forEach(statement => {
-                    if (statement.Principal && helpers.crossAccountPrincipal(statement.Principal, accountId)) {
-                        crossAccountEventBus = true;
-                        var principals = helpers.crossAccountPrincipal(statement.Principal, accountId, true);
-                        if (principals.length) {
-                            principals.forEach(principal => {
-                                if (whitelistOrganization) {
-                                    if (organizationAccounts.find(account => principal.includes(account))) return;
-                                }
-                                if (makeRegexBased) {
-                                    if (!config.whitelisted_aws_account_principals_regex.test(principal) &&
-                                        !restrictedAccountPrincipals.includes(principal)) restrictedAccountPrincipals.push(principal);
-                                } else if (!config.whitelisted_aws_account_principals.includes(principal) &&
-                                        !restrictedAccountPrincipals.includes(principal)) restrictedAccountPrincipals.push(principal);
+                    if (!statement.Principal) return;
+
+                    let conditionalPrincipals = helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, true, accountId);
+                    if (helpers.crossAccountPrincipal(statement.Principal, accountId) ||
+                        (conditionalPrincipals && conditionalPrincipals.length)) {
+                        let crossAccountPrincipals = helpers.crossAccountPrincipal(statement.Principal, accountId, true);
+
+                        if (conditionalPrincipals && conditionalPrincipals.length) {
+                            conditionalPrincipals.forEach(conPrincipal => {
+                                if (!conPrincipal.includes(accountId)) crossAccountPrincipals.push(conPrincipal);
                             });
                         }
+
+                        if (!crossAccountPrincipals.length) return;
+                        crossAccountEventBus = true;
+                        crossAccountPrincipals.forEach(principal => {
+                            if (whitelistOrganization) {
+                                if (organizationAccounts.find(account => principal.includes(account))) return;
+                            }
+                            if (makeRegexBased) {
+                                if (!config.eventbridge_whitelisted_aws_account_principals_regex.test(principal) &&
+                                    !restrictedAccountPrincipals.includes(principal)) restrictedAccountPrincipals.push(principal);
+                            } else if (!config.eventbridge_whitelisted_aws_account_principals.includes(principal) &&
+                                    !restrictedAccountPrincipals.includes(principal)) restrictedAccountPrincipals.push(principal);
+                        });
                         return;
                     }
                 });
