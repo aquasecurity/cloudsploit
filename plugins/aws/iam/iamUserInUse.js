@@ -22,6 +22,8 @@ module.exports = {
         var config = {
             iam_user_account_in_use_days: settings.iam_user_account_in_use_days || this.settings.iam_user_account_in_use_days.default
         };
+        var currentDate = now;
+        if (!currentDate) currentDate = new Date();
 
         var custom = helpers.isCustom(settings, this.settings);
 
@@ -61,10 +63,10 @@ module.exports = {
                     helpers.addResult(results, 0, 'IAM user has not been used', 'global', user.arn);
                 } else {
                     var dateToCompare = helpers.mostRecentDate(accessDates);
-                    var resultCode = (helpers.daysBetween(dateToCompare, now) < config.iam_user_account_in_use_days) ? 2: 0;
+                    var resultCode = (helpers.daysBetween(dateToCompare, currentDate) < config.iam_user_account_in_use_days) ? 2: 0;
 
                     helpers.addResult(results, resultCode,
-                        'IAM user was last used ' + helpers.daysBetween(dateToCompare, now) + ' days ago',
+                        'IAM user was last used ' + helpers.daysBetween(dateToCompare, currentDate) + ' days ago',
                         'global', user.arn, custom);
                 }
             }
