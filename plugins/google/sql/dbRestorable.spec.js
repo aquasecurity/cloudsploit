@@ -20,6 +20,13 @@ const createCache = (err, sqlInstances, backupRuns) => {
                     data: backupRuns
                 }
             }
+        },
+        projects: {
+            get: {
+                'global': {
+                    data: [{ name: 'test-project' }]
+                }
+            }
         }
     }
 };
@@ -56,6 +63,7 @@ describe('dbRestorable', function () {
         });
         it('should give passing result if sql instance has backup available', function (done) {
             const callback = (err, results) => {
+                console.log();
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('SQL instance has backup available');

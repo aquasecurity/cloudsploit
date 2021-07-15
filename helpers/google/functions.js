@@ -243,7 +243,7 @@ module.exports = {
     findOpenPorts: findOpenPorts,
     findOpenAllPorts: findOpenAllPorts,
     hasBuckets: hasBuckets,
-    createResourceName,
+    createResourceName: createResourceName,
     getProtectionLevel: getProtectionLevel,
     listToObj: listToObj
 };
