@@ -1,4 +1,3 @@
-var assert = require('assert');
 var expect = require('chai').expect;
 var plugin = require('./flowLogsEnabled');
 
@@ -9,6 +8,13 @@ const createCache = (err, data) => {
                 'us-east1': {
                     err: err,
                     data: data
+                }
+            }
+        },
+        projects: {
+            get: {
+                'global': {
+                    data: 'testProj'
                 }
             }
         }
