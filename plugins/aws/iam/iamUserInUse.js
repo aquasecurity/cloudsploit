@@ -18,11 +18,7 @@ module.exports = {
         }
     },
 
-    run: function(cache, settings, callback) {
-        this._run(cache, settings, callback, new Date());
-    },
-
-    _run: function(cache, settings, callback, now) {
+    run: function(cache, settings, callback, now) {
         var config = {
             iam_user_account_in_use_days: settings.iam_user_account_in_use_days || this.settings.iam_user_account_in_use_days.default
         };
@@ -65,7 +61,6 @@ module.exports = {
                     helpers.addResult(results, 0, 'IAM user has not been used', 'global', user.arn);
                 } else {
                     var dateToCompare = helpers.mostRecentDate(accessDates);
-
                     var resultCode = (helpers.daysBetween(dateToCompare, now) < config.iam_user_account_in_use_days) ? 2: 0;
 
                     helpers.addResult(results, resultCode,
