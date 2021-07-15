@@ -9,16 +9,6 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html',
     recommended_action: 'Create IAM users with appropriate group-level permissions for account access. Create an MFA token for the IAM user account, and store its password and token generation QR codes in a secure place.',
     apis: ['IAM:generateCredentialReport'],
-    compliance: { // Need comments for these statements
-        hipaa: 'HIPAA requires strong auditing controls surrounding actions ' +
-                'taken in the environment. The IAM user user lacks these controls ' +
-                'since it is not tied to a specific user. The IAM user account ' +
-                'should not be used.',
-        pci: 'PCI requires that cardholder data can only be accessed by those with ' +
-             'a legitimate business need. Restricting IAM user access prevents access ' +
-             'to these environments from users who may not be identified.',
-        cis1: '1.1 Avoid the use of the IAM user account'
-    },
     settings: {
         iam_user_account_in_use_days: {
             name: 'IAM User Account In Use Days',
