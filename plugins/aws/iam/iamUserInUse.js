@@ -65,7 +65,6 @@ module.exports = {
                     helpers.addResult(results, 0, 'IAM user has not been used', 'global', user.arn);
                 } else {
                     var dateToCompare = helpers.mostRecentDate(accessDates);
-                    console.log(accessDates, dateToCompare, now, helpers.daysBetween(dateToCompare, now));
 
                     var resultCode = (helpers.daysBetween(dateToCompare, now) < config.iam_user_account_in_use_days) ? 2: 0;
 
