@@ -43,7 +43,7 @@ module.exports = {
                 if (!instances) return zcb();
 
                 if (instances.err || !instances.data) {
-                    helpers.addResult(results, 3, 'Unable to query compute instances', zone, null, null, instances.err);
+                    helpers.addResult(results, 3, 'Unable to query compute instances', region, null, null, instances.err);
                     return zcb();
                 }
 
@@ -63,10 +63,10 @@ module.exports = {
 
                     if (found) {
                         helpers.addResult(results, 2,
-                            `Instance Service account has full access` , zone, resource);
+                            `Instance Service account has full access` , region, resource);
                     } else {
                         helpers.addResult(results, 0,
-                            'Instance Service account follows least privilege' , zone, resource);
+                            'Instance Service account follows least privilege' , region, resource);
                     }
                 });
                 return zcb();

@@ -58,7 +58,7 @@ module.exports = {
 
                 if (disks.err || !disks.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query compute disks', zone, null, null, disks.err);
+                        'Unable to query compute disks', region, null, null, disks.err);
                     return zcb();
                 }
 
@@ -82,24 +82,24 @@ module.exports = {
                 if (badDisks.length) {
                     if (badDisks.length > config.disk_result_limit) {
                         helpers.addResult(results, 2,
-                            `CSEK Encryption is disabled for ${badDisks.length} disks`, zone);
+                            `CSEK Encryption is disabled for ${badDisks.length} disks`, region);
                     } else {
                         badDisks.forEach(disk=> {
                             let resource = helpers.createResourceName('disks', disk, project, 'zone', zone);
                             helpers.addResult(results, 2,
-                                `CSEK Encryption is disabled for disk`, zone, resource);
+                                `CSEK Encryption is disabled for disk`, region, resource);
                         });
                     }
                 }
                 if (goodDisks.length) {
                     if (goodDisks.length > config.disk_result_limit) {
                         helpers.addResult(results, 0,
-                            `CSEK Encryption is enabled for ${goodDisks.length} disks`, zone);
+                            `CSEK Encryption is enabled for ${goodDisks.length} disks`, region);
                     } else {
                         goodDisks.forEach(disk=> {
                             let resource = helpers.createResourceName('disks', disk, project, 'zone', zone);
                             helpers.addResult(results, 0,
-                                `CSEK Encryption is enabled for disk`, zone, resource);
+                                `CSEK Encryption is enabled for disk`, region, resource);
                         });
                     }
                 }

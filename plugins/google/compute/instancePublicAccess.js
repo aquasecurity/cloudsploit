@@ -37,7 +37,7 @@ module.exports = {
                 if (!instances) return zcb();
 
                 if (instances.err || !instances.data) {
-                    helpers.addResult(results, 3, 'Unable to query instances', zone, null, null, instances.err);
+                    helpers.addResult(results, 3, 'Unable to query instances', region, null, null, instances.err);
                     return zcb();
                 }
 
@@ -59,10 +59,10 @@ module.exports = {
 
                     if (found) {
                         helpers.addResult(results, 2,
-                            'Public access is enabled for the instance', zone, resource);
+                            'Public access is enabled for the instance', region, resource);
                     } else {
                         helpers.addResult(results, 0,
-                            'Public access is disabled for the instance', zone, resource);
+                            'Public access is disabled for the instance', region, resource);
                     }
                 });
                 zcb();
