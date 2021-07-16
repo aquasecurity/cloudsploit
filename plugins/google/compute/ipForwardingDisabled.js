@@ -36,7 +36,7 @@ module.exports = {
                 if (!instances) return zcb();
 
                 if (instances.err || !instances.data) {
-                    helpers.addResult(results, 3, 'Unable to query compute instances', zone, null, null, instances.err);
+                    helpers.addResult(results, 3, 'Unable to query compute instances', region, null, null, instances.err);
                     return zcb();
                 }
 
@@ -49,10 +49,10 @@ module.exports = {
                     let resource = helpers.createResourceName('instances', instance.name, project, 'zone', zone);
                     if (instance.canIpForward) {
                         helpers.addResult(results, 2,
-                            'Instance has IP forwarding enabled', zone, resource);   
+                            'Instance has IP forwarding enabled', region, resource);   
                     } else {
                         helpers.addResult(results, 0,
-                            'Instance does not have IP forwarding enabled', zone, resource);   
+                            'Instance does not have IP forwarding enabled', region, resource);   
                     }
                 });
 

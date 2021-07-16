@@ -29,7 +29,7 @@ describe('csekEncryptionEnabled', function () {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query compute disks');
-                expect(results[0].region).to.equal('us-central1-a');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 
@@ -63,7 +63,7 @@ describe('csekEncryptionEnabled', function () {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('CSEK Encryption is disabled for disk');
-                expect(results[0].region).to.equal('us-central1-a');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 
@@ -111,7 +111,7 @@ describe('csekEncryptionEnabled', function () {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.equal('CSEK Encryption is enabled for disk');
-                expect(results[0].region).to.equal('us-central1-a');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 

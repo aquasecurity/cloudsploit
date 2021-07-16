@@ -31,7 +31,7 @@ describe('shieldedVmEnabled', function () {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query instances');
-                expect(results[0].region).to.equal('us-central1-a');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 
@@ -62,7 +62,7 @@ describe('shieldedVmEnabled', function () {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Shielded VM security is not enabled for the the instance');
-                expect(results[0].region).to.equal('us-central1-a');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 
@@ -89,7 +89,7 @@ describe('shieldedVmEnabled', function () {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Shielded VM security is enabled for the the instance');
-                expect(results[0].region).to.equal('us-central1-a');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 

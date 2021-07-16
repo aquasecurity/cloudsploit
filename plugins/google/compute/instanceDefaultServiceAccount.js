@@ -46,7 +46,7 @@ module.exports = {
                 if (!instances) return zcb();
 
                 if (instances.err || !instances.data) {
-                    helpers.addResult(results, 3, 'Unable to query instances', zone, null, null, instances.err);
+                    helpers.addResult(results, 3, 'Unable to query instances', region, null, null, instances.err);
                     return zcb();
                 }
 
@@ -64,10 +64,10 @@ module.exports = {
                     }
                     if (found) {
                         helpers.addResult(results, 2,
-                            'Default service account is used for instance', zone, resource);
+                            'Default service account is used for instance', region, resource);
                     } else {
                         helpers.addResult(results, 0,
-                            'Default service account is not used for instance', zone, resource);
+                            'Default service account is not used for instance', region, resource);
                     }
                     zcb();
                 });

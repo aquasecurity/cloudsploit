@@ -31,7 +31,7 @@ describe('instancePublicAccess', function () {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query instances');
-                expect(results[0].region).to.equal('us-central1-a');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 
@@ -65,7 +65,7 @@ describe('instancePublicAccess', function () {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Public access is enabled for the instance');
-                expect(results[0].region).to.equal('us-central1-a');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 
@@ -107,7 +107,7 @@ describe('instancePublicAccess', function () {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Public access is disabled for the instance');
-                expect(results[0].region).to.equal('us-central1-a');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 
