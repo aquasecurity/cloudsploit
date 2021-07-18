@@ -72,7 +72,7 @@ module.exports = {
         });
     },
 
-    remediate: function (config, cache, settings, resource, callback) {
+    remediate: function(config, cache, settings, resource, callback) {
         var remediation_file = settings.remediation_file;
         var putCall = this.actions.remediate;
 
@@ -102,7 +102,7 @@ module.exports = {
                 'WebApp': webAppName
             };
 
-            helpers.remediatePlugin(config, method, body, baseUrl, resource, remediation_file, putCall, pluginName, function (err, action) {
+            helpers.remediatePlugin(config, method, body, baseUrl, resource, remediation_file, putCall, pluginName, function(err, action) {
                 if (err) return callback(err);
                 if (action) action.action = putCall;
 
