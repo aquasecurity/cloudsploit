@@ -57,7 +57,7 @@ module.exports = {
                         if (!instances) return lcb();
 
                         if (instances.err || !instances.data) {
-                            helpers.addResult(results, 3, 'Unable to query instances: ' + helpers.addError(instances), loc);
+                            helpers.addResult(results, 3, 'Unable to query instances: ' + helpers.addError(instances), location);
                             return lcb();
                         }
 
@@ -69,17 +69,17 @@ module.exports = {
 
                         for (let instance of instances.data) {
                             if (!instance.name) continue;
-                            let resource = helpers.createResourceName('instances', instance.name, project, 'zone', loc);
+                            let resource = helpers.createResourceName('instances', instance.name, project, 'zone', location);
                             var instanceName = instance.name.split('-');
                             instanceName.splice(instanceName.length - 1, 1);
                             instanceName = instanceName.join('-');
 
                             if (groupName.includes(instanceName)) {
                                 helpers.addResult(results, 0,
-                                    'Instance is regional and highly available', loc, resource);
+                                    'Instance is regional and highly available', location, resource);
                             } else {
                                 helpers.addResult(results, 2,
-                                    'Instance is available in single zone', loc, resource);
+                                    'Instance is available in single zone', location, resource);
                             }
                         }
                         lcb();

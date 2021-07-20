@@ -32,7 +32,7 @@ describe('connectSerialPortsDisabled', function () {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query compute instances');
-                expect(results[0].region).to.equal('us-central1-a');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 
@@ -66,7 +66,7 @@ describe('connectSerialPortsDisabled', function () {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Connecting to Serial Ports is enabled for the instance');
-                expect(results[0].region).to.equal('us-central1-a');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 
@@ -177,7 +177,7 @@ describe('connectSerialPortsDisabled', function () {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.equal('Connecting to Serial Ports is disabled for the instance');
-                expect(results[0].region).to.equal('us-central1-a');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 

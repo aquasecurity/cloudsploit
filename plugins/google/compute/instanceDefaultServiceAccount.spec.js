@@ -31,7 +31,7 @@ describe('instanceDefaultServiceAccount', function () {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query instances');
-                expect(results[0].region).to.equal('us-central1-a');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 
@@ -78,7 +78,7 @@ describe('instanceDefaultServiceAccount', function () {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Default service account is used for instance');
-                expect(results[0].region).to.equal('us-central1-a');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 
@@ -119,7 +119,7 @@ describe('instanceDefaultServiceAccount', function () {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Default service account is not used for instance');
-                expect(results[0].region).to.equal('us-central1-a');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 

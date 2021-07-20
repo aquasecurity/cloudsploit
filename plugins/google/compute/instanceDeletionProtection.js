@@ -36,7 +36,7 @@ module.exports = {
                 if (!instances) return zcb();
 
                 if (instances.err || !instances.data) {
-                    helpers.addResult(results, 3, 'Unable to query instances', zone, null, null, instances.err);
+                    helpers.addResult(results, 3, 'Unable to query instances', region, null, null, instances.err);
                     return zcb();
                 }
 
@@ -50,10 +50,10 @@ module.exports = {
 
                     if (!instance.deletionProtection) {
                         helpers.addResult(results, 2,
-                            'Instance deletion protection is disabled', zone, resource);
+                            'Instance deletion protection is disabled', region, resource);
                     } else {
                         helpers.addResult(results, 0,
-                            'Instance deletion protection is enabled', zone, resource);
+                            'Instance deletion protection is enabled', region, resource);
                     }
                 });
                 zcb();

@@ -105,24 +105,16 @@ module.exports = {
                 }, function() {
                     if (Object.keys(instanceGroupURLObj).length) {
                         for (let group in instanceGroupURLObj) {
-                            let groupLocArr;
-                            let groupLoc;
-                            let resource;
-                            if (instanceGroupURLObj[group].zone) {
-                                groupLocArr = instanceGroupURLObj[group].zone.split('/');
-                                groupLoc = groupLocArr[groupLocArr.length-1];
-                                resource = helpers.createResourceName('instanceGroups', instanceGroupURLObj[group].name, project, 'zone', groupLoc);
-                            } else if (instanceGroupURLObj[group].region) {
-                                groupLocArr = instanceGroupURLObj[group].zone.split('/');
-                                groupLoc = groupLocArr[groupLocArr.length-1];
-                                resource = helpers.createResourceName('instanceGroups', instanceGroupURLObj[group].name, project, 'region', groupLoc);
-                            } else {
-                                groupLoc = 'global';
-                                resource = helpers.createResourceName('instanceGroups', instanceGroupURLObj[group].name, project, 'global');
-                            }
+                            let groupLocArr = instanceGroupURLObj[group].zone ? instanceGroupURLObj[group].zone.split('/') :
+                                instanceGroupURLObj[group].region ? instanceGroupURLObj[group].region.split('/') : ['global'];
+                            let groupLoc = groupLocArr[groupLocArr.length-1];
+                            let resourceType = instanceGroupURLObj[group].zone ? 'zone' :
+                                instanceGroupURLObj[group].region ? 'region' : 'global';
+                            let resource = helpers.createResourceName('instanceGroups', instanceGroupURLObj[group].name, project, resourceType, groupLoc);
+                            let region = (resourceType == 'zone') ? groupLoc.substr(0, groupLoc.length - 2) : groupLoc;
 
                             helpers.addResult(results, 2,
-                                'Instance group does not have autoscale enabled', groupLoc, resource);
+                                'Instance group does not have autoscale enabled', region, resource);
                         }
                     } else {
                         helpers.addResult(results, 0,
@@ -133,13 +125,16 @@ module.exports = {
             } else {
                 if (Object.keys(instanceGroupURLObj).length) {
                     for (let group in instanceGroupURLObj) {
-                        let groupLocArr = (instanceGroupURLObj[group].zone) ? instanceGroupURLObj[group].zone.split('/') :
-                            (instanceGroupURLObj[group].region) ? instanceGroupURLObj[group].region.split('/') : 'global';
+                        let groupLocArr = instanceGroupURLObj[group].zone ? instanceGroupURLObj[group].zone.split('/') :
+                            instanceGroupURLObj[group].region ? instanceGroupURLObj[group].region.split('/') : ['global'];
                         let groupLoc = groupLocArr[groupLocArr.length-1];
+                        let resourceType = instanceGroupURLObj[group].zone ? 'zone' :
+                            instanceGroupURLObj[group].region ? 'region' : 'global';
+                        let resource = helpers.createResourceName('instanceGroups', instanceGroupURLObj[group].name, project, resourceType, groupLoc);
+                        let region = (resourceType == 'zone') ? groupLoc.substr(0, groupLoc.length - 2) : groupLoc;
 
-                        let resource = helpers.createResourceName('instanceGroups', instanceGroupURLObj[group].name, project, 'zone', groupLoc);
                         helpers.addResult(results, 2,
-                            'Instance group does not have autoscale enabled', groupLoc, resource);
+                            'Instance group does not have autoscale enabled', region, resource);
                     }
                 } else {
                     helpers.addResult(results, 0,

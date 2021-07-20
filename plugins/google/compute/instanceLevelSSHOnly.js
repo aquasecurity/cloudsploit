@@ -36,7 +36,7 @@ module.exports = {
                 if (!instances) return zcb();
 
                 if (instances.err || !instances.data) {
-                    helpers.addResult(results, 3, 'Unable to query compute instances', zone, null, null, instances.err);
+                    helpers.addResult(results, 3, 'Unable to query compute instances', region, null, null, instances.err);
                     return zcb();
                 }
 
@@ -57,10 +57,10 @@ module.exports = {
                     let resource = helpers.createResourceName('instances', instance.name, project, 'zone', zone);
                     if (found) {
                         helpers.addResult(results, 0,
-                            'Block project-wide SSH keys is enabled for the instance', zone, resource);
+                            'Block project-wide SSH keys is enabled for the instance', region, resource);
                     } else {
                         helpers.addResult(results, 2,
-                            'Block project-wide SSH keys is disabled for the instance', zone, resource);
+                            'Block project-wide SSH keys is disabled for the instance', region, resource);
                     }
                 });
                 zcb();

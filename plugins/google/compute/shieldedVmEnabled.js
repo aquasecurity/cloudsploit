@@ -36,7 +36,7 @@ module.exports = {
                 if (!instances) return zcb();
 
                 if (instances.err || !instances.data) {
-                    helpers.addResult(results, 3, 'Unable to query instances', zone, null, null, instances.err);
+                    helpers.addResult(results, 3, 'Unable to query instances', region, null, null, instances.err);
                     return zcb();
                 }
 
@@ -52,10 +52,10 @@ module.exports = {
                         instance.shieldedInstanceConfig.enableVtpm &&
                         instance.shieldedInstanceConfig.enableIntegrityMonitoring) {
                         helpers.addResult(results, 0,
-                            'Shielded VM security is enabled for the the instance', zone, resource);
+                            'Shielded VM security is enabled for the the instance', region, resource);
                     } else {
                         helpers.addResult(results, 2,
-                            'Shielded VM security is not enabled for the the instance', zone, resource);
+                            'Shielded VM security is not enabled for the the instance', region, resource);
                     }
                 });
                 zcb();
