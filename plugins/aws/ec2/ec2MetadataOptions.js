@@ -10,6 +10,14 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html#configuring-instance-metadata-service',
     recommended_action: 'Update instance metadata options to use IMDSv2',
     apis: ['EC2:describeInstances'],
+    
+    settings: {
+        ec2_unsafemetada_threshold: {
+            name: 'Threshold of unsafe metadata alerts',
+            description: 'If the number of results is greater than this value, combine them into one result',
+            default: '20',
+        }
+    }
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -61,7 +69,7 @@ module.exports = {
 
             if (!totalCount) {
                 helpers.addResult(results, 0, 'No instances found', region);
-            } else if (totalCount <= 20) {
+            } else if (totalCount <= ec2_unsafemetada_threshold) {
                 // Add individual results
                 for (var iArn of instancesEndpointDisabled) {
                     helpers.addResult(results, 0, 'Instance has instance metadata endpoint disabled', region, iArn);
