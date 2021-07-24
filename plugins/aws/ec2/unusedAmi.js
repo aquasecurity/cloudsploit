@@ -71,15 +71,12 @@ module.exports = {
                 var describeLaunchTemplateVersions = helpers.addSource(cache, source,
                     ['ec2', 'describeLaunchTemplateVersions', region, template.LaunchTemplateId]);
                 
-                if (!describeLaunchTemplateVersions || describeLaunchTemplateVersions.err || !describeLaunchTemplateVersions.data.LaunchTemplateVersions) {
-                    helpers.addResult(results, 3,
-                        `Unable to query EC2 launch template versions: ${helpers.addError(describeLaunchTemplateVersions)}`, region);
-                    return rcb();
+                if (describeLaunchTemplateVersions && describeLaunchTemplateVersions.data && describeLaunchTemplateVersions.data.LaunchTemplateVersions) {
+                    var templateVersion = describeLaunchTemplateVersions.data.LaunchTemplateVersions.find(versions => versions.VersionNumber == template.DefaultVersionNumber);
+                    const imageId = templateVersion.LaunchTemplateData.ImageId ? templateVersion.LaunchTemplateData.ImageId : '';
+                    if (imageId && !usedAmis.includes(imageId)) usedAmis.push(imageId);
                 }
 
-                var templateVersion = describeLaunchTemplateVersions.data.LaunchTemplateVersions.find(versions => versions.VersionNumber == template.DefaultVersionNumber);
-                const imageId = templateVersion.LaunchTemplateData.ImageId ? templateVersion.LaunchTemplateData.ImageId : '';
-                if (imageId && !usedAmis.includes(imageId)) usedAmis.push(imageId);
             });
 
             if (describeInstances.data.length) {
