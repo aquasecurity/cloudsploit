@@ -17,7 +17,7 @@ module.exports = {
             description: 'If the number of results is greater than this value, combine them into one result',
             default: '20',
         }
-    }
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
