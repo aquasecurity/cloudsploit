@@ -498,7 +498,7 @@ var calls = {
             property: 'Policies',
             paginate: 'Marker',
             params: {
-                OnlyAttached: true
+                OnlyAttached: false
             }
         },
         listVirtualMFADevices: {
@@ -1354,6 +1354,12 @@ var postcalls = [
                 override: true
             },
             getPolicy: {
+                reliesOnService: 'iam',
+                reliesOnCall: 'listPolicies',
+                filterKey: 'PolicyArn',
+                filterValue: 'Arn'
+            },
+            listEntitiesForPolicy: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listPolicies',
                 filterKey: 'PolicyArn',
