@@ -23,6 +23,7 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var ec2_unsafemetada_threshold = parseInt(settings.ec2_unsafemetada_threshold || this.settings.ec2_unsafemetada_threshold.default);
 
         async.each(regions.ec2, function(region, rcb){
             var describeInstances = helpers.addSource(
@@ -69,7 +70,7 @@ module.exports = {
 
             if (!totalCount) {
                 helpers.addResult(results, 0, 'No instances found', region);
-            } else if (totalCount <= settings.ec2_unsafemetada_threshold) {
+            } else if (totalCount <= ec2_unsafemetada_threshold) {
                 // Add individual results
                 for (var iArn of instancesEndpointDisabled) {
                     helpers.addResult(results, 0, 'Instance has instance metadata endpoint disabled', region, iArn);
