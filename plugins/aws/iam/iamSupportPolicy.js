@@ -45,61 +45,37 @@ module.exports = {
         if (policyArn){
             if (!listEntitiesForPolicy) return callback(null, results, source);
     
-            if (listEntitiesForPolicy.err || !listEntitiesForPolicy.policyArn || !listEntitiesForPolicy[policyArn].data) {
+            if (listEntitiesForPolicy.err || !listEntitiesForPolicy[policyArn] || !listEntitiesForPolicy[policyArn].data) {
                 helpers.addResult(results, 3,
                     'Unable to query for IAM entities for policy: ' + helpers.addError(listEntitiesForPolicy));
                 return callback(null, results, source);
             }
     
-            const policyChecks = ['PolicyGroups', 'PolicyRoles', 'PolicyUsers'];
-            const entities = listEntitiesForPolicy[policyArn].data;
-    
-            const filteredEntities = Object.entries(entities).filter(entity => entity in policyChecks && !entities[entity]);
-    
-            if (filteredEntities){
-                const attachments = [];
-                addAttachments(attachments, filteredEntities);
-                helpers.addResult(results, 0,
-                    attachments.join(', '), 'global', policyArn);         
-            } else {
+            const attachments = [];
+            addAttachments(attachments, listEntitiesForPolicy[policyArn].data);
+            if (!attachments.length) {
                 helpers.addResult(results, 2,
                     'No role, user or group attached to the policy', 'global', policyArn);
+            } else {
+                helpers.addResult(results, 0,
+                    attachments.join(', '), 'global', policyArn);  
             }
         }
-
         return callback(null, results, source);
-
     }
 };
 
 const addAttachments = (attachments, entities) => {
-    
     if ('PolicyGroups' in entities) {
-        if (entities.PolicyGroups){
-            const attachedGroups = {
-                groups: []
-            };
-            entities.PolicyGroups.forEach(group => attachedGroups.groups.push(group.GroupName));
-            attachments.push(attachedGroups);
-        }
-        
+        if (entities.PolicyGroups.length > 0 ) entities.PolicyGroups.forEach(
+            group => attachments.push(`Policy is attached '${group.GroupName}' group`));        
     }
     if ('PolicyRoles' in entities) {
-        if (entities.PolicyRoles){
-            const attachedRoles = {
-                roles: []
-            };
-            entities.PolicyRoles.forEach(role => attachedRoles.Roles.push(role.RoleName));
-            attachments.push(attachedRoles);
-        }
+        if (entities.PolicyRoles.length > 0) entities.PolicyRoles.forEach(
+            role => attachments.push(`Policy is attached '${role.RoleName}' role`));
     }
     if ('PolicyUsers' in entities) {
-        if (entities.PolicyGroups){
-            const attachedUsers = {
-                users: []
-            };
-            entities.PolicyUsers.forEach(user => attachedUsers.Users.push(user.UserName));
-            attachments.push(attachedUsers);
-        }
+        if (entities.PolicyGroups.length > 0) entities.PolicyUsers.forEach(
+            user => attachments.push(`Policy is attached '${user.UserName}' user`));
     }
 };
