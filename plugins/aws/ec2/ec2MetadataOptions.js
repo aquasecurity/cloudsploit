@@ -69,7 +69,7 @@ module.exports = {
 
             if (!totalCount) {
                 helpers.addResult(results, 0, 'No instances found', region);
-            } else if (totalCount <= ec2_unsafemetada_threshold) {
+            } else if (totalCount <= settings.ec2_unsafemetada_threshold) {
                 // Add individual results
                 for (var iArn of instancesEndpointDisabled) {
                     helpers.addResult(results, 0, 'Instance has instance metadata endpoint disabled', region, iArn);
