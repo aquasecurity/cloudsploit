@@ -18,6 +18,8 @@ module.exports = {
         let instanceGroupsObj = helpers.addSource(cache, source,
             ['instanceGroups', 'aggregatedList', ['global']]);
 
+        if (!instanceGroupsObj) return callback(null, results, source)
+        
         if (instanceGroupsObj.err || !instanceGroupsObj.data) {
             helpers.addResult(results, 3, 'Unable to query instance groups', 'global', null, null, instanceGroupsObj.err);
             return callback(null, results, source);

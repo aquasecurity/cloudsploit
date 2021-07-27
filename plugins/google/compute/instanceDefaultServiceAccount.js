@@ -69,8 +69,9 @@ module.exports = {
                         helpers.addResult(results, 0,
                             'Default service account is not used for instance', region, resource);
                     }
-                    zcb();
                 });
+                
+                zcb();
             }, function(){
                 if (noInstances.length) {
                     helpers.addResult(results, 0, `No instances found in following zones: ${noInstances.join(', ')}`, region);

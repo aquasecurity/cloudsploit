@@ -51,6 +51,7 @@ module.exports = {
 
                 if (!virtualNetworkGateways || virtualNetworkGateways.err || !virtualNetworkGateways.data) {
                     helpers.addResult(results, 3, 'Unable to query for virtual Network Gateways: ' + helpers.addError(virtualNetworkGateways), location);
+                    return;
                 }
                 
                 if (virtualNetworkGateways.data.length) {
