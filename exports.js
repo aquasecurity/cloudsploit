@@ -148,6 +148,7 @@ module.exports = {
         'webTierInstanceIamRole'        : require(__dirname + '/plugins/aws/ec2/webTierInstanceIamRole.js'),
         'vpnTunnelState'                : require(__dirname + '/plugins/aws/ec2/vpnTunnelState.js'),
         'networkAclOutboundTraffic'     : require(__dirname + '/plugins/aws/ec2/networkAclOutboundTraffic.js'),
+        'outdatedAmi'                   : require(__dirname + '/plugins/aws/ec2/outdatedAmi.js'),
 
         'efsCmkEncrypted'               : require(__dirname + '/plugins/aws/efs/efsCmkEncrypted.js'),
         'efsEncryptionEnabled'          : require(__dirname + '/plugins/aws/efs/efsEncryptionEnabled.js'),
