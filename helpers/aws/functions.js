@@ -63,14 +63,25 @@ function addResult(results, status, message, region, resource, custom){
     }
 }
 
-function findOpenPorts(groups, ports, service, region, results) {
+function findOpenPorts(groups, ports, service, region, results, cache, config, callback) {
     var found = false;
-
+    var unusedGroup = true;
     for (var g in groups) {
         var string;
         var openV4Ports = [];
         var openV6Ports = [];
         var resource = `arn:aws:ec2:${region}:${groups[g].OwnerId}:security-group/${groups[g].GroupId}`;
+        
+        if (!config.skip_unused_groups) {
+            var unusedGroups = getUnusedSecurityGroups(cache, results, groups[g], region, callback);
+            console.log(unusedGroups, groups[g].GroupId);
+            if (unusedGroups) {
+                // addResult(results, 0, `Security Group: ${unusedGroups} is unused`,
+                //     region, resource);
+                continue;
+            }
+            unusedGroup = false;
+        }
 
         for (var p in groups[g].IpPermissions) {
             var permission = groups[g].IpPermissions[p];
@@ -157,7 +168,7 @@ function findOpenPorts(groups, ports, service, region, results) {
         }
     }
 
-    if (!found) {
+    if (!found && !unusedGroup) {
         addResult(results, 0, 'No public open ports found', region);
     }
 
@@ -830,6 +841,25 @@ function getOrganizationAccounts(listAccounts, accountId) {
     return orgAccountIds;
 }
 
+function getUnusedSecurityGroups(cache, results, group, region, callback) {
+    const source = {};
+    const describeNetworkInterfaces = helpers.addSource(cache, source,
+        ['ec2', 'describeNetworkInterfaces', region]);
+    if (!describeNetworkInterfaces) return callback();
+    if (describeNetworkInterfaces.err || !describeNetworkInterfaces.data) {
+        helpers.addResult(results, 3,
+            'Unable to query for network interfaces: ' + helpers.addError(describeNetworkInterfaces), region);
+    }
+    let found = true;
+    describeNetworkInterfaces.data.forEach(interface => {
+        if (interface.Groups && found) {
+            const usedGroup = interface.Groups.find(interfaceGroup => interfaceGroup.GroupId == group.GroupId);
+            if (usedGroup) found = false;
+        }
+    });
+    return (found) ? group.GroupId : '';
+}
+
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
@@ -855,5 +885,6 @@ module.exports = {
     getDenyPermissionsMap: getDenyPermissionsMap,
     isEffectivePolicyStatement: isEffectivePolicyStatement,
     getS3BucketLocation: getS3BucketLocation,
-    getOrganizationAccounts: getOrganizationAccounts
+    getOrganizationAccounts: getOrganizationAccounts,
+    getUnusedSecurityGroups: getUnusedSecurityGroups
 };
