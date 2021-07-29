@@ -207,10 +207,12 @@ var calls = {
         }
     },
     jobs: {
-        aggregated: { //https://dataflow.googleapis.com/v1b3/projects/{projectId}/jobs:aggregated
+        list: { //https://dataflow.googleapis.com/v1b3/projects/{projectId}/jobs:list
             api: 'dataflow',
+            location: 'region',
             version: 'v1b3',
-            parent: 'projectId'
+            projectId: true,
+            regional: true
         }
     }
 };
@@ -296,6 +298,20 @@ var postcalls = {
             filterKey: ['datasetId'],
             filterValue: ['id'],
             projectId: true
+        }
+    },
+    jobs: {
+        get: { //https://dataflow.googleapis.com/v1b3/projects/{projectId}/jobs/{jobId}
+            api: 'dataflow',
+            version: 'v1b3',
+            reliesOnService: ['jobs'],
+            reliesOnCall: ['list'],
+            filterKey: ['jobId'],
+            filterValue: ['id'],
+            projectId: true,
+            postcall: true,
+            location: 'region',
+            regional: true
         }
     }
 };
