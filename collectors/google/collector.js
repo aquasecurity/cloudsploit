@@ -204,7 +204,15 @@ var calls = {
             api: 'pubsub',
             version: 'v1',
             parent: 'project'
-
+        }
+    },
+    jobs: {
+        list: { //https://dataflow.googleapis.com/v1b3/projects/{projectId}/jobs:list
+            api: 'dataflow',
+            location: 'region',
+            version: 'v1b3',
+            projectId: true,
+            regional: true
         }
     }
 };

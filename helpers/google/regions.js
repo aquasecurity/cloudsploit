@@ -79,5 +79,6 @@ module.exports = {
     backupRuns: ['global'],
     datasets: ['global'],
     policies: ['global'],
-    topics: ['global']
+    topics: ['global'],
+    jobs: regions
 };
