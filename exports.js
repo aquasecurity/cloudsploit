@@ -779,7 +779,9 @@ module.exports = {
 
         'datasetAllUsersPolicy'         : require(__dirname + '/plugins/google/bigquery/datasetAllUsersPolicy.js'),
       
-        'topicEncryption'               : require(__dirname + '/plugins/google/pubsub/topicEncryption.js')
+        'topicEncryption'               : require(__dirname + '/plugins/google/pubsub/topicEncryption.js'),
+
+        'dataflowHangedJobs'            : require(__dirname + '/plugins/google/dataflow/dataflowHangedJobs.js')
     },
     alibaba: {
         'passwordMinLength'             : require(__dirname + '/plugins/alibaba/ram/passwordMinLength.js'),

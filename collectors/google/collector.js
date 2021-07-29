@@ -204,7 +204,13 @@ var calls = {
             api: 'pubsub',
             version: 'v1',
             parent: 'project'
-
+        }
+    },
+    jobs: {
+        aggregated: { //https://dataflow.googleapis.com/v1b3/projects/{projectId}/jobs:aggregated
+            api: 'dataflow',
+            version: 'v1b3',
+            parent: 'projectId'
         }
     }
 };
