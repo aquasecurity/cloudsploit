@@ -10,11 +10,11 @@ module.exports = {
     recommended_action: 'Restrict UDP port 445 to known IP addresses',
     apis: ['EC2:describeSecurityGroups', 'EC2:describeNetworkInterfaces'],
     settings: {
-        skip_unused_groups: {
+        ec2_skip_unused_groups: {
             name: '',
             description: '',
             regex: '',
-            default: 'false',
+            default: 'true',
         }
     },
     remediation_description: 'The impacted security group rule will be deleted if no input is provided. Otherwise, any input will replace the open CIDR rule.',
@@ -46,10 +46,10 @@ module.exports = {
 
     run: function(cache, settings, callback) {
         var config = {
-            skip_unused_groups: settings.skip_unused_groups || this.settings.skip_unused_groups.default,
+            ec2_skip_unused_groups: settings.ec2_skip_unused_groups || this.settings.ec2_skip_unused_groups.default,
         };
 
-        config.skip_unused_groups = (config.skip_unused_groups == 'true');
+        config.ec2_skip_unused_groups = (config.ec2_skip_unused_groups == 'true');
         
         var results = [];
         var source = {};
