@@ -4,10 +4,11 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Cluster Least Privilege',
     category: 'Kubernetes',
-    description: 'Ensures Kubernetes clusters are created with limited service account access scopes',
-    more_info: 'Kubernetes service accounts should be limited in scope to the services necessary to operate the clusters.',
+    description: 'Ensures Kubernetes clusters using default service account are using minimal service account access scopes',
+    more_info: 'As a best practice, Kubernetes clusters should not be created with default service account. But if they are, ' +
+        'Kubernetes default service account should be limited to minimal access scopes necessary to operate the clusters.',
     link: 'https://cloud.google.com/compute/docs/access/service-accounts',
-    recommended_action: 'Ensure that all Kubernetes clusters are created with limited access scope.',
+    recommended_action: 'Ensure that all Kubernetes clusters are created with minimal access scope.',
     apis: ['clusters:list', 'projects:get'],
 
     run: function(cache, settings, callback) {
@@ -66,19 +67,11 @@ module.exports = {
                     cluster.nodeConfig.serviceAccount &&
                     cluster.nodeConfig.serviceAccount == 'default') {
                     cluster.nodeConfig.oauthScopes.forEach((oneScope) => {
-                        let sameExist= false;
-
-                        for (let i = 0; i < minimalAccess.length; i++) {
-                            if (oneScope == minimalAccess[i]) {
-                                sameExist = true;
-                            }
-                        }
-                        if (sameExist == false) {
-                            otherScope = true;
-                        }
+                        if (!minimalAccess.includes(oneScope)) otherScope = true;
                     });
                 }
-                if (otherScope == true) {
+
+                if (otherScope) {
                     helpers.addResult(results, 2, 'No minimal access is allowed on Kubernetes cluster', region, resource);
                 } else {
                     helpers.addResult(results, 0, 'Minimal access is allowed on Kubernetes cluster', region, resource);
