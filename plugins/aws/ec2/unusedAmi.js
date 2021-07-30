@@ -8,7 +8,8 @@ module.exports = {
     more_info: 'All unused/deregistered Amazon Machine Images should be deleted to avoid extraneous cost.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html',
     recommended_action: 'Delete the unused/deregistered AMIs',
-    apis: ['EC2:describeImages', 'EC2:describeInstances', 'EC2:describeLaunchTemplates', 'EC2:describeLaunchTemplateVersions', 'AutoScaling:describeLaunchConfigurations', 'STS:getCallerIdentity'],
+    apis: ['EC2:describeImages', 'EC2:describeInstances', 'EC2:describeLaunchTemplates', 'EC2:describeLaunchTemplateVersions',
+        'AutoScaling:describeLaunchConfigurations', 'STS:getCallerIdentity'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -71,12 +72,14 @@ module.exports = {
                 var describeLaunchTemplateVersions = helpers.addSource(cache, source,
                     ['ec2', 'describeLaunchTemplateVersions', region, template.LaunchTemplateId]);
                 
-                if (describeLaunchTemplateVersions && describeLaunchTemplateVersions.data && describeLaunchTemplateVersions.data.LaunchTemplateVersions) {
-                    var templateVersion = describeLaunchTemplateVersions.data.LaunchTemplateVersions.find(versions => versions.VersionNumber == template.DefaultVersionNumber);
-                    const imageId = templateVersion.LaunchTemplateData.ImageId ? templateVersion.LaunchTemplateData.ImageId : '';
+                if (describeLaunchTemplateVersions &&
+                    describeLaunchTemplateVersions.data &&
+                    describeLaunchTemplateVersions.data.LaunchTemplateVersions) {
+                    let templateVersion = describeLaunchTemplateVersions.data.LaunchTemplateVersions.find(version => version.VersionNumber == template.DefaultVersionNumber);
+                    let imageId = (templateVersion.LaunchTemplateData && templateVersion.LaunchTemplateData.ImageId) ?
+                        templateVersion.LaunchTemplateData.ImageId : null;
                     if (imageId && !usedAmis.includes(imageId)) usedAmis.push(imageId);
                 }
-
             });
 
             if (describeInstances.data.length) {
