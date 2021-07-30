@@ -71,7 +71,7 @@ module.exports = {
         });
 
         if (!found) {
-            helpers.addResult(results, 3, 'Unable to query IAM users');
+            helpers.addResult(results, 0, 'No IAM users found', 'global');
         }
 
         callback(null, results, source);
