@@ -854,10 +854,27 @@ function getUsedSecurityGroups(cache, results, region, callback) {
             'Unable to query for network interfaces: ' + helpers.addError(describeNetworkInterfaces), region);
         return callback();
     }
+
+    const listFunctions = helpers.addSource(cache, source,
+        ['lambda', 'listFunctions', region]);
+    
+    if (!listFunctions || listFunctions.err || !listFunctions.data) {
+        helpers.addResult(results, 3,
+            'Unable to list lambda functions: ' + helpers.addError(listFunctions), region);
+        return callback();
+    }
     describeNetworkInterfaces.data.forEach(interface => {
         if (interface.Groups) {
             interface.Groups.forEach(group => {
                 if (!result.includes(group.GroupId)) result.push(group.GroupId);
+            });
+        }
+    });
+
+    listFunctions.data.forEach(func => {
+        if (func.VpcConfig) {
+            func.VpcConfig.SecurityGroupIds.forEach(group => {
+                if (!result.includes(group)) result.push(group);
             });
         }
     });
