@@ -65,10 +65,9 @@ function addResult(results, status, message, region, resource, custom){
 
 function findOpenPorts(groups, ports, service, region, results, cache, config, callback) {
     var found = false;
-    var usedGroup = false;
 
     if (config.ec2_skip_unused_groups) {
-        var usedGroups = getUsedSecurityGroups(groups, cache, results, region, callback);
+        var usedGroups = getUsedSecurityGroups(cache, results, region, callback);
     }
 
     for (var g in groups) {
@@ -81,7 +80,6 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
             if (!usedGroups.includes(groups[g].GroupId)) {
                 addResult(results, 0, `Security Group: ${groups[g].GroupId} is unused`,
                     region, resource);
-                usedGroup = true;
                 continue;
             }
         }
@@ -171,7 +169,7 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
         }
     }
 
-    if (!found && !usedGroup) {
+    if (!found) {
         addResult(results, 0, 'No public open ports found', region);
     }
 
@@ -844,26 +842,24 @@ function getOrganizationAccounts(listAccounts, accountId) {
     return orgAccountIds;
 }
 
-function getUsedSecurityGroups(groups, cache, results, region, callback) {
+function getUsedSecurityGroups(cache, results, region, callback) {
     let result = [];
     const source = {};
     const describeNetworkInterfaces = helpers.addSource(cache, source,
         ['ec2', 'describeNetworkInterfaces', region]);
-
-    if (!describeNetworkInterfaces) return callback();
     
-    if (describeNetworkInterfaces.err || !describeNetworkInterfaces.data) {
+    if (!describeNetworkInterfaces || describeNetworkInterfaces.err || !describeNetworkInterfaces.data) {
         helpers.addResult(results, 3,
             'Unable to query for network interfaces: ' + helpers.addError(describeNetworkInterfaces), region);
+        return callback();
     }
 
-    groups.forEach(group => {
-        describeNetworkInterfaces.data.forEach(interface => {
-            if (interface.Groups) {
-                const usedGroup = interface.Groups.find(interfaceGroup => interfaceGroup.GroupId == group.GroupId);
-                if (usedGroup && !result.includes(group.GroupId)) result.push(group.GroupId);
-            }
-        });
+    describeNetworkInterfaces.data.forEach(interface => {
+        if (interface.Groups) {
+            interface.Groups.forEach(group => {
+                if (!result.includes(group.GroupId)) result.push(group.GroupId);
+            });
+        }
     });
 
     return result;
