@@ -14,7 +14,7 @@ module.exports = {
             name: '',
             description: '',
             regex: '',
-            default: 'true',
+            default: 'false',
         }
     },
     remediation_description: 'The impacted security group rule will be deleted if no input is provided. Otherwise, any input will replace the open CIDR rule.',

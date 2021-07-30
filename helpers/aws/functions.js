@@ -65,7 +65,7 @@ function addResult(results, status, message, region, resource, custom){
 
 function findOpenPorts(groups, ports, service, region, results, cache, config, callback) {
     var found = false;
-
+    var usedGroup = false;
     if (config.ec2_skip_unused_groups) {
         var usedGroups = getUsedSecurityGroups(cache, results, region, callback);
     }
@@ -75,11 +75,12 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
         var openV4Ports = [];
         var openV6Ports = [];
         var resource = `arn:aws:ec2:${region}:${groups[g].OwnerId}:security-group/${groups[g].GroupId}`;
-        
+
         if (config.ec2_skip_unused_groups) {
             if (!usedGroups.includes(groups[g].GroupId)) {
                 addResult(results, 0, `Security Group: ${groups[g].GroupId} is unused`,
                     region, resource);
+                usedGroup = true;
                 continue;
             }
         }
@@ -169,7 +170,7 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
         }
     }
 
-    if (!found) {
+    if (!found && !usedGroup) {
         addResult(results, 0, 'No public open ports found', region);
     }
 
@@ -853,7 +854,6 @@ function getUsedSecurityGroups(cache, results, region, callback) {
             'Unable to query for network interfaces: ' + helpers.addError(describeNetworkInterfaces), region);
         return callback();
     }
-
     describeNetworkInterfaces.data.forEach(interface => {
         if (interface.Groups) {
             interface.Groups.forEach(group => {
