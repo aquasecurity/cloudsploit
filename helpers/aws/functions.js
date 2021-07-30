@@ -65,9 +65,9 @@ function addResult(results, status, message, region, resource, custom){
 
 function findOpenPorts(groups, ports, service, region, results, cache, config, callback) {
     var found = false;
-    var unusedGroup = false;
+    var usedGroup = false;
 
-    if (!config.ec2_skip_unused_groups) {
+    if (config.ec2_skip_unused_groups) {
         var usedGroups = getUsedSecurityGroups(groups, cache, results, region, callback);
     }
 
@@ -79,9 +79,9 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
         
         if (config.ec2_skip_unused_groups) {
             if (!usedGroups.includes(groups[g].GroupId)) {
-                addResult(results, 0, `Security Group: ${unusedGroups} is unused`,
+                addResult(results, 0, `Security Group: ${groups[g].GroupId} is unused`,
                     region, resource);
-                unusedGroup = true;
+                usedGroup = true;
                 continue;
             }
         }
@@ -171,7 +171,7 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
         }
     }
 
-    if (!found && !unusedGroup) {
+    if (!found && !usedGroup) {
         addResult(results, 0, 'No public open ports found', region);
     }
 
@@ -846,6 +846,7 @@ function getOrganizationAccounts(listAccounts, accountId) {
 
 function getUsedSecurityGroups(groups, cache, results, region, callback) {
     let result = [];
+    const source = {};
     const describeNetworkInterfaces = helpers.addSource(cache, source,
         ['ec2', 'describeNetworkInterfaces', region]);
 
@@ -856,14 +857,15 @@ function getUsedSecurityGroups(groups, cache, results, region, callback) {
             'Unable to query for network interfaces: ' + helpers.addError(describeNetworkInterfaces), region);
     }
 
-    const source = {};
-    let found = true;
-    describeNetworkInterfaces.data.forEach(interface => {
-        if (interface.Groups && found) {
-            const usedGroup = interface.Groups.find(interfaceGroup => interfaceGroup.GroupId == group.GroupId);
-            if (usedGroup) found = false;
-        }
+    groups.forEach(group => {
+        describeNetworkInterfaces.data.forEach(interface => {
+            if (interface.Groups) {
+                const usedGroup = interface.Groups.find(interfaceGroup => interfaceGroup.GroupId == group.GroupId);
+                if (usedGroup && !result.includes(group.GroupId)) result.push(group.GroupId);
+            }
+        });
     });
+
     return result;
 }
 
@@ -893,5 +895,5 @@ module.exports = {
     isEffectivePolicyStatement: isEffectivePolicyStatement,
     getS3BucketLocation: getS3BucketLocation,
     getOrganizationAccounts: getOrganizationAccounts,
-    getUnusedSecurityGroups: getUnusedSecurityGroups
+    getUsedSecurityGroups: getUsedSecurityGroups
 };
