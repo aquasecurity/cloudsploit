@@ -65,22 +65,25 @@ function addResult(results, status, message, region, resource, custom){
 
 function findOpenPorts(groups, ports, service, region, results, cache, config, callback) {
     var found = false;
-    var unusedGroup = true;
+    var unusedGroup = false;
+
+    if (!config.ec2_skip_unused_groups) {
+        var usedGroups = getUsedSecurityGroups(groups, cache, results, region, callback);
+    }
+
     for (var g in groups) {
         var string;
         var openV4Ports = [];
         var openV6Ports = [];
         var resource = `arn:aws:ec2:${region}:${groups[g].OwnerId}:security-group/${groups[g].GroupId}`;
         
-        if (!config.skip_unused_groups) {
-            var unusedGroups = getUnusedSecurityGroups(cache, results, groups[g], region, callback);
-            console.log(unusedGroups, groups[g].GroupId);
-            if (unusedGroups) {
-                // addResult(results, 0, `Security Group: ${unusedGroups} is unused`,
-                //     region, resource);
+        if (config.ec2_skip_unused_groups) {
+            if (!usedGroups.includes(groups[g].GroupId)) {
+                addResult(results, 0, `Security Group: ${unusedGroups} is unused`,
+                    region, resource);
+                unusedGroup = true;
                 continue;
             }
-            unusedGroup = false;
         }
 
         for (var p in groups[g].IpPermissions) {
@@ -841,15 +844,19 @@ function getOrganizationAccounts(listAccounts, accountId) {
     return orgAccountIds;
 }
 
-function getUnusedSecurityGroups(cache, results, group, region, callback) {
-    const source = {};
+function getUsedSecurityGroups(groups, cache, results, region, callback) {
+    let result = [];
     const describeNetworkInterfaces = helpers.addSource(cache, source,
         ['ec2', 'describeNetworkInterfaces', region]);
+
     if (!describeNetworkInterfaces) return callback();
+    
     if (describeNetworkInterfaces.err || !describeNetworkInterfaces.data) {
         helpers.addResult(results, 3,
             'Unable to query for network interfaces: ' + helpers.addError(describeNetworkInterfaces), region);
     }
+
+    const source = {};
     let found = true;
     describeNetworkInterfaces.data.forEach(interface => {
         if (interface.Groups && found) {
@@ -857,7 +864,7 @@ function getUnusedSecurityGroups(cache, results, group, region, callback) {
             if (usedGroup) found = false;
         }
     });
-    return (found) ? group.GroupId : '';
+    return result;
 }
 
 module.exports = {
