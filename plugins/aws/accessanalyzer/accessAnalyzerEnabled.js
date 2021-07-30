@@ -5,7 +5,7 @@ module.exports = {
     title: 'Access Analyzer Enabled',
     category: 'IAM',
     description: 'Ensure that IAM Access analyzer is enabled for all regions',
-    more_info: 'Access Analyzer allow you to determine if an unintended user is allowed, making it easier for administrators to monitor least privileges access. It analyzes only policies that are applied to resources in the same AWS Region.',
+    more_info: 'Access Analyzer allow you to determine if an unintended user is allowed, making it easier for administrators to monitor least privileges access. It analyzes only policies that are applied to resources in the same AWS region.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-getting-started.html',
     recommended_action: 'Enable Access Analyzer for all regions',
     apis: ['AccessAnalyzer:listAnalyzers'],
