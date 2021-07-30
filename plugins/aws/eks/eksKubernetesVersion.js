@@ -20,12 +20,15 @@ module.exports = {
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
         var deprecatedVersions = {
-            '1.10': '2019-07-22'
+            '1.10': '2019-07-22',
+            '1.11': '2019-11-04',
+            '1.12': '2020-05-11',
+            '1.13': '2020-06-30',
+            '1.14': '2020-12-08',
+            '1.15': '2021-05-03'
         };
 
         var outdatedVersions = {
-            '1.11': '2019-03-28',
-            '1.12': '2019-06-18'
         };
 
         async.each(regions.eks, function(region, rcb) {

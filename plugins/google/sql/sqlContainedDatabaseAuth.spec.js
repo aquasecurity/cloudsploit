@@ -13,6 +13,13 @@ const createCache = (err, data) => {
                     }
                 }
             }
+        },
+        projects: {
+            get: {
+                'global': {
+                    data: [{ name: 'test-project' }]
+                }
+            }
         }
     }
 };
@@ -126,33 +133,7 @@ describe('sqlContainedDatabaseAuth', function () {
 
             plugin.run(cache, {}, callback);
         });
-        it('should give failing result if sql instances has contained database authentication flag enabled', function (done) {
-            const callback = (err, results) => {
-                expect(results.length).to.be.above(0);
-                expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('SQL instance has contained database authentication flag enabled');
-                expect(results[0].region).to.equal('global');
-                done()
-            };
 
-            const cache = createCache(
-                null,
-                [{
-                    instanceType: "CLOUD_SQL_INSTANCE",
-                    name: "testing-instance",
-                    databaseVersion: "SQLSERVER_13",
-                    settings: {
-                      databaseFlags: [
-                        {
-                            name: "log_checkpoints",
-                            value: "on",
-                        },
-                      ]}
-                }],
-            );
-
-            plugin.run(cache, {}, callback);
-        });
         it('should give passing result if sql instances does not have any flags', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);

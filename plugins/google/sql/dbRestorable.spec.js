@@ -1,15 +1,30 @@
 var expect = require('chai').expect;
 var plugin = require('./dbRestorable');
 
-const createCache = (err, data) => {
+const createCache = (err, sqlInstances, backupRuns) => {
     return {
         instances: {
             sql: {
                 list: {
                     'global': {
                         err: err,
-                        data: data
+                        data: sqlInstances
                     }
+                }
+            }
+        },
+        backupRuns: {            
+            list: {
+                'global': {
+                    err: err,
+                    data: backupRuns
+                }
+            }
+        },
+        projects: {
+            get: {
+                'global': {
+                    data: [{ name: 'test-project' }]
                 }
             }
         }
@@ -46,11 +61,12 @@ describe('dbRestorable', function () {
             );
             plugin.run(cache, {}, callback);
         });
-        it('should give passing result if sql instance has point-in-time recovery enabled', function (done) {
+        it('should give passing result if sql instance has backup available', function (done) {
             const callback = (err, results) => {
+                console.log();
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('SQL instance has point-in-time recovery enabled');
+                expect(results[0].message).to.include('SQL instance has backup available');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -58,34 +74,22 @@ describe('dbRestorable', function () {
                 null,
                 [
                     {
-                        name: 'testing-instance1',
-                        instanceType: 'CLOUD_SQL_INSTANCE',
-                        settings: {
-                          tier: "db-custom-4-26624",
-                          kind: "sql#settings",
-                          backupConfiguration: {
-                            startTime: "17:00",
-                            kind: "sql#backupConfiguration",
-                            location: "us",
-                            backupRetentionSettings: {
-                              retentionUnit: "COUNT",
-                              retainedBackups: 7,
-                            },
-                            enabled: true,
-                            binaryLogEnabled: true,
-                            transactionLogRetentionDays: 7,
-                          }
-                        }
+                        name: "backup-testing"
                     }
                 ],
+                [
+                    {
+                        instance: "backup-testing"
+                    }
+                ]
             );
             plugin.run(cache, {}, callback);
         });
-        it('should give failing result if sql instance does not have point-in-time recovery enabled', function (done) {
+        it('should give failing result if sql instance does not have backups available', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('SQL instance does not have point-in-time recovery enabled');
+                expect(results[0].message).to.include('SQL instance does not have backups available');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -93,26 +97,11 @@ describe('dbRestorable', function () {
                 null,
                 [
                     {
-                        name: 'testing-instance1',
-                        instanceType: 'CLOUD_SQL_INSTANCE',
-                        settings: {
-                          tier: "db-custom-4-26624",
-                          kind: "sql#settings",
-                          backupConfiguration: {
-                            startTime: "17:00",
-                            kind: "sql#backupConfiguration",
-                            location: "us",
-                            backupRetentionSettings: {
-                              retentionUnit: "COUNT",
-                              retainedBackups: 7,
-                            },
-                            enabled: false,
-                            binaryLogEnabled: true,
-                            transactionLogRetentionDays: 7,
-                          }
-                        },
+                        name: "backup-testing"
                     }
                 ],
+                [
+                ]
             );
             plugin.run(cache, {}, callback);
         });

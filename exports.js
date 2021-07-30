@@ -180,6 +180,7 @@ module.exports = {
         'elbv2MinimumTargetInstances'   : require(__dirname + '/plugins/aws/elbv2/elbv2MinimumTargetInstances.js'),
         'elbv2NlbListenerSecurity'      : require(__dirname + '/plugins/aws/elbv2/elbv2NlbListenerSecurity.js'),
         'elbv2DeregistrationDelay'      : require(__dirname + '/plugins/aws/elbv2/elbv2DeregistrationDelay.js'),
+        'elbv2SslTermination'           : require(__dirname + '/plugins/aws/elbv2/elbv2SslTermination.js'),
 
         'emrClusterLogging'             : require(__dirname + '/plugins/aws/emr/emrClusterLogging.js'),
         'emrEncryptionInTransit'        : require(__dirname + '/plugins/aws/emr/emrEncryptionInTransit.js'),
@@ -286,6 +287,8 @@ module.exports = {
         'topicEncrypted'                : require(__dirname + '/plugins/aws/sns/topicEncrypted.js'),
         'topicPolicies'                 : require(__dirname + '/plugins/aws/sns/topicPolicies.js'),
         'topicCmkEncrypted'             : require(__dirname + '/plugins/aws/sns/topicCmkEncrypted.js'),
+        'snsCrossAccount'               : require(__dirname + '/plugins/aws/sns/snsCrossAccount.js'),
+
         'sqsCrossAccount'               : require(__dirname + '/plugins/aws/sqs/sqsCrossAccount.js'),
         'sqsDeadLetterQueue'            : require(__dirname + '/plugins/aws/sqs/sqsDeadLetterQueue.js'),
         'sqsEncrypted'                  : require(__dirname + '/plugins/aws/sqs/sqsEncrypted.js'),
@@ -369,6 +372,9 @@ module.exports = {
         'tableServiceAllAccessAcl'      : require(__dirname + '/plugins/azure/tableservice/tableServiceAllAccessAcl.js'),
         'queueServiceAllAccessAcl'      : require(__dirname + '/plugins/azure/queueservice/queueServiceAllAccessAcl.js'),
 
+        'minimumTlsVersion'             : require(__dirname + '/plugins/azure/redisCache/minimumTlsVersion.js'),
+        'sslAccessOnlyEnabled'          : require(__dirname + '/plugins/azure/redisCache/sslAccessOnlyEnabled.js'),
+
         'multipleSubnets'               : require(__dirname + '/plugins/azure/virtualnetworks/multipleSubnets.js'),
         'ddosStandardProtectionEnabled' : require(__dirname + '/plugins/azure/virtualnetworks/ddosStandardProtectionEnabled.js'),
         'noNetworkGatewaysInUse'        : require(__dirname + '/plugins/azure/virtualnetworks/noNetworkGatewaysInUse.js'),
@@ -415,6 +421,7 @@ module.exports = {
         'nsgLogAnalyticsEnabled'        : require(__dirname + '/plugins/azure/monitor/nsgLogAnalyticsEnabled.js'),
         'logProfileArchiveData'         : require(__dirname + '/plugins/azure/monitor/logProfileArchiveData.js'),
         'logProfileRetentionPolicy'     : require(__dirname + '/plugins/azure/monitor/logProfileRetentionPolicy.js'),
+        'monitorLogsEnabled'            : require(__dirname + '/plugins/azure/monitor/monitorLogsEnabled.js'),
 
         'securityPolicyAlertsEnabled'   : require(__dirname + '/plugins/azure/logalerts/securityPolicyAlertsEnabled.js'),
         'nsgLoggingEnabled'             : require(__dirname + '/plugins/azure/logalerts/nsgLoggingEnabled.js'),
@@ -440,6 +447,10 @@ module.exports = {
         'monitorNsgEnabled'             : require(__dirname + '/plugins/azure/securitycenter/monitorNsgEnabled.js'),
         'highSeverityAlertsEnabled'     : require(__dirname + '/plugins/azure/securitycenter/highSeverityAlertsEnabled.js'),
         'standardPricingEnabled'        : require(__dirname + '/plugins/azure/securitycenter/standardPricingEnabled.js'),
+        'monitorExternalAccounts'       : require(__dirname + '/plugins/azure/securitycenter/monitorExternalAccounts.js'),
+        'monitorIpForwarding'           : require(__dirname + '/plugins/azure/securitycenter/monitorIpForwarding.js'),
+        'monitorNextGenerationFirewall' : require(__dirname + '/plugins/azure/securitycenter/monitorNextGenerationFirewall.js'),
+        'monitorSubscriptionOwners'     : require(__dirname + '/plugins/azure/securitycenter/monitorSubscriptionOwners.js'),
 
         'resourceAllowedLocations'      : require(__dirname + '/plugins/azure/policyservice/resourceAllowedLocations.js'),
         'resourceLocationMatch'         : require(__dirname + '/plugins/azure/policyservice/resourceLocationMatch.js'),
@@ -515,6 +526,7 @@ module.exports = {
         'tlsVersionCheck'               : require(__dirname + '/plugins/azure/appservice/tlsVersionCheck.js'),
         'remoteDebuggingDisabled'       : require(__dirname + '/plugins/azure/appservice/remoteDebuggingDisabled.js'),
         'alwaysOnEnabled'               : require(__dirname + '/plugins/azure/appservice/alwaysOnEnabled.js'),
+        'certificateExpiry'             : require(__dirname + '/plugins/azure/appservice/certificateExpiry.js'),
 
         'rbacEnabled'                   : require(__dirname + '/plugins/azure/kubernetesservice/rbacEnabled.js'),
         'aksLatestVersion'              : require(__dirname + '/plugins/azure/kubernetesservice/aksLatestVersion.js'),
@@ -671,6 +683,7 @@ module.exports = {
         'defaultVpcInUse'               : require(__dirname + '/plugins/google/vpcnetwork/defaultVpcInUse.js'),
         'flowLogsEnabled'               : require(__dirname + '/plugins/google/vpcnetwork/flowLogsEnabled.js'),
         'privateAccessEnabled'          : require(__dirname + '/plugins/google/vpcnetwork/privateAccessEnabled.js'),
+        'dnsLoggingEnabled'             : require(__dirname + '/plugins/google/vpcnetwork/dnsLoggingEnabled.js'),
 
         'instanceMaxCount'              : require(__dirname + '/plugins/google/compute/instanceMaxCount.js'),
         'instancesMultiAz'              : require(__dirname + '/plugins/google/compute/instancesMultiAz.js'),
@@ -681,8 +694,13 @@ module.exports = {
         'connectSerialPortsDisabled'    : require(__dirname + '/plugins/google/compute/connectSerialPortsDisabled.js'),
         'csekEncryptionEnabled'         : require(__dirname + '/plugins/google/compute/csekEncryptionEnabled.js'),
         'osLoginEnabled'                : require(__dirname + '/plugins/google/compute/osLoginEnabled.js'),
+        'instancePublicAccess'          : require(__dirname + '/plugins/google/compute/instancePublicAccess.js'),
+        'instanceDefaultServiceAccount' : require(__dirname + '/plugins/google/compute/instanceDefaultServiceAccount.js'),
+        'shieldedVmEnabled'             : require(__dirname + '/plugins/google/compute/shieldedVmEnabled.js'),
+        'instanceDeletionProtection'    : require(__dirname + '/plugins/google/compute/instanceDeletionProtection.js'),
 
         'keyRotation'                   : require(__dirname + '/plugins/google/cryptographickeys/keyRotation.js'),
+        'keyProtectionLevel'            : require(__dirname + '/plugins/google/cryptographickeys/keyProtectionLevel.js'),
 
         'dbRestorable'                  : require(__dirname + '/plugins/google/sql/dbRestorable.js'),
         'dbAutomatedBackups'            : require(__dirname + '/plugins/google/sql/dbAutomatedBackups.js'),
@@ -701,6 +719,10 @@ module.exports = {
         'sqlNoPublicIps'                : require(__dirname + '/plugins/google/sql/sqlNoPublicIps.js'),
         'sqlCrossDbOwnership'           : require(__dirname + '/plugins/google/sql/sqlCrossDbOwnership.js'),
         'sqlContainedDatabaseAuth'      : require(__dirname + '/plugins/google/sql/sqlContainedDatabaseAuth.js'),
+        'postgresqlMaxConnections'      : require(__dirname + '/plugins/google/sql/postgresqlMaxConnections.js'),
+        'mysqlSlowQueryLog'             : require(__dirname + '/plugins/google/sql/mysqlSlowQueryLog.js'),
+        'storageAutoIncreaseEnabled'    : require(__dirname + '/plugins/google/sql/storageAutoIncreaseEnabled.js'),
+        'serverCertificateRotation'     : require(__dirname + '/plugins/google/sql/serverCertificateRotation.js'),
 
         'bucketVersioning'              : require(__dirname + '/plugins/google/storage/bucketVersioning.js'),
         'bucketLogging'                 : require(__dirname + '/plugins/google/storage/bucketLogging.js'),
@@ -754,6 +776,10 @@ module.exports = {
         'vpcNetworkRouteLogging'        : require(__dirname + '/plugins/google/logging/vpcNetworkRouteLogging.js'),
         'vpcNetworkLogging'             : require(__dirname + '/plugins/google/logging/vpcNetworkLogging.js'),
         'logSinksEnabled'               : require(__dirname + '/plugins/google/logging/logSinksEnabled.js'),
+
+        'datasetAllUsersPolicy'         : require(__dirname + '/plugins/google/bigquery/datasetAllUsersPolicy.js'),
+      
+        'topicEncryption'               : require(__dirname + '/plugins/google/pubsub/topicEncryption.js')
     },
     alibaba: {
         'passwordMinLength'             : require(__dirname + '/plugins/alibaba/ram/passwordMinLength.js'),
@@ -793,15 +819,25 @@ module.exports = {
         'openTelnet'                    : require(__dirname + '/plugins/alibaba/ecs/openTelnet.js'),
         'openVNCClient'                 : require(__dirname + '/plugins/alibaba/ecs/openVNCClient.js'),
         'openVNCServer'                 : require(__dirname + '/plugins/alibaba/ecs/openVNCServer.js'),
+        'openAllPortsProtocols'         : require(__dirname + '/plugins/alibaba/ecs/openAllPortsProtocols.js'),
+        'systemDisksEncrypted'          : require(__dirname + '/plugins/alibaba/ecs/systemDisksEncrypted.js'),
       
         'bucketLoggingEnabled'          : require(__dirname + '/plugins/alibaba/oss/bucketLoggingEnabled.js'),
+        'bucketPayByRequester'          : require(__dirname + '/plugins/alibaba/oss/bucketPayByRequester.js'),
         'ossBucketPrivate'              : require(__dirname + '/plugins/alibaba/oss/ossBucketPrivate.js'),
         'bucketCmkEncrypted'            : require(__dirname + '/plugins/alibaba/oss/bucketCmkEncrypted.js'),
+        'ossBucketVersioning'           : require(__dirname + '/plugins/alibaba/oss/ossBucketVersioning.js'),
+        'ossBucketTransferAcceleration' : require(__dirname + '/plugins/alibaba/oss/ossBucketTransferAcceleration.js'),
+        'bucketCrossRegionReplication'  : require(__dirname + '/plugins/alibaba/oss/bucketCrossRegionReplication.js'),
       
         'rdsLogDuration'                : require(__dirname + '/plugins/alibaba/rds/rdsLogDuration.js'),
         'rdsSslEncryptionEnabled'       : require(__dirname + '/plugins/alibaba/rds/rdsSslEncryptionEnabled.js'),
         'rdsAuditingEnabled'            : require(__dirname + '/plugins/alibaba/rds/rdsAuditingEnabled.js'),
         'rdsPublicAccess'               : require(__dirname + '/plugins/alibaba/rds/rdsPublicAccess.js'),
+        'rdsLogConnectionEnabled'       : require(__dirname + '/plugins/alibaba/rds/rdsLogConnectionEnabled.js'),
+        'rdsLogDisconnectionsEnabled'   : require(__dirname + '/plugins/alibaba/rds/rdsLogDisconnectionsEnabled.js'),
+        'rdsSqlAuditRetentionPeriod'    : require(__dirname + '/plugins/alibaba/rds/rdsSqlAuditRetentionPeriod.js'),
+        'rdsTdeEnabled'                 : require(__dirname + '/plugins/alibaba/rds/rdsTdeEnabled.js'),
 
         'actiontrailGlobalExportLogs'   : require(__dirname + '/plugins/alibaba/actiontrail/actiontrailGlobalExportLogs.js')
     }
