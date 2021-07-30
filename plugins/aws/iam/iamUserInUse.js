@@ -7,24 +7,22 @@ module.exports = {
     description: 'Ensure that IAM user accounts are being actively used.',
     more_info: 'IAM users, roles, and groups should be used for day-to-day account management.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html',
-    recommended_action: 'Create IAM users with appropriate group-level permissions for account access. Create an MFA token for the IAM user account, and store its password and token generation QR codes in a secure place.',
+    recommended_action: 'Delete IAM user accounts which are not being actively used.',
     apis: ['IAM:generateCredentialReport'],
     settings: {
         iam_user_account_in_use_days: {
             name: 'IAM User Account In Use Days',
             description: 'Return a failing result when the IAM user account has been used within this many days',
             regex: '^[1-9]{1}[0-9]{0,3}$',
-            default: 15
+            default: '15'
         }
     },
 
-    run: function(cache, settings, callback, now) {
+    run: function(cache, settings, callback) {
         var config = {
-            iam_user_account_in_use_days: settings.iam_user_account_in_use_days || this.settings.iam_user_account_in_use_days.default
+            iam_user_account_in_use_days: parseInt(settings.iam_user_account_in_use_days || this.settings.iam_user_account_in_use_days.default)
         };
-        var currentDate = now;
-        if (!currentDate) currentDate = new Date();
-
+        var currentDate = new Date();
         var custom = helpers.isCustom(settings, this.settings);
 
         var results = [];

@@ -48,7 +48,7 @@ describe('iamUserInUse', function () {
     describe('run', function () {
         it('should FAIL when IAM user account recently used', function (done) {
             const settings = {
-                iam_user_account_in_use_days: 15
+                iam_user_account_in_use_days: '15'
             };
 
             const cache = createCache([users[2]]);
@@ -59,12 +59,12 @@ describe('iamUserInUse', function () {
                 done();
             };
 
-            iamUserInUse.run(cache, settings, callback, currentDate);
+            iamUserInUse.run(cache, settings, callback);
         })
 
         it('should PASS when IAM user account not recently used', function (done) {
             const settings = {
-                iam_user_account_in_use_days: 15
+                iam_user_account_in_use_days: '15'
             };
 
             const cache = createCache([users[1]]);
@@ -75,12 +75,12 @@ describe('iamUserInUse', function () {
                 done();
             };
 
-            iamUserInUse.run(cache, settings, callback, currentDate);
+            iamUserInUse.run(cache, settings, callback);
         })
 
         it('should ignore recently used root user', function (done) {
             const settings = {
-                iam_user_account_in_use_days: 15
+                iam_user_account_in_use_days: '15'
             }
 
             const cache = createCache([users[0], users[1]]);
@@ -91,7 +91,7 @@ describe('iamUserInUse', function () {
                 done();
             };
 
-            iamUserInUse.run(cache, settings, callback, currentDate);
+            iamUserInUse.run(cache, settings, callback);
         })
     })
 })
