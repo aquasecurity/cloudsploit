@@ -42,6 +42,13 @@ const createCache = (groups, err) => {
                 },
             },
         },
+        projects: {
+            get: {
+                'global': {
+                    data: 'testProj'
+                }
+            }
+        }
     };
 };
 

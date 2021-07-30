@@ -50,7 +50,7 @@ const roles = [
     }
 ];
 
-const createCache = (roles) => {
+const createCache = (roles, accounts) => {
     return {
         iam: {
             listRoles: {
@@ -63,6 +63,32 @@ const createCache = (roles) => {
             getCallerIdentity: {
                 'us-east-1': {
                     data: '112233445566'
+                }
+            }
+        },
+        organizations: {
+            listAccounts: {
+                'us-east-1': {
+                    data: [
+                        {
+                            "Id": "123456654321",
+                            "Arn": "arn:aws:organizations::123456654321:account/o-sb9qmv2zif/123456654321",
+                            "Email": "xyz@gmail.com",
+                            "Name": "test-role",
+                            "Status": "ACTIVE",
+                            "JoinedMethod": "INVITED",
+                            "JoinedTimestamp": "2020-12-27T10:47:14.057Z"
+                        },
+                        {
+                            "Id": "123456654322",
+                            "Arn": "arn:aws:organizations::123456654322:account/o-sb9qmv2zif/123456654322",
+                            "Email": "xyz@gmail.com",
+                            "Name": "test-role",
+                            "Status": "ACTIVE",
+                            "JoinedMethod": "INVITED",
+                            "JoinedTimestamp": "2020-12-27T10:47:14.057Z"
+                        }
+                    ]
                 }
             }
         }
@@ -100,6 +126,15 @@ describe('trustedCrossAccountRoles', function () {
             trustedCrossAccountRoles.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                done();
+            });
+        });
+
+        it('should PASS if cross-account role contains organization account ID and setting to allow organization account is true', function (done) {
+            const cache = createCache([roles[4]]);
+            trustedCrossAccountRoles.run(cache, { iam_whitelist_aws_organization_accounts: 'true' }, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
                 done();
             });
         });
