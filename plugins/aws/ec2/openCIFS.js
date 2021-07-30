@@ -13,7 +13,7 @@ module.exports = {
         ec2_skip_unused_groups: {
             name: 'EC2 Skip Unused Groups',
             description: 'Skip checking ports for unused security groups',
-            regex: '',
+            regex: '^(true|false)$',
             default: 'false',
         }
     },
