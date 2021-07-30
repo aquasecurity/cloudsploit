@@ -106,7 +106,55 @@ const describeNetworkInterfaces = [
     },
 ]
 
-const createCache = (securityGroups, networkInterfaces, securityGroupsErr, networkInterfacesErr) => {
+const listFunctions = [
+    {
+        "FunctionName": "test-lambda",
+        "FunctionArn": "arn:aws:lambda:us-east-1:111122223333:function:test-lambda",
+        "Runtime": "nodejs12.x",
+        "Role": "arn:aws:iam::111122223333:role/lambda-role",
+        "Handler": "index.handler",
+        "CodeSize": 304,
+        "Description": "",
+        "Timeout": 3,
+        "MemorySize": 128,
+        "LastModified": "2020-12-23T06:58:12.289+0000",
+        "CodeSha256": "1LbkWTlxbeGxWCDcSB1hyIcv/HzJ6W3w6sibCRvjfAU=",
+        "Version": "$LATEST",
+        "VpcConfig": {
+            "SubnetIds": [
+                "subnet-6a8b635b",
+                "subnet-c21b84cc"
+            ],
+            "SecurityGroupIds": [
+                "sg-001639e564442dfec"
+            ],
+            "VpcId": "vpc-99de2fe4"
+        },
+        "Environment": {
+            "Variables": {
+                "password": "fastabc123",
+                "key": "AQICA="
+            }
+        },
+        "KMSKeyArn": null,
+        "TracingConfig": {
+            "Mode": "Active"
+        },
+        "MasterArn": null,
+        "RevisionId": "3ed6bad6-8315-4aee-804a-ba9d332a8952",
+        "State": null,
+        "StateReason": null,
+        "StateReasonCode": null,
+        "LastUpdateStatus": null,
+        "LastUpdateStatusReason": null,
+        "LastUpdateStatusReasonCode": null,
+        "PackageType": "Zip",
+        "SigningProfileVersionArn": null,
+        "SigningJobArn": null
+    },
+]
+
+const createCache = (securityGroups, networkInterfaces, functions, securityGroupsErr, networkInterfacesErr, functionsErr) => {
     return {
         ec2:{
             describeSecurityGroups: {
@@ -121,6 +169,14 @@ const createCache = (securityGroups, networkInterfaces, securityGroupsErr, netwo
                     data: networkInterfaces
                 }
             },
+        },
+        lambda: {
+            listFunctions: {
+                'us-east-1': {
+                    err: functionsErr,
+                    data: functions
+                }
+            }
         }
     };
 };
@@ -135,13 +191,18 @@ const createNullCache = () => {
                 'us-east-1': null,
             },
         },
+        lambda: {
+            listFunctions: {
+                'us-east-1': null,
+            },
+        },
     };
 };
 
 describe('openCIFS', function () {
     describe('run', function () {
         it('should PASS if no public open ports found', function (done) {
-            const cache = createCache([describeSecurityGroups[0]], [describeNetworkInterfaces[0]]);
+            const cache = createCache([describeSecurityGroups[0]], [describeNetworkInterfaces[0]], [listFunctions[0]]);
             openCIFS.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -150,7 +211,7 @@ describe('openCIFS', function () {
         });
 
         it('should PASS if security group is unused', function (done) {
-            const cache = createCache([describeSecurityGroups[1]], [describeNetworkInterfaces[0]]);
+            const cache = createCache([describeSecurityGroups[1]], [describeNetworkInterfaces[0]], []);
             openCIFS.run(cache, {ec2_skip_unused_groups: 'true'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -159,7 +220,7 @@ describe('openCIFS', function () {
         });
 
         it('should FAIL if security group has CIFS UDP port open to public', function (done) {
-            const cache = createCache([describeSecurityGroups[1]], [describeNetworkInterfaces[0]]);
+            const cache = createCache([describeSecurityGroups[1]], [describeNetworkInterfaces[0]], [listFunctions[0]]);
             openCIFS.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);

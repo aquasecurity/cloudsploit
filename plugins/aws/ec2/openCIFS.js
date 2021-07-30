@@ -8,11 +8,11 @@ module.exports = {
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as CIFS should be restricted to known IP addresses.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
     recommended_action: 'Restrict UDP port 445 to known IP addresses',
-    apis: ['EC2:describeSecurityGroups', 'EC2:describeNetworkInterfaces'],
+    apis: ['EC2:describeSecurityGroups', 'EC2:describeNetworkInterfaces', 'Lambda:listFunctions'],
     settings: {
         ec2_skip_unused_groups: {
-            name: '',
-            description: '',
+            name: 'EC2 Skip Unused Groups',
+            description: 'Skip checking ports for unused security groups',
             regex: '',
             default: 'false',
         }
@@ -78,7 +78,7 @@ module.exports = {
                 return rcb();
             }
 
-            helpers.findOpenPorts(describeSecurityGroups.data, ports, service, region, results, cache, config);
+            helpers.findOpenPorts(describeSecurityGroups.data, ports, service, region, results, cache, config, rcb);
 
             rcb();
         }, function(){
