@@ -233,6 +233,15 @@ describe('unusedAmi', function () {
                 done();
             });
         });
+
+        it('should PASS if Amazon Machine Image is used by launch template', function (done) {
+            const cache = createCache([describeImages[0]], [], [], [describeLaunchTemplates[0]], describeLaunchTemplateVersions[0]);
+            unusedAmi.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
         
         it('should FAIL if Amazon Machine Image is not in use', function (done) {
             const cache = createCache([describeImages[1]], [describeInstances[0]], describeLaunchConfigurations[0], [describeLaunchTemplates[0]], describeLaunchTemplateVersions[0]);
