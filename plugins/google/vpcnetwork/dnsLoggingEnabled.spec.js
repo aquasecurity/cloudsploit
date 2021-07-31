@@ -62,6 +62,13 @@ const createCache = (networks, networkErr, policies, policiesErr) => {
                     data: policies
                 }
             }
+        },
+        projects: {
+            get: {
+                'global': {
+                    data: 'testProj'
+                }
+            }
         }
     }
 };
