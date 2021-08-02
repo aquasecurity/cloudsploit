@@ -314,7 +314,7 @@ var execute = function(LocalGoogleConfig, collection, service, callObj, callKey,
             }
 
             if (!data) return regionCb();
-            if (callObj.property && !data[callObj.property]) return regionCb();
+            if (callObj.property && data.data && !data.data[callObj.property]) return regionCb();
             if (callObj.secondProperty && !data[callObj.secondProperty]) return regionCb();
 
             if (callObj.secondProperty) {
@@ -368,6 +368,12 @@ var execute = function(LocalGoogleConfig, collection, service, callObj, callKey,
     } else if (callObj.nested) {
         parentParams = {auth: callObj.params.auth, parent: callObj.params.parent};
         executor['projects']['locations']['keyRings'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
+    } else if (callObj.params && callObj.location && callObj.postcall && callObj.projectId && callObj.regional) {
+        parentParams = {auth: callObj.params.auth, projectId: callObj.params.project, location: callObj.params.region, [callObj.filterKey[0]]: callObj.params[callObj.filterKey[0]]};
+        executor['projects']['locations'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
+    } else if (callObj.projectId && callObj.regional) {
+        parentParams = {auth: callObj.params.auth, projectId: callObj.params.project, location: callObj.params.region};
+        executor['projects']['locations'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
     } else if (callObj.resource) {
         parentParams = {auth: callObj.auth, resource_: LocalGoogleConfig.project};
         executor[service][callKey](parentParams, LocalGoogleConfig, executorCb);
