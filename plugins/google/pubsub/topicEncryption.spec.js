@@ -105,7 +105,7 @@ describe('topicEncryption', function () {
                 expect(results[0].message).to.include('which is less than');
                 expect(results[1].message).to.include('which is less than');
                 expect(results[0].region).to.equal('global');
-                done()
+                done();
             };
 
             const cache = createCache(
