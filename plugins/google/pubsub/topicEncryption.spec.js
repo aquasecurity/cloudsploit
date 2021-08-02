@@ -32,6 +32,10 @@ const topics = [
         name: "projects/test-dev-aqua/topics/test-topic-2",
         kmsKeyName: "projects/test-dev-aqua/locations/global/keyRings/test-kr/cryptoKeys/test-key-2",
     },
+    {
+        name: "projects/test-dev-aqua/topics/test-topic-3",
+        kmsKeyName: "projects/test-dev-aqua/locations/global/keyRings/test-kr/cryptoKeys/test-key-1",
+    }
 ];
 
 const createCache = (listTopics, errTopics, listKeys, errKeys) => {
@@ -97,13 +101,15 @@ describe('topicEncryption', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
+                expect(results[1].status).to.equal(2);
                 expect(results[0].message).to.include('which is less than');
+                expect(results[1].message).to.include('which is less than');
                 expect(results[0].region).to.equal('global');
                 done()
             };
 
             const cache = createCache(
-                [topics[0]],
+                [topics[0], topics[2]],
                 null,
                 cryptoKeys
             );
