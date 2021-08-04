@@ -242,7 +242,7 @@ function createResourceName(resourceType, resourceId, project, locationType, loc
 }
 
 function getProtectionLevel(cryptographickey, encryptionLevels) {
-    if (cryptographickey.versionTemplate && cryptographickey.versionTemplate.protectionLevel) {
+    if (cryptographickey && cryptographickey.versionTemplate && cryptographickey.versionTemplate.protectionLevel) {
         if (cryptographickey.versionTemplate.protectionLevel == 'SOFTWARE') return encryptionLevels.indexOf('cloudcmek');
         else if (cryptographickey.versionTemplate.protectionLevel == 'HSM') return encryptionLevels.indexOf('cloudhsm');
         else if (cryptographickey.versionTemplate.protectionLevel == 'EXTERNAL') return encryptionLevels.indexOf('external');
