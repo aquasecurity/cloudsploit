@@ -53,6 +53,7 @@ module.exports = {
                 });
 
                 if (maximumValue > 1){
+                    found = true;
                     helpers.addResult(results, 2,
                         `ES Cluster for ES Domain: ${domain.DomainName} is unhealthy`, region);
                 }
