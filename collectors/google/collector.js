@@ -206,6 +206,13 @@ var calls = {
             parent: 'project'
 
         }
+    },
+    deployments: { // https://www.googleapis.com/deploymentmanager/v2/projects/project/global/deployments
+        list: {
+            api: 'deploymentmanager',
+            version: 'v2',
+            location: 'global'
+        }
     }
 };
 
