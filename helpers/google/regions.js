@@ -60,6 +60,7 @@ module.exports = {
         compute: regions,
         sql: ['global']
     },
+    instanceTemplates: ['global'],
     networks: ['global'],
     backendServices: ['global'],
     healthChecks: ['global'],
