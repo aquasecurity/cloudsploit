@@ -63,6 +63,13 @@ var calls = {
         },
         manyApi: true,
     },
+    instanceTemplates: {
+            list: {
+                api: 'compute',
+                version: 'v1',
+                location: 'global'
+            }
+    },
     instanceGroups: {
         aggregatedList: {
             api: 'compute',
