@@ -128,8 +128,8 @@ describe('eventBusCrossAccountAccess', function () {
             });
         });
 
-        it('should UNKNOWN if unable to describe RDS instances', function (done) {
-            const cache = createCache([], {},{ message: 'Unable to describe instances' });
+        it('should UNKNOWN if unable to query event bus', function (done) {
+            const cache = createCache([], {},{ message: 'Unable to list event bus' });
             eventBusCrossAccountAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
@@ -139,7 +139,7 @@ describe('eventBusCrossAccountAccess', function () {
         });
 
 
-        it('should not return anything if describe DB instances response not found', function (done) {
+        it('should not return anything if query to list event bus response not found', function (done) {
             const cache = createNullCache();
             eventBusCrossAccountAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
