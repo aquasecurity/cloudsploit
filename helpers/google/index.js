@@ -251,6 +251,8 @@ var handleErrors = function(err) {
             } else {
                 return '503 Error from Google';
             }
+        } else if (err.code === 'ERR_OSSL_PEM_NO_START_LINE') {
+            return 'Invalid Certificate';
         } else {
             console.log(`[ERROR] Unhandled error from Google API: Error: ${JSON.stringify(err)}`);
             return 'Unknown error response from Google';
