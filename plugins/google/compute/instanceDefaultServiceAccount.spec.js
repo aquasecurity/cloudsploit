@@ -1,25 +1,13 @@
 var expect = require('chai').expect;
 var plugin = require('./instanceDefaultServiceAccount');
 
-const createCache = (instanceData, instanceDatab, projectData, error) => {
+const createCache = (instanceData, projectData, error) => {
     return {
         instances: {
             compute: {
                 list: {
                     'us-central1-a': {
                         data: instanceData,
-                        err: error
-                    },
-                    'us-central1-b': {
-                        data: instanceDatab,
-                        err: error
-                    },
-                    'us-central1-c': {
-                        data: instanceDatab,
-                        err: error
-                    },
-                    'us-central1-f': {
-                        data: instanceDatab,
                         err: error
                     }
                 }
@@ -49,7 +37,6 @@ describe('instanceDefaultServiceAccount', function () {
 
             const cache = createCache(
                 [],
-                [],
                 [
                     {
                         kind: "compute#project",
@@ -74,15 +61,13 @@ describe('instanceDefaultServiceAccount', function () {
 
             const cache = createCache(
                 [],
-                [],
                 [
                     {
                         kind: "compute#project",
                         id: "00000111112222233333",
                         defaultServiceAccount: "779980017373-compute@developer.gserviceaccount.com",
                     }
-                ],
-                null
+                ]
             );
 
             plugin.run(cache, {}, callback);
@@ -92,7 +77,7 @@ describe('instanceDefaultServiceAccount', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Default service account is used for following instances');
+                expect(results[0].message).to.include('Default service account is used for instance');
                 expect(results[0].region).to.equal('us-central1');
                 done()
             };
@@ -117,68 +102,23 @@ describe('instanceDefaultServiceAccount', function () {
                           ],
                     }
                 ],
-                [],
                 [
                     {
                         kind: "compute#project",
                         id: "00000111112222233333",
                         defaultServiceAccount: "779980017373-compute@developer.gserviceaccount.com",
                     }
-                ],
-                null
+                ]
             );
 
             plugin.run(cache, {}, callback);
         })
 
-        it('should pass if the compute instance is not using the default service account', function (done) {
+        it('should pass if the compute instance is not using default service account', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Default service account is not used for following instances');
-                expect(results[0].region).to.equal('us-central1');
-                done()
-            };
-
-            const cache = createCache(
-                [
-                    {
-                        id: "000001111112222222",
-                        name: "testing-instance2",
-                        serviceAccounts: [
-                            {
-                              email: "Temp-1234-compute@developer.gserviceaccount.com",
-                              scopes: [
-                                "https://www.googleapis.com/auth/devstorage.read_only",
-                                "https://www.googleapis.com/auth/logging.write",
-                                "https://www.googleapis.com/auth/monitoring.write",
-                                "https://www.googleapis.com/auth/servicecontrol",
-                                "https://www.googleapis.com/auth/service.management.readonly",
-                                "https://www.googleapis.com/auth/trace.append",
-                              ],
-                            },
-                        ],
-                    }
-                ],
-                [],
-                [
-                    {
-                        kind: "compute#project",
-                        id: "00000111112222233333",
-                        defaultServiceAccount: "779980017373-compute@developer.gserviceaccount.com",
-                    }
-                ],
-                null
-            );
-
-            plugin.run(cache, {}, callback);
-        })
-
-        it('should pass if the compute instance is not using any service account', function (done) {
-            const callback = (err, results) => {
-                expect(results.length).to.be.above(0);
-                expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Default service account is not used for following instances');
+                expect(results[0].message).to.include('Default service account is not used for instance');
                 expect(results[0].region).to.equal('us-central1');
                 done()
             };
@@ -190,7 +130,6 @@ describe('instanceDefaultServiceAccount', function () {
                         name: "testing-instance2",
                     }
                 ],
-                [],
                 [
                     {
                         kind: "compute#project",

@@ -32,72 +32,52 @@ module.exports = {
         }
 
         var defaultServiceAccount = projects.data[0].defaultServiceAccount;
+        var project = projects.data[0].name;
 
         if (!defaultServiceAccount) return callback(null, results, source);
 
         async.each(regions.instances.compute, (region, rcb) => {
             var zones = regions.zones;
-            var myError = {};
-            var noInstances = {};
-            var defaultServiceAccountInstances = [];
-            var validServiceAccountInstances = [];
-            zones[region].forEach(zone => {
+            var noInstances = [];
+            async.each(zones[region], (zone, zcb) => {
                 var instances = helpers.addSource(cache, source,
                     ['instances', 'compute','list', zone]);
 
-                if (!instances) return;
+                if (!instances) return zcb();
 
                 if (instances.err || !instances.data) {
-                    if (!myError[region]) {
-                        myError[region] = [];
-                    }
-                    myError[region].push(zone);
-                    return;
+                    helpers.addResult(results, 3, 'Unable to query instances', region, null, null, instances.err);
+                    return zcb();
                 }
 
                 if (!instances.data.length) {
-                    if (!noInstances[region]) {
-                        noInstances[region] = [];
-                    }
-                    noInstances[region].push(zone);
-                    return;
+                    noInstances.push(zone);
+                    return zcb();
                 }
 
                 instances.data.forEach(instance => {
+                    let found;
+                    let resource = helpers.createResourceName('instances', instance.name, project, 'zone', zone);
                     if (instance.serviceAccounts &&
                         instance.serviceAccounts.length) {
-                        var found = instance.serviceAccounts.find(account => account.email == defaultServiceAccount);
-                        if (found) {
-                            defaultServiceAccountInstances.push(instance.id)
-                        }
-                        else {
-                            validServiceAccountInstances.push(instance.id)
-                        }
+                        found = instance.serviceAccounts.find(account => account.email == defaultServiceAccount);
+                    }
+                    if (found) {
+                        helpers.addResult(results, 2,
+                            'Default service account is used for instance', region, resource);
                     } else {
-                        validServiceAccountInstances.push(instance.id)
+                        helpers.addResult(results, 0,
+                            'Default service account is not used for instance', region, resource);
                     }
                 });
+                
+                zcb();
+            }, function(){
+                if (noInstances.length) {
+                    helpers.addResult(results, 0, `No instances found in following zones: ${noInstances.join(', ')}`, region);
+                }
+                rcb();
             });
-
-            if (myError[region] &&
-                zones[region] &&
-                (myError[region].join(',') === zones[region].join(','))) {
-                helpers.addResult(results, 3, 'Unable to query instances' , region);
-            } if (noInstances[region] &&
-                zones[region] &&
-                (noInstances[region].join(',') === zones[region].join(','))) {
-                helpers.addResult(results, 0, 'No instances found in the region' , region);
-            } if (defaultServiceAccountInstances.length) {
-                var myInstanceStr = defaultServiceAccountInstances.join(", ");
-                helpers.addResult(results, 2,
-                    `Default service account is used for following instances: ${myInstanceStr}`, region);
-            } if (validServiceAccountInstances.length) {
-                var myInstanceStr = validServiceAccountInstances.join(", ");
-                helpers.addResult(results, 0,
-                    `Default service account is not used for following instances: ${myInstanceStr}`, region);
-            }
-
-            rcb();
         }, function() {
             callback(null, results, source);
         });

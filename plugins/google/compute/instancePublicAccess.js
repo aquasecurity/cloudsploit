@@ -9,19 +9,27 @@ module.exports = {
         'in order to minimize the instance\'s exposure to the internet.',
     link: 'https://cloud.google.com/compute/docs/ip-addresses/reserve-static-external-ip-address',
     recommended_action: 'Modify compute instances and set External IP to None for network interface',
-    apis: ['instances:compute:list'],
+    apis: ['instances:compute:list', 'projects:get'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions();
 
+        let projects = helpers.addSource(cache, source,
+            ['projects','get', 'global']);
+
+        if (!projects || projects.err || !projects.data || !projects.data.length) {
+            helpers.addResult(results, 3,
+                'Unable to query for projects: ' + helpers.addError(projects), 'global', null, null, (projects) ? projects.err : null);
+            return callback(null, results, source);
+        }
+
+        var project = projects.data[0].name;
+
         async.each(regions.instances.compute, (region, rcb) => {
             var zones = regions.zones;
-            var myError = {};
-            var noInstances = {};
-            var publicAccessInstances = [];
-            var privateInstances = [];
+            var noInstances = [];
             async.each(zones[region], function(zone, zcb) {
                 var instances = helpers.addSource(cache, source,
                     ['instances', 'compute','list', zone]);
@@ -29,56 +37,39 @@ module.exports = {
                 if (!instances) return zcb();
 
                 if (instances.err || !instances.data) {
-                    if (!myError[region]) {
-                        myError[region] = [];
-                    }
-                    myError[region].push(zone);
+                    helpers.addResult(results, 3, 'Unable to query instances', region, null, null, instances.err);
                     return zcb();
                 }
 
                 if (!instances.data.length) {
-                    if (!noInstances[region]) {
-                        noInstances[region] = [];
-                    }
-                    noInstances[region].push(zone);
+                    noInstances.push(zone);
                     return zcb();
                 }
 
                 instances.data.forEach(instance => {
                     if (instance.name && instance.name.startsWith('gke-')) return;
 
+                    let resource = helpers.createResourceName('instances', instance.name, project, 'zone', zone);
+
+                    let found;
                     if (instance.networkInterfaces &&
                         instance.networkInterfaces.length) {
-                        var networkObject = instance.networkInterfaces.find(networkObject => networkObject.accessConfigs);
-                        if (networkObject) {
-                            publicAccessInstances.push(instance.id)
-                        }
-                        else {
-                            privateInstances.push(instance.id)
-                        }
+                        found = instance.networkInterfaces.find(networkObject => networkObject.accessConfigs);
+                    }
+
+                    if (found) {
+                        helpers.addResult(results, 2,
+                            'Public access is enabled for the instance', region, resource);
+                    } else {
+                        helpers.addResult(results, 0,
+                            'Public access is disabled for the instance', region, resource);
                     }
                 });
                 zcb();
             }, function() {
-                if (myError[region] &&
-                    zones[region] &&
-                    (myError[region].join(',') === zones[region].join(','))) {
-                    helpers.addResult(results, 3, 'Unable to query instances' , region);
+                if (noInstances.length) {
+                    helpers.addResult(results, 0, `No instances found in following zones: ${noInstances.join(', ')}`, region);
                 }
-                if (noInstances[region] &&
-                    zones[region] &&
-                    (noInstances[region].join(',') === zones[region].join(','))) {
-                    helpers.addResult(results, 0, 'No instances found in the region' , region);
-                }
-                if (publicAccessInstances.length) {
-                    helpers.addResult(results, 2,
-                        `Public access is enabled for these instances: ${publicAccessInstances.join(', ')}`, region);
-                }
-                if (privateInstances.length) {
-                    helpers.addResult(results, 0,
-                        `Public access is disabled for these instances: ${privateInstances.join(', ')}`, region);
-                }
-    
                 rcb();
             });
         }, function() {
