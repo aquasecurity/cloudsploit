@@ -92,9 +92,7 @@ module.exports = {
                     describeElasticsearchDomain.err ||
                     !describeElasticsearchDomain.data ||
                     !describeElasticsearchDomain.data.DomainStatus) {
-
-                    helpers.addResult(
-                        results, 3,
+                    helpers.addResult(results, 3,
                         'Unable to query for ES domain config: ' + helpers.addError(describeElasticsearchDomain), region);
                     return cb();
                 } else {
