@@ -33,7 +33,7 @@ const topics = [
         kmsKeyName: "projects/test-dev-aqua/locations/global/keyRings/test-kr/cryptoKeys/test-key-2",
     },
     {
-        name: "projects/test-dev-aqua/topics/test-topic-3",
+        name: "projects/test-dev-aqua/topics/test-topic-2",
         kmsKeyName: "projects/test-dev-aqua/locations/global/keyRings/test-kr/cryptoKeys/test-key-1",
     }
 ];
@@ -103,6 +103,7 @@ describe('topicEncryption', function () {
                 expect(results[0].status).to.equal(2);
                 expect(results[1].status).to.equal(2);
                 expect(results[0].message).to.include('which is less than');
+                expect(results[1].status).to.equal(2);
                 expect(results[1].message).to.include('which is less than');
                 expect(results[0].region).to.equal('global');
                 done();
