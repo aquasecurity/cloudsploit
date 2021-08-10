@@ -58,7 +58,7 @@ describe('instanceTemplateMachineTypes', function () {
             plugin.run(cache, settings, callback);
         });
 
-        it('should FAIL if VM instance is not of the desired machine type', function (done) {
+        it('should FAIL if VM instance template does not have desired machine type', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
