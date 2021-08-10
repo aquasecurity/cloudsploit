@@ -7,7 +7,7 @@ module.exports = {
     description: 'Ensure that Cloud Virtual Machine instance templates are of given types.',
     more_info: 'Virtual Machine instance templates should be of the given types to ensure the internal compliance and prevent unexpected billing charges.',
     link: 'https://cloud.google.com/compute/docs/machine-types',
-    recommended_action: 'Stop the Cloud Virtual Machine instance template, change the machine type to the desired type  and restart the instance template.',
+    recommended_action: 'Stop the Cloud Virtual Machine instance template, change the machine type to the desired type and restart the instance template.',
     apis: ['instanceTemplates:list', 'projects:get'],
     settings: {
         instance_template_machine_types: {
