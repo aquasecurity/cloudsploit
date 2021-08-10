@@ -23,7 +23,9 @@ module.exports = {
         var regions = helpers.regions();
 
         var instance_template_machine_types = settings.instance_template_machine_types || this.settings.instance_template_machine_types.default;
-        if (!instance_template_machine_types.length) return callback();
+
+        if (!instance_template_machine_types.length) return callback(null, results, source);
+
         let projects = helpers.addSource(cache, source,
             ['projects', 'get', 'global']);
         if (!projects || projects.err || !projects.data || !projects.data.length) {
