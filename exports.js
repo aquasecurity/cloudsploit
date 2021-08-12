@@ -195,6 +195,7 @@ module.exports = {
         'esLoggingEnabled'              : require(__dirname + '/plugins/aws/es/esLoggingEnabled.js'),
         'esUpgradeAvailable'            : require(__dirname + '/plugins/aws/es/esUpgradeAvailable.js'),
         'esHttpsOnly'                   : require(__dirname + '/plugins/aws/es/esHttpsOnly.js'),
+        'esTlsVersion'                   : require(__dirname + '/plugins/aws/es/esTlsVersion.js'),
 
         'glueCloudwatchLogsEncrypted'   : require(__dirname + '/plugins/aws/glue/glueCloudwatchLogsEncrypted.js'),
         'glueS3EncryptionEnabled'       : require(__dirname + '/plugins/aws/glue/glueS3EncryptionEnabled.js'),
