@@ -1237,6 +1237,14 @@ var postcalls = [
                 filterValue: 'Id'
             },
         },
+        Route53Domains: {
+            getDomainDetail: {
+                reliesOnService: 'route53domains',
+                reliesOnCall: 'listDomains',
+                filterKey: 'DomainName',
+                filterValue: 'DomainName'
+            },
+        },
         S3Control: {
             getPublicAccessBlock: {
                 reliesOnService: 'sts',
