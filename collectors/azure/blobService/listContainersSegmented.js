@@ -13,7 +13,7 @@ module.exports = function(collection, reliesOn, callback) {
         collection['blobService']['listContainersSegmented'][region] = {};
         collection['blobService']['getContainerAcl'][region] = {};
 
-        async.eachOf(regionObj, function(subObj, resourceId, sCb) {
+        async.eachOfLimit(regionObj, 5, function(subObj, resourceId, sCb) {
             collection['blobService']['listContainersSegmented'][region][resourceId] = {};
 
             if (subObj && subObj.data && subObj.data.keys && subObj.data.keys[0] && subObj.data.keys[0].value) {
@@ -29,7 +29,7 @@ module.exports = function(collection, reliesOn, callback) {
                         collection['blobService']['listContainersSegmented'][region][resourceId].data = serviceResults.entries;
 
                         // Add ACLs
-                        async.each(serviceResults.entries, function(entryObj, entryCb) {
+                        async.eachLimit(serviceResults.entries, 10, function(entryObj, entryCb) {
                             var entryId = `${resourceId}/blobService/${entryObj.name}`;
                             collection['blobService']['getContainerAcl'][region][entryId] = {};
 
