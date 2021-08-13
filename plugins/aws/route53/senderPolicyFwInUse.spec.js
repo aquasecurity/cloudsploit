@@ -42,19 +42,7 @@ const listResourceRecordSets = [
                 ]
             },
         ]
-    },
-    {
-        ResourceRecordSets:  [
-            {
-                "Name": "s3rec.testfr.com.",
-                "ResourceRecords": [
-                    {
-                    "Value": "172.31.28.00"
-                    }
-                ],
-            },
-        ]
-    },
+    }
 ];
 
 
@@ -128,15 +116,6 @@ describe('senderPolicyFwInUse', function () {
             senderPolicyFwInUse.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                done();
-            });
-        });
-
-        it('should UNKNOWN if Hosted Zone does not have record set type property', function (done) {
-            const cache = createCache([listHostedZones[0]], listResourceRecordSets[2]);
-            senderPolicyFwInUse.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(3);
                 done();
             });
         });
