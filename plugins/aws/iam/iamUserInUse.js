@@ -12,7 +12,7 @@ module.exports = {
     settings: {
         iam_user_account_in_use_days: {
             name: 'IAM User Account In Use Days',
-            description: 'Return a failing result when the IAM user account has been used within this many days',
+            description: 'Return a failing result when the IAM user account has not been used within this many days',
             regex: '^[1-9]{1}[0-9]{0,3}$',
             default: '15'
         }
