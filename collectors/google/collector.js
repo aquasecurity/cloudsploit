@@ -196,7 +196,8 @@ var calls = {
             api: 'bigquery',
             version: 'v2',
             location: null,
-            projectId: true
+            projectId: true,
+            property: 'datasets'
         }
     },
     policies: {
