@@ -63,7 +63,7 @@ module.exports = {
             default: 'sse',
         },
         s3_allow_unencrypted_static_websites: {
-            name: 'S3 Allow Unencrypted Statis Websites',
+            name: 'S3 Allow Unencrypted Static Websites',
             description: 'Allow buckets having static website enabled to skip encryption',
             regex: '^(true|false)$',
             default: 'false',
