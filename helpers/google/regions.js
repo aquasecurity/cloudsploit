@@ -58,7 +58,8 @@ module.exports = {
     buckets: ['global'],
     instances: {
         compute: regions,
-        sql: ['global']
+        sql: ['global'],
+        spanner: ['global']
     },
     networks: ['global'],
     backendServices: ['global'],
