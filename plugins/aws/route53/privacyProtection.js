@@ -1,4 +1,3 @@
-const { default: async } = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
@@ -35,7 +34,7 @@ module.exports = {
         listDomains.data.forEach(domain => {
             
             var domainDetail = helpers.addSource(cache, source,
-            ['route53domains', 'getDomainDetail', region, domain.DomainName]);
+                ['route53domains', 'getDomainDetail', region, domain.DomainName]);
 
             if (!domainDetail) return callback(null, results, source);
 
