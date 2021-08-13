@@ -50,9 +50,10 @@ module.exports = {
             }
 
             if (gmailUsers.length) {
-                var gmailUsersStr = gmailUsers.join(', ');
-                helpers.addResult(results, 2,
-                    `The following accounts are using Gmail login credentials: ${gmailUsersStr}`, region);
+                gmailUsers.forEach(user => {
+                    helpers.addResult(results, 2,
+                        'Account is using Gmail login credentials', region, user);
+                });
             } else {
                 helpers.addResult(results, 0, 'No accounts are using Gmail login credentials', region);
             }

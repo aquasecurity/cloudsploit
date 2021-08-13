@@ -9,7 +9,7 @@ module.exports = {
         'that incoming connections for database instance remain secure.',
     link: 'https://cloud.google.com/sql/docs/postgres/configure-ssl-instance?authuser=1#server-certs',
     recommended_action: 'Edit Cloud SQL DB instances and rotate server certificates under Connections->MANAGE CERTIFICATES',
-    apis: ['instances:sql:list'],
+    apis: ['instances:sql:list', 'projects:get'],
     settings: {
         server_certicate_expiration_threshold: {
             name: 'SQL Server Certificate Expiration Threshold',
@@ -28,6 +28,17 @@ module.exports = {
             expiryThreshold: parseInt(settings.server_certicate_expiration_threshold || this.settings.server_certicate_expiration_threshold.default)
         };
 
+        let projects = helpers.addSource(cache, source,
+            ['projects','get', 'global']);
+
+        if (!projects || projects.err || !projects.data) {
+            helpers.addResult(results, 3,
+                'Unable to query for projects: ' + helpers.addError(projects), 'global', null, null, projects.err);
+            return callback(null, results, source);
+        }
+
+        let project = projects.data[0].name;
+
         async.each(regions.instances.sql, function(region, rcb) {
             let sqlInstances = helpers.addSource(
                 cache, source, ['instances', 'sql', 'list', region]);
@@ -45,23 +56,27 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
+                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() == "READ_REPLICA_INSTANCE") return;
+
+                let resource = helpers.createResourceName('instances', sqlInstance.name, project);
+
                 if (sqlInstance.serverCaCert &&
                     sqlInstance.serverCaCert.expirationTime) {
                     let certExpiry = sqlInstance.serverCaCert.expirationTime;
                     let difference = Math.round((new Date(certExpiry).getTime() - new Date().getTime())/(24*60*60*1000));
                     if (difference >= config.expiryThreshold) {
                         helpers.addResult(results, 0,
-                            `SQL instance SSL certificate will expire after ${difference} days`, region, sqlInstance.name);
+                            `SQL instance SSL certificate will expire after ${difference} days`, region, resource);
                     } else if (difference < 0) {
                         helpers.addResult(results, 2,
-                            `SQL instance SSL certificate has already expired`, region, sqlInstance.name);
+                            `SQL instance SSL certificate has already expired`, region, resource);
                     } else {
                         helpers.addResult(results, 2,
-                            `SQL instance SSL certificate will expire after ${difference} days`, region, sqlInstance.name);
+                            `SQL instance SSL certificate will expire after ${difference} days`, region, resource);
                     }
                 } else {
                     helpers.addResult(results, 3,
-                        'Unable to find certicite info for instance', region, sqlInstance.name);
+                        'Unable to find certicite info for instance', region, resource);
                 }
             });
 

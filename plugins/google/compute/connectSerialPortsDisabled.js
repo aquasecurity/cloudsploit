@@ -8,19 +8,26 @@ module.exports = {
     more_info: 'The serial console does not allow restricting IP Addresses, which allows any IP address to connect to instance and should therefore be disabled.',
     link: 'https://cloud.google.com/compute/docs/instances/interacting-with-serial-console',
     recommended_action: 'Ensure the Enable Connecting to Serial Ports option is disabled for all compute instances.',
-    apis: ['instances:compute:list'],
+    apis: ['instances:compute:list', 'projects:get'],
 
     run: function(cache, settings, callback) {
-
         var results = [];
         var source = {};
         var regions = helpers.regions();
 
+        let projects = helpers.addSource(cache, source,
+            ['projects','get', 'global']);
+
+        if (!projects || projects.err || !projects.data || !projects.data.length) {
+            helpers.addResult(results, 3,
+                'Unable to query for projects: ' + helpers.addError(projects), 'global', null, null, (projects) ? projects.err : null);
+            return callback(null, results, source);
+        }
+
+        var project = projects.data[0].name;
         async.each(regions.instances.compute, (region, rcb) => {
+            var noInstances = [];
             var zones = regions.zones;
-            var myError = {};
-            var noInstances = {};
-            var badInstances = [];
             async.each(zones[region], function(zone, zcb) {
                 var instances = helpers.addSource(cache, source,
                     ['instances', 'compute','list', zone ]);
@@ -28,56 +35,40 @@ module.exports = {
                 if (!instances) return zcb();
 
                 if (instances.err || !instances.data) {
-                    if (!myError[region]) {
-                        myError[region] = [];
-                    }
-                    myError[region].push(zone);
-                    myError[region][zone] = instances.err;
+                    helpers.addResult(results, 3, 'Unable to query compute instances', region, null, null, instances.err);
                     return zcb();
                 }
 
                 if (!instances.data.length) {
-                    if (!noInstances[region]) {
-                        noInstances[region] = [];
-                    }
-                    noInstances[region].push(zone);
+                    noInstances.push(zone);
                     return zcb();
                 }
 
                 instances.data.forEach(instance => {
+                    let found = false;
                     if (instance.metadata &&
                         instance.metadata.items &&
                         instance.metadata.items.length) {
+                        found = instance.metadata.items.find(item => item.key && item.key.toLowerCase() == 'serial-port-enable' &&
+                            item.value && item.value.toLowerCase() === 'true');
+                    }
 
-                        instance.metadata.items.forEach(item => {
-                            if (item &&
-                                item.key === 'serial-port-enable' &&
-                                item.value === 'true') {
-                                badInstances.push(instance.id)
-                            }
-                        })
-
+                    let resource = helpers.createResourceName('instances', instance.name, project, 'zone', zone);
+                    if (found) {
+                        helpers.addResult(results, 2,
+                            'Connecting to Serial Ports is enabled for the instance', region, resource);
+                    } else {
+                        helpers.addResult(results, 0,
+                            'Connecting to Serial Ports is disabled for the instance', region, resource);
                     }
                 });
-
+                zcb();
+            }, function() {
+                if (noInstances.length) {
+                    helpers.addResult(results, 0, `No instances found in following zones: ${noInstances.join(', ')}`, region);
+                }
+                rcb();
             });
-            if (myError[region] &&
-                zones[region] &&
-                (myError[region].join(',') === zones[region].join(','))) {
-                helpers.addResult(results, 3, 'Unable to query instances', region, null, null, myError);
-            } else if (noInstances[region] &&
-                zones[region] &&
-                (noInstances[region].join(',') === zones[region].join(','))) {
-                helpers.addResult(results, 0, 'No instances found in the region' , region);
-            } else if (badInstances.length) {
-                var myInstanceStr = badInstances.join(", ");
-                helpers.addResult(results, 2,
-                    `Connecting to Serial Ports is enabled for the following instances: ${myInstanceStr}`, region);
-            } else if (!badInstances.length) {
-                helpers.addResult(results, 0,
-                    'Connecting to Serial Ports is disabled for all instances in the region', region);
-            }
-            rcb();
         }, function() {
             callback(null, results, source);
         });

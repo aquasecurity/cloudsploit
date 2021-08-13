@@ -9,6 +9,13 @@ const createCache = (clusterData) => {
                     data: clusterData
                 }
             }
+        },
+        projects: {
+            get: {
+                'global': {
+                    data: [ { name: 'testproj' }]
+                }
+            }
         }
     }
 };

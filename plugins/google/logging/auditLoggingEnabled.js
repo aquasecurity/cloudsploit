@@ -12,7 +12,7 @@ module.exports = {
     settings: {
         check_org_audit_logs: {
             name: 'Check Org Audit Logs',
-            descripttion: 'If set to true, check if audit logging is enabled on organization level. If enabled on organization level, ' +
+            description: 'If set to true, check if audit logging is enabled on organization level. If enabled on organization level, ' +
                 'return PASS result otherwise check for project audit logging',
             regex: '^(true|false)$',
             default: 'false'

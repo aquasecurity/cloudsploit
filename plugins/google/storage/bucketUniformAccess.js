@@ -33,14 +33,15 @@ module.exports = {
 
             var bucketFound = false;
             buckets.data.forEach(bucket => {
-                if (bucket.id) {
+                if (bucket.name) {
+                    let resource = helpers.createResourceName('b', bucket.name);
                     bucketFound = true;
                     if (bucket.iamConfiguration &&
                         bucket.iamConfiguration.uniformBucketLevelAccess && 
                         bucket.iamConfiguration.uniformBucketLevelAccess.enabled) {
-                        helpers.addResult(results, 0, 'Bucket has uniform bucket level access enabled', region, bucket.id);
+                        helpers.addResult(results, 0, 'Bucket has uniform bucket level access enabled', region, resource);
                     } else {
-                        helpers.addResult(results, 2, 'Bucket does not have uniform bucket level access enabled', region, bucket.id);
+                        helpers.addResult(results, 2, 'Bucket does not have uniform bucket level access enabled', region, resource);
                     }
                 }
 

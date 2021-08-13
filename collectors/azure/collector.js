@@ -86,6 +86,11 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/resources?api-version=2019-10-01'
         }
     },
+    redisCaches: {
+        listBySubscription: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Cache/redis?api-version=2020-06-01'
+        }
+    },
     managedClusters: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.ContainerService/managedClusters?api-version=2020-03-01'
@@ -109,6 +114,11 @@ var calls = {
     webApps: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Web/sites?api-version=2019-08-01'
+        }
+    },
+    appServiceCertificates: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Web/certificates?api-version=2019-08-01'
         }
     },
     logProfiles: {
@@ -207,6 +217,13 @@ var calls = {
 };
 
 var postcalls = {
+    availabilitySets:{
+        listByResourceGroup: {
+            reliesOnPath: 'resourceGroups.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/Microsoft.Compute/availabilitySets?api-version=2020-12-01'
+        }
+    },
     advancedThreatProtection: {
         get: {
             reliesOnPath: 'databaseAccounts.list',

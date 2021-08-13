@@ -39,9 +39,11 @@
     "access": "public"
   },
   "dependencies": {
+    "@alicloud/pop-core": "^1.7.10",
     "@octokit/app": "^3.0.0",
     "@octokit/request": "^3.0.3",
     "@octokit/rest": "^16.3.2",
+    "ali-oss": "^6.15.2",
     "argparse": "^2.0.0",
     "async": "^2.6.1",
     "aws-sdk": "^2.834.0",
