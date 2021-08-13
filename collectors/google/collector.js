@@ -61,6 +61,13 @@ var calls = {
                 location: null
             }
         },
+        spanner: {
+            list: {
+                api: 'spanner',
+                version: 'v1',
+                parent: 'projects'
+            }
+        },
         manyApi: true,
     },
     instanceGroups: {
@@ -204,7 +211,6 @@ var calls = {
             api: 'pubsub',
             version: 'v1',
             parent: 'project'
-
         }
     }
 };
