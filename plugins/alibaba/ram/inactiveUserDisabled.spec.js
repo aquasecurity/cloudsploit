@@ -97,6 +97,9 @@ describe('inactiveUserDisabled', function () {
             });
         });
         it('should PASS if RAM user last activity was before 90 days', function (done) {
+            const loginDateNew = new Date();
+            const loginDateOld = new Date(loginDateNew.getFullYear(), loginDateNew.getMonth() -1);
+            getUserData[1].LastLoginDate = loginDateOld.toString();
             const loginDate = new Date(getUserData[1].LastLoginDate);
             const diffInDays = helpers.daysBetween(currentDate, loginDate);
             const cache = createCache([listUsers[1]], getUserData[1], getUserLoginProfile[0], null, null);
