@@ -781,6 +781,7 @@ module.exports = {
       
         'topicEncryption'               : require(__dirname + '/plugins/google/pubsub/topicEncryption.js'),
 
+        'deleteExpiredDeployments'      : require(__dirname + '/plugins/google/deploymentmanager/deleteExpiredDeployments.js'),
         'instanceNodeCount'             : require(__dirname + '/plugins/google/spanner/instanceNodeCount.js')
     },
     alibaba: {
