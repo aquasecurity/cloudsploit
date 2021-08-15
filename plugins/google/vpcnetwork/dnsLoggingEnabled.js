@@ -8,12 +8,27 @@ module.exports = {
     more_info: 'Cloud DNS logging records the queries coming from Compute Engine VMs, GKE containers, or other GCP resources provisioned within the VPC to Stackdriver.',
     link: 'https://cloud.google.com/dns/docs/monitoring',
     recommended_action: 'Create Cloud DNS Server Policy with logging enabled for VPC Networks',
-    apis: ['networks:list', 'policies:list'],
+    apis: ['networks:list', 'policies:list', 'projects:get'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions();
+
+        var results = [];
+        var source = {};
+        var regions = helpers.regions();
+
+        let projects = helpers.addSource(cache, source,
+            ['projects','get', 'global']);
+
+        if (!projects || projects.err || !projects.data || !projects.data.length) {
+            helpers.addResult(results, 3,
+                'Unable to query for projects: ' + helpers.addError(projects), 'global', null, null, (projects) ? projects.err : null);
+            return callback(null, results, source);
+        }
+
+        var project = projects.data[0].name;
 
         async.each(regions.networks, function(region, rcb){
             let networks = helpers.addSource(
@@ -49,12 +64,15 @@ module.exports = {
             });
 
             networks.data.forEach(network => {
+                if (!network.name) return;
+
+                let resource = helpers.createResourceName('networks', network.name, project, 'global');
                 if (loggedVpcs.includes(network.selfLink)){
                     helpers.addResult(results, 0,
-                        'VPC Network has DNS logging enabled', region, network.name);
+                        'VPC Network has DNS logging enabled', region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'VPC Network does not have DNS logging enabled', region, network.name);
+                        'VPC Network does not have DNS logging enabled', region, resource);
                 }
             });
 
