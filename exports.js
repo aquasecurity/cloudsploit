@@ -2,6 +2,8 @@
 
 module.exports = {
     aws : {
+        'accessAnalyzerEnabled'         : require(__dirname + '/plugins/aws/accessanalyzer/accessAnalyzerEnabled.js'),
+
         'acmValidation'                 : require(__dirname + '/plugins/aws/acm/acmValidation.js'),
         'acmCertificateExpiry'          : require(__dirname + '/plugins/aws/acm/acmCertificateExpiry.js'),
 
@@ -782,6 +784,7 @@ module.exports = {
       
         'topicEncryption'               : require(__dirname + '/plugins/google/pubsub/topicEncryption.js'),
 
+        'deleteExpiredDeployments'      : require(__dirname + '/plugins/google/deploymentmanager/deleteExpiredDeployments.js'),
         'instanceNodeCount'             : require(__dirname + '/plugins/google/spanner/instanceNodeCount.js')
     },
     alibaba: {
