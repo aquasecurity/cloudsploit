@@ -4,15 +4,15 @@ var async = require('async');
 module.exports = {
     title: 'IAM User Account In Use',
     category: 'IAM',
-    description: 'Ensure that IAM user accounts are being actively used.',
-    more_info: 'IAM users, roles, and groups should be used for day-to-day account management.',
+    description: 'Ensure that IAM user accounts are not being actively used.',
+    more_info: 'IAM users, roles, and groups should not be used for day-to-day account management.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html',
     recommended_action: 'Delete IAM user accounts which are not being actively used.',
     apis: ['IAM:generateCredentialReport'],
     settings: {
         iam_user_account_in_use_days: {
             name: 'IAM User Account In Use Days',
-            description: 'Return a failing result when the IAM user account has not been used within this many days',
+            description: 'Return a failing result when an IAM user account has been used within this many days',
             regex: '^[1-9]{1}[0-9]{0,3}$',
             default: '15'
         }
@@ -22,7 +22,6 @@ module.exports = {
         var config = {
             iam_user_account_in_use_days: parseInt(settings.iam_user_account_in_use_days || this.settings.iam_user_account_in_use_days.default)
         };
-        var currentDate = new Date();
         var custom = helpers.isCustom(settings, this.settings);
 
         var results = [];
@@ -60,11 +59,12 @@ module.exports = {
                 if (!accessDates.length) {
                     helpers.addResult(results, 0, 'IAM user has not been used', 'global', user.arn);
                 } else {
-                    var dateToCompare = helpers.mostRecentDate(accessDates);
-                    var resultCode = (helpers.daysBetween(dateToCompare, currentDate) < config.iam_user_account_in_use_days) ? 2: 0;
+                    var currentDate = new Date();
+                    var loginDate = new Date(helpers.mostRecentDate(accessDates));
+                    var resultCode = (helpers.daysBetween(loginDate, currentDate) < config.iam_user_account_in_use_days) ? 2: 0;
 
                     helpers.addResult(results, resultCode,
-                        'IAM user was last used ' + helpers.daysBetween(dateToCompare, currentDate) + ' days ago',
+                        'IAM user was last used ' + helpers.daysBetween(loginDate, currentDate) + ' days ago',
                         'global', user.arn, custom);
                 }
             }
