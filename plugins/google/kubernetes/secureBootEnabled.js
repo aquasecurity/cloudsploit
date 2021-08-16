@@ -4,10 +4,10 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Secure Boot Enabled',
     category: 'Kubernetes',
-    description: 'Ensures all Kubernetes cluster nodes have secure boot feature enabled',
-    more_info: 'Secure Boot features protects your cluster nodes from malware and makes sure the system runs only authentic softwares',
+    description: 'Ensures all Kubernetes cluster nodes have secure boot feature enabled.',
+    more_info: 'Secure Boot feature protects your cluster nodes from malware and makes sure the system runs only authentic software.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/shielded-gke-nodes#secure_boot',
-    recommended_action: 'If you are not using third-party unsigned kernel modules, it is highly recommended to enable Secure Boot for all your GKE cluster nodes',
+    recommended_action: 'Ensure that Secure Boot feature is enabled for all node pools in your GKE clusters.',
     apis: ['clusters:list', 'projects:get'],
 
     run: function(cache, settings, callback) {
@@ -52,7 +52,6 @@ module.exports = {
                 let resource = helpers.createResourceName('clusters', cluster.name, project, 'location', location);
                 if (cluster.nodePools &&
                     cluster.nodePools.length) {
-                    found = true;
                     cluster.nodePools.forEach(nodePool => {
                         if (!nodePool.config || !nodePool.config.shieldedInstanceConfig || !nodePool.config.shieldedInstanceConfig.enableSecureBoot) disabledSecureBootNodes.push(nodePool.name);
                     });
