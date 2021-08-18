@@ -39,7 +39,7 @@ module.exports = {
             if (domainDetail.err || !domainDetail.data) {
                 helpers.addResult(results, 3,
                     'Unable to query for domain details: ' + helpers.addError(domainDetail));
-                return callback(null, results, source);
+                return;
             }
 
             const status = domainDetail.data.RegistrantPrivacy ? 0 : 2;
