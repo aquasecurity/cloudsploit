@@ -89,12 +89,87 @@ const describeLaunchConfigurations = [
     },
 ];
 
+const describeLaunchTemplates = [
+    {
+    "LaunchTemplateId": "lt-0219ac0443364d22d",
+    "LaunchTemplateName": "test2-lt",
+    "CreateTime": "2021-07-19T12:32:41.000Z",
+    "CreatedBy": "arn:aws:iam::111122223333:user/test",
+    "DefaultVersionNumber": 4,
+    "LatestVersionNumber": 4,
+    "Tags": []
+    },
+    {
+    "LaunchTemplateId": "lt-03e19cc8c28396619",
+    "LaunchTemplateName": "test-lt",
+    "CreateTime": "2021-08-18T21:46:24.000Z",
+    "CreatedBy": "arn:aws:iam::111122223333:user/test",
+    "DefaultVersionNumber": 1,
+    "LatestVersionNumber": 1,
+    "Tags": []
+    }
+]
+
+const describeLaunchTemplateVersions = [
+    {
+        "LaunchTemplateVersions": [
+            {
+                "LaunchTemplateId": "lt-03e19cc8c28396619",
+                "LaunchTemplateName": "test2-lt",
+                "VersionNumber": 2,
+                "CreateTime": "2021-08-18T21:46:24.000Z",
+                "CreatedBy": "arn:aws:iam::111122223333:user/test",
+                "DefaultVersion": true,
+                "LaunchTemplateData": {
+                    "BlockDeviceMappings": [],
+                    "NetworkInterfaces": [],
+                    "ImageId": "ami-04f5bebeff7a62793",
+                    "TagSpecifications": [],
+                    "ElasticGpuSpecifications": [],
+                    "ElasticInferenceAccelerators": [],
+                    "SecurityGroupIds": [
+                        "sg-043778823f73431a7"
+                    ],
+                    "SecurityGroups": [],
+                    "LicenseSpecifications": []
+                }
+            }
+        ]
+    },
+    {
+        "LaunchTemplateVersions": [
+            {
+                "LaunchTemplateId": "lt-03e19cc8c28396619",
+                "LaunchTemplateName": "test-lt",
+                "VersionNumber": 1,
+                "CreateTime": "2021-08-18T21:46:24.000Z",
+                "CreatedBy": "arn:aws:iam::111122223333:user/test",
+                "DefaultVersion": true,
+                "LaunchTemplateData": {
+                    "BlockDeviceMappings": [],
+                    "NetworkInterfaces": [],
+                    "ImageId": "ami-04f5bebeff7a62793",
+                    "TagSpecifications": [],
+                    "ElasticGpuSpecifications": [],
+                    "ElasticInferenceAccelerators": [],
+                    "SecurityGroupIds": [
+                        "sg-043778823f73431a7"
+                    ],
+                    "SecurityGroups": [],
+                    "LicenseSpecifications": []
+                }
+            }
+        ]
+    }
+]
+
+
 const currentDate = new Date().getFullYear();
 const oldDate = new Date().setFullYear(currentDate - 1);
 const upComingDate = new Date().setFullYear(currentDate + 1);
 
 
-const createCache = (images, instances, launchConfig) => {
+const createCache = (images, instances, launchConfig, launchTemplate, LaunchTemplateVersions) => {
     return {
         ec2:{
             describeImages: {
@@ -107,6 +182,16 @@ const createCache = (images, instances, launchConfig) => {
                     data: instances
                 },
             },
+            describeLaunchTemplates: {
+                'us-east-1': {
+                    data: launchTemplate
+                },
+            },
+            describeLaunchTemplateVersions: {
+                'us-east-1': {
+                    data: LaunchTemplateVersions
+                },
+            }
         },
         autoscaling:{
             describeLaunchConfigurations: {
@@ -135,6 +220,20 @@ const createErrorCache = () => {
                     },
                 },
             },
+            describeLaunchTemplates: {
+                'us-east-1': {
+                    err: {
+                        message: 'error describing launch templates'
+                    },
+                },
+            },
+            describeLaunchTemplateVersions: {
+                'us-east-1': {
+                    err: {
+                        message: 'error describing launch template versions'
+                    },
+                },
+            }
         },
         autoscaling: {
             describeLaunchConfigurations:{
@@ -157,6 +256,12 @@ const createNullCache = () => {
             describeInstances: {
                 'us-east-1': null,
             },
+            describeLaunchTemplates: {
+                'us-east-1': null,
+            },
+            describeLaunchTemplateVersions: {
+                'us-east-1': null,
+            },
         },
         autoscaling: {
             describeLaunchConfigurations:{
@@ -169,25 +274,26 @@ const createNullCache = () => {
 describe('outdatedAmi', function () {
     describe('run', function () {
         it('should PASS if Amazon Machine Images does not have deprecation time set', function (done) {
-            const cache = createCache([describeImages[0]], [describeInstances[0]], describeLaunchConfigurations[0]);
+            const cache = createCache([describeImages[0]], [describeInstances[0]], [describeLaunchConfigurations[0]], describeLaunchTemplates[0], describeLaunchTemplateVersions[0]);
             outdatedAmi.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
             });
         });
-        it('should PASS if Amazon Machine Images is not deprecated', function (done) {
+        it('should PASS if Amazon Machine Image is not deprecated yet', function (done) {
             describeImages[2].DeprecationTime = upComingDate;
-            const cache = createCache([describeImages[2]], [describeInstances[0]], describeLaunchConfigurations[0]);
+            const cache = createCache([describeImages[2]], [describeInstances[0]], describeLaunchConfigurations[0], describeLaunchTemplates[0], describeLaunchTemplateVersions[0]);
             outdatedAmi.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
             });
         });
+
         it('should Fail if deprecated Amazon Machine Image is in use', function (done) {
             describeImages[1].DeprecationTime = oldDate;
-            const cache = createCache([describeImages[1]], [describeInstances[0]], describeLaunchConfigurations[0]);
+            const cache = createCache([describeImages[1]], [describeInstances[0]], describeLaunchConfigurations[0], describeLaunchTemplates[0], describeLaunchTemplateVersions[0]);
             outdatedAmi.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -195,12 +301,12 @@ describe('outdatedAmi', function () {
             });
         });
         
-        it('should FAIL if Amazon Machine Image is deprecated', function (done) {
+        it('should PASS if Amazon Machine Image is deprecated and not in use', function (done) {
             describeImages[2].DeprecationTime = oldDate;
-            const cache = createCache([describeImages[2]], [describeInstances[0]], describeLaunchConfigurations[0]);
-            outdatedAmi.run(cache, {check_ami_usage: 'false'}, (err, results) => {
+            const cache = createCache([describeImages[2]], [describeInstances[0]], describeLaunchConfigurations[0], describeLaunchTemplates[0], describeLaunchTemplateVersions[0]);
+            outdatedAmi.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
+                expect(results[0].status).to.equal(0);
                 done();
             });
         });
@@ -219,6 +325,14 @@ describe('outdatedAmi', function () {
             outdatedAmi.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                done();
+            });
+        });
+
+        it('should not return anything if ami check is false', function (done) {
+            const cache = createNullCache();
+            outdatedAmi.run(cache, {check_ami_usage : 'false'}, (err, results) => {
+                expect(results.length).to.equal(0);
                 done();
             });
         });
