@@ -9,6 +9,7 @@ module.exports = {
     default: ['cn-north-1'],
     all: regions,
     optin: [],
+    accessanalyzer: [],
     acm: [],
     apigateway: regions,
     athena: [],

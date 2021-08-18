@@ -92,7 +92,7 @@ module.exports = {
                     return dcb();
                 }
 
-                var currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data);
+                var currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data, helpers.ENCRYPTION_LEVELS);
 
                 if (currentEncryptionLevel < targetEncryptionLevel) {
                     encryptionFailing.push(disk.DiskId);

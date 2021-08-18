@@ -36,6 +36,12 @@ var globalServices = [
 ];
 
 var calls = {
+    AccessAnalyzer: {
+        listAnalyzers: {
+            property: 'analyzers',
+            paginate: 'NextToken'
+        }
+    },
     ACM: {
         listCertificates: {
             property: 'CertificateSummaryList',
@@ -382,6 +388,10 @@ var calls = {
         },
         describeNetworkAcls: {
             property: 'NetworkAcls',
+            paginate: 'NextToken',
+        },
+        describeLaunchTemplates: {
+            property: 'LaunchTemplates',
             paginate: 'NextToken',
         }
 
@@ -985,6 +995,12 @@ var postcalls = [
                 reliesOnCall: 'describeVpcEndpointServices',
                 filterKey: 'ServiceId',
                 filterValue: 'ServiceId'
+            },
+            describeLaunchTemplateVersions: {
+                reliesOnService: 'ec2',
+                reliesOnCall: 'describeLaunchTemplates',
+                filterKey: 'LaunchTemplateId',
+                filterValue: 'LaunchTemplateId'
             }
         },
         ECR: {
