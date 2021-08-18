@@ -5,7 +5,7 @@ module.exports = {
     title: 'ElasticSearch CMK Encrypted',
     category: 'ES',
     description: 'Ensure AWS ElasticSearch domains are encrypted with KMS Customer Master Keys.',
-    more_info: 'ElasticSearch domains should be encrypted to ensure data at rest is secured.',
+    more_info: 'ElasticSearch domains should be encrypted with  KMS Customer Master Key (CMK) to ensure data is secured. Customer keys should be used to ensure control over the encryption seed data.',
     link: 'https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/encryption-at-rest.html',
     recommended_action: 'Ensure encryption-at-rest is enabled for all ElasticSearch domains with KMS Customer Master Keys.',
     apis: ['ES:listDomainNames', 'ES:describeElasticsearchDomain'],
