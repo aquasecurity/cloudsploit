@@ -50,10 +50,10 @@ module.exports = {
                 let resource = helpers.createResourceName('clusters', cluster.name, project, 'location', location);
                 if(cluster && cluster.shieldedNodes && cluster.shieldedNodes.enabled) {
                     helpers.addResult(results, 0,
-                        'Nodes are shielded in this cluster', region, resource);
+                        'Shielded Nodes feature is enabled for the cluster', region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'Nodes are not shielded in this cluster', region, resource);
+                        'Shielded Nodes feature is not enabled for the cluster', region, resource);
                 }
             });
 
