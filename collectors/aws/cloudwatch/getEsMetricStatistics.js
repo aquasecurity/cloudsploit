@@ -8,7 +8,7 @@ module.exports = function(AWSConfig, collection, callback) {
         collection.cloudwatch.getEsMetricStatistics[AWSConfig.region][domain.DomainName] = {};
         var endTime = new Date();
         var startTime = new Date();
-        startTime.setTime(startTime.getTime() - 1000);
+        startTime.setDate(startTime.getDate() - 1);
         var params = {
             'MetricName': 'ClusterStatus.Red',
             'Namespace':'AWS/ES',

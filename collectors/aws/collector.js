@@ -855,6 +855,8 @@ var postcalls = [
         },
         CloudWatch: {
             getEsMetricStatistics: {
+                reliesOnService: 'es',
+                reliesOnCall: 'listDomainNames',
                 override: true,
             }
         },

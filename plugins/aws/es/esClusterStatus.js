@@ -32,40 +32,33 @@ module.exports = {
                 return rcb();
             }
 
-            var found = false;
-
             async.each(listDomainNames.data, function(domain, dcb){
+                if(!domain.DomainName) return dcb();
+
                 var getMetricStats = helpers.addSource(cache, source,
                     ['cloudwatch', 'getEsMetricStatistics', region, domain.DomainName]);
                
-                if (!getMetricStats ||
-                    getMetricStats.err ||
-                    !getMetricStats.data) {
+                if (!getMetricStats || getMetricStats.err || !getMetricStats.data) {
                     helpers.addResult(results, 3,
-                        `Unable to query for ES domain config: ${helpers.addError(getMetricStats)}`, region);
+                        `Unable to query for ES domain metric stat: ${helpers.addError(getMetricStats)}`, region);
                     return dcb();
                 }
 
                 if (!getMetricStats.data.Datapoints.length) return dcb();
-                var maximumValue = 0;
+
+                let maximumValue = 0;
                 getMetricStats.data.Datapoints.forEach((dataPoint) => {
                     if (maximumValue < dataPoint.Maximum) maximumValue = dataPoint.Maximum;
                 });
 
-                if (maximumValue > 1){
-                    found = true;
-                    helpers.addResult(results, 2,
-                        `ES Cluster for ES Domain: ${domain.DomainName} is unhealthy`, region);
-                }
+                const status = (maximumValue >= 1) ? 2 : 0;
+                helpers.addResult(results, status,
+                    `ES Cluster for ES Domain: ${domain.DomainName} is ${status == 2 ? 'unhealthy': 'healthy'}`, region);
                 
                 dcb();
             }, function(){
                 rcb();
             });
-
-            if (!found){
-                helpers.addResult(results, 0, 'All ES Clusters are healthy', region);
-            }
         }, function() {
             callback(null, results, source);
         });
