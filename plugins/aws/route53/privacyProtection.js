@@ -31,6 +31,7 @@ module.exports = {
         }
 
         listDomains.data.forEach(domain => {
+            if (!domain.DomainName) return;
             var domainDetail = helpers.addSource(cache, source,
                 ['route53domains', 'getDomainDetail', region, domain.DomainName]);
 
