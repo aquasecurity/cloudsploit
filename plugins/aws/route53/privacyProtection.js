@@ -36,9 +36,7 @@ module.exports = {
             var domainDetail = helpers.addSource(cache, source,
                 ['route53domains', 'getDomainDetail', region, domain.DomainName]);
 
-            if (!domainDetail) return callback(null, results, source);
-
-            if (domainDetail.err || !domainDetail.data) {
+            if (!domainDetail || domainDetail.err || !domainDetail.data) {
                 helpers.addResult(results, 3,
                     'Unable to query for domain details: ' + helpers.addError(domainDetail));
                 return;
