@@ -8,12 +8,14 @@ module.exports = {
     more_info: 'Unhealthy Amazon ES clusters with the status set to "Red" is crucial for availability of ElasticSearch applications.',
     link: 'https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/cloudwatch-alarms.html',
     recommended_action: 'Configure alarms to send notification if cluster status remains red for more than a minute.',
-    apis: ['ES:listDomainNames', 'CloudWatch:getEsMetricStatistics'],
+    apis: ['ES:listDomainNames', 'CloudWatch:getEsMetricStatistics', 'STS:getCallerIdentity'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var accRegion = helpers.defaultRegion(settings);
+        var accountId =  helpers.addSource(cache, source, ['sts', 'getCallerIdentity', accRegion, 'data']);
         async.each(regions.es, function(region, rcb) {
             var listDomainNames = helpers.addSource(cache, source,
                 ['es', 'listDomainNames', region]);
@@ -33,14 +35,15 @@ module.exports = {
             }
 
             async.each(listDomainNames.data, function(domain, dcb){
-                if (!domain.DomainName) return dcb();
-
+                if (!domain.DomainName) return dcb();                
+                
+                const resource = `arn:aws:es:${region}:${accountId}:domain/${domain.DomainName}`;
                 var getMetricStats = helpers.addSource(cache, source,
                     ['cloudwatch', 'getEsMetricStatistics', region, domain.DomainName]);
                
                 if (!getMetricStats || getMetricStats.err || !getMetricStats.data) {
                     helpers.addResult(results, 3,
-                        `Unable to query for ES domain metric stat: ${helpers.addError(getMetricStats)}`, region);
+                        `Unable to query for ES domain metric stat: ${helpers.addError(getMetricStats)}`, region, resource);
                     return dcb();
                 }
 
@@ -53,7 +56,7 @@ module.exports = {
 
                 const status = (maximumValue >= 1) ? 2 : 0;
                 helpers.addResult(results, status,
-                    `ES Cluster for ES Domain: ${domain.DomainName} is ${status == 2 ? 'unhealthy': 'healthy'}`, region);
+                    `ES Cluster for ES Domain: ${domain.DomainName} is ${status == 2 ? 'unhealthy': 'healthy'}`, region, resource);
                 
                 dcb();
             }, function(){
