@@ -20,9 +20,6 @@ module.exports = {
         const listPolicies = helpers.addSource(cache, source,
             ['iam', 'listPolicies', region]);
         
-        const listEntitiesForPolicy = helpers.addSource(cache, source,
-            ['iam', 'listEntitiesForPolicy', region]);
-        
         if (!listPolicies) return callback(null, results, source);
 
         if (listPolicies.err || !listPolicies.data) {
@@ -32,33 +29,39 @@ module.exports = {
         }
 
         var policyArn = '';
-        listPolicies.data.forEach(policy => {
+        for (policy of listPolicies.data) {
             if (policy.PolicyName == 'AWSSupportAccess') {
                 if (policy.AttachmentCount > 0) {
                     policyArn = policy.Arn;
+                    break;
                 } else {
                     helpers.addResult(results, 2,
-                        'No role, user or group attached to the policy', 'global', policy.Arn);
+                        'No role, user or group attached to the AWSSupportAccess policy', 'global', policy.Arn);
+                    return callback(null, results, source);
                 }
             }
-        });
+        }
+
         if (policyArn){
+            const listEntitiesForPolicy = helpers.addSource(cache, source,
+                ['iam', 'listEntitiesForPolicy', region, policyArn]);
+
             if (!listEntitiesForPolicy) return callback(null, results, source);
     
-            if (listEntitiesForPolicy.err || !listEntitiesForPolicy[policyArn] || !listEntitiesForPolicy[policyArn].data) {
+            if (listEntitiesForPolicy.err || !listEntitiesForPolicy || !listEntitiesForPolicy.data) {
                 helpers.addResult(results, 3,
                     'Unable to query for IAM entities for policy: ' + helpers.addError(listEntitiesForPolicy));
                 return callback(null, results, source);
             }
     
             const attachments = [];
-            addAttachments(attachments, listEntitiesForPolicy[policyArn].data);
+            addAttachments(attachments, listEntitiesForPolicy.data);
             if (!attachments.length) {
                 helpers.addResult(results, 2,
-                    'No role, user or group attached to the policy', 'global', policyArn);
+                    'No role, user or group attached to the AWSSupportAccess policy', 'global', policyArn);
             } else {
                 helpers.addResult(results, 0,
-                    attachments.join(', '), 'global', policyArn);  
+                    `Policy attached to ${attachments.join(', ')}`, 'global', policyArn);  
             }
         }
         return callback(null, results, source);
@@ -66,16 +69,7 @@ module.exports = {
 };
 
 const addAttachments = (attachments, entities) => {
-    if ('PolicyGroups' in entities) {
-        if (entities.PolicyGroups.length > 0 ) entities.PolicyGroups.forEach(
-            group => attachments.push(`Policy is attached '${group.GroupName}' group`));        
-    }
-    if ('PolicyRoles' in entities) {
-        if (entities.PolicyRoles.length > 0) entities.PolicyRoles.forEach(
-            role => attachments.push(`Policy is attached '${role.RoleName}' role`));
-    }
-    if ('PolicyUsers' in entities) {
-        if (entities.PolicyGroups.length > 0) entities.PolicyUsers.forEach(
-            user => attachments.push(`Policy is attached '${user.UserName}' user`));
-    }
+    if (entities.PolicyGroups && entities.PolicyGroups.length) attachments.push('groups');
+    if (entities.PolicyRoles && entities.PolicyRoles.length) attachments.push('roles');
+    if (entities.PolicyUsers && entities.PolicyUsers.length) attachments.push('users')
 };
