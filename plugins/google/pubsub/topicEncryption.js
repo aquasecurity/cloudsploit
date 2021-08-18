@@ -72,9 +72,8 @@ module.exports = {
     
                     async.each(topics.data, (topic, tcp) => {
                         let currentEncryptionLevel;
-                        if (topic.kmsKeyName && topic.kmsKeyName.length) {
-                            let cryptoKey = keysObj[topic.kmsKeyName];
-                            currentEncryptionLevel = helpers.getProtectionLevel(cryptoKey, helpers.PROTECTION_LEVELS);
+                        if (topic.kmsKeyName && topic.kmsKeyName.length && keysObj[topic.kmsKeyName]) {
+                            currentEncryptionLevel = helpers.getProtectionLevel(keysObj[topic.kmsKeyName], helpers.PROTECTION_LEVELS);
                         } else {
                             currentEncryptionLevel = 1; //default
                         }

@@ -76,7 +76,7 @@ module.exports = {
                     describeLaunchTemplateVersions.data &&
                     describeLaunchTemplateVersions.data.LaunchTemplateVersions) {
                     let templateVersion = describeLaunchTemplateVersions.data.LaunchTemplateVersions.find(version => version.VersionNumber == template.DefaultVersionNumber);
-                    let imageId = (templateVersion.LaunchTemplateData && templateVersion.LaunchTemplateData.ImageId) ?
+                    let imageId = (templateVersion && templateVersion.LaunchTemplateData && templateVersion.LaunchTemplateData.ImageId) ?
                         templateVersion.LaunchTemplateData.ImageId : null;
                     if (imageId && !usedAmis.includes(imageId)) usedAmis.push(imageId);
                 }

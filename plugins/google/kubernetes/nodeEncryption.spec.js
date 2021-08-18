@@ -140,7 +140,7 @@ describe('nodeEncryption', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('which is greater than or equal to');
+                expect(results[0].message).to.include('All node pools have the');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -152,7 +152,7 @@ describe('nodeEncryption', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('which is less than');
+                expect(results[0].message).to.include('These node pools do not have the ');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -165,7 +165,7 @@ describe('nodeEncryption', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('which is less than');
+                expect(results[0].message).to.include('These node pools do not have the');
                 expect(results[0].region).to.equal('global');
                 done()
             };
