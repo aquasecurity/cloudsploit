@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Sender Policy Framework In Use',
+    title: 'Sender Policy Framework Record Present',
     category: 'Route53',
     description: 'Ensure that Sender Policy Framework (SPF) is used to stop spammers from spoofing your AWS Route 53 domain.',
     more_info: 'Implementing SPF records for Route53 domain names will help in reducing spam and increasing domains trustworthiness by stopping email spoofing.',
