@@ -101,11 +101,12 @@ describe('topicEncryption', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
+                expect(results[1].status).to.equal(2);
                 expect(results[0].message).to.include('which is less than');
                 expect(results[1].status).to.equal(2);
                 expect(results[1].message).to.include('which is less than');
                 expect(results[0].region).to.equal('global');
-                done()
+                done();
             };
 
             const cache = createCache(
