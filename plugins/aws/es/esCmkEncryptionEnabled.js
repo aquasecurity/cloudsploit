@@ -8,12 +8,13 @@ module.exports = {
     more_info: 'ElasticSearch domains should be encrypted with  KMS Customer Master Key (CMK) to ensure data is secured. Customer keys should be used to ensure control over the encryption seed data.',
     link: 'https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/encryption-at-rest.html',
     recommended_action: 'Ensure encryption-at-rest is enabled for all ElasticSearch domains with KMS Customer Master Keys.',
-    apis: ['ES:listDomainNames', 'ES:describeElasticsearchDomain'],
+    apis: ['ES:listDomainNames', 'ES:describeElasticsearchDomain', 'STS:getCallerIdentity'],
     
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
         async.each(regions.es, function(region, rcb) {
             var listDomainNames = helpers.addSource(cache, source,
@@ -33,17 +34,20 @@ module.exports = {
                 return rcb();
             }
 
-            listDomainNames.data.forEach(function(domain){
+            listDomainNames.data.forEach(function(domain, dcb){
+                if (!domain.DomainName) return dcb();
+                
+                const resource = `arn:aws:es:${region}:${accountId}:domain/${domain.DomainName}`;
                 var describeElasticsearchDomain = helpers.addSource(cache, source,
                     ['es', 'describeElasticsearchDomain', region, domain.DomainName]);
-
+                    
                 if (!describeElasticsearchDomain ||
                     describeElasticsearchDomain.err ||
                     !describeElasticsearchDomain.data ||
                     !describeElasticsearchDomain.data.DomainStatus) {
                     helpers.addResult(
                         results, 3,
-                        'Unable to query for ES domain config: ' + helpers.addError(describeElasticsearchDomain), region);
+                        'Unable to query for ES domain config: ' + helpers.addError(describeElasticsearchDomain), region, resource);
                 } else {
                     var localDomain = describeElasticsearchDomain.data.DomainStatus;
 
@@ -53,15 +57,15 @@ module.exports = {
                         if (localDomain.EncryptionAtRestOptions.KmsKeyId === '(Default) aws/es'){
                             helpers.addResult(results, 2,
                                 `ES domain "${domain.DomainName}" is not using Customer Master Key for encryption`,
-                                region, localDomain.ARN);
+                                region, resource);
                         } else {
                             helpers.addResult(results, 0,
                                 `ES domain "${domain.DomainName}" is using Customer Master Key for encryption`,
-                                region, localDomain.ARN);
+                                region, resource);
                         }
                     } else {
                         helpers.addResult(results, 2,
-                            'ES domain is not configured to use encryption at rest', region, localDomain.ARN);
+                            'ES domain is not configured to use encryption at rest', region, resource);
                     }
                 }
             });
