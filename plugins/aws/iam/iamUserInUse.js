@@ -19,17 +19,17 @@ module.exports = {
     },
 
     run: function(cache, settings, callback) {
-        var config = {
+        const config = {
             iam_user_account_in_use_days: parseInt(settings.iam_user_account_in_use_days || this.settings.iam_user_account_in_use_days.default)
         };
-        var custom = helpers.isCustom(settings, this.settings);
+        const custom = helpers.isCustom(settings, this.settings);
 
-        var results = [];
-        var source = {};
+        const results = [];
+        const source = {};
 
-        var region = helpers.defaultRegion(settings);
+        const region = helpers.defaultRegion(settings);
 
-        var generateCredentialReport = helpers.addSource(cache, source,
+        const generateCredentialReport = helpers.addSource(cache, source,
             ['iam', 'generateCredentialReport', region]);
         
         if (!generateCredentialReport) return callback(null, results, source);
@@ -40,7 +40,7 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        var found = false;
+        let found = false;
 
         async.forEach(generateCredentialReport.data, (user) => {
             if (user && user.user !== '<root_account>') {
@@ -48,23 +48,22 @@ module.exports = {
 
                 var accessDates = [];
 
-                if (user.password_last_used && user.password_last_used !== 'no_information') {
-                    accessDates.push(user.password_last_used);
-                }
+                if (user.password_last_used && user.password_last_used !== 'no_information') accessDates.push(user.password_last_used);
 
-                if (user.access_key_1_last_used_date) accessDates.push(user.access_key_1_last_used_date);
+                if (user.access_key_1_last_used_date && user.access_key_1_last_used_date != 'N/A') accessDates.push(user.access_key_1_last_used_date);
 
-                if (user.access_key_2_last_used_date) accessDates.push(user.access_key_2_last_used_date);
+                if (user.access_key_2_last_used_date && user.access_key_2_last_used_date != 'N/A') accessDates.push(user.access_key_2_last_used_date);
 
                 if (!accessDates.length) {
                     helpers.addResult(results, 0, 'IAM user has not been used', 'global', user.arn);
                 } else {
-                    var currentDate = new Date();
-                    var loginDate = new Date(helpers.mostRecentDate(accessDates));
-                    var resultCode = (helpers.daysBetween(loginDate, currentDate) < config.iam_user_account_in_use_days) ? 2: 0;
+                    const currentDate = new Date();
+                    const loginDate = new Date(helpers.mostRecentDate(accessDates));
+                    const difference = helpers.daysBetween(loginDate, currentDate)
+                    const resultCode = ( difference < config.iam_user_account_in_use_days) ? 2: 0;
 
                     helpers.addResult(results, resultCode,
-                        'IAM user was last used ' + helpers.daysBetween(loginDate, currentDate) + ' days ago',
+                        'IAM user was last used ' + difference + ' days ago',
                         'global', user.arn, custom);
                 }
             }
