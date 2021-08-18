@@ -34,6 +34,7 @@ module.exports = {
             }
 
             listDomainNames.data.forEach(function(domain){
+                if (!domain.DomainName) return;
                 var describeElasticsearchDomain = helpers.addSource(cache, source,
                     ['es', 'describeElasticsearchDomain', region, domain.DomainName]);
 
@@ -47,7 +48,7 @@ module.exports = {
                 } else {
                     var localDomain = describeElasticsearchDomain.data.DomainStatus;
 
-                    if (localDomain.ElasticsearchClusterConfig &&
+                    if (localDomain && localDomain.ElasticsearchClusterConfig &&
                         localDomain.ElasticsearchClusterConfig.DedicatedMasterEnabled) {
                         helpers.addResult(results, 0,
                             'ES domain is configured to use dedicated master node', region, localDomain.ARN);
