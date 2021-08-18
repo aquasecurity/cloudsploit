@@ -59,7 +59,7 @@ module.exports = {
                     'No role, user or group attached to the AWSSupportAccess policy', 'global', policyArn);
             } else {
                 helpers.addResult(results, 0,
-                    `Policy attached to ${attachments.join(', ')}`, 'global', policyArn);  
+                    `AWSSupportAccess Policy attached to ${attachments.join(', ')}`, 'global', policyArn);  
             }
         }
         return callback(null, results, source);
