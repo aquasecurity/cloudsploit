@@ -239,7 +239,7 @@ module.exports = {
         'canaryKeysUsed'                : require(__dirname + '/plugins/aws/iam/canaryKeysUsed.js'),
         'iamPoliciesPresent'            : require(__dirname + '/plugins/aws/iam/iamPoliciesPresent.js'),
         'iamDbAuthenticationEnabled'    : require(__dirname + '/plugins/aws/rds/iamDbAuthenticationEnabled.js'),
-        'iamSupportPolicy'                : require(__dirname + '/plugins/aws/iam/iamSupportPolicy.js'),
+        'iamSupportPolicy'              : require(__dirname + '/plugins/aws/iam/iamSupportPolicy.js'),
 
         'kinesisEncrypted'              : require(__dirname + '/plugins/aws/kinesis/kinesisEncrypted.js'),
         'kmsKeyRotation'                : require(__dirname + '/plugins/aws/kms/kmsKeyRotation.js'),
