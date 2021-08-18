@@ -59,7 +59,7 @@ module.exports = {
                 } else {
                     const currentDate = new Date();
                     const loginDate = new Date(helpers.mostRecentDate(accessDates));
-                    const difference = helpers.daysBetween(loginDate, currentDate)
+                    const difference = helpers.daysBetween(loginDate, currentDate);
                     const resultCode = ( difference < config.iam_user_account_in_use_days) ? 2: 0;
 
                     helpers.addResult(results, resultCode,
