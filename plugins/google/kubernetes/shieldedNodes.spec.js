@@ -60,7 +60,7 @@ describe('shielded Nodes', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Nodes are shielded in this cluster');
+                expect(results[0].message).to.include('Shielded Nodes feature is enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
