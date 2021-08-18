@@ -10,17 +10,17 @@ module.exports = {
     recommended_action: 'Reconfigure the domain to have the desired instance types.',
     apis: ['ES:listDomainNames', 'ES:describeElasticsearchDomain', 'STS:getCallerIdentity'],
     settings: {
-        es_desired_instance_type: {
-            name: 'Desired Instance Type',
+        es_desired_data_instance_type: {
+            name: 'ES Data Instance Type',
             description: 'Instance type of ES data instances',
             regex: '^.*$',
-            default: 't2.small.elasticsearch'
+            default: ''
         },
         es_desired_master_instance_type: {
-            name: 'Desired Dedicated Master Instance Type',
+            name: 'ES Dedicated Master Instance Type',
             description: 'Instance type of ES dedicated master instances',
             regex: '^.*$',
-            default: 't2.medium.elasticsearch'
+            default: ''
         }
     },
 
@@ -29,10 +29,10 @@ module.exports = {
         const source = {};
         const regions = helpers.regions(settings);
 
-        const es_desired_instance_type = settings.es_desired_instance_type || this.settings.es_desired_instance_type.default;
+        const es_desired_data_instance_type = settings.es_desired_data_instance_type || this.settings.es_desired_data_instance_type.default;
         const es_desired_master_instance_type = settings.es_desired_master_instance_type || this.settings.es_desired_master_instance_type.default;
 
-        if (!es_desired_instance_type.length && !es_desired_master_instance_type.length) return callback(null, results, source);
+        if (!es_desired_data_instance_type.length && !es_desired_master_instance_type.length) return callback(null, results, source);
         
         const acctRegion = helpers.defaultRegion(settings);
         const accountId = helpers.addSource(cache, source,
@@ -58,6 +58,8 @@ module.exports = {
             }
 
             async.each(listDomainNames.data, function(domain, cb){
+                if(!domain.DomainName) return cb();
+
                 const describeElasticsearchDomain = helpers.addSource(cache, source,
                     ['es', 'describeElasticsearchDomain', region, domain.DomainName]);
 
@@ -73,12 +75,12 @@ module.exports = {
                     return cb();
                 }
 
-                const localDomainStatus = describeElasticsearchDomain.data.DomainStatus;
-                let disallowedInstanceTypes = [];
-                if (localDomainStatus.ElasticsearchClusterConfig) {
-                    const config = localDomainStatus.ElasticsearchClusterConfig;
-                    if (config.InstanceType && !es_desired_instance_type.includes(config.InstanceType)) disallowedInstanceTypes.push(`${config.InstanceType} type for data node`);
-                    if (config.DedicatedMasterType && !es_desired_master_instance_type.includes(config.DedicatedMasterType)) disallowedInstanceTypes.push(`${config.DedicatedMasterType} type for master node`);
+                let disallowedDataInstanceTypes = [];
+                let disallowedDedicatedInstanceTypes = [];
+                if (describeElasticsearchDomain.data.DomainStatus && describeElasticsearchDomain.data.DomainStatus.ElasticsearchClusterConfig) {
+                    const config = describeElasticsearchDomain.data.DomainStatus.ElasticsearchClusterConfig;
+                    if (config.InstanceType && !es_desired_data_instance_type.includes(config.InstanceType)) disallowedDataInstanceTypes.push(config.InstanceType);
+                    if (config.DedicatedMasterType && !es_desired_master_instance_type.includes(config.DedicatedMasterType)) disallowedDedicatedInstanceTypes.push(config.DedicatedMasterType);
                 }
 
                 let status = (disallowedInstanceTypes.length) ? 2 : 0;
