@@ -11,10 +11,8 @@ module.exports = {
     settings: {},
 
     run: function(cache, settings, callback) {
-
         var results = [];
         var source = {};
-
         var region = helpers.defaultRegion(settings);
 
         const listPolicies = helpers.addSource(cache, source,
