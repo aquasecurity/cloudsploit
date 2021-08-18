@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Shielded Nodes',
     category: 'Kubernetes',
-    description: 'Ensures the shielded nodes setting is enabled for all kubernetes clusters',
+    description: 'Ensure that shielded nodes setting is enabled for all Kubernetes clusters.',
     more_info: 'Shielded GKE nodes give strong cryptographic identity. This prevents attackers from being able to impersonate a node in your GKE cluster even if the attacker can extract the node credentials.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/shielded-gke-nodes',
     recommended_action: 'Ensure that shielded nodes setting is enabled in your GKE cluster',
