@@ -7,7 +7,7 @@ module.exports = {
     description: 'Ensure that IAM user accounts are not being actively used.',
     more_info: 'IAM users, roles, and groups should not be used for day-to-day account management.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html',
-    recommended_action: 'Delete IAM user accounts which are not being actively used.',
+    recommended_action: 'Delete IAM user accounts which are being actively used.',
     apis: ['IAM:generateCredentialReport'],
     settings: {
         iam_user_account_in_use_days: {
