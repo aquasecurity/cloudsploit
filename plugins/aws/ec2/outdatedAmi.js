@@ -29,7 +29,7 @@ module.exports = {
         const results = [];
         const source = {};
         
-        if (!config.check_ami_usage) return callback(null, results, source)
+        if (!config.check_ami_usage) return callback(null, results, source);
         
         const regions = helpers.regions(settings);
         const acctRegion = helpers.defaultRegion(settings);
