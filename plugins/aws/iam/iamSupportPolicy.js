@@ -27,7 +27,7 @@ module.exports = {
         }
 
         var policyArn = '';
-        for (policy of listPolicies.data) {
+        for (const policy of listPolicies.data) {
             if (policy.PolicyName == 'AWSSupportAccess') {
                 if (policy.AttachmentCount > 0) {
                     policyArn = policy.Arn;
@@ -69,5 +69,5 @@ module.exports = {
 const addAttachments = (attachments, entities) => {
     if (entities.PolicyGroups && entities.PolicyGroups.length) attachments.push('groups');
     if (entities.PolicyRoles && entities.PolicyRoles.length) attachments.push('roles');
-    if (entities.PolicyUsers && entities.PolicyUsers.length) attachments.push('users')
+    if (entities.PolicyUsers && entities.PolicyUsers.length) attachments.push('users');
 };
