@@ -15,7 +15,7 @@ module.exports = {
             description: 'Desired protection level for GKE clusters. default: google-managed, cloudcmek: customer managed encryption keys, ' +
                 'cloudhsm: customer managed HSM ecnryption key, external: imported or externally managed key',
             regex: '^(default|cloudcmek|cloudhsm|external)$',
-            default: 'cloudhsm'
+            default: 'cloudcmek'
         }
     },
 
