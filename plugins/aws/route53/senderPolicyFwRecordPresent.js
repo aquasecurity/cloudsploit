@@ -33,6 +33,8 @@ module.exports = {
         }
 
         async.each(listHostedZones.data, function(zone, cb){
+            if (!zone.Id) return cb();
+
             var resource = `arn:aws:route53:::${zone.Id}`;
 
             var listResourceRecordSets = helpers.addSource(cache, source,
