@@ -33,7 +33,7 @@ module.exports = {
             }
 
             async.each(listDomainNames.data, function(domain, dcb){
-                if(!domain.DomainName) return dcb();
+                if (!domain.DomainName) return dcb();
 
                 var getMetricStats = helpers.addSource(cache, source,
                     ['cloudwatch', 'getEsMetricStatistics', region, domain.DomainName]);
