@@ -67,7 +67,7 @@ module.exports = {
 
             if (spfDisabledDnsRecords.length) {
                 helpers.addResult(results, 2,
-                    `Hosted Zone "${zone.Name}" has these SPF disabled DNS records: ${spfDisabledDnsRecords.join(', ')}`,
+                    `Hosted Zone has these SPF disabled DNS records: ${spfDisabledDnsRecords.join(', ')}`,
                     region, resource);
                 
             } else {
