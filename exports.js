@@ -197,6 +197,7 @@ module.exports = {
         'esLoggingEnabled'              : require(__dirname + '/plugins/aws/es/esLoggingEnabled.js'),
         'esUpgradeAvailable'            : require(__dirname + '/plugins/aws/es/esUpgradeAvailable.js'),
         'esHttpsOnly'                   : require(__dirname + '/plugins/aws/es/esHttpsOnly.js'),
+        'esDedicatedMasterEnabled'      : require(__dirname + '/plugins/aws/es/esDedicatedMasterEnabled.js'),
         'esDesiredInstanceTypes'        : require(__dirname + '/plugins/aws/es/esDesiredInstanceTypes.js'),
         'esTlsVersion'                  : require(__dirname + '/plugins/aws/es/esTlsVersion.js'),
 
