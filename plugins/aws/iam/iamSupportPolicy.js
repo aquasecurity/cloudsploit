@@ -8,7 +8,6 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/awssupport/latest/user/accessing-support.html',
     recommended_action: 'Ensure that an IAM role has permission to access support center.',
     apis: ['IAM:listPolicies', 'IAM:listEntitiesForPolicy'],
-    settings: {},
 
     run: function(cache, settings, callback) {
         var results = [];
