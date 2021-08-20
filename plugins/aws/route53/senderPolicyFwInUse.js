@@ -54,7 +54,7 @@ module.exports = {
 
             var spfDisabledDnsRecords = [];
             listResourceRecordSets.data.ResourceRecordSets.forEach(recordSet => {
-                if (recordSet.Type && recordSet.Type === 'TXT' && recordSet.ResourceRecords && recordSet.ResourceRecords.length) {
+                if (recordSet.Type && recordSet.Type.toUpperCase() === 'TXT' && recordSet.ResourceRecords && recordSet.ResourceRecords.length) {
                     recordSet.ResourceRecords.forEach(record => {
                         if (record.Value && !record.Value.includes('v=spf1') && !spfDisabledDnsRecords.includes(recordSet.Name)) {
                             spfDisabledDnsRecords.push(recordSet.Name);                           
