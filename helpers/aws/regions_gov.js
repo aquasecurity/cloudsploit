@@ -9,6 +9,7 @@ module.exports = {
     default: ['us-gov-west-1'],
     all: regions,
     optin: [],
+    accessanalyzer: regions,
     acm: regions,
     apigateway: regions,
     athena: ['us-gov-west-1'],

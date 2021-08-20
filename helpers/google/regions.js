@@ -58,7 +58,8 @@ module.exports = {
     buckets: ['global'],
     instances: {
         compute: regions,
-        sql: ['global']
+        sql: ['global'],
+        spanner: ['global']
     },
     networks: ['global'],
     backendServices: ['global'],
@@ -79,5 +80,6 @@ module.exports = {
     backupRuns: ['global'],
     datasets: ['global'],
     policies: ['global'],
-    topics: ['global']
+    topics: ['global'],
+    deployments: ['global']
 };
