@@ -8,12 +8,14 @@ module.exports = {
     more_info: 'Using Elasticsearch dedicated master nodes to separate management tasks from index and search requests will improve the clusters ability to manage easily different types of workload and make them more resilient in production.',
     link: 'http://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-createupdatedomains.html',
     recommended_action: 'Update the domain to use dedicated master nodes.',
-    apis: ['ES:listDomainNames', 'ES:describeElasticsearchDomain'],
+    apis: ['ES:listDomainNames', 'ES:describeElasticsearchDomain', 'STS:getCallerIdentity'],
     
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var acctRegion = helpers.defaultRegion(settings);
+        var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
         async.each(regions.es, function(region, rcb) {
             var listDomainNames = helpers.addSource(cache, source,
@@ -33,8 +35,10 @@ module.exports = {
                 return rcb();
             }
 
-            listDomainNames.data.forEach(function(domain){
-                if (!domain.DomainName) return;
+            listDomainNames.data.forEach(function(domain, dcb){
+                if (!domain.DomainName) return dcb();
+                
+                const resource = `arn:aws:es:${region}:${accountId}:domain/${domain.DomainName}`
                 var describeElasticsearchDomain = helpers.addSource(cache, source,
                     ['es', 'describeElasticsearchDomain', region, domain.DomainName]);
 
@@ -44,17 +48,17 @@ module.exports = {
                     !describeElasticsearchDomain.data.DomainStatus) {
                     helpers.addResult(
                         results, 3,
-                        'Unable to query for ES domain config: ' + helpers.addError(describeElasticsearchDomain), region);
+                        'Unable to query for ES domain config: ' + helpers.addError(describeElasticsearchDomain), region, resource);
                 } else {
                     var localDomain = describeElasticsearchDomain.data.DomainStatus;
 
                     if (localDomain && localDomain.ElasticsearchClusterConfig &&
                         localDomain.ElasticsearchClusterConfig.DedicatedMasterEnabled) {
                         helpers.addResult(results, 0,
-                            'ES domain is configured to use dedicated master node', region, localDomain.ARN);
+                            'ES domain is configured to use dedicated master node', region, resource);
                     } else {
                         helpers.addResult(results, 2,
-                            'ES domain is not configured to use dedicated master node', region, localDomain.ARN);
+                            'ES domain is not configured to use dedicated master node', region, resource);
                     }
                 }
             });
