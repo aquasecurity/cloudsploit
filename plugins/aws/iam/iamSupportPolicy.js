@@ -3,8 +3,8 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'IAM Support Policy',
     category: 'IAM',
-    description: 'Ensures that an IAM role, group or user exists with specific permissions to access support center',
-    more_info: 'AWS provides a support center that can be used for incident notification and response, as well as technical support and customer services. An IAM Role should be present to allow authorized users to manage incidents with AWS Support',
+    description: 'Ensures that an IAM role, group or user exists with specific permissions to access support center.',
+    more_info: 'AWS provides a support center that can be used for incident notification and response, as well as technical support and customer services. An IAM Role should be present to allow authorized users to manage incidents with AWS Support.',
     link: 'https://docs.aws.amazon.com/awssupport/latest/user/accessing-support.html',
     recommended_action: 'Ensure that an IAM role has permission to access support center.',
     apis: ['IAM:listPolicies', 'IAM:listEntitiesForPolicy'],
@@ -43,9 +43,7 @@ module.exports = {
             const listEntitiesForPolicy = helpers.addSource(cache, source,
                 ['iam', 'listEntitiesForPolicy', region, policyArn]);
 
-            if (!listEntitiesForPolicy) return callback(null, results, source);
-    
-            if (listEntitiesForPolicy.err || !listEntitiesForPolicy || !listEntitiesForPolicy.data) {
+            if (!listEntitiesForPolicy || listEntitiesForPolicy.err || !listEntitiesForPolicy.data) {
                 helpers.addResult(results, 3,
                     'Unable to query for IAM entities for policy: ' + helpers.addError(listEntitiesForPolicy));
                 return callback(null, results, source);
@@ -60,8 +58,12 @@ module.exports = {
                 helpers.addResult(results, 0,
                     `AWSSupportAccess Policy attached to ${attachments.join(', ')}`, 'global', policyArn);  
             }
+        } else {
+            helpers.addResult(results, 2,
+                'No role, user or group attached to the AWSSupportAccess policy', 'global', policy.Arn);
         }
-        return callback(null, results, source);
+
+        callback(null, results, source);
     }
 };
 
