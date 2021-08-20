@@ -264,6 +264,7 @@ module.exports = {
         'domainExpiry'                  : require(__dirname + '/plugins/aws/route53/domainExpiry.js'),
         'domainTransferLock'            : require(__dirname + '/plugins/aws/route53/domainTransferLock.js'),
         'danglingDnsRecords'            : require(__dirname + '/plugins/aws/route53/danglingDnsRecords.js'),
+        'senderPolicyFwInUse'           : require(__dirname + '/plugins/aws/route53/senderPolicyFwInUse.js'),
         'senderPolicyFwRecordPresent'   : require(__dirname + '/plugins/aws/route53/senderPolicyFwRecordPresent.js'),
 
         'bucketEncryptionInTransit'     : require(__dirname + '/plugins/aws/s3/bucketEncryptionInTransit.js'),
