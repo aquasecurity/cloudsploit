@@ -13,7 +13,7 @@ module.exports = {
         kubernetes_cluster_encryption_level: {
             name: 'Kubernetes Cluster Encryption Protection Level',
             description: 'Desired protection level for GKE clusters. default: google-managed, cloudcmek: customer managed encryption keys, ' +
-                'cloudhsm: customer managed HSM ecnryption key, external: imported or externally managed key',
+                'cloudhsm: customer managed HSM encryption key, external: imported or externally managed key',
             regex: '^(default|cloudcmek|cloudhsm|external)$',
             default: 'cloudcmek'
         }
