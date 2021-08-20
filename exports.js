@@ -265,6 +265,7 @@ module.exports = {
         'domainTransferLock'            : require(__dirname + '/plugins/aws/route53/domainTransferLock.js'),
         'danglingDnsRecords'            : require(__dirname + '/plugins/aws/route53/danglingDnsRecords.js'),
         'senderPolicyFwInUse'           : require(__dirname + '/plugins/aws/route53/senderPolicyFwInUse.js'),
+        'senderPolicyFwRecordPresent'   : require(__dirname + '/plugins/aws/route53/senderPolicyFwRecordPresent.js'),
 
         'bucketEncryptionInTransit'     : require(__dirname + '/plugins/aws/s3/bucketEncryptionInTransit.js'),
         'bucketAllUsersPolicy'          : require(__dirname + '/plugins/aws/s3/bucketAllUsersPolicy.js'),
@@ -334,6 +335,7 @@ module.exports = {
         'redshiftDesiredNodeType'       : require(__dirname + '/plugins/aws/redshift/redshiftDesiredNodeType.js'),
 
         'transferLoggingEnabled'        : require(__dirname + '/plugins/aws/transfer/transferLoggingEnabled.js'),
+        'transferPrivateLinkInUse'      : require(__dirname + '/plugins/aws/transfer/transferPrivateLinkInUse.js'),
 
         'secretRotationEnabled'         : require(__dirname + '/plugins/aws/secretsmanager/secretRotationEnabled.js'),
         'secretsManagerEncrypted'       : require(__dirname + '/plugins/aws/secretsmanager/secretsManagerEncrypted.js'),
@@ -765,6 +767,11 @@ module.exports = {
         'privateClusterEnabled'         : require(__dirname + '/plugins/google/kubernetes/privateClusterEnabled.js'),
         'basicAuthenticationDisabled'   : require(__dirname + '/plugins/google/kubernetes/basicAuthenticationDisabled.js'),
         'kubernetesAlphaDisabled'       : require(__dirname + '/plugins/google/kubernetes/kubernetesAlphaDisabled.js'),
+        'shieldedNodes'                 : require(__dirname + '/plugins/google/kubernetes/shieldedNodes.js'),
+        'integrityMonitoringEnabled'    : require(__dirname + '/plugins/google/kubernetes/integrityMonitoringEnabled.js'),
+        'secureBootEnabled'             : require(__dirname + '/plugins/google/kubernetes/secureBootEnabled.js'),
+        'nodeEncryption'                : require(__dirname + '/plugins/google/kubernetes/nodeEncryption.js'),
+        'clusterEncryption'             : require(__dirname + '/plugins/google/kubernetes/clusterEncryption.js'),
 
         'dnsSecEnabled'                 : require(__dirname + '/plugins/google/dns/dnsSecEnabled.js'),
         'dnsSecSigningAlgorithm'        : require(__dirname + '/plugins/google/dns/dnsSecSigningAlgorithm.js'),
