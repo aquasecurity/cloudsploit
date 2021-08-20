@@ -80,7 +80,7 @@ describe('esDesiredInstanceType', function () {
         it('should FAIL if both dedicated master and data node desired instance types do not exist', function (done) {
             const cache = createCache([domainNames[0]], domains[0]);
             esDesiredInstanceType.run(cache, {es_desired_data_instance_type: ['t2.medium.elasticsearch'], es_desired_master_instance_type: ['t2.medium.elasticsearch']}, (err, results) => {
-                expect(results.length).to.equal(1);
+                expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(2);
                 done();
             });
@@ -89,7 +89,7 @@ describe('esDesiredInstanceType', function () {
         it('should PASS if desired instance types exist', function (done) {
             const cache = createCache([domainNames[0]], domains[1]);
             esDesiredInstanceType.run(cache, {es_desired_data_instance_type: ['t2.small.elasticsearch'], es_desired_master_instance_type: ['t2.small.elasticsearch']}, (err, results) => {
-                expect(results.length).to.equal(1);
+                expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(0);
                 done();
             });
@@ -98,7 +98,7 @@ describe('esDesiredInstanceType', function () {
         it('should FAIL if either master or node desired instance type property do not exist ', function (done) {
             const cache = createCache([domainNames[0]], domains[1]);
             esDesiredInstanceType.run(cache, {es_desired_data_instance_type: ['t2.medium.elasticsearch'], es_desired_master_instance_type: ['t2.medium.elasticsearch']}, (err, results) => {
-                expect(results.length).to.equal(1);
+                expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(2);
                 done();
             });

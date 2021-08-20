@@ -57,8 +57,8 @@ module.exports = {
                 return rcb();
             }
 
-            listDomainNames.data.forEach(function(domain, cb){
-                if (!domain.DomainName) return cb();
+            for (domain of listDomainNames.data) {
+                if (!domain.DomainName) return;
 
                 const describeElasticsearchDomain = helpers.addSource(cache, source,
                     ['es', 'describeElasticsearchDomain', region, domain.DomainName]);
@@ -72,7 +72,7 @@ module.exports = {
                     helpers.addResult(
                         results, 3,
                         'Unable to query for ES domain config: ' + helpers.addError(describeElasticsearchDomain), region, resource);
-                    return cb();
+                    return;
                 }
 
                 let disallowedDataInstanceTypes = [];
@@ -92,11 +92,9 @@ module.exports = {
                 helpers.addResult(results, masterStatus,
                     `ES cluster is using ${masterStatus == 0 ? 'allowed' : disallowedDedicatedInstanceTypes.join(', ')} master instance types`,
                     region, resource);
+            }
 
-                cb();
-            }, function() {
-                rcb();
-            });
+            rcb();
 
         }, function() {
             callback(null, results, source);
