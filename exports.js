@@ -765,6 +765,7 @@ module.exports = {
         'basicAuthenticationDisabled'   : require(__dirname + '/plugins/google/kubernetes/basicAuthenticationDisabled.js'),
         'kubernetesAlphaDisabled'       : require(__dirname + '/plugins/google/kubernetes/kubernetesAlphaDisabled.js'),
         'nodeEncryption'                : require(__dirname + '/plugins/google/kubernetes/nodeEncryption.js'),
+        'clusterEncryption'             : require(__dirname + '/plugins/google/kubernetes/clusterEncryption.js'),
 
         'dnsSecEnabled'                 : require(__dirname + '/plugins/google/dns/dnsSecEnabled.js'),
         'dnsSecSigningAlgorithm'        : require(__dirname + '/plugins/google/dns/dnsSecSigningAlgorithm.js'),
