@@ -882,6 +882,44 @@ function getUsedSecurityGroups(cache, results, region, callback) {
     return result;
 }
 
+function getPrivateSubnets(subnetRTMap, subnets, routeTables) {
+    let response = [];
+    let privateRouteTables = [];
+
+    routeTables.forEach(routeTable => {
+        if (routeTable.RouteTableId && routeTable.Routes &&
+            routeTable.Routes.find(route => route.GatewayId && !route.GatewayId.startsWith('igw-'))) privateRouteTables.push(routeTable.RouteTableId);
+    });
+
+    subnets.forEach(subnet => {
+        if (subnet.SubnetId && subnetRTMap[subnet.SubnetId] && privateRouteTables.includes(subnetRTMap[subnet.SubnetId])) response.push(subnet.SubnetId);
+    });
+
+    return response;
+}
+
+function getSubnetRTMap(subnets, routeTables) {
+    let subnetRTMap = {};
+    let vpcRTMap = {};
+
+    routeTables.forEach(routeTable => {
+        if (routeTable.RouteTableId && routeTable.Associations && routeTable.Associations.length) {
+            routeTable.Associations.forEach(association => {
+                if (association.SubnetId && !subnetRTMap[association.SubnetId]) subnetRTMap[association.SubnetId] =  routeTable.RouteTableId;
+            });
+        }
+        if (routeTable.VpcId && routeTable.RouteTableId && routeTable.Associations &&
+            routeTable.Associations.find(association => association.Main) && !vpcRTMap[routeTable.VpcId]) vpcRTMap[routeTable.VpcId] = routeTable.RouteTableId; 
+    });
+
+    subnets.forEach(subnet => {
+        if (subnet.SubnetId && subnet.VpcId &&
+            !subnetRTMap[subnet.SubnetId] && vpcRTMap[subnet.VpcId]) subnetRTMap[subnet.SubnetId] = vpcRTMap[subnet.VpcId];
+    });
+
+    return subnetRTMap;
+}
+
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
@@ -908,5 +946,7 @@ module.exports = {
     isEffectivePolicyStatement: isEffectivePolicyStatement,
     getS3BucketLocation: getS3BucketLocation,
     getOrganizationAccounts: getOrganizationAccounts,
-    getUsedSecurityGroups: getUsedSecurityGroups
+    getUsedSecurityGroups: getUsedSecurityGroups,
+    getPrivateSubnets: getPrivateSubnets,
+    getSubnetRTMap: getSubnetRTMap
 };
