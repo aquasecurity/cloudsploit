@@ -77,8 +77,8 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
         var resource = `arn:aws:ec2:${region}:${groups[g].OwnerId}:security-group/${groups[g].GroupId}`;
 
         if (config.ec2_skip_unused_groups) {
-            if (!usedGroups.includes(groups[g].GroupId)) {
-                addResult(results, 0, `Security Group: ${groups[g].GroupId} is unused`,
+            if (groups[g].GroupId && !usedGroups.includes(groups[g].GroupId)) {
+                addResult(results, 0, `Security Group: ${groups[g].GroupId} is not in use`,
                     region, resource);
                 usedGroup = true;
                 continue;
@@ -845,8 +845,7 @@ function getOrganizationAccounts(listAccounts, accountId) {
 
 function getUsedSecurityGroups(cache, results, region, callback) {
     let result = [];
-    const source = {};
-    const describeNetworkInterfaces = helpers.addSource(cache, source,
+    const describeNetworkInterfaces = helpers.addSource(cache, {},
         ['ec2', 'describeNetworkInterfaces', region]);
     
     if (!describeNetworkInterfaces || describeNetworkInterfaces.err || !describeNetworkInterfaces.data) {
@@ -855,7 +854,7 @@ function getUsedSecurityGroups(cache, results, region, callback) {
         return callback();
     }
 
-    const listFunctions = helpers.addSource(cache, source,
+    const listFunctions = helpers.addSource(cache, {},
         ['lambda', 'listFunctions', region]);
     
     if (!listFunctions || listFunctions.err || !listFunctions.data) {
@@ -863,6 +862,7 @@ function getUsedSecurityGroups(cache, results, region, callback) {
             'Unable to list lambda functions: ' + helpers.addError(listFunctions), region);
         return callback();
     }
+
     describeNetworkInterfaces.data.forEach(interface => {
         if (interface.Groups) {
             interface.Groups.forEach(group => {
@@ -872,7 +872,7 @@ function getUsedSecurityGroups(cache, results, region, callback) {
     });
 
     listFunctions.data.forEach(func => {
-        if (func.VpcConfig) {
+        if (func.VpcConfig && func.VpcConfig.SecurityGroupIds) {
             func.VpcConfig.SecurityGroupIds.forEach(group => {
                 if (!result.includes(group)) result.push(group);
             });

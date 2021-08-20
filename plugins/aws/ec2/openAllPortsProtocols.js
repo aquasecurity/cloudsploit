@@ -14,7 +14,7 @@ module.exports = {
             name: 'EC2 Skip Unused Groups',
             description: 'Skip checking ports for unused security groups',
             regex: '^(true|false)$',
-            default: 'true',
+            default: 'flase',
         }
     },
     compliance: {
@@ -69,8 +69,8 @@ module.exports = {
                                groups[g].GroupId;
 
                 if (config.ec2_skip_unused_groups) {
-                    if (!usedGroups.includes(groups[g].GroupId)) {
-                        helpers.addResult(results, 0, `Security Group: ${groups[g].GroupId} is unused`,
+                    if (groups[g].GroupId && !usedGroups.includes(groups[g].GroupId)) {
+                        helpers.addResult(results, 0, `Security Group: ${groups[g].GroupId} is not in use`,
                             region, resource);
                         usedGroup = true;
                         continue;
