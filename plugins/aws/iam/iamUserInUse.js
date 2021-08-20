@@ -1,5 +1,4 @@
 var helpers = require('../../../helpers/aws');
-var async = require('async');
 
 module.exports = {
     title: 'IAM User Account In Use',
@@ -42,7 +41,7 @@ module.exports = {
 
         let found = false;
 
-        async.forEach(generateCredentialReport.data, (user) => {
+        generateCredentialReport.data.forEach(user => {
             if (user && user.user !== '<root_account>') {
                 found = true;
 
