@@ -764,6 +764,7 @@ module.exports = {
         'privateClusterEnabled'         : require(__dirname + '/plugins/google/kubernetes/privateClusterEnabled.js'),
         'basicAuthenticationDisabled'   : require(__dirname + '/plugins/google/kubernetes/basicAuthenticationDisabled.js'),
         'kubernetesAlphaDisabled'       : require(__dirname + '/plugins/google/kubernetes/kubernetesAlphaDisabled.js'),
+        'integrityMonitoringEnabled'    : require(__dirname + '/plugins/google/kubernetes/integrityMonitoringEnabled.js'),
         'secureBootEnabled'             : require(__dirname + '/plugins/google/kubernetes/secureBootEnabled.js'),
         'nodeEncryption'                : require(__dirname + '/plugins/google/kubernetes/nodeEncryption.js'),
         'clusterEncryption'             : require(__dirname + '/plugins/google/kubernetes/clusterEncryption.js'),
