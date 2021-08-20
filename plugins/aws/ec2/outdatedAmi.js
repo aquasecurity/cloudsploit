@@ -114,7 +114,8 @@ module.exports = {
                                 describeLaunchTemplateVersions.data &&
                                 describeLaunchTemplateVersions.data.LaunchTemplateVersions) {
                                 let templateVersion = describeLaunchTemplateVersions.data.LaunchTemplateVersions.find(version => version.VersionNumber == template.DefaultVersionNumber);
-                                if (templateVersion && templateVersion.LaunchTemplateData && templateVersion.LaunchTemplateData.ImageId) usedAmi = true;
+                                if (templateVersion && templateVersion.LaunchTemplateData && templateVersion.LaunchTemplateData.ImageId &&
+                                    image.ImageId == templateVersion.LaunchTemplateData.ImageId) usedAmi = true;
                                 
                             }
                         });
