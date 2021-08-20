@@ -72,7 +72,7 @@ module.exports = {
                 
             } else {
                 helpers.addResult(results, 0,
-                    `Hosted Zone "${zone.Name}" has SPF enabled for all DNS records`,
+                    'Hosted Zone has SPF enabled for all DNS records',
                     region, resource);
             }
 
