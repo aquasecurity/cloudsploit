@@ -57,7 +57,7 @@ module.exports = {
                 return rcb();
             }
 
-            async.each(listDomainNames.data, function(domain, cb){
+            listDomainNames.data.forEach(function(domain, cb){
                 if(!domain.DomainName) return cb();
 
                 const describeElasticsearchDomain = helpers.addSource(cache, source,
