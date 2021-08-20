@@ -38,7 +38,7 @@ module.exports = {
             listDomainNames.data.forEach(function(domain, dcb){
                 if (!domain.DomainName) return dcb();
                 
-                const resource = `arn:aws:es:${region}:${accountId}:domain/${domain.DomainName}`
+                const resource = `arn:aws:es:${region}:${accountId}:domain/${domain.DomainName}`;
                 var describeElasticsearchDomain = helpers.addSource(cache, source,
                     ['es', 'describeElasticsearchDomain', region, domain.DomainName]);
 
