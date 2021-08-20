@@ -17,7 +17,7 @@ module.exports = {
             default: ''
         },
         es_desired_master_instance_type: {
-            name: 'ES Dedicated Master Instance Type',
+            name: 'ES Master Instance Type',
             description: 'Instance type of ES dedicated master instances',
             regex: '^.*$',
             default: ''
