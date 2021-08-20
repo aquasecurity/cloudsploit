@@ -77,21 +77,31 @@ module.exports = {
 
                 let disallowedDataInstanceTypes = [];
                 let disallowedDedicatedInstanceTypes = [];
-                if (describeElasticsearchDomain.data.DomainStatus && describeElasticsearchDomain.data.DomainStatus.ElasticsearchClusterConfig) {
+
+                if (describeElasticsearchDomain.data.DomainStatus.ElasticsearchClusterConfig) {
                     const config = describeElasticsearchDomain.data.DomainStatus.ElasticsearchClusterConfig;
+
                     if (config.InstanceType && !es_desired_data_instance_type.includes(config.InstanceType)) disallowedDataInstanceTypes.push(config.InstanceType);
                     if (config.DedicatedMasterType && !es_desired_master_instance_type.includes(config.DedicatedMasterType)) disallowedDedicatedInstanceTypes.push(config.DedicatedMasterType);
                 }
 
-                const dataStatus = (disallowedDataInstanceTypes.length) ? 2 : 0;
-                helpers.addResult(results, dataStatus,
-                    `ES cluster is using ${dataStatus == 0 ? 'allowed' : disallowedDataInstanceTypes.join(', ')} data instance types`,
-                    region, resource);
-
-                const masterStatus = (disallowedDedicatedInstanceTypes.length) ? 2 : 0;
-                helpers.addResult(results, masterStatus,
-                    `ES cluster is using ${masterStatus == 0 ? 'allowed' : disallowedDedicatedInstanceTypes.join(', ')} master instance types`,
-                    region, resource);
+                if (disallowedDedicatedInstanceTypes.length && disallowedDataInstanceTypes.length) {
+                    helpers.addResult(results, 2,
+                        `ES domain is using ${disallowedDedicatedInstanceTypes.join(', ')} master instance(s) and ${disallowedDataInstanceTypes.join(', ')} data instance(s)`, 
+                        region, resource);
+                } else if (disallowedDedicatedInstanceTypes.length) {
+                    helpers.addResult(results, 2,
+                        `ES domain is using ${disallowedDedicatedInstanceTypes.join(', ')} master instance(s)`, 
+                        region, resource);
+                } else if (disallowedDataInstanceTypes.length) {
+                    helpers.addResult(results, 2,
+                        `ES domain is using ${disallowedDataInstanceTypes.join(', ')} data instance(s)`,
+                        region, resource);
+                } else {
+                    helpers.addResult(results, 0,
+                        'ES domain is using allowed master and node instance types',
+                        region, resource);
+                }
             }
 
             rcb();
