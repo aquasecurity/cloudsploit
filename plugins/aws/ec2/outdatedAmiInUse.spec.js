@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-const outdatedAmi = require('./outdatedAmi');
+const outdatedAmiInUse = require('./outdatedAmiInUse');
 
 const describeImages = [
     {
@@ -271,11 +271,11 @@ const createNullCache = () => {
     };
 };
 
-describe('outdatedAmi', function () {
+describe('outdatedAmiInUse', function () {
     describe('run', function () {
         it('should PASS if Amazon Machine Images does not have deprecation time set', function (done) {
             const cache = createCache([describeImages[0]], [describeInstances[0]], [describeLaunchConfigurations[0]], describeLaunchTemplates[0], describeLaunchTemplateVersions[0]);
-            outdatedAmi.run(cache, {}, (err, results) => {
+            outdatedAmiInUse.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -284,7 +284,7 @@ describe('outdatedAmi', function () {
         it('should PASS if Amazon Machine Image is not deprecated yet', function (done) {
             describeImages[2].DeprecationTime = upComingDate;
             const cache = createCache([describeImages[2]], [describeInstances[0]], describeLaunchConfigurations[0], describeLaunchTemplates[0], describeLaunchTemplateVersions[0]);
-            outdatedAmi.run(cache, {}, (err, results) => {
+            outdatedAmiInUse.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -294,7 +294,7 @@ describe('outdatedAmi', function () {
         it('should Fail if deprecated Amazon Machine Image is in use', function (done) {
             describeImages[1].DeprecationTime = oldDate;
             const cache = createCache([describeImages[1]], [describeInstances[0]], describeLaunchConfigurations[0], describeLaunchTemplates[0], describeLaunchTemplateVersions[0]);
-            outdatedAmi.run(cache, {}, (err, results) => {
+            outdatedAmiInUse.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -304,7 +304,7 @@ describe('outdatedAmi', function () {
         it('should PASS if Amazon Machine Image is deprecated and not in use', function (done) {
             describeImages[2].DeprecationTime = oldDate;
             const cache = createCache([describeImages[2]], [describeInstances[0]], describeLaunchConfigurations[0], describeLaunchTemplates[0], describeLaunchTemplateVersions[0]);
-            outdatedAmi.run(cache, {}, (err, results) => {
+            outdatedAmiInUse.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -313,7 +313,7 @@ describe('outdatedAmi', function () {
 
         it('should PASS if no Amazon Machine Images found', function (done) {
             const cache = createCache([]);
-            outdatedAmi.run(cache, {}, (err, results) => {
+            outdatedAmiInUse.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -322,24 +322,16 @@ describe('outdatedAmi', function () {
 
         it('should UNKNOWN if unable to describe images', function (done) {
             const cache = createErrorCache();
-            outdatedAmi.run(cache, {}, (err, results) => {
+            outdatedAmiInUse.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
             });
         });
 
-        it('should not return anything if ami check is false', function (done) {
-            const cache = createNullCache();
-            outdatedAmi.run(cache, {check_ami_usage : 'false'}, (err, results) => {
-                expect(results.length).to.equal(0);
-                done();
-            });
-        });
-
         it('should not return anything if describe images response not found', function (done) {
             const cache = createNullCache();
-            outdatedAmi.run(cache, {}, (err, results) => {
+            outdatedAmiInUse.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });

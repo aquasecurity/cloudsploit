@@ -10,26 +10,10 @@ module.exports = {
     recommended_action: 'Delete the instances using deprecated AMIs',
     apis: ['EC2:describeImages', 'EC2:describeInstances', 'AutoScaling:describeLaunchConfigurations',
         'EC2:describeLaunchTemplates', 'EC2:describeLaunchTemplateVersions','STS:getCallerIdentity'],
-    settings: {
-        check_ami_usage: {
-            name: 'Check for Deprecated AMI Usage',
-            description: 'When set to true all instances are checked to see if deprecated AMIs are being used',
-            regex: '^(true|false)$',
-            default: 'true'
-        }
-    },
 
     run: function(cache, settings, callback) {
-        const config = {
-            check_ami_usage: settings.check_ami_usage || this.settings.check_ami_usage.default
-        };
-
-        config.check_ami_usage = (config.check_ami_usage == 'true');
-        
         const results = [];
         const source = {};
-        
-        if (!config.check_ami_usage) return callback(null, results, source);
         
         const regions = helpers.regions(settings);
         const acctRegion = helpers.defaultRegion(settings);
@@ -70,7 +54,6 @@ module.exports = {
                 return rcb();
             }
 
-            
             if (!describeLaunchConfigurations || describeLaunchConfigurations.err || !describeLaunchConfigurations.data) {
                 helpers.addResult(results, 3,
                     `Unable to query Auto Scaling launch configurations: ${helpers.addError(describeLaunchConfigurations)}`, region);
@@ -85,46 +68,60 @@ module.exports = {
 
             let found = false;
             describeImages.data.forEach(image => {
-                const currentDate = new Date();
-                if (image.DeprecationTime && new Date(image.DeprecationTime) < currentDate) {                    
-                    found = true;                   
-                    let usedAmi = false;
+                if (!image.ImageId) return;
+
+                if (image.DeprecationTime && new Date(image.DeprecationTime) < new Date()) {                    
+                    found = true;
+                    let amiInUse = false;
+
                     if (describeInstances.data.length) {
-                        describeInstances.data.forEach(instance => {
+                        for (const instance of describeInstances.data) {
                             if (instance.Instances && instance.Instances.length) {
-                                instance.Instances.forEach(element => {
-                                    if (element.ImageId && image.ImageId == element.ImageId) usedAmi = true;
-                                });
+                                for (const element of instance.Instances) {
+                                    if (element.ImageId && image.ImageId == element.ImageId) {
+                                        amiInUse = true;
+                                        break;
+                                    }
+                                }
                             }
-                        });
+                            if (amiInUse) break;
+                        }
                     }
         
-                    if (!usedAmi && describeLaunchConfigurations.data.length) {
-                        describeLaunchConfigurations.data.forEach(config => {
-                            if (config.ImageId && image.ImageId == config.ImageId) usedAmi = true;
-                        });
+                    if (!amiInUse && describeLaunchConfigurations.data.length) {
+                        for (const config of describeLaunchConfigurations.data) {
+                            if (config.ImageId && image.ImageId == config.ImageId) {
+                                amiInUse = true;
+                                break;
+                            }
+                        }
                     }
 
-                    if (!usedAmi && describeLaunchTemplates.data.length) {
-                        describeLaunchTemplates.data.forEach(template=>{
-                            var describeLaunchTemplateVersions = helpers.addSource(cache, source,
-                                ['ec2', 'describeLaunchTemplateVersions', region, template.LaunchTemplateId]);
-
-                            if (describeLaunchTemplateVersions &&
-                                describeLaunchTemplateVersions.data &&
-                                describeLaunchTemplateVersions.data.LaunchTemplateVersions) {
-                                let templateVersion = describeLaunchTemplateVersions.data.LaunchTemplateVersions.find(version => version.VersionNumber == template.DefaultVersionNumber);
-                                if (templateVersion && templateVersion.LaunchTemplateData && templateVersion.LaunchTemplateData.ImageId &&
-                                    image.ImageId == templateVersion.LaunchTemplateData.ImageId) usedAmi = true;
-                                
+                    if (!amiInUse && describeLaunchTemplates.data.length) {
+                        for (const template of describeLaunchConfigurations.data) {
+                            if (template.LaunchTemplateDId) {
+                                var describeLaunchTemplateVersions = helpers.addSource(cache, source,
+                                    ['ec2', 'describeLaunchTemplateVersions', region, template.LaunchTemplateId]);
+    
+                                if (template.DefaultVersionNumber &&
+                                    describeLaunchTemplateVersions &&
+                                    describeLaunchTemplateVersions.data &&
+                                    describeLaunchTemplateVersions.data.LaunchTemplateVersions) {
+                                    let templateVersion = describeLaunchTemplateVersions.data.LaunchTemplateVersions.find(version => version.VersionNumber == template.DefaultVersionNumber);
+                                    if (templateVersion && templateVersion.LaunchTemplateData && templateVersion.LaunchTemplateData.ImageId &&
+                                        image.ImageId == templateVersion.LaunchTemplateData.ImageId) {
+                                        amiInUse = true;
+                                        break;
+                                    }
+                                }
                             }
-                        });
+                        }
                     }
                     
                     const resource = `arn:${awsOrGov}:ec2:${region}:${accountId}:image/${image.ImageId}`;
-                    const status = usedAmi ? 2: 0; 
+                    const status = amiInUse ? 2: 0; 
                     helpers.addResult(results, status,
-                        `Deprecated Amazon Machine Image "${image.ImageId}" is ${usedAmi ? '': 'not '}in use`,
+                        `Deprecated Amazon Machine Image "${image.ImageId}" is ${amiInUse ? '': 'not '}in use`,
                         region, resource);
                 }
             });
