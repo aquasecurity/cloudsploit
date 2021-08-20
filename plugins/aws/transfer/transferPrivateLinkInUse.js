@@ -6,7 +6,7 @@ module.exports = {
     category: 'Transfer',
     description: 'Ensure that AWS Transfer for SFTP server endpoints are configured to use VPC endpoints powered by AWS PrivateLink.',
     more_info: 'PrivateLink provides secure and private connectivity between VPCs and other AWS resources using a dedicated network.',
-    link: 'https://www.cloudconformity.com/knowledge-base/aws/Transfer/end-point-type.html',
+    link: 'https://docs.aws.amazon.com/transfer/latest/userguide/update-endpoint-type-vpc.html',
     recommended_action: 'Configure the SFTP server endpoints to use endpoints powered by PrivateLink.',
     apis: ['Transfer:listServers'],
 
