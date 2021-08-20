@@ -5,7 +5,7 @@ module.exports = {
     title: 'Sender Privacy Framework Record Present',
     category: 'Route53',
     description: 'Ensure that Route 53 hosted zones have a DNS record containing Sender Policy Framework (SPF) value set for each MX record available.',
-    more_info: 'Implementing SPF records for your Route 53 domain names will help to reduce spam and increase your domains trustworthiness by stopping email spoofing.',
+    more_info: 'The SPF record enables Route 53 registered domains to publicly state the mail servers that are authorized to send emails on its behalf.',
     link: 'https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resource-record-sets-creating.html',
     recommended_action: 'Add SPF records to the DNS records.',
     apis: ['Route53:listHostedZones', 'Route53:listResourceRecordSets'],
@@ -33,6 +33,7 @@ module.exports = {
         }
 
         async.each(listHostedZones.data, function(zone, cb){
+            if (!zone.Id) return cb();
             var resource = `arn:aws:route53:::${zone.Id}`;
 
             var listResourceRecordSets = helpers.addSource(cache, source,
@@ -53,7 +54,7 @@ module.exports = {
             }
 
             var spfRecordExists = listResourceRecordSets.data.ResourceRecordSets.find(
-                recordSet => recordSet.Type && recordSet.Type === 'SPF');
+                recordSet => recordSet.Type && recordSet.Type.toUpperCase() === 'SPF');
             const status = spfRecordExists ? 0 : 2;
 
             helpers.addResult(results, status,
