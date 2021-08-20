@@ -35,9 +35,9 @@ module.exports = {
                 return rcb();
             }
 
-            listDomainNames.data.forEach(function(domain, dcb){
-                if (!domain.DomainName) return dcb();
-                
+            listDomainNames.data.forEach(domain => {
+                if (!domain.DomainName) return;
+
                 const resource = `arn:aws:es:${region}:${accountId}:domain/${domain.DomainName}`;
                 var describeElasticsearchDomain = helpers.addSource(cache, source,
                     ['es', 'describeElasticsearchDomain', region, domain.DomainName]);
@@ -52,7 +52,7 @@ module.exports = {
                 } else {
                     var localDomain = describeElasticsearchDomain.data.DomainStatus;
 
-                    if (localDomain && localDomain.ElasticsearchClusterConfig &&
+                    if (localDomain.ElasticsearchClusterConfig &&
                         localDomain.ElasticsearchClusterConfig.DedicatedMasterEnabled) {
                         helpers.addResult(results, 0,
                             'ES domain is configured to use dedicated master node', region, resource);
