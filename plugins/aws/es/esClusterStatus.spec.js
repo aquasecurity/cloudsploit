@@ -45,6 +45,14 @@ const esMetricStatistics = [
                 "Unit": "Count"
             },
         ]
+    },
+    {
+        "Datapoints": [
+            {
+                "Timestamp": "2018-12-16T17:03:10Z",
+                "Unit": "Count"
+            }
+        ]
     }
 ]
 
@@ -122,7 +130,15 @@ describe('esClusterStatus', function () {
         it('should PASS if metric count is lesser than 1', function (done) {
             const cache = createCache([domainNames[0]], esMetricStatistics[1]);
             esClusterStatus.run(cache, {}, (err, results) => {
-                console.log(results)
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
+    
+        it('should PASS if metric count is not part of the response', function (done) {
+            const cache = createCache([domainNames[0]], esMetricStatistics[2]);
+            esClusterStatus.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();

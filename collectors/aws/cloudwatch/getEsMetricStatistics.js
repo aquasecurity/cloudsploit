@@ -4,7 +4,7 @@ var async = require('async');
 module.exports = function(AWSConfig, collection, callback) {
     var cloudwatch = new AWS.CloudWatch(AWSConfig);
    
-    async.forEach(collection.es.listDomainNames[AWSConfig.region].data, function(domain, cb){        
+    async.eachLimit(collection.es.listDomainNames[AWSConfig.region].data, 10, function(domain, cb){        
         collection.cloudwatch.getEsMetricStatistics[AWSConfig.region][domain.DomainName] = {};
         var endTime = new Date();
         var startTime = new Date();
@@ -14,7 +14,7 @@ module.exports = function(AWSConfig, collection, callback) {
             'Namespace':'AWS/ES',
             'StartTime': startTime.toISOString(),
             'EndTime': endTime.toISOString(),
-            'Period': 60,
+            'Period': 3600,
             'Statistics': ['Maximum'],
             'Dimensions' : [
                 {

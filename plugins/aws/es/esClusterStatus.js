@@ -16,6 +16,8 @@ module.exports = {
         var regions = helpers.regions(settings);
         var accRegion = helpers.defaultRegion(settings);
         var accountId =  helpers.addSource(cache, source, ['sts', 'getCallerIdentity', accRegion, 'data']);
+        var awsOrGov = helpers.defaultPartition(settings);
+
         async.each(regions.es, function(region, rcb) {
             var listDomainNames = helpers.addSource(cache, source,
                 ['es', 'listDomainNames', region]);
@@ -34,34 +36,25 @@ module.exports = {
                 return rcb();
             }
 
-            async.each(listDomainNames.data, function(domain, dcb){
-                if (!domain.DomainName) return dcb();                
+            listDomainNames.data.forEach(domain => {
+                if (!domain.DomainName) return;                
                 
-                const resource = `arn:aws:es:${region}:${accountId}:domain/${domain.DomainName}`;
+                const resource = `arn:${awsOrGov}:es:${region}:${accountId}:domain/${domain.DomainName}`;
                 var getMetricStats = helpers.addSource(cache, source,
                     ['cloudwatch', 'getEsMetricStatistics', region, domain.DomainName]);
                
                 if (!getMetricStats || getMetricStats.err || !getMetricStats.data) {
                     helpers.addResult(results, 3,
                         `Unable to query for ES domain metric stat: ${helpers.addError(getMetricStats)}`, region, resource);
-                    return dcb();
+                    return;
                 }
-
-                if (!getMetricStats.data.Datapoints.length) return dcb();
-
-                let maximumValue = 0;
-                getMetricStats.data.Datapoints.forEach((dataPoint) => {
-                    if (maximumValue < dataPoint.Maximum) maximumValue = dataPoint.Maximum;
-                });
-
-                const status = (maximumValue >= 1) ? 2 : 0;
+                const data = getMetricStats.data.Datapoints.find(datapoint => datapoint.Maximum && datapoint.Maximum >= 1);
+                const status = data ? 2 : 0;
                 helpers.addResult(results, status,
-                    `ES Cluster for ES Domain: ${domain.DomainName} is ${status == 2 ? 'unhealthy': 'healthy'}`, region, resource);
-                
-                dcb();
-            }, function(){
-                rcb();
+                    `ES Domain is ${data ? 'unhealthy': 'healthy'}`, region, resource);
             });
+
+            rcb();
         }, function() {
             callback(null, results, source);
         });
