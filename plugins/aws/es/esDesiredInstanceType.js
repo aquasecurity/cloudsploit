@@ -83,9 +83,14 @@ module.exports = {
                     if (config.DedicatedMasterType && !es_desired_master_instance_type.includes(config.DedicatedMasterType)) disallowedDedicatedInstanceTypes.push(config.DedicatedMasterType);
                 }
 
-                let status = (disallowedInstanceTypes.length) ? 2 : 0;
-                helpers.addResult(results, status,
-                    `ES cluster is using ${status == 0 ? 'allowed instance types' : disallowedInstanceTypes.join(', ')}`,
+                const dataStatus = (disallowedDataInstanceTypes.length) ? 2 : 0;
+                helpers.addResult(results, dataStatus,
+                    `ES cluster is using ${dataStatus == 0 ? 'allowed' : disallowedDataInstanceTypes.join(', ')} data instance types`,
+                    region, resource);
+
+                const masterStatus = (disallowedDedicatedInstanceTypes.length) ? 2 : 0;
+                helpers.addResult(results, masterStatus,
+                    `ES cluster is using ${masterStatus == 0 ? 'allowed' : disallowedDedicatedInstanceTypes.join(', ')} master instance types`,
                     region, resource);
 
                 cb();
