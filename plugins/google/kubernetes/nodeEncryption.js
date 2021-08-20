@@ -10,8 +10,8 @@ module.exports = {
     recommended_action: 'Ensure that all node pools in GKE clusters have the desired encryption level.',
     apis: ['clusters:list', 'projects:get', 'keyRings:list', 'cryptoKeys:list'],
     settings: {
-        node_encryption_level: {
-            name: 'Node Encryption Protection Level',
+        kubernetes_node_encryption_level: {
+            name: 'Kubernetes Node Encryption Protection Level',
             description: 'Desired protection level for GKE cluster nodes. default: google-managed, cloudcmek: customer managed encryption keys, ' +
                 'cloudhsm: customer managed HSM ecnryption key, external: imported or externally managed key',
             regex: '^(default|cloudcmek|cloudhsm|external)$',
@@ -24,7 +24,7 @@ module.exports = {
         var source = {};
         var regions = helpers.regions();
 
-        let desiredEncryptionLevelStr = settings.node_encryption_level || this.settings.node_encryption_level.default
+        let desiredEncryptionLevelStr = settings.kubernetes_node_encryption_level || this.settings.kubernetes_node_encryption_level.default
 
         var desiredEncryptionLevel = helpers.PROTECTION_LEVELS.indexOf(desiredEncryptionLevelStr);
 
@@ -85,7 +85,7 @@ module.exports = {
                         if (cluster.nodePools &&
                             cluster.nodePools.length) {
                             cluster.nodePools.forEach(nodePool => {
-                                let currentEncryptionLevel
+                                let currentEncryptionLevel;
 
                                 if (nodePool.config && nodePool.config.bootDiskKmsKey && nodePool.config.bootDiskKmsKey.length && keysObj[nodePool.config.bootDiskKmsKey]) {
                                     currentEncryptionLevel = helpers.getProtectionLevel(keysObj[nodePool.config.bootDiskKmsKey], helpers.PROTECTION_LEVELS);
@@ -93,7 +93,7 @@ module.exports = {
                                     currentEncryptionLevel = 1; //default
                                 }
 
-                                if (!(currentEncryptionLevel >= desiredEncryptionLevel)) {
+                                if (currentEncryptionLevel < desiredEncryptionLevel) {
                                     nonEncryptedNodes.push(nodePool.name)
                                 }
                             });
