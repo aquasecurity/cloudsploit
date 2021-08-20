@@ -5,13 +5,13 @@ module.exports = {
     title: 'Cluster Encryption Enabled',
     category: 'Kubernetes',
     description: 'Ensure that GKE clusters have KMS encryption enabled to encrypt application-layer secrets.',
-    more_info: 'Application-layer secrets encryption adds additional security layer to senstive data such as Kubernetes secrets stored in etcd.',
+    more_info: 'Application-layer secrets encryption adds additional security layer to sensitive data such as Kubernetes secrets stored in etcd.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/encrypting-secrets',
     recommended_action: 'Ensure that all GKE clusters have the desired application-layer secrets encryption level.',
     apis: ['clusters:list', 'projects:get', 'keyRings:list', 'cryptoKeys:list'],
     settings: {
-        cluster_encryption_level: {
-            name: 'Cluster Encryption Protection Level',
+        kubernetes_cluster_encryption_level: {
+            name: 'Kubernetes Cluster Encryption Protection Level',
             description: 'Desired protection level for GKE clusters. default: google-managed, cloudcmek: customer managed encryption keys, ' +
                 'cloudhsm: customer managed HSM ecnryption key, external: imported or externally managed key',
             regex: '^(default|cloudcmek|cloudhsm|external)$',
@@ -24,8 +24,7 @@ module.exports = {
         var source = {};
         var regions = helpers.regions();
 
-        let desiredEncryptionLevelStr = settings.cluster_encryption_level || this.settings.cluster_encryption_level.default
-
+        let desiredEncryptionLevelStr = settings.kubernetes_cluster_encryption_level || this.settings.kubernetes_cluster_encryption_level.default
         var desiredEncryptionLevel = helpers.PROTECTION_LEVELS.indexOf(desiredEncryptionLevelStr);
 
         var keysObj = {};
@@ -78,9 +77,12 @@ module.exports = {
                         } else location = region;
 
                         let resource = helpers.createResourceName('clusters', cluster.name, project, 'location', location);
-                        let currentEncryptionLevel
+                        let currentEncryptionLevel;
 
-                        if (cluster.databaseEncryption && cluster.databaseEncryption.keyName && cluster.databaseEncryption.keyName.length && keysObj[cluster.databaseEncryption.keyName] && cluster.databaseEncryption.state && cluster.databaseEncryption.state == "ENCRYPTED") {
+                        if (cluster.databaseEncryption && cluster.databaseEncryption.state &&
+                            cluster.databaseEncryption.state.toUpperCase() == "ENCRYPTED" &&
+                            cluster.databaseEncryption.keyName && cluster.databaseEncryption.keyName.length &&
+                            keysObj[cluster.databaseEncryption.keyName]) {
                             currentEncryptionLevel = helpers.getProtectionLevel(keysObj[cluster.databaseEncryption.keyName], helpers.PROTECTION_LEVELS);
                         } else {
                             currentEncryptionLevel = 1; //default
