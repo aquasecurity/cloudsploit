@@ -508,7 +508,7 @@ var calls = {
             property: 'Policies',
             paginate: 'Marker',
             params: {
-                OnlyAttached: false
+                OnlyAttached: true // Making this false will effect IAM Support Policy plugin
             }
         },
         listVirtualMFADevices: {
@@ -1370,12 +1370,6 @@ var postcalls = [
                 override: true
             },
             getPolicy: {
-                reliesOnService: 'iam',
-                reliesOnCall: 'listPolicies',
-                filterKey: 'PolicyArn',
-                filterValue: 'Arn'
-            },
-            listEntitiesForPolicy: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listPolicies',
                 filterKey: 'PolicyArn',

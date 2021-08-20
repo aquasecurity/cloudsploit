@@ -41,38 +41,7 @@ const listPolicies = [
         UpdateDate: "",
         Tags: [],
     }
-]
-
-const listEntitiesForPolicy = [
-    {
-        ResponseMetadata: {
-          RequestId: "130bbd6b-4db5-4fab-aaa8-0a0e5fab5ffd",
-        },
-        PolicyGroups: [ ],
-        PolicyUsers: [ ],
-        PolicyRoles: [
-            {
-                RoleName: "CloudTrailCloudwatchRole",
-                RoleId: "AROAYE32SRU5SKYPMYOPO",
-            },
-        ],
-        IsTruncated: false,
-    },
-    {
-        ResponseMetadata: {
-          RequestId: "130bbd6b-4db5-4fab-aaa8-0a0e5fab5ffd",
-        },
-        PolicyGroups: [ ],
-        PolicyUsers: [ ],
-        PolicyRoles: [
-            {
-                RoleName: "AWSSupportAccess",
-                RoleId: "AROAYE32SRU5SKYPMYOPO",
-            },
-        ],
-        IsTruncated: false,
-    },
-]
+];
 
 const createCache = (policies, entities) => {
     return {
@@ -80,14 +49,6 @@ const createCache = (policies, entities) => {
             listPolicies: {
                 "us-east-1": {
                     data: policies
-                }
-
-            },
-            listEntitiesForPolicy: {
-                "us-east-1": {
-                    "arn:aws:iam::111111111111:policy/AWSSupportAccess": {
-                        data: entities
-                    }
                 }
 
             }
@@ -116,14 +77,7 @@ const createNullCacheEntities = (policies) => {
                     data: policies
                 }
 
-            },
-            listEntitiesForPolicy: {
-                "us-east-1": {
-                    "arn:aws:iam::111111111111:policy/AWSSupportAccess": {
-                        data: null
-                    }
-                }
-            },
+            }
         }
     }
 }
@@ -131,15 +85,23 @@ const createNullCacheEntities = (policies) => {
 describe('iamSupportPolicy',() =>{
     describe('run', () => {
         it('should PASS if no policy attachment to access support center',() => {
-            const cache = createCache([listPolicies[2]], listEntitiesForPolicy[1]);
+            const cache = createCache([listPolicies[2]]);
             iamSupportPolicy.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
             })
         });
-        
+
+        it('should PASS if no policies',() => {
+            const cache = createCache([]);
+            iamSupportPolicy.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+            })
+        });
+    
         it('should FAIL if no policy attachment to access support center',() => {
-            const cache = createCache([listPolicies[1]], listEntitiesForPolicy[1]);
+            const cache = createCache([listPolicies[0]]);
             iamSupportPolicy.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -148,14 +110,6 @@ describe('iamSupportPolicy',() =>{
 
         it('should UNKNOWN if no policy returned',() => {
             const cache = createNullCachePolicies();
-            iamSupportPolicy.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(3);
-            });
-        });
-
-        it('should UNKNOWN if no entities for policy returned',() => {
-            const cache = createNullCacheEntities([listPolicies[2]]);
             iamSupportPolicy.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
