@@ -843,6 +843,7 @@ module.exports = {
         'bucketLoggingEnabled'          : require(__dirname + '/plugins/alibaba/oss/bucketLoggingEnabled.js'),
         'bucketPayByRequester'          : require(__dirname + '/plugins/alibaba/oss/bucketPayByRequester.js'),
         'ossBucketPrivate'              : require(__dirname + '/plugins/alibaba/oss/ossBucketPrivate.js'),
+        'ossBucketLifecycle'            : require(__dirname + '/plugins/alibaba/oss/ossBucketLifecycle.js'),
         'bucketCmkEncrypted'            : require(__dirname + '/plugins/alibaba/oss/bucketCmkEncrypted.js'),
         'ossBucketVersioning'           : require(__dirname + '/plugins/alibaba/oss/ossBucketVersioning.js'),
         'ossBucketTransferAcceleration' : require(__dirname + '/plugins/alibaba/oss/ossBucketTransferAcceleration.js'),
