@@ -13,6 +13,13 @@ const createCache = (err, data) => {
                     }
                 }
             }
+        },
+        projects: {
+            get: {
+                'global': {
+                    data: [{ name: 'test-project' }]
+                }
+            }
         }
     }
 };
@@ -103,7 +110,7 @@ describe('mysqlLocalInfile', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('SQL instance have local_infile flag enabled');
+                expect(results[0].message).to.include('SQL instance has local_infile flag enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -121,56 +128,6 @@ describe('mysqlLocalInfile', function () {
                             value: "on",
                         },
                       ]}
-                }],
-            );
-
-            plugin.run(cache, {}, callback);
-        });
-        it('should give failing result if sql instances have local_infile flag enabled', function (done) {
-            const callback = (err, results) => {
-                expect(results.length).to.be.above(0);
-                expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('SQL instance have local_infile flag enabled');
-                expect(results[0].region).to.equal('global');
-                done()
-            };
-
-            const cache = createCache(
-                null,
-                [{
-                    instanceType: "CLOUD_SQL_INSTANCE",
-                    name: "testing-instance",
-                    databaseVersion: "MYSQL_5_7",
-                    settings: {
-                      databaseFlags: [
-                        {
-                            name: "log_checkpoints",
-                            value: "on",
-                        },
-                      ]}
-                }],
-            );
-
-            plugin.run(cache, {}, callback);
-        });
-        it('should give failing result if sql instances have local_infile flag enabled', function (done) {
-            const callback = (err, results) => {
-                expect(results.length).to.be.above(0);
-                expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('SQL instance have local_infile flag enabled');
-                expect(results[0].region).to.equal('global');
-                done()
-            };
-
-            const cache = createCache(
-                null,
-                [{
-                    instanceType: "CLOUD_SQL_INSTANCE",
-                    name: "testing-instance",
-                    databaseVersion: "MYSQL_5_7",
-                    settings: {
-                      databaseFlags: []
-                    }
                 }],
             );
 

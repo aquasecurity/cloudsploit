@@ -11,7 +11,7 @@ var regions = [
     'cn-shenzhen',            // China (Shenzhen)
     'cn-heyuan',              // China (Heyuan)
     'cn-chengdu',             // China (Chengdu)
-    'cn-hongkong',            // China(Hong Kong)
+    'cn-hongkong',            // China (Hong Kong)
     'cn-guangzhou',           // China (Guangzhou)
     'ap-southeast-1',         // Singapore
     'ap-southeast-2',         // Australia (Sydney)
@@ -20,7 +20,7 @@ var regions = [
     'ap-northeast-1',         // Japan (Tokyo)
     'ap-south-1',             // India (Mumbai)
     'eu-central-1',           // Germany (Frankfurt)
-    'eu-west-1',              // UK(London)
+    'eu-west-1',              // UK (London)
     'us-west-1',              // US (Silicon Valley)
     'us-east-1',              // US (Virginia)
     'me-east-1',              // UAE (Dubai)

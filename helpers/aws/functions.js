@@ -361,11 +361,12 @@ function isValidCondition(statement, allowedConditionKeys, iamConditionOperators
 
             var subCondition = statement.Condition[operator];
             for (var key of Object.keys(subCondition)) {
-                if (!allowedConditionKeys.some(conditionKey=> key.includes(conditionKey))) return false;
+                let keyLower = key.toLowerCase();
+                if (!allowedConditionKeys.some(conditionKey => keyLower.includes(conditionKey.toLowerCase()))) return false;
                 var value = subCondition[key];
                 if (iamConditionOperators.string[effect].includes(defaultOperator) ||
                 iamConditionOperators.arn[effect].includes(defaultOperator)) {
-                    if (key === 'kms:CallerAccount' && typeof value === 'string' && effect === 'Allow' &&  value === accountId) {
+                    if (keyLower === 'kms:calleraccount' && typeof value === 'string' && effect === 'Allow' &&  value === accountId) {
                         values.push(value);
                         return values;
                     } 
@@ -395,7 +396,12 @@ function isEffectivePolicyStatement(statement, denyActionResourceMap) {
     for (let action of Object.keys(statementActionResourceMap)) {
         for (let key of Object.keys(denyActionResourceMap)) {
             if (matchKeys(key, action)) {
-                statementActionResourceMap[action] = statementActionResourceMap[action].filter(resource => !denyActionResourceMap[key].includes(resource));
+                var deniedResources = [];
+                for (let stmResource of statementActionResourceMap[action]) {
+                    if (denyActionResourceMap[key].find(deniedResource => matchKeys(deniedResource, stmResource))) deniedResources.push(stmResource);
+                }
+
+                statementActionResourceMap[action] = statementActionResourceMap[action].filter(resource => !deniedResources.includes(resource));
             }
         }
 
@@ -812,6 +818,56 @@ function getDefaultKeyId(cache, region, defaultKeyDesc) {
 
     return false;
 }
+
+function getOrganizationAccounts(listAccounts, accountId) {
+    let orgAccountIds = [];
+    if (listAccounts.data && listAccounts.data.length){
+        listAccounts.data.forEach(account => {
+            if (account.Id && account.Id !== accountId) orgAccountIds.push(account.Id);
+        });      
+    }
+
+    return orgAccountIds;
+}
+
+function getPrivateSubnets(subnetRTMap, subnets, routeTables) {
+    let response = [];
+    let privateRouteTables = [];
+
+    routeTables.forEach(routeTable => {
+        if (routeTable.RouteTableId && routeTable.Routes &&
+            routeTable.Routes.find(route => route.GatewayId && !route.GatewayId.startsWith('igw-'))) privateRouteTables.push(routeTable.RouteTableId);
+    });
+
+    subnets.forEach(subnet => {
+        if (subnet.SubnetId && subnetRTMap[subnet.SubnetId] && privateRouteTables.includes(subnetRTMap[subnet.SubnetId])) response.push(subnet.SubnetId);
+    });
+
+    return response;
+}
+
+function getSubnetRTMap(subnets, routeTables) {
+    let subnetRTMap = {};
+    let vpcRTMap = {};
+
+    routeTables.forEach(routeTable => {
+        if (routeTable.RouteTableId && routeTable.Associations && routeTable.Associations.length) {
+            routeTable.Associations.forEach(association => {
+                if (association.SubnetId && !subnetRTMap[association.SubnetId]) subnetRTMap[association.SubnetId] =  routeTable.RouteTableId;
+            });
+        }
+        if (routeTable.VpcId && routeTable.RouteTableId && routeTable.Associations &&
+            routeTable.Associations.find(association => association.Main) && !vpcRTMap[routeTable.VpcId]) vpcRTMap[routeTable.VpcId] = routeTable.RouteTableId; 
+    });
+
+    subnets.forEach(subnet => {
+        if (subnet.SubnetId && subnet.VpcId &&
+            !subnetRTMap[subnet.SubnetId] && vpcRTMap[subnet.VpcId]) subnetRTMap[subnet.SubnetId] = vpcRTMap[subnet.VpcId];
+    });
+
+    return subnetRTMap;
+}
+
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
@@ -836,5 +892,8 @@ module.exports = {
     getDenyActionResourceMap: getDenyActionResourceMap,
     getDenyPermissionsMap: getDenyPermissionsMap,
     isEffectivePolicyStatement: isEffectivePolicyStatement,
-    getS3BucketLocation: getS3BucketLocation
+    getS3BucketLocation: getS3BucketLocation,
+    getOrganizationAccounts: getOrganizationAccounts,
+    getPrivateSubnets: getPrivateSubnets,
+    getSubnetRTMap: getSubnetRTMap
 };

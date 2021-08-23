@@ -140,9 +140,9 @@ var calls = {
         }
     },
     ACK: {
-       describeClustersV1: {
-           override: true
-       } 
+        describeClustersV1: {
+            override: true
+        } 
     }
 };
 
@@ -234,10 +234,44 @@ var postcalls = [
                 filterKey: ['DBInstanceId'],
                 filterValue: ['DBInstanceId'],
                 apiVersion: '2014-08-15'
-            }
+            },
+            DescribeSQLCollectorPolicy: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'DescribeDBInstances',
+                filterKey: ['DBInstanceId'],
+                filterValue: ['DBInstanceId'],
+                apiVersion: '2014-08-15'
+            },
+            DescribeSQLCollectorRetention: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'DescribeDBInstances',
+                filterKey: ['DBInstanceId'],
+                filterValue: ['DBInstanceId'],
+                apiVersion: '2014-08-15'
+            },
+            DescribeDBInstanceIPArrayList: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'DescribeDBInstances',
+                filterKey: ['DBInstanceId'],
+                filterValue: ['DBInstanceId'],
+                apiVersion: '2014-08-15'
+            },
+            DescribeDBInstanceTDE: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'DescribeDBInstances',
+                filterKey: ['DBInstanceId'],
+                filterValue: ['DBInstanceId'],
+                apiVersion: '2014-08-15'
+            },
+
         },
         OSS: {
             getBucketInfo: {
+                reliesOnService: 'oss',
+                reliesOnCall: 'listBuckets',
+                override: true
+            },
+            getBucketRequestPayment: {
                 reliesOnService: 'oss',
                 reliesOnCall: 'listBuckets',
                 override: true

@@ -33,24 +33,27 @@ module.exports = {
 
             var iamPolicy = iamPolicies.data[0];
             var gmailUsers = [];
-            iamPolicy.bindings.forEach(roleBinding => {
-                if (roleBinding.members && roleBinding.members.length) {
-                    roleBinding.members.forEach(member => {
-                        var emailArr = member.split('@');
-                        if (emailArr.length && emailArr.length > 1) {
-                            var provider = emailArr[1].split('.');
-                            if (provider[0] === 'gmail' && (gmailUsers.indexOf(member) === -1)) {
-                                gmailUsers.push(member);
+            if (iamPolicy.bindings) {
+                iamPolicy.bindings.forEach(roleBinding => {
+                    if (roleBinding.members && roleBinding.members.length) {
+                        roleBinding.members.forEach(member => {
+                            var emailArr = member.split('@');
+                            if (emailArr.length && emailArr.length > 1) {
+                                var provider = emailArr[1].split('.');
+                                if (provider[0] === 'gmail' && (gmailUsers.indexOf(member) === -1)) {
+                                    gmailUsers.push(member);
+                                }
                             }
-                        }
-                    })
-                }
-            });
+                        })
+                    }
+                });
+            }
 
             if (gmailUsers.length) {
-                var gmailUsersStr = gmailUsers.join(', ');
-                helpers.addResult(results, 2,
-                    `The following accounts are using Gmail login credentials: ${gmailUsersStr}`, region);
+                gmailUsers.forEach(user => {
+                    helpers.addResult(results, 2,
+                        'Account is using Gmail login credentials', region, user);
+                });
             } else {
                 helpers.addResult(results, 0, 'No accounts are using Gmail login credentials', region);
             }

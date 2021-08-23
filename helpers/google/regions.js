@@ -51,15 +51,17 @@ module.exports = {
     all_regions: regions,
     zones: zones,
     disks: regions,
-    keyRings: regions,
-    cryptoKeys: regions,
+    keyRings: ['global', ...regions],
+    cryptoKeys: ['global', ...regions],
     securityPolicies: ['global'],
     firewalls: ['global'],
     buckets: ['global'],
     instances: {
         compute: regions,
-        sql: ['global']
+        sql: ['global'],
+        spanner: ['global']
     },
+    instanceTemplates: ['global'],
     networks: ['global'],
     backendServices: ['global'],
     healthChecks: ['global'],
@@ -75,5 +77,10 @@ module.exports = {
     serviceAccounts: ['global'],
     keys: ['global'],
     sinks: ['global'],
-    users: ['global']
+    users: ['global'],
+    backupRuns: ['global'],
+    datasets: ['global'],
+    policies: ['global'],
+    topics: ['global'],
+    deployments: ['global']
 };

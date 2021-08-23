@@ -33,14 +33,15 @@ module.exports = {
             }
 
             buckets.data.forEach(bucket => {
-                if (bucket.id) {
+                if (bucket.name) {
+                    let resource = helpers.createResourceName('b', bucket.name);
                     if (bucket.versioning &&
                         bucket.versioning.enabled) {
-                        helpers.addResult(results, 0, 'Bucket versioning Enabled', region, bucket.id);
+                        helpers.addResult(results, 0, 'Bucket versioning Enabled', region, resource);
                     } else if ((bucket.versioning &&
                         !bucket.versioning.enabled) ||
                         !bucket.versioning){
-                        helpers.addResult(results, 2, 'Bucket versioning not Enabled', region, bucket.id);
+                        helpers.addResult(results, 2, 'Bucket versioning not Enabled', region, resource);
                     }
                 } else {
                     helpers.addResult(results, 0, 'No storage buckets found', region);

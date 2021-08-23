@@ -1,4 +1,3 @@
-var async = require('async');
 var helpers = require('../../../helpers/alibaba');
 
 module.exports = {
@@ -33,7 +32,7 @@ module.exports = {
         }
 
         describeClusters.data.forEach(cluster => {
-            if (!cluster.cluster_id) return cb();
+            if (!cluster.cluster_id) return;
 
             var resource = helpers.createArn('cs', accountId, 'cluster', cluster.cluster_id, defaultRegion);
 

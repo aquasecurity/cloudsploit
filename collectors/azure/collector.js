@@ -76,9 +76,19 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.KeyVault/vaults?api-version=2019-09-01'
         }
     },
+    recoveryServiceVaults: {
+        listBySubscriptionId: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.RecoveryServices/vaults?api-version=2016-06-01'
+        }
+    },
     resources: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/resources?api-version=2019-10-01'
+        }
+    },
+    redisCaches: {
+        listBySubscription: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Cache/redis?api-version=2020-06-01'
         }
     },
     managedClusters: {
@@ -104,6 +114,11 @@ var calls = {
     webApps: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Web/sites?api-version=2019-08-01'
+        }
+    },
+    appServiceCertificates: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Web/certificates?api-version=2019-08-01'
         }
     },
     logProfiles: {
@@ -202,11 +217,32 @@ var calls = {
 };
 
 var postcalls = {
+    availabilitySets:{
+        listByResourceGroup: {
+            reliesOnPath: 'resourceGroups.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/Microsoft.Compute/availabilitySets?api-version=2020-12-01'
+        }
+    },
     advancedThreatProtection: {
         get: {
             reliesOnPath: 'databaseAccounts.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/Microsoft.Security/advancedThreatProtectionSettings/current?api-version=2017-08-01-preview'
+        }
+    },
+    backupProtectedItems: {
+        listByVault: {
+            reliesOnPath: 'recoveryServiceVaults.listBySubscriptionId',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/backupProtectedItems?api-version=2019-05-13'
+        }
+    },
+    backupPolicies: {
+        listByVault: {
+            reliesOnPath: 'recoveryServiceVaults.listBySubscriptionId',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/backupPolicies?api-version=2019-05-13'
         }
     },
     serverBlobAuditingPolicies: {
@@ -244,6 +280,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/flowLogs?api-version=2020-11-01'
         }
     },
+    virtualNetworkPeerings: {
+        list: {
+            reliesOnPath: 'virtualNetworks.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/virtualNetworkPeerings?api-version=2020-11-01'
+        }
+    },
     configurations: {
         listByServer: {
             reliesOnPath: 'servers.listPostgres',
@@ -256,6 +299,13 @@ var postcalls = {
             reliesOnPath: 'servers.listPostgres',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/administrators?api-version=2017-12-01'
+        }
+    },
+    virtualMachines: {
+        get: {
+            reliesOnPath: 'virtualMachines.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}?api-version=2020-12-01'
         }
     },
     virtualMachineExtensions: {

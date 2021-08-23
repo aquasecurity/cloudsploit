@@ -8,12 +8,23 @@ module.exports = {
     more_info: 'Log sinks send log data to a storage service for archival and compliance. A log sink with no filter is necessary to ensure that all logs are being properly sent. If logs are sent to a storage bucket, the bucket must exist and bucket versioning should exist.',
     link: 'https://cloud.google.com/logging/docs/export/',
     recommended_action: 'Ensure a log sink is configured properly with an empty filter and a destination.',
-    apis: ['sinks:list', 'buckets:list'],
+    apis: ['sinks:list', 'buckets:list', 'projects:get'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions();
+
+        let projects = helpers.addSource(cache, source,
+            ['projects','get', 'global']);
+
+        if (!projects || projects.err || !projects.data || !projects.data.length) {
+            helpers.addResult(results, 3,
+                'Unable to query for projects: ' + helpers.addError(projects), 'global', null, null, (projects) ? projects.err : null);
+            return callback(null, results, source);
+        }
+
+        var project = projects.data[0].name;
 
         async.each(regions.sinks, function(region, rcb){
             let sinks = helpers.addSource(cache, source,
@@ -33,17 +44,16 @@ module.exports = {
             var noSinks = true;
             var bucketName ='';
             var sinkName = '';
+            var sinkResource;
             sinks.data.forEach(sink => {
-                if ((!sink.filter ||
-                    (sink.filter &&
-                    sink.filter === '')) &&
-                    sink.destination) {
+                if ((!sink.filter || (sink.filter && sink.filter === '')) && sink.destination) {
                     var destinationType = sink.destination.split('.')[0];
                     if (destinationType === 'storage') {
                         bucketName = sink.destination.split('/')[1];
                     }
                     noSinks = false;
                     sinkName = sink.name
+                    sinkResource = helpers.createResourceName('sinks', sinkName, project);
                 }
             });
             if (bucketName.length) {
@@ -60,21 +70,22 @@ module.exports = {
                         return bucket.name === bucketName;
                     });
                     if (logBucket) {
-                        helpers.addResult(results, 0, 'The log sink is properly configured', region, sinkName);
+                        let bucketResource = helpers.createResourceName('b', logBucket.name);
+                        helpers.addResult(results, 0, 'The log sink is properly configured', region, sinkResource);
                         if (logBucket.versioning &&
                             logBucket.versioning.enabled) {
-                            helpers.addResult(results, 0, 'Log bucket versioning is enabled', region, logBucket.name);
+                            helpers.addResult(results, 0, 'Log bucket versioning is enabled', region, bucketResource);
                         } else {
-                            helpers.addResult(results, 2, 'Log bucket versioning is disabled', region, logBucket.name);
+                            helpers.addResult(results, 2, 'Log bucket versioning is disabled', region, bucketResource);
                         }
                     } else {
-                        helpers.addResult(results, 2, `The log bucket: ${bucketName} does not exist`, region, sinkName);
+                        helpers.addResult(results, 2, `The log bucket: ${bucketName} does not exist`, region, sinkResource);
                     }
                 }
             } else if (noSinks) {
                 helpers.addResult(results, 2, 'No log sinks are enabled', region);
             } else {
-                helpers.addResult(results, 0, 'The log sink is properly configured', region, sinkName);
+                helpers.addResult(results, 0, 'The log sink is properly configured', region, sinkResource);
             }
 
             rcb();
