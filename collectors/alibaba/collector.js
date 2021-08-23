@@ -138,6 +138,11 @@ var calls = {
             property: 'TrailList',
             apiVersion: '2020-07-06'
         }
+    },
+    ACK: {
+       describeClustersV1: {
+           override: true
+       } 
     }
 };
 

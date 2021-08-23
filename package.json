@@ -39,6 +39,7 @@
     "access": "public"
   },
   "dependencies": {
+    "@alicloud/pop-core": "^1.7.10",
     "@octokit/app": "^3.0.0",
     "@octokit/request": "^3.0.3",
     "@octokit/rest": "^16.3.2",
