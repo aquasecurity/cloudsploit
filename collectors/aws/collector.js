@@ -36,6 +36,12 @@ var globalServices = [
 ];
 
 var calls = {
+    AccessAnalyzer: {
+        listAnalyzers: {
+            property: 'analyzers',
+            paginate: 'NextToken'
+        }
+    },
     ACM: {
         listCertificates: {
             property: 'CertificateSummaryList',
@@ -502,7 +508,7 @@ var calls = {
             property: 'Policies',
             paginate: 'Marker',
             params: {
-                OnlyAttached: true
+                OnlyAttached: true // Making this false will effect IAM Support Policy plugin
             }
         },
         listVirtualMFADevices: {
@@ -1235,6 +1241,14 @@ var postcalls = [
                 reliesOnCall: 'listHostedZones',
                 filterKey: 'HostedZoneId',
                 filterValue: 'Id'
+            },
+        },
+        Route53Domains: {
+            getDomainDetail: {
+                reliesOnService: 'route53domains',
+                reliesOnCall: 'listDomains',
+                filterKey: 'DomainName',
+                filterValue: 'DomainName'
             },
         },
         S3Control: {
