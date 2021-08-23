@@ -75,8 +75,51 @@ const describeLaunchConfigurations = [
     },
 ];
 
+const describeLaunchTemplates = [
+    {
+        "LaunchTemplateId": "lt-0219ac0443364d22d",
+        "LaunchTemplateName": "Test-lt",
+        "CreateTime": "2021-07-19T12:32:41.000Z",
+        "CreatedBy": "arn:aws:iam::111111111111:user/user",
+        "DefaultVersionNumber": 4,
+        "LatestVersionNumber": 4,
+        "Tags": []
+    }
+]
 
-const createCache = (images, instances, launchConfig) => {
+const describeLaunchTemplateVersions = [
+    {
+        "LaunchTemplateVersions": [
+          {
+            "LaunchTemplateId": "lt-0219ac0443364d22d",
+            "LaunchTemplateName": "Test-lt",
+            "VersionNumber": 4,
+            "CreateTime": "2021-07-19T13:58:15.000Z",
+            "CreatedBy": "arn:aws:iam::111111111111:user/user",
+            "DefaultVersion": true,
+            "LaunchTemplateData": {
+                "EbsOptimized": false,
+                "BlockDeviceMappings": [],
+                "NetworkInterfaces": [],
+                "ImageId": "ami-026c295331eb10e50",
+                "InstanceType": "t1.micro",
+                "KeyName": "user-kp",
+                "TagSpecifications": [],
+                "ElasticGpuSpecifications": [],
+                "ElasticInferenceAccelerators": [],
+                "SecurityGroupIds": [
+                    "sg-043778823f73431a7",
+                    "sg-02e2c70cd463dca29"
+                ],
+                "SecurityGroups": [],
+                "LicenseSpecifications": []
+            }
+          },
+        ]
+    },
+]
+
+const createCache = (images, instances, launchConfig, launchTemplate, launchTemplateVersion) => {
     return {
         ec2:{
             describeImages: {
@@ -87,6 +130,18 @@ const createCache = (images, instances, launchConfig) => {
             describeInstances: {
                 'us-east-1': {
                     data: instances
+                },
+            },
+            describeLaunchTemplates: {
+                'us-east-1': {
+                    data: launchTemplate
+                },
+            },
+            describeLaunchTemplateVersions: {
+                'us-east-1': {
+                    "lt-0219ac0443364d22d": {
+                        data: launchTemplateVersion
+                    }
                 },
             },
         },
@@ -117,6 +172,20 @@ const createErrorCache = () => {
                     },
                 },
             },
+            describeLaunchTemplates: {
+                'us-east-1': {
+                    err: {
+                        message: 'error describing launch templates'
+                    }
+                },
+            },
+            describeLaunchTemplateVersions: {
+                'us-east-1': {
+                    err: {
+                        message: 'error describing launch template versions'
+                    }
+                },
+            },
         },
         autoscaling: {
             describeLaunchConfigurations:{
@@ -139,6 +208,12 @@ const createNullCache = () => {
             describeInstances: {
                 'us-east-1': null,
             },
+            describeLaunchTemplates: {
+                'us-east-1': null,
+            },
+            describeLaunchTemplateVersions: {
+                'us-east-1': null,
+            },
         },
         autoscaling: {
             describeLaunchConfigurations:{
@@ -151,7 +226,7 @@ const createNullCache = () => {
 describe('unusedAmi', function () {
     describe('run', function () {
         it('should PASS if Amazon Machine Image is in use', function (done) {
-            const cache = createCache([describeImages[0]], [describeInstances[0]], describeLaunchConfigurations[0]);
+            const cache = createCache([describeImages[0]], [describeInstances[0]], describeLaunchConfigurations[0], [describeLaunchTemplates[0]], describeLaunchTemplateVersions[0]);
             unusedAmi.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -159,8 +234,17 @@ describe('unusedAmi', function () {
             });
         });
 
+        it('should PASS if Amazon Machine Image is used by launch template', function (done) {
+            const cache = createCache([describeImages[0]], [], [], [describeLaunchTemplates[0]], describeLaunchTemplateVersions[0]);
+            unusedAmi.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
+        
         it('should FAIL if Amazon Machine Image is not in use', function (done) {
-            const cache = createCache([describeImages[1]], [describeInstances[0]], describeLaunchConfigurations[0]);
+            const cache = createCache([describeImages[1]], [describeInstances[0]], describeLaunchConfigurations[0], [describeLaunchTemplates[0]], describeLaunchTemplateVersions[0]);
             unusedAmi.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -169,7 +253,7 @@ describe('unusedAmi', function () {
         });
 
         it('should FAIL if Amazon Machine Image is not in use ', function (done) {
-            const cache = createCache([describeImages[1]], [], []);
+            const cache = createCache([describeImages[1]], [], [], []);
             unusedAmi.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);

@@ -1,8 +1,7 @@
-var assert = require('assert');
 var expect = require('chai').expect;
 var plugin = require('./instancePublicAccess');
 
-const createCache = (instanceData, instanceDatab, error) => {
+const createCache = (instanceData, error) => {
     return {
         instances: {
             compute: {
@@ -10,19 +9,14 @@ const createCache = (instanceData, instanceDatab, error) => {
                     'us-central1-a': {
                         data: instanceData,
                         err: error
-                    },
-                    'us-central1-b': {
-                        data: instanceDatab,
-                        err: error
-                    },
-                    'us-central1-c': {
-                        data: instanceDatab,
-                        err: error
-                    },
-                    'us-central1-f': {
-                        data: instanceDatab,
-                        err: error
                     }
+                }
+            }
+        },
+        projects: {
+            get: {
+                'global': {
+                    data: 'testproj'
                 }
             }
         }
@@ -43,7 +37,6 @@ describe('instancePublicAccess', function () {
 
             const cache = createCache(
                 [],
-                [],
                 ['null']
             );
 
@@ -61,18 +54,17 @@ describe('instancePublicAccess', function () {
 
             const cache = createCache(
                 [],
-                [],
                 null
             );
 
             plugin.run(cache, {}, callback);
         });
 
-        it('should fail with no block project-wide ssh keys', function (done) {
+        it('should fail if instance public access is enabled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Public access is enabled for these instances');
+                expect(results[0].message).to.include('Public access is enabled for the instance');
                 expect(results[0].region).to.equal('us-central1');
                 done()
             };
@@ -104,18 +96,17 @@ describe('instancePublicAccess', function () {
                         ],
                     }
                 ],
-                [],
                 null
             );
 
             plugin.run(cache, {}, callback);
         })
 
-        it('should pass with block project-wide ssh key', function (done) {
+        it('should pass if instance public access is disabled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Public access is disabled for these instances');
+                expect(results[0].message).to.include('Public access is disabled for the instance');
                 expect(results[0].region).to.equal('us-central1');
                 done()
             };

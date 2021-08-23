@@ -8,12 +8,23 @@ module.exports = {
     more_info: 'DNS Security is a feature that authenticates all responses to domain name lookups. This prevents attackers from committing DNS hijacking or man in the middle attacks.',
     link: 'https://cloud.google.com/dns/docs/dnssec',
     recommended_action: 'Ensure that all managed zones using DNSSEC are not using the RSASHA1 algorithm for key or zone signing.',
-    apis: ['managedZones:list'],
+    apis: ['managedZones:list', 'projects:get'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions();
+
+        let projects = helpers.addSource(cache, source,
+            ['projects','get', 'global']);
+
+        if (!projects || projects.err || !projects.data || !projects.data.length) {
+            helpers.addResult(results, 3,
+                'Unable to query for projects: ' + helpers.addError(projects), 'global', null, null, (projects) ? projects.err : null);
+            return callback(null, results, source);
+        }
+
+        var project = projects.data[0].name;
 
         async.each(regions.managedZones, function(region, rcb){
             let managedZones = helpers.addSource(cache, source,
@@ -33,6 +44,8 @@ module.exports = {
             }
 
             managedZones.data.forEach(managedZone => {
+                let resource = helpers.createResourceName('zones', managedZone.name, project);
+
                 if (managedZone.dnssecConfig &&
                     managedZone.dnssecConfig.state &&
                     managedZone.dnssecConfig.state === 'on' &&
@@ -42,25 +55,25 @@ module.exports = {
                         if (keySpec.keyType === 'keySigning') {
                             if (keySpec.algorithm.toLowerCase() === 'rsasha1') {
                                 helpers.addResult(results, 2,
-                                    'RSASHA1 algorithm is being used for key signing', region, managedZone.id);
+                                    'RSASHA1 algorithm is being used for key signing', region, resource);
                             } else {
                                 helpers.addResult(results, 0,
-                                    'RSASHA1 algorithm is not being for key signing', region, managedZone.id);
+                                    'RSASHA1 algorithm is not being for key signing', region, resource);
                             }
                         } else if (keySpec.keyType === 'zoneSigning') {
                             if (keySpec.algorithm.toLowerCase() === 'rsasha1') {
                                 helpers.addResult(results, 2,
-                                    'RSASHA1 algorithm is being used for zone signing', region, managedZone.id);
+                                    'RSASHA1 algorithm is being used for zone signing', region, resource);
                             } else {
                                 helpers.addResult(results, 0,
-                                    'RSASHA1 algorithm is not being used for zone signing', region, managedZone.id);
+                                    'RSASHA1 algorithm is not being used for zone signing', region, resource);
                             }
                         }
                     });
                 } else {
                     // DNSSEC not enabled
                     helpers.addResult(results, 0,
-                        'RSASHA1 algorithm is not being used for zone signing', region, managedZone.id);
+                        'RSASHA1 algorithm is not being used for zone signing', region, resource);
                 }
             });
 

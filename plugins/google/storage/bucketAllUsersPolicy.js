@@ -68,9 +68,11 @@ module.exports = {
             });
 
             if (badBuckets.length) {
-                var badBucketsStr = badBuckets.join(', ');
-                helpers.addResult(results, 2,
-                    `The following buckets have anonymous or public access: ${badBucketsStr}`, region);
+                badBuckets.forEach(bucket => {
+                    let resource = helpers.createResourceName('b', bucket);
+                    helpers.addResult(results, 2,
+                        'Bucket has anonymous or public access', region, resource);
+                });
             } else {
                 helpers.addResult(results, 0, 'No buckets have anonymous or public access.', region);
             }

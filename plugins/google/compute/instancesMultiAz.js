@@ -8,13 +8,24 @@ module.exports = {
     more_info: 'Creating instances in a single zone creates a single point of failure for all systems in the VPC. All managed instances should be created as Regional to ensure proper failover.',
     link: 'https://cloud.google.com/vpc/docs/vpc',
     recommended_action: 'Launch new instances as regional instance groups.',
-    apis: ['instanceGroups:aggregatedList', 'instances:compute:list'],
+    apis: ['instanceGroups:aggregatedList', 'instances:compute:list', 'projects:get'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions();
         var region = regions.instanceGroups[0];
+
+        let projects = helpers.addSource(cache, source,
+            ['projects','get', 'global']);
+
+        if (!projects || projects.err || !projects.data || !projects.data.length) {
+            helpers.addResult(results, 3,
+                'Unable to query for projects: ' + helpers.addError(projects), 'global', null, null, (projects) ? projects.err : null);
+            return callback(null, results, source);
+        }
+
+        var project = projects.data[0].name;
 
         let instanceGroups = helpers.addSource(cache, source,
             ['instanceGroups', 'aggregatedList', region]);
@@ -38,8 +49,7 @@ module.exports = {
                 icb();
             }, function () {
                 async.each(regions.instances.compute, function (location, loccb) {
-                    var instancesInRegion = [];
-                    var regionExists = false;
+                    var noInstances = [];
                     async.each(regions.zones[location], function (loc, lcb) {
                         let instances = helpers.addSource(
                             cache, source, ['instances', 'compute', 'list', loc]);
@@ -53,31 +63,30 @@ module.exports = {
 
                         //Looping by zone, ignoring the results
                         if (!instances.data.length) {
-                            // helpers.addResult(results, 0, 'No Instances Found', loc);
+                            noInstances.push(loc);
                             return lcb();
                         }
 
                         for (let instance of instances.data) {
+                            if (!instance.name) continue;
+                            let resource = helpers.createResourceName('instances', instance.name, project, 'zone', location);
                             var instanceName = instance.name.split('-');
                             instanceName.splice(instanceName.length - 1, 1);
                             instanceName = instanceName.join('-');
 
-                            if (!groupName.includes(instanceName)) {
-                                instancesInRegion.push(instance.id);
+                            if (groupName.includes(instanceName)) {
+                                helpers.addResult(results, 0,
+                                    'Instance is regional and highly available', location, resource);
                             } else {
-                                regionExists = true;
+                                helpers.addResult(results, 2,
+                                    'Instance is available in single zone', location, resource);
                             }
                         }
                         lcb();
                     }, function() {
-                        if (instancesInRegion.length) {
-                            var myInstancesStr = instancesInRegion.join(', ');
-                            helpers.addResult(results, 2,
-                                `These instances are only available in one zone: ${myInstancesStr}`, location);
-                        } else if (!instancesInRegion.length && regionExists) {
-                            helpers.addResult(results, 0, 'The instance groups in the region are highly available', location);
-                        } else if (!instancesInRegion.length && !regionExists) {
-                            helpers.addResult(results, 0, 'No instances found in the region', location);
+                        if (noInstances.length) {
+                            helpers.addResult(results, 0,
+                                `No instances found in following zones: ${noInstances.join(', ')}`, location)
                         }
                         loccb();
                     });

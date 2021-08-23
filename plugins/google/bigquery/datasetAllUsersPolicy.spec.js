@@ -46,6 +46,13 @@ const createCache = (err, data) => {
                     data: data
                 }
             }
+        },
+        projects: {
+            get: {
+                'global': {
+                    data: [ { name: 'testproj' }]
+                }
+            }
         }
     }
 };

@@ -1,7 +1,7 @@
 var expect = require('chai').expect;
 var plugin = require('./shieldedVmEnabled');
 
-const createCache = (instanceData, instanceDatab, error) => {
+const createCache = (instanceData, error) => {
     return {
         instances: {
             compute: {
@@ -9,19 +9,14 @@ const createCache = (instanceData, instanceDatab, error) => {
                     'us-central1-a': {
                         data: instanceData,
                         err: error
-                    },
-                    'us-central1-b': {
-                        data: instanceDatab,
-                        err: error
-                    },
-                    'us-central1-c': {
-                        data: instanceDatab,
-                        err: error
-                    },
-                    'us-central1-f': {
-                        data: instanceDatab,
-                        err: error
                     }
+                }
+            }
+        },
+        projects: {
+            get: {
+                'global': {
+                    data: 'testproj'
                 }
             }
         }
@@ -42,8 +37,7 @@ describe('shieldedVmEnabled', function () {
 
             const cache = createCache(
                 [],
-                [],
-                ['null']
+                ['error']
             );
 
             plugin.run(cache, {}, callback);
@@ -58,11 +52,7 @@ describe('shieldedVmEnabled', function () {
                 done()
             };
 
-            const cache = createCache(
-                [],
-                [],
-                null
-            );
+            const cache = createCache([]);
 
             plugin.run(cache, {}, callback);
         });
@@ -71,7 +61,7 @@ describe('shieldedVmEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Shielded VM security is not enabled for the these instances');
+                expect(results[0].message).to.include('Shielded VM security is not enabled for the the instance');
                 expect(results[0].region).to.equal('us-central1');
                 done()
             };
@@ -88,9 +78,7 @@ describe('shieldedVmEnabled', function () {
                             enableIntegrityMonitoring: false,
                         },
                     }
-                ],
-                [],
-                null
+                ]
             );
 
             plugin.run(cache, {}, callback);
@@ -100,7 +88,7 @@ describe('shieldedVmEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Shielded VM security is enabled for the these instances');
+                expect(results[0].message).to.include('Shielded VM security is enabled for the the instance');
                 expect(results[0].region).to.equal('us-central1');
                 done()
             };
