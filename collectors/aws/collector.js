@@ -508,7 +508,7 @@ var calls = {
             property: 'Policies',
             paginate: 'Marker',
             params: {
-                OnlyAttached: true
+                OnlyAttached: true // Making this false will effect IAM Support Policy plugin
             }
         },
         listVirtualMFADevices: {
