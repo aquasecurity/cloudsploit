@@ -859,6 +859,13 @@ var postcalls = [
                 filterValue: 'TrailARN'
             }
         },
+        CloudWatch: {
+            getEsMetricStatistics: {
+                reliesOnService: 'es',
+                reliesOnCall: 'listDomainNames',
+                override: true,
+            }
+        },
         CodeStar: {
             describeProject: {
                 reliesOnService: 'codestar',
