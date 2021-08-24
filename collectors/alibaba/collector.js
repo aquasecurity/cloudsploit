@@ -18,6 +18,7 @@ Arguments:
 
 var alicloud = require('@alicloud/pop-core');
 var async = require('async');
+const { apigateway } = require('../../helpers/alibaba/regions');
 var helpers = require(__dirname + '/../../helpers/alibaba');
 var collectors = require(__dirname + '/../../collectors/alibaba');
 
@@ -29,7 +30,8 @@ var regionEndpointMap = {
     kms: regions['kms'],
     rds: ['cn-zhangjiakou', 'cn-huhehaote', 'cn-chengdu', 'ap-southeast-2', 'ap-southeast-3', 'ap-southeast-5',
         'ap-northeast-1', 'ap-south-1', 'eu-central-1', 'eu-west-1', 'me-east-1'],
-    actiontrail: regions['actiontrail']
+    actiontrail: regions['actiontrail'],
+    apigateway: regions['apigateway'],
 };
 
 var globalServices = [
@@ -137,6 +139,14 @@ var calls = {
         DescribeTrails: {
             property: 'TrailList',
             apiVersion: '2020-07-06'
+        }
+    },
+    ApiGateway: {
+        DescribeLogConfig: {
+            property: 'LogInfos',
+            subProperty: 'LogInfo',
+            apiVersion: '2016-07-14',
+            paginate: 'Pages'
         }
     }
 };

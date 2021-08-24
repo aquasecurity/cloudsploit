@@ -37,5 +37,6 @@ module.exports = {
     sts: ['cn-hangzhou'],
     oss: ['cn-hangzhou'],
     kms: regions,
-    actiontrail: regions
+    actiontrail: regions,
+    apigateway: regions,
 };
