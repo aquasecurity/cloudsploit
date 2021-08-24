@@ -47,7 +47,7 @@ describe('apiLogConfig', () => {
          it('should PASS if API has log service configured', done => {
              const cache = createCache([describeLogConfig]);
              apiLogConfig.run(cache, {}, (err, results) => {
-                    expect(results.length).to.equal(1);
+                 expect(results.length).to.equal(1);
                  expect(results[0].status).to.equal(0);
                  expect(results[0].message).to.include('APIs are configured to publish logs to Log Service');
                  expect(results[0].region).to.equal('cn-hangzhou');
