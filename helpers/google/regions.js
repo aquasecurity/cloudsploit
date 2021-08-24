@@ -83,5 +83,6 @@ module.exports = {
     policies: ['global'],
     topics: ['global'],
     jobs: regions,
+    organizations: ['global'],
     deployments: ['global']
 };

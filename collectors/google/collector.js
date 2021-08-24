@@ -236,6 +236,14 @@ var calls = {
             version: 'v2',
             location: 'global'
         }
+    },
+    organizations:{ // https://cloudresourcemanager.googleapis.com/v1beta1/organizations
+        list: {
+            api: 'cloudresourcemanager',
+            version: 'v1beta1',
+            location: null,
+            parent: 'organization'
+        },
     }
 };
 
@@ -334,6 +342,17 @@ var postcalls = {
             postcall: true,
             location: 'region',
             regional: true
+        }
+    },
+    organizations: { //https://cloudresourcemanager.googleapis.com/v1beta1/{resource=organizations/*}:getIamPolicy
+        getIamPolicy: {
+            api: 'cloudresourcemanager',
+            version: 'v1beta1',
+            reliesOnService: ['organizations'],
+            reliesOnCall: ['list'],
+            filterKey: ['name'],
+            filterValue: ['organizationId'],
+            parent: 'resource'
         }
     }
 };

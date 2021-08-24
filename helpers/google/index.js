@@ -390,6 +390,11 @@ var execute = function(LocalGoogleConfig, collection, service, callObj, callKey,
         executor['projects'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
     } else if (callObj.parent && callObj.parent === 'projectId') {
         parentParams = {auth: callObj.params.auth, projectId: callObj.params.project};
+    } else if (callObj.parent && callObj.parent === 'resource') {
+        parentParams = {auth: callObj.params.auth, resource: `organizations/${callObj.params[callObj.filterKey[0]]}`};
+        executor[service][callKey](parentParams, LocalGoogleConfig, executorCb);
+    } else if (callObj.parent && callObj.parent === 'organization') {
+        executor[service][callKey]({auth: callObj.params.auth}, LocalGoogleConfig, executorCb);
     } else if (callObj.parent && callObj.parent === 'projects') {
         parentParams = {auth: callObj.params.auth, parent: `projects/${callObj.params.project}`};
         executor['projects'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
