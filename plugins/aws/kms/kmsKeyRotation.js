@@ -66,14 +66,6 @@ module.exports = {
                 var getKeyPolicy = helpers.addSource(cache, source,
                     ['kms', 'getKeyPolicy', region, kmsKey.KeyId]);
 
-                
-                if (!describeKey || describeKey.err || !describeKey.data) {
-                    helpers.addResult(results, 3,
-                        'Unable to describe key: ' + helpers.addError(describeKey),
-                        region, kmsKey.KeyArn);
-                    return kcb();
-                }
-
                 if (!getKeyPolicy || getKeyPolicy.err || !getKeyPolicy.data){
                     helpers.addResult(results, 3,
                         'Unable to get key policy: ' + helpers.addError(getKeyPolicy),
@@ -109,6 +101,7 @@ module.exports = {
                     (describeKeyData.KeyMetadata.Description && describeKeyData.KeyMetadata.Description.indexOf('Default master key that protects my') === 0) ||
                     (describeKeyData.KeyMetadata.KeyState && describeKeyData.KeyMetadata.KeyState == 'PendingDeletion')) {
                     return kcb();
+                }
 
                 // Skip keys that are imported into KMS
                 if (describeKeyData.KeyMetadata &&

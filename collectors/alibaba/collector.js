@@ -18,7 +18,6 @@ Arguments:
 
 var alicloud = require('@alicloud/pop-core');
 var async = require('async');
-const { apigateway } = require('../../helpers/alibaba/regions');
 var helpers = require(__dirname + '/../../helpers/alibaba');
 var collectors = require(__dirname + '/../../collectors/alibaba');
 
