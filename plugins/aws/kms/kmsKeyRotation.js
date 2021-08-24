@@ -100,8 +100,8 @@ module.exports = {
                 
                 if (describeKeyData && describeKeyData.KeyMetadata) {
                     const currentEncryptionLevel = helpers.getEncryptionLevel(describeKeyData.KeyMetadata, helpers.ENCRYPTION_LEVELS);
-                    if (describeKeyData.KeyMetadata.KeyState && describeKeyData.KeyMetadata.KeyState == 'PendingDeletion' || 
-                        currentEncryptionLevel < 2)  return kcb();
+                    if ((describeKeyData.KeyMetadata.KeyState && describeKeyData.KeyMetadata.KeyState == 'PendingDeletion') || 
+                        currentEncryptionLevel <= 2)  return kcb();
                 }
 
                 // Skip keys that are imported into KMS
