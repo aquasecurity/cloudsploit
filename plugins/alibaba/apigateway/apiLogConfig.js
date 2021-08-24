@@ -18,20 +18,20 @@ module.exports = {
             const describeLogConfig = helpers.addSource(cache, source,
                 ['apigateway', 'DescribeLogConfig', region]);
             
-                if (!describeLogConfig) continue;
+            if (!describeLogConfig) continue;
 
-                if (describeLogConfig.err || !describeLogConfig.data){
-                    helpers.addResult(results, 3,
-                        'Unable to describe log config: ' + helpers.addError(describeLogConfig), region);
-                    continue;
-                }
-                
-                let configEnabled = false;
-                if (describeLogConfig.data.length && describeLogConfig.data.find(config => config.SlsLogStore)) configEnabled = true;
-                
-                const status = configEnabled ? 0 : 2;
-                helpers.addResult(results, status,
-                    `APIs are ${configEnabled ? '' : 'not '}configured to publish logs to Log Service`, region);
+            if (describeLogConfig.err || !describeLogConfig.data){
+                helpers.addResult(results, 3,
+                    'Unable to describe log config: ' + helpers.addError(describeLogConfig), region);
+                continue;
+            }
+            
+            let configEnabled = false;
+            if (describeLogConfig.data.length && describeLogConfig.data.find(config => config.SlsLogStore)) configEnabled = true;
+            
+            const status = configEnabled ? 0 : 2;
+            helpers.addResult(results, status,
+                `APIs are ${configEnabled ? '' : 'not '}configured to publish logs to Log Service`, region);
         }               
 
         callback(null, results, source);
