@@ -61,7 +61,21 @@ var calls = {
                 location: null
             }
         },
+        spanner: {
+            list: {
+                api: 'spanner',
+                version: 'v1',
+                parent: 'projects'
+            }
+        },
         manyApi: true,
+    },
+    instanceTemplates: {
+        list: {
+            api: 'compute',
+            version: 'v1',
+            location: 'global'
+        }
     },
     instanceGroups: {
         aggregatedList: {
@@ -189,7 +203,8 @@ var calls = {
             api: 'bigquery',
             version: 'v2',
             location: null,
-            projectId: true
+            projectId: true,
+            property: 'datasets'
         }
     },
     policies: {
@@ -204,7 +219,13 @@ var calls = {
             api: 'pubsub',
             version: 'v1',
             parent: 'project'
-
+        }
+    },
+    deployments: { // https://www.googleapis.com/deploymentmanager/v2/projects/project/global/deployments
+        list: {
+            api: 'deploymentmanager',
+            version: 'v2',
+            location: 'global'
         }
     },
     organizations:{ // https://cloudresourcemanager.googleapis.com/v1beta1/organizations
