@@ -53,6 +53,7 @@ module.exports = {
 
         var s3_allow_unencrypted_static_websites = settings.s3_allow_unencrypted_static_websites || this.settings.s3_allow_unencrypted_static_websites.default;
         var allowSkipEncryption = (s3_allow_unencrypted_static_websites == 'true');
+
         var region = helpers.defaultRegion(settings);
 
         var listBuckets = helpers.addSource(cache, source, ['s3', 'listBuckets', region]);
