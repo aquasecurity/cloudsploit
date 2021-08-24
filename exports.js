@@ -805,6 +805,7 @@ module.exports = {
         'topicEncryption'               : require(__dirname + '/plugins/google/pubsub/topicEncryption.js'),
 
         'dataflowHangedJobs'            : require(__dirname + '/plugins/google/dataflow/dataflowHangedJobs.js'),
+        'dataflowJobsEncryption'        : require(__dirname + '/plugins/google/dataflow/dataflowJobsEncryption.js'),
 
         'deleteExpiredDeployments'      : require(__dirname + '/plugins/google/deploymentmanager/deleteExpiredDeployments.js'),
 

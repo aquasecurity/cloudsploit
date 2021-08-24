@@ -330,6 +330,20 @@ var postcalls = {
             projectId: true
         }
     },
+    jobs: {
+        get: { //https://dataflow.googleapis.com/v1b3/projects/{projectId}/jobs/{jobId}
+            api: 'dataflow',
+            version: 'v1b3',
+            reliesOnService: ['jobs'],
+            reliesOnCall: ['list'],
+            filterKey: ['jobId'],
+            filterValue: ['id'],
+            projectId: true,
+            postcall: true,
+            location: 'region',
+            regional: true
+        }
+    },
     organizations: { //https://cloudresourcemanager.googleapis.com/v1beta1/{resource=organizations/*}:getIamPolicy
         getIamPolicy: {
             api: 'cloudresourcemanager',
