@@ -4,7 +4,7 @@ module.exports = {
     title: 'Network Policy Enabled',
     category: 'ACK',
     description: 'Ensure that Kubernetes Engine Clusters are configured to enable NetworkPolicy.',
-    more_info: 'Be default, kubernetes pods accept traffic from any source. But with NetworkPolicy, pods can be configured ' +
+    more_info: 'By default, kubernetes pods accept traffic from any source. But with NetworkPolicy, pods can be configured ' +
         'to reject any connections which are not allowed by any NetworkPolicy.',
     link: 'https://www.alibabacloud.com/help/doc-detail/97467.htm?spm=a2c63.p38356.b99.209.1e7b2c60a1yuxS',
     recommended_action: 'Recreate Kubernetes clusters and select Terway for Network Plug-in option',
