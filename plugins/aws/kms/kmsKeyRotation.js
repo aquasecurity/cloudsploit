@@ -60,8 +60,6 @@ module.exports = {
             }
 
             async.each(listKeys.data, function(kmsKey, kcb){
-                if (!kmsKey.KeyId) return kcb();
-
                 var describeKey = helpers.addSource(cache, source,
                     ['kms', 'describeKey', region, kmsKey.KeyId]);
 
@@ -94,15 +92,23 @@ module.exports = {
 
                 var getKeyRotationStatus = helpers.addSource(cache, source,
                     ['kms', 'getKeyRotationStatus', region, kmsKey.KeyId]);
-                var describeKeyData = describeKey.data;
-                // AWS-generated keys for CodeCommit, ACM, etc. should be skipped.
-                // Also skip keys that are being deleted
-                
-                if (describeKeyData && describeKeyData.KeyMetadata) {
-                    const currentEncryptionLevel = helpers.getEncryptionLevel(describeKeyData.KeyMetadata, helpers.ENCRYPTION_LEVELS);
-                    if ((describeKeyData.KeyMetadata.KeyState && describeKeyData.KeyMetadata.KeyState == 'PendingDeletion') || 
-                        currentEncryptionLevel <= 2)  return kcb();
+
+                if (!describeKey || describeKey.err || !describeKey.data) {
+                    helpers.addResult(results, 3,
+                        'Unable to describe key: ' + helpers.addError(describeKey),
+                        region, kmsKey.KeyArn);
+                    return kcb();
                 }
+
+                var describeKeyData = describeKey.data;
+
+                // AWS-generated keys for CodeCommit, ACM, etc. should be skipped.
+                // The only way to distinguish these keys is the default description used by AWS.
+                // Also skip keys that are being deleted
+                if (describeKeyData.KeyMetadata &&
+                    (describeKeyData.KeyMetadata.Description && describeKeyData.KeyMetadata.Description.indexOf('Default master key that protects my') === 0) ||
+                    (describeKeyData.KeyMetadata.KeyState && describeKeyData.KeyMetadata.KeyState == 'PendingDeletion')) {
+                    return kcb();
 
                 // Skip keys that are imported into KMS
                 if (describeKeyData.KeyMetadata &&
