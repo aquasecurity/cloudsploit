@@ -30,7 +30,7 @@ module.exports = {
             }
 
             for (const api of describeApis.data) {
-                if(!api.GroupId) continue;
+                if (!api.GroupId) continue;
 
                 var resource = helpers.createArn('apigateway', accountId, 'api', api.ApiId, region);
 
