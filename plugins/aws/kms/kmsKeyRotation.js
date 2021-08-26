@@ -92,8 +92,6 @@ module.exports = {
                     return kcb();
                 }
 
-                var getKeyRotationStatus = helpers.addSource(cache, source,
-                    ['kms', 'getKeyRotationStatus', region, kmsKey.KeyId]);
                 var describeKeyData = describeKey.data;
                 // AWS-generated keys for CodeCommit, ACM, etc. should be skipped.
                 // Also skip keys that are being deleted
@@ -111,14 +109,17 @@ module.exports = {
                     return kcb();
                 }
 
-                var keyRotationStatusData = getKeyRotationStatus.data;
-
-                if (!getKeyRotationStatus || getKeyRotationStatus.err || !getKeyRotationStatus.data) {
+                var getKeyRotationStatus = helpers.addSource(cache, source,
+                    ['kms', 'getKeyRotationStatus', region, kmsKey.KeyId]);
+                
+                if (!getKeyRotationStatus || getKeyRotationStatus.err || !getKeyRotationStatus.data){
                     helpers.addResult(results, 3,
                         'Unable to get key rotation status: ' + helpers.addError(getKeyRotationStatus),
                         region, kmsKey.KeyArn);
                     return kcb();
                 }
+                
+                var keyRotationStatusData = getKeyRotationStatus.data;
 
                 if (keyRotationStatusData.KeyRotationEnabled) {
                     helpers.addResult(results, 0, 'Key rotation is enabled', region, kmsKey.KeyArn);
