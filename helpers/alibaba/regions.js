@@ -39,4 +39,5 @@ module.exports = {
     kms: regions,
     actiontrail: regions,
     apigateway: regions,
+    ack: ['cn-hangzhou']
 };

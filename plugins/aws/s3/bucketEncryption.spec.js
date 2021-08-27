@@ -114,6 +114,11 @@ const createCache = (cmk, bucketErr, sseAes, kms, cfMatching) => {
           "us-east-1": {
             "bucket1": bucketObj
           }
+        },
+        "getBucketWebsite": {
+          "us-east-1": {
+            "bucket1": bucketObj
+          }
         }
       },
       "cloudfront": {
@@ -173,6 +178,19 @@ describe('bucketEncryption', function () {
             const cache = createCache(false, false, false, true);
 
             s3.run(cache, {}, callback);
+        })
+
+        it('should give passing result if s3_unencrypted_static_websites setting is enabled and bucket has static website hosting enabled', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1)
+                expect(results[0].status).to.equal(0)
+                expect(results[0].message).to.include('Bucket has static website hosting enabled')
+                done()
+            };
+
+            const cache = createCache(false, false, false, true);
+
+            s3.run(cache, { s3_allow_unencrypted_static_websites: 'true' }, callback);
         })
 
         it('should give passing result if S3 bucket has CMK KMS encryption', function (done) {
