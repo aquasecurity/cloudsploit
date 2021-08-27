@@ -138,6 +138,11 @@ var calls = {
             property: 'TrailList',
             apiVersion: '2020-07-06'
         }
+    },
+    ACK: {
+        describeClustersV1: {
+            override: true
+        } 
     }
 };
 
@@ -262,6 +267,11 @@ var postcalls = [
         },
         OSS: {
             getBucketInfo: {
+                reliesOnService: 'oss',
+                reliesOnCall: 'listBuckets',
+                override: true
+            },
+            getBucketLifecycle: {
                 reliesOnService: 'oss',
                 reliesOnCall: 'listBuckets',
                 override: true
