@@ -38,6 +38,6 @@ module.exports = {
     oss: ['cn-hangzhou'],
     kms: regions,
     actiontrail: regions,
-    apigateway: regions,
-    ack: ['cn-hangzhou']
+    ack: ['cn-hangzhou'],
+    apigateway: regions
 };
