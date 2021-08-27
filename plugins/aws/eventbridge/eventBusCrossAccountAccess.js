@@ -30,7 +30,7 @@ module.exports = {
             default: 'false'
         },
         eventbridge_policy_condition_keys: {
-            name: 'SNS Topic Policy Allowed Condition Keys',
+            name: 'EventBridge Event Bus Policy Allowed Condition Keys',
             description: 'Comma separated list of AWS IAM condition keys that should be allowed i.e. aws:SourceAccount,aws:PrincipalArn',
             regex: '^.*$',
             default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceAccount,aws:SourceArn,aws:SourceOwner'
