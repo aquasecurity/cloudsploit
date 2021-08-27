@@ -150,11 +150,11 @@ describe('esCrossAccountAccess', function () {
             });
         });
 
-        it('should FAIL if ES domain does not have cross-account access policy attached', function (done) {
+        it('should PASS if ES domain does not have cross-account access policy attached', function (done) {
             const cache = createCache([domainNames[0]], domains[1]);
             esCrossAccountAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
+                expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
