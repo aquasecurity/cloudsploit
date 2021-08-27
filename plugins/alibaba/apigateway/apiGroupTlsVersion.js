@@ -37,7 +37,7 @@ module.exports = {
             for (const apiGroup of describeApiGroups.data) {
                 if (!apiGroup.GroupId) continue;
 
-                var resource = helpers.createArn('apigateway', accountId, 'api', apiGroup.GroupId, region);
+                var resource = helpers.createArn('apigateway', accountId, 'apigroup', apiGroup.GroupId, region);
                 let configEnabled = false;
                 if (apiGroup.HttpsPolicy && apiGroup.HttpsPolicy == 'HTTPS2_TLS1_2') configEnabled = true;
                 
