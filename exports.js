@@ -874,6 +874,6 @@ module.exports = {
 
         'networkPolicyEnabled'          : require(__dirname + '/plugins/alibaba/ack/networkPolicyEnabled.js'),
         
-        'apiInstanceTlsVersion'        : require(__dirname + '/plugins/alibaba/apigateway/apiInstanceTlsVersion.js'),
+        'apiGroupTlsVersion'           : require(__dirname + '/plugins/alibaba/apigateway/apiGroupTlsVersion.js'),
     }
 };
