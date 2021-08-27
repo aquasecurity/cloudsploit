@@ -103,7 +103,7 @@ module.exports = {
                     var localDomain = describeElasticsearchDomain.data.DomainStatus;
                    
                     if (!localDomain.AccessPolicies)  {                        
-                        helpers.addResult(results, 2,
+                        helpers.addResult(results, 0,
                             'ES domain does not have access policy defined', region, resource);
                         return cb();
                     }
