@@ -8,7 +8,7 @@ const domains =  [
             ARN: 'arn:1234',
             EncryptionAtRestOptions: {
                 Enabled: true,
-                KmsKeyId: '(Default) aws/es'
+                KmsKeyId: 'arn:aws:kms:us-east-1:111122223333:key/34e9wedw-ae6b-4c36-9405-06e67bccswwd'
             }
         }
     },
@@ -18,7 +18,7 @@ const domains =  [
             ARN: 'arn:1234',
             EncryptionAtRestOptions: {
                 Enabled: true,
-                KmsKeyId: 'alias/aws/es'
+                KmsKeyId: 'arn:aws:kms:us-east-1:111122223333:key/75e9285f-ae6b-4c36-9405-06e67bcc7ef1'
             }
         }
     },
@@ -53,11 +53,11 @@ const describeKey = [
     {
         "KeyMetadata": {
             "AWSAccountId": "111122223333",
-            "KeyId": "75e9285f-ae6b-4c36-9405-06e67bcc7ef1",
-            "Arn": "arn:aws:kms:us-east-1:111122223333:key/75e9285f-ae6b-4c36-9405-06e67bcc7ef1",
+            "KeyId": "34e9wedw-ae6b-4c36-9405-06e67bccswwd",
+            "Arn": "arn:aws:kms:us-east-1:111122223333:key/34e9wedw-ae6b-4c36-9405-06e67bccswwd",
             "CreationDate": "2020-12-15T01:16:53.045000+05:00",
             "Enabled": true,
-            "Description": "Default master key that protects my Glue data when no other key is defined",
+            "Description": "My key",
             "KeyUsage": "ENCRYPT_DECRYPT",
             "KeyState": "Enabled",
             "Origin": "AWS_KMS",

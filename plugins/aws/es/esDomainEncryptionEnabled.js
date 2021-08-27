@@ -14,16 +14,14 @@ module.exports = {
             name: 'ElasticSearch Domain Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awskms',
+            default: 'awscmk',
         }
     },
     
     run: function(cache, settings, callback) {
-        
         var config = {
             desiredEncryptionLevelString: settings.es_encryption_level || this.settings.es_encryption_level.default
         };
-
         var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(config.desiredEncryptionLevelString);
 
         var results = [];
@@ -53,8 +51,8 @@ module.exports = {
 
             listDomainNames.data.forEach(domain => {
                 if (!domain.DomainName) return;
-                
                 const resource = `arn:${awsOrGov}:es:${region}:${accountId}:domain/${domain.DomainName}`;
+
                 var describeElasticsearchDomain = helpers.addSource(cache, source,
                     ['es', 'describeElasticsearchDomain', region, domain.DomainName]);
                     
@@ -66,7 +64,6 @@ module.exports = {
                         results, 3,
                         'Unable to query for ES domain config: ' + helpers.addError(describeElasticsearchDomain), region, resource);
                 } else {
-
                     if (describeElasticsearchDomain.data.DomainStatus &&
                         describeElasticsearchDomain.data.DomainStatus.EncryptionAtRestOptions &&
                         describeElasticsearchDomain.data.DomainStatus.EncryptionAtRestOptions.Enabled &&
@@ -74,13 +71,13 @@ module.exports = {
                         var kmsKeyId = describeElasticsearchDomain.data.DomainStatus.EncryptionAtRestOptions.KmsKeyId.split('/')[1];
                         var describeKey = helpers.addSource(cache, source,
                             ['kms', 'describeKey', region, kmsKeyId]);
-        
+
                         if (!describeKey || describeKey.err || !describeKey.data || !describeKey.data.KeyMetadata) {
                             helpers.addResult(results, 3,
                                 `Unable to query KMS key: ${helpers.addError(describeKey)}`, region, kmsKeyId);
                             return;
                         }
-        
+
                         var currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
                         var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
 
