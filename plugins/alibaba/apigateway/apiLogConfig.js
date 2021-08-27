@@ -17,8 +17,8 @@ module.exports = {
         for (const region of regions.apigateway) {            
             const describeApis = helpers.addSource(cache, source, 
                 ['apigateway', 'DescribeApis', region]);
-            
-            if(!describeApis) continue;
+
+            if (!describeApis) continue;
             
             if (describeApis.err || !describeApis.data) {
                 helpers.addResult(results, 3,
@@ -33,10 +33,8 @@ module.exports = {
             
             const describeLogConfig = helpers.addSource(cache, source,
                 ['apigateway', 'DescribeLogConfig', region]);
-            
-            if (!describeLogConfig) continue;
 
-            if (describeLogConfig.err || !describeLogConfig.data){
+            if (!describeLogConfig || describeLogConfig.err || !describeLogConfig.data){
                 helpers.addResult(results, 3,
                     'Unable to describe log config: ' + helpers.addError(describeLogConfig), region);
                 continue;
