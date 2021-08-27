@@ -129,7 +129,6 @@ module.exports = {
                             } else if (!config.eventbridge_whitelisted_aws_account_principals.includes(principal) &&
                                     !restrictedAccountPrincipals.includes(principal)) restrictedAccountPrincipals.push(principal);
                         });
-                        return;
                     }
                 });
 
