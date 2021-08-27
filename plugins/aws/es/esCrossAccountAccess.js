@@ -85,12 +85,13 @@ module.exports = {
                 return rcb();
             }
 
-            async.forEach(listDomainNames.data, function(domain, cb){
-                if (!domain.DomainName) return cb();
+            listDomainNames.data.forEach(domain => {
+                if (!domain.DomainName) return;
+
+                const resource = `arn:${awsOrGov}:es:${region}:${accountId}:domain/${domain.DomainName}`;
 
                 var describeElasticsearchDomain = helpers.addSource(cache, source,
                     ['es', 'describeElasticsearchDomain', region, domain.DomainName]);
-                const resource = `arn:${awsOrGov}:es:${region}:${accountId}:domain/${domain.DomainName}`;
 
                 if (!describeElasticsearchDomain ||
                     describeElasticsearchDomain.err ||
@@ -98,22 +99,22 @@ module.exports = {
                     !describeElasticsearchDomain.data.DomainStatus) {
                     helpers.addResult(results, 3,
                         'Unable to query for ES domain config: ' + helpers.addError(describeElasticsearchDomain), region, resource);
-                    return cb();
                 } else {
                     var localDomain = describeElasticsearchDomain.data.DomainStatus;
                    
                     if (!localDomain.AccessPolicies)  {                        
                         helpers.addResult(results, 0,
                             'ES domain does not have access policy defined', region, resource);
-                        return cb();
+                        return;
                     }
                            
                     var statements = helpers.normalizePolicyDocument(localDomain.AccessPolicies);
         
                     if (!statements){
                         helpers.addResult(results, 0, 'No statement exists for the policy', region, resource);
-                        return cb();
+                        return;
                     }
+
                     var restrictedAccountPrincipals = [];
                     var crossAccountEs = false;
         
@@ -149,16 +150,13 @@ module.exports = {
 
                     if (crossAccountEs && !restrictedAccountPrincipals.length) {
                         helpers.addResult(results, 0,
-                            `ES domain "${domain.DomainName}" contains trusted account principals only`, region, resource);
-                        return cb();
+                            'ES domain contains trusted account principals only', region, resource);
                     } else if (crossAccountEs) {
                         helpers.addResult(results, 2,
-                            `ES domain "${domain.DomainName}" contains these untrusted account principals: ${restrictedAccountPrincipals.join(', ')}`, region,resource);
-                        return cb();
+                            `ES domain contains these untrusted account principals: ${restrictedAccountPrincipals.join(', ')}`, region,resource);
                     } else {
-                        helpers.addResult(results, 2,
-                            `ES domain "${domain.DomainName}" does not contain cross-account policy statement`, region, resource);
-                        return cb();
+                        helpers.addResult(results, 0,
+                            'ES domain does not contain cross-account policy statement', region, resource);
                     }
                 }
             });

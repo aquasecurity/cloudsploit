@@ -139,16 +139,6 @@ describe('esCrossAccountAccess', function () {
                 done();
             });
         });
-        
-        it('should FAIL if ES domain is accessible to all accounts', function (done) {
-            const cache = createCache([domainNames[0]], domains[2]);
-            esCrossAccountAccess.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                expect(results[0].region).to.equal('us-east-1');
-                done();
-            });
-        });
 
         it('should PASS if ES domain does not have cross-account access policy attached', function (done) {
             const cache = createCache([domainNames[0]], domains[1]);
@@ -160,11 +150,11 @@ describe('esCrossAccountAccess', function () {
             });
         });
         
-        it('should FAIL if no ES Domain policy found', function (done) {
+        it('should PASS if no ES Domain policy found', function (done) {
             const cache = createCache([domainNames[0]], domains[3]);
             esCrossAccountAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
+                expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
