@@ -87,7 +87,7 @@ module.exports = {
             
             async.each(listEventBuses.data, function(eventBus, cb){
                 if (!eventBus.Policy) {
-                    helpers.addResult(results, 2, `Event Bus ${eventBus.Name} does not contain cross-account policy statement`, region);
+                    helpers.addResult(results, 0, 'Event bus does not use custom policy', region);
                     return cb();
                 }
     
