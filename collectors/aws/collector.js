@@ -475,7 +475,16 @@ var calls = {
     },
     ES: {
         listDomainNames: {
-            property: 'DomainNames'
+            property: 'DomainNames',
+        }
+    },
+    EventBridge: {
+        listEventBuses: {
+            property: 'EventBuses',
+            paginate: 'NextToken',
+            params:{                
+                Limit: 100,
+            }
         }
     },
     Glue: {
