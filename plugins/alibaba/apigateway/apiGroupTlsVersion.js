@@ -29,7 +29,7 @@ module.exports = {
                 continue;
             }
 
-            if(!describeApiGroups.data.length) {
+            if (!describeApiGroups.data.length) {
                 helpers.addResult(results, 0, 'No API groups found', region);
                 continue;
             }

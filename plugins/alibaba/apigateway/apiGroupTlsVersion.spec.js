@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var apiInstanceTlsVersion = require('./apiInstanceTlsVersion')
+var apiGroupTlsVersion = require('./apiGroupTlsVersion')
 
 const describeApiGroups = [
     {
@@ -57,11 +57,11 @@ const nullCache = () => {
     }
 }
 
-describe('apiInstanceTlsVersion', () => {
+describe('apiGroupTlsVersion', () => {
     describe('run', () => {       
          it('should PASS if API has latest TLS version', done => {
              const cache = createCache([describeApiGroups[1]]);
-             apiInstanceTlsVersion.run(cache, {}, (err, results) => {
+             apiGroupTlsVersion.run(cache, {}, (err, results) => {
                  expect(results.length).to.equal(1);
                  expect(results[0].status).to.equal(0);
                  expect(results[0].message).to.include('API instance has latest TLS version');
@@ -72,7 +72,7 @@ describe('apiInstanceTlsVersion', () => {
   
          it('should FAIL if API does not have latest TLS version', done => {
              const cache = createCache([describeApiGroups[0]]);
-             apiInstanceTlsVersion.run(cache, {}, (err, results) => {
+             apiGroupTlsVersion.run(cache, {}, (err, results) => {
                  expect(results.length).to.equal(1);
                  expect(results[0].status).to.equal(2);
                  expect(results[0].message).to.include('API instance does not have latest TLS version');
@@ -83,7 +83,7 @@ describe('apiInstanceTlsVersion', () => {
 
          it('should FAIL if API response does not have HttpsPolicy', done => {
              const cache = createCache([describeApiGroups[2]]);
-             apiInstanceTlsVersion.run(cache, {}, (err, results) => {
+             apiGroupTlsVersion.run(cache, {}, (err, results) => {
                  expect(results.length).to.equal(1);
                  expect(results[0].status).to.equal(2);
                  expect(results[0].message).to.include('API instance does not have latest TLS version');
@@ -92,9 +92,19 @@ describe('apiInstanceTlsVersion', () => {
              });
          });
  
+         it('should PASS if no api groups found', done => {
+             const cache = createCache([]);
+             apiGroupTlsVersion.run(cache, {}, (err, results) => {
+                 expect(results.length).to.equal(1);
+                 expect(results[0].status).to.equal(0);
+                 expect(results[0].region).to.equal('cn-hangzhou');
+                 done();
+             });
+         });
+
          it('should UNKNOWN if unable to describe API groups', done => {
              const cache = errorCache();
-             apiInstanceTlsVersion.run(cache, {}, (err, results) => {
+             apiGroupTlsVersion.run(cache, {}, (err, results) => {
                  expect(results.length).to.equal(1);
                  expect(results[0].status).to.equal(3);
                  expect(results[0].region).to.equal('cn-hangzhou');
@@ -104,7 +114,7 @@ describe('apiInstanceTlsVersion', () => {
  
          it('should not return anything if response not received', done => {
              const cache = nullCache();
-             apiInstanceTlsVersion.run(cache, {}, (err, results) => {
+             apiGroupTlsVersion.run(cache, {}, (err, results) => {
                  expect(results.length).to.equal(0);
                  done();
              });
