@@ -147,6 +147,11 @@ var calls = {
             apiVersion: '2016-07-14',
             paginate: 'Pages'
         }
+    },
+    ACK: {
+        describeClustersV1: {
+            override: true
+        }
     }
 };
 
