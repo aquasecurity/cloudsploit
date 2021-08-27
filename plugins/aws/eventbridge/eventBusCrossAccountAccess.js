@@ -94,7 +94,7 @@ module.exports = {
                 var statements = helpers.normalizePolicyDocument(eventBus.Policy);
     
                 if (!statements){
-                    helpers.addResult(results, 3, 'No statement exists for the policy', region);
+                    helpers.addResult(results, 0, 'No statement exists for the policy', region);
                     return cb();
                 }
                 var restrictedAccountPrincipals = [];
