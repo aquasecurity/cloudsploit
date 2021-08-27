@@ -8,12 +8,29 @@ const describeLogConfig = {
     "RegionId": "cn-hangzhou"
 }
 
-const createCache = logConfig => {
+const describeApis = {
+    "GroupName": "test_group",
+    "CreatedTime": "2021-08-24T05:47:32Z",
+    "ModifiedTime": "2021-08-24T05:47:32Z",
+    "ApiName": "test_api",
+    "Visibility": "PRIVATE",
+    "RegionId": "cn-hangzhou",
+    "ApiId": "69567aca1ff14efe8b864fb1a6f58f32",
+    "GroupId": "db81d7d3fd794d3db5a4642afb408fa7"
+}
+
+
+const createCache = (describeApi, logConfig) => {
     return {
         apigateway: {
             DescribeLogConfig: {
                 'cn-hangzhou': {
                     data: logConfig
+                }
+            },
+            DescribeApis: {
+                'cn-hangzhou': {
+                    data: describeApi
                 }
             }
         }
@@ -24,6 +41,11 @@ const errorCache = () => {
     return {
         apigateway: {
             DescribeLogConfig: {
+                'cn-hangzhou': {
+                    err: 'Unable to describe log config',
+                }
+            },
+            DescribeApis: {
                 'cn-hangzhou': {
                     err: 'Unable to describe APIs',
                 }
@@ -37,6 +59,9 @@ const nullCache = () => {
         apigateway: {
             DescribeLogConfig: {
                 'cn-hangzhou': null
+            },
+            DescribeApis: {
+                'cn-hangzhou': null
             }
         }
     }
@@ -45,7 +70,7 @@ const nullCache = () => {
 describe('apiLogConfig', () => {
     describe('run', () => {       
          it('should PASS if API has log service configured', done => {
-             const cache = createCache([describeLogConfig]);
+             const cache = createCache([describeApis],[describeLogConfig]);
              apiLogConfig.run(cache, {}, (err, results) => {
                  expect(results.length).to.equal(1);
                  expect(results[0].status).to.equal(0);
@@ -55,8 +80,19 @@ describe('apiLogConfig', () => {
              });
          });
   
+         it('should PASS if no API found', done => {
+             const cache = createCache([],[describeLogConfig]);
+             apiLogConfig.run(cache, {}, (err, results) => {
+                 expect(results.length).to.equal(1);
+                 expect(results[0].status).to.equal(0);
+                 expect(results[0].message).to.include('No APIs found');
+                 expect(results[0].region).to.equal('cn-hangzhou');
+                 done();
+             });
+         });
+  
          it('should FAIL if API does not have log service configured', done => {
-             const cache = createCache([{}]);
+             const cache = createCache([describeApis], [{}]);
              apiLogConfig.run(cache, {}, (err, results) => {
                  expect(results.length).to.equal(1);
                  expect(results[0].status).to.equal(2);

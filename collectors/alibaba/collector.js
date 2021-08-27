@@ -146,6 +146,12 @@ var calls = {
             subProperty: 'LogInfo',
             apiVersion: '2016-07-14',
             paginate: 'Pages'
+        },
+        DescribeApis: {
+            property: 'ApiSummarys',
+            subProperty: 'ApiSummary',
+            apiVersion: '2016-07-14',
+            paginate: 'Pages'
         }
     },
     ACK: {

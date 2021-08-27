@@ -7,14 +7,30 @@ module.exports = {
     more_info: 'Publishing logs to Log Service helps in debugging issues related to request execution or client access to your API.',
     link: 'https://www.alibabacloud.com/help/doc-detail/64818.htm',
     recommended_action: 'Configure Log Service for API Gateway',
-    apis: ['ApiGateway:DescribeLogConfig'],
+    apis: ['ApiGateway:DescribeApis', 'ApiGateway:DescribeLogConfig'],
 
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const regions = helpers.regions(settings);
 
-        for (const region of regions.apigateway) {
+        for (const region of regions.apigateway) {            
+            const describeApis = helpers.addSource(cache, source, 
+                ['apigateway', 'DescribeApis', region]);
+            
+            if(!describeApis) continue;
+            
+            if (describeApis.err || !describeApis.data) {
+                helpers.addResult(results, 3,
+                    'Unable to describe APIs: ' + helpers.addError(describeApis), region);
+                continue;
+            }
+
+            if (!describeApis.data.length) {
+                helpers.addResult(results, 0, 'No APIs found', region);
+                break;
+            }            
+            
             const describeLogConfig = helpers.addSource(cache, source,
                 ['apigateway', 'DescribeLogConfig', region]);
             
