@@ -40,6 +40,7 @@ module.exports = {
     elbv2: regions,
     emr: regions,
     es: regions,
+    eventbridge: regions,
     kinesis: [],
     firehose: [],
     glue: regions,
