@@ -86,7 +86,7 @@ module.exports = {
             }
 
             async.forEach(listDomainNames.data, function(domain, cb){
-                if(!domain.DomainName) return cb();
+                if (!domain.DomainName) return cb();
 
                 var describeElasticsearchDomain = helpers.addSource(cache, source,
                     ['es', 'describeElasticsearchDomain', region, domain.DomainName]);
