@@ -98,17 +98,17 @@ describe('eventBusCrossAccountAccess', function () {
             });
         });
         
-        it('should FAIL if Event Bus does not have cross-account access policy attached', function (done) {
+        it('should PASS if Event Bus does not have cross-account access policy attached', function (done) {
             const cache = createCache([listEventBuses[1]]);
             eventBusCrossAccountAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
+                expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
         
-        it('should FAIL if no Event Bus policy found', function (done) {
+        it('should PASS if no Event Bus policy found', function (done) {
             const cache = createCache(listEventBuses[2]);
             eventBusCrossAccountAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -118,7 +118,7 @@ describe('eventBusCrossAccountAccess', function () {
             });
         });
 
-        it('should FAIL if no Event Bus found', function (done) {
+        it('should PASS if no Event Bus found', function (done) {
             const cache = createCache([]);
             eventBusCrossAccountAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -137,7 +137,6 @@ describe('eventBusCrossAccountAccess', function () {
                 done();
             });
         });
-
 
         it('should not return anything if query to list event bus response not found', function (done) {
             const cache = createNullCache();

@@ -85,17 +85,19 @@ module.exports = {
                 return rcb();
             }
             
-            async.each(listEventBuses.data, function(eventBus, cb){
+            listEventBuses.data.forEach(eventBus => {
+                if (!eventBus.Arn) return;
+
                 if (!eventBus.Policy) {
-                    helpers.addResult(results, 0, 'Event bus does not use custom policy', region);
-                    return cb();
+                    helpers.addResult(results, 0, 'Event bus does not use custom policy', region, eventBus.Arn);
+                    return;
                 }
-    
+
                 var statements = helpers.normalizePolicyDocument(eventBus.Policy);
     
                 if (!statements){
-                    helpers.addResult(results, 0, 'No statement exists for the policy', region);
-                    return cb();
+                    helpers.addResult(results, 0, 'No statement exists for the policy', region, eventBus.Arn);
+                    return;
                 }
                 var restrictedAccountPrincipals = [];
                 var crossAccountEventBus = false;
@@ -115,6 +117,7 @@ module.exports = {
                         }
 
                         if (!crossAccountPrincipals.length) return;
+
                         crossAccountEventBus = true;
                         crossAccountPrincipals.forEach(principal => {
                             if (whitelistOrganization) {
@@ -129,22 +132,21 @@ module.exports = {
                         return;
                     }
                 });
+
                 if (crossAccountEventBus && !restrictedAccountPrincipals.length) {
                     helpers.addResult(results, 0,
-                        `Event bus "${eventBus.Name}" contains trusted account principals only`, region);
-                    return cb();
+                        'Event bus contains trusted account principals only', region, eventBus.Arn);
                 } else if (crossAccountEventBus) {
                     helpers.addResult(results, 2,
-                        `Event bus "${eventBus.Name}" contains these untrusted account principals: ${restrictedAccountPrincipals.join(', ')}`, region);
-                    return cb();
+                        `Event bus contains these untrusted account principals: ${restrictedAccountPrincipals.join(', ')}`,
+                        region, eventBus.Arn);
                 } else {
-                    helpers.addResult(results, 2,
-                        `Event bus "${eventBus.Name}" does not contain cross-account policy statement`, region);
-                    return cb();
+                    helpers.addResult(results, 0,
+                        'Event bus does not contain cross-account policy statement', region, eventBus.Arn);
                 }
-            }, function(){
-                rcb();
             });
+
+            rcb();
         }, function(){
             callback(null, results, source);
         });
