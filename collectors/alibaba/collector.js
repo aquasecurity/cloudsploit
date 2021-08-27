@@ -140,10 +140,15 @@ var calls = {
             apiVersion: '2020-07-06'
         }
     },
+    ACK: {
+        describeClustersV1: {
+            override: true
+        }
+    },
     ApiGateway: {
-        DescribeApis: {
-            property: 'ApiSummarys',
-            subProperty: 'ApiSummary',
+        DescribeApiGroups: {
+            property: 'ApiGroupAttributes',
+            subProperty: 'ApiGroupAttribute',
             apiVersion: '2016-07-14',
             paginate: 'Pages'
         }
@@ -286,15 +291,6 @@ var postcalls = [
                 override: true
             }
         },
-        ApiGateway: {
-            DescribeApiGroup: {
-                reliesOnService: 'apigateway',
-                reliesOnCall: 'DescribeApis',            
-                filterKey: ['GroupId'],
-                filterValue: ['GroupId'],
-                apiVersion: '2016-07-14'
-            }
-        }
     }
 ];
 
