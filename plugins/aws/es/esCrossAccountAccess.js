@@ -54,6 +54,7 @@ module.exports = {
         var regions = helpers.regions(settings);
         var defaultRegion = helpers.defaultRegion(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', regions.default, 'data']);
+        var awsOrGov = helpers.defaultPartition(settings);
         let organizationAccounts = [];
         if (whitelistOrganization) {
             var listAccounts = helpers.addSource(cache, source,
@@ -84,30 +85,33 @@ module.exports = {
                 return rcb();
             }
 
-            async.each(listDomainNames.data, function(domain, cb){
+            async.forEach(listDomainNames.data, function(domain, cb){
+                if(!domain.DomainName) return cb();
+
                 var describeElasticsearchDomain = helpers.addSource(cache, source,
                     ['es', 'describeElasticsearchDomain', region, domain.DomainName]);
+                const resource = `arn:${awsOrGov}:es:${region}:${accountId}:domain/${domain.DomainName}`;
 
                 if (!describeElasticsearchDomain ||
                     describeElasticsearchDomain.err ||
                     !describeElasticsearchDomain.data ||
                     !describeElasticsearchDomain.data.DomainStatus) {
                     helpers.addResult(results, 3,
-                        'Unable to query for ES domain config: ' + helpers.addError(describeElasticsearchDomain), region);
+                        'Unable to query for ES domain config: ' + helpers.addError(describeElasticsearchDomain), region, resource);
                     return cb();
                 } else {
                     var localDomain = describeElasticsearchDomain.data.DomainStatus;
                    
                     if (!localDomain.AccessPolicies)  {                        
                         helpers.addResult(results, 2,
-                            'ES domain does not have access policy defined', region, localDomain.ARN);
+                            'ES domain does not have access policy defined', region, resource);
                         return cb();
                     }
                            
                     var statements = helpers.normalizePolicyDocument(localDomain.AccessPolicies);
         
                     if (!statements){
-                        helpers.addResult(results, 3, 'No statement exists for the policy', region);
+                        helpers.addResult(results, 3, 'No statement exists for the policy', region, resource);
                         return cb();
                     }
                     var restrictedAccountPrincipals = [];
@@ -145,15 +149,15 @@ module.exports = {
 
                     if (crossAccountEs && !restrictedAccountPrincipals.length) {
                         helpers.addResult(results, 0,
-                            `ES domain "${domain.DomainName}" contains trusted account principals only`, region);
+                            `ES domain "${domain.DomainName}" contains trusted account principals only`, region, resource);
                         return cb();
                     } else if (crossAccountEs) {
                         helpers.addResult(results, 2,
-                            `ES domain "${domain.DomainName}" contains these untrusted account principals: ${restrictedAccountPrincipals.join(', ')}`, region);
+                            `ES domain "${domain.DomainName}" contains these untrusted account principals: ${restrictedAccountPrincipals.join(', ')}`, region,resource);
                         return cb();
                     } else {
                         helpers.addResult(results, 2,
-                            `ES domain "${domain.DomainName}" does not contain cross-account policy statement`, region);
+                            `ES domain "${domain.DomainName}" does not contain cross-account policy statement`, region, resource);
                         return cb();
                     }
                 }
