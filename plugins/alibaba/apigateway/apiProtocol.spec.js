@@ -41,7 +41,7 @@ const describeApi = [
         "RequestConfig": {
             "RequestPath": "/getInfo",
             "RequestMode": "MAPPING",
-            "RequestProtocol": "HTTP,HTTPS",
+            "RequestProtocol": "HTTPS",
             "RequestHttpMethod": "GET",
             "PostBodyDescription": "",
             "BodyFormat": ""
