@@ -55,7 +55,6 @@ module.exports = {
                 helpers.addResult(results, status,
                     `API ${secure ? 'has' : 'does not have'} HTTPS protocol configured`, region, resource);
             }
-
         }               
 
         callback(null, results, source);
