@@ -49,7 +49,8 @@ module.exports = {
 
                 let secure = false;
                 if (describeApi.data && describeApi.data.RequestConfig && 
-                    describeApi.data.RequestConfig && describeApi.data.RequestConfig.RequestProtocol.includes('HTTPS')) secure = true;
+                    describeApi.data.RequestConfig && describeApi.data.RequestConfig.RequestProtocol &&
+                    describeApi.data.RequestConfig.RequestProtocol.toUpperCase() == 'HTTPS') secure = true;
                 
                 const status = secure ? 0 : 2;
                 helpers.addResult(results, status,
