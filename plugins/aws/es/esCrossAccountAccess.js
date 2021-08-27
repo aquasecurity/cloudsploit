@@ -111,7 +111,7 @@ module.exports = {
                     var statements = helpers.normalizePolicyDocument(localDomain.AccessPolicies);
         
                     if (!statements){
-                        helpers.addResult(results, 3, 'No statement exists for the policy', region, resource);
+                        helpers.addResult(results, 0, 'No statement exists for the policy', region, resource);
                         return cb();
                     }
                     var restrictedAccountPrincipals = [];
