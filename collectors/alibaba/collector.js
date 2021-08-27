@@ -290,7 +290,7 @@ var postcalls = [
                 reliesOnCall: 'listBuckets',
                 override: true
             }
-        },
+        }
     }
 ];
 
