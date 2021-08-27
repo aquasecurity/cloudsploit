@@ -29,7 +29,8 @@ var regionEndpointMap = {
     kms: regions['kms'],
     rds: ['cn-zhangjiakou', 'cn-huhehaote', 'cn-chengdu', 'ap-southeast-2', 'ap-southeast-3', 'ap-southeast-5',
         'ap-northeast-1', 'ap-south-1', 'eu-central-1', 'eu-west-1', 'me-east-1'],
-    actiontrail: regions['actiontrail']
+    actiontrail: regions['actiontrail'],
+    apigateway: regions['apigateway']
 };
 
 var globalServices = [
@@ -139,10 +140,18 @@ var calls = {
             apiVersion: '2020-07-06'
         }
     },
+    ApiGateway: {
+        DescribeApis: {
+            property: 'ApiSummarys',
+            subProperty: 'ApiSummary',
+            apiVersion: '2016-07-14',
+            paginate: 'Pages'
+        }
+    },
     ACK: {
         describeClustersV1: {
             override: true
-        } 
+        }
     }
 };
 
@@ -280,6 +289,15 @@ var postcalls = [
                 reliesOnService: 'oss',
                 reliesOnCall: 'listBuckets',
                 override: true
+            }
+        },
+        ApiGateway: {
+            DescribeApi: {
+                reliesOnService: 'apigateway',
+                reliesOnCall: 'DescribeApis',
+                filterKey: ['ApiId', 'GroupId'],
+                filterValue: ['ApiId', 'GroupId'],
+                apiVersion: '2016-07-14'
             }
         }
     }
