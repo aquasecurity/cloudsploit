@@ -146,7 +146,6 @@ module.exports = {
                     if (crossAccountEs && !restrictedAccountPrincipals.length) {
                         helpers.addResult(results, 0,
                             `ES domain "${domain.DomainName}" contains trusted account principals only`, region);
-                        return cb();
                     } else if (crossAccountEs) {
                         helpers.addResult(results, 2,
                             `ES domain "${domain.DomainName}" contains these untrusted account principals: ${restrictedAccountPrincipals.join(', ')}`, region);
