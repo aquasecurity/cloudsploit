@@ -144,7 +144,6 @@ module.exports = {
                                 } else if (!config.es_whitelisted_aws_account_principals.includes(principal) &&
                                         !restrictedAccountPrincipals.includes(principal)) restrictedAccountPrincipals.push(principal);
                             });
-                            return;
                         }
                     });
 
