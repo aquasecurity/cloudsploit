@@ -145,7 +145,7 @@ var calls = {
             property: 'ApiSummarys',
             subProperty: 'ApiSummary',
             apiVersion: '2016-07-14',
-            paginate: 'Pages' // Need confirmation
+            paginate: 'Pages'
         }
     }
 };
