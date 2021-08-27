@@ -149,11 +149,9 @@ module.exports = {
                     } else if (crossAccountEs) {
                         helpers.addResult(results, 2,
                             `ES domain "${domain.DomainName}" contains these untrusted account principals: ${restrictedAccountPrincipals.join(', ')}`, region);
-                        return cb();
                     } else {
                         helpers.addResult(results, 2,
                             `ES domain "${domain.DomainName}" does not contain cross-account policy statement`, region);
-                        return cb();
                     }
                 }
             });
