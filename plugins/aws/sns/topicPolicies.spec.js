@@ -144,7 +144,7 @@ const createNullCache = () => {
 describe('topicPolicies', function () {
     describe('run', function () {
         it('should PASS if SNS topic policy does not allow global access', function (done) {
-            const cache = createCache([listTopics[0]], getTopicAttributes[1]);
+            const cache = createCache([listTopics[0]], getTopicAttributes[0]);
             topicPolicies.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
