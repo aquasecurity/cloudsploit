@@ -11,6 +11,13 @@ const createCache = (err, data) => {
                     data: data
                 }
             }
+        },
+        projects: {
+            get: {
+                'global': {
+                    data: [ { name: 'testproj' }]
+                }
+            }
         }
     }
 };
@@ -51,11 +58,11 @@ describe('cosImageEnabled', function () {
             plugin.run(cache, {}, callback);
         });
 
-        it('should give passing result if Container-Optimized OS is enabled for the node pool of the cluster', function (done) {
+        it('should give passing result if Container-Optimized OS is enabled for all node pools', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Container-Optimized OS is enabled for the node pool of the cluster');
+                expect(results[0].message).to.include('Container-Optimized OS is enabled for all node pools');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -214,7 +221,7 @@ describe('cosImageEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Container-Optimized OS disabled for the node pool of the cluster');
+                expect(results[0].message).to.include('Container-Optimized OS disabled for these node pools');
                 expect(results[0].region).to.equal('global');
                 done()
             };

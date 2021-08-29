@@ -251,6 +251,8 @@ var handleErrors = function(err) {
             } else {
                 return '503 Error from Google';
             }
+        } else if (err.code === 'ERR_OSSL_PEM_NO_START_LINE') {
+            return 'Invalid Certificate';
         } else {
             console.log(`[ERROR] Unhandled error from Google API: Error: ${JSON.stringify(err)}`);
             return 'Unknown error response from Google';
@@ -314,7 +316,7 @@ var execute = function(LocalGoogleConfig, collection, service, callObj, callKey,
             }
 
             if (!data) return regionCb();
-            if (callObj.property && !data[callObj.property]) return regionCb();
+            if (callObj.property && data.data && !data.data[callObj.property]) return regionCb();
             if (callObj.secondProperty && !data[callObj.secondProperty]) return regionCb();
 
             if (callObj.secondProperty) {
@@ -368,6 +370,12 @@ var execute = function(LocalGoogleConfig, collection, service, callObj, callKey,
     } else if (callObj.nested) {
         parentParams = {auth: callObj.params.auth, parent: callObj.params.parent};
         executor['projects']['locations']['keyRings'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
+    } else if (callObj.params && callObj.location && callObj.postcall && callObj.projectId && callObj.regional) {
+        parentParams = {auth: callObj.params.auth, projectId: callObj.params.project, location: callObj.params.region, [callObj.filterKey[0]]: callObj.params[callObj.filterKey[0]]};
+        executor['projects']['locations'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
+    } else if (callObj.projectId && callObj.regional) {
+        parentParams = {auth: callObj.params.auth, projectId: callObj.params.project, location: callObj.params.region};
+        executor['projects']['locations'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
     } else if (callObj.resource) {
         parentParams = {auth: callObj.auth, resource_: LocalGoogleConfig.project};
         executor[service][callKey](parentParams, LocalGoogleConfig, executorCb);
@@ -380,6 +388,16 @@ var execute = function(LocalGoogleConfig, collection, service, callObj, callKey,
     } else if (callObj.parent && callObj.parent === 'project') {
         parentParams = {auth: callObj.params.auth, project: callObj.params.parent};
         executor['projects'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
+    } else if (callObj.parent && callObj.parent === 'projectId') {
+        parentParams = {auth: callObj.params.auth, projectId: callObj.params.project};
+    } else if (callObj.parent && callObj.parent === 'resource') {
+        parentParams = {auth: callObj.params.auth, resource: `organizations/${callObj.params[callObj.filterKey[0]]}`};
+        executor[service][callKey](parentParams, LocalGoogleConfig, executorCb);
+    } else if (callObj.parent && callObj.parent === 'organization') {
+        executor[service][callKey]({auth: callObj.params.auth}, LocalGoogleConfig, executorCb);
+    } else if (callObj.parent && callObj.parent === 'projects') {
+        parentParams = {auth: callObj.params.auth, parent: `projects/${callObj.params.project}`};
+        executor['projects'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
     } else if (callObj.parent) {
         parentParams = {auth: callObj.params.auth, parent: callObj.params.parent};
         executor['projects'][service][callKey](parentParams, LocalGoogleConfig, executorCb);
@@ -387,7 +405,7 @@ var execute = function(LocalGoogleConfig, collection, service, callObj, callKey,
         executor[service][callKey](callObj.params, LocalGoogleConfig, executorCb);
     } else {
         executor[service][callKey](LocalGoogleConfig, executorCb);
-    }    
+    }
 };
 
 var helpers = {

@@ -2,25 +2,20 @@ var assert = require('assert');
 var expect = require('chai').expect;
 var plugin = require('./csekEncryptionEnabled');
 
-const createCache = (instanceData, instanceDatab, error) => {
+const createCache = (instanceData, error) => {
     return {
         disks: {
             list: {
                 'us-central1-a': {
                     data: instanceData,
                     err: error
-                },
-                'us-central1-b': {
-                    data: instanceDatab,
-                    err: error
-                },
-                'us-central1-c': {
-                    data: instanceDatab,
-                    err: error
-                },
-                'us-central1-f': {
-                    data: instanceDatab,
-                    err: error
+                }
+            }
+        },
+        projects: {
+            get: {
+                'global': {
+                    data: 'test-proj'
                 }
             }
         }
@@ -29,36 +24,33 @@ const createCache = (instanceData, instanceDatab, error) => {
 
 describe('csekEncryptionEnabled', function () {
     describe('run', function () {
-
-        it('should give unknown if an instance error occurs', function (done) {
+        it('should give unknown if unable to query compute disks', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
-                expect(results[4].status).to.equal(3);
-                expect(results[4].message).to.include('Unable to query disks');
-                expect(results[4].region).to.equal('us-central1');
+                expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query compute disks');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 
             const cache = createCache(
                 [],
-                [],
-                ['null']
+                ['error']
             );
 
             plugin.run(cache, {}, callback);
         });
 
-        it('should pass no VM Instances', function (done) {
+        it('should pass if No compute disks found', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
-                expect(results[4].status).to.equal(0);
-                expect(results[4].message).to.include('No disks found in the region');
-                expect(results[4].region).to.equal('us-central1');
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No compute disks found');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 
             const cache = createCache(
-                [],
                 [],
                 null
             );
@@ -66,12 +58,12 @@ describe('csekEncryptionEnabled', function () {
             plugin.run(cache, {}, callback);
         });
 
-        it('should fail csek encryption is disabled', function (done) {
+        it('should fail if CSEK Encryption is disabled for disk', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.above(1);
-                expect(results[4].status).to.equal(2);
-                expect(results[4].message).to.include('CSEK Encryption is disabled for the following disks');
-                expect(results[4].region).to.equal('us-central1');
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('CSEK Encryption is disabled for disk');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 
@@ -108,19 +100,18 @@ describe('csekEncryptionEnabled', function () {
                         "physicalBlockSizeBytes": "4096"
                     }
                 ],
-                [],
                 null
             );
 
             plugin.run(cache, {}, callback);
         })
 
-        it('should pass with block project-wide ssh key', function (done) {
+        it('should pass if CSEK Encryption is enabled for disk', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.above(1);
-                expect(results[4].status).to.equal(0);
-                expect(results[4].message).to.equal('CSEK Encryption is enabled for all disks in the region');
-                expect(results[4].region).to.equal('us-central1');
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.equal('CSEK Encryption is enabled for disk');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 

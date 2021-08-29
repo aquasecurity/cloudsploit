@@ -36,6 +36,12 @@ var globalServices = [
 ];
 
 var calls = {
+    AccessAnalyzer: {
+        listAnalyzers: {
+            property: 'analyzers',
+            paginate: 'NextToken'
+        }
+    },
     ACM: {
         listCertificates: {
             property: 'CertificateSummaryList',
@@ -383,6 +389,10 @@ var calls = {
         describeNetworkAcls: {
             property: 'NetworkAcls',
             paginate: 'NextToken',
+        },
+        describeLaunchTemplates: {
+            property: 'LaunchTemplates',
+            paginate: 'NextToken',
         }
 
     },
@@ -465,7 +475,16 @@ var calls = {
     },
     ES: {
         listDomainNames: {
-            property: 'DomainNames'
+            property: 'DomainNames',
+        }
+    },
+    EventBridge: {
+        listEventBuses: {
+            property: 'EventBuses',
+            paginate: 'NextToken',
+            params:{                
+                Limit: 100,
+            }
         }
     },
     Glue: {
@@ -498,7 +517,7 @@ var calls = {
             property: 'Policies',
             paginate: 'Marker',
             params: {
-                OnlyAttached: true
+                OnlyAttached: true // Making this false will effect IAM Support Policy plugin
             }
         },
         listVirtualMFADevices: {
@@ -849,6 +868,13 @@ var postcalls = [
                 filterValue: 'TrailARN'
             }
         },
+        CloudWatch: {
+            getEsMetricStatistics: {
+                reliesOnService: 'es',
+                reliesOnCall: 'listDomainNames',
+                override: true,
+            }
+        },
         CodeStar: {
             describeProject: {
                 reliesOnService: 'codestar',
@@ -985,6 +1011,12 @@ var postcalls = [
                 reliesOnCall: 'describeVpcEndpointServices',
                 filterKey: 'ServiceId',
                 filterValue: 'ServiceId'
+            },
+            describeLaunchTemplateVersions: {
+                reliesOnService: 'ec2',
+                reliesOnCall: 'describeLaunchTemplates',
+                filterKey: 'LaunchTemplateId',
+                filterValue: 'LaunchTemplateId'
             }
         },
         ECR: {
@@ -1225,6 +1257,14 @@ var postcalls = [
                 reliesOnCall: 'listHostedZones',
                 filterKey: 'HostedZoneId',
                 filterValue: 'Id'
+            },
+        },
+        Route53Domains: {
+            getDomainDetail: {
+                reliesOnService: 'route53domains',
+                reliesOnCall: 'listDomains',
+                filterKey: 'DomainName',
+                filterValue: 'DomainName'
             },
         },
         S3Control: {

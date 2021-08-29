@@ -37,12 +37,13 @@ module.exports = {
 
             var bucketFound = false;
             buckets.data.forEach(bucket => {
-                if (bucket.id) {
+                if (bucket.name) {
+                    let resource = helpers.createResourceName('b', bucket.name);
                     bucketFound = true;
                     if (bucket.logging && bucket.logging.logObjectPrefix && bucket.logging.logObjectPrefix.length) {
-                        helpers.addResult(results, 0, 'Bucket Logging Enabled', region, bucket.id);
+                        helpers.addResult(results, 0, 'Bucket Logging Enabled', region, resource);
                     } else {
-                        helpers.addResult(results, 2, 'Bucket Logging not Enabled', region, bucket.id);
+                        helpers.addResult(results, 2, 'Bucket Logging not Enabled', region, resource);
                     }
                 }
             });

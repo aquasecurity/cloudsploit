@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as DNS should be restricted to known IP addresses.',
     link: 'https://cloud.google.com/vpc/docs/using-firewalls',
     recommended_action: 'Restrict TCP and UDP port 53 to known IP addresses.',
-    apis: ['firewalls:list'],
+    apis: ['firewalls:list', 'projects:get'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -38,7 +38,7 @@ module.exports = {
 
             let service = 'DNS';
 
-            helpers.findOpenPorts(firewalls.data, ports, service, region, results);
+            helpers.findOpenPorts(firewalls.data, ports, service, region, results, cache, callback, source);
 
             rcb();
         }, function(){
