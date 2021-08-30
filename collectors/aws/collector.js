@@ -1365,14 +1365,16 @@ var postcalls = [
                 reliesOnCall: 'listDetectors',
                 override: true,
             },
+        },
+    },
+    {
+        GuardDuty: {
             getFindings: {
                 reliesOnService: 'guardduty',
                 reliesOnCall: 'listFindings',
                 override: true,
             }
         },
-    },
-    {
         APIGateway: {
             getClientCertificate: {
                 reliesOnService: 'apigateway',
