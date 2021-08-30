@@ -1371,7 +1371,7 @@ var postcalls = [
         GuardDuty: {
             getFindings: {
                 reliesOnService: 'guardduty',
-                reliesOnCall: 'listFindings',
+                reliesOnCall: 'listDetectors',
                 override: true,
             }
         },

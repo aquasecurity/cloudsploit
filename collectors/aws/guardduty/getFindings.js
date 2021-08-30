@@ -4,8 +4,14 @@ var async = require('async');
 module.exports = function(AWSConfig, collection, callback) {
     var guardduty = new AWS.GuardDuty(AWSConfig);
     async.eachLimit(collection.guardduty.listDetectors[AWSConfig.region].data, 15, function(detectorId, dcb) {
-        const findingIds = collection.guardduty.listDetectors[AWSConfig.region].data[detectorId];
-        if (!findingIds) dcb();
+        if (!collection.guardduty ||
+            !collection.guardduty.listFindings ||
+            !collection.guardduty.listFindings[AWSConfig.region] ||
+            !collection.guardduty.listFindings[AWSConfig.region][detectorId] ||
+            !collection.guardduty.listFindings[AWSConfig.region][detectorId].data ||
+            !collection.guardduty.listFindings[AWSConfig.region][detectorId].data.FindingIds) dcb();
+        const findingIds = collection.guardduty.listFindings[AWSConfig.region][detectorId].data.FindingIds;
+        if (!findingIds.length) dcb();
         collection.guardduty.getFindings[AWSConfig.region][detectorId] = {};
         const params = {
             DetectorId: detectorId,

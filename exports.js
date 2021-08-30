@@ -64,6 +64,9 @@ module.exports = {
         'cloudtrailManagementEvents'    : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailManagementEvents.js'),
         'cloudtrailS3Bucket'            : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailS3Bucket.js'),
         'globalLoggingDuplicated'       : require(__dirname + '/plugins/aws/cloudtrail/globalLoggingDuplicated.js'),
+        
+        'monitoringMetrics'             : require(__dirname + '/plugins/aws/cloudwatchlogs/monitoringMetrics.js'),
+        'logRetentionPeriod'            : require(__dirname + '/plugins/aws/cloudwatchlogs/logRetentionPeriod.js'),
 
         'configServiceEnabled'          : require(__dirname + '/plugins/aws/configservice/configServiceEnabled.js'),
 
@@ -204,16 +207,20 @@ module.exports = {
         'esDesiredInstanceTypes'        : require(__dirname + '/plugins/aws/es/esDesiredInstanceTypes.js'),
         'esTlsVersion'                  : require(__dirname + '/plugins/aws/es/esTlsVersion.js'),
         'esDomainEncryptionEnabled'     : require(__dirname + '/plugins/aws/es/esDomainEncryptionEnabled.js'),
-
-        'firehoseEncrypted'             : require(__dirname + '/plugins/aws/firehose/firehoseEncrypted.js'),
-
+        
         'eventBusCrossAccountAccess'    : require(__dirname + '/plugins/aws/eventbridge/eventBusCrossAccountAccess.js'),
+        
+        'firehoseEncrypted'             : require(__dirname + '/plugins/aws/firehose/firehoseEncrypted.js'),
 
         'glueCloudwatchLogsEncrypted'   : require(__dirname + '/plugins/aws/glue/glueCloudwatchLogsEncrypted.js'),
         'glueS3EncryptionEnabled'       : require(__dirname + '/plugins/aws/glue/glueS3EncryptionEnabled.js'),
         'dataCatalogCmkEncrypted'       : require(__dirname + '/plugins/aws/glue/dataCatalogCmkEncrypted.js'),
         'bookmarkEncryptionEnabled'     : require(__dirname + '/plugins/aws/glue/bookmarkEncryptionEnabled.js'),
         'dataCatalogEncryptionEnabled'  : require(__dirname + '/plugins/aws/glue/dataCatalogEncryptionEnabled.js'),
+        
+        'guardDutyEnabled'              : require(__dirname + '/plugins/aws/guardduty/guarddutyEnabled.js'),
+        'guardDutyMaster'               : require(__dirname + '/plugins/aws/guardduty/guarddutyMaster.js'),
+        'guardDutyActiveFindings'       : require(__dirname + '/plugins/aws/guardduty/guarddutyActiveFindings.js'),
 
         'accessKeysExtra'               : require(__dirname + '/plugins/aws/iam/accessKeysExtra.js'),
         'accessKeysLastUsed'            : require(__dirname + '/plugins/aws/iam/accessKeysLastUsed.js'),
@@ -249,11 +256,11 @@ module.exports = {
         'usersPasswordLastUsed'         : require(__dirname + '/plugins/aws/iam/usersPasswordLastUsed.js'),
         'canaryKeysUsed'                : require(__dirname + '/plugins/aws/iam/canaryKeysUsed.js'),
         'iamPoliciesPresent'            : require(__dirname + '/plugins/aws/iam/iamPoliciesPresent.js'),
-        'iamDbAuthenticationEnabled'    : require(__dirname + '/plugins/aws/rds/iamDbAuthenticationEnabled.js'),
         'iamSupportPolicy'              : require(__dirname + '/plugins/aws/iam/iamSupportPolicy.js'),
-
         'iamUserInUse'                  : require(__dirname + '/plugins/aws/iam/iamUserInUse.js'),
+
         'kinesisEncrypted'              : require(__dirname + '/plugins/aws/kinesis/kinesisEncrypted.js'),
+        
         'kmsKeyRotation'                : require(__dirname + '/plugins/aws/kms/kmsKeyRotation.js'),
         'kmsScheduledDeletion'          : require(__dirname + '/plugins/aws/kms/kmsScheduledDeletion.js'),
         'kmsKeyPolicy'                  : require(__dirname + '/plugins/aws/kms/kmsKeyPolicy.js'),
@@ -271,7 +278,8 @@ module.exports = {
         'rdsMinorVersionUpgrade'        : require(__dirname + '/plugins/aws/rds/rdsMinorVersionUpgrade.js'),
         'sqlServerTLSVersion'           : require(__dirname + '/plugins/aws/rds/sqlServerTLSVersion'),
         'rdsTransportEncryption'        : require(__dirname + '/plugins/aws/rds/rdsTransportEncryption'),
-        'rdsDeletionProtectionEnabled'  : require(__dirname + '/plugins/aws/rds/rdsDeletionProtectionEnabled.js'),
+        'rdsDeletionProtectionEnabled'  : require(__dirname + '/plugins/aws/rds/rdsDeletionProtectionEnabled.js'),        
+        'iamDbAuthenticationEnabled'    : require(__dirname + '/plugins/aws/rds/iamDbAuthenticationEnabled.js'),
 
         'domainAutoRenew'               : require(__dirname + '/plugins/aws/route53/domainAutoRenew.js'),
         'domainExpiry'                  : require(__dirname + '/plugins/aws/route53/domainExpiry.js'),
@@ -330,9 +338,6 @@ module.exports = {
         'webServerPublicAccess'         : require(__dirname + '/plugins/aws/mwaa/webServerPublicAccess.js'),
         'environmentAdminPrivileges'    : require(__dirname + '/plugins/aws/mwaa/environmentAdminPrivileges.js'),
 
-        'monitoringMetrics'             : require(__dirname + '/plugins/aws/cloudwatchlogs/monitoringMetrics.js'),
-        'logRetentionPeriod'            : require(__dirname + '/plugins/aws/cloudwatchlogs/logRetentionPeriod.js'),
-
         'auditLoggingEnabled'           : require(__dirname + '/plugins/aws/redshift/auditLoggingEnabled.js'),
         'redshiftClusterCmkEncrypted'   : require(__dirname + '/plugins/aws/redshift/redshiftClusterCmkEncrypted.js'),
         'redshiftEncryptionEnabled'     : require(__dirname + '/plugins/aws/redshift/redshiftEncryptionEnabled.js'),
@@ -360,9 +365,6 @@ module.exports = {
 
         'enableAllFeatures'             : require(__dirname + '/plugins/aws/organizations/enableAllFeatures.js'),
         'organizationInvite'            : require(__dirname + '/plugins/aws/organizations/organizationInvite.js'),
-        'guardDutyEnabled'              : require(__dirname + '/plugins/aws/guardduty/guarddutyEnabled.js'),
-        'guardDutyMaster'               : require(__dirname + '/plugins/aws/guardduty/guarddutyMaster.js'),
-        'guardDutyActiveFindings'       : require(__dirname + '/plugins/aws/guardduty/guarddutyActiveFindings.js'),
 
         'workspacesVolumeEncryption'    : require(__dirname + '/plugins/aws/workspaces/workspacesVolumeEncryption.js'),
         'workspacesIpAccessControl'     : require(__dirname + '/plugins/aws/workspaces/workspacesIpAccessControl.js'),
@@ -879,7 +881,7 @@ module.exports = {
     
         'apiProtocol'                   : require(__dirname + '/plugins/alibaba/apigateway/apiProtocol.js'),
 
-        'apiLogConfig'                  : require(__dirname + '/plugins/alibaba/apigateway/apiLogConfig.js'),
+        // 'apiLogConfig'                  : require(__dirname + '/plugins/alibaba/apigateway/apiLogConfig.js'),
         
         'networkPolicyEnabled'          : require(__dirname + '/plugins/alibaba/ack/networkPolicyEnabled.js')
     }
