@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-var elasticacheDefaultPort = require('./elasticacheClusterDefaultPorts');
+var elasticacheDefaultPort = require('./elasticacheDefaultPorts');
 
 const describeClusters = [
     {
@@ -35,7 +35,7 @@ const describeClusters = [
         "AuthTokenEnabled": false,
         "TransitEncryptionEnabled": false,
         "AtRestEncryptionEnabled": false,
-        "ARN": "arn:aws:elasticache:us-east-1:978540712345:cluster:test-dev"
+        "ARN": "arn:aws:elasticache:us-east-1:111122223333:cluster:test-dev"
     },
     {
         "CacheClusterId": "test-dev",
@@ -70,7 +70,7 @@ const describeClusters = [
         "AuthTokenEnabled": false,
         "TransitEncryptionEnabled": false,
         "AtRestEncryptionEnabled": false,
-        "ARN": "arn:aws:elasticache:us-east-1:978540712345:cluster:test-dev"
+        "ARN": "arn:aws:elasticache:us-east-1:111122223333:cluster:test-dev"
     },
 ];
 
@@ -111,7 +111,7 @@ const createNullCache = () => {
     };
 };
 
-describe('elasticacheClusterDefaultPorts', function () {
+describe('elasticacheDefaultPorts', function () {
     describe('run', function () {
 
         it('should PASS if no cluster using default port', function (done) {

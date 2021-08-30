@@ -5,7 +5,7 @@ module.exports = {
     title: 'ElastiCache Default Ports',
     category: 'ElastiCache',
     description: 'Ensure AWS ElastiCache clusters are not using the default ports set for Redis and Memcached cache engines.',
-    more_info: 'ElastiCache clusters should not be using the default assigned port value.',
+    more_info: 'ElastiCache clusters should be configured not to use the default assigned port value for Redis (6379) and Memcached (11211).',
     link: 'https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/accessing-elasticache.html',
     recommended_action: 'Configure ElastiCache clusters to use the non-default ports.',
     apis: ['ElastiCache:describeCacheClusters'],
@@ -37,10 +37,8 @@ module.exports = {
                 return rcb();
             }
 
-            var found = false;
-
-            for (var c in describeCacheClusters.data) {
-                var cluster = describeCacheClusters.data[c];
+            for (var cluster of describeCacheClusters.data) {
+                if (!cluster.ARN) continue;
 
                 if (!cluster.Engine ||
                     !(cluster.ConfigurationEndpoint && cluster.ConfigurationEndpoint.Port)) continue;
@@ -49,21 +47,17 @@ module.exports = {
                     return d.engine == cluster.Engine && d.port == cluster.ConfigurationEndpoint.Port;
                 });
 
-                if (defaultPort && defaultPort.length>0){
-                    found = true;
-
+                if (defaultPort && defaultPort.length) {
                     helpers.addResult(results, 2,
                         'The ' + cluster.Engine + ' cluster is configured with default port ' + cluster.ConfigurationEndpoint.Port,
-                        region, cluster.CacheClusterId);
+                        region, cluster.ARN);
+                } else {
+                    helpers.addResult(results, 0,
+                        'The ' + cluster.Engine + ' cluster is configured with a non default port ' + cluster.ConfigurationEndpoint.Port,
+                        region, cluster.ARN);
                 }
             }
 
-            if (!found) {
-                helpers.addResult(results, 0,
-                    'No clusters using default ports',
-                    region);
-            }
-            
             rcb();
         }, function(){
             callback(null, results, source);
