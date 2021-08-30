@@ -64,4 +64,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

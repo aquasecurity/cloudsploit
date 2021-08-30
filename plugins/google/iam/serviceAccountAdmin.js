@@ -55,10 +55,10 @@ module.exports = {
                                 if (!serviceAccountObj[member]) {
                                     serviceAccountObj[member] = [];
                                 }
-                                serviceAccountObj[member].push(roleBinding.role)
+                                serviceAccountObj[member].push(roleBinding.role);
 
                             }
-                        })
+                        });
                     } else if (roleBinding.role === 'roles/editor') {
                         roleBinding.members.forEach(member => {
                             var memberStrArr = member.split('@');
@@ -66,9 +66,9 @@ module.exports = {
                                 if (!serviceAccountObj[member]) {
                                     serviceAccountObj[member] = [];
                                 }
-                                serviceAccountObj[member].push('editor')
+                                serviceAccountObj[member].push('editor');
                             }
-                        })
+                        });
                     } else if (roleBinding.role === 'roles/owner') {
                         roleBinding.members.forEach(member => {
                             var memberStrArr = member.split('@');
@@ -76,9 +76,9 @@ module.exports = {
                                 if (!serviceAccountObj[member]) {
                                     serviceAccountObj[member] = [];
                                 }
-                                serviceAccountObj[member].push('owner')
+                                serviceAccountObj[member].push('owner');
                             }
-                        })
+                        });
                     }
                 }
             });

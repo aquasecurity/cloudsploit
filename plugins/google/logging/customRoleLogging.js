@@ -52,7 +52,6 @@ module.exports = {
 
             var metricExists = false;
             var metricName = '';
-            var missingMetricStr;
 
             var testMetrics = [
                 'resource.type="iam_role" AND protoPayload.methodName="google.iam.admin.v1.CreateRole"',
@@ -75,8 +74,6 @@ module.exports = {
 
                     if (missingMetrics.length > 2) {
                         return;
-                    } else if (missingMetrics.length > 0) {
-                        missingMetricStr = missingMetrics.join(', ');
                     } else if (missingMetrics.length === 0) {
                         metricExists = true;
                         metricName = metric.metricDescriptor.type;
@@ -101,7 +98,7 @@ module.exports = {
                                     helpers.addResult(results, 0, 'Log alert for custom role changes is enabled', region, alertPolicy.name);
                                 }
                             }
-                        })
+                        });
                     }
                 });
 
