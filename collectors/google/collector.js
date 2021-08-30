@@ -221,6 +221,15 @@ var calls = {
             parent: 'project'
         }
     },
+    jobs: {
+        list: { //https://dataflow.googleapis.com/v1b3/projects/{projectId}/jobs:list
+            api: 'dataflow',
+            location: 'region',
+            version: 'v1b3',
+            projectId: true,
+            regional: true
+        }
+    },
     deployments: { // https://www.googleapis.com/deploymentmanager/v2/projects/project/global/deployments
         list: {
             api: 'deploymentmanager',
@@ -319,6 +328,20 @@ var postcalls = {
             filterKey: ['datasetId'],
             filterValue: ['id'],
             projectId: true
+        }
+    },
+    jobs: {
+        get: { //https://dataflow.googleapis.com/v1b3/projects/{projectId}/jobs/{jobId}
+            api: 'dataflow',
+            version: 'v1b3',
+            reliesOnService: ['jobs'],
+            reliesOnCall: ['list'],
+            filterKey: ['jobId'],
+            filterValue: ['id'],
+            projectId: true,
+            postcall: true,
+            location: 'region',
+            regional: true
         }
     },
     organizations: { //https://cloudresourcemanager.googleapis.com/v1beta1/{resource=organizations/*}:getIamPolicy
