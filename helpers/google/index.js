@@ -23,17 +23,17 @@ var authenticate = async function(GoogleConfig) {
 var processCall = function(GoogleConfig, collection, settings, regions, call, service, client, serviceCb) {
     // Loop through each of the service's functions
     if (call.manyApi) {
-        async.eachOfLimit(call, 10, function(callInt, item, itemsCb) {
+        async.eachOfLimit(call, 5, function(callInt, item, itemsCb) {
             var myEngine = item;
-            async.eachOfLimit(callInt, 10, function(callObj, callKey, callCb) {
+            async.eachOfLimit(callInt, 5, function(callObj, callKey, callCb) {
                 if (settings.api_calls && settings.api_calls.indexOf(service + ':' + myEngine + ':' + callKey) === -1) return callCb();
                 if (!collection[service]) collection[service] = {};
                 if (!collection[service][myEngine]) collection[service][myEngine] = {};
                 if (!collection[service][myEngine][callKey]) collection[service][myEngine][callKey] = {};
 
-                async.eachLimit(regions[service][myEngine], 10, function(region, regionCb) {
+                async.eachLimit(regions[service][myEngine], 5, function(region, regionCb) {
                     if (callObj.location == 'zone') {
-                        async.each(regions.zones[region], function(zone, zoneCb) {
+                        async.eachLimit(regions.zones[region], 5, function(zone, zoneCb) {
                             run(GoogleConfig, collection, settings, service, callObj, callKey, zone, zoneCb, client, myEngine);
                         }, function() {
                             regionCb();
@@ -51,14 +51,14 @@ var processCall = function(GoogleConfig, collection, settings, regions, call, se
             serviceCb();
         });
     } else {
-        async.eachOfLimit(call, 10, function(callObj, callKey, callCb) {
+        async.eachOfLimit(call, 5, function(callObj, callKey, callCb) {
             if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
             if (!collection[service]) collection[service] = {};
             if (!collection[service][callKey]) collection[service][callKey] = {};
 
-            async.eachLimit(regions[service], 10, function(region, regionCb) {
+            async.eachLimit(regions[service], 5, function(region, regionCb) {
                 if (callObj.location == 'zone') {
-                    async.each(regions.zones[region], function(zone, zoneCb) {
+                    async.eachLimit(regions.zones[region], 5,function(zone, zoneCb) {
                         run(GoogleConfig, collection, settings, service, callObj, callKey, zone, zoneCb, client);
                     }, function() {
                         regionCb();
