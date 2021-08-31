@@ -25,6 +25,7 @@ module.exports = {
     default: ['us-east-1'],
     all: regions,
     optin: ['ap-east-1', 'me-south-1'],   // Regions that AWS disables by default
+    accessanalyzer: regions,
     acm: regions,
     apigateway: regions,
     athena: ['us-east-1', 'us-east-2', 'us-west-2', 'ca-central-1',
@@ -64,6 +65,7 @@ module.exports = {
         'ap-southeast-1', 'ap-northeast-1', 'ap-southeast-2', 'ap-south-1'],
     elb: regions,
     elbv2: regions,
+    eventbridge: regions,
     emr: regions,
     es: regions,
     glue: regions,

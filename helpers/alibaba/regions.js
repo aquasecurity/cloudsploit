@@ -30,6 +30,7 @@ module.exports = {
     default: ['cn-hangzhou'],
     all: regions,
     ecs: regions,
+    apigateway: regions,
     polardb: regions,
     ram: ['cn-hangzhou'],
     vpc: regions,
@@ -37,5 +38,6 @@ module.exports = {
     sts: ['cn-hangzhou'],
     oss: ['cn-hangzhou'],
     kms: regions,
-    actiontrail: regions
+    actiontrail: regions,
+    ack: ['cn-hangzhou']
 };
