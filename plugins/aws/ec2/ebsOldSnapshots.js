@@ -12,22 +12,22 @@ module.exports = {
     settings: {
         ebs_snapshot_life: {
             name: 'EBS Snapshot Life',
-            description: 'Return a failing result when snapshot creation date is before this number of days in the past',
+            description: 'EBS volume snapshot will FAIL if its creation date is before this number of days in the past',
             regex: '^[1-9]{1}[0-9]{0,3}$',
-            default: 30
+            default: '30'
         },
         ebs_result_limit: {
             name: 'EBS Result Limit',
-            description: 'If the number of results is greater than this value, combine them into one result',
+            description: 'Plugin results will become aggregated when this value is breached',
             regex: '^[0-9]*$',
-            default: 20,
+            default: '20',
         },
     },
 
     run: function(cache, settings, callback) {
         var config = {
-            ebs_snapshot_life: settings.ebs_snapshot_life || this.settings.ebs_snapshot_life.default,
-            ebs_result_limit: settings.ebs_result_limit || this.settings.ebs_result_limit.default
+            ebs_snapshot_life: parseInt(settings.ebs_snapshot_life || this.settings.ebs_snapshot_life.default),
+            ebs_result_limit: parseInt(settings.ebs_result_limit || this.settings.ebs_result_limit.default)
         };
 
         var results = [];

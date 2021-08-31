@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'VPC endpoints should not be publicly accessible in order to avoid any unsigned requests made to the services inside VPC.',
     recommended_action: 'Update VPC endpoint access policy in order to stop any unsigned requests',
     link: 'https://docs.aws.amazon.com/vpc/latest/userguide/vpc-endpoints-access.html',
-    apis: ['EC2:describeVpcEndpoints', 'STS:getCallerIdentity'],
+    apis: ['EC2:describeVpcEndpoints', 'EC2:describeSubnets', 'EC2:describeRouteTables', 'STS:getCallerIdentity'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -37,9 +37,43 @@ module.exports = {
                 return rcb();
             }
 
-            for (var e in describeVpcEndpoints.data) {
-                var endpoint = describeVpcEndpoints.data[e];
+            var describeSubnets = helpers.addSource(cache, {},
+                ['ec2', 'describeSubnets', region]);
+
+            if (!describeSubnets || describeSubnets.err || !describeSubnets.data) {
+                helpers.addResult(results, 3,
+                    'Unable to query for VPC subnets: ' + helpers.addError(describeSubnets), region);
+                return rcb();
+            }
+
+            var describeRouteTables = helpers.addSource(cache, {},
+                ['ec2', 'describeRouteTables', region]);
+        
+            if (!describeRouteTables || describeRouteTables.err || !describeRouteTables.data) {
+                helpers.addResult(results, 3,
+                    'Unable to query for route tables: ' + helpers.addError(describeRouteTables), region);
+                return rcb();
+            }
+
+            var subnetRouteTableMap = helpers.getSubnetRTMap(describeSubnets.data, describeRouteTables.data);
+            var privateSubnets = helpers.getPrivateSubnets(subnetRouteTableMap, describeSubnets.data, describeRouteTables.data);
+
+            for (var endpoint of describeVpcEndpoints.data) {
                 var resource = `arn:${awsOrGov}:ec2:${region}:${accountId}:vpc-endpoint/${endpoint.VpcEndpointId}`;
+                if (endpoint.VpcEndpointType && endpoint.VpcEndpointType.toLowerCase() == 'gateway') {
+                    helpers.addResult(results, 0,
+                        `VPC endpoint is of ${endpoint.VpcEndpointId} is of Gateway type`, region, resource);
+                    continue;
+                }
+
+                if (endpoint.SubnetIds && endpoint.SubnetIds.length) {
+                    if (endpoint.SubnetIds.find(subnetId => privateSubnets.includes(subnetId))) {
+                        helpers.addResult(results, 0,
+                            'VPC endpoint is behind private subnet', region, resource);
+                        continue;
+                    }
+                }
+
                 var statements = helpers.normalizePolicyDocument(endpoint.PolicyDocument);
                 var publicEndpoint = false;
 

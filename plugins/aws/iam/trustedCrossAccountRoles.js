@@ -7,18 +7,38 @@ module.exports = {
     more_info: 'IAM roles should be configured to allow access to trusted account IDs.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_common-scenarios_aws-accounts.html',
     recommended_action: 'Delete the IAM roles that are associated with untrusted account IDs.',
-    apis: ['IAM:listRoles', 'STS:getCallerIdentity'],
+    apis: ['IAM:listRoles', 'STS:getCallerIdentity', 'Organizations:listAccounts'],
     settings: {
         whitelisted_aws_account_principals: {
             name: 'Whitelisted AWS Account Principals',
-            description: 'Return a failing result if cross-account role contains any AWS account principal other than these principals',
+            description: 'A comma-separated list of trusted cross account principals',
             regex: '^.*$',
             default: ''
+        },
+        whitelisted_aws_account_principals_regex: {
+            name: 'Whitelisted AWS Account Principals Regex',
+            description: 'If set, plugin will compare cross account principals against this regex instead of otherwise given comma-separated list' +
+                'Example regex: ^arn:aws:iam::(111111111111|222222222222|):.+$',
+            regex: '^.*$',
+            default: ''
+        },
+        iam_whitelist_aws_organization_accounts: {
+            name: 'Whitelist AWS Organization Accounts',
+            description: 'If true, trust all accounts in current AWS organization',
+            regex: '^(true|false)$',
+            default: 'false'
         }
     },
 
     run: function(cache, settings, callback) {
-        var whitelisted_aws_account_principals = settings.whitelisted_aws_account_principals || this.settings.whitelisted_aws_account_principals.default;
+        var config= {
+            whitelisted_aws_account_principals : settings.whitelisted_aws_account_principals || this.settings.whitelisted_aws_account_principals.default,
+            whitelisted_aws_account_principals_regex : settings.whitelisted_aws_account_principals_regex || this.settings.whitelisted_aws_account_principals_regex.default,
+            iam_whitelist_aws_organization_accounts: settings.iam_whitelist_aws_organization_accounts || this.settings.iam_whitelist_aws_organization_accounts.default
+        };
+        var makeRegexBased = (config.whitelisted_aws_account_principals_regex.length) ? true : false;
+        var whitelistOrganization = (config.iam_whitelist_aws_organization_accounts == 'true'); 
+        config.whitelisted_aws_account_principals_regex = new RegExp(config.whitelisted_aws_account_principals_regex);
         var results = [];
         var source = {};
         
@@ -41,6 +61,20 @@ module.exports = {
             return callback(null, results, source);
         }
 
+        let organizationAccounts = [];
+        if (whitelistOrganization) {
+            var listAccounts = helpers.addSource(cache, source,
+                ['organizations', 'listAccounts', region]);
+    
+            if (!listAccounts || listAccounts.err || !listAccounts.data) {
+                helpers.addResult(results, 3,
+                    `Unable to query organization accounts: ${helpers.addError(listAccounts)}`, region);
+                return callback(null, results, source);
+            }
+
+            organizationAccounts = helpers.getOrganizationAccounts(listAccounts, accountId);
+        }
+
         listRoles.data.forEach(role => {
             if (!role.Arn || !role.AssumeRolePolicyDocument) return;
 
@@ -55,15 +89,21 @@ module.exports = {
             var restrictedAccountPrincipals = [];
             var crossAccountRole = false;
 
-            for (var s in statements) {
-                var statement = statements[s];
+            for (var statement of statements) {
+                if (!statement.Effect || statement.Effect !== 'Allow') continue;
 
                 if (statement.Principal && helpers.crossAccountPrincipal(statement.Principal, accountId)) {
                     crossAccountRole = true;
                     var principals = helpers.crossAccountPrincipal(statement.Principal, accountId, true);
                     if (principals.length) {
                         principals.forEach(principal => {
-                            if (!whitelisted_aws_account_principals.includes(principal) &&
+                            if (whitelistOrganization) {
+                                if (organizationAccounts.find(account => principal.includes(account))) return;
+                            }
+                            if (makeRegexBased) {
+                                if (!config.whitelisted_aws_account_principals_regex.test(principal) &&
+                                    !restrictedAccountPrincipals.includes(principal)) restrictedAccountPrincipals.push(principal);
+                            } else if (!config.whitelisted_aws_account_principals.includes(principal) &&
                                     !restrictedAccountPrincipals.includes(principal)) restrictedAccountPrincipals.push(principal);
                         });
                     }
@@ -72,7 +112,7 @@ module.exports = {
 
             if (crossAccountRole && !restrictedAccountPrincipals.length) {
                 helpers.addResult(results, 0,
-                    `Cross-account role "${role.RoleName}" contains trusted account pricipals only`,
+                    `Cross-account role "${role.RoleName}" contains trusted account principals only`,
                     'global', role.Arn);
             } else if (crossAccountRole) {
                 helpers.addResult(results, 2,

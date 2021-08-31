@@ -38,7 +38,7 @@ module.exports = {
             }
 
             if (!listSecrets.data.length) {
-                helpers.addResult(results, 2, 'Secrets Manager is not in use', region);
+                helpers.addResult(results, 0, 'No secrets found', region);
                 return rcb();
             }
 

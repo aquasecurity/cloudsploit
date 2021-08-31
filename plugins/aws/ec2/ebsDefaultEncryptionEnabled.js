@@ -12,8 +12,8 @@ module.exports = {
     settings: {
         ebs_encryption_level: {
             name: 'EBS Minimum Encryption Level',
-            description: 'In order (lowest to highest) none=no encryption; awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
-            regex: '^(none|awskms|awscmk|externalcmk|cloudhsm)$',
+            description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
+            regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awskms',
         },
     },

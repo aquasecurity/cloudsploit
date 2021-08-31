@@ -287,24 +287,153 @@ function extractStatementPrincipals(statement) {
     if (statement.Principal) {
         let principal = statement.Principal;
         
-        if (typeof principal === 'string' &&
-        /^[0-9]{12}$/.test(principal)) {
+        if (typeof principal === 'string') {
             return [principal];
         }
 
+        if (!principal.AWS) return response;
+        
         var awsPrincipals = principal.AWS;
         if (!Array.isArray(awsPrincipals)) {
             awsPrincipals = [awsPrincipals];
         }
 
-        for (let a in awsPrincipals) {
-            if (/^arn:aws:(iam|sts)::.+/.test(awsPrincipals[a])) {
-                response.push(awsPrincipals[a]);
-            }
-        }
+        response.push.apply(response, awsPrincipals);
     }
 
     return response;
+}
+
+function getDenyPermissionsMap(statements, excludeStatementId) {
+    let permissionsMap = {};
+
+    for (let statement of statements) {
+        if ((statement.Sid && statement.Sid == excludeStatementId) || (statement.Effect && statement.Effect.toUpperCase() !== 'DENY')) continue;
+
+        let principals = extractStatementPrincipals(statement);
+        principals.forEach(principal => {
+            let permissionsObj = JSON.parse(JSON.stringify(getDenyActionResourceMap([statement])));
+            if (permissionsMap[principal]) permissionsMap[principal] = {...permissionsMap[principal], ...permissionsObj};
+            else permissionsMap[principal] = permissionsObj;
+        });
+    }
+
+    return permissionsMap;
+}
+
+function getDenyActionResourceMap(statements, excludeStatementId) {
+    let denyActionResourceMap = {};
+    for (let statement of statements) {
+        if (statement.Sid && statement.Sid != excludeStatementId &&
+            statement.Effect && statement.Effect == 'Deny' &&
+            statement.Resource && statement.Resource.length &&
+            statement.Action && statement.Action.length) {
+            statement.Action.forEach(action => {
+                if (denyActionResourceMap[action]) denyActionResourceMap[action].push.apply(denyActionResourceMap[action], statement.Resource);
+                else denyActionResourceMap[action] = statement.Resource;
+            });
+        }
+    }
+
+    return denyActionResourceMap;
+}
+
+function filterDenyPermissionsByPrincipal(permissionsMap, principal) {
+    let response = {};
+    Object.keys(permissionsMap).forEach(key => {
+        if (matchKeys(key, principal)) {
+            Object.keys(permissionsMap[key]).forEach(action => {
+                if (response[action]) response[action].push.apply(response[action], permissionsMap[key][action]);
+                else response[action] = permissionsMap[key][action];
+            });
+        }
+    });
+    return response;
+}
+
+function isValidCondition(statement, allowedConditionKeys, iamConditionOperators, fetchConditionPrincipals, accountId) {
+    if (statement.Condition && statement.Effect) {
+        var effect = statement.Effect;
+        var values = [];
+        for (var operator of Object.keys(statement.Condition)) {
+            var defaultOperator = operator;
+            if (operator.includes(':')) defaultOperator = operator.split(':')[1];
+
+            var subCondition = statement.Condition[operator];
+            for (var key of Object.keys(subCondition)) {
+                let keyLower = key.toLowerCase();
+                if (!allowedConditionKeys.some(conditionKey => keyLower.includes(conditionKey.toLowerCase()))) return false;
+                var value = subCondition[key];
+                if (iamConditionOperators.string[effect].includes(defaultOperator) ||
+                iamConditionOperators.arn[effect].includes(defaultOperator)) {
+                    if (keyLower === 'kms:calleraccount' && typeof value === 'string' && effect === 'Allow' &&  value === accountId) {
+                        values.push(value);
+                        return values;
+                    } 
+                    if (!value.length || value === '*') return false;
+                    else if (/^[0-9]{12}$/.test(value) || /^arn:aws:(iam|sts)::.+/.test(value)) values.push(value);
+                } else if (defaultOperator === 'Bool') {
+                    if ((effect === 'Allow' && !value) || effect === 'Deny' && value) return false;
+                } else if (iamConditionOperators.ipaddress[effect].includes(defaultOperator)) {
+                    if (value === '0.0.0.0/0' || value === '::/0') return false;
+                } else return false;
+            }
+        }
+        if (fetchConditionPrincipals) return values;
+    }
+
+    return true;
+}
+
+function isEffectivePolicyStatement(statement, denyActionResourceMap) {
+    let statementActionResourceMap = {};
+    if (statement.Action && statement.Resource) {
+        for (let action of statement.Action) {
+            statementActionResourceMap[action] = statement.Resource;
+        }
+    }
+
+    for (let action of Object.keys(statementActionResourceMap)) {
+        for (let key of Object.keys(denyActionResourceMap)) {
+            if (matchKeys(key, action)) {
+                var deniedResources = [];
+                for (let stmResource of statementActionResourceMap[action]) {
+                    if (denyActionResourceMap[key].find(deniedResource => matchKeys(deniedResource, stmResource))) deniedResources.push(stmResource);
+                }
+
+                statementActionResourceMap[action] = statementActionResourceMap[action].filter(resource => !deniedResources.includes(resource));
+            }
+        }
+
+        if (statementActionResourceMap[action].length) return true;
+    }
+
+    return false;
+}
+
+function isEffectiveStatement(statement, denyPermissionsMap) {
+    var principals = extractStatementPrincipals(statement);
+
+    for (let principal of principals) {
+        let denyActionResourceMap = filterDenyPermissionsByPrincipal(denyPermissionsMap, principal);
+        if (isEffectivePolicyStatement(statement, denyActionResourceMap)) return true;
+    }
+
+    return false;
+}
+
+function matchKeys(first, second) {
+    if (!first.length && !second.length) return true;
+
+    if (first.length > 1 && first[0] == '*' && !second.length) return false;
+
+    if ((first.length > 1 && first[0] == '?') || (first.length && second.length && first[0] == second[0])) return matchKeys(first.slice(1), second.slice(1));
+
+    if (first.length && first[0] == '*') {
+        return matchKeys(first.slice(1), second) || matchKeys(first,second.slice(1));
+    }
+
+    return false;
 }
 
 function defaultRegion(settings) {
@@ -689,6 +818,56 @@ function getDefaultKeyId(cache, region, defaultKeyDesc) {
 
     return false;
 }
+
+function getOrganizationAccounts(listAccounts, accountId) {
+    let orgAccountIds = [];
+    if (listAccounts.data && listAccounts.data.length){
+        listAccounts.data.forEach(account => {
+            if (account.Id && account.Id !== accountId) orgAccountIds.push(account.Id);
+        });      
+    }
+
+    return orgAccountIds;
+}
+
+function getPrivateSubnets(subnetRTMap, subnets, routeTables) {
+    let response = [];
+    let privateRouteTables = [];
+
+    routeTables.forEach(routeTable => {
+        if (routeTable.RouteTableId && routeTable.Routes &&
+            routeTable.Routes.find(route => route.GatewayId && !route.GatewayId.startsWith('igw-'))) privateRouteTables.push(routeTable.RouteTableId);
+    });
+
+    subnets.forEach(subnet => {
+        if (subnet.SubnetId && subnetRTMap[subnet.SubnetId] && privateRouteTables.includes(subnetRTMap[subnet.SubnetId])) response.push(subnet.SubnetId);
+    });
+
+    return response;
+}
+
+function getSubnetRTMap(subnets, routeTables) {
+    let subnetRTMap = {};
+    let vpcRTMap = {};
+
+    routeTables.forEach(routeTable => {
+        if (routeTable.RouteTableId && routeTable.Associations && routeTable.Associations.length) {
+            routeTable.Associations.forEach(association => {
+                if (association.SubnetId && !subnetRTMap[association.SubnetId]) subnetRTMap[association.SubnetId] =  routeTable.RouteTableId;
+            });
+        }
+        if (routeTable.VpcId && routeTable.RouteTableId && routeTable.Associations &&
+            routeTable.Associations.find(association => association.Main) && !vpcRTMap[routeTable.VpcId]) vpcRTMap[routeTable.VpcId] = routeTable.RouteTableId; 
+    });
+
+    subnets.forEach(subnet => {
+        if (subnet.SubnetId && subnet.VpcId &&
+            !subnetRTMap[subnet.SubnetId] && vpcRTMap[subnet.VpcId]) subnetRTMap[subnet.SubnetId] = vpcRTMap[subnet.VpcId];
+    });
+
+    return subnetRTMap;
+}
+
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
@@ -708,5 +887,13 @@ module.exports = {
     getEncryptionLevel: getEncryptionLevel,
     extractStatementPrincipals: extractStatementPrincipals,
     getDefaultKeyId: getDefaultKeyId,
-    getS3BucketLocation: getS3BucketLocation
+    isValidCondition: isValidCondition,
+    isEffectiveStatement: isEffectiveStatement,
+    getDenyActionResourceMap: getDenyActionResourceMap,
+    getDenyPermissionsMap: getDenyPermissionsMap,
+    isEffectivePolicyStatement: isEffectivePolicyStatement,
+    getS3BucketLocation: getS3BucketLocation,
+    getOrganizationAccounts: getOrganizationAccounts,
+    getPrivateSubnets: getPrivateSubnets,
+    getSubnetRTMap: getSubnetRTMap
 };

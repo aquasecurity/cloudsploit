@@ -321,6 +321,32 @@ const createCacheHSM = () => {
     };
 };
 
+const createCacheStaticWebsite = () => {
+    return {
+        s3: {
+            listBuckets: {
+                'us-east-1': {
+                    data: [{
+                        Name: 'mybucket',
+                    }],
+                },
+            },
+            getBucketWebsite: {
+                'us-east-1': {
+                    mybucket: {
+                        data: {
+                            "IndexDocument": {
+                                "Suffix": "index.html"
+                            }                            
+                        },
+                    },
+                },
+            },
+        },
+        
+    };
+};
+
 const createCacheNoBuckets = () => {
     return {
         s3: {
@@ -360,6 +386,15 @@ describe('s3Encryption', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
+                done();
+            });
+        });
+
+        it('should PASS if s3_unencrypted_static_websites if enabled and bucket has static website hosting enabled', function (done) {
+            const cache = createCacheStaticWebsite();
+            s3Encryption.run(cache, { s3_allow_unencrypted_static_websites: 'true' }, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
                 done();
             });
         });

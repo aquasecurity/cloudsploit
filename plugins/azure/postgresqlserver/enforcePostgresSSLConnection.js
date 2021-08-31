@@ -9,6 +9,12 @@ module.exports = {
     recommended_action: 'Ensure the connection security settings of each PostgreSQL server are configured to enforce SSL connections.',
     link: 'https://docs.microsoft.com/en-us/azure/postgresql/concepts-ssl-connection-security',
     apis: ['servers:listPostgres'],
+    remediation_min_version: '202101041600',
+    remediation_description: 'The SSL enforcement option will be enabled for the affected PostreSQL servers',
+    apis_remediate: ['servers:listPostgres'],
+    actions: {remediate:['servers:update'], rollback:['servers:update']},
+    permissions: {remediate: ['servers:update'], rollback: ['server:update']},
+    realtime_triggers: ['microsoftdbforpostgresql:servers:write'],
     compliance: {
         hipaa: 'HIPAA requires all data to be transmitted over secure channels. ' +
             'PostgreSQL SSL connection should be used to ensure internal ' +
@@ -56,5 +62,48 @@ module.exports = {
             // Global checking goes here
             callback(null, results, source);
         });
+    },
+    remediate: function(config, cache, settings, resource, callback) {
+        var remediation_file = settings.remediation_file;
+        var putCall = this.actions.remediate;
+
+        // inputs specific to the plugin
+        var pluginName = 'enforcePostgresSSLConnection';
+        var baseUrl = 'https://management.azure.com{resource}?api-version=2017-12-01';
+        var method = 'PATCH';
+
+        // for logging purposes
+        var serverNameArr = resource.split('/');
+        var serverName = serverNameArr[serverNameArr.length - 1];
+
+        // create the params necessary for the remediation
+        if (settings.region) {
+            var body = {
+                'properties': {
+                    'sslEnforcement': 'Enabled'
+                }
+            };
+
+            // logging
+            remediation_file['pre_remediate']['actions'][pluginName][resource] = {
+                'SSLEnforcement': 'Disabled',
+                'Server': serverName
+            };
+
+            helpers.remediatePlugin(config, method, body, baseUrl, resource, remediation_file, putCall, pluginName, function(err, action) {
+                if (err) return callback(err);
+                if (action) action.action = putCall;
+
+
+                remediation_file['post_remediate']['actions'][pluginName][resource] = action;
+                remediation_file['remediate']['actions'][pluginName][resource] = {
+                    'Action': 'Enabled'
+                };
+
+                callback(null, action);
+            });
+        } else {
+            callback('No region found');
+        }
     }
 };

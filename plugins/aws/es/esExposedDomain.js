@@ -8,12 +8,17 @@ module.exports = {
     more_info: 'ElasticSearch domains should not be publicly exposed to all AWS accounts.',
     link: 'https://aws.amazon.com/blogs/database/set-access-control-for-amazon-elasticsearch-service/',
     recommended_action: 'Update elasticsearch domain to set access control.',
-    apis: ['ES:listDomainNames', 'ES:describeElasticsearchDomain'],
+    apis: ['ES:listDomainNames', 'ES:describeElasticsearchDomain', 'STS:getCallerIdentity'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+
+        var acctRegion = helpers.defaultRegion(settings);
+        var accountId = helpers.addSource(cache, source,
+            ['sts', 'getCallerIdentity', acctRegion, 'data']);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.es, function(region, rcb) {
             var listDomainNames = helpers.addSource(cache, source,
@@ -37,11 +42,11 @@ module.exports = {
                 var describeElasticsearchDomain = helpers.addSource(cache, source,
                     ['es', 'describeElasticsearchDomain', region, domain.DomainName]);
 
-                var resource = domain.ARN;
+                var resource = `arn:${awsOrGov}:es:${region}:${accountId}:domain/${domain.DomainName}`;
 
                 if (!describeElasticsearchDomain ||
                     describeElasticsearchDomain.err ||
-                    !describeElasticsearchDomain.data || 
+                    !describeElasticsearchDomain.data ||
                     !describeElasticsearchDomain.data.DomainStatus) {
                     helpers.addResult(
                         results, 3,
@@ -49,25 +54,25 @@ module.exports = {
                     return cb();
                 }
 
-                var goodStatements = [];
+                var exposed;
 
                 if (describeElasticsearchDomain.data.DomainStatus.AccessPolicies) {
-                    var accessPolicies = JSON.parse(describeElasticsearchDomain.data.DomainStatus.AccessPolicies);
+                    var statements = helpers.normalizePolicyDocument(describeElasticsearchDomain.data.DomainStatus.AccessPolicies);
 
-                    if (accessPolicies.Statement && accessPolicies.Statement.length) {
-                        accessPolicies.Statement.forEach(statement => {
-                            if (statement.Principal && statement.Principal.AWS && statement.Principal.AWS != '*') {
-                                goodStatements.push(statement);
-                            }
-                        });
-        
-                        if (goodStatements.length === accessPolicies.Statement.length) {
-                            helpers.addResult(results, 0,
-                                'Domain :' + domain.DomainName + ': is not exposed to all AWS accounts',
-                                region, resource);
-                        } else {
+                    if (statements && statements.length) {
+                        for (let statement of statements) {
+                            var statementPrincipals = helpers.extractStatementPrincipals(statement);
+                            exposed = statementPrincipals.find(principal => principal == '*');
+                            if (exposed) break;
+                        }
+
+                        if (exposed) {
                             helpers.addResult(results, 2,
                                 'Domain :' + domain.DomainName + ': is exposed to all AWS accounts',
+                                region, resource);
+                        } else {
+                            helpers.addResult(results, 0,
+                                'Domain :' + domain.DomainName + ': is not exposed to all AWS accounts',
                                 region, resource);
                         }
                     } else {
@@ -83,7 +88,7 @@ module.exports = {
             }, function() {
                 rcb();
             });
-            
+
         }, function() {
             callback(null, results, source);
         });

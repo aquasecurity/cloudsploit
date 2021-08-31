@@ -39,16 +39,18 @@
     "access": "public"
   },
   "dependencies": {
+    "@alicloud/pop-core": "^1.7.10",
     "@octokit/app": "^3.0.0",
     "@octokit/request": "^3.0.3",
     "@octokit/rest": "^16.3.2",
+    "ali-oss": "^6.15.2",
     "argparse": "^2.0.0",
     "async": "^2.6.1",
-    "aws-sdk": "^2.834.0",
+    "aws-sdk": "^2.954.0",
     "azure-storage": "^2.10.3",
     "csv-write-stream": "^2.0.0",
     "fast-safe-stringify": "^2.0.6",
-    "googleapis": "^40.0.1",
+    "googleapis": "^76.0.0",
     "minimatch": "^3.0.4",
     "ms-rest-azure": "^2.6.0",
     "tty-table": "^4.1.3"

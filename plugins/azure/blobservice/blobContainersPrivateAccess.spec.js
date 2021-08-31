@@ -5,7 +5,13 @@ const storageAccounts = [
     {
         'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Storage/storageAccounts/acc',
         'location': 'eastus',
+        'name': 'acc'
+    },
+    {
+        'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Storage/storageAccounts/acc',
+        'location': 'eastus',
         'name': 'acc',
+        'allowBlobPublicAccess': false
     }
 ];
 
@@ -137,6 +143,17 @@ describe('blobContainerPrivateAccess', function() {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Blob container allows public access');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+
+        it('should give passing result if blob containers public access is disabled by storage account', function (done) {
+            const cache = createCache([storageAccounts[1]], [blobContainers[1]]);
+            blobPrivateAccess.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Storage Account does not allow blob containers public access');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

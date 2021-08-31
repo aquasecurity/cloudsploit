@@ -9,6 +9,7 @@ module.exports = {
     default: ['us-gov-west-1'],
     all: regions,
     optin: [],
+    accessanalyzer: regions,
     acm: regions,
     apigateway: regions,
     athena: ['us-gov-west-1'],
@@ -39,6 +40,7 @@ module.exports = {
     elbv2: regions,
     emr: regions,
     es: regions,
+    eventbridge: regions,
     kinesis: [],
     firehose: [],
     glue: regions,
@@ -73,5 +75,7 @@ module.exports = {
     wafv2: regions,
     workspaces: ['us-gov-west-1'],
     xray: [],
-    resourcegroupstaggingapi: regions
+    resourcegroupstaggingapi: regions,
+    codestar: regions,
+    codebuild: regions
 };

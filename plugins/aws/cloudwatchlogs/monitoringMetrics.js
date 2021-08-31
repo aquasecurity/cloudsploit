@@ -81,8 +81,17 @@ module.exports = {
             var describeTrails = helpers.addSource(cache, source,
                 ['cloudtrail', 'describeTrails', region]);
 
-            if (!describeTrails || describeTrails.err ||
-                !describeTrails.data || !describeTrails.data.length) {
+            if (!describeTrails) return rcb();
+            
+            if (describeTrails.err || !describeTrails.data) {
+                helpers.addResult(results, 3,
+                    `Unable to describe CloudTrail trails: ${helpers.addError(describeTrails)}`, region);
+                return rcb();
+            }
+
+            if (!describeTrails.data.length) {
+                helpers.addResult(results, 0,
+                    'No CloudTrail trails found', region);
                 return rcb();
             }
 
@@ -95,7 +104,11 @@ module.exports = {
                 }
             }
 
-            if (!trailsInRegion.length) return rcb();
+            if (!trailsInRegion.length) {
+                helpers.addResult(results, 0,
+                    'No CloudTrail trails found in current home region', region);
+                return rcb();
+            }
 
             var describeMetricFilters = helpers.addSource(cache, source,
                 ['cloudwatchlogs', 'describeMetricFilters', region]);
@@ -104,14 +117,12 @@ module.exports = {
                 describeMetricFilters.err || !describeMetricFilters.data) {
                 helpers.addResult(results, 3,
                     'Unable to query for CloudWatchLogs metric filters: ' + helpers.addError(describeMetricFilters), region);
-
                 return rcb();
             }
 
             if (!describeMetricFilters.data.length) {
                 helpers.addResult(results, 2,
                     'There are no CloudWatch metric filters in this region', region);
-
                 return rcb();
             }
 

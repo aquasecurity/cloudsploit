@@ -15,6 +15,14 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
 
+        var parameterMappings = {
+            'sqlserver-ex': 'rds.force_ssl',
+            'sqlserver-ee': 'rds.force_ssl',
+            'sqlserver-se': 'rds.force_ssl',
+            'sqlserver-web': 'rds.force_ssl',
+            'postgres': 'rds.force_ssl'
+        };
+
         async.each(regions.rds, function(region, rcb) {
             var describeDBInstances = helpers.addSource(cache, source,
                 ['rds', 'describeDBInstances', region]);
@@ -35,15 +43,12 @@ module.exports = {
                 return rcb();
             }
 
-            var sqlInstanceFound = false;
-
             async.each(describeDBInstances.data, function(db, cb){
-                if (db.Engine && db.Engine.startsWith('sqlserver')) {
-                    if (!db.DBInstanceArn) return cb();
+                if (!db.DBInstanceArn || !db.Engine) return cb();
 
-                    var resource = db.DBInstanceArn;
-                    sqlInstanceFound = true;
+                var resource = db.DBInstanceArn;
 
+                if (parameterMappings[db.Engine.toLowerCase()]) {
                     if (!db.DBParameterGroups || !db.DBParameterGroups.length) {
                         helpers.addResult(results, 0,
                             `RDS DB instance "${db.DBInstanceIdentifier}" does not have any parameter groups associated`,
@@ -65,18 +70,16 @@ module.exports = {
                                 region, resource);
                             return cb();
                         }
-    
+
                         if (!parameters.data.Parameters || !parameters.data.Parameters.length) {
                             helpers.addResult(results, 3,
                                 `No parameters found for RDS parameter group "${groupName}"`,
                                 region, resource);
                             return cb();
                         }
-    
-                        for (var p in parameters.data.Parameters) {
-                            var param = parameters.data.Parameters[p];
-    
-                            if (param.ParameterName && param.ParameterName === 'rds.force_ssl' &&
+
+                        for (var param of parameters.data.Parameters) {
+                            if (param.ParameterName && param.ParameterName === parameterMappings[db.Engine] &&
                                 param.ParameterValue && param.ParameterValue !== '0') {
                                 forceSslEnabled = true;
                                 break;
@@ -95,18 +98,16 @@ module.exports = {
                             `RDS DB instance "${db.DBInstanceIdentifier}" does not have transport encryption enabled`,
                             region, resource);
                     }
+                } else {
+                    helpers.addResult(results, 0,
+                        `TLS Enforcement is not supported on the ${db.DBInstanceIdentifier} database with ${db.Engine} engine`,
+                        region, resource);
                 }
 
                 cb();
+            }, function(){
+                rcb();
             });
-
-            if (!sqlInstanceFound) {
-                helpers.addResult(results, 0,
-                    'No RDS SQL Server instances found',
-                    region);
-            }
-
-            rcb();
         }, function(){
             callback(null, results, source);
         });

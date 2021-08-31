@@ -65,7 +65,18 @@ const createCache = (statement) => {
                         }
                     }
                 }
-            }
+            },
+            getBucketWebsite: {
+                'us-east-1': {
+                    mybucket: {
+                        data: {
+                            "IndexDocument": {
+                                "Suffix": "index.html"
+                            }
+                        },
+                    },
+                },
+            },
         },
     };
 };
@@ -135,6 +146,15 @@ describe('bucketEncryptionInTransit', function () {
             bucketEncryptionInTransit.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                done();
+            });
+        });
+
+        it('should PASS if s3_unencrypted_static_websites if enabled and bucket has static website hosting enabled', function (done) {
+            const cache = createCache();
+            bucketEncryptionInTransit.run(cache, { s3_allow_unencrypted_static_websites: 'true' }, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
                 done();
             });
         });

@@ -30,7 +30,7 @@ module.exports = {
             if (!httpProxies) return rcb();
 
             if (httpProxies.err || !httpProxies.data) {
-                helpers.addResult(results, 3, 'Unable to query firewall rules: ' + helpers.addError(httpProxies), region);
+                helpers.addResult(results, 3, 'Unable to query firewall rules', region, null, null, httpProxies.err);
                 return rcb();
             }
 
@@ -41,17 +41,16 @@ module.exports = {
             var non_https_listener = [];
             httpProxies.data.forEach(httpProxy => {
                 if (httpProxy.urlMap) {
-                    var urlMap = httpProxy.urlMap.split('/');
-                    var lbName = urlMap[urlMap.length-1];
+                    var lbName = httpProxy.urlMap.split('/').slice(5).join('/');
                     non_https_listener.push(lbName);
                 }
             });
-            
+
             if (non_https_listener.length) {
                 msg = "The following Load Balancers are not HTTPS-only: ";
                 helpers.addResult(
                     results, 2, msg + non_https_listener.join(', '), region, null);
-            } else{
+            } else {
                 helpers.addResult(results, 0, 'No listeners found', region, null);
             }
             rcb();
