@@ -54,7 +54,7 @@ module.exports = {
     more_info: 'S3 buckets support numerous types of encryption, including AES-256, KMS using a default key, KMS with a CMK, or via HSM-based key.',
     recommended_action: 'Configure a bucket policy to enforce encryption.',
     link: 'https://aws.amazon.com/blogs/security/how-to-prevent-uploads-of-unencrypted-objects-to-amazon-s3/',
-    apis: ['S3:listBuckets', 'S3:getBucketPolicy', 'S3:getBucketWebsite', 'KMS:listKeys', 'KMS:describeKey'],
+    apis: ['S3:listBuckets', 'S3:getBucketPolicy', 'S3:getBucketWebsite', 'KMS:listKeys', 'KMS:describeKey', 'S3:getBucketLocation'],
     settings: {
         s3_required_encryption_level: {
             name: 'S3 Minimum Default Encryption Level',
@@ -99,6 +99,7 @@ module.exports = {
 
         for (let bucket of listBuckets.data) {
             var bucketResource = `arn:aws:s3:::${bucket.Name}`;
+            var bucketLocation = helpers.getS3BucketLocation(cache, region, bucket.Name);
 
             if (allowSkipEncryption) {
                 var getBucketWebsite = helpers.addSource(cache, source, ['s3', 'getBucketWebsite', region, bucket.Name]);
@@ -116,11 +117,11 @@ module.exports = {
 
             var getBucketPolicy = helpers.addSource(cache, source, ['s3', 'getBucketPolicy', region, bucket.Name]);
             if (getBucketPolicy && getBucketPolicy.err && getBucketPolicy.err.code && getBucketPolicy.err.code === 'NoSuchBucketPolicy') {
-                helpers.addResult(results, 2, 'No bucket policy found; encryption not enforced', 'global', bucketResource);
+                helpers.addResult(results, 2, 'No bucket policy found; encryption not enforced', bucketLocation, bucketResource);
                 continue;
             }
             if (!getBucketPolicy || getBucketPolicy.err || !getBucketPolicy.data || !getBucketPolicy.data.Policy) {
-                helpers.addResult(results, 3, `Error querying for bucket policy on bucket: ${bucket.Name}: ${helpers.addError(getBucketPolicy)}`, 'global', bucketResource);
+                helpers.addResult(results, 3, `Error querying for bucket policy on bucket: ${bucket.Name}: ${helpers.addError(getBucketPolicy)}`, bucketLocation, bucketResource);
                 continue;
             }
 
@@ -133,15 +134,15 @@ module.exports = {
                     policyJson = getBucketPolicy.data.Policy;
                 }
             } catch (e) {
-                helpers.addResult(results, 3, `Bucket policy on bucket [${bucket.Name}] could not be parsed.`, 'global', bucketResource);
+                helpers.addResult(results, 3, `Bucket policy on bucket [${bucket.Name}] could not be parsed.`, bucketLocation, bucketResource);
                 continue;
             }
             if (!policyJson || !policyJson.Statement) {
-                helpers.addResult(results, 3, `Error querying for bucket policy for bucket: ${bucket.Name}: Policy JSON is invalid or does not contain valid statements.`, 'global', bucketResource);
+                helpers.addResult(results, 3, `Error querying for bucket policy for bucket: ${bucket.Name}: Policy JSON is invalid or does not contain valid statements.`, bucketLocation, bucketResource);
                 continue;
             }
             if (!policyJson.Statement.length) {
-                helpers.addResult(results, 2, 'Bucket policy does not contain any statements; encryption not enforced', 'global', bucketResource);
+                helpers.addResult(results, 2, 'Bucket policy does not contain any statements; encryption not enforced', bucketLocation, bucketResource);
                 continue;
             }
 
@@ -164,9 +165,9 @@ module.exports = {
             const currentEncryptionLevel = statementEncryptionLevels.reduce((max, level) => encryptionLevelMap[level] > encryptionLevelMap[max] ? level : max, 'none');
 
             if (encryptionLevelMap[currentEncryptionLevel] < encryptionLevelMap[desiredEncryptionLevelString]) {
-                helpers.addResult(results, 2, `Bucket policy does not enforce encryption to ${desiredEncryptionLevelString}, policy currently enforces: ${currentEncryptionLevel}`, 'global', bucketResource);
+                helpers.addResult(results, 2, `Bucket policy does not enforce encryption to ${desiredEncryptionLevelString}, policy currently enforces: ${currentEncryptionLevel}`, bucketLocation, bucketResource);
             } else {
-                helpers.addResult(results, 0, `Bucket policy enforces encryption to ${desiredEncryptionLevelString}, policy currently enforces: ${currentEncryptionLevel}`, 'global', bucketResource);
+                helpers.addResult(results, 0, `Bucket policy enforces encryption to ${desiredEncryptionLevelString}, policy currently enforces: ${currentEncryptionLevel}`, bucketLocation, bucketResource);
             }
         }
         callback(null, results, source);
