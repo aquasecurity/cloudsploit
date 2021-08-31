@@ -25,7 +25,7 @@ module.exports = {
             if (!iamPolicies) return rcb();
 
             if (iamPolicies.err || !iamPolicies.data) {
-                helpers.addResult(results, 3, 'Unable to query for IAM Policies: ' + helpers.addError(iamPolicies), region);
+                helpers.addResult(results, 3, 'Unable to query for IAM Policies', region, null, null, iamPolicies.err);
                 return rcb();
             }
 
@@ -87,9 +87,11 @@ module.exports = {
                 helpers.addResult(results, 0, 'All service accounts have least access', region);
             } else {
                 for (let member in serviceAccountObj) {
+                    let accountName = (member.includes(':')) ? member.split(':')[1] : member;
+                    let resource = helpers.createResourceName('serviceAccounts', accountName, projectName);
                     var permissionStr = serviceAccountObj[member].join(', ');
                     helpers.addResult(results, 2,
-                        `The Service account has the following permissions: ${permissionStr}`, region, member);
+                        `The Service account has the following permissions: ${permissionStr}`, region, resource);
                 }
             }
 

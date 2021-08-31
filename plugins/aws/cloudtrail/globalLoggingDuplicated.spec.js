@@ -100,7 +100,7 @@ describe('globalLoggingDuplicated', function () {
         });
 
         it('should FAIL if CloudTrail global services event logging is not enabled', function (done) {
-            const cache = createCache([describeTrails[0], describeTrails[2]]);
+            const cache = createCache([describeTrails[3]]);
             globalLoggingDuplicated.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);

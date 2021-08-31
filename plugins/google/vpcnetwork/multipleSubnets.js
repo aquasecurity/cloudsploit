@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'A single network within a VPC increases the risk of a broader blast radius in the event of a compromise.',
     link: 'https://cloud.google.com/vpc/docs/vpc',
     recommended_action: 'Create multiple networks/subnets in each VPC and change the architecture to take advantage of public and private tiers.',
-    apis: ['networks:list'],
+    apis: ['networks:list', 'projects:get'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -22,7 +22,7 @@ module.exports = {
             if (!networks) return rcb();
 
             if (networks.err || !networks.data) {
-                helpers.addResult(results, 3, 'Unable to query networks: ' + helpers.addError(networks), region);
+                helpers.addResult(results, 3, 'Unable to query networks: ' + helpers.addError(networks), region, null, null, networks.err);
                 return rcb();
             }
 
@@ -30,6 +30,18 @@ module.exports = {
                 helpers.addResult(results, 0, 'No networks found', region);
                 return rcb();
             }
+
+            let projects = helpers.addSource(cache, source,
+                ['projects','get', 'global']);
+    
+            if (!projects || projects.err || !projects.data || !projects.data.length) {
+                helpers.addResult(results, 3,
+                    'Unable to query for projects: ' + helpers.addError(projects), 'global', null, null, (projects) ? projects.err : null);
+                return callback(null, results, source);
+            }
+    
+            var project = projects.data[0].name;
+
             var subnetRegions;
             networks.data.forEach(network => {
                 regions = helpers.regions();
@@ -41,7 +53,7 @@ module.exports = {
                 var subnets = network.subnetworks;
 
                 subnetRegions = regions.zones;
-                if (subnets) {
+                if (subnets && subnets.length) {
                     subnets.forEach(subnet => {
                         var splitSubnet = subnet.split('/');
                         subnetName = splitSubnet[10];
@@ -74,6 +86,8 @@ module.exports = {
 
                         }
                     });
+                } else {
+                    noNetworks.push(1);
                 }
                 for (var sub in myRegions) {
                     if (Math.floor(myRegions[sub]) > 1) {
@@ -82,30 +96,29 @@ module.exports = {
                         failNetworks.push(sub);
                     } else if (myRegions[sub] == .5) {
                         warnNetworks.push(sub);
-                    } else if(myRegions[sub] == 0) {
-                        noNetworks.push(sub);
                     }
                 }
 
+                let resource = helpers.createResourceName('networks', network.name, project, 'global');
                 if (passNetworks.length) {
                     var msg = 'There are ' + myRegions[sub] + ' different subnets used in these regions: ';
                     helpers.addResult(results, 0,
-                        msg + passNetworks.join(', '), null, network.id);
+                        msg + passNetworks.join(', '), null, resource);
                 }
                 if (failNetworks.length) {
                     var msg = 'Only one subnet in these regions is used: ';
                     helpers.addResult(results, 2,
-                        msg + failNetworks.join(', '), null, network.id);
+                        msg + failNetworks.join(', '), null, resource);
                 }
                 if (warnNetworks.length) {
                     var msg = 'Only the default subnet in these regions is used: ';
                     helpers.addResult(results, 2,
-                        msg + warnNetworks.join(', '), null, network.id);
+                        msg + warnNetworks.join(', '), null, resource);
                 }
                 if (noNetworks.length) {
-                    var msg = 'The VPC does not have any subnets in these regions: ';
+                    var msg = 'The VPC does not have any subnets';
                     helpers.addResult(results, 0,
-                        msg + noNetworks.join(', '), null, network.id);
+                        msg, null, resource);
                 }
             });
 
