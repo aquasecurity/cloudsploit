@@ -55,7 +55,7 @@ module.exports = {
                 if (describeCluster.data.cluster &&
                     describeCluster.data.cluster.resourcesVpcConfig &&
                     describeCluster.data.cluster.resourcesVpcConfig.endpointPublicAccess) {
-                    helpers.addResult(results, 2, 'EKS cluster does not have only the private endpoint enabled', region, arn);
+                    helpers.addResult(results, 2, 'EKS cluster has public endpoint enabled', region, arn);
                 } else {
                     helpers.addResult(results, 0, 'EKS cluster has public endpoint disabled', region, arn);
                 }
