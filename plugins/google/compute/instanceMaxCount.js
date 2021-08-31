@@ -193,8 +193,8 @@ module.exports = {
 
 
         };
-        for (c in config) {
-            if (settings.hasOwnProperty(c)) {
+        for (let c in config) {
+            if (settings[c]) {
                 config[c] = settings[c];
             }
         }
@@ -235,7 +235,7 @@ module.exports = {
                     return zcb();
                 }
                 instances.data.forEach(instance => {
-                    if (instance.status && instance.status == "RUNNING") {
+                    if (instance.status && instance.status == 'RUNNING') {
                         instanceCountGlobal +=1;
                         instanceCount +=1;
                     }
@@ -272,18 +272,18 @@ module.exports = {
                 rcb();
             });
         }, function() {
-             // Print global results
-             var globalThreshold = config.instance_count_global_threshold;
+            // Print global results
+            var globalThreshold = config.instance_count_global_threshold;
 
-             if (instanceCountGlobal > globalThreshold) {
-                 helpers.addResult(results, 2,
-                     instanceCountGlobal + ' instances running in all regions, exceeding limit of: ' + globalThreshold, null, null, custom);
-             } else {
-                 helpers.addResult(results, 0,
-                     instanceCountGlobal + ' instances in the account are within the global expected count of: ' + globalThreshold, null, null, custom);
-             }
+            if (instanceCountGlobal > globalThreshold) {
+                helpers.addResult(results, 2,
+                    instanceCountGlobal + ' instances running in all regions, exceeding limit of: ' + globalThreshold, null, null, custom);
+            } else {
+                helpers.addResult(results, 0,
+                    instanceCountGlobal + ' instances in the account are within the global expected count of: ' + globalThreshold, null, null, custom);
+            }
      
-             callback(null, results, source); 
+            callback(null, results, source); 
         });
     }
 };

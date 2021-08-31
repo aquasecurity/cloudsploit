@@ -58,7 +58,7 @@ module.exports = {
                         found = true;
                         if (nodePool.config &&
                             nodePool.config.serviceAccount &&
-                            nodePool.config.serviceAccount === "default") defaultSaNodes.push(nodePool.name);
+                            nodePool.config.serviceAccount === 'default') defaultSaNodes.push(nodePool.name);
                     });
                 }
 
