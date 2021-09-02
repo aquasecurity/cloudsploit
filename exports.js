@@ -751,6 +751,7 @@ module.exports = {
         'bucketAllUsersPolicy'          : require(__dirname + '/plugins/google/storage/bucketAllUsersPolicy.js'),
         'bucketRetentionPolicy'         : require(__dirname + '/plugins/google/storage/bucketRetentionPolicy.js'),
         'bucketUniformAccess'           : require(__dirname + '/plugins/google/storage/bucketUniformAccess.js'),
+        'bucketLifecycleConfigured'     : require(__dirname + '/plugins/google/storage/bucketLifecycleConfigured.js'),
 
         'clbHttpsOnly'                  : require(__dirname + '/plugins/google/clb/clbHttpsOnly.js'),
         'clbNoInstances'                : require(__dirname + '/plugins/google/clb/clbNoInstances.js'),
