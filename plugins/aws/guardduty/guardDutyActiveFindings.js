@@ -42,7 +42,7 @@ module.exports = {
                     continue;
                 }
                 if (getDetector.data.Status && getDetector.data.Status.toUpperCase() !== 'ENABLED') {
-                    helpers.addResult(results, 2, `GuardDuty detector is disabled`, region, resource);
+                    helpers.addResult(results, 2, 'GuardDuty detector is disabled', region, resource);
                     continue;
                 }
                 const getFindings = helpers.addSource(cache, source, ['guardduty', 'getFindings', region, detectorId]);
