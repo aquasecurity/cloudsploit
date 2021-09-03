@@ -52,7 +52,7 @@ module.exports = {
                         bucketName = sink.destination.split('/')[1];
                     }
                     noSinks = false;
-                    sinkName = sink.name
+                    sinkName = sink.name;
                     sinkResource = helpers.createResourceName('sinks', sinkName, project);
                 }
             });

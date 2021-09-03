@@ -38,7 +38,7 @@ module.exports = {
             return callback(null, results, source);
         } else {
             var groupName = [];
-            async.each(instanceGroups.data, function (instanceGroup, icb) {
+            async.each(instanceGroups.data, function(instanceGroup, icb) {
                 if (instanceGroup.instanceGroups) {
                     instanceGroup.instanceGroups.forEach(group => {
                         if (group.region) {
@@ -47,10 +47,10 @@ module.exports = {
                     });
                 }
                 icb();
-            }, function () {
-                async.each(regions.instances.compute, function (location, loccb) {
+            }, function() {
+                async.each(regions.instances.compute, function(location, loccb) {
                     var noInstances = [];
-                    async.each(regions.zones[location], function (loc, lcb) {
+                    async.each(regions.zones[location], function(loc, lcb) {
                         let instances = helpers.addSource(
                             cache, source, ['instances', 'compute', 'list', loc]);
 
@@ -86,7 +86,7 @@ module.exports = {
                     }, function() {
                         if (noInstances.length) {
                             helpers.addResult(results, 0,
-                                `No instances found in following zones: ${noInstances.join(', ')}`, location)
+                                `No instances found in following zones: ${noInstances.join(', ')}`, location);
                         }
                         loccb();
                     });

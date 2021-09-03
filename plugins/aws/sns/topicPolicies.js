@@ -8,12 +8,33 @@ module.exports = {
     more_info: 'SNS policies should not be configured to allow any AWS user to subscribe or send messages. This could result in data leakage or financial DDoS.',
     recommended_action: 'Adjust the topic policy to only allow authorized AWS users in known accounts to subscribe.',
     link: 'http://docs.aws.amazon.com/sns/latest/dg/AccessPolicyLanguage.html',
-    apis: ['SNS:listTopics', 'SNS:getTopicAttributes'],
+    apis: ['SNS:listTopics', 'SNS:getTopicAttributes', 'STS:getCallerIdentity'],
+    settings: {
+        sns_topic_policy_condition_keys: {
+            name: 'SNS Topic Policy Allowed Condition Keys',
+            description: 'Comma separated list of AWS IAM condition keys that should be allowed i.e. aws:SourceAccount, aws:SourceArn' +
+                'This setting assumes following rules:' +
+                '1. As a best practice, "Deny" with "StringNotLike" and "Allow" with "StringLike" are used to prevent accidental privileged access' +
+                '2. IAM condition keys which work with "Numeric" or "Date" operators are not used' +
+                '3. Bool values are set to "true" with "Allow" and "false" with "Deny"',
+            regex: '^.*$',
+            default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceOwner,aws:SourceArn,aws:SourceAccount'
+        }
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+
+        var acctRegion = helpers.defaultRegion(settings);
+        var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
+
+        var config = {
+            sns_topic_policy_condition_keys: settings.sns_topic_policy_condition_keys || this.settings.sns_topic_policy_condition_keys.default
+        };
+        config.sns_topic_policy_condition_keys = config.sns_topic_policy_condition_keys.replace(/\s/g, '');
+        var allowedConditionKeys = config.sns_topic_policy_condition_keys.split(',');
 
         async.each(regions.sns, function(region, rcb){
             var listTopics = helpers.addSource(cache, source,
@@ -32,87 +53,67 @@ module.exports = {
                 return rcb();
             }
 
-            async.each(listTopics.data, function(topic, cb){
-                if (!topic.TopicArn) return cb();
-
+            listTopics.data.forEach( topic => {
+                if (!topic.TopicArn) return;
+    
                 var getTopicAttributes = helpers.addSource(cache, source,
                     ['sns', 'getTopicAttributes', region, topic.TopicArn]);
-
+    
                 if (!getTopicAttributes ||
-                    (!getTopicAttributes.err && !getTopicAttributes.data)) return cb();
-
+                    (!getTopicAttributes.err && !getTopicAttributes.data)) return;
+    
                 if (getTopicAttributes.err || !getTopicAttributes.data) {
                     helpers.addResult(results, 3,
                         'Unable to query SNS topic for policy: ' + helpers.addError(getTopicAttributes),
                         region, topic.TopicArn);
-
-                    return cb();
+                    return;
                 }
-
+    
                 if (!getTopicAttributes.data.Attributes ||
                     !getTopicAttributes.data.Attributes.Policy) {
                     helpers.addResult(results, 3,
                         'The SNS topic does not have a policy attached.',
                         region, topic.TopicArn);
-
-                    return cb();
+                    return;
                 }
-
-                try {
-                    var policy = JSON.parse(getTopicAttributes.data.Attributes.Policy);
-                } catch (e) {
-                    helpers.addResult(results, 3,
-                        'The SNS topic policy is not valid JSON.',
+    
+                var statements = helpers.normalizePolicyDocument(getTopicAttributes.data.Attributes.Policy);
+    
+                if (!statements || !statements.length) {
+                    helpers.addResult(results, 0,
+                        'The SNS Topic policy does not have trust relationship statements',
                         region, topic.TopicArn);
-
-                    return cb();
+                    return;
                 }
-
+    
                 var actions = [];
+    
+                for (var statement of statements) {
+                    // Evaluates whether the effect of the statement is to "allow" access to the SNS
+                    var effectEval = (statement.Effect && statement.Effect == 'Allow' ? true : false);
 
-                if (policy.Statement && policy.Statement.length) {
-                    for (var s in policy.Statement) {
-                        var statement = policy.Statement[s];
+                    // Evaluates whether the principal is open to everyone/anonymous
+                    var principalEval = helpers.globalPrincipal(statement.Principal);
 
-                        // Evaluates whether the effect of the statement is to "allow" access to the SNS
-                        var effectEval = (statement.Effect && statement.Effect == 'Allow' ? true : false);
+                    // Evaluates whether condition is scoped or global
+                    let scopedCondition;
+                    if (statement.Condition) scopedCondition = helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, false, accountId);
 
-                        // Evaluates whether the principal is open to everyone/anonymous
-                        var principalEval = (statement.Principal && statement.Principal.AWS &&
-                                            (statement.Principal.AWS === '*' || statement.Principal.AWS === 'arn:aws:iam::*') ? true : false);
-
-                        // Evaluate the condition:
-                        // Does the condition exist?
-                        var conditionExists = (statement.Condition ? true : false);
-                        // Is it a string condition (StringEquals)? Is the SourceOwner open to everyone?
-                        var conditionString = ((statement.Condition && statement.Condition.StringEquals &&
-                            (statement.Condition.StringEquals['AWS:SourceOwner'] || !statement.Condition.StringEquals['AWS:SourceOwner'] == '*')) ? true : false);
-                        // Is it an arn condition (ArnEquals)? Is the SourceArn open to all arns?
-                        var conditionArn = false;
-                        if (statement.Condition && statement.Condition.ArnEquals &&
-                            statement.Condition.ArnEquals['aws:SourceArn'] &&
-                            statement.Condition.ArnEquals['aws:SourceArn'] == '*') {
-                            conditionArn = true;
-                        }
-                        // Summarize the condition results
-                        var statementEval = ((conditionExists && (conditionString || conditionArn)) ? false : true);
-
-                        if (effectEval && principalEval && statementEval) {
-                            if (statement.Action && typeof statement.Action === 'string') {
-                                if (actions.indexOf(statement.Action) === -1) {
-                                    actions.push(statement.Action);
-                                }
-                            } else if (statement.Action && statement.Action.length) {
-                                for (var a in statement.Action) {
-                                    if (actions.indexOf(statement.Action[a]) === -1) {
-                                        actions.push(statement.Action[a]);
-                                    }
+                    if (!scopedCondition && principalEval && effectEval) {
+                        if (statement.Action && typeof statement.Action === 'string') {
+                            if (actions.indexOf(statement.Action) === -1) {
+                                actions.push(statement.Action);
+                            }
+                        } else if (statement.Action && statement.Action.length) {
+                            for (var a in statement.Action) {
+                                if (actions.indexOf(statement.Action[a]) === -1) {
+                                    actions.push(statement.Action[a]);
                                 }
                             }
                         }
                     }
                 }
-
+    
                 if (actions.length) {
                     helpers.addResult(results, 2,
                         'The SNS topic policy allows global access to the action(s): ' + actions,
@@ -122,11 +123,9 @@ module.exports = {
                         'The SNS topic policy does not allow global access.',
                         region, topic.TopicArn);
                 }
-
-                cb();
-            }, function(){
-                rcb();
             });
+            
+            rcb();
         }, function(){
             callback(null, results, source);
         });

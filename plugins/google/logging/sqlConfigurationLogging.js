@@ -52,7 +52,6 @@ module.exports = {
 
             var metricExists = false;
             var metricName = '';
-            var missingMetricStr;
 
             var testMetrics = 'protoPayload.methodName="cloudsql.instances.update"';
 
@@ -65,7 +64,7 @@ module.exports = {
                         metricExists = true;
                         metricName = metric.metricDescriptor.type;
                     } else {
-                        return
+                        return;
                     }
                 }
             });
@@ -87,7 +86,7 @@ module.exports = {
                                     helpers.addResult(results, 0, 'Log alert for SQL configuration changes is enabled', region, alertPolicy.name);
                                 }
                             }
-                        })
+                        });
                     }
                 });
 

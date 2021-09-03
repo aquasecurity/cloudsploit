@@ -51,7 +51,7 @@ module.exports = {
 
                 if (job.currentState && !['JOB_STATE_RUNNING', 'JOB_STATE_DRAINING', 'JOB_STATE_CANCELLING'].includes(job.currentState.toUpperCase())) {
                     helpers.addResult(results, 0,
-                        `Dataflow job has completed`, region, resource);
+                        'Dataflow job has completed', region, resource);
                     return cb();
                 }
 
@@ -73,4 +73,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};
