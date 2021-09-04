@@ -317,6 +317,7 @@ module.exports = {
         'ssmActiveOnAllInstances'       : require(__dirname + '/plugins/aws/ssm/ssmActiveOnAllInstances.js'),
         'ssmAgentLatestVersion'         : require(__dirname + '/plugins/aws/ssm/ssmAgentLatestVersion.js'),
         'ssmAgentAutoUpdateEnabled'     : require(__dirname + '/plugins/aws/ssm/ssmAgentAutoUpdateEnabled'),
+        'ssmDocumentPublicAccess'       : require(__dirname + '/plugins/aws/ssm/ssmDocumentPublicAccess'),
 
 
         'lambdaAdminPrivileges'         : require(__dirname + '/plugins/aws/lambda/lambdaAdminPrivileges.js'),

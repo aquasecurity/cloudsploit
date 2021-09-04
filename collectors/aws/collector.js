@@ -730,6 +730,10 @@ var calls = {
         listAssociations: {
             property: 'Associations',
             paginate: 'NextToken'
+        },
+        listDocuments: {
+            property: 'DocumentIdentifiers',
+            paginate: 'NextToken'
         }
     },
     STS: {
@@ -1296,6 +1300,14 @@ var postcalls = [
                 reliesOnCall: 'listSecrets',
                 filterKey: 'SecretId',
                 filterValue: 'ARN',
+            }
+        },
+        SSM: {
+            describeDocument: {
+                reliesOnService: 'ssm',
+                reliesOnCall: 'listDocuments',
+                filterKey: 'Name',
+                filterValue: 'Name',
             }
         },
         SES: {
