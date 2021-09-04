@@ -4,7 +4,7 @@
   "description": "AWS, Azure, GCP, Oracle, GitHub security scanning scripts",
   "main": "index.js",
   "scripts": {
-    "test": "mocha './**/*.spec.js'",
+    "test": "mocha './**/ssmDocume*.spec.js'",
     "test-watch": "nodemon --exec npm run test",
     "test-cov": "nyc --reporter text --reporter cobertura --reporter lcov --all -- npm run test",
     "test-cov-watch": "nodemon --exec npm run test-cov",

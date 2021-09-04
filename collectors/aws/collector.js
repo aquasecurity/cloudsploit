@@ -731,9 +731,12 @@ var calls = {
             property: 'Associations',
             paginate: 'NextToken'
         },
-        listDocuments: {
-            property: 'DocumentIdentifiers',
-            paginate: 'NextToken'
+        getServiceSetting: {
+            property: 'ServiceSetting',
+            paginate: 'NextToken',
+            params: {
+                SettingId: '/ssm/documents/console/public-sharing-permission'
+            }
         }
     },
     STS: {
@@ -1300,14 +1303,6 @@ var postcalls = [
                 reliesOnCall: 'listSecrets',
                 filterKey: 'SecretId',
                 filterValue: 'ARN',
-            }
-        },
-        SSM: {
-            describeDocument: {
-                reliesOnService: 'ssm',
-                reliesOnCall: 'listDocuments',
-                filterKey: 'Name',
-                filterValue: 'Name',
             }
         },
         SES: {
