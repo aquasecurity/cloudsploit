@@ -503,7 +503,7 @@ var calls = {
             params: {
                 accountId: '-',
                 limit: '50'
-            }
+            },
         }
     },
     IAM: {
@@ -1377,7 +1377,7 @@ var postcalls = [
                 reliesOnCall: 'listVaults',
                 filterKey: 'vaultName',
                 filterValue: 'VaultName'
-            }
+            },
         }
     },
     {
