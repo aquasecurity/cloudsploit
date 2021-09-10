@@ -11,7 +11,7 @@ module.exports = {
     settings: {
     },
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
 
