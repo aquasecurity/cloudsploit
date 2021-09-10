@@ -496,6 +496,16 @@ var calls = {
             paginate: 'NextMarker'
         }
     },
+    Glacier: {
+        listVaults: {
+            paginate: 'Marker',
+            property: 'VaultList',
+            params: {
+                accountId: '-',
+                limit: '50'
+            }
+        }
+    },
     IAM: {
         listServerCertificates: {
             property: 'ServerCertificateMetadataList',
@@ -1361,6 +1371,14 @@ var postcalls = [
                 override: true,
             },
         },
+        Glacier: {
+            getVaultAccessPolicy: {
+                reliesOnService: 'glacier',
+                reliesOnCall: 'listVaults',
+                filterKey: 'vaultName',
+                filterValue: 'VaultName'
+            }
+        }
     },
     {
         APIGateway: {
