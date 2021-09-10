@@ -9,7 +9,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/amazonglacier/latest/dev/access-control-overview.html',
     apis: ['Glacier:listVaults', 'Glacier:getVaultAccessPolicy', 'STS:getCallerIdentity'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
 
         const results = [];
         const source = {};
@@ -107,7 +107,7 @@ module.exports = {
                                 region, vault.VaultARN);
                         }
                     }
-                } catch {
+                } catch (err) {
                     helpers.addResult(results, 3,
                         'Error querying for vault policy. Policy JSON could not be parsed.',
                         region, vault.VaultARN);
@@ -115,6 +115,6 @@ module.exports = {
             });
         });
 
-        callback(null, results, source)
+        callback(null, results, source);
     }
-}
+};
