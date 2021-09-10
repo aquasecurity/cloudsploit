@@ -11,7 +11,7 @@ module.exports = {
     settings: {
     },
 
-    run: function(cache, settings, callback) {
+    run: function (cache, settings, callback) {
         const results = [];
         const source = {};
 
@@ -35,7 +35,7 @@ module.exports = {
             }
             for (let detectorId of listDetectors.data) {
                 const resource = 'arn:' + awsOrGov + ':guardduty:' + region + ':' + accountId + ':detector/' + detectorId;
-                const getDetector =  helpers.addSource(cache, source, ['guardduty', 'getDetector', region, detectorId]);
+                const getDetector = helpers.addSource(cache, source, ['guardduty', 'getDetector', region, detectorId]);
                 if (!getDetector) continue;
                 if (getDetector.err || !getDetector.data) {
                     helpers.addResult(results, 3, `Unable to get GuardDuty detector: ${helpers.addError(listDetectors)}`, region, resource);
@@ -46,7 +46,7 @@ module.exports = {
                     continue;
                 }
                 const getFindings = helpers.addSource(cache, source, ['guardduty', 'getFindings', region, detectorId]);
-                
+
                 if (!getFindings) {
                     helpers.addResult(results, 0, 'No findings available', region, resource);
                     continue;
@@ -57,11 +57,11 @@ module.exports = {
                 }
                 if (getFindings.data.Findings) {
                     const severityFindings = getFindings.data.Findings.find(finding => finding.Severity && finding.Severity >= 7.0);
-                    const status = severityFindings ? 2: 0;
-                    helpers.addResult(results, status, `High severity findings ${status == 0? 'not ': ''}found`, region, resource);
-                }  else {
+                    const status = severityFindings ? 2 : 0;
+                    helpers.addResult(results, status, `High severity findings ${status == 0 ? 'not ' : ''}found`, region, resource);
+                } else {
                     helpers.addResult(results, 0, 'No findings available', region, resource);
-                }       
+                }
             }
         });
 

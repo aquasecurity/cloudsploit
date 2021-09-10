@@ -881,8 +881,6 @@ module.exports = {
     
         'apiProtocol'                   : require(__dirname + '/plugins/alibaba/apigateway/apiProtocol.js'),
 
-        // 'apiLogConfig'                  : require(__dirname + '/plugins/alibaba/apigateway/apiLogConfig.js'),
-        
         'networkPolicyEnabled'          : require(__dirname + '/plugins/alibaba/ack/networkPolicyEnabled.js')
     }
 };

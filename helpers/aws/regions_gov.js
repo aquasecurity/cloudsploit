@@ -70,7 +70,7 @@ module.exports = {
     directconnect: regions,
     directoryservice: [],
     organizations: regions,
-    guardduty: regions,
+    guardduty: ['us-gov-west-1'],
     wafregional: [],
     wafv2: regions,
     workspaces: ['us-gov-west-1'],

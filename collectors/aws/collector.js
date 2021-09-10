@@ -21,11 +21,11 @@ var async = require('async');
 var https = require('https');
 var helpers = require(__dirname + '/../../helpers/aws');
 var collectors = require(__dirname + '/../../collectors/aws');
- 
+
 // Override max sockets
-var agent = new https.Agent({maxSockets: 100});
-AWS.config.update({httpOptions: {agent: agent}});
- 
+var agent = new https.Agent({ maxSockets: 100 });
+AWS.config.update({ httpOptions: { agent: agent } });
+
 var globalServices = [
     'S3',
     'IAM',
@@ -34,7 +34,7 @@ var globalServices = [
     'Route53Domains',
     'WAFRegional'
 ];
- 
+
 var calls = {
     AccessAnalyzer: {
         listAnalyzers: {
@@ -394,7 +394,7 @@ var calls = {
             property: 'LaunchTemplates',
             paginate: 'NextToken',
         }
- 
+
     },
     ECR: {
         describeRepositories: {
@@ -482,7 +482,7 @@ var calls = {
         listEventBuses: {
             property: 'EventBuses',
             paginate: 'NextToken',
-            params:{                
+            params: {
                 Limit: 100,
             }
         }
@@ -772,11 +772,11 @@ var calls = {
             property: 'Workspaces',
             paginate: 'NextToken'
         },
-        describeWorkspaceDirectories:{
+        describeWorkspaceDirectories: {
             property: 'Directories',
             paginate: 'NextToken'
         },
-        describeIpGroups:{
+        describeIpGroups: {
             property: 'Result',
             paginate: 'NextToken'
         }
@@ -787,7 +787,7 @@ var calls = {
         }
     }
 };
- 
+
 var postcalls = [
     {
         ACM: {
@@ -826,7 +826,7 @@ var postcalls = [
                 override: true
             }
         },
-        CloudFormation: {    
+        CloudFormation: {
             describeStackEvents: {
                 reliesOnService: 'cloudformation',
                 reliesOnCall: 'listStacks',
@@ -1360,7 +1360,7 @@ var postcalls = [
                 reliesOnCall: 'listDetectors',
                 override: true,
             },
-            listFindings:{
+            listFindings: {
                 reliesOnService: 'guardduty',
                 reliesOnCall: 'listDetectors',
                 override: true,
@@ -1418,7 +1418,7 @@ var postcalls = [
                 filterValue: 'RoleName'
             }
         },
-        EKS:{
+        EKS: {
             describeNodegroups: {
                 reliesOnService: 'eks',
                 reliesOnCall: 'listClusters',
@@ -1436,59 +1436,59 @@ var postcalls = [
         }
     }
 ];
- 
+
 // Loop through all of the top-level collectors for each service
-var collect = function(AWSConfig, settings, callback) {
+var collect = function (AWSConfig, settings, callback) {
     // Used to gather info only
     if (settings.gather) {
         return callback(null, calls, postcalls);
     }
- 
+
     // Configure an opt-in debug logger
     var AWSXRay;
     var debugMode = settings.debug_mode;
     if (debugMode) AWSXRay = require('aws-xray-sdk');
- 
+
     AWSConfig.maxRetries = 8;
-    AWSConfig.retryDelayOptions = {base: 100};
- 
+    AWSConfig.retryDelayOptions = { base: 100 };
+
     var regions = helpers.regions(settings);
- 
+
     var collection = {};
-    var debugApiCalls = function(call, service, finished) {
+    var debugApiCalls = function (call, service, finished) {
         if (!debugMode) return;
         finished ? console.log(`[INFO] ${service}:${call} returned`) : console.log(`[INFO] ${service}:${call} invoked`);
     };
-    async.eachOfLimit(calls, 10, function(call, service, serviceCb) {
+    async.eachOfLimit(calls, 10, function (call, service, serviceCb) {
         var serviceLower = service.toLowerCase();
         if (!collection[serviceLower]) collection[serviceLower] = {};
- 
+
         // Loop through each of the service's functions
-        async.eachOfLimit(call, 15, function(callObj, callKey, callCb) {
+        async.eachOfLimit(call, 15, function (callObj, callKey, callCb) {
             if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
             if (!collection[serviceLower][callKey]) collection[serviceLower][callKey] = {};
             debugApiCalls(callKey, service);
             var callRegions;
- 
+
             if (callObj.default) {
                 callRegions = regions.default;
-            }  else {
+            } else {
                 callRegions = regions[serviceLower];
             }
- 
-            async.eachLimit(callRegions, helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb) {
+
+            async.eachLimit(callRegions, helpers.MAX_REGIONS_AT_A_TIME, function (region, regionCb) {
                 if (settings.skip_regions &&
-                     settings.skip_regions.indexOf(region) > -1 &&
-                     globalServices.indexOf(service) === -1) return regionCb();
+                    settings.skip_regions.indexOf(region) > -1 &&
+                    globalServices.indexOf(service) === -1) return regionCb();
                 if (!collection[serviceLower][callKey][region]) collection[serviceLower][callKey][region] = {};
- 
+
                 var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
                 LocalAWSConfig.region = region;
- 
+
                 if (callObj.override) {
-                    collectors[serviceLower][callKey](LocalAWSConfig, collection, function() {
+                    collectors[serviceLower][callKey](LocalAWSConfig, collection, function () {
                         if (callObj.rateLimit) {
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 regionCb();
                             }, callObj.rateLimit);
                         } else {
@@ -1498,21 +1498,21 @@ var collect = function(AWSConfig, settings, callback) {
                 } else {
                     var executor = debugMode ? (AWSXRay.captureAWSClient(new AWS[service](LocalAWSConfig))) : new AWS[service](LocalAWSConfig);
                     var paginating = false;
-                    var executorCb = function(err, data) {
+                    var executorCb = function (err, data) {
                         if (err) collection[serviceLower][callKey][region].err = err;
- 
+
                         if (!data) return regionCb();
                         if (callObj.property && !data[callObj.property]) return regionCb();
                         if (callObj.secondProperty && !data[callObj.secondProperty]) return regionCb();
- 
+
                         var dataToAdd = callObj.secondProperty ? data[callObj.property][callObj.secondProperty] : data[callObj.property];
- 
+
                         if (paginating) {
                             collection[serviceLower][callKey][region].data = collection[serviceLower][callKey][region].data.concat(dataToAdd);
                         } else {
                             collection[serviceLower][callKey][region].data = dataToAdd;
                         }
- 
+
                         // If a "paginate" property is set, e.g. NextToken
                         var nextToken = callObj.paginate;
                         if (settings.paginate && nextToken && data[nextToken]) {
@@ -1520,16 +1520,16 @@ var collect = function(AWSConfig, settings, callback) {
                             var paginateProp = callObj.paginateReqProp ? callObj.paginateReqProp : nextToken;
                             return execute([paginateProp, data[nextToken]]);
                         }
- 
+
                         if (callObj.rateLimit) {
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 regionCb();
                             }, callObj.rateLimit);
                         } else {
                             regionCb();
                         }
                     };
- 
+
                     function execute(nextTokens) { // eslint-disable-line no-inner-declarations
                         // Each region needs its own local copy of callObj.params
                         // so that the injection of the NextToken doesn't break other calls
@@ -1543,41 +1543,41 @@ var collect = function(AWSConfig, settings, callback) {
                     }
                     execute();
                 }
-            }, function() {
+            }, function () {
                 debugApiCalls(callKey, service, true);
                 callCb();
             });
-        }, function() {
+        }, function () {
             serviceCb();
         });
-    }, function() {
+    }, function () {
         // Now loop through the follow up calls
-        async.eachSeries(postcalls, function(postcallObj, postcallCb) {
-            async.eachOfLimit(postcallObj, 10, function(serviceObj, service, serviceCb) {
+        async.eachSeries(postcalls, function (postcallObj, postcallCb) {
+            async.eachOfLimit(postcallObj, 10, function (serviceObj, service, serviceCb) {
                 var serviceLower = service.toLowerCase();
                 if (!collection[serviceLower]) collection[serviceLower] = {};
- 
-                async.eachOfLimit(serviceObj, 1, function(callObj, callKey, callCb) {
+
+                async.eachOfLimit(serviceObj, 1, function (callObj, callKey, callCb) {
                     if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
                     if (!collection[serviceLower][callKey]) collection[serviceLower][callKey] = {};
                     debugApiCalls(callKey, service);
-                    async.eachLimit(regions[serviceLower], helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb) {
+                    async.eachLimit(regions[serviceLower], helpers.MAX_REGIONS_AT_A_TIME, function (region, regionCb) {
                         if (settings.skip_regions &&
-                             settings.skip_regions.indexOf(region) > -1 &&
-                             globalServices.indexOf(service) === -1) return regionCb();
+                            settings.skip_regions.indexOf(region) > -1 &&
+                            globalServices.indexOf(service) === -1) return regionCb();
                         if (!collection[serviceLower][callKey][region]) collection[serviceLower][callKey][region] = {};
- 
+
                         // Ensure pre-requisites are met
                         if (callObj.reliesOnService && !collection[callObj.reliesOnService]) return regionCb();
- 
+
                         if (callObj.reliesOnCall &&
-                             (!collection[callObj.reliesOnService] ||
-                             !collection[callObj.reliesOnService][callObj.reliesOnCall] ||
-                             !collection[callObj.reliesOnService][callObj.reliesOnCall][region] ||
-                             !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data ||
-                             !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data.length))
+                            (!collection[callObj.reliesOnService] ||
+                                !collection[callObj.reliesOnService][callObj.reliesOnCall] ||
+                                !collection[callObj.reliesOnService][callObj.reliesOnCall][region] ||
+                                !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data ||
+                                !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data.length))
                             return regionCb();
- 
+
                         var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
                         if (callObj.deleteRegion) {
                             //delete LocalAWSConfig.region;
@@ -1586,11 +1586,11 @@ var collect = function(AWSConfig, settings, callback) {
                             LocalAWSConfig.region = region;
                         }
                         if (callObj.signatureVersion) LocalAWSConfig.signatureVersion = callObj.signatureVersion;
- 
+
                         if (callObj.override) {
-                            collectors[serviceLower][callKey](LocalAWSConfig, collection, function() {
+                            collectors[serviceLower][callKey](LocalAWSConfig, collection, function () {
                                 if (callObj.rateLimit) {
-                                    setTimeout(function() {
+                                    setTimeout(function () {
                                         regionCb();
                                     }, callObj.rateLimit);
                                 } else {
@@ -1599,21 +1599,21 @@ var collect = function(AWSConfig, settings, callback) {
                             });
                         } else {
                             var executor = debugMode ? (AWSXRay.captureAWSClient(new AWS[service](LocalAWSConfig))) : new AWS[service](LocalAWSConfig);
- 
+
                             if (!collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region] ||
-                                 !collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region].data) {
+                                !collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region].data) {
                                 return regionCb();
                             }
- 
-                            async.eachLimit(collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region].data, 10, function(dep, depCb) {
+
+                            async.eachLimit(collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region].data, 10, function (dep, depCb) {
                                 if (callObj.checkMultiple) {
-                                    async.each(callObj.checkMultiple, function(thisCheck, tcCb){
+                                    async.each(callObj.checkMultiple, function (thisCheck, tcCb) {
                                         collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]] = {};
- 
+
                                         var filter = {};
                                         filter[callObj.filterKey] = dep[callObj.filterValue];
                                         filter[callObj.checkMultipleKey] = thisCheck;
-                                        executor[callKey](filter, function(err, data) {
+                                        executor[callKey](filter, function (err, data) {
                                             if (err) {
                                                 collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = err;
                                             }
@@ -1624,22 +1624,22 @@ var collect = function(AWSConfig, settings, callback) {
                                             }
                                             tcCb();
                                         });
-                                    }, function() {
+                                    }, function () {
                                         depCb();
                                     });
                                 } else {
                                     collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]] = {};
- 
+
                                     var filter = {};
                                     filter[callObj.filterKey] = dep[callObj.filterValue];
-                                    executor[callKey](filter, function(err, data) {
+                                    executor[callKey](filter, function (err, data) {
                                         if (err) {
                                             collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = err;
                                         } else {
-                                            collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = data;   
+                                            collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = data;
                                         }
                                         if (callObj.rateLimit) {
-                                            setTimeout(function() {
+                                            setTimeout(function () {
                                                 depCb();
                                             }, callObj.rateLimit);
                                         } else {
@@ -1647,9 +1647,9 @@ var collect = function(AWSConfig, settings, callback) {
                                         }
                                     });
                                 }
-                            }, function() {
+                            }, function () {
                                 if (callObj.rateLimit) {
-                                    setTimeout(function() {
+                                    setTimeout(function () {
                                         regionCb();
                                     }, callObj.rateLimit);
                                 } else {
@@ -1657,21 +1657,20 @@ var collect = function(AWSConfig, settings, callback) {
                                 }
                             });
                         }
-                    }, function() {
+                    }, function () {
                         debugApiCalls(callKey, service, true);
                         callCb();
                     });
-                }, function() {
+                }, function () {
                     serviceCb();
                 });
-            }, function() {
+            }, function () {
                 postcallCb();
             });
-        }, function() {
+        }, function () {
             callback(null, collection);
         });
     });
 };
- 
+
 module.exports = collect;
- 
