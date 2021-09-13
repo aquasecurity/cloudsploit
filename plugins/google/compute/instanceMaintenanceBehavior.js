@@ -5,7 +5,7 @@ module.exports = {
     title: 'Instance Maintenance Behavior',
     category: 'Compute',
     description: 'Ensure that "On Host Maintenance" configuration is set to Migrate for VM instances.',
-    more_info: "When Google Compute Engine performs regular maintenance of its infrastructure it live migrate your VM instances to other hardware if you configured the instance's availability policy to use live migration. This prevents your applications from experiencing disruptions during these events.",
+    more_info: "When Google Compute Engine performs regular maintenance of its infrastructure, it migrates your VM instances to other hardware if you have configured the instance's availability policy to use live migration. This prevents your applications from experiencing disruptions during these events.",
     link: 'https://cloud.google.com/compute/docs/instances/setting-instance-scheduling-options',
     recommended_action: 'Ensure that your Google Compute Engine VM instances are configured to use live migration.',
     apis: ['instances:compute:list', 'projects:get'],
