@@ -33,7 +33,6 @@ module.exports = {
 
             var bucketFound = false;
             buckets.data.forEach(bucket => {
-
                 if (bucket.name) {
                     let resource = helpers.createResourceName('b', bucket.name);
                     bucketFound = true;
