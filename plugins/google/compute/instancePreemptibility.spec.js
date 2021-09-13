@@ -1,6 +1,6 @@
 var assert = require('assert');
 var expect = require('chai').expect;
-var plugin = require('./instancePreemptibilityDisabled');
+var plugin = require('./instancePreemptibility');
 
 const createCache = (instanceData, error) => {
     return {
@@ -24,7 +24,7 @@ const createCache = (instanceData, error) => {
     }
 };
 
-describe('instancePreemptibilityDisabled', function () {
+describe('instancePreemptibility', function () {
     describe('run', function () {
 
         it('should give unknown if an instance error occurs', function (done) {

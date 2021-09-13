@@ -46,12 +46,12 @@ module.exports = {
 
                 instances.data.forEach(instance => {
                     let resource = helpers.createResourceName('instances', instance.name, project, 'zone', zone);
-                    if (instance.scheduling && !instance.scheduling.preemptible) {
-                        helpers.addResult(results, 0,
-                            'VM Instance is not preemptible', region, resource);
-                    } else {
+                    if (instance.scheduling && instance.scheduling.preemptible) {
                         helpers.addResult(results, 2,
                             'VM Instance is preemptible', region, resource);
+                    } else {
+                        helpers.addResult(results, 0,
+                            'VM Instance is not preemptible', region, resource);
                     }
                 });
                 zcb();
