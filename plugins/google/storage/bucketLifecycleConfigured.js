@@ -37,7 +37,7 @@ module.exports = {
                     let resource = helpers.createResourceName('b', bucket.name);
                     bucketFound = true;
 
-                    if (bucket.lifecycle && Object.keys(bucket.lifecycle).length) {
+                    if (bucket.lifecycle && bucket.lifecycle.rule && bucket.lifecycle.rule.length) {
                         helpers.addResult(results, 0, 'Bucket has lifecycle management configuration.', region, resource);
                     } else {
                         helpers.addResult(results, 2, 'Bucket has no lifecycle management configuration.', region, resource);
