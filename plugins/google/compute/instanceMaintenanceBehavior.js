@@ -5,12 +5,12 @@ module.exports = {
     title: 'Instance Maintenance Behavior',
     category: 'Compute',
     description: 'Ensure that "On Host Maintenance" configuration is set to Migrate for VM instances.',
-    more_info: "When Google Compute Engine performs regular maintenance of its infrastructure, it migrates your VM instances to other hardware if you have configured the instance's availability policy to use live migration. This prevents your applications from experiencing disruptions during these events.",
+    more_info: 'When Google Compute Engine performs regular maintenance of its infrastructure, it migrates your VM instances to other hardware if you have configured the availability policy for the instance to use live migration. This prevents your applications from experiencing disruptions during these events.',
     link: 'https://cloud.google.com/compute/docs/instances/setting-instance-scheduling-options',
     recommended_action: 'Ensure that your Google Compute Engine VM instances are configured to use live migration.',
     apis: ['instances:compute:list', 'projects:get'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions();
@@ -29,7 +29,7 @@ module.exports = {
         async.each(regions.instances.compute, (region, rcb) => {
             var zones = regions.zones;
             var noInstances = [];
-            async.each(zones[region], function (zone, zcb) {
+            async.each(zones[region], function(zone, zcb) {
                 var instances = helpers.addSource(cache, source,
                     ['instances', 'compute', 'list', zone]);
 
@@ -58,13 +58,13 @@ module.exports = {
                     
                 });
                 zcb();
-            }, function () {
+            }, function() {
                 if (noInstances.length) {
                     helpers.addResult(results, 0, `No instances found in following zones: ${noInstances.join(', ')}`, region);
                 }
                 rcb();
             });
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }
