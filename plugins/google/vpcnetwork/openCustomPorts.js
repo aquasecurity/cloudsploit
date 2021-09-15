@@ -26,7 +26,7 @@ module.exports = {
 
         var restricted_open_ports = settings.restricted_open_ports || this.settings.restricted_open_ports.default;
 
-        if (!restricted_open_ports.length) return callback();
+        if (!restricted_open_ports.length) return callback(null, results, source);
 
         restricted_open_ports = restricted_open_ports.split(',');
 
