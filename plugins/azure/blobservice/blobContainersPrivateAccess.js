@@ -42,25 +42,29 @@ module.exports = {
             }
 
             storageAccounts.data.forEach(function(storageAccount) {
-                const blobContainers = helpers.addSource(
-                    cache, source, ['blobContainers', 'list', location, storageAccount.id]
-                );
-
-                if (!blobContainers || blobContainers.err || !blobContainers.data) {
-                    helpers.addResult(results, 3,
-                        'Unable to query Blob Containers: ' + helpers.addError(blobContainers),
-                        location, storageAccount.id);
-                } else if (!blobContainers.data.length) {
-                    helpers.addResult(results, 0, 'Storage Account does not contain blob containers', location, storageAccount.id);
+                if (storageAccount.allowBlobPublicAccess === false) {
+                    helpers.addResult(results, 0, 'Storage Account does not allow blob containers public access', location, storageAccount.id);
                 } else {
-                    blobContainers.data.forEach(function(blob){
-                        if (blob.publicAccess &&
-                            blob.publicAccess.toLowerCase() == 'none') {
-                            helpers.addResult(results, 0, 'Blob container does not allow public access', location, blob.id);
-                        } else {
-                            helpers.addResult(results, 2, 'Blob container allows public access', location, blob.id);
-                        }
-                    });
+                    const blobContainers = helpers.addSource(
+                        cache, source, ['blobContainers', 'list', location, storageAccount.id]
+                    );
+
+                    if (!blobContainers || blobContainers.err || !blobContainers.data) {
+                        helpers.addResult(results, 3,
+                            'Unable to query Blob Containers: ' + helpers.addError(blobContainers),
+                            location, storageAccount.id);
+                    } else if (!blobContainers.data.length) {
+                        helpers.addResult(results, 0, 'Storage Account does not contain blob containers', location, storageAccount.id);
+                    } else {
+                        blobContainers.data.forEach(function(blob){
+                            if (blob.publicAccess &&
+                                blob.publicAccess.toLowerCase() == 'none') {
+                                helpers.addResult(results, 0, 'Blob container does not allow public access', location, blob.id);
+                            } else {
+                                helpers.addResult(results, 2, 'Blob container allows public access', location, blob.id);
+                            }
+                        });
+                    }
                 }
             });
 
