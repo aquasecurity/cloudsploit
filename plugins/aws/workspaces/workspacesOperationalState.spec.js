@@ -71,7 +71,7 @@ describe("workspacesOperationalState", function () {
             done();
         });
 
-        it("should give unhealthy state for first workspace and stopped on second workspace", function (done) {
+        it("should give unhealthy state for first workspace and available on second workspace", function (done) {
             const settings = {};
             const cache = testWorkspaces();
 
