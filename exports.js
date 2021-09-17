@@ -41,7 +41,7 @@ module.exports = {
         'cloudfrontHttpsOnly'           : require(__dirname + '/plugins/aws/cloudfront/cloudfrontHttpsOnly.js'),
         'cloudfrontLoggingEnabled'      : require(__dirname + '/plugins/aws/cloudfront/cloudfrontLoggingEnabled.js'),
         'cloudfrontWafEnabled'          : require(__dirname + '/plugins/aws/cloudfront/cloudfrontWafEnabled.js'),
-        
+
         'volumeEncryption'              : require(__dirname + '/plugins/aws/comprehend/volumeEncryption.js'),
         'outputResultEncryption'        : require(__dirname + '/plugins/aws/comprehend/outputResultEncryption.js'),
 
@@ -136,7 +136,7 @@ module.exports = {
         'vpcEndpointCrossAccount'       : require(__dirname + '/plugins/aws/ec2/vpcEndpointCrossAccount.js'),
         'vpcPeeringConnections'         : require(__dirname + '/plugins/aws/ec2/vpcPeeringConnections.js'),
         'ebsEncryptedSnapshots'         : require(__dirname + '/plugins/aws/ec2/ebsEncryptedSnapshots.js'),
-        'ebsDefaultEncryptionEnabled'   : require(__dirname + '/plugins/aws/ec2/ebsDefaultEncryptionEnabled.js'), 
+        'ebsDefaultEncryptionEnabled'   : require(__dirname + '/plugins/aws/ec2/ebsDefaultEncryptionEnabled.js'),
         'ec2MetadataOptions'            : require(__dirname + '/plugins/aws/ec2/ec2MetadataOptions.js'),
         'unusedEni'                     : require(__dirname + '/plugins/aws/ec2/unusedEni.js'),
         'unusedAmi'                     : require(__dirname + '/plugins/aws/ec2/unusedAmi.js'),
@@ -157,9 +157,9 @@ module.exports = {
 
         'ecrRepositoryPolicy'           : require(__dirname + '/plugins/aws/ecr/ecrRepositoryPolicy.js'),
         'ecrRepositoryTagImmutability'  : require(__dirname + '/plugins/aws/ecr/ecrRepositoryTagImmutability.js'),
-        
+
         'managedPlatformUpdates'        : require(__dirname + '/plugins/aws/elasticbeanstalk/managedPlatformUpdates.js'),
-        
+
         'eksKubernetesVersion'          : require(__dirname + '/plugins/aws/eks/eksKubernetesVersion.js'),
         'eksLoggingEnabled'             : require(__dirname + '/plugins/aws/eks/eksLoggingEnabled.js'),
         'eksPrivateEndpoint'            : require(__dirname + '/plugins/aws/eks/eksPrivateEndpoint.js'),
@@ -365,6 +365,7 @@ module.exports = {
 
         'workspacesVolumeEncryption'    : require(__dirname + '/plugins/aws/workspaces/workspacesVolumeEncryption.js'),
         'workspacesIpAccessControl'     : require(__dirname + '/plugins/aws/workspaces/workspacesIpAccessControl.js'),
+        'workspacesOperationalState'     : require(__dirname + '/plugins/aws/workspaces/workspacesOperationalState.js'),
 
         'xrayEncryptionEnabled'         : require(__dirname + '/plugins/aws/xray/xrayEncryptionEnabled.js'),
 
@@ -524,7 +525,7 @@ module.exports = {
         'advancedDataSecurityEnabled'   : require(__dirname + '/plugins/azure/sqlserver/advancedDataSecurityEnabled.js'),
         'tdeProtectorEncrypted'         : require(__dirname + '/plugins/azure/sqlserver/tdeProtectorEncrypted.js'),
         'noPublicAccess'                : require(__dirname + '/plugins/azure/sqlserver/noPublicAccess.js'),
-        'serverPrivateEndpoints'        : require(__dirname + '/plugins/azure/sqlserver/serverPrivateEndpoints.js'), 
+        'serverPrivateEndpoints'        : require(__dirname + '/plugins/azure/sqlserver/serverPrivateEndpoints.js'),
         'auditRetentionPolicy'          : require(__dirname + '/plugins/azure/sqlserver/auditRetentionPolicy.js'),
         'auditActionGroupsEnabled'      : require(__dirname + '/plugins/azure/sqlserver/auditActionGroupsEnabled.js'),
         'serverAuditingEnabled'         : require(__dirname + '/plugins/azure/sqlserver/serverAuditingEnabled.js'),
@@ -805,7 +806,7 @@ module.exports = {
         'logSinksEnabled'               : require(__dirname + '/plugins/google/logging/logSinksEnabled.js'),
 
         'datasetAllUsersPolicy'         : require(__dirname + '/plugins/google/bigquery/datasetAllUsersPolicy.js'),
-      
+
         'topicEncryption'               : require(__dirname + '/plugins/google/pubsub/topicEncryption.js'),
 
         'dataflowHangedJobs'            : require(__dirname + '/plugins/google/dataflow/dataflowHangedJobs.js'),
@@ -828,7 +829,7 @@ module.exports = {
         'passwordExpiry'                : require(__dirname + '/plugins/alibaba/ram/passwordExpiry.js'),
         'passwordBlockLogon'            : require(__dirname + '/plugins/alibaba/ram/passwordBlockLogon.js'),
         'ramPolicyAttachments'          : require(__dirname + '/plugins/alibaba/ram/ramPolicyAttachments.js'),
-      
+
         'openSSH'                       : require(__dirname + '/plugins/alibaba/ecs/openSSH.js'),
         'openRDP'                       : require(__dirname + '/plugins/alibaba/ecs/openRDP.js'),
         'openDNS'                       : require(__dirname + '/plugins/alibaba/ecs/openDNS.js'),
@@ -855,7 +856,7 @@ module.exports = {
         'openVNCServer'                 : require(__dirname + '/plugins/alibaba/ecs/openVNCServer.js'),
         'openAllPortsProtocols'         : require(__dirname + '/plugins/alibaba/ecs/openAllPortsProtocols.js'),
         'systemDisksEncrypted'          : require(__dirname + '/plugins/alibaba/ecs/systemDisksEncrypted.js'),
-      
+
         'bucketLoggingEnabled'          : require(__dirname + '/plugins/alibaba/oss/bucketLoggingEnabled.js'),
         'bucketPayByRequester'          : require(__dirname + '/plugins/alibaba/oss/bucketPayByRequester.js'),
         'ossBucketPrivate'              : require(__dirname + '/plugins/alibaba/oss/ossBucketPrivate.js'),
@@ -864,7 +865,7 @@ module.exports = {
         'ossBucketVersioning'           : require(__dirname + '/plugins/alibaba/oss/ossBucketVersioning.js'),
         'ossBucketTransferAcceleration' : require(__dirname + '/plugins/alibaba/oss/ossBucketTransferAcceleration.js'),
         'bucketCrossRegionReplication'  : require(__dirname + '/plugins/alibaba/oss/bucketCrossRegionReplication.js'),
-      
+
         'rdsLogDuration'                : require(__dirname + '/plugins/alibaba/rds/rdsLogDuration.js'),
         'rdsSslEncryptionEnabled'       : require(__dirname + '/plugins/alibaba/rds/rdsSslEncryptionEnabled.js'),
         'rdsAuditingEnabled'            : require(__dirname + '/plugins/alibaba/rds/rdsAuditingEnabled.js'),
@@ -875,7 +876,7 @@ module.exports = {
         'rdsTdeEnabled'                 : require(__dirname + '/plugins/alibaba/rds/rdsTdeEnabled.js'),
 
         'actiontrailGlobalExportLogs'   : require(__dirname + '/plugins/alibaba/actiontrail/actiontrailGlobalExportLogs.js'),
-    
+
         'apiProtocol'                   : require(__dirname + '/plugins/alibaba/apigateway/apiProtocol.js'),
 
         'networkPolicyEnabled'          : require(__dirname + '/plugins/alibaba/ack/networkPolicyEnabled.js')
