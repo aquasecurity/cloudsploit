@@ -221,6 +221,13 @@ var calls = {
             parent: 'project'
         }
     },
+    subscriptions: {
+        list: {
+            api: 'pubsub',
+            version: 'v1',
+            parent: 'project'
+        }
+    },
     jobs: {
         list: { //https://dataflow.googleapis.com/v1b3/projects/{projectId}/jobs:list
             api: 'dataflow',

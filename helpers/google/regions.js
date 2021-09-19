@@ -82,6 +82,7 @@ module.exports = {
     datasets: ['global'],
     policies: ['global'],
     topics: ['global'],
+    subscriptions: ['global'],
     jobs: regions,
     organizations: ['global'],
     deployments: ['global']
