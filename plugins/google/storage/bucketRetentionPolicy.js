@@ -34,18 +34,19 @@ module.exports = {
             if (!buckets) return rcb();
 
             if (buckets.err || !buckets.data) {
-                helpers.addResult(results, 3, 'Unable to query storage buckets: ' + helpers.addError(buckets), region);
+                helpers.addResult(results, 3, 'Unable to query storage buckets: ' + helpers.addError(buckets), region, null, null, buckets.err);
                 return rcb();
             }
 
-            if (!buckets.data.length) {
+            if (!helpers.hasBuckets(buckets.data)) {
                 helpers.addResult(results, 0, 'No storage buckets found', region);
                 return rcb();
             }
 
             var bucketFound = false;
             buckets.data.forEach(bucket => {
-                if (bucket.id) {
+                if (bucket.name) {
+                    let resource = helpers.createResourceName('b', bucket.name);
                     bucketFound = true;
                     if (bucket.retentionPolicy && bucket.retentionPolicy.retentionPeriod && bucket.retentionPolicy.effectiveTime) {
                         var retentionDays = Math.round(parseInt(bucket.retentionPolicy.retentionPeriod)/(24*60*60));
@@ -55,16 +56,16 @@ module.exports = {
                         var effectiveDifference = retentionDays - difference;
 
                         if (effectiveDifference < 0) {
-                            helpers.addResult(results, 2, 'Storage bucket retention has already expired', region, bucket.id);
+                            helpers.addResult(results, 2, 'Storage bucket retention has already expired', region, resource);
                         } else if (effectiveDifference < config.bucket_retention_days) {
-                            helpers.addResult(results, 2, `Storage bucket retention will expire in ${effectiveDifference} days`, region, bucket.id);
+                            helpers.addResult(results, 2, `Storage bucket retention will expire in ${effectiveDifference} days`, region, resource);
                         } else if (!bucket.retentionPolicy.isLocked) {
-                            helpers.addResult(results, 2, 'Storage bucket retention policy is not locked', region, bucket.id);
+                            helpers.addResult(results, 2, 'Storage bucket retention policy is not locked', region, resource);
                         } else {
-                            helpers.addResult(results, 0, `Storage bucket retention will expire in ${effectiveDifference} days`, region, bucket.id);
+                            helpers.addResult(results, 0, `Storage bucket retention will expire in ${effectiveDifference} days`, region, resource);
                         }
                     } else {
-                        helpers.addResult(results, 2, 'Storage bucket does not have a retention policy', region, bucket.id);
+                        helpers.addResult(results, 2, 'Storage bucket does not have a retention policy', region, resource);
                     }
                 }
             });
@@ -78,4 +79,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

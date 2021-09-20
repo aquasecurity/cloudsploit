@@ -193,8 +193,8 @@ module.exports = {
 
 
         };
-        for (c in config) {
-            if (settings.hasOwnProperty(c)) {
+        for (let c in config) {
+            if (settings[c]) {
                 config[c] = settings[c];
             }
         }
@@ -223,6 +223,7 @@ module.exports = {
                         myError[region] = [];
                     }
                     myError[region].push(zone);
+                    myError[region][zone] = instances.err;
                     return zcb();
                 }
 
@@ -234,52 +235,55 @@ module.exports = {
                     return zcb();
                 }
                 instances.data.forEach(instance => {
-                    if (instance.status && instance.status == "RUNNING") {
+                    if (instance.status && instance.status == 'RUNNING') {
                         instanceCountGlobal +=1;
                         instanceCount +=1;
                     }
-                })
+                });
+
+                zcb();
+            }, function() {
+                // Print region results
+                var regionUnderscore = region.replace(/-/g, '_');
+                var regionThreshold = config['instance_count_region_threshold_'+regionUnderscore];
+
+                if (myError[region] &&
+                    zones[region] &&
+                    (myError[region].join(',') === zones[region].join(','))) {
+                    helpers.addResult(results, 3, 'Unable to query Instances', region, null, null, myError);
+
+                } else if (noInstances[region] &&
+                    zones[region] &&
+                    (noInstances[region].join(',') === zones[region].join(','))) {
+                    helpers.addResult(results, 0, 'No instances found in the region' , region);
+
+                } else if (!regionThreshold) {
+                    helpers.addResult(results, 3,
+                        'The region: ' + region + ' does not have a maximum instances count setting.', region);
+                } else if (instanceCount > regionThreshold) {
+                    helpers.addResult(results, 2,
+                        instanceCount + '  instances running in ' +
+                        region + ' region, exceeding limit of: ' +
+                        regionThreshold, region, null, custom);
+                } else {
+                    helpers.addResult(results, 0,
+                        instanceCount + '  instances in the region are within the regional expected count of: ' + regionThreshold, region, null, custom);
+                }
+                rcb();
             });
-            // Print region results
-            var regionUnderscore = region.replace(/-/g, '_');
-            var regionThreshold = config['instance_count_region_threshold_'+regionUnderscore];
+        }, function() {
+            // Print global results
+            var globalThreshold = config.instance_count_global_threshold;
 
-            if (myError[region] &&
-                zones[region] &&
-                (myError[region].join(',') === zones[region].join(','))) {
-                helpers.addResult(results, 3, 'Unable to query Instances', region);
-
-            } else if (noInstances[region] &&
-                zones[region] &&
-                (noInstances[region].join(',') === zones[region].join(','))) {
-                helpers.addResult(results, 0, 'No instances found in the region' , region);
-
-            } else if (!regionThreshold) {
-                helpers.addResult(results, 3,
-                    'The region: ' + region + ' does not have a maximum instances count setting.', region);
-            } else if (instanceCount > regionThreshold) {
+            if (instanceCountGlobal > globalThreshold) {
                 helpers.addResult(results, 2,
-                    instanceCount + '  instances running in ' +
-                    region + ' region, exceeding limit of: ' +
-                    regionThreshold, region, null, custom);
+                    instanceCountGlobal + ' instances running in all regions, exceeding limit of: ' + globalThreshold, null, null, custom);
             } else {
                 helpers.addResult(results, 0,
-                    instanceCount + '  instances in the region are within the regional expected count of: ' + regionThreshold, region, null, custom);
+                    instanceCountGlobal + ' instances in the account are within the global expected count of: ' + globalThreshold, null, null, custom);
             }
-            rcb();
+     
+            callback(null, results, source); 
         });
-
-        // Print global results
-        var globalThreshold = config.instance_count_global_threshold;
-
-        if (instanceCountGlobal > globalThreshold) {
-            helpers.addResult(results, 2,
-                instanceCountGlobal + ' instances running in all regions, exceeding limit of: ' + globalThreshold, null, null, custom);
-        } else {
-            helpers.addResult(results, 0,
-                instanceCountGlobal + ' instances in the account are within the global expected count of: ' + globalThreshold, null, null, custom);
-        }
-
-        callback(null, results, source);
     }
 };

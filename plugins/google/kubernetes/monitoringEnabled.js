@@ -8,12 +8,23 @@ module.exports = {
     more_info: 'Kubernetes supports monitoring through Stackdriver.',
     link: 'https://cloud.google.com/monitoring/kubernetes-engine/',
     recommended_action: 'Ensure monitoring is enabled on all Kubernetes clusters.',
-    apis: ['clusters:list'],
+    apis: ['clusters:list', 'projects:get'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions();
+
+        let projects = helpers.addSource(cache, source,
+            ['projects','get', 'global']);
+
+        if (!projects || projects.err || !projects.data || !projects.data.length) {
+            helpers.addResult(results, 3,
+                'Unable to query for projects: ' + helpers.addError(projects), 'global', null, null, (projects) ? projects.err : null);
+            return callback(null, results, source);
+        }
+
+        var project = projects.data[0].name;
 
         async.each(regions.clusters, function(region, rcb){
             let clusters = helpers.addSource(cache, source,
@@ -22,7 +33,7 @@ module.exports = {
             if (!clusters) return rcb();
 
             if (clusters.err || !clusters.data) {
-                helpers.addResult(results, 3, 'Unable to query Kubernetes clusters: ' + helpers.addError(clusters), region);
+                helpers.addResult(results, 3, 'Unable to query Kubernetes clusters', region, null, null, clusters.err);
                 return rcb();
             }
 
@@ -30,14 +41,20 @@ module.exports = {
                 helpers.addResult(results, 0, 'No Kubernetes clusters found', region);
                 return rcb();
             }
-            var badClusters = false;
+
             clusters.data.forEach(cluster => {
+                let location;
+                if (cluster.locations) {
+                    location = cluster.locations.length === 1 ? cluster.locations[0] : cluster.locations[0].substring(0, cluster.locations[0].length - 2);
+                } else location = region;
+
+                let resource = helpers.createResourceName('clusters', cluster.name, project, 'location', location);
+
                 if (cluster.monitoringService &&
                     cluster.monitoringService == 'none') {
-                    badClusters = true;
-                    helpers.addResult(results, 2, 'Monitoring is disabled on the Kubernetes cluster', region, cluster.name);
+                    helpers.addResult(results, 2, 'Monitoring is disabled on the Kubernetes cluster', region, resource);
                 } else {
-                    helpers.addResult(results, 0, 'Monitoring is enabled on the Kubernetes cluster', region, cluster.name);
+                    helpers.addResult(results, 0, 'Monitoring is enabled on the Kubernetes cluster', region, resource);
                 }
             });
 
@@ -47,4 +64,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

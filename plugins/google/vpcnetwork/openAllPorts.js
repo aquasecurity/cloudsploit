@@ -31,7 +31,7 @@ module.exports = {
             if (!firewalls) return rcb();
 
             if (firewalls.err || !firewalls.data) {
-                helpers.addResult(results, 3, 'Unable to query firewall rules: ' + helpers.addError(firewalls), region);
+                helpers.addResult(results, 3, 'Unable to query firewall rules', region, null, null, firewalls.err);
                 return rcb();
             }
 
@@ -40,7 +40,7 @@ module.exports = {
                 return rcb();
             }
 
-            helpers.findOpenAllPorts(firewalls.data, region, results);
+            helpers.findOpenAllPorts(firewalls.data, region, results, cache, callback, source);
 
             rcb();
         }, function(){
@@ -48,4 +48,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

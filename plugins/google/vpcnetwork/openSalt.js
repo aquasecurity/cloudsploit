@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Active Salt vulnerabilities, CVE-2020-11651 and CVE-2020-11652 are exploiting Salt instances exposed to the internet. These ports should be closed immediately.',
     link: 'https://help.saltstack.com/hc/en-us/articles/360043056331-New-SaltStack-Release-Critical-Vulnerability',
     recommended_action: 'Restrict TCP ports 4505 and 4506 to known IP addresses',
-    apis: ['firewalls:list'],
+    apis: ['firewalls:list', 'projects:get'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -22,7 +22,7 @@ module.exports = {
             if (!firewalls) return rcb();
 
             if (firewalls.err || !firewalls.data) {
-                helpers.addResult(results, 3, 'Unable to query firewall rules: ' + helpers.addError(firewalls), region);
+                helpers.addResult(results, 3, 'Unable to query firewall rules', region, null, null, firewalls.err);
                 return rcb();
             }
 
@@ -37,7 +37,7 @@ module.exports = {
 
             let service = 'Salt';
 
-            helpers.findOpenPorts(firewalls.data, ports, service, region, results);
+            helpers.findOpenPorts(firewalls.data, ports, service, region, results, cache, callback, source);
 
             rcb();
         }, function(){
@@ -45,4 +45,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};
