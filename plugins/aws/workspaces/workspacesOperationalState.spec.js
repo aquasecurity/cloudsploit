@@ -1,5 +1,5 @@
 var expect = require("chai").expect;
-var metrics = require("./workspacesOperationalState.js")
+var plugin = require("./workspacesOperationalState.js")
 
 
 const errorWorkspaces = (statement) => {
@@ -51,10 +51,11 @@ describe("workspacesOperationalState", function () {
             const settings = {};
             const cache = errorWorkspaces();
             const callback = (err, results) => {
-                expect(results.length).to.equal(0)
+                expect(results[0].status).to.equal(3);
+                expect(results.length).to.equal(1)
             };
 
-            metrics.run(cache, settings, callback);
+            plugin.run(cache, settings, callback);
             done();
         });
 
@@ -67,7 +68,7 @@ describe("workspacesOperationalState", function () {
                 expect(results[0].status).to.equal(0);
             };
 
-            metrics.run(cache, settings, callback);
+            plugin.run(cache, settings, callback);
             done();
         });
 
@@ -81,7 +82,7 @@ describe("workspacesOperationalState", function () {
                 expect(results[1].status).to.equal(0);
             };
 
-            metrics.run(cache, settings, callback);
+            plugin.run(cache, settings, callback);
             done();
         })
 
@@ -94,7 +95,7 @@ describe("workspacesOperationalState", function () {
                 expect(results[0].status).to.equal(0);
             };
 
-            metrics.run(cache, settings, callback);
+            plugin.run(cache, settings, callback);
             done();
         })
     })

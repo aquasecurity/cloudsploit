@@ -365,7 +365,7 @@ module.exports = {
 
         'workspacesVolumeEncryption'    : require(__dirname + '/plugins/aws/workspaces/workspacesVolumeEncryption.js'),
         'workspacesIpAccessControl'     : require(__dirname + '/plugins/aws/workspaces/workspacesIpAccessControl.js'),
-        'workspacesOperationalState'     : require(__dirname + '/plugins/aws/workspaces/workspacesOperationalState.js'),
+        'workspacesOperationalState'    : require(__dirname + '/plugins/aws/workspaces/workspacesOperationalState.js'),
 
         'xrayEncryptionEnabled'         : require(__dirname + '/plugins/aws/xray/xrayEncryptionEnabled.js'),
 

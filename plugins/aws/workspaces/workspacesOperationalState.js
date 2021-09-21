@@ -4,10 +4,12 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Workspaces Operational State',
     category: 'Workspaces',
-    description: 'Ensures instances are healthy on Workspaces',
-    more_info: 'Checking the workspaces instances state are healthy or not?',
+    description: 'Ensure that Amazon Workspaces instances are healthy.',
+    more_info: 'AWS Workspaces service inquires instances statuses by periodically sending health check requests. ' +
+               'Instances which do not respond to these checks, due to some issues like blocking network ports, ' +
+               'high CPU usage, etc. are considered unhealthy.',
     link: 'https://docs.aws.amazon.com/workspaces/latest/adminguide/cloudwatch-metrics.html',
-    recommended_action: 'Ensures that workspaces instance is respond to service health checks',
+    recommended_action: 'Reboot unhealthy Workspaces instances.',
     apis: ['WorkSpaces:describeWorkspaces'],
 
     run: function(cache, settings, callback) {
@@ -17,26 +19,26 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         async.each(regions.workspaces, function(region, rcb) {
-            var listWorkspaces = helpers.addSource(cache, source, ['workspaces', 'describeWorkspaces', region, 'data']);
+            var describeWorkspaces = helpers.addSource(cache, source, ['workspaces', 'describeWorkspaces', region]);
 
-            if (!listWorkspaces) {
+            if (!describeWorkspaces) {
                 return rcb();
             }
 
-            if (listWorkspaces.err) {
+            if (describeWorkspaces.err || !describeWorkspaces.data) {
                 helpers.addResult(
-                    results, 3, 'Unable to query for WorkSpaces information: ' + helpers.addError(listWorkspaces), region);
+                    results, 3, 'Unable to query for WorkSpaces information: ' + helpers.addError(describeWorkspaces), region);
                 return rcb();
             }
 
-            if (!listWorkspaces.length) {
+            if (!describeWorkspaces.data.length) {
                 helpers.addResult(
                     results, 0, 'No Workspaces found.', region);
                 return rcb();
             }
 
-            for (var workspace of listWorkspaces) {
-                if (workspace.State && workspace.State === 'UNHEALTHY') {
+            for (var workspace of describeWorkspaces.data) {
+                if (workspace.State && workspace.State.toUpperCase() === 'UNHEALTHY') {
                     helpers.addResult(results, 2, 'Workspaces instance is '+ workspace.State, region);
                 } else {
                     helpers.addResult(results, 0, 'Workspaces instance is '+ workspace.State, region);
