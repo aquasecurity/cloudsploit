@@ -27,6 +27,13 @@ var calls = {
             location: 'zone'
         }
     },
+    snapshots: {
+        list: {
+            api: 'compute',
+            version: 'v1',
+            location: null,
+        }
+    },
     securityPolicies: {
         list: {
             api: 'compute',
