@@ -84,5 +84,6 @@ module.exports = {
     topics: ['global'],
     jobs: regions,
     organizations: ['global'],
-    deployments: ['global']
+    deployments: ['global'],
+    urlMaps: ['global'],
 };
