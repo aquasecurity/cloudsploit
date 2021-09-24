@@ -61,6 +61,7 @@ module.exports = {
         sql: ['global'],
         spanner: ['global']
     },
+    functions: regions,
     instanceTemplates: ['global'],
     networks: ['global'],
     backendServices: ['global'],

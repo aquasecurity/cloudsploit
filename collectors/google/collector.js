@@ -84,6 +84,15 @@ var calls = {
             location: null,
         }
     },
+    functions: {
+        list : {
+            api: 'cloudfunctions',
+            version: 'v1',
+            parent: true,
+            location: 'region',
+            nested: true
+        }
+    },
     keyRings: {
         list: {
             api: 'cloudkms',
