@@ -78,7 +78,7 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
 
         if (config.ec2_skip_unused_groups) {
             if (groups[g].GroupId && !usedGroups.includes(groups[g].GroupId)) {
-                addResult(results, 0, `Security Group: ${groups[g].GroupId} is not in use`,
+                addResult(results, 1, `Security Group: ${groups[g].GroupId} is not in use`,
                     region, resource);
                 usedGroup = true;
                 continue;
