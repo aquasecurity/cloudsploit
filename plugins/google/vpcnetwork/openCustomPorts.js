@@ -12,7 +12,7 @@ module.exports = {
     settings: {
         restricted_open_ports: {
             name: 'Restricted Open Ports',
-            description: 'Comma separated list of ports that should be restricted and not publicly open. Example: tcp:80,tcp:443',
+            description: 'Comma separated list of ports that should be restricted and not publicly open. Example: tcp:80,tcp:443,tcp:81-90',
             regex: '[a-zA-Z0-9,:]',
             default: 'tcp:80'
         },
@@ -34,9 +34,9 @@ module.exports = {
         restricted_open_ports.forEach(port => {
             var [protocol, portNo] = port.split(':');
             if (ports[protocol]) {
-                ports[protocol].push(parseInt(portNo));
+                ports[protocol].push(portNo);
             } else {
-                ports[protocol] = [parseInt(portNo)];
+                ports[protocol] = [portNo];
             }
         });
 
@@ -57,7 +57,7 @@ module.exports = {
             }
 
             helpers.findOpenPorts(firewalls.data, ports, 'custom', region, results, cache, callback, source);
-
+            console.log("results; ", results)
             rcb();
         }, function() {
             // Global checking goes here
