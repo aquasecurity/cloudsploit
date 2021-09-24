@@ -17,7 +17,7 @@ const firewalls = [
           {
             "IPProtocol": "tcp",
             "ports": [
-              "22"
+              "90"
             ]
           }
         ],
@@ -36,7 +36,7 @@ const firewalls = [
         "network": "https://www.googleapis.com/compute/v1/projects/test-project/global/networks/test-vpc-1",
         "priority": 1000,
         "sourceRanges": [ "0.0.0.0/0" ],
-        "allowed": [{ "IPProtocol": "tcp", "ports": [ "80" ]}],
+        "allowed": [{ "IPProtocol": "tcp", "ports": [ "22" ]}],
         "direction": "INGRESS",
         "disabled": false,
         "kind": "compute#firewall"
@@ -121,7 +121,7 @@ describe('openCustomPorts', function () {
                 [firewalls[1]],
                 null
             );
-            plugin.run(cache, {restricted_open_ports: 'tcp:80'}, callback);
+            plugin.run(cache, {restricted_open_ports: 'tcp:20-80'}, callback);
         });
     })
 });
