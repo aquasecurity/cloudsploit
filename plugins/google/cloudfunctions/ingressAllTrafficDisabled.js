@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'You can secure your google cloud functions by implementing network based access control.',
     link: 'https://cloud.google.com/functions/docs/securing/authenticating',
     recommended_action: 'Ensure that your Google Cloud functions do not allow external traffic from the internet.',
-    apis: ['functions:list', 'projects:get'],
+    apis: ['functions:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -32,15 +32,16 @@ module.exports = {
                 return rcb();
             }
 
-            functions.data.forEach(funct => {
+            functions.data.forEach(func => {
+                if (!func.name) return;
 
-                if (funct.ingressSettings && (funct.ingressSettings == 'ALLOW_INTERNAL_AND_GCLB' || funct.ingressSettings == 'ALLOW_INTERNAL_ONLY')) {
-                    helpers.addResult(results, 0, 'Cloud Function is configured to allow only internal and GCLB traffic', region, funct.name);
+                if (func.ingressSettings && func.ingressSettings.toUpperCase() == 'ALLOW_ALL') {
+                    helpers.addResult(results, 2, 'Cloud Function is configured to allow all traffic', region, func.name);
                 } else {
-                    helpers.addResult(results, 2, 'Cloud Function is not configured to allow only internal and GCLB traffic', region, funct.name);
+                    helpers.addResult(results, 0, 'Cloud Function is configured to allow only internal and CLB traffic', region, func.name);
                 }
-
             });
+
             rcb();
         }, function() {
             callback(null, results, source);
