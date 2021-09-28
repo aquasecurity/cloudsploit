@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'SQL CMK Encryption',
     category: 'SQL',
-    description: 'Ensure that Cloud SQL instances are encrypted using Cutomer Managed Keys (CMKs).',
+    description: 'Ensure that Cloud SQL instances are encrypted using Customer Managed Keys (CMKs).',
     more_info: 'By default, your Google Cloud SQL instances are encrypted using Google-managed keys. To have a better control over the encryption process of your Cloud SQL instances you can use Customer-Managed Keys (CMKs).',
     link: 'https://cloud.google.com/sql/docs/sqlserver/cmek',
     recommended_action: 'Ensure that all Google Cloud SQL instances have desired encryption level.',
