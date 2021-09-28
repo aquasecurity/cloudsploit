@@ -73,8 +73,8 @@ function findOpenPorts(ngs, protocols, service, location, results, cache, callba
         ['projects','get', 'global']);
 
     if (!projects || projects.err || !projects.data || !projects.data.length) {
-        helpers.addResult(results, 3,
-            'Unable to query for projects: ' + helpers.addError(projects), 'global', null, null, (projects) ? projects.err : null);
+        addResult(results, 3,
+            'Unable to query for projects: ' + shared.addError(projects), 'global', null, null, (projects) ? projects.err : null);
         return callback(null, results, source);
     }
 
@@ -142,8 +142,8 @@ function findOpenAllPorts(ngs, location, results, cache, callback, source) {
         ['projects','get', 'global']);
 
     if (!projects || projects.err || !projects.data || !projects.data.length) {
-        helpers.addResult(results, 3,
-            'Unable to query for projects: ' + helpers.addError(projects), 'global', null, null, (projects) ? projects.err : null);
+        addResult(results, 3,
+            'Unable to query for projects: ' + shared.addError(projects), 'global', null, null, (projects) ? projects.err : null);
         return callback(null, results, source);
     }
 
