@@ -45,12 +45,12 @@ module.exports = {
             if (projects.err || !projects.data) {
                 helpers.addResult(results, 3, 'Unable to query projects', region, null, null, projects.err);
                 return rcb();
-            };
+            }
 
             if (!projects.data.length) {
                 helpers.addResult(results, 0, 'No projects found', region);
                 return rcb();
-            };
+            }
 
             projects.data.forEach(project => {
                 var warnReturnMsg = `The following services are over the ${config.service_limit_percentage_warn}% limit: `;
@@ -62,23 +62,23 @@ module.exports = {
                     var percentage = Math.ceil((quota.usage / quota.limit)*100);
 
                     if (percentage >= config.service_limit_percentage_fail) {
-                        failReturnMsg += `${quota.metric} has ${quota.usage} of ${quota.limit} resources, `
-                        failTrigger = true
+                        failReturnMsg += `${quota.metric} has ${quota.usage} of ${quota.limit} resources, `;
+                        failTrigger = true;
                     } else if (percentage >= config.service_limit_percentage_warn) {
-                        warnReturnMsg += `${quota.metric} has ${quota.usage} of ${quota.limit} resources, `
+                        warnReturnMsg += `${quota.metric} has ${quota.usage} of ${quota.limit} resources, `;
                         warnTrigger = true;
-                    };
+                    }
                 });
 
                 if (warnTrigger) {
                     helpers.addResult(results, 1, warnReturnMsg, region, project.id, custom);
-                };
+                }
                 if (failTrigger) {
                     helpers.addResult(results, 2, failReturnMsg, region, project.id, custom);
-                };
+                }
                 if (!failTrigger && !warnTrigger) {
                     helpers.addResult(results, 0, 'All resources are within the service limits', region);
-                };
+                }
             });
 
             rcb();
@@ -87,4 +87,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

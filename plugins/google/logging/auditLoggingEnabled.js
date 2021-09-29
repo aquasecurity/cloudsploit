@@ -5,7 +5,7 @@ module.exports = {
     title: 'Audit Logging Enabled',
     category: 'Logging',
     description: 'Ensures that default audit logging is enabled on the organization or project.',
-        more_info: 'The default audit logs should be configured to log all admin activities and write and read access to data for all services. In addition, no exempted members should be added to the logs to ensure proper delivery of all audit logs.',
+    more_info: 'The default audit logs should be configured to log all admin activities and write and read access to data for all services. In addition, no exempted members should be added to the logs to ensure proper delivery of all audit logs.',
     link: 'https://cloud.google.com/logging/docs/audit/',
     recommended_action: 'Ensure that the default audit logs are enabled to log all admin activities and write and read access to data for all services.',
     apis: ['projects:getIamPolicy', 'organizations:list', 'organizations:getIamPolicy'],
@@ -37,7 +37,7 @@ module.exports = {
             if (!getIamPolicy) return callback(null, results, source);
 
             if (getIamPolicy.err || !getIamPolicy.data) {
-                helpers.addResult(results, 3, 'Unable to query for IAM policies for org', region, null, null, getIamPolicy.err);
+                helpers.addResult(results, 3, 'Unable to query for IAM policies for org', 'global', null, null, getIamPolicy.err);
                 return callback(null, results, source);
             }
 
@@ -48,7 +48,7 @@ module.exports = {
                 iamPolicy.auditConfigs.forEach(auditConfig => {
                     if (enabledOnOrg) return;
                     if (auditConfig.service &&
-                        auditConfig.service === "allServices" &&
+                        auditConfig.service === 'allServices' &&
                         auditConfig.auditLogConfigs &&
                         auditConfig.auditLogConfigs.length) {
 
@@ -93,7 +93,7 @@ module.exports = {
                 iamPolicy.auditConfigs.forEach(auditConfig => {
                     if (foundLoggingConfig) return;
                     if (auditConfig.service &&
-                        auditConfig.service === "allServices" &&
+                        auditConfig.service === 'allServices' &&
                         auditConfig.auditLogConfigs &&
                         auditConfig.auditLogConfigs.length) {
 

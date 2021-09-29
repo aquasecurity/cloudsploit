@@ -18,9 +18,9 @@ var regions = [
     'asia-southeast1',              // Singapore
     'asia-east1',                   // Taiwan
     'asia-east2',                   // Hong Kong
-    'asia-northeast1',               // Tokyo
-    'asia-northeast2',               // Osaka
-    'australia-southeast1',          // Sydney
+    'asia-northeast1',              // Tokyo
+    'asia-northeast2',              // Osaka
+    'australia-southeast1',         // Sydney
 ];
 
 var zones = {
