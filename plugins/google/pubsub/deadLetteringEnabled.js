@@ -32,8 +32,9 @@ module.exports = {
                 return rcb();
             }
 
-            async.each(subscriptions.data, (subscription, scb) => {
-                
+            subscriptions.data.forEach(subscription => {
+                if (!subscription.name) return;
+
                 if (subscription.deadLetterPolicy && subscription.deadLetterPolicy.deadLetterTopic) {
                     helpers.addResult(results, 0,
                         'Pub/Sub subscription has dead lettering enabled', region, subscription.name);
@@ -41,12 +42,9 @@ module.exports = {
                     helpers.addResult(results, 2,
                         'Pub/Sub subscription does not have dead lettering enabled', region, subscription.name);
                 }
-              
-                scb();
-            }, function(){
-                rcb();
             });
 
+            rcb();
         }, function(){
             // Global checking goes here
             callback(null, results, source);
