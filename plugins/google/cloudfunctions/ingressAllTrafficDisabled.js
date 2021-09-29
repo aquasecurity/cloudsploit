@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Ingress All Traffic Disabled',
     category: 'Cloud Functions',
-    description: 'Ensure that Cloud Functions are configured to allow only internal traffic or traffic from Cloud Load Balancing.',
+    description: 'Ensure that Cloud Functions are configured to allow only internal traffic or traffic from Cloud Load Balancer.',
     more_info: 'You can secure your google cloud functions by implementing network based access control.',
     link: 'https://cloud.google.com/functions/docs/securing/authenticating',
     recommended_action: 'Ensure that your Google Cloud functions do not allow external traffic from the internet.',
