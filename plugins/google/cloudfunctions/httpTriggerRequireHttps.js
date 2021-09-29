@@ -33,10 +33,12 @@ module.exports = {
             }
 
             functions.data.forEach(funct => {
+                if (!funct.name) return;
+
                 if (funct.httpsTrigger) {
                     if (funct.httpsTrigger.securityLevel && funct.httpsTrigger.securityLevel == 'SECURE_ALWAYS') {
                         helpers.addResult(results, 0, 'Cloud Function is configured to require HTTPS for HTTP invocations',
-                        region, funct.name);
+                            region, funct.name);
                     } else {
                         helpers.addResult(results, 2, 'Cloud Function is not configured to require HTTPS for HTTP invocations', region, funct.name);
                     }
