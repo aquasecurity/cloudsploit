@@ -33,13 +33,19 @@ module.exports = {
             }
 
             functions.data.forEach(funct => {
-                if (funct.httpsTrigger && funct.httpsTrigger.securityLevel && funct.httpsTrigger.securityLevel == 'SECURE_ALWAYS') {
-                    helpers.addResult(results, 0, 'Cloud Function is configured to require HTTPS for HTTP invocations', region, funct.name);
+                if (funct.httpsTrigger) {
+                    if (funct.httpsTrigger.securityLevel && funct.httpsTrigger.securityLevel == 'SECURE_ALWAYS') {
+                        helpers.addResult(results, 0, 'Cloud Function is configured to require HTTPS for HTTP invocations',
+                        region, funct.name);
+                    } else {
+                        helpers.addResult(results, 2, 'Cloud Function is not configured to require HTTPS for HTTP invocations', region, funct.name);
+                    }
                 } else {
-                    helpers.addResult(results, 2, 'Cloud Function is not configured to require HTTPS for HTTP invocations', region, funct.name);
+                    helpers.addResult(results, 0,
+                        'Cloud Function trigger type is not HTTP', region, funct.name);
                 }
-
             });
+
             rcb();
         }, function() {
             callback(null, results, source);
