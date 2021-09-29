@@ -104,7 +104,7 @@ describe('diskOldSnapshots', function () {
                 [
                     {
                         id: '11111',
-                        creationTimestamp: '2021-09-08T01:48:16.346-07:00',
+                        creationTimestamp: new Date(),
                         name: 'snapshot-1',
                         status: 'READY',
                         sourceDisk: 'https://www.googleapis.com/compute/v1/projects/my-project-1/zones/us-central1-a/disks/disk-1',

@@ -11,7 +11,7 @@ module.exports = {
     settings: {
         compute_disk_snapshot_life: {
             name: 'Disk Snapshot Result Life',
-            description: 'Disk Snapshot will FAIL if its creation date is before this number of days in the past.',
+            description: 'Disk Snapshot will FAIL if its creation date is before this number of days in the past',
             regex: '^[1-9]{1}[0-9]{0,3}$',
             default: '30',
         },
