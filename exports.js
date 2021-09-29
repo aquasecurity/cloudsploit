@@ -815,7 +815,9 @@ module.exports = {
 
         'deleteExpiredDeployments'      : require(__dirname + '/plugins/google/deploymentmanager/deleteExpiredDeployments.js'),
 
-        'instanceNodeCount'             : require(__dirname + '/plugins/google/spanner/instanceNodeCount.js')
+        'instanceNodeCount'             : require(__dirname + '/plugins/google/spanner/instanceNodeCount.js'),
+
+        'ingressAllTrafficDisabled'     : require(__dirname + '/plugins/google/cloudfunctions/ingressAllTrafficDisabled.js')
     },
     alibaba: {
         'passwordMinLength'             : require(__dirname + '/plugins/alibaba/ram/passwordMinLength.js'),
