@@ -6,7 +6,7 @@ module.exports = {
     description: 'Ensure that Compute disk snapshots are deleted after defined time period.',
     more_info: 'To optimize storage costs, make sure that there are no old disk snapshots in your GCP project.',
     link: 'https://cloud.google.com/compute/docs/disks/create-snapshots',
-    recommended_action: 'Ensure that there are no snapshots older than specified number of days in your project.',
+    recommended_action: 'Ensure that there are no snapshots older than specified number of days.',
     apis: ['snapshots:list', 'projects:get'],
     settings: {
         compute_disk_snapshot_life: {
