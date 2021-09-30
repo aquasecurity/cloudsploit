@@ -77,7 +77,7 @@ describe('bucketLifecycleConfigured', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Bucket has no lifecycle management configuration');
+                expect(results[0].message).to.include('Bucket does not have lifecycle management configured');
                 expect(results[0].region).to.equal('global');
                 done()
             };
