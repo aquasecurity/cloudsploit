@@ -769,8 +769,10 @@ module.exports = {
         'serviceAccountKeyRotation'     : require(__dirname + '/plugins/google/iam/serviceAccountKeyRotation.js'),
         'serviceAccountManagedKeys'     : require(__dirname + '/plugins/google/iam/serviceAccountManagedKeys.js'),
         'corporateEmailsOnly'           : require(__dirname + '/plugins/google/iam/corporateEmailsOnly.js'),
-        'memberAdmin'                   : require(__dirname + '/plugins/google/iam/memberAdmin.js'),
 
+        'serviceAccountTokenCreator'    : require(__dirname + '/plugins/google/iam/serviceAccountTokenCreator.js'),
+        'memberAdmin'                   : require(__dirname + '/plugins/google/iam/memberAdmin.js'),
+      
         'privateEndpoint'               : require(__dirname + '/plugins/google/kubernetes/privateEndpoint.js'),
         'monitoringEnabled'             : require(__dirname + '/plugins/google/kubernetes/monitoringEnabled.js'),
         'clusterLeastPrivilege'         : require(__dirname + '/plugins/google/kubernetes/clusterLeastPrivilege.js'),
