@@ -48,7 +48,7 @@ module.exports = {
                 instances.data.forEach(instance => {
                     let resource = helpers.createResourceName('instances', instance.name, project, 'zone', zone);
                    
-                    if (instance.scheduling && instance.scheduling.onHostMaintenance && instance.scheduling.onHostMaintenance == 'MIGRATE') {
+                    if (instance.scheduling && instance.scheduling.onHostMaintenance && instance.scheduling.onHostMaintenance.toUpperCase() == 'MIGRATE') {
                         helpers.addResult(results, 0,
                             'Instance Maintenance Behavior is set to MIGRATE', region, resource);
                     } else {
