@@ -40,7 +40,7 @@ module.exports = {
                     if (bucket.lifecycle && bucket.lifecycle.rule && bucket.lifecycle.rule.length) {
                         helpers.addResult(results, 0, 'Bucket has lifecycle management configured', region, resource);
                     } else {
-                        helpers.addResult(results, 2, 'Bucket has no lifecycle management configuration.', region, resource);
+                        helpers.addResult(results, 2, 'Bucket does not have lifecycle management configured', region, resource);
                     }
                 }
             });
