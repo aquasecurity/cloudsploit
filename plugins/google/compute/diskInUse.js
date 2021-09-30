@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Disk In Use',
     category: 'Compute',
-    description: 'Ensure that there are no unused compute disks.',
+    description: 'Ensure that there are no unused Compute disks.',
     more_info: 'Leaving unused disks can waste money and potentially be insecure. Removing unused disks and their data reduces the available cyber attack surface.',
     link: 'https://cloud.google.com/compute/docs/disks',
     recommended_action: 'Ensure that all Google compute disks are being used.',
