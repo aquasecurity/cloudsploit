@@ -24,7 +24,7 @@ module.exports = {
             if (keys.err || !keys.data) {
                 helpers.addResult(results, 3, 'Unable to query service account keys, check permissions.', region, null, null, keys.err);
                 return rcb();
-            };
+            }
 
             if (!keys.data.length) {
                 helpers.addResult(results, 0, 'No service account keys found', region);
@@ -51,4 +51,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

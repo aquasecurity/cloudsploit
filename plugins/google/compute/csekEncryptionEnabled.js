@@ -73,9 +73,9 @@ module.exports = {
                         disk.diskEncryptionKey &&
                         Object.keys(disk.diskEncryptionKey) &&
                         Object.keys(disk.diskEncryptionKey).length) {
-                        goodDisks.push(disk.id)
+                        goodDisks.push(disk.id);
                     } else if (disk.creationTimestamp) {
-                        badDisks.push(disk.id)
+                        badDisks.push(disk.id);
                     }
                 });
 
@@ -87,7 +87,7 @@ module.exports = {
                         badDisks.forEach(disk=> {
                             let resource = helpers.createResourceName('disks', disk, project, 'zone', zone);
                             helpers.addResult(results, 2,
-                                `CSEK Encryption is disabled for disk`, region, resource);
+                                'CSEK Encryption is disabled for disk', region, resource);
                         });
                     }
                 }
@@ -99,7 +99,7 @@ module.exports = {
                         goodDisks.forEach(disk=> {
                             let resource = helpers.createResourceName('disks', disk, project, 'zone', zone);
                             helpers.addResult(results, 0,
-                                `CSEK Encryption is enabled for disk`, region, resource);
+                                'CSEK Encryption is enabled for disk', region, resource);
                         });
                     }
                 }
