@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Disk Automatic Backup Enabled',
     category: 'Compute',
-    description: 'Ensure that compute disks have scheduled snapshots configured.',
+    description: 'Ensure that Google Compute disks have scheduled snapshots configured.',
     more_info: 'Having scheduled snapshots configured for your disks will periodically backup data from your persistent disks.',
     link: 'https://cloud.google.com/compute/docs/disks/scheduled-snapshots',
     recommended_action: 'Ensure that all compute disks have a snapshot schedule attached.',
