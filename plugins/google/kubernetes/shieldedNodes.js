@@ -48,7 +48,7 @@ module.exports = {
                     location = cluster.locations.length === 1 ? cluster.locations[0] : cluster.locations[0].substring(0, cluster.locations[0].length - 2);
                 } else location = region;
                 let resource = helpers.createResourceName('clusters', cluster.name, project, 'location', location);
-                if(cluster && cluster.shieldedNodes && cluster.shieldedNodes.enabled) {
+                if (cluster && cluster.shieldedNodes && cluster.shieldedNodes.enabled) {
                     helpers.addResult(results, 0,
                         'Shielded Nodes feature is enabled for the cluster', region, resource);
                 } else {
@@ -62,4 +62,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

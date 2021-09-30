@@ -53,23 +53,23 @@ module.exports = {
             }
             var myIpConfig = {};
             sqlInstances.data.forEach(sqlInstance => {
-                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() === "READ_REPLICA_INSTANCE") return;
+                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() === 'READ_REPLICA_INSTANCE') return;
 
                 let resource = helpers.createResourceName('instances', sqlInstance.name, project);
 
                 if (sqlInstance.settings &&
                     sqlInstance.settings.ipConfiguration) {
-                    myIpConfig = sqlInstance.settings.ipConfiguration
+                    myIpConfig = sqlInstance.settings.ipConfiguration;
                     if (myIpConfig.privateNetwork && !myIpConfig.ipv4Enabled) {
                         helpers.addResult(results, 0,
                             'SQL Instance is not publicly accessible', region, resource);
                     } else if (myIpConfig.ipv4Enabled &&
                         myIpConfig.authorizedNetworks) {
-                            var openNetwork = false;
-                            myIpConfig.authorizedNetworks.forEach(network => {
-                                if (network.value == '0.0.0.0/0') {
-                                    openNetwork = true;
-                                }
+                        var openNetwork = false;
+                        myIpConfig.authorizedNetworks.forEach(network => {
+                            if (network.value == '0.0.0.0/0') {
+                                openNetwork = true;
+                            }
                         });
                         if (openNetwork) {
                             helpers.addResult(results, 2,
@@ -83,7 +83,7 @@ module.exports = {
                         }
                     }
                 }
-            })
+            });
 
             rcb();
         }, function(){
@@ -91,4 +91,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};
