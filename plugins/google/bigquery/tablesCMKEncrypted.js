@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Tables CMK Encrypted',
     category: 'BigQuery',
-    description: 'Ensure that BigQuery dataset tables are encrypted using Customer-Managed Keys (CMKs).',
+    description: 'Ensure that BigQuery dataset tables are encrypted using desired encryption protection level.',
     more_info: 'By default Google encrypts all datasets using Google-managed encryption keys. To have more control over the encryption process of your BigQuery dataset tables you can use Customer-Managed Keys (CMKs).',
     link: 'https://cloud.google.com/bigquery/docs/customer-managed-encryption',
     recommended_action: 'Ensure that each BigQuery dataset table has desired encryption level.',
