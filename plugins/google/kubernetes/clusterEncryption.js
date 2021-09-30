@@ -19,12 +19,12 @@ module.exports = {
         }
     },
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions();
 
-        let desiredEncryptionLevelStr = settings.kubernetes_cluster_encryption_level || this.settings.kubernetes_cluster_encryption_level.default
+        let desiredEncryptionLevelStr = settings.kubernetes_cluster_encryption_level || this.settings.kubernetes_cluster_encryption_level.default;
         var desiredEncryptionLevel = helpers.PROTECTION_LEVELS.indexOf(desiredEncryptionLevelStr);
 
         var keysObj = {};
@@ -41,19 +41,19 @@ module.exports = {
         var project = projects.data[0].name;
 
         async.series([
-            function (cb) {
-                async.each(regions.cryptoKeys, function (region, rcb) {
+            function(cb) {
+                async.each(regions.cryptoKeys, function(region, rcb) {
                     let cryptoKeys = helpers.addSource(
                         cache, source, ['cryptoKeys', 'list', region]);
 
                     if (cryptoKeys && cryptoKeys.data && cryptoKeys.data.length) helpers.listToObj(keysObj, cryptoKeys.data, 'name');
                     rcb();
-                }, function () {
+                }, function() {
                     cb();
                 });
             },
-            function (cb) {
-                async.each(regions.clusters, function (region, rcb) {
+            function(cb) {
+                async.each(regions.clusters, function(region, rcb) {
                     let clusters = helpers.addSource(cache, source,
                         ['clusters', 'list', region]);
 
@@ -80,7 +80,7 @@ module.exports = {
                         let currentEncryptionLevel;
 
                         if (cluster.databaseEncryption && cluster.databaseEncryption.state &&
-                            cluster.databaseEncryption.state.toUpperCase() == "ENCRYPTED" &&
+                            cluster.databaseEncryption.state.toUpperCase() == 'ENCRYPTED' &&
                             cluster.databaseEncryption.keyName && cluster.databaseEncryption.keyName.length &&
                             keysObj[cluster.databaseEncryption.keyName]) {
                             currentEncryptionLevel = helpers.getProtectionLevel(keysObj[cluster.databaseEncryption.keyName], helpers.PROTECTION_LEVELS);
@@ -103,12 +103,12 @@ module.exports = {
                     });
 
                     rcb();
-                }, function () {
+                }, function() {
                     cb();
                 });
             }
-        ], function () {
-            callback(null, results, source)
+        ], function() {
+            callback(null, results, source);
         });
     }
-}
+};

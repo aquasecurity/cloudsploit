@@ -27,6 +27,13 @@ var calls = {
             location: 'zone'
         }
     },
+    snapshots: {
+        list: {
+            api: 'compute',
+            version: 'v1',
+            location: null,
+        }
+    },
     securityPolicies: {
         list: {
             api: 'compute',
@@ -82,6 +89,15 @@ var calls = {
             api: 'compute',
             version: 'v1',
             location: null,
+        }
+    },
+    functions: {
+        list : {
+            api: 'cloudfunctions',
+            version: 'v1',
+            parent: true,
+            location: 'region',
+            nested: true
         }
     },
     keyRings: {
@@ -215,6 +231,13 @@ var calls = {
         }
     },
     topics: {
+        list: {
+            api: 'pubsub',
+            version: 'v1',
+            parent: 'project'
+        }
+    },
+    subscriptions: {
         list: {
             api: 'pubsub',
             version: 'v1',

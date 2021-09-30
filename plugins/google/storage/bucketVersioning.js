@@ -45,7 +45,7 @@ module.exports = {
                     }
                 } else {
                     helpers.addResult(results, 0, 'No storage buckets found', region);
-                    return
+                    return;
                 }
             });
 
@@ -55,4 +55,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

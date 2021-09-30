@@ -50,7 +50,7 @@ module.exports = {
                                 (managedZone.dnssecConfig.state &&
                                 managedZone.dnssecConfig.state !== 'on')))) {
                     helpers.addResult(results, 2,
-                        `The managed zone does not have DNS security enabled`, region, resource);
+                        'The managed zone does not have DNS security enabled', region, resource);
                 } else {
                     helpers.addResult(results, 0, 'The managed zone has DNS security enabled', region, resource);
                 }
@@ -62,4 +62,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

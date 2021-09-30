@@ -56,7 +56,6 @@ module.exports = {
 
             var metricExists = false;
             var metricName = '';
-            var missingMetricStr;
 
             var testMetrics = 'resource.type=gcs_bucket AND protoPayload.methodName="storage.setIamPermissions"';
 
@@ -69,7 +68,7 @@ module.exports = {
                         metricExists = true;
                         metricName = metric.metricDescriptor.type;
                     } else {
-                        return
+                        return;
                     }
                 }
             });
@@ -91,7 +90,7 @@ module.exports = {
                                     helpers.addResult(results, 0, 'Log alert for storage permission changes is enabled', region, alertPolicy.name);
                                 }
                             }
-                        })
+                        });
                     }
                 });
 
