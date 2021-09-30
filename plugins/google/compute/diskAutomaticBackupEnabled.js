@@ -11,7 +11,7 @@ module.exports = {
     apis: ['disks:list', 'projects:get'],
     settings: {
         disk_result_limit: {
-            name: 'Disk Automatic Backup Enabled Result Limit',
+            name: 'Disk Result Limit',
             description: 'If the number of results is greater than this value, combine them into one result',
             regex: '^[0-9]*$',
             default: '20',
