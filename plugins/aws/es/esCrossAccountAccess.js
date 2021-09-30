@@ -125,13 +125,13 @@ module.exports = {
                         if (helpers.crossAccountPrincipal(statement.Principal, accountId) ||
                             (conditionalPrincipals && conditionalPrincipals.length)) {
                             let crossAccountPrincipals = helpers.crossAccountPrincipal(statement.Principal, accountId, true);
-    
+
                             if (conditionalPrincipals && conditionalPrincipals.length) {
                                 conditionalPrincipals.forEach(conPrincipal => {
                                     if (!conPrincipal.includes(accountId)) crossAccountPrincipals.push(conPrincipal);
                                 });
                             }
-    
+
                             if (!crossAccountPrincipals.length) return;
                             crossAccountEs = true;
                             crossAccountPrincipals.forEach(principal => {

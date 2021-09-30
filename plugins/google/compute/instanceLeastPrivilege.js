@@ -63,7 +63,7 @@ module.exports = {
 
                     if (found) {
                         helpers.addResult(results, 2,
-                            `Instance Service account has full access` , region, resource);
+                            'Instance Service account has full access' , region, resource);
                     } else {
                         helpers.addResult(results, 0,
                             'Instance Service account follows least privilege' , region, resource);

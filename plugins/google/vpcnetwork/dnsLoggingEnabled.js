@@ -15,10 +15,6 @@ module.exports = {
         var source = {};
         var regions = helpers.regions();
 
-        var results = [];
-        var source = {};
-        var regions = helpers.regions();
-
         let projects = helpers.addSource(cache, source,
             ['projects','get', 'global']);
 
@@ -82,4 +78,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

@@ -47,7 +47,7 @@ module.exports = {
             });
 
             if (non_https_listener.length) {
-                msg = "The following Load Balancers are not HTTPS-only: ";
+                let msg = 'The following Load Balancers are not HTTPS-only: ';
                 helpers.addResult(
                     results, 2, msg + non_https_listener.join(', '), region, null);
             } else {
@@ -59,4 +59,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

@@ -56,7 +56,7 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
-                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() == "READ_REPLICA_INSTANCE") return;
+                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() == 'READ_REPLICA_INSTANCE') return;
 
                 let resource = helpers.createResourceName('instances', sqlInstance.name, project);
 
@@ -69,7 +69,7 @@ module.exports = {
                             `SQL instance SSL certificate will expire after ${difference} days`, region, resource);
                     } else if (difference < 0) {
                         helpers.addResult(results, 2,
-                            `SQL instance SSL certificate has already expired`, region, resource);
+                            'SQL instance SSL certificate has already expired', region, resource);
                     } else {
                         helpers.addResult(results, 2,
                             `SQL instance SSL certificate will expire after ${difference} days`, region, resource);
@@ -86,4 +86,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-} 
+}; 
