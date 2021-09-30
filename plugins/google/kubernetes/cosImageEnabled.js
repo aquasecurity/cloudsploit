@@ -56,8 +56,8 @@ module.exports = {
                     cluster.nodePools.length) {
                     found = true;
                     cluster.nodePools.forEach(nodePool => {
-                        if (!nodePool.config || !nodePool.config.imageType || !nodePool.config.imageType === "COS") nonCosNodes.push(nodePool.name); 
-                    })
+                        if (!nodePool.config || !nodePool.config.imageType || !nodePool.config.imageType === 'COS') nonCosNodes.push(nodePool.name); 
+                    });
                 }
 
                 if (nonCosNodes.length) {
@@ -79,4 +79,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};
