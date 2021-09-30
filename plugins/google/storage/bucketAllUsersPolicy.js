@@ -50,20 +50,20 @@ module.exports = {
                 if (bucketPolicy.bindings &&
                     bucketPolicy.bindings.length) {
                     bucketPolicy.bindings.forEach(binding => {
-                       if (binding.members &&
+                        if (binding.members &&
                            binding.members.length) {
-                           binding.members.forEach(member => {
-                               if (member === "allUsers" ||
-                                   member === "allAuthenticatedUsers") {
+                            binding.members.forEach(member => {
+                                if (member === 'allUsers' ||
+                                   member === 'allAuthenticatedUsers') {
                                     var resourceIdArr = bucketPolicy.resourceId.split('/');
                                     var bucketName = resourceIdArr[resourceIdArr.length - 1];
                                     if (badBuckets.indexOf(bucketName) === -1) {
                                         badBuckets.push(bucketName);
                                     }
-                               }
-                           })
-                       }
-                    })
+                                }
+                            });
+                        }
+                    });
                 }
             });
 
@@ -83,4 +83,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

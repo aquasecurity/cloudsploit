@@ -44,7 +44,7 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
-                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() == "READ_REPLICA_INSTANCE") return;
+                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() == 'READ_REPLICA_INSTANCE') return;
 
                 let resource = helpers.createResourceName('instances', sqlInstance.name, project);
 
@@ -57,16 +57,16 @@ module.exports = {
                 if (sqlInstance.settings &&
                     sqlInstance.settings.databaseFlags &&
                     sqlInstance.settings.databaseFlags.length) {
-                        let found = sqlInstance.settings.databaseFlags.find(flag => flag.name &&
+                    let found = sqlInstance.settings.databaseFlags.find(flag => flag.name &&
                             flag.name == 'contained database authentication' && flag.value && flag.value == 'off');
 
-                        if (found) {
-                            helpers.addResult(results, 0,
-                                'SQL instance has contained database authentication flag disabled', region, resource);
-                        } else {
-                            helpers.addResult(results, 2,
-                                'SQL instance has contained database authentication flag enabled', region, resource);
-                        }
+                    if (found) {
+                        helpers.addResult(results, 0,
+                            'SQL instance has contained database authentication flag disabled', region, resource);
+                    } else {
+                        helpers.addResult(results, 2,
+                            'SQL instance has contained database authentication flag enabled', region, resource);
+                    }
                 } else {
                     helpers.addResult(results, 0, 
                         'SQL instance does not have any flags', region, resource);
@@ -79,4 +79,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

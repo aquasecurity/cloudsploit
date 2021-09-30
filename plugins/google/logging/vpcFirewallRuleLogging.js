@@ -52,7 +52,6 @@ module.exports = {
 
             var metricExists = false;
             var metricName = '';
-            var missingMetricStr;
 
             var testMetrics = [
                 'resource.type="gce_firewall_rule" AND jsonPayload.event_subtype="compute.firewalls.patch"',
@@ -73,8 +72,6 @@ module.exports = {
 
                     if (missingMetrics.length > 2) {
                         return;
-                    } else if (missingMetrics.length > 0) {
-                        missingMetricStr = missingMetrics.join(', ');
                     } else if (missingMetrics.length === 0) {
                         metricExists = true;
                         metricName = metric.metricDescriptor.type;
@@ -99,7 +96,7 @@ module.exports = {
                                     helpers.addResult(results, 0, 'Log alert for firewall rule changes is enabled', region, alertPolicy.name);
                                 }
                             }
-                        })
+                        });
                     }
                 });
 
