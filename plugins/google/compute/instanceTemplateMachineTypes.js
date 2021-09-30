@@ -17,7 +17,7 @@ module.exports = {
             default: ''
         },
     },
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions();
@@ -33,7 +33,7 @@ module.exports = {
                 'Unable to query for projects: ' + helpers.addError(projects), 'global', null, null, (projects) ? projects.err : null);
             return callback(null, results, source);
         }
-        async.each(regions.instanceTemplates, function (region, rcb) {
+        async.each(regions.instanceTemplates, function(region, rcb) {
             let instanceTemplates = helpers.addSource(
                 cache, source, ['instanceTemplates', 'list', region]);
             if (!instanceTemplates) return rcb();
@@ -58,7 +58,7 @@ module.exports = {
                 }
             });
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }
