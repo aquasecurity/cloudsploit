@@ -101,40 +101,21 @@ function findOpenPorts(ngs, protocols, service, location, results, cache, callba
                             var sourcefilter = (sourceAddressPrefix === '0.0.0.0/0' ? 'any IP' : sourceAddressPrefix);
                             if (firewallRule['ports']) {
                                 firewallRule['ports'].forEach((portRange) => {
-                                    let start, end;
-                                    if(isNaN(port) && port.includes("-")) {
-                                        start = parseInt(port.split('-')[0]);
-                                        end = parseInt(port.split('-')[1]);
-                                    }
                                     if (portRange.includes("-")) {
                                         portRange = portRange.split("-");
                                         let startPort = portRange[0];
                                         let endPort = portRange[1];
-                                        if (start && end) {
-                                            if ((parseInt(startPort) <= end) && (parseInt(endPort) >= start)) {
-                                                var string = `Some ` + protocol.toUpperCase() +
-                                                ` ports between ${start} and ${end} are open to ` + sourcefilter; strings.push(string);
-                                                if (strings.indexOf(string) === -1) strings.push(string);
-                                                found = true;
-                                            }
-                                        } else if (parseInt(startPort) < port && parseInt(endPort) > port) {
+                                        if (parseInt(startPort) < port && parseInt(endPort) > port) {
                                             var string = `` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
                                                 ` port ` + port + ` open to ` + sourcefilter; strings.push(string);
                                             if (strings.indexOf(string) === -1) strings.push(string);
                                             found = true;
                                         }
-                                    } else {
-                                        if (start && end && (parseInt(portRange) >= start && parseInt(portRange) <= end)) {
-                                            var string = `Some ` + protocol.toUpperCase() +
-                                                ` ports between ${start} and ${end} are open to ` + sourcefilter; strings.push(string);
-                                            if (strings.indexOf(string) === -1) strings.push(string);
-                                            found = true;
-                                        } else if (parseInt(portRange) === port) {
-                                            var string = `` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
-                                                ` port ` + port + ` open to ` + sourcefilter;
-                                            if (strings.indexOf(string) === -1) strings.push(string);
-                                            found = true;
-                                        }
+                                    } else if (parseInt(portRange) === port) {
+                                        var string = `` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
+                                            ` port ` + port + ` open to ` + sourcefilter;
+                                        if (strings.indexOf(string) === -1) strings.push(string);
+                                        found = true;
                                     }
                                 });
                             }
