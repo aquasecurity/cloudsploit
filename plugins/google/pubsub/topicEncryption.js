@@ -1,5 +1,4 @@
 var async = require('async');
-const { call } = require('../../../helpers/azure/auth');
 var helpers = require('../../../helpers/google');
 
 module.exports = {
@@ -98,8 +97,8 @@ module.exports = {
                 });
             }
         ], function(){
-            callback(null, results, source)
+            callback(null, results, source);
         });
     }
-}
+};
                 

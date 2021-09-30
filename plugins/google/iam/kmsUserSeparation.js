@@ -47,7 +47,7 @@ module.exports = {
             var notSeparated = [];
             iamPolicy.bindings.forEach(roleBinding => {
                 if (roleBinding.role === 'roles/cloudkms.admin') {
-                    serviceAccountUsers = serviceAccountUsers.concat(roleBinding.members)
+                    serviceAccountUsers = serviceAccountUsers.concat(roleBinding.members);
                 }
             });
 
@@ -55,17 +55,17 @@ module.exports = {
                 if (roleBinding.role === 'roles/cloudkms.cryptoKeyDecrypter' &&
                     roleBinding.members) {
                     notSeparated = roleBinding.members.filter(member => {
-                        return (serviceAccountUsers.indexOf(member) > -1)
+                        return (serviceAccountUsers.indexOf(member) > -1);
                     }).concat(notSeparated);
                 } else if (roleBinding.role === 'roles/cloudkms.cryptoKeyEncrypter' &&
                     roleBinding.members) {
                     notSeparated = roleBinding.members.filter(member => {
-                        return (serviceAccountUsers.indexOf(member) > -1)
+                        return (serviceAccountUsers.indexOf(member) > -1);
                     }).concat(notSeparated);
                 } else if (roleBinding.role === 'roles/cloudkms.cryptoKeyEncrypterDecrypter' &&
                     roleBinding.members) {
                     notSeparated = roleBinding.members.filter(member => {
-                        return (serviceAccountUsers.indexOf(member) > -1)
+                        return (serviceAccountUsers.indexOf(member) > -1);
                     }).concat(notSeparated);
                 }
             });
@@ -76,7 +76,7 @@ module.exports = {
                     let accountName = (account.includes(':')) ? account.split(':')[1] : account;
                     let resource = helpers.createResourceName('serviceAccounts', accountName, project);
                     helpers.addResult(results, 2,
-                        `Account has the KMS admin role and one or more CryptoKey roles`, region, resource);
+                        'Account has the KMS admin role and one or more CryptoKey roles', region, resource);
                 });
             } else {
                 helpers.addResult(results, 0, 'No accounts have a KMS admin role or a CryptoKey key role', region);

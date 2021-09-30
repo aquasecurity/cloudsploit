@@ -48,7 +48,6 @@ module.exports = {
                     location = cluster.locations.length === 1 ? cluster.locations[0] : cluster.locations[0].substring(0, cluster.locations[0].length - 2);
                 } else location = region;
 
-                let found = false;
                 let disbaledIntegrityMonitoringNodes = [];
                 let resource = helpers.createResourceName('clusters', cluster.name, project, 'location', location);
                 if (cluster.nodePools &&
@@ -73,4 +72,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

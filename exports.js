@@ -703,6 +703,7 @@ module.exports = {
         'flowLogsEnabled'               : require(__dirname + '/plugins/google/vpcnetwork/flowLogsEnabled.js'),
         'privateAccessEnabled'          : require(__dirname + '/plugins/google/vpcnetwork/privateAccessEnabled.js'),
         'dnsLoggingEnabled'             : require(__dirname + '/plugins/google/vpcnetwork/dnsLoggingEnabled.js'),
+        'firewallLoggingMetadata'       : require(__dirname + '/plugins/google/vpcnetwork/firewallLoggingMetadata.js'),
 
         'instanceMaxCount'              : require(__dirname + '/plugins/google/compute/instanceMaxCount.js'),
         'instancesMultiAz'              : require(__dirname + '/plugins/google/compute/instancesMultiAz.js'),
@@ -721,6 +722,12 @@ module.exports = {
         'automaticRestartEnabled'       : require(__dirname + '/plugins/google/compute/automaticRestartEnabled.js'),
         'instanceTemplateMachineTypes'  : require(__dirname + '/plugins/google/compute/instanceTemplateMachineTypes.js'),
         'VMDisksCMKEncrypted'           : require(__dirname + '/plugins/google/compute/VMDisksCMKEncrypted.js'),
+        'instanceMaintenanceBehavior'   : require(__dirname + '/plugins/google/compute/instanceMaintenanceBehavior.js'),
+        'instancePreemptibility'        : require(__dirname + '/plugins/google/compute/instancePreemptibility.js'),
+        'diskInUse'                     : require(__dirname + '/plugins/google/compute/diskInUse.js'),
+        'osLogin2FAEnabled'             : require(__dirname + '/plugins/google/compute/osLogin2FAEnabled.js'),
+        'diskAutomaticBackupEnabled'    : require(__dirname + '/plugins/google/compute/diskAutomaticBackupEnabled.js'),
+        'diskOldSnapshots'              : require(__dirname + '/plugins/google/compute/diskOldSnapshots.js'),
 
         'keyRotation'                   : require(__dirname + '/plugins/google/cryptographickeys/keyRotation.js'),
         'keyProtectionLevel'            : require(__dirname + '/plugins/google/cryptographickeys/keyProtectionLevel.js'),
@@ -746,12 +753,15 @@ module.exports = {
         'mysqlSlowQueryLog'             : require(__dirname + '/plugins/google/sql/mysqlSlowQueryLog.js'),
         'storageAutoIncreaseEnabled'    : require(__dirname + '/plugins/google/sql/storageAutoIncreaseEnabled.js'),
         'serverCertificateRotation'     : require(__dirname + '/plugins/google/sql/serverCertificateRotation.js'),
+        'sqlCMKEncryption'              : require(__dirname + '/plugins/google/sql/sqlCMKEncryption.js'),
 
         'bucketVersioning'              : require(__dirname + '/plugins/google/storage/bucketVersioning.js'),
         'bucketLogging'                 : require(__dirname + '/plugins/google/storage/bucketLogging.js'),
         'bucketAllUsersPolicy'          : require(__dirname + '/plugins/google/storage/bucketAllUsersPolicy.js'),
         'bucketRetentionPolicy'         : require(__dirname + '/plugins/google/storage/bucketRetentionPolicy.js'),
         'bucketUniformAccess'           : require(__dirname + '/plugins/google/storage/bucketUniformAccess.js'),
+        'bucketLifecycleConfigured'     : require(__dirname + '/plugins/google/storage/bucketLifecycleConfigured.js'),
+        'bucketEncryption'              : require(__dirname + '/plugins/google/storage/bucketEncryption.js'),
 
         'clbHttpsOnly'                  : require(__dirname + '/plugins/google/clb/clbHttpsOnly.js'),
         'clbNoInstances'                : require(__dirname + '/plugins/google/clb/clbNoInstances.js'),
@@ -767,6 +777,9 @@ module.exports = {
         'serviceAccountManagedKeys'     : require(__dirname + '/plugins/google/iam/serviceAccountManagedKeys.js'),
         'corporateEmailsOnly'           : require(__dirname + '/plugins/google/iam/corporateEmailsOnly.js'),
 
+        'serviceAccountTokenCreator'    : require(__dirname + '/plugins/google/iam/serviceAccountTokenCreator.js'),
+        'memberAdmin'                   : require(__dirname + '/plugins/google/iam/memberAdmin.js'),
+      
         'privateEndpoint'               : require(__dirname + '/plugins/google/kubernetes/privateEndpoint.js'),
         'monitoringEnabled'             : require(__dirname + '/plugins/google/kubernetes/monitoringEnabled.js'),
         'clusterLeastPrivilege'         : require(__dirname + '/plugins/google/kubernetes/clusterLeastPrivilege.js'),
@@ -806,15 +819,20 @@ module.exports = {
         'logSinksEnabled'               : require(__dirname + '/plugins/google/logging/logSinksEnabled.js'),
 
         'datasetAllUsersPolicy'         : require(__dirname + '/plugins/google/bigquery/datasetAllUsersPolicy.js'),
+        'tablesCMKEncrypted'            : require(__dirname + '/plugins/google/bigquery/tablesCMKEncrypted.js'),
       
         'topicEncryption'               : require(__dirname + '/plugins/google/pubsub/topicEncryption.js'),
+        'deadLetteringEnabled'          : require(__dirname + '/plugins/google/pubsub/deadLetteringEnabled.js'),
 
         'dataflowHangedJobs'            : require(__dirname + '/plugins/google/dataflow/dataflowHangedJobs.js'),
         'dataflowJobsEncryption'        : require(__dirname + '/plugins/google/dataflow/dataflowJobsEncryption.js'),
 
         'deleteExpiredDeployments'      : require(__dirname + '/plugins/google/deploymentmanager/deleteExpiredDeployments.js'),
 
-        'instanceNodeCount'             : require(__dirname + '/plugins/google/spanner/instanceNodeCount.js')
+        'instanceNodeCount'             : require(__dirname + '/plugins/google/spanner/instanceNodeCount.js'),
+
+        'httpTriggerRequireHttps'       : require(__dirname + '/plugins/google/cloudfunctions/httpTriggerRequireHttps.js'),
+        'ingressAllTrafficDisabled'     : require(__dirname + '/plugins/google/cloudfunctions/ingressAllTrafficDisabled.js')
     },
     alibaba: {
         'passwordMinLength'             : require(__dirname + '/plugins/alibaba/ram/passwordMinLength.js'),

@@ -44,7 +44,7 @@ module.exports = {
                                     gmailUsers.push(member);
                                 }
                             }
-                        })
+                        });
                     }
                 });
             }
