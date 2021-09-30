@@ -721,6 +721,7 @@ module.exports = {
         'instanceDesiredMachineTypes'   : require(__dirname + '/plugins/google/compute/instanceDesiredMachineTypes.js'),
         'automaticRestartEnabled'       : require(__dirname + '/plugins/google/compute/automaticRestartEnabled.js'),
         'instanceTemplateMachineTypes'  : require(__dirname + '/plugins/google/compute/instanceTemplateMachineTypes.js'),
+        'diskAutomaticBackupEnabled'    : require(__dirname + '/plugins/google/compute/diskAutomaticBackupEnabled.js'),
         'diskOldSnapshots'              : require(__dirname + '/plugins/google/compute/diskOldSnapshots.js'),
 
         'keyRotation'                   : require(__dirname + '/plugins/google/cryptographickeys/keyRotation.js'),
