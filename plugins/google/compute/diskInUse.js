@@ -7,7 +7,7 @@ module.exports = {
     description: 'Ensure that there are no unused Compute disks.',
     more_info: 'Unused Compute disks should be deleted to prevent accidental exposure of data and to avoid unnecessary billing.',
     link: 'https://cloud.google.com/compute/docs/disks',
-    recommended_action: 'Ensure that all Google compute disks are being used.',
+    recommended_action: 'Delete unused Compute disks.',
     apis: ['disks:list', 'projects:get'],
     settings: {
         disk_result_limit: {
