@@ -47,7 +47,6 @@ module.exports = {
             var serviceAccountExists = false;
 
             iamPolicy.bindings.forEach(roleBinding => {
-
                 if (roleBinding.role === 'roles/iam.serviceAccountTokenCreator') {
                     serviceAccountExists = true;
                     roleBinding.members.forEach(member => {
