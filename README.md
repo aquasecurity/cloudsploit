@@ -1,4 +1,4 @@
-[<img src="https://cloudsploit.com/images/logos/cloudsploit_by_aqua_A02.png" height="130">](https://cloud.aquasec.com/signup)
+[<img src="https://cloudsploit.com/images/logos/cloudsploit_by_aqua_2021.png" height="130">](https://cloud.aquasec.com/signup)
 
 [![Build Status](https://travis-ci.com/aquasecurity/cloudsploit.svg?branch=master)](https://travis-ci.com/aquasecurity/cloudsploit)
 
