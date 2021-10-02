@@ -472,8 +472,9 @@ function getS3BucketLocation(cache, region, bucketName) {
         ['s3', 'getBucketLocation', region, bucketName]);
 
     if (getBucketLocation && getBucketLocation.data) {
-        if (getBucketLocation.data.LocationConstraint) return getBucketLocation.data.LocationConstraint;
-        else return 'us-east-1';
+        if (getBucketLocation.data.LocationConstraint &&
+            regions.all.includes(getBucketLocation.data.LocationConstraint)) return getBucketLocation.data.LocationConstraint;
+        else return 'global';
     }
     return 'global';
 }
