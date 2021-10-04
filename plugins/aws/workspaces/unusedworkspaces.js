@@ -46,9 +46,9 @@ module.exports = {
                         'WorkSpace does not have any known user connection', region, resource);
                 } else if (workspace.LastKnownUserConnectionTimestamp &&
                     (helpers.daysBetween(new Date(), workspace.LastKnownUserConnectionTimestamp)) > 30) {
-                        helpers.addResult(results, 2,
-                            `WorkSpace is not in use for last ${helpers.daysBetween(new Date(), workspace.LastKnownUserConnectionTimestamp)}`,
-                            region, resource);
+                    helpers.addResult(results, 2,
+                        `WorkSpace is not in use for last ${helpers.daysBetween(new Date(), workspace.LastKnownUserConnectionTimestamp)}`,
+                        region, resource);
                 } else {
                     helpers.addResult(results, 0,
                         'WorkSpace is in use', region, resource);
