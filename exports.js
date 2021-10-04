@@ -727,6 +727,7 @@ module.exports = {
         'osLogin2FAEnabled'             : require(__dirname + '/plugins/google/compute/osLogin2FAEnabled.js'),
         'diskAutomaticBackupEnabled'    : require(__dirname + '/plugins/google/compute/diskAutomaticBackupEnabled.js'),
         'diskOldSnapshots'              : require(__dirname + '/plugins/google/compute/diskOldSnapshots.js'),
+        'enableUsageExport'             : require(__dirname + '/plugins/google/compute/enableUsageExport.js'),
 
         'keyRotation'                   : require(__dirname + '/plugins/google/cryptographickeys/keyRotation.js'),
         'keyProtectionLevel'            : require(__dirname + '/plugins/google/cryptographickeys/keyProtectionLevel.js'),
