@@ -27,7 +27,7 @@ module.exports = {
         var source = {};
 
         var region = helpers.defaultRegion(settings);
-         console.log(listGroups);
+
         var listGroups = helpers.addSource(cache, source,
             ['iam', 'listGroups', region]);
 
