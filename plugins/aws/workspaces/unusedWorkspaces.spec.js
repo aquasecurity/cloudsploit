@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var unusedWorkspaces = require('./unusedWorkspaces');
+var unusedWorkspaces = require('./unusedWorkspaces.js');
 
 const describeWorkspacesConnectionStatus = [
     {
