@@ -55,6 +55,7 @@ module.exports = {
     cryptoKeys: ['global', ...regions],
     securityPolicies: ['global'],
     snapshots: ['global'],
+    images: ['global'],
     firewalls: ['global'],
     buckets: ['global'],
     instances: {
