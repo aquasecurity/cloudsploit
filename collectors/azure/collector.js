@@ -28,7 +28,7 @@ var calls = {
     },
     activityLogAlerts: {
         listBySubscriptionId: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/microsoft.insights/activityLogAlerts?api-version=2020-10-01'
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/microsoft.insights/activityLogAlerts?api-version=2017-04-01'
         }
     },
     storageAccounts: {
