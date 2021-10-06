@@ -1,11 +1,11 @@
 var helpers = require('../../../helpers/alibaba');
 
 module.exports = {
-    title: 'OSS Bucket Secure Transport Enabled',
+    title: 'OSS Bucket IP Restriction Configured',
     category: 'OSS',
-    description: 'Ensure that Alibaba OSS buckets have secure transport enabled.',
-    more_info: 'Configuring secure transfer enhances the security of OSS bucket by allowing requests to the storage account by only a secure connection.',
-    recommended_action: 'Modify OSS bucket policy to configure secure transport',
+    description: 'Ensure that OSS buckets have policy configured to allow only specific IP addresses.',
+    more_info: 'OSS buckets should limit access to selected networks. Restricting default network access provides a new layer of security.',
+    recommended_action: 'Add or modify bucket policy to create IP-based conditions',
     link: 'https://www.alibabacloud.com/help/doc-detail/85111.htm',
     apis: ['OSS:listBuckets', 'OSS:getBucketPolicy', 'STS:GetCallerIdentity'],
 
@@ -54,27 +54,31 @@ module.exports = {
 
             let statements = helpers.normalizePolicyDocument(getBucketPolicy.data);
 
-            let secureTransportEnabled = false;
+            let ipRestrictionInPlace = false;
             for (let statement of statements) {
-                if (statement.Principal && statement.Principal.includes('*') &&
-                    statement.Action && statement.Action.length &&
-                    statement.Condition && statement.Condition.Bool && statement.Condition.Bool) {
-                    let conditionValue = statement.Condition.Bool[Object.keys(statement.Condition.Bool).find(key => key.toLowerCase() == 'acs:securetransport')];
-                    if (statement.Effect && statement.Effect.toUpperCase() == 'DENY' &&
-                        conditionValue.find(boolValue => boolValue.toLowerCase() == 'false')) {
-                        secureTransportEnabled = true;
-                        break;
-                    } else if (conditionValue.find(boolValue => boolValue.toLowerCase() == 'true')) {
-                        secureTransportEnabled = true;
-                        break;
+                if (statement.Principal && statement.Action && statement.Action && statement.Condition) {
+                    if (statement.Condition.IpAddress) {
+                        let conditionValue = statement.Condition.IpAddress[Object.keys(statement.Condition.IpAddress).find(key => key.toLowerCase() == 'acs:sourceip')];
+                        if (conditionValue.length) {
+                            ipRestrictionInPlace = true;
+                            break;
+                        }
+                    } else if (statement.Condition.NotIpAddress) {
+                        let conditionValue = statement.Condition.NotIpAddress[Object.keys(statement.Condition.NotIpAddress).find(key => key.toLowerCase() == 'acs:sourceip')];
+                        if (conditionValue.length) {
+                            ipRestrictionInPlace = true;
+                            break;
+                        }
                     }
                 }
             }
 
-            if (secureTransportEnabled) {
-                helpers.addResult(results, 0, 'OSS bucket has secure transport enabled', region, resource);
+            if (ipRestrictionInPlace) {
+                helpers.addResult(results, 0,
+                    'OSS bucket has IP restrictions configured', region, resource);
             } else {
-                helpers.addResult(results, 2, 'OSS bucket does not have secure transport enabled', region, resource);
+                helpers.addResult(results, 2,
+                    'OSS bucket does not have IP restrictions configured', region, resource);
             }
         });
 

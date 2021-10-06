@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var ossBucketSecureTransport = require('./ossBucketSecureTransport.js');
+var ossBucketIpRestriction = require('./ossBucketIpRestriction.js');
 
 const listBuckets = [
     {
@@ -39,11 +39,11 @@ const getBucketPolicy = [
                     "*"
                 ],
                 "Resource": [
-                    "acs:oss:*:5103119194921620:akhtar-made/*"
+                    "acs:oss:*:0000111122223333:akhtar-made/*"
                 ],
                 "Condition": {
-                    "Bool": {
-                        "acs:SecureTransport": [ "false" ]
+                    "IpAddress": {
+                        "acs:SourceIp": [ "103.127.36.50" ]
                     }
                 }
             }
@@ -76,7 +76,7 @@ const getBucketPolicy = [
                     "*"
                 ],
                 "Resource": [
-                    "acs:oss:*:5103119194921620:akhtar-made/*"
+                    "acs:oss:*:0000111122223333:akhtar-made/*"
                 ]
             }
         ]
@@ -109,25 +109,25 @@ const createCache = (listBuckets, getBucketPolicy, listBucketsErr, getBucketPoli
     };
 };
 
-describe('ossBucketSecureTransport', function () {
+describe('ossBucketIpRestriction', function () {
     describe('run', function () {
-        it('should PASS if OSS bucket has secure transport enabled', function (done) {
+        it('should PASS if OSS bucket has IP restrictions configured', function (done) {
             const cache = createCache(listBuckets, getBucketPolicy[0]);
-            ossBucketSecureTransport.run(cache, {}, (err, results) => {
+            ossBucketIpRestriction.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('OSS bucket has secure transport enabled');
+                expect(results[0].message).to.include('OSS bucket has IP restrictions configured');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
         });
 
-        it('should FAIL if OSS bucket does not have secure transport enabled', function (done) {
+        it('should FAIL if OSS bucket does not have IP restrictions configured', function (done) {
             const cache = createCache(listBuckets, getBucketPolicy[1]);
-            ossBucketSecureTransport.run(cache, {}, (err, results) => {
+            ossBucketIpRestriction.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('OSS bucket does not have secure transport enabled');
+                expect(results[0].message).to.include('OSS bucket does not have IP restrictions configured');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
@@ -135,7 +135,7 @@ describe('ossBucketSecureTransport', function () {
 
         it('should FAIL if no OSS bucket policy found', function (done) {
             const cache = createCache(listBuckets, getBucketPolicy[2]);
-            ossBucketSecureTransport.run(cache, {}, (err, results) => {
+            ossBucketIpRestriction.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('No OSS bucket policy found');
@@ -146,7 +146,7 @@ describe('ossBucketSecureTransport', function () {
 
         it('should PASS if no OSS buckets found', function (done) {
             const cache = createCache([]);
-            ossBucketSecureTransport.run(cache, {}, (err, results) => {
+            ossBucketIpRestriction.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No OSS buckets found');
@@ -157,7 +157,7 @@ describe('ossBucketSecureTransport', function () {
 
         it('should UNKNOWN if unable to query for OSS buckets', function (done) {
             const cache = createCache([], null, { err: 'Unable to query for OSS buckets' });
-            ossBucketSecureTransport.run(cache, {}, (err, results) => {
+            ossBucketIpRestriction.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for OSS buckets');
@@ -168,7 +168,7 @@ describe('ossBucketSecureTransport', function () {
 
         it('should UNKNOWN if unable to query OSS bucket policy', function (done) {
             const cache = createCache([listBuckets[0]], {}, null, { err: 'Unable to query OSS bucket policy' });
-            ossBucketSecureTransport.run(cache, {}, (err, results) => {
+            ossBucketIpRestriction.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query OSS bucket policy');
