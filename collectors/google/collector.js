@@ -25,6 +25,11 @@ var calls = {
             api: 'compute',
             version: 'v1',
             location: 'zone'
+        },
+        aggregatedList: {
+            api: 'compute',
+            version: 'v1',
+            location: null
         }
     },
     snapshots: {
