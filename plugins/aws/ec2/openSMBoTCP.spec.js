@@ -273,11 +273,11 @@ describe('openSMBoTCP', function () {
             });
         });
 
-        it('should PASS if security group is unused', function (done) {
+        it('should WARN if security group is unused', function (done) {
             const cache = createCache([describeSecurityGroups[2]], [describeNetworkInterfaces[0]], []);
             openSMBoTCP.run(cache, {ec2_skip_unused_groups: 'true'}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
+                expect(results[0].status).to.equal(1);
                 done();
             });
         });
