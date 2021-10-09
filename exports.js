@@ -898,6 +898,6 @@ module.exports = {
 
         'networkPolicyEnabled'          : require(__dirname + '/plugins/alibaba/ack/networkPolicyEnabled.js'),
 
-        'tdsNotificationsEnabled'       : require(__dirname + '/plugins/alibaba/tds/tdsNotificationsEnabled.js')
+        'securityNotificationsEnabled'  : require(__dirname + '/plugins/alibaba/securitycenter/securityNotificationsEnabled.js')
     }
 };

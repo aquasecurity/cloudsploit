@@ -2,8 +2,8 @@ var async = require('async');
 var helpers = require('../../../helpers/alibaba');
 
 module.exports = {
-    title: 'TDS Notifications Enabled',
-    category: 'TDS',
+    title: 'Security Notifications Enabled',
+    category: 'Security Center',
     description: 'Ensure that notifications are enabled for all risk items in Vulnerability, Baseline Risks, Alerts and Accesskey Leak event detection categories.',
     more_info: 'Alibaba Cloud sends notification via email, SMS or internal message whenever security events happen. ' +
         'Enable notifications for security aletrs in order to receive notifications as soon as security events happens.',

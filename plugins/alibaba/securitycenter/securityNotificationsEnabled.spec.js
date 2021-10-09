@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var tdsNotificationsEnabled = require('./tdsNotificationsEnabled.js');
+var securityNotificationsEnabled = require('./securityNotificationsEnabled.js');
 
 const describeNoticeConfig = [
     [
@@ -210,11 +210,11 @@ const createCache = (describeNoticeConfig, describeNoticeConfigErr) => {
     };
 };
 
-describe('tdsNotificationsEnabled', function () {
+describe('securityNotificationsEnabled', function () {
     describe('run', function () {
         it('should FAIL if security notifications are not enabled', function (done) {
             const cache = createCache(describeNoticeConfig[1]);
-            tdsNotificationsEnabled.run(cache, {}, (err, results) => {
+            securityNotificationsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Security notifications are not enabled');
@@ -225,7 +225,7 @@ describe('tdsNotificationsEnabled', function () {
 
         it('should PASS if security notifications are enabled for all alerts', function (done) {
             const cache = createCache(describeNoticeConfig[0]);
-            tdsNotificationsEnabled.run(cache, {}, (err, results) => {
+            securityNotificationsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Security notifications are enabled for all alerts');
@@ -236,7 +236,7 @@ describe('tdsNotificationsEnabled', function () {
 
         it('should PASS if no TDS notice config found', function (done) {
             const cache = createCache([]);
-            tdsNotificationsEnabled.run(cache, {}, (err, results) => {
+            securityNotificationsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No TDS notice config found');
@@ -247,7 +247,7 @@ describe('tdsNotificationsEnabled', function () {
 
         it('should UNKNOWN if Unable to query TDS notice config', function (done) {
             const cache = createCache([], { err: 'Unable to query TDS notice config' });
-            tdsNotificationsEnabled.run(cache, {}, (err, results) => {
+            securityNotificationsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query TDS notice config');
