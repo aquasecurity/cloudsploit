@@ -162,6 +162,9 @@ var calls = {
         DescribeFieldStatistics: {
             property: 'GroupedFields',
             apiVersion: '2018-12-03',
+        },
+        DescribeVersionConfig: {
+            apiVersion: '2018-12-03'
         }
     }
 };
@@ -367,7 +370,8 @@ var collect = function(AlibabaConfig, settings, callback) {
                         if (callObj.property && !data[callObj.property]) return regionCb();
                         if (callObj.subProperty && !data[callObj.property][callObj.subProperty]) return regionCb();
 
-                        var dataToAdd = callObj.subProperty ? data[callObj.property][callObj.subProperty] : data[callObj.property];
+                        var dataToAdd = callObj.subProperty ? data[callObj.property][callObj.subProperty] :
+                            callObj.property ? data[callObj.property] : data;
 
                         if (paginating) {
                             collection[serviceLower][callKey][region].data = collection[serviceLower][callKey][region].data.concat(dataToAdd);
