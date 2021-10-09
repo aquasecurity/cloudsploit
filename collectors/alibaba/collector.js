@@ -30,7 +30,8 @@ var regionEndpointMap = {
     rds: ['cn-zhangjiakou', 'cn-huhehaote', 'cn-chengdu', 'ap-southeast-2', 'ap-southeast-3', 'ap-southeast-5',
         'ap-northeast-1', 'ap-south-1', 'eu-central-1', 'eu-west-1', 'me-east-1'],
     actiontrail: regions['actiontrail'],
-    apigateway: regions['apigateway']
+    apigateway: regions['apigateway'],
+    tds: ['ap-southeast-3', 'ap-southeast-1']
 };
 
 var globalServices = [
@@ -151,6 +152,12 @@ var calls = {
     ACK: {
         describeClustersV1: {
             override: true
+        }
+    },
+    TDS: {
+        DescribeNoticeConfig: {
+            property: 'NoticeConfigList',
+            apiVersion: '2018-12-03'
         }
     }
 };
