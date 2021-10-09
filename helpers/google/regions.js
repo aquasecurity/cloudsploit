@@ -54,6 +54,7 @@ module.exports = {
     keyRings: ['global', ...regions],
     cryptoKeys: ['global', ...regions],
     securityPolicies: ['global'],
+    resourcePolicies: regions,
     snapshots: ['global'],
     firewalls: ['global'],
     buckets: ['global'],

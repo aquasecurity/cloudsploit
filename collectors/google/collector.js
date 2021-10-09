@@ -41,6 +41,13 @@ var calls = {
             location: 'global'
         }
     },
+    resourcePolicies: {
+        list: {
+            api: 'compute',
+            version: 'v1',
+            location: 'region'
+        }
+    },
     firewalls: {
         list: {
             api: 'compute',
