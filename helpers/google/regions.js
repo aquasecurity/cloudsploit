@@ -51,6 +51,7 @@ module.exports = {
     all_regions: regions,
     zones: zones,
     disks: regions,
+    images: ['global'],
     keyRings: ['global', ...regions],
     cryptoKeys: ['global', ...regions],
     securityPolicies: ['global'],
