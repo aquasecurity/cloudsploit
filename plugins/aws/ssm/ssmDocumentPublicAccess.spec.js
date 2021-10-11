@@ -65,34 +65,23 @@ const createNullCache = () => {
 
 describe('ssmDocumentPublicAccess', function () {
   describe('run', function () {
-      it('should PASS if public access sharing is disabled', function (done) {
+      it('should PASS if SSM service has block public sharing is disabled', function (done) {
           const cache = createCache(serviceSetting[1]);
           ssmDocumentPublicAccess.run(cache, {}, (err, results) => {
               expect(results.length).to.equal(1);
               expect(results[0].status).to.equal(0);
-              expect(results[0].message).to.equal('SSM document is not publicly accessible');
+              expect(results[0].message).to.include('SSM service has block public sharing disabled');
               expect(results[0].region).to.equal('us-east-1');
               done();
             });
         });
         
-        it('should FAIL if public access sharing is enabled', function (done) {
+        it('should FAIL if SSM service has block public sharing is enabled', function (done) {
             const cache = createCache(serviceSetting[0]);
             ssmDocumentPublicAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.equal('SSM document is publicly accessible');
-                expect(results[0].region).to.equal('us-east-1');
-              done();
-          });
-        });
-
-        it('should FAIL if public access sharing setting does not exist', function (done) {
-            const cache = createCache(serviceSetting[2]);
-            ssmDocumentPublicAccess.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.equal('SSM document is publicly accessible');
+                expect(results[0].message).to.include('SSM service has block public sharing enabled for SSM documents');
                 expect(results[0].region).to.equal('us-east-1');
               done();
           });
