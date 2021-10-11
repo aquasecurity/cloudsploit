@@ -332,6 +332,7 @@ module.exports = {
 
         'monitoringMetrics'             : require(__dirname + '/plugins/aws/cloudwatchlogs/monitoringMetrics.js'),
         'mqAutoMinorVersionUpgrade'     : require(__dirname + '/plugins/aws/mq/mqAutoMinorVersionUpgrade.js'),
+        'mqDeploymentMode'              : require(__dirname + '/plugins/aws/mq/mqDeploymentMode.js'),
         
 
         'logRetentionPeriod'            : require(__dirname + '/plugins/aws/cloudwatchlogs/logRetentionPeriod.js'),
