@@ -575,6 +575,12 @@ var calls = {
             paginateReqProp: 'Marker'
         }
     },
+    MQ: {
+        listBrokers:{
+            property:'BrokerSummaries',
+            paginate:'NextToken'
+        },
+    },
     MWAA: {
         listEnvironments: {
             property: 'Environments',
@@ -785,7 +791,8 @@ var calls = {
         getEncryptionConfig: {
             property: 'EncryptionConfig'
         }
-    }
+    },
+    
 };
 
 var postcalls = [
@@ -1235,6 +1242,14 @@ var postcalls = [
                 reliesOnCall: 'listFunctions',
                 filterKey: 'Resource',
                 filterValue: 'FunctionArn'
+            }
+        },
+        MQ: {
+            describeBroker: {
+                reliesOnService: 'mq',
+                reliesOnCall: 'listBrokers',
+                filterKey: 'BrokerId',
+                filterValue: 'BrokerId'
             }
         },
         MWAA: {
