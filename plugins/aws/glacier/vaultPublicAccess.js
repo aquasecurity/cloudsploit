@@ -21,7 +21,7 @@ module.exports = {
 
             if (!listVaults) return;
             if (listVaults.err || !listVaults.data) {
-                helpers.addResult(results, 3, `Unable to list S3 glacier vaults: ${helpers.addError(listVaults)}`);
+                helpers.addResult(results, 3, `Unable to list S3 Glacier vaults: ${helpers.addError(listVaults)}`, region);
                 return;
             }
 
