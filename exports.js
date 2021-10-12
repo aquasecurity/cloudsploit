@@ -331,7 +331,7 @@ module.exports = {
         'environmentAdminPrivileges'    : require(__dirname + '/plugins/aws/mwaa/environmentAdminPrivileges.js'),
 
         'monitoringMetrics'             : require(__dirname + '/plugins/aws/cloudwatchlogs/monitoringMetrics.js'),
-        'mqAutoMinorVersionUpgrade'     : require(__dirname + '/plugins/aws/mq/mqAutoMinorVersionUpgrade.js'),
+        
         'mqLogExports'                  : require(__dirname + '/plugins/aws/mq/mqLogExports.js'),
         
 
