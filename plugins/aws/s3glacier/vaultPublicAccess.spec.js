@@ -114,24 +114,23 @@ const createNullCache = () => {
 
 describe('vaultPublicAccess', function () {
     describe('run', function () {
-        it('should PASS if S3 vault policy does not contain any insecure allow statements', function (done) {
+        it('should PASS if S3 Glacoer vault policy does not allow global access', function (done) {
             const cache = createCache([listVaults], vaultPolicy[0]);
             vaultPublicAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.equal('Vault policy does not contain any insecure allow statements');
+                expect(results[0].message).to.equal('S3 Glacoer vault policy does not allow global access');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
 
-        it('should FAIL if S3 vault policy contains insecure allow statements', function (done) {
+        it('should FAIL if S3 Glacoer vault policy allows global access to the actions', function (done) {
             const cache = createCache([listVaults], vaultPolicy[1]);
             vaultPublicAccess.run(cache, {}, (err, results) => {
-                const jsonPolicy = JSON.parse(vaultPolicy[1].policy.Policy);
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.equal(`Principal * allowed to perform: ${jsonPolicy.Statement[0].Action}`);
+                expect(results[0].message).to.include(`S3 Glacoer vault policy allows global access`);
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
@@ -142,7 +141,7 @@ describe('vaultPublicAccess', function () {
             vaultPublicAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.equal('No S3 glacier vault exists');
+                expect(results[0].message).to.equal('No S3 Glacier vaults found');
                 done();
             });
         });
@@ -152,29 +151,8 @@ describe('vaultPublicAccess', function () {
             vaultPublicAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.equal('Vault policy does not contain any statements');
+                expect(results[0].message).to.equal('S3 Glacier vault policy does not contain any statements');
                 expect(results[0].region).to.equal('us-east-1');
-                done();
-            });
-        });
-
-        it('should PASS if no additional bucket policy found', function (done) {
-            const cache = createPolicyErrorCache([listVaults]);
-            vaultPublicAccess.run(cache, {}, (err, results) => {
-                const { message } = cache.glacier.getVaultAccessPolicy['us-east-1'][listVaults.VaultName].err;
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.equal(`Unable to get vault policy: ${message}`);
-                done();
-            });
-        });
-
-        it('should UNKNOWN if bucket policy is invalid JSON or does not contain valid statements', function (done) {
-            const cache = createCache([listVaults], vaultPolicy[3]);
-            vaultPublicAccess.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.equal('Error querying for vault policy. Policy JSON is invalid or does not contain valid statements');
                 done();
             });
         });
@@ -185,7 +163,7 @@ describe('vaultPublicAccess', function () {
                 const { message } = cache.glacier.listVaults['us-east-1'].err;
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.equal(`Unable to list S3 glacier vaults: ${message}`);
+                expect(results[0].message).to.equal(`Unable to list S3 Glacier vaults: ${message}`);
                 done();
             });
         });
