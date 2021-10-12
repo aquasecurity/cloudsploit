@@ -26,7 +26,7 @@ module.exports = {
             }
 
             if (!listVaults.data.length) {
-                helpers.addResult(results, 0, 'No S3 glacier vault exists');
+                helpers.addResult(results, 0, 'No S3 Glacier vaults found', region);
                 return;
             }
 
