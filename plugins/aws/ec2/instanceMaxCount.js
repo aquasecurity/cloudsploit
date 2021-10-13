@@ -124,6 +124,24 @@ module.exports = {
             regex: '^[0-9]{1,4}$',
             default: 100
         },
+        instance_count_region_threshold_ap_northeast_3: {
+            name: 'Instance Count Region Threshold: ap-northeast-3',
+            description: 'Checks for the number of running instances in the ap-northeast-3 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_me_south_1: {
+            name: 'Instance Count Region Threshold: me-south-1',
+            description: 'Checks for the number of running instances in the me-south-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_af_south_1: {
+            name: 'Instance Count Region Threshold: af-south-1',
+            description: 'Checks for the number of running instances in the af-south-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
         instance_count_region_threshold_us_gov_west_1: {
             name: 'Instance Count Region Threshold: us-gov-west-1',
             description: 'Checks for the number of running instances in the us-gov-west-1 region and triggers a failing result if it exceeds the specified count',
