@@ -5,6 +5,7 @@ var helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'Blob Service Immutable',
     category: 'Blob Service',
+    domain: 'Storage',
     description: 'Ensures data immutability is properly configured for blob services to protect critical data against deletion',
     more_info: 'Immutable storage helps store data securely by protecting critical data against deletion.',
     recommended_action: 'Enable a data immutability policy for all storage containers in the Azure storage account.',

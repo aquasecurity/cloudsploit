@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Key Expiration Enabled',
     category: 'Key Vaults',
+    domain: 'Identity and Access Management',
     description: 'Ensure that all Keys in Azure Key Vault have an expiry time set.',
     more_info: 'Setting an expiry time on all keys forces key rotation and removes unused and forgotten keys from being used.',
     recommended_action: 'Ensure each Key Vault has an expiry time set that provides for sufficient rotation.',

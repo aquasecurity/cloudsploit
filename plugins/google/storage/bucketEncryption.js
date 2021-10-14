@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Bucket Encryption',
     category: 'Storage',
+    domain: 'Storage',
     description: 'Ensure that Cloud Storage buckets have encryption enabled using desired protection level.',
     more_info: 'By default, all storage buckets are encrypted using Google-managed keys. To have better control over how your storage bucktes are encrypted, you can use Customer-Managed Keys (CMKs).',
     link: 'https://cloud.google.com/storage/docs/encryption/customer-managed-keys',

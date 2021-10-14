@@ -3,6 +3,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'CloudFront HTTPS Only',
     category: 'CloudFront',
+    domain: 'Content Delivery',
     description: 'Ensures CloudFront distributions are configured to redirect non-HTTPS traffic to HTTPS.',
     more_info: 'For maximum security, CloudFront distributions can be configured to only accept HTTPS connections or to redirect HTTP connections to HTTPS.',
     link: 'http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CloudFront.html',

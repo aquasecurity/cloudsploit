@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Instance Maintenance Behavior',
     category: 'Compute',
+    domain: 'Compute',
     description: 'Ensure that "On Host Maintenance" configuration is set to Migrate for VM instances.',
     more_info: 'When Google Compute Engine performs regular maintenance of its infrastructure, it migrates your VM instances to other hardware if you have configured the availability policy for the instance to use live migration. This prevents your applications from experiencing disruptions during these events.',
     link: 'https://cloud.google.com/compute/docs/instances/setting-instance-scheduling-options',

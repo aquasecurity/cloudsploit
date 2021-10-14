@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'EC2 Max Instances',
     category: 'EC2',
+    domain: 'Compute',
     description: 'Ensures the total number of EC2 instances does not exceed a set threshold.',
     more_info: 'The number of running EC2 instances should be carefully audited, especially in unused regions, to ensure only approved applications are consuming compute resources. Many compromised AWS accounts see large numbers of EC2 instances launched.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/monitoring_ec2.html',

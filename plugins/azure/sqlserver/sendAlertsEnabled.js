@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Send Alerts Enabled',
     category: 'SQL Server',
+    domain: 'Databases',
     description: 'Ensures that send alerts is enabled in advanced data security for SQL servers.',
     more_info: 'Enabling send alerts in advanced data security on all SQL servers ensures that monitored data for unusual activity, vulnerabilities, and threats get sent to the email addresses configured in advanced data protections.',
     recommended_action: 'Ensure that an email address is activated under send alerts in advanced data security for all SQL servers.',

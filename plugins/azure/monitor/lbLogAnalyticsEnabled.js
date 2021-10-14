@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Load Balancer Log Analytics Enabled',
     category: 'Monitor',
+    domain: 'Management and Governance',
     description: 'Ensures Load Balancers Log Analytics logs are being properly delivered to Azure Monitor',
     more_info: 'Enabling Send to Log Analytics ensures that all Load Balancer logs are being properly monitored and managed.',
     recommended_action: 'Send all diagnostic logs for Load Balancers from the Azure Monitor service to Log Analytics.',

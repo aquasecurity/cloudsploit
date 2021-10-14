@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/oracle/');
 module.exports = {
     title: 'Open FTP',
     category: 'Networking',
+    domain: 'Network Access Control',
     description:  'Determine if TCP port 20 or 21 for FTP is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to ' +
         'the public to function properly, more sensitive services such as FTP should ' +

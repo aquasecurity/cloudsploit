@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'EKS Kubernetes Version',
     category: 'EKS',
+    domain: 'Containers',
     description: 'Ensures the latest version of Kubernetes is installed on EKS clusters',
     more_info: 'EKS supports provisioning clusters from several versions of Kubernetes. Clusters should be kept up to date to ensure Kubernetes security patches are applied.',
     link: 'https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html',

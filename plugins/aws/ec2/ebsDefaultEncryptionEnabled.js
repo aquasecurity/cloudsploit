@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'EBS Encryption Enabled By Default',
     category: 'EC2',
+    domain: 'Compute',
     description: 'Ensure the setting for encryption by default is enabled',
     more_info: 'AWS account should be configured to enable encryption for new EBS volumes and snapshots for all regions.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSEncryption.html#encryption-by-default',

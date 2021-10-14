@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'VPC Multiple Subnets',
     category: 'EC2',
+    domain: 'Compute',
     description: 'Ensures that VPCs have multiple subnets to provide a layered architecture',
     more_info: 'VPCs should be designed to have separate public and private subnets, ideally across availability zones, enabling a DMZ-style architecture.',
     link: 'https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Subnets.html#SubnetSecurity',

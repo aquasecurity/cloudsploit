@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/oracle/');
 module.exports = {
     title: 'WAF Public IP Enabled',
     category: 'Networking',
+    domain: 'Network Access Control',
     description: 'Ensures all public IPs have WAF enabled',
     more_info: 'Every Public IP address should have a firewall enabled to control access to the endpoints. Enabling a Web Application Firewall follows security best practices and helps prevent malicious attempts to access the network.',
     recommended_action: 'Ensure all Public IPs have WAF enabled',

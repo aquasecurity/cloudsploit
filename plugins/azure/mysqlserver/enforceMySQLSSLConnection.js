@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Enforce MySQL SSL Connection',
     category: 'MySQL Server',
+    domain: 'Databases',
     description: 'Ensures SSL connection is enforced on MySQL servers',
     more_info: 'MySQL servers should be set to use SSL for data transmission to ensure all data is encrypted in transit.',
     recommended_action: 'Ensure the connection security of each Azure Database for MySQL is configured to enforce SSL connections.',

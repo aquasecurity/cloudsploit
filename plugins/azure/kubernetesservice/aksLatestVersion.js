@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'Kubernetes Latest Version',
     category: 'Kubernetes Service',
+    domain: 'Containers',
     description: 'Ensures the latest version of Kubernetes is installed on AKS clusters',
     more_info: 'AKS supports provisioning clusters from several versions of Kubernetes. Clusters should be kept up to date to ensure Kubernetes security patches are applied.',
     recommended_action: 'Upgrade the version of Kubernetes on all AKS clusters to the latest available version.',

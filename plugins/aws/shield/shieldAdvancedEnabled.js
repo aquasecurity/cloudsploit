@@ -3,6 +3,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Shield Advanced Enabled',
     category: 'Shield',
+    domain: 'Availability',
     description: 'Ensures AWS Shield Advanced is setup and properly configured',
     more_info: 'AWS Shield Advanced provides enhanced DDOS protection for all enrolled services within a subscribed account. Subscriptions should be active.',
     recommended_action: 'Enable AWS Shield Advanced for the account.',
