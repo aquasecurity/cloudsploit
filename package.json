@@ -39,25 +39,25 @@
     "access": "public"
   },
   "dependencies": {
-    "@octokit/app": "^3.0.0",
-    "@octokit/request": "^3.0.3",
-    "@octokit/rest": "^16.3.2",
-    "argparse": "^2.0.0",
-    "async": "^2.6.1",
-    "aws-sdk": "^2.834.0",
-    "azure-storage": "^2.10.3",
-    "csv-write-stream": "^2.0.0",
-    "fast-safe-stringify": "^2.0.6",
-    "googleapis": "^71.0.0",
-    "minimatch": "^3.0.4",
-    "ms-rest-azure": "^2.6.0",
-    "tty-table": "^4.1.5"
+    "@octokit/app": "3.0.0",
+    "@octokit/request": "3.0.3",
+    "@octokit/rest": "16.3.2",
+    "argparse": "2.0.0",
+    "async": "2.6.1",
+    "aws-sdk": "2.834.0",
+    "azure-storage": "2.10.5",
+    "csv-write-stream": "2.0.0",
+    "fast-safe-stringify": "2.0.6",
+    "googleapis": "71.0.0",
+    "minimatch": "3.0.4",
+    "ms-rest-azure": "3.0.0",
+    "tty-table": "4.1.5"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
-    "mocha": "^6.1.4",
-    "nodemon": "^1.19.4",
-    "nyc": "^14.1.1",
-    "eslint": "^6.8.0"
+    "chai": "4.2.0",
+    "eslint": "8.0.1",
+    "mocha": "9.1.3",
+    "nodemon": "2.0.13",
+    "nyc": "15.1.0"
   }
 }
