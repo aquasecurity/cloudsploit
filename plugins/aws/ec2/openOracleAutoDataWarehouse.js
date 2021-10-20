@@ -14,7 +14,7 @@ module.exports = {
     settings: {
         ec2_skip_unused_groups: {
             name: 'EC2 Skip Unused Groups',
-            description: 'Skip checking ports for unused security groups',
+            description: 'When set to true, skip checking ports for unused security groups and produce a WARN result',
             regex: '^(true|false)$',
             default: 'false',
         }

@@ -234,10 +234,11 @@ describe('kmsKeyRotation', function () {
             });
         });
         
-        it('should not return if KMS encryption level is lower than or equal to awskms', function (done) {
+        it('should pass if KMS encryption level is lower than or equal to awskms', function (done) {
             const cache = createCache([listKeys], describeKey[2], keyPolicy[0], keyRotationStatus[1]);
             kmsKeyRotation.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(0);
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
                 done();
             });
         });
