@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'CSEK Encryption Enabled',
     category: 'Compute',
+    domain: 'Compute',
     description: 'Ensures Customer Supplied Encryption Key Encryption is enabled on disks',
     more_info: 'Google encrypts all disks at rest by default. By using CSEK only the users with the key can access the disk. Anyone else, including Google, cannot access the disk data.',
     link: 'https://cloud.google.com/compute/docs/disks/customer-supplied-encryption',
@@ -73,9 +74,9 @@ module.exports = {
                         disk.diskEncryptionKey &&
                         Object.keys(disk.diskEncryptionKey) &&
                         Object.keys(disk.diskEncryptionKey).length) {
-                        goodDisks.push(disk.id)
+                        goodDisks.push(disk.id);
                     } else if (disk.creationTimestamp) {
-                        badDisks.push(disk.id)
+                        badDisks.push(disk.id);
                     }
                 });
 
@@ -87,7 +88,7 @@ module.exports = {
                         badDisks.forEach(disk=> {
                             let resource = helpers.createResourceName('disks', disk, project, 'zone', zone);
                             helpers.addResult(results, 2,
-                                `CSEK Encryption is disabled for disk`, region, resource);
+                                'CSEK Encryption is disabled for disk', region, resource);
                         });
                     }
                 }
@@ -99,7 +100,7 @@ module.exports = {
                         goodDisks.forEach(disk=> {
                             let resource = helpers.createResourceName('disks', disk, project, 'zone', zone);
                             helpers.addResult(results, 0,
-                                `CSEK Encryption is enabled for disk`, region, resource);
+                                'CSEK Encryption is enabled for disk', region, resource);
                         });
                     }
                 }

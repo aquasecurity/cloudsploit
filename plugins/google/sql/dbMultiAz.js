@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'DB Multiple AZ',
     category: 'SQL',
+    domain: 'Databases',
     description: 'Ensures that SQL instances have a failover replica to be cross-AZ for high availability',
     more_info: 'Creating SQL instances in with a single AZ creates a single point of failure for all systems relying on that database. All SQL instances should be created in multiple AZs to ensure proper failover.',
     link: 'https://cloud.google.com/sql/docs/mysql/instance-settings',
@@ -43,7 +44,7 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
-                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() === "READ_REPLICA_INSTANCE") return;
+                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() === 'READ_REPLICA_INSTANCE') return;
 
                 let resource = helpers.createResourceName('instances', sqlInstance.name, project);
 
@@ -55,7 +56,7 @@ module.exports = {
                     helpers.addResult(results, 2, 
                         'SQL instance does not have multi-AZ enabled', region, resource);
                 }
-            })
+            });
 
             rcb();
         }, function(){
@@ -63,4 +64,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

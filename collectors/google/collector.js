@@ -27,6 +27,13 @@ var calls = {
             location: 'zone'
         }
     },
+    snapshots: {
+        list: {
+            api: 'compute',
+            version: 'v1',
+            location: null,
+        }
+    },
     securityPolicies: {
         list: {
             api: 'compute',
@@ -82,6 +89,15 @@ var calls = {
             api: 'compute',
             version: 'v1',
             location: null,
+        }
+    },
+    functions: {
+        list : {
+            api: 'cloudfunctions',
+            version: 'v1',
+            parent: true,
+            location: 'region',
+            nested: true
         }
     },
     keyRings: {
@@ -221,6 +237,13 @@ var calls = {
             parent: 'project'
         }
     },
+    subscriptions: {
+        list: {
+            api: 'pubsub',
+            version: 'v1',
+            parent: 'project'
+        }
+    },
     jobs: {
         list: { //https://dataflow.googleapis.com/v1b3/projects/{projectId}/jobs:list
             api: 'dataflow',
@@ -244,6 +267,13 @@ var calls = {
             location: null,
             parent: 'organization'
         },
+    },
+    urlMaps: { // https://compute.googleapis.com/compute/v1/projects/{project}/global/urlMaps
+        list: {
+            api: 'compute',
+            version: 'v1',
+            location: 'global'
+        }
     }
 };
 

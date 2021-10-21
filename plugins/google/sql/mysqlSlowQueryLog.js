@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'MySQL Slow Query Log Enabled',
     category: 'SQL',
+    domain: 'Databases',
     description: 'Ensures that MySQL instances have slow query log flag enabled.',
     more_info: 'MySQL instance flag that helps find inefficient or time-consuming SQL queries for MySQL databases.',
     link: 'https://cloud.google.com/sql/docs/mysql/flags',
@@ -56,16 +57,16 @@ module.exports = {
                 if (sqlInstance.settings &&
                     sqlInstance.settings.databaseFlags &&
                     sqlInstance.settings.databaseFlags.length) {
-                        let found = sqlInstance.settings.databaseFlags.find(flag => flag.name && flag.name == 'slow_query_log' &&
+                    let found = sqlInstance.settings.databaseFlags.find(flag => flag.name && flag.name == 'slow_query_log' &&
                                                                         flag.value && flag.value == 'on');
 
-                        if (found) {
-                            helpers.addResult(results, 0, 
-                                'SQL instance has slow query log flag enabled', region, resource);
-                        } else {
-                            helpers.addResult(results, 2,
-                                'SQL instance has slow query log flag disabled', region, resource);
-                        }
+                    if (found) {
+                        helpers.addResult(results, 0, 
+                            'SQL instance has slow query log flag enabled', region, resource);
+                    } else {
+                        helpers.addResult(results, 2,
+                            'SQL instance has slow query log flag disabled', region, resource);
+                    }
                 } else {
                     helpers.addResult(results, 2, 
                         'SQL instance has slow query log flag disabled', region, resource);
@@ -78,4 +79,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

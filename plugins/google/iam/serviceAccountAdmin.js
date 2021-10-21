@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Service Account Admin',
     category: 'IAM',
+    domain: 'Identity and Access Management',
     description: 'Ensures that user managed service accounts do not have any admin, owner, or write privileges.',
     more_info: 'Service accounts are primarily used for API access to Google. It is recommended to not use admin access for service accounts.',
     link: 'https://cloud.google.com/iam/docs/overview',
@@ -42,46 +43,49 @@ module.exports = {
             var serviceAccountObj = {};
             var iamPolicy = iamPolicies.data[0];
 
-            iamPolicy.bindings.forEach(roleBinding => {
-                if (roleBinding.role) {
-                    var role = roleBinding.role.split('.');
-                    if (role.length > 1) {
-                        role = role[1];
+            if (iamPolicy && iamPolicy.bindings && iamPolicy.bindings.length) {
+                iamPolicy.bindings.forEach(roleBinding => {
+                    if (roleBinding.role) {
+                        var role = roleBinding.role.split('.');
+                        if (role.length > 1) {
+                            role = role[1];
+                        }
+                        if (roleBinding.members && roleBinding.members.length) {
+                            if (role === 'admin') {
+                                roleBinding.members.forEach(member => {
+                                    var memberStrArr = member.split('@');
+                                    if (memberStrArr[1] === serviceAccountCheck) {
+                                        if (!serviceAccountObj[member]) {
+                                            serviceAccountObj[member] = [];
+                                        }
+                                        serviceAccountObj[member].push(roleBinding.role);
+                                    }
+                                });
+                            } else if (roleBinding.role === 'roles/editor') {
+                                roleBinding.members.forEach(member => {
+                                    var memberStrArr = member.split('@');
+                                    if (memberStrArr[1] === serviceAccountCheck) {
+                                        if (!serviceAccountObj[member]) {
+                                            serviceAccountObj[member] = [];
+                                        }
+                                        serviceAccountObj[member].push('editor');
+                                    }
+                                });
+                            } else if (roleBinding.role === 'roles/owner') {
+                                roleBinding.members.forEach(member => {
+                                    var memberStrArr = member.split('@');
+                                    if (memberStrArr[1] === serviceAccountCheck) {
+                                        if (!serviceAccountObj[member]) {
+                                            serviceAccountObj[member] = [];
+                                        }
+                                        serviceAccountObj[member].push('owner');
+                                    }
+                                });
+                            }
+                        }
                     }
-                    if (role === 'admin') {
-                        roleBinding.members.forEach(member => {
-                            var memberStrArr = member.split('@');
-                            if (memberStrArr[1] === serviceAccountCheck) {
-                                if (!serviceAccountObj[member]) {
-                                    serviceAccountObj[member] = [];
-                                }
-                                serviceAccountObj[member].push(roleBinding.role)
-
-                            }
-                        })
-                    } else if (roleBinding.role === 'roles/editor') {
-                        roleBinding.members.forEach(member => {
-                            var memberStrArr = member.split('@');
-                            if (memberStrArr[1] === serviceAccountCheck) {
-                                if (!serviceAccountObj[member]) {
-                                    serviceAccountObj[member] = [];
-                                }
-                                serviceAccountObj[member].push('editor')
-                            }
-                        })
-                    } else if (roleBinding.role === 'roles/owner') {
-                        roleBinding.members.forEach(member => {
-                            var memberStrArr = member.split('@');
-                            if (memberStrArr[1] === serviceAccountCheck) {
-                                if (!serviceAccountObj[member]) {
-                                    serviceAccountObj[member] = [];
-                                }
-                                serviceAccountObj[member].push('owner')
-                            }
-                        })
-                    }
-                }
-            });
+                });
+            }
 
             if (!Object.keys(serviceAccountObj).length) {
                 helpers.addResult(results, 0, 'All service accounts have least access', region);
