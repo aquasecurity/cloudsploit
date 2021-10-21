@@ -11,9 +11,12 @@ const encryptionLevelMap = {
 };
 
 function statementTargetsAction(statement, targetAction) {
-    return Array.isArray(statement.Action)
+    	console.log(statement)
+	console.log(targetAction)
+	return Array.isArray(statement.Action)
         ? statement.Action.find(action => minimatch(targetAction, action))
-        : minimatch(targetAction, statement.Action);
+        : minimatch(targetAction, statement.Action || '');
+	
 }
 
 /**
