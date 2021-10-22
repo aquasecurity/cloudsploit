@@ -121,7 +121,7 @@ describe('openCustomPorts', function () {
                 [firewalls[1]],
                 null
             );
-            plugin.run(cache, {restricted_open_ports: 'tcp:20-80'}, callback);
+            plugin.run(cache, {restricted_open_ports: 'tcp:22'}, callback);
         });
     })
 });
