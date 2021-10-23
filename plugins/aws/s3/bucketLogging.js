@@ -18,18 +18,6 @@ module.exports = {
         pci: 'PCI requires logging of all network access to environments containing ' +
              'cardholder data. Enable S3 bucket access logs to log these network requests.'
     },
-    asl: {
-        conditions: [
-            {
-                service: 's3',
-                api: 'getBucketLogging',
-                property: 'LoggingEnabled',
-                transform: 'STRING',
-                op: 'EQ',
-                value: 'true'
-            }
-        ]
-    },
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
