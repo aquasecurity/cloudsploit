@@ -831,7 +831,28 @@ module.exports = {
         'instanceNodeCount'             : require(__dirname + '/plugins/google/spanner/instanceNodeCount.js'),
 
         'httpTriggerRequireHttps'       : require(__dirname + '/plugins/google/cloudfunctions/httpTriggerRequireHttps.js'),
-        'ingressAllTrafficDisabled'     : require(__dirname + '/plugins/google/cloudfunctions/ingressAllTrafficDisabled.js')
+        'ingressAllTrafficDisabled'     : require(__dirname + '/plugins/google/cloudfunctions/ingressAllTrafficDisabled.js'),
+
+        'computeAllowedExternalIPs'     : require(__dirname + '/plugins/google/cloudresourcemanager/computeAllowedExternalIPs.js'),
+        'disableAutomaticIAMGrants'     : require(__dirname + '/plugins/google/cloudresourcemanager/disableAutomaticIAMGrants.js'),
+        'disableGuestAttributes'        : require(__dirname + '/plugins/google/cloudresourcemanager/disableGuestAttributes.js'),
+        'disableSerialPortAccess'       : require(__dirname + '/plugins/google/cloudresourcemanager/disableSerialPortAccess.js'),
+        'disableKeyCreation'            : require(__dirname + '/plugins/google/cloudresourcemanager/disableKeyCreation.js'),
+        'disableKeyUpload'              : require(__dirname + '/plugins/google/cloudresourcemanager/disableKeyUpload.js'),
+        'disableIdentityClusterCreation': require(__dirname + '/plugins/google/cloudresourcemanager/disableIdentityClusterCreation.js'),
+        'detailedAuditLoggingMode'      : require(__dirname + '/plugins/google/cloudresourcemanager/detailedAuditLoggingMode.js'),
+        'uniformBucketLevelAccess'      : require(__dirname + '/plugins/google/cloudresourcemanager/uniformBucketLevelAccess.js'),
+        'requireOsLogin'                : require(__dirname + '/plugins/google/cloudresourcemanager/requireOsLogin.js'),
+        'restrictAuthorizedNetworks'    : require(__dirname + '/plugins/google/cloudresourcemanager/restrictAuthorizedNetworks.js'),
+        'disableDefaultEncryption'      : require(__dirname + '/plugins/google/cloudresourcemanager/disableDefaultEncryption.js'),
+        'restrictLoadBalancerCreation'  : require(__dirname + '/plugins/google/cloudresourcemanager/restrictLoadBalancerCreation.js'),
+        'restrictSharedVPCSubnetworks'  : require(__dirname + '/plugins/google/cloudresourcemanager/restrictSharedVPCSubnetworks.js'),
+        'restrictVPCPeering'            : require(__dirname + '/plugins/google/cloudresourcemanager/restrictVPCPeering.js'),
+        'restrictVPNPeerIPs'            : require(__dirname + '/plugins/google/cloudresourcemanager/restrictVPNPeerIPs.js'),
+        'disableVMIPForwarding'         : require(__dirname + '/plugins/google/cloudresourcemanager/disableVMIPForwarding.js'),
+        'trustedImageProjects'          : require(__dirname + '/plugins/google/cloudresourcemanager/trustedImageProjects.js'),
+        'skipDefaultNetworkCreation'    : require(__dirname + '/plugins/google/cloudresourcemanager/skipDefaultNetworkCreation.js'),
+        'locationBasedRestriction'      : require(__dirname + '/plugins/google/cloudresourcemanager/locationBasedRestriction.js')
     },
     alibaba: {
         'passwordMinLength'             : require(__dirname + '/plugins/alibaba/ram/passwordMinLength.js'),
