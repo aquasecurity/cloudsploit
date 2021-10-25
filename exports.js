@@ -722,6 +722,7 @@ module.exports = {
         'instanceDesiredMachineTypes'   : require(__dirname + '/plugins/google/compute/instanceDesiredMachineTypes.js'),
         'automaticRestartEnabled'       : require(__dirname + '/plugins/google/compute/automaticRestartEnabled.js'),
         'instanceTemplateMachineTypes'  : require(__dirname + '/plugins/google/compute/instanceTemplateMachineTypes.js'),
+        'persistentDisksAutoDelete'     : require(__dirname + '/plugins/google/compute/persistentDisksAutoDelete.js'),
         'VMDisksCMKEncrypted'           : require(__dirname + '/plugins/google/compute/VMDisksCMKEncrypted.js'),
         'instanceMaintenanceBehavior'   : require(__dirname + '/plugins/google/compute/instanceMaintenanceBehavior.js'),
         'instancePreemptibility'        : require(__dirname + '/plugins/google/compute/instancePreemptibility.js'),
@@ -906,8 +907,8 @@ module.exports = {
 
         'networkPolicyEnabled'          : require(__dirname + '/plugins/alibaba/ack/networkPolicyEnabled.js'),
 
-        'securityCenterEdition'         : require(__dirname + '/plugins/alibaba/securitycenter/securityCenterEdition.js')
-        'securityAgentInstalled'        : require(__dirname + '/plugins/alibaba/securitycenter/securityAgentInstalled.js')
+        'securityCenterEdition'         : require(__dirname + '/plugins/alibaba/securitycenter/securityCenterEdition.js'),
+        'securityAgentInstalled'        : require(__dirname + '/plugins/alibaba/securitycenter/securityAgentInstalled.js'),
         'securityNotificationsEnabled'  : require(__dirname + '/plugins/alibaba/securitycenter/securityNotificationsEnabled.js')
     }
 };
