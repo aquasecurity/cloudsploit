@@ -158,6 +158,10 @@ var calls = {
         DescribeNoticeConfig: {
             property: 'NoticeConfigList',
             apiVersion: '2018-12-03'
+        },
+        DescribeFieldStatistics: {
+            property: 'GroupedFields',
+            apiVersion: '2018-12-03',
         }
     }
 };
