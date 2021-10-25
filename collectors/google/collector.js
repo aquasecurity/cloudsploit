@@ -27,6 +27,13 @@ var calls = {
             location: 'zone'
         }
     },
+    images: {
+        list: {
+            api: 'compute',
+            version: 'v1',
+            location: null
+        }
+    },
     snapshots: {
         list: {
             api: 'compute',
@@ -274,6 +281,13 @@ var calls = {
             location: null,
             parent: 'organization'
         },
+    },
+    urlMaps: { // https://compute.googleapis.com/compute/v1/projects/{project}/global/urlMaps
+        list: {
+            api: 'compute',
+            version: 'v1',
+            location: 'global'
+        }
     }
 };
 

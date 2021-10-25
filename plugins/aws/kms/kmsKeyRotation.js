@@ -59,6 +59,7 @@ module.exports = {
                 return rcb();                
             }
 
+            var noCmks = true;
             listKeys.data.forEach(kmsKey => {
                 if (!kmsKey.KeyId) return;
 
@@ -117,11 +118,16 @@ module.exports = {
                     return;
                 }
 
+                noCmks = false;
                 var enabled = getKeyRotationStatus.data.KeyRotationEnabled;
                 var status = enabled ? 0 : 2;
 
                 helpers.addResult(results, status, `Key rotation is ${enabled ? '' : 'not'} enabled`, region, kmsKey.KeyArn);
             });
+
+            if (noCmks) {
+                helpers.addResult(results, 0, 'No customer-managed KMS keys found', region);
+            }
 
             rcb();
         }, function(){
