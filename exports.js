@@ -846,6 +846,7 @@ module.exports = {
         'passwordExpiry'                : require(__dirname + '/plugins/alibaba/ram/passwordExpiry.js'),
         'passwordBlockLogon'            : require(__dirname + '/plugins/alibaba/ram/passwordBlockLogon.js'),
         'ramPolicyAttachments'          : require(__dirname + '/plugins/alibaba/ram/ramPolicyAttachments.js'),
+        'ramAdminPolicy'                : require(__dirname + '/plugins/alibaba/ram/ramAdminPolicy.js'),
       
         'openSSH'                       : require(__dirname + '/plugins/alibaba/ecs/openSSH.js'),
         'openRDP'                       : require(__dirname + '/plugins/alibaba/ecs/openRDP.js'),
@@ -882,6 +883,9 @@ module.exports = {
         'ossBucketVersioning'           : require(__dirname + '/plugins/alibaba/oss/ossBucketVersioning.js'),
         'ossBucketTransferAcceleration' : require(__dirname + '/plugins/alibaba/oss/ossBucketTransferAcceleration.js'),
         'bucketCrossRegionReplication'  : require(__dirname + '/plugins/alibaba/oss/bucketCrossRegionReplication.js'),
+       
+        'ossBucketIpRestriction'        : require(__dirname + '/plugins/alibaba/oss/ossBucketIpRestriction.js'),
+        'ossBucketSecureTransport'      : require(__dirname + '/plugins/alibaba/oss/ossBucketSecureTransport.js'),
       
         'rdsLogDuration'                : require(__dirname + '/plugins/alibaba/rds/rdsLogDuration.js'),
         'rdsSslEncryptionEnabled'       : require(__dirname + '/plugins/alibaba/rds/rdsSslEncryptionEnabled.js'),
@@ -899,5 +903,7 @@ module.exports = {
         'networkPolicyEnabled'          : require(__dirname + '/plugins/alibaba/ack/networkPolicyEnabled.js'),
 
         'securityCenterEdition'         : require(__dirname + '/plugins/alibaba/securitycenter/securityCenterEdition.js')
+        'securityAgentInstalled'        : require(__dirname + '/plugins/alibaba/securitycenter/securityAgentInstalled.js')
+        'securityNotificationsEnabled'  : require(__dirname + '/plugins/alibaba/securitycenter/securityNotificationsEnabled.js')
     }
 };

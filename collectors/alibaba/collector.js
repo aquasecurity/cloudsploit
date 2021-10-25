@@ -303,6 +303,11 @@ var postcalls = [
                 reliesOnService: 'oss',
                 reliesOnCall: 'listBuckets',
                 override: true
+            },
+            getBucketPolicy: {
+                reliesOnService: 'oss',
+                reliesOnCall: 'listBuckets',
+                override: true
             }
         },
         ApiGateway: {
@@ -334,7 +339,7 @@ var collect = function(AlibabaConfig, settings, callback) {
 
             let callRegions = regions[serviceLower];
             let requestOption = {
-                timeout: 10000, //default 3000 ms
+                timeout: 300000, //default 3000 ms
                 method: callObj.method || 'POST'
             };
 
