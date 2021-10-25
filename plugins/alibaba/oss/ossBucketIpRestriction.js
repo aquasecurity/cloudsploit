@@ -56,7 +56,7 @@ module.exports = {
 
             let ipRestrictionInPlace = false;
             for (let statement of statements) {
-                if (statement.Principal && statement.Action && statement.Action && statement.Condition) {
+                if (statement.Principal && statement.Action && statement.Condition) {
                     if (statement.Condition.IpAddress) {
                         let conditionValue = statement.Condition.IpAddress[Object.keys(statement.Condition.IpAddress).find(key => key.toLowerCase() == 'acs:sourceip')];
                         if (conditionValue.length) {
