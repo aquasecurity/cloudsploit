@@ -883,6 +883,8 @@ module.exports = {
         'ossBucketVersioning'           : require(__dirname + '/plugins/alibaba/oss/ossBucketVersioning.js'),
         'ossBucketTransferAcceleration' : require(__dirname + '/plugins/alibaba/oss/ossBucketTransferAcceleration.js'),
         'bucketCrossRegionReplication'  : require(__dirname + '/plugins/alibaba/oss/bucketCrossRegionReplication.js'),
+       
+        'ossBucketIpRestriction'        : require(__dirname + '/plugins/alibaba/oss/ossBucketIpRestriction.js'),
         'ossBucketSecureTransport'      : require(__dirname + '/plugins/alibaba/oss/ossBucketSecureTransport.js'),
       
         'rdsLogDuration'                : require(__dirname + '/plugins/alibaba/rds/rdsLogDuration.js'),
