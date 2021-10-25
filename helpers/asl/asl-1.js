@@ -109,6 +109,9 @@ var compositeResult = function(inputResultsArr, resource, region, results, logic
 };
 
 var validate = function(condition, conditionResult, inputResultsArr, message, property, parsed) {
+    if (property.length){
+        property = property[property.length-1];
+    }
     if (parsed && typeof parsed === 'object' && parsed[property]) {
         condition.parsed = parsed[property];
     }
@@ -234,7 +237,7 @@ var runValidation = function(obj, condition, inputResultsArr, nestedResultArr) {
         let conditionResult = 0;
         let property;
         if (condition.property.length === 1) property = condition.property[0];
-        else if (condition.property.length > 1) property = condition.property;
+        else if (condition.property.length > 1) property = condition.property.slice(0);
         condition.parsed = parse(obj, condition.property)[0];
 
         if ((typeof condition.parsed !== 'boolean' && !condition.parsed)|| condition.parsed === 'not set'){
@@ -356,17 +359,25 @@ var runConditions = function(input, data, results, resourcePath, resourceName, r
                 newPath = dataToValidate[1];
                 newData = dataToValidate[0];
                 condition.property = newPath;
+                if (newData.length){
+                    newData.forEach(dataElm =>{
+                        condition.validated = runValidation(dataElm, condition, inputResultsArr);
+                        parsedResource = parse(dataElm, resourcePath)[0];
+                        if (typeof parsedResource !== 'string') parsedResource = resourceName;
+                    });
 
-                condition.validated = runValidation(newData, condition, inputResultsArr);
-                parsedResource = parse(newData, resourcePath)[0];
-                if (typeof parsedResource !== 'string') parsedResource = null;
+                } else {
+                    condition.validated = runValidation(newData, condition, inputResultsArr);
+                    parsedResource = parse(newData, resourcePath)[0];
+                    if (typeof parsedResource !== 'string') parsedResource = resourceName;
+                }
             }
         } else {
             dataToValidate = parse(data, condition.property);
             if (dataToValidate.length === 1) {
                 validated = runValidation(data, condition, inputResultsArr);
                 parsedResource = parse(data, resourcePath)[0];
-                if (typeof parsedResource !== 'string') parsedResource = null;
+                if (typeof parsedResource !== 'string') parsedResource = resourceName;
             } else {
                 newPath = dataToValidate[1];
                 newData = dataToValidate[0];
