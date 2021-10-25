@@ -58,7 +58,7 @@ module.exports = {
             for (let statement of statements) {
                 if (statement.Principal && statement.Principal.includes('*') &&
                     statement.Action && statement.Action.length &&
-                    statement.Condition && statement.Condition.Bool && statement.Condition.Bool) {
+                    statement.Condition && statement.Condition.Bool) {
                     let conditionValue = statement.Condition.Bool[Object.keys(statement.Condition.Bool).find(key => key.toLowerCase() == 'acs:securetransport')];
                     if (statement.Effect && statement.Effect.toUpperCase() == 'DENY' &&
                         conditionValue.find(boolValue => boolValue.toLowerCase() == 'false')) {
