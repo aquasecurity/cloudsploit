@@ -27,6 +27,13 @@ var calls = {
             location: 'zone'
         }
     },
+    images: {
+        list: {
+            api: 'compute',
+            version: 'v1',
+            location: null
+        }
+    },
     snapshots: {
         list: {
             api: 'compute',
