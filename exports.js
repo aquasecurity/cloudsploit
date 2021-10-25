@@ -897,6 +897,7 @@ module.exports = {
         'rdsTdeEnabled'                 : require(__dirname + '/plugins/alibaba/rds/rdsTdeEnabled.js'),
 
         'actiontrailGlobalExportLogs'   : require(__dirname + '/plugins/alibaba/actiontrail/actiontrailGlobalExportLogs.js'),
+        'actiontrailBucketPrivate'      : require(__dirname + '/plugins/alibaba/actiontrail/actiontrailBucketPrivate.js'),
     
         'apiProtocol'                   : require(__dirname + '/plugins/alibaba/apigateway/apiProtocol.js'),
 
