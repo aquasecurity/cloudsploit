@@ -3,7 +3,7 @@ var mqAutoMinorVersionUpgrade = require('./mqAutoMinorVersionUpgrade');
 
 const listBrokers = [
     {
-        BrokerArn: 'arn:aws:mq:us-east-1:560213429563:broker:myBr1:b-943d9442-2bd9-4caa-b1fb-882451bcbb39',
+        BrokerArn: 'arn:aws:mq:us-east-1:000111222333:broker:myBr1:b-943d9442-2bd9-4caa-b1fb-882451bcbb39',
         BrokerId: 'b-943d9442-2bd9-4caa-b1fb-882451bcbb39',
         BrokerName: 'myBr1',
         BrokerState: 'RUNNING',
@@ -18,7 +18,7 @@ const describeBroker = [
     {
         "AuthenticationStrategy": 'simple',
         "AutoMinorVersionUpgrade": true,
-        "BrokerArn": 'arn:aws:mq:us-east-1:560213429563:broker:MyBroker12:b-127b45ef-fa90-40f4-bf8b-5a7c19b66cad',
+        "BrokerArn": 'arn:aws:mq:us-east-1:000111222333:broker:MyBroker12:b-127b45ef-fa90-40f4-bf8b-5a7c19b66cad',
         "BrokerId": 'b-127b45ef-fa90-40f4-bf8b-5a7c19b66cad',
         "BrokerInstances": [
             {
@@ -33,7 +33,7 @@ const describeBroker = [
     {
         "AuthenticationStrategy": 'simple',
         "AutoMinorVersionUpgrade": false,
-        "BrokerArn": 'arn:aws:mq:us-east-1:560213429563:broker:MyBroker12:b-127b45ef-fa90-40f4-bf8b-5a7c19b66cad',
+        "BrokerArn": 'arn:aws:mq:us-east-1:000111222333:broker:MyBroker12:b-127b45ef-fa90-40f4-bf8b-5a7c19b66cad',
         "BrokerId": 'b-127b45ef-fa90-40f4-bf8b-5a7c19b66cad',
         "BrokerInstances": [
             {

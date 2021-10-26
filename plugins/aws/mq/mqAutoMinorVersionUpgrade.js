@@ -17,8 +17,7 @@ module.exports = {
 
         async.each(regions.mq, function(region, rcb){        
             var listBrokers = helpers.addSource(cache, source,
-                ['mq', 'listBrokers', region]);
-            
+                ['mq', 'listBrokers', region]);           
 
             if (!listBrokers) return rcb();
 
@@ -33,17 +32,14 @@ module.exports = {
                 return rcb();
             }
             
-
             for (let broker of listBrokers.data) {
               
                 if (!broker.BrokerArn) continue;
                
-
                 let resource = broker.BrokerArn;
                 var describeBroker = helpers.addSource(cache, source,
                     ['mq', 'describeBroker', region, broker.BrokerId]);
                 
-                  
                 if (!describeBroker || describeBroker.err || !describeBroker.data) {
                     helpers.addResult(results, 3,
                         `Unable to get brokers description: ${helpers.addError(describeBroker)}`,
