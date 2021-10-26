@@ -51,9 +51,11 @@ module.exports = {
     all_regions: regions,
     zones: zones,
     disks: regions,
+    images: ['global'],
     keyRings: ['global', ...regions],
     cryptoKeys: ['global', ...regions],
     securityPolicies: ['global'],
+    resourcePolicies: regions,
     snapshots: ['global'],
     images: ['global'],
     firewalls: ['global'],
@@ -92,5 +94,6 @@ module.exports = {
     subscriptions: ['global'],
     jobs: regions,
     organizations: ['global'],
-    deployments: ['global']
+    deployments: ['global'],
+    urlMaps: ['global'],
 };
