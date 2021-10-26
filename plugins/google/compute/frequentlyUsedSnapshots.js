@@ -76,6 +76,7 @@ module.exports = {
             helpers.addResult(results, 0, 'Nothing to check', 'global', project);
             return callback(null, results, source);
         }
+
         let snapshotsWithImages = [];
         let snapshotsWithoutImages = [];
 
