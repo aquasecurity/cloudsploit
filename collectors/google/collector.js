@@ -41,13 +41,6 @@ var calls = {
             location: null,
         }
     },
-    images: {
-        list: {
-            api: 'compute',
-            version: 'v1',
-            location: null,
-        }
-    },
     securityPolicies: {
         list: {
             api: 'compute',

@@ -57,7 +57,6 @@ module.exports = {
     securityPolicies: ['global'],
     resourcePolicies: regions,
     snapshots: ['global'],
-    images: ['global'],
     firewalls: ['global'],
     buckets: ['global'],
     instances: {
