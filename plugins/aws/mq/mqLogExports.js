@@ -34,9 +34,7 @@ module.exports = {
                 return rcb();
             }
             for (let broker of listBrokers.data) {
-              
                 if (!broker.BrokerArn) continue;
-               
 
                 let resource = broker.BrokerArn;
                 var describeBroker = helpers.addSource(cache, source,
