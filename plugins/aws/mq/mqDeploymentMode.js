@@ -18,7 +18,6 @@ module.exports = {
         async.each(regions.mq, function(region, rcb){        
             var listBrokers = helpers.addSource(cache, source,
                 ['mq', 'listBrokers', region]);
-            
 
             if (!listBrokers) return rcb();
 
@@ -33,30 +32,25 @@ module.exports = {
                 return rcb();
             }
             
-
             for (let broker of listBrokers.data) {
-              
                 if (!broker.BrokerArn) continue;
                
-
                 let resource = broker.BrokerArn;
                 var describeBroker = helpers.addSource(cache, source,
                     ['mq', 'describeBroker', region, broker.BrokerId]);
-                    console.log(describeBroker.data);
-                
+                console.log(describeBroker.data);
                   
                 if (!describeBroker || describeBroker.err || !describeBroker.data) {
                     helpers.addResult(results, 3,
                         `Unable to get brokers description: ${helpers.addError(describeBroker)}`,
                         region, resource);
-                } else {
-                    
+                } else {   
                     if (describeBroker.data.DeploymentMode === "ACTIVE_STANDBY_MULTI_AZ") {
                         helpers.addResult(results, 0, 'Broker has active/standby deployment mode enabled',
-                        region, resource);
+                            region, resource);
                     } else {
                         helpers.addResult(results, 2, 'Broker does not have active/standby deployment mode enabled',
-                        region, resource);
+                            region, resource);
                     }
                 }
             }
