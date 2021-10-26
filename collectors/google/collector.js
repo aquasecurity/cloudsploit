@@ -48,6 +48,13 @@ var calls = {
             location: 'global'
         }
     },
+    resourcePolicies: {
+        list: {
+            api: 'compute',
+            version: 'v1',
+            location: 'region'
+        }
+    },
     firewalls: {
         list: {
             api: 'compute',
@@ -274,6 +281,13 @@ var calls = {
             location: null,
             parent: 'organization'
         },
+    },
+    urlMaps: { // https://compute.googleapis.com/compute/v1/projects/{project}/global/urlMaps
+        list: {
+            api: 'compute',
+            version: 'v1',
+            location: 'global'
+        }
     }
 };
 
