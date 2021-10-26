@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'PostgreSQL Max Connections',
     category: 'SQL',
+    domain: 'Databases',
     description: 'Ensure that max_connections is configured with optimal value for PostgreSQL instances.',
     more_info: 'An optimal value should be set for max_connections (maximum number of client connections) to meet the database workload requirements. ' +
         'If this no value is set for max_connections flag, instance assumes default value which is calculated per instance memory size.',
@@ -69,7 +70,7 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
-                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() == "READ_REPLICA_INSTANCE") return;
+                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() == 'READ_REPLICA_INSTANCE') return;
 
                 let resource = helpers.createResourceName('instances', sqlInstance.name, project);
 
@@ -107,4 +108,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

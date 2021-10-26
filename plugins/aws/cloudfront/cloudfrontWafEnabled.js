@@ -31,20 +31,18 @@ module.exports = {
             helpers.addResult(results, 0, 'No CloudFront distributions found');
             return callback(null, results, source);
         }
-        var badFlag = false;
+
         // loop through Instances for every reservation
         listDistributions.data.forEach(distribution => {
             if (!distribution.WebACLId ||
                 distribution.WebACLId === '') {
                 helpers.addResult(results, 2,
                     'The Cloudfront Distribution does not have WAF enabled', 'global', distribution.ARN);
-                badFlag = true;
+            } else {
+                helpers.addResult(results, 0,
+                    'The Cloudfront Distribution has WAF enabled', 'global', distribution.ARN);
             }
         });
-
-        if (!badFlag) {
-            helpers.addResult(results, 0, 'All CloudFront distributions have WAF enabled', 'global');
-        }
 
         return callback(null, results, source);
     }

@@ -20,6 +20,7 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
+        var regions = helpers.regions();
 
         let projects = helpers.addSource(cache, source,
             ['projects', 'get', 'global']);
@@ -44,72 +45,78 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        let disksLocation = Object.keys(disks.data);
-
-
-        disksLocation.forEach(location => {
-            let disksInLocation = disks.data[location];
-
-            var noDisks = false;
-            var goodDisks = [];
+        regions.all_regions.forEach(region => {
+            var noDisks = [];
+            var zones = regions.zones;
             var badDisks = [];
+            var goodDisks = [];
+            let disksInRegion = [];
+            let regionData = disks.data[`regions/${region}`];
 
-            if (!disksInLocation || disksInLocation.warning || !disksInLocation.disks || !disksInLocation.disks.length) {
-                noDisks = true;
-            } else {
-                disksInLocation.disks.forEach(disk => {
-                    if (!disk.id || !disk.creationTimestamp) return;
-
-                    if (disk && disk.replicaZones && disk.replicaZones.length) {
-                        goodDisks.push(disk.name);
-                    } else {
-                        badDisks.push(disk.name);
-                    }
-                });
+            if (regionData && regionData['disks'] && regionData['disks'].length) {
+                disksInRegion = disks.data[`regions/${region}`].disks.map(disk => { return {...disk, locationType: 'region', location: region};});
             }
-            if (!goodDisks.length && !badDisks.length) noDisks = true;
+        
+            zones[region].forEach(zone => {
+                let disksInZone = [];
+                let zoneData = disks.data[`zones/${zone}`];
+               
+                if (zoneData && zoneData['disks'] && zoneData['disks'].length) {
+                    disksInZone = disks.data[`zones/${zone}`].disks.map(disk => { return {...disk, locationType: 'zone', location: zone};});
+                }
+
+                if (!disksInZone.length) {
+                    noDisks.push(zone);
+                }
+
+                disksInRegion = disksInRegion.concat(disksInZone);
+            });
+
+            disksInRegion.forEach(disk => {
+                if (!disk.id || !disk.creationTimestamp) return;
+        
+                if (disk && disk.replicaZones && disk.replicaZones.length) {
+                    goodDisks.push(disk);
+                } else {
+                    badDisks.push(disk);
+                }
+            });
 
             if (badDisks.length) {
                 if (badDisks.length > disk_result_limit) {
                     helpers.addResult(results, 2,
-                        `Regional Disk Replication is not enabled for ${badDisks.length} disks`, location);
+                        `Regional Disk Replication is not enabled for ${badDisks.length} disks`, region);
                 } else {
                     badDisks.forEach(disk => {
-                        let resource;
-                        if (location.includes('zone')) {
-                            resource = helpers.createResourceName('disks', disk, project, 'zone', location.split('/')[1]);
-                        } else {
-                            resource = helpers.createResourceName('disks', disk, project, location.split('/')[1]);
-                        }
+                        let resource = helpers.createResourceName('disks', disk.name, project, disk.locationType, disk.location);
                         helpers.addResult(results, 2,
-                            'Regional Disk Replication is not enabled for disk', location, resource);
+                            'Regional Disk Replication is not enabled for disk', disk.location, resource);
                     });
                 }
             }
-
+        
             if (goodDisks.length) {
                 if (goodDisks.length > disk_result_limit) {
                     helpers.addResult(results, 0,
-                        `Regional Disk Replication is enabled for ${goodDisks.length} disks`, location);
+                        `Regional Disk Replication is enabled for ${goodDisks.length} disks`, region);
                 } else {
                     goodDisks.forEach(disk => {
-                        let resource;
-                        if (location.includes('zone')) {
-                            resource = helpers.createResourceName('disks', disk, project, 'zone', location.split('/')[1]);
-                        } else {
-                            resource = helpers.createResourceName('disks', disk, project, location.split('/')[1]);
-                        }
+                        let resource = helpers.createResourceName('disks', disk.name, project, disk.locationType, disk.location);
                         helpers.addResult(results, 0,
-                            'Regional Disk Replication is enabled for disk', location, resource);
+                            'Regional Disk Replication is enabled for disk', disk.location, resource);
                     });
                 }
-            }
+            } 
 
-            if (noDisks) {
-                helpers.addResult(results, 0, 'No disks found', location, project);
+            if (noDisks.length) {
+                if (!goodDisks.length && !badDisks.length) {
+                    helpers.addResult(results, 0, 'No compute disks found in the region', region);
+                } else {
+                    helpers.addResult(results, 0, `No compute disks found in following zones: ${noDisks.join(', ')}`, region);
+                }
             }
         });
         callback(null, results, source);
-
     }
 };
+

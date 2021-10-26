@@ -43,16 +43,16 @@ describe('diskMultiAz', function () {
 
         it('should pass if No compute disks found', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.equal(1);
+                expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No disks found');
-                expect(results[0].region).to.equal('regions/us-central1');
+                expect(results[0].message).to.include('No compute disks found');
+                expect(results[0].region).to.equal('us-east1');
                 done()
             };
 
             const cache = createCache(
                 {
-                    "regions/us-central1": {
+                    "regions/us-east1": {
                         "warning": {
                             "code": "NO_RESULTS_ON_PAGE",
                             "message": "There are no results for scope 'regions/us-central1' on this page.",
@@ -76,31 +76,30 @@ describe('diskMultiAz', function () {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('is not enabled');
-                expect(results[0].region).to.equal('zones/us-central1-a');
+                expect(results[0].region).to.equal('us-east1');
                 done()
             };
 
             const cache = createCache(
                 {
-                    "zones/us-central1-a": {
+                    "regions/us-east1": {
                         "disks": [
-                          {
-                            "id": "1111111",
-                            "creationTimestamp": "2021-09-23T13:26:18.565-07:00",
-                            "name": "disk-2",
-                            "sizeGb": "10",
-                            "zone": "https://www.googleapis.com/compute/v1/projects/my-test-project/zones/us-central1-a",
-                            "status": "READY",
-                            "selfLink": "https://www.googleapis.com/compute/v1/projects/my-test-project/zones/us-central1-a/disks/disk-2",
-                            "type": "https://www.googleapis.com/compute/v1/projects/my-test-project/zones/us-central1-a/diskTypes/pd-balanced",
-                            "labelFingerprint": "42WmSpB8rSM=",
-                            "physicalBlockSizeBytes": "4096",
-                            "kind": "compute#disk"
-                          }
+                            {
+                                "id": "1111111",
+                                "creationTimestamp": "2021-09-23T12:58:54.065-07:00",
+                                "name": "disk-1",
+                                "sizeGb": "10",
+                                "status": "READY",
+                                "selfLink": "https://www.googleapis.com/compute/v1/projects/my-test-project/regions/us-east1/disks/disk-1",
+                                "type": "https://www.googleapis.com/compute/v1/projects/my-test-project/regions/us-east1/diskTypes/pd-balanced",
+                                "labelFingerprint": "42WmSpB8rSM=",
+                                "region": "https://www.googleapis.com/compute/v1/projects/my-test-project/regions/us-east1",
+                                "physicalBlockSizeBytes": "4096",
+                                "kind": "compute#disk"
+                            }
                         ]
-                      }
-                },
-                null
+                    },
+                }
             );
 
             plugin.run(cache, {}, callback);
@@ -111,13 +110,13 @@ describe('diskMultiAz', function () {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('is enabled for');
-                expect(results[0].region).to.equal('regions/us-central1');
+                expect(results[0].region).to.equal('us-east1');
                 done()
             };
 
             const cache = createCache(
                 {
-                    "regions/us-central1": {
+                    "regions/us-east1": {
                         "disks": [
                             {
                                 "id": "1111111",
@@ -125,13 +124,13 @@ describe('diskMultiAz', function () {
                                 "name": "disk-1",
                                 "sizeGb": "10",
                                 "status": "READY",
-                                "selfLink": "https://www.googleapis.com/compute/v1/projects/my-test-project/regions/us-central1/disks/disk-1",
-                                "type": "https://www.googleapis.com/compute/v1/projects/my-test-project/regions/us-central1/diskTypes/pd-balanced",
+                                "selfLink": "https://www.googleapis.com/compute/v1/projects/my-test-project/regions/us-east1/disks/disk-1",
+                                "type": "https://www.googleapis.com/compute/v1/projects/my-test-project/regions/us-east1/diskTypes/pd-balanced",
                                 "labelFingerprint": "42WmSpB8rSM=",
-                                "region": "https://www.googleapis.com/compute/v1/projects/my-test-project/regions/us-central1",
+                                "region": "https://www.googleapis.com/compute/v1/projects/my-test-project/regions/us-east1",
                                 "replicaZones": [
-                                    "https://www.googleapis.com/compute/v1/projects/my-test-project/zones/us-central1-a",
-                                    "https://www.googleapis.com/compute/v1/projects/my-test-project/zones/us-central1-c"
+                                    "https://www.googleapis.com/compute/v1/projects/my-test-project/zones/us-east1-a",
+                                    "https://www.googleapis.com/compute/v1/projects/my-test-project/zones/us-east1-c"
                                 ],
                                 "physicalBlockSizeBytes": "4096",
                                 "kind": "compute#disk"
