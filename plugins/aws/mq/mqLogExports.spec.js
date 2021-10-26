@@ -1,9 +1,9 @@
 const expect = require('chai').expect;
-var mqAutoMinorVersionUpgrade = require('./mqLogExports');
+var mqLogExports = require('./mqLogExports');
 
 const listBrokers = [
     {
-        BrokerArn: 'arn:aws:mq:us-east-1:560213429563:broker:myBr1:b-5bf97c6e-1ce8-48da-9200-ecd32b861be9',
+        BrokerArn: 'arn:aws:mq:us-east-1:000111222333:broker:myBr1:b-5bf97c6e-1ce8-48da-9200-ecd32b861be9',
         BrokerId: 'b-5bf97c6e-1ce8-48da-9200-ecd32b861be9',
         BrokerName: 'myBr1',
         BrokerState: 'RUNNING',
@@ -18,7 +18,7 @@ const describeBroker = [
     {
         "AuthenticationStrategy": 'simple',
         "AutoMinorVersionUpgrade": true,
-        "BrokerArn": 'arn:aws:mq:us-east-1:560213429563:broker:MyBroker12:b-127b45ef-fa90-40f4-bf8b-5a7c19b66cad',
+        "BrokerArn": 'arn:aws:mq:us-east-1:000111222333:broker:MyBroker12:b-127b45ef-fa90-40f4-bf8b-5a7c19b66cad',
         "BrokerId": 'b-127b45ef-fa90-40f4-bf8b-5a7c19b66cad',
         "BrokerInstances": [
             {
@@ -39,7 +39,7 @@ const describeBroker = [
     {
         "AuthenticationStrategy": 'simple',
         "AutoMinorVersionUpgrade": false,
-        "BrokerArn": 'arn:aws:mq:us-east-1:560213429563:broker:MyBroker12:b-127b45ef-fa90-40f4-bf8b-5a7c19b66cad',
+        "BrokerArn": 'arn:aws:mq:us-east-1:000111222333:broker:MyBroker12:b-127b45ef-fa90-40f4-bf8b-5a7c19b66cad',
         "BrokerId": 'b-127b45ef-fa90-40f4-bf8b-5a7c19b66cad',
         "BrokerInstances": [
             {
@@ -92,12 +92,12 @@ const createNullCache = () => {
 };
 
 
-describe('mqAutoMinorVersionUpgrade', function () {
+describe('mqLogExports', function () {
     describe('run', function () {
 
         it('should PASS if MQ Log Exports Feature enabled', function (done) {
             const cache = createCache(listBrokers, describeBroker[0]);
-            mqAutoMinorVersionUpgrade.run(cache, {}, (err, results) => {
+            mqLogExports.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -107,7 +107,7 @@ describe('mqAutoMinorVersionUpgrade', function () {
 
         it('should FAIL if MQ Log Exports Feature not enabled', function (done) {
             const cache = createCache(listBrokers, describeBroker[1]);
-            mqAutoMinorVersionUpgrade.run(cache, { }, (err, results) => {
+            mqLogExports.run(cache, { }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
@@ -117,7 +117,7 @@ describe('mqAutoMinorVersionUpgrade', function () {
 
         it('should PASS if no MQ brokers found', function (done) {
             const cache = createCache([]);
-            mqAutoMinorVersionUpgrade.run(cache, {}, (err, results) => {
+            mqLogExports.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -127,7 +127,7 @@ describe('mqAutoMinorVersionUpgrade', function () {
 
         it('should UNKNOWN if unable to list MQ Brokers', function (done) {
             const cache = createCache(listBrokers, describeBroker[0], { message: 'error listing MQ brokers'});
-            mqAutoMinorVersionUpgrade.run(cache, {}, (err, results) => {
+            mqLogExports.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
@@ -137,7 +137,7 @@ describe('mqAutoMinorVersionUpgrade', function () {
 
         it('should not return anything if list of MQ brokers not found', function (done) {
             const cache = createNullCache();
-            mqAutoMinorVersionUpgrade.run(cache, {}, (err, results) => {
+            mqLogExports.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });
