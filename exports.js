@@ -722,6 +722,7 @@ module.exports = {
         'instanceDesiredMachineTypes'   : require(__dirname + '/plugins/google/compute/instanceDesiredMachineTypes.js'),
         'automaticRestartEnabled'       : require(__dirname + '/plugins/google/compute/automaticRestartEnabled.js'),
         'instanceTemplateMachineTypes'  : require(__dirname + '/plugins/google/compute/instanceTemplateMachineTypes.js'),
+        'diskMultiAz'                   : require(__dirname + '/plugins/google/compute/diskMultiAz.js'),
         'persistentDisksAutoDelete'     : require(__dirname + '/plugins/google/compute/persistentDisksAutoDelete.js'),
         'VMDisksCMKEncrypted'           : require(__dirname + '/plugins/google/compute/VMDisksCMKEncrypted.js'),
         'instanceMaintenanceBehavior'   : require(__dirname + '/plugins/google/compute/instanceMaintenanceBehavior.js'),
