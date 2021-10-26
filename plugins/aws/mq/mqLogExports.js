@@ -33,8 +33,6 @@ module.exports = {
                 helpers.addResult(results, 0, 'No MQ brokers found', region);
                 return rcb();
             }
-            
-
             for (let broker of listBrokers.data) {
               
                 if (!broker.BrokerArn) continue;
