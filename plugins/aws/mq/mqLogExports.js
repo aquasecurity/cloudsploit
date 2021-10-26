@@ -45,10 +45,10 @@ module.exports = {
                 } else {
                     if (describeBroker.data.Logs && (describeBroker.data.Logs.Audit || describeBroker.data.Logs.General)) {
                         helpers.addResult(results, 0, 'Broker has log exports feature enabled',
-                        region, resource);
+                            region, resource);
                     } else {
                         helpers.addResult(results, 2, 'Broker does not have log exports feature enabled',
-                        region, resource);
+                            region, resource);
                     }
                 }
             }
