@@ -18,8 +18,6 @@ module.exports = {
         async.each(regions.mq, function(region, rcb){        
             var listBrokers = helpers.addSource(cache, source,
                 ['mq', 'listBrokers', region]);
-                
-            
 
             if (!listBrokers) return rcb();
 
