@@ -10,7 +10,9 @@ module.exports = function(callKey, AlibabaConfig, collection, region, callback) 
         collection.oss[callKey][region][bucketName] = {};
 
         store[callKey](bucketName).then((result) => {
-            collection.oss[callKey][region][bucketName].data = result.bucket || result;
+            if (callKey == 'getBucketPolicy') collection.oss[callKey][region][bucketName].data = (result.policy)?
+                result.policy : result;
+            else collection.oss[callKey][region][bucketName].data = result.bucket || result;
             bcb();
         }, (err) => {
             collection.oss[callKey][region][bucketName].err = err;
