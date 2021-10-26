@@ -45,7 +45,7 @@ module.exports = {
                         `Unable to describe MQ broker: ${helpers.addError(describeBroker)}`,
                         region, resource);
                 } else {
-                    if (describeBroker.data.Logs.Audit || describeBroker.data.Logs.General) {
+                    if (describeBroker.data.Logs && (describeBroker.data.Logs.Audit || describeBroker.data.Logs.General)) {
                         helpers.addResult(results, 0, 'Broker has log exports feature enabled',
                         region, resource);
                     } else {
