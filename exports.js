@@ -333,8 +333,6 @@ module.exports = {
         'monitoringMetrics'             : require(__dirname + '/plugins/aws/cloudwatchlogs/monitoringMetrics.js'),
         
         'mqLogExports'                  : require(__dirname + '/plugins/aws/mq/mqLogExports.js'),
-        
-
         'logRetentionPeriod'            : require(__dirname + '/plugins/aws/cloudwatchlogs/logRetentionPeriod.js'),
 
         'auditLoggingEnabled'           : require(__dirname + '/plugins/aws/redshift/auditLoggingEnabled.js'),
