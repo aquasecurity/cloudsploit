@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Service Account Key Rotation',
     category: 'IAM',
+    domain: 'Identity and Access Management',
     description: 'Ensures that service account keys are rotated within 90 days of creation.',
     more_info: 'Service account keys should be rotated so older keys that that might have been lost or compromised cannot be used to access Google services.',
     link: 'https://cloud.google.com/iam/docs/creating-managing-service-account-keys',
@@ -32,18 +33,18 @@ module.exports = {
             if (keys.err || !keys.data) {
                 helpers.addResult(results, 3, 'Unable to query service account keys, check permissions.', region, null, null, keys.err);
                 return rcb();
-            };
+            }
 
             if (!keys.data.length) {
                 helpers.addResult(results, 0, 'No service account keys found', region);
                 return rcb();
             }
-            var keysNotRotated = [];
+
             keys.data.forEach(key => {
                 if (key.keyType &&
                     key.keyType === 'USER_MANAGED') {
                     var ninety_days = 90*24*60*60*1000;
-                    var validAfterTime = key.validAfterTime.split("T")[0];
+                    var validAfterTime = key.validAfterTime.split('T')[0];
 
                     var timeFromCreation = new Date().getTime() - new Date(validAfterTime).getTime();
                     timeFromCreation /= ninety_days;
@@ -63,4 +64,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

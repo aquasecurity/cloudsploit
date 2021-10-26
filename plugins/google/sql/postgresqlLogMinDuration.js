@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'PostgreSQL Log Min Duration Statement',
     category: 'SQL',
+    domain: 'Databases',
     description: 'Ensures SQL instances for PostgreSQL type have log min duration statement flag disabled.',
     more_info: 'SQL instance for PostgreSQL databases provides log_min_duration_statement flag. It is used to log the duration of every completed statement. This should always be disabled as there can be sensitive information as well that should not be recorded in the logs.',
     link: 'https://cloud.google.com/sql/docs/postgres/flags',
@@ -43,7 +44,7 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
-                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() === "READ_REPLICA_INSTANCE") return;
+                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() === 'READ_REPLICA_INSTANCE') return;
 
                 let resource = helpers.createResourceName('instances', sqlInstance.name, project);
                 
@@ -78,4 +79,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

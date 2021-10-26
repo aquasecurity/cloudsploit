@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'PostgreSQL Log Lock Waits Flag Enabled',
     category: 'SQL',
+    domain: 'Databases',
     description: 'Ensures SQL instances for PostgreSQL type have log_lock_waits flag enabled.',
     more_info: 'SQL instance for PostgreSQL database provides log_lock_waits flag. It is not enabled by default. Enabling it will make sure that log messages are generated whenever a session waits longer than deadlock_timeout to acquire a lock.',
     link: 'https://cloud.google.com/sql/docs/postgres/flags#config',
@@ -43,7 +44,7 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
-                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() === "READ_REPLICA_INSTANCE") return;
+                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() === 'READ_REPLICA_INSTANCE') return;
 
                 let resource = helpers.createResourceName('instances', sqlInstance.name, project);
 
@@ -78,4 +79,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

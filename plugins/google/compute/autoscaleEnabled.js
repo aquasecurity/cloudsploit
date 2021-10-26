@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Autoscale Enabled',
     category: 'Compute',
+    domain: 'Compute',
     description: 'Ensures instance groups have autoscale enabled for high availability',
     more_info: 'Enabling autoscale increases efficiency and improves cost management for resources.',
     link: 'https://cloud.google.com/compute/docs/autoscaler/',
@@ -18,7 +19,7 @@ module.exports = {
         let instanceGroupsObj = helpers.addSource(cache, source,
             ['instanceGroups', 'aggregatedList', ['global']]);
 
-        if (!instanceGroupsObj) return callback(null, results, source)
+        if (!instanceGroupsObj) return callback(null, results, source);
         
         if (instanceGroupsObj.err || !instanceGroupsObj.data) {
             helpers.addResult(results, 3, 'Unable to query instance groups', 'global', null, null, instanceGroupsObj.err);
@@ -48,7 +49,7 @@ module.exports = {
         async.each(instanceGroups, function(instanceGroupsInLocation, rcb) {
             instanceGroupsInLocation.instanceGroups.forEach(instanceGroup => {
                 if (instanceGroup.name) {
-                    instanceGroupURLObj[instanceGroup.name] = instanceGroup
+                    instanceGroupURLObj[instanceGroup.name] = instanceGroup;
                 }
             });
 
@@ -72,8 +73,8 @@ module.exports = {
                                 nodePool.instanceGroupUrls.length) {
                                 nodePool.instanceGroupUrls.forEach(instanceGroupUrl => {
                                     var instanceGroupUrlName = instanceGroupUrl.split('/')[10];
-                                    if (instanceGroupURLObj.hasOwnProperty(instanceGroupUrlName)) {
-                                        delete instanceGroupURLObj[instanceGroupUrlName]
+                                    if (instanceGroupURLObj[instanceGroupUrlName]) {
+                                        delete instanceGroupURLObj[instanceGroupUrlName];
                                     }
                                 });
                             }
@@ -97,8 +98,8 @@ module.exports = {
                 async.each(autoscalers, function(autoscalersInLocation, lcb) {
                     autoscalersInLocation.autoscalers.forEach(autoscaler => {
                         if (autoscaler.name) {
-                            if (instanceGroupURLObj.hasOwnProperty(autoscaler.name)) {
-                                delete instanceGroupURLObj[autoscaler.name]
+                            if (instanceGroupURLObj[autoscaler.name]) {
+                                delete instanceGroupURLObj[autoscaler.name];
                             }
                         }
                     });

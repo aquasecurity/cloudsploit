@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'DB Publicly Accessible',
     category: 'SQL',
+    domain: 'Databases',
     description: 'Ensures that SQL instances do not allow public access',
     more_info: 'Unless there is a specific business requirement, SQL instances should not have a public endpoint and should only be accessed from within a VPC.',
     link: 'https://cloud.google.com/sql/docs/mysql/authorize-networks',
@@ -53,23 +54,23 @@ module.exports = {
             }
             var myIpConfig = {};
             sqlInstances.data.forEach(sqlInstance => {
-                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() === "READ_REPLICA_INSTANCE") return;
+                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() === 'READ_REPLICA_INSTANCE') return;
 
                 let resource = helpers.createResourceName('instances', sqlInstance.name, project);
 
                 if (sqlInstance.settings &&
                     sqlInstance.settings.ipConfiguration) {
-                    myIpConfig = sqlInstance.settings.ipConfiguration
+                    myIpConfig = sqlInstance.settings.ipConfiguration;
                     if (myIpConfig.privateNetwork && !myIpConfig.ipv4Enabled) {
                         helpers.addResult(results, 0,
                             'SQL Instance is not publicly accessible', region, resource);
                     } else if (myIpConfig.ipv4Enabled &&
                         myIpConfig.authorizedNetworks) {
-                            var openNetwork = false;
-                            myIpConfig.authorizedNetworks.forEach(network => {
-                                if (network.value == '0.0.0.0/0') {
-                                    openNetwork = true;
-                                }
+                        var openNetwork = false;
+                        myIpConfig.authorizedNetworks.forEach(network => {
+                            if (network.value == '0.0.0.0/0') {
+                                openNetwork = true;
+                            }
                         });
                         if (openNetwork) {
                             helpers.addResult(results, 2,
@@ -83,7 +84,7 @@ module.exports = {
                         }
                     }
                 }
-            })
+            });
 
             rcb();
         }, function(){
@@ -91,4 +92,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};
