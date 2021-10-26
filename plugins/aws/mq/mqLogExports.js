@@ -42,7 +42,7 @@ module.exports = {
 
                 if (!describeBroker || describeBroker.err || !describeBroker.data) {
                     helpers.addResult(results, 3,
-                        `Unable to get brokers description: ${helpers.addError(describeBroker)}`,
+                        `Unable to describe MQ broker: ${helpers.addError(describeBroker)}`,
                         region, resource);
                 } else {
                     if (describeBroker.data.Logs.Audit || describeBroker.data.Logs.General) {
