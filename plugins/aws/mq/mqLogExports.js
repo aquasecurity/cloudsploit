@@ -39,9 +39,7 @@ module.exports = {
                 let resource = broker.BrokerArn;
                 var describeBroker = helpers.addSource(cache, source,
                     ['mq', 'describeBroker', region, broker.BrokerId]);  
-                    
-            
-                  
+
                 if (!describeBroker || describeBroker.err || !describeBroker.data) {
                     helpers.addResult(results, 3,
                         `Unable to get brokers description: ${helpers.addError(describeBroker)}`,
