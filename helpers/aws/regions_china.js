@@ -77,6 +77,5 @@ module.exports = {
     xray: regions,
     resourcegroupstaggingapi: regions,
     codestar: regions,
-    codebuild: regions,
-    mq: regions
+    codebuild: regions
 };
