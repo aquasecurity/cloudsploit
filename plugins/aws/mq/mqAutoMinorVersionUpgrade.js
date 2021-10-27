@@ -46,10 +46,10 @@ module.exports = {
                 } else {
                     if (describeBroker.data.AutoMinorVersionUpgrade) {
                         helpers.addResult(results, 0, 'Broker has auto minor version upgrade enabled',
-                        region, resource);
+                            region, resource);
                     } else {
                         helpers.addResult(results, 2, 'Broker does not have auto minor version upgrade enabled',
-                        region, resource);
+                            region, resource);
                     }
                 }
             }
