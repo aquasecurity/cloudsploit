@@ -16,7 +16,6 @@ module.exports = {
     
         var region = helpers.defaultRegion(settings);
 
-            
         var listUsers = helpers.addSource(cache, source,
             ['iam', 'listUsers', region]);
     
