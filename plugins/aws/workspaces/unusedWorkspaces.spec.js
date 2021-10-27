@@ -83,8 +83,5 @@ describe('unusedWorkspaces', function () {
                 done();
             });
         });
-
-       
-
     });
 });
