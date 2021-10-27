@@ -32,7 +32,7 @@ module.exports = {
             }
 
             if (!describeWorkspacesConnectionStatus.data.length) {   
-                helpers.addResult(results, 0, 'No WorkSpaces instance connection status found ', region);
+                helpers.addResult(results, 0, 'No WorkSpaces instance connection status found', region);
                 return rcb();
             }
             
