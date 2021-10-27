@@ -15,8 +15,7 @@ module.exports = {
         var source = {};
     
         var region = helpers.defaultRegion(settings);
-
-            
+        
         var listUsers = helpers.addSource(cache, source,
             ['iam', 'listUsers', region]);
     
@@ -31,7 +30,6 @@ module.exports = {
         if (!listUsers.data.length) {
             helpers.addResult(results, 2, 'No users found', 'global');
         } else {
-            console.log(listUsers.data);
             helpers.addResult(results, 0, `Found ${listUsers.data.length} users`, 'global');
         }
 

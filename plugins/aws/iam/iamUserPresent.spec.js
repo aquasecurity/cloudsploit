@@ -3,14 +3,13 @@ const iamUserPresent = require('./iamUserPresent.js');
 
 const listUsers = [
     {
-        UserName: 'sadeed',
+        UserName: 'test1',
         UserId: 'AIDAYE32SRU545SJ5O6AI',
-        Arn: 'arn:aws:iam::560213429563:user/sadeed',
+        Arn: 'arn:aws:iam::000111222333:user/test1',
         CreateDate: '2021-09-23T10:58:24.000Z',
         PasswordLastUsed: '2021-10-04T13:02:00.000Z',
         Tags: []
-  },
-    
+    }, 
     {
         Path: [],
         UserName: [],
@@ -19,12 +18,8 @@ const listUsers = [
         CreateDate: [],
         PasswordLastUsed: [],
         Tags: []
-      }
-    
+    }   
 ];
-
-
-
 
 const createCache = (listUsers) => {
     var usersName = (listUsers && listUsers.length) ? listUsers[0].usersName : null; 
@@ -75,9 +70,7 @@ describe('iamUserPresent', function () {
             });
         });
 
-       
-
-        it('should WARN  if no IAM  user(s) are present and root account is beig used', function (done) {
+        it('should FAIL if no IAM  user(s) are present and root account is being used', function (done) {
             const cache = createCache([listUsers[1]]);
             iamUserPresent.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -85,7 +78,6 @@ describe('iamUserPresent', function () {
                 done();
             });
         });
-
-        
+   
     });
 });
