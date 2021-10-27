@@ -10,12 +10,12 @@ module.exports = {
     recommended_action: 'Restrict TCP ports 2375 and 2376 to known IP addresses.',
     apis: ['firewalls:list', 'projects:get'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions();
 
-        async.each(regions.firewalls, function (region, rcb) {
+        async.each(regions.firewalls, function(region, rcb) {
             let firewalls = helpers.addSource(
                 cache, source, ['firewalls', 'list', region]);
 
@@ -40,9 +40,9 @@ module.exports = {
             helpers.findOpenPorts(firewalls.data, ports, service, region, results, cache, callback, source);
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });
     }
-}
+};

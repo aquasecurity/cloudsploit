@@ -51,10 +51,10 @@ module.exports = {
             var vpcUrl = '';
 
             networks.data.forEach(network => {
-               if (network.name == 'default') {
+                if (network.name == 'default') {
                     defVPC = true;
                     vpcUrl = network.selfLink;
-               }
+                }
             });
             if (!defVPC)  {
                 helpers.addResult(results, 0, 'No default VPC found', 'global');
@@ -65,7 +65,7 @@ module.exports = {
             async.each(regions.zones, function(location, icb){
                 location.forEach(loc => {
                     let instances = helpers.addSource(cache, source,
-                    ['instances', 'compute','list', loc]);
+                        ['instances', 'compute','list', loc]);
 
                     if (instances && instances.data && instances.data.length) {
                         instances.data.forEach(instance => {
@@ -94,4 +94,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

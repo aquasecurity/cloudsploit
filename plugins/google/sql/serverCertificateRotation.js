@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'SSL Certificate Rotation',
     category: 'SQL',
+    domain: 'Databases',
     description: 'Ensure that server certificates configured for Cloud SQL are rotated before they expire.',
     more_info: 'Server certificates configured for Cloud SQL DB instances should be rotated before they expire to ensure ' +
         'that incoming connections for database instance remain secure.',
@@ -56,7 +57,7 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
-                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() == "READ_REPLICA_INSTANCE") return;
+                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() == 'READ_REPLICA_INSTANCE') return;
 
                 let resource = helpers.createResourceName('instances', sqlInstance.name, project);
 
@@ -69,7 +70,7 @@ module.exports = {
                             `SQL instance SSL certificate will expire after ${difference} days`, region, resource);
                     } else if (difference < 0) {
                         helpers.addResult(results, 2,
-                            `SQL instance SSL certificate has already expired`, region, resource);
+                            'SQL instance SSL certificate has already expired', region, resource);
                     } else {
                         helpers.addResult(results, 2,
                             `SQL instance SSL certificate will expire after ${difference} days`, region, resource);
@@ -86,4 +87,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-} 
+}; 

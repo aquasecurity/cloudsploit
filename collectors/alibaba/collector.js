@@ -29,7 +29,9 @@ var regionEndpointMap = {
     kms: regions['kms'],
     rds: ['cn-zhangjiakou', 'cn-huhehaote', 'cn-chengdu', 'ap-southeast-2', 'ap-southeast-3', 'ap-southeast-5',
         'ap-northeast-1', 'ap-south-1', 'eu-central-1', 'eu-west-1', 'me-east-1'],
-    actiontrail: regions['actiontrail']
+    actiontrail: regions['actiontrail'],
+    apigateway: regions['apigateway'],
+    tds: ['ap-southeast-3', 'ap-southeast-1']
 };
 
 var globalServices = [
@@ -137,6 +139,32 @@ var calls = {
         DescribeTrails: {
             property: 'TrailList',
             apiVersion: '2020-07-06'
+        }
+    },
+    ApiGateway: {
+        DescribeApis: {
+            property: 'ApiSummarys',
+            subProperty: 'ApiSummary',
+            apiVersion: '2016-07-14',
+            paginate: 'Pages'
+        }
+    },
+    ACK: {
+        describeClustersV1: {
+            override: true
+        }
+    },
+    TDS: {
+        DescribeNoticeConfig: {
+            property: 'NoticeConfigList',
+            apiVersion: '2018-12-03'
+        },
+        DescribeFieldStatistics: {
+            property: 'GroupedFields',
+            apiVersion: '2018-12-03',
+        },
+        DescribeVersionConfig: {
+            apiVersion: '2018-12-03'
         }
     }
 };
@@ -266,10 +294,29 @@ var postcalls = [
                 reliesOnCall: 'listBuckets',
                 override: true
             },
+            getBucketLifecycle: {
+                reliesOnService: 'oss',
+                reliesOnCall: 'listBuckets',
+                override: true
+            },
             getBucketRequestPayment: {
                 reliesOnService: 'oss',
                 reliesOnCall: 'listBuckets',
                 override: true
+            },
+            getBucketPolicy: {
+                reliesOnService: 'oss',
+                reliesOnCall: 'listBuckets',
+                override: true
+            }
+        },
+        ApiGateway: {
+            DescribeApi: {
+                reliesOnService: 'apigateway',
+                reliesOnCall: 'DescribeApis',
+                filterKey: ['ApiId', 'GroupId'],
+                filterValue: ['ApiId', 'GroupId'],
+                apiVersion: '2016-07-14'
             }
         }
     }
@@ -292,7 +339,7 @@ var collect = function(AlibabaConfig, settings, callback) {
 
             let callRegions = regions[serviceLower];
             let requestOption = {
-                timeout: 10000, //default 3000 ms
+                timeout: 300000, //default 3000 ms
                 method: callObj.method || 'POST'
             };
 
@@ -328,7 +375,8 @@ var collect = function(AlibabaConfig, settings, callback) {
                         if (callObj.property && !data[callObj.property]) return regionCb();
                         if (callObj.subProperty && !data[callObj.property][callObj.subProperty]) return regionCb();
 
-                        var dataToAdd = callObj.subProperty ? data[callObj.property][callObj.subProperty] : data[callObj.property];
+                        var dataToAdd = callObj.subProperty ? data[callObj.property][callObj.subProperty] :
+                            callObj.property ? data[callObj.property] : data;
 
                         if (paginating) {
                             collection[serviceLower][callKey][region].data = collection[serviceLower][callKey][region].data.concat(dataToAdd);

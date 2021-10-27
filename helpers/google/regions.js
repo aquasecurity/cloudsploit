@@ -18,9 +18,9 @@ var regions = [
     'asia-southeast1',              // Singapore
     'asia-east1',                   // Taiwan
     'asia-east2',                   // Hong Kong
-    'asia-northeast1',               // Tokyo
-    'asia-northeast2',               // Osaka
-    'australia-southeast1',          // Sydney
+    'asia-northeast1',              // Tokyo
+    'asia-northeast2',              // Osaka
+    'australia-southeast1',         // Sydney
 ];
 
 var zones = {
@@ -50,16 +50,26 @@ var zones = {
 module.exports = {
     all_regions: regions,
     zones: zones,
-    disks: regions,
+    disks: ['global', ...regions],
+    images: ['global'],
     keyRings: ['global', ...regions],
     cryptoKeys: ['global', ...regions],
     securityPolicies: ['global'],
+    resourcePolicies: regions,
+    snapshots: ['global'],
     firewalls: ['global'],
     buckets: ['global'],
     instances: {
         compute: regions,
-        sql: ['global']
+        sql: ['global'],
+        spanner: ['global']
     },
+    functions: [
+        'us-east1', 'us-east4', 'us-west2', 'us-central1', 'northamerica-northeast1', 'southamerica-east1',
+        'europe-west1', 'europe-west2', 'europe-west3', 'europe-west6', 'asia-south1', 'asia-southeast1',
+        'asia-east1', 'asia-east2', 'asia-northeast1', 'asia-northeast2', 'australia-southeast1'
+    ],
+    instanceTemplates: ['global'],
     networks: ['global'],
     backendServices: ['global'],
     healthChecks: ['global'],
@@ -79,5 +89,10 @@ module.exports = {
     backupRuns: ['global'],
     datasets: ['global'],
     policies: ['global'],
-    topics: ['global']
+    topics: ['global'],
+    subscriptions: ['global'],
+    jobs: regions,
+    organizations: ['global'],
+    deployments: ['global'],
+    urlMaps: ['global'],
 };
