@@ -90,7 +90,7 @@ module.exports = {
                                     let autoScalingData = scaler.autoscalers.find(scalerObj => scalerObj.name == instanceGroup.name);
 
                                     if (autoScalingData && autoScalingData.autoscalingPolicy &&
-                                        autoScalingData.autoscalingPolicy.cpuUtilization && autoScalingData.autoscalingPolicy.cpuUtilization &&
+                                        autoScalingData.autoscalingPolicy.cpuUtilization &&
                                         autoScalingData.autoscalingPolicy.cpuUtilization.utilizationTarget) {
 
                                         if ((autoScalingData.autoscalingPolicy.cpuUtilization.utilizationTarget * 100) >= minimum_cpu_utilization_target) {
