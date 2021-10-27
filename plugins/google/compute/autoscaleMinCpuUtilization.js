@@ -18,11 +18,10 @@ module.exports = {
         }
     },
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-        var instanceGroupURLObj = {};
-        
+
         var minimum_cpu_utilization_target = settings.minimum_cpu_utilization_target || this.settings.minimum_cpu_utilization_target.default;
 
         if (minimum_cpu_utilization_target == 'false') return callback(null, results, source);
@@ -32,7 +31,7 @@ module.exports = {
         let instanceGroupsObj = helpers.addSource(cache, source,
             ['instanceGroups', 'aggregatedList', ['global']]);
 
-        if (!instanceGroupsObj) return callback(null, results, source)
+        if (!instanceGroupsObj) return callback(null, results, source);
 
         if (instanceGroupsObj.err || !instanceGroupsObj.data) {
             helpers.addResult(results, 3, 'Unable to query instance groups', 'global', null, null, instanceGroupsObj.err);
@@ -72,7 +71,7 @@ module.exports = {
                 helpers.addResult(results, 0, 'No autoscalers found', 'global');
             }
 
-            async.each(instanceGroups, function (instanceGroupsInLocation, rcb) {
+            async.each(instanceGroups, function(instanceGroupsInLocation, rcb) {
                 instanceGroupsInLocation.instanceGroups.forEach(instanceGroup => {
                     let groupLocArr = instanceGroup.zone ? instanceGroup.zone.split('/') :
                         instanceGroup.region ? instanceGroup.region.split('/') : ['global'];
@@ -88,7 +87,7 @@ module.exports = {
                             if (scaler && scaler.autoscalers && scaler.autoscalers.length) {
 
                                 if (instanceGroup && instanceGroup.name) {
-                                    let autoScalingData = scaler.autoscalers.find(scalerObj => scalerObj.name == instanceGroup.name)
+                                    let autoScalingData = scaler.autoscalers.find(scalerObj => scalerObj.name == instanceGroup.name);
 
                                     if (autoScalingData && autoScalingData.autoscalingPolicy &&
                                         autoScalingData.autoscalingPolicy.cpuUtilization && autoScalingData.autoscalingPolicy.cpuUtilization &&
@@ -109,7 +108,7 @@ module.exports = {
 
                                 }
                             }
-                        })
+                        });
                     }
 
                 });

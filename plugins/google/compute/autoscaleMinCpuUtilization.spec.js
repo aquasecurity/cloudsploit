@@ -49,7 +49,7 @@ describe('autoscaleMinCpuUtilization', function () {
                 ['error'], null
             );
 
-            plugin.run(cache, {}, callback);
+            plugin.run(cache, { minimum_cpu_utilization_target: '60' }, callback);
         });
 
         it('should pass no instance groups found', function (done) {
@@ -68,7 +68,7 @@ describe('autoscaleMinCpuUtilization', function () {
                 null, null
             );
 
-            plugin.run(cache, {}, callback);
+            plugin.run(cache, { minimum_cpu_utilization_target: '60' }, callback);
         });
         it('should give unknown if an autoscaler error occurs', function (done) {
             const callback = (err, results) => {
@@ -97,7 +97,7 @@ describe('autoscaleMinCpuUtilization', function () {
             );
 
 
-            plugin.run(cache, {}, callback);
+            plugin.run(cache, { minimum_cpu_utilization_target: '60' }, callback);
         });
 
         it('should pass no autoscalers found', function (done) {
@@ -128,7 +128,7 @@ describe('autoscaleMinCpuUtilization', function () {
                 null, null
             );
 
-            plugin.run(cache, {}, callback);
+            plugin.run(cache, { minimum_cpu_utilization_target: '60' }, callback);
         });
 
         it('should fail if instance group does not have desired minimum cpu utilization target', function (done) {
@@ -172,7 +172,7 @@ describe('autoscaleMinCpuUtilization', function () {
                 null
             );
 
-            plugin.run(cache, {}, callback);
+            plugin.run(cache, { minimum_cpu_utilization_target: '60' }, callback);
         })
 
         it('should pass if instance group has desired minimum cpu utilization target', function (done) {
@@ -216,7 +216,7 @@ describe('autoscaleMinCpuUtilization', function () {
                 null
             );
 
-            plugin.run(cache, {}, callback);
+            plugin.run(cache, { minimum_cpu_utilization_target: '60' }, callback);
         })
         it('should pass if no autoscaling policies found for instance group', function (done) {
             const callback = (err, results) => {
@@ -260,7 +260,7 @@ describe('autoscaleMinCpuUtilization', function () {
             );
 
 
-            plugin.run(cache, {}, callback);
+            plugin.run(cache, { minimum_cpu_utilization_target: '60' }, callback);
         })
 
     })
