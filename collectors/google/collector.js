@@ -402,6 +402,15 @@ var postcalls = {
             filterKey: ['name'],
             filterValue: ['organizationId'],
             parent: 'resource'
+        },
+        listOrgPolicies: {
+            api: 'cloudresourcemanager',
+            version: 'v1',
+            reliesOnService: ['organizations'],
+            reliesOnCall: ['list'],
+            filterKey: ['name'],
+            filterValue: ['organizationId'],
+            parent: 'resource'
         }
     }
 };
