@@ -791,7 +791,7 @@ var calls = {
         getEncryptionConfig: {
             property: 'EncryptionConfig'
         }
-    }
+    },
 };
 
 var postcalls = [
