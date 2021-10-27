@@ -78,7 +78,7 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
 
         if (config.ec2_skip_unused_groups) {
             if (groups[g].GroupId && !usedGroups.includes(groups[g].GroupId)) {
-                addResult(results, 0, `Security Group: ${groups[g].GroupId} is not in use`,
+                addResult(results, 1, `Security Group: ${groups[g].GroupId} is not in use`,
                     region, resource);
                 usedGroup = true;
                 continue;
@@ -258,8 +258,8 @@ function userGlobalAccess(statement, restrictedPermissions) {
 
 function crossAccountPrincipal(principal, accountId, fetchPrincipals) {
     if (typeof principal === 'string' &&
-        /^[0-9]{12}$/.test(principal) &&
-        principal !== accountId) {
+        (/^[0-9]{12}$/.test(principal) || /^arn:aws:.*/.test(principal)) &&
+        !principal.includes(accountId)) {
         if (fetchPrincipals) return [principal];
         return true;
     }
@@ -272,7 +272,7 @@ function crossAccountPrincipal(principal, accountId, fetchPrincipals) {
     var principals = [];
 
     for (var a in awsPrincipals) {
-        if (/^arn:aws:(iam|sts)::[0-9]{12}.*/.test(awsPrincipals[a]) &&
+        if (/^arn:aws:.*/.test(awsPrincipals[a]) &&
             awsPrincipals[a].indexOf(accountId) === -1) {
             if (!fetchPrincipals) return true;
             principals.push(awsPrincipals[a]);
@@ -385,7 +385,7 @@ function isValidCondition(statement, allowedConditionKeys, iamConditionOperators
                     if (keyLower === 'kms:calleraccount' && typeof value === 'string' && effect === 'Allow' &&  value === accountId) {
                         foundValid = true;
                         values.push(value);
-                    } else if (/^[0-9]{12}$/.test(value) || /^arn:aws:(iam|sts)::.+/.test(value)) {
+                    } else if (/^[0-9]{12}$/.test(value) || /^arn:aws:.+/.test(value)) {
                         foundValid = true;
                         values.push(value);
                     }

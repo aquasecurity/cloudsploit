@@ -50,10 +50,12 @@ var zones = {
 module.exports = {
     all_regions: regions,
     zones: zones,
-    disks: regions,
+    disks: ['global', ...regions],
+    images: ['global'],
     keyRings: ['global', ...regions],
     cryptoKeys: ['global', ...regions],
     securityPolicies: ['global'],
+    resourcePolicies: regions,
     snapshots: ['global'],
     firewalls: ['global'],
     buckets: ['global'],
@@ -91,5 +93,6 @@ module.exports = {
     subscriptions: ['global'],
     jobs: regions,
     organizations: ['global'],
-    deployments: ['global']
+    deployments: ['global'],
+    urlMaps: ['global'],
 };
