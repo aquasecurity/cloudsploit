@@ -785,6 +785,10 @@ var calls = {
         describeIpGroups:{
             property: 'Result',
             paginate: 'NextToken'
+        },
+        describeWorkspacesConnectionStatus: {
+            property: 'WorkspacesConnectionStatus',
+            paginate: 'NextToken'
         }
     },
     XRay: {
