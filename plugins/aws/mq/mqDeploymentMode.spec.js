@@ -14,40 +14,7 @@ const listBrokers = [
     }
 ];
 
-const describeBroker = [
-    {
-        "AuthenticationStrategy": 'simple',
-        "AutoMinorVersionUpgrade": true,
-        "BrokerArn": 'arn:aws:mq:us-east-1:000111222333:broker:MyBroker12:b-127b45ef-fa90-40f4-bf8b-5a7c19b66cad',
-        "BrokerId": 'b-127b45ef-fa90-40f4-bf8b-5a7c19b66cad',
-        "BrokerInstances": [
-            {
-            "ConsoleURL": 'https://b-127b45ef-fa90-40f4-bf8b-5a7c19b66cad-1.mq.us-east-1.amazonaws.com:8162',     
-            "Endpoints": [Array],
-            "IpAddress": '54.161.226.30'
-            }
-        ],
-        "BrokerName": 'myBr1',
-        "BrokerState": 'RUNNING',
-    },
-    {
-        "AuthenticationStrategy": 'simple',
-        "AutoMinorVersionUpgrade": false,
-        "BrokerArn": 'arn:aws:mq:us-east-1:000111222333:broker:MyBroker12:b-127b45ef-fa90-40f4-bf8b-5a7c19b66cad',
-        "BrokerId": 'b-127b45ef-fa90-40f4-bf8b-5a7c19b66cad',
-        "BrokerInstances": [
-            {
-            "ConsoleURL": 'https://b-127b45ef-fa90-40f4-bf8b-5a7c19b66cad-1.mq.us-east-1.amazonaws.com:8162',     
-            "Endpoints": [Array],
-            "IpAddress": '54.161.226.30'
-            }
-        ],
-        "BrokerName": 'myBr1',
-        "BrokerState": 'RUNNING',
-    }
-];
-
-const createCache = (listBrokers, describeBroker, listErr, getErr) => {
+const createCache = (listBrokers, listErr, getErr) => {
     var broker = (listBrokers && listBrokers.length) ? listBrokers[0].BrokerId : null;
     return {
         mq: {
@@ -57,14 +24,6 @@ const createCache = (listBrokers, describeBroker, listErr, getErr) => {
                     data: listBrokers
                 }
             },
-            describeBroker: {
-                'us-east-1': {
-                    [broker]: {
-                        err: getErr,
-                        data: describeBroker
-                    }
-                }
-            }
         }
     };
 };
@@ -84,17 +43,17 @@ describe('mqDeploymentMode', function () {
     describe('run', function () {
 
         it('should PASS if MQ Deployment Mode enabled', function (done) {
-            const cache = createCache(listBrokers, describeBroker[0]);
+            const cache = createCache(listBrokers[0]);
             mqDeploymentMode.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
+                expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
 
         it('should FAIL if MQ Deployment Mode not enabled', function (done) {
-            const cache = createCache(listBrokers, describeBroker[1]);
+            const cache = createCache(listBrokers);
             mqDeploymentMode.run(cache, { }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -114,7 +73,7 @@ describe('mqDeploymentMode', function () {
         });
 
         it('should UNKNOWN if unable to list MQ Brokers', function (done) {
-            const cache = createCache(listBrokers, describeBroker[0], { message: 'error listing MQ brokers'});
+            const cache = createCache(listBrokers, { message: 'error listing MQ brokers'});
             mqDeploymentMode.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);

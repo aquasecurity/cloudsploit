@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'With the active/standby deployment mode as opposed to the single-broker mode (enabled by default), you can achieve high availability for your Amazon MQ brokers as the service provides failure proof no risk.',
     recommended_action: 'Enabled Deployment Mode feature for MQ brokers',
     link: 'https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/active-standby-broker-deployment.html',
-    apis: ['MQ:listBrokers','MQ:describeBroker'],
+    apis: ['MQ:listBrokers'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -33,27 +33,19 @@ module.exports = {
             }
             
             for (let broker of listBrokers.data) {
+
                 if (!broker.BrokerArn) continue;
                
                 let resource = broker.BrokerArn;
-                var describeBroker = helpers.addSource(cache, source,
-                    ['mq', 'describeBroker', region, broker.BrokerId]);
-                  
-                if (!describeBroker || describeBroker.err || !describeBroker.data) {
-                    helpers.addResult(results, 3,
-                        `Unable to get brokers description: ${helpers.addError(describeBroker)}`,
-                        region, resource);
-                } else {   
-                    if (describeBroker.data.DeploymentMode && describeBroker.data.DeploymentMode.toUpperCase() === 'ACTIVE_STANDBY_MULTI_AZ') {
+
+                if (broker.DeploymentMode && broker.DeploymentMode.toUpperCase() === 'ACTIVE_STANDBY_MULTI_AZ') {
                         helpers.addResult(results, 0, 'Broker has active/standby deployment mode enabled',
                             region, resource);
-                    } else {
+                }else {
                         helpers.addResult(results, 2, 'Broker does not have active/standby deployment mode enabled',
                             region, resource);
                     }
-                }
             }
-
             rcb();  
         }, function(){
             callback(null, results, source);
