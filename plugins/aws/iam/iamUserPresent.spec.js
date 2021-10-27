@@ -9,15 +9,6 @@ const listUsers = [
         CreateDate: '2021-09-23T10:58:24.000Z',
         PasswordLastUsed: '2021-10-04T13:02:00.000Z',
         Tags: []
-    }, 
-    {
-        Path: [],
-        UserName: [],
-        UserId: [],
-        Arn: [],
-        CreateDate: [],
-        PasswordLastUsed: [],
-        Tags: []
     }   
 ];
 
@@ -61,7 +52,7 @@ const createNullCache = () => {
 
 describe('iamUserPresent', function () {
     describe('run', function () {
-        it('should pass if  users are present ', function (done) {
+        it('should pass if users are present', function (done) {
             const cache = createCache([listUsers[0]]);
             iamUserPresent.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -70,11 +61,11 @@ describe('iamUserPresent', function () {
             });
         });
 
-        it('should FAIL if no IAM  user(s) are present and root account is being used', function (done) {
-            const cache = createCache([listUsers[1]]);
+        it('should FAIL if no IAM user(s) are present and root account is being used', function (done) {
+            const cache = createCache([]);
             iamUserPresent.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
+                expect(results[0].status).to.equal(2);
                 done();
             });
         });
