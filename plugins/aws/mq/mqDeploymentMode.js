@@ -38,7 +38,6 @@ module.exports = {
                 let resource = broker.BrokerArn;
                 var describeBroker = helpers.addSource(cache, source,
                     ['mq', 'describeBroker', region, broker.BrokerId]);
-                console.log(describeBroker.data);
                   
                 if (!describeBroker || describeBroker.err || !describeBroker.data) {
                     helpers.addResult(results, 3,
