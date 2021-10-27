@@ -46,7 +46,7 @@ describe('unusedWorkspaces', function () {
             });
         });
         
-        it('should FAIL if Unable to query for WorkSpaces instance connection status', function (done) {
+        it('should UNKNOWN if Unable to query for WorkSpaces instance connection status', function (done) {
             const cache = createCache(null,"");
             unusedWorkspaces.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
