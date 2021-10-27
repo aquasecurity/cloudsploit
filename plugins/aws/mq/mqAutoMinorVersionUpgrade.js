@@ -33,7 +33,6 @@ module.exports = {
             }
             
             for (let broker of listBrokers.data) {
-              
                 if (!broker.BrokerArn) continue;
                
                 let resource = broker.BrokerArn;
