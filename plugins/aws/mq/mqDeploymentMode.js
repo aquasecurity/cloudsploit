@@ -44,7 +44,7 @@ module.exports = {
                         `Unable to get brokers description: ${helpers.addError(describeBroker)}`,
                         region, resource);
                 } else {   
-                    if (describeBroker.data.DeploymentMode === "ACTIVE_STANDBY_MULTI_AZ") {
+                    if (describeBroker.data.DeploymentMode && describeBroker.data.DeploymentMode.toUpperCase() === 'ACTIVE_STANDBY_MULTI_AZ') {
                         helpers.addResult(results, 0, 'Broker has active/standby deployment mode enabled',
                             region, resource);
                     } else {
