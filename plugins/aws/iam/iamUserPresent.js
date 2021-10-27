@@ -15,10 +15,10 @@ module.exports = {
         var source = {};
     
         var region = helpers.defaultRegion(settings);
-        
+
         var listUsers = helpers.addSource(cache, source,
             ['iam', 'listUsers', region]);
-    
+
         if (!listUsers) return callback(null, results, source);
     
         if (listUsers.err || !listUsers.data) {
