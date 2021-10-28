@@ -142,6 +142,12 @@ var calls = {
         }
     },
     ApiGateway: {
+        DescribeLogConfig: {
+            property: 'LogInfos',
+            subProperty: 'LogInfo',
+            apiVersion: '2016-07-14',
+            paginate: 'Pages'
+        },
         DescribeApis: {
             property: 'ApiSummarys',
             subProperty: 'ApiSummary',
