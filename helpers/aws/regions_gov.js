@@ -78,5 +78,6 @@ module.exports = {
     resourcegroupstaggingapi: regions,
     codestar: regions,
     codebuild: regions,
-    mq: regions
+    mq: regions,
+    glacier: regions
 };
