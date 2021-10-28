@@ -47,7 +47,7 @@ module.exports = {
 
         'plainTextParameters'           : require(__dirname + '/plugins/aws/cloudformation/plainTextParameters.js'),
         'stackFailedStatus'             : require(__dirname + '/plugins/aws/cloudformation/stackFailedStatus.js'),
-        'driftDetection'                :  require(__dirname + '/plugins/aws/cloudformation/driftDetection.js'),
+        'driftDetection'                : require(__dirname + '/plugins/aws/cloudformation/driftDetection.js'),
         'stackTerminationProtection'    : require(__dirname + '/plugins/aws/cloudformation/stackTerminationProtection.js'),
         'stackNotifications'            : require(__dirname + '/plugins/aws/cloudformation/stackNotifications.js'),
 
@@ -297,7 +297,7 @@ module.exports = {
         'bucketLifecycleConfiguration'  : require(__dirname + '/plugins/aws/s3/bucketLifecycleConfiguration'),
         'bucketTransferAcceleration'    : require(__dirname + '/plugins/aws/s3/bucketTransferAcceleration'),
         'bucketDnsCompliantName'        : require(__dirname + '/plugins/aws/s3/bucketDnsCompliantName.js'),
-
+        'bucketCrossAccountAccess'      : require(__dirname + '/plugins/aws/s3/bucketCrossAccountAccess.js'),
         'notebookDataEncrypted'         : require(__dirname + '/plugins/aws/sagemaker/notebookDataEncrypted.js'),
         'notebookDirectInternetAccess'  : require(__dirname + '/plugins/aws/sagemaker/notebookDirectInternetAccess.js'),
 
@@ -882,7 +882,7 @@ module.exports = {
         'passwordBlockLogon'            : require(__dirname + '/plugins/alibaba/ram/passwordBlockLogon.js'),
         'ramPolicyAttachments'          : require(__dirname + '/plugins/alibaba/ram/ramPolicyAttachments.js'),
         'ramAdminPolicy'                : require(__dirname + '/plugins/alibaba/ram/ramAdminPolicy.js'),
-      
+        
         'openSSH'                       : require(__dirname + '/plugins/alibaba/ecs/openSSH.js'),
         'openRDP'                       : require(__dirname + '/plugins/alibaba/ecs/openRDP.js'),
         'openDNS'                       : require(__dirname + '/plugins/alibaba/ecs/openDNS.js'),
