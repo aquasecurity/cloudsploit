@@ -7,7 +7,7 @@ const serviceSetting = [
         "SettingValue": "Enable",
         "LastModifiedDate": "2021-09-04T20:34:24.668000+00:00",
         "LastModifiedUser": "arn:aws:iam::560213429563:user/umair",
-        "ARN": "arn:aws:ssm:us-east-1:560213429563:servicesetting/ssm/documents/console/public-sharing-permission",
+        "ARN": "arn:aws:ssm:us-east-1:000111222333:servicesetting/ssm/documents/console/public-sharing-permission",
         "Status": "Customized" 
     },
     {
