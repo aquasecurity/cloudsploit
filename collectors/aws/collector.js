@@ -576,9 +576,9 @@ var calls = {
         }
     },
     MQ: {
-        listBrokers: {
-            property: 'BrokerSummaries',
-            paginate: 'NextToken'
+        listBrokers:{
+            property:'BrokerSummaries',
+            paginate:'NextToken'
         }
     },
     MWAA: {
@@ -785,13 +785,17 @@ var calls = {
         describeIpGroups:{
             property: 'Result',
             paginate: 'NextToken'
+        },
+        describeWorkspacesConnectionStatus: {
+            property: 'WorkspacesConnectionStatus',
+            paginate: 'NextToken'
         }
     },
     XRay: {
         getEncryptionConfig: {
             property: 'EncryptionConfig'
         }
-    }
+    },
 };
 
 var postcalls = [

@@ -33,18 +33,17 @@ module.exports = {
             }
             
             for (let broker of listBrokers.data) {
-
                 if (!broker.BrokerArn) continue;
                
                 let resource = broker.BrokerArn;
 
                 if (broker.DeploymentMode && broker.DeploymentMode.toUpperCase() === 'ACTIVE_STANDBY_MULTI_AZ') {
-                    helpers.addResult(results, 0, 'Broker has active/standby deployment mode enabled',
-                        region, resource);
+                        helpers.addResult(results, 0, 'Broker has active/standby deployment mode enabled',
+                            region, resource);
                 } else {
-                    helpers.addResult(results, 2, 'Broker does not have active/standby deployment mode enabled',
-                        region, resource);
-                }
+                        helpers.addResult(results, 2, 'Broker does not have active/standby deployment mode enabled',
+                            region, resource);
+                    }
             }
             rcb();  
         }, function(){

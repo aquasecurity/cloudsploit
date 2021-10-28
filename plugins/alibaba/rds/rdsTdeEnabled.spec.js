@@ -44,10 +44,7 @@ const createCache = (dbInstances, describeDBTde, dbInstancesErr, describeDBTdeEr
         },
     };
 };
-const cache = createCache(describeDBInstances, describeDBTde[1]);
 
-console.log(JSON.stringify(cache,null,2));
-rdsTdeEnabled.run(cache, {}, (err, results) => { console.log(results)});
 describe('rdsTdeEnabled', function () {
     describe('run', function () {
         it('should FAIL if RDS DB instance does not have TDE enabled', function (done) {
