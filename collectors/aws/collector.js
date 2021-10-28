@@ -1378,6 +1378,17 @@ var postcalls = [
                 reliesOnCall: 'listDetectors',
                 override: true,
             },
+            getFindings: {
+                reliesOnService: 'guardduty',
+                reliesOnCall: 'listDetectors',
+                override: true,
+            },
+            listFindings: {
+                reliesOnService: 'guardduty',
+                reliesOnCall: 'listDetectors',
+                override: true,
+            },
+
         },
     },
     {

@@ -366,6 +366,7 @@ module.exports = {
         'organizationInvite'            : require(__dirname + '/plugins/aws/organizations/organizationInvite.js'),
         'guardDutyEnabled'              : require(__dirname + '/plugins/aws/guardduty/guarddutyEnabled.js'),
         'guardDutyMaster'               : require(__dirname + '/plugins/aws/guardduty/guarddutyMaster.js'),
+        'guardDutyActiveFindings'       : require(__dirname + '/plugins/aws/guardduty/guardDutyActiveFindings.js'),
 
         'workspacesVolumeEncryption'    : require(__dirname + '/plugins/aws/workspaces/workspacesVolumeEncryption.js'),
         'workspacesIpAccessControl'     : require(__dirname + '/plugins/aws/workspaces/workspacesIpAccessControl.js'),
