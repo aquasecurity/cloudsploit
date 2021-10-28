@@ -53,7 +53,7 @@ describe('mqDeploymentMode', function () {
         });
 
         it('should FAIL if MQ Deployment Mode not enabled', function (done) {
-            const cache = createCache(listBrokers);
+            const cache = createCache([listBrokers[0]]);
             mqDeploymentMode.run(cache, { }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
