@@ -11,7 +11,17 @@ const listBrokers = [
         DeploymentMode: 'SINGLE_INSTANCE',
         EngineType: 'ActiveMQ',
         HostInstanceType: 'mq.t3.micro'
-    }
+    },
+    {
+        BrokerArn: 'arn:aws:mq:us-east-1:000111222333:broker:myBr12:b-b80de4cb-bc4d-4b7f-813b-8e0143927aac',
+        BrokerId: 'b-b80de4cb-bc4d-4b7f-813b-8e0143927aac',
+        BrokerName: 'myBr12',
+        BrokerState: 'RUNNING',
+        Created: '2021-10-28T07:54:35.000Z',
+        DeploymentMode: 'ACTIVE_STANDBY_MULTI_AZ',
+        EngineType: 'ActiveMQ',
+        HostInstanceType: 'mq.t3.micro'
+      }
 ];
 
 const createCache = (listBrokers, listErr, getErr) => {
@@ -43,7 +53,7 @@ describe('mqDeploymentMode', function () {
     describe('run', function () {
 
         it('should PASS if MQ Deployment Mode enabled', function (done) {
-            const cache = createCache(listBrokers[0]);
+            const cache = createCache([listBrokers[1]]);
             mqDeploymentMode.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -53,7 +63,7 @@ describe('mqDeploymentMode', function () {
         });
 
         it('should FAIL if MQ Deployment Mode not enabled', function (done) {
-            const cache = createCache(listBrokers);
+            const cache = createCache([listBrokers[0]]);
             mqDeploymentMode.run(cache, { }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
