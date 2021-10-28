@@ -736,6 +736,13 @@ var calls = {
         listAssociations: {
             property: 'Associations',
             paginate: 'NextToken'
+        },
+        getServiceSetting: {
+            property: 'ServiceSetting',
+            paginate: 'NextToken',
+            params: {
+                SettingId: '/ssm/documents/console/public-sharing-permission'
+            }
         }
     },
     STS: {
