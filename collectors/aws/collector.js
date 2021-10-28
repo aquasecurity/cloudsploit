@@ -579,7 +579,7 @@ var calls = {
         listBrokers:{
             property:'BrokerSummaries',
             paginate:'NextToken'
-        },
+        }
     },
     MWAA: {
         listEnvironments: {
