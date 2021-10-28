@@ -49,9 +49,11 @@ module.exports = {
         async.each(regions.disks, (region, rcb) => {
             var noDisks = [];
             var zones = regions.zones;
-            var badDisks = [];
-            var goodDisks = [];
+           
             async.each(zones[region], function(zone, zcb) {
+                var badDisks = [];
+                var goodDisks = [];
+
                 var disks = helpers.addSource(cache, source,
                     ['disks', 'list', zone]);
 
@@ -74,9 +76,9 @@ module.exports = {
                         disk.diskEncryptionKey &&
                         Object.keys(disk.diskEncryptionKey) &&
                         Object.keys(disk.diskEncryptionKey).length) {
-                        goodDisks.push(disk.id);
+                        goodDisks.push(disk.name);
                     } else if (disk.creationTimestamp) {
-                        badDisks.push(disk.id);
+                        badDisks.push(disk.name);
                     }
                 });
 
