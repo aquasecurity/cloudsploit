@@ -935,7 +935,7 @@ module.exports = {
         'actiontrailBucketPrivate'      : require(__dirname + '/plugins/alibaba/actiontrail/actiontrailBucketPrivate.js'),
     
         'apiProtocol'                   : require(__dirname + '/plugins/alibaba/apigateway/apiProtocol.js'),
-
+        'apiGroupTlsVersion'            : require(__dirname + '/plugins/alibaba/apigateway/apiGroupTlsVersion.js'),
         'networkPolicyEnabled'          : require(__dirname + '/plugins/alibaba/ack/networkPolicyEnabled.js'),
 
         'securityCenterEdition'         : require(__dirname + '/plugins/alibaba/securitycenter/securityCenterEdition.js'),
