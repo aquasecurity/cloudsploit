@@ -204,7 +204,7 @@ module.exports = {
         'esDesiredInstanceTypes'        : require(__dirname + '/plugins/aws/es/esDesiredInstanceTypes.js'),
         'esTlsVersion'                  : require(__dirname + '/plugins/aws/es/esTlsVersion.js'),
         'esDomainEncryptionEnabled'     : require(__dirname + '/plugins/aws/es/esDomainEncryptionEnabled.js'),
-
+        'vaultPublicAccess'             : require(__dirname + '/plugins/aws/s3glacier/vaultPublicAccess.js'),
         'firehoseEncrypted'             : require(__dirname + '/plugins/aws/firehose/firehoseEncrypted.js'),
 
         'eventBusCrossAccountAccess'    : require(__dirname + '/plugins/aws/eventbridge/eventBusCrossAccountAccess.js'),
@@ -251,6 +251,7 @@ module.exports = {
         'iamPoliciesPresent'            : require(__dirname + '/plugins/aws/iam/iamPoliciesPresent.js'),
         'iamDbAuthenticationEnabled'    : require(__dirname + '/plugins/aws/rds/iamDbAuthenticationEnabled.js'),
         'iamSupportPolicy'              : require(__dirname + '/plugins/aws/iam/iamSupportPolicy.js'),
+        'iamUserPresent'                : require(__dirname + '/plugins/aws/iam/iamUserPresent.js'),
 
         'iamUserInUse'                  : require(__dirname + '/plugins/aws/iam/iamUserInUse.js'),
         'kinesisEncrypted'              : require(__dirname + '/plugins/aws/kinesis/kinesisEncrypted.js'),
@@ -317,7 +318,7 @@ module.exports = {
         'ssmActiveOnAllInstances'       : require(__dirname + '/plugins/aws/ssm/ssmActiveOnAllInstances.js'),
         'ssmAgentLatestVersion'         : require(__dirname + '/plugins/aws/ssm/ssmAgentLatestVersion.js'),
         'ssmAgentAutoUpdateEnabled'     : require(__dirname + '/plugins/aws/ssm/ssmAgentAutoUpdateEnabled'),
-
+        'ssmDocumentPublicAccess'       : require(__dirname + '/plugins/aws/ssm/ssmDocumentPublicAccess'),
 
         'lambdaAdminPrivileges'         : require(__dirname + '/plugins/aws/lambda/lambdaAdminPrivileges.js'),
         'envVarsClientSideEncryption'   : require(__dirname + '/plugins/aws/lambda/envVarsClientSideEncryption.js'),
@@ -331,7 +332,12 @@ module.exports = {
         'environmentAdminPrivileges'    : require(__dirname + '/plugins/aws/mwaa/environmentAdminPrivileges.js'),
 
         'monitoringMetrics'             : require(__dirname + '/plugins/aws/cloudwatchlogs/monitoringMetrics.js'),
+        'mqDeploymentMode'              : require(__dirname + '/plugins/aws/mq/mqDeploymentMode.js'),
+
         'logRetentionPeriod'            : require(__dirname + '/plugins/aws/cloudwatchlogs/logRetentionPeriod.js'),
+      
+        'mqAutoMinorVersionUpgrade'     : require(__dirname + '/plugins/aws/mq/mqAutoMinorVersionUpgrade.js'),
+        'mqLogExports'                  : require(__dirname + '/plugins/aws/mq/mqLogExports.js'),
 
         'auditLoggingEnabled'           : require(__dirname + '/plugins/aws/redshift/auditLoggingEnabled.js'),
         'redshiftClusterCmkEncrypted'   : require(__dirname + '/plugins/aws/redshift/redshiftClusterCmkEncrypted.js'),
@@ -365,6 +371,7 @@ module.exports = {
 
         'workspacesVolumeEncryption'    : require(__dirname + '/plugins/aws/workspaces/workspacesVolumeEncryption.js'),
         'workspacesIpAccessControl'     : require(__dirname + '/plugins/aws/workspaces/workspacesIpAccessControl.js'),
+        'unusedWorkspaces'              : require(__dirname + '/plugins/aws/workspaces/unusedWorkspaces.js'),
 
         'xrayEncryptionEnabled'         : require(__dirname + '/plugins/aws/xray/xrayEncryptionEnabled.js'),
 
@@ -703,6 +710,7 @@ module.exports = {
         'flowLogsEnabled'               : require(__dirname + '/plugins/google/vpcnetwork/flowLogsEnabled.js'),
         'privateAccessEnabled'          : require(__dirname + '/plugins/google/vpcnetwork/privateAccessEnabled.js'),
         'dnsLoggingEnabled'             : require(__dirname + '/plugins/google/vpcnetwork/dnsLoggingEnabled.js'),
+        'openCustomPorts'               : require(__dirname + '/plugins/google/vpcnetwork/openCustomPorts.js'),
         'firewallLoggingMetadata'       : require(__dirname + '/plugins/google/vpcnetwork/firewallLoggingMetadata.js'),
 
         'instanceMaxCount'              : require(__dirname + '/plugins/google/compute/instanceMaxCount.js'),
@@ -718,15 +726,23 @@ module.exports = {
         'instanceDefaultServiceAccount' : require(__dirname + '/plugins/google/compute/instanceDefaultServiceAccount.js'),
         'shieldedVmEnabled'             : require(__dirname + '/plugins/google/compute/shieldedVmEnabled.js'),
         'instanceDeletionProtection'    : require(__dirname + '/plugins/google/compute/instanceDeletionProtection.js'),
+        'autoscaleMinCpuUtilization'    : require(__dirname + '/plugins/google/compute/autoscaleMinCpuUtilization.js'),
         'instanceDesiredMachineTypes'   : require(__dirname + '/plugins/google/compute/instanceDesiredMachineTypes.js'),
         'automaticRestartEnabled'       : require(__dirname + '/plugins/google/compute/automaticRestartEnabled.js'),
         'instanceTemplateMachineTypes'  : require(__dirname + '/plugins/google/compute/instanceTemplateMachineTypes.js'),
+        'diskMultiAz'                   : require(__dirname + '/plugins/google/compute/diskMultiAz.js'),
+        'persistentDisksAutoDelete'     : require(__dirname + '/plugins/google/compute/persistentDisksAutoDelete.js'),
+        'VMDisksCMKEncrypted'           : require(__dirname + '/plugins/google/compute/VMDisksCMKEncrypted.js'),
         'instanceMaintenanceBehavior'   : require(__dirname + '/plugins/google/compute/instanceMaintenanceBehavior.js'),
         'instancePreemptibility'        : require(__dirname + '/plugins/google/compute/instancePreemptibility.js'),
         'diskInUse'                     : require(__dirname + '/plugins/google/compute/diskInUse.js'),
         'osLogin2FAEnabled'             : require(__dirname + '/plugins/google/compute/osLogin2FAEnabled.js'),
         'diskAutomaticBackupEnabled'    : require(__dirname + '/plugins/google/compute/diskAutomaticBackupEnabled.js'),
         'diskOldSnapshots'              : require(__dirname + '/plugins/google/compute/diskOldSnapshots.js'),
+        'frequentlyUsedSnapshots'       : require(__dirname + '/plugins/google/compute/frequentlyUsedSnapshots.js'),
+        'applicationConsistentSnapshots': require(__dirname + '/plugins/google/compute/applicationConsistentSnapshots.js'),
+        'deprecatedImages'              : require(__dirname + '/plugins/google/compute/deprecatedImages.js'),
+        'enableUsageExport'             : require(__dirname + '/plugins/google/compute/enableUsageExport.js'),
 
         'keyRotation'                   : require(__dirname + '/plugins/google/cryptographickeys/keyRotation.js'),
         'keyProtectionLevel'            : require(__dirname + '/plugins/google/cryptographickeys/keyProtectionLevel.js'),
@@ -831,7 +847,28 @@ module.exports = {
         'instanceNodeCount'             : require(__dirname + '/plugins/google/spanner/instanceNodeCount.js'),
 
         'httpTriggerRequireHttps'       : require(__dirname + '/plugins/google/cloudfunctions/httpTriggerRequireHttps.js'),
-        'ingressAllTrafficDisabled'     : require(__dirname + '/plugins/google/cloudfunctions/ingressAllTrafficDisabled.js')
+        'ingressAllTrafficDisabled'     : require(__dirname + '/plugins/google/cloudfunctions/ingressAllTrafficDisabled.js'),
+
+        'computeAllowedExternalIPs'     : require(__dirname + '/plugins/google/cloudresourcemanager/computeAllowedExternalIPs.js'),
+        'disableAutomaticIAMGrants'     : require(__dirname + '/plugins/google/cloudresourcemanager/disableAutomaticIAMGrants.js'),
+        'disableGuestAttributes'        : require(__dirname + '/plugins/google/cloudresourcemanager/disableGuestAttributes.js'),
+        'disableSerialPortAccess'       : require(__dirname + '/plugins/google/cloudresourcemanager/disableSerialPortAccess.js'),
+        'disableKeyCreation'            : require(__dirname + '/plugins/google/cloudresourcemanager/disableKeyCreation.js'),
+        'disableKeyUpload'              : require(__dirname + '/plugins/google/cloudresourcemanager/disableKeyUpload.js'),
+        'disableIdentityClusterCreation': require(__dirname + '/plugins/google/cloudresourcemanager/disableIdentityClusterCreation.js'),
+        'detailedAuditLoggingMode'      : require(__dirname + '/plugins/google/cloudresourcemanager/detailedAuditLoggingMode.js'),
+        'uniformBucketLevelAccess'      : require(__dirname + '/plugins/google/cloudresourcemanager/uniformBucketLevelAccess.js'),
+        'requireOsLogin'                : require(__dirname + '/plugins/google/cloudresourcemanager/requireOsLogin.js'),
+        'restrictAuthorizedNetworks'    : require(__dirname + '/plugins/google/cloudresourcemanager/restrictAuthorizedNetworks.js'),
+        'disableDefaultEncryption'      : require(__dirname + '/plugins/google/cloudresourcemanager/disableDefaultEncryption.js'),
+        'restrictLoadBalancerCreation'  : require(__dirname + '/plugins/google/cloudresourcemanager/restrictLoadBalancerCreation.js'),
+        'restrictSharedVPCSubnetworks'  : require(__dirname + '/plugins/google/cloudresourcemanager/restrictSharedVPCSubnetworks.js'),
+        'restrictVPCPeering'            : require(__dirname + '/plugins/google/cloudresourcemanager/restrictVPCPeering.js'),
+        'restrictVPNPeerIPs'            : require(__dirname + '/plugins/google/cloudresourcemanager/restrictVPNPeerIPs.js'),
+        'disableVMIPForwarding'         : require(__dirname + '/plugins/google/cloudresourcemanager/disableVMIPForwarding.js'),
+        'trustedImageProjects'          : require(__dirname + '/plugins/google/cloudresourcemanager/trustedImageProjects.js'),
+        'skipDefaultNetworkCreation'    : require(__dirname + '/plugins/google/cloudresourcemanager/skipDefaultNetworkCreation.js'),
+        'locationBasedRestriction'      : require(__dirname + '/plugins/google/cloudresourcemanager/locationBasedRestriction.js')
     },
     alibaba: {
         'passwordMinLength'             : require(__dirname + '/plugins/alibaba/ram/passwordMinLength.js'),
@@ -846,6 +883,7 @@ module.exports = {
         'passwordExpiry'                : require(__dirname + '/plugins/alibaba/ram/passwordExpiry.js'),
         'passwordBlockLogon'            : require(__dirname + '/plugins/alibaba/ram/passwordBlockLogon.js'),
         'ramPolicyAttachments'          : require(__dirname + '/plugins/alibaba/ram/ramPolicyAttachments.js'),
+        'ramAdminPolicy'                : require(__dirname + '/plugins/alibaba/ram/ramAdminPolicy.js'),
       
         'openSSH'                       : require(__dirname + '/plugins/alibaba/ecs/openSSH.js'),
         'openRDP'                       : require(__dirname + '/plugins/alibaba/ecs/openRDP.js'),
@@ -882,6 +920,9 @@ module.exports = {
         'ossBucketVersioning'           : require(__dirname + '/plugins/alibaba/oss/ossBucketVersioning.js'),
         'ossBucketTransferAcceleration' : require(__dirname + '/plugins/alibaba/oss/ossBucketTransferAcceleration.js'),
         'bucketCrossRegionReplication'  : require(__dirname + '/plugins/alibaba/oss/bucketCrossRegionReplication.js'),
+       
+        'ossBucketIpRestriction'        : require(__dirname + '/plugins/alibaba/oss/ossBucketIpRestriction.js'),
+        'ossBucketSecureTransport'      : require(__dirname + '/plugins/alibaba/oss/ossBucketSecureTransport.js'),
       
         'rdsLogDuration'                : require(__dirname + '/plugins/alibaba/rds/rdsLogDuration.js'),
         'rdsSslEncryptionEnabled'       : require(__dirname + '/plugins/alibaba/rds/rdsSslEncryptionEnabled.js'),
@@ -893,9 +934,14 @@ module.exports = {
         'rdsTdeEnabled'                 : require(__dirname + '/plugins/alibaba/rds/rdsTdeEnabled.js'),
 
         'actiontrailGlobalExportLogs'   : require(__dirname + '/plugins/alibaba/actiontrail/actiontrailGlobalExportLogs.js'),
+        'actiontrailBucketPrivate'      : require(__dirname + '/plugins/alibaba/actiontrail/actiontrailBucketPrivate.js'),
     
         'apiProtocol'                   : require(__dirname + '/plugins/alibaba/apigateway/apiProtocol.js'),
+        'apiGroupTlsVersion'            : require(__dirname + '/plugins/alibaba/apigateway/apiGroupTlsVersion.js'),
+        'networkPolicyEnabled'          : require(__dirname + '/plugins/alibaba/ack/networkPolicyEnabled.js'),
 
-        'networkPolicyEnabled'          : require(__dirname + '/plugins/alibaba/ack/networkPolicyEnabled.js')
+        'securityCenterEdition'         : require(__dirname + '/plugins/alibaba/securitycenter/securityCenterEdition.js'),
+        'securityAgentInstalled'        : require(__dirname + '/plugins/alibaba/securitycenter/securityAgentInstalled.js'),
+        'securityNotificationsEnabled'  : require(__dirname + '/plugins/alibaba/securitycenter/securityNotificationsEnabled.js')
     }
 };

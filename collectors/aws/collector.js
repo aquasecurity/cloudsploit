@@ -496,6 +496,16 @@ var calls = {
             paginate: 'NextMarker'
         }
     },
+    Glacier: {
+        listVaults: {
+            paginate: 'Marker',
+            property: 'VaultList',
+            params: {
+                accountId: '-',
+                limit: '50'
+            },
+        }
+    },
     IAM: {
         listServerCertificates: {
             property: 'ServerCertificateMetadataList',
@@ -573,6 +583,12 @@ var calls = {
             property: 'Functions',
             paginate: 'NextMarker',
             paginateReqProp: 'Marker'
+        }
+    },
+    MQ: {
+        listBrokers:{
+            property:'BrokerSummaries',
+            paginate:'NextToken'
         }
     },
     MWAA: {
@@ -730,6 +746,13 @@ var calls = {
         listAssociations: {
             property: 'Associations',
             paginate: 'NextToken'
+        },
+        getServiceSetting: {
+            property: 'ServiceSetting',
+            paginate: 'NextToken',
+            params: {
+                SettingId: '/ssm/documents/console/public-sharing-permission'
+            }
         }
     },
     STS: {
@@ -779,13 +802,17 @@ var calls = {
         describeIpGroups:{
             property: 'Result',
             paginate: 'NextToken'
+        },
+        describeWorkspacesConnectionStatus: {
+            property: 'WorkspacesConnectionStatus',
+            paginate: 'NextToken'
         }
     },
     XRay: {
         getEncryptionConfig: {
             property: 'EncryptionConfig'
         }
-    }
+    },
 };
 
 var postcalls = [
@@ -1120,6 +1147,14 @@ var postcalls = [
                 filterValue: 'PolicyId'
             }
         },
+        Glacier: {
+            getVaultAccessPolicy: {
+                reliesOnService: 'glacier',
+                reliesOnCall: 'listVaults',
+                filterKey: 'vaultName',
+                filterValue: 'VaultName'
+            }
+        },
         IAM: {
             getGroup: {
                 reliesOnService: 'iam',
@@ -1235,6 +1270,14 @@ var postcalls = [
                 reliesOnCall: 'listFunctions',
                 filterKey: 'Resource',
                 filterValue: 'FunctionArn'
+            }
+        },
+        MQ: {
+            describeBroker: {
+                reliesOnService: 'mq',
+                reliesOnCall: 'listBrokers',
+                filterKey: 'BrokerId',
+                filterValue: 'BrokerId'
             }
         },
         MWAA: {
