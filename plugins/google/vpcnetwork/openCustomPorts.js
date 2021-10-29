@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Open Custom Ports',
     category: 'VPC Network',
+    domain: 'Network Access Control',
     description: 'Ensure that defined custom ports are not open to public.',
     more_info: 'To prevent attackers from identifying and exploiting the services running on your instances, make sure the VPC Network custom ports are not open to public.',
     link: 'https://cloud.google.com/vpc/docs/firewalls',
