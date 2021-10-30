@@ -52,6 +52,7 @@ module.exports = {
                 logical: 'AND'
             }
         ]
+
     },
     run: function(cache, settings, callback) {
         var results = [];
