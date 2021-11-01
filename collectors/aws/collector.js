@@ -575,6 +575,12 @@ var calls = {
             paginateReqProp: 'Marker'
         }
     },
+    MQ: {
+        listBrokers:{
+            property:'BrokerSummaries',
+            paginate:'NextToken'
+        },
+    },
     MWAA: {
         listEnvironments: {
             property: 'Environments',
@@ -779,13 +785,17 @@ var calls = {
         describeIpGroups:{
             property: 'Result',
             paginate: 'NextToken'
+        },
+        describeWorkspacesConnectionStatus: {
+            property: 'WorkspacesConnectionStatus',
+            paginate: 'NextToken'
         }
     },
     XRay: {
         getEncryptionConfig: {
             property: 'EncryptionConfig'
         }
-    }
+    },
 };
 
 var postcalls = [
@@ -1235,6 +1245,14 @@ var postcalls = [
                 reliesOnCall: 'listFunctions',
                 filterKey: 'Resource',
                 filterValue: 'FunctionArn'
+            }
+        },
+        MQ: {
+            describeBroker: {
+                reliesOnService: 'mq',
+                reliesOnCall: 'listBrokers',
+                filterKey: 'BrokerId',
+                filterValue: 'BrokerId'
             }
         },
         MWAA: {
