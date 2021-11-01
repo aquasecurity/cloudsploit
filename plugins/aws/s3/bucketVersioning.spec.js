@@ -23,44 +23,7 @@ const getBucketVersioning = [
     {}
 ];
 
-const getBucketLifecycleConfiguration = [
-    {
-        "Rules": [
-            {
-                "ID": "akd-36",
-                "Filter": {
-                    "Prefix": "t-"
-                },
-                "Status": "Enabled",
-                "Transitions": [
-                    {
-                        "Days": 900,
-                        "StorageClass": "STANDARD_IA"
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "Rules": [
-            {
-                "ID": "akd-36",
-                "Filter": {
-                    "Prefix": "t-"
-                },
-                "Status": "Disabled",
-                "Transitions": [
-                    {
-                        "Days": 900,
-                        "StorageClass": "STANDARD_IA"
-                    }
-                ]
-            }
-        ]
-    }
-]
-
-const createCache = (buckets, versioning, lifecycle) => {
+const createCache = (buckets, versioning) => {
     var bucketName = (buckets && buckets.length) ? buckets[0].Name : null;
     return {
         s3: {
@@ -84,14 +47,7 @@ const createCache = (buckets, versioning, lifecycle) => {
                         }
                     }
                 }
-            },
-            getBucketLifecycleConfiguration: {
-                'us-east-1': {
-                    [bucketName]: {
-                        data: lifecycle
-                    }
-                }
-            },
+            }
         },
     };
 };
@@ -161,29 +117,9 @@ describe('bucketVersioning', function () {
             });
         });
 
-        it('should PASS if S3 bucket has object versioning and lifecycle configuration enabled', function (done) {
-            const cache = createCache([listBuckets[0]], getBucketVersioning[0], getBucketLifecycleConfiguration[0]);
-            bucketVersioning.run(cache, { enforce_bucket_lifecycle_configuration: 'true' }, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                expect(results[0].region).to.equal('us-east-1');
-                done();
-            });
-        });
-
         it('should FAIL if S3 bucket has object versioning disabled', function (done) {
             const cache = createCache([listBuckets[0]], getBucketVersioning[1]);
             bucketVersioning.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                expect(results[0].region).to.equal('us-east-1');
-                done();
-            });
-        });
-
-        it('should FAIL if S3 bucket has object versioning disabled but has lifecycle configuration disabled', function (done) {
-            const cache = createCache([listBuckets[0]], getBucketVersioning[1], getBucketLifecycleConfiguration[1]);
-            bucketVersioning.run(cache, { enforce_bucket_lifecycle_configuration: 'true' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');

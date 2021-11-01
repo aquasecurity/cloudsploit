@@ -75,10 +75,6 @@ parser.add_argument('--cloud', {
     choices: ['aws', 'azure', 'github', 'google', 'oracle','alibaba'],
     action: 'append'
 });
-parser.add_argument('--run-asl', {
-    help: 'When set, it will execute custom plugins.',
-    action: 'store_false'
-});
 
 let settings = parser.parse_args();
 let cloudConfig = {};
