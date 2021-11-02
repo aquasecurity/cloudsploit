@@ -49,7 +49,7 @@ module.exports = {
         async.each(regions.disks, (region, rcb) => {
             var noDisks = [];
             var zones = regions.zones;
-            
+           
             async.each(zones[region], function(zone, zcb) {
                 var badDisks = [];
                 var goodDisks = [];
