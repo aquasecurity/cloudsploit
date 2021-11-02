@@ -71,7 +71,6 @@ module.exports = {
 
                 if (describeCluster.data.cluster &&
                     describeCluster.data.cluster.version) {
-                    // describeCluster.data.cluster.version = '1.16';
                     var version = describeCluster.data.cluster.version;
                     let versionDeprecationDate = (deprecatedVersions[version]) ? deprecatedVersions[version] : null;
                     let versionOutdatedDate = (outdatedVersions[version]) ? outdatedVersions[version] : null;
