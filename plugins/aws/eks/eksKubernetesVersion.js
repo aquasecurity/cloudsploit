@@ -33,7 +33,6 @@ module.exports = {
         };
 
         var outdatedVersions = {
-            
         };
 
         async.each(regions.eks, function(region, rcb) {
