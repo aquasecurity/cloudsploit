@@ -4,7 +4,6 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'EKS Kubernetes Version',
     category: 'EKS',
-    domain: 'Containers',
     description: 'Ensures the latest version of Kubernetes is installed on EKS clusters',
     more_info: 'EKS supports provisioning clusters from several versions of Kubernetes. Clusters should be kept up to date to ensure Kubernetes security patches are applied.',
     link: 'https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html',
@@ -27,10 +26,13 @@ module.exports = {
             '1.13': '2020-06-30',
             '1.14': '2020-12-08',
             '1.15': '2021-05-03',
-            '1.16': '2021-09-27'
+            '1.16': '2021-09-27',
+            '1.17': '2021-11-02',
+            '1.18': '2022-12-02'
         };
 
         var outdatedVersions = {
+            
         };
 
         async.each(regions.eks, function(region, rcb) {
@@ -68,12 +70,19 @@ module.exports = {
 
                 if (describeCluster.data.cluster &&
                     describeCluster.data.cluster.version) {
+                    // describeCluster.data.cluster.version = '1.16';
                     var version = describeCluster.data.cluster.version;
-                    if (deprecatedVersions[version]) {
+                    let versionDeprecationDate = (deprecatedVersions[version]) ? deprecatedVersions[version] : null;
+                    let versionOutdatedDate = (outdatedVersions[version]) ? outdatedVersions[version] : null;
+                    let today = new Date();
+                    let dateToday = (today.getDate() < 10) ? '0' + today.getDate() : today.getDate();
+                    today = `${today.getFullYear()}-${today.getMonth()+1}-${dateToday}`;
+
+                    if (versionDeprecationDate && today > versionDeprecationDate) {
                         helpers.addResult(results, 2,
                             'EKS cluster is running Kubernetes: ' + version + ' which was deprecated on: ' + deprecatedVersions[version],
                             region, arn);
-                    } else if (outdatedVersions[version]) {
+                    } else if (versionOutdatedDate && today > versionOutdatedDate) {
                         helpers.addResult(results, 1,
                             'EKS cluster is running Kubernetes: ' + version + ' which is currently outdated',
                             region, arn);
