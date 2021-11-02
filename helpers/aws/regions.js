@@ -11,14 +11,17 @@ var regions = [
     'eu-west-2',        // London
     'eu-west-3',        // Paris
     'eu-north-1',       // Stockholm
+    'eu-south-1',       // EU (Milan)
     'ap-northeast-1',   // Asia Pacific (Tokyo)
     'ap-northeast-2',   // Asia Pacific (Seoul)
     'ap-southeast-1',   // Asia Pacific (Singapore)
     'ap-southeast-2',   // Asia Pacific (Sydney)
+    'ap-northeast-3',   // Asia Pacific (Osaka)
     'ap-south-1',       // Asia Pacific (Mumbai)
     'sa-east-1',        // South America (São Paulo)
     'ap-east-1',        // Asia Pacific (Hong Kong)
-    'me-south-1'        // Middle East (Bahrain)
+    'me-south-1',       // Middle East (Bahrain)
+    'af-south-1'        // Africa (Cape Town)
 ];
 
 module.exports = {
@@ -28,9 +31,7 @@ module.exports = {
     accessanalyzer: regions,
     acm: regions,
     apigateway: regions,
-    athena: ['us-east-1', 'us-east-2', 'us-west-2', 'ca-central-1',
-        'eu-west-1', 'eu-central-1', 'eu-west-2', 'ap-southeast-1',
-        'ap-northeast-1', 'ap-southeast-2', 'ap-northeast-2', 'ap-south-1'],
+    athena: regions,
     cloudfront: ['us-east-1'], // CloudFront uses the default global region
     autoscaling: regions,
     iam: ['us-east-1'],
@@ -45,22 +46,16 @@ module.exports = {
         'eu-west-2', 'eu-west-1', 'ap-southeast-1', 'ap-northeast-1',
         'ap-southeast-2', 'ap-northeast-2', 'ap-south-1', 'ca-central-1'],
     configservice: regions,
-    dax: ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'eu-central-1',
-        'eu-west-1', 'eu-west-2', 'eu-west-3', 'ap-northeast-1', 'ap-southeast-1',
-        'ap-southeast-2', 'ap-south-1', 'sa-east-1'
-    ],
-    devopsguru: ['us-east-1', 'us-east-2', 'eu-west-1', 'us-west-2', 'ap-northeast-1'],
+    dax: regions,
+    devopsguru: ['us-east-1', 'us-east-2', 'eu-west-1', 'us-west-2', 'ap-northeast-1', 'eu-central-1',
+        'ap-southeast-1', 'ap-southeast-2'],
     dynamodb: regions,
     dlm: regions,
     dms: regions,
     ec2: regions,
     ecr: regions,
-    eks: ['us-east-1', 'us-east-2', 'us-west-2', 'eu-west-1', 'eu-central-1',
-        'eu-west-2', 'eu-west-3', 'eu-north-1', 'ap-southeast-1', 'ap-northeast-1',
-        'ap-southeast-2', 'ap-northeast-2', 'ap-south-1'],
-    elasticbeanstalk: ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'ca-central-1',
-        'eu-central-1', 'eu-west-1', 'eu-west-2', 'eu-west-3', 'eu-north-1', 'ap-northeast-1',
-        'ap-northeast-2', 'ap-southeast-1', 'ap-southeast-2', 'ap-south-1', 'sa-east-1'],
+    eks: regions,
+    elasticbeanstalk: regions,
     elastictranscoder: ['us-east-1', 'us-west-2', 'us-west-1', 'eu-west-1',
         'ap-southeast-1', 'ap-northeast-1', 'ap-southeast-2', 'ap-south-1'],
     elb: regions,
@@ -70,10 +65,7 @@ module.exports = {
     es: regions,
     glue: regions,
     kinesis: regions,
-    firehose: ['us-east-1', 'us-east-2', 'us-west-2', 'us-west-1',
-        'ca-central-1', 'eu-central-1', 'eu-west-1', 'eu-west-2', 'eu-west-3', 'eu-north-1',
-        'ap-northeast-1', 'ap-northeast-2',
-        'ap-southeast-1', 'ap-southeast-2', 'ap-south-1', 'sa-east-1'],
+    firehose: regions,
     kms: regions,
     vpc: regions,
     flowlogs: regions,
@@ -82,50 +74,38 @@ module.exports = {
     cloudwatch: regions,
     ecs: regions,
     resourcegroupstaggingapi: regions,
-    sagemaker: [
-        'us-east-1', 'us-east-2', 'us-west-2', 'ap-northeast-1', 'ap-northeast-2',
-        'ap-southeast-2', 'eu-central-1', 'eu-central-1', 'eu-west-1'],
+    sagemaker: regions,
     secretsmanager: regions,
-    ses: [
-        'us-east-1', 'us-west-2',
-        'eu-west-1'],
+    ses: ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'ca-central-1', 'eu-central-1',
+        'eu-west-1', 'eu-west-2', 'eu-west-3', 'eu-north-1', 'eu-south-1', 'ap-northeast-1',
+        'ap-northeast-2', 'ap-southeast-1', 'ap-southeast-2', 'ap-northeast-3', 'ap-south-1',
+        'sa-east-1', 'me-south-1', 'af-south-1'],
     sns: regions,
     sqs: regions,
     ssm: regions,
     shield: ['us-east-1'],
-    // SSE via KMS is only supported in some regions
-    // even though SQS is supported in all regions.
-    sqs_encrypted: ['us-east-1', 'us-east-2', 'us-west-2', 'us-west-1',
-        'ca-central-1', 'eu-central-1', 'eu-west-1', 'eu-west-2', 'eu-west-3', 'eu-north-1',
-        'ap-northeast-1', 'ap-northeast-2',
-        'ap-southeast-1', 'ap-southeast-2', 'ap-south-1', 'sa-east-1'],
+    sqs_encrypted: regions,
     sts: ['us-east-1'],
-    transfer: ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2',
-        'ap-northeast-2', 'ap-southeast-1', 'ap-southeast-2', 'ap-northeast-1',
-        'ca-central-1', 'eu-central-1', 'eu-west-1', 'eu-west-2', 'eu-west-3'],
+    transfer: ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'ca-central-1', 'eu-central-1',
+        'eu-west-1', 'eu-west-2', 'eu-west-3', 'eu-north-1', 'eu-south-1', 'ap-northeast-1',
+        'ap-northeast-2', 'ap-southeast-1', 'ap-southeast-2', 'ap-south-1', 'ap-east-1',
+        'sa-east-1', 'me-south-1', 'af-south-1'],
     lambda: regions,
-    mwaa: ['us-east-1', 'us-east-2', 'us-west-2', 'eu-west-1', 'eu-north-1', 'eu-central-1',
-        'ap-southeast-2', 'ap-southeast-1', 'ap-northeast-1'],
-    directconnect: regions,
-    directoryservice: ['us-east-1', 'us-east-2', 'us-west-2', 'us-west-1', 'ca-central-1',
-        'sa-east-1', 'eu-west-1', 'eu-central-1', 'eu-west-2',
-        'ap-southeast-1', 'ap-northeast-1', 'ap-southeast-2', 'ap-northeast-2',
-        'ap-south-1'],
-    efs: ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'eu-west-2', 'eu-west-1',
-        'ap-northeast-2', 'ap-northeast-1', 'ap-southeast-1', 'ap-southeast-2', 'eu-central-1'],
+    mwaa: ['us-east-1', 'us-east-2', 'us-west-2', 'eu-west-1', 'eu-west-2', 'eu-west-3', 'ap-south-1', 'eu-north-1', 'eu-central-1',
+        'ap-southeast-2', 'ap-southeast-1', 'ap-northeast-2', 'ap-northeast-1', 'ca-central-1', 'sa-east-1'],
+    directconnect: 'us-east-1', // this is global service
+    directoryservice: regions,
+    efs: regions,
     support: ['us-east-1'],
     wafregional: regions,
     wafv2: regions,
     organizations: ['us-east-1'],
     guardduty: regions,
-    workspaces: ['us-east-1', 'us-west-2', 'ca-central-1', 'sa-east-1',
+    workspaces: ['us-east-1', 'us-west-2', 'ca-central-1', 'sa-east-1', 'ap-south-1',
         'eu-west-1', 'eu-central-1', 'eu-west-2', 'ap-southeast-1',
         'ap-northeast-1', 'ap-southeast-2', 'ap-northeast-2'],
     servicequotas: regions,
-    xray: ['us-east-1', 'us-east-2', 'us-west-2', 'us-west-1',
-        'ca-central-1', 'eu-central-1', 'eu-west-1', 'eu-west-2', 'eu-west-3', 'eu-north-1',
-        'ap-northeast-1', 'ap-northeast-2',
-        'ap-southeast-1', 'ap-southeast-2', 'ap-south-1', 'sa-east-1', 'ap-east-1'],
+    xray: regions,
     codestar: ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'ap-northeast-2',
         'ap-southeast-1', 'ap-southeast-2', 'ap-northeast-1', 'ca-central-1', 'eu-central-1',
         'eu-west-1', 'eu-west-2', 'eu-north-1'],
