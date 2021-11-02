@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Service Account Separation',
     category: 'IAM',
+    domain: 'Identity and Access Management',
     description: 'Ensures that no users have both the Service Account User and Service Account Admin role.',
     more_info: 'Ensuring that no users have both roles follows separation of duties, where no user should have access to resources out of the scope of duty.',
     link: 'https://cloud.google.com/iam/docs/overview',
@@ -47,7 +48,7 @@ module.exports = {
             var notSeparated = {};
             iamPolicy.bindings.forEach(roleBinding => {
                 if (roleBinding.role === 'roles/iam.serviceAccountUser') {
-                    serviceAccountUsers = serviceAccountUsers.concat(roleBinding.members)
+                    serviceAccountUsers = serviceAccountUsers.concat(roleBinding.members);
                 }
             });
 
@@ -55,7 +56,7 @@ module.exports = {
                 if (roleBinding.role === 'roles/iam.serviceAccountAdmin' &&
                     roleBinding.members) {
                     notSeparated = roleBinding.members.filter(member => {
-                        return (serviceAccountUsers.indexOf(member) > -1)
+                        return (serviceAccountUsers.indexOf(member) > -1);
                     });
 
                     if (notSeparated && notSeparated.length) {
@@ -64,7 +65,7 @@ module.exports = {
                             let resource = helpers.createResourceName('serviceAccounts', accountName, project);
                             helpers.addResult(results, 2,
                                 'The account has both the service account user and admin role', region, resource);
-                        })
+                        });
                     }
                 }
             });

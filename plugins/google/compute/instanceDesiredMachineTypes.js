@@ -17,7 +17,7 @@ module.exports = {
             default: ''
         },
     },
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions();
@@ -34,7 +34,7 @@ module.exports = {
         async.each(regions.instances.compute, (region, rcb) => {
             var noInstances = [];
             var zones = regions.zones;
-            async.each(zones[region], function (zone, zcb) {
+            async.each(zones[region], function(zone, zcb) {
                 var instances = helpers.addSource(cache, source,
                     ['instances', 'compute', 'list', zone]);
 
@@ -61,13 +61,13 @@ module.exports = {
                     }
                 });
                 zcb();
-            }, function () {
+            }, function() {
                 if (noInstances.length) {
                     helpers.addResult(results, 0, `No instances found in following zones: ${noInstances.join(', ')}`, region);
                 }
                 rcb();
             });
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }
