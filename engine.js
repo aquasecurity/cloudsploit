@@ -204,7 +204,7 @@ var engine = function(cloudConfig, settings) {
                     setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
                 };
     
-                if (plugin.asl) {
+                if (plugin.asl && settings['run-asl']) {
                     console.log(`INFO: Using custom ASL for plugin: ${plugin.title}`);
                     // Inject APIs and resource maps
                     plugin.asl.apis = plugin.apis;
