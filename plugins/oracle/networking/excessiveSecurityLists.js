@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/oracle');
 module.exports = {
     title: 'Excessive Security Lists',
     category: 'Networking',
+    domain: 'Network Access Control',
     description: 'Determine if there are an excessive number of security lists in the account',
     more_info: 'Keeping the number of security lists to a minimum helps reduce the attack surface of an account. Rather than creating new groups with the same rules for each project, common rules should be grouped under the same security lists. For example, instead of adding port 22 from a known IP to every group, create a single "SSH" security group which can be used on multiple instances.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Network/Concepts/securitylists.htm',

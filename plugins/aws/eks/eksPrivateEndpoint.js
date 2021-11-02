@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'EKS Private Endpoint',
     category: 'EKS',
+    domain: 'Containers',
     description: 'Ensures the private endpoint setting is enabled for EKS clusters',
     more_info: 'EKS private endpoints can be used to route all traffic between the Kubernetes worker and control plane nodes over a private VPC endpoint rather than across the public internet.',
     link: 'https://docs.aws.amazon.com/eks/latest/userguide/cluster-endpoint.html',

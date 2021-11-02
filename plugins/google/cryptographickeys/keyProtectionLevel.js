@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Key Protection Level',
     category: 'Cryptographic Keys',
+    domain: 'Identity and Access Management',
     description: 'Ensure that cryptographic keys have protection level equal to or above desired protection level.',
     more_info: 'Cloud KMS cryptographic keys should be created with protection level set by your organization\'s compliance and security rules.',
     link: 'https://cloud.google.com/kms/docs/reference/rest/v1/ProtectionLevel',

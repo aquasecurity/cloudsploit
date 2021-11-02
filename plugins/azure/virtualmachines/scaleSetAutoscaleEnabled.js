@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Scale Sets Autoscale Enabled',
     category: 'Virtual Machines',
+    domain: 'Compute',
     description: 'Ensures that Virtual Machine scale sets have autoscale enabled for high availability',
     more_info: 'Autoscale automatically creates new instances when certain metrics are surpassed, or can destroy instances that are being underutilized. This creates a highly available scale set.',
     recommended_action: 'Ensure that autoscale is enabled for all Virtual Machine Scale Sets.',

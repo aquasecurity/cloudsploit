@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Endpoint Logging Enabled',
     category: 'CDN Profiles',
+    domain: 'Content Delivery',
     description: 'Ensures that endpoint requests are being logged for CDN endpoints',
     more_info: 'Endpoint Logging ensures that all requests to a CDN endpoint are logged.',
     recommended_action: 'Ensure that diagnostic logging is enabled for each CDN endpoint for each CDN profile',

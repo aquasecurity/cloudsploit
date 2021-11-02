@@ -20,6 +20,7 @@ function getEncryptionLevel(kmsKey) {
 module.exports = {
     title: 'Data Disks Encrypted',
     category: 'ECS',
+    domain: 'Compute',
     description: 'Ensure that encryption is enabled for ECS data disk volumes.',
     more_info: 'Encryption can help you secure your data stored in Alibaba Cloud ECS and comply with security standards.',
     link: 'https://www.alibabacloud.com/help/doc-detail/59643.htm',

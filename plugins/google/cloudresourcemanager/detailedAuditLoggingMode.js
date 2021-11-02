@@ -3,6 +3,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Detailed Audit Logging Mode',
     category: 'Resource Manager',
+    domain: 'Management and Governance',
     description: 'Determine if "Detailed Audit Logging Mode" policy is configured at the GCP organization level.',
     more_info: 'Detailed Audit Logging Mode is highly encouraged in coordination with Bucket Lock when seeking compliances such as SEC Rule 17a-4(f), CFTC Rule 1.31(c)-(d), and FINRA Rule 4511(c).',
     link: 'https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints',

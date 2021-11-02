@@ -3,6 +3,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'IAM User Account In Use',
     category: 'IAM',
+    domain: 'Identity and Access management',
     description: 'Ensure that IAM user accounts are not being actively used.',
     more_info: 'IAM users, roles, and groups should not be used for day-to-day account management.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html',

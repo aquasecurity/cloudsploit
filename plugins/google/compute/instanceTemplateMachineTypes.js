@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Instance Template Machine Type',
     category: 'Compute',
+    domain: 'Compute',
     description: 'Ensure that Cloud Virtual Machine instance templates are of given types.',
     more_info: 'Virtual Machine instance templates should be of the given types to ensure the internal compliance and prevent unexpected billing charges.',
     link: 'https://cloud.google.com/compute/docs/machine-types',

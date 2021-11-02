@@ -3,6 +3,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Enable Usage Export',
     category: 'Compute',
+    domain: 'Compute',
     description: 'Ensure that setting is configured to export Compute instances usage to Cloud Storage bucket.',
     link: 'https://cloud.google.com/compute/docs/logging/usage-export',
     more_info: 'Compute Engine lets you export detailed reports that provide information about the lifetime and usage of your Compute Engine resources to a Google Cloud Storage bucket using the usage export feature.',

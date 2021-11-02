@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Private Access Enabled',
     category: 'VPC Network',
+    domain: 'Network Access Control',
     description: 'Ensures Private Google Access is enabled for all Subnets',
     more_info: 'Private Google Access allows VM instances on a subnet to reach Google APIs and services without an IP address. This creates a more secure network for the internal communication.',
     link: 'https://cloud.google.com/vpc/docs/configure-private-google-access',

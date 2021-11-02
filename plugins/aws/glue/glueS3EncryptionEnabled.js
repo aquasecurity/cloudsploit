@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'AWS Glue S3 Encryption Enabled',
     category: 'Glue',
+    domain: 'Content Delivery',
     description: 'Ensures that encryption at-rest is enabled when writing AWS Glue data to Amazon S3.',
     more_info: 'AWS Glue should have encryption at-rest enabled for Amazon S3 to ensure security of data at rest and to prevent unauthorized access.',
     recommended_action: 'Recreate AWS Glue Security Configuration to enable Amazon S3 encryption at-rest',

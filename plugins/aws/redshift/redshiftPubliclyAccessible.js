@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Redshift Publicly Accessible',
     category: 'Redshift',
+    domain: 'Databases',
     description: 'Ensures Redshift clusters are not launched into the public cloud',
     more_info: 'Unless there is a specific business requirement, Redshift clusters should not have a public endpoint and should be accessed from within a VPC only.',
     link: 'http://docs.aws.amazon.com/redshift/latest/mgmt/getting-started-cluster-in-vpc.html',

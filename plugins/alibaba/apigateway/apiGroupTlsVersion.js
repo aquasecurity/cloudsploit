@@ -3,6 +3,7 @@ var helpers = require('../../../helpers/alibaba');
 module.exports = {
     title: 'API Group TLS Version',
     category: 'APIGateway',
+    domain: 'Availability',
     description: 'Ensure that API Gateway groups are using latest TLS version.',
     more_info: 'API Gateway groups should enforce TLS version 1.2.1 to ensure encryption of data in transit with updated features.',
     link: 'https://www.alibabacloud.com/help/doc-detail/115169.html',

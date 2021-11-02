@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'VPC DNS Logging Enabled',
     category: 'VPC Network',
+    domain: 'Network Access Control',
     description: 'Ensure that All VPC Network has DNS logging enabled.',
     more_info: 'Cloud DNS logging records the queries coming from Compute Engine VMs, GKE containers, or other GCP resources provisioned within the VPC to Stackdriver.',
     link: 'https://cloud.google.com/dns/docs/monitoring',

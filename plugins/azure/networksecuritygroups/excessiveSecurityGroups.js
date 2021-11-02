@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Excessive Security Groups',
     category: 'Network Security Groups',
+    domain: 'Network Access Control',
     description: 'Determines if there are an excessive number of security groups in the account',
     more_info: 'Keeping the number of security groups to a minimum helps reduce the attack surface of an account. Rather than creating new groups with the same rules for each project, common rules should be grouped under the same security groups. For example, instead of adding port 22 from a known IP to every group, create a single "SSH" security group which can be used on multiple instances.',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',

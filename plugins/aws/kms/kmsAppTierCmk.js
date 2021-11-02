@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'App-Tier KMS Customer Master Key (CMK)',
     category: 'KMS',
+    domain: 'Application Integration',
     description: 'Ensures that there is one Amazon KMS Customer Master Key (CMK) present in the account for App-Tier resources.',
     more_info: 'Amazon KMS should have Customer Master Key (CMK) for App-Tier to protect data in transit.',
     recommended_action: 'Create a Customer Master Key (CMK) with App-Tier tag',

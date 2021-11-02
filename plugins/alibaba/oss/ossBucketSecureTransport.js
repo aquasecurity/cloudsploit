@@ -3,6 +3,7 @@ var helpers = require('../../../helpers/alibaba');
 module.exports = {
     title: 'OSS Bucket Secure Transport Enabled',
     category: 'OSS',
+    domain: 'Storage',
     description: 'Ensure that Alibaba OSS buckets have secure transport enabled.',
     more_info: 'Configuring secure transfer enhances the security of OSS bucket by allowing requests to the storage account by only a secure connection.',
     recommended_action: 'Modify OSS bucket policy to configure secure transport',

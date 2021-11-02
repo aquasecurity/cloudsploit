@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'ELBv2 WAF Enabled',
     category: 'ELBv2',
+    domain: 'Content Delivery',
     description: 'Ensure that all Application Load Balancers have WAF enabled.',
     more_info: 'Enabling WAF allows control over requests to the load balancer, allowing or denying traffic based off rules in the Web ACL',
     link: 'https://aws.amazon.com/blogs/aws/aws-web-application-firewall-waf-for-application-load-balancers/',

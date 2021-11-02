@@ -3,6 +3,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Restrict VPN Peer IPs',
     category: 'Resource Manager',
+    domain: 'Management and Governance',
     description: 'Determine if "Restrict VPN Peer IPs" is enforced on the GCP organization level.',
     more_info: 'Enforcing the "Restrict VPN Peer IPs" constraint allows you to control the IP addresses which can be configured as VPN Peers.',
     link: 'https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints',

@@ -3,6 +3,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'CloudFront WAF Enabled',
     category: 'CloudFront',
+    domain: 'Content Delivery',
     description: 'Ensures CloudFront distributions have WAF enabled.',
     more_info: 'Enabling WAF allows control over requests to the Cloudfront Distribution, allowing or denying traffic based off rules in the Web ACL',
     link: 'https://docs.aws.amazon.com/waf/latest/developerguide/web-acl-associating-cloudfront-distribution.html',

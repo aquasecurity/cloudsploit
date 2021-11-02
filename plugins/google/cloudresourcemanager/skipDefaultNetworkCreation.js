@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Skip Default Network Creation',
     category: 'Resource Manager',
+    domain: 'Management and Governance',
     description: 'Determine if "Skip Default Network Creation" constraint policy is enforces at the GCP organization level.',
     more_info: 'Enforcing the "Skip Default Network Creation" disables the creation of default VPC network on project creation which is recommended if you want to keep some parts of your network private.',
     link: 'https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints',

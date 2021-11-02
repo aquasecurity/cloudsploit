@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'GuardDuty Master Account',
     category: 'GuardDuty',
+    domain: 'Management and Governance',
     description: 'Ensures GuardDuty master account is correct',
     more_info: 'Organizations with large numbers of AWS accounts should configure GuardDuty findings from all member accounts to be sent to a consistent master account.',
     link: 'https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_accounts.html#guardduty_master',
