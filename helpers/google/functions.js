@@ -73,8 +73,8 @@ function findOpenPorts(ngs, protocols, service, location, results, cache, callba
         ['projects','get', 'global']);
 
     if (!projects || projects.err || !projects.data || !projects.data.length) {
-        helpers.addResult(results, 3,
-            'Unable to query for projects: ' + helpers.addError(projects), 'global', null, null, (projects) ? projects.err : null);
+        addResult(results, 3,
+            'Unable to query for projects: ' + shared.addError(projects), 'global', null, null, (projects) ? projects.err : null);
         return callback(null, results, source);
     }
 
@@ -142,8 +142,8 @@ function findOpenAllPorts(ngs, location, results, cache, callback, source) {
         ['projects','get', 'global']);
 
     if (!projects || projects.err || !projects.data || !projects.data.length) {
-        helpers.addResult(results, 3,
-            'Unable to query for projects: ' + helpers.addError(projects), 'global', null, null, (projects) ? projects.err : null);
+        addResult(results, 3,
+            'Unable to query for projects: ' + shared.addError(projects), 'global', null, null, (projects) ? projects.err : null);
         return callback(null, results, source);
     }
 
@@ -280,6 +280,41 @@ function createResourceName(resourceType, resourceId, project, locationType, loc
     return resourceName;
 }
 
+function checkOrgPolicy(orgPolicies, constraintName, constraintType, shouldBeEnabled, ifNotFound, displayName, results) {
+    let isEnabled = false;
+    if (orgPolicies && orgPolicies.policies) {
+        let policyToCheck = orgPolicies.policies.find(policy => (
+            policy.constraint &&
+            policy.constraint.includes(constraintName)));
+        if (policyToCheck) {
+            if (constraintType == 'listPolicy' && policyToCheck.listPolicy) {
+                if (policyToCheck.listPolicy.allValues) {
+                    isEnabled = policyToCheck.listPolicy.allValues == 'ALLOW' ? false : true;
+                } else if ((policyToCheck.listPolicy.allowedValues && policyToCheck.listPolicy.allowedValues.length) || (policyToCheck.listPolicy.deniedValues && policyToCheck.listPolicy.deniedValues.length)) {
+                    isEnabled = true;
+                }
+            } else if (constraintType == 'booleanPolicy' && policyToCheck.booleanPolicy && policyToCheck.booleanPolicy.enforced) {
+                isEnabled = true;
+            }
+        } else {
+            isEnabled = ifNotFound;
+        }
+    } 
+    let successMessage = `"${displayName}" constraint is enforced at the organization level.`;
+    let failureMessage = `"${displayName}" constraint is not enforced at the organization level.`;
+    let status, message;
+    if (isEnabled) {
+        status = shouldBeEnabled ? 0 : 2;
+        message = shouldBeEnabled ? successMessage : failureMessage;
+    } else {
+        status = shouldBeEnabled ? 2 : 0;
+        message = shouldBeEnabled ? failureMessage : successMessage;
+    }
+
+    shared.addResult(results, status, message, 'global');
+
+}
+
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
@@ -288,5 +323,6 @@ module.exports = {
     createResourceName: createResourceName,
     getProtectionLevel: getProtectionLevel,
     listToObj: listToObj,
-    createResourceName: createResourceName
+    createResourceName: createResourceName,
+    checkOrgPolicy: checkOrgPolicy
 };

@@ -63,14 +63,27 @@ function addResult(results, status, message, region, resource, custom){
     }
 }
 
-function findOpenPorts(groups, ports, service, region, results) {
+function findOpenPorts(groups, ports, service, region, results, cache, config, callback) {
     var found = false;
+    var usedGroup = false;
+    if (config.ec2_skip_unused_groups) {
+        var usedGroups = getUsedSecurityGroups(cache, results, region, callback);
+    }
 
     for (var g in groups) {
         var string;
         var openV4Ports = [];
         var openV6Ports = [];
         var resource = `arn:aws:ec2:${region}:${groups[g].OwnerId}:security-group/${groups[g].GroupId}`;
+
+        if (config.ec2_skip_unused_groups) {
+            if (groups[g].GroupId && !usedGroups.includes(groups[g].GroupId)) {
+                addResult(results, 1, `Security Group: ${groups[g].GroupId} is not in use`,
+                    region, resource);
+                usedGroup = true;
+                continue;
+            }
+        }
 
         for (var p in groups[g].IpPermissions) {
             var permission = groups[g].IpPermissions[p];
@@ -157,7 +170,7 @@ function findOpenPorts(groups, ports, service, region, results) {
         }
     }
 
-    if (!found) {
+    if (!found && !usedGroup) {
         addResult(results, 0, 'No public open ports found', region);
     }
 
@@ -245,8 +258,8 @@ function userGlobalAccess(statement, restrictedPermissions) {
 
 function crossAccountPrincipal(principal, accountId, fetchPrincipals) {
     if (typeof principal === 'string' &&
-        /^[0-9]{12}$/.test(principal) &&
-        principal !== accountId) {
+        (/^[0-9]{12}$/.test(principal) || /^arn:aws:.*/.test(principal)) &&
+        !principal.includes(accountId)) {
         if (fetchPrincipals) return [principal];
         return true;
     }
@@ -259,7 +272,7 @@ function crossAccountPrincipal(principal, accountId, fetchPrincipals) {
     var principals = [];
 
     for (var a in awsPrincipals) {
-        if (/^arn:aws:(iam|sts)::[0-9]{12}.*/.test(awsPrincipals[a]) &&
+        if (/^arn:aws:.*/.test(awsPrincipals[a]) &&
             awsPrincipals[a].indexOf(accountId) === -1) {
             if (!fetchPrincipals) return true;
             principals.push(awsPrincipals[a]);
@@ -355,6 +368,8 @@ function isValidCondition(statement, allowedConditionKeys, iamConditionOperators
     if (statement.Condition && statement.Effect) {
         var effect = statement.Effect;
         var values = [];
+        var foundValid = false;
+
         for (var operator of Object.keys(statement.Condition)) {
             var defaultOperator = operator;
             if (operator.includes(':')) defaultOperator = operator.split(':')[1];
@@ -362,23 +377,27 @@ function isValidCondition(statement, allowedConditionKeys, iamConditionOperators
             var subCondition = statement.Condition[operator];
             for (var key of Object.keys(subCondition)) {
                 let keyLower = key.toLowerCase();
-                if (!allowedConditionKeys.some(conditionKey => keyLower.includes(conditionKey.toLowerCase()))) return false;
+                if (!allowedConditionKeys.find(conditionKey => conditionKey.toLowerCase() == keyLower)) continue;
+
                 var value = subCondition[key];
                 if (iamConditionOperators.string[effect].includes(defaultOperator) ||
-                iamConditionOperators.arn[effect].includes(defaultOperator)) {
+                    iamConditionOperators.arn[effect].includes(defaultOperator)) {
                     if (keyLower === 'kms:calleraccount' && typeof value === 'string' && effect === 'Allow' &&  value === accountId) {
+                        foundValid = true;
                         values.push(value);
-                        return values;
-                    } 
-                    if (!value.length || value === '*') return false;
-                    else if (/^[0-9]{12}$/.test(value) || /^arn:aws:(iam|sts)::.+/.test(value)) values.push(value);
+                    } else if (/^[0-9]{12}$/.test(value) || /^arn:aws:.+/.test(value)) {
+                        foundValid = true;
+                        values.push(value);
+                    }
                 } else if (defaultOperator === 'Bool') {
-                    if ((effect === 'Allow' && !value) || effect === 'Deny' && value) return false;
+                    if ((effect === 'Allow' && value) || effect === 'Deny' && !value) foundValid = true;
                 } else if (iamConditionOperators.ipaddress[effect].includes(defaultOperator)) {
-                    if (value === '0.0.0.0/0' || value === '::/0') return false;
-                } else return false;
+                    if (value !== '0.0.0.0/0' && value !== '::/0') foundValid = true;
+                }
             }
         }
+
+        if (!foundValid) return false;
         if (fetchConditionPrincipals) return values;
     }
 
@@ -453,8 +472,9 @@ function getS3BucketLocation(cache, region, bucketName) {
         ['s3', 'getBucketLocation', region, bucketName]);
 
     if (getBucketLocation && getBucketLocation.data) {
-        if (getBucketLocation.data.LocationConstraint) return getBucketLocation.data.LocationConstraint;
-        else return 'us-east-1';
+        if (getBucketLocation.data.LocationConstraint &&
+            regions.all.includes(getBucketLocation.data.LocationConstraint)) return getBucketLocation.data.LocationConstraint;
+        else return 'global';
     }
     return 'global';
 }
@@ -830,6 +850,45 @@ function getOrganizationAccounts(listAccounts, accountId) {
     return orgAccountIds;
 }
 
+function getUsedSecurityGroups(cache, results, region, callback) {
+    let result = [];
+    const describeNetworkInterfaces = helpers.addSource(cache, {},
+        ['ec2', 'describeNetworkInterfaces', region]);
+    
+    if (!describeNetworkInterfaces || describeNetworkInterfaces.err || !describeNetworkInterfaces.data) {
+        helpers.addResult(results, 3,
+            'Unable to query for network interfaces: ' + helpers.addError(describeNetworkInterfaces), region);
+        return callback();
+    }
+
+    const listFunctions = helpers.addSource(cache, {},
+        ['lambda', 'listFunctions', region]);
+    
+    if (!listFunctions || listFunctions.err || !listFunctions.data) {
+        helpers.addResult(results, 3,
+            'Unable to list lambda functions: ' + helpers.addError(listFunctions), region);
+        return callback();
+    }
+
+    describeNetworkInterfaces.data.forEach(interface => {
+        if (interface.Groups) {
+            interface.Groups.forEach(group => {
+                if (!result.includes(group.GroupId)) result.push(group.GroupId);
+            });
+        }
+    });
+
+    listFunctions.data.forEach(func => {
+        if (func.VpcConfig && func.VpcConfig.SecurityGroupIds) {
+            func.VpcConfig.SecurityGroupIds.forEach(group => {
+                if (!result.includes(group)) result.push(group);
+            });
+        }
+    });
+
+    return result;
+}
+
 function getPrivateSubnets(subnetRTMap, subnets, routeTables) {
     let response = [];
     let privateRouteTables = [];
@@ -894,6 +953,7 @@ module.exports = {
     isEffectivePolicyStatement: isEffectivePolicyStatement,
     getS3BucketLocation: getS3BucketLocation,
     getOrganizationAccounts: getOrganizationAccounts,
+    getUsedSecurityGroups: getUsedSecurityGroups,
     getPrivateSubnets: getPrivateSubnets,
     getSubnetRTMap: getSubnetRTMap
 };

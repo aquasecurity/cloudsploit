@@ -80,24 +80,18 @@ module.exports = {
                     var then = new Date(certificate.NotAfter);
                     var now = new Date();
                     
-                    var difference = helpers.daysBetween(then, now);
+                    var difference = Math.round((new Date(then).getTime() - new Date(now).getTime())/(24*60*60*1000));
                     var expiresInMsg = 'Certificate for domain: ' + certificate.DomainName + ' expires in ' + Math.abs(difference) + ' days';
                     var expiredMsg = 'Certificate: for domain: ' + certificate.DomainName + ' expired ' + Math.abs(difference) + ' days ago';
 
-                    // Expired already
-                    if (then < now) {
-                        helpers.addResult(results, 2, expiredMsg, region, certificate.CertificateArn);
+                    if (difference > config.acm_certificate_expiry_pass) {
+                        helpers.addResult(results, 0, expiresInMsg, region, certificate.CertificateArn, custom);
+                    } else if (difference > config.acm_certificate_expiry_warn) {
+                        helpers.addResult(results, 1, expiresInMsg, region, certificate.CertificateArn, custom);
+                    } else if (difference > 0) {
+                        helpers.addResult(results, 2, expiresInMsg, region, certificate.CertificateArn, custom);
                     } else {
-                        // Expires in the future
-                        if (difference > config.acm_certificate_expiry_pass) {
-                            helpers.addResult(results, 0, expiresInMsg, region, certificate.CertificateArn, custom);
-                        } else if (difference > config.acm_certificate_expiry_warn) {
-                            helpers.addResult(results, 1, expiresInMsg, region, certificate.CertificateArn, custom);
-                        } else if (difference > 0) {
-                            helpers.addResult(results, 2, expiresInMsg, region, certificate.CertificateArn, custom);
-                        } else {
-                            helpers.addResult(results, 0, expiredMsg, region, certificate.CertificateArn, custom);
-                        }
+                        helpers.addResult(results, 2, expiredMsg, region, certificate.CertificateArn, custom);
                     }
                 }
             });

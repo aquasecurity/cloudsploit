@@ -25,6 +25,25 @@ var calls = {
             api: 'compute',
             version: 'v1',
             location: 'zone'
+        },
+        aggregatedList: {
+            api: 'compute',
+            version: 'v1',
+            location: null
+        }
+    },
+    images: {
+        list: {
+            api: 'compute',
+            version: 'v1',
+            location: null
+        }
+    },
+    snapshots: {
+        list: {
+            api: 'compute',
+            version: 'v1',
+            location: null,
         }
     },
     securityPolicies: {
@@ -32,6 +51,13 @@ var calls = {
             api: 'compute',
             version: 'v1',
             location: 'global'
+        }
+    },
+    resourcePolicies: {
+        list: {
+            api: 'compute',
+            version: 'v1',
+            location: 'region'
         }
     },
     firewalls: {
@@ -82,6 +108,15 @@ var calls = {
             api: 'compute',
             version: 'v1',
             location: null,
+        }
+    },
+    functions: {
+        list : {
+            api: 'cloudfunctions',
+            version: 'v1',
+            parent: true,
+            location: 'region',
+            nested: true
         }
     },
     keyRings: {
@@ -221,6 +256,13 @@ var calls = {
             parent: 'project'
         }
     },
+    subscriptions: {
+        list: {
+            api: 'pubsub',
+            version: 'v1',
+            parent: 'project'
+        }
+    },
     jobs: {
         list: { //https://dataflow.googleapis.com/v1b3/projects/{projectId}/jobs:list
             api: 'dataflow',
@@ -244,6 +286,13 @@ var calls = {
             location: null,
             parent: 'organization'
         },
+    },
+    urlMaps: { // https://compute.googleapis.com/compute/v1/projects/{project}/global/urlMaps
+        list: {
+            api: 'compute',
+            version: 'v1',
+            location: 'global'
+        }
     }
 };
 
@@ -348,6 +397,15 @@ var postcalls = {
         getIamPolicy: {
             api: 'cloudresourcemanager',
             version: 'v1beta1',
+            reliesOnService: ['organizations'],
+            reliesOnCall: ['list'],
+            filterKey: ['name'],
+            filterValue: ['organizationId'],
+            parent: 'resource'
+        },
+        listOrgPolicies: {
+            api: 'cloudresourcemanager',
+            version: 'v1',
             reliesOnService: ['organizations'],
             reliesOnCall: ['list'],
             filterKey: ['name'],

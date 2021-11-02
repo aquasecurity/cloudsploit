@@ -3,11 +3,12 @@ var helpers = require('../../../helpers/aws/');
 module.exports = {
     title: 'S3 Bucket All Users Policy',
     category: 'S3',
+    domain: 'Storage',
     description: 'Ensures S3 bucket policies do not allow global write, delete, or read permissions',
     more_info: 'S3 buckets can be configured to allow the global principal to access the bucket via the bucket policy. This policy should be restricted only to known users or accounts.',
     recommended_action: 'Remove wildcard principals from the bucket policy statements.',
     link: 'https://docs.aws.amazon.com/AmazonS3/latest/dev/using-iam-policies.html',
-    apis: ['S3:listBuckets', 'S3:getBucketPolicy'],
+    apis: ['S3:listBuckets', 'S3:getBucketPolicy', 'S3:getBucketLocation'],
     compliance: {
         pci: 'PCI requires that cardholder data can only be accessed by those with ' +
              'a legitimate business need. If PCI-restricted data is stored in S3, ' +
@@ -41,6 +42,7 @@ module.exports = {
             if (!bucket.Name) continue;
 
             var bucketResource = 'arn:aws:s3:::' + bucket.Name;
+            var bucketLocation = helpers.getS3BucketLocation(cache, region, bucket.Name);
 
             var getBucketPolicy = helpers.addSource(cache, source,
                 ['s3', 'getBucketPolicy', region, bucket.Name]);
@@ -50,13 +52,13 @@ module.exports = {
                 getBucketPolicy.err.code && getBucketPolicy.err.code === 'NoSuchBucketPolicy') {
                 helpers.addResult(results, 0,
                     'No additional bucket policy found',
-                    'global', bucketResource);
+                    bucketLocation, bucketResource);
             } else if (!getBucketPolicy || getBucketPolicy.err ||
                        !getBucketPolicy.data || !getBucketPolicy.data.Policy) {
                 helpers.addResult(results, 3,
                     'Error querying for bucket policy for bucket: ' + bucket.Name +
                     ': ' + helpers.addError(getBucketPolicy),
-                    'global', bucketResource);
+                    bucketLocation, bucketResource);
             } else {
                 try {
                     var policyJson = JSON.parse(getBucketPolicy.data.Policy);
@@ -66,11 +68,11 @@ module.exports = {
                         helpers.addResult(results, 3,
                             'Error querying for bucket policy for bucket: ' + bucket.Name +
                             ': Policy JSON is invalid or does not contain valid statements.',
-                            'global', bucketResource);
+                            bucketLocation, bucketResource);
                     } else if (!policyJson.Statement.length) {
                         helpers.addResult(results, 0,
                             'Bucket policy does not contain any statements',
-                            'global', bucketResource);
+                            bucketLocation, bucketResource);
                     } else {
                         var policyMessage = [];
                         var policyResult = 0;
@@ -115,18 +117,18 @@ module.exports = {
                         if (!policyMessage.length) {
                             helpers.addResult(results, 0,
                                 'Bucket policy does not contain any insecure allow statements',
-                                'global', bucketResource);
+                                bucketLocation, bucketResource);
                         } else {
                             helpers.addResult(results, policyResult,
                                 policyMessage.join(' '),
-                                'global', bucketResource);
+                                bucketLocation, bucketResource);
                         }
                     }
                 } catch (e) {
                     helpers.addResult(results, 3,
                         'Error querying for bucket policy for bucket: ' + bucket.Name +
                         ': Policy JSON could not be parsed.',
-                        'global', bucketResource);
+                        bucketLocation, bucketResource);
                 }
             }
         }
