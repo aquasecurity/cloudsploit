@@ -147,6 +147,12 @@ var calls = {
             subProperty: 'ApiSummary',
             apiVersion: '2016-07-14',
             paginate: 'Pages'
+        },
+        DescribeApiGroups: {
+            property: 'ApiGroupAttributes',
+            subProperty: 'ApiGroupAttribute',
+            apiVersion: '2016-07-14',
+            paginate: 'Pages'
         }
     },
     ACK: {

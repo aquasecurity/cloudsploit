@@ -204,7 +204,7 @@ module.exports = {
         'esDesiredInstanceTypes'        : require(__dirname + '/plugins/aws/es/esDesiredInstanceTypes.js'),
         'esTlsVersion'                  : require(__dirname + '/plugins/aws/es/esTlsVersion.js'),
         'esDomainEncryptionEnabled'     : require(__dirname + '/plugins/aws/es/esDomainEncryptionEnabled.js'),
-
+        'vaultPublicAccess'             : require(__dirname + '/plugins/aws/s3glacier/vaultPublicAccess.js'),
         'firehoseEncrypted'             : require(__dirname + '/plugins/aws/firehose/firehoseEncrypted.js'),
 
         'eventBusCrossAccountAccess'    : require(__dirname + '/plugins/aws/eventbridge/eventBusCrossAccountAccess.js'),
@@ -318,7 +318,7 @@ module.exports = {
         'ssmActiveOnAllInstances'       : require(__dirname + '/plugins/aws/ssm/ssmActiveOnAllInstances.js'),
         'ssmAgentLatestVersion'         : require(__dirname + '/plugins/aws/ssm/ssmAgentLatestVersion.js'),
         'ssmAgentAutoUpdateEnabled'     : require(__dirname + '/plugins/aws/ssm/ssmAgentAutoUpdateEnabled'),
-
+        'ssmDocumentPublicAccess'       : require(__dirname + '/plugins/aws/ssm/ssmDocumentPublicAccess'),
 
         'lambdaAdminPrivileges'         : require(__dirname + '/plugins/aws/lambda/lambdaAdminPrivileges.js'),
         'envVarsClientSideEncryption'   : require(__dirname + '/plugins/aws/lambda/envVarsClientSideEncryption.js'),
@@ -332,6 +332,8 @@ module.exports = {
         'environmentAdminPrivileges'    : require(__dirname + '/plugins/aws/mwaa/environmentAdminPrivileges.js'),
 
         'monitoringMetrics'             : require(__dirname + '/plugins/aws/cloudwatchlogs/monitoringMetrics.js'),
+        'mqDeploymentMode'              : require(__dirname + '/plugins/aws/mq/mqDeploymentMode.js'),
+
         'logRetentionPeriod'            : require(__dirname + '/plugins/aws/cloudwatchlogs/logRetentionPeriod.js'),
       
         'mqAutoMinorVersionUpgrade'     : require(__dirname + '/plugins/aws/mq/mqAutoMinorVersionUpgrade.js'),
@@ -935,7 +937,7 @@ module.exports = {
         'actiontrailBucketPrivate'      : require(__dirname + '/plugins/alibaba/actiontrail/actiontrailBucketPrivate.js'),
     
         'apiProtocol'                   : require(__dirname + '/plugins/alibaba/apigateway/apiProtocol.js'),
-
+        'apiGroupTlsVersion'            : require(__dirname + '/plugins/alibaba/apigateway/apiGroupTlsVersion.js'),
         'networkPolicyEnabled'          : require(__dirname + '/plugins/alibaba/ack/networkPolicyEnabled.js'),
 
         'securityCenterEdition'         : require(__dirname + '/plugins/alibaba/securitycenter/securityCenterEdition.js'),

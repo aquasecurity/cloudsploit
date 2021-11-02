@@ -35,785 +35,762 @@ var globalServices = [
     'WAFRegional'
 ];
 
-var calls = {
-    AccessAnalyzer: {
-        listAnalyzers: {
-            property: 'analyzers',
-            paginate: 'NextToken'
-        }
-    },
-    ACM: {
-        listCertificates: {
-            property: 'CertificateSummaryList',
-            paginate: 'NextToken'
-        }
-    },
-    APIGateway: {
-        getRestApis: {
-            property: 'items',
-            paginate: 'NextToken'
-        }
-    },
-    Athena: {
-        listWorkGroups: {
-            property: 'WorkGroups',
-            paginate: 'NextToken',
-            params: {
-                MaxResults: 50
-            }
-        }
-    },
-    AutoScaling: {
-        describeAutoScalingGroups: {
-            property: 'AutoScalingGroups',
-            paginate: 'NextToken',
-            params: {
-                MaxRecords: 100
+var calls = [
+    {
+        AccessAnalyzer: {
+            listAnalyzers: {
+                property: 'analyzers',
+                paginate: 'NextToken'
             }
         },
-        describeLaunchConfigurations: {
-            property: 'LaunchConfigurations',
-            paginate: 'NextToken',
-            params: {
-                MaxRecords: 100
-            }
-        }
-    },
-    CloudFormation: {
-        listStacks: {
-            property: 'StackSummaries',
-            params: {
-                'StackStatusFilter': [
-                    'CREATE_IN_PROGRESS',
-                    'CREATE_COMPLETE',
-                    'ROLLBACK_IN_PROGRESS',
-                    'ROLLBACK_FAILED',
-                    'ROLLBACK_COMPLETE',
-                    'DELETE_FAILED',
-                    'UPDATE_IN_PROGRESS',
-                    'UPDATE_COMPLETE_CLEANUP_IN_PROGRESS',
-                    'UPDATE_COMPLETE',
-                    'UPDATE_ROLLBACK_IN_PROGRESS',
-                    'UPDATE_ROLLBACK_FAILED',
-                    'UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS',
-                    'UPDATE_ROLLBACK_COMPLETE',
-                    'REVIEW_IN_PROGRESS',
-                    'IMPORT_IN_PROGRESS',
-                    'IMPORT_COMPLETE',
-                    'IMPORT_ROLLBACK_IN_PROGRESS',
-                    'IMPORT_ROLLBACK_FAILED',
-                    'IMPORT_ROLLBACK_COMPLETE',
-                ]
+        ACM: {
+            listCertificates: {
+                property: 'CertificateSummaryList',
+                paginate: 'NextToken'
             }
         },
-    },
-    CloudFront: {
-        // TODO: Pagination is using an older format
-        listDistributions: {
-            property: 'DistributionList',
-            secondProperty: 'Items'
-        }
-    },
-    CloudTrail: {
-        describeTrails: {
-            property: 'trailList'
-        }
-    },
-    CloudWatchLogs: {
-        describeLogGroups: {
-            property: 'logGroups',
-            paginate: 'nextToken',
-            params: {
-                limit: 50
+        APIGateway: {
+            getRestApis: {
+                property: 'items',
+                paginate: 'NextToken'
             }
         },
-        describeMetricFilters: {
-            property: 'metricFilters',
-            paginate: 'nextToken',
-            params: {
-                limit: 50 // The max available
-            }
-        }
-    },
-    CodeStar: {
-        listProjects: {
-            property: 'projects',
-            paginate: 'nextToken'
-        }
-    },
-    CodeBuild: {
-        listProjects: {
-            property: 'projects',
-            paginate: 'nextToken'
-        }
-    },
-    Comprehend: {
-        listEntitiesDetectionJobs: {
-            property: 'EntitiesDetectionJobPropertiesList',
-            paginate: 'NextToken',
-            params: {
-                MaxResults: 100
+        Athena: {
+            listWorkGroups: {
+                property: 'WorkGroups',
+                paginate: 'NextToken',
+                params: {
+                    MaxResults: 50
+                }
             }
         },
-        listDocumentClassificationJobs: {
-            property: 'DocumentClassificationJobPropertiesList',
-            paginate: 'NextToken',
-            params: {
-                MaxResults: 100
+        AutoScaling: {
+            describeAutoScalingGroups: {
+                property: 'AutoScalingGroups',
+                paginate: 'NextToken',
+                params: {
+                    MaxRecords: 100
+                }
+            },
+            describeLaunchConfigurations: {
+                property: 'LaunchConfigurations',
+                paginate: 'NextToken',
+                params: {
+                    MaxRecords: 100
+                }
             }
         },
-        listDominantLanguageDetectionJobs: {
-            property: 'DominantLanguageDetectionJobPropertiesList',
-            paginate: 'NextToken',
-            params: {
-                MaxResults: 100
+        CloudFormation: {
+            listStacks: {
+                property: 'StackSummaries',
+                params: {
+                    'StackStatusFilter': [
+                        'CREATE_IN_PROGRESS',
+                        'CREATE_COMPLETE',
+                        'ROLLBACK_IN_PROGRESS',
+                        'ROLLBACK_FAILED',
+                        'ROLLBACK_COMPLETE',
+                        'DELETE_FAILED',
+                        'UPDATE_IN_PROGRESS',
+                        'UPDATE_COMPLETE_CLEANUP_IN_PROGRESS',
+                        'UPDATE_COMPLETE',
+                        'UPDATE_ROLLBACK_IN_PROGRESS',
+                        'UPDATE_ROLLBACK_FAILED',
+                        'UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS',
+                        'UPDATE_ROLLBACK_COMPLETE',
+                        'REVIEW_IN_PROGRESS',
+                        'IMPORT_IN_PROGRESS',
+                        'IMPORT_COMPLETE',
+                        'IMPORT_ROLLBACK_IN_PROGRESS',
+                        'IMPORT_ROLLBACK_FAILED',
+                        'IMPORT_ROLLBACK_COMPLETE',
+                    ]
+                }
+            },
+        },
+        CloudFront: {
+            // TODO: Pagination is using an older format
+            listDistributions: {
+                property: 'DistributionList',
+                secondProperty: 'Items'
             }
         },
-        listKeyPhrasesDetectionJobs: {
-            property: 'KeyPhrasesDetectionJobPropertiesList',
-            paginate: 'NextToken',
-            params: {
-                MaxResults: 100
+        CloudTrail: {
+            describeTrails: {
+                property: 'trailList'
             }
         },
-        listSentimentDetectionJobs: {
-            property: 'SentimentDetectionJobPropertiesList',
-            paginate: 'NextToken',
-            params: {
-                MaxResults: 100
+        CloudWatchLogs: {
+            describeLogGroups: {
+                property: 'logGroups',
+                paginate: 'nextToken',
+                params: {
+                    limit: 50
+                }
+            },
+            describeMetricFilters: {
+                property: 'metricFilters',
+                paginate: 'nextToken',
+                params: {
+                    limit: 50 // The max available
+                }
             }
         },
-        listTopicsDetectionJobs: {
-            property: 'TopicsDetectionJobPropertiesList',
-            paginate: 'NextToken',
-            params: {
-                MaxResults: 100
-            }
-        }
-    },
-    ConfigService: {
-        describeConfigurationRecorders: {
-            property: 'ConfigurationRecorders'
-        },
-        describeConfigurationRecorderStatus: {
-            property: 'ConfigurationRecordersStatus'
-        }
-    },
-    DevOpsGuru: {
-        listNotificationChannels: {
-            property: 'Channels',
-            paginate: 'NextToken'
-        }
-    },
-    DirectConnect: {
-        describeDirectConnectGateways: {
-            property: 'directConnectGateways',
-            paginate: 'nextToken'
-        }
-    },
-    DirectoryService: {
-        describeDirectories: {
-            property: 'DirectoryDescriptions',
-            paginate: 'NextToken'
-        }
-    },
-    DLM: {
-        getLifecyclePolicies: {
-            property: 'Policies'
-        }
-    },
-    DMS: {
-        describeReplicationInstances: {
-            property: 'ReplicationInstances',
-            paginate: 'Marker'
-        }
-    },
-    DynamoDB: {
-        listTables: {
-            property: 'TableNames',
-            paginate: 'LastEvaluatedTableName',
-            paginateReqProp: 'ExclusiveStartTableName'
-        }
-    },
-    DAX: {
-        describeClusters: {
-            property: 'Clusters',
-            paginate: 'NextToken'
-        }
-    },
-    EC2: {
-        describeAccountAttributes: {
-            property: 'AccountAttributes'
-        },
-        describeSubnets: {
-            property: 'Subnets',
-            paginate: 'NextToken'
-        },
-        describeAddresses: {
-            property: 'Addresses'
-        },
-        describeVolumes: {
-            property: 'Volumes'
-        },
-        describeSnapshots: {
-            // This call must be overridden because the
-            // default call retrieves every snapshot
-            // available, including public ones
-            override: true
-        },
-        describeInstances: {
-            property: 'Reservations',
-            paginate: 'NextToken',
-            params: {
-                MaxResults: 1000,
-                Filters: [
-                    {
-                        Name: 'instance-state-name',
-                        Values: [
-                            'pending',
-                            'running',
-                            'shutting-down',
-                            'stopping',
-                            'stopped'
-                        ]
-                    }
-                ]
+        CodeStar: {
+            listProjects: {
+                property: 'projects',
+                paginate: 'nextToken'
             }
         },
-        describeSecurityGroups: {
-            property: 'SecurityGroups'
-        },
-        describeVpcs: {
-            property: 'Vpcs',
-            paginate: 'NextToken'
-        },
-        describeFlowLogs: {
-            // TODO: override bc flowlogs are not available in all regions?
-            property: 'FlowLogs'
-        },
-        describeImages: {
-            property: 'Images',
-            params: {
-                Owners: [
-                    'self'
-                ],
-                Filters: [
-                    {
-                        Name: 'state',
-                        Values: [
-                            'available'
-                        ]
-                    }
-                ]
+        CodeBuild: {
+            listProjects: {
+                property: 'projects',
+                paginate: 'nextToken'
             }
         },
-        describeInternetGateways: {
-            property: 'InternetGateways'
-        },
-        describeEgressOnlyInternetGateways: {
-            property: 'EgressOnlyInternetGateways'
-        },
-        describeNatGateways: {
-            property: 'NatGateways',
-            paginate: 'NextToken',
-            params: {
-                Filter: [
-                    {
-                        Name: 'state',
-                        Values: [
-                            'available'
-                        ]
-                    }
-                ]
+        Comprehend: {
+            listEntitiesDetectionJobs: {
+                property: 'EntitiesDetectionJobPropertiesList',
+                paginate: 'NextToken',
+                params: {
+                    MaxResults: 100
+                }
+            },
+            listDocumentClassificationJobs: {
+                property: 'DocumentClassificationJobPropertiesList',
+                paginate: 'NextToken',
+                params: {
+                    MaxResults: 100
+                }
+            },
+            listDominantLanguageDetectionJobs: {
+                property: 'DominantLanguageDetectionJobPropertiesList',
+                paginate: 'NextToken',
+                params: {
+                    MaxResults: 100
+                }
+            },
+            listKeyPhrasesDetectionJobs: {
+                property: 'KeyPhrasesDetectionJobPropertiesList',
+                paginate: 'NextToken',
+                params: {
+                    MaxResults: 100
+                }
+            },
+            listSentimentDetectionJobs: {
+                property: 'SentimentDetectionJobPropertiesList',
+                paginate: 'NextToken',
+                params: {
+                    MaxResults: 100
+                }
+            },
+            listTopicsDetectionJobs: {
+                property: 'TopicsDetectionJobPropertiesList',
+                paginate: 'NextToken',
+                params: {
+                    MaxResults: 100
+                }
             }
         },
-        describeVpcPeeringConnections: {
-            property: 'VpcPeeringConnections',
-            paginate: 'NextToken',
-            params: {
-                Filters: [
-                    {
-                        Name: 'status-code',
-                        Values: [
-                            'pending-acceptance',
-                            'provisioning',
-                            'active'
-                        ]
-                    }
-                ]
+        ConfigService: {
+            describeConfigurationRecorders: {
+                property: 'ConfigurationRecorders'
+            },
+            describeConfigurationRecorderStatus: {
+                property: 'ConfigurationRecordersStatus'
             }
         },
-        describeVpnGateways: {
-            property: 'VpnGateways',
-            params: {
-                Filters: [
-                    {
-                        Name: 'state',
-                        Values: [
-                            'available'
-                        ]
-                    }
-                ]
+        DevOpsGuru: {
+            listNotificationChannels: {
+                property: 'Channels',
+                paginate: 'NextToken'
             }
         },
-        describeVpcEndpointServices: {
-            property: 'ServiceDetails',
-            paginate: 'NextToken'
+        DirectConnect: {
+            describeDirectConnectGateways: {
+                property: 'directConnectGateways',
+                paginate: 'nextToken'
+            }
         },
-        describeVpcEndpoints: {
-            property: 'VpcEndpoints',
-            paginate: 'NextToken'
+        DirectoryService: {
+            describeDirectories: {
+                property: 'DirectoryDescriptions',
+                paginate: 'NextToken'
+            }
         },
-        describeRouteTables: {
-            property: 'RouteTables',
-            paginate: 'NextToken'
+    }, {
+        DLM: {
+            getLifecyclePolicies: {
+                property: 'Policies'
+            }
         },
-        describeTags: {
-            property: 'Tags',
-            paginate: 'NextToken',
+        DMS: {
+            describeReplicationInstances: {
+                property: 'ReplicationInstances',
+                paginate: 'Marker'
+            }
         },
-        describeNetworkInterfaces: {
-            property: 'NetworkInterfaces',
-            paginate: 'NextToken',
+        DynamoDB: {
+            listTables: {
+                property: 'TableNames',
+                paginate: 'LastEvaluatedTableName',
+                paginateReqProp: 'ExclusiveStartTableName'
+            }
         },
-        getEbsEncryptionByDefault: {
-            property: 'EbsEncryptionByDefault'
+        DAX: {
+            describeClusters: {
+                property: 'Clusters',
+                paginate: 'NextToken'
+            }
         },
-        getEbsDefaultKmsKeyId: {
-            property: 'KmsKeyId'
-        },
-        describeVpnConnections: {
-            property: 'VpnConnections',
-            paginate: 'NextToken'
-        },
-        describeNetworkAcls: {
-            property: 'NetworkAcls',
-            paginate: 'NextToken',
-        },
-        describeLaunchTemplates: {
-            property: 'LaunchTemplates',
-            paginate: 'NextToken',
-        }
+        EC2: {
+            describeAccountAttributes: {
+                property: 'AccountAttributes'
+            },
+            describeSubnets: {
+                property: 'Subnets',
+                paginate: 'NextToken'
+            },
+            describeAddresses: {
+                property: 'Addresses'
+            },
+            describeVolumes: {
+                property: 'Volumes'
+            },
+            describeSnapshots: {
+                // This call must be overridden because the
+                // default call retrieves every snapshot
+                // available, including public ones
+                override: true
+            },
+            describeInstances: {
+                property: 'Reservations',
+                paginate: 'NextToken',
+                params: {
+                    MaxResults: 1000,
+                    Filters: [
+                        {
+                            Name: 'instance-state-name',
+                            Values: [
+                                'pending',
+                                'running',
+                                'shutting-down',
+                                'stopping',
+                                'stopped'
+                            ]
+                        }
+                    ]
+                }
+            },
+            describeSecurityGroups: {
+                property: 'SecurityGroups'
+            },
+            describeVpcs: {
+                property: 'Vpcs',
+                paginate: 'NextToken'
+            },
+            describeFlowLogs: {
+                // TODO: override bc flowlogs are not available in all regions?
+                property: 'FlowLogs'
+            },
+            describeImages: {
+                property: 'Images',
+                params: {
+                    Owners: [
+                        'self'
+                    ],
+                    Filters: [
+                        {
+                            Name: 'state',
+                            Values: [
+                                'available'
+                            ]
+                        }
+                    ]
+                }
+            },
+            describeInternetGateways: {
+                property: 'InternetGateways'
+            },
+            describeEgressOnlyInternetGateways: {
+                property: 'EgressOnlyInternetGateways'
+            },
+            describeNatGateways: {
+                property: 'NatGateways',
+                paginate: 'NextToken',
+                params: {
+                    Filter: [
+                        {
+                            Name: 'state',
+                            Values: [
+                                'available'
+                            ]
+                        }
+                    ]
+                }
+            },
+            describeVpcPeeringConnections: {
+                property: 'VpcPeeringConnections',
+                paginate: 'NextToken',
+                params: {
+                    Filters: [
+                        {
+                            Name: 'status-code',
+                            Values: [
+                                'pending-acceptance',
+                                'provisioning',
+                                'active'
+                            ]
+                        }
+                    ]
+                }
+            },
+            describeVpnGateways: {
+                property: 'VpnGateways',
+                params: {
+                    Filters: [
+                        {
+                            Name: 'state',
+                            Values: [
+                                'available'
+                            ]
+                        }
+                    ]
+                }
+            },
+            describeVpcEndpointServices: {
+                property: 'ServiceDetails',
+                paginate: 'NextToken'
+            },
+            describeVpcEndpoints: {
+                property: 'VpcEndpoints',
+                paginate: 'NextToken'
+            },
+            describeRouteTables: {
+                property: 'RouteTables',
+                paginate: 'NextToken'
+            },
+            describeTags: {
+                property: 'Tags',
+                paginate: 'NextToken',
+            },
+            describeNetworkInterfaces: {
+                property: 'NetworkInterfaces',
+                paginate: 'NextToken',
+            },
+            getEbsEncryptionByDefault: {
+                property: 'EbsEncryptionByDefault'
+            },
+            getEbsDefaultKmsKeyId: {
+                property: 'KmsKeyId'
+            },
+            describeVpnConnections: {
+                property: 'VpnConnections',
+                paginate: 'NextToken'
+            },
+            describeNetworkAcls: {
+                property: 'NetworkAcls',
+                paginate: 'NextToken',
+            },
+            describeLaunchTemplates: {
+                property: 'LaunchTemplates',
+                paginate: 'NextToken',
+            }
 
-    },
-    ECR: {
-        describeRepositories: {
-            property: 'repositories',
-            paginate: 'nextToken',
-            params: {
-                maxResults: 1000
-            }
-        }
-    },
-    EFS: {
-        describeFileSystems: {
-            property: 'FileSystems',
-            paginate: 'NextMarker',
-            paginateReqProp: 'Marker'
-        }
-    },
-    EKS: {
-        listClusters: {
-            property: 'clusters',
-            paginate: 'nextToken'
-        }
-    },
-    ECS: {
-        listClusters: {
-            property: 'clusterArns',
-            paginate: 'nextToken'
-        }
-    },
-    ElasticBeanstalk: {
-        describeEnvironments: {
-            property: 'Environments',
-            paginate: 'NextToken'
-        }
-    },
-    ElasticTranscoder: {
-        // TODO: Pagination via NextPageToken and PageToken
-        listPipelines: {
-            property: 'Pipelines',
-            paginate: 'NextPageToken',
-            paginateReqProp: 'PageToken'
-        }
-    },
-    ELB: {
-        describeLoadBalancers: {
-            property: 'LoadBalancerDescriptions',
-            paginate: 'NextMarker',
-            paginateReqProp: 'Marker'
-        }
-    },
-    ELBv2: {
-        describeLoadBalancers: {
-            property: 'LoadBalancers',
-            paginate: 'NextMarker',
-            paginateReqProp: 'Marker'
         },
-        describeTargetGroups: {
-            property: 'TargetGroups',
-            paginate: 'NextMarker',
-            paginateReqProp: 'Marker'
-        },
-        describeTargetHealth: {
-            property: 'TargetGroups',
-            paginate: 'NextMarker',
-            paginateReqProp: 'Marker'
-        }
-    },
-    EMR: {
-        listClusters: {
-            property: 'Clusters',
-            paginate: 'Marker',
-            params: {
-                ClusterStates: [
-                    'RUNNING'
-                ]
+        ECR: {
+            describeRepositories: {
+                property: 'repositories',
+                paginate: 'nextToken',
+                params: {
+                    maxResults: 1000
+                }
             }
-        }
-    },
-    ES: {
-        listDomainNames: {
-            property: 'DomainNames',
-        }
-    },
-    EventBridge: {
-        listEventBuses: {
-            property: 'EventBuses',
-            paginate: 'NextToken',
-            params:{                
-                Limit: 100,
-            }
-        }
-    },
-    Glue: {
-        getDataCatalogEncryptionSettings: {
-            property: 'DataCatalogEncryptionSettings',
         },
-        getSecurityConfigurations: {
-            property: 'SecurityConfigurations',
-            paginate: 'NextMarker'
-        }
-    },
-    Glacier: {
-        listVaults: {
-            paginate: 'Marker',
-            property: 'VaultList',
-            params: {
-                accountId: '-',
-                limit: '50'
+        EFS: {
+            describeFileSystems: {
+                property: 'FileSystems',
+                paginate: 'NextMarker',
+                paginateReqProp: 'Marker'
+            }
+        },
+        EKS: {
+            listClusters: {
+                property: 'clusters',
+                paginate: 'nextToken'
+            }
+        },
+        ECS: {
+            listClusters: {
+                property: 'clusterArns',
+                paginate: 'nextToken'
+            }
+        },
+        ElasticBeanstalk: {
+            describeEnvironments: {
+                property: 'Environments',
+                paginate: 'NextToken'
+            }
+        },
+        ElasticTranscoder: {
+            // TODO: Pagination via NextPageToken and PageToken
+            listPipelines: {
+                property: 'Pipelines',
+                paginate: 'NextPageToken',
+                paginateReqProp: 'PageToken'
+            }
+        },
+        ELB: {
+            describeLoadBalancers: {
+                property: 'LoadBalancerDescriptions',
+                paginate: 'NextMarker',
+                paginateReqProp: 'Marker'
+            }
+        },
+        ELBv2: {
+            describeLoadBalancers: {
+                property: 'LoadBalancers',
+                paginate: 'NextMarker',
+                paginateReqProp: 'Marker'
             },
-        }
-    },
-    IAM: {
-        listServerCertificates: {
-            property: 'ServerCertificateMetadataList',
-            paginate: 'Marker'
-        },
-        listGroups: {
-            property: 'Groups',
-            paginate: 'Marker'
-        },
-        listUsers: {
-            property: 'Users',
-            paginate: 'Marker'
-        },
-        listRoles: {
-            property: 'Roles',
-            paginate: 'Marker'
-        },
-        listPolicies: {
-            property: 'Policies',
-            paginate: 'Marker',
-            params: {
-                OnlyAttached: true // Making this false will effect IAM Support Policy plugin
-            }
-        },
-        listVirtualMFADevices: {
-            property: 'VirtualMFADevices',
-            paginate: 'Marker'
-        },
-        getAccountPasswordPolicy: {
-            property: 'PasswordPolicy'
-        },
-        getAccountSummary: {
-            property: 'SummaryMap'
-        },
-        generateCredentialReport: {
-            override: true
-        }
-    },
-    Kinesis: {
-        listStreams: {
-            property: 'StreamNames'
-        }
-    },
-    Firehose: {
-        listDeliveryStreams: {
-            property: 'DeliveryStreamNames'
-        }
-    },
-    GuardDuty: {
-        listDetectors: {
-            property: 'DetectorIds',
-            paginate: 'NextToken',
-        }
-    },
-    KMS: {
-        listKeys: {
-            property: 'Keys',
-            paginate: 'NextMarker',
-            paginateReqProp: 'Marker',
-            params: {
-                Limit: 1000
-            }
-        },
-        listAliases: {
-            property: 'Aliases',
-            paginate: 'NextMarker',
-            paginateReqProp: 'Marker',
-            params: {
-                Limit: 100
-            }
-        }
-    },
-    Lambda: {
-        listFunctions: {
-            property: 'Functions',
-            paginate: 'NextMarker',
-            paginateReqProp: 'Marker'
-        }
-    },
-    MQ: {
-        listBrokers:{
-            property:'BrokerSummaries',
-            paginate:'NextToken'
-        }
-    },
-    MWAA: {
-        listEnvironments: {
-            property: 'Environments',
-            paginate: 'NextToken'
-        }
-    },
-    Organizations: {
-        describeOrganization: {
-            property: 'Organization',
-        },
-        listHandshakesForAccount: {
-            property: 'Handshakes',
-        },
-        listAccounts: {
-            property: 'Accounts',
-            paginate: 'NextToken'
-        },
-    },
-    RDS: {
-        describeDBInstances: {
-            property: 'DBInstances',
-            paginate: 'Marker'
-        },
-        describeDBClusters: {
-            property: 'DBClusters',
-            paginate: 'Marker'
-        },
-        describeDBEngineVersions: {
-            property: 'DBEngineVersions',
-            paginate: 'Marker',
-            default: true
-        },
-        describeDBSnapshots: {
-            property: 'DBSnapshots',
-            paginate: 'Marker'
-        },
-        describeDBParameterGroups: {
-            property: 'DBParameterGroups',
-            paginate: 'Marker'
-        }
-    },
-    Redshift: {
-        describeClusters: {
-            property: 'Clusters',
-            paginate: 'Marker'
-        },
-        describeClusterParameterGroups: {
-            property: 'ParameterGroups',
-            paginate: 'Marker'
-        },
-        describeReservedNodes: {
-            property: 'ReservedNodes',
-            paginate: 'Marker'
-        }
-    },
-    ResourceGroupsTaggingAPI: {
-        getTagKeys: {
-            property: 'TagKeys',
-            paginate: 'PaginationToken'
-        }
-    },
-    Route53: {
-        listHostedZones: {
-            property: 'HostedZones',
-            paginate: 'NextPageMarker',
-            paginateReqProp: 'Marker'
-        },
-    },
-    Route53Domains: {
-        listDomains: {
-            property: 'Domains',
-            paginate: 'NextPageMarker',
-            paginateReqProp: 'Marker'
-        }
-    },
-    S3: {
-        listBuckets: {
-            property: 'Buckets'
-        }
-    },
-    SageMaker: {
-        listNotebookInstances: {
-            property: 'NotebookInstances',
-            paginate: 'NextToken'
-        }
-    },
-    SecretsManager: {
-        listSecrets: {
-            property: 'SecretList',
-            paginate: 'NextToken'
-        }
-    },
-    ServiceQuotas: {
-        listServiceQuotas: {
-            property: 'Quotas',
-            paginate: 'NextToken',
-            params: {
-                ServiceCode: 'ec2'
+            describeTargetGroups: {
+                property: 'TargetGroups',
+                paginate: 'NextMarker',
+                paginateReqProp: 'Marker'
             },
-        }
-    },
-    SES: {
-        listIdentities: {
-            property: 'Identities',
-            paginate: 'NextToken',
-            params: {
-                IdentityType: 'Domain', // TODO: maybe don't filter these?
-                MaxItems: 1000
+            describeTargetHealth: {
+                property: 'TargetGroups',
+                paginate: 'NextMarker',
+                paginateReqProp: 'Marker'
+            }
+        },
+        EMR: {
+            listClusters: {
+                property: 'Clusters',
+                paginate: 'Marker',
+                params: {
+                    ClusterStates: [
+                        'RUNNING'
+                    ]
+                }
+            }
+        },
+        ES: {
+            listDomainNames: {
+                property: 'DomainNames',
+            }
+        },
+        EventBridge: {
+            listEventBuses: {
+                property: 'EventBuses',
+                paginate: 'NextToken',
+                params: {
+                    Limit: 100,
+                }
+            }
+        },
+        Glue: {
+            getDataCatalogEncryptionSettings: {
+                property: 'DataCatalogEncryptionSettings',
             },
-            rateLimit: 1000 // ms to rate limit between regions
-        },
-        describeActiveReceiptRuleSet: {
-            property: 'Rules'
-        }
-    },
-    Shield: {
-        describeSubscription: {
-            property: 'Subscription'
-        },
-        describeEmergencyContactSettings: {
-            property: 'EmergencyContactList'
-        },
-        listProtections: {
-            property: 'Protections'
-        }
-    },
-    SNS: {
-        listTopics: {
-            property: 'Topics',
-            paginate: 'NextToken'
-        }
-    },
-    SQS: {
-        listQueues: {
-            property: 'QueueUrls'
-        }
-    },
-    SSM: {
-        describeInstanceInformation: {
-            property: 'InstanceInformationList',
-            params: {
-                MaxResults: 50
-            },
-            paginate: 'NextToken'
-        },
-        describeParameters: {
-            property: 'Parameters',
-            params: {
-                MaxResults: 50
-            },
-            paginate: 'NextToken'
-        },
-        listAssociations: {
-            property: 'Associations',
-            paginate: 'NextToken'
-        },
-        getServiceSetting: {
-            property: 'ServiceSetting',
-            paginate: 'NextToken',
-            params: {
-                SettingId: '/ssm/documents/console/public-sharing-permission'
+            getSecurityConfigurations: {
+                property: 'SecurityConfigurations',
+                paginate: 'NextMarker'
             }
         }
-    },
-    STS: {
-        getCallerIdentity: {
-            property: 'Account'
-        }
-    },
-    Support: {
-        describeTrustedAdvisorChecks: {
-            property: 'checks',
-            params: { language: 'en' },
-        },
-    },
-    Transfer: {
-        listServers: {
-            property: 'Servers',
-            paginate: 'NextToken',
-            params: {
-                MaxResults: 1000
+    }, {
+        IAM: {
+            listServerCertificates: {
+                property: 'ServerCertificateMetadataList',
+                paginate: 'Marker'
+            },
+            listGroups: {
+                property: 'Groups',
+                paginate: 'Marker'
+            },
+            listUsers: {
+                property: 'Users',
+                paginate: 'Marker'
+            },
+            listRoles: {
+                property: 'Roles',
+                paginate: 'Marker'
+            },
+            listPolicies: {
+                property: 'Policies',
+                paginate: 'Marker',
+                params: {
+                    OnlyAttached: true // Making this false will effect IAM Support Policy plugin
+                }
+            },
+            listVirtualMFADevices: {
+                property: 'VirtualMFADevices',
+                paginate: 'Marker'
+            },
+            getAccountPasswordPolicy: {
+                property: 'PasswordPolicy'
+            },
+            getAccountSummary: {
+                property: 'SummaryMap'
+            },
+            generateCredentialReport: {
+                override: true
             }
-        }
-    },
-    WAFRegional: {
-        listWebACLs: {
-            property: 'WebACLs',
-            paginate: 'NextMarker'
-        }
-    },
-    WAFV2: {
-        listWebACLs: {
-            property: 'WebACLs',
-            paginate: 'NextMarker',
-            params: {
-                Scope: 'REGIONAL'
+        },
+        Kinesis: {
+            listStreams: {
+                property: 'StreamNames'
             }
-        }
-    },
-    WorkSpaces: {
-        describeWorkspaces: {
-            property: 'Workspaces',
-            paginate: 'NextToken'
         },
-        describeWorkspaceDirectories:{
-            property: 'Directories',
-            paginate: 'NextToken'
+        Firehose: {
+            listDeliveryStreams: {
+                property: 'DeliveryStreamNames'
+            }
         },
-        describeIpGroups:{
-            property: 'Result',
-            paginate: 'NextToken'
+        GuardDuty: {
+            listDetectors: {
+                property: 'DetectorIds',
+                paginate: 'NextToken',
+            }
         },
-        describeWorkspacesConnectionStatus: {
-            property: 'WorkspacesConnectionStatus',
-            paginate: 'NextToken'
-        }
-    },
-    XRay: {
-        getEncryptionConfig: {
-            property: 'EncryptionConfig'
+        KMS: {
+            listKeys: {
+                property: 'Keys',
+                paginate: 'NextMarker',
+                paginateReqProp: 'Marker',
+                params: {
+                    Limit: 1000
+                }
+            },
+            listAliases: {
+                property: 'Aliases',
+                paginate: 'NextMarker',
+                paginateReqProp: 'Marker',
+                params: {
+                    Limit: 100
+                }
+            }
+        },
+        Lambda: {
+            listFunctions: {
+                property: 'Functions',
+                paginate: 'NextMarker',
+                paginateReqProp: 'Marker'
+            }
+        },
+        MWAA: {
+            listEnvironments: {
+                property: 'Environments',
+                paginate: 'NextToken'
+            }
+        },
+        Organizations: {
+            describeOrganization: {
+                property: 'Organization',
+            },
+            listHandshakesForAccount: {
+                property: 'Handshakes',
+            },
+            listAccounts: {
+                property: 'Accounts',
+                paginate: 'NextToken'
+            },
+        },
+        RDS: {
+            describeDBInstances: {
+                property: 'DBInstances',
+                paginate: 'Marker'
+            },
+            describeDBClusters: {
+                property: 'DBClusters',
+                paginate: 'Marker'
+            },
+            describeDBEngineVersions: {
+                property: 'DBEngineVersions',
+                paginate: 'Marker',
+                default: true
+            },
+            describeDBSnapshots: {
+                property: 'DBSnapshots',
+                paginate: 'Marker'
+            },
+            describeDBParameterGroups: {
+                property: 'DBParameterGroups',
+                paginate: 'Marker'
+            }
+        },
+        Redshift: {
+            describeClusters: {
+                property: 'Clusters',
+                paginate: 'Marker'
+            },
+            describeClusterParameterGroups: {
+                property: 'ParameterGroups',
+                paginate: 'Marker'
+            },
+            describeReservedNodes: {
+                property: 'ReservedNodes',
+                paginate: 'Marker'
+            }
+        },
+        ResourceGroupsTaggingAPI: {
+            getTagKeys: {
+                property: 'TagKeys',
+                paginate: 'PaginationToken'
+            }
+        },
+        Route53: {
+            listHostedZones: {
+                property: 'HostedZones',
+                paginate: 'NextPageMarker',
+                paginateReqProp: 'Marker'
+            },
+        },
+        Route53Domains: {
+            listDomains: {
+                property: 'Domains',
+                paginate: 'NextPageMarker',
+                paginateReqProp: 'Marker'
+            }
+        },
+        S3: {
+            listBuckets: {
+                property: 'Buckets'
+            }
+        },
+        SageMaker: {
+            listNotebookInstances: {
+                property: 'NotebookInstances',
+                paginate: 'NextToken'
+            }
+        },
+        SecretsManager: {
+            listSecrets: {
+                property: 'SecretList',
+                paginate: 'NextToken'
+            }
+        },
+        ServiceQuotas: {
+            listServiceQuotas: {
+                property: 'Quotas',
+                paginate: 'NextToken',
+                params: {
+                    ServiceCode: 'ec2'
+                },
+            }
+        },
+        SES: {
+            listIdentities: {
+                property: 'Identities',
+                paginate: 'NextToken',
+                params: {
+                    IdentityType: 'Domain', // TODO: maybe don't filter these?
+                    MaxItems: 1000
+                },
+                rateLimit: 1000 // ms to rate limit between regions
+            },
+            describeActiveReceiptRuleSet: {
+                property: 'Rules'
+            }
+        },
+        Shield: {
+            describeSubscription: {
+                property: 'Subscription'
+            },
+            describeEmergencyContactSettings: {
+                property: 'EmergencyContactList'
+            },
+            listProtections: {
+                property: 'Protections'
+            }
+        },
+        SNS: {
+            listTopics: {
+                property: 'Topics',
+                paginate: 'NextToken'
+            }
+        },
+        SQS: {
+            listQueues: {
+                property: 'QueueUrls'
+            }
+        },
+        SSM: {
+            describeInstanceInformation: {
+                property: 'InstanceInformationList',
+                params: {
+                    MaxResults: 50
+                },
+                paginate: 'NextToken'
+            },
+            describeParameters: {
+                property: 'Parameters',
+                params: {
+                    MaxResults: 50
+                },
+                paginate: 'NextToken'
+            },
+            listAssociations: {
+                property: 'Associations',
+                paginate: 'NextToken'
+            }
+        },
+        STS: {
+            getCallerIdentity: {
+                property: 'Account'
+            }
+        },
+        Support: {
+            describeTrustedAdvisorChecks: {
+                property: 'checks',
+                params: {language: 'en'},
+            },
+        },
+        Transfer: {
+            listServers: {
+                property: 'Servers',
+                paginate: 'NextToken',
+                params: {
+                    MaxResults: 1000
+                }
+            }
+        },
+        WAFRegional: {
+            listWebACLs: {
+                property: 'WebACLs',
+                paginate: 'NextMarker'
+            }
+        },
+        WAFV2: {
+            listWebACLs: {
+                property: 'WebACLs',
+                paginate: 'NextMarker',
+                params: {
+                    Scope: 'REGIONAL'
+                }
+            }
+        },
+        WorkSpaces: {
+            describeWorkspaces: {
+                property: 'Workspaces',
+                paginate: 'NextToken'
+            },
+            describeWorkspaceDirectories: {
+                property: 'Directories',
+                paginate: 'NextToken'
+            },
+            describeIpGroups: {
+                property: 'Result',
+                paginate: 'NextToken'
+            }
+        },
+        XRay: {
+            getEncryptionConfig: {
+                property: 'EncryptionConfig'
+            }
         }
     }
-};
+];
 
 var postcalls = [
     {
@@ -853,20 +830,20 @@ var postcalls = [
                 override: true
             }
         },
-        CloudFormation: {    
+        CloudFormation: {
             describeStackEvents: {
                 reliesOnService: 'cloudformation',
                 reliesOnCall: 'listStacks',
                 filterKey: 'StackName',
                 filterValue: 'StackName',
-                rateLimit: 100 // ms to rate limit between stacks
+                rateLimit: 500 // ms to rate limit between stacks
             },
             describeStacks: {
                 reliesOnService: 'cloudformation',
                 reliesOnCall: 'listStacks',
                 filterKey: 'StackName',
                 filterValue: 'StackName',
-                rateLimit: 100 // ms to rate limit between stacks
+                rateLimit: 500 // ms to rate limit between stacks
             }
         },
         CloudFront: {
@@ -1147,77 +1124,82 @@ var postcalls = [
                 filterValue: 'PolicyId'
             }
         },
-        Glacier: {
-            getVaultAccessPolicy: {
-                reliesOnService: 'glacier',
-                reliesOnCall: 'listVaults',
-                filterKey: 'vaultName',
-                filterValue: 'VaultName'
-            }
-        },
+    },
+    {
         IAM: {
             getGroup: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listGroups',
                 filterKey: 'GroupName',
-                filterValue: 'GroupName'
+                filterValue: 'GroupName',
+                rateLimit: 200
             },
             listAttachedUserPolicies: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listUsers',
                 filterKey: 'UserName',
-                filterValue: 'UserName'
+                filterValue: 'UserName',
+                rateLimit: 200
             },
             listAttachedGroupPolicies: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listGroups',
                 filterKey: 'GroupName',
-                filterValue: 'GroupName'
+                filterValue: 'GroupName',
+                rateLimit: 200
             },
             listAttachedRolePolicies: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listRoles',
                 filterKey: 'RoleName',
-                filterValue: 'RoleName'
+                filterValue: 'RoleName',
+                rateLimit: 200
             },
             listUserPolicies: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listUsers',
                 filterKey: 'UserName',
-                filterValue: 'UserName'
+                filterValue: 'UserName',
+                rateLimit: 200
             },
             listGroupPolicies: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listGroups',
                 filterKey: 'GroupName',
-                filterValue: 'GroupName'
+                filterValue: 'GroupName',
+                rateLimit: 200
             },
             listRolePolicies: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listRoles',
                 filterKey: 'RoleName',
-                filterValue: 'RoleName'
+                filterValue: 'RoleName',
+                rateLimit: 200
             },
             listSSHPublicKeys: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listUsers',
                 filterKey: 'UserName',
-                filterValue: 'UserName'
+                filterValue: 'UserName',
+                rateLimit: 200
             },
             listMFADevices: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listUsers',
                 filterKey: 'UserName',
-                filterValue: 'UserName'
+                filterValue: 'UserName',
+                rateLimit: 200
             },
             listGroupsForUser: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listUsers',
                 filterKey: 'UserName',
                 filterValue: 'UserName',
-                rateLimit: 100
+                rateLimit: 500
             }
-        },
+        }
+    },
+    {
         Kinesis: {
             describeStream: {
                 reliesOnService: 'kinesis',
@@ -1263,21 +1245,13 @@ var postcalls = [
                 reliesOnCall: 'listFunctions',
                 filterKey: 'FunctionName',
                 filterValue: 'FunctionName',
-                rateLimit: 100, // it's not documented but experimentially 10/second works.
+                rateLimit: 500, // it's not documented but experimentally 10/second works.
             },
             listTags: {
                 reliesOnService: 'lambda',
                 reliesOnCall: 'listFunctions',
                 filterKey: 'Resource',
                 filterValue: 'FunctionArn'
-            }
-        },
-        MQ: {
-            describeBroker: {
-                reliesOnService: 'mq',
-                reliesOnCall: 'listBrokers',
-                filterKey: 'BrokerId',
-                filterValue: 'BrokerId'
             }
         },
         MWAA: {
@@ -1424,32 +1398,37 @@ var postcalls = [
             getUserPolicy: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listUsers',
-                override: true
+                override: true,
+                rateLimit: 500
             },
             getGroupPolicy: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listGroups',
-                override: true
+                override: true,
+                rateLimit: 500
             },
             getRolePolicy: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listRoles',
-                override: true
+                override: true,
+                rateLimit: 500
             },
             getPolicy: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listPolicies',
                 filterKey: 'PolicyArn',
-                filterValue: 'Arn'
+                filterValue: 'Arn',
+                rateLimit: 500
             },
             getRole: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listRoles',
                 filterKey: 'RoleName',
-                filterValue: 'RoleName'
+                filterValue: 'RoleName',
+                rateLimit: 500
             }
         },
-        EKS:{
+        EKS: {
             describeNodegroups: {
                 reliesOnService: 'eks',
                 reliesOnCall: 'listClusters',
@@ -1462,14 +1441,24 @@ var postcalls = [
             getPolicyVersion: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listPolicies',
-                override: true
+                override: true,
+                rateLimit: 500
             }
         }
     }
 ];
 
+var CALLS_CONFIG = {
+    TOTAL_PARTS: 8,
+    CALLS_PARTS: 3,
+    POSTCALLS_PARTS: 5
+};
+
 // Loop through all of the top-level collectors for each service
 var collect = function(AWSConfig, settings, callback) {
+    // Used to set locally the position of the calls to be
+    // used in the calls or postcalls array
+    let callsPart = 0;
     let apiCallErrors = 0;
     let apiCallTypeErrors = 0;
     let totalApiCallErrors = 0;
@@ -1493,6 +1482,10 @@ var collect = function(AWSConfig, settings, callback) {
     var errors = {};
     var errorSummary = {};
     var errorTypeSummary = {};
+
+    if (settings.collection) {
+        collection = settings.collection;
+    }
 
     var debugApiCalls = function(call, service, finished) {
         if (!debugMode) return;
@@ -1538,6 +1531,8 @@ var collect = function(AWSConfig, settings, callback) {
             }
         }
     };
+    
+    callsPart = settings.part - 1;
 
     let runApiCalls = [];
 
@@ -1557,7 +1552,9 @@ var collect = function(AWSConfig, settings, callback) {
             }
         }
 
-        async.eachOfLimit(calls, 10, function(call, service, serviceCb) {
+        async.eachOfLimit(calls[callsPart], 10, function(call, service, serviceCb) {
+            if (callsPart >= CALLS_CONFIG.CALLS_PARTS) return serviceCb();
+
             var serviceLower = service.toLowerCase();
             if (!collection[serviceLower]) collection[serviceLower] = {};
 
@@ -1671,140 +1668,146 @@ var collect = function(AWSConfig, settings, callback) {
             });
         }, function() {
             // Now loop through the follow up calls
-            async.eachSeries(postcalls, function(postcallObj, postcallCb) {
-                async.eachOfLimit(postcallObj, 10, function(serviceObj, service, serviceCb) {
-                    var serviceLower = service.toLowerCase();
-                    if (!collection[serviceLower]) collection[serviceLower] = {};
+            if (settings.part > CALLS_CONFIG.CALLS_PARTS) {
+                callsPart = settings.part - CALLS_CONFIG.CALLS_PARTS - 1;
+            } else {
+                return callback(null, collection, runApiCalls, errorSummary, errorTypeSummary, errors);
+            }
 
-                    async.eachOfLimit(serviceObj, 1, function(callObj, callKey, callCb) {
-                        if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
+            async.eachOfLimit(postcalls[callsPart], 10, function(serviceObj, service, serviceCb) {
+                var serviceLower = service.toLowerCase();
+                if (!collection[serviceLower]) collection[serviceLower] = {};
 
-                        runApiCalls.push(service + ':' + callKey);
+                async.eachOfLimit(serviceObj, 1, function(callObj, callKey, callCb) {
+                    if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
 
-                        if (!collection[serviceLower][callKey]) {
-                            collection[serviceLower][callKey] = {};
-                            apiCallErrors = 0;
-                            apiCallTypeErrors = 0;
+                    runApiCalls.push(service + ':' + callKey);
+
+                    if (!collection[serviceLower][callKey]) {
+                        collection[serviceLower][callKey] = {};
+                        apiCallErrors = 0;
+                        apiCallTypeErrors = 0;
+                    }
+
+                    debugApiCalls(callKey, service);
+                    async.eachLimit(regions[serviceLower], helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb) {
+                        if (settings.skip_regions &&
+                            settings.skip_regions.indexOf(region) > -1 &&
+                            globalServices.indexOf(service) === -1) return regionCb();
+
+                        if (excludeRegions &&
+                            excludeRegions.filter(excluded=> {
+                                if (excluded.RegionName == region) {
+                                    return true;
+                                }
+                            }).length){
+                            return regionCb();
                         }
 
-                        debugApiCalls(callKey, service);
-                        async.eachLimit(regions[serviceLower], helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb) {
-                            if (settings.skip_regions &&
-                                settings.skip_regions.indexOf(region) > -1 &&
-                                globalServices.indexOf(service) === -1) return regionCb();
+                        if (!collection[serviceLower][callKey][region]) collection[serviceLower][callKey][region] = {};
 
-                            if (excludeRegions &&
-                                excludeRegions.filter(excluded=> {
-                                    if (excluded.RegionName == region) {
-                                        return true;
-                                    }
-                                }).length){
-                                return regionCb();
-                            }
+                        // Ensure pre-requisites are met
+                        if (callObj.reliesOnService && !collection[callObj.reliesOnService]) return regionCb();
 
-                            if (!collection[serviceLower][callKey][region]) collection[serviceLower][callKey][region] = {};
-
-                            // Ensure pre-requisites are met
-                            if (callObj.reliesOnService && !collection[callObj.reliesOnService]) return regionCb();
-
-                            if (callObj.reliesOnCall &&
-                                (!collection[callObj.reliesOnService] ||
+                        if (callObj.reliesOnCall &&
+                            (!collection[callObj.reliesOnService] ||
                                 !collection[callObj.reliesOnService][callObj.reliesOnCall] ||
                                 !collection[callObj.reliesOnService][callObj.reliesOnCall][region] ||
                                 !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data ||
                                 !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data.length))
-                                return regionCb();
+                            return regionCb();
 
-                            var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
-                            if (callObj.deleteRegion) {
-                                //delete LocalAWSConfig.region;
-                                LocalAWSConfig.region = settings.govcloud ? 'us-gov-west-1' : settings.china ? 'cn-north-1' : 'us-east-1';
-                            } else {
-                                LocalAWSConfig.region = region;
-                            }
-                            if (callObj.signatureVersion) LocalAWSConfig.signatureVersion = callObj.signatureVersion;
+                        var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
+                        if (callObj.deleteRegion) {
+                            //delete LocalAWSConfig.region;
+                            LocalAWSConfig.region = settings.govcloud ? 'us-gov-west-1' : settings.china ? 'cn-north-1' : 'us-east-1';
+                        } else {
+                            LocalAWSConfig.region = region;
+                        }
+                        if (callObj.signatureVersion) LocalAWSConfig.signatureVersion = callObj.signatureVersion;
 
-                            if (callObj.override) {
-                                collectors[serviceLower][callKey](LocalAWSConfig, collection, function() {
-                                    if (callObj.rateLimit) {
-                                        setTimeout(function() {
-                                            regionCb();
-                                        }, callObj.rateLimit);
-                                    } else {
+                        if (callObj.override) {
+                            collectors[serviceLower][callKey](LocalAWSConfig, collection, function() {
+                                if (callObj.rateLimit) {
+                                    setTimeout(function() {
                                         regionCb();
-                                    }
-                                });
-                            } else {
-                                var executor = debugMode ? (AWSXRay.captureAWSClient(new AWS[service](LocalAWSConfig))) : new AWS[service](LocalAWSConfig);
-
-                                if (!collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region] ||
-                                    !collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region].data) {
-                                    return regionCb();
+                                    }, callObj.rateLimit);
+                                } else {
+                                    regionCb();
                                 }
+                            });
+                        } else {
+                            var executor = debugMode ? (AWSXRay.captureAWSClient(new AWS[service](LocalAWSConfig))) : new AWS[service](LocalAWSConfig);
 
-                                async.eachLimit(collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region].data, 10, function(dep, depCb) {
-                                    if (callObj.checkMultiple) {
-                                        async.each(callObj.checkMultiple, function(thisCheck, tcCb){
-                                            collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]] = {};
+                            if (!collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region] ||
+                                !collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region].data) {
+                                return regionCb();
+                            }
 
-                                            var filter = {};
-                                            filter[callObj.filterKey] = dep[callObj.filterValue];
-                                            filter[callObj.checkMultipleKey] = thisCheck;
-                                            executor[callKey](filter, function(err, data) {
-                                                if (err) {
-                                                    collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = err;
-                                                    logError(serviceLower, callKey, region, err);
-                                                }
-                                                if (data) {
-                                                    if (!collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data) {
-                                                        collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = data;
-                                                    }
-                                                }
-                                                tcCb();
-                                            });
-                                        }, function() {
-                                            depCb();
-                                        });
-                                    } else {
+                            async.eachLimit(collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region].data, 10, function(dep, depCb) {
+                                if (callObj.checkMultiple) {
+                                    async.each(callObj.checkMultiple, function(thisCheck, tcCb) {
                                         collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]] = {};
 
                                         var filter = {};
                                         filter[callObj.filterKey] = dep[callObj.filterValue];
+                                        filter[callObj.checkMultipleKey] = thisCheck;
                                         executor[callKey](filter, function(err, data) {
                                             if (err) {
                                                 collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = err;
                                                 logError(serviceLower, callKey, region, err);
-                                            } else {
-                                                collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = data;
                                             }
-                                            if (callObj.rateLimit) {
-                                                setTimeout(function() {
-                                                    depCb();
-                                                }, callObj.rateLimit);
-                                            } else {
-                                                depCb();
+                                            if (data) {
+                                                if (!collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data) {
+                                                    collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = data;
+                                                }
                                             }
+                                            tcCb();
                                         });
-                                    }
-                                }, function() {
-                                    if (callObj.rateLimit) {
-                                        setTimeout(function() {
-                                            regionCb();
-                                        }, callObj.rateLimit);
-                                    } else {
+                                    }, function() {
+                                        depCb();
+                                    });
+                                } else {
+                                    collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]] = {};
+
+                                    var filter = {};
+                                    filter[callObj.filterKey] = dep[callObj.filterValue];
+                                    executor[callKey](filter, function(err, data) {
+                                        if (err) {
+                                            collection[serviceLower][callKey][region].err = err;
+                                            logError(serviceLower, callKey, region, err);
+                                        }
+                                        if (err) {
+                                            collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = err;
+                                            logError(serviceLower, callKey, region, err);
+                                        } else {
+                                            collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = data;
+                                        }
+                                        if (callObj.rateLimit) {
+                                            setTimeout(function() {
+                                                depCb();
+                                            }, callObj.rateLimit);
+                                        } else {
+                                            depCb();
+                                        }
+                                    });
+                                }
+                            }, function() {
+                                if (callObj.rateLimit) {
+                                    setTimeout(function() {
                                         regionCb();
-                                    }
-                                });
-                            }
-                        }, function() {
-                            debugApiCalls(callKey, service, true);
-                            callCb();
-                        });
+                                    }, callObj.rateLimit);
+                                } else {
+                                    regionCb();
+                                }
+                            });
+                        }
                     }, function() {
-                        serviceCb();
+                        debugApiCalls(callKey, service, true);
+                        callCb();
                     });
                 }, function() {
-                    postcallCb();
+                    serviceCb();
                 });
             }, function() {
                 callback(null, collection, runApiCalls, errorSummary, errorTypeSummary, errors);
@@ -1813,4 +1816,8 @@ var collect = function(AWSConfig, settings, callback) {
     });
 };
 
-module.exports = collect;
+module.exports = {
+    collect: collect,
+    calls: calls,
+    postcalls: postcalls
+};
