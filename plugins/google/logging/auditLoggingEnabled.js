@@ -127,15 +127,38 @@ module.exports = {
                 }
 
                 if (typeof status == 'undefined' || status > 0) {
-                    let loggingEnabledServices = iamPolicy.auditConfigs.filter(config => {
-                        return ((config.auditLogConfigs.filter(auditLogConfig => {
-                            return (['ADMIN_READ', 'DATA_READ', 'DATA_WRITE'].indexOf(auditLogConfig.logType) > - 1);
-                        }).length) == 3);
-                    });
+                    let loggingEnabledServices = 0;
+                    let projectExemptedMembers = false;
 
-                    if (loggingEnabledServices && loggingEnabledServices.length >= 100) {
+                    if (iamPolicy.auditConfigs && iamPolicy.auditConfigs.length) {
+                        loggingEnabledServices = iamPolicy.auditConfigs.filter(config => {
+                            return ((config.auditLogConfigs.filter(auditLogConfig => {
+                                return (['ADMIN_READ', 'DATA_READ', 'DATA_WRITE'].indexOf(auditLogConfig.logType) > - 1);
+                            }).length) == 3);
+                        });
+
+                        for (let config of iamPolicy.auditConfigs) {
+                            if (config.auditLogConfigs && config.auditLogConfigs.length) {
+                                for (let auditLogConfig of config.auditLogConfigs) {
+                                    if (auditLogConfig.exemptedMembers && auditLogConfig.exemptedMembers.length) {
+                                        projectExemptedMembers = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (projectExemptedMembers) break;
+                        }
+                    }
+
+                    if (loggingEnabledServices && loggingEnabledServices.length >= 100 && !projectExemptedMembers) {
                         status = 0;
                         message = 'Audit logging is enabled on the project';
+                    } else if (loggingEnabledServices && loggingEnabledServices.length && projectExemptedMembers) {
+                        status = 2;
+                        message = 'Audit logging has exempted members for some services in the project';
+                    } else if (loggingEnabledServices && loggingEnabledServices.length) {
+                        status = 2;
+                        message = 'Audit logging is not properly configured on the project';
                     } else if (typeof status == 'undefined' && !message) {
                         status = 2;
                         message = 'Audit logging is not enabled on the project';
