@@ -32,6 +32,13 @@ var calls = {
             location: null
         }
     },
+    images: {
+        list: {
+            api: 'compute',
+            version: 'v1',
+            location: null
+        }
+    },
     snapshots: {
         list: {
             api: 'compute',
@@ -44,6 +51,13 @@ var calls = {
             api: 'compute',
             version: 'v1',
             location: 'global'
+        }
+    },
+    resourcePolicies: {
+        list: {
+            api: 'compute',
+            version: 'v1',
+            location: 'region'
         }
     },
     firewalls: {
@@ -383,6 +397,15 @@ var postcalls = {
         getIamPolicy: {
             api: 'cloudresourcemanager',
             version: 'v1beta1',
+            reliesOnService: ['organizations'],
+            reliesOnCall: ['list'],
+            filterKey: ['name'],
+            filterValue: ['organizationId'],
+            parent: 'resource'
+        },
+        listOrgPolicies: {
+            api: 'cloudresourcemanager',
+            version: 'v1',
             reliesOnService: ['organizations'],
             reliesOnCall: ['list'],
             filterKey: ['name'],
