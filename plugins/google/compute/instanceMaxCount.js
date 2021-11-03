@@ -41,6 +41,18 @@ module.exports = {
             regex: '^[0-9]{1,4}$',
             default: 100
         },
+        instance_count_region_threshold_us_west3: {
+            name: 'Instance Count Region Threshold: us-west3',
+            description: 'Checks for the number of running instances in the us-west3 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_us_west4: {
+            name: 'Instance Count Region Threshold: us-west4',
+            description: 'Checks for the number of running instances in the us-west4 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
         instance_count_region_threshold_us_central1: {
             name: 'Instance Count Region Threshold: us-central1',
             description: 'Checks for the number of running instances in the us-central1 region and triggers a failing result if it exceeds the specified count',
@@ -50,6 +62,12 @@ module.exports = {
         instance_count_region_threshold_northamerica_northeast1: {
             name: 'Instance Count Region Threshold: northamerica-northeast1',
             description: 'Checks for the number of running instances in the northamerica-northeast1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_northamerica_northeast2: {
+            name: 'Instance Count Region Threshold: northamerica-northeast2',
+            description: 'Checks for the number of running instances in the northamerica-northeast2 region and triggers a failing result if it exceeds the specified count',
             regex: '^[0-9]{1,4}$',
             default: 100
         },
@@ -101,15 +119,33 @@ module.exports = {
             regex: '^[0-9]{1,4}$',
             default: 100
         },
+        instance_count_region_threshold_europe_central2: {
+            name: 'Instance Count Region Threshold: europe-central2',
+            description: 'Checks for the number of running instances in the europe-central2 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
         instance_count_region_threshold_asia_south1: {
             name: 'Instance Count Region Threshold: asia-south1',
             description: 'Checks for the number of running instances in the asia-south1 region and triggers a failing result if it exceeds the specified count',
             regex: '^[0-9]{1,4}$',
             default: 100
         },
+        instance_count_region_threshold_asia_south2: {
+            name: 'Instance Count Region Threshold: asia-south2',
+            description: 'Checks for the number of running instances in the asia-south2 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
         instance_count_region_threshold_asia_southeast1: {
             name: 'Instance Count Region Threshold: asia-southeast1',
             description: 'Checks for the number of running instances in the asia-southeast1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_asia_southeast2: {
+            name: 'Instance Count Region Threshold: asia-southeast2',
+            description: 'Checks for the number of running instances in the asia-southeast2 region and triggers a failing result if it exceeds the specified count',
             regex: '^[0-9]{1,4}$',
             default: 100
         },
@@ -137,9 +173,21 @@ module.exports = {
             regex: '^[0-9]{1,4}$',
             default: 100
         },
+        instance_count_region_threshold_asia_northeast3: {
+            name: 'Instance Count Region Threshold: asia-northeast3',
+            description: 'Checks for the number of running instances in the asia-northeast3 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
         instance_count_region_threshold_australia_southeast1: {
             name: 'Instance Count Region Threshold: australia-southeast1',
             description: 'Checks for the number of running instances in the australia-southeast1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_australia_southeast2: {
+            name: 'Instance Count Region Threshold: australia-southeast2',
+            description: 'Checks for the number of running instances in the australia-southeast2 region and triggers a failing result if it exceeds the specified count',
             regex: '^[0-9]{1,4}$',
             default: 100
         },
