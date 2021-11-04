@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/oracle/');
 module.exports = {
     title: 'Open Hadoop HDFS NameNode WebUI',
     category: 'Networking',
+    domain: 'Network Access Control',
     description: 'Determine if TCP port 50070 and 50470 for Hadoop/HDFS NameNode ' +
         'WebUI service is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to ' +

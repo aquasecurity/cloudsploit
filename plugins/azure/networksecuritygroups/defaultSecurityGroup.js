@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Default Security Group',
     category: 'Network Security Groups',
+    domain: 'Network Access Control',
     description: 'Ensures that default security groups block all traffic by default',
     more_info: 'The default security group is often used for resources launched without a defined security group. For this reason, the default rules should be set to block all traffic to prevent an accidental exposure.',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',

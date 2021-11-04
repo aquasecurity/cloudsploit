@@ -3,6 +3,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Enforce Restrict Authorized Networks',
     category: 'Resource Manager',
+    domain: 'Management and Governance',
     description: 'Determine if "Restrict Authorized Networks on Cloud SQL instances" policy is enforced at the GCP organization level.',
     more_info: 'Enforcing "Restrict Authorized Networks on Cloud SQL instances" organization policy, restricts adding authorized networks for unproxied database access to Cloud SQL instances.',
     link: 'https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints',

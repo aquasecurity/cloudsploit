@@ -3,6 +3,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Disable Workload Identity Cluster Creation',
     category: 'Resource Manager',
+    domain: 'Management and Governance',
     description: 'Determine if "Disable Workload Identity Cluster Creation" policy is enforced at the GCP organization level.',
     more_info: 'To have a better control over service account access, make sure that GKE clusters have Workload Identity feature disabled at the time of creation.',
     link: 'https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints',

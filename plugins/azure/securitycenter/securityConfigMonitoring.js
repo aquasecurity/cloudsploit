@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Security Configuration Monitoring',
     category: 'Security Center',
+    domain: 'Management and Governance',
     description: 'Ensures that Security Configuration Monitoring is enabled in Security Center',
     more_info: 'When this setting is enabled, Security Center will monitor virtual machines for security configurations.',
     recommended_action: 'Ensure Security Configuration Monitoring is configured for virtual machines from the Azure Security Center.',

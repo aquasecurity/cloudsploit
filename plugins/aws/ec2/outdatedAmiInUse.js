@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Outdated Amazon Machine Images',
     category: 'EC2',
+    domain: 'Compute',
     description: 'Ensures that deprecated Amazon Machine Images are not in use.',
     more_info: 'Deprecated Amazon Machine Images should not be used to make an instance.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ami-deprecate.html',

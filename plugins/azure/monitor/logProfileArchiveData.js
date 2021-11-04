@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Log Profile Archive Data',
     category: 'Monitor',
+    domain: 'Management and Governance',
     description: 'Ensures the Log Profile is configured to export all activities from the control and management planes in all active locations',
     more_info: 'Exporting log activity for control plane activity allows for audited access to the Azure account with event data in the case of a security incident.',
     recommended_action: 'Ensure that all activity is logged to the Event Hub or storage account for archiving.' ,

@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Open Oracle',
     category: 'EC2',
+    domain: 'Compute',
     description: 'Determine if TCP port 1521 for Oracle is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open \
         to the public to function properly, more sensitive services such as Oracle \

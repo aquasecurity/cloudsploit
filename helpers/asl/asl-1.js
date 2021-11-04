@@ -1,6 +1,7 @@
 var parse = function(obj, path) {
-    if (typeof path == 'string') path = path.split('.');
-    if (Array.isArray(path) && path.length) {
+    // (Array.isArray(obj)) return [obj];
+    if (typeof path == 'string' && path.includes('.')) path = path.split('.');
+    if (Array.isArray(path) && path.length && typeof obj === 'object') {
         var localPath = path.shift();
         if (localPath.includes('[*]')){
             localPath = localPath.split('[')[0];
@@ -8,11 +9,14 @@ var parse = function(obj, path) {
                 if (!path || !path.length) {
                     return [obj[localPath][0], path];
                 } else if (path.length === 1){
-                    return [obj[localPath][0][path[0]]];
+                    return [obj[localPath],path[0]];
+                    //return parse(obj[localPath][0], path[0]);
                 }
             }
             if (path.length && path.join('.').includes('[*]')) {
                 return parse(obj[localPath], path);
+            } else if (!obj[localPath] || !obj[localPath].length) {
+                return ['not set'];
             }
             return [obj[localPath], path];
         }
@@ -21,8 +25,11 @@ var parse = function(obj, path) {
         } else {
             return ['not set'];
         }
+    } else if (!Array.isArray(obj) && path && path.length) {
+        if (obj[path]) return [obj[path]];
+        else return ['not set'];
     } else if (Array.isArray(obj)) {
-        return obj;
+        return [obj];
     } else {
         return [obj];
     }
@@ -40,7 +47,7 @@ var transform = function(val, transformation) {
         var now = new Date();
         var then = new Date(val);
         var timeDiff = then.getTime() - now.getTime();
-        var diff = Math.abs(Math.round(timeDiff / (1000 * 3600 * 24)));
+        var diff = (Math.round(timeDiff / (1000 * 3600 * 24)));
         return diff;
     } else if (transformation == 'COUNT') {
         return val.length;
@@ -109,7 +116,7 @@ var compositeResult = function(inputResultsArr, resource, region, results, logic
 };
 
 var validate = function(condition, conditionResult, inputResultsArr, message, property, parsed) {
-    if (property.length){
+    if (Array.isArray(property)){
         property = property[property.length-1];
     }
     if (parsed && typeof parsed === 'object' && parsed[property]) {
@@ -236,9 +243,23 @@ var runValidation = function(obj, condition, inputResultsArr, nestedResultArr) {
 
         let conditionResult = 0;
         let property;
-        if (condition.property.length === 1) property = condition.property[0];
-        else if (condition.property.length > 1) property = condition.property.slice(0);
+        if (Array.isArray(condition.property)) {
+            if (condition.property.length === 1) {
+                property = condition.property[0];
+            } else if (condition.property.length > 1) {
+                property = condition.property.slice(0);
+            }
+        } else {
+            property = condition.property;
+        }
+
         condition.parsed = parse(obj, condition.property)[0];
+
+        // if ( Array.isArray(obj)) {
+        //     condition.parsed = obj;
+        // } else {
+        //     condition.parsed = parse(obj, condition.property)[0];
+        // }
 
         if ((typeof condition.parsed !== 'boolean' && !condition.parsed)|| condition.parsed === 'not set'){
             conditionResult = 2;
@@ -260,15 +281,19 @@ var runValidation = function(obj, condition, inputResultsArr, nestedResultArr) {
                 propertyArr.shift();
                 property = propertyArr.join('.');
                 condition.property = property;
-                condition.parsed.forEach(parsed => {
-                    if (property.includes('[*]')) {
-                        runValidation(parsed, condition, inputResultsArr, nestedResultArr);
-                    } else {
-                        let localConditionResult = validate(condition, conditionResult, inputResultsArr, message, property, parsed);
-                        nestedResultArr.push(localConditionResult);
-                    }
-                    // [0,2,0,2,0,0,2,2]
-                });
+                if (condition.op !== 'CONTAINS') {
+                    condition.parsed.forEach(parsed => {
+                        if (property.includes('[*]')) {
+                            runValidation(parsed, condition, inputResultsArr, nestedResultArr);
+                        } else {
+                            let localConditionResult = validate(condition, conditionResult, inputResultsArr, message, property, parsed);
+                            nestedResultArr.push(localConditionResult);
+                        }
+                        // [0,2,0,2,0,0,2,2]
+                    });
+                } else {
+                    runValidation(condition.parsed, condition, inputResultsArr, nestedResultArr);
+                }
                 // NestedCompositeResult
                 if (nestedResultArr && nestedResultArr.length) {
                     if (!condition.nested) condition.nested = 'ONE';
@@ -330,7 +355,7 @@ var runConditions = function(input, data, results, resourcePath, resourceName, r
     let newPath;
     let newData;
     let validated;
-    let parsedResource;
+    let parsedResource = resourceName;
 
     let inputResultsArr = [];
     let logical;
@@ -346,30 +371,47 @@ var runConditions = function(input, data, results, resourcePath, resourceName, r
             if (conditionPropArr.length > 1 && conditionPropArr[1].includes('[*]')) {
                 resourceConditionArr.push(conditionPropArr[0]);
                 var firstProperty = conditionPropArr.shift();
-                dataToValidate = parse(data, firstProperty.split('[*]')[0]);
+                dataToValidate = parse(data, firstProperty.split('[*]')[0])[0];
                 condition.property = conditionPropArr.join('.');
-                dataToValidate.forEach(newData => {
-                    condition.validated = runValidation(newData, condition, inputResultsArr);
-                    parsedResource = parse(newData, resourcePath)[0];
-                    if (typeof parsedResource !== 'string') parsedResource = resourceName;
-                });
+                if (dataToValidate.length) {
+                    dataToValidate.forEach(newData => {
+                        condition.validated = runValidation(newData, condition, inputResultsArr);
+                        parsedResource = parse(newData, resourcePath)[0];
+                        if (typeof parsedResource !== 'string' || parsedResource === 'not set') parsedResource = resourceName;
+                    });
+                } else {
+                    condition.validated = runValidation([], condition, inputResultsArr);
+                    parsedResource = parse([], resourcePath)[0];
+                    if (typeof parsedResource !== 'string' || parsedResource === 'not set') parsedResource = resourceName;
+                }
                 // result per resource
             } else {
                 dataToValidate = parse(data, condition.property);
                 newPath = dataToValidate[1];
                 newData = dataToValidate[0];
-                condition.property = newPath;
-                if (newData.length){
+                if (newPath && newData.length){
                     newData.forEach(dataElm =>{
+                        if (newPath) condition.property = JSON.parse(JSON.stringify(newPath));
                         condition.validated = runValidation(dataElm, condition, inputResultsArr);
                         parsedResource = parse(dataElm, resourcePath)[0];
-                        if (typeof parsedResource !== 'string') parsedResource = resourceName;
+                        if (typeof parsedResource !== 'string' || parsedResource === 'not set') parsedResource = resourceName;
                     });
-
-                } else {
+                } else if (newPath && !newData.length) {
+                    condition.property = JSON.parse(JSON.stringify(newPath));
                     condition.validated = runValidation(newData, condition, inputResultsArr);
                     parsedResource = parse(newData, resourcePath)[0];
-                    if (typeof parsedResource !== 'string') parsedResource = resourceName;
+                    if (parsedResource === 'not set' || typeof parsedResource !== 'string') parsedResource = resourceName;
+                } else if (!newPath) {
+                    // no path returned. means it has fully parsed and got the value.
+                    // save the value
+                    newPath = JSON.parse(JSON.stringify(condition.property));
+                    if (condition.property.includes('.')){
+                        condition.property = condition.property.split('.')[condition.property.split('.').length -1 ];
+                    }
+                    condition.validated = runValidation(newData, condition, inputResultsArr);
+                    condition.property = JSON.parse(JSON.stringify(newPath));
+                    parsedResource = parse(newData, resourcePath)[0];
+                    if (parsedResource === 'not set' || typeof parsedResource !== 'string') parsedResource = resourceName;
                 }
             }
         } else {
@@ -377,7 +419,7 @@ var runConditions = function(input, data, results, resourcePath, resourceName, r
             if (dataToValidate.length === 1) {
                 validated = runValidation(data, condition, inputResultsArr);
                 parsedResource = parse(data, resourcePath)[0];
-                if (typeof parsedResource !== 'string') parsedResource = resourceName;
+                if (typeof parsedResource !== 'string' || parsedResource === 'not set') parsedResource = resourceName;
             } else {
                 newPath = dataToValidate[1];
                 newData = dataToValidate[0];
@@ -385,7 +427,7 @@ var runConditions = function(input, data, results, resourcePath, resourceName, r
                 newData.forEach(element =>{
                     condition.validated = runValidation(element, condition, inputResultsArr);
                     parsedResource = parse(data, resourcePath)[0];
-                    if (typeof parsedResource !== 'string') parsedResource = null;
+                    if (typeof parsedResource !== 'string' || parsedResource === 'not set') parsedResource = null;
 
                     results.push({
                         status: validated.status,
@@ -430,7 +472,8 @@ var asl = function(source, input, resourceMap, callback) {
             });
         } else if (regionVal.data && regionVal.data.length) {
             regionVal.data.forEach(function(regionData) {
-                runConditions(input, regionData, results, resourcePath, '', region);
+                var resourceName = parse(regionData, resourcePath)[0];
+                runConditions(input, regionData, results, resourcePath, resourceName, region);
             });
         } else if (regionVal.data && Object.keys(regionVal.data).length) {
             runConditions(input, regionVal.data, results, resourcePath, '', region);
@@ -452,7 +495,14 @@ var asl = function(source, input, resourceMap, callback) {
                             region: region
                         });
                     } else {
-                        runConditions(input, resourceObj.data, results, resourcePath, resourceName, region);
+                        if (resourceObj.data && resourceObj.data.length){
+                            resourceObj.data.forEach(function(regionData) {
+                                var resourceName = parse(regionData, resourcePath)[0];
+                                runConditions(input, regionData, results, resourcePath, resourceName, region);
+                            });
+                        } else {
+                            runConditions(input, resourceObj.data, results, resourcePath, resourceName, region);
+                        }
                     }
                 }
             }

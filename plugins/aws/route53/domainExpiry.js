@@ -3,6 +3,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Domain Expiry',
     category: 'Route53',
+    domain: 'Content Delivery',
     description: 'Ensures domains are not expiring too soon',
     more_info: 'Expired domains can be lost and reregistered by a third-party.',
     link: 'http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/registrar.html',

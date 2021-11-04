@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'LB HTTPS Only',
     category: 'Load Balancer',
+    domain: 'Availability',
     description: 'Ensures load balancers are configured to only accept connections on HTTPS ports',
     more_info: 'For maximum security, load balancers can be configured to only accept HTTPS connections. Standard HTTP connections will be blocked. This should only be done if the client application is configured to query HTTPS directly and not rely on a redirect from HTTP.',
     link: 'https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-overview',

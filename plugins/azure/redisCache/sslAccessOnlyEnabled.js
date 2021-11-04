@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'SSL Access Only Enabled',
     category: 'Redis Cache',
+    domain: 'Databases',
     description: 'Ensures that SSL Access Only feature is enabled for Azure Redis Caches.',
     more_info: 'SSL Access only should be enabled for Azure Cache for Redis to meet the organization\'s security compliance requirements.',
     recommended_action: 'Enable SSL Access Only for Azure cache for Redis',

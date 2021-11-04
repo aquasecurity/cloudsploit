@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Web-Tier Launch Configurations IAM Roles',
     category: 'AutoScaling',
+    domain: 'Availability',
     description: 'Ensures that Web-Tier Auto Scaling launch configuration is configured to use a customer created IAM role.',
     more_info: 'Web-Tier Auto Scaling launch configuration should have a customer created Web-Tier IAM role to provide necessary credentials to access AWS services.',
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/us-iam-role.html',

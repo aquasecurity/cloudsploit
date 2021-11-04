@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'TLS Version Check',
     category: 'App Service',
+    domain: 'Application Integration',
     description: 'Ensures that all web apps are using the latest version of TLS',
     more_info: 'App Services currently allows web apps to use TLS versions 1.0, 1.1 and 1.2. It is highly recommended to use the latest TLS 1.2 version for web app TLS connections.',
     recommended_action: 'Set the minimum TLS version to 1.2 for all App Services.',
