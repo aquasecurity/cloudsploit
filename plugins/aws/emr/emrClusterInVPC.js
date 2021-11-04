@@ -17,71 +17,71 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         async.each(regions.ec2, function(region, rcb){
-        var describeAccountAttributes = helpers.addSource(cache, source,
-            ['ec2', 'describeAccountAttributes', region]);
+            var describeAccountAttributes = helpers.addSource(cache, source,
+                ['ec2', 'describeAccountAttributes', region]);
 
-        if (!describeAccountAttributes || describeAccountAttributes.err || !describeAccountAttributes.data || !describeAccountAttributes.data.length) {
-            helpers.addResult(results, 3,
-                'Unable to query for supported platforms: ' + helpers.addError(describeAccountAttributes), region);
-        }
-        var supportedPlatforms = describeAccountAttributes.data.find(attribute => attribute.AttributeName == 'supported-platforms');
-        if (supportedPlatforms && supportedPlatforms.AttributeValues) {
-            let ec2ClassicFound = supportedPlatforms.AttributeValues.find(value => value.AttributeValue == 'EC2');
-            if (!ec2ClassicFound) {
-                helpers.addResult(results, 0, 'No ec2-classic instance found', region);
-                return rcb();
-            }
-        }
-
-        async.each(regions.emr, function(region, rcb){
-            var listClusters = helpers.addSource(cache, source,
-                ['emr', 'listClusters', region]);
-               
-            if (!listClusters) return rcb();
-
-            if (listClusters.err || !listClusters.data) {
+            if (!describeAccountAttributes || describeAccountAttributes.err || !describeAccountAttributes.data || !describeAccountAttributes.data.length) {
                 helpers.addResult(results, 3,
-                    'Unable to query for EMR clusters: ' + helpers.addError(listClusters), region);
-                return rcb();
+                    'Unable to query for supported platforms: ' + helpers.addError(describeAccountAttributes), region);
+            }
+            var supportedPlatforms = describeAccountAttributes.data.find(attribute => attribute.AttributeName == 'supported-platforms');
+            if (supportedPlatforms && supportedPlatforms.AttributeValues) {
+                let ec2ClassicFound = supportedPlatforms.AttributeValues.find(value => value.AttributeValue == 'EC2');
+                if (!ec2ClassicFound) {
+                    helpers.addResult(results, 0, 'No ec2-classic instance found', region);
+                    return rcb();
+                }
             }
 
-            if (!listClusters.data.length) {
-                helpers.addResult(results, 0, 'No EMR cluster found', region);
-                return rcb();
-            }
-            
-            async.each(listClusters.data, function(cluster, ccb){
-                if (!cluster.Id) ccb();
+            async.each(regions.emr, function(region, rcb){
+                var listClusters = helpers.addSource(cache, source,
+                    ['emr', 'listClusters', region]);
+               
+                if (!listClusters) return rcb();
 
-                var resource = cluster.ClusterArn;
-                
-                var describeCluster = helpers.addSource(cache, source,
-                    ['emr', 'describeCluster', region, cluster.Id]);
-                
-                if (!describeCluster || describeCluster.err || !describeCluster.data || !describeCluster.data.Cluster) {
+                if (listClusters.err || !listClusters.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for EMR cluster', region, resource);
-                    return ccb();
+                        'Unable to query for EMR clusters: ' + helpers.addError(listClusters), region);
+                    return rcb();
                 }
 
-                if (describeCluster.data.Cluster.Ec2InstanceAttributes &&
+                if (!listClusters.data.length) {
+                    helpers.addResult(results, 0, 'No EMR cluster found', region);
+                    return rcb();
+                }
+            
+                async.each(listClusters.data, function(cluster, ccb){
+                    if (!cluster.Id) ccb();
+
+                    var resource = cluster.ClusterArn;
+                
+                    var describeCluster = helpers.addSource(cache, source,
+                        ['emr', 'describeCluster', region, cluster.Id]);
+                
+                    if (!describeCluster || describeCluster.err || !describeCluster.data || !describeCluster.data.Cluster) {
+                        helpers.addResult(results, 3,
+                            'Unable to query for EMR cluster', region, resource);
+                        return ccb();
+                    }
+
+                    if (describeCluster.data.Cluster.Ec2InstanceAttributes &&
                     describeCluster.data.Cluster.Ec2InstanceAttributes.Ec2SubnetId !='') {
-                    helpers.addResult(results, 0,
-                        `EMR cluster  "${cluster.Name}" is in VPC`, region, resource);
-                } else {
-                    helpers.addResult(results, 2,
-                        `EMR cluster  "${cluster.Name}" is not in VPC`, region, resource);
-                }
+                        helpers.addResult(results, 0,
+                            `EMR cluster  "${cluster.Name}" is in VPC`, region, resource);
+                    } else {
+                        helpers.addResult(results, 2,
+                            `EMR cluster  "${cluster.Name}" is not in VPC`, region, resource);
+                    }
 
-                ccb();
+                    ccb();
+                }, function(){
+                    rcb();
+                });
             }, function(){
-                rcb();
+                callback(null, results, source);
             });
-        }, function(){
+        },function(){
             callback(null, results, source);
         });
-    },function(){
-        callback(null, results, source);
-    });
-},
+    },
 };
