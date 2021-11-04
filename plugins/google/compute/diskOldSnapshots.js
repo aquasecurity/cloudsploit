@@ -3,6 +3,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Disk Old Snapshots',
     category: 'Compute',
+    domain: 'Compute',
     description: 'Ensure that Compute disk snapshots are deleted after defined time period.',
     more_info: 'To optimize storage costs, make sure that there are no old disk snapshots in your GCP project.',
     link: 'https://cloud.google.com/compute/docs/disks/create-snapshots',

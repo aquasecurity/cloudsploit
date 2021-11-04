@@ -3,6 +3,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'CloudFront Logging Enabled',
     category: 'CloudFront',
+    domain: 'Content Delivery',
     description: 'Ensures CloudFront distributions have request logging enabled.',
     more_info: 'Logging requests to CloudFront ' +
                'distributions is a helpful way of detecting and ' + 

@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'VPC Network Logging',
     category: 'Logging',
+    domain: 'Management and Governance',
     description: 'Ensures that logging and log alerts exist for VPC network changes',
     more_info: 'Project Ownership is the highest level of privilege on a project, any changes in VPC network should be heavily monitored to prevent unauthorized changes.',
     link: 'https://cloud.google.com/logging/docs/logs-based-metrics/',

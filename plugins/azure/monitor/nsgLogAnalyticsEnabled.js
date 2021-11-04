@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'NSG Log Analytics Enabled',
     category: 'Monitor',
+    domain: 'Management and Governance',
     description: 'Ensures Network Security Group logs are sent to the Log Analytics workspace',
     more_info: 'Enabling Log Analytics for Network Security Groups ensures that logs are shipped to a central repository that can be queried and audited.',
     recommended_action: 'Enable sending of logs to Log Analytics for each Network Security Group resource in the Azure Monitor.',

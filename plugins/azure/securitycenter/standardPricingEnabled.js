@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'Standard Pricing Enabled',
     category: 'Security Center',
+    domain: 'Management and Governance',
     description: 'Ensures that standard pricing is enabled in the security center',
     more_info: 'Enabling standard pricing increases the security posture of the subscription. This enables advanced security monitoring for the services covered under the security center.',
     recommended_action: 'Ensure that standard pricing is enabled in the security center.',

@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'ElasticSearch Desired Instance Type',
     category: 'ES',
+    domain: 'Databases',
     description: 'Ensure that all your Amazon Elasticsearch cluster instances are of given instance types.',
     more_info: 'Limiting the type of Amazon Elasticsearch cluster instances that can be provisioned will help address compliance requirements and prevent unexpected charges on the AWS bill.',
     link: 'https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-createupdatedomains.html',

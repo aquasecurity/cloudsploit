@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Access Analyzer Enabled',
     category: 'IAM',
+    domain: 'Management and Governance',
     description: 'Ensure that IAM Access analyzer is enabled for all regions.',
     more_info: 'Access Analyzer allow you to determine if an unintended user is allowed, making it easier for administrators to monitor least privileges access. It analyzes only policies that are applied to resources in the same AWS region.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-getting-started.html',

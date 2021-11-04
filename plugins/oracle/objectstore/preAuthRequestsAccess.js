@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/oracle/');
 module.exports = {
     title: 'Pre-Authenticated Requests Access',
     category: 'Object Store',
+    domain: 'Storage',
     description: 'Ensure that pre-authenticated requests have least privilege access.',
     more_info: 'Pre-authenticated requests allow for users who are not in the tenancy to access buckets, ensuring least access prevents malicious entities from leveraging this type of access to edit or delete objects in a bucket.',
     recommended_action: 'When creating pre-authenticated Requests, ensure only object read permissions are selected.',
