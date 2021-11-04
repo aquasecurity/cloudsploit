@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Cluster Encryption Enabled',
     category: 'Kubernetes',
+    domain: 'Containers',
     description: 'Ensure that GKE clusters have KMS encryption enabled to encrypt application-layer secrets.',
     more_info: 'Application-layer secrets encryption adds additional security layer to sensitive data such as Kubernetes secrets stored in etcd.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/encrypting-secrets',

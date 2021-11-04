@@ -3,6 +3,7 @@ var helpers = require('../../../helpers/alibaba');
 module.exports = {
     title: 'Network Policy Enabled',
     category: 'ACK',
+    domain: 'Containers',
     description: 'Ensure that Kubernetes Engine Clusters are configured to enable NetworkPolicy.',
     more_info: 'By default, kubernetes pods accept traffic from any source. But with NetworkPolicy, pods can be configured ' +
         'to reject any connections which are not allowed by any NetworkPolicy.',

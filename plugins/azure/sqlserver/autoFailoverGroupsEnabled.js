@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Auto-Failover Groups Enabled',
     category: 'SQL Server',
+    domain: 'Databases',
     description: 'Ensures that auto-failover groups are configured for Azure SQL database servers.',
     more_info: 'In case of any outage that impacts one or more SQL databases, automatic failover process switches all secondary databases in the group to primary databases to ensure high availability.',
     recommended_action: 'Ensure that auto-failover Groups are configured for Azure SQL database servers',

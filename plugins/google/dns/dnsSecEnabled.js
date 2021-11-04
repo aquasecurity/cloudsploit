@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'DNS Security Enabled',
     category: 'DNS',
+    domain: 'Content Delivery',
     description: 'Ensures that DNS Security is enabled on all managed zones',
     more_info: 'DNS Security is a feature that authenticates all responses to domain name lookups. This prevents attackers from committing DNS hijacking or man in the middle attacks.',
     link: 'https://cloud.google.com/dns/docs/dnssec',

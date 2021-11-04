@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/alibaba');
 module.exports = {
     title: 'Security Agent Installed',
     category: 'Security Center',
+    domain: 'Management and Governance',
     description: 'Ensure that all assets are condifgured to be installed with Security Agent.',
     more_info: 'Security center provides a set of comprehensive endpoint intrusion detection and protection capabilities, ' +
         'such as remote logon detection, webshell detection and removal, anomaly detection, and detection of changes in key files and suspicious accounts in systems and applications. ' +

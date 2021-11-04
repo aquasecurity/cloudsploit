@@ -3,6 +3,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Enforce Uniform Bucket-Level Access',
     category: 'Resource Manager',
+    domain: 'Management and Governance',
     description: 'Determine if "Enforce uniform bucket-level access" policy is enabled at the GCP organization level.',
     more_info: 'Enforcing Uniform Bucket Level Access ensures that access is granted exclusively through Cloud IAM service which is more efficient and secure.',
     link: 'https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints',

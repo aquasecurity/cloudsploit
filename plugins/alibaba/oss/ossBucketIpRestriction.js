@@ -3,6 +3,7 @@ var helpers = require('../../../helpers/alibaba');
 module.exports = {
     title: 'OSS Bucket IP Restriction Configured',
     category: 'OSS',
+    domain: 'Storage',
     description: 'Ensure that OSS buckets have policy configured to allow only specific IP addresses.',
     more_info: 'OSS buckets should limit access to selected networks. Restricting default network access provides a new layer of security.',
     recommended_action: 'Add or modify bucket policy to create IP-based conditions',

@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Dataset All Users Policy',
     category: 'BigQuery',
+    domain: 'Databases',
     description: 'Ensure that BigQuery datasets do not allow public read, write or delete access.',
     more_info: 'Granting permissions to allUsers or allAuthenticatedUsers allows anyone to access the dataset. Such access might not be desirable if sensitive data is being stored in the dataset.',
     link: 'https://cloud.google.com/bigquery/docs/dataset-access-controls',

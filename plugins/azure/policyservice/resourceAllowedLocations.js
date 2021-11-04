@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Resources Allowed Locations',
     category: 'Azure Policy',
+    domain: 'Management and Governance',
     description: 'Ensures deployed resources and resource groups belong to the list set in the allowed locations for resource groups policy',
     more_info: 'Setting allowed locations for a service helps ensure the service can only be deployed in expected locations.',
     recommended_action: 'Ensure that all services contain policy definitions that defined allowed locations.',

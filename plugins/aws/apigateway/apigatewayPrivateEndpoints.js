@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'API Gateway Private Endpoints',
     category: 'API Gateway',
+    domain: 'Availability',
     description: 'Ensures that Amazon API Gateway APIs are only accessible through private endpoints.',
     more_info: 'API Gateway APIs should be only accessible through private endpoints to ensure API security.',
     recommended_action: 'Set API Gateway API endpoint configuration to private',

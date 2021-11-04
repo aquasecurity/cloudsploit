@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Email DKIM Enabled',
     category: 'SES',
+    domain: 'Content Delivery',
     description: 'Ensures DomainKeys Identified Mail (DKIM) is enabled for domains and addresses in SES.',
     more_info: 'DKIM is a security feature that allows recipients of an email to veriy that the sender domain has authorized the message and that it has not been spoofed.',
     recommended_action: 'Enable DKIM for all domains and addresses in all regions used to send email through SES.',

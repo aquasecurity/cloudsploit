@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Secret Expiration Enabled',
     category: 'Key Vaults',
+    domain: 'Identity and Access Management',
     description: 'Ensures that all secrets in Azure Key Vault have an expiry time set.',
     more_info: 'Setting an expiry time on all secrets forces secret rotation and removes unused and forgotten secrets from being used.',
     recommended_action: 'Ensure each Key Vault has an expiry time set that provides for sufficient rotation.',

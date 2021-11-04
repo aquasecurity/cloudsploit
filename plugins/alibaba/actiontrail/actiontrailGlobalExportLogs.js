@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/alibaba');
 module.exports = {
     title: 'ActionTrail Global Export Logs',
     category: 'ActionTrail',
+    domain: 'Compliance',
     description: 'Ensure that ActionTrail is configured to export copies of all log entries for all regions.',
     more_info: 'ActionTrail records API calls for Alibaba account which can be exported to OSS bucket. There should be at least one trail which logs all API calls for all regions.',
     link: 'https://www.alibabacloud.com/help/doc-detail/28810.htm',

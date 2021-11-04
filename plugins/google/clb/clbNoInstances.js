@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'CLB No Instances',
     category: 'CLB',
+    domain: 'Availability',
     description: 'Detects CLBs that have no backend instances attached',
     more_info: 'GCP does not allow for Load Balancers to be configured without backend instances attached.',
     link: 'https://cloud.google.com/load-balancing/docs/load-balancing-overview',

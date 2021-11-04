@@ -5,6 +5,7 @@ var helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Queue Service All Access ACL',
     category: 'Queue Service',
+    domain: 'Application Integration',
     description: 'Ensures queues do not allow full write, delete, or read ACL permissions',
     more_info: 'Queues can be configured to allow object read, write or delete. This option should not be configured unless there is a strong business requirement.',
     recommended_action: 'Disable global read, write, delete policies on all queues and ensure the ACL is configured with least privileges.',

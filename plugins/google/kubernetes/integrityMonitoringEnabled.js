@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Integrity Monitoring Enabled',
     category: 'Kubernetes',
+    domain: 'Containers',
     description: 'Ensures all Kubernetes shielded cluster node have integrity monitoring enabled',
     more_info: 'Integrity Monitoring feature automatically monitors the integrity of your cluster nodes.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/shielded-gke-nodes#integrity_monitoring',

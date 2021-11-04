@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'ElasticSearch IAM Authentication',
     category: 'ES',
+    domain: 'Databases',
     description: 'Ensures ElasticSearch domains require IAM Authentication',
     more_info: 'ElasticSearch domains can allow access without IAM authentication by having a policy that does not specify the principal or has a wildcard principal',
     link: 'https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-ac.html',

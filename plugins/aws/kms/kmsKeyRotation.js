@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'KMS Key Rotation',
     category: 'KMS',
+    domain: 'Application Integration',
     description: 'Ensures KMS keys are set to rotate on a regular schedule',
     more_info: 'All KMS keys should have key rotation enabled. AWS will handle the rotation of the encryption key itself, as well as storage of previous keys, so previous data does not need to be re-encrypted before the rotation occurs.',
     recommended_action: 'Enable yearly rotation for the KMS key',

@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'CloudTrail Bucket Access Logging',
     category: 'CloudTrail',
+    domain: 'Compliance',
     description: 'Ensures CloudTrail logging bucket has access logging enabled to detect tampering of log files',
     more_info: 'CloudTrail buckets should utilize access logging for an additional layer of auditing. If the log files are deleted or modified in any way, the additional access logs can help determine who made the changes.',
     recommended_action: 'Enable access logging on the CloudTrail bucket from the S3 console',

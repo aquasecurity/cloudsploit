@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'EFS CMK Encrypted',
     category: 'EFS',
+    domain: 'Storage',
     description: 'Ensure EFS file systems are encrypted using Customer Master Keys (CMKs).',
     more_info: 'EFS file systems should use KMS Customer Master Keys (CMKs) instead of AWS managed keys for encryption in order to have full control over data encryption and decryption.',
     link: 'https://docs.aws.amazon.com/efs/latest/ug/encryption-at-rest.html',

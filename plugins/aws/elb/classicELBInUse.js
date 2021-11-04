@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Classic Load Balancers In Use',
     category: 'ELB',
+    domain: 'Content Delivery',
     description: 'Ensures that HTTP/HTTPS applications are using Application Load Balancer instead of Classic Load Balancer.',
     more_info: 'HTTP/HTTPS applications should use Application Load Balancer instead of Classic Load Balancer for cost and web traffic distribution optimization.',
     link: 'https://aws.amazon.com/elasticloadbalancing/features/',

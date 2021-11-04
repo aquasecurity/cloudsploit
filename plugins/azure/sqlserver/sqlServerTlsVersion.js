@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'SQL Server Minimum TLS Version',
     category: 'SQL Server',
+    domain: 'Databases',
     description: 'Ensures Microsoft Azure SQL Servers do not allow outdated TLS certificate versions.',
     more_info: 'TLS 1.2 or higher should be used for all TLS connections to Microsoft Azure SQL server. This setting applies to all databases associated with the server.',
     recommended_action: 'Modify SQL server firewall and virtual network settings to set desired minimum TLS version.',
