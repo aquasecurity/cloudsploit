@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'EMR Cluster In VPC',
     category: 'EMR',
+    domain: 'Compute',
     description: 'Ensure that your Amazon Elastic MapReduce (EMR) clusters are provisioned using the AWS EC2-VPC platform instead of EC2-Classic platform.',
     more_info: 'AWS EMR clusters using EC2-VPC platform instead of EC2-Classic can bring multiple advantages such as better networking infrastructure, much more flexible control over access security .',
     link: 'https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-vpc-launching-job-flows.htmll',
