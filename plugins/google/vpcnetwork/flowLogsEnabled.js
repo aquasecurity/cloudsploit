@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Flow Logs Enabled',
     category: 'VPC Network',
+    domain: 'Network Access Control',
     description: 'Ensures VPC flow logs are enabled for traffic logging',
     more_info: 'VPC flow logs record all traffic flowing in to and out of a VPC. These logs are critical for auditing and review after security incidents.',
     link: 'https://cloud.google.com/vpc/docs/using-flow-logs',

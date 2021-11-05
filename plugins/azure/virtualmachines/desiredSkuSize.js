@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'VM Desired SKU Size',
     category: 'Virtual Machines',
+    domain: 'Compute',
     description: 'Ensures that virtual machines is using the desired SKU size. This is an opt in plugin and will not run if no desired SKU size is provided.',
     more_info: 'VM SKU size defines the compute power and data processing speed. VM SKU size should be chosen carefully to address compute requirements for the organization and to save un-necessary costs.',
     recommended_action: 'Resize VM to desired SKU size.',

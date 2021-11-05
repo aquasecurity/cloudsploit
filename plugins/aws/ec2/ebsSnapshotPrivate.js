@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'EBS Volume Snapshot Public',
     category: 'EC2',
+    domain: 'Compute',
     description: 'Ensures EBS volume snapshots are private',
     more_info: 'EBS volumes often contain sensitive data from running EC2 instances and should be set to private so they cannot be accidentally shared with other accounts.',
     recommended_action: 'Ensure that each EBS snapshot has its permissions set to private.',

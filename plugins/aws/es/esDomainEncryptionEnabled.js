@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'ElasticSearch Encryption Enabled',
     category: 'ES',
+    domain: 'Databases',
     description: 'Ensure that AWS ElasticSearch domains have encryption enabled.',
     more_info: 'ElasticSearch domains should be encrypted to ensure that data is secured.',
     link: 'https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/encryption-at-rest.html',

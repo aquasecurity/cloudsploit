@@ -6,6 +6,7 @@ var defaultKmsKey = 'alias/aws/sqs';
 module.exports = {
     title: 'SQS Encrypted',
     category: 'SQS',
+    domain: 'Application Integration',
     description: 'Ensures SQS encryption is enabled',
     more_info: 'Messages sent to SQS queues can be encrypted using KMS server-side encryption. Existing queues can be modified to add encryption with minimal overhead.',
     recommended_action: 'Enable encryption using KMS for all SQS queues.',

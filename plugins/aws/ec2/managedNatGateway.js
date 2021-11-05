@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Managed NAT Gateway In Use',
     category: 'EC2',
+    domain: 'Compute',
     description: 'Ensure AWS VPC Managed NAT (Network Address Translation) Gateway service is enabled for high availability (HA).',
     more_info: 'VPCs should use highly available Managed NAT Gateways in order to enable EC2 instances to connect to the internet or with other AWS components.',
     link: 'https://aws.amazon.com/blogs/aws/new-managed-nat-network-address-translation-gateway-for-aws/',

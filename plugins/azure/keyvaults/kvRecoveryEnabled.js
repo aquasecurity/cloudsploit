@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Key Vault Recovery Enabled',
     category: 'Key Vaults',
+    domain: 'Identity and Access Management',
     description: 'Ensures that Purge Protection and Soft Delete are enabled on all Key Vaults',
     more_info: 'Purge Protection and Soft Delete are features that safeguard losing key access. With these setting enabled, key vaults have recovery actions available to restore deleted or compromised key vaults.',
     recommended_action: 'Once Key Vaults are created, the Azure CLI must be used to update the vault Soft Delete and Purge Protection settings.',

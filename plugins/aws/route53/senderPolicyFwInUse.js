@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Sender Policy Framework In Use',
     category: 'Route53',
+    domain: 'Content Delivery',
     description: 'Ensure that Sender Policy Framework (SPF) is used to stop spammers from spoofing your AWS Route 53 domain.',
     more_info: 'The Sender Policy Framework enables AWS Route 53 registered domain to publicly state the mail servers that are authorized to send emails on its behalf.',
     link: 'https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/rrsets-working-with.html',

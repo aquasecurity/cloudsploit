@@ -3,6 +3,7 @@ var helpers = require('../../../helpers/oracle');
 module.exports = {
     title: 'Object Store Policy Protection',
     category: 'Object Store',
+    domain: 'Storage',
     description: 'Ensure policy statements have deletion protection for object store services unless it is an administrator group.',
     more_info: 'Adding deletion protection to Oracle object store policies mitigates unintended deletion of object store services by unauthorized users or groups.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Object/Tasks/managingobjects.htm',

@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Monitor System Updates',
     category: 'Security Center',
+    domain: 'Management and Governance',
     description: 'Ensures that Monitor System Updates is enabled in Security Center',
     more_info: 'When this setting is enabled, Security Center will audit virtual machines for pending OS or system updates.',
     recommended_action: 'Ensure System Update monitoring is configured for virtual machines from the Azure Security Center.',

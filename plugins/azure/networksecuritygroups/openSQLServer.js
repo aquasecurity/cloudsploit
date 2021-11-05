@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Open SQLServer',
     category: 'Network Security Groups',
+    domain: 'Network Access Control',
     description: 'Determine if TCP port 1433 or UDP port 1434 for SQL Server is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as SQL server should be restricted to known IP addresses.',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',

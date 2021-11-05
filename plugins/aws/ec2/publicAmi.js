@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Public AMI',
     category: 'EC2',
+    domain: 'Compute',
     description: 'Checks for publicly shared AMIs',
     more_info: 'Accidentally sharing AMIs allows any AWS user to launch an EC2 instance using the image as a base. This can potentially expose sensitive information stored on the host.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/sharingamis-intro.html',

@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Storage Auto-Growth Enabled',
     category: 'PostgreSQL Server',
+    domain: 'Databases',
     description: 'Ensures that Storage Auto-Growth feature is enabled for Microsoft Azure PostgreSQL servers.',
     more_info: 'Storage auto grow prevents your server from reaching the storage limit and becoming read-only. For servers with 100 GB or less of provisioned storage, the size is increased by 5 GB when the free space is below 10%. For servers with more than 100 GB of provisioned storage, the size is increased by 5% when the free space is below 10 GB.',
     recommended_action: 'Modify PostgreSQL servers to enable storage auto-growth feature',

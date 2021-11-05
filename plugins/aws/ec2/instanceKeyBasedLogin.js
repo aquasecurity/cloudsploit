@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'EC2 Instance Key Based Login',
     category: 'EC2',
+    domain: 'Compute',
     description: 'Ensures EC2 instances have associated keys for password-less SSH login',
     more_info: 'AWS allows EC2 instances to be launched with a specified PEM key for SSH login which should be used instead of user and password login.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html',
