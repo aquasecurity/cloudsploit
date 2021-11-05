@@ -468,7 +468,7 @@ var calls = {
             paginate: 'Marker',
             params: {
                 ClusterStates: [
-                    'RUNNING','TERMINATED'
+                    'RUNNING','WAITING'
                 ]
             }
         }
