@@ -1,6 +1,28 @@
 const expect = require('chai').expect;
 const emrClusterInVPC = require('./emrClusterInVPC');
 
+const describeAccountAttributes = [
+    {
+        "AttributeName": "supported-platforms",
+        "AttributeValues": [
+            {
+                "AttributeValue": "VPC"
+            }
+        ]
+    },
+    {
+        "AttributeName": "supported-platforms",
+        "AttributeValues": [
+            {
+                "AttributeValue": "EC2"
+            },
+            {
+                "AttributeValue": "VPC"
+            }
+        ]
+    },
+];
+
 const listClusters = [
     {
         "Id": "j-8PNQXHQF599L",
@@ -91,9 +113,16 @@ const describeCluster= [
     }
 ];
 
-const createCache = (listClusters, describeCluster) => {
+const createCache = (attributes,listClusters, describeCluster) => {
     var clusterId = (listClusters && listClusters.length) ? listClusters[0].Id : null;
     return {
+        ec2:{
+            describeAccountAttributes: {
+                'us-east-1': {
+                    data: attributes
+                },
+            },
+        },
         emr: {
             listClusters: {
                 'us-east-1': {
@@ -122,7 +151,7 @@ const createErrorCache = () => {
                 },
             },
         },
-    };
+    }  
 };
 
 const createDescribeClusterErrorCache = (clusters) => {
@@ -148,18 +177,23 @@ const createDescribeClusterErrorCache = (clusters) => {
 
 const createNullCache = () => {
     return {
+        ec2:{
+            describeAccountAttributes: {
+                'us-east-1': null,
+            },
         emr: {
             listClusters: {
                 'us-east-1': null,
             },
         },
+    }
     };
 };
 
 describe('emrClusterInVPC', function () {
     describe('run', function () {
         it('should FAIL if EMR cluster is not in VPC', function (done) {
-            const cache = createCache([listClusters[1]], describeCluster[1]);
+            const cache = createCache([describeAccountAttributes[1]],[listClusters[1]], describeCluster[1]);
             emrClusterInVPC.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -168,7 +202,7 @@ describe('emrClusterInVPC', function () {
         });
 
         it('should PASS if EMR cluster is in VPC', function (done) {
-            const cache = createCache([listClusters[0]], describeCluster[0]);
+            const cache = createCache(describeAccountAttributes[0],[listClusters[0]], describeCluster[0]);
             emrClusterInVPC.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -177,7 +211,7 @@ describe('emrClusterInVPC', function () {
         });
 
         it('should PASS if no EMR clusters found', function (done) {
-            const cache = createCache([]);
+            const cache = createCache(describeAccountAttributes[0],[]);
             emrClusterInVPC.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -188,13 +222,13 @@ describe('emrClusterInVPC', function () {
         it('should UNKNOWN if unable to describe EMR cluster', function (done) {
             const cache = createDescribeClusterErrorCache(listClusters);
             emrClusterInVPC.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(2);
+                expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
             });
         });
 
-        it('should UNKNOWN if unable to list EMR clusters', function (done) {
+        it('should UNKNOWN if unable to list EMR clusters or account attributes', function (done) {
             const cache = createErrorCache();
             emrClusterInVPC.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
