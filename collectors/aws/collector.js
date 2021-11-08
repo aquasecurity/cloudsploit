@@ -63,6 +63,14 @@ var calls = {
             }
         }
     },
+    AuditManager: {
+        getSettings: {
+            property: 'settings',
+            params: {
+                attribute: 'ALL'
+            }
+        }
+    },
     AutoScaling: {
         describeAutoScalingGroups: {
             property: 'AutoScalingGroups',
