@@ -5,11 +5,11 @@ module.exports = {
     title: 'Backup Vault Encrypted',
     category: 'Backup',
     domain: 'Storage',
-    description: 'nsure that your Amazon Backup vaults are using AWS KMS Customer Master Keys instead of AWS managed-keys (i.e. default encryption keys).',
-    more_info: 'CodeArtifact domains make it easier to manage multiple repositories across an organization. By default, domain assets are encrypted with AWS-managed KMS key. ' +
-        'Encrypt them using customer-managed keys in order to gain more granular control over encryption/decryption process',
-    recommended_action: 'Encrypt CodeArtifact domains with desired encryption level',
-    link: 'https://docs.aws.amazon.com/codeartifact/latest/ug/domain-create.html',
+    description: 'Ensure that your Amazon Backup vaults are using AWS KMS Customer Master Keys instead of AWS managed-keys (i.e. default encryption keys).',
+    more_info: 'Amazon Key Management Service (KMS) service allows you to easily create, rotate, disable and audit the Customer Master Keys used to encrypt AWS Backup data'+
+    'Ensure that you use your own AWS KMS Customer Master Keys (CMKs) to protect the backups created with Amazon Backup service, you have full control over who can use the encryption keys to access your backups.',
+    recommended_action: 'Encrypt Backup Vault with desired encryption level',
+    link: 'https://docs.aws.amazon.com/aws-backup/latest/devguide/creating-a-vault.html',
     apis: ['Backup:listBackupVaults', 'KMS:listKeys', 'KMS:describeKey'],
     settings: {
         backup_vault_encryption_level: {
