@@ -54,6 +54,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    Appflow: {
+        listFlows: {
+            property: 'flows',
+            paginate: 'nextToken'
+        }
+    },
     Athena: {
         listWorkGroups: {
             property: 'WorkGroups',
@@ -831,6 +837,14 @@ var postcalls = [
                 reliesOnCall: 'getRestApis',
                 filterKey: 'restApiId',
                 filterValue: 'id'
+            }
+        },
+        Appflow: {
+            describeFlow: {
+                reliesOnService: 'appflow',
+                reliesOnCall: 'listFlows',
+                filterKey: 'flowName',
+                filterValue: 'flowName'
             }
         },
         Athena: {
