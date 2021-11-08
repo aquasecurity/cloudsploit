@@ -79,6 +79,12 @@ var calls = {
             }
         }
     },
+    Backup: {
+        listBackupVaults: {
+            property: 'BackupVaultList',
+            paginate: 'NextToken',
+        },
+    },
     CloudFormation: {
         listStacks: {
             property: 'StackSummaries',

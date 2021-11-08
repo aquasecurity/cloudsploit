@@ -13,6 +13,7 @@ module.exports = {
     acm: regions,
     apigateway: regions,
     athena: ['us-gov-west-1'],
+    backup: regions,
     cloudfront: [],
     autoscaling: regions,
     iam: regions,
