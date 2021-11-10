@@ -68,12 +68,13 @@ module.exports = {
         'configServiceEnabled'          : require(__dirname + '/plugins/aws/configservice/configServiceEnabled.js'),
 
         'devOpsGuruNotificationEnabled' : require(__dirname + '/plugins/aws/devopsguru/devOpsGuruNotificationEnabled.js'),
-
+       
         'dmsEncryptionEnabled'          : require(__dirname + '/plugins/aws/dms/dmsEncryptionEnabled.js'),
 
         'dynamoKmsEncryption'           : require(__dirname + '/plugins/aws/dynamodb/dynamoKmsEncryption.js'),
         'daxClusterEncryption'          : require(__dirname + '/plugins/aws/dynamodb/daxClusterEncryption.js'),
         'dynamoContinuousBackups'       : require(__dirname + '/plugins/aws/dynamodb/dynamoContinuousBackups.js'),
+        'clusterEncrypted'             : require(__dirname + '/plugins/aws/documentdb/clusterEncrypted.js'),
 
         'appTierInstanceIamRole'        : require(__dirname + '/plugins/aws/ec2/appTierInstanceIamRole.js'),
         'defaultSecurityGroup'          : require(__dirname + '/plugins/aws/ec2/defaultSecurityGroup.js'),

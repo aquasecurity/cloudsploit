@@ -228,6 +228,12 @@ var calls = {
             paginate: 'Marker'
         }
     },
+    DocDB: {
+        describeDBClusters: {
+            property: 'DBClusters',
+            paginate: 'Marker'
+        }
+    },
     DynamoDB: {
         listTables: {
             property: 'TableNames',
