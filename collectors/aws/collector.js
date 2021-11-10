@@ -1085,6 +1085,14 @@ var postcalls = [
                 override: true
             }
         },
+        ElasticTranscoder: {
+            listJobsByPipeline : {
+                reliesOnService: 'elastictranscoder',
+                reliesOnCall: 'listPipelines',
+                filterKey: 'PipelineId',
+                filterValue: 'Id'
+            }
+        },
         ELB: {
             describeLoadBalancerPolicies: {
                 reliesOnService: 'elb',
