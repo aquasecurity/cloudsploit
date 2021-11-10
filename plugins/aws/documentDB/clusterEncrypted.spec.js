@@ -82,13 +82,13 @@ const describeKey = [
     }
 ];
 
-const createCache = (clusters, keys, describeKey, clusterErr, keysErr, describeKeyErr) => {
+const createCache = (clusters, keys, describeKey, clustersErr, keysErr, describeKeyErr) => {
     var keyId = (clusters && clusters.length && clusters[0].KmsKeyId) ? clusters[0].KmsKeyId.split('/')[1] : null;
     return {
         docdb: {
             describeDBClusters: {
                 'us-east-1': {
-                    err: clusterErr,
+                    err: clustersErr,
                     data: clusters
                 },
             },

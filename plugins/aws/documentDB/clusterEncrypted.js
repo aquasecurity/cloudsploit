@@ -64,7 +64,7 @@ module.exports = {
                 let resource = cluster.DBClusterArn;
 
                 if (cluster.KmsKeyId) {
-                    var kmsKeyId = cluster.KmsKeyId.split('/')[1] ? cluster.KmsKeyId.split('/')[1] : clusters.KmsKeyId;
+                    var kmsKeyId = cluster.KmsKeyId.split('/')[1] ? cluster.KmsKeyId.split('/')[1] : cluster.KmsKeyId;
 
                     var describeKey = helpers.addSource(cache, source,
                         ['kms', 'describeKey', region, kmsKeyId]); 
