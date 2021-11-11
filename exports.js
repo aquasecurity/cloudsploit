@@ -377,7 +377,9 @@ module.exports = {
 
         'codebuildValidSourceProviders' : require(__dirname + '/plugins/aws/codebuild/codebuildValidSourceProviders.js'),
 
-        'codestarValidRepoProviders'    : require(__dirname + '/plugins/aws/codestar/codestarValidRepoProviders.js')
+        'codestarValidRepoProviders'    : require(__dirname + '/plugins/aws/codestar/codestarValidRepoProviders.js'),
+
+        'translateJobOutputEncrypted'   : require(__dirname + '/plugins/aws/translate/translateJobOutputEncrypted.js')
     },
     azure : {
         'fileServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/fileServiceEncryption.js'),
