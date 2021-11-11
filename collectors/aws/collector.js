@@ -235,6 +235,12 @@ var calls = {
             paginateReqProp: 'ExclusiveStartTableName'
         }
     },
+    ElastiCache: {
+        describeCacheClusters: {
+            property: 'CacheClusters',
+            paginate: 'Marker'
+        }
+    },
     DAX: {
         describeClusters: {
             property: 'Clusters',
@@ -928,6 +934,14 @@ var postcalls = [
                 reliesOnCall: 'listTables',
                 override: true
             },
+        },
+        ElastiCache: {
+            describeReplicationGroups: {
+                reliesOnService: 'elasticache',
+                reliesOnCall: 'describeCacheClusters',
+                filterKey: 'ReplicationGroupId',
+                filterValue: 'ReplicationGroupId'
+            }
         },
         ES: {
             describeElasticsearchDomain: {
