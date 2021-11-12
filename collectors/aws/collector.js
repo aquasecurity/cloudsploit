@@ -241,6 +241,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    TimestreamWrite: {
+        listDatabases: {
+            property: 'Databases',
+            paginate: 'NextToken'
+        }
+    },
     EC2: {
         describeAccountAttributes: {
             property: 'AccountAttributes'
