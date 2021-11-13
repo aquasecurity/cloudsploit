@@ -63,9 +63,7 @@ module.exports = {
 
                 let resource = database.Arn;
 
-                if (!database.KmsKeyId) {
-                    currentEncryptionLevel = 1; //none
-                } else {
+                if (database.KmsKeyId) {
                     var kmsKeyId = database.KmsKeyId.split('/')[1] ? database.KmsKeyId.split('/')[1] : database.KmsKeyId;
 
                     var describeKey = helpers.addSource(cache, source,
@@ -79,6 +77,9 @@ module.exports = {
                     }
 
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
+                } else {
+                    
+                    currentEncryptionLevel = 2; //awskms
                 }
 
                 var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
