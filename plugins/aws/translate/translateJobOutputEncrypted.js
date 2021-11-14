@@ -104,7 +104,6 @@ module.exports = {
                         'Unable to find output data config for the job',
                         region, resource);
                 }
-
             }
 
             rcb();
