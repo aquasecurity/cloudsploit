@@ -703,7 +703,6 @@ var calls = {
             rateLimit: 1000 // ms to rate limit between regions
         },
         describeActiveReceiptRuleSet: {
-            property: 'Rules'
         }
     },
     Shield: {
@@ -1624,7 +1623,7 @@ var collect = function(AWSConfig, settings, callback) {
                             if (callObj.property && !data[callObj.property]) return regionCb();
                             if (callObj.secondProperty && !data[callObj.secondProperty]) return regionCb();
 
-                            var dataToAdd = callObj.secondProperty ? data[callObj.property][callObj.secondProperty] : data[callObj.property];
+                            var dataToAdd = callObj.secondProperty ? data[callObj.property][callObj.secondProperty] : data[callObj.property] ? data[callObj.property] : data;
 
                             if (paginating) {
                                 collection[serviceLower][callKey][region].data = collection[serviceLower][callKey][region].data.concat(dataToAdd);
