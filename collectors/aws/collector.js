@@ -585,6 +585,12 @@ var calls = {
             paginateReqProp: 'Marker'
         }
     },
+    MemoryDB: {
+        describeClusters: {
+            property:'Clusters',
+            paginate:'NextToken'
+        }
+    },
     MQ: {
         listBrokers:{
             property:'BrokerSummaries',

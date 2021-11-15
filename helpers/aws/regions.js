@@ -111,5 +111,6 @@ module.exports = {
         'eu-west-1', 'eu-west-2', 'eu-north-1'],
     codebuild: regions,
     mq: regions,
-    glacier: regions
+    glacier: regions,
+    memorydb: regions,
 };
