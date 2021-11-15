@@ -333,6 +333,7 @@ module.exports = {
 
         'monitoringMetrics'             : require(__dirname + '/plugins/aws/cloudwatchlogs/monitoringMetrics.js'),
         'mqDeploymentMode'              : require(__dirname + '/plugins/aws/mq/mqDeploymentMode.js'),
+        'mqBrokerEncrypted'             : require(__dirname + '/plugins/aws/mq/mqBrokerEncrypted.js'),
 
         'logRetentionPeriod'            : require(__dirname + '/plugins/aws/cloudwatchlogs/logRetentionPeriod.js'),
       
