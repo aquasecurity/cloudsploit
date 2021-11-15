@@ -23,7 +23,6 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
-        console.log(JSON.stringify(cache.elasticache, null, 2));
 
         var config = {
             desiredEncryptionLevelString: settings.ec_at_rest_encryption_level || this.settings.ec_at_rest_encryption_level.default
