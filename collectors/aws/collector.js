@@ -199,6 +199,12 @@ var calls = {
             property: 'ConfigurationRecordersStatus'
         }
     },
+    DataBrew: {
+        listJobs: {
+            property: 'Jobs',
+            paginate: 'NextToken'
+        }
+    },
     DevOpsGuru: {
         listNotificationChannels: {
             property: 'Channels',
