@@ -330,6 +330,7 @@ module.exports = {
 
         'webServerPublicAccess'         : require(__dirname + '/plugins/aws/mwaa/webServerPublicAccess.js'),
         'environmentAdminPrivileges'    : require(__dirname + '/plugins/aws/mwaa/environmentAdminPrivileges.js'),
+        'neptuneDBClusterEncrypted'     : require(__dirname + '/plugins/aws/neptune/neptuneDBClusterEncrypted.js'),
 
         'monitoringMetrics'             : require(__dirname + '/plugins/aws/cloudwatchlogs/monitoringMetrics.js'),
         'mqDeploymentMode'              : require(__dirname + '/plugins/aws/mq/mqDeploymentMode.js'),
