@@ -585,6 +585,12 @@ var calls = {
             paginateReqProp: 'Marker'
         }
     },
+    ManagedBlockchain: {
+        listNetworks: {
+            property: 'Networks',
+            paginate: 'NextToken'
+        }
+    },
     MQ: {
         listBrokers:{
             property:'BrokerSummaries',
@@ -1272,6 +1278,14 @@ var postcalls = [
                 filterValue: 'FunctionArn'
             }
         },
+        ManagedBlockchain: {
+            listMembers: {
+                reliesOnService: 'managedblockchain',
+                reliesOnCall: 'listNetworks',
+                filterKey: 'NetworkId',
+                filterValue: 'Id'
+            }
+        },
         MQ: {
             describeBroker: {
                 reliesOnService: 'mq',
@@ -1453,6 +1467,13 @@ var postcalls = [
             describeNodegroups: {
                 reliesOnService: 'eks',
                 reliesOnCall: 'listClusters',
+                override: true
+            }
+        },
+        ManagedBlockchain: {
+            getMember: {
+                reliesOnService: 'managedblockchain',
+                reliesOnCall: 'listNetworks',
                 override: true
             }
         }
