@@ -595,7 +595,7 @@ var calls = {
         listEnvironments: {
             property: 'Environments',
             paginate: 'NextToken'
-        }
+        },
     },
     Organizations: {
         describeOrganization: {
