@@ -79,5 +79,6 @@ module.exports = {
     codestar: regions,
     codebuild: regions,
     mq: regions,
-    glacier: regions
+    glacier: regions,
+    kafka:regions
 };
