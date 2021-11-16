@@ -65,7 +65,7 @@ module.exports = {
 
                 if (job.EncryptionMode) {
                     if (job.EncryptionKeyArn) {
-                        var kmsKeyId = job.EncryptionKeyArn.split('/')[1] ? job.EncryptionKeyArn.split('/')[1] : job.OutputDataConfig.EncryptionKey.Id;
+                        var kmsKeyId = job.EncryptionKeyArn.split('/')[1] ? job.EncryptionKeyArn.split('/')[1] : job.EncryptionKeyArn;
 
                         var describeKey = helpers.addSource(cache, source,
                             ['kms', 'describeKey', region, kmsKeyId]);
