@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensure that your AWS Neptune Database clusters data is encrypted with KMS Customer Master Keys (CMKs) instead of AWS managed-keys.',
     more_info: 'Use your own AWS KMS Customer Master Keys (CMKs) to protect your Neptune Database data (including indexes, logs, replicas and snapshots) from unauthorized users, you have full control over who can use the encryption keys to access your data.',
     recommended_action: 'Encrypt Neptune DBCluster with desired encryption level',
-    link: 'https://docs.aws.amazon.com/documentdb/latest/developerguide/what-is.html#what-is-db-clusters',
+    link: 'https://docs.aws.amazon.com/neptune/latest/userguide/encrypt.html',
     apis: ['Neptune:describeDBClusters', 'KMS:listKeys', 'KMS:describeKey'],
     settings: {
         neptune_db_cluster_encryption_level: {
