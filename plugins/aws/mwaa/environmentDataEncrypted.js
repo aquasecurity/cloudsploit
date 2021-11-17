@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Amazon MWAA encrypts your data with AWS-manager keys by default.' +
                'Encrypt your files using customer-managed keys in order to gain more granular control over encryption/decryption process.',
     recommended_action: 'Create MWAA Environment with customer-manager keys (CMKs).',
-    link: 'https://docs.aws.amazon.com/AmazonECR/latest/userguide/Repositories.html',
+    link: 'https://docs.aws.amazon.com/mwaa/latest/userguide/encryption-at-rest.html',
     apis: ['MWAA:listEnvironments','MWAA:getEnvironment', 'KMS:describeKey', 'KMS:listKeys', 'STS:getCallerIdentity'],
     settings: {
         mwaa_environment_data_encryption: {
