@@ -560,6 +560,12 @@ var calls = {
             paginate: 'NextToken',
         }
     },
+    Kendra: {
+        listIndices: {
+            property: 'IndexConfigurationSummaryItems',
+            paginate: 'NextToken'
+        }
+    },
     KMS: {
         listKeys: {
             property: 'Keys',
@@ -1216,6 +1222,14 @@ var postcalls = [
                 filterKey: 'UserName',
                 filterValue: 'UserName',
                 rateLimit: 100
+            }
+        },
+        Kendra: {
+            describeIndex : {
+                reliesOnService: 'kendra',
+                reliesOnCall: 'listIndices',
+                filterKey: 'Id',
+                filterValue: 'Id'
             }
         },
         Kinesis: {
