@@ -36,7 +36,7 @@ module.exports = {
             resourcePolicies.data.forEach(policy => {
                 if (!policy.name) return;
 
-                if (policy.snapshotSchedulePolicy.snapshotProperties && policy.snapshotSchedulePolicy.snapshotProperties.guestFlush) {
+                if (policy.snapshotSchedulePolicy && policy.snapshotSchedulePolicy.snapshotProperties && policy.snapshotSchedulePolicy.snapshotProperties.guestFlush) {
                     helpers.addResult(results, 0, 'Snapshot schedule is configured to take application-consistent snapshots',
                         region, policy.name);
                 } else {
