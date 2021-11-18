@@ -1,12 +1,14 @@
 const OSS = require('ali-oss');
 
 module.exports = function(AlibabaConfig, collection, region, callback) {
-    const store = new OSS(AlibabaConfig);
+    let localAlibabaConfig = JSON.parse(JSON.stringify(AlibabaConfig));
+    localAlibabaConfig['timeout'] = 300000;
+    const store = new OSS(localAlibabaConfig);
     collection.oss.listBuckets[region].data = [];
 
     var execute = function(nextToken) {
         store.listBuckets({
-            'max-keys': 1,
+            'max-keys': 100,
             'marker': nextToken
         }).then((result) => {
             callCB(null, result);

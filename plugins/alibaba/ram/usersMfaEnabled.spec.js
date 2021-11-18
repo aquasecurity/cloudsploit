@@ -24,7 +24,7 @@ const getUserMfa = [
     {
         "MFADevice": {
           "Type": "VMFA",
-          "SerialNumber": "acs:ram::5103119194921620:mfa/aqua"
+          "SerialNumber": "acs:ram::0000111122223333:mfa/aqua"
         }
     },
     {
