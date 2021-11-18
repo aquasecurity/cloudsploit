@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Monitor SQL Auditing',
     category: 'Security Center',
+    domain: 'Management and Governance',
     description: 'Ensures that Monitor SQL Auditing is enabled in Security Center',
     more_info: 'When this setting is enabled, Security Center will monitor SQL databases.',
     recommended_action: 'Ensure SQL auditing monitoring is configured for SQL databases from the Azure Security Center.',

@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'EBS Volumes Too Old Snapshots',
     category: 'EC2',
+    domain: 'Compute',
     description: 'Ensure that EBS volume snapshots are deleted after defined time period.',
     more_info: 'EBS volume snapshots older than indicated should be deleted after defined time period for cost optimization.',
     link: 'https://docs.amazonaws.cn/en_us/AWSEC2/latest/UserGuide/ebs-deleting-snapshot.html',

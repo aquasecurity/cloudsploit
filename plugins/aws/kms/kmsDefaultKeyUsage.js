@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'KMS Default Key Usage',
     category: 'KMS',
+    domain: 'Application Integration',
     description: 'Checks AWS services to ensure the default KMS key is not being used',
     more_info: 'It is recommended not to use the default key to avoid encrypting disparate sets of data with the same key. Each application should have its own customer-managed KMS key',
     link: 'http://docs.aws.amazon.com/kms/latest/developerguide/concepts.html',

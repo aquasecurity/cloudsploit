@@ -3,6 +3,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Domain Auto Renew',
     category: 'Route53',
+    domain: 'Content Delivery',
     description: 'Ensures domains are set to auto renew through Route53',
     more_info: 'Domains purchased through Route53 should be set to auto renew. Domains that are not renewed can quickly be acquired by a third-party and cause loss of access for customers.',
     link: 'http://docs.aws.amazon.com/Route53/latest/APIReference/api-enable-domain-auto-renew.html',

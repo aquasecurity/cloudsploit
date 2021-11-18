@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'OS Login 2FA Enabled',
     category: 'Compute',
+    domain: 'Compute',
     description: 'Ensure that Virtual Machines instances have OS logic feature enabled and configured with Two-Factor Authentication.',
     more_info: 'Enable OS login Two-Factor Authentication (2FA) to add an additional security layer to your VM instances. The risk of your VM instances getting attcked is reduced significantly if 2FA is enabled.',
     link: 'https://cloud.google.com/compute/docs/oslogin/setup-two-factor-authentication',

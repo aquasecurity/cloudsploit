@@ -3,6 +3,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'IAM Support Policy',
     category: 'IAM',
+    domain: 'Identity and Access management',
     description: 'Ensures that an IAM role, group or user exists with specific permissions to access support center.',
     more_info: 'AWS provides a support center that can be used for incident notification and response, as well as technical support and customer services. An IAM Role should be present to allow authorized users to manage incidents with AWS Support.',
     link: 'https://docs.aws.amazon.com/awssupport/latest/user/accessing-support.html',

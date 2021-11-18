@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'EKS Security Groups',
     category: 'EKS',
+    domain: 'Containers',
     description: 'Ensures the EKS control plane only allows inbound traffic on port 443.',
     more_info: 'The EKS control plane only requires port 443 access. Security groups for the control plane should not add additional port access.',
     link: 'https://docs.aws.amazon.com/eks/latest/userguide/sec-group-reqs.html',

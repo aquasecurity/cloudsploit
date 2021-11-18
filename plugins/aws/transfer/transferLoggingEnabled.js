@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Transfer Logging Enabled',
     category: 'Transfer',
+    domain: 'Content Delivery',
     description: 'Ensures AWS Transfer servers have CloudWatch logging enabled.',
     more_info: 'AWS Transfer servers can log activity to CloudWatch if a proper IAM service role is provided. This role should be configured for all servers to ensure proper access logging.',
     link: 'https://docs.aws.amazon.com/transfer/latest/userguide/monitoring.html',

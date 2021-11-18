@@ -476,6 +476,7 @@ function getS3BucketLocation(cache, region, bucketName) {
             regions.all.includes(getBucketLocation.data.LocationConstraint)) return getBucketLocation.data.LocationConstraint;
         else return 'global';
     }
+
     return 'global';
 }
 

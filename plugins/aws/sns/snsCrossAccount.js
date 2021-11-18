@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'SNS Cross Account Access',
     category: 'SNS',
+    domain: 'Application Integration',
     description: 'Ensures SNS policies disallow cross-account access',
     more_info: 'SNS topic policies should be carefully restricted to to subscribe or send messages. Topic policies can be used to limit these privileges.',
     recommended_action: 'Update the SNS policy to prevent access from external accounts.',

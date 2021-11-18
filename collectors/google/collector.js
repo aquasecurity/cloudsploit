@@ -25,6 +25,11 @@ var calls = {
             api: 'compute',
             version: 'v1',
             location: 'zone'
+        },
+        aggregatedList: {
+            api: 'compute',
+            version: 'v1',
+            location: null
         }
     },
     images: {
@@ -392,6 +397,15 @@ var postcalls = {
         getIamPolicy: {
             api: 'cloudresourcemanager',
             version: 'v1beta1',
+            reliesOnService: ['organizations'],
+            reliesOnCall: ['list'],
+            filterKey: ['name'],
+            filterValue: ['organizationId'],
+            parent: 'resource'
+        },
+        listOrgPolicies: {
+            api: 'cloudresourcemanager',
+            version: 'v1',
             reliesOnService: ['organizations'],
             reliesOnCall: ['list'],
             filterKey: ['name'],

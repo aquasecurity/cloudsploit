@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/oracle/');
 module.exports = {
     title: 'Open All Ports Protocols',
     category: 'Networking',
+    domain: 'Network Access Control',
     description: 'Determine if security list has all ports or protocols open to the public',
     more_info: 'Security lists should be created on a per-service basis and avoid allowing all ports or protocols.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Network/Concepts/securitylists.htm',
