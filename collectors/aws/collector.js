@@ -609,6 +609,12 @@ var calls = {
             paginate: 'NextToken'
         },
     },
+    Proton: {
+        listEnvironmentTemplates: {
+            property: 'templates',
+            paginate: 'nextToken'
+        }
+    },
     RDS: {
         describeDBInstances: {
             property: 'DBInstances',
@@ -1285,6 +1291,14 @@ var postcalls = [
                 reliesOnService: 'mwaa',
                 reliesOnCall: 'listEnvironments',
                 override: true
+            }
+        },
+        Proton: {
+            getEnvironmentTemplate: {
+                reliesOnService: 'proton',
+                reliesOnCall: 'listEnvironmentTemplates',
+                filterKey: 'name',
+                filterValue: 'name'
             }
         },
         RDS: {
