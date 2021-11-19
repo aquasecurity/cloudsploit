@@ -5,7 +5,7 @@ module.exports = {
     title: 'Ledger Encrypted',
     category: 'QLDB',
     domain: 'Databases',
-    description: 'Ensures that the Ledgeris Encrypted',
+    description: 'Ensures that the Ledger is Encrypted',
     more_info: 'Amazon QLDB encrypts your ledger with AWS-manager keys by default.' +
                'Encrypt your files using customer-managed keys in order to gain more granular control over encryption/decryption process.',
     recommended_action: 'Create QLDB ledger with customer-manager keys (CMKs).',
