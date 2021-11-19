@@ -320,6 +320,8 @@ module.exports = {
         'ssmAgentAutoUpdateEnabled'     : require(__dirname + '/plugins/aws/ssm/ssmAgentAutoUpdateEnabled'),
         'ssmDocumentPublicAccess'       : require(__dirname + '/plugins/aws/ssm/ssmDocumentPublicAccess'),
 
+        'ledgerEncrypted'               : require(__dirname + '/plugins/aws/qldb/ledgerEncrypted'),
+
         'lambdaAdminPrivileges'         : require(__dirname + '/plugins/aws/lambda/lambdaAdminPrivileges.js'),
         'envVarsClientSideEncryption'   : require(__dirname + '/plugins/aws/lambda/envVarsClientSideEncryption.js'),
         'lambdaOldRuntimes'             : require(__dirname + '/plugins/aws/lambda/lambdaOldRuntimes.js'),
