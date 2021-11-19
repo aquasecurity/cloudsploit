@@ -116,7 +116,7 @@ describe('customerProfilesDomainEncrypted', function () {
     describe('run', function () {
         it('should PASS if CustomerProfiles domain is encrypted with desired encryption level', function (done) {
             const cache = createCache(listDomains, listKeys, getDomain[0], describeKey[0]);
-            customerProfilesDomainEncrypted.run(cache, { mwaa_environment_data_encryption : 'awscmk' }, (err, results) => {
+            customerProfilesDomainEncrypted.run(cache, { customer_profiles_encryption : 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -126,7 +126,7 @@ describe('customerProfilesDomainEncrypted', function () {
 
         it('should FAIL if CustomerProfiles domain is not encrypted with desired encryption level', function (done) {
             const cache = createCache(listDomains,listKeys, getDomain[0], describeKey[1]);
-            customerProfilesDomainEncrypted.run(cache, { mwaa_environment_data_encryption : 'awscmk' }, (err, results) => {
+            customerProfilesDomainEncrypted.run(cache, { customer_profiles_encryption : 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
