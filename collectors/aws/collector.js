@@ -199,6 +199,12 @@ var calls = {
             property: 'ConfigurationRecordersStatus'
         }
     },
+    CustomerProfiles: {
+        listDomains: {
+            property: 'Items',
+            paginate: 'NextToken',
+        }
+    },
     DevOpsGuru: {
         listNotificationChannels: {
             property: 'Channels',
@@ -908,6 +914,14 @@ var postcalls = [
                 reliesOnCall: 'listProjects',
                 filterKey: 'id',
                 filterValue: 'projectId'
+            }
+        },
+        CustomerProfiles: {
+            getDomain: {
+                reliesOnService: 'customerprofiles',
+                reliesOnCall: 'listDomains',
+                filterKey: 'DomainName',
+                filterValue: 'DomainName'
             }
         },
         CodeBuild: {
