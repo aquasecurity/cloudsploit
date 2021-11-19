@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Amazon QLDB encrypts your ledger with AWS-manager keys by default.' +
                'Encrypt your files using customer-managed keys in order to gain more granular control over encryption/decryption process.',
     recommended_action: 'Create QLDB ledger with customer-manager keys (CMKs).',
-    link: 'https://docs.aws.amazon.com/proton/latest/adminguide/data-protection.html',
+    link: 'https://docs.aws.amazon.com/qldb/latest/developerguide/encryption-at-rest.html',
     apis: ['QLDB:listLedgers','QLDB:describeLedger', 'KMS:describeKey', 'KMS:listKeys', 'STS:getCallerIdentity'],
     settings: {
         qldb_ledger_encryption: {
