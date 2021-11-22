@@ -357,6 +357,8 @@ module.exports = {
         'transferLoggingEnabled'        : require(__dirname + '/plugins/aws/transfer/transferLoggingEnabled.js'),
         'transferPrivateLinkInUse'      : require(__dirname + '/plugins/aws/transfer/transferPrivateLinkInUse.js'),
 
+        'serviceEncrypted'              : require(__dirname + '/plugins/aws/apprunner/serviceEncrypted.js'),
+
         'secretRotationEnabled'         : require(__dirname + '/plugins/aws/secretsmanager/secretRotationEnabled.js'),
         'secretsManagerEncrypted'       : require(__dirname + '/plugins/aws/secretsmanager/secretsManagerEncrypted.js'),
 

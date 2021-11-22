@@ -54,6 +54,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    AppRunner: {
+        listServices: {
+            property: 'ServiceSummaryList',
+            paginate: 'NextToken'
+        }
+    },
     Athena: {
         listWorkGroups: {
             property: 'WorkGroups',
@@ -831,6 +837,14 @@ var postcalls = [
                 reliesOnCall: 'getRestApis',
                 filterKey: 'restApiId',
                 filterValue: 'id'
+            }
+        },
+        AppRunner: {
+            describeService: {
+                reliesOnService: 'apprunner',
+                reliesOnCall: 'listServices',
+                filterKey: 'ServiceArn',
+                filterValue: 'ServiceArn'
             }
         },
         Athena: {
