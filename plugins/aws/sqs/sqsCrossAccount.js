@@ -19,7 +19,7 @@ module.exports = {
             name: 'Whitelisted AWS Account Principals',
             description: 'A comma-separated list of trusted cross account principals',
             regex: '^.*$',
-            default: ''
+            default: 'arn:aws:iam::560213429563:root'
         },
         sqs_whitelist_aws_organization_accounts: {
             name: 'SQS Whitelist All AWS Organization Accounts',
@@ -125,18 +125,33 @@ module.exports = {
                 var statements = helpers.normalizePolicyDocument(policy);
 
                 for (var statement of statements) {
-                    if (!statement.Effect || statement.Effect !== 'Allow') continue;
-                    if (!statement.Principal) continue;
+                    if (!statement.Effect || statement.Effect !== 'Allow' || !statement.Principal) continue;
+
+                    var crossAccountAccess = false;
+                    var conditionalPrincipals = (statement.Condition) ?
+                        helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, true, accountId) : [];
 
                     if (helpers.globalPrincipal(statement.Principal)) {
-                        if (statement.Condition && helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, false, accountId)) continue;
-                        for (var a in statement.Action) {
-                            if (globalActions.indexOf(statement.Action[a]) === -1) {
-                                globalActions.push(statement.Action[a]);
+                        // if (statement.Condition && helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, false, accountId)) continue;
+                        if (statement.Condition && conditionalPrincipals.length) {
+                            for (let principal of conditionalPrincipals) {
+                                if (helpers.crossAccountPrincipal(principal, accountId)) {
+                                    crossAccountAccess = true;
+                                    break;
+                                }
+                            }
+                        } else {
+                            for (var a in statement.Action) {
+                                if (globalActions.indexOf(statement.Action[a]) === -1) {
+                                    globalActions.push(statement.Action[a]);
+                                }
                             }
                         }
-                    } else {
-                        let conditionalPrincipals = helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, true, accountId);
+                    }
+
+                    if (helpers.crossAccountPrincipal(statement.Principal, accountId)) crossAccountAccess = true;
+
+                    if (crossAccountAccess) {
                         if (helpers.crossAccountPrincipal(statement.Principal, accountId) ||
                             (conditionalPrincipals && conditionalPrincipals.length)) {
                             let crossAccountPrincipals = helpers.crossAccountPrincipal(statement.Principal, accountId, true);
@@ -150,15 +165,11 @@ module.exports = {
                             if (!crossAccountPrincipals.length) continue;
 
                             let crossAccount = false;
-                            let orgAccount;
 
                             for (let principal of crossAccountPrincipals) {
                                 if (config.sqs_whitelisted_aws_account_principals.includes(principal)) continue;
-
-                                if (whitelistOrganization) {
-                                    orgAccount = organizationAccounts.find(account => principal.includes(account));
-                                    if (orgAccount) continue;
-                                }
+                                if (whitelistOrganization &&
+                                    organizationAccounts.find(account => principal.includes(account))) continue;
 
                                 crossAccount = true;
                                 break;
