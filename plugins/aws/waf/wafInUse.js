@@ -21,6 +21,7 @@ module.exports = {
                 ['waf', 'listWebACLs', region]);
 
             if (!listWebACLs) return rcb();
+
             if (listWebACLs.err || !listWebACLs.data) {
                 helpers.addResult(results, 3,
                     'Unable to query for WAF: ' + helpers.addError(listWebACLs), region);
