@@ -70,7 +70,6 @@ module.exports = {
                 var getDomain = helpers.addSource(cache, source,
                     ['customerprofiles', 'getDomain', region, domains.DomainName]);
 
-
                 if (!getDomain || getDomain.err || !getDomain.data) {
                     helpers.addResult(results, 3,
                         `Unable to get customerprofiles domain description: ${helpers.addError(getDomain)}`,
