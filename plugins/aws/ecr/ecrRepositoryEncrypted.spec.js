@@ -161,7 +161,7 @@ describe('ecrRepositoryEncrypted', function () {
         });
 
         it('should UNKNOWN if unable to list ECR Repository', function (done) {
-            const cache = createCache(null, null, null, { message: "Unable to list Timestream Databases encryption" });
+            const cache = createCache(null, null, null, { message: "Unable to list ECR Repository encryption" });
             ecrRepositoryEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
