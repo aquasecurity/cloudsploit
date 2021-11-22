@@ -79,7 +79,7 @@ module.exports = {
 
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
                 } else {
-                    helpers.addResult(results, 2,
+                    helpers.addResult(results, 3,
                         `No Default Encryption key found invalid : ${helpers.addError(describeKey)}`, region);
                     return rcb();
                 }
