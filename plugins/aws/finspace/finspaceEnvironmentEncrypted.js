@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'FinSpace Environment Encrypted',
     category: 'FinSpace',
-    domain: 'Containers',
+    domain: 'Content Delivery',
     description: 'Ensure that AWS FinSpace Environments are using desired encryption level.',
     more_info: 'Amazon FinSpace is a fully managed data management and analytics service that makes it easy to store, catalog, and prepare financial industry data at scale.' +
                'To encrypt this data, use a KMS key with desired encrypted level to meet regulatory compliance requirements within your organization.',
