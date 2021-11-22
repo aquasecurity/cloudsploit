@@ -32,7 +32,8 @@ var globalServices = [
     'CloudFront',
     'Route53',
     'Route53Domains',
-    'WAFRegional'
+    'WAFRegional',
+    'WAF'
 ];
 
 var calls = [
@@ -768,6 +769,12 @@ var calls = [
                 params: {
                     Scope: 'REGIONAL'
                 }
+            }
+        },
+        WAF: {
+            listWebACLs: {
+                property: 'WebACLs',
+                paginate: 'NextMarker'
             }
         },
         WorkSpaces: {

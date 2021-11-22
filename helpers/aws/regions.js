@@ -99,6 +99,7 @@ module.exports = {
     support: ['us-east-1'],
     wafregional: regions,
     wafv2: regions,
+    waf: regions,
     organizations: ['us-east-1'],
     guardduty: regions,
     workspaces: ['us-east-1', 'us-west-2', 'ca-central-1', 'sa-east-1', 'ap-south-1',
