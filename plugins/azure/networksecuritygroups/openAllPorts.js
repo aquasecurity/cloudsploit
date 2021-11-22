@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Open All Ports',
     category: 'Network Security Groups',
+    domain: 'Network Access Control',
     description: 'Ensures Network Security Groups do not expose all ports to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, almost all services should be restricted to known IP addresses.',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',

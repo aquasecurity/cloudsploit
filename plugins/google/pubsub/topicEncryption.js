@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Topic Encryption Enabled',
     category: 'Pub/Sub',
+    domain: 'Application Integration',
     description: 'Ensure that Google Pub/Sub topics are encrypted with desired encryption level.',
     more_info: 'Google encrypts all messages in topics by default. By using CSEK, only the users with the key can access the disk. Anyone else, including Google, cannot access the disk data.',
     link: 'https://cloud.google.com/pubsub/docs/encryption',

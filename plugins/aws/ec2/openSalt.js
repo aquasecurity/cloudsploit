@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Open Salt',
     category: 'EC2',
+    domain: 'Compute',
     description: 'Determine if TCP ports 4505 or 4506 for the Salt master are open to the public',
     more_info: 'Active Salt vulnerabilities, CVE-2020-11651 and CVE-2020-11652 are exploiting Salt instances exposed to the internet. These ports should be closed immediately.',
     link: 'https://help.saltstack.com/hc/en-us/articles/360043056331-New-SaltStack-Release-Critical-Vulnerability',
@@ -12,7 +13,7 @@ module.exports = {
     settings: {
         ec2_skip_unused_groups: {
             name: 'EC2 Skip Unused Groups',
-            description: 'Skip checking ports for unused security groups',
+            description: 'When set to true, skip checking ports for unused security groups and produce a WARN result',
             regex: '^(true|false)$',
             default: 'false',
         }

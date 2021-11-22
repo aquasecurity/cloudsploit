@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Open All Ports Protocols',
     category: 'EC2',
+    domain: 'Compute',
     description: 'Determine if security group has all ports or protocols open to the public',
     more_info: 'Security groups should be created on a per-service basis and avoid allowing all ports or protocols.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
@@ -12,9 +13,9 @@ module.exports = {
     settings: {
         ec2_skip_unused_groups: {
             name: 'EC2 Skip Unused Groups',
-            description: 'Skip checking ports for unused security groups',
+            description: 'When set to true, skip checking ports for unused security groups and produce a WARN result',
             regex: '^(true|false)$',
-            default: 'flase',
+            default: 'false',
         }
     },
     compliance: {
@@ -70,7 +71,7 @@ module.exports = {
 
                 if (config.ec2_skip_unused_groups) {
                     if (groups[g].GroupId && !usedGroups.includes(groups[g].GroupId)) {
-                        helpers.addResult(results, 0, `Security Group: ${groups[g].GroupId} is not in use`,
+                        helpers.addResult(results, 1, `Security Group: ${groups[g].GroupId} is not in use`,
                             region, resource);
                         usedGroup = true;
                         continue;

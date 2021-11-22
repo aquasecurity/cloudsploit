@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'No Network Gateways Connections',
     category: 'Virtual Networks',
+    domain: 'Network Access Control',
     description: 'Ensures that virtual network gateways do not have any established connections.',
     more_info: 'To meet your organization\'s security compliance requirements.',
     link: 'https://docs.microsoft.com/en-us/azure/vpn-gateway/tutorial-site-to-site-portal',

@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'EKS Secrets Encrypted',
     category: 'EKS',
+    domain: 'Containers',
     description: 'Ensures EKS clusters are configured to enable envelope encryption of Kubernetes secrets using KMS.',
     more_info: 'Amazon EKS clusters should be configured to enable envelope encryption for Kubernetes secrets to adhere to security best practice for applications that store sensitive data.',
     link: 'https://aws.amazon.com/about-aws/whats-new/2020/03/amazon-eks-adds-envelope-encryption-for-secrets-with-aws-kms/',

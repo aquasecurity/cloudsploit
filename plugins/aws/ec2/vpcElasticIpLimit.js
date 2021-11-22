@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'VPC Elastic IP Limit',
     category: 'EC2',
+    domain: 'Compute',
     description: 'Determine if the number of allocated VPC EIPs is close to the AWS per-account limit',
     more_info: 'AWS limits accounts to certain numbers of resources. Exceeding those limits could prevent resources from launching.',
     recommended_action: 'Contact AWS support to increase the number of EIPs available',

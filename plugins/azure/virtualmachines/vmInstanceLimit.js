@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'VM Instance Limit',
     category: 'Virtual Machines',
+    domain: 'Compute',
     description: 'Determines if the number of VM instances is close to the Azure per-region limit',
     more_info: 'Azure limits regions to certain numbers of resources. Exceeding those limits could prevent resources from launching.',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/windows/overview',

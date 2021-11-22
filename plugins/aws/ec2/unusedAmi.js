@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Unused Amazon Machine Images',
     category: 'EC2',
+    domain: 'Compute',
     description: 'Ensures that all Amazon Machine Images are in use to ensure cost optimization.',
     more_info: 'All unused/deregistered Amazon Machine Images should be deleted to avoid extraneous cost.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html',

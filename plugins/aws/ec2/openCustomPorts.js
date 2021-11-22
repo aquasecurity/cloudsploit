@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Open Custom Ports',
     category: 'EC2',
+    domain: 'Compute',
     description: 'Ensure that defined custom ports are not open to public.',
     more_info: 'Security groups should restrict access to ports from known networks.',
     link: 'https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html',
@@ -18,7 +19,7 @@ module.exports = {
         },
         ec2_skip_unused_groups: {
             name: 'EC2 Skip Unused Groups',
-            description: 'Skip checking ports for unused security groups',
+            description: 'When set to true, skip checking ports for unused security groups and produce a WARN result',
             regex: '^(true|false)$',
             default: 'false',
         }

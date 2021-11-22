@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/oracle/');
 module.exports = {
     title: 'Open Autonomous Data Warehouse',
     category: 'Networking',
+    domain: 'Network Access Control',
     description: 'Determine if TCP port 1522 for Autonomous Data Warehouse is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public ' +
         'to function properly, more sensitive services such as Autonomous Data Warehouse should ' +

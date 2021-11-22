@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Advanced Data Security Enabled',
     category: 'SQL Server',
+    domain: 'Databases',
     description: 'Ensures that Advanced Data Security is enabled for SQL Servers',
     more_info: 'Enabling Advanced Data Security on all SQL Servers ensures that SQL server data is encrypted and monitored for unusual activity, vulnerabilities, and threats.',
     recommended_action: 'Ensure that Advanced Data Security is enabled for all SQL Servers.',

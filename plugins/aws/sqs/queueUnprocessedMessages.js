@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'SQS Queue Unprocessed Messages',
     category: 'SQS',
+    domain: 'Application Integration',
     description: 'Ensures that Amazon SQS queue has not reached unprocessed messages limit.',
     more_info: 'Amazon SQS queues should have unprocessed messages less than the limit to be highly available and responsive.',
     recommended_action: 'Set up appropriate message polling time and set up dead letter queue for Amazon SQS queue to handle messages in time',

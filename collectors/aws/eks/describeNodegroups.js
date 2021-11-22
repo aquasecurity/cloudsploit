@@ -5,9 +5,9 @@ module.exports = function(AWSConfig, collection, callback) {
     var eks = new AWS.EKS(AWSConfig);
     //var autoscaling = new AWS.AutoScaling(AWSConfig);
 
-    async.eachLimit(collection.eks.listClusters[AWSConfig.region].data, 10, function(cluster, cb){
+    async.eachLimit(collection.eks.listClusters[AWSConfig.region].data, 5, function(cluster, cb){
         collection.eks.describeNodegroups[AWSConfig.region][cluster] = {};
-        async.each(collection.eks.listNodegroups[AWSConfig.region][cluster].data, function(nodeGroup, cb){
+        async.eachLimit(collection.eks.listNodegroups[AWSConfig.region][cluster].data, 3, function(nodeGroup, cb){
             collection.eks.describeNodegroups[AWSConfig.region][cluster][nodeGroup] = {};
             // Check for the multiple subnets in that single VPC
             var params = {

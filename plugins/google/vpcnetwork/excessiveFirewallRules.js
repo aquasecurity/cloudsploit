@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Excessive Firewall Rules',
     category: 'VPC Network',
+    domain: 'Network Access Control',
     description: 'Determines if there are an excessive number of firewall rules in the account',
     more_info: 'Keeping the number of firewall rules to a minimum helps reduce the attack surface of an account. Rather than creating new rules with the same rules for each project, common rules should be grouped under the same firewall rule. For example, instead of adding port 22 from a known IP to every firewall rule, create a single "SSH" firewall rule which can be used on multiple instances.',
     link: 'https://cloud.google.com/vpc/docs/using-firewalls',

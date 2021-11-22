@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Open Oracle',
     category: 'EC2',
+    domain: 'Compute',
     description: 'Determine if TCP port 1521 for Oracle is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open \
         to the public to function properly, more sensitive services such as Oracle \
@@ -14,7 +15,7 @@ module.exports = {
     settings: {
         ec2_skip_unused_groups: {
             name: 'EC2 Skip Unused Groups',
-            description: 'Skip checking ports for unused security groups',
+            description: 'When set to true, skip checking ports for unused security groups and produce a WARN result',
             regex: '^(true|false)$',
             default: 'false',
         }

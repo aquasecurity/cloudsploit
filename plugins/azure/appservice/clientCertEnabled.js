@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'Client Certificates Enabled',
     category: 'App Service',
+    domain: 'Application Integration',
     description: 'Ensures Client Certificates are enabled for App Services, only allowing clients with valid certificates to reach the app',
     more_info: 'Enabling Client Certificates will block all clients that do not have a valid certificate from accessing the app.',
     recommended_action: 'Enable incoming client certificate SSL setting for all App Services.',

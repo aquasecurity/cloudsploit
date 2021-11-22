@@ -67,7 +67,7 @@ describe('bucketAllUsersPolicy', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No buckets have anonymous or public access.');
+                expect(results[0].message).to.include('Bucket does not have anonymous or public access');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -76,38 +76,73 @@ describe('bucketAllUsersPolicy', function () {
                 null,
                 [
                     {
-                        "name": "giotestdnszone1",
-                        "dnsName": "cloudsploit.com.",
-                        "description": "",
-                        "id": "4534388710135378441",
-                        "nameServers": [
-                            "ns-cloud-e1.googledomains.com.",
-                            "ns-cloud-e2.googledomains.com.",
-                            "ns-cloud-e3.googledomains.com.",
-                            "ns-cloud-e4.googledomains.com."
+                        "kind": "storage#policy",
+                        "resourceId": "projects/_/buckets/us.artifacts.rosy-booth-253119.appspot.com",
+                        "bindings": [
+                            {
+                                "role": "roles/storage.legacyBucketOwner",
+                                "members": [
+                                    "projectEditor:rosy-booth-253119",
+                                    "projectOwner:rosy-booth-253119"
+                                ]
+                            },
+                            {
+                                "role": "roles/storage.legacyBucketReader",
+                                "members": [
+                                    "projectViewer:rosy-booth-253119"
+                                ]
+                            }
                         ],
-                        "creationTime": "2019-10-03T21:11:18.894Z",
-                        "dnssecConfig": {
-                            "state": "on",
-                            "defaultKeySpecs": [
-                                {
-                                    "keyType": "keySigning",
-                                    "algorithm": "rsasha256",
-                                    "keyLength": 2048,
-                                    "kind": "dns#dnsKeySpec"
-                                },
-                                {
-                                    "keyType": "zoneSigning",
-                                    "algorithm": "rsasha256",
-                                    "keyLength": 1024,
-                                    "kind": "dns#dnsKeySpec"
-                                }
-                            ],
-                            "nonExistence": "nsec3",
-                            "kind": "dns#managedZoneDnsSecConfig"
-                        },
-                        "visibility": "public",
-                        "kind": "dns#managedZone"
+                        "etag": "CAE=",
+                        "version": 1
+                    },
+                    {
+                        "kind": "storage#policy",
+                        "resourceId": "projects/_/buckets/staging.rosy-booth-253119.appspot.com",
+                        "bindings": [
+                            {
+                                "role": "roles/storage.legacyBucketOwner",
+                                "members": [
+                                    "projectEditor:rosy-booth-253119",
+                                    "projectOwner:rosy-booth-253119"
+                                ]
+                            },
+                            {
+                                "role": "roles/storage.legacyBucketReader",
+                                "members": [
+                                    "projectViewer:rosy-booth-253119"
+                                ]
+                            }
+                        ],
+                        "etag": "CAE=",
+                        "version": 1
+                    },
+                    {
+                        "kind": "storage#policy",
+                        "resourceId": "projects/_/buckets/rosy-booth-253119.appspot.com",
+                        "version": 1,
+                        "bindings": [
+                            {
+                                "role": "roles/iam.securityReviewer",
+                                "members": [
+                                    "projectEditor:rosy-booth-253119",
+                                ]
+                            },
+                            {
+                                "role": "roles/storage.legacyBucketOwner",
+                                "members": [
+                                    "projectEditor:rosy-booth-253119",
+                                    "projectOwner:rosy-booth-253119"
+                                ]
+                            },
+                            {
+                                "role": "roles/storage.legacyBucketReader",
+                                "members": [
+                                    "projectViewer:rosy-booth-253119"
+                                ]
+                            }
+                        ],
+                        "etag": "CAs="
                     }
                 ],
                 null,

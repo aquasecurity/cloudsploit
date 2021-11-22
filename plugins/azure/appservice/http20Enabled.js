@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'HTTP 2.0 Enabled',
     category: 'App Service',
+    domain: 'Application Integration',
     description: 'Ensures the latest HTTP version is enabled for App Services',
     more_info: 'Enabling HTTP2.0 ensures that the App Service has the latest technology which improves server performance',
     recommended_action: 'Enable HTTP 2.0 support in the general settings for all App Services',

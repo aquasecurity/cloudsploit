@@ -5,6 +5,7 @@ var helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'Virtual Machine Boot Diagnostics Enabled',
     category: 'Virtual Machines',
+    domain: 'Compute',
     description: 'Ensures that the VM boot diagnostics is enabled for virtual machines.',
     more_info: 'Boot diagnostics is a debugging feature for Azure virtual machines (VM) that allows diagnosis of VM boot failures. Boot diagnostics enables a user to observe the state of their VM as it is booting up by collecting serial log information and screenshots.',
     recommended_action: 'Enable boot diagnostics for all virtual machines.',

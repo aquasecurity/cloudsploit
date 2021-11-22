@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Open Hadoop HDFS NameNode WebUI',
     category: 'VPC Network',
+    domain: 'Network Access Control',
     description: 'Determines if TCP port 50070 and 50470 for Hadoop/HDFS NameNode WebUI service is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Hadoop/HDFS should be restricted to known IP addresses.',
     link: 'https://cloud.google.com/vpc/docs/using-firewalls',

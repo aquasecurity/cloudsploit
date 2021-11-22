@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/oracle');
 module.exports = {
     title: 'Load Balancer No Instances',
     category: 'Networking',
+    domain: 'Network Access Control',
     description: 'Detects LBs that have no backend instances attached',
     more_info: 'All LBs should have backend server resources. ' +
                'Those without any are consuming costs without providing ' +

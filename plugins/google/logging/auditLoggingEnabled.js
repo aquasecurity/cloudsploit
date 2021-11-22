@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Audit Logging Enabled',
     category: 'Logging',
+    domain: 'Management and Governance',
     description: 'Ensures that default audit logging is enabled on the organization or project.',
     more_info: 'The default audit logs should be configured to log all admin activities and write and read access to data for all services. In addition, no exempted members should be added to the logs to ensure proper delivery of all audit logs.',
     link: 'https://cloud.google.com/logging/docs/audit/',

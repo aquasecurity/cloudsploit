@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'WorkSpaces Volume Encryption',
     category: 'WorkSpaces',
+    domain: 'Identity Access and Management',
     description: 'Ensures volume encryption on WorkSpaces for data protection.',
     more_info: 'AWS WorkSpaces should have volume encryption enabled in order to protect data from unauthorized access.',
     link: 'https://docs.aws.amazon.com/workspaces/latest/adminguide/encrypt-workspaces.html',
