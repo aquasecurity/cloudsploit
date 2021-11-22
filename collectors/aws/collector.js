@@ -487,6 +487,12 @@ var calls = {
             }
         }
     },
+    Finspace: {
+        listEnvironments: {
+            property: 'environments',
+            paginate: 'nextToken'
+        }
+    },
     Glue: {
         getDataCatalogEncryptionSettings: {
             property: 'DataCatalogEncryptionSettings',

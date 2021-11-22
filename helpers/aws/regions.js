@@ -111,5 +111,6 @@ module.exports = {
         'eu-west-1', 'eu-west-2', 'eu-north-1'],
     codebuild: regions,
     mq: regions,
-    glacier: regions
+    glacier: regions,
+    finspace: ['us-east-1', 'us-east-2', 'us-west-2', 'ca-central-1','eu-west-1'],
 };
