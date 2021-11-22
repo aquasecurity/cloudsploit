@@ -63,7 +63,6 @@ module.exports = {
             }
 
             for (let domains of listDomains.data) {
-                //arn:aws:profile:us-east-1:101363889637:domains/
                 let resource = `arn:${awsOrGov}:profile:${region}:${accountId}:domains/${domains.DomainName}`;
 
                 var getDomain = helpers.addSource(cache, source,
