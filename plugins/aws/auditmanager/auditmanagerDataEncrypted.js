@@ -69,7 +69,7 @@ module.exports = {
                     if (!describeKey || describeKey.err || !describeKey.data || !describeKey.data.KeyMetadata) {
                         helpers.addResult(results, 3,
                             `Unable to query KMS key: ${helpers.addError(describeKey)}`,
-                            region, kmsKeyId);
+                            region, getSettings.data.kmsKey);
                         continue;
                     }
 
