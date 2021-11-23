@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Content Delivery',
     description: 'Ensure that AWS Glue DataBrew jobs have encryption enabled for output files with desired encryption level.',
     more_info: 'AWS Glue DataBrew jobs should have encryption enabled to encrypt S3 targets i.e. output files to meet regulatory compliance requirements within your organization.',
-    recommended_action: 'Modify Glue Data',
+    recommended_action: 'Modify Glue DataBrew jobs to set desired encryption configuration',
     link: 'https://docs.aws.amazon.com/databrew/latest/dg/encryption-security-configuration.html',
     apis: ['DataBrew:listJobs', 'KMS:listKeys', 'KMS:describeKey'],
     settings: {
