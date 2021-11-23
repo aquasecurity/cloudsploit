@@ -786,6 +786,12 @@ var calls = {
             }
         }
     },
+    Translate: {
+        listTextTranslationJobs: {
+            property: 'TextTranslationJobPropertiesList',
+            paginate: 'NextToken'
+        }
+    },
     WAFRegional: {
         listWebACLs: {
             property: 'WebACLs',
