@@ -379,6 +379,8 @@ module.exports = {
 
         'codestarValidRepoProviders'    : require(__dirname + '/plugins/aws/codestar/codestarValidRepoProviders.js'),
 
+        'databrewJobOutputEncrypted'    : require(__dirname + '/plugins/aws/gluedatabrew/databrewJobOutputEncrypted.js'),
+      
         'networkMemberDataEncrypted'    : require(__dirname + '/plugins/aws/managedblockchain/networkMemberDataEncrypted.js')
     },
     azure : {
