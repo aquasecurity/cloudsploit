@@ -102,7 +102,7 @@ module.exports = {
                     badDisks.forEach(disk => {
                         let resource = helpers.createResourceName('disks', disk.name, project, disk.locationType, disk.location);
                         helpers.addResult(results, 2,
-                            'CSEK Encryption is disabled for disk', disk.location, resource);
+                            'CSEK Encryption is disabled for disk', region, resource);
                     });
                 }
             }
@@ -115,7 +115,7 @@ module.exports = {
                     goodDisks.forEach(disk => {
                         let resource = helpers.createResourceName('disks', disk.name, project, disk.locationType, disk.location);
                         helpers.addResult(results, 0,
-                            'CSEK Encryption is enabled for disk', disk.location, resource);
+                            'CSEK Encryption is enabled for disk', region, resource);
                     });
                 }
             } 
