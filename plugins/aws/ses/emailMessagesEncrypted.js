@@ -86,7 +86,7 @@ module.exports = {
                 if (!s3Action) helpers.addResult(results, 0, 'SES active rule set rule does not have action to deliver to S3', region, resource);
                 else {
                     if (s3Action.S3Action.KmsKeyArn) {
-                        console.log('here');
+             
                         if (s3Action.S3Action.KmsKeyArn.includes('alias/aws/ses')) currentEncryptionLevel = 2;
                         else {
                             let kmsKeyId = s3Action.S3Action.KmsKeyArn.split('/')[1] ? s3Action.S3Action.KmsKeyArn.split('/')[1] : s3Action.S3Action.KmsKeyArn;
