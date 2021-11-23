@@ -199,6 +199,12 @@ var calls = {
             property: 'ConfigurationRecordersStatus'
         }
     },
+    DataBrew: {
+        listJobs: {
+            property: 'Jobs',
+            paginate: 'NextToken'
+        }
+    },
     DevOpsGuru: {
         listNotificationChannels: {
             property: 'Channels',
@@ -585,6 +591,12 @@ var calls = {
             paginateReqProp: 'Marker'
         }
     },
+    ManagedBlockchain: {
+        listNetworks: {
+            property: 'Networks',
+            paginate: 'NextToken'
+        }
+    },
     MQ: {
         listBrokers:{
             property:'BrokerSummaries',
@@ -703,7 +715,6 @@ var calls = {
             rateLimit: 1000 // ms to rate limit between regions
         },
         describeActiveReceiptRuleSet: {
-            property: 'Rules'
         }
     },
     Shield: {
@@ -773,6 +784,12 @@ var calls = {
             params: {
                 MaxResults: 1000
             }
+        }
+    },
+    Translate: {
+        listTextTranslationJobs: {
+            property: 'TextTranslationJobPropertiesList',
+            paginate: 'NextToken'
         }
     },
     WAFRegional: {
@@ -1280,6 +1297,14 @@ var postcalls = [
                 filterValue: 'FunctionArn'
             }
         },
+        ManagedBlockchain: {
+            listMembers: {
+                reliesOnService: 'managedblockchain',
+                reliesOnCall: 'listNetworks',
+                filterKey: 'NetworkId',
+                filterValue: 'Id'
+            }
+        },
         MQ: {
             describeBroker: {
                 reliesOnService: 'mq',
@@ -1463,6 +1488,13 @@ var postcalls = [
                 reliesOnCall: 'listClusters',
                 override: true
             }
+        },
+        ManagedBlockchain: {
+            getMember: {
+                reliesOnService: 'managedblockchain',
+                reliesOnCall: 'listNetworks',
+                override: true
+            }
         }
     },
     {
@@ -1632,7 +1664,7 @@ var collect = function(AWSConfig, settings, callback) {
                             if (callObj.property && !data[callObj.property]) return regionCb();
                             if (callObj.secondProperty && !data[callObj.secondProperty]) return regionCb();
 
-                            var dataToAdd = callObj.secondProperty ? data[callObj.property][callObj.secondProperty] : data[callObj.property];
+                            var dataToAdd = callObj.secondProperty ? data[callObj.property][callObj.secondProperty] : data[callObj.property] ? data[callObj.property] : data;
 
                             if (paginating) {
                                 collection[serviceLower][callKey][region].data = collection[serviceLower][callKey][region].data.concat(dataToAdd);
