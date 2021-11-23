@@ -80,6 +80,7 @@ module.exports = {
     codebuild: regions,
     mq: regions,
     glacier: regions,
+    appflow: regions,
     translate: regions,
     databrew: regions,
     managedblockchain: regions
