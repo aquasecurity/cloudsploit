@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Amazon Managed Blockchain encrypts the network member data at-rest by default with AWS-managed keys. ' +
         'Use your own key (CMK) to encrypt this data to meet regulatory compliance requirements within your organization',
     link: 'https://docs.aws.amazon.com/managed-blockchain/latest/hyperledger-fabric-dev/managed-blockchain-encryption-at-rest.html',
-    recommended_action: 'Modify IAM role attached with MWAA environment to provide the minimal amount of access required to perform its tasks',
+    recommended_action: 'Ensure members in Managed Blockchain are using desired encryption level for encryption',
     apis: ['ManagedBlockchain:listMembers', 'ManagedBlockchain:listNetworks', 'ManagedBlockchain:getMember', 'KMS:listKeys', 'KMS:describeKey'],
     settings: {
         blockchain_member_encryption_level: {
