@@ -379,6 +379,8 @@ module.exports = {
 
         'codestarValidRepoProviders'    : require(__dirname + '/plugins/aws/codestar/codestarValidRepoProviders.js'),
 
+        'dataStoreEncrypted'            : require(__dirname + '/plugins/aws/healthlake/dataStoreEncrypted.js'),
+
         'networkMemberDataEncrypted'    : require(__dirname + '/plugins/aws/managedblockchain/networkMemberDataEncrypted.js')
     },
     azure : {

@@ -80,5 +80,6 @@ module.exports = {
     codebuild: regions,
     mq: regions,
     glacier: regions,
-    managedblockchain: regions
+    managedblockchain: regions,
+    healthlake: ['us-east-1', 'us-east-2', 'eu-west-2'],
 };
