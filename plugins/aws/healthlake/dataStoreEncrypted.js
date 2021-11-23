@@ -4,12 +4,12 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'HealthLake Data Store Encrypted',
     category: 'HealthLake',
-    domain: 'Databases',
+    domain: 'Content Delivery',
     description: 'Ensures that the HealthLake Data Store is Encrypted',
     more_info: 'Amazon HealthLake is a Fast Healthcare Interoperability Resources (FHIR)-enabled patient Data Store that uses default Kms keys. ' +
                'Encrypt your files using customer-managed keys in order to gain more granular control over encryption/decryption process.',
     recommended_action: 'Create HealthLake Data Store with customer-manager keys (CMKs).',
-    link: 'https://docs.aws.amazon.com/timestream/latest/developerguide/EncryptionAtRest.html',
+    link: 'https://docs.aws.amazon.com/healthlake/latest/devguide/data-protection.html',
     apis: ['HealthLake:listFHIRDatastores', 'KMS:describeKey', 'KMS:listKeys'],
     settings: {
         healthLake_data_store_encryption: {
