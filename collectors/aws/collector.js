@@ -149,6 +149,12 @@ var calls = {
             }
         }
     },
+    CodeArtifact: {
+        listDomains: {
+            property: 'domains',
+            paginate: 'nextToken'
+        }
+    },
     CodeStar: {
         listProjects: {
             property: 'projects',
