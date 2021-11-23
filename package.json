@@ -46,7 +46,7 @@
     "ali-oss": "^6.15.2",
     "argparse": "^2.0.0",
     "async": "^2.6.1",
-    "aws-sdk": "^2.954.0",
+    "aws-sdk": "^2.1026.0",
     "azure-storage": "^2.10.3",
     "csv-write-stream": "^2.0.0",
     "fast-safe-stringify": "^2.0.6",

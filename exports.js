@@ -302,6 +302,7 @@ module.exports = {
         'notebookDirectInternetAccess'  : require(__dirname + '/plugins/aws/sagemaker/notebookDirectInternetAccess.js'),
 
         'dkimEnabled'                   : require(__dirname + '/plugins/aws/ses/dkimEnabled.js'),
+        'emailMessagesEncrypted'        : require(__dirname + '/plugins/aws/ses/emailMessagesEncrypted.js'),
 
         'topicEncrypted'                : require(__dirname + '/plugins/aws/sns/topicEncrypted.js'),
         'topicPolicies'                 : require(__dirname + '/plugins/aws/sns/topicPolicies.js'),
@@ -379,7 +380,14 @@ module.exports = {
 
         'codestarValidRepoProviders'    : require(__dirname + '/plugins/aws/codestar/codestarValidRepoProviders.js'),
 
-        'pipelineDataEncrypted'         : require(__dirname + '/plugins/aws/elastictranscoder/pipelineDataEncrypted.js')
+        'pipelineDataEncrypted'         : require(__dirname + '/plugins/aws/elastictranscoder/pipelineDataEncrypted.js'),
+        'jobOutputsEncrypted'           : require(__dirname + '/plugins/aws/elastictranscoder/jobOutputsEncrypted.js'),
+      
+        'translateJobOutputEncrypted'   : require(__dirname + '/plugins/aws/translate/translateJobOutputEncrypted.js'),
+      
+        'databrewJobOutputEncrypted'    : require(__dirname + '/plugins/aws/gluedatabrew/databrewJobOutputEncrypted.js'),
+      
+        'networkMemberDataEncrypted'    : require(__dirname + '/plugins/aws/managedblockchain/networkMemberDataEncrypted.js')
     },
     azure : {
         'fileServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/fileServiceEncryption.js'),
