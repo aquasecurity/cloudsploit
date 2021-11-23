@@ -147,6 +147,12 @@ var calls = {
             paginate: 'nextToken'
         }
     },
+    CodePipeline: {
+        listPipelines: {
+            property: 'pipelines',
+            paginate: 'nextToken'
+        }
+    },
     Comprehend: {
         listEntitiesDetectionJobs: {
             property: 'EntitiesDetectionJobPropertiesList',
@@ -915,6 +921,14 @@ var postcalls = [
                 reliesOnService: 'codebuild',
                 reliesOnCall: 'listProjects',
                 override: true
+            }
+        },
+        CodePipeline: {
+            getPipeline: {
+                reliesOnService: 'codepipeline',
+                reliesOnCall: 'listPipelines',
+                filterKey: 'name',
+                filterValue: 'name'
             }
         },
         DynamoDB: {
