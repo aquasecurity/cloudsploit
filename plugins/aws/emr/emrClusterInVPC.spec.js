@@ -39,7 +39,7 @@ const listClusters = [
             }
         },
         "NormalizedInstanceHours": 0,
-        "ClusterArn": "arn:aws:elasticmapreduce:us-east-1:560213429563:cluster/j-8PNQXHQF599L"
+        "ClusterArn": "arn:aws:elasticmapreduce:us-east-1:000011112222:cluster/j-8PNQXHQF599L"
     },
     {
         "Id": "j-11W10W1AXKL60",
