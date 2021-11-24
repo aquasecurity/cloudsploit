@@ -12,13 +12,13 @@ const listLedgers = [
 const describeLedger = [
     {
         "Name": "sadeed1",
-        "Arn": "arn:aws:qldb:us-east-1:101363889637:ledger/sadeed1",
+        "Arn": "arn:aws:qldb:us-east-1:000111222333:ledger/sadeed1",
         "State": "ACTIVE",
         "CreationDateTime": "2021-11-19T16:29:08.899000+05:00",
         "PermissionsMode": "STANDARD",
         "DeletionProtection": true,
         "EncryptionDescription": {
-            "KmsKeyArn": "arn:aws:kms:us-east-1:101363889637:key/ad013a33-b01d-4d88-ac97-127399c18b3e",
+            "KmsKeyArn": "arn:aws:kms:us-east-1:000111222333:key/ad013a33-b01d-4d88-ac97-127399c18b3e",
             "EncryptionStatus": "ENABLED"
         }
     }
