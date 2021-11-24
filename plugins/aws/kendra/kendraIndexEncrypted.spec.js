@@ -27,7 +27,7 @@ const describeIndex = [
     "Edition": "DEVELOPER_EDITION",
     "RoleArn": "arn:aws:iam::101363889637:role/service-role/AmazonKendra-us-east-1-role1",
     "ServerSideEncryptionConfiguration": {
-        "KmsKeyId": "arn:aws:kms:us-east-1:101363889637:key/ad013a33-b01d-4d88-ac97-127399c18b3e"
+        "KmsKeyId": "arn:aws:kms:us-east-1:000111222333:key/ad013a33-b01d-4d88-ac97-127399c18b3e"
     },
     "Status": "ACTIVE",
     "CreatedAt": "2021-11-17T15:23:58.841000+05:00",
