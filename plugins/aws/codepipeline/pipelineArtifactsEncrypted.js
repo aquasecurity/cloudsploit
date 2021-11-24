@@ -96,7 +96,7 @@ module.exports = {
                 } 
                
                 if (getPipeline.data.pipeline && 
-                getPipeline.data.pipeline.artifactStore &&
+                    getPipeline.data.pipeline.artifactStore &&
                     getPipeline.data.pipeline.artifactStore.encryptionKey &&
                     getPipeline.data.pipeline.artifactStore.encryptionKey.id) {
                     var kmsKey =  getPipeline.data.pipeline.artifactStore.encryptionKey.id;
