@@ -2,49 +2,51 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'MSK Cluster At-Rest Encrypted',
-    category: 'MSK',
+    title: 'CodeArtifact Domain Encrypted',
+    category: 'CodeArtifact',
     domain: 'Application Integration',
-    description: 'Ensure that Amazon Managed Streaming for Kafka (MSK) clusters are using AWS KMS Customer Master Keys (CMKs) instead of AWS managed-keys',
-    more_info: 'Use your own AWS KMS Customer Master Keys (CMKs) to protect your Managed Streaming for Kafka (MSK) clusters in order to have a fine-grained control over data-at-rest encryption/decryption process and meet compliance requirements.',
-    recommended_action: 'Encrypt MSK Cluster At-Rest with desired encryption level',
-    link: 'https://docs.aws.amazon.com/msk/1.0/apireference/clusters-clusterarn-security.html',
-    apis: ['Kafka:listClusters', 'KMS:listKeys', 'KMS:describeKey'],
+    description: 'Ensures that AWS CodeArtifact domains have encryption enabled with desired encryption level.',
+    more_info: 'CodeArtifact domains make it easier to manage multiple repositories across an organization. By default, domain assets are encrypted with AWS-managed KMS key. ' +
+        'Encrypt them using customer-managed keys in order to gain more granular control over encryption/decryption process',
+    recommended_action: 'Encrypt CodeArtifact domains with desired encryption level',
+    link: 'https://docs.aws.amazon.com/codeartifact/latest/ug/domain-create.html',
+    apis: ['CodeArtifact:listDomains', 'KMS:listKeys', 'KMS:describeKey'],
     settings: {
-        mskcluster_atrest_desired_encryption_level: {
-            name: 'MSK Cluster At-Rest Target Encryption Level',
+        codeartifact_domain_encryption_level: {
+            name: 'CodeArtifact Domain Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk',
         }
     },
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
 
         var config = {
-            desiredEncryptionLevelString: settings.mskcluster_atrest_desired_encryption_level || this.settings.mskcluster_atrest_desired_encryption_level.default
+            desiredEncryptionLevelString: settings.codeartifact_domain_encryption_level || this.settings.codeartifact_domain_encryption_level.default
         };
 
         var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(config.desiredEncryptionLevelString);
         var currentEncryptionLevel;
 
-        async.each(regions.kafka, function(region, rcb){
-            var listClusters = helpers.addSource(cache, source,
-                ['kafka', 'listClusters', region]);
+        async.each(regions.codeartifact, function(region, rcb){
+            var listDomains = helpers.addSource(cache, source,
+                ['codeartifact', 'listDomains', region]);
 
-            if (!listClusters) return rcb();
+            if (!listDomains) return rcb();
 
-            if (listClusters.err || !listClusters.data) {
+            if (listDomains.err || !listDomains.data) {
                 helpers.addResult(results, 3,
-                    `Unable to list MSK Cluster At-Rest  : ${helpers.addError(listClusters)}`, region);
+                    `Unable to list CodeArtifact domains: ${helpers.addError(listDomains)}`, region);
                 return rcb();
             }
 
-            if (!listClusters.data.length) {
+            if (!listDomains.data.length) {
                 helpers.addResult(results, 0,
-                    'No MSK Clusters found', region);
+                    'No CodeArtifact domains found', region);
                 return rcb();
             }
 
@@ -57,48 +59,44 @@ module.exports = {
                 return rcb();
             }
 
-            for (let cluster of listClusters.data) {
-                if (!cluster.ClusterArn) continue;
+            for (let domain of listDomains.data) {
+                if (!domain.arn) continue;
 
-                let resource = cluster.ClusterArn;
-
-                if (cluster.EncryptionInfo &&
-                    cluster.EncryptionInfo.EncryptionAtRest &&
-                    cluster.EncryptionInfo.EncryptionAtRest.DataVolumeKMSKeyId) {
-
-                    let DataVolumeKMSKeyId = cluster.EncryptionInfo.EncryptionAtRest.DataVolumeKMSKeyId;  
-                    var keyId = DataVolumeKMSKeyId.split('/')[1] ? DataVolumeKMSKeyId.split('/')[1] : DataVolumeKMSKeyId;
-
+                let resource = domain.arn;
+                if (domain.encryptionKey) {
+                    var kmsKeyId = domain.encryptionKey.split('/')[1] ? domain.encryptionKey.split('/')[1] : domain.encryptionKey;
+    
                     var describeKey = helpers.addSource(cache, source,
-                        ['kms', 'describeKey', region, keyId]); 
-
+                        ['kms', 'describeKey', region, kmsKeyId]);
+    
                     if (!describeKey || describeKey.err || !describeKey.data || !describeKey.data.KeyMetadata) {
                         helpers.addResult(results, 3,
                             `Unable to query KMS key: ${helpers.addError(describeKey)}`,
-                            region, DataVolumeKMSKeyId);
+                            region, domain.encryptionKey);
                         continue;
                     }
-
+    
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
                     var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
-
+    
                     if (currentEncryptionLevel >= desiredEncryptionLevel) {
                         helpers.addResult(results, 0,
-                            `MSK Cluster At-Rest is encrypted with ${currentEncryptionLevelString} \
+                            `CodeArtifact domain is encrypted with ${currentEncryptionLevelString} \
                             which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
                             region, resource);
                     } else {
                         helpers.addResult(results, 2,
-                            `MSK Cluster At-Rest is encrypted with ${currentEncryptionLevelString} \
+                            `CodeArtifact domain is encrypted with ${currentEncryptionLevelString} \
                             which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                             region, resource);
                     }
                 } else {
                     helpers.addResult(results, 2,
-                        'MSK Cluster At-Rest does not have encryption enabled for assets',
+                        'CodeArtifact domain does not have encryption enabled for assets',
                         region, resource);
                 }
             }
+
             rcb();
         }, function(){
             callback(null, results, source);

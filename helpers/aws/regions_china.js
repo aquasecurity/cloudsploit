@@ -80,5 +80,14 @@ module.exports = {
     codebuild: regions,
     mq: regions,
     glacier: regions,
-    kafka:regions
+    kafka:regions,
+    finspace: regions,
+    codepipeline: regions,
+    codeartifact: regions,
+    auditmanager: regions,
+    appflow: regions,
+    translate: regions,
+    databrew: regions,
+    managedblockchain: regions,
+    healthlake: regions
 };
