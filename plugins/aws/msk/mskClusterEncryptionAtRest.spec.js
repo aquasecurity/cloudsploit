@@ -1,7 +1,6 @@
 var expect = require('chai').expect;
 var mskClusterEncryptionAtRest = require('./mskClusterEncryptionAtRest');
 
-
 const listClusters = [
     { 
         "BrokerNodeGroupInfo": {
@@ -37,7 +36,7 @@ const listClusters = [
                 "Enabled": true
             }
         },
-        "ClusterArn": "arn:aws:kafka:us-east-1:101363889637:cluster/sadeed-cl1/444e81bf-14ab-4839-923e-ac424325e2df-20",
+        "ClusterArn": "arn:aws:kafka:us-east-1:000111222333:cluster/sadeed-cl1/444e81bf-14ab-4839-923e-ac424325e2df-20",
         "ClusterName": "sadeed-cl1",
         "CreationTime": "2021-11-16T10:49:45.001000+00:00",
         "CurrentBrokerSoftwareInfo": {
@@ -46,7 +45,7 @@ const listClusters = [
         "CurrentVersion": "K1VC38T7YXB528",
         "EncryptionInfo": {
             "EncryptionAtRest": {
-                "DataVolumeKMSKeyId": "arn:aws:kms:us-east-1:101363889637:key/ad013a33-b01d-4d88-ac97-127399c18b3e"
+                "DataVolumeKMSKeyId": "arn:aws:kms:us-east-1:000111222333:key/ad013a33-b01d-4d88-ac97-127399c18b3e"
             },
             "EncryptionInTransit": {
                 "ClientBroker": "TLS_PLAINTEXT",
