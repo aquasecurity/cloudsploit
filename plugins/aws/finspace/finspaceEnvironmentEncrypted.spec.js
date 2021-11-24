@@ -1,7 +1,6 @@
 var expect = require('chai').expect;
 var finspaceEnvironmentEncrypted = require('./finspaceEnvironmentEncrypted');
 
-
 const listEnvironments = [
     {
         "name": "sadeed1",
