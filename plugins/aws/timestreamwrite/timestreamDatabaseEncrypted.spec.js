@@ -1,7 +1,6 @@
 var expect = require('chai').expect;
 var timestreamDatabaseEncrypted = require('./timestreamDatabaseEncrypted');
 
-
 const listDatabases = [
         {
             "Arn": "arn:aws:timestream:us-east-1:000011112222:database/akhtar-db1",
@@ -98,8 +97,6 @@ const createCache = (databases, keys, describeKey, databasesErr, keysErr, descri
         },
     };
 };
-
-
 
 
 describe('timestreamDatabaseEncrypted', function () {
