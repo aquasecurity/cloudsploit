@@ -8,12 +8,6 @@ const listPipelines = [
     "created": "2021-11-22T21:03:15.001000+05:00",
     "updated": "2021-11-22T21:03:15.001000+05:00" 
    },
-   {
-    "name": "edwed",
-    "version": 1,
-    "created": "2021-11-22T15:51:27.657000+05:00",
-    "updated": "2021-11-22T15:51:27.657000+05:00"
-   }
 ];
 
 
@@ -21,12 +15,12 @@ const getPipeline = [
     {
         "pipeline": {
             "name": "sad",
-            "roleArn": "arn:aws:iam::101363889637:role/service-role/AWSCodePipelineServiceRole-us-east-1-sad",
+            "roleArn": "arn:aws:iam::000111222333:role/service-role/AWSCodePipelineServiceRole-us-east-1-sad",
             "artifactStore": {
                 "type": "S3",
                 "location": "codepipeline-us-east-1-347340132483",
                 "encryptionKey": {
-                    "id": "arn:aws:kms:us-east-1:101363889637:alias/sadeed-k1",
+                    "id": "arn:aws:kms:us-east-1:000111222333:alias/sadeed-k1",
                     "type": "KMS"
                 }
             },
@@ -38,7 +32,7 @@ const getPipeline = [
 const listAliases = [
     {
         "AliasName": "alias/sadeed-k1",
-        "AliasArn": "arn:aws:kms:us-east-1:101363889637:alias/sadeed-k1",
+        "AliasArn": "arn:aws:kms:us-east-1:000111222333:alias/sadeed-k1",
         "TargetKeyId": "ad013a33-b01d-4d88-ac97-127399c18b3e",
         "CreationDate": "2021-11-15T17:05:31.308000+05:00",
         "LastUpdatedDate": "2021-11-15T17:05:31.308000+05:00"
