@@ -12,8 +12,8 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/finspace/latest/userguide/data-encryption.html',
     apis: ['Finspace:listEnvironments', 'KMS:describeKey', 'KMS:listKeys'],
     settings: {
-        finspace_environment_encryption: {
-            name: 'FinSpace Environment Encryption',
+        finspace_environment_desired_encryption_level: {
+            name: 'FinSpace Environment Desired Encryption Level',
             description: 'In order (lowest to highest) awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
@@ -26,7 +26,7 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var config = {
-            desiredEncryptionLevelString: settings.finspace_environment_encryption || this.settings.finspace_environment_encryption.default
+            desiredEncryptionLevelString: settings.finspace_environment_desired_encryption_level || this.settings.finspace_environment_desired_encryption_level.default
         };
 
         var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(config.desiredEncryptionLevelString);
@@ -60,10 +60,10 @@ module.exports = {
 
             for (let environment of listEnvironments.data) {
                 if (!environment.environmentArn) continue;
+
                 let resource = environment.environmentArn;
 
                 if (environment.kmsKeyId) {
-
                     var keyId = environment.kmsKeyId.split('/')[1] ? environment.kmsKeyId.split('/')[1] : environment.kmsKeyId;
 
                     var describeKey = helpers.addSource(cache, source,
@@ -79,20 +79,20 @@ module.exports = {
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
                 } else {
                     helpers.addResult(results, 3,
-                        `No Default Encryption key found invalid or Unknown Error : ${helpers.addError(describeKey)}`, region);
-                    return rcb();
+                        'Unable to find encryption key for environment', region, resource);
+                    continue;
                 }
 
                 var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
 
                 if (currentEncryptionLevel >= desiredEncryptionLevel) {
                     helpers.addResult(results, 0,
-                        `FinSpace Environment is encrypted with ${currentEncryptionLevelString} \
+                        `FinSpace environment is encrypted with ${currentEncryptionLevelString} \
                         which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `FinSpace Environment encrypted with ${currentEncryptionLevelString} \
+                        `FinSpace environment is encrypted with ${currentEncryptionLevelString} \
                         which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 }

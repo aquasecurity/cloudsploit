@@ -103,7 +103,7 @@ describe('finspaceEnvironmentEncrypted', function () {
             finspaceEnvironmentEncrypted.run(cache, { finspace_environment_encryption: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('FinSpace Environment is encrypted with awscmk');
+                expect(results[0].message).to.include('FinSpace environment is encrypted with awscmk');
                 done();
             });
         });
@@ -113,7 +113,7 @@ describe('finspaceEnvironmentEncrypted', function () {
             finspaceEnvironmentEncrypted.run(cache, { finspace_environment_encryption: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('FinSpace Environment encrypted with awskms');
+                expect(results[0].message).to.include('FinSpace environment is encrypted with awskms');
                 done();
             });
         });
