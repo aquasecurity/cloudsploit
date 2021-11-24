@@ -1,7 +1,6 @@
 var expect = require('chai').expect;
 var memorydbClusterEncrypted = require('./memorydbClusterEncrypted');
 
-
 const describeClusters = [
     {
         "Name": "sadeed2",
@@ -23,7 +22,7 @@ const describeClusters = [
         ],
         "SubnetGroupName": "subnet1",
         "TLSEnabled": true,
-        "ARN": "arn:aws:memorydb:us-east-1:101363889637:cluster/sadeed2",
+        "ARN": "arn:aws:memorydb:us-east-1:000111222333:cluster/sadeed2",
         "SnapshotRetentionLimit": 1,
         "MaintenanceWindow": "wed:08:00-wed:09:00",
         "SnapshotWindow": "06:30-07:30",
@@ -51,8 +50,8 @@ const describeClusters = [
         ],
         "SubnetGroupName": "subnet1",
         "TLSEnabled": true,
-        "KmsKeyId": "arn:aws:kms:us-east-1:101363889637:key/ad013a33-b01d-4d88-ac97-127399c18b3e",
-        "ARN": "arn:aws:memorydb:us-east-1:101363889637:cluster/sadeed-cl1",
+        "KmsKeyId": "arn:aws:kms:us-east-1:000111222333:key/ad013a33-b01d-4d88-ac97-127399c18b3e",
+        "ARN": "arn:aws:memorydb:us-east-1:000111222333:cluster/sadeed-cl1",
         "SnapshotRetentionLimit": 1,
         "MaintenanceWindow": "tue:06:00-tue:07:00",
         "SnapshotWindow": "04:00-05:00",
