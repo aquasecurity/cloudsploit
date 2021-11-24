@@ -13,8 +13,8 @@ module.exports = {
     apis: ['CodePipeline:listPipelines','CodePipeline:getPipeline', 'KMS:describeKey',
         'KMS:listKeys', 'STS:getCallerIdentity', 'KMS:listAliases'],
     settings: {
-        pipeline_artifacts_encryption: {
-            name: 'Pipeline Artifacts Encrypted',
+        pipeline_artifacts_desired_encryption_level: {
+            name: 'Pipeline Artifacts Desired Encrypted Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
@@ -31,7 +31,7 @@ module.exports = {
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', defaultRegion, 'data']);
 
         var config = {
-            desiredEncryptionLevelString: settings.pipeline_artifacts_encryption || this.settings.pipeline_artifacts_encryption.default
+            desiredEncryptionLevelString: settings.pipeline_artifacts_desired_encryption_level || this.settings.pipeline_artifacts_desired_encryption_level.default
         };
 
         var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(config.desiredEncryptionLevelString);
@@ -131,12 +131,12 @@ module.exports = {
 
                 if (currentEncryptionLevel >= desiredEncryptionLevel) {
                     helpers.addResult(results, 0,
-                        `Pipeline Artifact is encrypted with ${currentEncryptionLevelString} \
+                        `Pipeline artifacts are encrypted with ${currentEncryptionLevelString} \
                         which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `Pipeline Artifact is encrypted with ${currentEncryptionLevelString} \
+                        `Pipeline artifacts are encrypted with ${currentEncryptionLevelString} \
                         which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 }
