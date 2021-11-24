@@ -105,7 +105,7 @@ describe('logGroupsEncrypted', function () {
     describe('run', function () {
         it('should PASS if CloudWatch Logs log group is encrypted with desired encryption level', function (done) {
             const cache = createCache([describeLogGroups[0]], listKeys, describeKey[0]);
-            logGroupsEncrypted.run(cache, {}, (err, results) => {
+            logGroupsEncrypted.run(cache, {cloudwatchlog_groups_desired_encryption_level :'awscmk'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('CloudWatch Logs log group is encrypted with awscmk');
@@ -117,7 +117,7 @@ describe('logGroupsEncrypted', function () {
 
         it('should FAIL if CloudWatch Logs log groups is not encrypted with desired encyption level', function (done) {
             const cache = createCache([describeLogGroups[1]], listKeys, describeKey[1]);
-            logGroupsEncrypted.run(cache, { cloudwatch_log_groups_encryption:'awscmk' }, (err, results) => {
+            logGroupsEncrypted.run(cache, { cloudwatchlog_groups_desired_encryption_level:'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('CloudWatch Logs log group is encrypted with awskms');

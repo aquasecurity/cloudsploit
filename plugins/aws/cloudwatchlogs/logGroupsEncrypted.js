@@ -11,7 +11,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/Working-with-log-groups-and-streams.html',
     apis: ['CloudWatchLogs:describeLogGroups', 'KMS:describeKey', 'KMS:listKeys'],
     settings: {
-        cloudwatch_log_groups_encryption: {
+        cloudwatchlog_groups_desired_encryption_level: {
             name: 'CloudWatch Log Group Ecryption',
             description: 'If set, CloudWatchLogs log groups should have a customer managed key(CMK) instead of default KMS ',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
@@ -25,7 +25,7 @@ module.exports = {
         var regions = helpers.regions(settings);
         
         var config = {
-            desiredEncryptionLevelString: settings.cloudwatch_log_groups_encryption || this.settings.cloudwatch_log_groups_encryption.default
+            desiredEncryptionLevelString: settings.cloudwatchlog_groups_desired_encryption_level || this.settings.cloudwatchlog_groups_desired_encryption_level.default
         };
 
         var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(config.desiredEncryptionLevelString);
