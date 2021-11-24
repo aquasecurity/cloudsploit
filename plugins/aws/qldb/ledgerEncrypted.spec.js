@@ -113,7 +113,7 @@ describe('ledgerEncrypted', function () {
     describe('run', function () {
         it('should PASS if QLDB ledger is encrypted with desired encryption level', function (done) {
             const cache = createCache(listLedgers, listKeys, describeLedger[0], describeKey[0]);
-            ledgerEncrypted.run(cache, { qldb_ledger_encryption : 'awscmk' }, (err, results) => {
+            ledgerEncrypted.run(cache, { qldb_ledger_desired_encryption_level : 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
