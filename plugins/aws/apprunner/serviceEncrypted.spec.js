@@ -164,7 +164,7 @@ describe('serviceEncrypted', function () {
 
         it('should FAIL if App Runner service not encrypted with desired encryption level', function (done) {
             const cache = createCache([listServices[0]],listKeys, describeService[0], describeKey[1]);
-            serviceEncrypted.run(cache, { app_runner_service_encryption : 'awscmk' }, (err, results) => {
+            serviceEncrypted.run(cache, { app_runner_service_desired_encryption_level: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
