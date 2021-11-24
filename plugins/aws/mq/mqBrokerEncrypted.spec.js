@@ -176,9 +176,9 @@ const createCache = (brokers, keys, describeBroker, describeKey, brokersErr, key
 
 describe('mqBrokerEncrypted', function () {
     describe('run', function () {
-        it('should PASS if MQ Broker at-rest is encrypted with desired encryption level', function (done) {
+        it('should PASS if MQ Broker data at-rest is encrypted with desired encryption level', function (done) {
             const cache = createCache(listBrokers[0], listKeys, [describeBroker[1]], describeKey[0]);
-            mqBrokerEncrypted.run(cache, { mq_broker_encryption : 'awscmk' }, (err, results) => {
+            mqBrokerEncrypted.run(cache, { mq_broker_desired_encryption_level : 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -186,9 +186,9 @@ describe('mqBrokerEncrypted', function () {
             });
         });
 
-        it('should FAIL if MQ Broker at-rest is not encrypted with desired encryption level', function (done) {
+        it('should FAIL if MQ Broker data at-rest is not encrypted with desired encryption level', function (done) {
             const cache = createCache([listBrokers[1]],listKeys, [describeBroker[0]], describeKey[1]);
-            mqBrokerEncrypted.run(cache, { mq_broker_encryption : 'awscmk' }, (err, results) => {
+            mqBrokerEncrypted.run(cache, { mq_broker_desired_encryption_level : 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
@@ -196,7 +196,7 @@ describe('mqBrokerEncrypted', function () {
             });
         });
 
-        it('should PASS if no MQ Broker at-rest found', function (done) {
+        it('should PASS if no MQ Broker found', function (done) {
             const cache = createCache([]);
             mqBrokerEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -206,7 +206,7 @@ describe('mqBrokerEncrypted', function () {
             });
         });
 
-        it('should UNKNOWN if unable to list MQ Broker at-rest', function (done) {
+        it('should UNKNOWN if unable to list MQ Broker', function (done) {
             const cache = createCache(null, null, null, { message: "Unable to list MQ Broker" });
             mqBrokerEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);

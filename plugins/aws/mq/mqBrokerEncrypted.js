@@ -11,7 +11,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/data-protection.html#data-protection-encryption-at-rest',
     apis: ['MQ:listBrokers', 'MQ:describeBroker', 'KMS:describeKey', 'KMS:listKeys'],
     settings: {
-        mq_broker_encryption: {
+        mq_broker_desired_encryption_level: {
             name: 'MQ Broker Encrypted',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
@@ -26,7 +26,7 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var config = {
-            desiredEncryptionLevelString: settings.mq_broker_encryption || this.settings.mq_broker_encryption.default
+            desiredEncryptionLevelString: settings.mq_broker_desired_encryption_level || this.settings.mq_broker_desired_encryption_level.default
         };
 
         var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(config.desiredEncryptionLevelString);
@@ -104,12 +104,12 @@ module.exports = {
 
                 if (currentEncryptionLevel >= desiredEncryptionLevel) {
                     helpers.addResult(results, 0,
-                        `MQ Broker Data at-rest is encrypted with ${currentEncryptionLevelString} \
+                        `MQ Broker data at-rest is encrypted with ${currentEncryptionLevelString} \
                         which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `MQ Broker Data at-rest is encrypted with ${currentEncryptionLevelString} \
+                        `MQ Broker data at-rest is encrypted with ${currentEncryptionLevelString} \
                         which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 }
