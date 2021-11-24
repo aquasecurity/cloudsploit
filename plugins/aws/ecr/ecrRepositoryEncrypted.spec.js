@@ -1,13 +1,12 @@
 var expect = require('chai').expect;
 var ecrRepositoryEncrypted = require('./ecrRepositoryEncrypted');
 
-
 const describeRepositories = [
     {
-        "repositoryArn": "arn:aws:ecr:us-east-1:560213429563:repository/private-test",
+        "repositoryArn": "arn:aws:ecr:us-east-1:000011112222:repository/private-test",
         "registryId": "560213429563",
         "repositoryName": "private-test",
-        "repositoryUri": "560213429563.dkr.ecr.us-east-1.amazonaws.com/private-test",
+        "repositoryUri": "000011112222.dkr.ecr.us-east-1.amazonaws.com/private-test",
         "createdAt": "2021-07-24T17:20:58+05:00",
         "imageTagMutability": "MUTABLE",
         "imageScanningConfiguration": {
@@ -18,7 +17,7 @@ const describeRepositories = [
         }
     },
     {
-        "repositoryArn": "arn:aws:ecr:us-east-1:560213429563:repository/sad",
+        "repositoryArn": "arn:aws:ecr:us-east-1:000011112222:repository/sad",
         "registryId": "560213429563",
         "repositoryName": "sad",
         "repositoryUri": "560213429563.dkr.ecr.us-east-1.amazonaws.com/sad",
@@ -29,14 +28,14 @@ const describeRepositories = [
         },
         "encryptionConfiguration": {
             "encryptionType": "KMS",
-            "kmsKey": "arn:aws:kms:us-east-1:560213429563:key/92e3e4cf-dfc3-4ea7-a225-22542c8e1528"
+            "kmsKey": "arn:aws:kms:us-east-1:000011112222:key/92e3e4cf-dfc3-4ea7-a225-22542c8e1528"
         }
     },
     {
-        "repositoryArn": "arn:aws:ecr:us-east-1:560213429563:repository/sadeed1",
+        "repositoryArn": "arn:aws:ecr:us-east-1:000011112222:repository/sadeed1",
         "registryId": "560213429563",
         "repositoryName": "sadeed1",
-        "repositoryUri": "560213429563.dkr.ecr.us-east-1.amazonaws.com/sadeed1",
+        "repositoryUri": "000011112222.dkr.ecr.us-east-1.amazonaws.com/sadeed1",
         "createdAt": "2021-11-12T19:56:56+05:00",
         "imageTagMutability": "MUTABLE",
         "imageScanningConfiguration": {
@@ -44,7 +43,7 @@ const describeRepositories = [
         },
         "encryptionConfiguration": {
             "encryptionType": "KMS",
-            "kmsKey": "arn:aws:kms:us-east-1:560213429563:key/c4750c1a-72e5-4d16-bc72-0e7b559e0250"
+            "kmsKey": "arn:aws:kms:us-east-1:000011112222:key/c4750c1a-72e5-4d16-bc72-0e7b559e0250"
         }
     }
 ];
@@ -124,7 +123,6 @@ const createCache = (repository, keys, describeKey, repositoryErr, keysErr, desc
         },
     };
 };
-
 
 
 
