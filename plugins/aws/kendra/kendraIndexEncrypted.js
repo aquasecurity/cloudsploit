@@ -25,7 +25,7 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
 
-
+```suggestion
         var defaultRegion = helpers.defaultRegion(settings);
         var awsOrGov = helpers.defaultPartition(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', defaultRegion, 'data']);
