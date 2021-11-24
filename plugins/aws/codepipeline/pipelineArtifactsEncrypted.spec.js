@@ -1,38 +1,42 @@
 var expect = require('chai').expect;
-var kendraIndexEncrypted = require('./kendraIndexEncrypted');
+var pipelineArtifactsEncrypted = require('./pipelineArtifactsEncrypted');
 
-const listIndices = [    
-    {
-        "Name": "sadeed2",
-        "Id": "1b5d0d81-224e-4a8b-bbc8-2c2a4a0a615c",
-        "Edition": "DEVELOPER_EDITION",
-        "CreatedAt": "2021-11-17T15:29:30.124000+05:00",
-        "UpdatedAt": "2021-11-17T15:29:30.124000+05:00",
-        "Status": "CREATING"
-    },
-    {
-        "Name": "sadeed1",
-        "Id": "9280dadd-5d45-4f9c-a105-896e5b230c05",
-        "Edition": "DEVELOPER_EDITION",
-        "CreatedAt": "2021-11-17T15:23:58.841000+05:00",
-        "UpdatedAt": "2021-11-17T15:23:58.841000+05:00",
-        "Status": "CREATING"
-    }
+const listPipelines = [
+   {   
+    "name": "sad",
+    "version": 1,
+    "created": "2021-11-22T21:03:15.001000+05:00",
+    "updated": "2021-11-22T21:03:15.001000+05:00" 
+   },
 ];
 
-const describeIndex = [
+
+const getPipeline = [
     {
-    "Name": "sadeed1",
-    "Id": "9280dadd-5d45-4f9c-a105-896e5b230c05",
-    "Edition": "DEVELOPER_EDITION",
-    "RoleArn": "arn:aws:iam::101363889637:role/service-role/AmazonKendra-us-east-1-role1",
-    "ServerSideEncryptionConfiguration": {
-        "KmsKeyId": "arn:aws:kms:us-east-1:000111222333:key/ad013a33-b01d-4d88-ac97-127399c18b3e"
+        "pipeline": {
+            "name": "sad",
+            "roleArn": "arn:aws:iam::000111222333:role/service-role/AWSCodePipelineServiceRole-us-east-1-sad",
+            "artifactStore": {
+                "type": "S3",
+                "location": "codepipeline-us-east-1-347340132483",
+                "encryptionKey": {
+                    "id": "arn:aws:kms:us-east-1:000111222333:alias/sadeed-k1",
+                    "type": "KMS"
+                }
+            },
+        }
+    }
+
+];
+
+const listAliases = [
+    {
+        "AliasName": "alias/sadeed-k1",
+        "AliasArn": "arn:aws:kms:us-east-1:000111222333:alias/sadeed-k1",
+        "TargetKeyId": "ad013a33-b01d-4d88-ac97-127399c18b3e",
+        "CreationDate": "2021-11-15T17:05:31.308000+05:00",
+        "LastUpdatedDate": "2021-11-15T17:05:31.308000+05:00"
     },
-    "Status": "ACTIVE",
-    "CreatedAt": "2021-11-17T15:23:58.841000+05:00",
-    "UpdatedAt": "2021-11-17T15:23:58.841000+05:00",
-    }  
 ];
 
 const describeKey = [
@@ -71,7 +75,6 @@ const describeKey = [
                 "SYMMETRIC_DEFAULT"
             ]
         }
-    
     }
 ];
 
@@ -82,27 +85,34 @@ const listKeys = [
     }
 ]
 
-const createCache = (index, keys, describeIndex, describeKey, indexErr, keysErr, describeKeyErr, describeIndexErr) => {
-    var keyId = (keys && keys.length) ? keys[0].KeyId : null;
-    var id = (index && index.length) ? index[0].Id: null;
+const createCache = (pipelines,  keys, kmsAliases, getPipeline, describeKey, pipelinesErr, kmsAliasesErr, keysErr, describeKeyErr, getPipelineErr) => {
+
+    var keyId = (keys && keys.length ) ? keys[0].KeyId : null;
+    var name = (pipelines && pipelines.length) ? pipelines[0].name: null;
     return {
-        kendra: {
-            listIndices: {
+        codepipeline: {
+            listPipelines: {
                 'us-east-1': {
-                    err: indexErr,
-                    data: index
+                    err: pipelinesErr,
+                    data: pipelines
                 },
             },
-            describeIndex: {
+            getPipeline: {
                 'us-east-1': {
-                    [id]: {
-                        data: describeIndex,
-                        err: describeIndexErr
+                    [name]: {
+                        data: getPipeline,
+                        err: getPipelineErr
                     }
                 }
             }
         },
         kms: {
+            listAliases: {
+                'us-east-1': {
+                    data: kmsAliases,
+                    err: kmsAliasesErr
+                },
+            },
             listKeys: {
                 'us-east-1': {
                     data: keys,
@@ -121,11 +131,11 @@ const createCache = (index, keys, describeIndex, describeKey, indexErr, keysErr,
     };
 };
 
-describe('kendraIndexEncrypted', function () {
+describe('pipelineArtifactsEncrypted', function () {
     describe('run', function () {
-        it('should PASS if Kendra Indices is encrypted with desired encryption level', function (done) {
-            const cache = createCache([listIndices[0]], listKeys, describeIndex[0], describeKey[0]);
-            kendraIndexEncrypted.run(cache, { kendra_index_desired_encryption_level : 'awscmk' }, (err, results) => {
+        it('should PASS if Pipeline Artifacts is encrypted with desired encryption level', function (done) {
+            const cache = createCache([listPipelines[0]], listKeys, listAliases, getPipeline[0], describeKey[0]);
+            pipelineArtifactsEncrypted.run(cache, { pipeline_artifacts_encryption : 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -133,9 +143,9 @@ describe('kendraIndexEncrypted', function () {
             });
         });
 
-        it('should FAIL if Kendra Indices is not encrypted with desired encryption level', function (done) {
-            const cache = createCache([listIndices[1]],listKeys, describeIndex[0], describeKey[1]);
-            kendraIndexEncrypted.run(cache, { kendra_index_desired_encryption_level : 'awscmk' }, (err, results) => {
+        it('should FAIL if Pipeline Artifacts not encrypted with desired encryption level', function (done) {
+            const cache = createCache([listPipelines[0]], listKeys, listAliases, getPipeline[0], describeKey[1]);
+            pipelineArtifactsEncrypted.run(cache, { pipeline_artifacts_encryption : 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
@@ -143,9 +153,9 @@ describe('kendraIndexEncrypted', function () {
             });
         });
 
-        it('should PASS if no Kendra Indices found', function (done) {
+        it('should PASS if no Pipeline Artifacts found', function (done) {
             const cache = createCache([]);
-            kendraIndexEncrypted.run(cache, {}, (err, results) => {
+            pipelineArtifactsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -153,9 +163,9 @@ describe('kendraIndexEncrypted', function () {
             });
         });
 
-        it('should UNKNOWN if unable to list Kendra Indices', function (done) {
-            const cache = createCache(null, null, null, { message: "Unable to list Kendra Indices" });
-            kendraIndexEncrypted.run(cache, {}, (err, results) => {
+        it('should UNKNOWN if unable to list Pipeline Artifacts', function (done) {
+            const cache = createCache(null, null, null, { message: "Unable to list Pipeline Artifacts" });
+            pipelineArtifactsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
@@ -164,8 +174,8 @@ describe('kendraIndexEncrypted', function () {
         });
 
         it('should UNKNOWN if unable to list KMS keys', function (done) {
-            const cache = createCache(listIndices, null, null, null, { message: "Unable to list KMS keys" });
-            kendraIndexEncrypted.run(cache, {}, (err, results) => {
+            const cache = createCache(listPipelines, null, null, null, { message: "Unable to list KMS keys" });
+            pipelineArtifactsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');

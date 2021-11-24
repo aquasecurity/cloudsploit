@@ -82,4 +82,13 @@ module.exports = {
     glacier: regions,
     kendra:  ['us-east-1', 'us-east-2', 'us-west-2','ap-southeast-1',
         'ap-southeast-2', 'ca-central-1', 'eu-west-1'],
+    finspace: regions,
+    codepipeline: regions,
+    codeartifact: regions,
+    auditmanager: regions,
+    appflow: regions,
+    translate: regions,
+    databrew: regions,
+    managedblockchain: regions,
+    healthlake: regions
 };

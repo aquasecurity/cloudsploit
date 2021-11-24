@@ -5,14 +5,14 @@ module.exports = {
     title: 'Kendra Index Encrypted',
     category: 'Kendra',
     domain: 'Databases',
-    description: 'Ensures that the Kendra Index is Encrypted',
+    description: 'Ensure that the Kendra Index is Encrypted',
     more_info: 'Amazon Kendra encrypts your data with AWS-manager keys by default.' +
                'Encrypt your files using customer-managed keys in order to gain more granular control over encryption/decryption process.',
     recommended_action: 'Create Kendra Index with customer-manager keys (CMKs).',
     link: 'https://docs.aws.amazon.com/kendra/latest/dg/encryption-at-rest.html',
     apis: ['Kendra:listIndices','Kendra:describeIndex', 'KMS:describeKey', 'KMS:listKeys', 'STS:getCallerIdentity'],
     settings: {
-        kendra_index_encryption: {
+        kendra_index_desired_encryption_level: {
             name: 'Kendra Index Encrypted',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
@@ -30,7 +30,7 @@ module.exports = {
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', defaultRegion, 'data']);
 
         var config = {
-            desiredEncryptionLevelString: settings.kendra_index_encryption || this.settings.kendra_index_encryption.default
+            desiredEncryptionLevelString: settings.kendra_index_desired_encryption_level || this.settings.kendra_index_desired_encryption_level.default
         };
 
         var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(config.desiredEncryptionLevelString);
