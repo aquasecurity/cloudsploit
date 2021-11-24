@@ -13,7 +13,7 @@ module.exports = {
     apis: ['AppRunner:listServices','AppRunner:describeService', 'KMS:describeKey', 'KMS:listKeys'],
     settings: {
         app_runner_service_desired_encryption_level: {
-            name: 'Service Encrypted',
+            name: ' App Runner service desired Encryption level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
