@@ -3,7 +3,7 @@ var mqBrokerEncrypted = require('./mqBrokerEncrypted');
 
 const listBrokers = [
     {
-        "BrokerArn": "arn:aws:mq:us-east-1:560213429563:broker:sadeed-br:b-a67fb4c0-2f23-46cf-98cb-7015bd36e1b4",
+        "BrokerArn": "arn:aws:mq:us-east-1:000011112222:broker:sadeed-br:b-a67fb4c0-2f23-46cf-98cb-7015bd36e1b4",
         "BrokerId": "b-a67fb4c0-2f23-46cf-98cb-7015bd36e1b4",
         "BrokerName": "sadeed-br",
         "BrokerState": "RUNNING",
@@ -13,7 +13,7 @@ const listBrokers = [
         "HostInstanceType": "mq.t3.micro"
     },
     {
-        "BrokerArn": "arn:aws:mq:us-east-1:560213429563:broker:sadeed-br3:b-b4cfface-0aa9-4922-b41d-07fab046cef3",
+        "BrokerArn": "arn:aws:mq:us-east-1:000011112222:broker:sadeed-br3:b-b4cfface-0aa9-4922-b41d-07fab046cef3",
         "BrokerId": "b-b4cfface-0aa9-4922-b41d-07fab046cef3",
         "BrokerName": "sadeed-br3",
         "BrokerState": "RUNNING",
@@ -28,7 +28,7 @@ const describeBroker = [
     {
         "AuthenticationStrategy": "simple",
         "AutoMinorVersionUpgrade": true,
-        "BrokerArn": "arn:aws:mq:us-east-1:560213429563:broker:sadeed-br3:b-b4cfface-0aa9-4922-b41d-07fab046cef3",
+        "BrokerArn": "arn:aws:mq:us-east-1:000011112222:broker:sadeed-br3:b-b4cfface-0aa9-4922-b41d-07fab046cef3",
         "BrokerId": "b-b4cfface-0aa9-4922-b41d-07fab046cef3",
         "BrokerInstances": [],
         "BrokerName": "sadeed-br3",
@@ -43,7 +43,7 @@ const describeBroker = [
         "Created": "2021-11-15T09:58:29.997000+00:00",
         "DeploymentMode": "SINGLE_INSTANCE",
         "EncryptionOptions": {
-            "KmsKeyId": "arn:aws:kms:us-east-1:560213429563:key/26fb32cb-1abc-4096-93eb-1fa0c6e6efb4",
+            "KmsKeyId": "arn:aws:kms:us-east-1:000011112222:key/26fb32cb-1abc-4096-93eb-1fa0c6e6efb4",
             "UseAwsOwnedKey": false
         },
         "EngineType": "ActiveMQ",
@@ -53,7 +53,7 @@ const describeBroker = [
     {
         "AuthenticationStrategy": "simple",
         "AutoMinorVersionUpgrade": true,
-        "BrokerArn": "arn:aws:mq:us-east-1:560213429563:broker:sadeed-br:b-a67fb4c0-2f23-46cf-98cb-7015bd36e1b4",
+        "BrokerArn": "arn:aws:mq:us-east-1:000011112222:broker:sadeed-br:b-a67fb4c0-2f23-46cf-98cb-7015bd36e1b4",
         "BrokerId": "b-a67fb4c0-2f23-46cf-98cb-7015bd36e1b4",
         "BrokerInstances": [
             {
@@ -80,7 +80,7 @@ const describeBroker = [
         "Created": "2021-11-15T08:21:57.182000+00:00",
         "DeploymentMode": "SINGLE_INSTANCE",
         "EncryptionOptions": {
-            "KmsKeyId": "arn:aws:kms:us-east-1:560213429563:key/c4750c1a-72e5-4d16-bc72-0e7b559e0250",
+            "KmsKeyId": "arn:aws:kms:us-east-1:000011112222:key/c4750c1a-72e5-4d16-bc72-0e7b559e0250",
             "UseAwsOwnedKey": false
         },
         "EngineType": "ActiveMQ",
