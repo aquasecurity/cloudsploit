@@ -73,7 +73,7 @@ module.exports = {
                     continue;
                 } 
 
-                if (describeService.data.Service.EncryptionConfiguration &&
+                if (describeService.data.Service && describeService.data.Service.EncryptionConfiguration &&
                     describeService.data.Service.EncryptionConfiguration.KmsKey) {
 
                     var kmsKey = describeService.data.Service.EncryptionConfiguration.KmsKey;
