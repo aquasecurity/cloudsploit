@@ -120,7 +120,6 @@ describe('timestreamDatabaseEncrypted', function () {
             });
         });
 
-
         it('should PASS if no Timestream Databases found', function (done) {
             const cache = createCache([]);
             timestreamDatabaseEncrypted.run(cache, {}, (err, results) => {
