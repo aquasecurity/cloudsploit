@@ -11,7 +11,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/connect/latest/adminguide/enable-customer-profiles.html',
     apis: ['CustomerProfiles:listDomains', 'CustomerProfiles:getDomain', 'KMS:describeKey', 'KMS:listKeys', 'STS:getCallerIdentity'],
     settings: {
-        customer_profiles_encryption: {
+        customer_profiles_desired_encryption_level: {
             name: 'Connect Customer Profiles Encrypted',
             description: 'In order (lowest to highest) awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awscmk|externalcmk|cloudhsm)$',
@@ -30,7 +30,7 @@ module.exports = {
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', defaultRegion, 'data']);
 
         var config = {
-            desiredEncryptionLevelString: settings.customer_profiles_encryption || this.settings.customer_profiles_encryption.default
+            desiredEncryptionLevelString: settings.customer_profiles_desired_encryption_level || this.settings.customer_profiles_desired_encryption_level.default
         };
 
         var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(config.desiredEncryptionLevelString);
@@ -100,12 +100,12 @@ module.exports = {
 
                 if (currentEncryptionLevel >= desiredEncryptionLevel) {
                     helpers.addResult(results, 0,
-                        `Customer Profile Domain is encrypted with ${currentEncryptionLevelString} \
+                        `Customer Profile domain is encrypted with ${currentEncryptionLevelString} \
                         which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `Customer Profile Domain is encrypted with ${currentEncryptionLevelString} \
+                        `Customer Profile domain is encrypted with ${currentEncryptionLevelString} \
                         which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 }
