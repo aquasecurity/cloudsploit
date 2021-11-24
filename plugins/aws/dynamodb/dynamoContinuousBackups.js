@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'DynamoDB tables should have Continuous Backups and Point-In-Time Recovery (PITR) features enabled to protect DynamoDB data against accidental data writes.',
     link: 'https://aws.amazon.com/blogs/aws/new-amazon-dynamodb-continuous-backups-and-point-in-time-recovery-pitr/',
     recommended_action: 'Enable Continuous Backups and Point-In-Time Recovery (PITR) features.',
-    apis: ['DynamoDB:listTables', 'DynamoDB:describeContinuousBackups', 'STS:getCallerIdentity'],
+    apis: ['DynamoDB:listTables', 'DynamoDB:listInstanceCallRecordingsStorageConfigs'],
 
     run: function(cache, settings, callback) {
         var results = [];
