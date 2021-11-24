@@ -15,7 +15,7 @@ const getEnvironment = [
             "DagS3Path": "data",
             "EnvironmentClass": "mw1.small",
             "ExecutionRoleArn": "arn:aws:iam::000111222333:role/service-role/AmazonMWAA-MyAirflowEnvironment-CKkXBd",
-            "KmsKey": "arn:aws:kms:us-east-1:101363889637:key/ad013a33-b01d-4d88-ac97-127399c18b3e",
+            "KmsKey": "arn:aws:kms:us-east-1:000111222333:key/ad013a33-b01d-4d88-ac97-127399c18b3e",
             "LastUpdate": {
                 "CreatedAt": "2021-11-16T17:29:30+05:00",
                 "Error": {
