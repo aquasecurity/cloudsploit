@@ -58,7 +58,6 @@ const describeClusters = [
         "ACLName": "open-access",
         "AutoMinorVersionUpgrade": true
     }
-
 ];
 
 const listKeys = [
