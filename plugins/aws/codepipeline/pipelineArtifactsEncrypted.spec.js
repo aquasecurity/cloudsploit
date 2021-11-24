@@ -1,35 +1,42 @@
 var expect = require('chai').expect;
-var environmentTemplateEncrypted = require('./environmentTemplateEncrypted');
+var pipelineArtifactsEncrypted = require('./pipelineArtifactsEncrypted');
 
-const listEnvironmentTemplates = [
-    {
-        "arn": "arn:aws:proton:us-east-1:000111222333:environment-template/sadeed1",
-        "createdAt": "2021-11-18T17:01:54.758000+05:00",
-        "displayName": "call me brown boy",
-        "lastModifiedAt": "2021-11-18T17:01:54.758000+05:00",
-        "name": "sadeed1"
-    },
-    {
-        "arn": "arn:aws:proton:us-east-1:000111222333:environment-template/sad1",
-        "createdAt": "2021-11-18T17:36:46.281000+05:00",
-        "displayName": "sadeed",
-        "lastModifiedAt": "2021-11-18T17:36:46.281000+05:00",
-        "name": "sad1"
-    }
+const listPipelines = [
+   {   
+    "name": "sad",
+    "version": 1,
+    "created": "2021-11-22T21:03:15.001000+05:00",
+    "updated": "2021-11-22T21:03:15.001000+05:00" 
+   },
 ];
 
-const getEnvironmentTemplate = [
+
+const getPipeline = [
     {
-        "environmentTemplate": {
-            "arn": "arn:aws:proton:us-east-1:000111222333:environment-template/sadeed1",
-            "createdAt": "2021-11-18T17:01:54.758000+05:00",
-            "displayName": "call me brown boy",
-            "encryptionKey": "arn:aws:kms:us-east-1:101363889637:key/ad013a33-b01d-4d88-ac97-127399c18b3e",
-            "lastModifiedAt": "2021-11-18T17:01:54.758000+05:00",
-            "name": "sadeed1"
+        "pipeline": {
+            "name": "sad",
+            "roleArn": "arn:aws:iam::000111222333:role/service-role/AWSCodePipelineServiceRole-us-east-1-sad",
+            "artifactStore": {
+                "type": "S3",
+                "location": "codepipeline-us-east-1-347340132483",
+                "encryptionKey": {
+                    "id": "arn:aws:kms:us-east-1:000111222333:alias/sadeed-k1",
+                    "type": "KMS"
+                }
+            },
         }
     }
 
+];
+
+const listAliases = [
+    {
+        "AliasName": "alias/sadeed-k1",
+        "AliasArn": "arn:aws:kms:us-east-1:000111222333:alias/sadeed-k1",
+        "TargetKeyId": "ad013a33-b01d-4d88-ac97-127399c18b3e",
+        "CreationDate": "2021-11-15T17:05:31.308000+05:00",
+        "LastUpdatedDate": "2021-11-15T17:05:31.308000+05:00"
+    },
 ];
 
 const describeKey = [
@@ -78,28 +85,34 @@ const listKeys = [
     }
 ]
 
-const createCache = (templates, keys, getEnvironmentTemplate, describeKey, templatesErr, keysErr, describeKeyErr, getEnvironmentTemplateErr) => {
-    
+const createCache = (pipelines,  keys, kmsAliases, getPipeline, describeKey, pipelinesErr, kmsAliasesErr, keysErr, describeKeyErr, getPipelineErr) => {
+
     var keyId = (keys && keys.length ) ? keys[0].KeyId : null;
-    var name = (templates && templates.length) ? templates[0].name: null;
+    var name = (pipelines && pipelines.length) ? pipelines[0].name: null;
     return {
-        proton: {
-            listEnvironmentTemplates: {
+        codepipeline: {
+            listPipelines: {
                 'us-east-1': {
-                    err: templatesErr,
-                    data: templates
+                    err: pipelinesErr,
+                    data: pipelines
                 },
             },
-            getEnvironmentTemplate: {
+            getPipeline: {
                 'us-east-1': {
                     [name]: {
-                        data: getEnvironmentTemplate,
-                        err: getEnvironmentTemplateErr
+                        data: getPipeline,
+                        err: getPipelineErr
                     }
                 }
             }
         },
         kms: {
+            listAliases: {
+                'us-east-1': {
+                    data: kmsAliases,
+                    err: kmsAliasesErr
+                },
+            },
             listKeys: {
                 'us-east-1': {
                     data: keys,
@@ -118,11 +131,11 @@ const createCache = (templates, keys, getEnvironmentTemplate, describeKey, templ
     };
 };
 
-describe('environmentTemplateEncrypted', function () {
+describe('pipelineArtifactsEncrypted', function () {
     describe('run', function () {
-        it('should PASS if Proton environment template is encrypted with desired encryption level', function (done) {
-            const cache = createCache([listEnvironmentTemplates[0]], listKeys, getEnvironmentTemplate[0], describeKey[0]);
-            environmentTemplateEncrypted.run(cache, { proton_environmenttemplate_desired_encryption_level : 'awscmk' }, (err, results) => {
+        it('should PASS if Pipeline Artifacts is encrypted with desired encryption level', function (done) {
+            const cache = createCache([listPipelines[0]], listKeys, listAliases, getPipeline[0], describeKey[0]);
+            pipelineArtifactsEncrypted.run(cache, { pipeline_artifacts_encryption : 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -130,9 +143,9 @@ describe('environmentTemplateEncrypted', function () {
             });
         });
 
-        it('should FAIL if Proton environment template is not encrypted with desired encryption level', function (done) {
-            const cache = createCache([listEnvironmentTemplates[1]],listKeys, getEnvironmentTemplate[0], describeKey[1]);
-            environmentTemplateEncrypted.run(cache, { proton_environmenttemplate_desired_encryption_level : 'awscmk' }, (err, results) => {
+        it('should FAIL if Pipeline Artifacts not encrypted with desired encryption level', function (done) {
+            const cache = createCache([listPipelines[0]], listKeys, listAliases, getPipeline[0], describeKey[1]);
+            pipelineArtifactsEncrypted.run(cache, { pipeline_artifacts_encryption : 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
@@ -140,9 +153,9 @@ describe('environmentTemplateEncrypted', function () {
             });
         });
 
-        it('should PASS if no Proton environment template found', function (done) {
+        it('should PASS if no Pipeline Artifacts found', function (done) {
             const cache = createCache([]);
-            environmentTemplateEncrypted.run(cache, {}, (err, results) => {
+            pipelineArtifactsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -150,9 +163,9 @@ describe('environmentTemplateEncrypted', function () {
             });
         });
 
-        it('should UNKNOWN if unable to list Proton environment template', function (done) {
-            const cache = createCache(null, null, null, { message: "Unable to list Proton environment template" });
-            environmentTemplateEncrypted.run(cache, {}, (err, results) => {
+        it('should UNKNOWN if unable to list Pipeline Artifacts', function (done) {
+            const cache = createCache(null, null, null, { message: "Unable to list Pipeline Artifacts" });
+            pipelineArtifactsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
@@ -161,8 +174,8 @@ describe('environmentTemplateEncrypted', function () {
         });
 
         it('should UNKNOWN if unable to list KMS keys', function (done) {
-            const cache = createCache(listEnvironmentTemplates, null, null, null, { message: "Unable to list KMS keys" });
-            environmentTemplateEncrypted.run(cache, {}, (err, results) => {
+            const cache = createCache(listPipelines, null, null, null, { message: "Unable to list KMS keys" });
+            pipelineArtifactsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');

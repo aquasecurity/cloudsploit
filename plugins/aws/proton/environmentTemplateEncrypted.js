@@ -5,14 +5,14 @@ module.exports = {
     title: 'Environment Template Encrypted',
     category: 'Proton',
     domain: 'Databases',
-    description: 'Ensures that the Environment Template is Encrypted',
+    description: 'Ensures that AWS Proton environment template is encrypted with desired level',
     more_info: 'Amazon Proton encrypts your data with AWS-manager keys by default.' +
                'Encrypt your files using customer-managed keys in order to gain more granular control over encryption/decryption process.',
     recommended_action: 'Create Proton Environment Template with customer-manager keys (CMKs).',
     link: 'https://docs.aws.amazon.com/proton/latest/adminguide/data-protection.html',
     apis: ['Proton:listEnvironmentTemplates','Proton:getEnvironmentTemplate', 'KMS:describeKey', 'KMS:listKeys'],
     settings: {
-        proton_environment_template_encryption: {
+        proton_environmenttemplate_desired_encryption_level: {
             name: 'Environment Template Encrypted',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
@@ -26,7 +26,7 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var config = {
-            desiredEncryptionLevelString: settings.proton_environment_template_encryption || this.settings.proton_environment_template_encryption.default
+            desiredEncryptionLevelString: settings.proton_environmenttemplate_desired_encryption_level || this.settings.proton_environmenttemplate_desired_encryption_level.default
         };
 
         var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(config.desiredEncryptionLevelString);
@@ -98,12 +98,12 @@ module.exports = {
 
                 if (currentEncryptionLevel >= desiredEncryptionLevel) {
                     helpers.addResult(results, 0,
-                        `Environment Template is encrypted with ${currentEncryptionLevelString} \
+                        `Proton environment template is encrypted with ${currentEncryptionLevelString} \
                         which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `Environment Template is encrypted with ${currentEncryptionLevelString} \
+                        `Proton environment template is encrypted with ${currentEncryptionLevelString} \
                         which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 }

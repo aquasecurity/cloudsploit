@@ -80,5 +80,14 @@ module.exports = {
     codebuild: regions,
     mq: regions,
     glacier: regions,
-    proton: ['us-east-1', 'us-east-2', 'us-west-2', 'ap-northeast-1', 'eu-west-1'],
+    proton: regions,
+    finspace: regions,
+    codepipeline: regions,
+    codeartifact: regions,
+    auditmanager: regions,
+    appflow: regions,
+    translate: regions,
+    databrew: regions,
+    managedblockchain: regions,
+    healthlake: regions
 };
