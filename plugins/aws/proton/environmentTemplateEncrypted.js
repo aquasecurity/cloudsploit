@@ -57,16 +57,14 @@ module.exports = {
                     `Unable to list KMS keys: ${helpers.addError(listKeys)}`, region);
                 return rcb();
             }
-            
-
+         
             for (let template of listEnvironmentTemplates.data) {
                 if (!template.arn) continue;
 
                 let resource = template.arn;
                 
                 var getEnvironmentTemplate = helpers.addSource(cache, source,
-                    ['proton', 'getEnvironmentTemplate', region, template.name]);
-                   
+                    ['proton', 'getEnvironmentTemplate', region, template.name]);  
                     
                 if (!getEnvironmentTemplate || getEnvironmentTemplate.err || !getEnvironmentTemplate.data ) {
                     helpers.addResult(results, 3,
@@ -88,7 +86,6 @@ module.exports = {
                             `Unable to query KMS key: ${helpers.addError(describeKey)}`,
                             region, encryptionKey);
                         continue;
-
                     }
 
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
