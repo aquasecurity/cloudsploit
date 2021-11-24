@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Content Delivery',
     description: 'Ensure that AWS HealthLake Data Store is using desired encryption level.',
     more_info: 'Amazon HealthLake is a Fast Healthcare Interoperability Resources (FHIR)-enabled patient Data Store that uses AWS-managed KMS keys for encryption. ' +
-               'Encrypt your files using customer-managed keys in order to gain more granular control over encryption/decryption process.',
+               'Encrypt these data stores using customer-managed keys (CMKs) in order to gain more granular control over encryption/decryption process.',
     recommended_action: 'Create HealthLake Data Store with customer-manager keys (CMKs).',
     link: 'https://docs.aws.amazon.com/healthlake/latest/devguide/data-protection.html',
     apis: ['HealthLake:listFHIRDatastores', 'KMS:describeKey', 'KMS:listKeys'],
