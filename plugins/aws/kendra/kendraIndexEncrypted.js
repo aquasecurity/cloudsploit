@@ -25,7 +25,6 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
 
-```suggestion
         var defaultRegion = helpers.defaultRegion(settings);
         var awsOrGov = helpers.defaultPartition(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', defaultRegion, 'data']);
@@ -41,7 +40,6 @@ module.exports = {
             var listIndices = helpers.addSource(cache, source,
                 ['kendra', 'listIndices', region]);
                 
-
             if (!listIndices) return rcb();
 
             if (listIndices.err || !listIndices.data) {
@@ -58,7 +56,6 @@ module.exports = {
             var listKeys = helpers.addSource(cache, source,
                 ['kms', 'listKeys', region]);
 
-
             if (!listKeys || listKeys.err || !listKeys.data) {
                 helpers.addResult(results, 3,
                     `Unable to list KMS keys: ${helpers.addError(listKeys)}`, region);
@@ -71,7 +68,6 @@ module.exports = {
                 var describeIndex = helpers.addSource(cache, source,
                     ['kendra', 'describeIndex', region, index.Id]);
                     
-
                 if (!describeIndex || describeIndex.err || !describeIndex.data ) {
                     helpers.addResult(results, 3,
                         `Unable to get Kendra Indices description: ${helpers.addError(describeIndex)}`,
@@ -87,13 +83,11 @@ module.exports = {
                     var describeKey = helpers.addSource(cache, source,
                         ['kms', 'describeKey', region, keyId]);  
                         
-
                     if (!describeKey || describeKey.err || !describeKey.data || !describeKey.data.KeyMetadata) {
                         helpers.addResult(results, 3,
                             `Unable to query KMS key: ${helpers.addError(describeKey)}`,
                             region, kmsKeyId);
                         continue;
-
                     }
 
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
