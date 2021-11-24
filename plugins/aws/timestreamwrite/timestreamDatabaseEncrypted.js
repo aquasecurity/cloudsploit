@@ -36,7 +36,6 @@ module.exports = {
             var listDatabases = helpers.addSource(cache, source,
                 ['timestreamwrite', 'listDatabases', region]);
                
-
             if (!listDatabases) return rcb();
 
             if (listDatabases.err || !listDatabases.data) {
