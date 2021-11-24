@@ -12,7 +12,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonECR/latest/userguide/Repositories.html',
     apis: ['ECR:describeRepositories', 'KMS:describeKey', 'KMS:listKeys'],
     settings: {
-        ecr_repository_encryption: {
+        ecr_repository_desired_encryption_level: {
             name: 'ECR Repository Encryption',
             description: 'In order (lowest to highest) sse=AWS-managed AES256;awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(sse|awskms|awscmk|externalcmk|cloudhsm)$',
@@ -26,7 +26,7 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var config = {
-            desiredEncryptionLevelString: settings.ecr_repository_encryption || this.settings.ecr_repository_encryption.default
+            desiredEncryptionLevelString: settings.ecr_repository_desired_encryption_level || this.settings.ecr_repository_desired_encryption_level.default
         };
 
         var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(config.desiredEncryptionLevelString);
@@ -90,12 +90,12 @@ module.exports = {
 
                 if (currentEncryptionLevel >= desiredEncryptionLevel) {
                     helpers.addResult(results, 0,
-                        `ECR Repository is encrypted with ${currentEncryptionLevelString} \
+                        `ECR repository is encrypted with ${currentEncryptionLevelString} \
                         which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `ECR Repository encrypted with ${currentEncryptionLevelString} \
+                        `ECR repository encrypted with ${currentEncryptionLevelString} \
                         which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 }

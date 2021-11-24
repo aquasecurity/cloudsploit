@@ -130,20 +130,20 @@ describe('ecrRepositoryEncrypted', function () {
     describe('run', function () {
         it('should PASS if ECR Repository is encrypted with desired encryption level', function (done) {
             const cache = createCache([describeRepositories[2]], listKeys, describeKey[0]);
-            ecrRepositoryEncrypted.run(cache, { ecr_repository_encryption: 'awscmk' }, (err, results) => {
+            ecrRepositoryEncrypted.run(cache, { ecr_repository_desired_encryption_level: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('ECR Repository is encrypted with awscmk');
+                expect(results[0].message).to.include('ECR repository is encrypted with awscmk');
                 done();
             });
         });
 
         it('should FAIL if ECR Repository is not encrypted with desired encyption level', function (done) {
             const cache = createCache([describeRepositories[1]], listKeys, describeKey[1]);
-            ecrRepositoryEncrypted.run(cache, { ecr_repository_encryption:'awscmk' }, (err, results) => {
+            ecrRepositoryEncrypted.run(cache, { ecr_repository_desired_encryption_level:'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('ECR Repository encrypted with awskms');
+                expect(results[0].message).to.include('ECR repository encrypted with awskms');
                 done();
             });
         });
