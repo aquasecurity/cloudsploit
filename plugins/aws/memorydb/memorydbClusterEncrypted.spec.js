@@ -141,11 +141,10 @@ describe('memorydbClusterEncrypted', function () {
     describe('run', function () {
         it('should PASS if MemoryDB Cluster for Redis is encrypted with desired encryption level', function (done) {
             const cache = createCache([describeClusters[1]], listKeys, describeKey[0]);
-            memorydbClusterEncrypted.run(cache, { memorydb_cluster_encryption_level:'awscmk' }, (err, results) => {
-                console.log(results);
+            memorydbClusterEncrypted.run(cache, { memorydb_cluster_desired_encryption_level:'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('MemoryDB Cluster is encrypted with awscmk');
+                expect(results[0].message).to.include('MemoryDB cluster is encrypted with awscmk');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
@@ -153,11 +152,10 @@ describe('memorydbClusterEncrypted', function () {
 
         it('should FAIL if MemoryDB Cluster for Redis is not encrypted with desired encyption level', function (done) {
             const cache = createCache([describeClusters[0]], listKeys, describeKey[1]);
-            memorydbClusterEncrypted.run(cache, { memorydb_cluster_encryption_level:'awscmk' } , (err, results) => {
-                console.log(results);
+            memorydbClusterEncrypted.run(cache, { memorydb_cluster_desired_encryption_level:'awscmk' } , (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('MemoryDB Cluster is encrypted with awskms');
+                expect(results[0].message).to.include('MemoryDB cluster is encrypted with awskms');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
