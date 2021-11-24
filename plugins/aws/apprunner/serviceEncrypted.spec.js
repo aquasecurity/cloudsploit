@@ -152,7 +152,7 @@ const createCache = (services, keys, describeService, describeKey, servicesErr, 
 
 describe('serviceEncrypted', function () {
     describe('run', function () {
-        it('should PASS if Service is encrypted with desired encryption level', function (done) {
+        it('should PASS if App Runner service is encrypted with desired encryption level', function (done) {
             const cache = createCache([listServices[0]], listKeys, describeService[0], describeKey[0]);
             serviceEncrypted.run(cache, { app_runner_service_encryption : 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -162,7 +162,7 @@ describe('serviceEncrypted', function () {
             });
         });
 
-        it('should FAIL if Service not encrypted with desired encryption level', function (done) {
+        it('should FAIL if App Runner service not encrypted with desired encryption level', function (done) {
             const cache = createCache([listServices[0]],listKeys, describeService[0], describeKey[1]);
             serviceEncrypted.run(cache, { app_runner_service_encryption : 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -172,7 +172,7 @@ describe('serviceEncrypted', function () {
             });
         });
 
-        it('should PASS if no Service found', function (done) {
+        it('should PASS if no App Runner service found', function (done) {
             const cache = createCache([]);
             serviceEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
