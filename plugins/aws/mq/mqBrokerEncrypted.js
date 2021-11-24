@@ -114,7 +114,6 @@ module.exports = {
                         region, resource);
                 }
             }
-
             rcb();  
         }, function(){
             callback(null, results, source);
