@@ -110,7 +110,7 @@ describe('finspaceEnvironmentEncrypted', function () {
 
         it('should FAIL if FinSpace Environment is not encrypted with desired encyption level', function (done) {
             const cache = createCache([listEnvironments[0]], listKeys, describeKey[1]);
-            finspaceEnvironmentEncrypted.run(cache, { ecr_repository_encryption:'awscmk' }, (err, results) => {
+            finspaceEnvironmentEncrypted.run(cache, { finspace_environment_encryption: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('FinSpace Environment encrypted with awskms');
