@@ -35,7 +35,6 @@ module.exports = {
             var describeClusters = helpers.addSource(cache, source,
                 ['memorydb', 'describeClusters', region]);
                 
-
             if (!describeClusters) return rcb();
 
             if (describeClusters.err || !describeClusters.data) {
