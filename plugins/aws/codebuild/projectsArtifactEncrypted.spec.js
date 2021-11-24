@@ -147,27 +147,27 @@ describe('projectsArtifactEncrypted', function () {
     describe('run', function () {
         it('should PASS if CodeBuild project artifact is encrypted with desired encryption level', function (done) {
             const cache = createCache(listProjects, listKeys, batchGetProjects[0], describeKey[0]);
-            projectsArtifactEncrypted.run(cache, { projects_artifact_encryption_level: 'awscmk' }, (err, results) => {
+            projectsArtifactEncrypted.run(cache, { projects_artifact_desired_encryption_level: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('CodeBuild Project Artifact is encrypted with awscmk');
+                expect(results[0].message).to.include('CodeBuild project artifact is encrypted with awscmk');
                 done();
             });
         });
 
         it('should FAIL if CodeBuild project artifact is not encrypted with desired encryption level', function (done) {
             const cache = createCache(listProjects, listKeys, batchGetProjects[1], describeKey[1]);
-            projectsArtifactEncrypted.run(cache, { projects_artifact_encryption_level: 'awscmk' }, (err, results) => {
+            projectsArtifactEncrypted.run(cache, { projects_artifact_desired_encryption_level: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('CodeBuild Project Artifact is encrypted with awskms');
+                expect(results[0].message).to.include('CodeBuild project Artifact is encrypted with awskms');
                 done();
             });
         });
 
-        it('should PASS if No projects artifact found', function (done) {
+        it('should PASS if No CodeBuild projects artifact found', function (done) {
             const cache = createCache([]);
             projectsArtifactEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);

@@ -13,7 +13,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/codebuild/latest/userguide/security-encryption.html',
     apis: ['CodeBuild:listProjects', 'CodeBuild:batchGetProjects', 'KMS:listKeys', 'KMS:describeKey'],
     settings: {
-        projects_artifact_encryption_level: {
+        projects_artifact_desired_encryption_level: {
             name: 'projects artifact target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
@@ -28,7 +28,7 @@ module.exports = {
        
 
         var config = {
-            desiredEncryptionLevelString: settings.projects_artifact_encryption_level || this.settings.projects_artifact_encryption_level.default
+            desiredEncryptionLevelString: settings.projects_artifact_desired_encryption_level || this.settings.projects_artifact_desired_encryption_level.default
         };
 
         var acctRegion = helpers.defaultRegion(settings);
@@ -103,12 +103,12 @@ module.exports = {
 
                 if (currentEncryptionLevel >= desiredEncryptionLevel) {
                     helpers.addResult(results, 0,
-                        `CodeBuild Project Artifact is encrypted with ${currentEncryptionLevelString} \
+                        `CodeBuild project artifact is encrypted with ${currentEncryptionLevelString} \
                         which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `CodeBuild Project Artifact is encrypted with ${currentEncryptionLevelString} \
+                        `CodeBuild project Artifact is encrypted with ${currentEncryptionLevelString} \
                         which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 }
