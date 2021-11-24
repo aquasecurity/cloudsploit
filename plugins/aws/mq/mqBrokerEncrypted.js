@@ -36,7 +36,6 @@ module.exports = {
             var listBrokers = helpers.addSource(cache, source,
                 ['mq', 'listBrokers', region]);
                     
-
             if (!listBrokers) return rcb();
 
             if (listBrokers.err || !listBrokers.data) {
