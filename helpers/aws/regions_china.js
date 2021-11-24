@@ -81,4 +81,10 @@ module.exports = {
     mq: regions,
     glacier: regions,
     finspace: ['us-east-1', 'us-east-2', 'us-west-2', 'ca-central-1','eu-west-1'],
+    codeartifact: regions,
+    auditmanager: regions,
+    appflow: regions,
+    translate: regions,
+    databrew: regions,
+    managedblockchain: regions
 };
