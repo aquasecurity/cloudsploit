@@ -137,8 +137,6 @@ const createCache = (clusters, keys, describeKey, logGroupErr, keysErr, describe
 };
 
 
-
-
 describe('memorydbClusterEncrypted', function () {
     describe('run', function () {
         it('should PASS if MemoryDB Cluster for Redis is encrypted with desired encryption level', function (done) {
@@ -153,7 +151,6 @@ describe('memorydbClusterEncrypted', function () {
             });
         });
 
-
         it('should FAIL if MemoryDB Cluster for Redis is not encrypted with desired encyption level', function (done) {
             const cache = createCache([describeClusters[0]], listKeys, describeKey[1]);
             memorydbClusterEncrypted.run(cache, { memorydb_cluster_encryption_level:'awscmk' } , (err, results) => {
@@ -165,7 +162,6 @@ describe('memorydbClusterEncrypted', function () {
                 done();
             });
         });
-
 
         it('should PASS if no No MemoryDB Cluster found', function (done) {
             const cache = createCache([]);
