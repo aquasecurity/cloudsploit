@@ -54,12 +54,26 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    Appflow: {
+        listFlows: {
+            property: 'flows',
+            paginate: 'nextToken'
+        }
+    },
     Athena: {
         listWorkGroups: {
             property: 'WorkGroups',
             paginate: 'NextToken',
             params: {
                 MaxResults: 50
+            }
+        }
+    },
+    AuditManager: {
+        getSettings: {
+            property: 'settings',
+            params: {
+                attribute: 'ALL'
             }
         }
     },
@@ -135,6 +149,12 @@ var calls = {
             }
         }
     },
+    CodeArtifact: {
+        listDomains: {
+            property: 'domains',
+            paginate: 'nextToken'
+        }
+    },
     CodeStar: {
         listProjects: {
             property: 'projects',
@@ -197,6 +217,12 @@ var calls = {
         },
         describeConfigurationRecorderStatus: {
             property: 'ConfigurationRecordersStatus'
+        }
+    },
+    DataBrew: {
+        listJobs: {
+            property: 'Jobs',
+            paginate: 'NextToken'
         }
     },
     DevOpsGuru: {
@@ -715,7 +741,6 @@ var calls = {
             rateLimit: 1000 // ms to rate limit between regions
         },
         describeActiveReceiptRuleSet: {
-            property: 'Rules'
         }
     },
     Shield: {
@@ -787,6 +812,12 @@ var calls = {
             }
         }
     },
+    Translate: {
+        listTextTranslationJobs: {
+            property: 'TextTranslationJobPropertiesList',
+            paginate: 'NextToken'
+        }
+    },
     WAFRegional: {
         listWebACLs: {
             property: 'WebACLs',
@@ -843,6 +874,14 @@ var postcalls = [
                 reliesOnCall: 'getRestApis',
                 filterKey: 'restApiId',
                 filterValue: 'id'
+            }
+        },
+        Appflow: {
+            describeFlow: {
+                reliesOnService: 'appflow',
+                reliesOnCall: 'listFlows',
+                filterKey: 'flowName',
+                filterValue: 'flowName'
             }
         },
         Athena: {
@@ -1095,6 +1134,14 @@ var postcalls = [
                 reliesOnService: 'elasticbeanstalk',
                 reliesOnCall: 'describeEnvironments',
                 override: true
+            }
+        },
+        ElasticTranscoder: {
+            listJobsByPipeline : {
+                reliesOnService: 'elastictranscoder',
+                reliesOnCall: 'listPipelines',
+                filterKey: 'PipelineId',
+                filterValue: 'Id'
             }
         },
         ELB: {
@@ -1651,7 +1698,7 @@ var collect = function(AWSConfig, settings, callback) {
                             if (callObj.property && !data[callObj.property]) return regionCb();
                             if (callObj.secondProperty && !data[callObj.secondProperty]) return regionCb();
 
-                            var dataToAdd = callObj.secondProperty ? data[callObj.property][callObj.secondProperty] : data[callObj.property];
+                            var dataToAdd = callObj.secondProperty ? data[callObj.property][callObj.secondProperty] : data[callObj.property] ? data[callObj.property] : data;
 
                             if (paginating) {
                                 collection[serviceLower][callKey][region].data = collection[serviceLower][callKey][region].data.concat(dataToAdd);
