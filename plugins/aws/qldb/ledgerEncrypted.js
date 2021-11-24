@@ -62,7 +62,6 @@ module.exports = {
                 return rcb();
             }
 
-
             for (let ledger of listLedgers.data) {
                 // arn:aws:qldb:us-east-1:101363889637:ledger/
                
