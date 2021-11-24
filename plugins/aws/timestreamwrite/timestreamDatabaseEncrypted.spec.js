@@ -18,7 +18,6 @@ const listDatabases = [
             "CreationTime": "2021-11-12T02:59:33.357000-08:00",
             "LastUpdatedTime": "2021-11-12T02:59:33.357000-08:00"
         }
-    
 
 ];
 
