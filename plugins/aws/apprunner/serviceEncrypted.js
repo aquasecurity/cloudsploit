@@ -58,7 +58,6 @@ module.exports = {
                 return rcb();
             }
 
-
             for (let service of listServices.data) {
               
                 if (!service.ServiceArn) continue;
@@ -66,7 +65,6 @@ module.exports = {
 
                 var describeService = helpers.addSource(cache, source,
                     ['apprunner', 'describeService', region, service.ServiceArn]);
-
 
                 if (!describeService || describeService.err || !describeService.data ) {
                     helpers.addResult(results, 3,
@@ -89,7 +87,6 @@ module.exports = {
                             `Unable to query KMS key: ${helpers.addError(describeKey)}`,
                             region, kmsKey);
                         continue;
-
                     }
 
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
