@@ -105,7 +105,7 @@ describe('dataStoreEncrypted', function () {
             dataStoreEncrypted.run(cache, { healthLake_data_store_encryption: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('HealthLake Data Store is encrypted with awscmk');
+                expect(results[0].message).to.include('HealthLake data store is encrypted with awscmk');
                 done();
             });
         });
@@ -116,7 +116,7 @@ describe('dataStoreEncrypted', function () {
             dataStoreEncrypted.run(cache, { healthLake_data_store_encryption:'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('HealthLake Data Store is encrypted with awskms');
+                expect(results[0].message).to.include('HealthLake data store is encrypted with awskms');
                 done();
             });
         });
@@ -127,7 +127,7 @@ describe('dataStoreEncrypted', function () {
             dataStoreEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No HealthLake Data Store found');
+                expect(results[0].message).to.include('No HealthLake data stores found');
                 done();
             });
         });

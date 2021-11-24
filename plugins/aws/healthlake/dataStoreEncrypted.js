@@ -12,9 +12,9 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/healthlake/latest/devguide/data-protection.html',
     apis: ['HealthLake:listFHIRDatastores', 'KMS:describeKey', 'KMS:listKeys'],
     settings: {
-        healthLake_data_store_encryption: {
-            name: 'HealthLake Data Store Encryption',
-            description: 'If set, HealthLake Data Store should have a customer managed key(CMK) instead of default KMS ',
+        healthlake_datastore_desired_encryption_level: {
+            name: 'HealthLake Data Store Desired Encryption Level',
+            description: 'In order (lowest to highest) awskms=AWS managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
         }
@@ -26,7 +26,7 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var config = {
-            desiredEncryptionLevelString: settings.healthLake_data_store_encryption || this.settings.healthLake_data_store_encryption.default
+            desiredEncryptionLevelString: settings.healthlake_datastore_desired_encryption_level || this.settings.healthlake_datastore_desired_encryption_level.default
         };
 
         var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(config.desiredEncryptionLevelString);
@@ -44,7 +44,7 @@ module.exports = {
             }
 
             if (!listFHIRDatastores.data.length) {
-                helpers.addResult(results, 0, 'No HealthLake Data Store found', region);
+                helpers.addResult(results, 0, 'No HealthLake data stores found', region);
                 return rcb();
             }
 
@@ -88,12 +88,12 @@ module.exports = {
 
                 if (currentEncryptionLevel >= desiredEncryptionLevel) {
                     helpers.addResult(results, 0,
-                        `HealthLake Data Store is encrypted with ${currentEncryptionLevelString} \
+                        `HealthLake data store is encrypted with ${currentEncryptionLevelString} \
                         which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `HealthLake Data Store is encrypted with ${currentEncryptionLevelString} \
+                        `HealthLake data store is encrypted with ${currentEncryptionLevelString} \
                         which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 }
