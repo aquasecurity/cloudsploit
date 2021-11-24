@@ -385,7 +385,7 @@ module.exports = {
         'codeartifactDomainEncrypted'   : require(__dirname + '/plugins/aws/codeartifact/codeartifactDomainEncrypted.js'),
         'auditmanagerDataEncrypted'     : require(__dirname + '/plugins/aws/auditmanager/auditmanagerDataEncrypted.js'),
 
-      'flowEncrypted'                 : require(__dirname + '/plugins/aws/appflow/flowEncrypted.js'),
+        'flowEncrypted'                 : require(__dirname + '/plugins/aws/appflow/flowEncrypted.js'),
 
         'pipelineDataEncrypted'         : require(__dirname + '/plugins/aws/elastictranscoder/pipelineDataEncrypted.js'),
         'jobOutputsEncrypted'           : require(__dirname + '/plugins/aws/elastictranscoder/jobOutputsEncrypted.js'),
