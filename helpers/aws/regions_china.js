@@ -81,5 +81,5 @@ module.exports = {
     mq: regions,
     glacier: regions,
     managedblockchain: regions,
-    healthlake: ['us-east-1', 'us-east-2', 'eu-west-2'],
+    healthlake: regions
 };
