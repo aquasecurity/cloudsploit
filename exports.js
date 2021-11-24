@@ -381,10 +381,12 @@ module.exports = {
 
         'codestarValidRepoProviders'    : require(__dirname + '/plugins/aws/codestar/codestarValidRepoProviders.js'),
 
+        'dataStoreEncrypted'            : require(__dirname + '/plugins/aws/healthlake/dataStoreEncrypted.js'),
+
         'codeartifactDomainEncrypted'   : require(__dirname + '/plugins/aws/codeartifact/codeartifactDomainEncrypted.js'),
         'auditmanagerDataEncrypted'     : require(__dirname + '/plugins/aws/auditmanager/auditmanagerDataEncrypted.js'),
 
-      'flowEncrypted'                 : require(__dirname + '/plugins/aws/appflow/flowEncrypted.js'),
+        'flowEncrypted'                 : require(__dirname + '/plugins/aws/appflow/flowEncrypted.js'),
 
         'pipelineDataEncrypted'         : require(__dirname + '/plugins/aws/elastictranscoder/pipelineDataEncrypted.js'),
         'jobOutputsEncrypted'           : require(__dirname + '/plugins/aws/elastictranscoder/jobOutputsEncrypted.js'),

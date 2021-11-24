@@ -532,6 +532,12 @@ var calls = {
             },
         }
     },
+    HealthLake: {
+        listFHIRDatastores: {
+            property: 'DatastorePropertiesList',
+            paginate: 'NextToken'
+        }
+    },
     IAM: {
         listServerCertificates: {
             property: 'ServerCertificateMetadataList',

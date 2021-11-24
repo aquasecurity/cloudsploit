@@ -85,5 +85,6 @@ module.exports = {
     appflow: regions,
     translate: regions,
     databrew: regions,
-    managedblockchain: regions
+    managedblockchain: regions,
+    healthlake: regions
 };
