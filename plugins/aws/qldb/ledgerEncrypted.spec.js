@@ -111,7 +111,7 @@ const createCache = (ledgers, keys, describeLedger, describeKey, ledgersErr, key
 
 describe('ledgerEncrypted', function () {
     describe('run', function () {
-        it('should PASS if Ledger is encrypted with desired encryption level', function (done) {
+        it('should PASS if QLDB ledger is encrypted with desired encryption level', function (done) {
             const cache = createCache(listLedgers, listKeys, describeLedger[0], describeKey[0]);
             ledgerEncrypted.run(cache, { qldb_ledger_encryption : 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -121,7 +121,7 @@ describe('ledgerEncrypted', function () {
             });
         });
 
-        it('should FAIL if Ledger is not encrypted with desired encryption level', function (done) {
+        it('should FAIL if QLDb ledger is not encrypted with desired encryption level', function (done) {
             const cache = createCache(listLedgers,listKeys, describeLedger[0], describeKey[1]);
             ledgerEncrypted.run(cache, { qldb_ledger_encryption : 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -131,7 +131,7 @@ describe('ledgerEncrypted', function () {
             });
         });
 
-        it('should PASS if no Ledgers found', function (done) {
+        it('should PASS if no QLDB ledgers found', function (done) {
             const cache = createCache([]);
             ledgerEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -141,8 +141,8 @@ describe('ledgerEncrypted', function () {
             });
         });
 
-        it('should UNKNOWN if unable to list Ledgers', function (done) {
-            const cache = createCache(null, null, null, { message: "Unable to list Ledgers" });
+        it('should UNKNOWN if unable to list  QLDB ledgers', function (done) {
+            const cache = createCache(null, null, null, { message: "Unable to list QLDB ledgers" });
             ledgerEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);

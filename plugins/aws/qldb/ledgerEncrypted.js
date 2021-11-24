@@ -5,15 +5,15 @@ module.exports = {
     title: 'Ledger Encrypted',
     category: 'QLDB',
     domain: 'Databases',
-    description: 'Ensures that the Ledger is Encrypted',
+    description: 'Ensures that AWS QLDB Ledger is Encrypted',
     more_info: 'Amazon QLDB encrypts your ledger with AWS-manager keys by default.' +
                'Encrypt your files using customer-managed keys in order to gain more granular control over encryption/decryption process.',
     recommended_action: 'Create QLDB ledger with customer-manager keys (CMKs).',
     link: 'https://docs.aws.amazon.com/qldb/latest/developerguide/encryption-at-rest.html',
     apis: ['QLDB:listLedgers','QLDB:describeLedger', 'KMS:describeKey', 'KMS:listKeys', 'STS:getCallerIdentity'],
     settings: {
-        qldb_ledger_encryption: {
-            name: 'Ledger Encrypted',
+        qldb_ledger_desired_encryption_level: {
+            name: 'QLDB ledger desired encryption level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
@@ -30,7 +30,7 @@ module.exports = {
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', defaultRegion, 'data']);
 
         var config = {
-            desiredEncryptionLevelString: settings.qldb_ledger_encryption || this.settings.qldb_ledger_encryption.default
+            desiredEncryptionLevelString: settings.qldb_ledger_desired_encryption_level || this.settings.qldb_ledger_desired_encryption_level.default
         };
 
         var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(config.desiredEncryptionLevelString);
@@ -101,12 +101,12 @@ module.exports = {
 
                 if (currentEncryptionLevel >= desiredEncryptionLevel) {
                     helpers.addResult(results, 0,
-                        `Ledger is encrypted with ${currentEncryptionLevelString} \
+                        `QLDB ledger is encrypted with ${currentEncryptionLevelString} \
                         which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `Ledgers is encrypted with ${currentEncryptionLevelString} \
+                        `QLDB ledger is encrypted with ${currentEncryptionLevelString} \
                         which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 }
