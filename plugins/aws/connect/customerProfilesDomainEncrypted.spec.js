@@ -14,7 +14,7 @@ const getDomain = [
     {
         "DomainName": "mine2",
         "DefaultExpirationDays": 366,
-        "DefaultEncryptionKey": "arn:aws:kms:us-east-1:101363889637:key/ad013a33-b01d-4d88-ac97-127399c18b3e",
+        "DefaultEncryptionKey": "arn:aws:kms:us-east-1:000111222333:key/ad013a33-b01d-4d88-ac97-127399c18b3e",
         "Stats": {
             "ProfileCount": 0,
             "MeteringProfileCount": 0,
