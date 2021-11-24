@@ -81,10 +81,12 @@ module.exports = {
     mq: regions,
     glacier: regions,
     finspace: regions,
+    codepipeline: regions,
     codeartifact: regions,
     auditmanager: regions,
     appflow: regions,
     translate: regions,
     databrew: regions,
-    managedblockchain: regions
+    managedblockchain: regions,
+    healthlake: regions
 };
