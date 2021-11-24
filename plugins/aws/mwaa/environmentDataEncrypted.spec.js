@@ -142,7 +142,7 @@ describe('environmentDataEncrypted', function () {
     describe('run', function () {
         it('should PASS if MWAA Environment Data is encrypted with desired encryption level', function (done) {
             const cache = createCache(listEnvironments, listKeys, getEnvironment[0], describeKey[0]);
-            environmentDataEncrypted.run(cache, { mwaa_environment_data_encryption : 'awscmk' }, (err, results) => {
+            environmentDataEncrypted.run(cache, { mwaa_environmentdata_desired_encryption_level : 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -152,7 +152,7 @@ describe('environmentDataEncrypted', function () {
 
         it('should FAIL if MWAA Environment Data is not encrypted with desired encryption level', function (done) {
             const cache = createCache(listEnvironments,listKeys, getEnvironment[0], describeKey[1]);
-            environmentDataEncrypted.run(cache, { mwaa_environment_data_encryption : 'awscmk' }, (err, results) => {
+            environmentDataEncrypted.run(cache, { mwaa_environmentdata_desired_encryption_level : 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');

@@ -5,14 +5,14 @@ module.exports = {
     title: 'Environment Data Encrypted',
     category: 'MWAA',
     domain: 'Compute',
-    description: 'Ensures that the Environment Data is Encrypted',
+    description: 'Ensures that AWS MWAA environment data is encrypted',
     more_info: 'Amazon MWAA encrypts your data with AWS-manager keys by default.' +
                'Encrypt your files using customer-managed keys in order to gain more granular control over encryption/decryption process.',
     recommended_action: 'Create MWAA Environment with customer-manager keys (CMKs).',
     link: 'https://docs.aws.amazon.com/mwaa/latest/userguide/encryption-at-rest.html',
     apis: ['MWAA:listEnvironments','MWAA:getEnvironment', 'KMS:describeKey', 'KMS:listKeys', 'STS:getCallerIdentity'],
     settings: {
-        mwaa_environment_data_encryption: {
+        mwaa_environmentdata_desired_encryption_level: {
             name: 'Environment Data Encryption',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(sse|awskms|awscmk|externalcmk|cloudhsm)$',
@@ -30,7 +30,7 @@ module.exports = {
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', defaultRegion, 'data']);
 
         var config = {
-            desiredEncryptionLevelString: settings.mwaa_environment_data_encryption || this.settings.mwaa_environment_data_encryption.default
+            desiredEncryptionLevelString: settings.mwaa_environmentdata_desired_encryption_level || this.settings.mwaa_environmentdata_desired_encryption_level.default
         };
 
         var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(config.desiredEncryptionLevelString);
