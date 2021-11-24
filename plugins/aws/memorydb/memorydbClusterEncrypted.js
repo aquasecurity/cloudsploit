@@ -93,7 +93,6 @@ module.exports = {
                         which is less than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 }
-              
             }
             rcb();
         }, function(){
