@@ -80,5 +80,5 @@ module.exports = {
     codebuild: regions,
     mq: regions,
     glacier: regions,
-    apprunner:  ['us-east-1', 'us-west-2', 'us-west-2', 'eu-west-1','ap-northeast-1'],
+    apprunner:  regions,
 };
