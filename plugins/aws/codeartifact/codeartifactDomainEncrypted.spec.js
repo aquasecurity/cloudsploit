@@ -1,19 +1,14 @@
 var expect = require('chai').expect;
-var backupVaultEncrypted = require('./backupVaultEncrypted');
+var codeartifactDomainEncrypted = require('./codeartifactDomainEncrypted');
 
-const listBackupVaults = [
+const listDomains = [
     {
-        BackupVaultName: 'sadeed-vault',
-        BackupVaultArn: 'arn:aws:backup:us-east-1:560213429563:backup-vault:sadeed-vault',
-        CreationDate: '2021-11-08T10:12:46.700Z',
-        EncryptionKeyArn: 'arn:aws:kms:us-east-1:560213429563:key/c4750c1a-72e5-4d16-bc72-0e7b559e0250'
-    },
-    {
-        BackupVaultName: "aws/efs/automatic-backup-vault",
-        BackupVaultArn: "arn:aws:backup:us-east-1:560213429563:backup-vault:aws/efs/automatic-backup-vault",
-        CreationDate: "2020-10-18T10:53:45.887000-07:00",
-        EncryptionKeyArn: "arn:aws:kms:us-east-1:560213429563:key/f4942dd6-bce5-4213-bdd3-cc8ccd87dd89"
-    }
+        name: 'test-domain',
+        owner: '000011112222',
+        arn: 'arn:aws:codeartifact:us-east-1:000011112222:domain/test-domain',
+        status: 'Active',
+        encryptionKey: 'arn:aws:kms:us-east-1:000011112222:key/c4750c1a-72e5-4d16-bc72-0e7b559e0250'
+    } 
 ];
 
 const describeKey = [
@@ -59,21 +54,17 @@ const listKeys = [
     {
         "KeyId": "0604091b-8c1b-4a55-a844-8cc8ab1834d9",
         "KeyArn": "arn:aws:kms:us-east-1:000011112222:key/c4750c1a-72e5-4d16-bc72-0e7b559e0250"
-    },
-    {
-        "KeyId": "0604091b-8c1b-4a55-a844-8cc8ab1834d9",
-        "KeyArn": "arn:aws:kms:us-east-1:000011112222:key/f4942dd6-bce5-4213-bdd3-cc8ccd87dd890"
     }
 ]
 
-const createCache = (backupVault, keys, describeKey, backupVaultErr, keysErr, describeKeyErr) => {
-    var keyId = (backupVault && backupVault.length) ? backupVault[0].EncryptionKeyArn.split('/')[1] : null;
+const createCache = (domains, keys, describeKey, domainsErr, keysErr, describeKeyErr) => {
+    var keyId = (domains && domains.length) ? domains[0].encryptionKey.split('/')[1] : null;
     return {
-        backup: {
-            listBackupVaults: {
+        codeartifact: {
+            listDomains: {
                 'us-east-1': {
-                    err: backupVaultErr,
-                    data: backupVault
+                    err: domainsErr,
+                    data: domains
                 },
             },
         },
@@ -96,44 +87,41 @@ const createCache = (backupVault, keys, describeKey, backupVaultErr, keysErr, de
     };
 };
 
-describe('backupVaultEncrypted', function () {
+describe('codeartifactDomainEncrypted', function () {
     describe('run', function () {
-        it('should PASS if Backup Vault is encrypted with desired encryption level', function (done) {
-            const cache = createCache([listBackupVaults[0]], listKeys, describeKey[0]);
-            backupVaultEncrypted.run(cache, { backup_vault_desired_encryption_level:'awscmk' }, (err, results) => {
+        it('should PASS if CodeArtifact domain is encrypted with desired encryption level', function (done) {
+            const cache = createCache(listDomains, listKeys, describeKey[0]);
+            codeartifactDomainEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Backup vault is encrypted with awscmk');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
 
-        it('should FAIL if Backup Vault is not encrypted with desired encyption level', function (done) {
-            const cache = createCache([listBackupVaults[0]], listKeys, describeKey[1]);
-            backupVaultEncrypted.run(cache, { backup_vault_desired_encryption_level:'awscmk' }, (err, results) => {
+        it('should FAIL if CodeArtifact domain is not encrypted with desired encyption level', function (done) {
+            const cache = createCache(listDomains, listKeys, describeKey[1]);
+            codeartifactDomainEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Backup Vault is encrypted with awskms');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
 
-        it('should PASS if no Backup vault  found', function (done) {
+        it('should PASS if no CodeArtifact domains found', function (done) {
             const cache = createCache([]);
-            backupVaultEncrypted.run(cache, {}, (err, results) => {
+            codeartifactDomainEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No Backup Vaults found');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
 
-        it('should UNKNOWN if unable to list Backup vault', function (done) {
-            const cache = createCache(null, null, null, { message: "Unable to list Backup vault encryption" });
-            backupVaultEncrypted.run(cache, {}, (err, results) => {
+        it('should UNKNOWN if unable to list CodeArtifact Domains', function (done) {
+            const cache = createCache(null, null, null, { message: "Unable to list CodeArtifact Domains" });
+            codeartifactDomainEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
@@ -142,8 +130,8 @@ describe('backupVaultEncrypted', function () {
         });
 
         it('should UNKNOWN if unable to list KMS keys', function (done) {
-            const cache = createCache(null, null, null, { message: "Unable to list KMS keys" });
-            backupVaultEncrypted.run(cache, {}, (err, results) => {
+            const cache = createCache(listDomains, null, null, null, { message: "Unable to list KMS keys" });
+            codeartifactDomainEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');

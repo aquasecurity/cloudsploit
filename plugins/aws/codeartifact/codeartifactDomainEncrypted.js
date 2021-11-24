@@ -2,17 +2,17 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Backup Vault Encrypted',
-    category: 'Backup',
-    domain: 'Storage',
-    description: 'Ensure that your Amazon Backup vaults are using AWS KMS Customer Master Keys instead of AWS managed-keys (i.e. default encryption keys).',
-    more_info: 'Amazon Key Management Service (KMS) service allows you to easily create, rotate, disable and audit the Customer Master Keys used to encrypt AWS Backup data'+
-    'Ensure that you use your own AWS KMS Customer Master Keys (CMKs) to protect the backups created with Amazon Backup service, you have full control over who can use the encryption keys to access your backups.',
-    recommended_action: 'Encrypt Backup Vault with desired encryption level',
-    link: 'https://docs.aws.amazon.com/aws-backup/latest/devguide/creating-a-vault.html',
-    apis: ['Backup:listBackupVaults', 'KMS:listKeys', 'KMS:describeKey'],
+    title: 'CodeArtifact Domain Encrypted',
+    category: 'CodeArtifact',
+    domain: 'Application Integration',
+    description: 'Ensures that AWS CodeArtifact domains have encryption enabled with desired encryption level.',
+    more_info: 'CodeArtifact domains make it easier to manage multiple repositories across an organization. By default, domain assets are encrypted with AWS-managed KMS key. ' +
+        'Encrypt them using customer-managed keys in order to gain more granular control over encryption/decryption process',
+    recommended_action: 'Encrypt CodeArtifact domains with desired encryption level',
+    link: 'https://docs.aws.amazon.com/codeartifact/latest/ug/domain-create.html',
+    apis: ['CodeArtifact:listDomains', 'KMS:listKeys', 'KMS:describeKey'],
     settings: {
-        backup_vault_desired_encryption_level: {
+        codeartifact_domain_encryption_level: {
             name: 'CodeArtifact Domain Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
@@ -26,27 +26,27 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var config = {
-            desiredEncryptionLevelString: settings.backup_vault_desired_encryption_level || this.settings.backup_vault_desired_encryption_level.default
+            desiredEncryptionLevelString: settings.codeartifact_domain_encryption_level || this.settings.codeartifact_domain_encryption_level.default
         };
 
         var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(config.desiredEncryptionLevelString);
         var currentEncryptionLevel;
 
-        async.each(regions.backup, function(region, rcb){
-            var listBackupVaults = helpers.addSource(cache, source,
-                ['backup', 'listBackupVaults', region]);
+        async.each(regions.codeartifact, function(region, rcb){
+            var listDomains = helpers.addSource(cache, source,
+                ['codeartifact', 'listDomains', region]);
 
-            if (!listBackupVaults) return rcb();
+            if (!listDomains) return rcb();
 
-            if (listBackupVaults.err || !listBackupVaults.data) {
+            if (listDomains.err || !listDomains.data) {
                 helpers.addResult(results, 3,
-                    `Unable to list Backup Vaults: ${helpers.addError(listBackupVaults)}`, region);
+                    `Unable to list CodeArtifact domains: ${helpers.addError(listDomains)}`, region);
                 return rcb();
             }
 
-            if (!listBackupVaults.data.length) {
+            if (!listDomains.data.length) {
                 helpers.addResult(results, 0,
-                    'No Backup Vaults found', region);
+                    'No CodeArtifact domains found', region);
                 return rcb();
             }
 
@@ -59,40 +59,40 @@ module.exports = {
                 return rcb();
             }
 
-            for (let backupVault of listBackupVaults.data) {
-                if (!backupVault.BackupVaultArn) continue;
+            for (let domain of listDomains.data) {
+                if (!domain.arn) continue;
 
-                let resource = backupVault.BackupVaultArn;
-                if (backupVault.EncryptionKeyArn) {
-                    var kmsKeyId = backupVault.EncryptionKeyArn.split('/')[1] ? backupVault.EncryptionKeyArn.split('/')[1] : backupVault.EncryptionKeyArn;
-
+                let resource = domain.arn;
+                if (domain.encryptionKey) {
+                    var kmsKeyId = domain.encryptionKey.split('/')[1] ? domain.encryptionKey.split('/')[1] : domain.encryptionKey;
+    
                     var describeKey = helpers.addSource(cache, source,
-                        ['kms', 'describeKey', region, kmsKeyId]);  
-
+                        ['kms', 'describeKey', region, kmsKeyId]);
+    
                     if (!describeKey || describeKey.err || !describeKey.data || !describeKey.data.KeyMetadata) {
                         helpers.addResult(results, 3,
                             `Unable to query KMS key: ${helpers.addError(describeKey)}`,
-                            region, kmsKeyId);
+                            region, domain.encryptionKey);
                         continue;
                     }
-
+    
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
                     var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
-
+    
                     if (currentEncryptionLevel >= desiredEncryptionLevel) {
                         helpers.addResult(results, 0,
-                            `Backup vault is encrypted with ${currentEncryptionLevelString} \
+                            `CodeArtifact domain is encrypted with ${currentEncryptionLevelString} \
                             which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
                             region, resource);
                     } else {
                         helpers.addResult(results, 2,
-                            `Backup Vault is encrypted with ${currentEncryptionLevelString} \
+                            `CodeArtifact domain is encrypted with ${currentEncryptionLevelString} \
                             which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                             region, resource);
                     }
                 } else {
                     helpers.addResult(results, 2,
-                        'Backup Vaults does not have encryption enabled for assets',
+                        'CodeArtifact domain does not have encryption enabled for assets',
                         region, resource);
                 }
             }
