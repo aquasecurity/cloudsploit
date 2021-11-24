@@ -170,16 +170,16 @@ module.exports = {
                     if (describeActiveReceiptRuleSet.err) {
                         helpers.addResult(results, 3,
                             'Unable to query for SES: ' + helpers.addError(describeActiveReceiptRuleSet), region);
-                    } else if (describeActiveReceiptRuleSet.data) {
-                        for (var n in describeActiveReceiptRuleSet.data){
-                            if (describeActiveReceiptRuleSet.data[n].Actions) {
-                                for (var o in describeActiveReceiptRuleSet.data[n].Actions){
-                                    if (describeActiveReceiptRuleSet.data[n].Actions[o].S3Action &&
-                                        describeActiveReceiptRuleSet.data[n].Actions[o].S3Action.KmsKeyArn) {
+                    } else if (describeActiveReceiptRuleSet.data && describeActiveReceiptRuleSet.data.Rules) {
+                        for (var rule of describeActiveReceiptRuleSet.data.Rules) {
+                            if (rule.Actions) {
+                                for (var o in rule.Actions){
+                                    if (rule.Actions[o].S3Action &&
+                                        rule.Actions[o].S3Action.KmsKeyArn) {
                                         services.push({
                                             serviceName: 'SES',
                                             resource: 'SES ruleset',
-                                            KMSKey: describeActiveReceiptRuleSet.data[n].Actions[o].S3Action.KmsKeyArn
+                                            KMSKey: rule.Actions[o].S3Action.KmsKeyArn
                                         });
                                     }
                                 }
