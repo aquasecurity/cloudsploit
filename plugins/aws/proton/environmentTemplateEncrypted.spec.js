@@ -3,14 +3,14 @@ var environmentTemplateEncrypted = require('./environmentTemplateEncrypted');
 
 const listEnvironmentTemplates = [
     {
-        "arn": "arn:aws:proton:us-east-1:101363889637:environment-template/sadeed1",
+        "arn": "arn:aws:proton:us-east-1:000111222333:environment-template/sadeed1",
         "createdAt": "2021-11-18T17:01:54.758000+05:00",
         "displayName": "call me brown boy",
         "lastModifiedAt": "2021-11-18T17:01:54.758000+05:00",
         "name": "sadeed1"
     },
     {
-        "arn": "arn:aws:proton:us-east-1:101363889637:environment-template/sad1",
+        "arn": "arn:aws:proton:us-east-1:000111222333:environment-template/sad1",
         "createdAt": "2021-11-18T17:36:46.281000+05:00",
         "displayName": "sadeed",
         "lastModifiedAt": "2021-11-18T17:36:46.281000+05:00",
@@ -21,7 +21,7 @@ const listEnvironmentTemplates = [
 const getEnvironmentTemplate = [
     {
         "environmentTemplate": {
-            "arn": "arn:aws:proton:us-east-1:101363889637:environment-template/sadeed1",
+            "arn": "arn:aws:proton:us-east-1:000111222333:environment-template/sadeed1",
             "createdAt": "2021-11-18T17:01:54.758000+05:00",
             "displayName": "call me brown boy",
             "encryptionKey": "arn:aws:kms:us-east-1:101363889637:key/ad013a33-b01d-4d88-ac97-127399c18b3e",
