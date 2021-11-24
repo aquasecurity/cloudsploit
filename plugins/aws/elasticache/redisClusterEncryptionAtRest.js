@@ -11,7 +11,7 @@ module.exports = {
     recommended_action: 'Enable encryption for ElastiCache cluster data-at-rest.',
     apis: ['ElastiCache:describeCacheClusters', 'ElastiCache:describeReplicationGroups', 'KMS:listKeys', 'KMS:describeKey'],
     settings: {
-        ec_at_rest_encryption_level: {
+        ec_atrest_desired_encryption_level: {
             name: 'ElastiCache Redis Cluster At-Rest Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
@@ -25,7 +25,7 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var config = {
-            desiredEncryptionLevelString: settings.ec_at_rest_encryption_level || this.settings.ec_at_rest_encryption_level.default
+            desiredEncryptionLevelString: settings.ec_atrest_desired_encryption_level || this.settings.ec_atrest_desired_encryption_level.default
         };
 
         var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(config.desiredEncryptionLevelString);
