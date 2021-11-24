@@ -63,13 +63,10 @@ module.exports = {
             }
 
             for (let ledger of listLedgers.data) {
-                // arn:aws:qldb:us-east-1:101363889637:ledger/
-               
                 let resource = `arn:${awsOrGov}:qldb:${region}:${accountId}:ledger/${ledger.Name}`;
 
                 var describeLedger = helpers.addSource(cache, source,
                     ['qldb', 'describeLedger', region, ledger.Name]);
-
 
                 if (!describeLedger || describeLedger.err || !describeLedger.data ) {
                     helpers.addResult(results, 3,
@@ -92,7 +89,6 @@ module.exports = {
                             `Unable to query KMS key: ${helpers.addError(describeKey)}`,
                             region, kmsKeyArn);
                         continue;
-
                     }
 
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
