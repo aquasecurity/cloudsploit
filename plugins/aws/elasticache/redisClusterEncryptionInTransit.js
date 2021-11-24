@@ -50,7 +50,6 @@ module.exports = {
                         'Encryption is not enabled for In-Transit Cluster :' + cluster.CacheClusterId, region, resource);
                 }
             }
-
             rcb();
         }, function(){
             callback(null, results, source);
