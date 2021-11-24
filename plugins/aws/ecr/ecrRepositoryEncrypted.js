@@ -43,7 +43,6 @@ module.exports = {
                 return rcb();
             }
             
-
             if (!describeRepositories.data.length) {
                 helpers.addResult(results, 0, 'No ECR Repository  found', region);
                 return rcb();
