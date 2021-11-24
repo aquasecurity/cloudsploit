@@ -135,7 +135,7 @@ module.exports = {
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `Pipeline Artifacts is encrypted with ${currentEncryptionLevelString} \
+                        `Pipeline Artifact is encrypted with ${currentEncryptionLevelString} \
                         which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 }
