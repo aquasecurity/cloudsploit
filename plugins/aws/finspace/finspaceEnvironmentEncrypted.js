@@ -59,7 +59,6 @@ module.exports = {
             }
 
             for (let environment of listEnvironments.data) {
-
                 if (!environment.environmentArn) continue;
                 let resource = environment.environmentArn;
 
