@@ -62,7 +62,8 @@ module.exports = {
 
                 let resource = repository.repositoryArn;
 
-                if (repository.encryptionConfiguration.encryptionType &&
+                if ( repository.encryptionConfiguration &&
+                repository.encryptionConfiguration.encryptionType &&
                     repository.encryptionConfiguration.encryptionType.toUpperCase() == 'AES256') {
                     currentEncryptionLevel = 1;
                 } else if (repository.encryptionConfiguration && repository.encryptionConfiguration.kmsKey) {
