@@ -12,7 +12,7 @@ module.exports = {
     apis: ['Neptune:describeDBClusters', 'KMS:listKeys', 'KMS:describeKey'],
     settings: {
         neptunedb_cluster_desired_encryption_level: {
-            name: 'Neptune Database Cluster Target Encryption Level',
+            name: 'Neptune Database Cluster Desired Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk',
