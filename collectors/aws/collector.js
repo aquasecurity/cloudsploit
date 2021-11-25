@@ -1045,6 +1045,11 @@ var postcalls = [
                 reliesOnService: 'connect',
                 reliesOnCall: 'listInstances',
                 override: true
+            },
+            listInstanceMediaStreamsStorageConfigs: {
+                reliesOnService: 'connect',
+                reliesOnCall: 'listInstances',
+                override: true 
             }
         },
         DynamoDB: {
