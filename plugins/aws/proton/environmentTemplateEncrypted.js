@@ -65,7 +65,8 @@ module.exports = {
                 var getEnvironmentTemplate = helpers.addSource(cache, source,
                     ['proton', 'getEnvironmentTemplate', region, template.name]);  
                     
-                if (!getEnvironmentTemplate || getEnvironmentTemplate.err || !getEnvironmentTemplate.data ) {
+                if (!getEnvironmentTemplate || getEnvironmentTemplate.err || !getEnvironmentTemplate.data ||
+                    !getEnvironmentTemplate.data.environmentTemplate) {
                     helpers.addResult(results, 3,
                         `Unable to get Environment Template description: ${helpers.addError(getEnvironmentTemplate)}`,
                         region, resource);
