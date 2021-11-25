@@ -677,6 +677,12 @@ var calls = {
             paginate: 'NextToken'
         },
     },
+    Proton: {
+        listEnvironmentTemplates: {
+            property: 'templates',
+            paginate: 'nextToken'
+        }
+    },
     QLDB: {
         listLedgers: {
             property: 'Ledgers',
@@ -1427,6 +1433,14 @@ var postcalls = [
                 reliesOnService: 'mwaa',
                 reliesOnCall: 'listEnvironments',
                 override: true
+            }
+        },
+        Proton: {
+            getEnvironmentTemplate: {
+                reliesOnService: 'proton',
+                reliesOnCall: 'listEnvironmentTemplates',
+                filterKey: 'name',
+                filterValue: 'name'
             }
         },
         RDS: {
