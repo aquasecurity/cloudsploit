@@ -88,7 +88,6 @@ module.exports = {
                             region, kmsKey);
                         continue;
                     }
-
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
                 } else {
 
@@ -99,17 +98,16 @@ module.exports = {
 
                 if (currentEncryptionLevel >= desiredEncryptionLevel) {
                     helpers.addResult(results, 0,
-                        `App Runner service is using ${currentEncryptionLevelString} \ for encryption
+                        `App Runner service is using ${currentEncryptionLevelString} for encryption \
                         which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `App Runner service is using ${currentEncryptionLevelString} \ for encryption
+                        `App Runner service is using ${currentEncryptionLevelString} for encryption \
                         which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 }
             }
-
             rcb();
         }, function(){
             callback(null, results, source);
