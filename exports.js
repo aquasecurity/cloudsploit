@@ -156,7 +156,7 @@ module.exports = {
         'efsEncryptionEnabled'          : require(__dirname + '/plugins/aws/efs/efsEncryptionEnabled.js'),
 
         'ecrRepositoryPolicy'           : require(__dirname + '/plugins/aws/ecr/ecrRepositoryPolicy.js'),
-        'ecrRepositoryEncrypted'         : require(__dirname + '/plugins/aws/ecr/ecrRepositoryEncrypted.js'),
+        'ecrRepositoryEncrypted'        : require(__dirname + '/plugins/aws/ecr/ecrRepositoryEncrypted.js'),
         'ecrRepositoryTagImmutability'  : require(__dirname + '/plugins/aws/ecr/ecrRepositoryTagImmutability.js'),
         
         'managedPlatformUpdates'        : require(__dirname + '/plugins/aws/elasticbeanstalk/managedPlatformUpdates.js'),
