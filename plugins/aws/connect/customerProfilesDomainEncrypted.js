@@ -6,7 +6,7 @@ module.exports = {
     category: 'Connect',
     domain: 'Application Integration',
     description: 'Ensure that AWS Connect Customer Profiles domains are using desired encryption level.',
-    more_info: 'Customer profiles domain is a container for all data, such as customer profiles, object types, profile keys, and encryption keys. To encrypt this data, use a KMS key with desired encrypted level to meet regulatory compliance requirements within your organization',
+    more_info: 'Customer profiles domain is a container for all data, such as customer profiles, object types, profile keys, and encryption keys. To encrypt this data, use a KMS key with desired encrypted level to meet regulatory compliance requirements within your organization.',
     recommended_action: 'Enabled data encryption feature for Connect Customer Profiles',
     link: 'https://docs.aws.amazon.com/connect/latest/adminguide/enable-customer-profiles.html',
     apis: ['CustomerProfiles:listDomains', 'CustomerProfiles:getDomain', 'KMS:describeKey', 'KMS:listKeys', 'STS:getCallerIdentity'],
