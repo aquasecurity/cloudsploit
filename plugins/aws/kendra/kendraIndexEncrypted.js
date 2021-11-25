@@ -62,7 +62,7 @@ module.exports = {
             }
 
             for (let index of listIndices.data) {
-                var resource = `arn:${awsOrGov}:kendra:${accountId}:index/${index.Name}`;
+                var resource = `arn:${awsOrGov}:kendra:${region}:${accountId}:index/${index.Name}`;
 
                 var describeIndex = helpers.addSource(cache, source,
                     ['kendra', 'describeIndex', region, index.Id]);
