@@ -5,10 +5,10 @@ module.exports = {
     title: 'Ledger Encrypted',
     category: 'QLDB',
     domain: 'Databases',
-    description: 'Ensures that AWS QLDB Ledger is Encrypted',
-    more_info: 'Amazon QLDB encrypts your ledger with AWS-manager keys by default.' +
-               'Encrypt your files using customer-managed keys in order to gain more granular control over encryption/decryption process.',
-    recommended_action: 'Create QLDB ledger with customer-manager keys (CMKs).',
+    description: 'Ensure that AWS QLDB ledger is encrypted using desired encryption level',
+    more_info: 'QLDB encryption at rest provides enhanced security by encrypting all ledger data at rest using encryption keys in AWS Key Management Service (AWS KMS).' +
+               'Use customer-managed keys (CMKs) instead in order to gain more granular control over encryption/decryption process.',
+    recommended_action: 'Create QLDB ledger with customer-manager keys (CMKs)',
     link: 'https://docs.aws.amazon.com/qldb/latest/developerguide/encryption-at-rest.html',
     apis: ['QLDB:listLedgers','QLDB:describeLedger', 'KMS:describeKey', 'KMS:listKeys', 'STS:getCallerIdentity'],
     settings: {
@@ -63,6 +63,8 @@ module.exports = {
             }
 
             for (let ledger of listLedgers.data) {
+                if (!ledger.Name) continue;
+
                 let resource = `arn:${awsOrGov}:qldb:${region}:${accountId}:ledger/${ledger.Name}`;
 
                 var describeLedger = helpers.addSource(cache, source,
@@ -93,8 +95,7 @@ module.exports = {
 
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
                 } else {
-
-                    currentEncryptionLevel=2; //awskms
+                    currentEncryptionLevel = 2; //awskms
                 }
 
                 var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
@@ -111,6 +112,7 @@ module.exports = {
                         region, resource);
                 }
             }
+
             rcb();
         }, function(){
             callback(null, results, source);
