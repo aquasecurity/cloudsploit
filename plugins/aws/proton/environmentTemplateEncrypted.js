@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     description: 'Ensure that AWS Proton environment template is encrypted with desired level.',
     more_info: 'AWS Proton encrypts sensitive data in your template bundles at rest in the S3 bucket where you store your template bundles using AWS-managed keys. Use customer-managed keys (CMKs) in order to meet regulatory compliance requirements within your organization.',
-    recommended_action: 'Create Proton Environment Template with customer-manager keys (CMKs).',
+    recommended_action: 'Create Proton environment template with customer-manager keys (CMKs)',
     link: 'https://docs.aws.amazon.com/proton/latest/adminguide/data-protection.html',
     apis: ['Proton:listEnvironmentTemplates','Proton:getEnvironmentTemplate', 'KMS:describeKey', 'KMS:listKeys'],
     settings: {
