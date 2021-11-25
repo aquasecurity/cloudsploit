@@ -71,6 +71,7 @@ module.exports = {
                     helpers.addResult(results, 3,
                         `Unable to get Kendra Indices description: ${helpers.addError(describeIndex)}`,
                         region, resource);
+                    continue;
                 } 
 
                 if (describeIndex.data.ServerSideEncryptionConfiguration &&
