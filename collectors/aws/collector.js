@@ -622,6 +622,12 @@ var calls = {
             paginate: 'NextToken',
         }
     },
+    Kendra: {
+        listIndices: {
+            property: 'IndexConfigurationSummaryItems',
+            paginate: 'NextToken'
+        }
+    },
     KMS: {
         listKeys: {
             property: 'Keys',
@@ -682,6 +688,12 @@ var calls = {
             property: 'Accounts',
             paginate: 'NextToken'
         },
+    },
+    Proton: {
+        listEnvironmentTemplates: {
+            property: 'templates',
+            paginate: 'nextToken'
+        }
     },
     QLDB: {
         listLedgers: {
@@ -1350,6 +1362,14 @@ var postcalls = [
                 rateLimit: 100
             }
         },
+        Kendra: {
+            describeIndex : {
+                reliesOnService: 'kendra',
+                reliesOnCall: 'listIndices',
+                filterKey: 'Id',
+                filterValue: 'Id'
+            }
+        },
         Kinesis: {
             describeStream: {
                 reliesOnService: 'kinesis',
@@ -1433,6 +1453,14 @@ var postcalls = [
                 reliesOnService: 'mwaa',
                 reliesOnCall: 'listEnvironments',
                 override: true
+            }
+        },
+        Proton: {
+            getEnvironmentTemplate: {
+                reliesOnService: 'proton',
+                reliesOnCall: 'listEnvironmentTemplates',
+                filterKey: 'name',
+                filterValue: 'name'
             }
         },
         RDS: {
