@@ -85,6 +85,7 @@ module.exports = {
                     helpers.addResult(results, 2,
                         'ECR Repository does not have encryption enabled',
                         region, resource);
+                        continue;
                 }
 
                 var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
