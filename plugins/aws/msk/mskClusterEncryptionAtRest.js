@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Application Integration',
     description: 'Ensure that Amazon Managed Streaming for Kafka (MSK) clusters are encrypted with desired encryption level.',
     more_info: 'Amazon MSK encrypts all data at rest using AWS-managed KMS keys by default. Use AWS customer-managed Keys (CMKs) instead in order to have a fine-grained control over data-at-rest encryption/decryption process and meet compliance requirements.',
-    recommended_action: 'Encrypt MSK Cluster At-Rest with desired encryption level',
+    recommended_action: 'Modify MSK cluster encryption configuration to use desired encryption key',
     link: 'https://docs.aws.amazon.com/msk/1.0/apireference/clusters-clusterarn-security.html',
     apis: ['Kafka:listClusters', 'KMS:listKeys', 'KMS:describeKey'],
     settings: {
