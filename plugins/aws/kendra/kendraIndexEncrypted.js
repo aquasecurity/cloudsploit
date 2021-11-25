@@ -6,8 +6,7 @@ module.exports = {
     category: 'Kendra',
     domain: 'Databases',
     description: 'Ensure that the Kendra index is encrypted using desired encryption level.',
-    more_info: 'Amazon Kendra encrypts your data with AWS-manager keys by default.' +
-               'Encrypt your files using customer-managed keys in order to gain more granular control over encryption/decryption process.',
+    more_info: 'Amazon Kendra encrypts your data at rest with AWS-manager keys by default. Use customer-managed keys instead in order to gain more granular control over encryption/decryption process.',
     recommended_action: 'Create Kendra Index with customer-manager keys (CMKs).',
     link: 'https://docs.aws.amazon.com/kendra/latest/dg/encryption-at-rest.html',
     apis: ['Kendra:listIndices','Kendra:describeIndex', 'KMS:describeKey', 'KMS:listKeys', 'STS:getCallerIdentity'],
