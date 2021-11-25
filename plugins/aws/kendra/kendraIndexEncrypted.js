@@ -69,7 +69,7 @@ module.exports = {
                     
                 if (!describeIndex || describeIndex.err || !describeIndex.data ) {
                     helpers.addResult(results, 3,
-                        `Unable to get Kendra Indices description: ${helpers.addError(describeIndex)}`,
+                        `Unable to get Kendra index description: ${helpers.addError(describeIndex)}`,
                         region, resource);
                     continue;
                 } 
