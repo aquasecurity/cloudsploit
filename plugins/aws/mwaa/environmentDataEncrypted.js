@@ -76,7 +76,7 @@ module.exports = {
                         region, resource);
                 } 
 
-                if (getEnvironment.data.Environment.KmsKey) {
+                if (getEnvironment.data.Environment && getEnvironment.data.Environment.KmsKey) {
                     var KmsKey = getEnvironment.data.Environment.KmsKey;
                     var keyId = KmsKey.split('/')[1] ? KmsKey.split('/')[1] : KmsKey;
 
