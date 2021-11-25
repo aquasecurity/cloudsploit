@@ -44,7 +44,7 @@ module.exports = {
 
             if (!listClusters.data.length) {
                 helpers.addResult(results, 0,
-                    'No MSK Clusters found', region);
+                    'No MSK clusters found', region);
                 return rcb();
             }
 
