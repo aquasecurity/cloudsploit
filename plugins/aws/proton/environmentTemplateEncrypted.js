@@ -5,7 +5,7 @@ module.exports = {
     title: 'Environment Template Encrypted',
     category: 'Proton',
     domain: 'Databases',
-    description: 'Ensures that AWS Proton environment template is encrypted with desired level',
+    description: 'Ensure that AWS Proton environment template is encrypted with desired level.',
     more_info: 'Amazon Proton encrypts your data with AWS-manager keys by default.' +
                'Encrypt your files using customer-managed keys in order to gain more granular control over encryption/decryption process.',
     recommended_action: 'Create Proton Environment Template with customer-manager keys (CMKs).',
