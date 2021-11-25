@@ -5,7 +5,7 @@ module.exports = {
     title: 'ECR Repository Encrypted',
     category: 'ECR',
     domain: 'Containers',
-    description: 'Ensure that the data in ECR repository is encrypted using desired encryption level.',
+    description: 'Ensure that the images in ECR repository are encrypted using desired encryption level.',
     more_info: 'Amazon ECR encrypts your images stored in the repository with AWS-managed KMS keys by default.' +
                'Encrypt your files using customer-managed keys in order to gain more granular control over encryption/decryption process.',
     recommended_action: 'Create ECR Repository with customer-manager keys (CMKs).',
