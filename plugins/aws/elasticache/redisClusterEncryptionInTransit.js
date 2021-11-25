@@ -5,10 +5,10 @@ module.exports = {
     title: 'ElastiCache Redis Cluster Encryption In-Transit',
     category: 'ElastiCache',
     domain: 'Databases',
-    description: 'Ensure that your AWS ElastiCache Redis clusters are encrypted in order to meet security and compliance requirements.',
-    more_info: 'Working with production data it is highly recommended to implement encryption in order to protect it from unauthorized access and fulfill compliance requirements for data-in-transit encryption within your organization',
-    link: 'https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/WhatIs.html',
-    recommended_action: 'Enable encryption for ElastiCache cluster data-in-transit.',
+    description: 'Ensure that your AWS ElastiCache Redis clusters have encryption in-transit enabled.',
+    more_info: 'Amazon ElastiCache in-transit encryption is an optional feature that allows you to increase the security of your data at its most vulnerable points—when it is in transit from one location to another.',
+    link: 'https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/in-transit-encryption.html',
+    recommended_action: 'Enable in-transit encryption for ElastiCache clusters',
     apis: ['ElastiCache:describeCacheClusters'],
 
     run: function(cache, settings, callback) {
@@ -33,23 +33,25 @@ module.exports = {
                 return rcb();
             }
             
-            for (var c in describeCacheClusters.data) {
-                var cluster = describeCacheClusters.data[c];
+            for (var cluster of describeCacheClusters.data) {
+                if (!cluster.ARN) continue;
+
                 var resource = cluster.ARN;
 
-                if (!cluster.Engine === 'redis'){
-                    helpers.addResult(results, 2, `Encryption is not supported for ${cluster.Engine}`, region);
+                if (cluster.Engine !== 'redis'){
+                    helpers.addResult(results, 0, `Encryption is not supported for ${cluster.Engine}`, region, resource);
                     continue ;
                 }
 
                 if (cluster.TransitEncryptionEnabled) {
                     helpers.addResult(results, 0,
-                        'Encryption is enabled for In-Transit Cluster :' + cluster.CacheClusterId, region, resource);
+                        'Cluster has in-transit encryption enabled', region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'Encryption is not enabled for In-Transit Cluster :' + cluster.CacheClusterId, region, resource);
+                        'Cluster does not have in-transit encryption enabled', region, resource);
                 }
             }
+
             rcb();
         }, function(){
             callback(null, results, source);
