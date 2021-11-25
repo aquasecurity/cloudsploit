@@ -54,6 +54,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    AppRunner: {
+        listServices: {
+            property: 'ServiceSummaryList',
+            paginate: 'NextToken'
+        }
+    },
     Appflow: {
         listFlows: {
             property: 'flows',
@@ -665,6 +671,12 @@ var calls = {
             paginate: 'NextToken'
         },
     },
+    QLDB: {
+        listLedgers: {
+            property: 'Ledgers',
+            paginate: 'NextToken'
+        }
+    },
     RDS: {
         describeDBInstances: {
             property: 'DBInstances',
@@ -892,6 +904,14 @@ var postcalls = [
                 reliesOnCall: 'getRestApis',
                 filterKey: 'restApiId',
                 filterValue: 'id'
+            }
+        },
+        AppRunner: {
+            describeService: {
+                reliesOnService: 'apprunner',
+                reliesOnCall: 'listServices',
+                filterKey: 'ServiceArn',
+                filterValue: 'ServiceArn'
             }
         },
         Appflow: {
@@ -1362,6 +1382,14 @@ var postcalls = [
                 reliesOnCall: 'listFunctions',
                 filterKey: 'Resource',
                 filterValue: 'FunctionArn'
+            }
+        },
+        QLDB: {
+            describeLedger: {
+                reliesOnService: 'qldb',
+                reliesOnCall: 'listLedgers',
+                filterKey: 'Name',
+                filterValue: 'Name'
             }
         },
         ManagedBlockchain: {
