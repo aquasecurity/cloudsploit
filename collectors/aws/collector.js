@@ -237,6 +237,12 @@ var calls = {
             property: 'ConfigurationRecordersStatus'
         }
     },
+    CustomerProfiles: {
+        listDomains: {
+            property: 'Items',
+            paginate: 'NextToken',
+        }
+    },
     DataBrew: {
         listJobs: {
             property: 'Jobs',
@@ -997,6 +1003,14 @@ var postcalls = [
                 reliesOnCall: 'listProjects',
                 filterKey: 'id',
                 filterValue: 'projectId'
+            }
+        },
+        CustomerProfiles: {
+            getDomain: {
+                reliesOnService: 'customerprofiles',
+                reliesOnCall: 'listDomains',
+                filterKey: 'DomainName',
+                filterValue: 'DomainName'
             }
         },
         CodeBuild: {

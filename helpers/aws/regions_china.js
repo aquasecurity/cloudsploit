@@ -80,6 +80,7 @@ module.exports = {
     codebuild: regions,
     mq: regions,
     glacier: regions,
+    customerprofiles: regions,
     qldb: regions,
     apprunner:  regions,
     finspace: regions,
