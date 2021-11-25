@@ -665,6 +665,12 @@ var calls = {
             paginate: 'NextToken'
         },
     },
+    QLDB: {
+        listLedgers: {
+            property: 'Ledgers',
+            paginate: 'NextToken'
+        }
+    },
     RDS: {
         describeDBInstances: {
             property: 'DBInstances',
@@ -1363,6 +1369,14 @@ var postcalls = [
                 reliesOnCall: 'listFunctions',
                 filterKey: 'Resource',
                 filterValue: 'FunctionArn'
+            }
+        },
+        QLDB: {
+            describeLedger: {
+                reliesOnService: 'qldb',
+                reliesOnCall: 'listLedgers',
+                filterKey: 'Name',
+                filterValue: 'Name'
             }
         },
         ManagedBlockchain: {
