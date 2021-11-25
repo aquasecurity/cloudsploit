@@ -62,11 +62,7 @@ module.exports = {
 
                 let resource = repository.repositoryArn;
 
-                if ( repository.encryptionConfiguration &&
-                    repository.encryptionConfiguration.encryptionType &&
-                    repository.encryptionConfiguration.encryptionType.toUpperCase() == 'AES256') {
-                    currentEncryptionLevel = 1;
-                } else if (repository.encryptionConfiguration && repository.encryptionConfiguration.kmsKey) {
+                if (repository.encryptionConfiguration && repository.encryptionConfiguration.kmsKey) {
                     let kmsKey = repository.encryptionConfiguration.kmsKey;
                     var keyId = kmsKey.split('/')[1] ? kmsKey.split('/')[1] : kmsKey;
 
@@ -81,10 +77,7 @@ module.exports = {
 
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
                 } else {
-                    helpers.addResult(results, 2,
-                        'ECR Repository does not have encryption enabled',
-                        region, resource);
-                    continue;
+                    currentEncryptionLevel = 1; //sse
                 }
 
                 var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
@@ -101,6 +94,7 @@ module.exports = {
                         region, resource);
                 }
             }
+
             rcb();
         }, function(){
             callback(null, results, source);

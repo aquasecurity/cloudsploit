@@ -153,17 +153,18 @@ describe('ecrRepositoryEncrypted', function () {
             ecrRepositoryEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No ECR Repository  found');
+                expect(results[0].message).to.include('No ECR repositories found');
                 done();
             });
         });
 
         it('should UNKNOWN if unable to list ECR Repository', function (done) {
-            const cache = createCache(null, null, null, { message: "Unable to list ECR Repository encryption" });
+            const cache = createCache(null, null, null, { message: "Unable to list ECR repositories" });
             ecrRepositoryEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to list ECR repositories');
                 done();
             });
         });
