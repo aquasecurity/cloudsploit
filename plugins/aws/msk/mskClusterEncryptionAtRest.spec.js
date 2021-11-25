@@ -138,10 +138,10 @@ describe('mskClusterEncryptionAtRest', function () {
     describe('run', function () {
         it('should PASS if MSK Cluster At-Rest is encrypted with desired encryption level', function (done) {
             const cache = createCache(listClusters, listKeys, describeKey[0]);
-            mskClusterEncryptionAtRest.run(cache, { mskcluster_atrest_desired_encryption_level: 'awscmk' }, (err, results) => {
+            mskClusterEncryptionAtRest.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('MSK Cluster At-Rest is encrypted with awscmk');
+                expect(results[0].message).to.include('MSK cluster is encrypted with awscmk');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
@@ -150,10 +150,10 @@ describe('mskClusterEncryptionAtRest', function () {
 
         it('should FAIL if MSK Cluster At-Rest is not encrypted with desired encyption level', function (done) {
             const cache = createCache(listClusters, listKeys, describeKey[1]);
-            mskClusterEncryptionAtRest.run(cache, { mskcluster_atrest_desired_encryption_level:'awscmk' }, (err, results) => {
+            mskClusterEncryptionAtRest.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('MSK Cluster At-Rest is encrypted with awskms ');
+                expect(results[0].message).to.include('MSK cluster is encrypted with awskms');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
@@ -165,14 +165,14 @@ describe('mskClusterEncryptionAtRest', function () {
             mskClusterEncryptionAtRest.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No MSK Clusters found');
+                expect(results[0].message).to.include('No MSK clusters found');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
 
         it('should UNKNOWN if unable to list MSK Clusters', function (done) {
-            const cache = createCache(null, null, null, { message: "Unable to list  MSK Clusters encryption" });
+            const cache = createCache(null, null, null, { message: "Unable to list  MSK clusters" });
             mskClusterEncryptionAtRest.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
