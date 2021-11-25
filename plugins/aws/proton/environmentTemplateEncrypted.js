@@ -12,7 +12,7 @@ module.exports = {
     apis: ['Proton:listEnvironmentTemplates','Proton:getEnvironmentTemplate', 'KMS:describeKey', 'KMS:listKeys'],
     settings: {
         proton_environmenttemplate_desired_encryption_level: {
-            name: 'Environment Template Encrypted',
+            name: 'Environment Template Desired Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
