@@ -12,13 +12,12 @@ module.exports = {
     apis: ['MQ:listBrokers', 'MQ:describeBroker', 'KMS:describeKey', 'KMS:listKeys'],
     settings: {
         mq_broker_desired_encryption_level: {
-            name: 'MQ Broker Encrypted',
+            name: 'MQ Broker Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
         }
     },
-
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -63,19 +62,19 @@ module.exports = {
                
                 let resource = broker.BrokerArn;
 
-                if (broker.EngineType.toUpperCase() == 'RABBITMQ') {
-                    helpers.addResult(results, 0, 'Amazon uses default Encryption keys that are not available in user account', region);
-                    return rcb();
+                if (broker.EngineType && broker.EngineType.toUpperCase() == 'RABBITMQ') {
+                    helpers.addResult(results, 0, `AWS itself controls encryption for ${broker.EngineType.toUpperCase()} broker type`, region);
+                    continue;
                 }
 
                 var describeBroker = helpers.addSource(cache, source,
                     ['mq', 'describeBroker', region, broker.BrokerId]);
-
                 
                 if (!describeBroker || describeBroker.err || !describeBroker.data) {
                     helpers.addResult(results, 3,
-                        `Unable to get brokers description: ${helpers.addError(describeBroker)}`,
+                        `Unable to describe MQ broker: ${helpers.addError(describeBroker)}`,
                         region, resource);
+                    continue;
                 } 
                
                 if (describeBroker.data.EncryptionOptions &&
@@ -96,8 +95,7 @@ module.exports = {
                 
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
                 } else {
-
-                    currentEncryptionLevel=2; //awskms
+                    currentEncryptionLevel = 2; //awskms
                 }
             
                 var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
@@ -114,6 +112,7 @@ module.exports = {
                         region, resource);
                 }
             }
+
             rcb();  
         }, function(){
             callback(null, results, source);
