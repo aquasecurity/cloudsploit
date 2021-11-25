@@ -81,6 +81,10 @@ module.exports = {
     mq: regions,
     glacier: regions,
     elasticache: regions,
+    kendra: regions,
+    proton: regions,
+    customerprofiles: regions,
+    qldb: regions,
     finspace: regions,
     codepipeline: regions,
     codeartifact: regions,
@@ -89,5 +93,7 @@ module.exports = {
     translate: regions,
     databrew: regions,
     managedblockchain: regions,
+    connect: regions,
+    apprunner: regions,
     healthlake: regions
 };
