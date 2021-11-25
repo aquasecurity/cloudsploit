@@ -54,6 +54,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    AppRunner: {
+        listServices: {
+            property: 'ServiceSummaryList',
+            paginate: 'NextToken'
+        }
+    },
     Appflow: {
         listFlows: {
             property: 'flows',
@@ -215,6 +221,12 @@ var calls = {
             params: {
                 MaxResults: 100
             }
+        }
+    },
+    Connect: {
+        listInstances: {
+            property: 'InstanceSummaryList',
+            paginate: 'NextToken'
         }
     },
     ConfigService: {
@@ -665,6 +677,12 @@ var calls = {
             paginate: 'NextToken'
         },
     },
+    QLDB: {
+        listLedgers: {
+            property: 'Ledgers',
+            paginate: 'NextToken'
+        }
+    },
     RDS: {
         describeDBInstances: {
             property: 'DBInstances',
@@ -894,6 +912,14 @@ var postcalls = [
                 filterValue: 'id'
             }
         },
+        AppRunner: {
+            describeService: {
+                reliesOnService: 'apprunner',
+                reliesOnCall: 'listServices',
+                filterKey: 'ServiceArn',
+                filterValue: 'ServiceArn'
+            }
+        },
         Appflow: {
             describeFlow: {
                 reliesOnService: 'appflow',
@@ -1000,6 +1026,13 @@ var postcalls = [
                 reliesOnCall: 'listPipelines',
                 filterKey: 'name',
                 filterValue: 'name'
+            }
+        },
+        Connect: {
+            listInstanceCallRecordingStorageConfigs: {
+                reliesOnService: 'connect',
+                reliesOnCall: 'listInstances',
+                override: true
             }
         },
         DynamoDB: {
@@ -1363,6 +1396,14 @@ var postcalls = [
                 reliesOnCall: 'listFunctions',
                 filterKey: 'Resource',
                 filterValue: 'FunctionArn'
+            }
+        },
+        QLDB: {
+            describeLedger: {
+                reliesOnService: 'qldb',
+                reliesOnCall: 'listLedgers',
+                filterKey: 'Name',
+                filterValue: 'Name'
             }
         },
         ManagedBlockchain: {
