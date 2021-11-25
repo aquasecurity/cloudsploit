@@ -73,7 +73,6 @@ module.exports = {
                 } 
 
                 if (getEnvironmentTemplate.data.environmentTemplate.encryptionKey) {
-
                     var encryptionKey = getEnvironmentTemplate.data.environmentTemplate.encryptionKey;
                     var keyId = encryptionKey.split('/')[1] ? encryptionKey.split('/')[1] : encryptionKey;
 
