@@ -5,7 +5,7 @@ module.exports = {
     title: 'MSK Cluster At-Rest Encrypted',
     category: 'MSK',
     domain: 'Application Integration',
-    description: 'Ensure that Amazon Managed Streaming for Kafka (MSK) clusters are using AWS KMS Customer Master Keys (CMKs) instead of AWS managed-keys',
+    description: 'Ensure that Amazon Managed Streaming for Kafka (MSK) clusters are encrypted with desired encryption level.',
     more_info: 'Use your own AWS KMS Customer Master Keys (CMKs) to protect your Managed Streaming for Kafka (MSK) clusters in order to have a fine-grained control over data-at-rest encryption/decryption process and meet compliance requirements.',
     recommended_action: 'Encrypt MSK Cluster At-Rest with desired encryption level',
     link: 'https://docs.aws.amazon.com/msk/1.0/apireference/clusters-clusterarn-security.html',
