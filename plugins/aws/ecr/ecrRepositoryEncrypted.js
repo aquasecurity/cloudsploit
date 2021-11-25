@@ -14,8 +14,8 @@ module.exports = {
     settings: {
         ecr_repository_desired_encryption_level: {
             name: 'ECR Repository Encryption',
-            description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
-            regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
+            description: 'In order (lowest to highest) sse=AES-256; awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
+            regex: '^(sse|awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
         }
     },
