@@ -1045,7 +1045,12 @@ var postcalls = [
                 reliesOnService: 'connect',
                 reliesOnCall: 'listInstances',
                 override: true
-            }
+            },
+            listInstanceChatTranscriptsStorageConfigs: {
+                reliesOnService: 'connect',
+                reliesOnCall: 'listInstances',
+                override: true
+            }   
         },
         DynamoDB: {
             describeTable: {
