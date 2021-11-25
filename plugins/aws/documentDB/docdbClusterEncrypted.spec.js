@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var clusterEncrypted = require('./clusterEncrypted');
+var docdbClusterEncrypted = require('./docdbClusterEncrypted');
 
 
 const describeDBClusters = [
@@ -26,9 +26,9 @@ const describeDBClusters = [
       VpcSecurityGroups: [Array],
       HostedZoneId: 'ZNKXH85TT8WVW',
       StorageEncrypted: true,
-      KmsKeyId: 'arn:aws:kms:us-east-1:560213429563:key/2cff2321-73c6-4bac-95eb-bc9633d3e8a9',
+      KmsKeyId: 'arn:aws:kms:us-east-1:000011112222:key/2cff2321-73c6-4bac-95eb-bc9633d3e8a9',
       DbClusterResourceId: 'cluster-TWDPR3PSXGUPMCESNBK6W55SH4',
-      DBClusterArn: 'arn:aws:rds:us-east-1:560213429563:cluster:docdb-2021-11-10-10-16-10',
+      DBClusterArn: 'arn:aws:rds:us-east-1:000011112222:cluster:docdb-2021-11-10-10-16-10',
       AssociatedRoles: [],
       ClusterCreateTime: '2021-11-10T10:16:49.359Z',
       EnabledCloudwatchLogsExports: [],
@@ -114,11 +114,11 @@ const createCache = (clusters, keys, describeKey, clustersErr, keysErr, describe
 
 
 
-describe('clusterEncrypted', function () {
+describe('docdbClusterEncrypted', function () {
     describe('run', function () {
         it('should PASS if DocumentDb Cluster is encrypted with desired encryption level', function (done) {
             const cache = createCache(describeDBClusters, listKeys, describeKey[0]);
-            clusterEncrypted.run(cache, { documentdb_cluster_desired_encryption_level: 'awscmk' }, (err, results) => {
+            docdbClusterEncrypted.run(cache, { documentdb_cluster_desired_encryption_level: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('DocumentDB cluster is encrypted with awscmk');
@@ -130,7 +130,7 @@ describe('clusterEncrypted', function () {
 
         it('should FAIL if DocumentDB Clusters is not encrypted with desired encyption level', function (done) {
             const cache = createCache(describeDBClusters, listKeys, describeKey[1]);
-            clusterEncrypted.run(cache, { documentdb_cluster_desired_encryption_level:'awscmk' }, (err, results) => {
+            docdbClusterEncrypted.run(cache, { documentdb_cluster_desired_encryption_level:'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('DocumentDB cluster is encrypted with awskms ');
@@ -142,10 +142,10 @@ describe('clusterEncrypted', function () {
 
         it('should PASS if no DocumentDB Clusters found', function (done) {
             const cache = createCache([]);
-            clusterEncrypted.run(cache, {}, (err, results) => {
+            docdbClusterEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No DB Clusters found');
+                expect(results[0].message).to.include('No DocumentDB clusters found');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
@@ -153,7 +153,7 @@ describe('clusterEncrypted', function () {
 
         it('should UNKNOWN if unable to list DocumentDB Clusters', function (done) {
             const cache = createCache(null, null, null, { message: "Unable to list DocumentDB Clusters encryption" });
-            clusterEncrypted.run(cache, {}, (err, results) => {
+            docdbClusterEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
@@ -163,7 +163,7 @@ describe('clusterEncrypted', function () {
 
         it('should UNKNOWN if unable to list KMS keys', function (done) {
             const cache = createCache(null, null, null, { message: "Unable to list KMS keys" });
-            clusterEncrypted.run(cache, {}, (err, results) => {
+            docdbClusterEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');

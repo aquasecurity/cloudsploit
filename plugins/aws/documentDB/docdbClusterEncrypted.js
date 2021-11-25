@@ -5,10 +5,11 @@ module.exports = {
     title: 'DocumentDB Cluster Encrypted',
     category: 'DocumentDB',
     domain: 'Databases',
-    description: 'Ensure that your AWS DocumentDB clusters data is encrypted with KMS Customer Master Keys (CMKs) instead of AWS managed-keys.',
-    more_info: 'Use your own AWS KMS Customer Master Keys (CMKs) to protect your DocumentDB data (including indexes, logs, replicas and snapshots) from unauthorized users, you have full control over who can use the encryption keys to access your data.',
-    recommended_action: 'Encrypt DocumentDB Cluster with desired encryption level',
-    link: 'https://docs.aws.amazon.com/documentdb/latest/developerguide/what-is.html#what-is-db-clusters',
+    description: 'Ensure that data at-rest in encrypted in AWS DocumentDB clusters using desired encryption level.',
+    more_info: 'Amazon DocumentDB integrates with AWS KMS and uses a method known as envelope encryption to protect your data. ' +
+        'This gives you an extra layer of data security and help meet security compliance and regulations within your organization.',
+    recommended_action: 'Modify DocumentDB cluster at-rest encryption configuration to use desired encryption key',
+    link: 'https://docs.aws.amazon.com/documentdb/latest/developerguide/encryption-at-rest.html',
     apis: ['DocDB:describeDBClusters', 'KMS:listKeys', 'KMS:describeKey'],
     settings: {
         documentdb_cluster_desired_encryption_level: {
@@ -39,13 +40,13 @@ module.exports = {
 
             if (describeDBClusters.err || !describeDBClusters.data) {
                 helpers.addResult(results, 3,
-                    `Unable to list DocumentDB Clusters : ${helpers.addError(describeDBClusters)}`, region);
+                    `Unable to list DocumentDB clusters: ${helpers.addError(describeDBClusters)}`, region);
                 return rcb();
             }
 
             if (!describeDBClusters.data.length) {
                 helpers.addResult(results, 0,
-                    'No DB Clusters found', region);
+                    'No DocumentDB clusters found', region);
                 return rcb();
             }
 
@@ -72,7 +73,7 @@ module.exports = {
                     if (!describeKey || describeKey.err || !describeKey.data || !describeKey.data.KeyMetadata) {
                         helpers.addResult(results, 3,
                             `Unable to query KMS key: ${helpers.addError(describeKey)}`,
-                            region, kmsKeyId);
+                            region, cluster.KmsKeyId);
                         continue;
                     }
 
@@ -92,10 +93,11 @@ module.exports = {
                     }
                 } else {
                     helpers.addResult(results, 2,
-                        'DynamoDB clusters does not have encryption enabled for assets',
+                        'DynamoDB cluster does not have at-rest encryption enabled',
                         region, resource);
                 }
             }
+
             rcb();
         }, function(){
             callback(null, results, source);
