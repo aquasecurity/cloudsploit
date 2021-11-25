@@ -76,7 +76,6 @@ module.exports = {
 
                 if (describeIndex.data.ServerSideEncryptionConfiguration &&
                     describeIndex.data.ServerSideEncryptionConfiguration.KmsKeyId) {
-
                     var kmsKeyId = describeIndex.data.ServerSideEncryptionConfiguration.KmsKeyId;
                     var keyId = kmsKeyId.split('/')[1] ? kmsKeyId.split('/')[1] : kmsKeyId;
 
