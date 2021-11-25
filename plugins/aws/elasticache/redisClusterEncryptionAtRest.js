@@ -5,14 +5,15 @@ module.exports = {
     title: 'ElastiCache Redis Cluster Encryption At-Rest',
     category: 'ElastiCache',
     domain: 'Databases',
-    description: 'Ensure that your AWS ElastiCache Redis clusters are encrypted in order to meet security and compliance requirements.',
-    more_info: 'Working with production data it is highly recommended to implement encryption in order to protect it from unauthorized access and fulfill compliance requirements for data-at-rest encryption within your organization',
-    link: 'https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/WhatIs.html',
-    recommended_action: 'Enable encryption for ElastiCache cluster data-at-rest.',
+    description: 'Ensure that your Amazon ElastiCache Redis clusters are encrypted to increase data security.',
+    more_info: 'Amazon ElastiCache provides an optional feature to encrypt your data saved to persistent media. ' +
+        'Enable this feature and use customer-managed keys In order to protect it from unauthorized access and fulfill compliance requirements within your organization.',
+    link: 'https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/at-rest-encryption.html',
+    recommended_action: 'Enable encryption for ElastiCache cluster data-at-rest',
     apis: ['ElastiCache:describeCacheClusters', 'ElastiCache:describeReplicationGroups', 'KMS:listKeys', 'KMS:describeKey'],
     settings: {
-        ec_atrest_desired_encryption_level: {
-            name: 'ElastiCache Redis Cluster At-Rest Target Encryption Level',
+        ec_cluster_target_encryption_level: {
+            name: 'ElastiCache Cluster Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk',
@@ -25,7 +26,7 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var config = {
-            desiredEncryptionLevelString: settings.ec_atrest_desired_encryption_level || this.settings.ec_atrest_desired_encryption_level.default
+            desiredEncryptionLevelString: settings.ec_cluster_target_encryption_level || this.settings.ec_cluster_target_encryption_level.default
         };
 
         var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(config.desiredEncryptionLevelString);
@@ -39,13 +40,13 @@ module.exports = {
 
             if (describeCacheClusters.err || !describeCacheClusters.data) {
                 helpers.addResult(results, 3,
-                    `Unable to list ElastiCache Redis Clusters : ${helpers.addError(describeCacheClusters)}`, region);
+                    `Unable to list ElastiCache clusters : ${helpers.addError(describeCacheClusters)}`, region);
                 return rcb();
             }
 
             if (!describeCacheClusters.data.length) {
                 helpers.addResult(results, 0,
-                    'No ElastiCache Redis Cluster found', region);
+                    'No ElastiCache clusters found', region);
                 return rcb();
             }
 
@@ -63,20 +64,19 @@ module.exports = {
 
                 let resource = cluster.ARN;
 
-                if (!cluster.Engine === 'redis'){
-                    helpers.addResult(results, 2, `Encryption is not supported for ${cluster.Engine}`, region);
-                    continue ;
+                if (cluster.Engine !== 'redis') {
+                    helpers.addResult(results, 0, `Encryption is not supported for ${cluster.Engine}`, region, resource);
+                    continue;
                 }
 
                 if (cluster.AtRestEncryptionEnabled) {
-
                     let describeReplicationGroups = helpers.addSource(cache, source,
                         ['elasticache', 'describeReplicationGroups', region, cluster.ReplicationGroupId]);
 
                     if (!describeReplicationGroups || describeReplicationGroups.err || !describeReplicationGroups.data ||
                         !describeReplicationGroups.data.ReplicationGroups || !describeReplicationGroups.data.ReplicationGroups.length) {
                         helpers.addResult(results, 3,
-                            `Unable to describe Replication Groups : ${helpers.addError(describeReplicationGroups)}`, region, resource);
+                            `Unable to describe replication groups for cluster: ${helpers.addError(describeReplicationGroups)}`, region, resource);
                         continue;
                     }
                 
@@ -103,19 +103,20 @@ module.exports = {
                     if (currentEncryptionLevel >= desiredEncryptionLevel) {
                         helpers.addResult(results, 0,
                             `ElastiCache Redis Cluster is encrypted with ${currentEncryptionLevelString} \
-                        which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
+                            which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
                             region, resource);
                     } else {
                         helpers.addResult(results, 2,
                             `ElastiCache Redis Cluster is encrypted with ${currentEncryptionLevelString} \
-                        which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
+                            which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                             region, resource);
                     }
                 } else {
                     helpers.addResult(results, 2,
-                        'Cluster does not have encryption Enabled at :' + cluster.CacheClusterId, region, resource);
+                        'Cluster does not have at-rest encryption enabled', region, resource);
                 }
             }
+
             rcb();
         }, function(){
             callback(null, results, source);
