@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var neptuneDBClusterEncrypted = require('./neptuneDBClusterEncrypted');
+var neptuneDBInstanceEncrypted = require('./neptuneDBInstanceEncrypted');
 
 const describeDBClusters = [
     {
@@ -127,46 +127,46 @@ const createCache = (clusters, keys, describeKey, clustersErr, keysErr, describe
 
 
 
-describe('neptuneDBClusterEncrypted', function () {
+describe('neptuneDBInstanceEncrypted', function () {
     describe('run', function () {
-        it('should PASS if Neptune database cluster is encrypted with desired encryption level', function (done) {
+        it('should PASS if Neptune database instance is encrypted with desired encryption level', function (done) {
             const cache = createCache(describeDBClusters, listKeys, describeKey[0]);
-            neptuneDBClusterEncrypted.run(cache, { neptunedb_cluster_desired_encryption_level: 'awscmk' }, (err, results) => {
+            neptuneDBInstanceEncrypted.run(cache, { neptunedb_cluster_desired_encryption_level: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Neptune database cluster is encrypted with awscmk');
+                expect(results[0].message).to.include('Neptune database instance is encrypted with awscmk');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
 
 
-        it('should FAIL if Neptune database cluster is not encrypted with desired encyption level', function (done) {
+        it('should FAIL if Neptune database instance is not encrypted with desired encyption level', function (done) {
             const cache = createCache(describeDBClusters, listKeys, describeKey[1]);
-            neptuneDBClusterEncrypted.run(cache, { neptunedb_cluster_desired_encryption_level:'awscmk' }, (err, results) => {
+            neptuneDBInstanceEncrypted.run(cache, { neptunedb_cluster_desired_encryption_level:'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Neptune Database cluster is encrypted with awskms');
+                expect(results[0].message).to.include('Neptune database instance is encrypted with awskms');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
 
 
-        it('should PASS if no Neptune database clusters found', function (done) {
+        it('should PASS if no Neptune database instances found', function (done) {
             const cache = createCache([]);
-            neptuneDBClusterEncrypted.run(cache, {}, (err, results) => {
+            neptuneDBInstanceEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No DB Clusters found');
+                expect(results[0].message).to.include('No Neptune database instances found');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
 
-        it('should UNKNOWN if unable to list Neptune Database Clusters', function (done) {
-            const cache = createCache(null, null, null, { message: "Unable to list Neptune Database Clusters encryption" });
-            neptuneDBClusterEncrypted.run(cache, {}, (err, results) => {
+        it('should UNKNOWN if unable to list Neptune Database instances', function (done) {
+            const cache = createCache(null, null, null, { message: "Unable to list Neptune database instances" });
+            neptuneDBInstanceEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
@@ -176,7 +176,7 @@ describe('neptuneDBClusterEncrypted', function () {
 
         it('should UNKNOWN if unable to list KMS keys', function (done) {
             const cache = createCache(null, null, null, { message: "Unable to list KMS keys" });
-            neptuneDBClusterEncrypted.run(cache, {}, (err, results) => {
+            neptuneDBInstanceEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');

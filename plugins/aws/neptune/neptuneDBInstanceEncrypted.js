@@ -2,17 +2,19 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Neptune Database Cluster Encrypted',
+    title: 'Neptune Database Instance Encrypted',
     category: 'Neptune',
     domain: 'Databases',
-    description: 'Ensure that your AWS Neptune Database clusters data is encrypted with KMS Customer Master Keys (CMKs) instead of AWS managed-keys.',
-    more_info: 'Use your own AWS KMS Customer Master Keys (CMKs) to protect your Neptune Database data (including indexes, logs, replicas and snapshots) from unauthorized users, you have full control over who can use the encryption keys to access your data.',
-    recommended_action: 'Encrypt Neptune DBCluster with desired encryption level',
+    description: 'Ensure that your AWS Neptune database instances are encrypted with KMS Customer Master Keys (CMKs) instead of AWS managed-keys.',
+    more_info: 'Neptune encrypted instances provide an additional layer of data protection by helping to secure your data from unauthorized access to the underlying storage. ' +
+        'You can use Neptune encryption to increase data protection of your applications that are deployed in the cloud. ' +
+        'You can also use it to fulfill compliance requirements for data-at-rest encryption.',
+    recommended_action: 'Encrypt Neptune database with desired encryption level',
     link: 'https://docs.aws.amazon.com/neptune/latest/userguide/encrypt.html',
     apis: ['Neptune:describeDBClusters', 'KMS:listKeys', 'KMS:describeKey'],
     settings: {
-        neptunedb_cluster_desired_encryption_level: {
-            name: 'Neptune Database Cluster Desired Encryption Level',
+        neptune_db_desired_encryption_level: {
+            name: 'Neptune Database Desired Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk',
@@ -25,7 +27,7 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var config = {
-            desiredEncryptionLevelString: settings.neptunedb_cluster_desired_encryption_level || this.settings.neptunedb_cluster_desired_encryption_level.default
+            desiredEncryptionLevelString: settings.neptune_db_desired_encryption_level || this.settings.neptune_db_desired_encryption_level.default
         };
 
         var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(config.desiredEncryptionLevelString);
@@ -39,13 +41,13 @@ module.exports = {
 
             if (describeDBClusters.err || !describeDBClusters.data) {
                 helpers.addResult(results, 3,
-                    `Unable to list Neptune Database Clusters : ${helpers.addError(describeDBClusters)}`, region);
+                    `Unable to list Neptune database instances: ${helpers.addError(describeDBClusters)}`, region);
                 return rcb();
             }
 
             if (!describeDBClusters.data.length) {
                 helpers.addResult(results, 0,
-                    'No DB Clusters found', region);
+                    'No Neptune database instances found', region);
                 return rcb();
             }
 
@@ -81,18 +83,18 @@ module.exports = {
 
                     if (currentEncryptionLevel >= desiredEncryptionLevel) {
                         helpers.addResult(results, 0,
-                            `Neptune database cluster is encrypted with ${currentEncryptionLevelString} \
+                            `Neptune database instance is encrypted with ${currentEncryptionLevelString} \
                             which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
                             region, resource);
                     } else {
                         helpers.addResult(results, 2,
-                            `Neptune Database cluster is encrypted with ${currentEncryptionLevelString} \
+                            `Neptune database instance is encrypted with ${currentEncryptionLevelString} \
                             which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                             region, resource);
                     }
                 } else {
                     helpers.addResult(results, 2,
-                        'Neptune database clusters does not have encryption enabled for assets',
+                        'Neptune database instance does not have encryption enabled',
                         region, resource);
                 }
             }
