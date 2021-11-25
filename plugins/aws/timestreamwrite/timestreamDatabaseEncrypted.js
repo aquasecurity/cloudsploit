@@ -5,16 +5,17 @@ module.exports = {
     title: ' Timestream Database Encrypted',
     category: 'Timestream',
     domain: 'Databases',
-    description: 'Ensures that AWS Timestream database is encrypted',
-    more_info: 'Amazon Timestream encrypts your output data with AWS-manager keys by default. ' +
-               'Encrypt your files using customer-managed keys in order to gain more granular control over encryption/decryption process.',
-    recommended_action: 'Create Trimestream Databases with customer-manager keys (CMKs).',
+    description: 'Ensure that AWS Timestream databases are encrypted with KMS Customer Master Keys (CMKs) instead of AWS managed-keys.',
+    more_info: 'Timestream encryption at rest provides enhanced security by encrypting all your data at rest using encryption keys. ' +
+        'This functionality helps reduce the operational burden and complexity involved in protecting sensitive data. ' +
+        'With encryption at rest using customer-managed keys, you can build security-sensitive applications that meet strict encryption compliance and regulatory requirements. ',
+    recommended_action: 'Modify Trimestream database encryption configuration to use desired encryption key',
     link: 'https://docs.aws.amazon.com/timestream/latest/developerguide/EncryptionAtRest.html',
     apis: ['TimestreamWrite:listDatabases', 'KMS:describeKey', 'KMS:listKeys'],
     settings: {
         timestream_databases_desired_encryption_level: {
-            name: 'Timestream Databases Encryption',
-            description: 'If set, Timestream Databases should have a customer managed key(CMK) instead of default KMS ',
+            name: 'Timestream Database Target Encryption Level',
+            description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
         }
@@ -94,6 +95,7 @@ module.exports = {
                         region, resource);
                 }
             }
+
             rcb();
         }, function(){
             callback(null, results, source);
