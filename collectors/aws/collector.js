@@ -223,6 +223,12 @@ var calls = {
             }
         }
     },
+    Connect: {
+        listInstances: {
+            property: 'InstanceSummaryList',
+            paginate: 'NextToken'
+        }
+    },
     ConfigService: {
         describeConfigurationRecorders: {
             property: 'ConfigurationRecorders'
@@ -1006,6 +1012,13 @@ var postcalls = [
                 reliesOnCall: 'listPipelines',
                 filterKey: 'name',
                 filterValue: 'name'
+            }
+        },
+        Connect: {
+            listInstanceCallRecordingStorageConfigs: {
+                reliesOnService: 'connect',
+                reliesOnCall: 'listInstances',
+                override: true
             }
         },
         DynamoDB: {
