@@ -24,7 +24,7 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var config = {
-            desiredEncryptionLevelString: settings.mskcluster_atrest_desired_encryption_level || this.settings.mskcluster_atrest_desired_encryption_level.default
+            desiredEncryptionLevelString: settings.msk_cluster_desired_encryption_level || this.settings.msk_cluster_desired_encryption_level.default
         };
 
         var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(config.desiredEncryptionLevelString);
