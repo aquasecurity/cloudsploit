@@ -62,11 +62,13 @@ module.exports = {
                 return rcb();
             }
 
-            for (let domains of listDomains.data) {
-                let resource = `arn:${awsOrGov}:profile:${region}:${accountId}:domains/${domains.DomainName}`;
+            for (let domain of listDomains.data) {
+                if (!domain.DomainName) continue;
+
+                let resource = `arn:${awsOrGov}:profile:${region}:${accountId}:domain/${domain.DomainName}`;
 
                 var getDomain = helpers.addSource(cache, source,
-                    ['customerprofiles', 'getDomain', region, domains.DomainName]);
+                    ['customerprofiles', 'getDomain', region, domain.DomainName]);
 
                 if (!getDomain || getDomain.err || !getDomain.data) {
                     helpers.addResult(results, 3,
@@ -75,7 +77,6 @@ module.exports = {
                 } 
 
                 if (getDomain.data.DefaultEncryptionKey) {
-
                     let DefaultEncryptionKey = getDomain.data.DefaultEncryptionKey;
                     var keyId = DefaultEncryptionKey.split('/')[1] ? DefaultEncryptionKey.split('/')[1] : DefaultEncryptionKey;
 
@@ -91,9 +92,9 @@ module.exports = {
 
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
                 } else {
-                    helpers.addResult(results, 2,
-                        `No Default Encryption key found invalid : ${helpers.addError(describeKey)}`, region);
-                    return rcb();
+                    helpers.addResult(results, 3,
+                        'Unable to find Customer Profile domain encryption key', region, resource);
+                    continue;
                 }
 
                 var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
@@ -111,7 +112,7 @@ module.exports = {
                 }
             }
 
-            rcb();  
+            rcb();
         }, function(){
             callback(null, results, source);
         });
