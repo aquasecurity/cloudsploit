@@ -81,6 +81,7 @@ module.exports = {
     mq: regions,
     glacier: regions,
     kendra: regions,
+    proton: regions,
     customerprofiles: regions,
     qldb: regions,
     finspace: regions,
