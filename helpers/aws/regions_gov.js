@@ -89,5 +89,6 @@ module.exports = {
     translate: regions,
     databrew: regions,
     managedblockchain: regions,
+    apprunner: regions,
     healthlake: regions
 };
