@@ -21,6 +21,16 @@ const listBrokers = [
         "DeploymentMode": "SINGLE_INSTANCE",
         "EngineType": "ActiveMQ",
         "HostInstanceType": "mq.t3.micro"
+    },
+    {
+        "BrokerArn": "arn:aws:mq:us-east-1:101363889637:broker:mybr1:b-043833c7-190c-4ebf-bbe7-8d930f9f9124",
+        "BrokerId": "b-043833c7-190c-4ebf-bbe7-8d930f9f9124",
+        "BrokerName": "mybr1",
+        "BrokerState": "CREATION_IN_PROGRESS",
+        "Created": "2021-11-25T12:40:59.605000+00:00",
+        "DeploymentMode": "SINGLE_INSTANCE",
+        "EngineType": "ActiveMQ",
+        "HostInstanceType": "mq.t3.micro"
     }
 ];
 
@@ -82,6 +92,30 @@ const describeBroker = [
         "EncryptionOptions": {
             "KmsKeyId": "arn:aws:kms:us-east-1:000011112222:key/c4750c1a-72e5-4d16-bc72-0e7b559e0250",
             "UseAwsOwnedKey": false
+        },
+        "EngineType": "ActiveMQ",
+        "EngineVersion": "5.16.3",
+        "HostInstanceType": "mq.t3.micro",
+    },
+    {
+        "AuthenticationStrategy": "simple",
+        "AutoMinorVersionUpgrade": true,
+        "BrokerArn": "arn:aws:mq:us-east-1:101363889637:broker:mybr1:b-043833c7-190c-4ebf-bbe7-8d930f9f9124",
+        "BrokerId": "b-043833c7-190c-4ebf-bbe7-8d930f9f9124",
+        "BrokerInstances": [],
+        "BrokerName": "mybr1",
+        "BrokerState": "CREATION_IN_PROGRESS",
+        "Configurations": {
+            "History": [],
+            "Pending": {
+                "Id": "c-babd5721-d60a-41b3-815a-d30b6fbfc0a3",
+                "Revision": 1
+            }
+        },
+        "Created": "2021-11-25T12:40:59.605000+00:00",
+        "DeploymentMode": "SINGLE_INSTANCE",
+        "EncryptionOptions": {
+            "UseAwsOwnedKey": true
         },
         "EngineType": "ActiveMQ",
         "EngineVersion": "5.16.3",
@@ -178,7 +212,7 @@ describe('mqBrokerEncrypted', function () {
     describe('run', function () {
         it('should PASS if MQ Broker data at-rest is encrypted with desired encryption level', function (done) {
             const cache = createCache(listBrokers[0], listKeys, [describeBroker[1]], describeKey[0]);
-            mqBrokerEncrypted.run(cache, { mq_broker_desired_encryption_level : 'awscmk' }, (err, results) => {
+            mqBrokerEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -188,7 +222,17 @@ describe('mqBrokerEncrypted', function () {
 
         it('should FAIL if MQ Broker data at-rest is not encrypted with desired encryption level', function (done) {
             const cache = createCache([listBrokers[1]],listKeys, [describeBroker[0]], describeKey[1]);
-            mqBrokerEncrypted.run(cache, { mq_broker_desired_encryption_level : 'awscmk' }, (err, results) => {
+            mqBrokerEncrypted.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
+                done();
+            });
+        });
+
+        it('should FAIL if MQ Broker data at-rest is encrypted with AWS owned key', function (done) {
+            const cache = createCache([listBrokers[2]],listKeys, [describeBroker[2]], describeKey[1]);
+            mqBrokerEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
