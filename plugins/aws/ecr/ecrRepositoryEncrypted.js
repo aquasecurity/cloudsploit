@@ -44,7 +44,7 @@ module.exports = {
             }
             
             if (!describeRepositories.data.length) {
-                helpers.addResult(results, 0, 'No ECR Repository  found', region);
+                helpers.addResult(results, 0, 'No ECR repositories found', region);
                 return rcb();
             }
 
