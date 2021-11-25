@@ -65,7 +65,7 @@ module.exports = {
                 if (cluster.EncryptionInfo &&
                     cluster.EncryptionInfo.EncryptionAtRest &&
                     cluster.EncryptionInfo.EncryptionAtRest.DataVolumeKMSKeyId) {
-                    let dataVolumeKMSKeyId = cluster.EncryptionInfo.EncryptionAtRest.dataVolumeKMSKeyId;  
+                    let dataVolumeKMSKeyId = cluster.EncryptionInfo.EncryptionAtRest.DataVolumeKMSKeyId;  
                     var keyId = dataVolumeKMSKeyId.split('/')[1] ? dataVolumeKMSKeyId.split('/')[1] : dataVolumeKMSKeyId;
 
                     var describeKey = helpers.addSource(cache, source,
