@@ -75,7 +75,6 @@ module.exports = {
                 } 
 
                 if (getDomain.data.DefaultEncryptionKey) {
-
                     let DefaultEncryptionKey = getDomain.data.DefaultEncryptionKey;
                     var keyId = DefaultEncryptionKey.split('/')[1] ? DefaultEncryptionKey.split('/')[1] : DefaultEncryptionKey;
 
