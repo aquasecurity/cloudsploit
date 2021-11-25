@@ -6,16 +6,16 @@ module.exports = {
     category: 'MWAA',
     domain: 'Compute',
     description: 'Ensures that AWS MWAA environment data is encrypted',
-    more_info: 'Amazon MWAA encrypts your data with AWS-manager keys by default.' +
-               'Encrypt your files using customer-managed keys in order to gain more granular control over encryption/decryption process.',
-    recommended_action: 'Create MWAA Environment with customer-manager keys (CMKs).',
+    more_info: 'Amazon MWAA encrypts data saved to persistent media with AWS-manager keys by default. ' +
+        'Use customer-managed keys instead in order to gain more granular control over encryption/decryption process.',
+    recommended_action: 'Create MWAA environments with customer-manager keys (CMKs)',
     link: 'https://docs.aws.amazon.com/mwaa/latest/userguide/encryption-at-rest.html',
     apis: ['MWAA:listEnvironments','MWAA:getEnvironment', 'KMS:describeKey', 'KMS:listKeys', 'STS:getCallerIdentity'],
     settings: {
         mwaa_environmentdata_desired_encryption_level: {
             name: 'Environment Data Encryption',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
-            regex: '^(sse|awskms|awscmk|externalcmk|cloudhsm)$',
+            regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
         }
     },
@@ -72,8 +72,9 @@ module.exports = {
 
                 if (!getEnvironment || getEnvironment.err || !getEnvironment.data || !getEnvironment.data.Environment) {
                     helpers.addResult(results, 3,
-                        `Unable to get MWAA Environment description: ${helpers.addError(getEnvironment)}`,
+                        `Unable to get MWAA environment: ${helpers.addError(getEnvironment)}`,
                         region, resource);
+                    continue;
                 } 
 
                 if (getEnvironment.data.Environment && getEnvironment.data.Environment.KmsKey) {
@@ -92,8 +93,7 @@ module.exports = {
 
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
                 } else {
-
-                    currentEncryptionLevel=2; //awskms
+                    currentEncryptionLevel = 2; //awskms
                 }
 
                 var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];

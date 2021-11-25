@@ -10,7 +10,7 @@ const getEnvironment = [
         "Environment": {
             "AirflowConfigurationOptions": {},
             "AirflowVersion": "2.0.2",
-            "Arn": "arn:aws:airflow:us-east-1:101363889637:environment/MyAirflowEnvironment",
+            "Arn": "arn:aws:airflow:us-east-1:000111222333:environment/MyAirflowEnvironment",
             "CreatedAt": "2021-11-16T17:29:30+05:00",
             "DagS3Path": "data",
             "EnvironmentClass": "mw1.small",

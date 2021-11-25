@@ -165,7 +165,6 @@ module.exports = {
         'eksPrivateEndpoint'            : require(__dirname + '/plugins/aws/eks/eksPrivateEndpoint.js'),
         'eksSecretsEncrypted'           : require(__dirname + '/plugins/aws/eks/eksSecretsEncrypted.js'),
         'eksSecurityGroups'             : require(__dirname + '/plugins/aws/eks/eksSecurityGroups.js'),
-        'environmentDataEncrypted'      : require(__dirname + '/plugins/aws/mwaa/environmentDataEncrypted.js'),
 
         'crosszoneLoadBalancing'        : require(__dirname + '/plugins/aws/elb/crosszoneLoadBalancing.js'),
         'insecureCiphers'               : require(__dirname + '/plugins/aws/elb/insecureCiphers.js'),
@@ -333,6 +332,7 @@ module.exports = {
 
         'webServerPublicAccess'         : require(__dirname + '/plugins/aws/mwaa/webServerPublicAccess.js'),
         'environmentAdminPrivileges'    : require(__dirname + '/plugins/aws/mwaa/environmentAdminPrivileges.js'),
+        'environmentDataEncrypted'      : require(__dirname + '/plugins/aws/mwaa/environmentDataEncrypted.js'),
 
         'monitoringMetrics'             : require(__dirname + '/plugins/aws/cloudwatchlogs/monitoringMetrics.js'),
         'mqDeploymentMode'              : require(__dirname + '/plugins/aws/mq/mqDeploymentMode.js'),
