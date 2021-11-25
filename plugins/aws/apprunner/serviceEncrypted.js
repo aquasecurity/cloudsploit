@@ -5,10 +5,10 @@ module.exports = {
     title: 'Service Encrypted',
     category: 'App Runner',
     domain: 'Compute',
-    description: 'Ensures that App Runner Service is Encrypted',
-    more_info: 'Amazon App Runner encrypts your Service with AWS-manager keys by default.' +
-               'Encrypt your files using customer-managed keys in order to gain more granular control over encryption/decryption process.',
-    recommended_action: 'Create App Runner Service with customer-manager keys (CMKs).',
+    description: 'Ensure that AWS App Runner service is encrypted using using desired encryption level.',
+    more_info: 'To protect your application\'s data at rest, App Runner encrypts all stored copies of your application source image or source bundle using AWS-managed key by default.' +
+               'Use customer-managed keys (CMKs) instead in order to gain more granular control over encryption/decryption process.',
+    recommended_action: 'Create App Runner Service with customer-manager keys (CMKs)',
     link: 'https://docs.aws.amazon.com/apprunner/latest/dg/security-data-protection-encryption.html',
     apis: ['AppRunner:listServices','AppRunner:describeService', 'KMS:describeKey', 'KMS:listKeys'],
     settings: {
@@ -59,8 +59,8 @@ module.exports = {
             }
 
             for (let service of listServices.data) {
-              
                 if (!service.ServiceArn) continue;
+
                 let resource = service.ServiceArn;
 
                 var describeService = helpers.addSource(cache, source,
@@ -92,23 +92,24 @@ module.exports = {
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
                 } else {
 
-                    currentEncryptionLevel=2; //awskms
+                    currentEncryptionLevel = 2; //awskms
                 }
 
                 var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
 
                 if (currentEncryptionLevel >= desiredEncryptionLevel) {
                     helpers.addResult(results, 0,
-                        `App Runner service is encrypted with ${currentEncryptionLevelString} \
+                        `App Runner service is using ${currentEncryptionLevelString} \ for encryption
                         which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `App Runner service is encrypted with ${currentEncryptionLevelString} \
+                        `App Runner service is using ${currentEncryptionLevelString} \ for encryption
                         which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 }
             }
+
             rcb();
         }, function(){
             callback(null, results, source);
