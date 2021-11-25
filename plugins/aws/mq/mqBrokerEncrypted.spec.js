@@ -112,7 +112,7 @@ const describeKey = [
         "KeyMetadata": {
             "AWSAccountId": "000011112222",
             "KeyId": "c4750c1a-72e5-4d16-bc72-0e7b559e0250",
-            "Arn": "arn:aws:kms:us-east-1:000011112222:key/c4750c1a-72e5-4d16-bc72-0e7b559e0250",
+            "Arn": "arn:aws:kms:us-east-1:000011112222:key/26fb32cb-1abc-4096-93eb-1fa0c6e6efb4",
             "CreationDate": "2020-12-15T01:16:53.045000+05:00",
             "Enabled": true,
             "Description": "Default master key that protects my Glue data when no other key is defined",
