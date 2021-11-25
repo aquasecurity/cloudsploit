@@ -115,7 +115,7 @@ module.exports = {
                                 region, resource);
                         }
                     } else {
-                       currentEncryptionLevel= 2; //awskms
+                        currentEncryptionLevel= 2; //awskms
                     }
                 } else {
                     helpers.addResult(results, 3,
