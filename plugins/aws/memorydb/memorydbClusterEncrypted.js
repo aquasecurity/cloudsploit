@@ -2,17 +2,18 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'MemoryDB Cluster for Redis Encrypted',
+    title: 'MemoryDB Cluster Encrypted',
     category: 'MemoryDB',
     domain: 'Databases',
-    description: 'Ensure that your AWS MemoryDB Cluster for Redis data is encrypted with KMS Customer Master Keys (CMKs) instead of AWS managed-keys.',
-    more_info: 'Use your own AWS KMS Customer Master Keys (CMKs) to protect your MemoryDB for Redis data (including indexes, logs, replicas and snapshots) from unauthorized users, you have full control over who can use the encryption keys to access your data.',
-    recommended_action: 'Encrypt MemoryDB Cluster for Redis with desired encryption level',
-    link: 'https://docs.aws.amazon.com/documentdb/latest/developerguide/what-is.html#what-is-db-clusters',
+    description: 'Ensure that your Amazon MemoryDB cluster is encrypted with desired encryption level.',
+    more_info: 'To help keep your data secure, MemoryDB at-rest encryption is always enabled to increase data security by encrypting persistent data using AWS-managed KMS keys. ' +
+        'Use AWS customer-managed Keys (CMKs) instead in order to have a fine-grained control over data-at-rest encryption/decryption process and meet compliance requirements.',
+    recommended_action: 'Modify MemoryDB cluster encryption configuration to use desired encryption key',
+    link: 'https://docs.aws.amazon.com/memorydb/latest/devguide/at-rest-encryption.html',
     apis: ['MemoryDB:describeClusters', 'KMS:listKeys', 'KMS:describeKey'],
     settings: {
-        memorydb_cluster_desired_encryption_level: {
-            name: 'MemoryDB Cluster for Redis Target Encryption Level',
+        memorydb_cluster_target_encryption_level: {
+            name: 'MemoryDB Cluster Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk',
@@ -25,7 +26,7 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var config = {
-            desiredEncryptionLevelString: settings.memorydb_cluster_desired_encryption_level || this.settings.memorydb_cluster_desired_encryption_level.default
+            desiredEncryptionLevelString: settings.memorydb_cluster_target_encryption_level || this.settings.memorydb_cluster_target_encryption_level.default
         };
 
         var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(config.desiredEncryptionLevelString);
@@ -39,13 +40,13 @@ module.exports = {
 
             if (describeClusters.err || !describeClusters.data) {
                 helpers.addResult(results, 3,
-                    `Unable to list MemoryDB Cluster : ${helpers.addError(describeClusters)}`, region);
+                    `Unable to list MemoryDB clusters: ${helpers.addError(describeClusters)}`, region);
                 return rcb();
             }
 
             if (!describeClusters.data.length) {
                 helpers.addResult(results, 0,
-                    'No MemoryDB Cluster found', region);
+                    'No MemoryDB clusters found', region);
                 return rcb();
             }
 
@@ -66,7 +67,6 @@ module.exports = {
                 if (!cluster.KmsKeyId) {
                     currentEncryptionLevel = 2; //awskms
                 } else {
-
                     var kmsKeyId = cluster.KmsKeyId.split('/')[1] ? cluster.KmsKeyId.split('/')[1] : cluster.KmsKeyId;
 
                     var describeKey = helpers.addSource(cache, source,
@@ -78,8 +78,10 @@ module.exports = {
                             region, cluster.KmsKeyId);
                         continue;
                     }
+
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
                 }
+
                 var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
 
                 if (currentEncryptionLevel >= desiredEncryptionLevel) {
@@ -94,6 +96,7 @@ module.exports = {
                         region, resource);
                 }
             }
+
             rcb();
         }, function(){
             callback(null, results, source);

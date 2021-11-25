@@ -3,7 +3,7 @@ var memorydbClusterEncrypted = require('./memorydbClusterEncrypted');
 
 const describeClusters = [
     {
-        "Name": "sadeed2",
+        "Name": "aquacluster",
         "Status": "creating",
         "NumberOfShards": 1,
         "ClusterEndpoint": {
@@ -22,7 +22,7 @@ const describeClusters = [
         ],
         "SubnetGroupName": "subnet1",
         "TLSEnabled": true,
-        "ARN": "arn:aws:memorydb:us-east-1:000111222333:cluster/sadeed2",
+        "ARN": "arn:aws:memorydb:us-east-1:000111222333:cluster/aquacluster",
         "SnapshotRetentionLimit": 1,
         "MaintenanceWindow": "wed:08:00-wed:09:00",
         "SnapshotWindow": "06:30-07:30",
@@ -141,7 +141,7 @@ describe('memorydbClusterEncrypted', function () {
     describe('run', function () {
         it('should PASS if MemoryDB Cluster for Redis is encrypted with desired encryption level', function (done) {
             const cache = createCache([describeClusters[1]], listKeys, describeKey[0]);
-            memorydbClusterEncrypted.run(cache, { memorydb_cluster_desired_encryption_level:'awscmk' }, (err, results) => {
+            memorydbClusterEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('MemoryDB cluster is encrypted with awscmk');
@@ -152,7 +152,7 @@ describe('memorydbClusterEncrypted', function () {
 
         it('should FAIL if MemoryDB Cluster for Redis is not encrypted with desired encyption level', function (done) {
             const cache = createCache([describeClusters[0]], listKeys, describeKey[1]);
-            memorydbClusterEncrypted.run(cache, { memorydb_cluster_desired_encryption_level:'awscmk' } , (err, results) => {
+            memorydbClusterEncrypted.run(cache, {} , (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('MemoryDB cluster is encrypted with awskms');
@@ -166,14 +166,14 @@ describe('memorydbClusterEncrypted', function () {
             memorydbClusterEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No MemoryDB Cluster found');
+                expect(results[0].message).to.include('No MemoryDB clusters found');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
 
         it('should UNKNOWN if unable to list MemoryDB Clusters', function (done) {
-            const cache = createCache(null, null, null, { message: "Unable to list MemoryDB Cluster encryption" });
+            const cache = createCache(null, null, null, { message: "Unable to list MemoryDB clusters" });
             memorydbClusterEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
