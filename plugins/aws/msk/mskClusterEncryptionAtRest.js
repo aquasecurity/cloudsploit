@@ -38,7 +38,7 @@ module.exports = {
 
             if (listClusters.err || !listClusters.data) {
                 helpers.addResult(results, 3,
-                    `Unable to list MSK Cluster At-Rest  : ${helpers.addError(listClusters)}`, region);
+                    `Unable to list MSK clusters : ${helpers.addError(listClusters)}`, region);
                 return rcb();
             }
 
