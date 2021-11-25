@@ -39,7 +39,7 @@ module.exports = {
             if (!describeRepositories) return rcb();
             
             if (describeRepositories.err || !describeRepositories.data) {
-                helpers.addResult(results, 3, `Unable to query ECR Repository: ${helpers.addError(describeRepositories)}`, region);
+                helpers.addResult(results, 3, `Unable to query ECR repositories: ${helpers.addError(describeRepositories)}`, region);
                 return rcb();
             }
             
