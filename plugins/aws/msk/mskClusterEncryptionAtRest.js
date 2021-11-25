@@ -11,7 +11,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/msk/1.0/apireference/clusters-clusterarn-security.html',
     apis: ['Kafka:listClusters', 'KMS:listKeys', 'KMS:describeKey'],
     settings: {
-        mskcluster_atrest_desired_encryption_level: {
+        msk_cluster_desired_encryption_level: {
             name: 'MSK Cluster At-Rest Desired Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
