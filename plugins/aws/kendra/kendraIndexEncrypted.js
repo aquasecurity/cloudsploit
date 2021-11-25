@@ -104,7 +104,7 @@ module.exports = {
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `Kendra Indices is encrypted with ${currentEncryptionLevelString} \
+                        `Kendra index is encrypted with ${currentEncryptionLevelString} \
                         which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 }
