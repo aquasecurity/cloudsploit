@@ -5,7 +5,7 @@ module.exports = {
     title: 'Kendra Index Encrypted',
     category: 'Kendra',
     domain: 'Databases',
-    description: 'Ensure that the Kendra Index is Encrypted',
+    description: 'Ensure that the Kendra index is encrypted using desired encryption level.',
     more_info: 'Amazon Kendra encrypts your data with AWS-manager keys by default.' +
                'Encrypt your files using customer-managed keys in order to gain more granular control over encryption/decryption process.',
     recommended_action: 'Create Kendra Index with customer-manager keys (CMKs).',
