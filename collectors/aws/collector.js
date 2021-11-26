@@ -54,6 +54,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    AppRunner: {
+        listServices: {
+            property: 'ServiceSummaryList',
+            paginate: 'NextToken'
+        }
+    },
     Appflow: {
         listFlows: {
             property: 'flows',
@@ -223,12 +229,24 @@ var calls = {
             }
         }
     },
+    Connect: {
+        listInstances: {
+            property: 'InstanceSummaryList',
+            paginate: 'NextToken'
+        }
+    },
     ConfigService: {
         describeConfigurationRecorders: {
             property: 'ConfigurationRecorders'
         },
         describeConfigurationRecorderStatus: {
             property: 'ConfigurationRecordersStatus'
+        }
+    },
+    CustomerProfiles: {
+        listDomains: {
+            property: 'Items',
+            paginate: 'NextToken',
         }
     },
     DataBrew: {
@@ -266,6 +284,12 @@ var calls = {
             paginate: 'Marker'
         }
     },
+    DocDB: {
+        describeDBClusters: {
+            property: 'DBClusters',
+            paginate: 'Marker'
+        }
+    },
     DynamoDB: {
         listTables: {
             property: 'TableNames',
@@ -273,10 +297,28 @@ var calls = {
             paginateReqProp: 'ExclusiveStartTableName'
         }
     },
+    ElastiCache: {
+        describeCacheClusters: {
+            property: 'CacheClusters',
+            paginate: 'Marker'
+        }
+    },
     DAX: {
         describeClusters: {
             property: 'Clusters',
             paginate: 'NextToken'
+        }
+    },
+    TimestreamWrite: {
+        listDatabases: {
+            property: 'Databases',
+            paginate: 'NextToken'
+        }
+    },
+    ElastiCache: {
+        describeCacheClusters: {
+            property: 'CacheClusters',
+            paginate: 'Marker'
         }
     },
     EC2: {
@@ -610,6 +652,12 @@ var calls = {
             paginate: 'NextToken',
         }
     },
+    Kendra: {
+        listIndices: {
+            property: 'IndexConfigurationSummaryItems',
+            paginate: 'NextToken'
+        }
+    },
     KMS: {
         listKeys: {
             property: 'Keys',
@@ -628,11 +676,23 @@ var calls = {
             }
         }
     },
+    Kafka: {
+        listClusters: {
+            property: 'ClusterInfoList',
+            paginate: 'NextToken'
+        }
+    },
     Lambda: {
         listFunctions: {
             property: 'Functions',
             paginate: 'NextMarker',
             paginateReqProp: 'Marker'
+        }
+    },
+    MemoryDB: {
+        describeClusters: {
+            property:'Clusters',
+            paginate:'NextToken'
         }
     },
     ManagedBlockchain: {
@@ -653,6 +713,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    Neptune: {
+        describeDBClusters: {
+            property: 'DBClusters',
+            paginate: 'Marker'
+        }
+    },
     Organizations: {
         describeOrganization: {
             property: 'Organization',
@@ -664,6 +730,18 @@ var calls = {
             property: 'Accounts',
             paginate: 'NextToken'
         },
+    },
+    Proton: {
+        listEnvironmentTemplates: {
+            property: 'templates',
+            paginate: 'nextToken'
+        }
+    },
+    QLDB: {
+        listLedgers: {
+            property: 'Ledgers',
+            paginate: 'NextToken'
+        }
     },
     RDS: {
         describeDBInstances: {
@@ -894,6 +972,14 @@ var postcalls = [
                 filterValue: 'id'
             }
         },
+        AppRunner: {
+            describeService: {
+                reliesOnService: 'apprunner',
+                reliesOnCall: 'listServices',
+                filterKey: 'ServiceArn',
+                filterValue: 'ServiceArn'
+            }
+        },
         Appflow: {
             describeFlow: {
                 reliesOnService: 'appflow',
@@ -979,6 +1065,14 @@ var postcalls = [
                 filterValue: 'projectId'
             }
         },
+        CustomerProfiles: {
+            getDomain: {
+                reliesOnService: 'customerprofiles',
+                reliesOnCall: 'listDomains',
+                filterKey: 'DomainName',
+                filterValue: 'DomainName'
+            }
+        },
         CodeBuild: {
             batchGetProjects: {
                 reliesOnService: 'codebuild',
@@ -994,6 +1088,13 @@ var postcalls = [
                 filterValue: 'name'
             }
         },
+        Connect: {
+            listInstanceCallRecordingStorageConfigs: {
+                reliesOnService: 'connect',
+                reliesOnCall: 'listInstances',
+                override: true
+            }
+        },
         DynamoDB: {
             describeTable: {
                 reliesOnService: 'dynamodb',
@@ -1005,6 +1106,14 @@ var postcalls = [
                 reliesOnCall: 'listTables',
                 override: true
             },
+        },
+        ElastiCache: {
+            describeReplicationGroups: {
+                reliesOnService: 'elasticache',
+                reliesOnCall: 'describeCacheClusters',
+                filterKey: 'ReplicationGroupId',
+                filterValue: 'ReplicationGroupId'
+            }
         },
         ES: {
             describeElasticsearchDomain: {
@@ -1303,6 +1412,14 @@ var postcalls = [
                 rateLimit: 100
             }
         },
+        Kendra: {
+            describeIndex : {
+                reliesOnService: 'kendra',
+                reliesOnCall: 'listIndices',
+                filterKey: 'Id',
+                filterValue: 'Id'
+            }
+        },
         Kinesis: {
             describeStream: {
                 reliesOnService: 'kinesis',
@@ -1357,6 +1474,14 @@ var postcalls = [
                 filterValue: 'FunctionArn'
             }
         },
+        QLDB: {
+            describeLedger: {
+                reliesOnService: 'qldb',
+                reliesOnCall: 'listLedgers',
+                filterKey: 'Name',
+                filterValue: 'Name'
+            }
+        },
         ManagedBlockchain: {
             listMembers: {
                 reliesOnService: 'managedblockchain',
@@ -1378,6 +1503,14 @@ var postcalls = [
                 reliesOnService: 'mwaa',
                 reliesOnCall: 'listEnvironments',
                 override: true
+            }
+        },
+        Proton: {
+            getEnvironmentTemplate: {
+                reliesOnService: 'proton',
+                reliesOnCall: 'listEnvironmentTemplates',
+                filterKey: 'name',
+                filterValue: 'name'
             }
         },
         RDS: {
