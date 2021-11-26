@@ -6,14 +6,14 @@ module.exports = {
     category: 'Connect',
     domain: 'Content Delivery',
     description: 'Ensure that Amazon Connect instances have encryption enabled for exported reports being saved on S3.',
-    more_info: 'You can configure Amazon Connect instance to save exported reports to be saved on S3. When you save ' +
+    more_info: 'You can configure Amazon Connect instance to save exported reports on S3. When you save ' +
         'such data on S3, enable encryption for the data and use a KMS key with desired encrypted level to meet regulatory compliance requirements within your organization.',
     link: 'https://docs.aws.amazon.com/connect/latest/adminguide/encryption-at-rest.html',
     recommended_action: 'Modify Connect instance data storage configuration and enable encryption for exported reports',
-    apis: ['Connect:listInstances', 'Connect:listInstanceExportedReportsStorageConfigs', 'KMS:listKeys', 'KMS:describeKey'],
+    apis: ['Connect:listInstances', 'Connect:listInstanceExportedReportStorageConfigs', 'KMS:listKeys', 'KMS:describeKey'],
     settings: {
         connect_exported_reports_encryption_level: {
-            name: 'Connect exported reports Encryption Level',
+            name: 'Connect Exported Reports Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
@@ -63,25 +63,25 @@ module.exports = {
 
                 var resource = instance.Arn;
 
-                var listInstanceExportedReportsStorageConfigs = helpers.addSource(cache, source,
-                    ['connect', 'listInstanceExportedReportsStorageConfigs', region, instance.Id]);
+                var listInstanceExportedReportStorageConfigs = helpers.addSource(cache, source,
+                    ['connect', 'listInstanceExportedReportStorageConfigs', region, instance.Id]);
 
-                if (!listInstanceExportedReportsStorageConfigs || listInstanceExportedReportsStorageConfigs.err || !listInstanceExportedReportsStorageConfigs.data ||
-                    !listInstanceExportedReportsStorageConfigs.data.StorageConfigs) {
+                if (!listInstanceExportedReportStorageConfigs || listInstanceExportedReportStorageConfigs.err || !listInstanceExportedReportStorageConfigs.data ||
+                    !listInstanceExportedReportStorageConfigs.data.StorageConfigs) {
                     helpers.addResult(results, 3,
-                        `Unable to describe Connect instance exported reports storage config: ${helpers.addError(listInstanceExportedReportsStorageConfigs)}`,
+                        `Unable to describe Connect instance exported reports storage config: ${helpers.addError(listInstanceExportedReportStorageConfigs)}`,
                         region, resource);
                     continue;
                 }
 
-                if (!listInstanceExportedReportsStorageConfigs.data.StorageConfigs.length) {
+                if (!listInstanceExportedReportStorageConfigs.data.StorageConfigs.length) {
                     helpers.addResult(results, 0,
                         'Connect instance does not have any storage config for exported reports',
                         region, resource);
                     continue;
                 }
 
-                let storageConfig = listInstanceExportedReportsStorageConfigs.data.StorageConfigs[0];
+                let storageConfig = listInstanceExportedReportStorageConfigs.data.StorageConfigs[0];
 
                 if (storageConfig.S3Config) {
                     if (storageConfig.S3Config.EncryptionConfig &&
@@ -105,12 +105,12 @@ module.exports = {
 
                         if (currentEncryptionLevel >= desiredEncryptionLevel) {
                             helpers.addResult(results, 0,
-                                `Connect instance is using ${currentEncryptionLevelString} for exported reports encryption\
+                                `Connect instance is using ${currentEncryptionLevelString} for exported reports encryption \
                                 which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
                                 region, resource);
                         } else {
                             helpers.addResult(results, 2,
-                                `Connect instance is using ${currentEncryptionLevelString} for exported reports encryption\
+                                `Connect instance is using ${currentEncryptionLevelString} for exported reports encryption \
                                 which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                                 region, resource);
                         }

@@ -68,7 +68,7 @@ module.exports = {
         'configServiceEnabled'          : require(__dirname + '/plugins/aws/configservice/configServiceEnabled.js'),
 
         'devOpsGuruNotificationEnabled' : require(__dirname + '/plugins/aws/devopsguru/devOpsGuruNotificationEnabled.js'),
-
+       
         'dmsEncryptionEnabled'          : require(__dirname + '/plugins/aws/dms/dmsEncryptionEnabled.js'),
 
         'dynamoKmsEncryption'           : require(__dirname + '/plugins/aws/dynamodb/dynamoKmsEncryption.js'),
@@ -156,6 +156,7 @@ module.exports = {
         'efsEncryptionEnabled'          : require(__dirname + '/plugins/aws/efs/efsEncryptionEnabled.js'),
 
         'ecrRepositoryPolicy'           : require(__dirname + '/plugins/aws/ecr/ecrRepositoryPolicy.js'),
+        'ecrRepositoryEncrypted'        : require(__dirname + '/plugins/aws/ecr/ecrRepositoryEncrypted.js'),
         'ecrRepositoryTagImmutability'  : require(__dirname + '/plugins/aws/ecr/ecrRepositoryTagImmutability.js'),
         
         'managedPlatformUpdates'        : require(__dirname + '/plugins/aws/elasticbeanstalk/managedPlatformUpdates.js'),
@@ -278,6 +279,8 @@ module.exports = {
         'rdsTransportEncryption'        : require(__dirname + '/plugins/aws/rds/rdsTransportEncryption'),
         'rdsDeletionProtectionEnabled'  : require(__dirname + '/plugins/aws/rds/rdsDeletionProtectionEnabled.js'),
 
+        'redisClusterEncryptionInTransit': require(__dirname + '/plugins/aws/elasticache/redisClusterEncryptionInTransit.js'),
+
         'domainAutoRenew'               : require(__dirname + '/plugins/aws/route53/domainAutoRenew.js'),
         'domainExpiry'                  : require(__dirname + '/plugins/aws/route53/domainExpiry.js'),
         'domainTransferLock'            : require(__dirname + '/plugins/aws/route53/domainTransferLock.js'),
@@ -340,16 +343,26 @@ module.exports = {
         'environmentAdminPrivileges'    : require(__dirname + '/plugins/aws/mwaa/environmentAdminPrivileges.js'),
         'environmentDataEncrypted'      : require(__dirname + '/plugins/aws/mwaa/environmentDataEncrypted.js'),
 
+        'neptuneDBInstanceEncrypted'    : require(__dirname + '/plugins/aws/neptune/neptuneDBInstanceEncrypted.js'),
+
         'monitoringMetrics'             : require(__dirname + '/plugins/aws/cloudwatchlogs/monitoringMetrics.js'),
         'mqDeploymentMode'              : require(__dirname + '/plugins/aws/mq/mqDeploymentMode.js'),
+        'mqBrokerEncrypted'             : require(__dirname + '/plugins/aws/mq/mqBrokerEncrypted.js'),
 
         'customerProfilesDomainEncrypted' : require(__dirname + '/plugins/aws/connect/customerProfilesDomainEncrypted.js'),
 
         'logRetentionPeriod'            : require(__dirname + '/plugins/aws/cloudwatchlogs/logRetentionPeriod.js'),
-      
+        'logGroupsEncrypted'            : require(__dirname + '/plugins/aws/cloudwatchlogs/logGroupsEncrypted.js'),
+
+        'timestreamDatabaseEncrypted'   : require(__dirname + '/plugins/aws/timestreamwrite/timestreamDatabaseEncrypted.js'),
+
         'mqAutoMinorVersionUpgrade'     : require(__dirname + '/plugins/aws/mq/mqAutoMinorVersionUpgrade.js'),
         'mqLogExports'                  : require(__dirname + '/plugins/aws/mq/mqLogExports.js'),
-
+      
+        'memorydbClusterEncrypted'      : require(__dirname + '/plugins/aws/memorydb/memorydbClusterEncrypted.js'),
+      
+        'mskClusterEncryptionAtRest'    : require(__dirname + '/plugins/aws/msk/mskClusterEncryptionAtRest.js'),
+      
         'auditLoggingEnabled'           : require(__dirname + '/plugins/aws/redshift/auditLoggingEnabled.js'),
         'redshiftClusterCmkEncrypted'   : require(__dirname + '/plugins/aws/redshift/redshiftClusterCmkEncrypted.js'),
         'redshiftEncryptionEnabled'     : require(__dirname + '/plugins/aws/redshift/redshiftEncryptionEnabled.js'),
@@ -364,6 +377,7 @@ module.exports = {
         'redshiftNodesCount'            : require(__dirname + '/plugins/aws/redshift/redshiftNodesCount.js'),
         'redshiftUnusedReservedNodes'   : require(__dirname + '/plugins/aws/redshift/redshiftUnusedReservedNodes.js'),
         'redshiftDesiredNodeType'       : require(__dirname + '/plugins/aws/redshift/redshiftDesiredNodeType.js'),
+        'redisClusterEncryptionAtRest'  : require(__dirname + '/plugins/aws/elasticache/redisClusterEncryptionAtRest.js'),
 
         'transferLoggingEnabled'        : require(__dirname + '/plugins/aws/transfer/transferLoggingEnabled.js'),
         'transferPrivateLinkInUse'      : require(__dirname + '/plugins/aws/transfer/transferPrivateLinkInUse.js'),
@@ -372,6 +386,7 @@ module.exports = {
 
         'secretRotationEnabled'         : require(__dirname + '/plugins/aws/secretsmanager/secretRotationEnabled.js'),
         'secretsManagerEncrypted'       : require(__dirname + '/plugins/aws/secretsmanager/secretsManagerEncrypted.js'),
+
         'finspaceEnvironmentEncrypted'  : require(__dirname + '/plugins/aws/finspace/finspaceEnvironmentEncrypted.js'),
 
         'shieldAdvancedEnabled'         : require(__dirname + '/plugins/aws/shield/shieldAdvancedEnabled.js'),
@@ -380,6 +395,7 @@ module.exports = {
 
         'enableAllFeatures'             : require(__dirname + '/plugins/aws/organizations/enableAllFeatures.js'),
         'organizationInvite'            : require(__dirname + '/plugins/aws/organizations/organizationInvite.js'),
+
         'guardDutyEnabled'              : require(__dirname + '/plugins/aws/guardduty/guarddutyEnabled.js'),
         'guardDutyMaster'               : require(__dirname + '/plugins/aws/guardduty/guarddutyMaster.js'),
 
@@ -398,6 +414,7 @@ module.exports = {
         'dataStoreEncrypted'            : require(__dirname + '/plugins/aws/healthlake/dataStoreEncrypted.js'),
 
         'codeartifactDomainEncrypted'   : require(__dirname + '/plugins/aws/codeartifact/codeartifactDomainEncrypted.js'),
+
         'auditmanagerDataEncrypted'     : require(__dirname + '/plugins/aws/auditmanager/auditmanagerDataEncrypted.js'),
 
         'flowEncrypted'                 : require(__dirname + '/plugins/aws/appflow/flowEncrypted.js'),
@@ -411,9 +428,12 @@ module.exports = {
       
         'networkMemberDataEncrypted'    : require(__dirname + '/plugins/aws/managedblockchain/networkMemberDataEncrypted.js'),
 
-        'instanceCallRecordingEncrypted': require(__dirname + '/plugins/aws/connect/instanceCallRecordingEncrypted.js'),
-        'instanceExportedReportsEncrypted': require(__dirname + '/plugins/aws/connect/instanceExportedReportsEncrypted.js')
+        'docdbClusterEncrypted'         : require(__dirname + '/plugins/aws/documentDB/docdbClusterEncrypted.js'),
 
+        'instanceReportsEncrypted'      : require(__dirname + '/plugins/aws/connect/instanceReportsEncrypted.js'),
+        'instanceCallRecordingEncrypted': require(__dirname + '/plugins/aws/connect/instanceCallRecordingEncrypted.js'),
+
+        'backupVaultEncrypted'          : require(__dirname + '/plugins/aws/backup/backupVaultEncrypted.js')
     },
     azure : {
         'fileServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/fileServiceEncryption.js'),

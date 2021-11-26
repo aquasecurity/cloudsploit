@@ -1,21 +1,21 @@
 var expect = require('chai').expect;
-const instanceExportedReportsEncrypted = require('./instanceExportedReportsEncrypted');
+const instanceReportsEncrypted = require('./instanceReportsEncrypted');
 
 const listInstances = [
     {
         "Id": "9da26b8e-8f9e-4af2-8717-6f79913f2439",
-        "Arn": "arn:aws:connect:us-east-1:101363889637:instance/9da26b8e-8f9e-4af2-8717-6f79913f2439",
+        "Arn": "arn:aws:connect:us-east-1:000111222333:instance/9da26b8e-8f9e-4af2-8717-6f79913f2439",
         "IdentityManagementType": "CONNECT_MANAGED",
         "InstanceAlias": "akhtar",
         "CreatedTime": "2021-11-24T17:07:05+05:00",
-        "ServiceRole": "arn:aws:iam::101363889637:role/aws-service-role/connect.amazonaws.com/AWSServiceRoleForAmazonConnect_XYUbWO6kTpYfc9uUNk5i",
+        "ServiceRole": "arn:aws:iam::000111222333:role/aws-service-role/connect.amazonaws.com/AWSServiceRoleForAmazonConnect_XYUbWO6kTpYfc9uUNk5i",
         "InstanceStatus": "ACTIVE",
         "InboundCallsEnabled": true,
         "OutboundCallsEnabled": false
     }
 ];
 
-const listInstanceExportedReportsStorageConfigs = [
+const listInstanceExportedReportStorageConfigs = [
     {
         "StorageConfigs": [
             {
@@ -26,7 +26,7 @@ const listInstanceExportedReportsStorageConfigs = [
                     "BucketPrefix": "connect/akhtar/Reports",
                     "EncryptionConfig": {
                         "EncryptionType": "KMS",
-                        "KeyId": "arn:aws:kms:us-east-1:101363889637:key/ad013a33-b01d-4d88-ac97-127399c18b3e"
+                        "KeyId": "arn:aws:kms:us-east-1:000111222333:key/ad013a33-b01d-4d88-ac97-127399c18b3e"
                     }
                 }
             }
@@ -106,7 +106,7 @@ const createCache = (instances, storageConfig, keys, describeKey, instancesErr, 
                     err: instancesErr
                 },
             },
-            listInstanceExportedReportsStorageConfigs: {
+            listInstanceExportedReportStorageConfigs: {
                 'us-east-1': {
                     [instanceId]: {
                         data: storageConfig
@@ -132,11 +132,11 @@ const createCache = (instances, storageConfig, keys, describeKey, instancesErr, 
     };
 };
 
-describe('instanceExportedReportsEncrypted', function () {
+describe('instanceReportsEncrypted', function () {
     describe('run', function () {
         it('should FAIL if Connect instance is not using desired encryption level', function (done) {
-            const cache = createCache(listInstances, listInstanceExportedReportsStorageConfigs[0], listKeys, describeKey[1]);
-            instanceExportedReportsEncrypted.run(cache, {}, (err, results) => {
+            const cache = createCache(listInstances, listInstanceExportedReportStorageConfigs[0], listKeys, describeKey[1]);
+            instanceReportsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -144,8 +144,8 @@ describe('instanceExportedReportsEncrypted', function () {
         });
 
         it('should FAIL if Connect instance does not have encryption enabled for exported reports', function (done) {
-            const cache = createCache(listInstances, listInstanceExportedReportsStorageConfigs[1], listKeys, describeKey[1]);
-            instanceExportedReportsEncrypted.run(cache, {}, (err, results) => {
+            const cache = createCache(listInstances, listInstanceExportedReportStorageConfigs[1], listKeys, describeKey[1]);
+            instanceReportsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -153,8 +153,8 @@ describe('instanceExportedReportsEncrypted', function () {
         });
 
         it('should PASS if Connect instance is using desired encryption level', function (done) {
-            const cache = createCache(listInstances, listInstanceExportedReportsStorageConfigs[0], listKeys, describeKey[0]);
-            instanceExportedReportsEncrypted.run(cache, {}, (err, results) => {
+            const cache = createCache(listInstances, listInstanceExportedReportStorageConfigs[0], listKeys, describeKey[0]);
+            instanceReportsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -162,8 +162,8 @@ describe('instanceExportedReportsEncrypted', function () {
         });
 
         it('should PASS if Connect instance does not have any storage config for exported reports', function (done) {
-            const cache = createCache(listInstances, listInstanceExportedReportsStorageConfigs[2], listKeys, describeKey[0]);
-            instanceExportedReportsEncrypted.run(cache, {}, (err, results) => {
+            const cache = createCache(listInstances, listInstanceExportedReportStorageConfigs[2], listKeys, describeKey[0]);
+            instanceReportsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -172,7 +172,7 @@ describe('instanceExportedReportsEncrypted', function () {
 
         it('should PASS no Connect instances found', function (done) {
             const cache = createCache([]);
-            instanceExportedReportsEncrypted.run(cache, {}, (err, results) => {
+            instanceReportsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -181,7 +181,7 @@ describe('instanceExportedReportsEncrypted', function () {
 
         it('should UNKNOWN Unable to query Connect instances', function (done) {
             const cache = createCache([], null, listKeys, describeKey[0], { message: 'Unable to find data' });
-            instanceExportedReportsEncrypted.run(cache, {}, (err, results) => {
+            instanceReportsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -189,8 +189,8 @@ describe('instanceExportedReportsEncrypted', function () {
         });
 
         it('should UNKNOWN Unable to query KMS keys', function (done) {
-            const cache = createCache(listInstances, listInstanceExportedReportsStorageConfigs[2], [], null, null, { message: 'Unable to find data' });
-            instanceExportedReportsEncrypted.run(cache, {}, (err, results) => {
+            const cache = createCache(listInstances, listInstanceExportedReportStorageConfigs[2], [], null, null, { message: 'Unable to find data' });
+            instanceReportsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
