@@ -54,12 +54,32 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    AppRunner: {
+        listServices: {
+            property: 'ServiceSummaryList',
+            paginate: 'NextToken'
+        }
+    },
+    Appflow: {
+        listFlows: {
+            property: 'flows',
+            paginate: 'nextToken'
+        }
+    },
     Athena: {
         listWorkGroups: {
             property: 'WorkGroups',
             paginate: 'NextToken',
             params: {
                 MaxResults: 50
+            }
+        }
+    },
+    AuditManager: {
+        getSettings: {
+            property: 'settings',
+            params: {
+                attribute: 'ALL'
             }
         }
     },
@@ -78,6 +98,12 @@ var calls = {
                 MaxRecords: 100
             }
         }
+    },
+    Backup: {
+        listBackupVaults: {
+            property: 'BackupVaultList',
+            paginate: 'NextToken',
+        },
     },
     CloudFormation: {
         listStacks: {
@@ -135,6 +161,12 @@ var calls = {
             }
         }
     },
+    CodeArtifact: {
+        listDomains: {
+            property: 'domains',
+            paginate: 'nextToken'
+        }
+    },
     CodeStar: {
         listProjects: {
             property: 'projects',
@@ -144,6 +176,12 @@ var calls = {
     CodeBuild: {
         listProjects: {
             property: 'projects',
+            paginate: 'nextToken'
+        }
+    },
+    CodePipeline: {
+        listPipelines: {
+            property: 'pipelines',
             paginate: 'nextToken'
         }
     },
@@ -191,12 +229,30 @@ var calls = {
             }
         }
     },
+    Connect: {
+        listInstances: {
+            property: 'InstanceSummaryList',
+            paginate: 'NextToken'
+        }
+    },
     ConfigService: {
         describeConfigurationRecorders: {
             property: 'ConfigurationRecorders'
         },
         describeConfigurationRecorderStatus: {
             property: 'ConfigurationRecordersStatus'
+        }
+    },
+    CustomerProfiles: {
+        listDomains: {
+            property: 'Items',
+            paginate: 'NextToken',
+        }
+    },
+    DataBrew: {
+        listJobs: {
+            property: 'Jobs',
+            paginate: 'NextToken'
         }
     },
     DevOpsGuru: {
@@ -228,6 +284,12 @@ var calls = {
             paginate: 'Marker'
         }
     },
+    DocDB: {
+        describeDBClusters: {
+            property: 'DBClusters',
+            paginate: 'Marker'
+        }
+    },
     DynamoDB: {
         listTables: {
             property: 'TableNames',
@@ -238,6 +300,12 @@ var calls = {
     DAX: {
         describeClusters: {
             property: 'Clusters',
+            paginate: 'NextToken'
+        }
+    },
+    TimestreamWrite: {
+        listDatabases: {
+            property: 'Databases',
             paginate: 'NextToken'
         }
     },
@@ -487,6 +555,12 @@ var calls = {
             }
         }
     },
+    Finspace: {
+        listEnvironments: {
+            property: 'environments',
+            paginate: 'nextToken'
+        }
+    },
     Glue: {
         getDataCatalogEncryptionSettings: {
             property: 'DataCatalogEncryptionSettings',
@@ -504,6 +578,12 @@ var calls = {
                 accountId: '-',
                 limit: '50'
             },
+        }
+    },
+    HealthLake: {
+        listFHIRDatastores: {
+            property: 'DatastorePropertiesList',
+            paginate: 'NextToken'
         }
     },
     IAM: {
@@ -560,6 +640,12 @@ var calls = {
             paginate: 'NextToken',
         }
     },
+    Kendra: {
+        listIndices: {
+            property: 'IndexConfigurationSummaryItems',
+            paginate: 'NextToken'
+        }
+    },
     KMS: {
         listKeys: {
             property: 'Keys',
@@ -578,11 +664,29 @@ var calls = {
             }
         }
     },
+    Kafka: {
+        listClusters: {
+            property: 'ClusterInfoList',
+            paginate: 'NextToken'
+        }
+    },
     Lambda: {
         listFunctions: {
             property: 'Functions',
             paginate: 'NextMarker',
             paginateReqProp: 'Marker'
+        }
+    },
+    MemoryDB: {
+        describeClusters: {
+            property:'Clusters',
+            paginate:'NextToken'
+        }
+    },
+    ManagedBlockchain: {
+        listNetworks: {
+            property: 'Networks',
+            paginate: 'NextToken'
         }
     },
     MQ: {
@@ -597,6 +701,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    Neptune: {
+        describeDBClusters: {
+            property: 'DBClusters',
+            paginate: 'Marker'
+        }
+    },
     Organizations: {
         describeOrganization: {
             property: 'Organization',
@@ -608,6 +718,18 @@ var calls = {
             property: 'Accounts',
             paginate: 'NextToken'
         },
+    },
+    Proton: {
+        listEnvironmentTemplates: {
+            property: 'templates',
+            paginate: 'nextToken'
+        }
+    },
+    QLDB: {
+        listLedgers: {
+            property: 'Ledgers',
+            paginate: 'NextToken'
+        }
     },
     RDS: {
         describeDBInstances: {
@@ -703,7 +825,6 @@ var calls = {
             rateLimit: 1000 // ms to rate limit between regions
         },
         describeActiveReceiptRuleSet: {
-            property: 'Rules'
         }
     },
     Shield: {
@@ -775,6 +896,12 @@ var calls = {
             }
         }
     },
+    Translate: {
+        listTextTranslationJobs: {
+            property: 'TextTranslationJobPropertiesList',
+            paginate: 'NextToken'
+        }
+    },
     WAFRegional: {
         listWebACLs: {
             property: 'WebACLs',
@@ -831,6 +958,22 @@ var postcalls = [
                 reliesOnCall: 'getRestApis',
                 filterKey: 'restApiId',
                 filterValue: 'id'
+            }
+        },
+        AppRunner: {
+            describeService: {
+                reliesOnService: 'apprunner',
+                reliesOnCall: 'listServices',
+                filterKey: 'ServiceArn',
+                filterValue: 'ServiceArn'
+            }
+        },
+        Appflow: {
+            describeFlow: {
+                reliesOnService: 'appflow',
+                reliesOnCall: 'listFlows',
+                filterKey: 'flowName',
+                filterValue: 'flowName'
             }
         },
         Athena: {
@@ -910,10 +1053,53 @@ var postcalls = [
                 filterValue: 'projectId'
             }
         },
+        CustomerProfiles: {
+            getDomain: {
+                reliesOnService: 'customerprofiles',
+                reliesOnCall: 'listDomains',
+                filterKey: 'DomainName',
+                filterValue: 'DomainName'
+            }
+        },
         CodeBuild: {
             batchGetProjects: {
                 reliesOnService: 'codebuild',
                 reliesOnCall: 'listProjects',
+                override: true
+            }
+        },
+        CodePipeline: {
+            getPipeline: {
+                reliesOnService: 'codepipeline',
+                reliesOnCall: 'listPipelines',
+                filterKey: 'name',
+                filterValue: 'name'
+            }
+        },
+        Connect: {
+            listInstanceCallRecordingStorageConfigs: {
+                reliesOnService: 'connect',
+                reliesOnCall: 'listInstances',
+                override: true
+            },
+            listInstanceMediaStreamStorageConfigs: {
+                reliesOnService: 'connect',
+                reliesOnCall: 'listInstances',
+                override: true
+            },
+            listInstanceChatTranscriptStorageConfigs: {
+                reliesOnService: 'connect',
+                reliesOnCall: 'listInstances',
+                override: true
+            },   
+            listInstanceExportedReportStorageConfigs: {
+                reliesOnService: 'connect',
+                reliesOnCall: 'listInstances',
+                override: true
+            },
+            instanceAttachmentStorageConfigs: {
+                reliesOnService: 'connect',
+                reliesOnCall: 'listInstances',
                 override: true
             }
         },
@@ -928,6 +1114,14 @@ var postcalls = [
                 reliesOnCall: 'listTables',
                 override: true
             },
+        },
+        ElastiCache: {
+            describeReplicationGroups: {
+                reliesOnService: 'elasticache',
+                reliesOnCall: 'describeCacheClusters',
+                filterKey: 'ReplicationGroupId',
+                filterValue: 'ReplicationGroupId'
+            }
         },
         ES: {
             describeElasticsearchDomain: {
@@ -1085,6 +1279,14 @@ var postcalls = [
                 override: true
             }
         },
+        ElasticTranscoder: {
+            listJobsByPipeline : {
+                reliesOnService: 'elastictranscoder',
+                reliesOnCall: 'listPipelines',
+                filterKey: 'PipelineId',
+                filterValue: 'Id'
+            }
+        },
         ELB: {
             describeLoadBalancerPolicies: {
                 reliesOnService: 'elb',
@@ -1218,6 +1420,14 @@ var postcalls = [
                 rateLimit: 100
             }
         },
+        Kendra: {
+            describeIndex : {
+                reliesOnService: 'kendra',
+                reliesOnCall: 'listIndices',
+                filterKey: 'Id',
+                filterValue: 'Id'
+            }
+        },
         Kinesis: {
             describeStream: {
                 reliesOnService: 'kinesis',
@@ -1272,6 +1482,22 @@ var postcalls = [
                 filterValue: 'FunctionArn'
             }
         },
+        QLDB: {
+            describeLedger: {
+                reliesOnService: 'qldb',
+                reliesOnCall: 'listLedgers',
+                filterKey: 'Name',
+                filterValue: 'Name'
+            }
+        },
+        ManagedBlockchain: {
+            listMembers: {
+                reliesOnService: 'managedblockchain',
+                reliesOnCall: 'listNetworks',
+                filterKey: 'NetworkId',
+                filterValue: 'Id'
+            }
+        },
         MQ: {
             describeBroker: {
                 reliesOnService: 'mq',
@@ -1285,6 +1511,14 @@ var postcalls = [
                 reliesOnService: 'mwaa',
                 reliesOnCall: 'listEnvironments',
                 override: true
+            }
+        },
+        Proton: {
+            getEnvironmentTemplate: {
+                reliesOnService: 'proton',
+                reliesOnCall: 'listEnvironmentTemplates',
+                filterKey: 'name',
+                filterValue: 'name'
             }
         },
         RDS: {
@@ -1453,6 +1687,13 @@ var postcalls = [
             describeNodegroups: {
                 reliesOnService: 'eks',
                 reliesOnCall: 'listClusters',
+                override: true
+            }
+        },
+        ManagedBlockchain: {
+            getMember: {
+                reliesOnService: 'managedblockchain',
+                reliesOnCall: 'listNetworks',
                 override: true
             }
         }
@@ -1657,7 +1898,7 @@ var collect = function(AWSConfig, settings, callback) {
                             if (callObj.property && !data[callObj.property]) return regionCb();
                             if (callObj.secondProperty && !data[callObj.secondProperty]) return regionCb();
 
-                            var dataToAdd = callObj.secondProperty ? data[callObj.property][callObj.secondProperty] : data[callObj.property];
+                            var dataToAdd = callObj.secondProperty ? data[callObj.property][callObj.secondProperty] : data[callObj.property] ? data[callObj.property] : data;
 
                             if (paginating) {
                                 collection[serviceLower][callKey][region].data = collection[serviceLower][callKey][region].data.concat(dataToAdd);
