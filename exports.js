@@ -431,6 +431,7 @@ module.exports = {
 
         'docdbClusterEncrypted'         : require(__dirname + '/plugins/aws/documentDB/docdbClusterEncrypted.js'),
 
+        'instanceReportsEncrypted'      : require(__dirname + '/plugins/aws/connect/instanceReportsEncrypted.js'),
         'instanceCallRecordingEncrypted': require(__dirname + '/plugins/aws/connect/instanceCallRecordingEncrypted.js'),
         'instanceAttachmentsEncrypted'  : require(__dirname + '/plugins/aws/connect/instanceAttachmentsEncrypted.js'),
         
