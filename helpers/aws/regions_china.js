@@ -1,5 +1,6 @@
 // Source: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html
 
+
 var regions = [
     'cn-north-1',
     'cn-northwest-1'
@@ -80,11 +81,11 @@ module.exports = {
     codebuild: regions,
     mq: regions,
     glacier: regions,
+    backup: regions,
     elasticache: regions,
     timestreamwrite: regions,
     neptune: regions,
     docdb: regions,
-    elasticache: regions,
     memorydb: regions,
     kafka: regions,
     kendra:  regions,

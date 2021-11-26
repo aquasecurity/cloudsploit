@@ -429,7 +429,9 @@ module.exports = {
 
         'docdbClusterEncrypted'         : require(__dirname + '/plugins/aws/documentDB/docdbClusterEncrypted.js'),
 
-        'instanceCallRecordingEncrypted': require(__dirname + '/plugins/aws/connect/instanceCallRecordingEncrypted.js')
+        'instanceCallRecordingEncrypted': require(__dirname + '/plugins/aws/connect/instanceCallRecordingEncrypted.js'),
+
+        'backupVaultEncrypted'          : require(__dirname + '/plugins/aws/backup/backupVaultEncrypted.js')
     },
     azure : {
         'fileServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/fileServiceEncryption.js'),

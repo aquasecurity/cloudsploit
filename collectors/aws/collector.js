@@ -99,6 +99,12 @@ var calls = {
             }
         }
     },
+    Backup: {
+        listBackupVaults: {
+            property: 'BackupVaultList',
+            paginate: 'NextToken',
+        },
+    },
     CloudFormation: {
         listStacks: {
             property: 'StackSummaries',
@@ -307,12 +313,6 @@ var calls = {
         listDatabases: {
             property: 'Databases',
             paginate: 'NextToken'
-        }
-    },
-    ElastiCache: {
-        describeCacheClusters: {
-            property: 'CacheClusters',
-            paginate: 'Marker'
         }
     },
     EC2: {
