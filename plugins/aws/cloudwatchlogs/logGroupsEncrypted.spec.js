@@ -10,16 +10,15 @@ const describeLogGroups = [
         arn: 'arn:aws:logs:us-east-1:000011112222:log-group:akhtar-lg:*',
         storedBytes: 0,
         kmsKeyId: 'arn:aws:kms:us-east-1:000011112222:key/c4750c1a-72e5-4d16-bc72-0e7b559e0250'
-      },
-      {
+    },
+    {
         logGroupName: 'test-lg-1',
         creationTime: 1607077091876,
         retentionInDays: 3,
         metricFilterCount: 0,
         arn: 'arn:aws:logs:us-east-1:000011112222:log-group:test-lg-1:*',
         storedBytes: 0
-      }
-
+    }
 ];
 
 const listKeys = [
@@ -108,7 +107,7 @@ describe('logGroupsEncrypted', function () {
             logGroupsEncrypted.run(cache, {cloudwatchlog_groups_desired_encryption_level :'awscmk'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('CloudWatch Logs log group is encrypted with awscmk');
+                expect(results[0].message).to.include('CloudWatch log group is encrypted with awscmk');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
@@ -120,7 +119,7 @@ describe('logGroupsEncrypted', function () {
             logGroupsEncrypted.run(cache, { cloudwatchlog_groups_desired_encryption_level:'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('CloudWatch Logs log group is encrypted with awskms');
+                expect(results[0].message).to.include('CloudWatch log group is encrypted with awskms');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
@@ -132,7 +131,7 @@ describe('logGroupsEncrypted', function () {
             logGroupsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No CloudWatch Logs log groups found');
+                expect(results[0].message).to.include('No CloudWatch log groups found');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
