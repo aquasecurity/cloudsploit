@@ -674,7 +674,7 @@ module.exports = {
         'volumeGroupsRestorable'        : require(__dirname + '/plugins/oracle/blockstorage/volumeGroupsRestorable.js'),
         'blockPolicyProtection'         : require(__dirname + '/plugins/oracle/blockstorage/blockPolicyProtection.js'),
 
-        'logRetentionPeriod'             : require(__dirname + '/plugins/oracle/audit/logRetentionPeriod.js'),
+        'logRetentionPeriod'            : require(__dirname + '/plugins/oracle/audit/logRetentionPeriod.js'),
     },
     google: {
         'excessiveFirewallRules'        : require(__dirname + '/plugins/google/vpcnetwork/excessiveFirewallRules.js'),
