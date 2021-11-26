@@ -297,6 +297,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    ElastiCache: {
+        describeCacheClusters: {
+            property: 'CacheClusters',
+            paginate: 'Marker'
+        }
+    },
     EC2: {
         describeAccountAttributes: {
             property: 'AccountAttributes'
@@ -652,11 +658,23 @@ var calls = {
             }
         }
     },
+    Kafka: {
+        listClusters: {
+            property: 'ClusterInfoList',
+            paginate: 'NextToken'
+        }
+    },
     Lambda: {
         listFunctions: {
             property: 'Functions',
             paginate: 'NextMarker',
             paginateReqProp: 'Marker'
+        }
+    },
+    MemoryDB: {
+        describeClusters: {
+            property:'Clusters',
+            paginate:'NextToken'
         }
     },
     ManagedBlockchain: {
