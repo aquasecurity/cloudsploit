@@ -80,6 +80,7 @@ module.exports = {
     codebuild: regions,
     mq: regions,
     glacier: regions,
+    memorydb: regions,
     kafka: regions,
     kendra:  regions,
     proton: regions,

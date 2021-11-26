@@ -659,6 +659,12 @@ var calls = {
             paginateReqProp: 'Marker'
         }
     },
+    MemoryDB: {
+        describeClusters: {
+            property:'Clusters',
+            paginate:'NextToken'
+        }
+    },
     ManagedBlockchain: {
         listNetworks: {
             property: 'Networks',

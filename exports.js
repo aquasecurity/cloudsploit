@@ -349,8 +349,11 @@ module.exports = {
       
         'mqAutoMinorVersionUpgrade'     : require(__dirname + '/plugins/aws/mq/mqAutoMinorVersionUpgrade.js'),
         'mqLogExports'                  : require(__dirname + '/plugins/aws/mq/mqLogExports.js'),
+      
+        'memorydbClusterEncrypted'      : require(__dirname + '/plugins/aws/memorydb/memorydbClusterEncrypted.js'),
+      
         'mskClusterEncryptionAtRest'    : require(__dirname + '/plugins/aws/msk/mskClusterEncryptionAtRest.js'),
-
+      
         'auditLoggingEnabled'           : require(__dirname + '/plugins/aws/redshift/auditLoggingEnabled.js'),
         'redshiftClusterCmkEncrypted'   : require(__dirname + '/plugins/aws/redshift/redshiftClusterCmkEncrypted.js'),
         'redshiftEncryptionEnabled'     : require(__dirname + '/plugins/aws/redshift/redshiftEncryptionEnabled.js'),
