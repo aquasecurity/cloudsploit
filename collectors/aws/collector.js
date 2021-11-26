@@ -695,6 +695,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    Neptune: {
+        describeDBClusters: {
+            property: 'DBClusters',
+            paginate: 'Marker'
+        }
+    },
     Organizations: {
         describeOrganization: {
             property: 'Organization',
