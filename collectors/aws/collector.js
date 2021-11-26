@@ -1082,6 +1082,11 @@ var postcalls = [
                 reliesOnCall: 'listInstances',
                 override: true
             },
+            listInstanceMediaStreamStorageConfigs: {
+                reliesOnService: 'connect',
+                reliesOnCall: 'listInstances',
+                override: true
+            },
             listInstanceChatTranscriptStorageConfigs: {
                 reliesOnService: 'connect',
                 reliesOnCall: 'listInstances',
