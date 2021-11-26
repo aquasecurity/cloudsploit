@@ -10,7 +10,7 @@ module.exports = {
             'All data put into a Kinesis video stream is encrypted at rest using AWS-managed KMS keys. Use customer-managed keys instead, in order to meet regulatory compliance requirements within your organization.',
     link: 'https://docs.aws.amazon.com/connect/latest/adminguide/enable-live-media-streams.html',
     recommended_action: 'Modify Connect instance data storage configuration and enable encryption for media streams',
-    apis: ['Connect:listInstances', 'Connect:listInstanceMediaStreamsStorageConfigs', 'KMS:listKeys', 'KMS:describeKey'],
+    apis: ['Connect:listInstances', 'Connect:listInstanceMediaStreamStorageConfigs', 'KMS:listKeys', 'KMS:describeKey'],
     settings: {
         connect_media_streams_encryption_level: {
             name: 'Connect Media Streams Target Encryption Level',
@@ -63,25 +63,25 @@ module.exports = {
 
                 var resource = instance.Arn;
 
-                var listInstanceMediaStreamsStorageConfigs = helpers.addSource(cache, source,
-                    ['connect', 'listInstanceMediaStreamsStorageConfigs', region, instance.Id]);
+                var listInstanceMediaStreamStorageConfigs = helpers.addSource(cache, source,
+                    ['connect', 'listInstanceMediaStreamStorageConfigs', region, instance.Id]);
 
-                if (!listInstanceMediaStreamsStorageConfigs || listInstanceMediaStreamsStorageConfigs.err || !listInstanceMediaStreamsStorageConfigs.data ||
-                    !listInstanceMediaStreamsStorageConfigs.data.StorageConfigs) {
+                if (!listInstanceMediaStreamStorageConfigs || listInstanceMediaStreamStorageConfigs.err || !listInstanceMediaStreamStorageConfigs.data ||
+                    !listInstanceMediaStreamStorageConfigs.data.StorageConfigs) {
                     helpers.addResult(results, 3,
-                        `Unable to describe Connect instance media streams storage config: ${helpers.addError(listInstanceMediaStreamsStorageConfigs)}`,
+                        `Unable to describe Connect instance media streams storage config: ${helpers.addError(listInstanceMediaStreamStorageConfigs)}`,
                         region, resource);
                     continue;
                 }
 
-                if (!listInstanceMediaStreamsStorageConfigs.data.StorageConfigs.length) {
+                if (!listInstanceMediaStreamStorageConfigs.data.StorageConfigs.length) {
                     helpers.addResult(results, 0,
                         'Connect instance does not have any media streams enabled',
                         region, resource);
                     continue;
                 }
 
-                let storageConfig = listInstanceMediaStreamsStorageConfigs.data.StorageConfigs[0];
+                let storageConfig = listInstanceMediaStreamStorageConfigs.data.StorageConfigs[0];
 
                 if (storageConfig.KinesisVideoStreamConfig) {
                     if (storageConfig.KinesisVideoStreamConfig.EncryptionConfig &&
