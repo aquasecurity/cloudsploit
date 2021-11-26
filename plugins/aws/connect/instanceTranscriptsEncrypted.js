@@ -10,7 +10,7 @@ module.exports = {
         'such data on S3, enable encryption for the data and use a KMS key with desired encrypted level to meet regulatory compliance requirements within your organization.',
     link: 'https://docs.aws.amazon.com/connect/latest/adminguide/encryption-at-rest.html',
     recommended_action: 'Modify Connect instance data storage configuration and enable encryption for chat transcripts',
-    apis: ['Connect:listInstances', 'Connect:listInstanceChatTranscriptsStorageConfigs', 'KMS:listKeys', 'KMS:describeKey'],
+    apis: ['Connect:listInstances', 'Connect:listInstanceChatTranscriptStorageConfigs', 'KMS:listKeys', 'KMS:describeKey'],
     settings: {
         connect_chat_transcripts_encryption_level: {
             name: 'Connect Chat Transcripts Encryption Level',
@@ -63,25 +63,25 @@ module.exports = {
 
                 var resource = instance.Arn;
 
-                var listInstanceChatTranscriptsStorageConfigs = helpers.addSource(cache, source,
-                    ['connect', 'listInstanceChatTranscriptsStorageConfigs', region, instance.Id]);
+                var listInstanceChatTranscriptStorageConfigs = helpers.addSource(cache, source,
+                    ['connect', 'listInstanceChatTranscriptStorageConfigs', region, instance.Id]);
 
-                if (!listInstanceChatTranscriptsStorageConfigs || listInstanceChatTranscriptsStorageConfigs.err || !listInstanceChatTranscriptsStorageConfigs.data ||
-                    !listInstanceChatTranscriptsStorageConfigs.data.StorageConfigs) {
+                if (!listInstanceChatTranscriptStorageConfigs || listInstanceChatTranscriptStorageConfigs.err || !listInstanceChatTranscriptStorageConfigs.data ||
+                    !listInstanceChatTranscriptStorageConfigs.data.StorageConfigs) {
                     helpers.addResult(results, 3,
-                        `Unable to describe Connect instance chat transcripts storage config: ${helpers.addError(listInstanceChatTranscriptsStorageConfigs)}`,
+                        `Unable to describe Connect instance chat transcripts storage config: ${helpers.addError(listInstanceChatTranscriptStorageConfigs)}`,
                         region, resource);
                     continue;
                 }
 
-                if (!listInstanceChatTranscriptsStorageConfigs.data.StorageConfigs.length) {
+                if (!listInstanceChatTranscriptStorageConfigs.data.StorageConfigs.length) {
                     helpers.addResult(results, 0,
                         'Connect instance does not have any storage config for chat transcriptss',
                         region, resource);
                     continue;
                 }
 
-                let storageConfig = listInstanceChatTranscriptsStorageConfigs.data.StorageConfigs[0];
+                let storageConfig = listInstanceChatTranscriptStorageConfigs.data.StorageConfigs[0];
 
                 if (storageConfig.S3Config) {
                     if (storageConfig.S3Config.EncryptionConfig &&

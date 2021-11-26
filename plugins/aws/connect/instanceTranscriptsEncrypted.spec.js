@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-const instanceChatTranscriptsEncrypted = require('./instanceChatTranscriptsEncrypted');
+const instanceTranscriptsEncrypted = require('./instanceTranscriptsEncrypted');
 
 const listInstances = [
     {
@@ -15,7 +15,7 @@ const listInstances = [
     }
 ];
 
-const listInstanceChatTranscriptsStorageConfigs = [
+const listInstanceChatTranscriptStorageConfigs = [
     {
         "StorageConfigs": [
             {
@@ -106,7 +106,7 @@ const createCache = (instances, storageConfig, keys, describeKey, instancesErr, 
                     err: instancesErr
                 },
             },
-            listInstanceChatTranscriptsStorageConfigs: {
+            listInstanceChatTranscriptStorageConfigs: {
                 'us-east-1': {
                     [instanceId]: {
                         data: storageConfig
@@ -132,11 +132,11 @@ const createCache = (instances, storageConfig, keys, describeKey, instancesErr, 
     };
 };
 
-describe('instanceChatTranscriptsEncrypted', function () {
+describe('instanceTranscriptsEncrypted', function () {
     describe('run', function () {
         it('should FAIL if Connect instance is not using desired encryption level', function (done) {
-            const cache = createCache(listInstances, listInstanceChatTranscriptsStorageConfigs[0], listKeys, describeKey[1]);
-            instanceChatTranscriptsEncrypted.run(cache, {}, (err, results) => {
+            const cache = createCache(listInstances, listInstanceChatTranscriptStorageConfigs[0], listKeys, describeKey[1]);
+            instanceTranscriptsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -144,8 +144,8 @@ describe('instanceChatTranscriptsEncrypted', function () {
         });
 
         it('should FAIL if Connect instance does not have encryption enabled for chat transcripts', function (done) {
-            const cache = createCache(listInstances, listInstanceChatTranscriptsStorageConfigs[1], listKeys, describeKey[1]);
-            instanceChatTranscriptsEncrypted.run(cache, {}, (err, results) => {
+            const cache = createCache(listInstances, listInstanceChatTranscriptStorageConfigs[1], listKeys, describeKey[1]);
+            instanceTranscriptsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -153,8 +153,8 @@ describe('instanceChatTranscriptsEncrypted', function () {
         });
 
         it('should PASS if Connect instance is using desired encryption level', function (done) {
-            const cache = createCache(listInstances, listInstanceChatTranscriptsStorageConfigs[0], listKeys, describeKey[0]);
-            instanceChatTranscriptsEncrypted.run(cache, {}, (err, results) => {
+            const cache = createCache(listInstances, listInstanceChatTranscriptStorageConfigs[0], listKeys, describeKey[0]);
+            instanceTranscriptsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -162,8 +162,8 @@ describe('instanceChatTranscriptsEncrypted', function () {
         });
 
         it('should PASS if Connect instance does not have any storage config for chat transcripts', function (done) {
-            const cache = createCache(listInstances, listInstanceChatTranscriptsStorageConfigs[2], listKeys, describeKey[0]);
-            instanceChatTranscriptsEncrypted.run(cache, {}, (err, results) => {
+            const cache = createCache(listInstances, listInstanceChatTranscriptStorageConfigs[2], listKeys, describeKey[0]);
+            instanceTranscriptsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -172,7 +172,7 @@ describe('instanceChatTranscriptsEncrypted', function () {
 
         it('should PASS if no Connect instances found', function (done) {
             const cache = createCache([]);
-            instanceChatTranscriptsEncrypted.run(cache, {}, (err, results) => {
+            instanceTranscriptsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -181,7 +181,7 @@ describe('instanceChatTranscriptsEncrypted', function () {
 
         it('should UNKNOWN Unable to query Connect instances', function (done) {
             const cache = createCache([], null, listKeys, describeKey[0], { message: 'Unable to find data' });
-            instanceChatTranscriptsEncrypted.run(cache, {}, (err, results) => {
+            instanceTranscriptsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -189,8 +189,8 @@ describe('instanceChatTranscriptsEncrypted', function () {
         });
 
         it('should UNKNOWN Unable to query KMS keys', function (done) {
-            const cache = createCache(listInstances, listInstanceChatTranscriptsStorageConfigs[2], [], null, null, { message: 'Unable to find data' });
-            instanceChatTranscriptsEncrypted.run(cache, {}, (err, results) => {
+            const cache = createCache(listInstances, listInstanceChatTranscriptStorageConfigs[2], [], null, null, { message: 'Unable to find data' });
+            instanceTranscriptsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();

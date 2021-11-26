@@ -278,6 +278,12 @@ var calls = {
             paginate: 'Marker'
         }
     },
+    DocDB: {
+        describeDBClusters: {
+            property: 'DBClusters',
+            paginate: 'Marker'
+        }
+    },
     DynamoDB: {
         listTables: {
             property: 'TableNames',
@@ -285,10 +291,28 @@ var calls = {
             paginateReqProp: 'ExclusiveStartTableName'
         }
     },
+    ElastiCache: {
+        describeCacheClusters: {
+            property: 'CacheClusters',
+            paginate: 'Marker'
+        }
+    },
     DAX: {
         describeClusters: {
             property: 'Clusters',
             paginate: 'NextToken'
+        }
+    },
+    TimestreamWrite: {
+        listDatabases: {
+            property: 'Databases',
+            paginate: 'NextToken'
+        }
+    },
+    ElastiCache: {
+        describeCacheClusters: {
+            property: 'CacheClusters',
+            paginate: 'Marker'
         }
     },
     EC2: {
@@ -646,11 +670,23 @@ var calls = {
             }
         }
     },
+    Kafka: {
+        listClusters: {
+            property: 'ClusterInfoList',
+            paginate: 'NextToken'
+        }
+    },
     Lambda: {
         listFunctions: {
             property: 'Functions',
             paginate: 'NextMarker',
             paginateReqProp: 'Marker'
+        }
+    },
+    MemoryDB: {
+        describeClusters: {
+            property:'Clusters',
+            paginate:'NextToken'
         }
     },
     ManagedBlockchain: {
@@ -669,6 +705,12 @@ var calls = {
         listEnvironments: {
             property: 'Environments',
             paginate: 'NextToken'
+        }
+    },
+    Neptune: {
+        describeDBClusters: {
+            property: 'DBClusters',
+            paginate: 'Marker'
         }
     },
     Organizations: {
@@ -1046,7 +1088,7 @@ var postcalls = [
                 reliesOnCall: 'listInstances',
                 override: true
             },
-            listInstanceChatTranscriptsStorageConfigs: {
+            listInstanceChatTranscriptStorageConfigs: {
                 reliesOnService: 'connect',
                 reliesOnCall: 'listInstances',
                 override: true
@@ -1063,6 +1105,14 @@ var postcalls = [
                 reliesOnCall: 'listTables',
                 override: true
             },
+        },
+        ElastiCache: {
+            describeReplicationGroups: {
+                reliesOnService: 'elasticache',
+                reliesOnCall: 'describeCacheClusters',
+                filterKey: 'ReplicationGroupId',
+                filterValue: 'ReplicationGroupId'
+            }
         },
         ES: {
             describeElasticsearchDomain: {
