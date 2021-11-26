@@ -67,6 +67,7 @@ module.exports = {
     support: [],
     transfer: [],
     lambda: regions,
+    elasticache: regions,
     mwaa: regions,
     directconnect: regions,
     directoryservice: [],
