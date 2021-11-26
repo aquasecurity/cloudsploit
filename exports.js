@@ -278,6 +278,8 @@ module.exports = {
         'rdsTransportEncryption'        : require(__dirname + '/plugins/aws/rds/rdsTransportEncryption'),
         'rdsDeletionProtectionEnabled'  : require(__dirname + '/plugins/aws/rds/rdsDeletionProtectionEnabled.js'),
 
+        'redisClusterEncryptionInTransit': require(__dirname + '/plugins/aws/elasticache/redisClusterEncryptionInTransit.js'),
+
         'domainAutoRenew'               : require(__dirname + '/plugins/aws/route53/domainAutoRenew.js'),
         'domainExpiry'                  : require(__dirname + '/plugins/aws/route53/domainExpiry.js'),
         'domainTransferLock'            : require(__dirname + '/plugins/aws/route53/domainTransferLock.js'),
