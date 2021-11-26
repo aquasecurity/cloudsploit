@@ -291,12 +291,6 @@ var calls = {
             paginateReqProp: 'ExclusiveStartTableName'
         }
     },
-    ElastiCache: {
-        describeCacheClusters: {
-            property: 'CacheClusters',
-            paginate: 'Marker'
-        }
-    },
     DAX: {
         describeClusters: {
             property: 'Clusters',

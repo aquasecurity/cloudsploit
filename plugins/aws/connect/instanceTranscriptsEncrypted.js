@@ -5,7 +5,7 @@ module.exports = {
     title: 'Connect Instance Chat Transcripts Encrypted',
     category: 'Connect',
     domain: 'Content Delivery',
-    description: 'Ensure that Amazon Connect instances have encryption enabled for Chat Transcripts being saved on S3.',
+    description: 'Ensure that Amazon Connect instances have encryption enabled for chat transcripts being saved on S3.',
     more_info: 'You can configure Amazon Connect instance to save transcripts for chats to be saved on S3. When you save ' +
         'such data on S3, enable encryption for the data and use a KMS key with desired encrypted level to meet regulatory compliance requirements within your organization.',
     link: 'https://docs.aws.amazon.com/connect/latest/adminguide/encryption-at-rest.html',
@@ -76,7 +76,7 @@ module.exports = {
 
                 if (!listInstanceChatTranscriptStorageConfigs.data.StorageConfigs.length) {
                     helpers.addResult(results, 0,
-                        'Connect instance does not have any storage config for chat transcriptss',
+                        'Connect instance does not have any storage config for chat transcripts',
                         region, resource);
                     continue;
                 }
@@ -105,18 +105,18 @@ module.exports = {
 
                         if (currentEncryptionLevel >= desiredEncryptionLevel) {
                             helpers.addResult(results, 0,
-                                `Connect instance is using ${currentEncryptionLevelString} for chat transcripts encryption\
+                                `Connect instance is using ${currentEncryptionLevelString} for chat transcripts encryption \
                                 which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
                                 region, resource);
                         } else {
                             helpers.addResult(results, 2,
-                                `Connect instance is using ${currentEncryptionLevelString} for chat transcripts encryption\
+                                `Connect instance is using ${currentEncryptionLevelString} for chat transcripts encryption \
                                 which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                                 region, resource);
                         }
                     } else {
                         helpers.addResult(results, 2,
-                            'Connect instance does not have encryption enabled for chat transcriptss',
+                            'Connect instance does not have encryption enabled for chat transcripts',
                             region, resource);
                     }
                 } else {

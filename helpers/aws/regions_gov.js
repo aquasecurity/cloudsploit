@@ -80,7 +80,6 @@ module.exports = {
     codebuild: regions,
     mq: regions,
     glacier: regions,
-    elasticache: regions,
     timestreamwrite: regions,
     neptune: regions,
     docdb: regions,
