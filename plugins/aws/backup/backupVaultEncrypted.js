@@ -6,8 +6,7 @@ module.exports = {
     category: 'Backup',
     domain: 'Storage',
     description: 'Ensure that your Amazon Backup vaults are using AWS KMS Customer Master Keys instead of AWS managed-keys (i.e. default encryption keys).',
-    more_info: 'Amazon Key Management Service (KMS) service allows you to easily create, rotate, disable and audit the Customer Master Keys used to encrypt AWS Backup data'+
-    'Ensure that you use your own AWS KMS Customer Master Keys (CMKs) to protect the backups created with Amazon Backup service, you have full control over who can use the encryption keys to access your backups.',
+    more_info: 'When you encrypt AWS Backup using your own AWS KMS Customer Master Keys (CMKs) for enhanced protection, you have full control over who can use the encryption keys to access your backups.',
     recommended_action: 'Encrypt Backup Vault with desired encryption level',
     link: 'https://docs.aws.amazon.com/aws-backup/latest/devguide/creating-a-vault.html',
     apis: ['Backup:listBackupVaults', 'KMS:listKeys', 'KMS:describeKey'],
@@ -40,13 +39,13 @@ module.exports = {
 
             if (listBackupVaults.err || !listBackupVaults.data) {
                 helpers.addResult(results, 3,
-                    `Unable to list Backup Vaults: ${helpers.addError(listBackupVaults)}`, region);
+                    `Unable to list Backup vaults: ${helpers.addError(listBackupVaults)}`, region);
                 return rcb();
             }
 
             if (!listBackupVaults.data.length) {
                 helpers.addResult(results, 0,
-                    'No Backup Vaults found', region);
+                    'No Backup vaults found', region);
                 return rcb();
             }
 
@@ -72,7 +71,7 @@ module.exports = {
                     if (!describeKey || describeKey.err || !describeKey.data || !describeKey.data.KeyMetadata) {
                         helpers.addResult(results, 3,
                             `Unable to query KMS key: ${helpers.addError(describeKey)}`,
-                            region, kmsKeyId);
+                            region, backupVault.EncryptionKeyArn);
                         continue;
                     }
 
@@ -86,13 +85,13 @@ module.exports = {
                             region, resource);
                     } else {
                         helpers.addResult(results, 2,
-                            `Backup Vault is encrypted with ${currentEncryptionLevelString} \
+                            `Backup vault is encrypted with ${currentEncryptionLevelString} \
                             which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                             region, resource);
                     }
                 } else {
                     helpers.addResult(results, 2,
-                        'Backup Vaults does not have encryption enabled for assets',
+                        'Backup vaults does not have encryption enabled',
                         region, resource);
                 }
             }

@@ -4,15 +4,15 @@ var backupVaultEncrypted = require('./backupVaultEncrypted');
 const listBackupVaults = [
     {
         BackupVaultName: 'sadeed-vault',
-        BackupVaultArn: 'arn:aws:backup:us-east-1:560213429563:backup-vault:sadeed-vault',
+        BackupVaultArn: 'arn:aws:backup:us-east-1:000011112222:backup-vault:sadeed-vault',
         CreationDate: '2021-11-08T10:12:46.700Z',
-        EncryptionKeyArn: 'arn:aws:kms:us-east-1:560213429563:key/c4750c1a-72e5-4d16-bc72-0e7b559e0250'
+        EncryptionKeyArn: 'arn:aws:kms:us-east-1:000011112222:key/c4750c1a-72e5-4d16-bc72-0e7b559e0250'
     },
     {
         BackupVaultName: "aws/efs/automatic-backup-vault",
-        BackupVaultArn: "arn:aws:backup:us-east-1:560213429563:backup-vault:aws/efs/automatic-backup-vault",
+        BackupVaultArn: "arn:aws:backup:us-east-1:000011112222:backup-vault:aws/efs/automatic-backup-vault",
         CreationDate: "2020-10-18T10:53:45.887000-07:00",
-        EncryptionKeyArn: "arn:aws:kms:us-east-1:560213429563:key/f4942dd6-bce5-4213-bdd3-cc8ccd87dd89"
+        EncryptionKeyArn: "arn:aws:kms:us-east-1:000011112222:key/f4942dd6-bce5-4213-bdd3-cc8ccd87dd89"
     }
 ];
 
@@ -114,7 +114,7 @@ describe('backupVaultEncrypted', function () {
             backupVaultEncrypted.run(cache, { backup_vault_desired_encryption_level:'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Backup Vault is encrypted with awskms');
+                expect(results[0].message).to.include('Backup vault is encrypted with awskms');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
@@ -125,7 +125,7 @@ describe('backupVaultEncrypted', function () {
             backupVaultEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No Backup Vaults found');
+                expect(results[0].message).to.include('No Backup vaults found');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });

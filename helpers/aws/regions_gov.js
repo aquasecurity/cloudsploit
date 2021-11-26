@@ -85,7 +85,6 @@ module.exports = {
     timestreamwrite: regions,
     neptune: regions,
     docdb: regions,
-    elasticache: regions,
     memorydb: regions,
     kafka: regions,
     kendra: regions,
