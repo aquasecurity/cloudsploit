@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'You can configure Amazon Connect instance to save attachments on S3. When you save ' +
         'such data on S3, enable encryption for the data and use a KMS key with desired encrypted level to meet regulatory compliance requirements within your organization.',
     link: 'https://docs.aws.amazon.com/connect/latest/adminguide/set-up-recordings.html',
-    recommended_action: 'Modify Connect instance data storage configuration and enable encryption for  Attachments',
+    recommended_action: 'Modify Connect instance data storage configuration and enable encryption for  attachments',
     apis: ['Connect:listInstances', 'Connect:instanceAttachmentStorageConfigs', 'KMS:listKeys', 'KMS:describeKey'],
     settings: {
         connect_attachments_encryption_level: {
