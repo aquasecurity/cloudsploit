@@ -406,6 +406,7 @@ module.exports = {
         'xrayEncryptionEnabled'         : require(__dirname + '/plugins/aws/xray/xrayEncryptionEnabled.js'),
 
         'codebuildValidSourceProviders' : require(__dirname + '/plugins/aws/codebuild/codebuildValidSourceProviders.js'),
+        'projectArtifactsEncrypted'     : require(__dirname + '/plugins/aws/codebuild/projectArtifactsEncrypted.js'),
 
         'codestarValidRepoProviders'    : require(__dirname + '/plugins/aws/codestar/codestarValidRepoProviders.js'),
         
@@ -431,6 +432,7 @@ module.exports = {
         'docdbClusterEncrypted'         : require(__dirname + '/plugins/aws/documentDB/docdbClusterEncrypted.js'),
 
         'instanceTranscriptsEncrypted'  : require(__dirname + '/plugins/aws/connect/instanceTranscriptsEncrypted.js'),
+        'instanceReportsEncrypted'      : require(__dirname + '/plugins/aws/connect/instanceReportsEncrypted.js'),
         'instanceCallRecordingEncrypted': require(__dirname + '/plugins/aws/connect/instanceCallRecordingEncrypted.js'),
         'instanceAttachmentsEncrypted'  : require(__dirname + '/plugins/aws/connect/instanceAttachmentsEncrypted.js'),
         
