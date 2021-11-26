@@ -379,7 +379,7 @@ module.exports = {
         'xrayEncryptionEnabled'         : require(__dirname + '/plugins/aws/xray/xrayEncryptionEnabled.js'),
 
         'codebuildValidSourceProviders' : require(__dirname + '/plugins/aws/codebuild/codebuildValidSourceProviders.js'),
-        'projectsArtifactEncrypted'     : require(__dirname + '/plugins/aws/codebuild/projectsArtifactsEncrypted.js'),
+        'projectArtifactsEncrypted'     : require(__dirname + '/plugins/aws/codebuild/projectArtifactsEncrypted.js'),
 
         'codestarValidRepoProviders'    : require(__dirname + '/plugins/aws/codestar/codestarValidRepoProviders.js'),
         

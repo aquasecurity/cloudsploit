@@ -51,7 +51,6 @@ module.exports = {
             }
 
             async.each(listProjects.data, function(project, cb) {
-
                 var resource = `arn:${awsOrGov}:codebuild:${region}:${accountId}:project/${project}`;
 
                 var batchGetProjects = helpers.addSource(cache, source, ['codebuild', 'batchGetProjects', region, project]);
