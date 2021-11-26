@@ -91,7 +91,7 @@ module.exports = {
                     badDisks.forEach(disk => {
                         let resource = helpers.createResourceName('disks', disk.name, project, disk.locationType, disk.location);
                         helpers.addResult(results, 2,
-                            'Snapshot schedule is not configured for disk', disk.location, resource);
+                            'Snapshot schedule is not configured for disk', region, resource);
                     });
                 }
             }
@@ -104,7 +104,7 @@ module.exports = {
                     goodDisks.forEach(disk => {
                         let resource = helpers.createResourceName('disks', disk.name, project, disk.locationType, disk.location);
                         helpers.addResult(results, 0,
-                            'Snapshot schedule is configured for disk', disk.location, resource);
+                            'Snapshot schedule is configured for disk', region, resource);
                     });
                 }
             } 
