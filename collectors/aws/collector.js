@@ -1085,7 +1085,22 @@ var postcalls = [
             listInstanceMediaStreamStorageConfigs: {
                 reliesOnService: 'connect',
                 reliesOnCall: 'listInstances',
-                override: true 
+                override: true
+            },
+            listInstanceChatTranscriptStorageConfigs: {
+                reliesOnService: 'connect',
+                reliesOnCall: 'listInstances',
+                override: true
+            },   
+            listInstanceExportedReportStorageConfigs: {
+                reliesOnService: 'connect',
+                reliesOnCall: 'listInstances',
+                override: true
+            },
+            instanceAttachmentStorageConfigs: {
+                reliesOnService: 'connect',
+                reliesOnCall: 'listInstances',
+                override: true
             }
         },
         DynamoDB: {
