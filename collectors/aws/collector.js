@@ -646,6 +646,12 @@ var calls = {
             }
         }
     },
+    Kafka: {
+        listClusters: {
+            property: 'ClusterInfoList',
+            paginate: 'NextToken'
+        }
+    },
     Lambda: {
         listFunctions: {
             property: 'Functions',
