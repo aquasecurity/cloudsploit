@@ -297,6 +297,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    TimestreamWrite: {
+        listDatabases: {
+            property: 'Databases',
+            paginate: 'NextToken'
+        }
+    },
     ElastiCache: {
         describeCacheClusters: {
             property: 'CacheClusters',
