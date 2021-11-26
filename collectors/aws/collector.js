@@ -297,12 +297,6 @@ var calls = {
             paginateReqProp: 'ExclusiveStartTableName'
         }
     },
-    ElastiCache: {
-        describeCacheClusters: {
-            property: 'CacheClusters',
-            paginate: 'Marker'
-        }
-    },
     DAX: {
         describeClusters: {
             property: 'Clusters',
@@ -1089,6 +1083,11 @@ var postcalls = [
                 override: true
             },
             listInstanceExportedReportStorageConfigs: {
+                reliesOnService: 'connect',
+                reliesOnCall: 'listInstances',
+                override: true
+            },
+            instanceAttachmentStorageConfigs: {
                 reliesOnService: 'connect',
                 reliesOnCall: 'listInstances',
                 override: true
