@@ -15,7 +15,7 @@ const listInstances = [
     }
 ];
 
-const listInstanceMediaStreamsStorageConfigs = [
+const listInstanceMediaStreamStorageConfigs = [
     {
         "StorageConfigs": [
             {
@@ -112,7 +112,7 @@ const createCache = (instances, storageConfig, keys, describeKey, instancesErr, 
                     err: instancesErr
                 },
             },
-            listInstanceMediaStreamsStorageConfigs: {
+            listInstanceMediaStreamStorageConfigs: {
                 'us-east-1': {
                     [instanceId]: {
                         data: storageConfig
@@ -141,7 +141,7 @@ const createCache = (instances, storageConfig, keys, describeKey, instancesErr, 
 describe('instanceMediaStreamsEncrypted', function () {
     describe('run', function () {
         it('should FAIL if Connect instance is not using desired encryption level', function (done) {
-            const cache = createCache(listInstances, listInstanceMediaStreamsStorageConfigs[0], listKeys, describeKey[1]);
+            const cache = createCache(listInstances, listInstanceMediaStreamStorageConfigs[0], listKeys, describeKey[1]);
             instanceMediaStreamsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -150,7 +150,7 @@ describe('instanceMediaStreamsEncrypted', function () {
         });
 
         it('should PASS if Connect instance is using desired encryption level', function (done) {
-            const cache = createCache(listInstances, listInstanceMediaStreamsStorageConfigs[0], listKeys, describeKey[0]);
+            const cache = createCache(listInstances, listInstanceMediaStreamStorageConfigs[0], listKeys, describeKey[0]);
             instanceMediaStreamsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -159,7 +159,7 @@ describe('instanceMediaStreamsEncrypted', function () {
         });
 
         it('should PASS if Connect instance does not have any storage config for media streams', function (done) {
-            const cache = createCache(listInstances, listInstanceMediaStreamsStorageConfigs[2], listKeys, describeKey[0]);
+            const cache = createCache(listInstances, listInstanceMediaStreamStorageConfigs[2], listKeys, describeKey[0]);
             instanceMediaStreamsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -186,7 +186,7 @@ describe('instanceMediaStreamsEncrypted', function () {
         });
 
         it('should UNKNOWN Unable to query KMS keys', function (done) {
-            const cache = createCache(listInstances, listInstanceMediaStreamsStorageConfigs[2], [], null, null, { message: 'Unable to find data' });
+            const cache = createCache(listInstances, listInstanceMediaStreamStorageConfigs[2], [], null, null, { message: 'Unable to find data' });
             instanceMediaStreamsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
