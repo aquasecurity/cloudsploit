@@ -1081,6 +1081,11 @@ var postcalls = [
                 reliesOnService: 'connect',
                 reliesOnCall: 'listInstances',
                 override: true
+            },
+            instanceAttachmentsStorageConfigs: {
+                reliesOnService: 'connect',
+                reliesOnCall: 'listInstances',
+                override: true
             }
         },
         DynamoDB: {
