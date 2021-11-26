@@ -6,14 +6,14 @@ module.exports = {
     category: 'Connect',
     domain: 'Content Delivery',
     description: 'Ensure that Amazon Connect instances have encryption enabled for media streams being saved on Kinesis Video Stream.',
-    more_info: 'You can configure Amazon Connect instance to save media streams to be saved on Kinesis Video Stream. When you save ' +
-        'such data on Kinesis Video Stream, enable encryption for the data and use a KMS key with desired encrypted level to meet regulatory compliance requirements within your organization.',
-    link: 'https://docs.aws.amazon.com/connect/latest/adminguide/encryption-at-rest.html',
+    more_info: 'In Amazon Connect, you can capture customer audio during an interaction with your contact center by sending the audio to a Kinesis video stream.'+
+            'All data put into a Kinesis video stream is encrypted at rest using AWS-managed KMS keys. Use customer-managed keys instead, in order to meet regulatory compliance requirements within your organization.',
+    link: 'https://docs.aws.amazon.com/connect/latest/adminguide/enable-live-media-streams.html',
     recommended_action: 'Modify Connect instance data storage configuration and enable encryption for media streams',
     apis: ['Connect:listInstances', 'Connect:listInstanceMediaStreamsStorageConfigs', 'KMS:listKeys', 'KMS:describeKey'],
     settings: {
         connect_media_streams_encryption_level: {
-            name: 'Connect Media Streams Encryption Level',
+            name: 'Connect Media Streams Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
@@ -76,7 +76,7 @@ module.exports = {
 
                 if (!listInstanceMediaStreamsStorageConfigs.data.StorageConfigs.length) {
                     helpers.addResult(results, 0,
-                        'Connect instance does not have any storage config for media streams',
+                        'Connect instance does not have any media streams enabled',
                         region, resource);
                     continue;
                 }
@@ -98,28 +98,27 @@ module.exports = {
                                 region, kmsKeyArn);
                             continue;
                         }
-    
                         currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
-
-                        var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
-
-                        if (currentEncryptionLevel >= desiredEncryptionLevel) {
-                            helpers.addResult(results, 0,
-                                `Connect instance is using ${currentEncryptionLevelString} for media streams encryption\
-                                which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
-                                region, resource);
-                        } else {
-                            helpers.addResult(results, 2,
-                                `Connect instance is using ${currentEncryptionLevelString} for media streams encryption\
-                                which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
-                                region, resource);
-                        }
                     } else {
                         currentEncryptionLevel= 2; //awskms
                     }
+                    var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
+                
+                    if (currentEncryptionLevel >= desiredEncryptionLevel) {
+                        helpers.addResult(results, 0,
+                            `Connect instance is using ${currentEncryptionLevelString} for media streams encryption\
+                            which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
+                            region, resource);
+                    } else {
+                        helpers.addResult(results, 2,
+                            `Connect instance is using ${currentEncryptionLevelString} for media streams encryption\
+                            which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
+                            region, resource);
+                    }
+                   
                 } else {
                     helpers.addResult(results, 3,
-                        'Unable to find Connect instance media streams Kinesis Video Stream Config',
+                        'Unable to find Connect instance media streams Config',
                         region, resource);
                 }
             }
