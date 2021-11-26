@@ -24,6 +24,7 @@ var regions = [
     'af-south-1'        // Africa (Cape Town)
 ];
 
+
 module.exports = {
     default: ['us-east-1'],
     all: regions,
@@ -93,7 +94,7 @@ module.exports = {
     lambda: regions,
     mwaa: ['us-east-1', 'us-east-2', 'us-west-2', 'eu-west-1', 'eu-west-2', 'eu-west-3', 'ap-south-1', 'eu-north-1', 'eu-central-1',
         'ap-southeast-2', 'ap-southeast-1', 'ap-northeast-2', 'ap-northeast-1', 'ca-central-1', 'sa-east-1'],
-    directconnect: 'us-east-1', // this is global service
+    directconnect: ['us-east-1'], // this is global service
     directoryservice: regions,
     efs: regions,
     support: ['us-east-1'],

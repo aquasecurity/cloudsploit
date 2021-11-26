@@ -1468,11 +1468,20 @@ var postcalls = [
     }
 ];
 
+var rateError = [{message: 'rate'}];
+
+var apiRetryAttempts = 2;
+var apiRetryBackoff = 500;
+var apiRetryCap = 1000;
+
 // Loop through all of the top-level collectors for each service
 var collect = function(AWSConfig, settings, callback) {
     let apiCallErrors = 0;
     let apiCallTypeErrors = 0;
     let totalApiCallErrors = 0;
+
+    // Used to track rate limiting retries
+    let retries = [];
 
     // Used to gather info only
     if (settings.gather) {
@@ -1537,6 +1546,30 @@ var collect = function(AWSConfig, settings, callback) {
                 }
             }
         }
+    };
+
+    var isRateError = function(err) {
+        let isError=false;
+        for (var e in rateError) {
+            if (err &&
+                err.statusCode &&
+                rateError[e] &&
+                rateError[e].statusCode &&
+                rateError[e].statusCode.filter(code => {
+                    return code == err.statusCode;
+                }).length){
+                isError=true;
+                break;
+            } else if (err &&
+                rateError[e] &&
+                rateError[e].message &&
+                err.message &&
+                err.message.toLowerCase().indexOf(rateError[e].message.toLowerCase())>-1){
+                isError=true;
+                break;
+            }
+        }
+        return isError;
     };
 
     let runApiCalls = [];
@@ -1640,13 +1673,7 @@ var collect = function(AWSConfig, settings, callback) {
                                 return execute([paginateProp, data[nextToken]]);
                             }
 
-                            if (callObj.rateLimit) {
-                                setTimeout(function() {
-                                    regionCb();
-                                }, callObj.rateLimit);
-                            } else {
-                                regionCb();
-                            }
+                            return regionCb();
                         };
 
                         function execute(nextTokens) { // eslint-disable-line no-inner-declarations
@@ -1655,9 +1682,55 @@ var collect = function(AWSConfig, settings, callback) {
                             var localParams = JSON.parse(JSON.stringify(callObj.params || {}));
                             if (nextTokens) localParams[nextTokens[0]] = nextTokens[1];
                             if (callObj.params || nextTokens) {
-                                executor[callKey](localParams, executorCb);
+                                async.retry({
+                                    times: apiRetryAttempts,
+                                    interval: function(retryCount){
+                                        let retryExponential = 3;
+                                        let retryLeveler = 3;
+                                        let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
+                                        let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
+                                        let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
+
+                                        console.log(`Trying again in: ${retry_seconds/1000} seconds`);
+                                        retries.push({seconds: Math.round(retry_seconds/1000)});
+                                        return retry_seconds;
+                                    }
+                                }, function(cb) {
+                                    executor[callKey](localParams, function(err, data) {
+                                        if (isRateError(err)) {
+                                            return cb(err);
+                                        } else {
+                                            return cb(err, data);
+                                        }
+                                    });
+                                }, function(err, data){
+                                    executorCb(err, data);
+                                });
                             } else {
-                                executor[callKey](executorCb);
+                                async.retry({
+                                    times: apiRetryAttempts,
+                                    interval: function(retryCount){
+                                        let retryExponential = 3;
+                                        let retryLeveler = 3;
+                                        let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
+                                        let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
+                                        let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
+
+                                        console.log(`Trying again in: ${retry_seconds/1000} seconds`);
+                                        retries.push({seconds: Math.round(retry_seconds/1000)});
+                                        return retry_seconds;
+                                    }
+                                }, function(cb) {
+                                    executor[callKey](function(err, data) {
+                                        if (isRateError(err)) {
+                                            return cb(err);
+                                        } else {
+                                            return cb(err, data);
+                                        }
+                                    });
+                                }, function(err, data){
+                                    executorCb(err, data);
+                                });
                             }
                         }
                         execute();
@@ -1750,16 +1823,38 @@ var collect = function(AWSConfig, settings, callback) {
                                             var filter = {};
                                             filter[callObj.filterKey] = dep[callObj.filterValue];
                                             filter[callObj.checkMultipleKey] = thisCheck;
-                                            executor[callKey](filter, function(err, data) {
-                                                if (err) {
-                                                    collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = err;
-                                                    logError(serviceLower, callKey, region, err);
+
+                                            async.retry({
+                                                times: apiRetryAttempts,
+                                                interval: function(retryCount){
+                                                    let retryExponential = 3;
+                                                    let retryLeveler = 3;
+                                                    let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
+                                                    let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
+                                                    let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
+
+                                                    console.log(`Trying again in: ${retry_seconds/1000} seconds`);
+                                                    retries.push({seconds: Math.round(retry_seconds/1000)});
+                                                    return retry_seconds;
                                                 }
-                                                if (data) {
-                                                    if (!collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data) {
-                                                        collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = data;
+                                            }, function(cb) {
+                                                executor[callKey](filter, function(err, data) {
+                                                    if (isRateError(err)) {
+                                                        return cb(err);
+                                                    } else if (err) {
+                                                        collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = err;
+                                                        logError(serviceLower, callKey, region, err);
+                                                        return cb();
+                                                    } else {
+                                                        if (data) {
+                                                            if (!collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data) {
+                                                                collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = data;
+                                                            }
+                                                        }
+                                                        return cb();
                                                     }
-                                                }
+                                                });
+                                            }, function(){
                                                 tcCb();
                                             });
                                         }, function() {
@@ -1770,30 +1865,39 @@ var collect = function(AWSConfig, settings, callback) {
 
                                         var filter = {};
                                         filter[callObj.filterKey] = dep[callObj.filterValue];
-                                        executor[callKey](filter, function(err, data) {
-                                            if (err) {
-                                                collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = err;
-                                                logError(serviceLower, callKey, region, err);
-                                            } else {
-                                                collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = data;
+
+                                        async.retry({
+                                            times: apiRetryAttempts,
+                                            interval: function(retryCount){
+                                                let retryExponential = 3;
+                                                let retryLeveler = 3;
+                                                let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
+                                                let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
+                                                let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
+
+                                                console.log(`Trying again in: ${retry_seconds/1000} seconds`);
+                                                retries.push({seconds: Math.round(retry_seconds/1000)});
+                                                return retry_seconds;
                                             }
-                                            if (callObj.rateLimit) {
-                                                setTimeout(function() {
-                                                    depCb();
-                                                }, callObj.rateLimit);
-                                            } else {
-                                                depCb();
-                                            }
+                                        }, function(cb) {
+                                            executor[callKey](filter, function(err, data) {
+                                                if (isRateError(err)) {
+                                                    return cb(err);
+                                                } else if (err) {
+                                                    collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = err;
+                                                    logError(serviceLower, callKey, region, err);
+                                                    return cb();
+                                                } else {
+                                                    collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = data;
+                                                    return cb();
+                                                }
+                                            });
+                                        }, function(){
+                                            depCb();
                                         });
                                     }
                                 }, function() {
-                                    if (callObj.rateLimit) {
-                                        setTimeout(function() {
-                                            regionCb();
-                                        }, callObj.rateLimit);
-                                    } else {
-                                        regionCb();
-                                    }
+                                    regionCb();
                                 });
                             }
                         }, function() {
@@ -1807,7 +1911,7 @@ var collect = function(AWSConfig, settings, callback) {
                     postcallCb();
                 });
             }, function() {
-                callback(null, collection, runApiCalls, errorSummary, errorTypeSummary, errors);
+                callback(null, collection, runApiCalls, errorSummary, errorTypeSummary, errors, retries);
             });
         });
     });
