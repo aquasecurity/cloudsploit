@@ -100,5 +100,6 @@ module.exports = {
     managedblockchain: regions,
     connect: regions,
     apprunner: regions,
-    healthlake: regions
+    healthlake: regions,
+    elasticache: regions
 };
