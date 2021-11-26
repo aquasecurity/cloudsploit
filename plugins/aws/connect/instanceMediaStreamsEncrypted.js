@@ -6,7 +6,7 @@ module.exports = {
     category: 'Connect',
     domain: 'Content Delivery',
     description: 'Ensure that Amazon Connect instances have encryption enabled for media streams being saved on Kinesis Video Stream.',
-    more_info: 'In Amazon Connect, you can capture customer audio during an interaction with your contact center by sending the audio to a Kinesis video stream.'+
+    more_info: 'In Amazon Connect, you can capture customer audio during an interaction with your contact center by sending the audio to a Kinesis video stream. ' +
             'All data put into a Kinesis video stream is encrypted at rest using AWS-managed KMS keys. Use customer-managed keys instead, in order to meet regulatory compliance requirements within your organization.',
     link: 'https://docs.aws.amazon.com/connect/latest/adminguide/enable-live-media-streams.html',
     recommended_action: 'Modify Connect instance data storage configuration and enable encryption for media streams',

@@ -43,7 +43,7 @@ const listInstanceMediaStreamStorageConfigs = [
                         "RetentionPeriodHours": 1,
                         "EncryptionConfig": {
                             "EncryptionType": "KMS",
-                            "KeyId": "arn:aws:kms:us-east-1:000111222333:key/fec2198d-d766-4e39-86e0-acfeb1fd2175"
+                            "KeyId": "arn:aws:kms:us-east-1:000111222333:key/ad013a33-b01d-4d88-ac97-127399c18b3e"
                         }
                     }
                 }
@@ -77,8 +77,8 @@ const describeKey = [
     {
         "KeyMetadata": {
             "AWSAccountId": "000011112222",
-            "KeyId": "fec2198d-d766-4e39-86e0-acfeb1fd2175",
-            "Arn": "arn:aws:kms:us-east-1:000111222333:key/fec2198d-d766-4e39-86e0-acfeb1fd2175",
+            "KeyId": "ad013a33-b01d-4d88-ac97-127399c18b3e",
+            "Arn": "arn:aws:kms:us-east-1:000111222333:key/ad013a33-b01d-4d88-ac97-127399c18b3e",
             "CreationDate": "2020-12-15T01:16:53.045000+05:00",
             "Enabled": true,
             "Description": "Default master key that protects my Glue data when no other key is defined",
