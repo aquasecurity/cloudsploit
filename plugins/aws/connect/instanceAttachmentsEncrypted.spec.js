@@ -15,7 +15,7 @@ const listInstances = [
     }
 ];
 
-const instanceAttachmentsStorageConfigs = [
+const instanceAttachmentStorageConfigs = [
     {
         "StorageConfigs": [
             {
@@ -106,7 +106,7 @@ const createCache = (instances, storageConfig, keys, describeKey, instancesErr, 
                     err: instancesErr
                 },
             },
-            instanceAttachmentsStorageConfigs: {
+            instanceAttachmentStorageConfigs: {
                 'us-east-1': {
                     [instanceId]: {
                         data: storageConfig
@@ -135,7 +135,7 @@ const createCache = (instances, storageConfig, keys, describeKey, instancesErr, 
 describe('instanceAttachmentsEncrypted', function () {
     describe('run', function () {
         it('should FAIL if Connect instance is not using desired encryption level', function (done) {
-            const cache = createCache(listInstances, instanceAttachmentsStorageConfigs[0], listKeys, describeKey[1]);
+            const cache = createCache(listInstances, instanceAttachmentStorageConfigs[0], listKeys, describeKey[1]);
             instanceAttachmentsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -144,7 +144,7 @@ describe('instanceAttachmentsEncrypted', function () {
         });
 
         it('should FAIL if Connect instance does not have encryption enabled for attachments', function (done) {
-            const cache = createCache(listInstances, instanceAttachmentsStorageConfigs[1], listKeys, describeKey[1]);
+            const cache = createCache(listInstances, instanceAttachmentStorageConfigs[1], listKeys, describeKey[1]);
             instanceAttachmentsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -153,7 +153,7 @@ describe('instanceAttachmentsEncrypted', function () {
         });
 
         it('should PASS if Connect instance is using desired encryption level', function (done) {
-            const cache = createCache(listInstances, instanceAttachmentsStorageConfigs[0], listKeys, describeKey[0]);
+            const cache = createCache(listInstances, instanceAttachmentStorageConfigs[0], listKeys, describeKey[0]);
             instanceAttachmentsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -162,7 +162,7 @@ describe('instanceAttachmentsEncrypted', function () {
         });
 
         it('should PASS if Connect instance does not have any storage config for attachments', function (done) {
-            const cache = createCache(listInstances, instanceAttachmentsStorageConfigs[2], listKeys, describeKey[0]);
+            const cache = createCache(listInstances, instanceAttachmentStorageConfigs[2], listKeys, describeKey[0]);
             instanceAttachmentsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -189,7 +189,7 @@ describe('instanceAttachmentsEncrypted', function () {
         });
 
         it('should UNKNOWN Unable to query KMS keys', function (done) {
-            const cache = createCache(listInstances, instanceAttachmentsStorageConfigs[2], [], null, null, { message: 'Unable to find data' });
+            const cache = createCache(listInstances, instanceAttachmentStorageConfigs[2], [], null, null, { message: 'Unable to find data' });
             instanceAttachmentsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
