@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     description: 'Ensure that the Amazon ElastiCache cluster nodes provisioned in your AWS account have the desired node type established within your organization based on the workload deployed.',
     more_info: 'Setting limits for the type of Amazon ElastiCache cluster nodes will help you address internal compliance requirements and prevent unexpected charges on your AWS bill.',
-    recommended_action: 'Enable Desired node type for ElastiCache clusters',
+    recommended_action: 'Create ElastiCache clusters with desired node types',
     link: 'https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/WhatIs.html',
     apis: ['ElastiCache:describeCacheClusters'],
     settings: {
