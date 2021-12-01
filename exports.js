@@ -362,6 +362,7 @@ module.exports = {
         'memorydbClusterEncrypted'      : require(__dirname + '/plugins/aws/memorydb/memorydbClusterEncrypted.js'),
       
         'mskClusterEncryptionAtRest'    : require(__dirname + '/plugins/aws/msk/mskClusterEncryptionAtRest.js'),
+        'mskClusterEncryptionInTransit' : require(__dirname + '/plugins/aws/msk/mskClusterEncryptionInTransit.js'),
       
         'auditLoggingEnabled'           : require(__dirname + '/plugins/aws/redshift/auditLoggingEnabled.js'),
         'redshiftClusterCmkEncrypted'   : require(__dirname + '/plugins/aws/redshift/redshiftClusterCmkEncrypted.js'),
