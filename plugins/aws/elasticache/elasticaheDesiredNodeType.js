@@ -15,7 +15,7 @@ module.exports = {
             name: 'ElastiCache Cluster Desired Node Type',
             description: 'ElastiCache Cluster should be using the desired node type',
             regex: '^.*$',
-            default:''
+            default:'cache.t2.micro'
         }
     },
 
