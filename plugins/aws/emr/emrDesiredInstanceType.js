@@ -39,7 +39,6 @@ module.exports = {
         async.each(regions.emr, function(region, rcb) {
             const listClusters = helpers.addSource(cache, source,
                 ['emr', 'listClusters', region]);
-                // console.log(JSON.stringify(cache.emr, null ,2));
 
             if (!listClusters) return rcb();
 
