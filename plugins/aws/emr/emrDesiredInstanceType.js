@@ -26,7 +26,6 @@ module.exports = {
     },
 
     run: function(cache, settings, callback) {  
-        // console.log(JSON.stringify(cache, null, 2));
         const results = [];
         const source = {};
         const regions = helpers.regions(settings);
