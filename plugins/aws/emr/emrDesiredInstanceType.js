@@ -62,7 +62,6 @@ module.exports = {
 
                 const listInstanceGroups = helpers.addSource(cache, source,
                     ['emr', 'listInstanceGroups', region, cluster.Id]);
-                    // console.log(JSON.stringify(listInstanceGroups, null, 2));
 
                 if (!listInstanceGroups || listInstanceGroups.err ||
                     !listInstanceGroups.data || !listInstanceGroups.data.InstanceGroups) {
