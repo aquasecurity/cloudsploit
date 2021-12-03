@@ -468,7 +468,7 @@ var calls = {
             paginate: 'Marker',
             params: {
                 ClusterStates: [
-                    'RUNNING'
+                    'RUNNING','TERMINATED_WITH_ERRORS', 'STARTING','TERMINATING'
                 ]
             }
         }
@@ -1133,6 +1133,12 @@ var postcalls = [
         },
         EMR: {
             describeCluster: {
+                reliesOnService: 'emr',
+                reliesOnCall: 'listClusters',
+                filterKey: 'ClusterId',
+                filterValue: 'Id'
+            },
+            listInstanceGroups: {
                 reliesOnService: 'emr',
                 reliesOnCall: 'listClusters',
                 filterKey: 'ClusterId',
