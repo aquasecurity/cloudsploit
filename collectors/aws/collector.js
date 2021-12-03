@@ -103,7 +103,7 @@ var calls = {
         listBackupVaults: {
             property: 'BackupVaultList',
             paginate: 'NextToken',
-        },
+        }
     },
     CloudFormation: {
         listStacks: {
@@ -1113,7 +1113,7 @@ var postcalls = [
                 reliesOnService: 'dynamodb',
                 reliesOnCall: 'listTables',
                 override: true
-            },
+            }
         },
         ElastiCache: {
             describeReplicationGroups: {
