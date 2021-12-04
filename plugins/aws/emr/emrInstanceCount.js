@@ -1,0 +1,297 @@
+var async   = require('async');
+var helpers = require('../../../helpers/aws');
+
+module.exports = {
+    title: 'EMR Instances Counts',
+    category: 'EMR',
+    domain: 'Compute',
+    description: 'Ensure that the number of EMR cluster instances provisioned in your AWS account has not reached the limit quota established by your organization for the EMR workload deployed.',
+    more_info: 'Elastic MapReduce cluster instances provisioned within your AWS account will help you to manage better your EMR compute resources by monitoring and setting limits for the maximum number of instances,'+
+        'prevent unexpected charges on your AWS bill and act fast to mitigate attacks',
+    link: 'https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-manage-view-clusters.html',
+    recommended_action: 'Ensure that the number of running EMR cluster instances matches the expected count. If instances are launched above the threshold, investigate to ensure they are legitimate.',
+    apis: ['EMR:listClusters', 'EMR:listInstanceGroups'],
+    settings: {
+        instance_count_global_threshold: {
+            name: 'Instance Count Global Threshold',
+            description: 'Checks for the number of running instances across all regions and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 200
+        },
+        instance_count_region_threshold_us_east_1: {
+            name: 'Instance Count Region Threshold: us-east-1',
+            description: 'Checks for the number of running instances in the us-east-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_us_east_2: {
+            name: 'Instance Count Region Threshold: us-east-2',
+            description: 'Checks for the number of running instances in the us-east-2 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_us_west_1: {
+            name: 'Instance Count Region Threshold: us-west-1',
+            description: 'Checks for the number of running instances in the us-west-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_us_west_2: {
+            name: 'Instance Count Region Threshold: us-west-2',
+            description: 'Checks for the number of running instances in the us-west-2 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_ap_northeast_1: {
+            name: 'Instance Count Region Threshold: ap-northeast-1',
+            description: 'Checks for the number of running instances in the ap-northeast-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_ap_northeast_2: {
+            name: 'Instance Count Region Threshold: ap-northeast-2',
+            description: 'Checks for the number of running instances in the ap-northeast-2 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_ap_southeast_1: {
+            name: 'Instance Count Region Threshold: ap-southeast-1',
+            description: 'Checks for the number of running instances in the ap-southeast-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_ap_southeast_2: {
+            name: 'Instance Count Region Threshold: ap-southeast-2',
+            description: 'Checks for the number of running instances in the ap-southeast-2 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_eu_central_1: {
+            name: 'Instance Count Region Threshold: eu-central-1',
+            description: 'Checks for the number of running instances in the eu-central-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_eu_west_1: {
+            name: 'Instance Count Region Threshold: eu-west-1',
+            description: 'Checks for the number of running instances in the eu-west-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_eu_west_2: {
+            name: 'Instance Count Region Threshold: eu-west-2',
+            description: 'Checks for the number of running instances in the eu-west-2 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_eu_west_3: {
+            name: 'Instance Count Region Threshold: eu-west-3',
+            description: 'Checks for the number of running instances in the eu-west-3 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_eu_north_1: {
+            name: 'Instance Count Region Threshold: eu-north-1',
+            description: 'Checks for the number of running instances in the eu-north-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_eu_south_1: {
+            name: 'Instance Count Region Threshold: eu-south-1',
+            description: 'Checks for the number of running instances in the eu-south-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_sa_east_1: {
+            name: 'Instance Count Region Threshold: sa-east-1',
+            description: 'Checks for the number of running instances in the sa-east-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_ap_south_1: {
+            name: 'Instance Count Region Threshold: ap-south-1',
+            description: 'Checks for the number of running instances in the ap-south-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_ap_east_1: {
+            name: 'Instance Count Region Threshold: ap-east-1',
+            description: 'Checks for the number of running instances in the ap-east-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_ca_central_1: {
+            name: 'Instance Count Region Threshold: ca-central-1',
+            description: 'Checks for the number of running instances in the ca-central-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_ap_northeast_3: {
+            name: 'Instance Count Region Threshold: ap-northeast-3',
+            description: 'Checks for the number of running instances in the ap-northeast-3 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_me_south_1: {
+            name: 'Instance Count Region Threshold: me-south-1',
+            description: 'Checks for the number of running instances in the me-south-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_af_south_1: {
+            name: 'Instance Count Region Threshold: af-south-1',
+            description: 'Checks for the number of running instances in the af-south-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_us_gov_west_1: {
+            name: 'Instance Count Region Threshold: us-gov-west-1',
+            description: 'Checks for the number of running instances in the us-gov-west-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_us_gov_east_1: {
+            name: 'Instance Count Region Threshold: us-gov-east-1',
+            description: 'Checks for the number of running instances in the us-gov-east-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_cn_north_1: {
+            name: 'Instance Count Region Threshold: cn-north-1',
+            description: 'Checks for the number of running instances in the cn-north-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_cn_northwest_1: {
+            name: 'Instance Count Region Threshold: cn-northwest-1',
+            description: 'Checks for the number of running instances in the cn-northwest-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        }
+    },
+
+    run: function(cache, settings, callback) {
+        var config = {
+            instance_count_global_threshold: settings.instance_count_global_threshold || this.settings.instance_count_global_threshold.default,
+            instance_count_region_threshold_us_east_1: settings.instance_count_region_threshold_us_east_1 || this.settings.instance_count_region_threshold_us_east_1.default,
+            instance_count_region_threshold_us_east_2: settings.instance_count_region_threshold_us_east_2 || this.settings.instance_count_region_threshold_us_east_2.default,
+            instance_count_region_threshold_us_west_1: settings.instance_count_region_threshold_us_west_1 || this.settings.instance_count_region_threshold_us_west_1.default,
+            instance_count_region_threshold_us_west_2: settings.instance_count_region_threshold_us_west_2 || this.settings.instance_count_region_threshold_us_west_2.default,
+            instance_count_region_threshold_ap_northeast_1: settings.instance_count_region_threshold_ap_northeast_1 || this.settings.instance_count_region_threshold_ap_northeast_1.default,
+            instance_count_region_threshold_ap_northeast_2: settings.instance_count_region_threshold_ap_northeast_2 || this.settings.instance_count_region_threshold_ap_northeast_2.default,
+            instance_count_region_threshold_ap_southeast_1: settings.instance_count_region_threshold_ap_southeast_1 || this.settings.instance_count_region_threshold_ap_southeast_1.default,
+            instance_count_region_threshold_ap_southeast_2: settings.instance_count_region_threshold_ap_southeast_2 || this.settings.instance_count_region_threshold_ap_southeast_2.default,
+            instance_count_region_threshold_eu_central_1: settings.instance_count_region_threshold_eu_central_1 || this.settings.instance_count_region_threshold_eu_central_1.default,
+            instance_count_region_threshold_eu_west_1: settings.instance_count_region_threshold_eu_west_1 || this.settings.instance_count_region_threshold_eu_west_1.default,
+            instance_count_region_threshold_eu_west_2: settings.instance_count_region_threshold_eu_west_2 || this.settings.instance_count_region_threshold_eu_west_2.default,
+            instance_count_region_threshold_eu_west_3: settings.instance_count_region_threshold_eu_west_3 || this.settings.instance_count_region_threshold_eu_west_3.default,
+            instance_count_region_threshold_eu_north_1: settings.instance_count_region_threshold_eu_north_1 || this.settings.instance_count_region_threshold_eu_north_1.default,
+            instance_count_region_threshold_sa_east_1: settings.instance_count_region_threshold_sa_east_1 || this.settings.instance_count_region_threshold_sa_east_1.default,
+            instance_count_region_threshold_ap_south_1: settings.instance_count_region_threshold_ap_south_1 || this.settings.instance_count_region_threshold_ap_south_1.default,
+            instance_count_region_threshold_ap_east_1: settings.instance_count_region_threshold_ap_east_1 || this.settings.instance_count_region_threshold_ap_east_1.default,
+            instance_count_region_threshold_ca_central_1: settings.instance_count_region_threshold_ca_central_1 || this.settings.instance_count_region_threshold_ca_central_1.default,
+            instance_count_region_threshold_us_gov_west_1: settings.instance_count_region_threshold_us_gov_west_1 || this.settings.instance_count_region_threshold_us_gov_west_1.default,
+            instance_count_region_threshold_us_gov_east_1: settings.instance_count_region_threshold_us_gov_east_1 || this.settings.instance_count_region_threshold_us_gov_east_1.default,
+            instance_count_region_threshold_cn_north_1: settings.instance_count_region_threshold_cn_north_1 || this.settings.instance_count_region_threshold_cn_north_1.default,
+            instance_count_region_threshold_cn_northwest_1: settings.instance_count_region_threshold_cn_northwest_1 || this.settings.instance_count_region_threshold_cn_northwest_1.default
+        };
+
+        for (var c in config) {
+            if (Object.prototype.hasOwnProperty.call(settings, c)) {
+                config[c] = settings[c];    
+            }
+        }
+
+        var custom = helpers.isCustom(settings, this.settings);
+
+        var results = [];
+        var source = {};
+        var regions = helpers.regions(settings);
+        var instanceCountGlobal = 0;
+
+        async.each(regions.emr, function(region, rcb){
+
+            var listClusters = helpers.addSource(cache, source,
+                ['emr', 'listClusters', region]);
+                // console.log(JSON.stringify(cache.emr, null ,2));
+                
+            if (!listClusters) return rcb();
+
+            if (listClusters.err || !listClusters.data) {
+                helpers.addResult(results, 3,
+                    'Unable to query for clusters: ' + helpers.addError(listClusters), region);
+                return rcb();
+            }
+
+            if (!listClusters.data.length) {
+                helpers.addResult(results, 0, 'No clusters found', region);
+                return rcb();
+            }
+
+            for (const cluster of listClusters.data) {
+                if (!cluster.Id) continue;
+
+                const resource = cluster.ClusterArn;
+
+                const listInstanceGroups = helpers.addSource(cache, source,
+                    ['emr', 'listInstanceGroups', region, cluster.Id]);
+
+                if (!listInstanceGroups || listInstanceGroups.err ||
+                    !listInstanceGroups.data || !listInstanceGroups.data.InstanceGroups) {
+                    helpers.addResult(
+                        results, 3,
+                        'Unable to query for EMR cluster config: ' + helpers.addError(listInstanceGroups), region, resource);
+                    continue;
+                }
+
+                let instanceCount = 0;
+                const instanceGroups = listInstanceGroups.data.InstanceGroups;
+                const masterGroup = instanceGroups.find(InstanceGroup => InstanceGroup.InstanceGroupType === 'MASTER');
+                const coreGroup = instanceGroups.find(InstanceGroup => InstanceGroup.InstanceGroupType === 'CORE');
+                const masterInstanceCount = masterGroup ? masterGroup.RunningInstanceCount : 0;
+                const coreInstanceCount = coreGroup ? coreGroup.RunningInstanceCount : 0;
+
+                
+
+                if (masterInstanceCount) {
+                    instanceCountGlobal += masterInstanceCount;
+                    instanceCount += masterInstanceCount;
+                }
+                if (coreInstanceCount){
+                    instanceCountGlobal += coreInstanceCount;
+                    instanceCount += coreInstanceCount;
+                }
+            
+                // Print region results
+                var regionUnderscore = region.replace(/-/g, '_');
+                var regionThreshold = config['instance_count_region_threshold_'+regionUnderscore];
+
+                if (!regionThreshold) {
+                    helpers.addResult(results, 3,
+                        'The region: ' + region + ' does not have a maximum running instances count setting.', region);
+                } else if (instanceCount > regionThreshold) {
+                    helpers.addResult(results, 2,
+                        instanceCount + ' EMR instances running in ' +
+                        region + ' region, exceeding limit of: ' +
+                        regionThreshold, region, null, custom);
+                } else {
+                    helpers.addResult(results, 0,
+                        instanceCount + ' instances in the region are within the regional expected count of: ' + regionThreshold, region, null, custom);
+                }
+            }
+            rcb();
+        }, function() {
+            var globalThreshold = config.instance_count_global_threshold;
+
+            if (instanceCountGlobal > globalThreshold) {
+                helpers.addResult(results, 2,
+                    instanceCountGlobal + ' EMR instances running in all regions, exceeding limit of: ' + globalThreshold, null, null, custom);
+            } else {
+                helpers.addResult(results, 0,
+                    instanceCountGlobal + ' instances in the account are within the global expected count of: ' + globalThreshold, null, null, custom);
+            }
+            callback(null, results, source);
+        });
+    }
+};
+
