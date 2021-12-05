@@ -561,6 +561,12 @@ var calls = {
             paginate: 'nextToken'
         }
     },
+    ForecastService: {
+        listDatasets: {
+            property: 'Datasets',
+            paginate: 'NextToken'
+        }
+    },
     Glue: {
         getDataCatalogEncryptionSettings: {
             property: 'DataCatalogEncryptionSettings',
@@ -1347,6 +1353,14 @@ var postcalls = [
                 reliesOnCall: 'getLifecyclePolicies',
                 filterKey: 'PolicyId',
                 filterValue: 'PolicyId'
+            }
+        },
+        ForecastService: {
+            describeDataset: {
+                reliesOnService: 'forecastservice',
+                reliesOnCall: 'listDatasets',
+                filterKey: 'DatasetArn',
+                filterValue: 'DatasetArn'
             }
         },
         Glacier: {
