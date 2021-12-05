@@ -43,7 +43,7 @@ module.exports = {
                 if (environment.Health === 'Green') {
                     helpers.addResult(results, 0, `Enhanced Health Reporting feature is enabled for environment ${environment.EnvironmentName}. Environment health is ${environment.HealthStatus}`, region, resource);
                 } else {
-                    helpers.addResult(results, 2, `Enhanced Health Reporting is not enabled for environment: ${environment.EnvironmentName}`, region, resource);
+                    helpers.addResult(results, 2, `Enhanced Health Reporting feature is not enabled for environment: ${environment.EnvironmentName}`, region, resource);
                 }
 
                 ecb();
