@@ -162,6 +162,7 @@ module.exports = {
         'managedPlatformUpdates'        : require(__dirname + '/plugins/aws/elasticbeanstalk/managedPlatformUpdates.js'),
         'enhancedHealthReporting'       : require(__dirname + '/plugins/aws/elasticbeanstalk/enhancedHealthReporting.js'),
         'environmentAccessLogs'         : require(__dirname + '/plugins/aws/elasticbeanstalk/environmentAccessLogs.js'),
+        'environmentPersistentLogs'     : require(__dirname + '/plugins/aws/elasticbeanstalk/environmentPersistentLogs.js'),
         
         'eksKubernetesVersion'          : require(__dirname + '/plugins/aws/eks/eksKubernetesVersion.js'),
         'eksLoggingEnabled'             : require(__dirname + '/plugins/aws/eks/eksLoggingEnabled.js'),
