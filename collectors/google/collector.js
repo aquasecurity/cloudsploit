@@ -22,61 +22,52 @@ var helpers = require(__dirname + '/../../helpers/google');
 var calls = {
     disks: {
         list: {
-            api: 'compute',
-            version: 'v1',
+            url: 'https://compute.googleapis.com/compute/v1/projects/{projectid}/zones/{locationId}/disks',
             location: 'zone'
         },
         aggregatedList: {
-            api: 'compute',
-            version: 'v1',
+            url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/aggregated/disks',
             location: null
         }
     },
     images: {
         list: {
-            api: 'compute',
-            version: 'v1',
+            url: 'https://compute.googleapis.com/compute/v1/projects/{projectid}/global/images',
             location: null
         }
     },
     snapshots: {
         list: {
-            api: 'compute',
-            version: 'v1',
+            url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/global/snapshots',
             location: null,
         }
     },
     securityPolicies: {
         list: {
-            api: 'compute',
-            version: 'v1',
-            location: 'global'
+            url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/global/securityPolicies',
+            location: null
         }
     },
     resourcePolicies: {
         list: {
-            api: 'compute',
-            version: 'v1',
+            url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/regions/{locationId}/resourcePolicies',
             location: 'region'
         }
     },
     firewalls: {
         list: {
-            api: 'compute',
-            version: 'v1',
-            location: 'global'
+            url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/global/firewalls',
+            location: null
         }
     },
     instances: {
         compute: { 
             list: {
-                api: 'compute',
-                version: 'v1',
+                url: `https://compute.googleapis.com/compute/v1/projects/{projectId}/zones/{locationId}/instances`,
                 location: 'zone'
             },
             aggregatedList: {
-                api: 'compute',
-                version: 'v1',
+                url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/aggregated/instances',
                 location: null
             }
         },
@@ -179,6 +170,7 @@ var calls = {
     },
     projects: {
         get: {
+            url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}',
             api: 'compute',
             version: 'v1',
             location: null
@@ -425,7 +417,6 @@ var collect = function(GoogleConfig, settings, callback) {
 
     helpers.authenticate(GoogleConfig)
         .then(client => {
-
             async.eachOfLimit(calls, 10, function(call, service, serviceCb) {
                 if (!collection[service]) collection[service] = {};
 
