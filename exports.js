@@ -280,6 +280,7 @@ module.exports = {
         'rdsDeletionProtectionEnabled'  : require(__dirname + '/plugins/aws/rds/rdsDeletionProtectionEnabled.js'),
 
         'redisClusterEncryptionInTransit': require(__dirname + '/plugins/aws/elasticache/redisClusterEncryptionInTransit.js'),
+        'redisEngineVersions'           : require(__dirname + '/plugins/aws/elasticache/redisEngineVersions.js'),
 
         'domainAutoRenew'               : require(__dirname + '/plugins/aws/route53/domainAutoRenew.js'),
         'domainExpiry'                  : require(__dirname + '/plugins/aws/route53/domainExpiry.js'),
