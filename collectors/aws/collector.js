@@ -1121,14 +1121,6 @@ var postcalls = [
                 override: true
             }
         },
-        ElastiCache: {
-            describeReplicationGroups: {
-                reliesOnService: 'elasticache',
-                reliesOnCall: 'describeCacheClusters',
-                filterKey: 'ReplicationGroupId',
-                filterValue: 'ReplicationGroupId'
-            }
-        },
         ES: {
             describeElasticsearchDomain: {
                 reliesOnService: 'es',
