@@ -166,6 +166,7 @@ module.exports = {
         'eksPrivateEndpoint'            : require(__dirname + '/plugins/aws/eks/eksPrivateEndpoint.js'),
         'eksSecretsEncrypted'           : require(__dirname + '/plugins/aws/eks/eksSecretsEncrypted.js'),
         'eksSecurityGroups'             : require(__dirname + '/plugins/aws/eks/eksSecurityGroups.js'),
+        'eksLatestPlatformVersion'      : require(__dirname + '/plugins/aws/eks/eksLatestPlatformVersion.js'),
       
         'kendraIndexEncrypted'          : require(__dirname + '/plugins/aws/kendra/kendraIndexEncrypted.js'),
       
@@ -280,6 +281,7 @@ module.exports = {
         'rdsDeletionProtectionEnabled'  : require(__dirname + '/plugins/aws/rds/rdsDeletionProtectionEnabled.js'),
 
         'redisClusterEncryptionInTransit': require(__dirname + '/plugins/aws/elasticache/redisClusterEncryptionInTransit.js'),
+        
 
         'domainAutoRenew'               : require(__dirname + '/plugins/aws/route53/domainAutoRenew.js'),
         'domainExpiry'                  : require(__dirname + '/plugins/aws/route53/domainExpiry.js'),
