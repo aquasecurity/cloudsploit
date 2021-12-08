@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-const reservedNodePaymentfailed = require('./reservedNodePaymentfailed');
+const reservedNodePaymentFailed = require('./reservedNodePaymentFailed');
 
 const clusters = [
     {
@@ -80,11 +80,11 @@ const createNullCache = () => {
     };
 };
 
-describe('reservedNodePaymentfailed', function () {
+describe('reservedNodePaymentFailed', function () {
     describe('run', function () {
         it('should FAIL if shown state is not payment-failure option for ElastiCache reserved cache node', function (done) {
             const cache = createCache([clusters[0]]);
-            reservedNodePaymentfailed.run(cache, {}, (err, results) => {
+            reservedNodePaymentFailed.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -93,7 +93,7 @@ describe('reservedNodePaymentfailed', function () {
 
         it('should PASS if payment state is failure for ElastiCache reserved cache node', function (done) {
             const cache = createCache([clusters[1]]);
-            reservedNodePaymentfailed.run(cache, {}, (err, results) => {
+            reservedNodePaymentFailed.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -102,7 +102,7 @@ describe('reservedNodePaymentfailed', function () {
 
         it('should PASS if no ElastiCache reserved cache node found', function (done) {
             const cache = createCache([]);
-            reservedNodePaymentfailed.run(cache, {}, (err, results) => {
+            reservedNodePaymentFailed.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -111,7 +111,7 @@ describe('reservedNodePaymentfailed', function () {
 
         it('should UNKNOWN if there was an error querying for ElastiCache reserved cache node', function (done) {
             const cache = createErrorCache();
-            reservedNodePaymentfailed.run(cache, {}, (err, results) => {
+            reservedNodePaymentFailed.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -120,7 +120,7 @@ describe('reservedNodePaymentfailed', function () {
 
         it('should not return any results if unable to query for ElastiCache reserved cache node', function (done) {
             const cache = createNullCache();
-            reservedNodePaymentfailed.run(cache, {}, (err, results) => {
+            reservedNodePaymentFailed.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });
