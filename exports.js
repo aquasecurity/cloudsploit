@@ -378,6 +378,7 @@ module.exports = {
         'redshiftUnusedReservedNodes'   : require(__dirname + '/plugins/aws/redshift/redshiftUnusedReservedNodes.js'),
         'redshiftDesiredNodeType'       : require(__dirname + '/plugins/aws/redshift/redshiftDesiredNodeType.js'),
         'redisClusterEncryptionAtRest'  : require(__dirname + '/plugins/aws/elasticache/redisClusterEncryptionAtRest.js'),
+        'unusedElastiCacheReservedNode' : require(__dirname + '/plugins/aws/elasticache/unusedElastiCacheReservedNode.js'),
 
         'transferLoggingEnabled'        : require(__dirname + '/plugins/aws/transfer/transferLoggingEnabled.js'),
         'transferPrivateLinkInUse'      : require(__dirname + '/plugins/aws/transfer/transferPrivateLinkInUse.js'),
