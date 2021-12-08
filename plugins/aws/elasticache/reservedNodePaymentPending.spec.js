@@ -100,7 +100,7 @@ describe('reservedNodePaymentPending', function () {
             });
         });
 
-        it('should PASS no ElastiCache reserved cache node found', function (done) {
+        it('should PASS if no ElastiCache reserved cache node found', function (done) {
             const cache = createCache([]);
             reservedNodePaymentPending.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
