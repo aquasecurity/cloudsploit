@@ -465,8 +465,8 @@ var calls = {
 
     },
     ElastiCache: {
-        describeReplicationGroups: {
-            property: 'ReplicationGroups',
+        describeCacheClusters: {
+            property: 'CacheClusters',
             paginate: 'Marker'
         }
     },
@@ -1119,6 +1119,14 @@ var postcalls = [
                 reliesOnService: 'dynamodb',
                 reliesOnCall: 'listTables',
                 override: true
+            }
+        },
+        ElastiCache: {
+            describeReplicationGroups: {
+                reliesOnService: 'elasticache',
+                reliesOnCall: 'describeCacheClusters',
+                filterKey: 'ReplicationGroupId',
+                filterValue: 'ReplicationGroupId'
             }
         },
         ES: {

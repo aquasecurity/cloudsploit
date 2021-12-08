@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Enabling the Multi-AZ feature for your Redis Cache clusters will improve the fault tolerance in case the read/write primary node becomes unreachable due to loss of network connectivity, loss of availability in the primary’s AZ, etc. ',
     link: 'https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/AutoFailover.html#AutoFailover.Enable',
     recommended_action: 'Enable Redis Multi-AZ for ElastiCache clusters',
-    apis: ['ElastiCache:describeReplicationGroups'],
+    apis: ['ElastiCache:describeCacheClusters', 'ElastiCache:describeReplicationGroups'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -17,33 +17,42 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         async.each(regions.elasticache, function(region, rcb) {
-            var describeReplicationGroups = helpers.addSource(cache, source,
-                ['elasticache', 'describeReplicationGroups', region]);
+            var describeCacheClusters = helpers.addSource(cache, source,
+                ['elasticache', 'describeCacheClusters', region]);
+            // console.log(JSON.stringify(cache.elasticache, null, 2));
 
-            if (!describeReplicationGroups) return rcb();
+            if (!describeCacheClusters) return rcb();
 
-            if (describeReplicationGroups.err || !describeReplicationGroups.data) {
+            if (describeCacheClusters.err || !describeCacheClusters.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for ElastiCache clusters: ' + helpers.addError(describeReplicationGroups), region);
+                    'Unable to query elasticache clusters: ' + helpers.addError(describeCacheClusters), region);
                 return rcb();
             }
 
-            if (!describeReplicationGroups.data.length) {
-                helpers.addResult(results, 0, 'No ElastiCache clusters found', region);
+            if (!describeCacheClusters.data.length) {
+                helpers.addResult(results, 0, 'No elasticache clusters found', region);
                 return rcb();
             }
 
-            for (var cluster of describeReplicationGroups.data) {
+            for (let cluster of describeCacheClusters.data) {
                 if (!cluster.ARN) continue;
 
                 var resource = cluster.ARN;
+                var describeReplicationGroups = helpers.addSource(cache, source,
+                    ['elasticache', 'describeReplicationGroups', region, cluster.ReplicationGroupId]);
 
-                if (cluster.MultiAZ === 'enabled') {
-                    helpers.addResult(results, 0,
-                        'Cluster has Multi-AZ feature enabled', region, resource);
+                if (!describeReplicationGroups || describeReplicationGroups.err || !describeReplicationGroups.data) {
+                    helpers.addResult(results, 3,
+                        `Unable to get clusters description: ${helpers.addError(describeReplicationGroups)}`,
+                        region, resource);
                 } else {
-                    helpers.addResult(results, 2,
-                        'Cluster does not have Multi-AZ feature enabled', region, resource);
+                    if (describeReplicationGroups.data.MultiAZ === 'enabled') {
+                        helpers.addResult(results, 0,
+                            'Cluster has Multi-AZ feature enabled', region, resource);
+                    } else {
+                        helpers.addResult(results, 2,
+                            'Cluster does not have Multi-AZ feature enabled', region, resource);
+                    }
                 }
             }
 
