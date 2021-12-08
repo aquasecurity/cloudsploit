@@ -1722,7 +1722,7 @@ var apiRetryBackoff = 500;
 var apiRetryCap = 1000;
 
 // Loop through all of the top-level collectors for each service
-var collect = function (AWSConfig, settings, callback) {
+var collect = function(AWSConfig, settings, callback) {
     let apiCallErrors = 0;
     let apiCallTypeErrors = 0;
     let totalApiCallErrors = 0;
@@ -1750,12 +1750,12 @@ var collect = function (AWSConfig, settings, callback) {
     var errorSummary = {};
     var errorTypeSummary = {};
 
-    var debugApiCalls = function (call, service, finished) {
+    var debugApiCalls = function(call, service, finished) {
         if (!debugMode) return;
         finished ? console.log(`[INFO] ${service}:${call} returned`) : console.log(`[INFO] ${service}:${call} invoked`);
     };
 
-    var logError = function (service, call, region, err) {
+    var logError = function(service, call, region, err) {
         totalApiCallErrors++;
 
         if (!errorSummary[service]) errorSummary[service] = {};
@@ -1795,7 +1795,7 @@ var collect = function (AWSConfig, settings, callback) {
         }
     };
 
-    var isRateError = function (err) {
+    var isRateError = function(err) {
         let isError = false;
         for (var e in rateError) {
             if (err &&
@@ -1825,7 +1825,7 @@ var collect = function (AWSConfig, settings, callback) {
     var params = { AllRegions: true };
     var excludeRegions = [];
 
-    AWSEC2.describeRegions(params, function (err, accountRegions) {
+    AWSEC2.describeRegions(params, function(err, accountRegions) {
         if (err) {
             console.log(`[INFO][REGIONS] Could not load all regions from EC2: ${JSON.stringify(err)}`);
         } else {
@@ -1837,12 +1837,12 @@ var collect = function (AWSConfig, settings, callback) {
             }
         }
 
-        async.eachOfLimit(calls, 10, function (call, service, serviceCb) {
+        async.eachOfLimit(calls, 10, function(call, service, serviceCb) {
             var serviceLower = service.toLowerCase();
             if (!collection[serviceLower]) collection[serviceLower] = {};
 
             // Loop through each of the service's functions
-            async.eachOfLimit(call, 15, function (callObj, callKey, callCb) {
+            async.eachOfLimit(call, 15, function(callObj, callKey, callCb) {
                 if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
 
                 runApiCalls.push(service + ':' + callKey);
@@ -1862,7 +1862,7 @@ var collect = function (AWSConfig, settings, callback) {
                     callRegions = regions[serviceLower];
                 }
 
-                async.eachLimit(callRegions, helpers.MAX_REGIONS_AT_A_TIME, function (region, regionCb) {
+                async.eachLimit(callRegions, helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb) {
                     if (settings.skip_regions &&
                         settings.skip_regions.indexOf(region) > -1 &&
                         globalServices.indexOf(service) === -1) return regionCb();
@@ -1882,9 +1882,9 @@ var collect = function (AWSConfig, settings, callback) {
                     LocalAWSConfig.region = region;
 
                     if (callObj.override) {
-                        collectors[serviceLower][callKey](LocalAWSConfig, collection, function () {
+                        collectors[serviceLower][callKey](LocalAWSConfig, collection, function() {
                             if (callObj.rateLimit) {
-                                setTimeout(function () {
+                                setTimeout(function() {
                                     regionCb();
                                 }, callObj.rateLimit);
                             } else {
@@ -1894,7 +1894,7 @@ var collect = function (AWSConfig, settings, callback) {
                     } else {
                         var executor = debugMode ? (AWSXRay.captureAWSClient(new AWS[service](LocalAWSConfig))) : new AWS[service](LocalAWSConfig);
                         var paginating = false;
-                        var executorCb = function (err, data) {
+                        var executorCb = function(err, data) {
                             if (err) {
                                 collection[serviceLower][callKey][region].err = err;
                                 logError(serviceLower, callKey, region, err);
@@ -1931,7 +1931,7 @@ var collect = function (AWSConfig, settings, callback) {
                             if (callObj.params || nextTokens) {
                                 async.retry({
                                     times: apiRetryAttempts,
-                                    interval: function (retryCount) {
+                                    interval: function(retryCount) {
                                         let retryExponential = 3;
                                         let retryLeveler = 3;
                                         let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
@@ -1942,21 +1942,21 @@ var collect = function (AWSConfig, settings, callback) {
                                         retries.push({ seconds: Math.round(retry_seconds / 1000) });
                                         return retry_seconds;
                                     }
-                                }, function (cb) {
-                                    executor[callKey](localParams, function (err, data) {
+                                }, function(cb) {
+                                    executor[callKey](localParams, function(err, data) {
                                         if (isRateError(err)) {
                                             return cb(err);
                                         } else {
                                             return cb(err, data);
                                         }
                                     });
-                                }, function (err, data) {
+                                }, function(err, data) {
                                     executorCb(err, data);
                                 });
                             } else {
                                 async.retry({
                                     times: apiRetryAttempts,
-                                    interval: function (retryCount) {
+                                    interval: function(retryCount) {
                                         let retryExponential = 3;
                                         let retryLeveler = 3;
                                         let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
@@ -1967,36 +1967,36 @@ var collect = function (AWSConfig, settings, callback) {
                                         retries.push({ seconds: Math.round(retry_seconds / 1000) });
                                         return retry_seconds;
                                     }
-                                }, function (cb) {
-                                    executor[callKey](function (err, data) {
+                                }, function(cb) {
+                                    executor[callKey](function(err, data) {
                                         if (isRateError(err)) {
                                             return cb(err);
                                         } else {
                                             return cb(err, data);
                                         }
                                     });
-                                }, function (err, data) {
+                                }, function(err, data) {
                                     executorCb(err, data);
                                 });
                             }
                         }
                         execute();
                     }
-                }, function () {
+                }, function() {
                     debugApiCalls(callKey, service, true);
                     callCb();
                 });
-            }, function () {
+            }, function() {
                 serviceCb();
             });
-        }, function () {
+        }, function() {
             // Now loop through the follow up calls
-            async.eachSeries(postcalls, function (postcallObj, postcallCb) {
-                async.eachOfLimit(postcallObj, 10, function (serviceObj, service, serviceCb) {
+            async.eachSeries(postcalls, function(postcallObj, postcallCb) {
+                async.eachOfLimit(postcallObj, 10, function(serviceObj, service, serviceCb) {
                     var serviceLower = service.toLowerCase();
                     if (!collection[serviceLower]) collection[serviceLower] = {};
 
-                    async.eachOfLimit(serviceObj, 1, function (callObj, callKey, callCb) {
+                    async.eachOfLimit(serviceObj, 1, function(callObj, callKey, callCb) {
                         if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
 
                         runApiCalls.push(service + ':' + callKey);
@@ -2008,7 +2008,7 @@ var collect = function (AWSConfig, settings, callback) {
                         }
 
                         debugApiCalls(callKey, service);
-                        async.eachLimit(regions[serviceLower], helpers.MAX_REGIONS_AT_A_TIME, function (region, regionCb) {
+                        async.eachLimit(regions[serviceLower], helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb) {
                             if (settings.skip_regions &&
                                 settings.skip_regions.indexOf(region) > -1 &&
                                 globalServices.indexOf(service) === -1) return regionCb();
@@ -2045,9 +2045,9 @@ var collect = function (AWSConfig, settings, callback) {
                             if (callObj.signatureVersion) LocalAWSConfig.signatureVersion = callObj.signatureVersion;
 
                             if (callObj.override) {
-                                collectors[serviceLower][callKey](LocalAWSConfig, collection, function () {
+                                collectors[serviceLower][callKey](LocalAWSConfig, collection, function() {
                                     if (callObj.rateLimit) {
-                                        setTimeout(function () {
+                                        setTimeout(function() {
                                             regionCb();
                                         }, callObj.rateLimit);
                                     } else {
@@ -2062,9 +2062,9 @@ var collect = function (AWSConfig, settings, callback) {
                                     return regionCb();
                                 }
 
-                                async.eachLimit(collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region].data, 10, function (dep, depCb) {
+                                async.eachLimit(collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region].data, 10, function(dep, depCb) {
                                     if (callObj.checkMultiple) {
-                                        async.each(callObj.checkMultiple, function (thisCheck, tcCb) {
+                                        async.each(callObj.checkMultiple, function(thisCheck, tcCb) {
                                             collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]] = {};
 
                                             var filter = {};
@@ -2073,7 +2073,7 @@ var collect = function (AWSConfig, settings, callback) {
 
                                             async.retry({
                                                 times: apiRetryAttempts,
-                                                interval: function (retryCount) {
+                                                interval: function(retryCount) {
                                                     let retryExponential = 3;
                                                     let retryLeveler = 3;
                                                     let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
@@ -2084,8 +2084,8 @@ var collect = function (AWSConfig, settings, callback) {
                                                     retries.push({ seconds: Math.round(retry_seconds / 1000) });
                                                     return retry_seconds;
                                                 }
-                                            }, function (cb) {
-                                                executor[callKey](filter, function (err, data) {
+                                            }, function(cb) {
+                                                executor[callKey](filter, function(err, data) {
                                                     if (isRateError(err)) {
                                                         return cb(err);
                                                     } else if (err) {
@@ -2101,10 +2101,10 @@ var collect = function (AWSConfig, settings, callback) {
                                                         return cb();
                                                     }
                                                 });
-                                            }, function () {
+                                            }, function() {
                                                 tcCb();
                                             });
-                                        }, function () {
+                                        }, function() {
                                             depCb();
                                         });
                                     } else {
@@ -2115,7 +2115,7 @@ var collect = function (AWSConfig, settings, callback) {
 
                                         async.retry({
                                             times: apiRetryAttempts,
-                                            interval: function (retryCount) {
+                                            interval: function(retryCount) {
                                                 let retryExponential = 3;
                                                 let retryLeveler = 3;
                                                 let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
@@ -2126,8 +2126,8 @@ var collect = function (AWSConfig, settings, callback) {
                                                 retries.push({ seconds: Math.round(retry_seconds / 1000) });
                                                 return retry_seconds;
                                             }
-                                        }, function (cb) {
-                                            executor[callKey](filter, function (err, data) {
+                                        }, function(cb) {
+                                            executor[callKey](filter, function(err, data) {
                                                 if (isRateError(err)) {
                                                     return cb(err);
                                                 } else if (err) {
@@ -2139,25 +2139,25 @@ var collect = function (AWSConfig, settings, callback) {
                                                     return cb();
                                                 }
                                             });
-                                        }, function () {
+                                        }, function() {
                                             depCb();
                                         });
                                     }
-                                }, function () {
+                                }, function() {
                                     regionCb();
                                 });
                             }
-                        }, function () {
+                        }, function() {
                             debugApiCalls(callKey, service, true);
                             callCb();
                         });
-                    }, function () {
+                    }, function() {
                         serviceCb();
                     });
-                }, function () {
+                }, function() {
                     postcallCb();
                 });
-            }, function () {
+            }, function() {
                 callback(null, collection, runApiCalls, errorSummary, errorTypeSummary, errors, retries);
             });
         });
