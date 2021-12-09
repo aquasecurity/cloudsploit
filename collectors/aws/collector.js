@@ -464,6 +464,12 @@ var calls = {
         }
 
     },
+    ElastiCache: {
+        describeReservedCacheNodes: {
+            property: 'ReservedCacheNodes',
+            paginate: 'Marker'
+        },
+    },
     ECR: {
         describeRepositories: {
             property: 'repositories',
