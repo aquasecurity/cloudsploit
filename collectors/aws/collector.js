@@ -464,6 +464,12 @@ var calls = {
         }
 
     },
+    ElastiCache: {
+        describeCacheClusters: {
+            property: 'CacheClusters',
+            paginate: 'Marker'
+        }
+    },
     ECR: {
         describeRepositories: {
             property: 'repositories',
@@ -1043,7 +1049,13 @@ var postcalls = [
                 reliesOnService: 'es',
                 reliesOnCall: 'listDomainNames',
                 override: true,
-            }
+            },
+            getEcMetricStatistics: {
+                reliesOnService: 'elasticache',
+                reliesOnCall: 'describeCacheClusters',
+                override: true,
+            },
+
         },
         CodeStar: {
             describeProject: {
