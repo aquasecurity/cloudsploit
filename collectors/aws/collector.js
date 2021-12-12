@@ -1008,6 +1008,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    Wisdom: {
+        listAssistants: {
+            property: 'assistantSummaries',
+            paginate: 'NextToken'
+        }
+    },
     XRay: {
         getEncryptionConfig: {
             property: 'EncryptionConfig'
