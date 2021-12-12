@@ -969,6 +969,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    VoiceID: {
+        listDomains: {
+            property: 'DomainSummaries',
+            paginate: 'NextToken'
+        }
+    },
     WAFRegional: {
         listWebACLs: {
             property: 'WebACLs',
