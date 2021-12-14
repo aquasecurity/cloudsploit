@@ -43,6 +43,7 @@ module.exports = {
     es: regions,
     eventbridge: regions,
     kinesis: [],
+    kinesisvideo: regions,
     firehose: regions,
     glue: regions,
     kms: regions,
