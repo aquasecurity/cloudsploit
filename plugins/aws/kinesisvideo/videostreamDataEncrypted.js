@@ -35,7 +35,7 @@ module.exports = {
         async.each(regions.kinesisvideo, function(region, rcb){
             var listStreams = helpers.addSource(cache, source,
                 ['kinesisvideo', 'listStreams', region]);
-                // console.log(JSON.stringify(cache.kinesis, null, 2));
+          
             if (!listStreams) return rcb();
 
             if (listStreams.err || !listStreams.data) {
