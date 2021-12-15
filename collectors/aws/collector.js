@@ -677,6 +677,12 @@ var calls = {
             paginateReqProp: 'Marker'
         }
     },
+    LookoutEquipment: {
+        listDatasets: {
+            property: 'DatasetSummaries',
+            paginate: 'NextToken',
+        }
+    },
     MemoryDB: {
         describeClusters: {
             property:'Clusters',
@@ -1480,6 +1486,14 @@ var postcalls = [
                 reliesOnCall: 'listFunctions',
                 filterKey: 'Resource',
                 filterValue: 'FunctionArn'
+            }
+        },
+        LookoutEquipment: {
+            describeDataset: {
+                reliesOnService: 'lookoutequipment',
+                reliesOnCall: 'listDatasets',
+                filterKey: 'DatasetName',
+                filterValue: 'DatasetName'
             }
         },
         QLDB: {
