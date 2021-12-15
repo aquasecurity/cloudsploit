@@ -22,18 +22,18 @@ const listGeofenceCollections = [
 
 const describeGeofenceCollection = [
     {
-        "CollectionArn": "arn:aws:geo:us-east-1:101363889637:geofence-collection/sadeed1",
+        "CollectionArn": "arn:aws:geo:us-east-1:000111222333:geofence-collection/sadeed1",
         "CollectionName": "sadeed1",
         "CreateTime": "2021-12-15T12:39:55.016000+00:00",
         "Description": "",
-        "KmsKeyId": "arn:aws:kms:us-east-1:101363889637:key/ad013a33-b01d-4d88-ac97-127399c18b3e",
+        "KmsKeyId": "arn:aws:kms:us-east-1:000111222333:key/ad013a33-b01d-4d88-ac97-127399c18b3e",
         "PricingPlan": "MobileAssetTracking",
         "PricingPlanDataSource": "Here",
         "Tags": {},
         "UpdateTime": "2021-12-15T12:39:55.016000+00:00"
     },
     {
-        "CollectionArn": "arn:aws:geo:us-east-1:101363889637:geofence-collection/explore.geofence-collection",
+        "CollectionArn": "arn:aws:geo:us-east-1:000111222333:geofence-collection/explore.geofence-collection",
         "CollectionName": "explore.geofence-collection",
         "CreateTime": "2021-12-14T14:15:06.967000+00:00",
         "Description": "Created by Amazon Location Service explore",
