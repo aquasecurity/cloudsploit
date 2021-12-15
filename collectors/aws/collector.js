@@ -677,6 +677,12 @@ var calls = {
             paginateReqProp: 'Marker'
         }
     },
+    Location: {
+        listTrackers: {
+            property: 'Entries',
+            paginate: 'NextToken',
+        }
+    },
     MemoryDB: {
         describeClusters: {
             property:'Clusters',
@@ -1480,6 +1486,14 @@ var postcalls = [
                 reliesOnCall: 'listFunctions',
                 filterKey: 'Resource',
                 filterValue: 'FunctionArn'
+            }
+        },
+        Location: {
+            describeTracker: {
+                reliesOnService: 'location',
+                reliesOnCall: 'listTrackers',
+                filterKey: 'TrackerName',
+                filterValue: 'TrackerName'
             }
         },
         QLDB: {
