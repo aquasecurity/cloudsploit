@@ -33,7 +33,7 @@ module.exports = {
             }
 
             if (!describeCacheClusters.data.length) {
-                helpers.addResult(results, 0, 'No cache clusters found', region);
+                helpers.addResult(results, 0, 'No ElastiCache clusters found', region);
                 return rcb();
             }
 
