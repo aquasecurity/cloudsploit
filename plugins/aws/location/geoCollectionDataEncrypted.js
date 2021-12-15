@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Geoference Collection Data Encrypted',
     category: 'Location',
-    domain: 'Location Service',
+    domain: 'Application Integration',
     description: 'Ensure that Amazon Location geoference collection data is encrypted',
     more_info: 'Amazon Location Service provides encryption by default to protect sensitive customer data at rest using AWS owned encryption keys. ' +
         'You can also use customer-managed keys instead in order to gain more granular control over encryption/decryption process.',
