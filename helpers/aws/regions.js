@@ -164,5 +164,9 @@ module.exports = {
     connect: ['us-east-1', 'us-west-2', 'eu-west-2', 'ca-central-1', 'eu-central-1',
         'ap-southeast-1', 'ap-southeast-2', 'ap-northeast-1', 'ap-northeast-2'],
     apprunner:  ['us-east-1', 'us-west-2', 'us-west-2', 'eu-west-1','ap-northeast-1'],
-    healthlake: ['us-east-1', 'us-east-2', 'eu-west-2']
+    healthlake: ['us-east-1', 'us-east-2', 'eu-west-2'],
+    location: [
+        'us-east-1', 'us-east-2', 'us-west-2', 'eu-central-1', 'eu-west-1', 'eu-north-1',
+        'ap-northeast-1', 'ap-southeast-1', 'ap-southeast-2', 'ap-south-1'
+    ],
 };
