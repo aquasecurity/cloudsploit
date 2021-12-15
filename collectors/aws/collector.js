@@ -576,6 +576,10 @@ var calls = {
         listDatasets: {
             property: 'Datasets',
             paginate: 'NextToken'
+        },
+        listForecastExportJobs: {
+            property: 'ForecastExportJobs',
+            paginate: 'NextToken'
         }
     },
     FSx: {
