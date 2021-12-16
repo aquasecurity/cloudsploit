@@ -379,20 +379,23 @@ function isValidCondition(statement, allowedConditionKeys, iamConditionOperators
                 let keyLower = key.toLowerCase();
                 if (!allowedConditionKeys.find(conditionKey => conditionKey.toLowerCase() == keyLower)) continue;
 
-                var value = subCondition[key];
-                if (iamConditionOperators.string[effect].includes(defaultOperator) ||
-                    iamConditionOperators.arn[effect].includes(defaultOperator)) {
-                    if (keyLower === 'kms:calleraccount' && typeof value === 'string' && effect === 'Allow' &&  value === accountId) {
-                        foundValid = true;
-                        values.push(value);
-                    } else if (/^[0-9]{12}$/.test(value) || /^arn:aws:.+/.test(value)) {
-                        foundValid = true;
-                        values.push(value);
+                var conditionValues = subCondition[key];
+                if (!Array.isArray(conditionValues)) conditionValues = [conditionValues];
+                for (var value of conditionValues) {
+                    if (iamConditionOperators.string[effect].includes(defaultOperator) ||
+                        iamConditionOperators.arn[effect].includes(defaultOperator)) {
+                        if (keyLower === 'kms:calleraccount' && typeof value === 'string' && effect === 'Allow' &&  value === accountId) {
+                            foundValid = true;
+                            values.push(value);
+                        } else if (/^[0-9]{12}$/.test(value) || /^arn:aws:.+/.test(value)) {
+                            foundValid = true;
+                            values.push(value);
+                        }
+                    } else if (defaultOperator === 'Bool') {
+                        if ((effect === 'Allow' && value) || effect === 'Deny' && !value) foundValid = true;
+                    } else if (iamConditionOperators.ipaddress[effect].includes(defaultOperator)) {
+                        if (value !== '0.0.0.0/0' && value !== '::/0') foundValid = true;
                     }
-                } else if (defaultOperator === 'Bool') {
-                    if ((effect === 'Allow' && value) || effect === 'Deny' && !value) foundValid = true;
-                } else if (iamConditionOperators.ipaddress[effect].includes(defaultOperator)) {
-                    if (value !== '0.0.0.0/0' && value !== '::/0') foundValid = true;
                 }
             }
         }
