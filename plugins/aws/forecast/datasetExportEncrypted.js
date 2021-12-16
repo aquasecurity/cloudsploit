@@ -40,10 +40,10 @@ module.exports = {
 
                 if (S3Config.KMSKeyArn) {
                     helpers.addResult(results, 0,
-                        'Forecast Dataset Export is not encrypted.', region, resource);
+                        `Forecast Dataset Export is with ${S3Config.KMSKeyArn}`, region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `Forecast Dataset Export is encrypted with ${S3Config.KMSKeyArn}`, region, resource);
+                        'Forecast Dataset Export is not encrypted', region, resource);
                 }
             }
 
