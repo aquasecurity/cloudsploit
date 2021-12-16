@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Amazon Lookout for Metrics encrypts your data at rest with your choice of an encryption key.If you dont specify an encryption key, your data is encrypted with AWS owned key by default.' +
         'You can also use customer-managed keys instead in order to gain more granular control over encryption/decryption process.',
     recommended_action: 'Create Amazon LookoutMetrics Anomaly Detector with customer-manager keys (CMKs)',
-    link: 'https://docs.aws.amazon.com/lookout-for-equipment/latest/ug/encryption-at-rest.html',
+    link: 'https://docs.aws.amazon.com/lookoutmetrics/latest/dev/security-dataprotection.html#security-privacy-atrest',
     apis: ['LookoutMetrics:listAnomalyDetectors','LookoutMetrics:describeAnomalyDetector', 'KMS:describeKey', 'KMS:listKeys'],
     settings: {
         lookoutmetrics_anomalydetectors_desired_encryption_level: {
