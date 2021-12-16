@@ -109,5 +109,6 @@ module.exports = {
     lookoutvision: regions,
     lookoutmetrics: regions,
     forecastservice: regions,
-    lexmodelsv2: regions
+    lexmodelsv2: regions,
+    fsx: regions
 };

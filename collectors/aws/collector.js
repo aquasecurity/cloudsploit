@@ -577,6 +577,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    FSx: {
+        describeFileSystems: {
+            property: 'FileSystems',
+            paginate: 'NextToken'
+        }
+    },
     Glue: {
         getDataCatalogEncryptionSettings: {
             property: 'DataCatalogEncryptionSettings',
