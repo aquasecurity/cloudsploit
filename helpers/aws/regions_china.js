@@ -102,5 +102,6 @@ module.exports = {
     databrew: regions,
     managedblockchain: regions,
     healthlake: regions,
-    connect: regions
+    connect: regions,
+    lookoutmetrics: regions
 };
