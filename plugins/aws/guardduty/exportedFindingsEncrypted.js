@@ -12,7 +12,7 @@ module.exports = {
     apis: ['GuardDuty:listDetectors', 'GuardDuty:listPublishingDestinations', 'GuardDuty:describePublishingDestination', 'KMS:describeKey', 'KMS:listKeys', 'STS:getCallerIdentity'],
     settings: {
         exported_findings_desired_encryption_level: {
-            name: 'Location GuardDuty Export Findings Desired Encryption Level',
+            name: 'GuardDuty Export Findings Desired Encryption Level',
             description: 'In order (lowest to highest) awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
