@@ -677,6 +677,12 @@ var calls = {
             paginateReqProp: 'Marker'
         }
     },
+    LookoutVision: {
+        listProjects: {
+            property: 'Projects',
+            paginate: 'NextToken',
+        }
+    },
     MemoryDB: {
         describeClusters: {
             property:'Clusters',
@@ -1482,6 +1488,14 @@ var postcalls = [
                 filterValue: 'FunctionArn'
             }
         },
+        LookoutVision: {
+            listModels: {
+                reliesOnService: 'lookoutvision',
+                reliesOnCall: 'listProjects',
+                filterKey: 'ProjectName',
+                filterValue: 'ProjectName'
+            }
+        },
         QLDB: {
             describeLedger: {
                 reliesOnService: 'qldb',
@@ -1690,6 +1704,13 @@ var postcalls = [
                 override: true
             }
         },
+        LookoutVision: {
+            describeModel: {
+                reliesOnService: 'lookoutvision',
+                reliesOnCall: 'listProjects',
+                override: true
+            }
+        },
         ManagedBlockchain: {
             getMember: {
                 reliesOnService: 'managedblockchain',
@@ -1876,7 +1897,7 @@ var collect = function(AWSConfig, settings, callback) {
                     LocalAWSConfig.region = region;
 
                     if (callObj.override) {
-                        collectors[serviceLower][callKey](LocalAWSConfig, collection, function() {
+                        collectors[serviceLower][callKey](LocalAWSConfig, collection, retries, function() {
                             if (callObj.rateLimit) {
                                 setTimeout(function() {
                                     regionCb();
@@ -2039,7 +2060,7 @@ var collect = function(AWSConfig, settings, callback) {
                             if (callObj.signatureVersion) LocalAWSConfig.signatureVersion = callObj.signatureVersion;
 
                             if (callObj.override) {
-                                collectors[serviceLower][callKey](LocalAWSConfig, collection, function() {
+                                collectors[serviceLower][callKey](LocalAWSConfig, collection, retries, function() {
                                     if (callObj.rateLimit) {
                                         setTimeout(function() {
                                             regionCb();
