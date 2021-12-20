@@ -16,7 +16,7 @@ module.exports = {
             name: 'Storage Account Minimum TLS Version',
             description: 'Minimum desired TLS version for Microsoft Azure Storage Accounts',
             regex: '^(1.0|1.1|1.2)$',
-            default: '1.1'
+            default: '1.2'
         }
     },
 
