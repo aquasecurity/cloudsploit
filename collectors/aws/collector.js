@@ -1651,6 +1651,11 @@ var postcalls = [
                 reliesOnCall: 'listDetectors',
                 override: true,
             },
+            listFindings: {
+                reliesOnService: 'guardduty',
+                reliesOnCall: 'listDetectors',
+                override: true,
+            },
         },
     },
     {
@@ -1703,6 +1708,13 @@ var postcalls = [
                 reliesOnCall: 'listClusters',
                 override: true
             }
+        },
+        GuardDuty: {
+            getFindings: {
+                reliesOnService: 'guardduty',
+                reliesOnCall: 'listDetectors',
+                override: true,
+            },
         },
         ManagedBlockchain: {
             getMember: {
