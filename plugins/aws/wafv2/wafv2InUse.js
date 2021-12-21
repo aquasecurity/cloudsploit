@@ -38,7 +38,5 @@ module.exports = {
         }, function(){
             callback(null, results, source);
         });
-
-
     }
 };
