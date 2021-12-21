@@ -102,5 +102,6 @@ module.exports = {
     connect: regions,
     apprunner: regions,
     healthlake: regions,
-    lookoutequipment: regions
+    lookoutequipment: regions,
+    forecastservice: regions
 };

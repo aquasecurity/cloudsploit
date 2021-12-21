@@ -103,5 +103,6 @@ module.exports = {
     managedblockchain: regions,
     healthlake: regions,
     connect: regions,
-    lookoutequipment: regions
+    lookoutequipment: regions,
+    forecastservice: regions
 };
