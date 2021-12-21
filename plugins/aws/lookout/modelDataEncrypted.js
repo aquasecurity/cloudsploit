@@ -91,7 +91,7 @@ module.exports = {
                     !describeModel.data) {
                     helpers.addResult(results, 3,
                         'Unable to get LookoutVision models: ' + project.ProjectName + ': ' + helpers.addError(describeModel), region, resource);
-                    return cb();
+                    continue;
                 }
 
                 if (describeModel.data.ModelDescription && 
