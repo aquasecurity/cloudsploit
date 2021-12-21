@@ -1715,6 +1715,11 @@ var postcalls = [
                 reliesOnCall: 'listDetectors',
                 override: true,
             },
+            describePublishingDestination: {
+                reliesOnService: 'guardduty',
+                reliesOnCall: 'listDetectors',
+                override: true,
+            },
         },
         ManagedBlockchain: {
             getMember: {
@@ -1722,14 +1727,7 @@ var postcalls = [
                 reliesOnCall: 'listNetworks',
                 override: true
             }
-        },
-        GuardDuty: {
-            describePublishingDestination: {
-                reliesOnService: 'guardduty',
-                reliesOnCall: 'listDetectors',
-                override: true,
-            },
-        }
+        },           
     },
     {
         IAM: {
