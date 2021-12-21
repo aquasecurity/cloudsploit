@@ -102,5 +102,6 @@ module.exports = {
     connect: regions,
     apprunner: regions,
     healthlake: regions,
-    iotsitewise: regions
+    iotsitewise: regions,
+    forecastservice: regions
 };
