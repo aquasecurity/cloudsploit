@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'AWS WAF In Use',
+    title: 'AWS WAFV2 In Use',
     category: 'WAF',
     domain: 'Availability',
     description: 'Ensure that AWS Web Application Firewall V2 (WAFV2) is in use to achieve availability and security for AWS-powered web applications.',
