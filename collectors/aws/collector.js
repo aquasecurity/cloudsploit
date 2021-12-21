@@ -561,6 +561,12 @@ var calls = {
             paginate: 'nextToken'
         }
     },
+    ForecastService: {
+        listDatasets: {
+            property: 'Datasets',
+            paginate: 'NextToken'
+        }
+    },
     Glue: {
         getDataCatalogEncryptionSettings: {
             property: 'DataCatalogEncryptionSettings',
@@ -1355,6 +1361,14 @@ var postcalls = [
                 filterValue: 'PolicyId'
             }
         },
+        ForecastService: {
+            describeDataset: {
+                reliesOnService: 'forecastservice',
+                reliesOnCall: 'listDatasets',
+                filterKey: 'DatasetArn',
+                filterValue: 'DatasetArn'
+            }
+        },
         Glacier: {
             getVaultAccessPolicy: {
                 reliesOnService: 'glacier',
@@ -1651,6 +1665,11 @@ var postcalls = [
                 reliesOnCall: 'listDetectors',
                 override: true,
             },
+            listFindings: {
+                reliesOnService: 'guardduty',
+                reliesOnCall: 'listDetectors',
+                override: true,
+            },
         },
     },
     {
@@ -1703,6 +1722,13 @@ var postcalls = [
                 reliesOnCall: 'listClusters',
                 override: true
             }
+        },
+        GuardDuty: {
+            getFindings: {
+                reliesOnService: 'guardduty',
+                reliesOnCall: 'listDetectors',
+                override: true,
+            },
         },
         ManagedBlockchain: {
             getMember: {
