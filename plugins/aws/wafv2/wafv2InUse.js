@@ -24,7 +24,7 @@ module.exports = {
 
             if (listWebACLs.err || !listWebACLs.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for WAF: ' + helpers.addError(listWebACLs), region);
+                    'Unable to list WAFV2 web ACLs: ' + helpers.addError(listWebACLs), region);
                 return rcb();
             }
 
