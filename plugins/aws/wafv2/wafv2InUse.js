@@ -31,7 +31,7 @@ module.exports = {
             if (!listWebACLs.data.length) {
                 helpers.addResult(results, 2, 'WAF is not enabled', region);
             } else {
-                helpers.addResult(results, 0, 'WAF is enabled', region);
+                helpers.addResult(results, 0, 'WAFV2 is enabled', region);
             }
 
             rcb();
