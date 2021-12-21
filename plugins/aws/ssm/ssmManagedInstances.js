@@ -6,7 +6,7 @@ module.exports = {
     title: 'SSM Managed Instances',
     category: 'SSM',
     domain: 'Identity Access and Management',
-    description: 'Ensure that all Amazon EC2 instances are managed by AWS Systems Manager (SSM)',
+    description: 'Ensure that all Amazon EC2 instances are managed by AWS Systems Manager (SSM).',
     more_info: 'Systems Manager simplifies AWS cloud resource management, shortens the time to detect and resolve operational problems, and makes it easy to operate and manage your instances securely at scale.',
     recommended_action: 'Configure AWS EC2 instance as managed instances',
     link: 'https://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-paramstore-about.html#sysman-paramstore-securestring',
