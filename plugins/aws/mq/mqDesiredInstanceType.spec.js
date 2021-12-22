@@ -3,7 +3,7 @@ var mqDesiredInstanceType = require('./mqDesiredInstanceType');
 
 const listBrokers = [
     {
-        BrokerArn: 'arn:aws:mq:us-east-1:560213429563:broker:Mybr1:b-64f1b066-9604-46c0-ad14-b6fe482b29a0',
+        BrokerArn: 'arn:aws:mq:us-east-1:000011112222:broker:Mybr1:b-64f1b066-9604-46c0-ad14-b6fe482b29a0',
         BrokerId: 'b-64f1b066-9604-46c0-ad14-b6fe482b29a0',
         BrokerName: 'Mybr1',
         BrokerState: 'RUNNING',
@@ -13,7 +13,7 @@ const listBrokers = [
         HostInstanceType: 'mq.t3.micro'
       },
       {
-        BrokerArn: 'arn:aws:mq:us-east-1:560213429563:broker:MyBr2:b-ec84403c-f14b-438b-889b-e931706aaae6',
+        BrokerArn: 'arn:aws:mq:us-east-1:000011112222:broker:MyBr2:b-ec84403c-f14b-438b-889b-e931706aaae6',
         BrokerId: 'b-ec84403c-f14b-438b-889b-e931706aaae6',
         BrokerName: 'MyBr2',
         BrokerState: 'RUNNING',

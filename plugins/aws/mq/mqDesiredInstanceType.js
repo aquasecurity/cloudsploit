@@ -4,15 +4,16 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'MQ Desired Broker Instance Type',
     category: 'MQ',
-    description: 'Ensure that the Amazon MQ broker instances provisioned in your AWS account have the desired instance type established within your organization based on the workload deployed.',
-    more_info: 'Setting limits for the type of Amazon MQ broker instances created in your AWS account will help you address internal compliance requirements and prevent unexpected charges on your AWS bill.',
-    recommended_action: 'Enable Desired Instance type for MQ brokers',
+    description: 'Ensure that the Amazon MQ broker instances are cretaed with desired instance types.',
+    more_info: 'Set limits for the type of Amazon MQ broker instances created in your AWS account to address internal compliance ' +
+        'requirements and prevent unexpected charges on your AWS bill.',
+    recommended_action: 'Create MQ broker with desired instance types',
     link: 'https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/amazon-mq-broker-architecture.html',
     apis: ['MQ:listBrokers'],
     settings: {
         mq_desired_instance_type: {
-            name: 'MQ Desired Broker Instance Type',
-            description: 'MQ brokers should be using the desired instance type',
+            name: 'MQ Desired Broker Instance Types',
+            description: 'Comma-separated list of desired MQ broker instance types',
             regex: '^.*$',
             default:''
         }
@@ -28,11 +29,11 @@ module.exports = {
         };
         
         if (!config.mq_desired_instance_type.length) return callback(null, results, source);
-      
+
         async.each(regions.mq, function(region, rcb){        
             var listBrokers = helpers.addSource(cache, source,
                 ['mq', 'listBrokers', region]);
-                
+
             if (!listBrokers) return rcb();
 
             if (listBrokers.err || !listBrokers.data) {
@@ -45,10 +46,9 @@ module.exports = {
                 helpers.addResult(results, 0, 'No MQ brokers found', region);
                 return rcb();
             }
-           
-            for (var f in listBrokers.data) {
-                // For resource, attempt to use the endpoint address (more specific) but fallback to the instance identifier
-                var broker = listBrokers.data[f];
+
+            for (var broker of listBrokers.data) {
+                if (!broker.BrokerArn) continue;
 
                 if (broker.HostInstanceType && broker.HostInstanceType.length &&
                     config.mq_desired_instance_type.includes(broker.HostInstanceType)) {
