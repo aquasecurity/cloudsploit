@@ -21,7 +21,6 @@ module.exports = {
     },
 
     run: function(cache, settings, callback) {
-        
         var results = [];
         var source = {};
         var region = helpers.defaultRegion(settings);
