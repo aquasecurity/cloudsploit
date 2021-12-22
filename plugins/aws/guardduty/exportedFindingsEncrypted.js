@@ -74,7 +74,7 @@ module.exports = {
 
             if (!listPublishingDestinations.data.Destinations.length) {
                 helpers.addResult(results, 0,
-                    'you need to configure exports for s3 bucket for enabling encryption: '  + helpers.addError(listPublishingDestinations), region);
+                    'Guardduty findings export is not configured'), region, resource);
                 return cb();
             }
 
