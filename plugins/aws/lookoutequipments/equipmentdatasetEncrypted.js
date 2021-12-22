@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensure that Amazon LookoutEquipment Dataset is encrypted using desired KMS encryption level',
     more_info: 'Amazon Lookout for Equipment encrypts your data at rest with your choice of an encryption key.If you dont specify an encryption key, your data is encrypted with AWS owned key by default.' +
         'So by using customer-managed keys instead you will gain more granular control over encryption/decryption process.',
-    recommended_action: 'Create Amazon LookoutEquipment Dataset with customer-manager keys (CMKs)',
+    recommended_action: 'Encrypt Amazon LookoutEquipment Dataset with customer-manager keys (CMKs)',
     link: 'https://docs.aws.amazon.com/lookout-for-equipment/latest/ug/encryption-at-rest.html',
     apis: ['LookoutEquipment:listDatasets','LookoutEquipment:describeDataset', 'KMS:describeKey', 'KMS:listKeys'],
     settings: {
