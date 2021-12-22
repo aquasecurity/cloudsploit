@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Content Delivery',
     description: 'Ensure that Amazon LookoutMetrics Anomaly Detector is encrypted using desired KMS encryption level',
     more_info: 'Amazon Lookout for Metrics encrypts your data at rest with your choice of an encryption key.If you dont specify an encryption key, your data is encrypted with AWS owned key by default.' +
-        'You can also use customer-managed keys instead in order to gain more granular control over encryption/decryption process.',
+        'So use customer-managed keys instead in order to gain more granular control over encryption/decryption process.',
     recommended_action: 'Create Amazon LookoutMetrics Anomaly Detector with customer-manager keys (CMKs)',
     link: 'https://docs.aws.amazon.com/lookoutmetrics/latest/dev/security-dataprotection.html#security-privacy-atrest',
     apis: ['LookoutMetrics:listAnomalyDetectors','LookoutMetrics:describeAnomalyDetector', 'KMS:describeKey', 'KMS:listKeys'],
