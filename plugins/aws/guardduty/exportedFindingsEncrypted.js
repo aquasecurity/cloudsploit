@@ -79,7 +79,7 @@ module.exports = {
             }
 
             for (let destination of listPublishingDestinations.data.Destinations) {
-                var resource = `arn:${awsOrGov}:guardduty:${region}:${accountId}:detector/${detectorId}/publishingDestination/${ destination.DestinationId}`;
+                let resource = `arn:${awsOrGov}:guardduty:${region}:${accountId}:detector/${detectorId}/publishingDestination/${ destination.DestinationId}`;
 
                 var describePublishingDestination = helpers.addSource(cache, source,
                     ['guardduty', 'describePublishingDestination', region, destination.DestinationId]);
