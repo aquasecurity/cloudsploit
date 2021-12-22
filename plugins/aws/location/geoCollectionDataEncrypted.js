@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensure that Amazon Location geoference collection data is encrypted using desired KMS encryption level',
     more_info: 'Amazon Location Service provides encryption by default to protect sensitive customer data at rest using AWS owned encryption keys. ' +
         'You can also use customer-managed keys instead in order to gain more granular control over encryption/decryption process.',
-    recommended_action: 'Create Amazon Location geoference collection with customer-manager keys (CMKs)',
+    recommended_action: 'Encrypt Amazon Location geoference collection with customer-manager keys (CMKs)',
     link: 'https://docs.aws.amazon.com/location/latest/developerguide/encryption-at-rest.html',
     apis: ['Location:listGeofenceCollections','Location:describeGeofenceCollection', 'KMS:describeKey', 'KMS:listKeys', 'STS:getCallerIdentity'],
     settings: {
