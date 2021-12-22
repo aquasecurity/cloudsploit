@@ -86,7 +86,6 @@ module.exports = {
 
                 var describeBotAlias = helpers.addSource(cache, source,
                     ['lexmodelsv2', 'describeBotAlias', region, alias.botAliasId]);
-                    // console.log(JSON.stringify(describeBotAlias , null, 2));
 
                 if (!describeBotAlias ||
                     describeBotAlias.err ||
