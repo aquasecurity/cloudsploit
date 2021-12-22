@@ -13,7 +13,7 @@ module.exports = {
     apis: ['LookoutMetrics:listAnomalyDetectors','LookoutMetrics:describeAnomalyDetector', 'KMS:describeKey', 'KMS:listKeys'],
     settings: {
         lookoutmetrics_anomalydetectors_desired_encryption_level: {
-            name: 'LookoutMetrics Anomaly Detector Desired Encryption Level',
+            name: 'LookoutMetrics Anomaly Detector Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
