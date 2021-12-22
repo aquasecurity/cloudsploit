@@ -4,13 +4,13 @@ var equipmentdatasetEncrypted = require('./equipmentdatasetEncrypted');
 const listDatasets = [    
     {
         "DatasetName": "sadeed1",
-        "DatasetArn": "arn:aws:lookoutequipment:us-east-1:101363889637:dataset/sadeed1/7e416b3a-c317-44ed-9f51-1430d2191319",
+        "DatasetArn": "arn:aws:lookoutequipment:us-east-1:000011112222:dataset/sadeed1/7e416b3a-c317-44ed-9f51-1430d2191319",
         "Status": "CREATED",
         "CreatedAt": "2021-12-15T20:25:41.181000+05:00"
     },
     {
         "DatasetName": "sadeed2",
-        "DatasetArn": "arn:aws:lookoutequipment:us-east-1:101363889637:dataset/sadeed2/7e416b3a-c317-44ed-9f51-1430d2191319",
+        "DatasetArn": "arn:aws:lookoutequipment:us-east-1:000011112222:dataset/sadeed2/7e416b3a-c317-44ed-9f51-1430d2191319",
         "Status": "CREATED",
         "CreatedAt": "2021-12-15T20:25:41.181000+05:00"
     }
@@ -19,16 +19,16 @@ const listDatasets = [
 const describeDataset = [
     {
         "DatasetName": "sadeed1",
-        "DatasetArn": "arn:aws:lookoutequipment:us-east-1:101363889637:dataset/sadeed1/7e416b3a-c317-44ed-9f51-1430d2191319",
+        "DatasetArn": "arn:aws:lookoutequipment:us-east-1:000011112222:dataset/sadeed1/7e416b3a-c317-44ed-9f51-1430d2191319",
         "CreatedAt": "2021-12-15T20:25:41.181000+05:00",
         "LastUpdatedAt": "2021-12-15T20:25:41.181000+05:00",
         "Status": "CREATED",
         "Schema": "{\"Components\":[{\"ComponentName\":\"test1\",\"Columns\":[{\"Name\":\"Timestamp\",\"Type\":\"DATETIME\"},{\"Name\":\"Attr1\",\"Type\":\"DOUBLE\"},{\"Name\":\"Attr2\",\"Type\":\"DOUBLE\"},{\"Name\":\"Attr3\",\"Type\":\"DOUBLE\"},{\"Name\":\"Attr4\",\"Type\":\"DOUBLE\"},{\"Name\":\"Attr5\",\"Type\":\"DOUBLE\"},{\"Name\":\"Attr6\",\"Type\":\"DOUBLE\"},{\"Name\":\"Attr7\",\"Type\":\"DOUBLE\"},{\"Name\":\"Attr8\",\"Type\":\"DOUBLE\"},{\"Name\":\"Attr9\",\"Type\":\"DOUBLE\"},{\"Name\":\"Attr10\",\"Type\":\"DOUBLE\"},{\"Name\":\"Attr11\",\"Type\":\"DOUBLE\"}]}]}",
-        "ServerSideKmsKeyId": "arn:aws:kms:us-east-1:101363889637:key/ad013a33-b01d-4d88-ac97-127399c18b3e"
+        "ServerSideKmsKeyId": "arn:aws:kms:us-east-1:000011112222:key/ad013a33-b01d-4d88-ac97-127399c18b3e"
     },
     {
         "DatasetName": "sadeed1",
-        "DatasetArn": "arn:aws:lookoutequipment:us-east-1:101363889637:dataset/sadeed1/7e416b3a-c317-44ed-9f51-1430d2191319",
+        "DatasetArn": "arn:aws:lookoutequipment:us-east-1:000011112222:dataset/sadeed1/7e416b3a-c317-44ed-9f51-1430d2191319",
         "CreatedAt": "2021-12-15T20:25:41.181000+05:00",
         "LastUpdatedAt": "2021-12-15T20:25:41.181000+05:00",
         "Status": "CREATED",
@@ -125,7 +125,7 @@ describe('equipmentdatasetEncrypted', function () {
     describe('run', function () {
         it('should PASS if LookoutEquipment Dataset is encrypted with desired encryption level', function (done) {
             const cache = createCache([listDatasets[0]], listKeys, describeDataset[0], describeKey[0]);
-            equipmentdatasetEncrypted.run(cache, { lookoutequipment_dataset_desired_encryption_level : 'awscmk' }, (err, results) => {
+            equipmentdatasetEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -135,7 +135,7 @@ describe('equipmentdatasetEncrypted', function () {
 
         it('should FAIL if LookoutEquipment Dataset is not encrypted with desired encryption level', function (done) {
             const cache = createCache([listDatasets[1]], listKeys, describeDataset[1], describeKey[1]);
-            equipmentdatasetEncrypted.run(cache, { lookoutequipment_dataset_desired_encryption_level : 'awscmk' }, (err, results) => {
+            equipmentdatasetEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
