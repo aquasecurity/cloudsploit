@@ -68,7 +68,7 @@ module.exports = {
 
             if (!listPublishingDestinations || listPublishingDestinations.err || !listPublishingDestinations.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for GuardDuty publishing destination lists: ' + detectorId + ': ' + helpers.addError(listPublishingDestinations), region);
+                    'Unable to query for GuardDuty publishing destination lists: ' + helpers.addError(listPublishingDestinations), region, resource);
                 return cb();
             }
 
