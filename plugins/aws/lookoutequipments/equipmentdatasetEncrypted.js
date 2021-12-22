@@ -13,7 +13,7 @@ module.exports = {
     apis: ['LookoutEquipment:listDatasets','LookoutEquipment:describeDataset', 'KMS:describeKey', 'KMS:listKeys'],
     settings: {
         lookoutequipment_dataset_desired_encryption_level: {
-            name: 'LookoutEquipment Dataset Desired Encryption Level',
+            name: 'LookoutEquipment Dataset Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
