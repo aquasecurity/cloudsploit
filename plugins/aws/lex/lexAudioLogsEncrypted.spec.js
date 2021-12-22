@@ -49,7 +49,7 @@ const describeBotAlias = [
                     "enabled": true,
                     "destination": {
                         "cloudWatch": {
-                            "cloudWatchLogGroupArn": "arn:aws:logs:us-east-1:101363889637:log-group:mine1",
+                            "cloudWatchLogGroupArn": "arn:aws:logs:us-east-1:000011112222:log-group:mine1",
                             "logPrefix": "aws/lex/ESPNGEMBCT/TSTALIASID/DRAFT/"
                         }
                     }
@@ -60,7 +60,7 @@ const describeBotAlias = [
                     "enabled": true,
                     "destination": {
                         "s3Bucket": {
-                            "kmsKeyArn": "arn:aws:kms:us-east-1:101363889637:key/ad013a33-b01d-4d88-ac97-127399c18b3e",
+                            "kmsKeyArn": "arn:aws:kms:us-east-1:000011112222:key/ad013a33-b01d-4d88-ac97-127399c18b3e",
                             "s3BucketArn": "arn:aws:s3:::viteace-data-bucket",
                             "logPrefix": "aws/lex/ESPNGEMBCT/TSTALIASID/DRAFT/"
                         }
@@ -182,7 +182,7 @@ describe('lexAudioLogsEncrypted', function () {
 
         it('should PASS if Lex audio logs are encrypted with desired level', function (done) {
             const cache = createCache([listBots[0]], [listBotAliases[0]], describeBotAlias[0], listKeys, describeKey[0]);
-            lexAudioLogsEncrypted.run(cache, { audio_logs_desired_encryption_level: 'awscmk' }, (err, results) => {
+            lexAudioLogsEncrypted.run(cache, { }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -192,7 +192,7 @@ describe('lexAudioLogsEncrypted', function () {
 
         it('should FAIL if Lex audio logs are not encrypted with desired level ', function (done) {
             const cache = createCache([listBots[0]], [listBotAliases[1]], describeBotAlias[0], listKeys, describeKey[1]);
-            lexAudioLogsEncrypted.run(cache, { audio_logs_desired_encryption_level: 'awscmk' }, (err, results) => {
+            lexAudioLogsEncrypted.run(cache, { }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
@@ -202,7 +202,7 @@ describe('lexAudioLogsEncrypted', function () {
 
         it('should PASS if Lex conversation log settings not enabled', function (done) {
             const cache = createCache([]);
-            lexAudioLogsEncrypted.run(cache, { audio_logs_desired_encryption_level: 'awscmk' }, (err, results) => {
+            lexAudioLogsEncrypted.run(cache, { }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -211,7 +211,7 @@ describe('lexAudioLogsEncrypted', function () {
 
         it('should UNKNOWN if unable to list Lex bots', function (done) {
             const cache = createCache(null, null, null, { message: 'Unable to list LookoutVision model'});
-            lexAudioLogsEncrypted.run(cache, { audio_logs_desired_encryption_level: 'awscmk' }, (err, results) => {
+            lexAudioLogsEncrypted.run(cache, { }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -220,7 +220,7 @@ describe('lexAudioLogsEncrypted', function () {
 
         it('should UNKNOWN if unable to list Lex bot aliases', function (done) {
             const cache = createCache([listBots[0]], {}, describeBotAlias[0], null, null, { message: 'Unable to query LookoutVision models'});
-            lexAudioLogsEncrypted.run(cache, { audio_logs_desired_encryption_level: 'awscmk' }, (err, results) => {
+            lexAudioLogsEncrypted.run(cache, { }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -229,7 +229,7 @@ describe('lexAudioLogsEncrypted', function () {
 
         it('should not return anything if list bots response not found', function (done) {
             const cache = createNullCache();
-            lexAudioLogsEncrypted.run(cache, { audio_logs_desired_encryption_level: 'awscmk' }, (err, results) => {
+            lexAudioLogsEncrypted.run(cache, { }, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });
@@ -240,7 +240,7 @@ describe('lexAudioLogsEncrypted', function () {
             lexAudioLogsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].region).to.equal('global');
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
