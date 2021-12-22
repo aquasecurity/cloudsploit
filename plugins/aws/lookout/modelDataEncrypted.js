@@ -34,7 +34,6 @@ module.exports = {
 
         var listProjects = helpers.addSource(cache, source,
             ['lookoutvision', 'listProjects', region]);
-            // console.log(JSON.stringify(cache, null, 2));
 
         if (!listProjects) return callback(null, results, source);
 
