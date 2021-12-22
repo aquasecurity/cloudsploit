@@ -105,7 +105,7 @@ module.exports = {
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `Location geoference collection data is encrypted with ${currentEncryptionLevelString} \
+                        `Location geoference collection data is using ${currentEncryptionLevelString} \
                         which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 }
