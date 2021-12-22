@@ -102,7 +102,7 @@ module.exports = {
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `LookoutEquipment Datasets is encrypted with ${currentEncryptionLevelString} \
+                        `LookoutEquipment Datasets is using ${currentEncryptionLevelString} \
                         which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 }
