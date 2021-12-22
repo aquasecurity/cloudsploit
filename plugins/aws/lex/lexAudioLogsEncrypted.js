@@ -91,7 +91,7 @@ module.exports = {
                     describeBotAlias.err ||
                     !describeBotAlias.data) {
                     helpers.addResult(results, 3,
-                        'Unable to get Lex bot aliases description: ' + alias.botAliasId + ': ' + helpers.addError(describeBotAlias), region, resource);
+                        'Unable to query Lex bot alias: ' + helpers.addError(describeBotAlias), region, resource);
                     continue;
                 }
 
