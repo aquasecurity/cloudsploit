@@ -13,7 +13,7 @@ module.exports = {
     apis: ['LookoutVision:listProjects', 'LookoutVision:listModels', 'LookoutVision:describeModel', 'KMS:describeKey', 'KMS:listKeys'],
     settings: {
         model_data_desired_encryption_level: {
-            name: 'LookoutVision Model Data Desired Encryption Level',
+            name: 'LookoutVision Data Target Encryption Level',
             description: 'In order (lowest to highest) sse=S3-SSE; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(sse|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
