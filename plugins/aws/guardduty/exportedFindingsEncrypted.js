@@ -14,7 +14,7 @@ module.exports = {
         exported_findings_desired_encryption_level: {
             name: 'GuardDuty Export Findings Desired Encryption Level',
             description: 'In order (lowest to highest) awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
-            regex: '^(awscmk|externalcmk|cloudhsm)$',
+            regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
         }
     },
