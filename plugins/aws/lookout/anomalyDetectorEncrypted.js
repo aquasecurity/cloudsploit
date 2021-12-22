@@ -97,12 +97,12 @@ module.exports = {
 
                 if (currentEncryptionLevel >= desiredEncryptionLevel) {
                     helpers.addResult(results, 0,
-                        `LookoutMetrics Anomaly Detector is encrypted with ${currentEncryptionLevelString} \
+                        `LookoutMetrics Anomaly Detector is using ${currentEncryptionLevelString} \
                         which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `LookoutMetrics Anomaly Detector is encrypted with ${currentEncryptionLevelString} \
+                        `LookoutMetrics Anomaly Detector is using ${currentEncryptionLevelString} \
                         which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 }
