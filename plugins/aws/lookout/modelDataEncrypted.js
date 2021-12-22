@@ -83,7 +83,7 @@ module.exports = {
                 let resource = model.ModelArn;
 
                 var describeModel = helpers.addSource(cache, source,
-                    ['lookoutvision', 'describeModel', region, model.ModelArn]);
+                    ['lookoutvision', 'describeModel', region, model.ModelVersion]);
 
                 if (!describeModel ||
                     describeModel.err ||

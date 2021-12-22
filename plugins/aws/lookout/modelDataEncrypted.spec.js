@@ -173,6 +173,7 @@ describe('modelDataEncrypted', function () {
         it('should PASS if LookoutVision model data is encrypted with desired level', function (done) {
             const cache = createCache([listProjects[0]], [listModels[1]], describeModel[1], listKeys, describeKey[0]);
             modelDataEncrypted.run(cache, { model_data_desired_encryption_level: 'awscmk' }, (err, results) => {
+                console.log(results);
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
