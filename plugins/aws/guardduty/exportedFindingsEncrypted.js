@@ -72,7 +72,7 @@ module.exports = {
                 return cb();
             }
 
-            if (!listPublishingDestinations.data.Destinations || !listPublishingDestinations.data.Destinations.length) {
+            if (!listPublishingDestinations.data.Destinations.length) {
                 helpers.addResult(results, 0,
                     'you need to configure exports for s3 bucket for enabling encryption: '  + helpers.addError(listPublishingDestinations), region);
                 return cb();
