@@ -5,7 +5,7 @@ module.exports = {
     title: 'Tracker Data Encrypted',
     category: 'Location',
     domain: 'Application Integration',
-    description: 'Ensure that Amazon Location tracker data is encrypted',
+    description: 'Ensure that Amazon Location tracker data is encrypted using desired KMS encryption level',
     more_info: 'Amazon Location Service provides encryption by default to protect sensitive customer data at rest using AWS owned encryption keys. ' +
         'You can also use customer-managed keys instead in order to gain more granular control over encryption/decryption process.',
     recommended_action: 'Create Amazon Location tracker with customer-manager keys (CMKs)',
