@@ -6,7 +6,7 @@ module.exports = {
     category: 'GuardDuty',
     domain: 'Management and Governance',
     description: 'Ensure that GuardDuty Export Findings is encrypted',
-    more_info: 'GuardDuty data, such as findings, is encrypted at rest using AWS owned customer master keys (CMK). To successfully configure findings export, you must first give GuardDuty permission to use a CMK key present in your account rather than using external CMK from other accounts.',
+    more_info: 'GuardDuty data, such as findings, is encrypted at rest using AWS owned customer master keys (CMK). Additionally, you can use your use key (CMKs) in order to gain more control over data encryption/decryption process.',
     link: 'https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_exportfindings.html',
     recommended_action: 'Create GuardDuty Export Findings with customer-manager keys (CMKs) present in your account',
     apis: ['GuardDuty:listDetectors', 'GuardDuty:listPublishingDestinations', 'GuardDuty:describePublishingDestination', 'KMS:describeKey', 'KMS:listKeys', 'STS:getCallerIdentity'],
