@@ -930,58 +930,6 @@ function getSubnetRTMap(subnets, routeTables) {
     return subnetRTMap;
 }
 
-function isRateError(err) {
-    let isError=false;
-    let rateError = [{message: 'rate'}];
-    for (var e in rateError) {
-        if (err &&
-            err.statusCode &&
-            rateError[e] &&
-            rateError[e].statusCode &&
-            rateError[e].statusCode.filter(code => {
-                return code == err.statusCode;
-            }).length){
-            isError=true;
-            break;
-        } else if (err &&
-            rateError[e] &&
-            rateError[e].message &&
-            err.message &&
-            err.message.toLowerCase().indexOf(rateError[e].message.toLowerCase())>-1){
-            isError=true;
-            break;
-        }
-    }
-    return isError;
-}
-
-function makeCustomCollectorCall(executor, callKey, params, retries, apiRetryAttempts=2, apiRetryCap=1000, apiRetryBackoff=500, callback) {
-    async.retry({
-        times: apiRetryAttempts,
-        interval: function(retryCount){
-            let retryExponential = 3;
-            let retryLeveler = 3;
-            let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
-            let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
-            let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
-
-            console.log(`Trying ${callKey} again in: ${retry_seconds/1000} seconds`);
-            retries.push({seconds: Math.round(retry_seconds/1000)});
-            return retry_seconds;
-        }
-    }, function(cb) {
-        executor[callKey](params, function(err, data) {
-            if (isRateError(err)) {
-                return cb(err);
-            } else {
-                return cb(err, data);
-            }
-        });
-    }, function(err, result) {
-        callback(err, result);
-    });
-}
-
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
@@ -1011,5 +959,4 @@ module.exports = {
     getUsedSecurityGroups: getUsedSecurityGroups,
     getPrivateSubnets: getPrivateSubnets,
     getSubnetRTMap: getSubnetRTMap,
-    makeCustomCollectorCall: makeCustomCollectorCall,
 };

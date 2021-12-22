@@ -5,15 +5,15 @@ module.exports = {
     title: 'Model Data Encrypted',
     category: 'LookoutVision',
     domain: 'Management and Governance',
-    description: 'Ensure that LookoutVision model data is encrypted',
+    description: 'Ensure that LookoutVision model data is encrypted using desired KMS encryption level',
     more_info: 'By default, trained models and manifest files are encrypted in Amazon S3 using server-side encryption with KMS keys stored in AWS Key Management Service (SSE-KMS).'+
         'You can also use customer-managed keys instead in order to gain more granular control over encryption/decryption process.',
     link: 'https://docs.aws.amazon.com/lookout-for-vision/latest/developer-guide/security-data-encryption.html',
-    recommended_action: 'Create LookoutVision model with customer-manager keys (CMKs) present in your account',
+    recommended_action: 'Encrypt LookoutVision model with customer-manager keys (CMKs) present in your account',
     apis: ['LookoutVision:listProjects', 'LookoutVision:listModels', 'LookoutVision:describeModel', 'KMS:describeKey', 'KMS:listKeys'],
     settings: {
         model_data_desired_encryption_level: {
-            name: 'LookoutVision Model Data Desired Encryption Level',
+            name: 'LookoutVision Data Target Encryption Level',
             description: 'In order (lowest to highest) sse=S3-SSE; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(sse|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
@@ -24,7 +24,7 @@ module.exports = {
         
         var results = [];
         var source = {};
-        var region = helpers.defaultRegion(settings);
+        var region = helpers.regions(settings);
 
         var config = {
             desiredEncryptionLevelString: settings.model_data_desired_encryption_level || this.settings.model_data_desired_encryption_level.default
@@ -33,49 +33,49 @@ module.exports = {
         var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(config.desiredEncryptionLevelString);
         var currentEncryptionLevel;
 
-        var listProjects = helpers.addSource(cache, source,
-            ['lookoutvision', 'listProjects', region]);
-            // console.log(JSON.stringify(cache, null, 2));
+        async.each(region.lookoutvision, function(region, rcb){
+            var listProjects = helpers.addSource(cache, source,
+                ['lookoutvision', 'listProjects', region]);
 
-        if (!listProjects) return callback(null, results, source);
+            if (!listProjects) return rcb();
 
-        if (listProjects.err || !listProjects.data) {
-            helpers.addResult(results, 3,
-                'Unable to query for LookoutVision projects: ' + helpers.addError(listProjects));
-            return callback(null, results, source);
-        }
-
-        if (!listProjects.data.length) {
-            helpers.addResult(results, 0, 'No LookoutVision projects found');
-            return callback(null, results, source);
-        }
-
-        var listKeys = helpers.addSource(cache, source,
-            ['kms', 'listKeys', region]);
-
-        if (!listKeys || listKeys.err || !listKeys.data) {
-            helpers.addResult(results, 3,
-                `Unable to list KMS keys: ${helpers.addError(listKeys)}`, region);
-            return callback(null, results, source);
-        }
-
-        async.each(listProjects.data, function(project, cb){
-            if (!project.ProjectName) return cb();
-
-            var listModels = helpers.addSource(cache, source,
-                ['lookoutvision', 'listModels', region, project.ProjectName]);
-                // console.log(listModels.data);
-
-            if (!listModels || listModels.err || !listModels.data) {
+            if (listProjects.err || !listProjects.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for LookoutVision models: ' + project.ProjectName + ': ' + helpers.addError(listModels), region);
-                return cb();
+                    'Unable to query for LookoutVision projects: ' + helpers.addError(listProjects), region);
+                return rcb();
             }
 
-            if (!listModels.data.Models || !listModels.data.Models.length) {
+            if (!listProjects.data.length) {
+                helpers.addResult(results, 0, 'No LookoutVision projects found', region);
+                return rcb();
+            }
+
+            var listKeys = helpers.addSource(cache, source,
+                ['kms', 'listKeys', region]);
+
+            if (!listKeys || listKeys.err || !listKeys.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for LookoutVision models descriptions: '  + helpers.addError(listModels), region);
-                return cb();
+                    `Unable to list KMS keys: ${helpers.addError(listKeys)}`, region);
+                return rcb();
+            }
+    
+            for (let project of listProjects.data){
+                if (!project.ProjectName) continue;
+
+                var listModels = helpers.addSource(cache, source,
+                    ['lookoutvision', 'listModels', region, project.ProjectName]);
+
+                if (!listModels || listModels.err || !listModels.data) {
+                    helpers.addResult(results, 3,
+                        'Unable to query for LookoutVision models: ' + project.ProjectName + ': ' + helpers.addError(listModels), region);
+                    continue;
+                }
+
+                if (!listModels.data.Models || !listModels.data.Models.length) {
+                    helpers.addResult(results, 3,
+                        'Unable to query for LookoutVision models descriptions: '  + helpers.addError(listModels), region);
+                    continue;
+                }
             }
 
             for (let model of listModels.data.Models) {
@@ -84,13 +84,13 @@ module.exports = {
                 let resource = model.ModelArn;
 
                 var describeModel = helpers.addSource(cache, source,
-                    ['lookoutvision', 'describeModel', region, model.ModelVersion]);
+                    ['lookoutvision', 'describeModel', region, model.ModelArn]);
 
                 if (!describeModel ||
                     describeModel.err ||
                     !describeModel.data) {
                     helpers.addResult(results, 3,
-                        'Unable to get LookoutVision models: ' + project.ProjectName + ': ' + helpers.addError(describeModel), region, resource);
+                        'Unable to get LookoutVision models: ' + helpers.addError(describeModel), region, resource);
                     continue;
                 }
 
@@ -129,7 +129,7 @@ module.exports = {
                         region, resource);
                 }
             }
-            cb();
+            rcb();
         }, function(){
             callback(null, results, source);
         });

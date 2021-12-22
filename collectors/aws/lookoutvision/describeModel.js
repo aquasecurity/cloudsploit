@@ -22,18 +22,18 @@ module.exports = function(AWSConfig, collection, retries, callback) {
         }
 
         async.eachLimit(collection.lookoutvision.listModels[AWSConfig.region][project.ProjectName].data.Models, 3, function(model, pCb){
-            collection.lookoutvision.describeModel[AWSConfig.region][model.ModelVersion] = {};
+            collection.lookoutvision.describeModel[AWSConfig.region][model.ModelArn] = {};
 
             // Make the describe Models call
             lookoutvision.describeModel({
-                ModelVersion: model.ModelVersion,
+                ModelArn: model.ModelArn,
                 ProjectName: project.ProjectName
             }, function(err, data){
                 if (err) {
-                    collection.lookoutvision.describeModel[AWSConfig.region][model.ModelVersion].err = err;
+                    collection.lookoutvision.describeModel[AWSConfig.region][model.ModelArn].err = err;
                 }
 
-                collection.lookoutvision.describeModel[AWSConfig.region][model.ModelVersion].data = data;
+                collection.lookoutvision.describeModel[AWSConfig.region][model.ModelArn].data = data;
                 pCb();
             });
         }, function(){
