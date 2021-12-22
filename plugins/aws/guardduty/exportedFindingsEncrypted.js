@@ -109,11 +109,7 @@ module.exports = {
 
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
 
-                } else {
-                    helpers.addResult(results, 3,
-                        'Unable to find encryption configuration for GuardDuty publishing destination');
-                    return cb();
-                }
+                } else currentEncryptionLevel = 2; //awskms
 
                 var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
 
