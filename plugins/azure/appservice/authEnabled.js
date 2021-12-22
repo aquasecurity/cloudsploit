@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Authentication Enabled',
     category: 'App Service',
+    domain: 'Application Integration',
     description: 'Ensures Authentication is enabled for App Services, redirecting unauthenticated users to the login page.',
     more_info: 'Enabling authentication will redirect all unauthenticated requests to the login page. It also handles authentication of users with specific providers (Azure Active Directory, Facebook, Google, Microsoft Account, and Twitter).',
     recommended_action: 'Enable App Service Authentication for all App Services.',

@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/alibaba');
 module.exports = {
     title: 'ActionTrail Bucket Private',
     category: 'ActionTrail',
+    domain: 'Compliance',
     description: 'Ensure that OSS buckets which are acting as ActionTrail trails destinations, should not be publicly accessible.',
     more_info: 'When you allow public-access on an OSS bucket, all Internet users can access the objects in the bucket ' +
         'and write data to the bucket. This may cause unexpected access to the data in your bucket, and cause an increase in your fees. ' +

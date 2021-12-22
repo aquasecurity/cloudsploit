@@ -78,6 +78,7 @@ var badCiphers = [
 module.exports = {
     title: 'Insecure Ciphers',
     category: 'ELB',
+    domain: 'Content Delivery',
     description: 'Detect use of insecure ciphers on ELBs',
     more_info: 'Various security vulnerabilities have rendered several ciphers insecure. Only the recommended ciphers should be used.',
     link: 'http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/elb-security-policy-options.html',

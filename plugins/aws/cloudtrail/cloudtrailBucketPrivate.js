@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'CloudTrail Bucket Private',
     category: 'CloudTrail',
+    domain: 'Compliance',
     description: 'Ensures CloudTrail logging bucket is not publicly accessible',
     more_info: 'CloudTrail buckets contain large amounts of sensitive account data and should only be accessible by logged in users.',
     recommended_action: 'Set the S3 bucket access policy for all CloudTrail buckets to only allow known users to access its files.',
@@ -37,7 +38,7 @@ module.exports = {
             }
 
             async.each(describeTrails.data, function(trail, cb){
-                if (!trail.S3BucketName) return cb();
+                if (!trail.S3BucketName || (trail.HomeRegion && trail.HomeRegion.toLowerCase() !== region)) return cb();
                 // Skip CloudSploit-managed events bucket
                 if (trail.S3BucketName == helpers.CLOUDSPLOIT_EVENTS_BUCKET) return cb();
 

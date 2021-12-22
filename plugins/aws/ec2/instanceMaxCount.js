@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'EC2 Max Instances',
     category: 'EC2',
+    domain: 'Compute',
     description: 'Ensures the total number of EC2 instances does not exceed a set threshold.',
     more_info: 'The number of running EC2 instances should be carefully audited, especially in unused regions, to ensure only approved applications are consuming compute resources. Many compromised AWS accounts see large numbers of EC2 instances launched.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/monitoring_ec2.html',
@@ -94,6 +95,12 @@ module.exports = {
             regex: '^[0-9]{1,4}$',
             default: 100
         },
+        instance_count_region_threshold_eu_south_1: {
+            name: 'Instance Count Region Threshold: eu-south-1',
+            description: 'Checks for the number of running instances in the eu-south-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
         instance_count_region_threshold_sa_east_1: {
             name: 'Instance Count Region Threshold: sa-east-1',
             description: 'Checks for the number of running instances in the sa-east-1 region and triggers a failing result if it exceeds the specified count',
@@ -115,6 +122,24 @@ module.exports = {
         instance_count_region_threshold_ca_central_1: {
             name: 'Instance Count Region Threshold: ca-central-1',
             description: 'Checks for the number of running instances in the ca-central-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_ap_northeast_3: {
+            name: 'Instance Count Region Threshold: ap-northeast-3',
+            description: 'Checks for the number of running instances in the ap-northeast-3 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_me_south_1: {
+            name: 'Instance Count Region Threshold: me-south-1',
+            description: 'Checks for the number of running instances in the me-south-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_af_south_1: {
+            name: 'Instance Count Region Threshold: af-south-1',
+            description: 'Checks for the number of running instances in the af-south-1 region and triggers a failing result if it exceeds the specified count',
             regex: '^[0-9]{1,4}$',
             default: 100
         },

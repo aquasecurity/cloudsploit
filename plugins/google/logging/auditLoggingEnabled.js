@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Audit Logging Enabled',
     category: 'Logging',
+    domain: 'Management and Governance',
     description: 'Ensures that default audit logging is enabled on the organization or project.',
     more_info: 'The default audit logs should be configured to log all admin activities and write and read access to data for all services. In addition, no exempted members should be added to the logs to ensure proper delivery of all audit logs.',
     link: 'https://cloud.google.com/logging/docs/audit/',
@@ -42,30 +43,38 @@ module.exports = {
             }
 
             let iamPolicy = getIamPolicy.data[0];
-
             if (iamPolicy &&
                 iamPolicy.auditConfigs) {
-                iamPolicy.auditConfigs.forEach(auditConfig => {
-                    if (enabledOnOrg) return;
-                    if (auditConfig.service &&
-                        auditConfig.service === 'allServices' &&
-                        auditConfig.auditLogConfigs &&
-                        auditConfig.auditLogConfigs.length) {
+                let auditConfig = iamPolicy.auditConfigs.find(auditConfig => (auditConfig.service && auditConfig.service === 'allServices'));
+                if (auditConfig &&
+                    auditConfig.auditLogConfigs &&
+                    auditConfig.auditLogConfigs.length) {
 
-                        let auditLogConfigs = auditConfig.auditLogConfigs.filter(auditLogConfig => {
-                            return (['ADMIN_READ', 'DATA_READ', 'DATA_WRITE'].indexOf(auditLogConfig.logType) > - 1);
-                        });
+                    let auditLogConfigs = auditConfig.auditLogConfigs.filter(auditLogConfig => {
+                        return (['ADMIN_READ', 'DATA_READ', 'DATA_WRITE'].indexOf(auditLogConfig.logType) > - 1);
+                    });
 
-                        let exemptedMembers = auditConfig.auditLogConfigs.filter(auditLogConfig => {
-                            return (auditLogConfig.exemptedMembers && auditLogConfig.exemptedMembers.length);
-                        });
+                    let exemptedMembers = auditConfig.auditLogConfigs.filter(auditLogConfig => {
+                        return (auditLogConfig.exemptedMembers && auditLogConfig.exemptedMembers.length);
+                    });
 
+                    if (auditLogConfigs.length == 3 && !exemptedMembers.length) {
                         enabledOnOrg = true;
-                        if (auditLogConfigs.length == 3 && !exemptedMembers.length) {
-                            helpers.addResult(results, 0, 'Audit logging is enabled on the organization', 'global');
-                        }
                     }
-                });
+                }
+                if (!enabledOnOrg) {
+                    let loggingEnabledServices = iamPolicy.auditConfigs.filter(config => {
+                        return ((config.auditLogConfigs.filter(auditLogConfig => {
+                            return (['ADMIN_READ', 'DATA_READ', 'DATA_WRITE'].indexOf(auditLogConfig.logType) > - 1);
+                        }).length) == 3);
+                    });
+                    if (loggingEnabledServices && loggingEnabledServices.length >= 100) {
+                        enabledOnOrg = true;
+                    }
+                }
+                if (enabledOnOrg) {
+                    helpers.addResult(results, 0, 'Audit logging is enabled on the organization', 'global');
+                }
             }
         }
         if (enabledOnOrg) return callback(null, results, source);
@@ -87,34 +96,77 @@ module.exports = {
             }
 
             var iamPolicy = iamPolicies.data[0];
+
             var foundLoggingConfig = false;
+            let status, message;
             if (iamPolicy &&
                 iamPolicy.auditConfigs) {
-                iamPolicy.auditConfigs.forEach(auditConfig => {
-                    if (foundLoggingConfig) return;
-                    if (auditConfig.service &&
-                        auditConfig.service === 'allServices' &&
-                        auditConfig.auditLogConfigs &&
-                        auditConfig.auditLogConfigs.length) {
+                let auditConfig = iamPolicy.auditConfigs.find(auditConfig => (auditConfig.service && auditConfig.service === 'allServices'));
+                if (auditConfig &&
+                    auditConfig.auditLogConfigs &&
+                    auditConfig.auditLogConfigs.length) {
 
-                        var auditLogConfigs = auditConfig.auditLogConfigs.filter(auditLogConfig => {
-                            return (['ADMIN_READ', 'DATA_READ', 'DATA_WRITE'].indexOf(auditLogConfig.logType) > - 1);
+                    var auditLogConfigs = auditConfig.auditLogConfigs.filter(auditLogConfig => {
+                        return (['ADMIN_READ', 'DATA_READ', 'DATA_WRITE'].indexOf(auditLogConfig.logType) > - 1);
+                    });
+
+                    var exemptedMembers = auditConfig.auditLogConfigs.filter(auditLogConfig => {
+                        return (auditLogConfig.exemptedMembers && auditLogConfig.exemptedMembers.length);
+                    });
+
+                    foundLoggingConfig = true;
+                    if (auditLogConfigs.length < 3) {
+                        status = 2;
+                        message = 'Audit logging is not properly configured on the project';
+                    } else if (exemptedMembers.length) {
+                        status = 2;
+                        message = 'Default audit configuration has exempted members';
+                    } else {
+                        status = 0;
+                        message = 'Audit logging is enabled on the project';
+                    }
+                }
+
+                if (typeof status == 'undefined' || status > 0) {
+                    let loggingEnabledServices = 0;
+                    let projectExemptedMembers = false;
+
+                    if (iamPolicy.auditConfigs && iamPolicy.auditConfigs.length) {
+                        loggingEnabledServices = iamPolicy.auditConfigs.filter(config => {
+                            return ((config.auditLogConfigs.filter(auditLogConfig => {
+                                return (['ADMIN_READ', 'DATA_READ', 'DATA_WRITE'].indexOf(auditLogConfig.logType) > - 1);
+                            }).length) == 3);
                         });
 
-                        var exemptedMembers = auditConfig.auditLogConfigs.filter(auditLogConfig => {
-                            return (auditLogConfig.exemptedMembers && auditLogConfig.exemptedMembers.length);
-                        });
-
-                        foundLoggingConfig = true;
-                        if (auditLogConfigs.length < 3) {
-                            helpers.addResult(results, 2, 'Audit logging is not properly configured on the project', region);
-                        } else if (exemptedMembers.length) {
-                            helpers.addResult(results, 2, 'Default audit configuration has exempted members', region);
-                        } else {
-                            helpers.addResult(results, 0, 'Audit logging is enabled on the project', region);
+                        for (let config of iamPolicy.auditConfigs) {
+                            if (config.auditLogConfigs && config.auditLogConfigs.length) {
+                                for (let auditLogConfig of config.auditLogConfigs) {
+                                    if (auditLogConfig.exemptedMembers && auditLogConfig.exemptedMembers.length) {
+                                        projectExemptedMembers = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (projectExemptedMembers) break;
                         }
                     }
-                });
+
+                    if (loggingEnabledServices && loggingEnabledServices.length >= 100 && !projectExemptedMembers) {
+                        status = 0;
+                        message = 'Audit logging is enabled on the project';
+                    } else if (loggingEnabledServices && loggingEnabledServices.length && projectExemptedMembers) {
+                        status = 2;
+                        message = 'Audit logging has exempted members for some services in the project';
+                    } else if (loggingEnabledServices && loggingEnabledServices.length) {
+                        status = 2;
+                        message = 'Audit logging is not properly configured on the project';
+                    } else if (typeof status == 'undefined' && !message) {
+                        status = 2;
+                        message = 'Audit logging is not enabled on the project';
+                    }
+                }
+                foundLoggingConfig = true;
+                helpers.addResult(results, status, message, region);
             }
             if (!foundLoggingConfig) {
                 helpers.addResult(results, 2, 'Audit logging is not enabled on the project', region);

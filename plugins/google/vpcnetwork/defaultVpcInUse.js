@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Default VPC In Use',
     category: 'VPC Network',
+    domain: 'Network Access Control',
     description: 'Determines whether the default VPC is being used for launching VM instances',
     more_info: 'The default VPC should not be used in order to avoid launching multiple services in the same network which may not require connectivity. Each application, or network tier, should use its own VPC.',
     link: 'https://cloud.google.com/vpc/docs/vpc',

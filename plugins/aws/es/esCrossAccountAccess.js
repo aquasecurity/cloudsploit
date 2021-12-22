@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'ElasticSearch Domain Cross Account access',
     category: 'ES',
+    domain: 'Databases',
     description: 'Ensures that only trusted accounts have access to ElasticSearch domains.',
     more_info: 'Allowing unrestricted access of ES clusters will cause data leaks and data loss. This can be prevented by restricting access only to the trusted entities by implementing the appropriate access policies.',
     link: 'http://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-gsg-configure-access.html',

@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Enable Geo-Redundant Backups',
     category: 'PostgreSQL Server',
+    domain: 'Databases',
     description: 'Ensure that your Microsoft Azure PostgreSQL database servers have geo-redundant backups enabled.',
     more_info: 'Enabling geo-redundant backup storage for PostgreSQL database servers gives better protection and ability to restore your server in a different region in the event of a disaster.',
     recommended_action: 'PostgreSQL servers does not support modifying geo-redundant storage configuration. ' +

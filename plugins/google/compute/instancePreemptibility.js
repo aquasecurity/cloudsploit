@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Instance Preemptibility Disabled',
     category: 'Compute',
+    domain: 'Compute',
     description: 'Ensure that preemptible Virtual Machine instances do not exist.',
     more_info: 'Preemptible instances are excess Compute Engine capacity, so their availability varies with usage. Compute Engine can terminate preemptible instances if it requires access to these resources for other tasks.',
     link: 'https://cloud.google.com/compute/docs/instances/preemptible',

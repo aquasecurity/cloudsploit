@@ -3,6 +3,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Enforce Require OS Login',
     category: 'Resource Manager',
+    domain: 'Management and Governance',
     description: 'Determine if "Require OS Login" policy is enforced at the GCP organization level.',
     more_info: 'Enabling OS Login at project level will ensure that the SSH keys being used to access your VM instances are mapped with Cloud IAM users.',
     link: 'https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints',

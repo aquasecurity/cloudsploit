@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Application Consistent Snapshots',
     category: 'Compute',
+    domain: 'Compute',
     description: 'Ensure that application consistent snapshots feature is enabled for snapshot schedules.',
     more_info: 'Application consistent snapshots are more reliable because they are created after making sure that current operations are temporarily ceased and any data in memory is flushed to disk.',
     link: 'https://cloud.google.com/compute/docs/disks/snapshot-best-practices#prepare_for_consistency',
@@ -36,7 +37,7 @@ module.exports = {
             resourcePolicies.data.forEach(policy => {
                 if (!policy.name) return;
 
-                if (policy.snapshotSchedulePolicy.snapshotProperties && policy.snapshotSchedulePolicy.snapshotProperties.guestFlush) {
+                if (policy.snapshotSchedulePolicy && policy.snapshotSchedulePolicy.snapshotProperties && policy.snapshotSchedulePolicy.snapshotProperties.guestFlush) {
                     helpers.addResult(results, 0, 'Snapshot schedule is configured to take application-consistent snapshots',
                         region, policy.name);
                 } else {

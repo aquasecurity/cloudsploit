@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Trusted Image Projects',
     category: 'Resource Manager',
+    domain: 'Management and Governance',
     description: 'Determine if "Define Trusted Image Projects" constraint policy is enforces at the GCP organization level.',
     more_info: 'Enforcing the "Define Trusted Image Projects" allows you to restrict disk image access and ensure that your project members can only create boot disks from trusted images.',
     link: 'https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints',

@@ -3,6 +3,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Disable Serial Port Access',
     category: 'Resource Manager',
+    domain: 'Management and Governance',
     description: 'Determine if "Disable VM serial port access" policy is enforced at the GCP organization level.',
     more_info: 'For security purposes, ensure that serial port access to your VM instances is disabled.',
     link: 'https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints',

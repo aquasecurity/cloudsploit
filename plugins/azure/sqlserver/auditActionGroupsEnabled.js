@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'Audit Action Groups Enabled',
     category: 'SQL Server',
+    domain: 'Databases',
     description: 'Ensures that SQL Server Audit Action and Groups is configured properly',
     more_info: 'SQL Server Audit Action and Groups should be configured to at least include SUCCESSFUL_DATABASE_AUTHENTICATION_GROUP, FAILED_DATABASE_AUTHENTICATION_GROUP and BATCH_COMPLETED_GROUP.',
     recommended_action: 'If SQL Server Audit Action and Groups is not configured properly when enabling Auditing, these settings must be configured in Powershell.',
