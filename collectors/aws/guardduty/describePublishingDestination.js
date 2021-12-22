@@ -10,7 +10,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
         !collection.guardduty.listDetectors[AWSConfig.region].data) return callback();
 
     async.eachLimit(collection.guardduty.listDetectors[AWSConfig.region].data, 5, function(detectorId, cb){
-        // Loop through each policy for that detector
+       
         if (!detectorId || !collection.guardduty ||
             !collection.guardduty.listPublishingDestinations ||
             !collection.guardduty.listPublishingDestinations[AWSConfig.region] ||
@@ -36,10 +36,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
                 collection.guardduty.describePublishingDestination[AWSConfig.region][destination.DestinationId].data = data;
                 pCb();
             });
-        }, function(){
-            setTimeout(function(){
-                cb();
-            }, 100);
+            cb();
         });
     }, function(){
         callback();

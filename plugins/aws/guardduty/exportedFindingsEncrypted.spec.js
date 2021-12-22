@@ -21,7 +21,7 @@ const describePublishingDestination = [
         "Status": "PUBLISHING",
         "DestinationProperties": {
             "DestinationArn": "arn:aws:s3:::viteace-data-bucket",
-            "KmsKeyArn": "arn:aws:kms:us-east-1:101363889637:key/ad013a33-b01d-4d88-ac97-127399c18b3e"
+            "KmsKeyArn": "arn:aws:kms:us-east-1:000011112222:key/ad013a33-b01d-4d88-ac97-127399c18b3e"
         }
     },
     {
@@ -30,7 +30,7 @@ const describePublishingDestination = [
         "Status": "PUBLISHING",
         "DestinationProperties": {
             "DestinationArn": "arn:aws:s3:::viteace-data-bucket",
-            "KmsKeyArn": "arn:aws:kms:us-east-1:101363889637:key/ad013a33-b01d-4d88-ac97-127399c18b3e"
+            "KmsKeyArn": "arn:aws:kms:us-east-1:000011112222:key/ad013a33-b01d-4d88-ac97-127399c18b3e"
         }
     }
 ];
@@ -205,7 +205,7 @@ describe('exportedFindingsEncrypted', function () {
             exportedFindingsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].region).to.equal('global');
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });

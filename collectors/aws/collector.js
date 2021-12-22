@@ -1656,6 +1656,11 @@ var postcalls = [
                 reliesOnCall: 'listDetectors',
                 override: true,
             },
+            listPublishingDestinations: {
+                reliesOnService: 'guardduty',
+                reliesOnCall: 'listDetectors',
+                override: true,
+            },
         },
     },
     {
