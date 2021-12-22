@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensure that Amazon Lex audio logs are encrypted',
     more_info: 'For audio logs you use default encryption on your S3 bucket or specify an AWS KMS key to encrypt your audio objects. Even if your S3 bucket uses default encryption you can still specify a different AWS KMS key to encrypt your audio objects for enhanced security.',
     link: 'https://docs.aws.amazon.com/lex/latest/dg/conversation-logs-encrypting.html',
-    recommended_action: 'Create Lex audio logs with customer-manager keys (CMKs) present in your account',
+    recommended_action: 'Encrypt Lex audio logs with customer-manager keys (CMKs) present in your account',
     apis: ['LexModelsV2:listBots', 'LexModelsV2:listBotAliases', 'LexModelsV2:describeBotAlias',
         'KMS:describeKey', 'KMS:listKeys', 'STS:getCallerIdentity'],
     settings: {
