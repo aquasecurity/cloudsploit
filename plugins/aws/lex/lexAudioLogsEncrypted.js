@@ -13,7 +13,7 @@ module.exports = {
         'KMS:describeKey', 'KMS:listKeys', 'STS:getCallerIdentity'],
     settings: {
         audio_logs_desired_encryption_level: {
-            name: 'Lex Audio Logs Desired Encryption Level',
+            name: 'Lex Audio Logs Target Encryption Level',
             description: 'In order (lowest to highest) sse=S3-SSE; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(sse|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
