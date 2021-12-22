@@ -13,7 +13,7 @@ module.exports = {
     apis: ['Location:listGeofenceCollections','Location:describeGeofenceCollection', 'KMS:describeKey', 'KMS:listKeys', 'STS:getCallerIdentity'],
     settings: {
         geoference_collectiondata_desired_encryption_level: {
-            name: 'Location Geoference Collection Data Desired Encryption Level',
+            name: 'Location Geoference Collection Data Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
