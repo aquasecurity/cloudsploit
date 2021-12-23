@@ -465,12 +465,12 @@ var calls = {
 
     },
     ElastiCache: {
-        describeReservedCacheNodes: {
-            property: 'ReservedCacheNodes',
-            paginate: 'Marker'
-        },
         describeCacheClusters: {
             property: 'CacheClusters',
+            paginate: 'Marker'
+        },
+        describeReservedCacheNodes: {
+            property: 'ReservedCacheNodes',
             paginate: 'Marker'
         }
     },
