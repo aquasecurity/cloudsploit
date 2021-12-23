@@ -91,8 +91,8 @@ describe('reservedNodePaymentPending', function () {
             });
         });
 
-        it('should PASS if payment state is pending for ElastiCache reserved cache node', function (done) {
-            const cache = createCache([clusters[0]]);
+        it('should PASS if payment state is not pending for ElastiCache reserved cache node', function (done) {
+            const cache = createCache([clusters[1]]);
             reservedNodePaymentPending.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
