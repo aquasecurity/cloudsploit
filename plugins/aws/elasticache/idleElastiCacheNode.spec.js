@@ -35,7 +35,7 @@ const describeCacheClusters = [
         "AuthTokenEnabled": false,
         "TransitEncryptionEnabled": false,
         "AtRestEncryptionEnabled": false,
-        "ARN": "arn:aws:elasticache:us-east-1:101363889637:cluster:sad1",
+        "ARN": "arn:aws:elasticache:us-east-1:000011112222:cluster:sad1",
         "ReplicationGroupLogDeliveryEnabled": false,
         "LogDeliveryConfigurations": []
     }
