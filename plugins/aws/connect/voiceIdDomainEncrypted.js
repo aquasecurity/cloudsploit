@@ -12,7 +12,7 @@ module.exports = {
     apis: ['VoiceID:listDomains', 'KMS:listKeys', 'KMS:describeKey'],
     settings: {
         voice_id_desired_encryption_level: {
-            name: 'Connect Voice ID Domain Encrypted',
+            name: 'Connect Voice ID Domain Target Encryption Level',
             description: 'In order (lowest to highest) awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
@@ -60,8 +60,14 @@ module.exports = {
             for (let domain of listDomains.data) {
                 let resource = domain.Arn;
 
-                if (domain.ServerSideEncryptionConfiguration.KmsKeyId) {
-                    let encryptionKey = domain.ServerSideEncryptionConfiguration.KmsKeyId;
+                if (!domain && !domain.ServerSideEncryptionConfiguration) {
+                    continue;
+                }
+
+                let config = domain.ServerSideEncryptionConfiguration;
+
+                if (config.KmsKeyId) {
+                    let encryptionKey = config.KmsKeyId;
                     var keyId = encryptionKey.split('/')[1] ? encryptionKey.split('/')[1] : encryptionKey;
 
                     var describeKey = helpers.addSource(cache, source,

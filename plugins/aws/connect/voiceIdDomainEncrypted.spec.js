@@ -3,9 +3,9 @@ var voiceIdDomainEncrypted = require('./voiceIdDomainEncrypted');
 
 const listDomains = [
     {
-      Arn: 'arn:aws:voiceid:us-east-1:101363889637:domain/Ci6NViLr6D0r32RegwAkgp',
+      Arn: 'arn:aws:voiceid:us-east-1:111222333:domain/aabbccddeeff',
       CreatedAt: '2021-11-29T14:00:40.764Z',
-      DomainId: 'Ci6NViLr6D0r32RegwAkgp',
+      DomainId: 'aabbccddeeff',
       DomainStatus: 'ACTIVE',
       Name: 'akhtar-domain',
       ServerSideEncryptionConfiguration: {
@@ -14,9 +14,9 @@ const listDomains = [
       UpdatedAt: '2021-11-29T14:00:41.007Z'
     },
     {
-      Arn: 'arn:aws:voiceid:us-east-1:101363889637:domain/OdVX8k6TePWY9CqRjZTDvm',
+      Arn: 'arn:aws:voiceid:us-east-1:111222333:domain/0asdfvv02ddff',
       CreatedAt: '2021-12-05T09:11:34.154Z',
-      DomainId: 'OdVX8k6TePWY9CqRjZTDvm',
+      DomainId: '0asdfvv02ddff',
       DomainStatus: 'ACTIVE',
       Name: 'bdjasd',
       ServerSideEncryptionConfiguration: {
@@ -25,9 +25,9 @@ const listDomains = [
       UpdatedAt: '2021-12-05T09:11:34.465Z'
     },
     {
-      Arn: 'arn:aws:voiceid:us-east-1:101363889637:domain/OpWKEjSMUDz7ZT2iLiEr6e',
+      Arn: 'arn:aws:voiceid:us-east-1:111222333:domain/aa112ccc33vv',
       CreatedAt: '2021-12-12T20:48:49.447Z',
-      DomainId: 'OpWKEjSMUDz7ZT2iLiEr6e',
+      DomainId: 'aa112ccc33vv',
       DomainStatus: 'ACTIVE',
       Name: 'Test',
       ServerSideEncryptionConfiguration: {
