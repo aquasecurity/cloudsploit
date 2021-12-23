@@ -40,10 +40,10 @@ module.exports = {
 
                 if (cluster.State === 'payment-failed') {
                     helpers.addResult(results, 0,
-                        'ElastiCache Reserved Cache Node have payment failure', region, resource);
+                        'ElastiCache reserved cache node have payment failure', region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'ElastiCache Reserved Cache Node does not have payment failure', region, resource);
+                        'ElastiCache reserved cache node does not have payment failure', region, resource);
                 }
             }
             rcb();
