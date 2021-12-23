@@ -161,7 +161,7 @@ describe('geoCollectionDataEncrypted', function () {
         });
 
         it('should UNKNOWN if unable to list Location geoference collections', function (done) {
-            const cache = createCache(null, null, null, { message: "Unable to list Location geoference collections" });
+            const cache = createCache(null, null, null, null, { message: "Unable to list Location geoference collections" });
             geoCollectionDataEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
