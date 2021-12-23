@@ -2055,10 +2055,10 @@ var collect = function(AWSConfig, settings, callback) {
 
                             if (callObj.reliesOnCall &&
                                 (!collection[callObj.reliesOnService] ||
-                                    !collection[callObj.reliesOnService][callObj.reliesOnCall] ||
-                                    !collection[callObj.reliesOnService][callObj.reliesOnCall][region] ||
-                                    !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data ||
-                                    !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data.length))
+                                !collection[callObj.reliesOnService][callObj.reliesOnCall] ||
+                                !collection[callObj.reliesOnService][callObj.reliesOnCall][region] ||
+                                !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data ||
+                                !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data.length))
                                 return regionCb();
 
                             var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
