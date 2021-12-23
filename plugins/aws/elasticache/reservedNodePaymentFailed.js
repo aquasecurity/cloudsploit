@@ -24,7 +24,7 @@ module.exports = {
 
             if (describeReservedCacheNodes.err || !describeReservedCacheNodes.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for ElastiCache Reserved Cache Node: ' + helpers.addError(describeReservedCacheNodes), region);
+                    'Unable to query for ElastiCache reserved cache nodes: ' + helpers.addError(describeReservedCacheNodes), region);
                 return rcb();
             }
 
