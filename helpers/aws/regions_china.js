@@ -103,7 +103,8 @@ module.exports = {
     managedblockchain: regions,
     healthlake: regions,
     connect: regions,
+    lookoutvision: regions,
+    lookoutmetrics: regions,
     forecastservice: regions,
     lexmodelsv2: regions,
-    lookoutmetrics: regions
 };

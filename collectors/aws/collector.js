@@ -683,6 +683,12 @@ var calls = {
             paginateReqProp: 'Marker'
         }
     },
+    LookoutVision: {
+        listProjects: {
+            property: 'Projects',
+            paginate: 'NextToken'
+        }
+    },
     LexModelsV2: {
         listBots: {
             property: 'botSummaries',
@@ -1508,6 +1514,14 @@ var postcalls = [
                 filterValue: 'FunctionArn'
             }
         },
+        LookoutVision: {
+            listModels: {
+                reliesOnService: 'lookoutvision',
+                reliesOnCall: 'listProjects',
+                filterKey: 'ProjectName',
+                filterValue: 'ProjectName'
+            }
+        },
         LexModelsV2: {
             listBotAliases: {
                 reliesOnService: 'lexmodelsv2',
@@ -1734,6 +1748,13 @@ var postcalls = [
             describeNodegroups: {
                 reliesOnService: 'eks',
                 reliesOnCall: 'listClusters',
+                override: true
+            }
+        },
+        LookoutVision: {
+            describeModel: {
+                reliesOnService: 'lookoutvision',
+                reliesOnCall: 'listProjects',
                 override: true
             }
         },
