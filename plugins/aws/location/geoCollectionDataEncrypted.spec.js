@@ -171,7 +171,7 @@ describe('geoCollectionDataEncrypted', function () {
         });
 
         it('should UNKNOWN if unable to list KMS keys', function (done) {
-            const cache = createCache(listGeofenceCollections, null, null, null, { message: "Unable to list KMS keys" });
+            const cache = createCache(listGeofenceCollections, null, null, null, null, { message: "Unable to list KMS keys" });
             geoCollectionDataEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
