@@ -15,7 +15,7 @@ module.exports = {
             name: 'ElastiCache Idle Node Average Percentage',
             description: 'A percentage value for cluster CPU utilization under which cluster is considered idle i.e. 2.50',
             regex: '^(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)$', // eslint-disable-line
-            default: '5.00'
+            default: ''
         }
     },
 
