@@ -103,5 +103,6 @@ module.exports = {
     apprunner: regions,
     healthlake: regions,
     iotsitewise: regions,
+    lookoutmetrics: regions,
     forecastservice: regions
 };

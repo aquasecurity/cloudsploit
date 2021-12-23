@@ -442,6 +442,8 @@ module.exports = {
 
         'iotsitewiseDataEncrypted'      : require(__dirname + '/plugins/aws/iotsitewise/iotsitewiseDataEncrypted.js'),
 
+        'anomalyDetectorEncrypted'      : require(__dirname + '/plugins/aws/lookout/anomalyDetectorEncrypted.js'),
+
         'forecastDatasetEncrypted'      : require(__dirname + '/plugins/aws/forecast/forecastDatasetEncrypted.js')
     },
     azure : {

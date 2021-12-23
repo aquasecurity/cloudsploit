@@ -104,5 +104,6 @@ module.exports = {
     healthlake: regions,
     connect: regions,
     iotsitewise: regions,
+    lookoutmetrics: regions,
     forecastservice: regions
 };
