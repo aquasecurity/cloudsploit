@@ -90,7 +90,7 @@ module.exports = {
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `Kinesis Video Streams data is encrypted with ${currentEncryptionLevelString} \
+                        `Kinesis Video Streams data is using ${currentEncryptionLevelString} \
                         which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 }
