@@ -1748,61 +1748,61 @@ var postcalls = [
         }
     }
 ];
- 
+
 var rateError = [{message: 'rate'}];
  
 var apiRetryAttempts = 2;
 var apiRetryBackoff = 500;
 var apiRetryCap = 1000;
- 
+
 // Loop through all of the top-level collectors for each service
 var collect = function(AWSConfig, settings, callback) {
     let apiCallErrors = 0;
     let apiCallTypeErrors = 0;
     let totalApiCallErrors = 0;
- 
+
     // Used to track rate limiting retries
     let retries = [];
- 
+
     // Used to gather info only
     if (settings.gather) {
         return callback(null, calls, postcalls);
     }
- 
+
     // Configure an opt-in debug logger
     var AWSXRay;
     var debugMode = settings.debug_mode;
     if (debugMode) AWSXRay = require('aws-xray-sdk');
- 
+
     AWSConfig.maxRetries = 8;
     AWSConfig.retryDelayOptions = {base: 100};
- 
+
     var regions = helpers.regions(settings);
- 
+
     var collection = {};
     var errors = {};
     var errorSummary = {};
     var errorTypeSummary = {};
- 
+
     var debugApiCalls = function(call, service, finished) {
         if (!debugMode) return;
         finished ? console.log(`[INFO] ${service}:${call} returned`) : console.log(`[INFO] ${service}:${call} invoked`);
     };
- 
+
     var logError = function(service, call, region, err) {
         totalApiCallErrors++;
- 
+
         if (!errorSummary[service]) errorSummary[service] = {};
- 
+
         if (!errorSummary[service][call]) errorSummary[service][call] = {};
- 
+
         if (err.code && !errorSummary[service][call][err.code]) {
             apiCallErrors++;
             errorSummary[service][call][err.code] = {};
             errorSummary[service][call][err.code].total = apiCallErrors;
             errorSummary.total = totalApiCallErrors;
         }
- 
+
         if (err.code && !errorTypeSummary[err.code]) errorTypeSummary[err.code] = {};
         if (err.code && !errorTypeSummary[err.code][service]) errorTypeSummary[err.code][service] = {};
         if (err.code && !errorTypeSummary[err.code][service][call]) {
@@ -1811,7 +1811,7 @@ var collect = function(AWSConfig, settings, callback) {
             errorTypeSummary[err.code][service][call].total = apiCallTypeErrors;
             errorTypeSummary.total = totalApiCallErrors;
         }
- 
+
         if (debugMode){
             if (!errors[service]) errors[service] = {};
             if (!errors[service][call]) errors[service][call] = {};
@@ -1833,88 +1833,88 @@ var collect = function(AWSConfig, settings, callback) {
         let isError=false;
         for (var e in rateError) {
             if (err &&
-                 err.statusCode &&
-                 rateError[e] &&
-                 rateError[e].statusCode &&
-                 rateError[e].statusCode.filter(code => {
-                     return code == err.statusCode;
-                 }).length){
+                err.statusCode &&
+                rateError[e] &&
+                rateError[e].statusCode &&
+                rateError[e].statusCode.filter(code => {
+                    return code == err.statusCode;
+                }).length){
                 isError=true;
                 break;
             } else if (err &&
-                 rateError[e] &&
-                 rateError[e].message &&
-                 err.message &&
-                 err.message.toLowerCase().indexOf(rateError[e].message.toLowerCase())>-1){
+                rateError[e] &&
+                rateError[e].message &&
+                err.message &&
+                err.message.toLowerCase().indexOf(rateError[e].message.toLowerCase())>-1){
                 isError=true;
                 break;
             }
         }
         return isError;
     };
- 
+
     let runApiCalls = [];
- 
+
     var AWSEC2 = new AWS.EC2(AWSConfig);
     var params = {AllRegions: true};
     var excludeRegions = [];
- 
+
     AWSEC2.describeRegions(params, function(err, accountRegions) {
         if (err) {
             console.log(`[INFO][REGIONS] Could not load all regions from EC2: ${JSON.stringify(err)}`);
         } else {
             if (accountRegions &&
-                 accountRegions.Regions) {
+                accountRegions.Regions) {
                 excludeRegions = accountRegions.Regions.filter(region => {
                     return region.OptInStatus == 'not-opted-in';
                 });
             }
         }
- 
+
         async.eachOfLimit(calls, 10, function(call, service, serviceCb) {
             var serviceLower = service.toLowerCase();
             if (!collection[serviceLower]) collection[serviceLower] = {};
- 
+
             // Loop through each of the service's functions
             async.eachOfLimit(call, 15, function(callObj, callKey, callCb) {
                 if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
- 
+
                 runApiCalls.push(service + ':' + callKey);
- 
+
                 if (!collection[serviceLower][callKey]) {
                     collection[serviceLower][callKey] = {};
                     apiCallErrors = 0;
                     apiCallTypeErrors = 0;
                 }
- 
+
                 debugApiCalls(callKey, service);
                 var callRegions;
- 
+
                 if (callObj.default) {
                     callRegions = regions.default;
                 } else {
                     callRegions = regions[serviceLower];
                 }
- 
+
                 async.eachLimit(callRegions, helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb) {
                     if (settings.skip_regions &&
-                         settings.skip_regions.indexOf(region) > -1 &&
-                         globalServices.indexOf(service) === -1) return regionCb();
- 
+                        settings.skip_regions.indexOf(region) > -1 &&
+                        globalServices.indexOf(service) === -1) return regionCb();
+
                     if (excludeRegions &&
-                         excludeRegions.filter(excluded=> {
-                             if (excluded.RegionName == region) {
-                                 return true;
-                             }
-                         }).length){
+                        excludeRegions.filter(excluded=> {
+                            if (excluded.RegionName == region) {
+                                return true;
+                            }
+                        }).length){
                         return regionCb();
                     }
- 
+
                     if (!collection[serviceLower][callKey][region]) collection[serviceLower][callKey][region] = {};
- 
+
                     var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
                     LocalAWSConfig.region = region;
- 
+
                     if (callObj.override) {
                         collectors[serviceLower][callKey](LocalAWSConfig, collection, function() {
                             if (callObj.rateLimit) {
@@ -1933,19 +1933,19 @@ var collect = function(AWSConfig, settings, callback) {
                                 collection[serviceLower][callKey][region].err = err;
                                 logError(serviceLower, callKey, region, err);
                             }
- 
+
                             if (!data) return regionCb();
                             if (callObj.property && !data[callObj.property]) return regionCb();
                             if (callObj.secondProperty && !data[callObj.secondProperty]) return regionCb();
- 
+
                             var dataToAdd = callObj.secondProperty ? data[callObj.property][callObj.secondProperty] : data[callObj.property] ? data[callObj.property] : data;
- 
+
                             if (paginating) {
                                 collection[serviceLower][callKey][region].data = collection[serviceLower][callKey][region].data.concat(dataToAdd);
                             } else {
                                 collection[serviceLower][callKey][region].data = dataToAdd;
                             }
- 
+
                             // If a "paginate" property is set, e.g. NextToken
                             var nextToken = callObj.paginate;
                             if (settings.paginate && nextToken && data[nextToken]) {
@@ -1953,10 +1953,10 @@ var collect = function(AWSConfig, settings, callback) {
                                 var paginateProp = callObj.paginateReqProp ? callObj.paginateReqProp : nextToken;
                                 return execute([paginateProp, data[nextToken]]);
                             }
- 
+
                             return regionCb();
                         };
- 
+
                         function execute(nextTokens) { // eslint-disable-line no-inner-declarations
                             // Each region needs its own local copy of callObj.params
                             // so that the injection of the NextToken doesn't break other calls
@@ -1971,7 +1971,7 @@ var collect = function(AWSConfig, settings, callback) {
                                         let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
                                         let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
                                         let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
- 
+
                                         console.log(`Trying again in: ${retry_seconds/1000} seconds`);
                                         retries.push({seconds: Math.round(retry_seconds/1000)});
                                         return retry_seconds;
@@ -1996,7 +1996,7 @@ var collect = function(AWSConfig, settings, callback) {
                                         let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
                                         let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
                                         let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
- 
+
                                         console.log(`Trying again in: ${retry_seconds/1000} seconds`);
                                         retries.push({seconds: Math.round(retry_seconds/1000)});
                                         return retry_seconds;
@@ -2029,46 +2029,46 @@ var collect = function(AWSConfig, settings, callback) {
                 async.eachOfLimit(postcallObj, 10, function(serviceObj, service, serviceCb) {
                     var serviceLower = service.toLowerCase();
                     if (!collection[serviceLower]) collection[serviceLower] = {};
- 
+
                     async.eachOfLimit(serviceObj, 1, function(callObj, callKey, callCb) {
                         if (settings.api_calls && settings.api_calls.indexOf(service + ':' + callKey) === -1) return callCb();
- 
+
                         runApiCalls.push(service + ':' + callKey);
- 
+
                         if (!collection[serviceLower][callKey]) {
                             collection[serviceLower][callKey] = {};
                             apiCallErrors = 0;
                             apiCallTypeErrors = 0;
                         }
- 
+
                         debugApiCalls(callKey, service);
                         async.eachLimit(regions[serviceLower], helpers.MAX_REGIONS_AT_A_TIME, function(region, regionCb) {
                             if (settings.skip_regions &&
-                                 settings.skip_regions.indexOf(region) > -1 &&
-                                 globalServices.indexOf(service) === -1) return regionCb();
- 
+                                settings.skip_regions.indexOf(region) > -1 &&
+                                globalServices.indexOf(service) === -1) return regionCb();
+
                             if (excludeRegions &&
-                                 excludeRegions.filter(excluded=> {
-                                     if (excluded.RegionName == region) {
-                                         return true;
-                                     }
-                                 }).length){
+                                excludeRegions.filter(excluded=> {
+                                    if (excluded.RegionName == region) {
+                                        return true;
+                                    }
+                                }).length){
                                 return regionCb();
                             }
- 
+
                             if (!collection[serviceLower][callKey][region]) collection[serviceLower][callKey][region] = {};
- 
+
                             // Ensure pre-requisites are met
                             if (callObj.reliesOnService && !collection[callObj.reliesOnService]) return regionCb();
- 
+
                             if (callObj.reliesOnCall &&
-                                 (!collection[callObj.reliesOnService] ||
-                                 !collection[callObj.reliesOnService][callObj.reliesOnCall] ||
-                                 !collection[callObj.reliesOnService][callObj.reliesOnCall][region] ||
-                                 !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data ||
-                                 !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data.length))
+                                (!collection[callObj.reliesOnService] ||
+                                !collection[callObj.reliesOnService][callObj.reliesOnCall] ||
+                                !collection[callObj.reliesOnService][callObj.reliesOnCall][region] ||
+                                !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data ||
+                                !collection[callObj.reliesOnService][callObj.reliesOnCall][region].data.length))
                                 return regionCb();
- 
+
                             var LocalAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
                             if (callObj.deleteRegion) {
                                 //delete LocalAWSConfig.region;
@@ -2077,7 +2077,7 @@ var collect = function(AWSConfig, settings, callback) {
                                 LocalAWSConfig.region = region;
                             }
                             if (callObj.signatureVersion) LocalAWSConfig.signatureVersion = callObj.signatureVersion;
- 
+
                             if (callObj.override) {
                                 collectors[serviceLower][callKey](LocalAWSConfig, collection, function() {
                                     if (callObj.rateLimit) {
@@ -2090,21 +2090,21 @@ var collect = function(AWSConfig, settings, callback) {
                                 });
                             } else {
                                 var executor = debugMode ? (AWSXRay.captureAWSClient(new AWS[service](LocalAWSConfig))) : new AWS[service](LocalAWSConfig);
- 
+
                                 if (!collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region] ||
-                                     !collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region].data) {
+                                    !collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region].data) {
                                     return regionCb();
                                 }
- 
+
                                 async.eachLimit(collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region].data, 10, function(dep, depCb) {
                                     if (callObj.checkMultiple) {
                                         async.each(callObj.checkMultiple, function(thisCheck, tcCb){
                                             collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]] = {};
- 
+
                                             var filter = {};
                                             filter[callObj.filterKey] = dep[callObj.filterValue];
                                             filter[callObj.checkMultipleKey] = thisCheck;
- 
+
                                             async.retry({
                                                 times: apiRetryAttempts,
                                                 interval: function(retryCount){
@@ -2113,7 +2113,7 @@ var collect = function(AWSConfig, settings, callback) {
                                                     let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
                                                     let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
                                                     let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
- 
+
                                                     console.log(`Trying again in: ${retry_seconds/1000} seconds`);
                                                     retries.push({seconds: Math.round(retry_seconds/1000)});
                                                     return retry_seconds;
@@ -2143,10 +2143,10 @@ var collect = function(AWSConfig, settings, callback) {
                                         });
                                     } else {
                                         collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]] = {};
- 
+
                                         var filter = {};
                                         filter[callObj.filterKey] = dep[callObj.filterValue];
- 
+
                                         async.retry({
                                             times: apiRetryAttempts,
                                             interval: function(retryCount){
@@ -2155,7 +2155,7 @@ var collect = function(AWSConfig, settings, callback) {
                                                 let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
                                                 let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
                                                 let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
- 
+
                                                 console.log(`Trying again in: ${retry_seconds/1000} seconds`);
                                                 retries.push({seconds: Math.round(retry_seconds/1000)});
                                                 return retry_seconds;
@@ -2197,5 +2197,5 @@ var collect = function(AWSConfig, settings, callback) {
         });
     });
 };
- 
+
 module.exports = collect;
