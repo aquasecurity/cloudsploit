@@ -49,7 +49,7 @@ module.exports = {
             }
 
             if (!listBots.data.length) {
-                helpers.addResult(results, 0, 'No  Lex bots found'),region;
+                helpers.addResult(results, 0, 'No  Lex bots found', region);
                 return rcb();
             }
 
@@ -58,94 +58,102 @@ module.exports = {
 
             if (!listKeys || listKeys.err || !listKeys.data) {
                 helpers.addResult(results, 3,
-                    `Unable to list KMS keys: ${helpers.addError(listKeys)}`, region);
+                    'Unable to list KMS keys: ' + helpers.addError(listKeys), region);
                 return rcb();
             }
 
             for (let bot of listBots.data){
                 if (!bot.botId) continue;
 
+                var resource = `arn:${awsOrGov}:lex:${region}:${accountId}:bot/${bot.botId}`;
+
                 var listBotAliases = helpers.addSource(cache, source,
                     ['lexmodelsv2', 'listBotAliases', region, bot.botId]);
 
                 if (!listBotAliases || listBotAliases.err || !listBotAliases.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for Lex bot aliases: ' + bot.botId + ': ' + helpers.addError(listBotAliases), region);
+                        'Unable to query for Lex bot aliases: ' + bot.botId + ': ' + helpers.addError(listBotAliases),
+                        region, resource);
                     continue;
                 }
 
                 if (!listBotAliases.data.botAliasSummaries || !listBotAliases.data.botAliasSummaries.length) {
-                    helpers.addResult(results, 3,
-                        'Unable to query for Lex bot aliases descriptions: '  + helpers.addError(listBotAliases), region);
-                    continue;
-                }
-            }
-
-            for (let alias of listBotAliases.data.botAliasSummaries) {
-                var resource = `arn:${awsOrGov}:lex:${region}:${accountId}:bot/${alias.botAliasId}`;
-
-                var describeBotAlias = helpers.addSource(cache, source,
-                    ['lexmodelsv2', 'describeBotAlias', region, alias.botAliasId]);
-
-                if (!describeBotAlias ||
-                    describeBotAlias.err ||
-                    !describeBotAlias.data) {
-                    helpers.addResult(results, 3,
-                        'Unable to query Lex bot alias: ' + helpers.addError(describeBotAlias), region, resource);
-                    continue;
-                }
-
-                if (!describeBotAlias.data.conversationLogSettings) {
                     helpers.addResult(results, 0,
-                        'Bot alias does not have any audio logs configured: ' + alias.botAliasId + ': ' + helpers.addError(describeBotAlias), region, resource);
+                        'No bot aliases found', region, resource);
                     continue;
                 }
-            }
 
-            let found = false;
+                for (let alias of listBotAliases.data.botAliasSummaries) {
+                    if (!alias.botAliasId) continue;
 
-            for (let audioLog of describeBotAlias.data.conversationLogSettings.audioLogSettings){
-                if (audioLog.destination && 
-                    audioLog.destination.s3Bucket) {
-                    found = true;
-                }
+                    var aliasArn = `arn:${awsOrGov}:lex:${region}:${accountId}:bot/${alias.botAliasId}`;
 
-                if (audioLog.destination.s3Bucket.kmsKeyArn) {
-                    var KmsKey =  audioLog.destination.s3Bucket.kmsKeyArn;
-                    var keyId = KmsKey.split('/')[1] ? KmsKey.split('/')[1] : KmsKey;
+                    var describeBotAlias = helpers.addSource(cache, source,
+                        ['lexmodelsv2', 'describeBotAlias', region, alias.botAliasId]);
 
-                    var describeKey = helpers.addSource(cache, source,
-                        ['kms', 'describeKey', region, keyId]);  
-
-                    if (!describeKey || describeKey.err || !describeKey.data || !describeKey.data.KeyMetadata) {
+                    if (!describeBotAlias ||
+                        describeBotAlias.err ||
+                        !describeBotAlias.data) {
                         helpers.addResult(results, 3,
-                            `Unable to query KMS key: ${helpers.addError(describeKey)}`,
-                            region, KmsKey);
+                            'Unable to query Lex bot alias: ' + helpers.addError(describeBotAlias), region, aliasArn);
                         continue;
                     }
 
-                    currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
-                
-                } else currentEncryptionLevel = 1; //sse
+                    if (!describeBotAlias.data.conversationLogSettings ||
+                        !describeBotAlias.data.conversationLogSettings.audioLogSettings) {
+                        helpers.addResult(results, 0,
+                            'Bot alias does not have any audio logs configured', region, aliasArn);
+                        continue;
+                    }
 
-                if (!found) {
-                    helpers.addResult(results, 2,
-                        'Bot alias is not saving audio logs on s3', region, resource);
-                    continue;
-                }     
-            }
-            var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
+                    let found = false;
 
-            if (currentEncryptionLevel >= desiredEncryptionLevel) {
-                helpers.addResult(results, 0,
-                    `Lex audio logs are encrypted with ${currentEncryptionLevelString} \
-                    which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
-                    region, resource);
-            } else {
-                helpers.addResult(results, 2,
-                    `Lex audio logs are encrypted with ${currentEncryptionLevelString} \
-                    which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
-                    region, resource);
+                    for (let audioLog of describeBotAlias.data.conversationLogSettings.audioLogSettings){
+                        if (audioLog.destination && 
+                            audioLog.destination.s3Bucket) {
+                            found = true;
+                        }
+        
+                        if (audioLog.destination.s3Bucket.kmsKeyArn) {
+                            var KmsKey =  audioLog.destination.s3Bucket.kmsKeyArn;
+                            var keyId = KmsKey.split('/')[1] ? KmsKey.split('/')[1] : KmsKey;
+        
+                            var describeKey = helpers.addSource(cache, source,
+                                ['kms', 'describeKey', region, keyId]);  
+        
+                            if (!describeKey || describeKey.err || !describeKey.data || !describeKey.data.KeyMetadata) {
+                                helpers.addResult(results, 3,
+                                    `Unable to query KMS key: ${helpers.addError(describeKey)}`,
+                                    region, KmsKey);
+                                continue;
+                            }
+        
+                            currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
+                        
+                        } else currentEncryptionLevel = 1; //sse
+        
+                    }
+
+                    if (!found) {
+                        helpers.addResult(results, 2,
+                            'Bot alias is not saving audio logs on S3', region, aliasArn);
+                        continue;
+                    }
+        
+                    var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
+        
+                    if (currentEncryptionLevel >= desiredEncryptionLevel) {
+                        helpers.addResult(results, 0,
+                            `Bot audio logs are encrypted with ${currentEncryptionLevelString} \
+                            which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
+                            region, aliasArn);
+                    } else {
+                        helpers.addResult(results, 2,
+                            `Bot audio logs are encrypted with ${currentEncryptionLevelString} \
+                            which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
+                            region, aliasArn);
+                    }
+                }
             }
             
             rcb();

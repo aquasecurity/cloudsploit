@@ -1,7 +1,7 @@
 var AWS = require('aws-sdk');
 var async = require('async');
 
-module.exports = function(AWSConfig, collection, retries, callback) {
+module.exports = function(AWSConfig, collection, callback) {
     var lexmodelsv2 = new AWS.LexModelsV2(AWSConfig);
 
     if (!collection.lexmodelsv2 ||
@@ -34,10 +34,9 @@ module.exports = function(AWSConfig, collection, retries, callback) {
                 collection.lexmodelsv2.describeBotAlias[AWSConfig.region][alias.botAliasId].data = data;
                 pCb();
             });
-        }, function(){
-            setTimeout(function(){
-                cb();
-            }, 100);
+
+        }, function() {
+            cb();
         });
     }, function(){
         callback();
