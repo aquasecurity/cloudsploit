@@ -260,6 +260,8 @@ module.exports = {
 
         'iamUserInUse'                  : require(__dirname + '/plugins/aws/iam/iamUserInUse.js'),
         'kinesisEncrypted'              : require(__dirname + '/plugins/aws/kinesis/kinesisEncrypted.js'),
+        'videostreamDataEncrypted'      : require(__dirname + '/plugins/aws/kinesisvideo/videostreamDataEncrypted.js'),
+
         'kmsKeyRotation'                : require(__dirname + '/plugins/aws/kms/kmsKeyRotation.js'),
         'kmsScheduledDeletion'          : require(__dirname + '/plugins/aws/kms/kmsScheduledDeletion.js'),
         'kmsKeyPolicy'                  : require(__dirname + '/plugins/aws/kms/kmsKeyPolicy.js'),
@@ -399,6 +401,7 @@ module.exports = {
         'guardDutyEnabled'              : require(__dirname + '/plugins/aws/guardduty/guarddutyEnabled.js'),
         'guardDutyMaster'               : require(__dirname + '/plugins/aws/guardduty/guarddutyMaster.js'),
         'noActiveFindings'              : require(__dirname + '/plugins/aws/guardduty/noActiveFindings'),
+        'exportedFindingsEncrypted'     : require(__dirname + '/plugins/aws/guardduty/exportedFindingsEncrypted.js'),
 
         'workspacesVolumeEncryption'    : require(__dirname + '/plugins/aws/workspaces/workspacesVolumeEncryption.js'),
         'workspacesIpAccessControl'     : require(__dirname + '/plugins/aws/workspaces/workspacesIpAccessControl.js'),
@@ -439,10 +442,12 @@ module.exports = {
         'instanceAttachmentsEncrypted'  : require(__dirname + '/plugins/aws/connect/instanceAttachmentsEncrypted.js'),
         
         'backupVaultEncrypted'          : require(__dirname + '/plugins/aws/backup/backupVaultEncrypted.js'),
+
         'equipmentdatasetEncrypted'     : require(__dirname + '/plugins/aws/lookout/equipmentdatasetEncrypted.js'),
 
         'iotsitewiseDataEncrypted'      : require(__dirname + '/plugins/aws/iotsitewise/iotsitewiseDataEncrypted.js'),
 
+        'trackerDataEncrypted'          : require(__dirname + '/plugins/aws/location/trackerDataEncrypted.js'),
         'geoCollectionDataEncrypted'    : require(__dirname + '/plugins/aws/location/geoCollectionDataEncrypted.js'),
       
         'modelDataEncrypted'            : require(__dirname + '/plugins/aws/lookout/modelDataEncrypted.js'),

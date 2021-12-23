@@ -639,6 +639,12 @@ var calls = {
             property: 'StreamNames'
         }
     },
+    KinesisVideo: {
+        listStreams: {
+            property: 'StreamInfoList',
+            paginate: 'NextToken',
+        }
+    },
     Firehose: {
         listDeliveryStreams: {
             property: 'DeliveryStreamNames'
@@ -694,6 +700,10 @@ var calls = {
         }
     },
     Location: {
+        listTrackers: {
+            property: 'Entries',
+            paginate: 'NextToken',
+        },
         listGeofenceCollections: {
             property: 'Entries',
             paginate: 'NextToken',
@@ -1539,6 +1549,12 @@ var postcalls = [
             }
         },
         Location: {
+            describeTracker: {
+                reliesOnService: 'location',
+                reliesOnCall: 'listTrackers',
+                filterKey: 'TrackerName',
+                filterValue: 'TrackerName'
+            },
             describeGeofenceCollection: {
                 reliesOnService: 'location',
                 reliesOnCall: 'listGeofenceCollections',
@@ -1559,7 +1575,7 @@ var postcalls = [
                 reliesOnService: 'lexmodelsv2',
                 reliesOnCall: 'listBots',
                 filterKey: 'botId',
-                filterValue: 'botId'
+                filterValue: 'botId' 
             }
         },
         QLDB: {
@@ -1730,6 +1746,11 @@ var postcalls = [
                 reliesOnCall: 'listDetectors',
                 override: true,
             },
+            listPublishingDestinations: {
+                reliesOnService: 'guardduty',
+                reliesOnCall: 'listDetectors',
+                override: true,
+            },
         },
     },
     {
@@ -1792,6 +1813,11 @@ var postcalls = [
         },
         GuardDuty: {
             getFindings: {
+                reliesOnService: 'guardduty',
+                reliesOnCall: 'listDetectors',
+                override: true,
+            },
+            describePublishingDestination: {
                 reliesOnService: 'guardduty',
                 reliesOnCall: 'listDetectors',
                 override: true,
