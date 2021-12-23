@@ -82,8 +82,8 @@ const createNullCache = () => {
 
 describe('reservedNodePaymentFailed', function () {
     describe('run', function () {
-        it('should FAIL if shown state is not payment-failure option for ElastiCache reserved cache node', function (done) {
-            const cache = createCache([clusters[0]]);
+        it('should FAIL if shown state is payment-failure option for ElastiCache reserved cache node', function (done) {
+            const cache = createCache([clusters[1]]);
             reservedNodePaymentFailed.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
