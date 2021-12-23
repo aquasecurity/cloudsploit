@@ -283,6 +283,7 @@ module.exports = {
         'rdsDeletionProtectionEnabled'  : require(__dirname + '/plugins/aws/rds/rdsDeletionProtectionEnabled.js'),
 
         'redisClusterEncryptionInTransit': require(__dirname + '/plugins/aws/elasticache/redisClusterEncryptionInTransit.js'),
+        'elasticacheNodesCount'         : require(__dirname + '/plugins/aws/elasticache/elasticacheNodesCount.js'),
         'elasticacheRedisMultiAZ'       : require(__dirname + '/plugins/aws/elasticache/elasticacheRedisMultiAZ.js'),
         'idleElastiCacheNode'            : require(__dirname + '/plugins/aws/elasticache/idleElastiCacheNode.js'),
 
