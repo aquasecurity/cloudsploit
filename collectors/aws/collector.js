@@ -2,6 +2,7 @@
  Collector - The collector will query AWS APIs for the information required
  to run the CloudSploit scans. This data will be returned in the callback
  as a JSON object.
+
  Arguments:
  - AWSConfig: If using an access key/secret, pass in the config object. Pass null if not.
  - settings: custom settings for the scan. Properties:
