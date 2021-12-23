@@ -39,7 +39,7 @@ module.exports = {
                 var resource = cluster.ReservationARN;
 
                 if (cluster.State === 'payment-failed') {
-                    helpers.addResult(results, 0,
+                    helpers.addResult(results, 2,
                         'ElastiCache reserved cache node have payment failure', region, resource);
                 } else {
                     helpers.addResult(results, 2,
