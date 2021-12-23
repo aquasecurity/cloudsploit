@@ -175,7 +175,7 @@ describe('exportedFindingsEncrypted', function () {
         });
 
         it('should UNKNOWN if unable to list GuardDuty detectors', function (done) {
-            const cache = createCache(null, null, null, { message: 'Unable to list GuardDuty detectors'});
+            const cache = createCache(null, null, null, null, null, { message: 'Unable to list GuardDuty detectors'});
             exportedFindingsEncrypted.run(cache, { exported_findings_desired_encryption_level: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
