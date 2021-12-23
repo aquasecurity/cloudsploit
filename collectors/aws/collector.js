@@ -23,8 +23,8 @@ var helpers = require(__dirname + '/../../helpers/aws');
 var collectors = require(__dirname + '/../../collectors/aws');
 
 // Override max sockets
-var agent = new https.Agent({ maxSockets: 100 });
-AWS.config.update({ httpOptions: { agent: agent } });
+var agent = new https.Agent({maxSockets: 100});
+AWS.config.update({httpOptions: {agent: agent}});
 
 var globalServices = [
     'S3',
