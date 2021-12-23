@@ -2090,7 +2090,7 @@ var collect = function(AWSConfig, settings, callback) {
 
                                 async.eachLimit(collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region].data, 10, function(dep, depCb) {
                                     if (callObj.checkMultiple) {
-                                        async.each(callObj.checkMultiple, function(thisCheck, tcCb) {
+                                        async.each(callObj.checkMultiple, function(thisCheck, tcCb){
                                             collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]] = {};
 
                                             var filter = {};
