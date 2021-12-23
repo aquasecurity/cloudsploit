@@ -27,7 +27,7 @@ module.exports = {
 
             if (describeEnvironments.err || !describeEnvironments.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for application environments', region);
+                    'Unable to query for application environments: ' + helpers.addError(describeEnvironments), region);
                 return rcb();
             }
 
@@ -46,13 +46,13 @@ module.exports = {
                     !describeConfigurationSettings.data ||
                     !describeConfigurationSettings.data.ConfigurationSettings) {
                     helpers.addResult(results, 3,
-                        'Unable to query for environment configuration settings',
+                        'Unable to query for environment configuration settings: ' + helpers.addError(describeConfigurationSettings),
                         region, resource);
                     return ecb();
                 }
 
                 if (!describeConfigurationSettings.data.ConfigurationSettings.length) {
-                    helpers.addResult(results, 2, 'No environment configuration settings found', region, resource);
+                    helpers.addResult(results, 2, 'Environment does not have any log configuration', region, resource);
                     return ecb();
                 }
 
