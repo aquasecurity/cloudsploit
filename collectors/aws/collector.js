@@ -687,6 +687,10 @@ var calls = {
         listTrackers: {
             property: 'Entries',
             paginate: 'NextToken',
+        },
+        listGeofenceCollections: {
+            property: 'Entries',
+            paginate: 'NextToken',
         }
     },
     LookoutVision: {
@@ -1526,6 +1530,12 @@ var postcalls = [
                 reliesOnCall: 'listTrackers',
                 filterKey: 'TrackerName',
                 filterValue: 'TrackerName'
+            },
+            describeGeofenceCollection: {
+                reliesOnService: 'location',
+                reliesOnCall: 'listGeofenceCollections',
+                filterKey: 'CollectionName',
+                filterValue: 'CollectionName'
             }
         },
         LookoutVision: {
