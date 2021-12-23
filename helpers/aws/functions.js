@@ -958,5 +958,5 @@ module.exports = {
     getOrganizationAccounts: getOrganizationAccounts,
     getUsedSecurityGroups: getUsedSecurityGroups,
     getPrivateSubnets: getPrivateSubnets,
-    getSubnetRTMap: getSubnetRTMap,
+    getSubnetRTMap: getSubnetRTMap
 };

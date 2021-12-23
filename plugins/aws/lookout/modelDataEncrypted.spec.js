@@ -110,7 +110,7 @@ const listKeys = [
 const createCache = (listProjects, listModels,  describeModel, keys, describeKey, listProjectsErr, keysErr, listModelsErr, describeKeyErr, describeModelErr) => {
     var keyId = (keys && keys.length) ? keys[0].KeyId : null;
     var projectName = (listProjects && listProjects.length) ? listProjects[0].ProjectName : null;
-    var modelVersion = (listModels && listModels.length) ? listModels[0].ModelVersion : null;
+    var modelArn = (listModels && listModels.length) ? listModels[0].ModelArn : null;
     return {
         lookoutvision: {
             listProjects: {
@@ -124,14 +124,14 @@ const createCache = (listProjects, listModels,  describeModel, keys, describeKey
                     [projectName]: {
                         err: listModelsErr,
                         data: {
-                            "Models":listModels
+                            "Models": listModels
                         }     
                     }
                 }
             },
             describeModel: {
                 'us-east-1': {
-                    [modelVersion]: {
+                    [modelArn]: {
                         err: describeModelErr,
                         data: describeModel
                     }

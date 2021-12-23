@@ -1,7 +1,7 @@
 var AWS = require('aws-sdk');
 var async = require('async');
 
-module.exports = function(AWSConfig, collection, retries, callback) {
+module.exports = function(AWSConfig, collection, callback) {
     var lookoutvision = new AWS.LookoutVision(AWSConfig);
 
     if (!collection.lookoutvision ||
@@ -26,7 +26,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
 
             // Make the describe Models call
             lookoutvision.describeModel({
-                ModelArn: model.ModelArn,
+                ModelVersion: model.ModelVersion,
                 ProjectName: project.ProjectName
             }, function(err, data){
                 if (err) {
@@ -36,6 +36,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
                 collection.lookoutvision.describeModel[AWSConfig.region][model.ModelArn].data = data;
                 pCb();
             });
+        }, function() {
             cb();
         });
     }, function(){
