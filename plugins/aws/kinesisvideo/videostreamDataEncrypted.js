@@ -63,7 +63,6 @@ module.exports = {
                 let resource = streamData.StreamARN;
 
                 if (streamData.KmsKeyId) {
-
                     var kmsKeyId = streamData.KmsKeyId.split('/')[1] ? streamData.KmsKeyId.split('/')[1] : streamData.KmsKeyId;
 
                     var describeKey = helpers.addSource(cache, source,
