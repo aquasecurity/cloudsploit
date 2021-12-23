@@ -3,29 +3,29 @@ var wisdomDomainEncrypted = require('./wisdomDomainEncrypted');
 
 const listAssistants = [
     {
-      assistantArn: 'arn:aws:wisdom:us-east-1:101363889637:assistant/6bebcb0b-4a11-42b1-a79c-18e1e7d554c3',
-      assistantId: '6bebcb0b-4a11-42b1-a79c-18e1e7d554c3',
+      assistantArn: 'arn:aws:wisdom:us-east-1:111122223333:assistant/6abcbdde-4a11-42b1-a79c-18e1e7d554c3',
+      assistantId: '6abcbdde-4a11-42b1-a79c-18e1e7d554c3',
       name: 'asdw',
       serverSideEncryptionConfiguration: {
-        kmsKeyId: 'arn:aws:kms:us-east-1:101363889637:key/ad013a33-b01d-4d88-ac97-127399c18b3e'
+        kmsKeyId: 'arn:aws:kms:us-east-1:111122223333:key/ad013a33-b01d-4d88-ac97-127399c18b3e'
       },
       status: 'ACTIVE',
       tags: {},
       type: 'AGENT'
     },
     {
-        assistantArn: 'arn:aws:wisdom:us-east-1:101363889637:assistant/6bebcb0b-4a11-42b1-a79c-18e1e7d554c3',
-        assistantId: '6bebcb0b-4a11-42b1-a79c-18e1e7d554c3',
+        assistantArn: 'arn:aws:wisdom:us-east-1:111122223333:assistant/6abcbdde-4a11-42b1-a79c-18e1e7d554c3',
+        assistantId: '6abcbdde-4a11-42b1-a79c-18e1e7d554c3',
         name: 'asdw',
         serverSideEncryptionConfiguration: {
-          kmsKeyId: 'arn:aws:kms:us-east-1:101363889637:key/22322a33-b01d-4d88-ac97-127399c18b3e'
+          kmsKeyId: 'arn:aws:kms:us-east-1:111122223333:key/22322a33-b01d-4d88-ac97-127399c18b3e'
         },
         status: 'ACTIVE',
         tags: {},
         type: 'AGENT'
     },
     {
-      assistantArn: 'arn:aws:wisdom:us-east-1:101363889637:assistant/e5b466a7-52e6-480d-a145-965ba1882c18',
+      assistantArn: 'arn:aws:wisdom:us-east-1:111122223333:assistant/e5b466a7-52e6-480d-a145-965ba1882c18',
       assistantId: 'e5b466a7-52e6-480d-a145-965ba1882c18',
       name: 'ddwe',
       status: 'ACTIVE',

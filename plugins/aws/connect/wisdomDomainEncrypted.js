@@ -12,7 +12,7 @@ module.exports = {
     apis: ['Wisdom:listAssistants', 'KMS:listKeys', 'KMS:describeKey'],
     settings: {
         wisdom_desired_encryption_level: {
-            name: 'Connect Wisdom Domain Encrypted',
+            name: 'Connect Wisdom Domain Desired Encryption Level',
             description: 'In order (lowest to highest) awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
