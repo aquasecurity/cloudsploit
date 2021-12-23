@@ -13,7 +13,7 @@ module.exports = {
     settings: {
         elasticache_idle_node_percentage: {
             name: 'ElastiCache Idle Node Average Percentage',
-            description: 'A percentage value under which cluster is considered idle for up to two decimal places i.e 10.55 by gaining data of 3 days',
+            description: 'A percentage value for cluster CPU utilization under which cluster is considered idle i.e. 2.50',
             regex: '^(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)$', // eslint-disable-line
             default: '5.00'
         }
