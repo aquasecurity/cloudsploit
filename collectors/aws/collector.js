@@ -683,6 +683,12 @@ var calls = {
             paginateReqProp: 'Marker'
         }
     },
+    Location: {
+        listGeofenceCollections: {
+            property: 'Entries',
+            paginate: 'NextToken',
+        }
+    },
     LookoutVision: {
         listProjects: {
             property: 'Projects',
@@ -1512,6 +1518,14 @@ var postcalls = [
                 reliesOnCall: 'listFunctions',
                 filterKey: 'Resource',
                 filterValue: 'FunctionArn'
+            }
+        },
+        Location: {
+            describeGeofenceCollection: {
+                reliesOnService: 'location',
+                reliesOnCall: 'listGeofenceCollections',
+                filterKey: 'CollectionName',
+                filterValue: 'CollectionName'
             }
         },
         LookoutVision: {
