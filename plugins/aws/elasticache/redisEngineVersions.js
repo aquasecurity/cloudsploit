@@ -6,7 +6,7 @@ module.exports = {
     category: 'ElastiCache',
     domain: 'Databases',
     description: 'Ensure that your Amazon ElastiCache clusters are using the stable latest version of Redis cache engine in order to adhere to AWS best practices.',
-    more_info: 'ElastiCache clusters with the latest version of Redis cache engine you will benefit from new features and enhancements,'+
+    more_info: 'ElastiCache clusters with the latest version of Redis cache engine, You will benefit from new features and enhancements,'+
     'Using engines prior to version 3.2.6 will not be benefited with Encryption Options, support for HIPAA compliance and much more. Also engine version 3.2.10 does not hold Encryption options.',
     link: 'https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/supported-engine-versions.html',
     recommended_action: 'Upgrade the version of Redis on all ElastiCache clusters to the latest available version.',
