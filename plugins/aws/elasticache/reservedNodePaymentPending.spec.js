@@ -82,8 +82,8 @@ const createNullCache = () => {
 
 describe('reservedNodePaymentPending', function () {
     describe('run', function () {
-        it('should FAIL if shown state is not payment-pending option for ElastiCache reserved cache node', function (done) {
-            const cache = createCache([clusters[1]]);
+        it('should FAIL if shown state payment is pending for ElastiCache reserved cache node', function (done) {
+            const cache = createCache([clusters[0]]);
             reservedNodePaymentPending.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
