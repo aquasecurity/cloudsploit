@@ -42,7 +42,7 @@ module.exports = {
                     helpers.addResult(results, 2,
                         'ElastiCache reserved cache node have pending payment', region, resource);
                 } else {
-                    helpers.addResult(results, 2,
+                    helpers.addResult(results, 0,
                         'ElastiCache reserved cache node does not have pending payment', region, resource);
                 }
             }
