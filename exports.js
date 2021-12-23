@@ -399,6 +399,7 @@ module.exports = {
 
         'guardDutyEnabled'              : require(__dirname + '/plugins/aws/guardduty/guarddutyEnabled.js'),
         'guardDutyMaster'               : require(__dirname + '/plugins/aws/guardduty/guarddutyMaster.js'),
+        'noActiveFindings'              : require(__dirname + '/plugins/aws/guardduty/noActiveFindings'),
 
         'workspacesVolumeEncryption'    : require(__dirname + '/plugins/aws/workspaces/workspacesVolumeEncryption.js'),
         'workspacesIpAccessControl'     : require(__dirname + '/plugins/aws/workspaces/workspacesIpAccessControl.js'),
@@ -438,7 +439,10 @@ module.exports = {
         'instanceCallRecordingEncrypted': require(__dirname + '/plugins/aws/connect/instanceCallRecordingEncrypted.js'),
         'instanceAttachmentsEncrypted'  : require(__dirname + '/plugins/aws/connect/instanceAttachmentsEncrypted.js'),
         
-        'backupVaultEncrypted'          : require(__dirname + '/plugins/aws/backup/backupVaultEncrypted.js')
+        'backupVaultEncrypted'          : require(__dirname + '/plugins/aws/backup/backupVaultEncrypted.js'),
+
+        'anomalyDetectorEncrypted'      : require(__dirname + '/plugins/aws/lookout/anomalyDetectorEncrypted.js'),
+        'forecastDatasetEncrypted'      : require(__dirname + '/plugins/aws/forecast/forecastDatasetEncrypted.js')
     },
     azure : {
         'fileServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/fileServiceEncryption.js'),
@@ -451,6 +455,7 @@ module.exports = {
         'blobServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/blobServiceEncryption.js'),
         'trustedMsAccessEnabled'        : require(__dirname + '/plugins/azure/storageaccounts/trustedMsAccessEnabled.js'),
         'blobSoftDeletionEnabled'       : require(__dirname + '/plugins/azure/storageaccounts/blobSoftDeletionEnabled.js'),
+        'storageAccountsTlsVersion'     : require(__dirname + '/plugins/azure/storageaccounts/storageAccountsTlsVersion.js'),
 
         'blobContainersPrivateAccess'   : require(__dirname + '/plugins/azure/blobservice/blobContainersPrivateAccess.js'),
         'blobServiceImmutable'          : require(__dirname + '/plugins/azure/blobservice/blobServiceImmutable.js'),
