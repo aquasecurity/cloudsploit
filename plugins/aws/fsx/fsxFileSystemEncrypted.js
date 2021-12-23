@@ -58,6 +58,10 @@ module.exports = {
             }
 
             for (let fileSystem of listFileSystems.data) {
+                if (fileSystem && fileSystem.FileSystemType.toLowerCase() !== 'windows') {
+                    continue;
+                }
+
                 var resource = fileSystem.Arn;
 
                 if (fileSystem.KmsKeyId) {

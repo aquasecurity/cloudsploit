@@ -6,6 +6,7 @@ const describeFileSystems = [
         CreationTime: "2020-12-15T01:16:53.045000+05:00",
         DNSName: "fs-0498eed5fe91001ec.fsx.com",
         FileSystemId: "fs-0498eed5fe91001ec",
+        FileSystemType: "WINDOWS",
         KmsKeyId: "arn:aws:kms:us-east-1:012345678912:key/ad013a33-b01d-4d88-ac97-127399c18b3e",
         Lifecycle: "AVAILABLE",
         NetworkInterfaceIds: ["eni-abcd1234"],
