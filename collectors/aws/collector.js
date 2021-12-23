@@ -1716,6 +1716,11 @@ var postcalls = [
                 reliesOnCall: 'listDetectors',
                 override: true,
             },
+            listPublishingDestinations: {
+                reliesOnService: 'guardduty',
+                reliesOnCall: 'listDetectors',
+                override: true,
+            },
         },
     },
     {
@@ -1778,6 +1783,11 @@ var postcalls = [
         },
         GuardDuty: {
             getFindings: {
+                reliesOnService: 'guardduty',
+                reliesOnCall: 'listDetectors',
+                override: true,
+            },
+            describePublishingDestination: {
                 reliesOnService: 'guardduty',
                 reliesOnCall: 'listDetectors',
                 override: true,
