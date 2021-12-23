@@ -2001,7 +2001,7 @@ var collect = function(AWSConfig, settings, callback) {
                                             return cb(err, data);
                                         }
                                     });
-                                }, function(err, data) {
+                                }, function(err, data){
                                     executorCb(err, data);
                                 });
                             }
