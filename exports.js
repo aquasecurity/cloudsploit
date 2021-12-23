@@ -441,6 +441,7 @@ module.exports = {
         'backupVaultEncrypted'          : require(__dirname + '/plugins/aws/backup/backupVaultEncrypted.js'),
         'equipmentdatasetEncrypted'     : require(__dirname + '/plugins/aws/lookoutequipments/equipmentdatasetEncrypted.js'),
 
+        'anomalyDetectorEncrypted'      : require(__dirname + '/plugins/aws/lookout/anomalyDetectorEncrypted.js'),
         'forecastDatasetEncrypted'      : require(__dirname + '/plugins/aws/forecast/forecastDatasetEncrypted.js')
     },
     azure : {

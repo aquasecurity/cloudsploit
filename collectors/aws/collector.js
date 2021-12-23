@@ -686,7 +686,13 @@ var calls = {
     LookoutEquipment: {
         listDatasets: {
             property: 'DatasetSummaries',
-            paginate: 'NextToken',
+            paginate: 'NextToken'
+        }
+    },
+    LookoutMetrics: {
+        listAnomalyDetectors: {
+            property: 'AnomalyDetectorSummaryList',
+            paginate: 'NextToken'
         }
     },
     MemoryDB: {
@@ -1532,6 +1538,14 @@ var postcalls = [
                 reliesOnCall: 'listBrokers',
                 filterKey: 'BrokerId',
                 filterValue: 'BrokerId'
+            }
+        },
+        LookoutMetrics: {
+            describeAnomalyDetector: {
+                reliesOnService: 'lookoutmetrics',
+                reliesOnCall: 'listAnomalyDetectors',
+                filterKey: 'AnomalyDetectorArn',
+                filterValue: 'AnomalyDetectorArn'
             }
         },
         MWAA: {
