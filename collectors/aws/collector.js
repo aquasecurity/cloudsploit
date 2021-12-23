@@ -688,6 +688,10 @@ var calls = {
         }
     },
     Location: {
+        listTrackers: {
+            property: 'Entries',
+            paginate: 'NextToken',
+        },
         listGeofenceCollections: {
             property: 'Entries',
             paginate: 'NextToken',
@@ -1525,6 +1529,12 @@ var postcalls = [
             }
         },
         Location: {
+            describeTracker: {
+                reliesOnService: 'location',
+                reliesOnCall: 'listTrackers',
+                filterKey: 'TrackerName',
+                filterValue: 'TrackerName'
+            },
             describeGeofenceCollection: {
                 reliesOnService: 'location',
                 reliesOnCall: 'listGeofenceCollections',
@@ -1545,7 +1555,7 @@ var postcalls = [
                 reliesOnService: 'lexmodelsv2',
                 reliesOnCall: 'listBots',
                 filterKey: 'botId',
-                filterValue: 'botId'
+                filterValue: 'botId' 
             }
         },
         QLDB: {

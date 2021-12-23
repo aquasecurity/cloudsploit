@@ -443,6 +443,7 @@ module.exports = {
 
         'iotsitewiseDataEncrypted'      : require(__dirname + '/plugins/aws/iotsitewise/iotsitewiseDataEncrypted.js'),
 
+        'trackerDataEncrypted'          : require(__dirname + '/plugins/aws/location/trackerDataEncrypted.js'),
         'geoCollectionDataEncrypted'    : require(__dirname + '/plugins/aws/location/geoCollectionDataEncrypted.js'),
       
         'modelDataEncrypted'            : require(__dirname + '/plugins/aws/lookout/modelDataEncrypted.js'),
