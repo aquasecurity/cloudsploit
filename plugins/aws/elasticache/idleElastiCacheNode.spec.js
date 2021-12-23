@@ -164,45 +164,50 @@ describe('idleElastiCacheNode', function () {
     describe('run', function () {
         it('should PASS if metric count is greater than 5', function (done) {
             const cache = createCache([describeCacheClusters[0]], ecMetricStatistics[0]);
-            idleElastiCacheNode.run(cache, {}, (err, results) => {
+            idleElastiCacheNode.run(cache, { elasticache_idle_node_percentage:'5.00' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('ElastiCache cluster is not idle');
                 done();
             });
         });
 
         it('should FAIL if metric count is lesser than 5', function (done) {
             const cache = createCache([describeCacheClusters[0]], ecMetricStatistics[1]);
-            idleElastiCacheNode.run(cache, {}, (err, results) => {
+            idleElastiCacheNode.run(cache, { elasticache_idle_node_percentage:'5.00' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('ElastiCache cluster is idle');
                 done();
             });
         });
     
         it('should PASS if metric count is not part of the response', function (done) {
             const cache = createCache([describeCacheClusters[0]], ecMetricStatistics[2]);
-            idleElastiCacheNode.run(cache, {}, (err, results) => {
+            idleElastiCacheNode.run(cache, { elasticache_idle_node_percentage:'5.00' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('ElastiCache cluster is not idle');
                 done();
             });
         });
     
-        it('should PASS if no elasticache metric statistics found', function (done) {
+        it('should PASS if no ElastiCache cluster found', function (done) {
             const cache = createCache([]);
-            idleElastiCacheNode.run(cache, {}, (err, results) => {
+            idleElastiCacheNode.run(cache, { elasticache_idle_node_percentage:'5.00' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No ElastiCache cluster found');
                 done();
             });
         });
 
         it('should UNKNOWN if unable to describe cache clusters', function (done) {
             const cache = createErrorCache();
-            idleElastiCacheNode.run(cache, {}, (err, results) => {
+            idleElastiCacheNode.run(cache, { elasticache_idle_node_percentage:'5.00' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query for ElastiCache cluster');
                 done();
             });
         });
