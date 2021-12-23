@@ -6,7 +6,7 @@ module.exports = {
     category: 'Kinesis Video Streams',
     domain: 'Content Delivery',
     description: 'Ensure that Amazon Kinesis Video Streams is using desired encryption level for Data at-rest.',
-    more_info: 'Server-side encryption is always enabled on Kinesis video streams. If a user-provided key is not specified when the stream is created, the default key (provided by Kinesis Video Streams) is used.,  ' +
+    more_info: 'Server-side encryption is always enabled on Kinesis video streams data. If a user-provided key is not specified when the stream is created, the default key (provided by Kinesis Video Streams) is used. ' +
                'Encrypt these data at-rest using customer-managed keys (CMKs) in order to gain more granular control over encryption/decryption process.',
     recommended_action: 'Encrypt Kinesis Video Streams data with customer-manager keys (CMKs).',
     link: 'https://docs.aws.amazon.com/kinesisvideostreams/latest/dg/how-kms.html',
