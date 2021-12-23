@@ -699,6 +699,12 @@ var calls = {
             paginateReqProp: 'Marker'
         }
     },
+    LookoutEquipment: {
+        listDatasets: {
+            property: 'DatasetSummaries',
+            paginate: 'NextToken'
+        }
+    },
     Location: {
         listTrackers: {
             property: 'Entries',
@@ -1543,6 +1549,14 @@ var postcalls = [
                 reliesOnCall: 'listFunctions',
                 filterKey: 'Resource',
                 filterValue: 'FunctionArn'
+            }
+        },
+        LookoutEquipment: {
+            describeDataset: {
+                reliesOnService: 'lookoutequipment',
+                reliesOnCall: 'listDatasets',
+                filterKey: 'DatasetName',
+                filterValue: 'DatasetName'
             }
         },
         Location: {
