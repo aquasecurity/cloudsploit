@@ -61,18 +61,20 @@ module.exports = {
             for (let project of listProjects.data){
                 if (!project.ProjectName) continue;
 
+                let resource = project.ProjectArn;
+
                 var listModels = helpers.addSource(cache, source,
                     ['lookoutvision', 'listModels', region, project.ProjectName]);
 
                 if (!listModels || listModels.err || !listModels.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for LookoutVision models: ' + project.ProjectName + ': ' + helpers.addError(listModels), region);
+                        'Unable to query for LookoutVision models: ' + project.ProjectName + ': ' + helpers.addError(listModels), region, resource);
                     continue;
                 }
 
                 if (!listModels.data.Models || !listModels.data.Models.length) {
                     helpers.addResult(results, 3,
-                        'Unable to query for LookoutVision models descriptions: '  + helpers.addError(listModels), region);
+                        'Unable to query for LookoutVision models descriptions: '  + helpers.addError(listModels), region, resource);
                     continue;
                 }
 
