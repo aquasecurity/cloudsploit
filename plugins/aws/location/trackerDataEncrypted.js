@@ -44,7 +44,7 @@ module.exports = {
 
             if (listTrackers.err || !listTrackers.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query Location Tracker: ' + helpers.addError(listTrackers), region);
+                    'Unable to query Location trackers: ' + helpers.addError(listTrackers), region);
                 return rcb();
             }
 
