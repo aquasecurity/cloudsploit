@@ -77,8 +77,8 @@ module.exports = {
                 } 
 
                 if (describeTracker.data.KmsKeyId) {
-                    var KmsKey = describeTracker.data.KmsKeyId;
-                    var keyId = KmsKey.split('/')[1] ? KmsKey.split('/')[1] : KmsKey;
+                    var kmsKey = describeTracker.data.KmsKeyId;
+                    var keyId = kmsKey.split('/')[1] ? kmsKey.split('/')[1] : kmsKey;
 
                     var describeKey = helpers.addSource(cache, source,
                         ['kms', 'describeKey', region, keyId]);  
@@ -86,14 +86,12 @@ module.exports = {
                     if (!describeKey || describeKey.err || !describeKey.data || !describeKey.data.KeyMetadata) {
                         helpers.addResult(results, 3,
                             `Unable to query KMS key: ${helpers.addError(describeKey)}`,
-                            region, KmsKey);
+                            region, kmsKey);
                         continue;
                     }
 
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
-                } else {
-                    currentEncryptionLevel = 2; //awskms
-                }
+                } else currentEncryptionLevel = 2; //awskms
 
                 var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
 
