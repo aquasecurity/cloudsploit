@@ -250,8 +250,6 @@ module.exports = {
                 const masterInstanceCount = masterGroup ? masterGroup.RunningInstanceCount : 0;
                 const coreInstanceCount = coreGroup ? coreGroup.RunningInstanceCount : 0;
 
-                
-
                 if (masterInstanceCount) {
                     instanceCountGlobal += masterInstanceCount;
                     instanceCount += masterInstanceCount;
