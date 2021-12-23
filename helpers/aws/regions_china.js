@@ -105,5 +105,7 @@ module.exports = {
     connect: regions,
     lookoutvision: regions,
     lookoutmetrics: regions,
-    forecastservice: regions
+    forecastservice: regions,
+    forecastservice: regions,
+    lexmodelsv2: regions,
 };
