@@ -2165,7 +2165,7 @@ var collect = function(AWSConfig, settings, callback) {
                                                     return cb();
                                                 }
                                             });
-                                        }, function() {
+                                        }, function(){
                                             depCb();
                                         });
                                     }
