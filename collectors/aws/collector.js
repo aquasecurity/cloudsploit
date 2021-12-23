@@ -630,6 +630,10 @@ var calls = {
             override: true
         }
     },
+    IoTSiteWise: {
+        describeDefaultEncryptionConfiguration: {    
+        }
+    },
     Kinesis: {
         listStreams: {
             property: 'StreamNames'

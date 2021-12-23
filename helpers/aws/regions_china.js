@@ -103,6 +103,7 @@ module.exports = {
     managedblockchain: regions,
     healthlake: regions,
     connect: regions,
+    iotsitewise: regions,
     location: regions,
     lookoutvision: regions,
     lookoutmetrics: regions,
