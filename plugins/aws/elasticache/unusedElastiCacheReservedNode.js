@@ -55,11 +55,11 @@ module.exports = {
                 if (usedReservedNodes.includes(node.CacheNodeType)) {
                     helpers.addResult(results, 0,
                         `ElastiCache reserved cache node "${node.ReservedCacheNodeId}" is being used`,
-                        region, node.ReservedCacheNodeId);
+                        region, node.ReservationARN);
                 } else {
                     helpers.addResult(results, 2,
                         `ElastiCache reserved cache node "${node.ReservedCacheNodeId}" is not being used`,
-                        region, node.ReservedCacheNodeId);
+                        region, node.ReservationARN);
                 }
             });
 
