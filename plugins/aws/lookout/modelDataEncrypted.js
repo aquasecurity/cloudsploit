@@ -75,57 +75,57 @@ module.exports = {
                         'Unable to query for LookoutVision models descriptions: '  + helpers.addError(listModels), region);
                     continue;
                 }
-            }
 
-            for (let model of listModels.data.Models) {
-                if (!model.ModelArn) continue;
+                for (let model of listModels.data.Models) {
+                    if (!model.ModelArn) continue;
 
-                let resource = model.ModelArn;
+                    let resource = model.ModelArn;
 
-                var describeModel = helpers.addSource(cache, source,
-                    ['lookoutvision', 'describeModel', region, model.ModelVersion]);
+                    var describeModel = helpers.addSource(cache, source,
+                        ['lookoutvision', 'describeModel', region, model.ModelVersion]);
 
-                if (!describeModel ||
-                    describeModel.err ||
-                    !describeModel.data) {
-                    helpers.addResult(results, 3,
-                        'Unable to get LookoutVision models: ' + helpers.addError(describeModel), region, resource);
-                    continue;
-                }
-
-                if (describeModel.data.ModelDescription && 
-                    describeModel.data.ModelDescription.KmsKeyId) {
-                    var KmsKey =  describeModel.data.ModelDescription.KmsKeyId;
-                    var keyId = KmsKey.split('/')[1] ? KmsKey.split('/')[1] : KmsKey;
-
-                    var describeKey = helpers.addSource(cache, source,
-                        ['kms', 'describeKey', region, keyId]);  
-
-                    if (!describeKey || describeKey.err || !describeKey.data || !describeKey.data.KeyMetadata) {
+                    if (!describeModel ||
+                        describeModel.err ||
+                        !describeModel.data) {
                         helpers.addResult(results, 3,
-                            `Unable to query KMS key: ${helpers.addError(describeKey)}`,
-                            region, KmsKey);
+                            'Unable to get LookoutVision models: ' + helpers.addError(describeModel), region, resource);
                         continue;
                     }
 
-                    currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
+                    if (describeModel.data.ModelDescription && 
+                        describeModel.data.ModelDescription.KmsKeyId) {
+                        var KmsKey =  describeModel.data.ModelDescription.KmsKeyId;
+                        var keyId = KmsKey.split('/')[1] ? KmsKey.split('/')[1] : KmsKey;
 
-                } else {
-                    currentEncryptionLevel = 1; //sse
-                }
+                        var describeKey = helpers.addSource(cache, source,
+                            ['kms', 'describeKey', region, keyId]);  
 
-                var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
+                        if (!describeKey || describeKey.err || !describeKey.data || !describeKey.data.KeyMetadata) {
+                            helpers.addResult(results, 3,
+                                `Unable to query KMS key: ${helpers.addError(describeKey)}`,
+                                region, KmsKey);
+                            continue;
+                        }
 
-                if (currentEncryptionLevel >= desiredEncryptionLevel) {
-                    helpers.addResult(results, 0,
-                        `LookoutVision model data is encrypted with ${currentEncryptionLevelString} \
-                    which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
-                        region, resource);
-                } else {
-                    helpers.addResult(results, 2,
-                        `LookoutVision model data is encrypted with ${currentEncryptionLevelString} \
-                    which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
-                        region, resource);
+                        currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
+
+                    } else {
+                        currentEncryptionLevel = 1; //sse
+                    }
+
+                    var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
+
+                    if (currentEncryptionLevel >= desiredEncryptionLevel) {
+                        helpers.addResult(results, 0,
+                            `LookoutVision model data is encrypted with ${currentEncryptionLevelString} \
+                        which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
+                            region, resource);
+                    } else {
+                        helpers.addResult(results, 2,
+                            `LookoutVision model data is encrypted with ${currentEncryptionLevelString} \
+                        which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
+                            region, resource);
+                    }
                 }
             }
             rcb();
