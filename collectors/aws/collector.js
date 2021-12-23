@@ -639,6 +639,12 @@ var calls = {
             property: 'StreamNames'
         }
     },
+    KinesisVideo: {
+        listStreams: {
+            property: 'StreamInfoList',
+            paginate: 'NextToken',
+        }
+    },
     Firehose: {
         listDeliveryStreams: {
             property: 'DeliveryStreamNames'
