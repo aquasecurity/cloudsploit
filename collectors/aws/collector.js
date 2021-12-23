@@ -462,8 +462,8 @@ var calls = {
             property: 'LaunchTemplates',
             paginate: 'NextToken',
         }
-    },
 
+    },
     ECR: {
         describeRepositories: {
             property: 'repositories',
@@ -2197,5 +2197,4 @@ var collect = function(AWSConfig, settings, callback) {
         });
     });
 };
-
 module.exports = collect;
