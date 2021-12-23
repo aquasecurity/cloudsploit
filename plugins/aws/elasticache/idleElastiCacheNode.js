@@ -8,7 +8,7 @@ module.exports = {
     description: 'Identify ElastiCache clusters having CPU utilization below defined threshold within last 24 hours (idle clusters).',
     more_info: 'Idle Amazon ElastiCache cache cluster nodes represent a good candidate to reduce your monthly AWS costs and avoid accumulating unnecessary usage charges.',
     link: 'https://aws.amazon.com/elasticache/features/',
-    recommended_action: 'Configure cluster to check for idle by using average percentage if greator than the two decimal limit.',
+    recommended_action: 'Identify and remove idle ElastiCache clusters',
     apis: ['ElastiCache:describeCacheClusters', 'CloudWatch:getEcMetricStatistics'],
     settings: {
         elasticache_idle_node_percentage: {
