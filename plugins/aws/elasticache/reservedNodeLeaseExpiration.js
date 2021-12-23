@@ -41,7 +41,7 @@ module.exports = {
                 let start = cluster.StartTime;
                 let duration = cluster.Duration;
 
-                if (duration == 1 || duration == 3 ){
+                if (duration == 1 || duration == 3){
                     duration = duration * 31536000;
                 }
                 
