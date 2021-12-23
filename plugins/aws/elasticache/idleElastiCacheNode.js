@@ -58,7 +58,7 @@ module.exports = {
                 if (!getEcMetricStatistics || getEcMetricStatistics.err ||
                     !getEcMetricStatistics.data || !getEcMetricStatistics.data.Datapoints) {
                     helpers.addResult(results, 3,
-                        `Unable to query for ElastiCache cluster metric stat: ${helpers.addError(getEcMetricStatistics)}`, region, resource);
+                        `Unable to query for ElastiCache cluster metric stats: ${helpers.addError(getEcMetricStatistics)}`, region, resource);
                     return;
                 }
 
