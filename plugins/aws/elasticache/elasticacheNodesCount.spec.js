@@ -109,22 +109,24 @@ describe('elasticacheNodesCount', function () {
     describe('run', function () {
         it('should PASS if region contains provisioned Elasticache nodes less than or equal to the limit', function (done) {
             const cache = createCache([describeCacheClusters[1]]);
-            const settings = { elasticache_nodes_count: '5' };
+            const settings = { elasticache_nodes_count_per_region: '5' };
 
             elasticacheNodesCount.run(cache, settings, (err, results) => {
-                expect(results.length).to.equal(1);
+                expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[1].status).to.equal(0);
+                expect(results[1].region).to.equal('global');
                 done();
             });
         });
 
         it('should FAIL if region contains provisioned Elasticache nodes more than the limit', function (done) {
             const cache = createCache([describeCacheClusters[0]]);
-            const settings = { elasticache_nodes_count: '4' };
+            const settings = { elasticache_nodes_count_per_region: '4', elasticache_nodes_count_global: '4' };
 
             elasticacheNodesCount.run(cache, settings, (err, results) => {
-                expect(results.length).to.equal(1);
+                expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
                 done();
@@ -133,8 +135,8 @@ describe('elasticacheNodesCount', function () {
 
         it('should PASS if no Elasticache clusters found', function (done) {
             const cache = createCache([]);
-            elasticacheNodesCount.run(cache, { elasticache_nodes_count: '5' }, (err, results) => {
-                expect(results.length).to.equal(1);
+            elasticacheNodesCount.run(cache, { elasticache_nodes_count_per_region: '5' }, (err, results) => {
+                expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
                 done();
@@ -143,21 +145,12 @@ describe('elasticacheNodesCount', function () {
 
         it('should UNKNOWN if unable to describe clusters', function (done) {
             const cache = createErrorCache();
-            elasticacheNodesCount.run(cache, { elasticache_nodes_count: '5' }, (err, results) => {
-                expect(results.length).to.equal(1);
+            elasticacheNodesCount.run(cache, { elasticache_nodes_count_per_region: '5' }, (err, results) => {
+                expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
-
-        it('should not return anything if describe clusters response is not found', function (done) {
-            const cache = createNullCache();
-            elasticacheNodesCount.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(0);
-                done();
-            });
-        });
-
     });
 });

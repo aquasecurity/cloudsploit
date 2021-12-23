@@ -11,21 +11,31 @@ module.exports = {
     recommended_action: 'Enable limit for ElastiCache cluster nodes count',
     apis: ['ElastiCache:describeCacheClusters'],
     settings: {
-        elasticache_nodes_count: {
-            name: 'Amazon ElastiCache Nodes Count',
+        elasticache_nodes_count_per_region: {
+            name: 'Amazon ElastiCache Nodes Count Per Region',
             description: 'Maximum Amazon ElastiCache nodes count per region',
             regex: '^[0-9]{1,4}',
             default: '100'
         },
+        elasticache_nodes_count_global: {
+            name: 'Amazon ElastiCache Nodes Count Global',
+            description: 'Maximum Amazon ElastiCache nodes count per region',
+            regex: '^[0-9]{1,4}',
+            default: '200'
+        },
     },
 
     run: function(cache, settings, callback) {
-        var elasticache_nodes_count = parseInt(settings.elasticache_nodes_count || this.settings.elasticache_nodes_count.default);
-
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        
+        var config = {
+            elasticache_nodes_count_per_region: parseInt(settings.elasticache_nodes_count_per_region || this.settings.elasticache_nodes_count_per_region.default),
+            elasticache_nodes_count_global: parseInt(settings.elasticache_nodes_count_global || this.settings.elasticache_nodes_count_global.default)
+        };
 
+        var globalCount = 0;
         async.each(regions.elasticache, function(region, rcb){
             var describeCacheClusters = helpers.addSource(cache, source,
                 ['elasticache', 'describeCacheClusters', region]);
@@ -49,19 +59,28 @@ module.exports = {
 
                 if (cluster.NumCacheNodes) {
                     nodesCount = nodesCount + cluster.NumCacheNodes;
+                    globalCount = globalCount + cluster.NumCacheNodes;
                 }
             });
 
-            if (nodesCount <= elasticache_nodes_count) {
+            if (nodesCount <= config.elasticache_nodes_count_per_region) {
                 helpers.addResult(results, 0,
-                    `Region contains "${nodesCount}" provisioned ElastiCache nodes of "${elasticache_nodes_count}" limit`, region);
+                    `Region contains "${nodesCount}" provisioned ElastiCache nodes of "${config.elasticache_nodes_count_per_region}" limit`, region);
             } else {
                 helpers.addResult(results, 2,
-                    `Region contains "${nodesCount}" provisioned ElastiCache nodes of "${elasticache_nodes_count}" limit`, region);
+                    `Region contains "${nodesCount}" provisioned ElastiCache nodes of "${config.elasticache_nodes_count_per_region}" limit`, region);
             }
 
             rcb();
         }, function(){
+            if (globalCount <= config.elasticache_nodes_count_global) {
+                helpers.addResult(results, 0,
+                    `Region contains "${globalCount}" provisioned ElastiCache nodes of "${config.elasticache_nodes_count_global}" limit`, 'global');
+            } else {
+                helpers.addResult(results, 2,
+                    `Region contains "${globalCount}" provisioned ElastiCache nodes of "${config.elasticache_nodes_count_global}" limit`, 'global');
+            }
+
             callback(null, results, source);
         });
     }
