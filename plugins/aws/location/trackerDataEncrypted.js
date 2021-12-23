@@ -68,7 +68,6 @@ module.exports = {
                
                 var describeTracker = helpers.addSource(cache, source,
                     ['location', 'describeTracker', region, tracker.TrackerName]);
-                   
 
                 if (!describeTracker || describeTracker.err || !describeTracker.data) {
                     helpers.addResult(results, 3,
