@@ -39,7 +39,7 @@ module.exports = {
                 var resource = cluster.ReservationARN;
 
                 if (cluster.State === 'payment-pending') {
-                    helpers.addResult(results, 0,
+                    helpers.addResult(results, 2,
                         'ElastiCache reserved cache node have pending payment', region, resource);
                 } else {
                     helpers.addResult(results, 2,
