@@ -200,8 +200,8 @@ describe('modelDataEncrypted', function () {
             });
         });
 
-        it('should UNKNOWN if unable to list LookoutVision model description', function (done) {
-            const cache = createCache(null, null, null, { message: 'Unable to list LookoutVision model'});
+        it('should UNKNOWN if unable to list LookoutVision projects', function (done) {
+            const cache = createCache(null, null, null, null, { message: 'Unable to list LookoutVision model'});
             modelDataEncrypted.run(cache, { model_data_desired_encryption_level: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
@@ -210,7 +210,7 @@ describe('modelDataEncrypted', function () {
         });
 
         it('should UNKNOWN if unable to list LookoutVision models', function (done) {
-            const cache = createCache([listProjects[0]], {}, describeModel[0], null, null, { message: 'Unable to query LookoutVision models'});
+            const cache = createCache([listProjects[0]], null, describeModel[0], listKeys, null, null, null, { message: 'Unable to query LookoutVision models'});
             modelDataEncrypted.run(cache, { model_data_desired_encryption_level: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
@@ -227,7 +227,7 @@ describe('modelDataEncrypted', function () {
         });
 
         it('should UNKNOWN if unable to list KMS keys', function (done) {
-            const cache = createCache([listProjects[0]], null, null, null, null, { message: "Unable to list KMS keys" });
+            const cache = createCache([listProjects[0]], null, null, null, null, null, { message: "Unable to list KMS keys" });
             modelDataEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
