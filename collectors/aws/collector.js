@@ -461,7 +461,6 @@ var calls = {
             property: 'LaunchTemplates',
             paginate: 'NextToken',
         }
- 
     },
     ECR: {
         describeRepositories: {
