@@ -5,10 +5,10 @@ module.exports = {
     title: 'ElastiCache Reserved Cache Node Payment Pending',
     category: 'ElastiCache',
     domain: 'Databases',
-    description: 'Ensure that any payment pending ElastiCache Reserved Cache Nodes available within your AWS account has been purchased successfully. ',
-    more_info: 'When using ElastiCache Reserved Cache Nodes over standard On-Demand Cache Nodes savings are up to max that they can give when used in steady state, therefore in order to receive this benefit you need to make sure that all your ElastiCache reservation purchases have been fully successful.',
+    description: 'Ensure that payments for ElastiCache Reserved Cache Nodes available within your AWS account has been processed completely. ',
+    more_info: 'When using ElastiCache Reserved Cache Nodes over standard On-Demand Cache Nodes savings are up to max that they give when used in steady state, therefore in order to receive this benefit you need to make sure that all your ElastiCache reservation purchases have been fully successful.',
     link: 'https://aws.amazon.com/elasticache/reserved-cache-nodes/',
-    recommended_action: 'Enable reserved cache nodes payment state for ElastiCache clusters',
+    recommended_action: 'Identify any pending payments for ElastiCache reserved cache nodes',
     apis: ['ElastiCache:describeReservedCacheNodes'],
 
     run: function(cache, settings, callback) {
@@ -24,12 +24,12 @@ module.exports = {
 
             if (describeReservedCacheNodes.err || !describeReservedCacheNodes.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for ElastiCache Reserved Cache Node: ' + helpers.addError(describeReservedCacheNodes), region);
+                    'Unable to query for ElastiCache reserved cache node: ' + helpers.addError(describeReservedCacheNodes), region);
                 return rcb();
             }
 
             if (!describeReservedCacheNodes.data.length) {
-                helpers.addResult(results, 0, 'No ElastiCache Reserved Cache Node found', region);
+                helpers.addResult(results, 0, 'No ElastiCache reserved cache node found', region);
                 return rcb();
             }
             
@@ -40,10 +40,10 @@ module.exports = {
 
                 if (cluster.State === 'payment-pending') {
                     helpers.addResult(results, 0,
-                        'ElastiCache Reserved Cache Node have pending payment', region, resource);
+                        'ElastiCache reserved cache node have pending payment', region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'ElastiCache Reserved Cache Node does not have pending payment', region, resource);
+                        'ElastiCache reserved cache node does not have pending payment', region, resource);
                 }
             }
             rcb();
