@@ -105,7 +105,6 @@ describe('reservedNodeLeaseExpiration', function () {
         it('should FAIL if lease expiration is less than 30 days for renewal of ElastiCache reserved cache node', function (done) {
             const cache = createCache([clusters[1]]);
             reservedNodeLeaseExpiration.run(cache, {}, (err, results) => {
-                console.log(results);
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
