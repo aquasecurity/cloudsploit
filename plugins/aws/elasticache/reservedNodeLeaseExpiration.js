@@ -50,13 +50,13 @@ module.exports = {
 
                 if (expirationDays >= 30) {
                     helpers.addResult(results, 0,
-                        'ElastiCache Reserved Cache Node lease expires in ' + expirationDays + ' days', region, resource);
+                        'ElastiCache reserved cache node lease expires in ' + expirationDays + ' days', region, resource);
                 } else if (expirationDays > 0 ) {
                     helpers.addResult(results, 2,
-                        'ElastiCache Reserved Cache Node lease expires in ' + expirationDays + ' days', region, resource);
+                        'ElastiCache reserved cache node lease expires in ' + expirationDays + ' days', region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'ElastiCache Reserved Cache Node has expired', region, resource);
+                        'ElastiCache reserved cache node lease has expired', region, resource);
                 }
             }
             rcb();
