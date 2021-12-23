@@ -687,7 +687,7 @@ var calls = {
         listTrackers: {
             property: 'Entries',
             paginate: 'NextToken',
-          }
+        }
     },
     LookoutVision: {
         listProjects: {
