@@ -95,25 +95,25 @@ const createCache = (streamData, keys, describeKey, streamDataErr, keysErr, desc
 
 describe('videostreamDataEncrypted', function () {
     describe('run', function () {
-        it('should PASS if Kinesis Video Streams data is encrypted with desired encryption level', function (done) {
+        it('should PASS if Kinesis Video Streams data Kinesis Video Streams data is using desired encryption level', function (done) {
             const cache = createCache(listStreams, listKeys, describeKey[0]);
             videostreamDataEncrypted.run(cache, { video_stream_data_desired_encryption_level: 'awscmk' }, (err, results) => {
                 console.log(results);
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Kinesis Video Streams data is encrypted with awscmk');
+                expect(results[0].message).to.include('Kinesis Video Streams data Kinesis Video Streams data is using awscmk');
                 done();
             });
         });
 
 
-        it('should FAIL if Kinesis Video Streams data is not encrypted with desired encyption level', function (done) {
+        it('should FAIL if Kinesis Video Streams data is not Kinesis Video Streams data is using desired encyption level', function (done) {
             const cache = createCache(listStreams, listKeys, describeKey[1]);
             videostreamDataEncrypted.run(cache, { video_stream_data_desired_encryption_level:'awscmk' }, (err, results) => {
                 console.log(results);
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Kinesis Video Streams data is encrypted with awskms');
+                expect(results[0].message).to.include('Kinesis Video Streams data is Kinesis Video Streams data is using awskms');
                 done();
             });
         });
