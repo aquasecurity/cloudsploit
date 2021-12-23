@@ -2197,4 +2197,5 @@ var collect = function(AWSConfig, settings, callback) {
         });
     });
 };
+
 module.exports = collect;
