@@ -683,10 +683,16 @@ var calls = {
             paginateReqProp: 'Marker'
         }
     },
+    LexModelsV2: {
+        listBots: {
+            property: 'botSummaries',
+            paginate: 'nextToken'
+        }
+    },
     LookoutMetrics: {
         listAnomalyDetectors: {
             property: 'AnomalyDetectorSummaryList',
-            paginate: 'NextToken',
+            paginate: 'NextToken'
         }
     },
     MemoryDB: {
@@ -1502,6 +1508,14 @@ var postcalls = [
                 filterValue: 'FunctionArn'
             }
         },
+        LexModelsV2: {
+            listBotAliases: {
+                reliesOnService: 'lexmodelsv2',
+                reliesOnCall: 'listBots',
+                filterKey: 'botId',
+                filterValue: 'botId'
+            }
+        },
         QLDB: {
             describeLedger: {
                 reliesOnService: 'qldb',
@@ -1729,6 +1743,13 @@ var postcalls = [
                 reliesOnCall: 'listDetectors',
                 override: true,
             },
+        },
+        LexModelsV2:{
+            describeBotAlias: {
+                reliesOnService: 'lexmodelsv2',
+                reliesOnCall: 'listBots',
+                override: true,
+            }
         },
         ManagedBlockchain: {
             getMember: {
