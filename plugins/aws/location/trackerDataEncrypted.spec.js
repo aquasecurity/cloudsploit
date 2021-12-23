@@ -160,7 +160,7 @@ describe('trackerDataEncrypted', function () {
         });
 
         it('should UNKNOWN if unable to list Location tracker', function (done) {
-            const cache = createCache(null, null, null, { message: "Unable to list Location tracker" });
+            const cache = createCache(null, null, null, null, { message: "Unable to list Location tracker" });
             trackerDataEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
