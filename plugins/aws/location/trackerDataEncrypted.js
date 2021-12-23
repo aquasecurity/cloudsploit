@@ -102,7 +102,7 @@ module.exports = {
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `Location Tracker data is encrypted with ${currentEncryptionLevelString} \
+                        `Tracker data is encrypted with ${currentEncryptionLevelString} \
                         which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 }
