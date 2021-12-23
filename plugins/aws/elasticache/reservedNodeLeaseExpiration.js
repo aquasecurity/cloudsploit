@@ -19,7 +19,6 @@ module.exports = {
         async.each(regions.elasticache, function(region, rcb){
             var describeReservedCacheNodes = helpers.addSource(cache, source,
                 ['elasticache', 'describeReservedCacheNodes', region]);
-                // console.log(JSON.stringify(cache.elasticache, null, 2));
 
             if (!describeReservedCacheNodes) return rcb();
 
