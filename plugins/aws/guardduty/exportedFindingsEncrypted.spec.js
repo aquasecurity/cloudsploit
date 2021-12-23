@@ -184,7 +184,7 @@ describe('exportedFindingsEncrypted', function () {
         });
 
         it('should UNKNOWN if unable to list GuardDuty publishing destinations', function (done) {
-            const cache = createCache([listDetectors[0]], {}, describePublishingDestination[0], null, null, { message: 'Unable to query GuardDuty publishing destinations'});
+            const cache = createCache([listDetectors[0]], {}, describePublishingDestination[0], null, null, null, null, { message: 'Unable to query GuardDuty publishing destinations'});
             exportedFindingsEncrypted.run(cache, { exported_findings_desired_encryption_level: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
