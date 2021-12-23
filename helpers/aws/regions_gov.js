@@ -103,6 +103,8 @@ module.exports = {
     apprunner: regions,
     healthlake: regions,
     iotsitewise: regions,
+    lookoutvision: regions,
     lookoutmetrics: regions,
-    forecastservice: regions
+    forecastservice: regions,
+    lexmodelsv2: regions
 };
