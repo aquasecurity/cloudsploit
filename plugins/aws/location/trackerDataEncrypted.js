@@ -49,7 +49,7 @@ module.exports = {
             }
 
             if (!listTrackers.data.length) {
-                helpers.addResult(results, 0, 'No Location Trackers found', region);
+                helpers.addResult(results, 0, 'No Location trackers found', region);
                 return rcb();
             }
 
