@@ -34,7 +34,6 @@ var globalServices = [
     'Route53Domains',
     'WAFRegional'
 ];
- 
 var calls = {
     AccessAnalyzer: {
         listAnalyzers: {
@@ -462,7 +461,6 @@ var calls = {
             property: 'LaunchTemplates',
             paginate: 'NextToken',
         }
- 
     },
     ECR: {
         describeRepositories: {
@@ -953,7 +951,6 @@ var calls = {
         }
     }
 };
- 
 var postcalls = [
     {
         ACM: {
