@@ -29,7 +29,7 @@ module.exports = {
             }
 
             if (!describeReservedCacheNodes.data.length) {
-                helpers.addResult(results, 0, 'No ElastiCache Reserved Cache Node found', region);
+                helpers.addResult(results, 0, 'No ElastiCache reserved cache nodes found', region);
                 return rcb();
             }
 
