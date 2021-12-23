@@ -5,9 +5,9 @@ module.exports = {
     title: 'Geoference Collection Data Encrypted',
     category: 'Location',
     domain: 'Application Integration',
-    description: 'Ensure that Amazon Location geoference collection data is encrypted using desired KMS encryption level',
+    description: 'Ensure that Amazon Location geoference collection data is encrypted using desired KMS encryption level.',
     more_info: 'Amazon Location Service provides encryption by default to protect sensitive customer data at rest using AWS owned encryption keys. ' +
-        'You can also use customer-managed keys instead in order to gain more granular control over encryption/decryption process.',
+        'It is recommended to use customer-managed keys instead in order to gain more granular control over encryption/decryption process.',
     recommended_action: 'Encrypt Amazon Location geoference collection with customer-manager keys (CMKs)',
     link: 'https://docs.aws.amazon.com/location/latest/developerguide/encryption-at-rest.html',
     apis: ['Location:listGeofenceCollections','Location:describeGeofenceCollection', 'KMS:describeKey', 'KMS:listKeys', 'STS:getCallerIdentity'],
@@ -72,14 +72,14 @@ module.exports = {
 
                 if (!describeGeofenceCollection || describeGeofenceCollection.err || !describeGeofenceCollection.data) {
                     helpers.addResult(results, 3,
-                        `Unable to get Location geoference collections: ${helpers.addError(describeGeofenceCollection)}`,
+                        `Unable to get Location geoference collection: ${helpers.addError(describeGeofenceCollection)}`,
                         region, resource);
                     continue;
                 } 
 
                 if (describeGeofenceCollection.data.KmsKeyId) {
-                    var KmsKey = describeGeofenceCollection.data.KmsKeyId;
-                    var keyId = KmsKey.split('/')[1] ? KmsKey.split('/')[1] : KmsKey;
+                    var kmsKey = describeGeofenceCollection.data.KmsKeyId;
+                    var keyId = kmsKey.split('/')[1] ? kmsKey.split('/')[1] : kmsKey;
 
                     var describeKey = helpers.addSource(cache, source,
                         ['kms', 'describeKey', region, keyId]);  
@@ -87,29 +87,28 @@ module.exports = {
                     if (!describeKey || describeKey.err || !describeKey.data || !describeKey.data.KeyMetadata) {
                         helpers.addResult(results, 3,
                             `Unable to query KMS key: ${helpers.addError(describeKey)}`,
-                            region, KmsKey);
+                            region, kmsKey);
                         continue;
                     }
 
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
-                } else {
-                    currentEncryptionLevel = 2; //awskms
-                }
+                } else currentEncryptionLevel = 2; //awskms
 
                 var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
 
                 if (currentEncryptionLevel >= desiredEncryptionLevel) {
                     helpers.addResult(results, 0,
-                        `Location geoference collection data is using ${currentEncryptionLevelString} \
+                        `Geoference collection data is encrypted with ${currentEncryptionLevelString} \
                         which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `Location geoference collection data is using ${currentEncryptionLevelString} \
+                        `Geoference collection data is encrypted with ${currentEncryptionLevelString} \
                         which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 }
             }
+
             rcb();
         }, function(){
             callback(null, results, source);
