@@ -34,6 +34,7 @@ var globalServices = [
     'Route53Domains',
     'WAFRegional'
 ];
+
 var calls = {
     AccessAnalyzer: {
         listAnalyzers: {
