@@ -259,7 +259,6 @@ module.exports = {
                     instanceCount += coreInstanceCount;
                 }
             
-                // Print region results
                 var regionUnderscore = region.replace(/-/g, '_');
                 var regionThreshold = config['instance_count_region_threshold_'+regionUnderscore];
 
