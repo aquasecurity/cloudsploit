@@ -5,9 +5,9 @@ module.exports = {
     title: 'IoT SiteWise Data Encrypted',
     category: 'IoT SiteWise',
     domain: 'Application Integration',
-    description: 'Ensure that AWS IoT SiteWise is using desired encryption level for Data at-rest',
-    more_info: 'AWS IoT SiteWise stores data in other AWS services that encrypt data at rest by default.'+
-        'You can choose to use a customer managed key to encrypt asset property values and aggregate values in AWS IoT SiteWise. You can create, manage, and view your encryption key through AWS KMS.',
+    description: 'Ensure that AWS IoT SiteWise is using desired encryption level for data at-rest.',
+    more_info: 'AWS IoT SiteWise encrypts data such as your asset property values and aggregate values by default.'+
+        'It is recommended to use customer managed keys in order to gain more control over data encryption/decryption process.',
     link: 'https://docs.aws.amazon.com/iot-sitewise/latest/userguide/encryption-at-rest.html',
     recommended_action: 'Update IoT SiteWise encryption configuration to use a CMK.',
     apis: ['IoTSiteWise:describeDefaultEncryptionConfiguration', 'KMS:listKeys', 'KMS:describeKey'],
@@ -54,27 +54,30 @@ module.exports = {
 
             if (describeDefaultEncryptionConfiguration.data.encryptionType == 'KMS_BASED_ENCRYPTION' &&
                 describeDefaultEncryptionConfiguration.data.kmsKeyArn) {
-                let KmsKeyArn = describeDefaultEncryptionConfiguration.data.kmsKeyArn;
-                var kmsKeyId = KmsKeyArn.split('/')[1] ? KmsKeyArn.split('/')[1] : KmsKeyArn;
+                let kmsKeyArn = describeDefaultEncryptionConfiguration.data.kmsKeyArn;
+                var kmsKeyId = kmsKeyArn.split('/')[1] ? kmsKeyArn.split('/')[1] : kmsKeyArn;
 
                 var describeKey = helpers.addSource(cache, source, ['kms', 'describeKey', region, kmsKeyId]);
 
                 if (!describeKey || describeKey.err || !describeKey.data || !describeKey.data.KeyMetadata) {
                     helpers.addResult(results, 3,
-                        `Unable to query KMS key: ${helpers.addError(describeKey)}`, region);
+                        `Unable to query KMS key: ${helpers.addError(describeKey)}`, region, kmsKeyArn);
                     return rcb();
                 }
 
                 currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
-            } else {
-                currentEncryptionLevel = 2; //awskms
-            } 
+            } else currentEncryptionLevel = 2; //awskms
+ 
             var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
 
             if (currentEncryptionLevel >= desiredEncryptionLevel) {
-                helpers.addResult(results, 0, `IoT SiteWise is configured to use encryption at level ${currentEncryptionLevelString} which is greater than or equal to desired level ${config.desiredEncryptionLevelString}`, region);
+                helpers.addResult(results, 0,
+                    `IoT SiteWise is configured to use encryption at level ${currentEncryptionLevelString} which is greater than or equal to desired level ${config.desiredEncryptionLevelString}`,
+                    region);
             } else {
-                helpers.addResult(results, 2, `IoT SiteWise is configured to use encryption at level ${currentEncryptionLevelString} which is less than desired level ${config.desiredEncryptionLevelString}`, region);
+                helpers.addResult(results, 2,
+                    `IoT SiteWise is configured to use encryption at level ${currentEncryptionLevelString} which is less than desired level ${config.desiredEncryptionLevelString}`,
+                    region);
             }
             
             rcb();
