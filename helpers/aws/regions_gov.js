@@ -43,6 +43,7 @@ module.exports = {
     es: regions,
     eventbridge: regions,
     kinesis: [],
+    kinesisvideo: regions,
     firehose: [],
     glue: regions,
     kms: regions,
@@ -102,6 +103,11 @@ module.exports = {
     connect: regions,
     apprunner: regions,
     healthlake: regions,
+    lookoutequipment: regions,
+    iotsitewise: regions,
+    location: regions,
+    lookoutvision: regions,
     lookoutmetrics: regions,
-    forecastservice: regions
+    forecastservice: regions,
+    lexmodelsv2: regions
 };
