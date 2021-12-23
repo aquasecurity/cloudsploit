@@ -5,15 +5,15 @@ module.exports = {
     title: 'LookoutEquipment Dataset Encrypted',
     category: 'LookoutEquipment',
     domain: 'Content Delivery',
-    description: 'Ensure that Amazon LookoutEquipment Dataset is encrypted using desired KMS encryption level',
-    more_info: 'Amazon Lookout for Equipment encrypts your data at rest with your choice of an encryption key.If you dont specify an encryption key, your data is encrypted with AWS owned key by default.' +
-        'So by using customer-managed keys instead you will gain more granular control over encryption/decryption process.',
+    description: 'Ensure that Amazon Lookout for Equipment datasets are encrypted using desired KMS encryption level',
+    more_info: 'Amazon Lookout for Equipment encrypts your data at rest with AWS owned KMS key by default. ' +
+        'It is recommended to use customer-managed keys instead you will gain more granular control over encryption/decryption process.',
     recommended_action: 'Encrypt Amazon LookoutEquipment Dataset with customer-manager keys (CMKs)',
     link: 'https://docs.aws.amazon.com/lookout-for-equipment/latest/ug/encryption-at-rest.html',
     apis: ['LookoutEquipment:listDatasets','LookoutEquipment:describeDataset', 'KMS:describeKey', 'KMS:listKeys'],
     settings: {
-        lookoutequipment_dataset_desired_encryption_level: {
-            name: 'LookoutEquipment Dataset Target Encryption Level',
+        equipment_dataset_desired_encryption_level: {
+            name: 'Equipement Dataset Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
@@ -26,7 +26,7 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var config = {
-            desiredEncryptionLevelString: settings.lookoutequipment_dataset_desired_encryption_level || this.settings.lookoutequipment_dataset_desired_encryption_level.default
+            desiredEncryptionLevelString: settings.equipment_dataset_desired_encryption_level || this.settings.equipment_dataset_desired_encryption_level.default
         };
 
         var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(config.desiredEncryptionLevelString);
@@ -40,12 +40,12 @@ module.exports = {
 
             if (listDatasets.err || !listDatasets.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query LookoutEquipment Dataset: ' + helpers.addError(listDatasets), region);
+                    'Unable to query Lookout for Equipment Dataset: ' + helpers.addError(listDatasets), region);
                 return rcb();
             }
 
             if (!listDatasets.data.length) {
-                helpers.addResult(results, 0, 'No LookoutEquipment Datasets found', region);
+                helpers.addResult(results, 0, 'No Lookout for Equipment Datasets found', region);
                 return rcb();
             }
 
@@ -69,14 +69,14 @@ module.exports = {
 
                 if (!describeDataset || describeDataset.err || !describeDataset.data) {
                     helpers.addResult(results, 3,
-                        `Unable to get LookoutEquipment Dataset: ${helpers.addError(describeDataset)}`,
+                        `Unable to get Lookout for Equipment dataset: ${helpers.addError(describeDataset)}`,
                         region, resource);
                     continue;
                 } 
 
                 if (describeDataset.data.ServerSideKmsKeyId) {
-                    var KmsKey = describeDataset.data.ServerSideKmsKeyId;
-                    var keyId = KmsKey.split('/')[1] ? KmsKey.split('/')[1] : KmsKey;
+                    var kmsKey = describeDataset.data.ServerSideKmsKeyId;
+                    var keyId = kmsKey.split('/')[1] ? kmsKey.split('/')[1] : kmsKey;
 
                     var describeKey = helpers.addSource(cache, source,
                         ['kms', 'describeKey', region, keyId]);  
@@ -84,29 +84,28 @@ module.exports = {
                     if (!describeKey || describeKey.err || !describeKey.data || !describeKey.data.KeyMetadata) {
                         helpers.addResult(results, 3,
                             `Unable to query KMS key: ${helpers.addError(describeKey)}`,
-                            region, KmsKey);
+                            region, kmsKey);
                         continue;
                     }
 
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
-                } else {
-                    currentEncryptionLevel = 2; //awskms
-                }
+                } else currentEncryptionLevel = 2; //awskms
 
                 var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
 
                 if (currentEncryptionLevel >= desiredEncryptionLevel) {
                     helpers.addResult(results, 0,
-                        `LookoutEquipment Datasets is using ${currentEncryptionLevelString} \
+                        `Datasets is using ${currentEncryptionLevelString} \
                         which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `LookoutEquipment Datasets is using ${currentEncryptionLevelString} \
+                        `Datasets is using ${currentEncryptionLevelString} \
                         which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 }
             }
+
             rcb();
         }, function(){
             callback(null, results, source);
