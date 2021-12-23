@@ -91,8 +91,8 @@ describe('reservedNodePaymentFailed', function () {
             });
         });
 
-        it('should PASS if payment state is failure for ElastiCache reserved cache node', function (done) {
-            const cache = createCache([clusters[1]]);
+        it('should PASS if payment state is not failure for ElastiCache reserved cache node', function (done) {
+            const cache = createCache([clusters[0]]);
             reservedNodePaymentFailed.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
