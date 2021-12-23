@@ -686,6 +686,12 @@ var calls = {
     LookoutVision: {
         listProjects: {
             property: 'Projects',
+            paginate: 'NextToken'
+        }
+    },
+    LookoutMetrics: {
+        listAnomalyDetectors: {
+            property: 'AnomalyDetectorSummaryList',
             paginate: 'NextToken',
         }
     },
@@ -1532,6 +1538,14 @@ var postcalls = [
                 reliesOnCall: 'listBrokers',
                 filterKey: 'BrokerId',
                 filterValue: 'BrokerId'
+            }
+        },
+        LookoutMetrics: {
+            describeAnomalyDetector: {
+                reliesOnService: 'lookoutmetrics',
+                reliesOnCall: 'listAnomalyDetectors',
+                filterKey: 'AnomalyDetectorArn',
+                filterValue: 'AnomalyDetectorArn'
             }
         },
         MWAA: {
