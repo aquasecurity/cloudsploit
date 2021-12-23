@@ -42,7 +42,7 @@ module.exports = {
                     helpers.addResult(results, 2,
                         'ElastiCache reserved cache node have payment failure', region, resource);
                 } else {
-                    helpers.addResult(results, 2,
+                    helpers.addResult(results, 0,
                         'ElastiCache reserved cache node does not have payment failure', region, resource);
                 }
             }
