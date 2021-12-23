@@ -630,6 +630,10 @@ var calls = {
             override: true
         }
     },
+    IoTSiteWise: {
+        describeDefaultEncryptionConfiguration: {    
+        }
+    },
     Kinesis: {
         listStreams: {
             property: 'StreamNames'
@@ -687,6 +691,24 @@ var calls = {
         listDatasets: {
             property: 'DatasetSummaries',
             paginate: 'NextToken'
+        }
+    },
+    Location: {
+        listGeofenceCollections: {
+            property: 'Entries',
+            paginate: 'NextToken',
+        }
+    },
+    LookoutVision: {
+        listProjects: {
+            property: 'Projects',
+            paginate: 'NextToken'
+        }
+    },
+    LexModelsV2: {
+        listBots: {
+            property: 'botSummaries',
+            paginate: 'nextToken'
         }
     },
     LookoutMetrics: {
@@ -1516,6 +1538,30 @@ var postcalls = [
                 filterValue: 'DatasetName'
             }
         },
+        Location: {
+            describeGeofenceCollection: {
+                reliesOnService: 'location',
+                reliesOnCall: 'listGeofenceCollections',
+                filterKey: 'CollectionName',
+                filterValue: 'CollectionName'
+            }
+        },
+        LookoutVision: {
+            listModels: {
+                reliesOnService: 'lookoutvision',
+                reliesOnCall: 'listProjects',
+                filterKey: 'ProjectName',
+                filterValue: 'ProjectName'
+            }
+        },
+        LexModelsV2: {
+            listBotAliases: {
+                reliesOnService: 'lexmodelsv2',
+                reliesOnCall: 'listBots',
+                filterKey: 'botId',
+                filterValue: 'botId'
+            }
+        },
         QLDB: {
             describeLedger: {
                 reliesOnService: 'qldb',
@@ -1737,12 +1783,26 @@ var postcalls = [
                 override: true
             }
         },
+        LookoutVision: {
+            describeModel: {
+                reliesOnService: 'lookoutvision',
+                reliesOnCall: 'listProjects',
+                override: true
+            }
+        },
         GuardDuty: {
             getFindings: {
                 reliesOnService: 'guardduty',
                 reliesOnCall: 'listDetectors',
                 override: true,
             },
+        },
+        LexModelsV2:{
+            describeBotAlias: {
+                reliesOnService: 'lexmodelsv2',
+                reliesOnCall: 'listBots',
+                override: true,
+            }
         },
         ManagedBlockchain: {
             getMember: {
