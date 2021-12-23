@@ -382,7 +382,8 @@ module.exports = {
         'redshiftDesiredNodeType'       : require(__dirname + '/plugins/aws/redshift/redshiftDesiredNodeType.js'),
  
         'redisClusterEncryptionAtRest'  : require(__dirname + '/plugins/aws/elasticache/redisClusterEncryptionAtRest.js'),
-        'reservedNodePaymentPending.js' : require(__dirname + '/plugins/aws/elasticache/reservedNodePaymentPending.js'),
+        'reservedNodePaymentPending.js' : require(__dirname + '/plugins/aws/elasticache/reservedNodePaymentPending.js'),      
+        'reservedNodePaymentFailed'     : require(__dirname + '/plugins/aws/elasticache/reservedNodePaymentFailed.js'),
         'reservedNodeLeaseExpiration'   : require(__dirname + '/plugins/aws/elasticache/reservedNodeLeaseExpiration.js'),
 
         'transferLoggingEnabled'        : require(__dirname + '/plugins/aws/transfer/transferLoggingEnabled.js'),
