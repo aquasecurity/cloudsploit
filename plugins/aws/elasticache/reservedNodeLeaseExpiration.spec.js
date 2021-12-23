@@ -6,7 +6,7 @@ const clusters = [
         "ReservedCacheNodeId": "mynode",
         "ReservedCacheNodesOfferingId": "xxxxxxxxx-xxxxx-xxxxx-xxxx-xxxxxxxx71",
         "CacheNodeType": "cache.t3.small",
-        "StartTime": "2019-12-06T02:50:44.003Z",
+        "StartTime": new Date(),
         "Duration": 94608000,
         "FixedPrice": 0.0,
         "UsagePrice": 0.0,
