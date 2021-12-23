@@ -64,7 +64,7 @@ module.exports = {
 
                 if (!getEcMetricStatistics.data.Datapoints.length) {
                     helpers.addResult(results, 0,
-                        'ElastiCache cluster does not have any metric statistics', region, resource);
+                        'ElastiCache cluster metric statistics are not configured', region, resource);
                     return;
                 } else {
                     const isIdle = getEcMetricStatistics.data.Datapoints.every(datapoint => datapoint.Average < elasticache_idle_node_percentage);
