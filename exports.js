@@ -166,6 +166,7 @@ module.exports = {
         'eksPrivateEndpoint'            : require(__dirname + '/plugins/aws/eks/eksPrivateEndpoint.js'),
         'eksSecretsEncrypted'           : require(__dirname + '/plugins/aws/eks/eksSecretsEncrypted.js'),
         'eksSecurityGroups'             : require(__dirname + '/plugins/aws/eks/eksSecurityGroups.js'),
+        'eksLatestPlatformVersion'      : require(__dirname + '/plugins/aws/eks/eksLatestPlatformVersion.js'),
       
         'kendraIndexEncrypted'          : require(__dirname + '/plugins/aws/kendra/kendraIndexEncrypted.js'),
       
