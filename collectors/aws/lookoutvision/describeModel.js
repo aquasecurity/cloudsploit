@@ -36,10 +36,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
                 collection.lookoutvision.describeModel[AWSConfig.region][model.ModelArn].data = data;
                 pCb();
             });
-        }, function(){
-            setTimeout(function(){
-                cb();
-            }, 100);
+            cb();
         });
     }, function(){
         callback();
