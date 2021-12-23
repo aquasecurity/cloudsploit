@@ -103,5 +103,6 @@ module.exports = {
     apprunner: regions,
     healthlake: regions,
     forecastservice: regions,
-    lexmodelsv2: regions 
+    lexmodelsv2: regions,
+    lookoutmetrics: regions
 };

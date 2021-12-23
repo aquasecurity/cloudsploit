@@ -104,5 +104,6 @@ module.exports = {
     healthlake: regions,
     connect: regions,
     forecastservice: regions,
-    lexmodelsv2: regions 
+    lexmodelsv2: regions,
+    lookoutmetrics: regions
 };

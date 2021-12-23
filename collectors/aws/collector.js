@@ -686,7 +686,13 @@ var calls = {
     LexModelsV2: {
         listBots: {
             property: 'botSummaries',
-            paginate: 'nextToken',
+            paginate: 'nextToken'
+        }
+    },
+    LookoutMetrics: {
+        listAnomalyDetectors: {
+            property: 'AnomalyDetectorSummaryList',
+            paginate: 'NextToken'
         }
     },
     MemoryDB: {
@@ -1532,6 +1538,14 @@ var postcalls = [
                 reliesOnCall: 'listBrokers',
                 filterKey: 'BrokerId',
                 filterValue: 'BrokerId'
+            }
+        },
+        LookoutMetrics: {
+            describeAnomalyDetector: {
+                reliesOnService: 'lookoutmetrics',
+                reliesOnCall: 'listAnomalyDetectors',
+                filterKey: 'AnomalyDetectorArn',
+                filterValue: 'AnomalyDetectorArn'
             }
         },
         MWAA: {
