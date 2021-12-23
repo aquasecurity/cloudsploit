@@ -8,12 +8,12 @@ module.exports = {
     description: 'Ensure that Amazon Kinesis Video Streams is using desired encryption level for Data at-rest.',
     more_info: 'Amazon Kinesis Video Streams automatically provisions and scales the infrastructure needed to ingest streaming media, ' +
                'Encrypt these data at-rest using customer-managed keys (CMKs) in order to gain more granular control over encryption/decryption process.',
-    recommended_action: 'Create Kinesis Video Streams data with customer-manager keys (CMKs).',
+    recommended_action: 'Encrypt Kinesis Video Streams data with customer-manager keys (CMKs).',
     link: 'https://docs.aws.amazon.com/kinesisvideostreams/latest/dg/how-kms.html',
     apis: ['KinesisVideo:listStreams', 'KMS:describeKey', 'KMS:listKeys'],
     settings: {
         video_stream_data_desired_encryption_level: {
-            name: 'Kinesis Video Streams Data Desired Encryption Level',
+            name: 'Kinesis Video Streams Data Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
@@ -85,12 +85,12 @@ module.exports = {
 
                 if (currentEncryptionLevel >= desiredEncryptionLevel) {
                     helpers.addResult(results, 0,
-                        `Kinesis Video Streams data is encrypted with ${currentEncryptionLevelString} \
+                        `Kinesis Video Streams data is using ${currentEncryptionLevelString} \
                         which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `Kinesis Video Streams data is encrypted with ${currentEncryptionLevelString} \
+                        `Kinesis Video Streams data is using ${currentEncryptionLevelString} \
                         which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 }
