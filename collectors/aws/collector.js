@@ -1748,7 +1748,7 @@ var postcalls = [
 ];
 
 var rateError = [{message: 'rate'}];
- 
+
 var apiRetryAttempts = 2;
 var apiRetryBackoff = 500;
 var apiRetryCap = 1000;
@@ -1826,7 +1826,7 @@ var collect = function(AWSConfig, settings, callback) {
             }
         }
     };
- 
+
     var isRateError = function(err) {
         let isError=false;
         for (var e in rateError) {
