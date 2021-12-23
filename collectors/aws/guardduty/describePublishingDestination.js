@@ -1,7 +1,7 @@
 var AWS = require('aws-sdk');
 var async = require('async');
 
-module.exports = function(AWSConfig, collection, retries, callback) {
+module.exports = function(AWSConfig, collection, callback) {
     var guardduty = new AWS.GuardDuty(AWSConfig);
 
     if (!collection.guardduty ||
@@ -36,6 +36,8 @@ module.exports = function(AWSConfig, collection, retries, callback) {
                 collection.guardduty.describePublishingDestination[AWSConfig.region][destination.DestinationId].data = data;
                 pCb();
             });
+
+        }, function() {
             cb();
         });
     }, function(){

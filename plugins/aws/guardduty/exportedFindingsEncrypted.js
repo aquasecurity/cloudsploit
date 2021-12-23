@@ -5,14 +5,15 @@ module.exports = {
     title: 'Exported Findings Encrypted',
     category: 'GuardDuty',
     domain: 'Management and Governance',
-    description: 'Ensure that GuardDuty Export Findings is encrypted using desired KMS encryption level',
-    more_info: 'GuardDuty data, such as findings, is encrypted at rest using AWS owned customer master keys (CMK). Additionally, you can use your use key (CMKs) in order to gain more control over data encryption/decryption process.',
+    description: 'Ensure that GuardDuty findings export is encrypted using desired KMS encryption level.',
+    more_info: 'GuardDuty data, such as findings, is encrypted at rest using AWS owned customer master keys (CMK). ' +
+        'Additionally, you can use your use key (CMKs) in order to gain more control over data encryption/decryption process.',
     link: 'https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_exportfindings.html',
-    recommended_action: 'Encrypt GuardDuty Export Findings with customer-manager keys (CMKs) present in your account',
+    recommended_action: 'Encrypt GuardDuty Export Findings with customer-manager keys (CMKs)',
     apis: ['GuardDuty:listDetectors', 'GuardDuty:listPublishingDestinations', 'GuardDuty:describePublishingDestination', 'KMS:describeKey', 'KMS:listKeys', 'STS:getCallerIdentity'],
     settings: {
-        exported_findings_desired_encryption_level: {
-            name: 'GuardDuty Export Findings Target Encryption Level',
+        findings_desired_encryption_level: {
+            name: 'GuardDuty Findings Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
@@ -29,7 +30,7 @@ module.exports = {
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', defaultRegion, 'data']);
 
         var config = {
-            desiredEncryptionLevelString: settings.exported_findings_desired_encryption_level || this.settings.exported_findings_desired_encryption_level.default
+            desiredEncryptionLevelString: settings.findings_desired_encryption_level || this.settings.findings_desired_encryption_level.default
         };
 
         var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(config.desiredEncryptionLevelString);
@@ -74,7 +75,7 @@ module.exports = {
                     !listPublishingDestinations.data ||
                     !listPublishingDestinations.data.Destinations) {
                     helpers.addResult(results, 3,
-                        'Unable to query for GuardDuty publishing destination lists:' + helpers.addError(listPublishingDestinations),
+                        'Unable to query for GuardDuty publishing destinations: ' + helpers.addError(listPublishingDestinations),
                         region, resource);
                     continue;
                 }
@@ -87,7 +88,7 @@ module.exports = {
                 }
 
                 for (let destination of listPublishingDestinations.data.Destinations) {
-                    let resource = `arn:${awsOrGov}:guardduty:${region}:${accountId}:detector/${detectorId}/publishingDestination/${ destination.DestinationId}`;
+                    let resource = `arn:${awsOrGov}:guardduty:${region}:${accountId}:detector/${detectorId}/publishingDestination/${destination.DestinationId}`;
         
                     var describePublishingDestination = helpers.addSource(cache, source,
                         ['guardduty', 'describePublishingDestination', region, destination.DestinationId]);
@@ -96,14 +97,15 @@ module.exports = {
                         describePublishingDestination.err ||
                         !describePublishingDestination.data) {
                         helpers.addResult(results, 3,
-                            'Unable to query for GuardDuty describing publishing destination: ' + detectorId + ': ' + helpers.addError(describePublishingDestination), region, resource);
+                            'Unable to query for GuardDuty publishing destination: ' + helpers.addError(describePublishingDestination),
+                            region, resource);
                         continue;
                     }
         
                     if (describePublishingDestination.data.DestinationProperties && 
                         describePublishingDestination.data.DestinationProperties.KmsKeyArn) {
-                        var KmsKey =  describePublishingDestination.data.DestinationProperties.KmsKeyArn;
-                        var keyId = KmsKey.split('/')[1] ? KmsKey.split('/')[1] : KmsKey;
+                        var kmsKey =  describePublishingDestination.data.DestinationProperties.KmsKeyArn;
+                        var keyId = kmsKey.split('/')[1] ? kmsKey.split('/')[1] : kmsKey;
         
                         var describeKey = helpers.addSource(cache, source,
                             ['kms', 'describeKey', region, keyId]);  
@@ -111,7 +113,7 @@ module.exports = {
                         if (!describeKey || describeKey.err || !describeKey.data || !describeKey.data.KeyMetadata) {
                             helpers.addResult(results, 3,
                                 `Unable to query KMS key: ${helpers.addError(describeKey)}`,
-                                region, KmsKey);
+                                region, kmsKey);
                             continue;
                         }
         

@@ -1,7 +1,7 @@
 var AWS = require('aws-sdk');
 var async = require('async');
 
-module.exports = function(AWSConfig, collection, retries, callback) {
+module.exports = function(AWSConfig, collection, callback) {
     var guardduty = new AWS.GuardDuty(AWSConfig);
     async.eachLimit(collection.guardduty.listDetectors[AWSConfig.region].data, 15, function(detectorId, cb) {
         collection.guardduty.listPublishingDestinations[AWSConfig.region][detectorId] = {};
