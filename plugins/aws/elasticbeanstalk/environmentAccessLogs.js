@@ -57,7 +57,7 @@ module.exports = {
 
                 if (accesLogs && accesLogs.Value === 'true') {
                     helpers.addResult(results, 0,
-                        'Environment Access Logs for environment: ' + environment.EnvironmentName + ' are enabled',
+                        'Access Logs for environment: ' + environment.EnvironmentName + ' are enabled',
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
