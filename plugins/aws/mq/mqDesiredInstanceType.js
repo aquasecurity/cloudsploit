@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'MQ Desired Broker Instance Type',
     category: 'MQ',
-    description: 'Ensure that the Amazon MQ broker instances are cretaed with desired instance types.',
+    description: 'Ensure that the Amazon MQ broker instances are created with desired instance types.',
     more_info: 'Set limits for the type of Amazon MQ broker instances created in your AWS account to address internal compliance ' +
         'requirements and prevent unexpected charges on your AWS bill.',
     recommended_action: 'Create MQ broker with desired instance types',
