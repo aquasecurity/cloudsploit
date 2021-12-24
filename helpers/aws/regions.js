@@ -24,6 +24,7 @@ var regions = [
     'af-south-1'        // Africa (Cape Town)
 ];
 
+
 module.exports = {
     default: ['us-east-1'],
     all: regions,
@@ -69,6 +70,9 @@ module.exports = {
     es: regions,
     glue: regions,
     kinesis: regions,
+    kinesisvideo:  ['us-east-1', 'us-east-2', 'us-west-2', 'ca-central-1', 'eu-central-1',
+        'eu-west-1', 'eu-west-2', 'eu-west-3', 'ap-northeast-1','ap-northeast-2', 'ap-southeast-1',
+        'ap-southeast-2', 'ap-south-1', 'ap-east-1','sa-east-1'],
     firehose: regions,
     kms: regions,
     vpc: regions,
@@ -97,7 +101,7 @@ module.exports = {
     lambda: regions,
     mwaa: ['us-east-1', 'us-east-2', 'us-west-2', 'eu-west-1', 'eu-west-2', 'eu-west-3', 'ap-south-1', 'eu-north-1', 'eu-central-1',
         'ap-southeast-2', 'ap-southeast-1', 'ap-northeast-2', 'ap-northeast-1', 'ca-central-1', 'sa-east-1'],
-    directconnect: 'us-east-1', // this is global service
+    directconnect: ['us-east-1'], // this is global service
     directoryservice: regions,
     efs: regions,
     support: ['us-east-1'],
@@ -163,5 +167,19 @@ module.exports = {
     connect: ['us-east-1', 'us-west-2', 'eu-west-2', 'ca-central-1', 'eu-central-1',
         'ap-southeast-1', 'ap-southeast-2', 'ap-northeast-1', 'ap-northeast-2'],
     apprunner:  ['us-east-1', 'us-west-2', 'us-west-2', 'eu-west-1','ap-northeast-1'],
-    healthlake: ['us-east-1', 'us-east-2', 'eu-west-2']
+    healthlake: ['us-east-1', 'us-east-2', 'eu-west-2'],
+    lookoutequipment: ['us-east-1', 'eu-west-1', 'ap-northeast-2'],
+    iotsitewise: ['us-east-1', 'us-west-2', 'ap-south-1', 'ap-southeast-1', 'ap-northeast-2', 'ap-southeast-2',
+        'ap-northeast-1', 'eu-central-1', 'eu-west-1'],
+    location: [
+        'us-east-1', 'us-east-2', 'us-west-2', 'eu-central-1', 'eu-west-1', 'eu-north-1',
+        'ap-northeast-1', 'ap-southeast-1', 'ap-southeast-2', 'ap-south-1'
+    ],
+    lookoutvision: ['us-east-1', 'us-east-2', 'ap-northeast-1',  'ap-northeast-2', 'eu-central-1', 'eu-west-1'],
+    lookoutmetrics: ['us-east-1', 'us-east-2', 'ap-southeast-1', 'ap-southeast-2', 'ap-northeast-1', 'eu-central-1',
+        'eu-west-1', 'eu-north-1'],
+    forecastservice: ['us-east-1', 'us-east-2', 'us-west-2', 'eu-central-1', 'eu-west-1', 
+        'ap-northeast-1', 'ap-northeast-2', 'ap-southeast-1', 'ap-southeast-2', 'ap-south-1'],
+    lexmodelsv2: [ 'us-east-1', 'us-west-2', 'ca-central-1', 'eu-central-1', 'eu-west-1',
+        'eu-west-2', 'ap-northeast-1', 'ap-northeast-2', 'ap-southeast-1', 'ap-southeast-2', 'af-south-1']
 };
