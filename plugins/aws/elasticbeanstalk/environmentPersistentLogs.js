@@ -24,7 +24,7 @@ module.exports = {
 
             if (describeEnvironments.err || !describeEnvironments.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for application environments: ' + helpers.addError(describeEnvironments), region);
+                    'Unable to query for ElasticBeanstalk environments: ' + helpers.addError(describeEnvironments), region);
                 return rcb();
             }
 
