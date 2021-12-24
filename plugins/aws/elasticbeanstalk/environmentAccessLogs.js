@@ -61,7 +61,7 @@ module.exports = {
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'Environment Access Logs for environment: ' + environment.EnvironmentName + ' are not enabled',
+                        'Access Logs for environment: ' + environment.EnvironmentName + ' are not enabled',
                         region, resource);
                 }
             });
