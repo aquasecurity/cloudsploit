@@ -86,7 +86,7 @@ describe('docdbClusterBackupRetention', function () {
             docdbClusterBackupRetention.run(cache, { doc_db_backup_retention_threshold: 7 }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('DocumentDB cluster has a backup retention period of 10 days');
+                expect(results[0].message).to.include('DocumentDB cluster has a backup retention period of 10');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
