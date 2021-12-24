@@ -1,7 +1,6 @@
 var expect = require('chai').expect;
 var docdbClusterBackupRetention = require('./docdbClusterBackupRetention');
 
-
 const describeDBClusters = [
     {
       AvailabilityZones: [],
@@ -80,13 +79,11 @@ const createCache = (clusters, clustersErr) => {
     };
 };
 
-
-
 describe('docdbClusterBackupRetention', function () {
     describe('run', function () {
         it('should PASS if DocumentDb Cluster has the recommended backup retention period', function (done) {
             const cache = createCache([describeDBClusters[1]]);
-            docdbClusterBackupRetention.run(cache, {}, (err, results) => {
+            docdbClusterBackupRetention.run(cache, { doc_db_backup_retention_threshold: 7 }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('DocumentDB cluster has a backup retention period of 10 days');
@@ -95,10 +92,9 @@ describe('docdbClusterBackupRetention', function () {
             });
         });
 
-
         it('should FAIL if DocumentDB Clusters do not have the recommended backup retention period', function (done) {
             const cache = createCache([describeDBClusters[0]]);
-            docdbClusterBackupRetention.run(cache, {}, (err, results) => {
+            docdbClusterBackupRetention.run(cache, { doc_db_backup_retention_threshold: 7 }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('DocumentDB cluster has a backup retention period of 1 days');
@@ -106,7 +102,6 @@ describe('docdbClusterBackupRetention', function () {
                 done();
             });
         });
-
 
         it('should PASS if no DocumentDB Clusters found', function (done) {
             const cache = createCache([]);

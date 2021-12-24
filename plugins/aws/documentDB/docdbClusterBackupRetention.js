@@ -12,14 +12,21 @@ module.exports = {
     recommended_action: 'Modify DocumentDb cluster to configure sufficient backup retention period.',
     link: 'https://docs.aws.amazon.com/documentdb/latest/developerguide/db-cluster-modify.html',
     apis: ['DocDB:describeDBClusters'],
+    settings: {
+        doc_db_backup_retention_threshold: {
+            name: 'Threshold for DocDB Cluster backup retention.',
+            description: 'Plugin results will become aggregated once this value is breached',
+            regex: '^[1-35]*$',
+            default: 7
+        }
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var doc_db_backup_retention_threshold = settings.doc_db_backup_retention_threshold || this.settings.doc_db_backup_retention_threshold.default; 
 
-        var RECOMMENDED_THRESHOLD = 7;
-    
         async.each(regions.docdb, function(region, rcb){
             var describeDBClusters = helpers.addSource(cache, source,
                 ['docdb', 'describeDBClusters', region]);
@@ -43,15 +50,15 @@ module.exports = {
 
                 let resource = cluster.DBClusterArn;
 
-                if (cluster.BackupRetentionPeriod && cluster.BackupRetentionPeriod > RECOMMENDED_THRESHOLD) {
+                if (cluster.BackupRetentionPeriod && cluster.BackupRetentionPeriod > doc_db_backup_retention_threshold) {
                     helpers.addResult(results, 0,
                         `DocumentDB cluster has a backup retention period of ${cluster.BackupRetentionPeriod} days \
-                        which is greater than or equal to the recommended period of ${RECOMMENDED_THRESHOLD} days`,
+                        which is greater than or equal to the recommended period of ${doc_db_backup_retention_threshold} days`,
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
                         `DocumentDB cluster has a backup retention period of ${cluster.BackupRetentionPeriod} days \
-                        which is less than the recommended period of ${RECOMMENDED_THRESHOLD} days`,
+                        which is less than the recommended period of ${doc_db_backup_retention_threshold} days`,
                         region, resource);
                 }
             }
