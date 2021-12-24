@@ -309,12 +309,6 @@ var calls = {
             paginate: 'NextToken'
         }
     },
-    ElastiCache: {
-        describeCacheClusters: {
-            property: 'CacheClusters',
-            paginate: 'Marker'
-        }
-    },
     EC2: {
         describeAccountAttributes: {
             property: 'AccountAttributes'

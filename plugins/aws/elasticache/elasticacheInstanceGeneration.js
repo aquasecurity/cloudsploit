@@ -6,10 +6,10 @@ module.exports = {
     category: 'ElastiCache',
     domain: 'Databases',
     description: 'Ensure that all ElastiCache clusters provisioned within your AWS account are using the latest generation of instances',
-    more_info: 'Using the latest generation of Amazon ElastiCache instances instead of the previous generation instances will upgrade your clusters for higher hardware performance,'+
-        'better support for latest Memcached and Redis in-memory engines versions and lower costs for compute power and network bandwidth.',
+    more_info: 'Using the latest generation of Amazon ElastiCache instances instances will benefit clusters for higher hardware performance, ' +
+        'better support for latest Memcached and Redis in-memory engines versions and lower costs.',
     link: 'https://aws.amazon.com/elasticache/previous-generation/',
-    recommended_action: 'Upgrade the generation of instances on all ELastiCache clusters to the latest available generation.',
+    recommended_action: 'Upgrade ElastiCache instance generaion to the latest available generation.',
     apis: ['ElastiCache:describeCacheClusters'],
 
     run: function(cache, settings, callback) {
@@ -17,22 +17,30 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
 
-        var deprecatedGenerations = {
-            'cache.m1.small'  :'Standard', 
-            'cache.m1.medium' :'Standard',
-            'cache.m1.large'  :'Standard',
-            'cache.m1.xlarge' :'Standard',
-            'cache.m2.xlarge' :'MemoryOptimized',
-            'cache.m2.2xlarge':'MemoryOptimized',
-            'cache.m2.4xlarge':'MemoryOptimized',
-            'cache.c1.xlarge' :'ComputeOptimized',
-            'cache.t1.micro'  :'Micro',
-        };
+        var previousGen = [
+            'cache.m1.small',
+            'cache.m1.medium',
+            'cache.m1.large',
+            'cache.m1.xlarge',
+            'cache.m2.xlarge',
+            'cache.m2.2xlarge',
+            'cache.m2.4xlarge',
+            'cache.c1.xlarge',
+            'cache.t1.micro',
+            'cache.m3.medium',
+            'cache.m3.large',
+            'cache.m3.xlarge',
+            'cache.m3.2xlarge',
+            'cache.r3.large',
+            'cache.r3.xlarge',
+            'cache.r3.2xlarge',
+            'cache.r3.4xlarge',
+            'cache.r3.8xlarge'
+        ];
 
         async.each(regions.elasticache, function(region, rcb){
             var describeCacheClusters = helpers.addSource(cache, source,
                 ['elasticache', 'describeCacheClusters', region]);
-               
 
             if (!describeCacheClusters) return rcb();
 
@@ -54,19 +62,16 @@ module.exports = {
 
                 if (cluster.CacheNodeType) {
                     var generation = cluster.CacheNodeType;
-                    let generationDeprecationType = (deprecatedGenerations[generation]) ? deprecatedGenerations[generation] : null;
-                    
-                    if (generationDeprecationType) {
+
+                    if (previousGen.includes(generation)) {
                         helpers.addResult(results, 2,
-                            'ElastiCache cluster is running generation instance node: ' + generation + ' which is currently depricated',
+                            'ElastiCache cluster is running previoud generation instance node: ' + generation,
                             region, resource);
                     } else {
                         helpers.addResult(results, 0,
-                            'ElastiCache cluster is running a current generation of Instance Node: ' + generation,
+                            'ElastiCache cluster is running current generation Instance Node: ' + generation,
                             region, resource);
                     }
-                } else {
-                    helpers.addResult(results, 2, 'Unknown Instance Generation found', region, resource);
                 }
             }
 

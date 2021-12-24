@@ -60,12 +60,13 @@ const clusters = [
       }
 ];
 
-const createCache = (clusters) => {
+const createCache = (clusters, err) => {
     return {
         elasticache: {
             describeCacheClusters: {
                 'us-east-1': {
                     data: clusters,
+                    err: err
                 },
             },
         },
@@ -75,7 +76,7 @@ const createCache = (clusters) => {
 
 describe('elasticacheInstanceGeneration', function () {
     describe('run', function () {
-        it('should give error result if ElastiCache cluster is deprecated', function (done) {
+        it('should FAIL if ElastiCache cluster is running previous generation', function (done) {
             const cache = createCache([clusters[1]]);
             elasticacheInstanceGeneration.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -84,7 +85,7 @@ describe('elasticacheInstanceGeneration', function () {
             });
         });
 
-        it('should give passing result if ElastiCache cluster is current', function (done) {
+        it('should PASS if ElastiCache cluster is running current generation', function (done) {
             const cache = createCache([clusters[0]]);
             elasticacheInstanceGeneration.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -98,6 +99,15 @@ describe('elasticacheInstanceGeneration', function () {
             elasticacheInstanceGeneration.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
+
+        it('should UNKNOWN if unable to query ElastiCache clusters', function (done) {
+            const cache = createCache(null, { message: 'Unable to obtain data' });
+            elasticacheInstanceGeneration.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
                 done();
             });
         });
