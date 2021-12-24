@@ -58,7 +58,7 @@ module.exports = {
             }
 
             for (let fileSystem of listFileSystems.data) {
-                if (fileSystem && fileSystem.FileSystemType.toLowerCase() !== 'windows') {
+                if (fileSystem.FileSystemType && fileSystem.FileSystemType.toLowerCase() !== 'windows') {
                     continue;
                 }
 
