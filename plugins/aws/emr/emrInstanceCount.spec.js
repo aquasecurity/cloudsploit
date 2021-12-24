@@ -166,8 +166,8 @@ describe('emrInstanceCount', function () {
         it('should PASS if instances are within the regional and global expected count', function (done) {
             const cache = createCache([listClusters[0]], listInstanceGroups[2]);
             var settings = {
-                instance_count_global_threshold: 2,
-                instance_count_region_threshold_us_east_1: 1
+                emr_instance_count_global_threshold: 2,
+                emr_instance_count_regional_threshold: 1
             };
 
             emrInstanceCount.run(cache, settings, (err, results) => {
@@ -181,8 +181,8 @@ describe('emrInstanceCount', function () {
         it('should FAIL if instances are not in the regional expected count', function (done) {
             const cache = createCache([listClusters[0]], listInstanceGroups[1]);
             var settings = {
-                instance_count_global_threshold: 2,
-                instance_count_region_threshold_us_east_1: 1
+                emr_instance_count_global_threshold: 2,
+                emr_instance_count_regional_threshold: 1
             };
 
             emrInstanceCount.run(cache, settings, (err, results) => {
@@ -196,12 +196,11 @@ describe('emrInstanceCount', function () {
         it('should FAIL if instances are not in the global expected count', function (done) {
             const cache = createCache([listClusters[0]], listInstanceGroups[0]);
             var settings = {
-                instance_count_global_threshold: 2,
-                instance_count_region_threshold_us_east_1: 2
+                emr_instance_count_global_threshold: 2,
+                emr_instance_count_regional_threshold: 2
             };
 
             emrInstanceCount.run(cache, settings, (err, results) => {
-                console.log(results);
                 expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(2);
                 expect(results[1].status).to.equal(2);
@@ -212,8 +211,8 @@ describe('emrInstanceCount', function () {
         it('should FAIL if instances are not in the regional and global expected count', function (done) {
             const cache = createCache([listClusters[0]], listInstanceGroups[3]);
             var settings = {
-                instance_count_global_threshold: 1,
-                instance_count_region_threshold_us_east_1: 1
+                emr_instance_count_global_threshold: 1,
+                emr_instance_count_regional_threshold: 1
             };
 
             emrInstanceCount.run(cache, settings, (err, results) => {
@@ -252,6 +251,5 @@ describe('emrInstanceCount', function () {
                 done();
             });
         });
-
     });
 });
