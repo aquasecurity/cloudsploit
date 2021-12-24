@@ -90,8 +90,8 @@ describe('workspacesDesiredBundleType', function () {
         });
 
         it('should PASS if all Workspaces are using desired bundle type', function (done) {
-            const cache = createCache([describeWorkspaces[0]]);
-            workspacesDesiredBundleType.run(cache, {}, (err, results) => {
+            const cache = createCache([describeWorkspaces[1]]);
+            workspacesDesiredBundleType.run(cache, { desired_bundle_type: 'PERFORMANCE' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
