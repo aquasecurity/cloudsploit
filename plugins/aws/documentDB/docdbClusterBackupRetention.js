@@ -12,7 +12,7 @@ module.exports = {
     apis: ['DocDB:describeDBClusters'],
     settings: {
         doc_db_backup_retention_threshold: {
-            name: 'Threshold for DocDB Cluster backup retention.',
+            name: 'DocDB Cluster Backup Retention Threshold',
             description: 'Plugin results will become aggregated once this value is breached',
             regex: '^[1-35]*$',
             default: 7
