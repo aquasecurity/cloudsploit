@@ -29,7 +29,7 @@ module.exports = {
 
             if (!describeEnvironments.data.length) {
                 helpers.addResult(results, 0,
-                    'No ElasticBeanstalk applications found', region);
+                    'No ElasticBeanstalk environments found', region);
                 return rcb();
             }
 
