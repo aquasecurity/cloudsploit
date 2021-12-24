@@ -23,7 +23,7 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
-        var doc_db_backup_retention_threshold = settings.doc_db_backup_retention_threshold || this.settings.doc_db_backup_retention_threshold.default; 
+        var doc_db_backup_retention_threshold = parseInt(settings.doc_db_backup_retention_threshold || this.settings.doc_db_backup_retention_threshold.default); 
 
         async.each(regions.docdb, function(region, rcb){
             var describeDBClusters = helpers.addSource(cache, source,
