@@ -6,7 +6,7 @@ module.exports = {
     category: 'ElasticBeanstalk',
     domain: 'Application Integration',
     description: 'Ensure that your Amazon Elastic Beanstalk environment is configured to save logs for load balancer associated with the application environment.',
-    more_info: 'Elastic Load Balancing provides access logs that capture detailed information about requests sent to your load balancer. Each log contains information such as the time the request was received, the client's IP address, latencies, request paths, and server responses. You can use these access logs to analyze traffic patterns and troubleshoot issues.',
+    more_info: 'Elastic Load Balancing provides access logs that capture detailed information about requests sent to your load balancer. Each log contains information such as the time the request was received, the client\'s IP address, latencies, request paths, and server responses. You can use these access logs to analyze traffic patterns and troubleshoot issues.',
     recommended_action: 'Go to specific environment, select Configuration, edit Load Balancer category, and enable Store logs',
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html',
     apis: ['ElasticBeanstalk:describeEnvironments', 'ElasticBeanstalk:describeConfigurationSettings'],
