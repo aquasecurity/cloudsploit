@@ -103,7 +103,7 @@ const createCache = (clusters) => {
 
 describe('redisEngineVersions', function () {
     describe('run', function () {
-        it('should give error result if ElastiCache cluster is deprecated', function (done) {
+        it('should give error result if ElastiCache redis cluster is using deprecated engine version', function (done) {
             const cache = createCache([clusters[1]]);
             redisEngineVersions.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -112,7 +112,7 @@ describe('redisEngineVersions', function () {
             });
         });
 
-        it('should give passing result if ElastiCache cluster is current', function (done) {
+        it('should give passing result if ElastiCache redis cluster is using current version', function (done) {
             const cache = createCache([clusters[0]]);
             redisEngineVersions.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -121,11 +121,11 @@ describe('redisEngineVersions', function () {
             });
         });
 
-        it('should give warning result if ElastiCache cluster has low specifications', function (done) {
+        it('should give failing result if ElastiCache redis cluster engine version is not recommended', function (done) {
             const cache = createCache([clusters[2]]);
             redisEngineVersions.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(1);
+                expect(results[0].status).to.equal(2);
                 done();
             });
         });
