@@ -79,9 +79,7 @@ module.exports = {
                     }
 
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
-                } else {
-                    helpers.addResult(results, 3, 'Unable to find FSx file systems encryption key', region, resource);
-                }
+                } else currentEncryptionLevel = 2; //awskms
 
                 var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
 
