@@ -54,8 +54,7 @@ module.exports = {
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `DocumentDB cluster has a backup retention period of ${cluster.BackupRetentionPeriod} days \
-                        which is less than the recommended period of ${doc_db_backup_retention_threshold} days`,
+                        `DocumentDB cluster has a backup retention period of ${cluster.BackupRetentionPeriod} of ${doc_db_backup_retention_threshold} days limit`,
                         region, resource);
                 }
             }
