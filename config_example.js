@@ -63,6 +63,11 @@ module.exports = {
             // url: process.env.GITHUB_URL || 'https://api.github.com',
             // login: process.env.GITHUB_LOGIN || 'myusername',
             // organization: process.env.GITHUB_ORG || false
+        },
+        alibaba: {
+            "access_key_id": process.env.ALICLOUD_ACCESS_KEY,
+            "access_key_secret": process.env.ALICLOUD_SECRET_KEY,
+            "security_token": process.env.ALICLOUD_SECURITY_TOKEN
         }
     }
 };
