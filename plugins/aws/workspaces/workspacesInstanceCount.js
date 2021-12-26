@@ -13,8 +13,9 @@ module.exports = {
     settings: {
         workspace_instance_limit: {
             name: 'Limit for the number of Workspace instances.',
-            description: 'Plugin results will become aggregated once this value is breached',
-            default: 50
+            description: 'Desired threshold for the number of WorkSpace instances in AWS account.',
+            regex: '/[0-9]+/',
+            default: '50'
         }
     },
 
@@ -22,7 +23,7 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
-        var workspace_instance_limit = settings.workspace_instance_limit || this.settings.workspace_instance_limit.default;
+        var workspace_instance_limit = parseInt(settings.workspace_instance_limit || this.settings.workspace_instance_limit.default);
         var instanceCount = 0;
 
         async.each(regions.workspaces, function(region, rcb){
@@ -35,19 +36,19 @@ module.exports = {
             if (!listWorkspaces || listWorkspaces.err || !listWorkspaces.data || !listWorkspaces.data.length) {
                 helpers.addResult(results, 3,
                     'Unable to list Workspaces: ' + helpers.addError(listWorkspaces), region);
-                return callback(null, results, source);
+                return rcb();
             }
 
             instanceCount += listWorkspaces.data.length;
 
-            return rcb();
+            rcb();
         }, function(){
             if (instanceCount > workspace_instance_limit){
-                helpers.addResult(results, 2, `Workspaces Instance count is greater than the desired threshold
-                    i.e. ${workspace_instance_limit} workspaces`);
+                helpers.addResult(results, 2, `Workspaces Instance count is ${instanceCount} of desired threshold \
+                    of ${workspace_instance_limit} workspaces.`, 'global');
             } else {
-                helpers.addResult(results, 0, `Workspaces Instance count is within the desired threshold
-                    i.e. ${workspace_instance_limit} workspaces`);
+                helpers.addResult(results, 0, `Workspaces Instance count is ${instanceCount} of desired threshold \
+                    of ${workspace_instance_limit} workspaces.`, 'global');
             }
 
             callback(null, results, source);

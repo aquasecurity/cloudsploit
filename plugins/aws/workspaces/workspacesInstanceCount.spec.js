@@ -61,7 +61,7 @@ describe('workspacesInstanceCount', function () {
             workspacesInstanceCount.run(cache, { workspace_instance_limit: 10 }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Workspaces Instance count is within the desired threshold');
+                expect(results[0].message).to.include('Workspaces Instance count is 1 of desired threshold');
                 done();
             });
         });
@@ -71,7 +71,7 @@ describe('workspacesInstanceCount', function () {
             workspacesInstanceCount.run(cache, { workspace_instance_limit: 2 }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Workspaces Instance count is greater than the desired threshold');
+                expect(results[0].message).to.include('Workspaces Instance count is 3 of desired threshold');
                 done();
             });
         });
@@ -79,7 +79,7 @@ describe('workspacesInstanceCount', function () {
         it('should UNKNOWN if unable to list Workspaces', function (done) {
             const cache = createCache([]);
             workspacesInstanceCount.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
+                expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(3);
                 done();
             });
