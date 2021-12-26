@@ -178,7 +178,7 @@ describe('projectOwnershipLogging', function () {
                             "type": "logging.googleapis.com/user/ProjectOwnershipAssignmentsChanges"
                         },
                         "createTime": "2019-11-07T02:11:39.940887528Z",
-                        "updateTime": "2019-11-07T19:19:18.101740507Z",
+                        "updateTime": "2019-11-07T19:19:18.101740507Z"
                     },
                     {
                         "name": "test1",

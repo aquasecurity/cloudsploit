@@ -65,9 +65,9 @@ module.exports = {
             ];
 
             let disabled = false;
-            metrics.data.forEach(metric => {
+            for (let metric of metrics.data) {
                 if (metric.filter) {
-                    if (metricExists) return;
+                    if (metricExists) break;
                     var checkMetrics = metric.filter.trim().replace(/\r|\n/g, '');
                     var missingMetrics = [];
 
@@ -79,11 +79,14 @@ module.exports = {
 
                     if (missingMetrics.length === 0) {
                         if (metric.disabled) disabled = true;
-                        metricExists = true;
-                        metricName = metric.metricDescriptor.type;
+                        else {
+                            disabled = false;
+                            metricExists = true;
+                            metricName = metric.metricDescriptor.type;
+                        }
                     }
                 }
-            });
+            }
 
             if (disabled) {
                 helpers.addResult(results, 2, 'Log metric for project ownership changes is disbled', region);

@@ -61,17 +61,20 @@ module.exports = {
             var testMetrics = 'resource.type=gcs_bucket AND protoPayload.methodName="storage.setIamPermissions"';
 
             let disabled = false;
-            metrics.data.forEach(metric => {
+            for (let metric of metrics.data) {
                 if (metric.filter) {
-                    if (metricExists) return;
+                    if (metricExists) break;
 
                     if (metric.filter.trim() === testMetrics) {
                         if (metric.disabled) disabled = true;
-                        metricExists = true;
-                        metricName = metric.metricDescriptor.type;
+                        else {
+                            disabled = false;
+                            metricExists = true;
+                            metricName = metric.metricDescriptor.type;
+                        }
                     }
                 }
-            });
+            }
 
             if (disabled) {
                 helpers.addResult(results, 2, 'Log metric for storage permission changes is disbled', region);

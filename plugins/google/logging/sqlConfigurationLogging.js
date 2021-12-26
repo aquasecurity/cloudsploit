@@ -57,17 +57,20 @@ module.exports = {
             var testMetrics = 'protoPayload.methodName="cloudsql.instances.update"';
 
             let disabled = false;
-            metrics.data.forEach(metric => {
+            for (let metric of metrics.data) {
                 if (metric.filter) {
-                    if (metricExists) return;
+                    if (metricExists) break;
 
                     if (metric.filter.trim().indexOf(testMetrics) > -1) {
                         if (metric.disabled) disabled = true;
-                        metricExists = true;
-                        metricName = metric.metricDescriptor.type;
+                        else {
+                            disabled = false;
+                            metricExists = true;
+                            metricName = metric.metricDescriptor.type;
+                        }
                     }
                 }
-            });
+            }
 
             if (disabled) {
                 helpers.addResult(results, 2, 'Log metric for SQL configuration changes is disbled', region);
