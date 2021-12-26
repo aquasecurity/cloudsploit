@@ -58,7 +58,7 @@ module.exports = {
             }
 
             for (let forecastExportJob of listForecastExportJobs.data) {
-                if (!forecastExportJob && !forecastExportJob.Destination) {
+                if (!forecastExportJob.Destination) {
                     continue;
                 }
 
