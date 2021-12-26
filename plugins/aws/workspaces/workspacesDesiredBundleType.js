@@ -9,20 +9,27 @@ module.exports = {
     more_info: 'A bundle in AWS WorkSpaces defines the hardware and software for AWS WorkSpaces. You can create a WorkSpaces instance using a predefined or custom bundle. Setting a limit to the types that can be used will help you control billing and address internal compliance requirements.',
     recommended_action: 'Ensure that WorkSpaces instances are using desired bundle types',
     link: 'https://docs.aws.amazon.com/workspaces/latest/adminguide/amazon-workspaces-bundles.html',
-    apis: ['WorkSpaces:describeWorkspaces'],
+    apis: ['WorkSpaces:describeWorkspaces', 'STS:getCallerIdentity'],
     settings: {
-        desired_bundle_type: {
-            name: 'Workspaces desired bundle type.',
-            description: 'Plugin results will become aggregated once this value is breached',
-            default: 'STANDARD'
+        workspace_desired_bundle_type: {
+            name: 'Workspaces desired bundle type',
+            description: 'Comma separated list of desired Workspace bundle types',
+            regex: '^.*$',
+            default: ''
         }
     },
 
     run: function(cache, settings, callback) {
+        var workspace_desired_bundle_type = settings.workspace_desired_bundle_type || this.settings.workspace_desired_bundle_type.default;
+        if (!workspace_desired_bundle_type.length) return callback();
+
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
-        var desired_bundle_type = settings.desired_bundle_type || this.settings.desired_bundle_type.default;
+
+        var acctRegion = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
+        var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
         async.each(regions.workspaces, function(region, rcb){
             var listWorkspaces = helpers.addSource(cache, source, ['workspaces', 'describeWorkspaces', region]);
@@ -43,15 +50,18 @@ module.exports = {
                 return rcb();
             }
 
-            var bundleTypes = listWorkspaces.data.map(({ WorkspaceProperties }) => WorkspaceProperties.ComputeTypeName );
-            var currentBundleTypes = [...new Set(bundleTypes)]; // get unique bundle types
-            var isDesiredBundleUsed = currentBundleTypes.length === 1 &&  currentBundleTypes[0].toUpperCase() === desired_bundle_type;
+            listWorkspaces.data.forEach(workspace => {
+                var resource = 'arn:' + awsOrGov + ':workspaces:' + region + ':' + accountId + ':workspace/' + workspace.WorkspaceId;
 
-            if (!isDesiredBundleUsed){
-                helpers.addResult(results, 2, 'Workspaces bundle is not of desired type', region);
-            } else {
-                helpers.addResult(results, 0, 'Workspaces bundle is of desired type', region);
-            }
+                if (workspace.WorkspaceProperties && workspace.WorkspaceProperties.ComputeTypeName
+                    && workspace_desired_bundle_type.includes(workspace.WorkspaceProperties.ComputeTypeName.toUpperCase())) {
+                    helpers.addResult(results, 0,
+                        'Workspace is using the desired bundle type', region, resource);
+                } else {
+                    helpers.addResult(results, 2,
+                        'Workspace is not using the desired bundle type', region, resource);
+                }
+            });
 
             return rcb();
         }, function(){

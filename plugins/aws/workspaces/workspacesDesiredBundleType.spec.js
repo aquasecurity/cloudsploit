@@ -71,9 +71,9 @@ const createErrorCache = () => {
 
 describe('workspacesDesiredBundleType', function () {
     describe('run', function () {
-        it('should PASS if no workspace connection found', function (done) {
+        it('should PASS if no workspace instances found', function (done) {
             const cache = createCache([]);
-            workspacesDesiredBundleType.run(cache, {}, (err, results) => {
+            workspacesDesiredBundleType.run(cache, { workspace_desired_bundle_type: 'PERFORMANCE' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -82,16 +82,16 @@ describe('workspacesDesiredBundleType', function () {
 
         it('should UNKNOWN if Unable to query for WorkSpaces instances', function (done) {
             const cache = createErrorCache();
-            workspacesDesiredBundleType.run(cache, {}, (err, results) => {
+            workspacesDesiredBundleType.run(cache, { workspace_desired_bundle_type: 'PERFORMANCE' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
             });
         });
 
-        it('should PASS if all Workspaces are using desired bundle type', function (done) {
+        it('should PASS if the Workspace is using desired bundle type', function (done) {
             const cache = createCache([describeWorkspaces[1]]);
-            workspacesDesiredBundleType.run(cache, { desired_bundle_type: 'PERFORMANCE' }, (err, results) => {
+            workspacesDesiredBundleType.run(cache, { workspace_desired_bundle_type: 'PERFORMANCE, STANDARD' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -99,9 +99,9 @@ describe('workspacesDesiredBundleType', function () {
             });
         });
 
-        it('should FAIL if Workspaces are not using desired bundle type', function (done) {
-            const cache = createCache(describeWorkspaces);
-            workspacesDesiredBundleType.run(cache, {}, (err, results) => {
+        it('should FAIL if Workspace is not using desired bundle type', function (done) {
+            const cache = createCache([describeWorkspaces[1]]);
+            workspacesDesiredBundleType.run(cache, { workspace_desired_bundle_type: 'STANDARD' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
