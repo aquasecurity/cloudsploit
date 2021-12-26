@@ -22,7 +22,6 @@ module.exports = {
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
         async.each(regions.ssm, function(region, rcb){
-            // Look for EC2 instances
             var describeInstances = helpers.addSource(cache, source,
                 ['ec2', 'describeInstances', region]);
 
@@ -33,7 +32,9 @@ module.exports = {
                 return rcb();
             }
 
-            if (!describeInstances.data.length) {
+            let ec2Instances = describeInstances.data.map((reservation) => reservation.Instances).flat();
+
+            if (!ec2Instances.length) {
                 helpers.addResult(results, 0, 'No EC2 instances found', region);
                 return rcb();
             }
@@ -47,22 +48,15 @@ module.exports = {
                 return rcb();
             }
 
-            let ec2Instances = describeInstances.data.map((reservation) => reservation.Instances).flat();
+            for (let ec2Instance of ec2Instances) {
+                const arn = `arn:${awsOrGov}:ec2:${region}:${accountId}:instance/${ec2Instance.InstanceId}`;
 
-            if (!ec2Instances.length) {
-                helpers.addResult(results, 0, 'No EC2 instances found', region);
-                return rcb();
-            }
+                let instanceInfo = describeInstanceInformation.data.find((instanceInfo) => instanceInfo.InstanceId === ec2Instance.InstanceId);
 
-            for (let instanceInfo of describeInstanceInformation.data) {
-                const arn = `arn:${awsOrGov}:ec2:${region}:${accountId}:instance/${instanceInfo.InstanceId}`;
-
-                let ec2Instance = ec2Instances.find((ec2Instance) => ec2Instance.InstanceId === instanceInfo.InstanceId);
-
-                if (ec2Instance) {
+                if (instanceInfo) {
                     helpers.addResult(results, 0, `EC2 Instance: ${ec2Instance.InstanceId} is managed by AWS Systems Manager`, region, arn);
                 } else {
-                    helpers.addResult(results, 2, `EC2 Instance: ${arn} is not managed by AWS Systems Manager`, region, arn);
+                    helpers.addResult(results, 2, `EC2 Instance: ${ec2Instance.InstanceId} is not managed by AWS Systems Manager`, region, arn);
                 }
             }
 
