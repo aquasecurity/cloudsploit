@@ -13,9 +13,13 @@ module.exports = {
     settings: {
         voice_id_desired_encryption_level: {
             name: 'Connect Voice ID Domain Target Encryption Level',
-            description: 'In order (lowest to highest) awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
-            regex: '^(awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk'
+            description: 'In order (lowest to highest) \
+                awskms=AWS-managed KMS; \
+                awscmk=Customer managed KMS; \
+                externalcmk=Customer managed externally sourced KMS; \
+                cloudhsm=Customer managed CloudHSM sourced KMS',
+            regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
+            default: 'awskms'
         }
     },
 
@@ -82,9 +86,7 @@ module.exports = {
 
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
                 } else {
-                    helpers.addResult(results, 3,
-                        'Unable to find VoiceID domain encryption key', region, resource);
-                    continue;
+                    currentEncryptionLevel = 2; //awskms
                 }
 
                 var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
