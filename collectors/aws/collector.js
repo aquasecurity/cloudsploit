@@ -599,6 +599,15 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    FraudDetector: {
+        getDetectors: {
+            property: 'detectors',
+            paginate: 'nextToken'
+        },
+        getKMSEncryptionKey: {
+            property: 'kmsKey'
+        }
+    },
     Glue: {
         getDataCatalogEncryptionSettings: {
             property: 'DataCatalogEncryptionSettings',
