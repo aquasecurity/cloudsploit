@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that logging and log alerts exist for storage permission changes',
     more_info: 'Storage permissions include access to the buckets that store the logs, any changes in storage permissions should be heavily monitored to prevent unauthorized changes.',
     link: 'https://cloud.google.com/logging/docs/logs-based-metrics/',
-    recommended_action: 'Ensure that log alerts exist for storage permission changes.',
+    recommended_action: 'Ensure that log metric and alert for storage permission changes.',
     apis: ['metrics:list', 'alertPolicies:list'],
     compliance: {
         pci: 'PCI requires tracking and monitoring of all access to environments ' +
@@ -60,21 +60,22 @@ module.exports = {
 
             var testMetrics = 'resource.type=gcs_bucket AND protoPayload.methodName="storage.setIamPermissions"';
 
-
+            let disabled = false;
             metrics.data.forEach(metric => {
                 if (metric.filter) {
                     if (metricExists) return;
 
                     if (metric.filter.trim() === testMetrics) {
+                        if (metric.disabled) disabled = true;
                         metricExists = true;
                         metricName = metric.metricDescriptor.type;
-                    } else {
-                        return;
                     }
                 }
             });
 
-            if (metricExists && metricName.length) {
+            if (disabled) {
+                helpers.addResult(results, 2, 'Log metric for storage permission changes is disbled', region);
+            } else if (metricExists && metricName.length) {
                 var conditionFound = false;
 
                 alertPolicies.data.forEach(alertPolicy => {

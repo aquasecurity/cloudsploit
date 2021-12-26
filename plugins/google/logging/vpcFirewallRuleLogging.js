@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that logging and log alerts exist for firewall rule changes',
     more_info: 'Project Ownership is the highest level of privilege on a project, any changes in firewall rule should be heavily monitored to prevent unauthorized changes.',
     link: 'https://cloud.google.com/logging/docs/logs-based-metrics/',
-    recommended_action: 'Ensure that log alerts exist for firewall rule changes.',
+    recommended_action: 'Ensure that log metric and alert exist for firewall rule changes.',
     apis: ['metrics:list', 'alertPolicies:list'],
     compliance: {
         hipaa: 'HIPAA requires the logging of all activity ' +
@@ -55,32 +55,33 @@ module.exports = {
             var metricName = '';
 
             var testMetrics = [
-                'resource.type="gce_firewall_rule" AND jsonPayload.event_subtype="compute.firewalls.patch"',
-                'jsonPayload.event_subtype="compute.firewalls.insert"'
+                'resource.type="gce_firewall_rule" AND protoPayload.methodName="v1.compute.firewalls.patch"',
+                'protoPayload.methodName="v1.compute.firewalls.insert"'
             ];
 
+            let disabled = false;
             metrics.data.forEach(metric => {
                 if (metric.filter) {
                     if (metricExists) return;
-                    var checkMetrics = metric.filter.trim().split(' OR ');
+                    var checkMetrics = metric.filter.trim().replace(/\r|\n/g, '');
                     var missingMetrics = [];
-
                     testMetrics.forEach(testMetric => {
                         if (checkMetrics.indexOf(testMetric) === -1) {
                             missingMetrics.push(testMetric);
                         }
                     });
 
-                    if (missingMetrics.length > 2) {
-                        return;
-                    } else if (missingMetrics.length === 0) {
+                    if (missingMetrics.length === 0) {
+                        if (metric.disabled) disabled = true;
                         metricExists = true;
                         metricName = metric.metricDescriptor.type;
                     }
                 }
             });
 
-            if (metricExists && metricName.length) {
+            if (disabled) {
+                helpers.addResult(results, 2, 'Log metric for firewall rule changes is disbled', region);
+            } else if (metricExists && metricName.length) {
                 var conditionFound = false;
 
                 alertPolicies.data.forEach(alertPolicy => {

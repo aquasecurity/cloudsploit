@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that logging and log alerts exist for VPC network changes',
     more_info: 'Project Ownership is the highest level of privilege on a project, any changes in VPC network should be heavily monitored to prevent unauthorized changes.',
     link: 'https://cloud.google.com/logging/docs/logs-based-metrics/',
-    recommended_action: 'Ensure that log alerts exist for VPC network changes.',
+    recommended_action: 'Ensure that log metric and alert exist for VPC network changes.',
     apis: ['metrics:list', 'alertPolicies:list'],
     compliance: {
         pci: 'PCI requires tracking and monitoring of all access to environments ' +
@@ -58,17 +58,19 @@ module.exports = {
             var metricName = '';
 
             var testMetrics = [
-                'resource.type=gce_network AND jsonPayload.event_subtype="compute.networks.insert"',
-                'jsonPayload.event_subtype="compute.networks.patch"',
-                'jsonPayload.event_subtype="compute.networks.delete"',
-                'jsonPayload.event_subtype="compute.networks.removePeering"',
-                'jsonPayload.event_subtype="compute.networks.addPeering"'
+                'resource.type=gce_network AND protoPayload.methodName="beta.compute.networks.insert"',
+                'protoPayload.methodName="beta.compute.networks.patch"',
+                'protoPayload.methodName="v1.compute.networks.delete"',
+                'protoPayload.methodName="v1.compute.networks.removePeering"',
+                'protoPayload.methodName="v1.compute.networks.addPeering"'
+                
             ];
 
+            let disabled = false;
             metrics.data.forEach(metric => {
                 if (metric.filter) {
                     if (metricExists) return;
-                    var checkMetrics = metric.filter.trim().split(' OR ');
+                    var checkMetrics = metric.filter.trim().replace(/\r|\n/g, '');
                     var missingMetrics = [];
 
                     testMetrics.forEach(testMetric => {
@@ -77,18 +79,17 @@ module.exports = {
                         }
                     });
 
-                    if (missingMetrics.length > 2) {
-                        return;
-                    } else if (missingMetrics.length > 0) {
-                        metricExists = true;
-                    } else if (missingMetrics.length === 0) {
+                    if (missingMetrics.length === 0) {
+                        if (metric.disabled) disabled = true;
                         metricExists = true;
                         metricName = metric.metricDescriptor.type;
                     }
                 }
             });
 
-            if (metricExists && metricName.length) {
+            if (disabled) {
+                helpers.addResult(results, 2, 'Log metric for VPC network changes is disbled', region);
+            } else if (metricExists && metricName.length) {
                 var conditionFound = false;
 
                 alertPolicies.data.forEach(alertPolicy => {
