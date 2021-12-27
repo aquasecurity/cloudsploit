@@ -115,7 +115,7 @@ describe('docdbClusterBackupRetention', function () {
         });
 
         it('should UNKNOWN if unable to list DocumentDB Clusters', function (done) {
-            const cache = createCache(null, null, null, { message: "Unable to list DocumentDB Clusters encryption" });
+            const cache = createCache(null,  { message: "Unable to list DocumentDB Clusters encryption" });
             docdbClusterBackupRetention.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
