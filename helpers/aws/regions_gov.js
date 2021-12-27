@@ -43,6 +43,7 @@ module.exports = {
     es: regions,
     eventbridge: regions,
     kinesis: [],
+    kinesisvideo: regions,
     firehose: [],
     glue: regions,
     kms: regions,
@@ -75,6 +76,7 @@ module.exports = {
     guardduty: ['us-gov-west-1'],
     wafregional: [],
     wafv2: regions,
+    waf: regions,
     workspaces: ['us-gov-west-1'],
     xray: [],
     resourcegroupstaggingapi: regions,
@@ -101,5 +103,12 @@ module.exports = {
     managedblockchain: regions,
     connect: regions,
     apprunner: regions,
-    healthlake: regions
+    healthlake: regions,
+    lookoutequipment: regions,
+    iotsitewise: regions,
+    location: regions,
+    lookoutvision: regions,
+    lookoutmetrics: regions,
+    forecastservice: regions,
+    lexmodelsv2: regions
 };

@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'MQ Broker Enccrypted',
+    title: 'MQ Broker Encrypted',
     category: 'MQ',
     domain: 'Application Integration',
     description: 'Ensure that Amazon MQ brokers have data ecrypted at-rest feature enabled.',
