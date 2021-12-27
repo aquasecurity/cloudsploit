@@ -12,7 +12,7 @@ module.exports = {
     apis: ['DocDB:describeDBClusters'],
     settings: {
         doc_db_backup_retention_threshold: {
-            name: 'DocDB Cluster Backup Retention Threshold',
+            name: 'DocDB Cluster Minimum Backup Retention Period',
             description: 'Desired number of days for DocumentDB cluster backup retention period.',
             regex: '^[1-35]*$',
             default: 7
