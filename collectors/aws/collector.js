@@ -956,6 +956,13 @@ var calls = {
             params: {
                 SettingId: '/ssm/documents/console/public-sharing-permission'
             }
+        },
+        describeSessions: {
+            property: 'Sessions',
+            paginate: 'NextToken',
+            params: {
+                State: 'Active'
+            }
         }
     },
     STS: {
