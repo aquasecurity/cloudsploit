@@ -470,6 +470,8 @@ module.exports = {
   
         'forecastDatasetEncrypted'      : require(__dirname + '/plugins/aws/forecast/forecastDatasetEncrypted.js'),
 
+        'wafv2InUse'                    : require(__dirname + '/plugins/aws/wafv2/wafv2InUse.js'),
+
         'wafInUse'                      : require(__dirname + '/plugins/aws/waf/wafInUse.js')
     },
     azure : {
