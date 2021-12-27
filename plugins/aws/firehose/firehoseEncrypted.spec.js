@@ -9,7 +9,7 @@ const describeDeliveryStream = [
     {
         "DeliveryStreamDescription": {
             "DeliveryStreamName": "KDS-S3-VzT52",
-            "DeliveryStreamARN": "arn:aws:firehose:us-east-1:101363889637:deliverystream/KDS-S3-VzT52",
+            "DeliveryStreamARN": "arn:aws:firehose:us-east-1:111122223333:deliverystream/KDS-S3-VzT52",
             "DeliveryStreamStatus": "ACTIVE",
             "DeliveryStreamEncryptionConfiguration": {
                 "Status": "DISABLED"
@@ -22,7 +22,7 @@ const describeDeliveryStream = [
                 {
                     "DestinationId": "destinationId-000000000001",
                     "S3DestinationDescription": {
-                        "RoleARN": "arn:aws:iam::101363889637:role/service-role/KinesisFirehoseServiceRole-KDS-S3-VzT52-us-east-1-1640617752463",
+                        "RoleARN": "arn:aws:iam::111122223333:role/service-role/KinesisFirehoseServiceRole-KDS-S3-VzT52-us-east-1-1640617752463",
                         "BucketARN": "arn:aws:s3:::guardduty-bucket-viteace",
                         "Prefix": "",
                         "ErrorOutputPrefix": "",
@@ -41,7 +41,7 @@ const describeDeliveryStream = [
                         }
                     },
                     "ExtendedS3DestinationDescription": {
-                        "RoleARN": "arn:aws:iam::101363889637:role/service-role/KinesisFirehoseServiceRole-KDS-S3-VzT52-us-east-1-1640617752463",
+                        "RoleARN": "arn:aws:iam::111122223333:role/service-role/KinesisFirehoseServiceRole-KDS-S3-VzT52-us-east-1-1640617752463",
                         "BucketARN": "arn:aws:s3:::guardduty-bucket-viteace",
                         "Prefix": "",
                         "ErrorOutputPrefix": "",
@@ -75,7 +75,7 @@ const describeDeliveryStream = [
     {
         "DeliveryStreamDescription": {
             "DeliveryStreamName": "KDS-S3-VzT52",
-            "DeliveryStreamARN": "arn:aws:firehose:us-east-1:101363889637:deliverystream/KDS-S3-VzT52",
+            "DeliveryStreamARN": "arn:aws:firehose:us-east-1:111122223333:deliverystream/KDS-S3-VzT52",
             "DeliveryStreamStatus": "ACTIVE",
             "DeliveryStreamEncryptionConfiguration": {
                 "Status": "DISABLED"
@@ -88,7 +88,7 @@ const describeDeliveryStream = [
                 {
                     "DestinationId": "destinationId-000000000001",
                     "S3DestinationDescription": {
-                        "RoleARN": "arn:aws:iam::101363889637:role/service-role/KinesisFirehoseServiceRole-KDS-S3-VzT52-us-east-1-1640617752463",
+                        "RoleARN": "arn:aws:iam::111122223333:role/service-role/KinesisFirehoseServiceRole-KDS-S3-VzT52-us-east-1-1640617752463",
                         "BucketARN": "arn:aws:s3:::guardduty-bucket-viteace",
                         "Prefix": "",
                         "ErrorOutputPrefix": "",
@@ -107,7 +107,7 @@ const describeDeliveryStream = [
                         }
                     },
                     "ExtendedS3DestinationDescription": {
-                        "RoleARN": "arn:aws:iam::101363889637:role/service-role/KinesisFirehoseServiceRole-KDS-S3-VzT52-us-east-1-1640617752463",
+                        "RoleARN": "arn:aws:iam::111122223333:role/service-role/KinesisFirehoseServiceRole-KDS-S3-VzT52-us-east-1-1640617752463",
                         "BucketARN": "arn:aws:s3:::guardduty-bucket-viteace",
                         "Prefix": "",
                         "ErrorOutputPrefix": "",
@@ -141,7 +141,7 @@ const describeDeliveryStream = [
     {
         "DeliveryStreamDescription": {
             "DeliveryStreamName": "KDS-S3-VzT52",
-            "DeliveryStreamARN": "arn:aws:firehose:us-east-1:101363889637:deliverystream/KDS-S3-VzT52",
+            "DeliveryStreamARN": "arn:aws:firehose:us-east-1:111122223333:deliverystream/KDS-S3-VzT52",
             "DeliveryStreamStatus": "ACTIVE",
             "DeliveryStreamEncryptionConfiguration": {
                 "KeyType": "AWS_OWNED_CMK",
@@ -155,7 +155,7 @@ const describeDeliveryStream = [
                 {
                     "DestinationId": "destinationId-000000000001",
                     "S3DestinationDescription": {
-                        "RoleARN": "arn:aws:iam::101363889637:role/service-role/KinesisFirehoseServiceRole-KDS-S3-VzT52-us-east-1-1640617752463",
+                        "RoleARN": "arn:aws:iam::111122223333:role/service-role/KinesisFirehoseServiceRole-KDS-S3-VzT52-us-east-1-1640617752463",
                         "BucketARN": "arn:aws:s3:::guardduty-bucket-viteace",
                         "Prefix": "",
                         "ErrorOutputPrefix": "",
@@ -174,7 +174,7 @@ const describeDeliveryStream = [
                         }
                     },
                     "ExtendedS3DestinationDescription": {
-                        "RoleARN": "arn:aws:iam::101363889637:role/service-role/KinesisFirehoseServiceRole-KDS-S3-VzT52-us-east-1-1640617752463",
+                        "RoleARN": "arn:aws:iam::111122223333:role/service-role/KinesisFirehoseServiceRole-KDS-S3-VzT52-us-east-1-1640617752463",
                         "BucketARN": "arn:aws:s3:::guardduty-bucket-viteace",
                         "Prefix": "",
                         "ErrorOutputPrefix": "",
