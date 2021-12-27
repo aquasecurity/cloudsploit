@@ -64,9 +64,11 @@ module.exports = {
                         'Access Logs for environment: ' + environment.EnvironmentName + ' are not enabled',
                         region, resource);
                 }
-            });
 
-            rcb();
+                ecb();
+            }, function() {
+                rcb();
+            });
         }, function(){
             callback(null, results, source);
         });
