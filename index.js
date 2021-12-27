@@ -221,7 +221,7 @@ if (config.credentials.aws.credential_file && (!settings.cloud || (settings.clou
         accessKeyId: config.credentials.alibaba.access_key_id,
         accessKeySecret: config.credentials.alibaba.access_key_secret,
         securityToken: config.credentials.alibaba.security_token,
-        // Suport OSS authentication which uses stsToken
+        // Support OSS authentication which uses stsToken
         stsToken: config.credentials.alibaba.security_token
     };
 } else {
