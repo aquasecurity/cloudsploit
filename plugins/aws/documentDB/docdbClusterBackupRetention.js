@@ -13,7 +13,7 @@ module.exports = {
     settings: {
         doc_db_backup_retention_threshold: {
             name: 'DocDB Cluster Backup Retention Threshold',
-            description: 'Plugin results will become aggregated once this value is breached',
+            description: 'Desired number of days for DocumentDB cluster backup retention period.',
             regex: '^[1-35]*$',
             default: 7
         }
