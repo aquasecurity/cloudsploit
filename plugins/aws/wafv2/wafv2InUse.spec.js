@@ -49,7 +49,7 @@ describe('wafv2InUse', function () {
             wafv2InUse.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('WAF is enabled');
+                expect(results[0].message).to.include('WAFV2 is enabled');
                 done();
             });
         });
@@ -59,7 +59,7 @@ describe('wafv2InUse', function () {
             wafv2InUse.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('WAF is not enabled');
+                expect(results[0].message).to.include('WAFV2 is not enabled');
                 done();
             });
         });
