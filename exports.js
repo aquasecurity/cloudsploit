@@ -468,7 +468,9 @@ module.exports = {
       
         'lexAudioLogsEncrypted'         : require(__dirname + '/plugins/aws/lex/lexAudioLogsEncrypted.js'),
   
-        'forecastDatasetEncrypted'      : require(__dirname + '/plugins/aws/forecast/forecastDatasetEncrypted.js')
+        'forecastDatasetEncrypted'      : require(__dirname + '/plugins/aws/forecast/forecastDatasetEncrypted.js'),
+
+        'wafInUse'                      : require(__dirname + '/plugins/aws/waf/wafInUse.js')
     },
     azure : {
         'fileServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/fileServiceEncryption.js'),
