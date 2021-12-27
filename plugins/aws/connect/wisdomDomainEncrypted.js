@@ -6,7 +6,7 @@ module.exports = {
     category: 'Connect',
     domain: 'Content Delivery',
     description: 'Ensure that Wisdom domains created under Amazon Connect instances are using desired KMS encryption level.',
-    more_info: 'All user data stored in Amazon Connect Wisdom is encrypted at rest using encryption keys stored in AWS Key Management Service. Additionaly, you can provide customer managed KMS keys in order to gain more control over encryption/decryption processes.',
+    more_info: 'All user data stored in Amazon Connect Wisdom is encrypted at rest using encryption keys stored in AWS Key Management Service. Additionally, you can provide customer managed KMS keys in order to gain more control over encryption/decryption processes.',
     recommended_action: 'Ensure that Amazon Connect Wisdom domains have encryption enabled.',
     link: 'https://docs.aws.amazon.com/connect/latest/adminguide/encryption-at-rest.html',
     apis: ['Wisdom:listAssistants', 'KMS:listKeys', 'KMS:describeKey'],
