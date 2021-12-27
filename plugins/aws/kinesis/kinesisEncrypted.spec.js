@@ -20,7 +20,7 @@ const describeStream = [
                 }
             }
         ],
-        "StreamARN": "arn:aws:kinesis:us-east-1:101363889637:stream/mine2",
+        "StreamARN": "arn:aws:kinesis:us-east-1:111122223333:stream/mine2",
         "StreamName": "mine2",
         "StreamStatus": "ACTIVE",
         "RetentionPeriodHours": 24,
@@ -48,7 +48,7 @@ const describeStream = [
                 }
             }
         ],
-        "StreamARN": "arn:aws:kinesis:us-east-1:101363889637:stream/mine1",
+        "StreamARN": "arn:aws:kinesis:us-east-1:111122223333:stream/mine1",
         "StreamName": "mine1",
         "StreamStatus": "ACTIVE",
         "RetentionPeriodHours": 24,
@@ -76,7 +76,7 @@ const describeStream = [
                 }
             }
         ],
-        "StreamARN": "arn:aws:kinesis:us-east-1:101363889637:stream/mine1",
+        "StreamARN": "arn:aws:kinesis:us-east-1:111122223333:stream/mine1",
         "StreamName": "mine1",
         "StreamStatus": "ACTIVE",
         "RetentionPeriodHours": 24,
@@ -86,7 +86,7 @@ const describeStream = [
             }
         ],
         "EncryptionType": "KMS",
-        "KeyId": "arn:aws:kms:us-east-1:101363889637:key/ad013a33-b01d-4d88-ac97-127399c18b3e",
+        "KeyId": "arn:aws:kms:us-east-1:111122223333:key/ad013a33-b01d-4d88-ac97-127399c18b3e",
         "StreamCreationTimestamp": "2021-12-27T19:37:41+05:00"
     }
     }
