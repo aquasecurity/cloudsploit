@@ -48,7 +48,7 @@ module.exports = {
 
                 let resource = cluster.DBClusterArn;
 
-                if (cluster.BackupRetentionPeriod && cluster.BackupRetentionPeriod > doc_db_backup_retention_threshold) {
+                if (cluster.BackupRetentionPeriod && cluster.BackupRetentionPeriod >=  doc_db_backup_retention_threshold) {
                     helpers.addResult(results, 0,
                         `DocumentDB cluster has a backup retention period of ${cluster.BackupRetentionPeriod} of ${doc_db_backup_retention_threshold} days limit`,
                         region, resource);
