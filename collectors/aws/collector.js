@@ -32,7 +32,8 @@ var globalServices = [
     'CloudFront',
     'Route53',
     'Route53Domains',
-    'WAFRegional'
+    'WAFRegional',
+    'WAF'
 ];
 
 var calls = {
@@ -465,12 +466,12 @@ var calls = {
 
     },
     ElastiCache: {
-        describeReservedCacheNodes: {
-            property: 'ReservedCacheNodes',
-            paginate: 'Marker'
-        },
         describeCacheClusters: {
             property: 'CacheClusters',
+            paginate: 'Marker'
+        },
+        describeReservedCacheNodes: {
+            property: 'ReservedCacheNodes',
             paginate: 'Marker'
         }
     },
@@ -983,6 +984,12 @@ var calls = {
             }
         }
     },
+    WAF: {
+        listWebACLs: {
+            property: 'WebACLs',
+            paginate: 'NextMarker'
+        }
+    },
     WorkSpaces: {
         describeWorkspaces: {
             property: 'Workspaces',
@@ -1406,6 +1413,12 @@ var postcalls = [
         },
         EMR: {
             describeCluster: {
+                reliesOnService: 'emr',
+                reliesOnCall: 'listClusters',
+                filterKey: 'ClusterId',
+                filterValue: 'Id'
+            },
+            listInstanceGroups: {
                 reliesOnService: 'emr',
                 reliesOnCall: 'listClusters',
                 filterKey: 'ClusterId',

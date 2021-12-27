@@ -76,6 +76,7 @@ module.exports = {
     guardduty: ['us-gov-west-1'],
     wafregional: [],
     wafv2: regions,
+    waf: regions,
     workspaces: ['us-gov-west-1'],
     xray: [],
     resourcegroupstaggingapi: regions,
