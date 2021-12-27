@@ -6,7 +6,7 @@ module.exports = {
     category: 'Connect',
     domain: 'Content Delivery',
     description: 'Ensure that Voice domains created under Amazon Connect instances are using desired KMS encryption level.',
-    more_info: 'All user data stored in Amazon Connect Voice ID is encrypted at rest using encryption keys stored in AWS Key Management Service. Additionaly, you can provide customer managed KMS keys in order to gain more control over encryption/decryption processes.',
+    more_info: 'All user data stored in Amazon Connect Voice ID is encrypted at rest using encryption keys stored in AWS Key Management Service. Additionally, you can provide customer managed KMS keys in order to gain more control over encryption/decryption processes.',
     recommended_action: 'Ensure that Amazon Voice ID domains have encryption enabled.',
     link: 'https://docs.aws.amazon.com/connect/latest/adminguide/encryption-at-rest.html',
     apis: ['VoiceID:listDomains', 'KMS:listKeys', 'KMS:describeKey'],
