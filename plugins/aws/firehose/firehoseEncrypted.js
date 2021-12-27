@@ -60,7 +60,7 @@ module.exports = {
                 var deliveryStreamDesc = describeDeliveryStream.data.DeliveryStreamDescription;
                 var deliveryStreamARN = deliveryStreamDesc.DeliveryStreamARN;
 
-                //console.log(describeDeliveryStream.data.DeliveryStreamDescription.Destinations[0].ExtendedS3DestinationDescription.EncryptionConfiguration.KMSEncryptionConfig);
+                // console.log(JSON.stringify(describeDeliveryStream, null, 2));
 
                 if (!deliveryStreamDesc ||
                     !deliveryStreamDesc.Destinations ||
