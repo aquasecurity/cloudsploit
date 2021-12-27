@@ -69,9 +69,11 @@ module.exports = {
                         'Environment Persistent Logs for environment: ' + environment.EnvironmentName + ' are enabled',
                         region, resource);
                 }
-            });
 
-            rcb();
+                ecb();
+            }, function() {
+                rcb();
+            });
         }, function(){
             callback(null, results, source);
         });
