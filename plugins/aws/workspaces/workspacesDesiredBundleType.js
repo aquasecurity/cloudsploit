@@ -47,7 +47,7 @@ module.exports = {
 
             if (!listWorkspaces.data.length) {
                 helpers.addResult(
-                    results, 0, 'No Workspaces found.', region);
+                    results, 0, 'No WorkSpaces instances found', region);
                 return rcb();
             }
 
