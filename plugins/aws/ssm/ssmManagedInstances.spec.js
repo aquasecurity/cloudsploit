@@ -233,14 +233,6 @@ describe('ssmManagedInstances', function () {
             });
         });
 
-        it('should FAIL if there are ec2 instances but they are not managed by AWS SSM', function (done) {
-            const cache = createCache(describeInstances, []);
-            ssmManagedInstances.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                done();
-            });
-        });
 
         it('should PASS if EC2 instance is being managed by AWS SSM', function (done) {
             const cache = createCache(describeInstances, describeInstanceInformation);
