@@ -65,7 +65,7 @@ module.exports = {
                 let resource = domain.Arn;
 
                 if (domain.ServerSideEncryptionConfiguration && domain.ServerSideEncryptionConfiguration.KmsKeyId) {
-                    let encryptionKey = config.KmsKeyId;
+                    let encryptionKey = domain.ServerSideEncryptionConfiguration.KmsKeyId;
                     var keyId = encryptionKey.split('/')[1] ? encryptionKey.split('/')[1] : encryptionKey;
 
                     var describeKey = helpers.addSource(cache, source,
