@@ -92,7 +92,7 @@ module.exports = {
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `VoiceID domain is encrypted with ${currentEncryptionLevelString} \
+                        `Voice ID domain is encrypted with ${currentEncryptionLevelString} \
                         which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 }
