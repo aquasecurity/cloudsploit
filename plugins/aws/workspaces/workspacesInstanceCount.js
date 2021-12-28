@@ -12,7 +12,7 @@ module.exports = {
     apis: ['WorkSpaces:describeWorkspaces'],
     settings: {
         workspace_instance_limit: {
-            name: 'Limit for the number of Workspace instances.',
+            name: 'Limit for the number of WorkSpaces instances.',
             description: 'Desired threshold for the number of WorkSpace instances in AWS account.',
             regex: '/[0-9]+/',
             default: '50'
