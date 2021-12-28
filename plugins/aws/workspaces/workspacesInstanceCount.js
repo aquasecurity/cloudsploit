@@ -33,9 +33,15 @@ module.exports = {
                 return rcb();
             }
 
-            if (!listWorkspaces || listWorkspaces.err || !listWorkspaces.data || !listWorkspaces.data.length) {
+            if (!listWorkspaces || listWorkspaces.err || !listWorkspaces.data) {
                 helpers.addResult(results, 3,
                     'Unable to list Workspaces: ' + helpers.addError(listWorkspaces), region);
+                return rcb();
+            }
+            
+            if (!listWorkspaces.data.length) {
+                helpers.addResult(results, 2,
+                    'No WorkSpaces instances found', region);
                 return rcb();
             }
 
