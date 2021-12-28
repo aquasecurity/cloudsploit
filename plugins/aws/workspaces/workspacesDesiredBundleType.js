@@ -39,7 +39,7 @@ module.exports = {
                 return rcb();
             }
 
-            if (listWorkspaces.err) {
+            if (listWorkspaces.err || !listWorkspaces.data) {
                 helpers.addResult(
                     results, 3, 'Unable to query for WorkSpaces information: ' + helpers.addError(listWorkspaces), region);
                 return rcb();
