@@ -64,13 +64,7 @@ module.exports = {
             for (let domain of listDomains.data) {
                 let resource = domain.Arn;
 
-                if (!domain && !domain.ServerSideEncryptionConfiguration) {
-                    continue;
-                }
-
-                let config = domain.ServerSideEncryptionConfiguration;
-
-                if (config.KmsKeyId) {
+                if (domain.ServerSideEncryptionConfiguration && domain.ServerSideEncryptionConfiguration.KmsKeyId) {
                     let encryptionKey = config.KmsKeyId;
                     var keyId = encryptionKey.split('/')[1] ? encryptionKey.split('/')[1] : encryptionKey;
 
