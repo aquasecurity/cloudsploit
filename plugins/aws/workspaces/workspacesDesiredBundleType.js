@@ -56,10 +56,10 @@ module.exports = {
 
                 if (workspace.WorkspaceProperties && workspace.WorkspaceProperties.ComputeTypeName && workspace_desired_bundle_type.toUpperCase().includes(workspace.WorkspaceProperties.ComputeTypeName.toUpperCase())) {
                     helpers.addResult(results, 0,
-                        'Workspace is using the desired bundle type', region, resource);
+                        'WorkSpaces instance is using the desired bundle type', region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'Workspace is not using the desired bundle type', region, resource);
+                        'WorkSpaces instance is not using the desired bundle type', region, resource);
                 }
             });
 
