@@ -39,7 +39,7 @@ module.exports = {
 
             if (listForecastExportJobs.err || !listForecastExportJobs.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query forecast exports: ' + helpers.addError(listForecastExportJobs), region);
+                    'Unable to query Forecast exports: ' + helpers.addError(listForecastExportJobs), region);
                 return rcb();
             }
 
