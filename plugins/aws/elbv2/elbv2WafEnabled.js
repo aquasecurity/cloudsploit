@@ -11,6 +11,7 @@ module.exports = {
     recommended_action: '1. Enter the WAF service. 2. Enter Web ACLs and filter by the region the Application Load Balancer is in. 3. If no Web ACL is found, Create a new Web ACL in the region the ALB resides and in Resource type to associate with web ACL, select the Load Balancer. ',
     apis: ['ELBv2:describeLoadBalancers', 'WAFV2:listWebACLs', 'WAFRegional:listWebACLs', 'WAFV2:listResourcesForWebACL', 'WAFRegional:listResourcesForWebACL'],
     run: function(cache, settings, callback) {
+        // console.log(JSON.stringify(cache, null, 2));
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
@@ -44,9 +45,10 @@ module.exports = {
 
             combinedACLS.forEach(webACL => {
                 if (webACL.WebACLId) {
+                    // console.log(JSON.stringify(cache.wafregional, null, 2));
                     let listResources = helpers.addSource(cache, source,
                         ['wafregional', 'listResourcesForWebACL', region, webACL.WebACLId]);
-
+                    // console.log(listResources, 'here', webACL.WebACLId);
                     if (listResources && listResources.data && listResources.data.ResourceArns &&
                         listResources.data.ResourceArns.length) {
                         resourcesToCheck = resourcesToCheck.concat(listResources.data.ResourceArns);
