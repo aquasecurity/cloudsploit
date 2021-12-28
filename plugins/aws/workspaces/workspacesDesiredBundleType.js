@@ -54,8 +54,7 @@ module.exports = {
             listWorkspaces.data.forEach(workspace => {
                 var resource = 'arn:' + awsOrGov + ':workspaces:' + region + ':' + accountId + ':workspace/' + workspace.WorkspaceId;
 
-                if (workspace.WorkspaceProperties && workspace.WorkspaceProperties.ComputeTypeName
-                    && workspace_desired_bundle_type.includes(workspace.WorkspaceProperties.ComputeTypeName.toUpperCase())) {
+                if (workspace.WorkspaceProperties && workspace.WorkspaceProperties.ComputeTypeName && workspace_desired_bundle_type.toUpperCase().includes(workspace.WorkspaceProperties.ComputeTypeName.toUpperCase())) {
                     helpers.addResult(results, 0,
                         'Workspace is using the desired bundle type', region, resource);
                 } else {
