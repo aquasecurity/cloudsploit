@@ -76,11 +76,11 @@ describe('workspacesInstanceCount', function () {
             });
         });
 
-        it('should UNKNOWN if unable to list Workspaces', function (done) {
+        it('should PASS if no WorkSpaces instances found', function (done) {
             const cache = createCache([]);
             workspacesInstanceCount.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(2);
-                expect(results[0].status).to.equal(3);
+                expect(results[0].status).to.equal(0);
                 done();
             });
         });
