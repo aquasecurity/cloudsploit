@@ -48,7 +48,7 @@ module.exports = {
             }
 
             if (!listDomains.data.length) {
-                helpers.addResult(results, 0, 'No wisdom domain found', region);
+                helpers.addResult(results, 0, 'No Connect Wisdom domains found', region);
                 return rcb();
             }
 
