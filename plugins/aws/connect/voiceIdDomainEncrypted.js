@@ -43,7 +43,7 @@ module.exports = {
 
             if (listDomains.err || !listDomains.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query voiceid domain: ' + helpers.addError(listDomains), region);
+                    'Unable to query Connect Voice ID domains: ' + helpers.addError(listDomains), region);
                 return rcb();
             }
 
