@@ -41,9 +41,9 @@ module.exports = {
             var describeInstanceInformation = helpers.addSource(cache, source,
                 ['ssm', 'describeInstanceInformation', region]);
 
-            if (!describeInstanceInformation || describeInstanceInformation.err || !describeInstanceInformation.data || !describeInstanceInformation.data.length) {
-                helpers.addResult(results, 2,
-                    'No EC2 instance is being managed by AWS SSM: ' + helpers.addError(describeInstanceInformation), region);
+            if (!describeInstanceInformation || describeInstanceInformation.err || !describeInstanceInformation.data) {
+                helpers.addResult(results, 3,
+                    'Unable to query instance information: ' + helpers.addError(describeInstanceInformation), region);
                 return rcb();
             }
 
