@@ -50,7 +50,7 @@ module.exports = {
             for (let ec2Instance of ec2Instances) {
                 const arn = `arn:${awsOrGov}:ec2:${region}:${accountId}:instance/${ec2Instance.InstanceId}`;
 
-                let instanceInfo = describeInstanceInformation.data.find((instanceInfo) => instanceInfo.InstanceId === ec2Instance.InstanceId);
+                let instanceInfo = describeInstanceInformation.data.find((instanceInfo) => instanceInfo.InstanceId && instanceInfo.InstanceId === ec2Instance.InstanceId);
 
                 if (instanceInfo) {
                     helpers.addResult(results, 0, `EC2 Instance: ${ec2Instance.InstanceId} is managed by AWS Systems Manager`, region, arn);
