@@ -71,7 +71,7 @@ describe('workspacesInstanceCount', function () {
             workspacesInstanceCount.run(cache, { workspace_instance_limit: 2 }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Workspaces Instance count is 3 of desired threshold');
+                expect(results[0].message).to.include('WorkSpaces Instance count is 3 of 2 desired threshold');
                 done();
             });
         });
