@@ -53,8 +53,7 @@ module.exports = {
                 helpers.addResult(results, 2, `WorkSpaces Instance count is ${instanceCount} of desired threshold \
                     of ${workspace_instance_limit} workspaces`, 'global');
             } else {
-                helpers.addResult(results, 0, `Workspaces Instance count is ${instanceCount} of desired threshold \
-                    of ${workspace_instance_limit} workspaces.`, 'global');
+                helpers.addResult(results, 0, `WorkSpaces Instance count is ${instanceCount} of ${workspace_instance_limit} desired threshold`, 'global');
             }
 
             callback(null, results, source);
