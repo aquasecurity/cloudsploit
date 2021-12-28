@@ -44,7 +44,7 @@ module.exports = {
             }
 
             if (!listForecastExportJobs.data.length) {
-                helpers.addResult(results, 0, 'No forecast exports found', region);
+                helpers.addResult(results, 0, 'No Forecast exports found', region);
                 return rcb();
             }
 
