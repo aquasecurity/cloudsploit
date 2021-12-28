@@ -21,7 +21,8 @@ module.exports = {
 
     run: function(cache, settings, callback) {
         var workspace_desired_bundle_type = settings.workspace_desired_bundle_type || this.settings.workspace_desired_bundle_type.default;
-        if (!workspace_desired_bundle_type.length) return callback();
+
+        if (!workspace_desired_bundle_type.length) return callback(null, results, source);
 
         var results = [];
         var source = {};
