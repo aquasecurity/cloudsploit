@@ -254,18 +254,7 @@ describe('firehoseEncrypted', function () {
             });
         });
 
-        // it('should WARN if Firehose delivery stream uses the default KMS key', function (done) {
-        //     const cache = createCache([listDeliveryStreams[0]], describeDeliveryStream[2]);
-        //     firehoseEncrypted.run(cache, {}, (err, results) => {
-        //         console.log(results);
-        //         expect(results.length).to.equal(1);
-        //         expect(results[0].status).to.equal(1);
-        //         expect(results[0].message).to.include('The Firehose delivery stream uses the default KMS key');
-        //         expect(results[0].region).to.equal('us-east-1');
-        //         done();
-        //     });
-        // });
-
+ 
         it('should PASS if No Firehose delivery streams found', function (done) {
             const cache = createCache([]);
             firehoseEncrypted.run(cache, {}, (err, results) => {
