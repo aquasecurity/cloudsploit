@@ -22,7 +22,7 @@ const describeStream = [
                     }
                 }
             ],
-            "StreamARN": "arn:aws:kinesis:us-east-1:101363889637:stream/mine2",
+            "StreamARN": "arn:aws:kinesis:us-east-1:000011112222:stream/mine2",
             "StreamName": "mine2",
             "StreamStatus": "ACTIVE",
             "RetentionPeriodHours": 24,
