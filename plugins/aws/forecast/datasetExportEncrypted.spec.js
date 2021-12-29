@@ -151,7 +151,7 @@ describe('datasetExportEncrypted', function () {
         });
 
         it('should UNKNOWN if unable to find Wisdom domain encryption key', function (done) {
-            const cache = createCache([listForecastExportJobs[0]], null, null);
+            const cache = createCache([listForecastExportJobs[1]], listKeys, null);
             datasetExportEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
