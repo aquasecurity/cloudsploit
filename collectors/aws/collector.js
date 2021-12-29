@@ -32,7 +32,8 @@ var globalServices = [
     'CloudFront',
     'Route53',
     'Route53Domains',
-    'WAFRegional'
+    'WAFRegional',
+    'WAF'
 ];
 
 var calls = {
@@ -577,6 +578,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    FSx: {
+        describeFileSystems: {
+            property: 'FileSystems',
+            paginate: 'NextToken'
+        }
+    },
     Glue: {
         getDataCatalogEncryptionSettings: {
             property: 'DataCatalogEncryptionSettings',
@@ -975,6 +982,12 @@ var calls = {
             params: {
                 Scope: 'REGIONAL'
             }
+        }
+    },
+    WAF: {
+        listWebACLs: {
+            property: 'WebACLs',
+            paginate: 'NextMarker'
         }
     },
     WorkSpaces: {
@@ -1400,6 +1413,12 @@ var postcalls = [
         },
         EMR: {
             describeCluster: {
+                reliesOnService: 'emr',
+                reliesOnCall: 'listClusters',
+                filterKey: 'ClusterId',
+                filterValue: 'Id'
+            },
+            listInstanceGroups: {
                 reliesOnService: 'emr',
                 reliesOnCall: 'listClusters',
                 filterKey: 'ClusterId',
