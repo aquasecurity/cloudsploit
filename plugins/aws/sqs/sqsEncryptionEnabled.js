@@ -109,7 +109,7 @@ module.exports = {
                     var encryptionKey = getQueueAttributes.data.Attributes.KmsMasterKeyId;
                     let kmsKeyArn = (encryptionKey.startsWith('alias/')) ?
                         (kmsAliasArnMap[encryptionKey]) ? kmsAliasArnMap[encryptionKey] :
-                        encryptionKey : encryptionKey;
+                            encryptionKey : encryptionKey;
                 
                     var keyId = kmsKeyArn.split('/')[1] ? kmsKeyArn.split('/')[1] : kmsKeyArn;
 
