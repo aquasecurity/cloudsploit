@@ -324,7 +324,6 @@ function makeApiCall(client, originalUrl, callCb, nextToken, config) {
         queryParams = `${url.includes("?") ? '&' : '?'}${config.paginationKey ? config.paginationKey : 'maxResults'}=${maxResults}${nextToken ? `&pageToken=${nextToken}` : ''}`
     }
     url = `${originalUrl}${queryParams}`
-    console.log("url: ", url)
     client.request({ 
         url,
         method: config.method ? config.method : 'GET'

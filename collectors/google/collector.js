@@ -22,7 +22,7 @@ var helpers = require(__dirname + '/../../helpers/google');
 var calls = {
     disks: {
         list: {
-            url: 'https://compute.googleapis.com/compute/v1/projects/{projectid}/zones/{locationId}/disks',
+            url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/zones/{locationId}/disks',
             location: 'zone',
             pagination: true
         },
@@ -34,7 +34,7 @@ var calls = {
     },
     images: {
         list: {
-            url: 'https://compute.googleapis.com/compute/v1/projects/{projectid}/global/images',
+            url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/global/images',
             location: null,
             pagination: true
         }
@@ -91,7 +91,8 @@ var calls = {
             list: {
                 url: 'https://spanner.googleapis.com/v1/projects/{projectId}/instances',
                 location: null,
-                pagination: true
+                pagination: true,
+                paginationKey: 'pageSize'
             }
         },
         manyApi: true,
@@ -376,8 +377,7 @@ var postcalls = {
             reliesOnCall: ['list'],
             location: 'region',
             properties: ['id'],
-            pagination: true,
-            paginationKey: 'pageSize'
+            pagination: false,
         }
     },
     organizations: { //https://cloudresourcemanager.googleapis.com/v1beta1/{resource=organizations/*}:getIamPolicy
@@ -420,6 +420,7 @@ var collect = function(GoogleConfig, settings, callback) {
                         postcallCb();
                     });
                 }, function() {
+                    JSON.stringify(collection, null, 2)
                     callback(null, collection);
                 });
             });
