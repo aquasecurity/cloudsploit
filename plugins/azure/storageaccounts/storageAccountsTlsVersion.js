@@ -2,9 +2,9 @@ var async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'SQL Server Minimum TLS Version',
-    category: 'SQL Server',
-    domain: 'Databases',
+    title: 'Storage Accounts Minimum TLS Version',
+    category: 'Storage Accounts',
+    domain: 'Storage',
     description: 'Ensures Microsoft Azure Storage Accounts are using the latest TLS version 1.2 to enforce stricter security measure.',
     more_info: 'Azure Storage accounts permit clients to send and receive data with the oldest version of TLS, TLS 1.0, and above. ' +
         'To enforce stricter security measures, you can configure your storage account to require that clients send and receive data with a newer version of TLS.',
