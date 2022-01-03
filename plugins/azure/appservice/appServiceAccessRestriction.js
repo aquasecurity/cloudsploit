@@ -43,15 +43,15 @@ module.exports = {
                         'Unable to query App Service configuration: ' + helpers.addError(webConfigs),
                         location, webApp.id);
                 } else {
-                    let DenyAllIp;
+                    let denyAllIp;
                     if (webConfigs.data[0].ipSecurityRestrictions && webConfigs.data[0].ipSecurityRestrictions.length) {
-                        DenyAllIp = webConfigs.data[0].ipSecurityRestrictions.find(ipSecurityRestriction =>
+                        denyAllIp = webConfigs.data[0].ipSecurityRestrictions.find(ipSecurityRestriction =>
                             ipSecurityRestriction.ipAddress && ipSecurityRestriction.ipAddress.toUpperCase() === 'ANY' &&
                             ipSecurityRestriction.action && ipSecurityRestriction.action.toUpperCase() === 'DENY'
                         );
                     }
 
-                    if (DenyAllIp) {
+                    if (denyAllIp) {
                         helpers.addResult(results, 0,
                             'App Service has access restriction enabled',
                             location, webApp.id);
