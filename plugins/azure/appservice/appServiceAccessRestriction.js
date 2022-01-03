@@ -38,7 +38,7 @@ module.exports = {
                     cache, source, ['webApps', 'listConfigurations', location, webApp.id]
                 );
 
-                if (!webConfigs || webConfigs.err || !webConfigs.data && !webConfigs.data.length) {
+                if (!webConfigs || webConfigs.err || !webConfigs.data || !webConfigs.data.length) {
                     helpers.addResult(results, 3,
                         'Unable to query App Service configuration: ' + helpers.addError(webConfigs),
                         location, webApp.id);
