@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Notebook in VPC',
+    title: 'Notebook instance in VPC',
     category: 'SageMaker',
     domain: 'Compute',
     description: 'Ensure SageMaker Notebook instances are launched within a VPC',
