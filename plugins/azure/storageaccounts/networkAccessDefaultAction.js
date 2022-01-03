@@ -25,6 +25,12 @@ module.exports = {
             default: '^aquaacct([a-f0-9]){16}$'
         }
     },
+    remediation_min_version: '202201032300',
+    remediation_description: 'Default network action will be set to deny all traffic for affected storage accounts',
+    apis_remediate: ['storageAccounts:list'],
+    actions: {remediate:['storageAccounts:update'], rollback:['storageAccounts:update']},
+    permissions: {remediate: ['storageAccounts:update'], rollback: ['storageAccounts:update']},
+    realtime_triggers: ['microsoftstorage:storageaccounts:write'],
 
     run: function(cache, settings, callback) {
         var config = {
@@ -86,5 +92,51 @@ module.exports = {
             // Global checking goes here
             callback(null, results, source);
         });
+    },
+    remediate: function(config, cache, settings, resource, callback) {
+        var remediation_file = settings.remediation_file;
+        var putCall = this.actions.remediate;
+
+        // inputs specific to the plugin
+        var pluginName = 'networkAccessDefaultAction';
+        var baseUrl = 'https://management.azure.com/{resource}?api-version=2021-04-01';
+        var method = 'PATCH';
+
+        // for logging purposes
+        var saNameArr = resource.split('/');
+        var saName = saNameArr[saNameArr.length - 1];
+
+        // create the params necessary for the remediation
+        if (settings.region) {
+            var body = {
+                'location': settings.region,
+                'properties': {
+                    'networkAcls': {
+                         'defaultAction': 'Deny'
+                     }
+                }
+            };
+
+            // logging
+            remediation_file['pre_remediate']['actions'][pluginName][resource] = {
+                'DefaultNetworkAction': 'Allow',
+                'StorageAccount': saName
+            };
+
+            helpers.remediatePlugin(config, method, body, baseUrl, resource, remediation_file, putCall, pluginName, function(err, action) {
+                if (err) return callback(err);
+                if (action) action.action = putCall;
+
+
+                remediation_file['post_remediate']['actions'][pluginName][resource] = action;
+                remediation_file['remediate']['actions'][pluginName][resource] = {
+                    'Action': 'Deny'
+                };
+
+                callback(null, action);
+            });
+        } else {
+            callback('No region found');
+        }
     }
 };
