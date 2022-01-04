@@ -1577,8 +1577,7 @@ var postcalls = [
             listGrants: {
                 reliesOnService: 'kms',
                 reliesOnCall: 'listKeys',
-                filterKey: 'KeyId',
-                filterValue: 'KeyId'
+                override: true
             }
         },
         Lambda: {

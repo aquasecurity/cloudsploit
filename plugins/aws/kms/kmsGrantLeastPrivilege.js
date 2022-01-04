@@ -40,7 +40,7 @@ module.exports = {
             'RetireGrant',
         ];
 
-        var asymmetricSVOperations = [
+        var asymmetricSVOperations = [ // eslint-disable-line
             'ReEncryptFrom',
             'ReEncryptTo',
             'Sign',
