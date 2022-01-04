@@ -112,8 +112,8 @@ module.exports = {
                 'location': settings.region,
                 'properties': {
                     'networkAcls': {
-                         'defaultAction': 'Deny'
-                     }
+                        'defaultAction': 'Deny'
+                    }
                 }
             };
 
