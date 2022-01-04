@@ -103,9 +103,9 @@ const describeKey = [
     },
     {
         "KeyMetadata": {
-            "AWSAccountId": "101363889637",
+            "AWSAccountId": "000011112222",
             "KeyId": "fb8ab834-47f3-4434-810a-e9cb1634de69",
-            "Arn": "arn:aws:kms:us-east-1:101363889637:key/fb8ab834-47f3-4434-810a-e9cb1634de69",
+            "Arn": "arn:aws:kms:us-east-1:000011112222:key/fb8ab834-47f3-4434-810a-e9cb1634de69",
             "CreationDate": "2022-01-04T20:45:32.105000+05:00",
             "Enabled": true,
             "Description": "",
