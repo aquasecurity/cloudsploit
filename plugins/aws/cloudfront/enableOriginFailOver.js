@@ -40,7 +40,7 @@ module.exports = {
                     'CloudFront distribution does not have origin failover enabled.', 'global', distribution.ARN);
             } else {
                 helpers.addResult(results, 0,
-                    'origin failover is enabled within CloudFront distribution.', 'global', distribution.ARN);
+                    'CloudFront distribution have origin failover enabled.', 'global', distribution.ARN);
             }
         });
 
