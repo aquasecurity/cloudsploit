@@ -1573,6 +1573,11 @@ var postcalls = [
                 reliesOnCall: 'listKeys',
                 filterKey: 'KeyId',
                 filterValue: 'KeyId'
+            },
+            listGrants: {
+                reliesOnService: 'kms',
+                reliesOnCall: 'listKeys',
+                override: true
             }
         },
         Lambda: {
