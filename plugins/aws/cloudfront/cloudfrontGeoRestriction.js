@@ -4,7 +4,7 @@ module.exports = {
     title: 'CloudFront Geo Restriction',
     category: 'CloudFront',
     domain: 'Content Delivery',
-    description: 'Ensure that geo restriction is enabled for your CloudFront distribution to whitelist or blocklist a country in order to allow or restrict users in specific locations from accessing web application.',
+    description: 'Ensure that geo-restriction feature is enabled for your CloudFront distribution to allow or block location-based access.',
     more_info: ' AWS CloudFront geo restriction feature can be used to assist in mitigation of Distributed Denial of Service (DDoS) attacks. ' +
                'Also you have the ability to block IP addresses based on Geo IP from reaching your distribution and your web application content delivered by the distribution.',
     link: 'https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/georestrictions.html',
