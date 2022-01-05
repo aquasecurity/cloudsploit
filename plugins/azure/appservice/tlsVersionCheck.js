@@ -20,7 +20,6 @@ module.exports = {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
-        console.log(JSON.stringify(cache, null, 2));
 
         async.each(locations.webApps, function(location, rcb) {
             const webApps = helpers.addSource(
