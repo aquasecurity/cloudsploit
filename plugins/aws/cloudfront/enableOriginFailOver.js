@@ -8,7 +8,7 @@ module.exports = {
     more_info: ' With Origin Failover capability, you can setup two origins for your CloudFront web distributions primary and secondary. In the event of primary origin failure, ' +
                'your content is automatically served from the secondary origin, maintaining the distribution high reliability. ',
     link: 'https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_OriginGroupFailoverCriteria.html',
-    recommended_action: 'Ensures that When you create or update a distribution, you can specifiy the origin group instead of a single origin, and CloudFront will failover from the primary origin to the second origin under the failover conditions that you have chosen.',
+    recommended_action: 'Ensures that When you create or update a distribution, you can specify the origin group instead of a single origin, and CloudFront will failover from the primary origin to the second origin under the failover conditions that you have chosen.',
     apis: ['CloudFront:listDistributions'],
 
     run: function(cache, settings, callback) {
