@@ -36,7 +36,7 @@ module.exports = {
         listDistributions.data.forEach(distribution => {
             if (!distribution.DefaultCacheBehavior || !distribution.DefaultCacheBehavior.Compress) {
                 helpers.addResult(results, 2,
-                    'Cloudfront web distribution is not currently configured to compress files (objects) automatically.', 'global', distribution.ARN);
+                    'CloudFront distribution is not currently configured to compress files automatically', 'global', distribution.ARN);
             } else {
                 helpers.addResult(results, 0,
                     'CloudFront distribution is currently configured to compress files automatically', 'global', distribution.ARN);
