@@ -37,7 +37,7 @@ module.exports = {
         listDistributions.data.forEach(distribution => {
             if (!distribution.OriginGroups || !distribution.OriginGroups.Quantity) {
                 helpers.addResult(results, 2,
-                    'origin failover is not enabled within CloudFront distribution.', 'global', distribution.ARN);
+                    'CloudFront distribution does not have origin failover enabled.', 'global', distribution.ARN);
             } else {
                 helpers.addResult(results, 0,
                     'origin failover is enabled within CloudFront distribution.', 'global', distribution.ARN);
