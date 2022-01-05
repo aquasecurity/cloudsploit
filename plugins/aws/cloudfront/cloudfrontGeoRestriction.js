@@ -20,27 +20,29 @@ module.exports = {
         var listDistributions = helpers.addSource(cache, source,
             ['cloudfront', 'listDistributions', region]);
 
-        if (!listDistributions) return callback(null, results, source);
+        if (!listDistributions) return callback(null, results, source, region);
 
         if (listDistributions.err || !listDistributions.data) {
             helpers.addResult(results, 3,
                 'Unable to query for CloudFront distributions: ' + helpers.addError(listDistributions));
-            return callback(null, results, source);
+            return callback(null, results, source, region);
         }
 
         if (!listDistributions.data.length) {
             helpers.addResult(results, 0, 'No CloudFront distributions found');
-            return callback(null, results, source);
+            return callback(null, results, source, region);
         }
 
         // loop through Instances for every reservation
         listDistributions.data.forEach(distribution => {
-            if (distribution.Restrictions.GeoRestriction.RestrictionType === 'none') {
-                helpers.addResult(results, 2,
-                    'geo restriction is not enabled within CloudFront distribution.', 'global', distribution.ARN);
-            } else {
+            if (distribution.Restrictions && distribution.Restrictions.GeoRestriction 
+                && distribution.Restrictions.GeoRestriction.RestrictionType 
+                && distribution.Restrictions.GeoRestriction.RestrictionType.toLowerCase() != 'none') {
                 helpers.addResult(results, 0,
                     'geo restriction is enabled within CloudFront distribution.', 'global', distribution.ARN);
+            } else {
+                helpers.addResult(results, 2,
+                    'geo restriction is not enabled within CloudFront distribution.', 'global', distribution.ARN);
             }
         });
 
