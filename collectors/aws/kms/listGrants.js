@@ -46,3 +46,4 @@ module.exports = function(AWSConfig, collection, callback) {
         callback();
     });
 };
+
