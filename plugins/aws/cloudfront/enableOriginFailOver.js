@@ -20,7 +20,7 @@ module.exports = {
         var listDistributions = helpers.addSource(cache, source,
             ['cloudfront', 'listDistributions', region]);
 
-        if (!listDistributions) return callback(null, results, source);
+        if (!listDistributions) return callback(null, results, source, region);
 
         if (listDistributions.err || !listDistributions.data) {
             helpers.addResult(results, 3,
