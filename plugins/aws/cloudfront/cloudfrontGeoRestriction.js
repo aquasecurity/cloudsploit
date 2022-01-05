@@ -20,17 +20,17 @@ module.exports = {
         var listDistributions = helpers.addSource(cache, source,
             ['cloudfront', 'listDistributions', region]);
 
-        if (!listDistributions) return callback(null, results, source, region);
+        if (!listDistributions) return callback(null, results, source);
 
         if (listDistributions.err || !listDistributions.data) {
             helpers.addResult(results, 3,
-                'Unable to query for CloudFront distributions: ' + helpers.addError(listDistributions));
-            return callback(null, results, source, region);
+                'Unable to query for CloudFront distributions: ' + helpers.addError(listDistributions), region);
+            return callback(null, results, source);
         }
 
         if (!listDistributions.data.length) {
-            helpers.addResult(results, 0, 'No CloudFront distributions found');
-            return callback(null, results, source, region);
+            helpers.addResult(results, 0, 'No CloudFront distributions found', region);
+            return callback(null, results, source);
         }
 
         // loop through Instances for every reservation
