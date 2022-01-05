@@ -8,7 +8,7 @@ module.exports = {
     more_info: ' Cloudfront data transfer is based on the total amount of data served, sending compressed files to the viewers is much less expensive than sending uncompressed files, ' +
                'To optimise your AWS cloud costs and speed up your web applications, configure your Cloudfront distributions to compress the web content served with compression enabled.',
     link: 'https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/ServingCompressedFiles.html',
-    recommended_action: 'Enable CloudFront serving compressed files to true.',
+    recommended_action: 'Ensures that CloudFront to automatically compress certain types of objects (files) and serve the compressed objects when viewers (web browsers or other clients) support them.',
     apis: ['CloudFront:listDistributions'],
     
     run: function(cache, settings, callback) {
@@ -23,12 +23,12 @@ module.exports = {
 
         if (listDistributions.err || !listDistributions.data) {
             helpers.addResult(results, 3,
-                'Unable to query for CloudFront distributions: ' + helpers.addError(listDistributions));
+                'Unable to query for CloudFront distributions: ' + helpers.addError(listDistributions), 'global');
             return callback(null, results, source);
         }
 
         if (!listDistributions.data.length) {
-            helpers.addResult(results, 0, 'No CloudFront distributions found');
+            helpers.addResult(results, 0, 'No CloudFront distributions found', 'global');
             return callback(null, results, source);
         }
 
