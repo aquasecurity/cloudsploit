@@ -24,12 +24,12 @@ module.exports = {
 
         if (listDistributions.err || !listDistributions.data) {
             helpers.addResult(results, 3,
-                'Unable to query for CloudFront distributions: ' + helpers.addError(listDistributions), region);
+                'Unable to query for CloudFront distributions: ' + helpers.addError(listDistributions), 'global');
             return callback(null, results, source);
         }
 
         if (!listDistributions.data.length) {
-            helpers.addResult(results, 0, 'No CloudFront distributions found', region);
+            helpers.addResult(results, 0, 'No CloudFront distributions found', 'global');
             return callback(null, results, source);
         }
 
