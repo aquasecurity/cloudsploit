@@ -8,7 +8,7 @@ module.exports = {
     more_info: ' AWS CloudFront geo restriction feature can be used to assist in mitigation of Distributed Denial of Service (DDoS) attacks. ' +
                'Also you have the ability to block IP addresses based on Geo IP from reaching your distribution and your web application content delivered by the distribution.',
     link: 'https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/georestrictions.html',
-    recommended_action: 'Enable CloudFront geo restriction to whitelist or block users.',
+    recommended_action: 'Enable CloudFront geo restriction to whitelist or block location-based access.',
     apis: ['CloudFront:listDistributions'],
 
     run: function(cache, settings, callback) {
