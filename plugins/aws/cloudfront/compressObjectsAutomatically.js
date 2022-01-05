@@ -40,7 +40,7 @@ module.exports = {
                     'Cloudfront web distribution is not currently configured to compress files (objects) automatically.', 'global', distribution.ARN);
             } else {
                 helpers.addResult(results, 0,
-                    'Cloudfront web distribution is currently configured to compress files (objects) automatically.', 'global', distribution.ARN);
+                    'CloudFront distribution is currently configured to compress files automatically', 'global', distribution.ARN);
             }
         });
 
