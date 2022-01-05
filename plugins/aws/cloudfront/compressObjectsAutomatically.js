@@ -35,7 +35,7 @@ module.exports = {
 
         // loop through Instances for every reservation
         listDistributions.data.forEach(distribution => {
-            if (!distribution.DefaultCacheBehavior.Compress == true) {
+            if (!distribution.DefaultCacheBehavior || !distribution.DefaultCacheBehavior.Compress) {
                 helpers.addResult(results, 2,
                     'Cloudfront web distribution is not currently configured to compress files (objects) automatically.', 'global', distribution.ARN);
             } else {
