@@ -32,7 +32,8 @@ var globalServices = [
     'CloudFront',
     'Route53',
     'Route53Domains',
-    'WAFRegional'
+    'WAFRegional',
+    'WAF'
 ];
 
 var calls = {
@@ -464,6 +465,16 @@ var calls = {
         }
 
     },
+    ElastiCache: {
+        describeCacheClusters: {
+            property: 'CacheClusters',
+            paginate: 'Marker'
+        },
+        describeReservedCacheNodes: {
+            property: 'ReservedCacheNodes',
+            paginate: 'Marker'
+        }
+    },
     ECR: {
         describeRepositories: {
             property: 'repositories',
@@ -471,7 +482,18 @@ var calls = {
             params: {
                 maxResults: 1000
             }
-        }
+        },
+        describeRegistry: {
+        },
+    },
+    ECRPUBLIC :{
+        describeRegistries: {
+            property: 'registries',
+            paginate: 'nextToken',
+            params: {
+                maxResults: 1000
+            }
+        },
     },
     EFS: {
         describeFileSystems: {
@@ -561,6 +583,22 @@ var calls = {
             paginate: 'nextToken'
         }
     },
+    ForecastService: {
+        listDatasets: {
+            property: 'Datasets',
+            paginate: 'NextToken'
+        },
+        listForecastExportJobs: {
+            property: 'ForecastExportJobs',
+            paginate: 'NextToken'
+        }
+    },
+    FSx: {
+        describeFileSystems: {
+            property: 'FileSystems',
+            paginate: 'NextToken'
+        }
+    },
     Glue: {
         getDataCatalogEncryptionSettings: {
             property: 'DataCatalogEncryptionSettings',
@@ -624,9 +662,19 @@ var calls = {
             override: true
         }
     },
+    IoTSiteWise: {
+        describeDefaultEncryptionConfiguration: {    
+        }
+    },
     Kinesis: {
         listStreams: {
             property: 'StreamNames'
+        }
+    },
+    KinesisVideo: {
+        listStreams: {
+            property: 'StreamInfoList',
+            paginate: 'NextToken',
         }
     },
     Firehose: {
@@ -675,6 +723,40 @@ var calls = {
             property: 'Functions',
             paginate: 'NextMarker',
             paginateReqProp: 'Marker'
+        }
+    },
+    LookoutEquipment: {
+        listDatasets: {
+            property: 'DatasetSummaries',
+            paginate: 'NextToken'
+        }
+    },
+    Location: {
+        listTrackers: {
+            property: 'Entries',
+            paginate: 'NextToken',
+        },
+        listGeofenceCollections: {
+            property: 'Entries',
+            paginate: 'NextToken',
+        }
+    },
+    LookoutVision: {
+        listProjects: {
+            property: 'Projects',
+            paginate: 'NextToken'
+        }
+    },
+    LexModelsV2: {
+        listBots: {
+            property: 'botSummaries',
+            paginate: 'nextToken'
+        }
+    },
+    LookoutMetrics: {
+        listAnomalyDetectors: {
+            property: 'AnomalyDetectorSummaryList',
+            paginate: 'NextToken'
         }
     },
     MemoryDB: {
@@ -902,6 +984,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    VoiceID: {
+        listDomains: {
+            property: 'DomainSummaries',
+            paginate: 'NextToken'
+        }
+    },
     WAFRegional: {
         listWebACLs: {
             property: 'WebACLs',
@@ -915,6 +1003,12 @@ var calls = {
             params: {
                 Scope: 'REGIONAL'
             }
+        }
+    },
+    WAF: {
+        listWebACLs: {
+            property: 'WebACLs',
+            paginate: 'NextMarker'
         }
     },
     WorkSpaces: {
@@ -932,6 +1026,12 @@ var calls = {
         },
         describeWorkspacesConnectionStatus: {
             property: 'WorkspacesConnectionStatus',
+            paginate: 'NextToken'
+        }
+    },
+    Wisdom: {
+        listAssistants: {
+            property: 'assistantSummaries',
             paginate: 'NextToken'
         }
     },
@@ -1043,7 +1143,12 @@ var postcalls = [
                 reliesOnService: 'es',
                 reliesOnCall: 'listDomainNames',
                 override: true,
-            }
+            },
+            getEcMetricStatistics: {
+                reliesOnService: 'elasticache',
+                reliesOnCall: 'describeCacheClusters',
+                override: true,
+            },
         },
         CodeStar: {
             describeProject: {
@@ -1246,7 +1351,15 @@ var postcalls = [
                 reliesOnCall: 'describeRepositories',
                 filterKey: 'repositoryName',
                 filterValue: 'repositoryName'
-            }
+            },
+        },
+        ECRPUBLIC :{
+            describeRepositories: {
+                reliesOnService: 'ecr',
+                reliesOnCall: 'describeRegistries',
+                filterKey: 'registryId',
+                filterValue: 'registryId'
+            },
         },
         EKS: {
             describeCluster: {
@@ -1339,6 +1452,12 @@ var postcalls = [
                 reliesOnCall: 'listClusters',
                 filterKey: 'ClusterId',
                 filterValue: 'Id'
+            },
+            listInstanceGroups: {
+                reliesOnService: 'emr',
+                reliesOnCall: 'listClusters',
+                filterKey: 'ClusterId',
+                filterValue: 'Id'
             }
         },
         DLM: {
@@ -1347,6 +1466,14 @@ var postcalls = [
                 reliesOnCall: 'getLifecyclePolicies',
                 filterKey: 'PolicyId',
                 filterValue: 'PolicyId'
+            }
+        },
+        ForecastService: {
+            describeDataset: {
+                reliesOnService: 'forecastservice',
+                reliesOnCall: 'listDatasets',
+                filterKey: 'DatasetArn',
+                filterValue: 'DatasetArn'
             }
         },
         Glacier: {
@@ -1465,6 +1592,11 @@ var postcalls = [
                 reliesOnCall: 'listKeys',
                 filterKey: 'KeyId',
                 filterValue: 'KeyId'
+            },
+            listGrants: {
+                reliesOnService: 'kms',
+                reliesOnCall: 'listKeys',
+                override: true
             }
         },
         Lambda: {
@@ -1480,6 +1612,44 @@ var postcalls = [
                 reliesOnCall: 'listFunctions',
                 filterKey: 'Resource',
                 filterValue: 'FunctionArn'
+            }
+        },
+        LookoutEquipment: {
+            describeDataset: {
+                reliesOnService: 'lookoutequipment',
+                reliesOnCall: 'listDatasets',
+                filterKey: 'DatasetName',
+                filterValue: 'DatasetName'
+            }
+        },
+        Location: {
+            describeTracker: {
+                reliesOnService: 'location',
+                reliesOnCall: 'listTrackers',
+                filterKey: 'TrackerName',
+                filterValue: 'TrackerName'
+            },
+            describeGeofenceCollection: {
+                reliesOnService: 'location',
+                reliesOnCall: 'listGeofenceCollections',
+                filterKey: 'CollectionName',
+                filterValue: 'CollectionName'
+            }
+        },
+        LookoutVision: {
+            listModels: {
+                reliesOnService: 'lookoutvision',
+                reliesOnCall: 'listProjects',
+                filterKey: 'ProjectName',
+                filterValue: 'ProjectName'
+            }
+        },
+        LexModelsV2: {
+            listBotAliases: {
+                reliesOnService: 'lexmodelsv2',
+                reliesOnCall: 'listBots',
+                filterKey: 'botId',
+                filterValue: 'botId' 
             }
         },
         QLDB: {
@@ -1504,6 +1674,14 @@ var postcalls = [
                 reliesOnCall: 'listBrokers',
                 filterKey: 'BrokerId',
                 filterValue: 'BrokerId'
+            }
+        },
+        LookoutMetrics: {
+            describeAnomalyDetector: {
+                reliesOnService: 'lookoutmetrics',
+                reliesOnCall: 'listAnomalyDetectors',
+                filterKey: 'AnomalyDetectorArn',
+                filterValue: 'AnomalyDetectorArn'
             }
         },
         MWAA: {
@@ -1637,6 +1815,16 @@ var postcalls = [
                 reliesOnCall: 'listDetectors',
                 override: true,
             },
+            listFindings: {
+                reliesOnService: 'guardduty',
+                reliesOnCall: 'listDetectors',
+                override: true,
+            },
+            listPublishingDestinations: {
+                reliesOnService: 'guardduty',
+                reliesOnCall: 'listDetectors',
+                override: true,
+            },
         },
     },
     {
@@ -1688,6 +1876,32 @@ var postcalls = [
                 reliesOnService: 'eks',
                 reliesOnCall: 'listClusters',
                 override: true
+            }
+        },
+        LookoutVision: {
+            describeModel: {
+                reliesOnService: 'lookoutvision',
+                reliesOnCall: 'listProjects',
+                override: true
+            }
+        },
+        GuardDuty: {
+            getFindings: {
+                reliesOnService: 'guardduty',
+                reliesOnCall: 'listDetectors',
+                override: true,
+            },
+            describePublishingDestination: {
+                reliesOnService: 'guardduty',
+                reliesOnCall: 'listDetectors',
+                override: true,
+            },
+        },
+        LexModelsV2:{
+            describeBotAlias: {
+                reliesOnService: 'lexmodelsv2',
+                reliesOnCall: 'listBots',
+                override: true,
             }
         },
         ManagedBlockchain: {

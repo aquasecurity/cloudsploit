@@ -32,7 +32,8 @@ var globalServices = [
     'CloudFront',
     'Route53',
     'Route53Domains',
-    'WAFRegional'
+    'WAFRegional',
+    'WAF'
 ];
 
 var calls = [
@@ -406,7 +407,18 @@ var calls = [
                 params: {
                     maxResults: 1000
                 }
+            },
+            describeRegistry: {
             }
+        },
+        ECRPUBLIC :{
+            describeRegistries: {
+                property: 'registries',
+                paginate: 'nextToken',
+                params: {
+                    maxResults: 1000
+                }
+            },
         },
         EFS: {
             describeFileSystems: {
@@ -755,6 +767,12 @@ var calls = [
                 }
             }
         },
+        WAF: {
+            listWebACLs: {
+                property: 'WebACLs',
+                paginate: 'NextMarker'
+            }
+        },
         WorkSpaces: {
             describeWorkspaces: {
                 property: 'Workspaces',
@@ -1018,6 +1036,14 @@ var postcalls = [
                 filterKey: 'repositoryName',
                 filterValue: 'repositoryName'
             }
+        },
+        ECRPUBLIC :{
+            describeRepositories: {
+                reliesOnService: 'ecr',
+                reliesOnCall: 'describeRegistries',
+                filterKey: 'registryId',
+                filterValue: 'registryId'
+            },
         },
         EKS: {
             describeCluster: {
