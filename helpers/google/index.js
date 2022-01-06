@@ -120,6 +120,7 @@ var run = function(GoogleConfig, collection, settings, service, callObj, callKey
                     !collection[callObj.reliesOnService[reliedService]][myEngine][callObj.reliesOnCall[reliedService]][region].data.length)) return regionCb();
 
                 records = collection[callObj.reliesOnService[reliedService]][myEngine][callObj.reliesOnCall[reliedService]][region].data;
+                if (callObj.subObj) records = records.filter(record => !!record[callObj.subObj])
                 async.eachLimit(records, 10, function(record) {
                     for (var property in callObj.properties) {
                         callObj.urlToCall = callObj.url.replace(`{${callObj.properties[property]}}`, !callObj.subObj ? record[callObj.properties[property]] : record[callObj.subObj][callObj.properties[property]]);
@@ -160,6 +161,7 @@ var run = function(GoogleConfig, collection, settings, service, callObj, callKey
                     !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][region].data.length)) return regionCb();
 
                 records = collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][region].data;
+                if (callObj.subObj) records = records.filter(record => !!record[callObj.subObj])
                 async.eachLimit(records, 10, function(record, recordCb) {
                     for (var property in callObj.properties) {
                         callObj.urlToCall = callObj.url.replace(`{${callObj.properties[property]}}`, !callObj.subObj ? record[callObj.properties[property]] :  record[callObj.subObj][callObj.properties[property]]);
@@ -184,6 +186,7 @@ var run = function(GoogleConfig, collection, settings, service, callObj, callKey
                         !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnSubService[reliedService]][callObj.reliesOnCall[reliedService]][region].data.length)) return regionCb();
 
                 records = collection[callObj.reliesOnService[reliedService]][callObj.reliesOnSubService[reliedService]][callObj.reliesOnCall[reliedService]][region].data;
+                if (callObj.subObj) records = records.filter(record => !!record[callObj.subObj])
                 async.eachLimit(records, 10, function(record, recordCb) {
                     for (var property in callObj.properties) {
                         callObj.urlToCall = callObj.url.replace(`{${callObj.properties[property]}}`, !callObj.subObj ? record[callObj.properties[property]] :  record[callObj.subObj][callObj.properties[property]]);
@@ -200,7 +203,6 @@ var run = function(GoogleConfig, collection, settings, service, callObj, callKey
     }
 };
 var handleErrors = function(err) {
-    console.log("err: ", err)
     if (err.code) {
         if (err.code == 400) {
             return 'Invalid argument, please contact support.';
@@ -317,7 +319,7 @@ var execute = async function(LocalGoogleConfig, collection, service, callObj, ca
 
 };
 function makeApiCall(client, originalUrl, callCb, nextToken, config) {
-    let maxResults = 1
+    let maxResults = 100
     let url = originalUrl
     let queryParams = ''
     if (config && config.pagination) {
