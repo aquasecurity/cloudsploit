@@ -1,7 +1,8 @@
 var AWS = require('aws-sdk');
 var async = require('async');
+var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, callback) {
+module.exports = function(AWSConfig, collection, retries, callback) {
     var support = new AWS.Support(AWSConfig);
 
     async.eachLimit(collection.support.describeTrustedAdvisorChecks[AWSConfig.region].data, 15, function(check, cb) {
@@ -11,7 +12,7 @@ module.exports = function(AWSConfig, collection, callback) {
             checkId: check,
         };
 
-        support.describeTrustedAdvisorCheckResult(params, function(err, data) {
+        helpers.makeCustomCollectorCall(support, 'describeTrustedAdvisorCheckResult', params, retries, null, null, null, function(err, data) {
             if (err) {
                 collection.support.describeTrustedAdvisorChecks[AWSConfig.region][check].err = err;
             }
