@@ -73,6 +73,7 @@ module.exports = {
                     helpers.addResult(results, 3,
                         `Unable to get customerprofiles domain description: ${helpers.addError(getDomain)}`,
                         region, resource);
+                    continue;
                 } 
 
                 if (getDomain.data.DefaultEncryptionKey) {

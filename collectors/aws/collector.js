@@ -482,7 +482,18 @@ var calls = {
             params: {
                 maxResults: 1000
             }
-        }
+        },
+        describeRegistry: {
+        },
+    },
+    ECRPUBLIC :{
+        describeRegistries: {
+            property: 'registries',
+            paginate: 'nextToken',
+            params: {
+                maxResults: 1000
+            }
+        },
     },
     EFS: {
         describeFileSystems: {
@@ -1340,7 +1351,15 @@ var postcalls = [
                 reliesOnCall: 'describeRepositories',
                 filterKey: 'repositoryName',
                 filterValue: 'repositoryName'
-            }
+            },
+        },
+        ECRPUBLIC :{
+            describeRepositories: {
+                reliesOnService: 'ecr',
+                reliesOnCall: 'describeRegistries',
+                filterKey: 'registryId',
+                filterValue: 'registryId'
+            },
         },
         EKS: {
             describeCluster: {
@@ -1573,6 +1592,11 @@ var postcalls = [
                 reliesOnCall: 'listKeys',
                 filterKey: 'KeyId',
                 filterValue: 'KeyId'
+            },
+            listGrants: {
+                reliesOnService: 'kms',
+                reliesOnCall: 'listKeys',
+                override: true
             }
         },
         Lambda: {

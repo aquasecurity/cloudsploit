@@ -407,7 +407,18 @@ var calls = [
                 params: {
                     maxResults: 1000
                 }
+            },
+            describeRegistry: {
             }
+        },
+        ECRPUBLIC :{
+            describeRegistries: {
+                property: 'registries',
+                paginate: 'nextToken',
+                params: {
+                    maxResults: 1000
+                }
+            },
         },
         EFS: {
             describeFileSystems: {
@@ -1025,6 +1036,14 @@ var postcalls = [
                 filterKey: 'repositoryName',
                 filterValue: 'repositoryName'
             }
+        },
+        ECRPUBLIC :{
+            describeRepositories: {
+                reliesOnService: 'ecr',
+                reliesOnCall: 'describeRegistries',
+                filterKey: 'registryId',
+                filterValue: 'registryId'
+            },
         },
         EKS: {
             describeCluster: {
