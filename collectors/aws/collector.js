@@ -482,7 +482,18 @@ var calls = {
             params: {
                 maxResults: 1000
             }
-        }
+        },
+        describeRegistry: {
+        },
+    },
+    ECRPUBLIC :{
+        describeRegistries: {
+            property: 'registries',
+            paginate: 'nextToken',
+            params: {
+                maxResults: 1000
+            }
+        },
     },
     EFS: {
         describeFileSystems: {
@@ -575,6 +586,16 @@ var calls = {
     ForecastService: {
         listDatasets: {
             property: 'Datasets',
+            paginate: 'NextToken'
+        },
+        listForecastExportJobs: {
+            property: 'ForecastExportJobs',
+            paginate: 'NextToken'
+        }
+    },
+    FSx: {
+        describeFileSystems: {
+            property: 'FileSystems',
             paginate: 'NextToken'
         }
     },
@@ -963,6 +984,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    VoiceID: {
+        listDomains: {
+            property: 'DomainSummaries',
+            paginate: 'NextToken'
+        }
+    },
     WAFRegional: {
         listWebACLs: {
             property: 'WebACLs',
@@ -999,6 +1026,12 @@ var calls = {
         },
         describeWorkspacesConnectionStatus: {
             property: 'WorkspacesConnectionStatus',
+            paginate: 'NextToken'
+        }
+    },
+    Wisdom: {
+        listAssistants: {
+            property: 'assistantSummaries',
             paginate: 'NextToken'
         }
     },
@@ -1318,7 +1351,15 @@ var postcalls = [
                 reliesOnCall: 'describeRepositories',
                 filterKey: 'repositoryName',
                 filterValue: 'repositoryName'
-            }
+            },
+        },
+        ECRPUBLIC :{
+            describeRepositories: {
+                reliesOnService: 'ecr',
+                reliesOnCall: 'describeRegistries',
+                filterKey: 'registryId',
+                filterValue: 'registryId'
+            },
         },
         EKS: {
             describeCluster: {
@@ -1551,6 +1592,11 @@ var postcalls = [
                 reliesOnCall: 'listKeys',
                 filterKey: 'KeyId',
                 filterValue: 'KeyId'
+            },
+            listGrants: {
+                reliesOnService: 'kms',
+                reliesOnCall: 'listKeys',
+                override: true
             }
         },
         Lambda: {
@@ -2044,7 +2090,7 @@ var collect = function(AWSConfig, settings, callback) {
                     LocalAWSConfig.region = region;
 
                     if (callObj.override) {
-                        collectors[serviceLower][callKey](LocalAWSConfig, collection, function() {
+                        collectors[serviceLower][callKey](LocalAWSConfig, collection, retries, function() {
                             if (callObj.rateLimit) {
                                 setTimeout(function() {
                                     regionCb();
@@ -2207,7 +2253,7 @@ var collect = function(AWSConfig, settings, callback) {
                             if (callObj.signatureVersion) LocalAWSConfig.signatureVersion = callObj.signatureVersion;
 
                             if (callObj.override) {
-                                collectors[serviceLower][callKey](LocalAWSConfig, collection, function() {
+                                collectors[serviceLower][callKey](LocalAWSConfig, collection, retries, function() {
                                     if (callObj.rateLimit) {
                                         setTimeout(function() {
                                             regionCb();

@@ -1,7 +1,8 @@
 var AWS = require('aws-sdk');
 var async = require('async');
+var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, callback) {
+module.exports = function(AWSConfig, collection, retries, callback) {
     var cloudwatch = new AWS.CloudWatch(AWSConfig);
    
     async.eachLimit(collection.elasticache.describeCacheClusters[AWSConfig.region].data, 10, function(cluster, cb){        
@@ -24,7 +25,7 @@ module.exports = function(AWSConfig, collection, callback) {
             ]
         };
 
-        cloudwatch.getMetricStatistics(params, function(err, data) {
+        helpers.makeCustomCollectorCall(cloudwatch, 'getMetricStatistics', params, retries, null, null, null, function(err, data) {
             if (err) {
                 collection.cloudwatch.getEcMetricStatistics[AWSConfig.region][cluster.CacheClusterId].err = err;
             }

@@ -1,7 +1,7 @@
 var AWS = require('aws-sdk');
 var async = require('async');
 
-module.exports = function(AWSConfig, collection, callback) {
+module.exports = function(AWSConfig, collection, retries, callback) {
     var iam = new AWS.IAM(AWSConfig);
 
     var generateCredentialReport = function(genCb) {

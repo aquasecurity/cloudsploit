@@ -112,4 +112,7 @@ module.exports = {
     lookoutmetrics: regions,
     forecastservice: regions,
     lexmodelsv2: regions,
+    fsx: regions,
+    wisdom: regions,
+    voiceid: regions
 };
