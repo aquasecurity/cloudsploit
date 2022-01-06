@@ -160,6 +160,7 @@ module.exports = {
         'ecrRepositoryTagImmutability'  : require(__dirname + '/plugins/aws/ecr/ecrRepositoryTagImmutability.js'),
         
         'managedPlatformUpdates'        : require(__dirname + '/plugins/aws/elasticbeanstalk/managedPlatformUpdates.js'),
+        'environmentAccessLogs'         : require(__dirname + '/plugins/aws/elasticbeanstalk/environmentAccessLogs.js'),
         
         'eksKubernetesVersion'          : require(__dirname + '/plugins/aws/eks/eksKubernetesVersion.js'),
         'eksLoggingEnabled'             : require(__dirname + '/plugins/aws/eks/eksLoggingEnabled.js'),
@@ -194,6 +195,7 @@ module.exports = {
         'emrClusterLogging'             : require(__dirname + '/plugins/aws/emr/emrClusterLogging.js'),
         'emrEncryptionInTransit'        : require(__dirname + '/plugins/aws/emr/emrEncryptionInTransit.js'),
         'emrEncryptionAtRest'           : require(__dirname + '/plugins/aws/emr/emrEncryptionAtRest.js'),
+        'emrInstanceCount'              : require(__dirname + '/plugins/aws/emr/emrInstanceCount.js'),
 
         'esAccessFromIps'               : require(__dirname + '/plugins/aws/es/esAccessFromIps.js'),
         'esPublicEndpoint'              : require(__dirname + '/plugins/aws/es/esPublicEndpoint.js'),
@@ -283,9 +285,11 @@ module.exports = {
         'rdsDeletionProtectionEnabled'  : require(__dirname + '/plugins/aws/rds/rdsDeletionProtectionEnabled.js'),
 
         'redisClusterEncryptionInTransit': require(__dirname + '/plugins/aws/elasticache/redisClusterEncryptionInTransit.js'),
+        'elasticacheInstanceGeneration' : require(__dirname + '/plugins/aws/elasticache/elasticacheInstanceGeneration.js'),
+        'redisEngineVersions'           : require(__dirname + '/plugins/aws/elasticache/redisEngineVersions.js'),
         'elasticacheNodesCount'         : require(__dirname + '/plugins/aws/elasticache/elasticacheNodesCount.js'),
         'elasticacheRedisMultiAZ'       : require(__dirname + '/plugins/aws/elasticache/elasticacheRedisMultiAZ.js'),
-        'idleElastiCacheNode'            : require(__dirname + '/plugins/aws/elasticache/idleElastiCacheNode.js'),
+        'idleElastiCacheNode'           : require(__dirname + '/plugins/aws/elasticache/idleElastiCacheNode.js'),
 
         'domainAutoRenew'               : require(__dirname + '/plugins/aws/route53/domainAutoRenew.js'),
         'domainExpiry'                  : require(__dirname + '/plugins/aws/route53/domainExpiry.js'),
@@ -352,8 +356,6 @@ module.exports = {
         'neptuneDBInstanceEncrypted'    : require(__dirname + '/plugins/aws/neptune/neptuneDBInstanceEncrypted.js'),
 
         'monitoringMetrics'             : require(__dirname + '/plugins/aws/cloudwatchlogs/monitoringMetrics.js'),
-        'mqDeploymentMode'              : require(__dirname + '/plugins/aws/mq/mqDeploymentMode.js'),
-        'mqBrokerEncrypted'             : require(__dirname + '/plugins/aws/mq/mqBrokerEncrypted.js'),
 
         'customerProfilesDomainEncrypted' : require(__dirname + '/plugins/aws/connect/customerProfilesDomainEncrypted.js'),
 
@@ -364,6 +366,9 @@ module.exports = {
 
         'mqAutoMinorVersionUpgrade'     : require(__dirname + '/plugins/aws/mq/mqAutoMinorVersionUpgrade.js'),
         'mqLogExports'                  : require(__dirname + '/plugins/aws/mq/mqLogExports.js'),
+        'mqDeploymentMode'              : require(__dirname + '/plugins/aws/mq/mqDeploymentMode.js'),
+        'mqDesiredInstanceType'         : require(__dirname + '/plugins/aws/mq/mqDesiredInstanceType.js'),
+        'mqBrokerEncrypted'             : require(__dirname + '/plugins/aws/mq/mqBrokerEncrypted.js'),
       
         'memorydbClusterEncrypted'      : require(__dirname + '/plugins/aws/memorydb/memorydbClusterEncrypted.js'),
       
@@ -443,6 +448,7 @@ module.exports = {
         'networkMemberDataEncrypted'    : require(__dirname + '/plugins/aws/managedblockchain/networkMemberDataEncrypted.js'),
 
         'docdbClusterEncrypted'         : require(__dirname + '/plugins/aws/documentDB/docdbClusterEncrypted.js'),
+        'docdbClusterBackupRetention'   : require(__dirname + '/plugins/aws/documentDB/docdbClusterBackupRetention.js'),
 
         'instanceMediaStreamsEncrypted' : require(__dirname + '/plugins/aws/connect/instanceMediaStreamsEncrypted.js'),
         'instanceTranscriptsEncrypted'  : require(__dirname + '/plugins/aws/connect/instanceTranscriptsEncrypted.js'),
@@ -464,7 +470,11 @@ module.exports = {
       
         'lexAudioLogsEncrypted'         : require(__dirname + '/plugins/aws/lex/lexAudioLogsEncrypted.js'),
   
-        'forecastDatasetEncrypted'      : require(__dirname + '/plugins/aws/forecast/forecastDatasetEncrypted.js')
+        'forecastDatasetEncrypted'      : require(__dirname + '/plugins/aws/forecast/forecastDatasetEncrypted.js'),
+
+        'wafv2InUse'                    : require(__dirname + '/plugins/aws/wafv2/wafv2InUse.js'),
+
+        'wafInUse'                      : require(__dirname + '/plugins/aws/waf/wafInUse.js')
     },
     azure : {
         'fileServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/fileServiceEncryption.js'),
