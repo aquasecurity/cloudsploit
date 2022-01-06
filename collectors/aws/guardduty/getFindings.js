@@ -1,7 +1,8 @@
 var AWS = require('aws-sdk');
 var async = require('async');
+var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, callback) {
+module.exports = function(AWSConfig, collection, retries, callback) {
     var guardduty = new AWS.GuardDuty(AWSConfig);
     async.eachLimit(collection.guardduty.listDetectors[AWSConfig.region].data, 15, function(detectorId, dcb) {
         if (!collection.guardduty ||
@@ -21,7 +22,7 @@ module.exports = function(AWSConfig, collection, callback) {
             FindingIds: findingIds
         };
 
-        guardduty.getFindings(params, function(err, data) {
+        helpers.makeCustomCollectorCall(guardduty, 'getFindings', params, retries, null, null, null, function(err, data) {
             if (err) {
                 collection.guardduty.getFindings[AWSConfig.region][detectorId].err = err;
             }

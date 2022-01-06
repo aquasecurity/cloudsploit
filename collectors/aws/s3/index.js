@@ -1,7 +1,8 @@
 var AWS = require('aws-sdk');
 var async = require('async');
+var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(callKey, forceCloudTrail, AWSConfig, collection, callback) {
+module.exports = function(callKey, forceCloudTrail, AWSConfig, collection, retries, callback) {
     var s3 = new AWS.S3(AWSConfig);
 
     var knownBuckets = [];
@@ -38,12 +39,12 @@ module.exports = function(callKey, forceCloudTrail, AWSConfig, collection, callb
     async.eachLimit(knownBuckets, 10, function(bucket, bcb){
         collection['s3'][callKey][AWSConfig.region][bucket] = {};
 
-        s3[callKey]({Bucket:bucket}, function(bErr, bData){
+        helpers.makeCustomCollectorCall(s3, callKey, {Bucket:bucket}, retries, null, null, null, function(bErr, bData) {
             if (bErr) {
                 collection['s3'][callKey][AWSConfig.region][bucket].err = bErr;
 
                 if (bErr.statusCode && bErr.statusCode == 301) {
-                    s3.getBucketLocation({Bucket: bucket}, function(locErr, locData){
+                    helpers.makeCustomCollectorCall(s3, 'getBucketLocation', {Bucket:bucket}, retries, null, null, null, function(locErr, locData) {
                         if (locErr || !locData || !locData.LocationConstraint) return bcb();
                         // Special case where location constraint is EU - rewrite as eu-west-1
                         if (locData.LocationConstraint == 'EU') locData.LocationConstraint = 'eu-west-1';

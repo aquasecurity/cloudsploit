@@ -1,7 +1,8 @@
 var AWS = require('aws-sdk');
 var async = require('async');
+var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, callback) {
+module.exports = function(AWSConfig, collection, retries, callback) {
     var connect = new AWS.Connect(AWSConfig);
 
     async.eachLimit(collection.connect.listInstances[AWSConfig.region].data, 15, function(instance, cb){
@@ -11,7 +12,7 @@ module.exports = function(AWSConfig, collection, callback) {
             'ResourceType': 'CALL_RECORDINGS'
         };
 
-        connect.listInstanceStorageConfigs(params, function(err, data) {
+        helpers.makeCustomCollectorCall(connect, 'listInstanceStorageConfigs', params, retries, null, null, null, function(err, data) {
             if (err) {
                 collection.connect.listInstanceCallRecordingStorageConfigs[AWSConfig.region][instance.Id].err = err;
             }
