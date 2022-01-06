@@ -1,5 +1,6 @@
 var AWS = require('aws-sdk');
 var async = require('async');
+var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
     var cloudwatch = new AWS.CloudWatch(AWSConfig);
