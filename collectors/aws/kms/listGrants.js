@@ -1,7 +1,8 @@
 var AWS = require('aws-sdk');
 var async = require('async');
+var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, callback) {
+module.exports = function(AWSConfig, collection, retries, callback) {
     var kms = new AWS.KMS(AWSConfig);
     async.eachLimit(collection.kms.listKeys[AWSConfig.region].data, 15, function(key, cb) {
         collection.kms.listGrants[AWSConfig.region][key.KeyId] = {};
@@ -35,9 +36,9 @@ module.exports = function(AWSConfig, collection, callback) {
             var localParams = JSON.parse(JSON.stringify(params || {}));
             if (marker) localParams['Marker'] = marker;
             if (marker) {
-                kms.listGrants(localParams, paginateCb);
+                helpers.makeCustomCollectorCall(kms, 'listGrants', localParams, retries, null, null, null, paginateCb);
             } else {
-                kms.listGrants(params, paginateCb);
+                helpers.makeCustomCollectorCall(kms, 'listGrants', params, retries, null, null, null, paginateCb);
             }
         }
 
