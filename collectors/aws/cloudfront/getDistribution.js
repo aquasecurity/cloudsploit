@@ -1,7 +1,8 @@
 var AWS = require('aws-sdk');
 var async = require('async');
+var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, callback) {
+module.exports = function(AWSConfig, collection, retries, callback) {
     var cloudfront = new AWS.CloudFront(AWSConfig);
 
     async.eachLimit(collection.cloudfront.listDistributions[AWSConfig.region].data, 15, function(distribution, cb){        
@@ -10,7 +11,7 @@ module.exports = function(AWSConfig, collection, callback) {
             'Id':distribution.Id
         };
 
-        cloudfront.getDistribution(params, function(err, data) {
+        helpers.makeCustomCollectorCall(cloudfront, 'getDistribution', params, retries, null, null, null, function(err, data) {
             if (err) {
                 collection.cloudfront.getDistribution[AWSConfig.region][distribution.Id].err = err;
             }
