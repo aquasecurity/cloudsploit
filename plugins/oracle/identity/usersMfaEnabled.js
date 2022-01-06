@@ -22,7 +22,7 @@ module.exports = {
             name: 'Warn Federated Users',
             description: 'Give a WARN instead of FAIL result for federated users',
             regex: '^(true|false)$',
-            default: 'true'
+            default: 'false'
         } 
     },
 
