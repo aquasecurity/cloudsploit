@@ -351,6 +351,24 @@
                 "path": "userGroupMemberships",
                 "endpoint": "identity.{{region}}.oraclecloud.com"
             }
+        },
+        "apiKey": {
+            "list": {
+                "encodedGet": "userId",
+                "method": "GET",
+                "path": "users",
+                "secondaryPath": "apiKeys",
+                "endpoint": "identity.{{region}}.oraclecloud.com"
+            }
+        },
+        "authToken": {
+            "list": {
+                "encodedGet": "userId",
+                "method": "GET",
+                "path": "users",
+                "secondaryPath": "authTokens",
+                "endpoint": "identity.{{region}}.oraclecloud.com"
+            }
         }
     },
     "loadBalance": {
