@@ -4,7 +4,7 @@ module.exports = {
     title: 'User Auth Token Rotated',
     category: 'Identity',
     domain: 'Identity and Access Management',
-    description: '',
+    description: 'Ensure that user auth tokens are rotated regularly in order to reduce accidental exposures.',
     more_info: '',
     link: '',
     recommended_action: '',
