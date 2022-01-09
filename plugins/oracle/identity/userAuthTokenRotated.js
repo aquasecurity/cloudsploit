@@ -7,7 +7,7 @@ module.exports = {
     description: 'Ensure that user auth tokens are rotated regularly in order to reduce accidental exposures.',
     more_info: 'User auth tokens should be rotated frequently to avoid having them accidentally exposed.',
     link: 'https://docs.oracle.com/en-us/iaas/Content/Identity/Tasks/managingcredentials.htm',
-    recommended_action: '',
+    recommended_action: 'Rotate user auth tokens after regular intervals',
     apis: ['user:list', 'authToken:list'],
     settings: {
         auth_tokens_rotated_fail: {
