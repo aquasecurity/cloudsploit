@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'The administrator user should avoid using API keys. Since the administrator user has full permissions across the entire tenancy, creating API keys for it only increases the chance that they are compromised. ' +
         'Instead, create non-admin user with limited permissions and use its API keys.',
     link: 'https://docs.oracle.com/en/cloud/get-started/subscriptions-cloud/csgsg/create-users-and-assign-roles.html',
-    recommended_action: 'Enable an MFA device for the user account.',
+    recommended_action: 'Remove API keys for administrator users',
     apis: ['user:list', 'apiKey:list', 'group:list', 'userGroupMembership:list', 'authToken:list'],
 
     run: function (cache, settings, callback) {
