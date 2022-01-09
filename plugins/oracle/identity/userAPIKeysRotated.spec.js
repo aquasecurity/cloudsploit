@@ -1,28 +1,26 @@
 var expect = require('chai').expect;
-var plugin = require('./userAuthTokenRotated');
+var plugin = require('./userAPIKeysRotated');
 
-const authTokens = [
+const apiKeys = [
     {
-        "id": "ocid1.credential.oc1..aaaaaaaa4f57ig72lh5gu6hicy5d5nl7wzb6q",
-        "compartmentId": "ocid1.tenancy.oc1..aaaaaaaaip3imsyctt3vhme6rnemweaxe4b6q2gcodq",
-        "description": "For CIS",
         "timeCreated": new Date(),
-        "userId": "ocid1.user.oc1..aaaaaaaaddzaosqxqgeryy43emaptcnzzcrekfkxmha6u5cyvqjkmvo7kdxa",
+        "userId": "ocid1.user.oc1..aaaaaaaaddzcrvo7kdxa",
+        "keyValue": "",
+        "keyId": "ocid1.tenancy.oc1..aaaaaaaaip36ginmudtormvwsv45imsyctt3vhme6rnemweaxe4b6q2gcodq/ocid1.user.oc1..aaaaaaaaddzcrvo7kdxa/65:ab:7d:b9:54:a8:7e:c7:42:cb:5a:87:2f:ed:08:d3",
         "lifecycleState": "ACTIVE",
-        "users": "ocid1.user.oc1..aaaaaaaaddzaosqxqgeryy43emaptcnzzcrekfkxmha6u5cyvqjkmvo7kdxa"
+        "users": "ocid1.user.oc1..aaaaaaaaddzcrvo7kdxa"
     },
     {
-        "id": "ocid1.credential.oc1..aaaaaaaa4f57ig72lh5gu6hicy5d5nl7wzb6q",
-        "compartmentId": "ocid1.tenancy.oc1..aaaaaaaaip3imsyctt3vhme6rnemweaxe4b6q2gcodq",
-        "description": "For CIS",
-        "timeCreated": "2021-01-09T14:53:08.201Z",
-        "userId": "ocid1.user.oc1..aaaaaaaaddzaosqrekfkxmha6u5cyvqjkmvo7kdxa",
+        "timeCreated": "2021-01-09T12:34:21.976Z",
+        "userId": "ocid1.user.oc1..aaaaaaaaddzcrvo7kdxa",
+        "keyValue": "",
+        "keyId": "ocid1.tenancy.oc1..aaaaaaaaip36ginmudtormvwsv45imsyctt3vhme6rnemweaxe4b6q2gcodq/ocid1.user.oc1..aaaaaaaaddzcrvo7kdxa/65:ab:7d:b9:54:a8:7e:c7:42:cb:5a:87:2f:ed:08:d3",
         "lifecycleState": "ACTIVE",
-        "users": "ocid1.user.oc1..aaaaaaaaddzaosqrekfkxmha6u5cyvqjkmvo7kdxa"
+        "users": "ocid1.user.oc1..aaaaaaaaddzcrvo7kdxa"
     }
 ];
 
-const createCache = (authData, userErr, authErr) => {
+const createCache = (apiData, userErr, apiErr) => {
     return {
         regionSubscription: {
             "list": {
@@ -89,18 +87,18 @@ const createCache = (authData, userErr, authErr) => {
                 }
             }
         }, 
-        authToken: {
+        apiKey: {
             list: {
                 'us-ashburn-1': {
-                    data: authData,
-                    err: authErr
+                    data: apiData,
+                    err: apiErr
                 }
             }
         }
     }
 };
 
-describe('userAuthTokenRotated', function () {
+describe('userAPIKeysRotated', function () {
     describe('run', function () {
         it('should give unknown result if unable to query for users', function (done) {
             const callback = (err, results) => {
@@ -119,43 +117,43 @@ describe('userAuthTokenRotated', function () {
             plugin.run(cache, {}, callback);
         })
 
-        it('should give failing result Auth token has not been rotated within set days limit', function (done) {
+        it('should give failing result API keys has not been rotated within set days limit', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('Auth token is')
+                expect(results[0].message).to.include('API key is')
                 expect(results[0].region).to.equal('global')
                 done()
             };
 
             const cache = createCache(
-                [authTokens[1]]
+                [apiKeys[1]]
             );
 
             plugin.run(cache, {}, callback);
         })
 
-        it('should give passing result Auth token has been rotated within set days limit', function (done) {
+        it('should give passing result API keys has been rotated within set days limit', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('Auth token is 0 days old')
+                expect(results[0].message).to.include('API key is 0 days old')
                 expect(results[0].region).to.equal('global')
                 done()
             };
 
             const cache = createCache(
-                [authTokens[0]]
+                [apiKeys[0]]
             );
 
             plugin.run(cache, {}, callback);
         })
 
-        it('should give passing result if No user auth tokens found', function (done) {
+        it('should give passing result if No user API keys found', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No user auth tokens found')
+                expect(results[0].message).to.include('No user API keys found')
                 expect(results[0].region).to.equal('global')
                 done()
             };
@@ -167,11 +165,11 @@ describe('userAuthTokenRotated', function () {
             plugin.run(cache, {}, callback);
         });
 
-        it('should give unknown result if unable to query user auth tokens', function (done) {
+        it('should give unknown result if unable to query user API keys', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(3)
-                expect(results[0].message).to.include('Unable to query user auth tokens')
+                expect(results[0].message).to.include('Unable to query user API keys')
                 expect(results[0].region).to.equal('global')
                 done()
             };
