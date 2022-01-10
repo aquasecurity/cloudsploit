@@ -71,7 +71,7 @@ describe('autoMinorVersionUpgrade', function () {
         });
 
         it('should UNKNOWN if unable to list DMS replication instances', function (done) {
-            const cache = createCache(null,  { message: "Unable to list DMS replication instances encryption" });
+            const cache = createCache(null,  { message: "Unable to list DMS replication instances" });
             autoMinorVersionUpgrade.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
