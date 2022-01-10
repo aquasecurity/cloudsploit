@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'DMS Auto Minor Version Upgrade',
+    title: 'DMS Publicly Accessible Instances',
     category: 'DMS',
     domain: 'Application Integration',
     description: 'Ensure that in order to avoid exposing sensitive data your Amazon Database Migration Service (DMS) are not publicly accessible.',
