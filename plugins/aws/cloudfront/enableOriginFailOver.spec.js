@@ -44,23 +44,23 @@ const createNullCache = () => {
 
 describe('enableOriginFailOver', function () {
     describe('run', function () {
-        it('should PASS if origin failover is enabled within CloudFront distribution.', function (done) {
+        it('should PASS if CloudFront distribution have origin failover enabled.', function (done) {
             const cache = createCache([listDistributions[0]]);
             enableOriginFailOver.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('origin failover is enabled within CloudFront distribution.');
+                expect(results[0].message).to.include('CloudFront distribution have origin failover enabled.');
                 expect(results[0].region).to.equal('global');
                 done();
             });
         });
 
-        it('should FAIL if origin failover is not enabled within CloudFront distribution.', function (done) {
+        it('should FAIL if CloudFront distribution does not have origin failover enabled.', function (done) {
             const cache = createCache([listDistributions[1]]);
             enableOriginFailOver.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('origin failover is not enabled within CloudFront distribution');
+                expect(results[0].message).to.include('CloudFront distribution does not have origin failover enabled.');
                 expect(results[0].region).to.equal('global');
                 done();
             });
