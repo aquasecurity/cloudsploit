@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'DMS Auto Minor Version Upgrade',
+    title: 'DMS Multi-AZ Feature Enabled',
     category: 'DMS',
     domain: 'Application Integration',
     description: 'Ensure that your Amazon Database Migration Service (DMS) replication instances are using Multi-AZ deployment configurations.',
