@@ -41,10 +41,6 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        if (!users.data.length) {
-            helpers.addResult(results, 0, 'No user accounts found', 'global');
-            return callback(null, results, source);
-        }
 
         if (apiKeys.err || !apiKeys.data) {
             helpers.addResult(results, 3,
