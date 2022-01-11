@@ -79,7 +79,6 @@ module.exports = {
         let apiKeyIds = apiKeys.data.map(apiKey => apiKey.userId) || [];
 
         if (adminGroup) {
-            adminGroupId = adminGroup.id;
 
             let adminUsers = userGroups.data.map(userGroup => userGroup.userId) || [];
 
