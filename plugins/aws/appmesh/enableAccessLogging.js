@@ -45,7 +45,7 @@ module.exports = {
 
                 if (!listVirtualGateways || listVirtualGateways.err || !listVirtualGateways.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for AppMesh virtual gateways: ' + helpers.addError(listVirtualGateways),
+                        'Unable to query for App Mesh virtual gateways: ' + helpers.addError(listVirtualGateways),
                         region, resource);
                     continue;
                 }
