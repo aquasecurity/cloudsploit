@@ -41,7 +41,6 @@ module.exports = {
             return callback(null, results, source);
         }
 
-
         if (apiKeys.err || !apiKeys.data) {
             helpers.addResult(results, 3,
                 'Unable to query user API keys: ' + helpers.addError(apiKeys), 'global');
