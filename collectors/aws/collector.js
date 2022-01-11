@@ -924,7 +924,11 @@ var calls = {
         listTopics: {
             property: 'Topics',
             paginate: 'NextToken'
-        }
+        },
+        listSubscriptions: {
+            property: 'Subscriptions',
+            paginate: 'NextToken'
+        },
     },
     SQS: {
         listQueues: {
@@ -1767,7 +1771,7 @@ var postcalls = [
                 reliesOnCall: 'listTopics',
                 filterKey: 'TopicArn',
                 filterValue: 'TopicArn'
-            }
+            },
         },
         SQS: {
             getQueueAttributes: {
