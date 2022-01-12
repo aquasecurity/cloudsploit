@@ -55,6 +55,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    AppMesh: {
+        listMeshes: {
+            property: 'meshes',
+            paginate: 'nextToken'
+        }
+    },
     AppRunner: {
         listServices: {
             property: 'ServiceSummaryList',
@@ -1066,6 +1072,14 @@ var postcalls = [
                 reliesOnCall: 'listServices',
                 filterKey: 'ServiceArn',
                 filterValue: 'ServiceArn'
+            }
+        },
+        AppMesh: {
+            describeMesh: {
+                reliesOnService: 'appmesh',
+                reliesOnCall: 'listMeshes',
+                filterKey: 'meshName',
+                filterValue: 'meshName'
             }
         },
         Appflow: {
