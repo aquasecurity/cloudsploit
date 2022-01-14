@@ -60,7 +60,7 @@ module.exports = {
                 var securityRules = helpers.addSource(cache, source,
                     ['securityRule', 'list', region]);
 
-                if (!securityRules || securityRules.err)  {
+                if (!securityRules || securityRules.err || !securityRules.data)  {
                     helpers.addResult(results, 3,
                         'Unable to query for security rules: ' + helpers.addError(securityRules), region);
                     return rcb();
@@ -70,6 +70,7 @@ module.exports = {
                     helpers.addResult(results, 0, 'No security rules found', region);
                     return rcb();
                 }
+
                 var statefulNSGId = [];
                 var securityGroupName;
                 securityRules.data.forEach(securityRule => {

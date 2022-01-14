@@ -1,7 +1,8 @@
 var AWS = require('aws-sdk');
 var async = require('async');
+var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, callback) {
+module.exports = function(AWSConfig, collection, retries, callback) {
     var ecs = new AWS.ECS(AWSConfig);
 
     async.eachLimit(collection.ecs.listClusters[AWSConfig.region].data, 10, function(cluster, cb){
@@ -12,7 +13,7 @@ module.exports = function(AWSConfig, collection, callback) {
             clusters: [cluster]
         };
 
-        ecs.describeClusters(params, function(err, data) {
+        helpers.makeCustomCollectorCall(ecs, 'describeClusters', params, retries, null, null, null, function(err, data) {
             if (err) {
                 collection.ecs.describeCluster[AWSConfig.region][cluster].err = err;
             }

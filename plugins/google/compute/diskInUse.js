@@ -91,7 +91,7 @@ module.exports = {
                     badDisks.forEach(disk => {
                         let resource = helpers.createResourceName('disks', disk.name, project, disk.locationType, disk.location);
                         helpers.addResult(results, 2,
-                            'Disk is not in use', disk.location, resource);
+                            'Disk is not in use', region, resource);
                     });
                 }
             }
@@ -104,7 +104,7 @@ module.exports = {
                     goodDisks.forEach(disk => {
                         let resource = helpers.createResourceName('disks', disk.name, project, disk.locationType, disk.location);
                         helpers.addResult(results, 0,
-                            'Disk is in use', disk.location, resource);
+                            'Disk is in use', region, resource);
                     });
                 }
             } 

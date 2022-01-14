@@ -403,6 +403,9 @@ var postcalls = {
 
 var collect = function(GoogleConfig, settings, callback) {
     var collection = {};
+   
+    GoogleConfig.mRetries = 5;
+    GoogleConfig.retryDelayOptions = {base: 300};
 
     var regions = helpers.regions();
 

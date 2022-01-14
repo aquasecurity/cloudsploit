@@ -91,7 +91,7 @@ module.exports = {
                     badDisks.forEach(disk => {
                         let resource = helpers.createResourceName('disks', disk.name, project, disk.locationType, disk.location);
                         helpers.addResult(results, 2,
-                            'Regional Disk Replication is not enabled for disk', disk.location, resource);
+                            'Regional Disk Replication is not enabled for disk', region, resource);
                     });
                 }
             }
@@ -104,7 +104,7 @@ module.exports = {
                     goodDisks.forEach(disk => {
                         let resource = helpers.createResourceName('disks', disk.name, project, disk.locationType, disk.location);
                         helpers.addResult(results, 0,
-                            'Regional Disk Replication is enabled for disk', disk.location, resource);
+                            'Regional Disk Replication is enabled for disk', region, resource);
                     });
                 }
             } 
