@@ -70,7 +70,7 @@ var calls = {
     instances: {
         compute: { 
             list: {
-                url: `https://compute.googleapis.com/compute/v1/projects/{projectId}/zones/{locationId}/instances`,
+                url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/zones/{locationId}/instances',
                 location: 'zone',
                 pagination: true
             },
@@ -420,7 +420,7 @@ var collect = function(GoogleConfig, settings, callback) {
                         postcallCb();
                     });
                 }, function() {
-                    JSON.stringify(collection, null, 2)
+                    JSON.stringify(collection, null, 2);
                     callback(null, collection);
                 });
             });
