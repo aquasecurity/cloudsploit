@@ -1923,7 +1923,7 @@ var postcalls = [
     }
 ];
 
-var rateError = [{message: 'rate'}];
+var rateError = {message: 'rate', statusCode: 429};
 
 var apiRetryAttempts = 2;
 var apiRetryBackoff = 500;
@@ -2004,26 +2004,15 @@ var collect = function(AWSConfig, settings, callback) {
     };
 
     var isRateError = function(err) {
-        let isError=false;
-        for (var e in rateError) {
-            if (err &&
-                err.statusCode &&
-                rateError[e] &&
-                rateError[e].statusCode &&
-                rateError[e].statusCode.filter(code => {
-                    return code == err.statusCode;
-                }).length){
-                isError=true;
-                break;
-            } else if (err &&
-                rateError[e] &&
-                rateError[e].message &&
-                err.message &&
-                err.message.toLowerCase().indexOf(rateError[e].message.toLowerCase())>-1){
-                isError=true;
-                break;
-            }
+        let isError = false;
+
+        if (err && err.statusCode && rateError && rateError.statusCode == err.statusCode) {
+            isError = true;
+        } else if (err && rateError && rateError.message && err.message &&
+            err.message.toLowerCase().indexOf(rateError.message.toLowerCase()) > -1) {
+            isError = true;
         }
+
         return isError;
     };
 
@@ -2120,15 +2109,42 @@ var collect = function(AWSConfig, settings, callback) {
                                 collection[serviceLower][callKey][region].data = dataToAdd;
                             }
 
-                            // If a "paginate" property is set, e.g. NextToken
-                            var nextToken = callObj.paginate;
-                            if (settings.paginate && nextToken && data[nextToken]) {
-                                paginating = true;
-                                var paginateProp = callObj.paginateReqProp ? callObj.paginateReqProp : nextToken;
-                                return execute([paginateProp, data[nextToken]]);
-                            }
+                            if (dataToAdd && dataToAdd.length && settings.identifier){
+                                var localEvent = {};
+                                localEvent.collection = {};
+                                localEvent.collection[serviceLower] = {};
+                                localEvent.collection[serviceLower][callKey] = {};
+                                localEvent.collection[serviceLower][callKey][region] = {};
+                                localEvent.collection[serviceLower][callKey][region].data = dataToAdd;
 
-                            return regionCb();
+                                localEvent.identifier = settings.identifier;
+
+                                localEvent.previousCollection = settings.previousCollection;
+
+                                settings.integration(localEvent, function() {
+                                    if (debugMode) console.log(`Processed Event: ${JSON.stringify(localEvent)}`);
+
+                                    // If a "paginate" property is set, e.g. NextToken
+                                    var nextToken = callObj.paginate;
+                                    if (settings.paginate && nextToken && data[nextToken]) {
+                                        paginating = true;
+                                        var paginateProp = callObj.paginateReqProp ? callObj.paginateReqProp : nextToken;
+                                        return execute([paginateProp, data[nextToken]]);
+                                    }
+
+                                    return regionCb();
+                                });
+                            } else {
+                                // If a "paginate" property is set, e.g. NextToken
+                                var nextToken = callObj.paginate;
+                                if (settings.paginate && nextToken && data[nextToken]) {
+                                    paginating = true;
+                                    var paginateProp = callObj.paginateReqProp ? callObj.paginateReqProp : nextToken;
+                                    return execute([paginateProp, data[nextToken]]);
+                                }
+
+                                return regionCb();
+                            }
                         };
 
                         function execute(nextTokens) { // eslint-disable-line no-inner-declarations
@@ -2149,14 +2165,13 @@ var collect = function(AWSConfig, settings, callback) {
                                         console.log(`Trying again in: ${retry_seconds/1000} seconds`);
                                         retries.push({seconds: Math.round(retry_seconds/1000)});
                                         return retry_seconds;
+                                    },
+                                    errorFilter: function(err) {
+                                        return isRateError(err);
                                     }
                                 }, function(cb) {
                                     executor[callKey](localParams, function(err, data) {
-                                        if (isRateError(err)) {
-                                            return cb(err);
-                                        } else {
-                                            return cb(err, data);
-                                        }
+                                        return cb(err, data);
                                     });
                                 }, function(err, data){
                                     executorCb(err, data);
@@ -2174,14 +2189,13 @@ var collect = function(AWSConfig, settings, callback) {
                                         console.log(`Trying again in: ${retry_seconds/1000} seconds`);
                                         retries.push({seconds: Math.round(retry_seconds/1000)});
                                         return retry_seconds;
+                                    },
+                                    errorFilter: function(err) {
+                                        return isRateError(err);
                                     }
                                 }, function(cb) {
                                     executor[callKey](function(err, data) {
-                                        if (isRateError(err)) {
-                                            return cb(err);
-                                        } else {
-                                            return cb(err, data);
-                                        }
+                                        return cb(err, data);
                                     });
                                 }, function(err, data){
                                     executorCb(err, data);
@@ -2291,6 +2305,9 @@ var collect = function(AWSConfig, settings, callback) {
                                                     console.log(`Trying again in: ${retry_seconds/1000} seconds`);
                                                     retries.push({seconds: Math.round(retry_seconds/1000)});
                                                     return retry_seconds;
+                                                },
+                                                errorFilter: function(err) {
+                                                    return isRateError(err);
                                                 }
                                             }, function(cb) {
                                                 executor[callKey](filter, function(err, data) {
@@ -2333,6 +2350,9 @@ var collect = function(AWSConfig, settings, callback) {
                                                 console.log(`Trying again in: ${retry_seconds/1000} seconds`);
                                                 retries.push({seconds: Math.round(retry_seconds/1000)});
                                                 return retry_seconds;
+                                            },
+                                            errorFilter: function(err) {
+                                                return isRateError(err);
                                             }
                                         }, function(cb) {
                                             executor[callKey](filter, function(err, data) {
