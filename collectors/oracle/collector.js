@@ -309,6 +309,16 @@ var postcalls = {
             filterConfig: [true, false],
         }
     },
+    customerSecretKey: {
+        list: {
+            api: 'iam',
+            reliesOnService: ['user'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'userId'],
+            filterValue: ['compartmentId', 'id'],
+            filterConfig: [true, false],
+        }
+    },
     bucket: {
         list: {
             api: 'objectStore',

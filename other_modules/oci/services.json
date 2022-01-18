@@ -369,6 +369,15 @@
                 "secondaryPath": "authTokens",
                 "endpoint": "identity.{{region}}.oraclecloud.com"
             }
+        },
+        "customerSecretKey": {
+            "list": {
+                "encodedGet": "userId",
+                "method": "GET",
+                "path": "users",
+                "secondaryPath": "customerSecretKeys",
+                "endpoint": "identity.{{region}}.oraclecloud.com"
+            }
         }
     },
     "loadBalance": {
