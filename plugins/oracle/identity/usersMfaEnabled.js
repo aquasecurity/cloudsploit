@@ -33,7 +33,6 @@ module.exports = {
             warn_federated_users: settings.warn_federated_users || this.setting.warn_federated_users.default
         };
         var warnFedUsers = (config.warn_federated_users == 'true');
-        console.log(JSON.stringify(cache, null, 2));
 
         var region = helpers.objectFirstKey(cache['regionSubscription']['list']);
 
