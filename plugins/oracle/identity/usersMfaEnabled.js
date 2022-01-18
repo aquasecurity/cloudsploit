@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'User accounts should have an MFA device setup to enable two-factor authentication.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Identity/Tasks/usingmfa.htm',
     recommended_action: 'Enable an MFA device for the user account.',
-    apis: ['user:list', 'apiKey:list'],
+    apis: ['user:list'],
     compliance: {
         hipaa: 'MFA helps provide additional assurance that the user accessing ' +
             'the cloud environment has been identified. HIPAA requires ' +
