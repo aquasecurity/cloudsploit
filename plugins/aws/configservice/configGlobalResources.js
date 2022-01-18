@@ -33,10 +33,10 @@ module.exports = {
                 describeConfigurationRecorders.data[0].recordingGroup.includeGlobalResourceTypes == true){    
                 helpers.addResult(results, 0,
                     'The configuration changes made to your AWS Global resources are currently recorded.', region, resource);
-                } else {
+            } else {
                 helpers.addResult(results, 2,
                     'The configuration changes made to your AWS Global resources are not currently recorded', region, resource);
-                }
+            }
             
             rcb();
         }, function(){
