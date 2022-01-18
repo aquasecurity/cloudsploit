@@ -28,16 +28,22 @@ module.exports = {
                 return rcb();
             }
            
-            let resource = describeConfigurationRecorders.data[0].roleARN;
-            if (describeConfigurationRecorders.data[0].recordingGroup &&
-                describeConfigurationRecorders.data[0].recordingGroup.includeGlobalResourceTypes == true){    
-                helpers.addResult(results, 0,
-                    'The configuration changes made to your AWS Global resources are currently recorded.', region, resource);
-            } else {
-                helpers.addResult(results, 2,
-                    'The configuration changes made to your AWS Global resources are not currently recorded', region, resource);
+            for (let record of describeConfigurationRecorders.data) {
+                if (!record.roleARN) continue;
+
+                let resource = record.roleARN;
+
+                if (record.recordingGroup &&
+                    record.recordingGroup.includeGlobalResourceTypes == true) {
+                    helpers.addResult(results, 0,
+                        'The configuration changes made to your AWS Global resources are currently recorded.',
+                        region, resource);
+                } else {
+                    helpers.addResult(results, 2,
+                        'The configuration changes made to your AWS Global resources are not currently recorded.',
+                        region, resource);
+                }
             }
-            
             rcb();
         }, function(){
             callback(null, results, source);
