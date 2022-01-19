@@ -44,7 +44,8 @@ module.exports = {
             }
 
             networkWatchers.data.forEach((networkWatcher) => {
-                if (networkWatcher.properties.provisioningState &&
+                if (networkWatcher.properties &&
+                    networkWatcher.properties.provisioningState &&
                     networkWatcher.properties.provisioningState.toLowerCase() == 'succeeded') {
                     helpers.addResult(results, 0, 'Network Watcher is enabled', location, networkWatcher.id);
                 } else {
