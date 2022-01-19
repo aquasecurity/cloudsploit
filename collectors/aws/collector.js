@@ -242,6 +242,9 @@ var calls = {
         },
         describeConfigurationRecorderStatus: {
             property: 'ConfigurationRecordersStatus'
+        },
+        describeDeliveryChannels: {
+            property: 'DeliveryChannels'
         }
     },
     CustomerProfiles: {
@@ -1319,6 +1322,12 @@ var postcalls = [
                 reliesOnCall: 'listBuckets',
                 filterKey: 'Bucket',
                 filterValue: 'Name'
+            },
+            headBucket: {
+                reliesOnService: 'configservice',
+                reliesOnCall: 'describeDeliveryChannels',
+                filterKey: 's3BucketName',
+                filterValue: 's3BucketName'
             },
         },
         EC2: {
