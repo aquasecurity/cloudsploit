@@ -27,7 +27,8 @@ const createCache = (recorders) => {
         configservice: {
             describeConfigurationRecorders: {
                 "us-east-1": {
-                    data: recorders                },
+                    data: recorders
+                },
             }
         }
     }
