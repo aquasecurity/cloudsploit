@@ -128,7 +128,7 @@ const createNullCache = () => {
 
 describe('asgCooldownPeriod', function () {
     describe('run', function () {
-        it('should PASS if Amazon Auto Scaling Groups are utilizing cooldown periods.', function (done) {
+        it('should PASS if Amazon Auto Scaling Groups are utilizing cooldown periods', function (done) {
             const cache = createCache([autoScalingGroups[0]]);
             asgCooldownPeriod.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
