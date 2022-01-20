@@ -28,7 +28,7 @@ const describeAutoScalingGroups = [
             "Default"
         ],
         "NewInstancesProtectedFromScaleIn": false,
-        "ServiceLinkedRoleARN": "arn:aws:iam::101363889637:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
+        "ServiceLinkedRoleARN": "arn:aws:iam::000011112222:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
     }
 ];
 
