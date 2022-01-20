@@ -566,6 +566,7 @@ module.exports = {
         'securitySolutionLogging'       : require(__dirname + '/plugins/azure/logalerts/securitySolutionLogging.js'),
         'nsgRuleLoggingEnabled'         : require(__dirname + '/plugins/azure/logalerts/nsgRuleLoggingEnabled.js'),
         'policyAssignmentLogging'       : require(__dirname + '/plugins/azure/logalerts/policyAssignmentLogging.js'),
+        'keyVaultsLoggingEnabled'       : require(__dirname + '/plugins/azure/logalerts/keyVaultsLoggingEnabled.js'),
 
         'monitorEndpointProtection'     : require(__dirname + '/plugins/azure/securitycenter/monitorEndpointProtection.js'),
         'monitorBlobEncryption'         : require(__dirname + '/plugins/azure/securitycenter/monitorBlobEncryption.js'),
