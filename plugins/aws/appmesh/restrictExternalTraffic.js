@@ -11,7 +11,6 @@ module.exports = {
     recommended_action: 'Enable the feature to allow egress only from virtual nodes to other defined resources in the service mesh.',
     apis: ['AppMesh:listMeshes', 'AppMesh:describeMesh'],
 
-
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
