@@ -35,7 +35,7 @@ const describeAutoScalingGroups = [
 const describeLaunchConfigurations = [
     {
         "LaunchConfigurationName": "mine2",
-        "LaunchConfigurationARN": "arn:aws:autoscaling:us-east-1:101363889637:launchConfiguration:8fceeaaa-c984-4cad-a20d-3e09eaea2440:launchConfigurationName/mine2",
+        "LaunchConfigurationARN": "arn:aws:autoscaling:us-east-1:000011112222:launchConfiguration:8fceeaaa-c984-4cad-a20d-3e09eaea2440:launchConfigurationName/mine2",
         "ImageId": "ami-085b20a79fc1af8f5",
         "KeyName": "test",
         "SecurityGroups": [
