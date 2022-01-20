@@ -137,7 +137,7 @@ describe('asgCooldownPeriod', function () {
             });
         });
 
-        it('should FAIL if The cooldown period setting is not properly configured for the selected Amazon ASG.', function (done) {
+        it('should FAIL if The cooldown period setting is not properly configured for the selected Amazon ASG', function (done) {
             const cache = createCache([autoScalingGroups[1]]);
             asgCooldownPeriod.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
