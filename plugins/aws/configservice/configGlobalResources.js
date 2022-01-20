@@ -35,7 +35,7 @@ module.exports = {
                 let resource = record.roleARN;
 
                 if (record.recordingGroup &&
-                    record.recordingGroup.includeGlobalResourceTypes == true) {
+                    record.recordingGroup.includeGlobalResourceTypes && record.recordingGroup.includeGlobalResourceTypes === true) {
                     helpers.addResult(results, 0,
                         'The configuration changes made to your AWS Global resources are currently recorded.',
                         region, resource);
