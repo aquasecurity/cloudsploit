@@ -89,8 +89,6 @@ const autoScalingGroups =  [
     },
 ];
 
-
-
 const createCache = (asgs) => {
     return {
         autoscaling: {
