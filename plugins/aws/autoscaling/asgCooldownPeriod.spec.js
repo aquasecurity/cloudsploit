@@ -146,7 +146,7 @@ describe('asgCooldownPeriod', function () {
             });
         });
 
-        it('should PASS if no AutoScaling groups found ', function (done) {
+        it('should PASS if no AutoScaling groups found', function (done) {
             const cache = createCache([]);
             asgCooldownPeriod.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
