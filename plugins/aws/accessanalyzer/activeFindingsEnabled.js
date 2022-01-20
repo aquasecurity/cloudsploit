@@ -62,7 +62,6 @@ module.exports = {
                         region, resource);
                     continue;
                 }
-                
             }
 
             rcb();

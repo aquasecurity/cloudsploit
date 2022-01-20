@@ -140,7 +140,6 @@ const listFindings = [
 
 
 const createCache = (analyzer, listFindings, analyzerErr, listFindingsErr) => {
-    
     var analyzerArn = (analyzer && analyzer.length) ? analyzer[0].arn: null;
     return {
         accessanalyzer: {
