@@ -15,6 +15,7 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        
         async.each(regions.configservice, function(region, rcb){
             var describeConfigurationRecorders = helpers.addSource(cache, source,
                 ['configservice', 'describeConfigurationRecorders', region]);
