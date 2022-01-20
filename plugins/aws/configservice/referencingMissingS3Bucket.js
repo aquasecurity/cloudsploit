@@ -13,6 +13,7 @@ module.exports = {
     apis: ['ConfigService:describeDeliveryChannels', 'S3:headBucket'],
   
     run: function(cache, settings, callback) {
+        console.log(JSON.stringify(cache, null, 2));
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
@@ -34,23 +35,33 @@ module.exports = {
                 return rcb();
             }
 
+            let deletedBucket = [];
             for (let record of describeDeliveryChannels.data) {
+                if (!record.s3BucketName) continue;
 
                 var headBucket = helpers.addSource(cache, source,
                     ['s3', 'headBucket', region, record.s3BucketName]);
 
-                if (!headBucket.data || !headBucket) {
-                    helpers.addResult(results, 0,
-                        'the referenced S3 bucket is available within your AWS account',
-                        region);
-
-                } else {
-                    helpers.addResult(results, 2,
-                        'the referenced S3 bucket is no longer available within your AWS account', 
-                        region);
-                } 
-                
+                if (headBucket && headBucket.err && headBucket.err.code &&
+                    headBucket.err.code.toLowerCase() == 'notfound'){
+                    deletedBucket.push(record)
+                } else if (!headBucket || headBucket.err) {
+                    helpers.addResult(results, 3,
+                        'Unable to query S3 headbucket: ' + helpers.addError(headBucket), region);
+                    continue;
+                }
             }
+
+            if (deletedBucket.length) {
+                helpers.addResult(results, 2,
+                    `config service have these buckets  ${deletedBucket.join(', ')}, not available in your account`,
+                    region);
+
+            } else {
+                helpers.addResult(results, 0,
+                    'config service have buckets available in your account', 
+                    region);
+            } 
 
             rcb();
         }, function() {
