@@ -23,7 +23,8 @@ const createCache = (status) => {
         configservice: {
             describeConfigurationRecorderStatus: {
                 "us-east-1": {
-                    data: status                },
+                    data: status               
+                },
             }
         }
     }
