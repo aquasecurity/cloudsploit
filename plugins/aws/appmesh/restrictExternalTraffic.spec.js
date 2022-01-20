@@ -87,7 +87,7 @@ describe('restrictExternalTraffic', function () {
     describe('run', function () {
         it('should PASS if App Mesh allows egress only from virtual nodes to other defined resources.', function (done) {
             const cache = createCache([listMeshes[0]], describeMesh[1]);
-            restrictExternalTraffic.run(cache, { }, (err, results) => {
+            restrictExternalTraffic.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Amazon App Mesh allows egress only from virtual nodes to other defined resources.');
