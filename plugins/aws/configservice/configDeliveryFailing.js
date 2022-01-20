@@ -31,7 +31,7 @@ module.exports = {
             }
 
             for (let record of describeConfigurationRecorderStatus.data) {
-                if (record.lastStatus.toUpperCase()=='SUCCESS') {
+                if (record.lastStatus.toUpperCase() === 'SUCCESS') {
                     helpers.addResult(results, 0,
                         'The AWS Config service succeeded in delivering the last log file to the designated recipient.',
                         region);
