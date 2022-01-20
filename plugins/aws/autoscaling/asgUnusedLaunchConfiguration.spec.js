@@ -65,7 +65,7 @@ const describeLaunchConfigurations = [
     },
     {
         "LaunchConfigurationName": "mine3",
-        "LaunchConfigurationARN": "arn:aws:autoscaling:us-east-1:101363889637:launchConfiguration:917c072a-383b-48b6-9675-ed0e1f4e6f51:launchConfigurationName/mine3",
+        "LaunchConfigurationARN": "arn:aws:autoscaling:us-east-1:000011112222:launchConfiguration:917c072a-383b-48b6-9675-ed0e1f4e6f51:launchConfigurationName/mine3",
         "ImageId": "ami-085b20a79fc1af8f5",
         "KeyName": "test",
         "SecurityGroups": [
