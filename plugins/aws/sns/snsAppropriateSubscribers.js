@@ -58,7 +58,6 @@ module.exports = {
                     helpers.addResult(results, 0,
                         'SNS subscriber is appropriate for topic', region, resource);
                 }
-                
             }
 
             rcb();
