@@ -4,7 +4,7 @@ const asgUnusedLaunchConfiguration = require('./asgUnusedLaunchConfiguration');
 const describeAutoScalingGroups = [
     {
         "AutoScalingGroupName": "sadeed-grp1",
-        "AutoScalingGroupARN": "arn:aws:autoscaling:us-east-1:101363889637:autoScalingGroup:1efc7b66-fbd4-4a5b-8086-8b95b0b74603:autoScalingGroupName/sadeed-grp1",
+        "AutoScalingGroupARN": "arn:aws:autoscaling:us-east-1:000111222333:autoScalingGroup:1efc7b66-fbd4-4a5b-8086-8b95b0b74603:autoScalingGroupName/sadeed-grp1",
         "LaunchConfigurationName": "mine2",
         "MinSize": 1,
         "MaxSize": 5,
