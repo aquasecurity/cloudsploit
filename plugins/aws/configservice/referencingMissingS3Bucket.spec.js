@@ -14,7 +14,6 @@ const describeDeliveryChannels = [
     }
 ];
 
-
 const createCache = (records, headBucket, recordsErr, headBucketErr) => {
     var name = (records && records.length) ? records[0].s3BucketName : null;
     return {
