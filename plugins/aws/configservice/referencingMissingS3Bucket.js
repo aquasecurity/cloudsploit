@@ -44,7 +44,7 @@ module.exports = {
 
                 if (headBucket && headBucket.err && headBucket.err.code &&
                     headBucket.err.code.toLowerCase() == 'notfound'){
-                    deletedBucket.push(record)
+                    deletedBucket.push(record);
                 } else if (!headBucket || headBucket.err) {
                     helpers.addResult(results, 3,
                         'Unable to query S3 headbucket: ' + helpers.addError(headBucket), region);
