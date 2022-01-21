@@ -104,6 +104,10 @@ var calls = {
         listBackupVaults: {
             property: 'BackupVaultList',
             paginate: 'NextToken',
+        },
+        listBackupPlans: {
+            property: 'BackupPlansList',
+            paginate: 'NextToken',
         }
     },
     CloudFormation: {
@@ -1094,6 +1098,14 @@ var postcalls = [
                 reliesOnService: 'autoscaling',
                 reliesOnCall: 'describeAutoScalingGroups',
                 override: true
+            }
+        },
+        Backup: {
+            getBackupPlan: {
+                reliesOnService: 'backup',
+                reliesOnCall: 'listBackupPlans',
+                filterKey: 'BackupPlanId',
+                filterValue: 'BackupPlanId',
             }
         },
         CloudFormation: {    
