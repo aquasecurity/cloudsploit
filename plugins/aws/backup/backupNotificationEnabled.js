@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Backup Vault Encrypted',
+    title: 'Backup Notification Enabled',
     category: 'Backup',
     domain: 'Storage',
     description: 'Ensure your Amazon Backup vaults send notifications via Amazon SNS for each failed backup job',
