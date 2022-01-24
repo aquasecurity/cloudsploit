@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Backup Vault Encrypted',
+    title: 'Backup Deletion Protection Enabled',
     category: 'Backup',
     domain: 'Storage',
     description: 'Ensure that an Amazon Backup vault access policy is configured to prevent the deletion of AWS backups in the backup vault',
