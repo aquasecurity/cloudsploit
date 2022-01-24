@@ -1096,6 +1096,14 @@ var postcalls = [
                 override: true
             }
         },
+        Backup: {
+            getBackupVaultNotifications: {
+                reliesOnService: 'backup',
+                reliesOnCall: 'listBackupVaults',
+                filterKey: 'BackupVaultName',
+                filterValue: 'BackupVaultName',
+            },
+        },
         CloudFormation: {    
             describeStackEvents: {
                 reliesOnService: 'cloudformation',
