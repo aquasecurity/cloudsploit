@@ -44,7 +44,6 @@ module.exports = {
 
             combinedACLS.forEach(webACL => {
                 if (webACL.WebACLId) {
-                    // console.log(JSON.stringify(cache.wafregional, null, 2));
                     let listResources = helpers.addSource(cache, source,
                         ['wafregional', 'listResourcesForWebACL', region, webACL.WebACLId]);
                     // console.log(listResources, 'here', webACL.WebACLId);
