@@ -46,7 +46,6 @@ module.exports = {
                 if (webACL.WebACLId) {
                     let listResources = helpers.addSource(cache, source,
                         ['wafregional', 'listResourcesForWebACL', region, webACL.WebACLId]);
-                    // console.log(listResources, 'here', webACL.WebACLId);
                     if (listResources && listResources.data && listResources.data.ResourceArns &&
                         listResources.data.ResourceArns.length) {
                         resourcesToCheck = resourcesToCheck.concat(listResources.data.ResourceArns);
