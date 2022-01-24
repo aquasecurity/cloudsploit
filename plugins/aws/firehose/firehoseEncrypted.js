@@ -60,7 +60,6 @@ module.exports = {
                 var deliveryStreamDesc = describeDeliveryStream.data.DeliveryStreamDescription;
                 var deliveryStreamARN = deliveryStreamDesc.DeliveryStreamARN;
 
-                // console.log(JSON.stringify(describeDeliveryStream, null, 2));
 
                 if (!deliveryStreamDesc ||
                     !deliveryStreamDesc.Destinations ||
