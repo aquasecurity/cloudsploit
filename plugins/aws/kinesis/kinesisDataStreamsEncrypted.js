@@ -14,7 +14,7 @@ module.exports = {
         'KMS:listAliases', 'STS:getCallerIdentity'],
     settings: {
         data_streams_desired_encryption_level: {
-            name: 'Kinesis Data Streams Target Encryption Level',
+            name: 'Kinesis Data Stream Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
