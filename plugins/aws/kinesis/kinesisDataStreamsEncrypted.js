@@ -94,13 +94,6 @@ module.exports = {
                     continue;
                 }
 
-                if (!describeStream.data.StreamDescription) {
-                    helpers.addResult(results, 3,
-                        'Unable to query Kinesis for stream: ' + stream + ': no stream data',
-                        region);
-                    continue;
-                }
-
                 if (!describeStream.data.StreamDescription.KeyId) {
                     helpers.addResult(results, 2,
                         'Kinesis stream does not have encryption enabled',
