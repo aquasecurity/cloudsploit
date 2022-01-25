@@ -5,8 +5,8 @@ module.exports = {
     title: 'Firehose Delivery Streams Encrypted',
     category: 'Firehose',
     domain: 'Content Delivery',
-    description: 'Ensures Firehose Delivery Stream are encrypted using AWS KMS of desired encryption level',
-    more_info: 'Data sent through Firehose Delivery Streams can be encrypted using KMS server-side encryption. Existing delivery streams can be modified to add encryption with minimal overhead.'+
+    description: 'Ensures Firehose Delivery Stream are encrypted using AWS KMS key of desired encryption level',
+    more_info: 'Data sent through Firehose delivery streams can be encrypted using KMS server-side encryption. Existing delivery streams can be modified to add encryption with minimal overhead.'+
         'Use customer-managed keys instead in order to gain more granular control over encryption/decryption process.',
     recommended_action: 'Enable encryption using desired level for all Firehose Delivery Streams.',
     link: 'https://docs.aws.amazon.com/firehose/latest/dev/encryption.html',
@@ -64,7 +64,6 @@ module.exports = {
             }
 
             for (let stream of listDeliveryStreams.data) {
-                // arn:aws:firehose:us-east-1:101363889637:deliverystream/123
                 var resource = `arn:${awsOrGov}:firehose:${region}:${accountId}:deliverystream/${stream}`;
 
                 var describeDeliveryStream = helpers.addSource(cache, source,
