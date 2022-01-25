@@ -94,13 +94,6 @@ module.exports = {
                     continue;
                 }
 
-                if (!describeStream.data.StreamDescription.KeyId) {
-                    helpers.addResult(results, 2,
-                        'Kinesis stream does not have encryption enabled',
-                        region, resource);
-                    continue;
-                }
-                
                 if (describeStream.data.StreamDescription.KeyId) {
                     var encryptionKey = describeStream.data.StreamDescription.KeyId;
 
@@ -121,21 +114,25 @@ module.exports = {
                     }
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
 
-                } else currentEncryptionLevel = 2; //awskms
+                    let currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
 
-                let currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
-
-                if (currentEncryptionLevel >= desiredEncryptionLevel) {
-                    helpers.addResult(results, 0,
-                        `Kinesis stream is encrypted with ${currentEncryptionLevelString} \
-                        which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
-                        region, resource);
+                    if (currentEncryptionLevel >= desiredEncryptionLevel) {
+                        helpers.addResult(results, 0,
+                            `Kinesis stream is encrypted with ${currentEncryptionLevelString} \
+                            which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
+                            region, resource);
+                    } else {
+                        helpers.addResult(results, 2,
+                            `Kinesis stream is encrypted with ${currentEncryptionLevelString} \
+                            which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
+                            region, resource);
+                    }
                 } else {
                     helpers.addResult(results, 2,
-                        `Kinesis stream is encrypted with ${currentEncryptionLevelString} \
-                        which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
+                        'Kinesis stream does not have encryption enabled',
                         region, resource);
                 }
+                
             }
             rcb();
         }, function(){
