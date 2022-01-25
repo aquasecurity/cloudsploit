@@ -2,7 +2,7 @@ var expect = require('chai').expect;
 var sqsEncryptionEnabled = require('./sqsEncryptionEnabled');
 
 const listQueues = [
-    "https://sqs.us-east-1.amazonaws.com/101363889637/akhtarqueue"
+    "https://sqs.us-east-1.amazonaws.com/000111222333/akhtarqueue"
 ];
 
 
@@ -33,7 +33,7 @@ const getQueueAttributes = [
           "RequestId": "8b46adeb-a313-5f7a-8319-f7adf206f5ed"
         },
         "Attributes": {
-          "QueueArn": "arn:aws:sqs:us-east-1:101363889637:mine1",
+          "QueueArn": "arn:aws:sqs:us-east-1:000111222333:mine1",
           "ApproximateNumberOfMessages": "0",
           "ApproximateNumberOfMessagesNotVisible": "0",
           "ApproximateNumberOfMessagesDelayed": "0",
@@ -53,7 +53,7 @@ const getQueueAttributes = [
           "RequestId": "d35d9102-91c9-5a3b-b8e0-cb44c0dcd106"
         },
         "Attributes": {
-          "QueueArn": "arn:aws:sqs:us-east-1:101363889637:akhtarqueue",
+          "QueueArn": "arn:aws:sqs:us-east-1:000111222333:akhtarqueue",
           "ApproximateNumberOfMessages": "0",
           "ApproximateNumberOfMessagesNotVisible": "0",
           "ApproximateNumberOfMessagesDelayed": "0",
