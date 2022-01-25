@@ -64,7 +64,6 @@ module.exports = {
             }
 
             for (let stream of listDeliveryStreams.data) {
-                // arn:aws:firehose:us-east-1:101363889637:deliverystream/123
                 var resource = `arn:${awsOrGov}:firehose:${region}:${accountId}:deliverystream/${stream}`;
 
                 var describeDeliveryStream = helpers.addSource(cache, source,
