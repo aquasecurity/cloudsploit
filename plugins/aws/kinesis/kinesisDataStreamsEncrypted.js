@@ -74,7 +74,6 @@ module.exports = {
                 return rcb();
             }
             
-
             var keyArn;
             var kmsAliasArnMap = {};
             listAliases.data.forEach(function(alias){
