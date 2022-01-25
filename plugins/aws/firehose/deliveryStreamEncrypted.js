@@ -89,18 +89,12 @@ module.exports = {
                     continue;
                 }
 
-                if (!deliveryStreamDesc.Destinations[0].ExtendedS3DestinationDescription.EncryptionConfiguration.KMSEncryptionConfig) {
-                    helpers.addResult(results, 2,
-                        'Firehose delivery stream does not have encryption enabled',
-                        region, resource);
-                    continue;
-                }
-
                 if (deliveryStreamDesc &&
                     deliveryStreamDesc.Destinations &&
                     deliveryStreamDesc.Destinations[0] &&
                     deliveryStreamDesc.Destinations[0].ExtendedS3DestinationDescription &&
                     deliveryStreamDesc.Destinations[0].ExtendedS3DestinationDescription.EncryptionConfiguration &&
+                    deliveryStreamDesc.Destinations[0].ExtendedS3DestinationDescription.EncryptionConfiguration.KMSEncryptionConfig &&
                     deliveryStreamDesc.Destinations[0].ExtendedS3DestinationDescription.EncryptionConfiguration.KMSEncryptionConfig.AWSKMSKeyARN) {
 
                     var kmsKeyId = deliveryStreamDesc.Destinations[0].ExtendedS3DestinationDescription.EncryptionConfiguration.KMSEncryptionConfig.AWSKMSKeyARN;
@@ -117,23 +111,27 @@ module.exports = {
                     }
 
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
-                } else {
-                    currentEncryptionLevel = 2; //awskms
-                }
+                
 
-                var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
+                    var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
 
-                if (currentEncryptionLevel >= desiredEncryptionLevel) {
-                    helpers.addResult(results, 0,
-                        `Firehose delivery stream is encrypted with ${currentEncryptionLevelString} \
-                        which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
-                        region, resource);
+                    if (currentEncryptionLevel >= desiredEncryptionLevel) {
+                        helpers.addResult(results, 0,
+                            `Firehose delivery stream is encrypted with ${currentEncryptionLevelString} \
+                            which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
+                            region, resource);
+                    } else {
+                        helpers.addResult(results, 2,
+                            `Firehose delivery stream is encrypted with ${currentEncryptionLevelString} \
+                            which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
+                            region, resource);
+                    }
                 } else {
                     helpers.addResult(results, 2,
-                        `Firehose delivery stream is encrypted with ${currentEncryptionLevelString} \
-                        which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
+                        'Firehose delivery stream does not have encryption enabled',
                         region, resource);
                 }
+
             }
             rcb();
         }, function(){
