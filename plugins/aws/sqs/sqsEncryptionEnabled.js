@@ -1,7 +1,6 @@
 var async = require('async');
 var helpers = require('../../../helpers/aws');
 
-
 module.exports = {
     title: 'SQS Encryption Enabled',
     category: 'SQS',
