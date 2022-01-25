@@ -82,7 +82,6 @@ module.exports = {
             });
 
             for (let stream of listStreams.data) {
-                // arn:aws:kinesis:us-west-1:101363889637:stream/aaaa
                 let resource = `arn:${awsOrGov}:kinesis:${region}:${accountId}:stream/${stream}`;
                 
                 var describeStream = helpers.addSource(cache, source,
