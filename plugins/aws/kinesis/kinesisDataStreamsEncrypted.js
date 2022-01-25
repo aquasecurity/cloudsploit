@@ -6,7 +6,7 @@ module.exports = {
     category: 'Kinesis',
     domain: 'Content Delivery',
     description: 'Ensures Kinesis data streams are encrypted using AWS KMS key of desired encryption level.',
-    more_info: 'Data sent to Kinesis Streams can be encrypted using KMS server-side encryption. Existing streams can be modified to add encryption with minimal overhead. '+ 
+    more_info: 'Data sent to Kinesis data streams can be encrypted using KMS server-side encryption. Existing streams can be modified to add encryption with minimal overhead. '+ 
         'Use customer-managed keys instead in order to gain more granular control over encryption/decryption process.',
     recommended_action: 'Enable encryption using desired level for all Kinesis streams',
     link: 'https://docs.aws.amazon.com/streams/latest/dev/server-side-encryption.html',
