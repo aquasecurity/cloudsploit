@@ -50,10 +50,9 @@ const createCache = (snapshots, snapshotsErr) => {
 
 describe('backupInUseForRDSSnapshots', function () {
     describe('run', function () {
-        it('should PASS if Amazon Backup is in use for Amazon RDS to take snapshots in the selected region.', function (done) {
+        it('should PASS if Amazon Backup is in use for Amazon RDS to take snapshots', function (done) {
             const cache = createCache([describeDBSnapshots[0]]);
             backupInUseForRDSSnapshots.run(cache, {}, (err, results) => {
-              console.log(results);
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -61,7 +60,7 @@ describe('backupInUseForRDSSnapshots', function () {
             });
         });
 
-        it('should FAIL if Amazon Backup is not in use for Amazon RDS to take snapshots in the selected region.', function (done) {
+        it('should FAIL if Amazon Backup is not in use for Amazon RDS to take snapshots', function (done) {
             const cache = createCache([describeDBSnapshots[1]]);
             backupInUseForRDSSnapshots.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);

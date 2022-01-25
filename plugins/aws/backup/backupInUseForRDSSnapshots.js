@@ -38,9 +38,9 @@ module.exports = {
 
                 if (snapshot.SnapshotType&&
                     snapshot.SnapshotType.toLowerCase() === 'awsbackup') {
-                    helpers.addResult(results, 0, 'Amazon Backup is in use for Amazon RDS to take snapshots in the selected region', region, dbResource);
+                    helpers.addResult(results, 0, 'Amazon Backup is in use for Amazon RDS to take snapshots', region, dbResource);
                 } else {
-                    helpers.addResult(results, 2, 'Amazon Backup is not in use for Amazon RDS to take snapshots in the selected region', region, dbResource);
+                    helpers.addResult(results, 2, 'Amazon Backup is not in use for Amazon RDS to take snapshots', region, dbResource);
                 }
             }
 
