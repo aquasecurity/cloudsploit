@@ -12,7 +12,7 @@ const getQueueAttributes = [
           "RequestId": "55fecb32-ba74-528f-bea8-9174eb61d3d5"
         },
         "Attributes": {
-          "QueueArn": "arn:aws:sqs:us-east-1:101363889637:my-queue1",
+          "QueueArn": "arn:aws:sqs:us-east-1:000111222333:my-queue1",
           "ApproximateNumberOfMessages": "0",
           "ApproximateNumberOfMessagesNotVisible": "0",
           "ApproximateNumberOfMessagesDelayed": "0",
