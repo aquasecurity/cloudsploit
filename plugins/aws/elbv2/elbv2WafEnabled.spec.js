@@ -32,7 +32,7 @@ const describeLoadBalancers = [
         "IpAddressType": "ipv4"
     },
     {
-        "LoadBalancerArn": "arn:aws:elasticloadbalancing:us-east-1:101363889637:loadbalancer/app/sad-elb2/c09ae5d45f51b7b3",
+        "LoadBalancerArn": "arn:aws:elasticloadbalancing:us-east-1:000111222333:loadbalancer/app/sad-elb2/c09ae5d45f51b7b3",
         "DNSName": "sad-elb2-1999742259.us-east-1.elb.amazonaws.com",
         "CanonicalHostedZoneId": "Z35SXDOTRQ7X7K",
         "CreatedTime": "2021-12-28T11:03:12.930Z",
@@ -79,7 +79,7 @@ const listResourcesForWebACL = [
     },
     {
         "ResourceArns": [
-          "arn:aws:elasticloadbalancing:us-east-1:101363889637:loadbalancer/app/sad-elb/0c48be96f812e564"      
+          "arn:aws:elasticloadbalancing:us-east-1:000111222333:loadbalancer/app/sad-elb/0c48be96f812e564"      
         ]
     }
 ];
@@ -173,6 +173,7 @@ describe('elbv2WafEnabled', function () {
         it('should PASS if Application Load Balancer has WAF enabled', function (done) {
             const cache = createCache([describeLoadBalancers[0]], [listWebACLs[1]], listResourcesForWebACL[1]);
             elbv2WafEnabled.run(cache, {}, (err, results) => {
+                console.log(results);
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
