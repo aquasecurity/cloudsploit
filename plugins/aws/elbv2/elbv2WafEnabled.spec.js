@@ -3,7 +3,7 @@ const elbv2WafEnabled = require('./elbv2WafEnabled');
 
 const describeLoadBalancers = [
     {
-        "LoadBalancerArn": "arn:aws:elasticloadbalancing:us-east-1:101363889637:loadbalancer/app/sad-elb/0c48be96f812e564",
+        "LoadBalancerArn": "arn:aws:elasticloadbalancing:us-east-1:000111222333:loadbalancer/app/sad-elb/0c48be96f812e564",
         "DNSName": "sad-elb-2137190229.us-east-1.elb.amazonaws.com",
         "CanonicalHostedZoneId": "Z35SXDOTRQ7X7K",
         "CreatedTime": "2021-12-28T11:00:35.740Z",
