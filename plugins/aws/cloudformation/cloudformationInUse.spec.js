@@ -53,23 +53,23 @@ const createCache = (backupVault, backupVaultErr) => {
 
 describe('cloudformationInUse', function () {
     describe('run', function () {
-        it('should PASS if the Amazon CloudFormation service is currently in use within the selected AWS region.', function (done) {
+        it('should PASS if Amazon CloudFormation service is currently in use', function (done) {
             const cache = createCache([describeStacks[0]]);
             cloudformationInUse.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('the Amazon CloudFormation service is currently in use within the selected AWS region.');
+                expect(results[0].message).to.include('Amazon CloudFormation service is currently in use');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
 
-        it('should FAIL if the Amazon CloudFormation service is not currently in use within the selected AWS region.', function (done) {
+        it('should FAIL if Amazon CloudFormation service is not currently in use', function (done) {
             const cache = createCache(describeStacks[1]);
             cloudformationInUse.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('the Amazon CloudFormation service is not currently in use within the selected AWS region.');
+                expect(results[0].message).to.include('Amazon CloudFormation service is not currently in use');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });

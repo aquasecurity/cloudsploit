@@ -29,13 +29,13 @@ module.exports = {
                 return rcb();
             }
 
-            if (!describeStacks.data.length) {
-                helpers.addResult(results, 2,
-                    'the Amazon CloudFormation service is not currently in use within the selected AWS region.',
+            if (describeStacks.data.length) {
+                helpers.addResult(results, 0,
+                    'Amazon CloudFormation service is currently in use',
                     region); 
             } else {
-                helpers.addResult(results, 0,
-                    'the Amazon CloudFormation service is currently in use within the selected AWS region.',
+                helpers.addResult(results, 2,
+                    'Amazon CloudFormation service is not currently in use',
                     region);  
             }
         
