@@ -83,7 +83,6 @@ module.exports = {
             });
          
             for (let queue of listQueues.data) {
-                // arn:aws:sqs:us-east-1:101363889637:aaaa
                 let resource = `arn:${awsOrGov}:sqs:${region}:${accountId}:${queue}`;
                 
                 var getQueueAttributes = helpers.addSource(cache, source,
