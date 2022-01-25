@@ -10,8 +10,8 @@ module.exports = {
         'Use customer-managed keys instead in order to gain more granular control over encryption/decryption process.',
     recommended_action: 'Enable encryption using desired level for all Kinesis streams',
     link: 'https://docs.aws.amazon.com/streams/latest/dev/server-side-encryption.html',
-    apis: ['Kinesis:listStreams', 'Kinesis:describeStream', 'KMS:listKeys', 'KMS:describeKey'
-        , 'KMS:listAliases', 'STS:getCallerIdentity'],
+    apis: ['Kinesis:listStreams', 'Kinesis:describeStream', 'KMS:listKeys', 'KMS:describeKey',
+        'KMS:listAliases', 'STS:getCallerIdentity'],
     settings: {
         data_streams_desired_encryption_level: {
             name: 'Kinesis Data Streams Target Encryption Level',
