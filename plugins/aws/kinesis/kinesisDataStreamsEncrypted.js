@@ -97,7 +97,7 @@ module.exports = {
                 if (describeStream.err || !describeStream.data) {
                     helpers.addResult(results, 3,
                         'Unable to query Kinesis for stream: ' + stream + ': ' + helpers.addError(describeStream),
-                        region);
+                        region, resource);
                     continue;
                 }
 
