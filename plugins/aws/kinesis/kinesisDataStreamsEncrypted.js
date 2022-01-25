@@ -69,7 +69,7 @@ module.exports = {
 
             if (!listAliases || listAliases.err || !listAliases.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for KMS aliases:' + helpers.addError(listAliases),
+                    'Unable to query for KMS aliases: ' + helpers.addError(listAliases),
                     region);
                 return rcb();
             }
