@@ -15,7 +15,7 @@ module.exports = {
         'KMS:describeKey', 'STS:getCallerIdentity'],
     settings: {
         sqs_queues_desired_encryption_level: {
-            name: 'SQS Qeues Target Encryption Level',
+            name: 'SQS QueuesTarget Encryption Level',
             description: 'In order (lowest to highest) sse=SSE-SQS; awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(sse|awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
