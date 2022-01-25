@@ -33,7 +33,7 @@ module.exports = {
                 helpers.addResult(results, 2,
                     'the Amazon CloudFormation service is not currently in use within the selected AWS region.',
                     region); 
-            }else {
+            } else {
                 helpers.addResult(results, 0,
                     'the Amazon CloudFormation service is currently in use within the selected AWS region.',
                     region);  
