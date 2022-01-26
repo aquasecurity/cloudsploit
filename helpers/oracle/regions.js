@@ -65,5 +65,8 @@ module.exports = {
     configuration: ['default'],
     dbSystem: regions,
     mountTarget: regions,
-    namespace: regions
+    namespace: regions,
+    apiKey: ['default'],
+    authToken: ['default'],
+    customerSecretKey: ['default']
 };

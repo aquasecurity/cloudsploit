@@ -1,7 +1,8 @@
 var AWS = require('aws-sdk');
 var async = require('async');
+var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, callback) {
+module.exports = function(AWSConfig, collection, retries, callback) {
     var eks = new AWS.EKS(AWSConfig);
     //var autoscaling = new AWS.AutoScaling(AWSConfig);
 
@@ -15,7 +16,7 @@ module.exports = function(AWSConfig, collection, callback) {
                 nodegroupName: nodeGroup
             };
 
-            eks.describeNodegroup(params, function(err, data) {
+            helpers.makeCustomCollectorCall(eks, 'describeNodegroup', params, retries, null, null, null, function(err, data) {
                 if (err) {
                     collection.eks.describeNodegroups[AWSConfig.region][cluster][nodeGroup].err = err;
                 }

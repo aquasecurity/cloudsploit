@@ -417,7 +417,9 @@ var postcalls = {
 
 var collect = function(GoogleConfig, settings, callback) {
     var collection = {};
-
+    if (settings.gather) {
+        return callback(null, calls, postcalls);
+    }
     GoogleConfig.maxRetries = 5;
     GoogleConfig.retryDelayOptions = {base: 300};
 
