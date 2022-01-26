@@ -6,7 +6,7 @@ const listClusters = [
         "Id": "j-2C3R1T3QB6HBQ",
         "Name": "My cluster",
         "Status": {
-            "State": "STARTING",
+            "State": "RUNNING",
             "StateChangeReason": {},
             "Timeline": {
                 "CreationDateTime": "2021-11-23T19:34:38.096000+05:00"
@@ -19,7 +19,7 @@ const listClusters = [
         "Id": "j-2GWDFSLQDWY54",
         "Name": "My cluster12",
         "Status": {
-            "State": "TERMINATED_WITH_ERRORS",
+            "State": "RUNNING",
             "StateChangeReason": {
                 "Code": "BOOTSTRAP_FAILURE",
                 "Message": "On the master instance (i-07434010850e76576), application provisioning failed"
