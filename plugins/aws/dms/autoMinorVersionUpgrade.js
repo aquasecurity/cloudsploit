@@ -41,11 +41,11 @@ module.exports = {
 
                 if (instance.AutoMinorVersionUpgrade == true) {
                     helpers.addResult(results, 0,
-                        'DMS replication instances have auto minor version upgrade enabled.',
+                        'Replication instances have auto minor version upgrade enabled.',
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'DMS replication instances does not have auto minor version upgrade enabled.',
+                        'Replication instances does not have auto minor version upgrade enabled.',
                         region, resource);
                 }
             }

@@ -37,23 +37,23 @@ const createCache = (instances, instancesErr) => {
 
 describe('autoMinorVersionUpgrade', function () {
     describe('run', function () {
-        it('should PASS if DMS replication instances have auto minor version upgrade enabled.', function (done) {
+        it('should PASS if Replication instances have auto minor version upgrade enabled.', function (done) {
             const cache = createCache([describeReplicationInstances[0]]);
             autoMinorVersionUpgrade.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('DMS replication instances have auto minor version upgrade enabled.');
+                expect(results[0].message).to.include('Replication instances have auto minor version upgrade enabled.');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
 
-        it('should FAIL if DMS replication instances does not have auto minor version upgrade enabled.', function (done) {
+        it('should FAIL if Replication instances does not have auto minor version upgrade enabled.', function (done) {
             const cache = createCache([describeReplicationInstances[1]]);
             autoMinorVersionUpgrade.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('DMS replication instances does not have auto minor version upgrade enabled.');
+                expect(results[0].message).to.include('Replication instances does not have auto minor version upgrade enabled.');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
