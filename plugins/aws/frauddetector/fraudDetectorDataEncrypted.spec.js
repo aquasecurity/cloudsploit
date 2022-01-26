@@ -32,7 +32,7 @@ const describeKey = [
         "KeyMetadata": {
             "AWSAccountId": "000011112222",
             "KeyId": "ad013a33-b01d-4d88-ac97-127399c18b3e",
-            "Arn": "arn:aws:kms:us-east-1:000111222333:key/ad013a33-b01d-4d88-ac97-127399c18b3e",
+            "Arn": "arn:aws:kms:us-east-1:111222333444:key/ad013a33-b01d-4d88-ac97-127399c18b3e",
             "CreationDate": "2020-12-15T01:16:53.045000+05:00",
             "Enabled": true,
             "Description": "Default master key that protects my Glue data when no other key is defined",
@@ -143,7 +143,17 @@ describe('fraudDetectorDataEncrypted', function () {
         });
 
         it('should UNKNOWN if unable to list Fraud Detector data', function (done) {
-            const cache = createCache(null, null, null);
+            const cache = createCache();
+            fraudDetectorDataEncrypted.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
+                done();
+            });
+        });
+
+        it('should UNKNOWN if unable to query Fraud Detectors Key', function (done) {
+            const cache = createCache();
             fraudDetectorDataEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);

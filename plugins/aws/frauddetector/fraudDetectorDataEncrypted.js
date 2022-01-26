@@ -49,7 +49,13 @@ module.exports = {
             }
 
             var fraudDetectorsEncryptionKey = helpers.addSource(cache, source,
-                ['frauddetector', 'getKMSEncryptionKey', region, 'data']);
+                ['frauddetector', 'getKMSEncryptionKey', region]);
+
+            if (fraudDetectorsEncryptionKey.err || !fraudDetectorsEncryptionKey.data) {
+                helpers.addResult(results, 3,
+                    `Unable to query Fraud Detectors Key: ${helpers.addError(listDetectors)}`, region);
+                return rcb();
+            }
 
             var listKeys = helpers.addSource(cache, source,
                 ['kms', 'listKeys', region]);
@@ -60,9 +66,9 @@ module.exports = {
                 return rcb();
             }
 
-            if (fraudDetectorsEncryptionKey && fraudDetectorsEncryptionKey.kmsEncryptionKeyArn
-                    && fraudDetectorsEncryptionKey.kmsEncryptionKeyArn.toUpperCase() !== 'DEFAULT') {
-                let encryptionKey = fraudDetectorsEncryptionKey.kmsEncryptionKeyArn;
+            if (fraudDetectorsEncryptionKey.data && fraudDetectorsEncryptionKey.data.kmsEncryptionKeyArn
+                    && fraudDetectorsEncryptionKey.data.kmsEncryptionKeyArn.toUpperCase() !== 'DEFAULT') {
+                let encryptionKey = fraudDetectorsEncryptionKey.data.kmsEncryptionKeyArn;
                 var keyId = encryptionKey.split('/')[1] ? encryptionKey.split('/')[1] : encryptionKey;
 
                 var describeKey = helpers.addSource(cache, source,
