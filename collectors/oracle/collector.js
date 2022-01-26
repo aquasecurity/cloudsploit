@@ -289,6 +289,37 @@ var postcalls = {
             filterConfig: [true, false],
         }
     },
+    apiKey: {
+        list: {
+            api: 'iam',
+            reliesOnService: ['user'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'userId'],
+            filterValue: ['compartmentId', 'id'],
+            filterConfig: [true, false],
+        }
+    },
+    authToken: {
+        list: {
+            api: 'iam',
+            reliesOnService: ['user'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'userId'],
+            filterValue: ['compartmentId', 'id'],
+            filterConfig: [true, false],
+        }
+    },
+
+    customerSecretKey: {
+        list: {
+            api: 'iam',
+            reliesOnService: ['user'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'userId'],
+            filterValue: ['compartmentId', 'id'],
+            filterConfig: [true, false],
+        }
+    },
     bucket: {
         list: {
             api: 'objectStore',

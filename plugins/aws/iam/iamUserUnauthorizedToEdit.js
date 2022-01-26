@@ -122,8 +122,7 @@ module.exports = {
             }
 
             // See if user has IAM full access inline policy
-            if (listUserPolicies.data.PolicyNames) {
-
+            if (listUserPolicies.data && listUserPolicies.data.PolicyNames) {
                 for (var up in listUserPolicies.data.PolicyNames) {
                     let policyName = listUserPolicies.data.PolicyNames[up];
 
