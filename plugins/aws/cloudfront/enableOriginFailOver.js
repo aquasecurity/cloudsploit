@@ -35,12 +35,12 @@ module.exports = {
 
         // loop through Instances for every reservation
         listDistributions.data.forEach(distribution => {
-            if (!distribution.OriginGroups || !distribution.OriginGroups.Quantity) {
-                helpers.addResult(results, 2,
-                    'CloudFront distribution does not have origin failover enabled.', 'global', distribution.ARN);
-            } else {
+            if (distribution.OriginGroups && distribution.OriginGroups.Quantity) {
                 helpers.addResult(results, 0,
                     'CloudFront distribution have origin failover enabled.', 'global', distribution.ARN);
+            } else {
+                helpers.addResult(results, 2,
+                    'CloudFront distribution does not have origin failover enabled.', 'global', distribution.ARN);
             }
         });
 
