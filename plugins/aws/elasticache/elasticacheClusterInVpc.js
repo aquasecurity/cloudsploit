@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensure that your ElastiCache clusters are provisioned within the AWS VPC platform.',
     more_info: 'Amazon ElastiCache clusters using EC2-VPC platform instead of EC2-Classic can bring multiple advantages such as better networking infrastructure, much more flexible control over access security .',
     link: 'https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/VPCs.EC.html',
-    recommended_action: 'ElastiCache clusters Available in VPC',
+    recommended_action: 'Create ElastiCache clusters within VPC network',
     apis: ['ElastiCache:describeCacheClusters'],
     run: function(cache, settings, callback) {
         var results = [];
