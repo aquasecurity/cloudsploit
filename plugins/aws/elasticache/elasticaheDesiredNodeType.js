@@ -59,7 +59,7 @@ module.exports = {
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `cluster does not have desired node type: ${cluster.CacheNodeType} and engine: ${cluster.Engine}`,
+                        `${cluster.Engine} cluster does not have desired node type: ${cluster.CacheNodeType}`,
                         region, resource);
                 }
             }
