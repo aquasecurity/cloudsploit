@@ -2,12 +2,12 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Secrets Manager Secret Rotation Enabled',
+    title: 'Secrets Manager In Use',
     category: 'Secrets Manager',
     domain: 'Identity and Access Management',
     description: 'Ensure that Amazon Secrets Manager service is being used in your account to manage all the credentials.',
     more_info: 'Amazon Secrets Manager helps you protect sensitive information needed to access your cloud applications, services and resources. Users and apps can use secrets manager to get the secrets stored with a call to Secrets Manager API, enhancing access security.',
-    recommended_action: 'Enable Secrets Manager service in your AWS account.',
+    recommended_action: 'Use Secrets Manager service to store sensitive information in your AWS account.',
     apis: ['SecretsManager:listSecrets'],
     link: 'https://docs.aws.amazon.com/secretsmanager/latest/userguide/asm_access.html',
 
@@ -27,15 +27,10 @@ module.exports = {
             }
 
             if (!listSecrets.data.length) {
-                helpers.addResult(results, 2, `Secrets Manager is not enabled for this region: ${helpers.addError(listSecrets)}`, region);
+                helpers.addResult(results, 2, `Secrets Manager is not enabled: ${helpers.addError(listSecrets)}`, region);
                 return rcb();
-            }
-
-            for (let secret of listSecrets.data) {
-                if (!secret.ARN) return rcb();
-
-                var resource = secret.ARN;
-                helpers.addResult(results, 0, 'Secrets Manager is enabled for this region', region, resource);
+            } else {
+                helpers.addResult(results, 0, 'Secrets Manager is enabled', region);
             }
 
             rcb();
