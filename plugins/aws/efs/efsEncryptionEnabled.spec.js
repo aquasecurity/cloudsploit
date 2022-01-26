@@ -279,22 +279,18 @@ describe('efsEncryptionEnabled', function () {
             efsEncryptionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('EFS: fs-f3fg4ht5 is unencrypted');
+                expect(results[0].message).to.include('is unencrypted');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
         
         it('should FAIL if EFS file systems more than 20 files are not encrypted', function (done) {
-            const cache = createCache([fileSystems[1]], [fileSystems[2]], [fileSystems[3]], [fileSystems[4]]
-                [fileSystems[5]], [fileSystems[6]],[fileSystems[7]], [fileSystems[8]], [fileSystems[9]],
-                [fileSystems[10]], [fileSystems[11]], [fileSystems[12]], [fileSystems[13]], [fileSystems[14]],
-                [fileSystems[15]],[fileSystems[16]], [fileSystems[17]], [fileSystems[18]], [fileSystems[19]],
-                [fileSystems[20]], [fileSystems[21]]);
+            const cache = createCache(fileSystems);
             efsEncryptionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('EFS: fs-f3fg4ht5 is unencrypted');
+                expect(results[0].message).to.include('More than 20 EFS systems are unencrypted');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
