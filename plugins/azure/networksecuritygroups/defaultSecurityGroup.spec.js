@@ -11,8 +11,7 @@ const networkSecurityGroups = [
         "provisioningState": "Succeeded",
         "resourceGuid": "4a6b1ca1-a123-4829-a25d-1a6bcde3fg45",
         "securityRules": [],
-        "defaultSecurityRules": [
-            {
+        "defaultSecurityRules": [{
                 "name": "DenyAllInBound",
                 "id": "/subscriptions/dce9d1sa-ebf6-437f-a1b2-28fc0d22117e/resourceGroups/test-rg/providers/Microsoft.Network/networkSecurityGroups/aadds-nsg/defaultSecurityRules/DenyAllInBound",
                 "etag": "W/\"a1bb27cd-711f-4ede-b673-2fe8e7e07eee\"",
@@ -68,54 +67,27 @@ const networkSecurityGroups = [
         "provisioningState": "Succeeded",
         "resourceGuid": "12a3456b-7dd8-4d9e-aa71-99cdc67b4506",
         "securityRules": [],
-        "defaultSecurityRules": [
-        {
-            "name": "DenyAllInBound",
-            "id": "/subscriptions/dce9d1sa-ebf6-437f-a1b2-28fc0d22117e/resourceGroups/test-rg/providers/Microsoft.Network/networkSecurityGroups/test-vm-1-nsg/defaultSecurityRules/DenyAllInBound",
-            "etag": "W/\"9479cb49-b812-4f0f-825b-2960bfcd14e3\"",
-            "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
-            "properties": {
-            "provisioningState": "Succeeded",
-            "description": "Deny all inbound traffic",
-            "protocol": "*",
-            "sourcePortRange": "*",
-            "access": "Deny",
-            "priority": 65500,
-            "direction": "Inbound",
-            "sourcePortRanges": [],
-            "destinationPortRanges": [],
-            "sourceAddressPrefixes": [],
-            "destinationAddressPrefixes": []
-            }
-        },
-        {
+        "defaultSecurityRules": [{
             "name": "DenyAllOutBound",
             "id": "/subscriptions/dce9d1sa-ebf6-437f-a1b2-28fc0d22117e/resourceGroups/test-rg/providers/Microsoft.Network/networkSecurityGroups/test-vm-1-nsg/defaultSecurityRules/DenyAllOutBound",
             "etag": "W/\"9479cb49-b812-4f0f-825b-2960bfcd14e3\"",
             "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
             "properties": {
-            "provisioningState": "Succeeded",
-            "description": "Deny all outbound traffic",
-            "protocol": "*",
-            "sourcePortRange": "*",
-            "destinationPortRange": "*",
-            "sourceAddressPrefix": "*",
-            "destinationAddressPrefix": "*",
-            "access": "Deny",
-            "priority": 65500,
-            "direction": "Outbound",
-            "sourcePortRanges": [],
-            "destinationPortRanges": [],
-            "sourceAddressPrefixes": [],
-            "destinationAddressPrefixes": []
+                "provisioningState": "Succeeded",
+                "description": "Deny all outbound traffic",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Deny",
+                "priority": 65500,
+                "direction": "Outbound",
             }
-        }
-        ],
-        "networkInterfaces": [
-        {
+        }],
+        "networkInterfaces": [{
             "id": "/subscriptions/dce9d1sa-ebf6-437f-a1b2-28fc0d22117e/resourceGroups/test-rg/providers/Microsoft.Network/networkInterfaces/test-vm-1969"
-        }
-        ]
+        }]
     },
     {
         "name": "test-vm-1-nsg",
@@ -127,11 +99,9 @@ const networkSecurityGroups = [
         "resourceGuid": "12a3456b-7dd8-4d9e-aa71-99cdc67b4506",
         "securityRules": [],
         "defaultSecurityRules": [],
-        "networkInterfaces": [
-        {
+        "networkInterfaces": [{
             "id": "/subscriptions/dce9d1sa-ebf6-437f-a1b2-28fc0d22117e/resourceGroups/test-rg/providers/Microsoft.Network/networkInterfaces/test-vm-1969"
-        }
-        ]
+        }]
     }
 ];
 
