@@ -96,7 +96,7 @@ describe('efsEncryptionEnabled', function () {
         });
         
         it('should FAIL if EFS file systems more than 20 files are not encrypted', function (done) {
-            const cache = createCache([fileSystems[1]], [fileSystems[2]], [fileSystems[3]]);
+            const cache = createCache([fileSystems[1]], [fileSystems[2]]);
             efsEncryptionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
