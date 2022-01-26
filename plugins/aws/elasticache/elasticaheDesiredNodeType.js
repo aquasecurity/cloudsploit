@@ -55,7 +55,7 @@ module.exports = {
                 if (cluster.CacheNodeType && cluster.CacheNodeType.length && cluster.Engine &&
                     config.elasticache_desired_node_type.includes(cluster.CacheNodeType)) {
                     helpers.addResult(results, 0,
-                        `cluster has desired node type: ${cluster.CacheNodeType} and engine: ${cluster.Engine} `,
+                        `${cluster.Engine} Cluster has desired node type: ${cluster.CacheNodeType}`,
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
