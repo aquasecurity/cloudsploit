@@ -13,7 +13,7 @@ const listClusters = [
             }
         },
         "NormalizedInstanceHours": 0,
-        "ClusterArn": "arn:aws:elasticmapreduce:us-east-1:101363889637:cluster/j-2C3R1T3QB6HBQ"
+        "ClusterArn": "arn:aws:elasticmapreduce:us-east-1:000011112222:cluster/j-2C3R1T3QB6HBQ"
     },
     {
         "Id": "j-2GWDFSLQDWY54",
@@ -30,7 +30,7 @@ const listClusters = [
             }
         },
         "NormalizedInstanceHours": 0,
-        "ClusterArn": "arn:aws:elasticmapreduce:us-east-1:101363889637:cluster/j-2GWDFSLQDWY54"
+        "ClusterArn": "arn:aws:elasticmapreduce:us-east-1:000011112222:cluster/j-2GWDFSLQDWY54"
     },
 ];
 
