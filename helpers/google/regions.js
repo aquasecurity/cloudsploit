@@ -31,6 +31,7 @@ var regions = [
     'australia-southeast2',         // Melbourne
 ];
 
+
 var zones = {
     'us-east1'                      : ['us-east1-b', 'us-east1-c', 'us-east1-d'],
     'us-east4'                      : ['us-east4-a', 'us-east4-b', 'us-east4-c'],

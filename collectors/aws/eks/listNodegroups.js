@@ -1,7 +1,8 @@
 var AWS = require('aws-sdk');
 var async = require('async');
+var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, callback) {
+module.exports = function(AWSConfig, collection, retries, callback) {
     var eks = new AWS.EKS(AWSConfig);
 
     async.eachLimit(collection.eks.listClusters[AWSConfig.region].data, 10, function(cluster, cb){
@@ -12,7 +13,7 @@ module.exports = function(AWSConfig, collection, callback) {
             clusterName: cluster
         };
 
-        eks.listNodegroups(params, function(err, data) {
+        helpers.makeCustomCollectorCall(eks, 'listNodegroups', params, retries, null, null, null, function(err, data) {
             if (err) {
                 collection.eks.listNodegroups[AWSConfig.region][cluster].err = err;
             }
