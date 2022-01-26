@@ -20,7 +20,6 @@ module.exports = {
             default: 'awscmk'
         }
     },
-   
 
     run: function(cache, settings, callback) {
         var results = [];
