@@ -46,7 +46,7 @@ module.exports = {
                 var supportedPlatforms = describeAccountAttributes.data.find(attribute => attribute.AttributeName == 'supported-platforms');
 
                 if (supportedPlatforms && supportedPlatforms.AttributeValues) {
-                    let ec2ClassicFound = supportedPlatforms.AttributeValues.find(value => value.AttributeValue === 'EC2');
+                    let ec2ClassicFound = supportedPlatforms.AttributeValues.find(value => value.AttributeValue && value.AttributeValue.toUpperCase() === 'VPC');
                     if (!ec2ClassicFound) {
                         helpers.addResult(results, 0, 'No ec2-classic instance found', region);
                         return rcb();
