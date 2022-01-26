@@ -34,12 +34,12 @@ module.exports = {
 
         // loop through Instances for every reservation
         listDistributions.data.forEach(distribution => {
-            if (!distribution.DefaultCacheBehavior || !distribution.DefaultCacheBehavior.Compress) {
-                helpers.addResult(results, 2,
-                    'CloudFront distribution is not currently configured to compress files automatically', 'global', distribution.ARN);
-            } else {
+            if (distribution.DefaultCacheBehavior && distribution.DefaultCacheBehavior.Compress) {
                 helpers.addResult(results, 0,
-                    'CloudFront distribution is currently configured to compress files automatically', 'global', distribution.ARN);
+                    'CloudFront distribution is configured to compress files automatically', 'global', distribution.ARN);
+            } else {
+                helpers.addResult(results, 2,
+                    'CloudFront distribution is not configured to compress files automatically', 'global', distribution.ARN);
             }
         });
 
