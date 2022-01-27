@@ -60,6 +60,15 @@ module.exports = {
                 return rcb();
             }
 
+            var listKeys = helpers.addSource(cache, source,
+                ['kms', 'listKeys', region]);
+
+            if (!listKeys || listKeys.err || !listKeys.data) {
+                helpers.addResult(results, 3,
+                    `Unable to list KMS keys: ${helpers.addError(listKeys)}`, region);
+                return rcb();
+            }
+
             async.each(listStreams.data, function(stream, cb){
 
                 var describeStream = helpers.addSource(cache, source,

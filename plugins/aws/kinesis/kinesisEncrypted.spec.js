@@ -192,7 +192,7 @@ describe('kinesisEncrypted', function () {
         });
 
         it('should FAIL if The Kinesis stream does not use a KMS key for SSE', function (done) {
-            const cache = createCache([listStreams[0]],listKeys, describeStream[1], describeKey[1]);
+            const cache = createCache([listStreams[0]], listKeys, describeStream[1], describeKey[1]);
             kinesisEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -203,7 +203,7 @@ describe('kinesisEncrypted', function () {
         });
 
         it('should WARN if Kinesis stream uses the default KMS key', function (done) {
-            const cache = createCache([listStreams[0]],listKeys, describeStream[0], describeKey[1]);
+            const cache = createCache([listStreams[0]], listKeys, describeStream[0], describeKey[1]);
             kinesisEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(1);
@@ -230,6 +230,7 @@ describe('kinesisEncrypted', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to query for Kinesis streams');
                 done();
             });
         });
@@ -240,6 +241,7 @@ describe('kinesisEncrypted', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to list KMS keys');
                 done();
             });
         });
