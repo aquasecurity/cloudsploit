@@ -37,23 +37,23 @@ const createCache = (instances, instancesErr) => {
 
 describe('dmsPubliclyAccessibleInstances', function () {
     describe('run', function () {
-        it('should PASS if DMS replication instances are not publicly accessible.', function (done) {
+        it('should PASS if DMS replication instance is not publicly accessible.', function (done) {
             const cache = createCache([describeReplicationInstances[1]]);
             dmsPubliclyAccessibleInstances.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('DMS replication instances are not publicly accessible.');
+                expect(results[0].message).to.include('DMS replication instance is not publicly accessible.');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
 
-        it('should FAIL if DMS replication instances are publicly accessible.', function (done) {
+        it('should FAIL if DMS replication instance is publicly accessible.', function (done) {
             const cache = createCache([describeReplicationInstances[0]]);
             dmsPubliclyAccessibleInstances.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('DMS replication instances are publicly accessible.');
+                expect(results[0].message).to.include('DMS replication instance is publicly accessible.');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
@@ -76,6 +76,7 @@ describe('dmsPubliclyAccessibleInstances', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to list DMS replication instances');
                 done();
             });
         });
