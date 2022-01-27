@@ -266,22 +266,24 @@ describe('firehoseEncrypted', function () {
             });
         });
 
-        it('should UNKNOWN if Unable to query for firehose delivery streams', function (done) {
-            const cache = createCache(null, null, { message: "Unable to Unable to query Firehose for delivery streams" });
+        it('should UNKNOWN if Unable to list Firehose delivery streams', function (done) {
+            const cache = createCache(null, null, { message: "Unable to list Firehose delivery streams" });
             firehoseEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to list Firehose delivery streams');
                 done();
             });
         });
 
         it('should UNKNOWN if unable to query Firehose for delivery streams', function (done) {
-            const cache = createCache([listDeliveryStreams[0]], null, { message: "Unable to Unable to query Firehose for delivery streams" });
+            const cache = createCache([listDeliveryStreams[0]], null, null,  { message: "Unable to Unable to query Firehose for delivery streams" });
             firehoseEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to query Firehose for delivery streams');
                 done();
             });
         });

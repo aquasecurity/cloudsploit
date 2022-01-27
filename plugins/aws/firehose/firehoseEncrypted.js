@@ -31,7 +31,7 @@ module.exports = {
 
             if (listDeliveryStreams.err) {
                 helpers.addResult(results, 3,
-                    'Unable to query for firehose delivery streams: ' + helpers.addError(listDeliveryStreams), region);
+                    'Unable to list Firehose delivery streams: ' + helpers.addError(listDeliveryStreams), region);
                 return rcb();
             }
 
