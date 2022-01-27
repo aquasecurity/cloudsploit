@@ -295,6 +295,7 @@ module.exports = {
         'elasticacheNodesCount'         : require(__dirname + '/plugins/aws/elasticache/elasticacheNodesCount.js'),
         'elasticacheRedisMultiAZ'       : require(__dirname + '/plugins/aws/elasticache/elasticacheRedisMultiAZ.js'),
         'idleElastiCacheNode'           : require(__dirname + '/plugins/aws/elasticache/idleElastiCacheNode.js'),
+        'elasticaheDesiredNodeType'     : require(__dirname + '/plugins/aws/elasticache/elasticaheDesiredNodeType.js'),
 
         'domainAutoRenew'               : require(__dirname + '/plugins/aws/route53/domainAutoRenew.js'),
         'domainExpiry'                  : require(__dirname + '/plugins/aws/route53/domainExpiry.js'),
