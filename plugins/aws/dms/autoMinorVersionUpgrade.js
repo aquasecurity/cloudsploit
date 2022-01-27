@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Application Integration',
     description: 'Ensure that your Amazon Database Migration Service (DMS) replication instances have the Auto Minor Version Upgrade feature enabled',
     more_info: 'AWS Database Migration Service (AWS DMS) helps you migrate databases to AWS quickly and securely. The DMS service releases engine version upgrades regularly to introduce new software features, bug fixes, security patches and performance improvements.',
-    recommended_action: 'Enable Auto Minor Version Upgrade feature in order to receive automatically minor engine upgrades for better working and modifications.',
+    recommended_action: 'Enable Auto Minor Version Upgrade feature in order to automatically receive minor engine upgrades for improved performance and security',
     link: 'https://docs.aws.amazon.com/dms/latest/userguide/CHAP_ReplicationInstance.Modifying.html',
     apis: ['DMS:describeReplicationInstances'],
 
@@ -39,13 +39,13 @@ module.exports = {
 
                 let resource = instance.ReplicationInstanceArn;
 
-                if (instance.AutoMinorVersionUpgrade == true) {
+                if (instance.AutoMinorVersionUpgrade) {
                     helpers.addResult(results, 0,
-                        'Replication instances have auto minor version upgrade enabled.',
+                        'Replication instance has auto minor version upgrade enabled',
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'Replication instances does not have auto minor version upgrade enabled.',
+                        'Replication instance does not have auto minor version upgrade enabled',
                         region, resource);
                 }
             }
