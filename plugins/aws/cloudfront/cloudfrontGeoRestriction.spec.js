@@ -61,7 +61,7 @@ describe('cloudfrontGeoRestriction', function () {
             cloudfrontGeoRestriction.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Geo restriction is enabled within CloudFront distribution.');
+                expect(results[0].message).to.include('Geo restriction feature is enabled within CloudFront distribution.');
                 expect(results[0].region).to.equal('global');
                 done();
             });
