@@ -126,7 +126,7 @@ const listKeys = [
     }
 ]
 
-const createCache = (queues,  keys, kmsAliases, getQueueAttributes, describeKey, queuesErr, kmsAliasesErr, keysErr, describeKeyErr, getQueueAttributesErr) => {
+const createCache = (queues, keys, kmsAliases, getQueueAttributes, describeKey, queuesErr, kmsAliasesErr, keysErr, describeKeyErr, getQueueAttributesErr) => {
 
     var keyId = (keys && keys.length ) ? keys[0].KeyId : null;
     var queue = (queues && queues.length) ? queues[0]: null;
@@ -218,8 +218,9 @@ describe('sqsEncryptionEnabled', function () {
             });
         });
 
-        it('should UNKNOWN if unable to list SQS queues', function (done) {
-            const cache = createCache(null, null, null, { message: "Unable to list SQS queues" });
+        it('should UNKNOWN if unable to query SQS queues', function (done) {
+            const cache = createCache([listQueues[0]], listKeys, listAliases, null, null, null, null, 
+                null, null,  { message: "Unable to query SQS queues" });
             sqsEncryptionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
@@ -230,7 +231,7 @@ describe('sqsEncryptionEnabled', function () {
         });
 
         it('should UNKNOWN if unable to list KMS keys', function (done) {
-            const cache = createCache(listQueues, null, null, null, { message: "Unable to list KMS keys" });
+            const cache = createCache(listQueues, null, null, null, null, null, null, { message: "Unable to list KMS keys" });
             sqsEncryptionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
