@@ -198,6 +198,7 @@ module.exports = {
         'emrClusterInVPC'               : require(__dirname + '/plugins/aws/emr/emrClusterInVPC.js'),
         'emrEncryptionInTransit'        : require(__dirname + '/plugins/aws/emr/emrEncryptionInTransit.js'),
         'emrEncryptionAtRest'           : require(__dirname + '/plugins/aws/emr/emrEncryptionAtRest.js'),
+        'emrDesiredInstanceType'        : require(__dirname + '/plugins/aws/emr/emrDesiredInstanceType.js'),
         'emrInstanceCount'              : require(__dirname + '/plugins/aws/emr/emrInstanceCount.js'),
 
         'esAccessFromIps'               : require(__dirname + '/plugins/aws/es/esAccessFromIps.js'),
