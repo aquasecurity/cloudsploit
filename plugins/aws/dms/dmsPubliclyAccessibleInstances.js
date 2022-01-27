@@ -39,7 +39,7 @@ module.exports = {
 
                 let resource = instance.ReplicationInstanceArn;
 
-                if (instance.PubliclyAccessible == false) {
+                if (!instance.PubliclyAccessible) {
                     helpers.addResult(results, 0,
                         'DMS replication instances are not publicly accessible.',
                         region, resource);
