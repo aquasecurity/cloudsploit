@@ -48,7 +48,7 @@ module.exports = {
             }
            
             for (var cluster of describeCacheClusters.data) {
-                if (!cluster.ARN) continue;
+                if (!cluster.ARN || !cluster.Engine) continue;
 
                 var resource = cluster.ARN;
 
