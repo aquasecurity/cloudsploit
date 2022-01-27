@@ -77,8 +77,8 @@ describe('enableOriginFailOver', function () {
             });
         });
 
-        it('should UNKNOWN if unable to list distributions', function (done) {
-            const cache = createCache([], { message: 'Unable to list distributions' });
+        it('should UNKNOWN if query for CloudFront distributions', function (done) {
+            const cache = createCache([], { message: 'query for CloudFront distributions' });
             enableOriginFailOver.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
