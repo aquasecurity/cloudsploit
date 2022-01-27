@@ -6,7 +6,7 @@ module.exports = {
     category: 'EMR',
     domain: 'Compute',
     description: 'Ensure that your Amazon Elastic MapReduce (EMR) clusters are provisioned using the AWS VPC platform instead of EC2-Classic platform.',
-    more_info: 'AWS EMR clusters using EC2-VPC platform instead of EC2-Classic can bring multiple advantages such as better networking infrastructure, much more flexible control over access security .',
+    more_info: 'AWS EMR clusters using VPC platform instead of EC2-Classic can bring multiple advantages such as better networking infrastructure, much more flexible control over access security .',
     link: 'https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-vpc-launching-job-flows.htmll',
     recommended_action: 'EMR clusters Available in VPC',
     apis: ['EC2:describeAccountAttributes','EMR:listClusters', 'EMR:describeCluster'],
