@@ -157,7 +157,7 @@ const listKeys = [
     }
 ]
 
-const createCache = (streams,  keys, kmsAliases, describeStream, describeKey, streamsErr, kmsAliasesErr, keysErr, describeKeyErr, describeStreamErr) => {
+const createCache = (streams, keys, kmsAliases, describeStream, describeKey, streamsErr, kmsAliasesErr, keysErr, describeKeyErr, describeStreamErr) => {
 
     var keyId = (keys && keys.length ) ? keys[0].KeyId : null;
     var stream = (streams && streams.length) ? streams[0]: null;
@@ -249,23 +249,24 @@ describe('kinesisDataStreamsEncrypted', function () {
             });
         });
 
-        it('should UNKNOWN if unable to list Kinesis streams', function (done) {
-            const cache = createCache(null, null, null, null, null, { message: "Unable to list Kinesis streams" });
+        it('should UNKNOWN if unable to to query for Kinesis streams', function (done) {
+            const cache = createCache([listStreams[0]], listKeys, listAliases, null, null, null, null, null, null ,{ message: "Unable to to query for Kinesis streams" });
             kinesisDataStreamsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for Kinesis streams');
+                expect(results[0].message).to.include('Unable to query Kinesis for stream');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
 
         it('should UNKNOWN if unable to list KMS keys', function (done) {
-            const cache = createCache(listStreams, null, null, null, { message: "Unable to list KMS keys" });
+            const cache = createCache(listStreams, null, null, null, null, null, null, { message: "Unable to list KMS keys" });
             kinesisDataStreamsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to list KMS keys');
                 done();
             });
         });
