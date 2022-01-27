@@ -69,7 +69,8 @@ module.exports = {
                 }
 
                 if (describeCluster.data.Cluster.Ec2InstanceAttributes &&
-                describeCluster.data.Cluster.Ec2InstanceAttributes.Ec2SubnetId !='') {
+                    describeCluster.data.Cluster.Ec2InstanceAttributes.Ec2SubnetId &&
+                    describeCluster.data.Cluster.Ec2InstanceAttributes.Ec2SubnetId.length) {
                     helpers.addResult(results, 0,
                         `EMR cluster  "${cluster.Name}" is in VPC`, region, resource);
                 } else {
