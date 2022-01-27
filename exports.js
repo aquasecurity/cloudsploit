@@ -70,7 +70,7 @@ module.exports = {
         'devOpsGuruNotificationEnabled' : require(__dirname + '/plugins/aws/devopsguru/devOpsGuruNotificationEnabled.js'),
        
         'dmsEncryptionEnabled'          : require(__dirname + '/plugins/aws/dms/dmsEncryptionEnabled.js'),
-        'dmsMultiAZFeatureEnabled'     : require(__dirname + '/plugins/aws/dms/dmsMultiAZFeatureEnabled.js'),
+        'dmsMultiAZFeatureEnabled'      : require(__dirname + '/plugins/aws/dms/dmsMultiAZFeatureEnabled.js'),
 
         'dynamoKmsEncryption'           : require(__dirname + '/plugins/aws/dynamodb/dynamoKmsEncryption.js'),
         'daxClusterEncryption'          : require(__dirname + '/plugins/aws/dynamodb/daxClusterEncryption.js'),

@@ -39,13 +39,13 @@ module.exports = {
 
                 let resource = instance.ReplicationInstanceArn;
 
-                if (instance.MultiAZ == true) {
+                if (instance.MultiAZ) {
                     helpers.addResult(results, 0,
-                        'DMS replication instances have Multi-AZ feature enabled.',
+                        'DMS replication instance has Multi-AZ feature enabled',
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'DMS replication instances does not have Multi-AZ feature enabled.',
+                        'DMS replication instance does not have Multi-AZ feature enabled',
                         region, resource);
                 }
             }
