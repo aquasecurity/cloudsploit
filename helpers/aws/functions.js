@@ -930,30 +930,18 @@ function getSubnetRTMap(subnets, routeTables) {
     return subnetRTMap;
 }
 
-function isRateError(err) {
-    let isError=false;
-    let rateError = [{message: 'rate'}];
-    for (var e in rateError) {
-        if (err &&
-            err.statusCode &&
-            rateError[e] &&
-            rateError[e].statusCode &&
-            rateError[e].statusCode.filter(code => {
-                return code == err.statusCode;
-            }).length){
-            isError=true;
-            break;
-        } else if (err &&
-            rateError[e] &&
-            rateError[e].message &&
-            err.message &&
-            err.message.toLowerCase().indexOf(rateError[e].message.toLowerCase())>-1){
-            isError=true;
-            break;
-        }
+var isRateError = function(err) {
+    let isError = false;
+    var rateError = {message: 'rate', statusCode: 429};
+    if (err && err.statusCode && rateError.statusCode == err.statusCode){
+        isError = true;
+    } else if (err && rateError && rateError.message && err.message &&
+        err.message.toLowerCase().indexOf(rateError.message.toLowerCase()) > -1){
+        isError = true;
     }
+
     return isError;
-}
+};
 
 function makeCustomCollectorCall(executor, callKey, params, retries, apiRetryAttempts=2, apiRetryCap=1000, apiRetryBackoff=500, callback) {
     async.retry({
@@ -968,14 +956,13 @@ function makeCustomCollectorCall(executor, callKey, params, retries, apiRetryAtt
             console.log(`Trying ${callKey} again in: ${retry_seconds/1000} seconds`);
             retries.push({seconds: Math.round(retry_seconds/1000)});
             return retry_seconds;
+        },
+        errorFilter: function(err) {
+            return isRateError(err);
         }
     }, function(cb) {
         executor[callKey](params, function(err, data) {
-            if (isRateError(err)) {
-                return cb(err);
-            } else {
-                return cb(err, data);
-            }
+            return cb(err, data);
         });
     }, function(err, result) {
         callback(err, result);
