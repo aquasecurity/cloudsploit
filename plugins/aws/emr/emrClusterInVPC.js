@@ -46,8 +46,8 @@ module.exports = {
                 var supportedPlatforms = describeAccountAttributes.data.find(attribute => attribute.AttributeName == 'supported-platforms');
 
                 if (supportedPlatforms && supportedPlatforms.AttributeValues) {
-                    let vpcPlatform = supportedPlatforms.AttributeValues.find(value => value.AttributeValue && value.AttributeValue.toUpperCase() === 'VPC');
-                    if (vpcPlatform) {
+                    let ec2ClassicFound = supportedPlatforms.AttributeValues.find(value => value.AttributeValue && value.AttributeValue.toUpperCase() === 'EC2');
+                    if (!ec2ClassicFound) {
                         helpers.addResult(results, 0, 'EC2 account attribute allows only VPC supported platform', region);
                         return rcb();
                     }
