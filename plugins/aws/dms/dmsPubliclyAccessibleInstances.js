@@ -5,7 +5,7 @@ module.exports = {
     title: 'DMS Publicly Accessible Instances',
     category: 'DMS',
     domain: 'Application Integration',
-    description: 'Ensure that in order to avoid exposing sensitive data your Amazon Database Migration Service (DMS) are not publicly accessible.',
+    description: 'Ensure that Amazon Database Migration Service (DMS) instances are not publicly accessible.',
     more_info: 'An AWS DMS replication instance can have one public IP address and one private IP address. If you uncheck (disable) the box for Publicly accessible, then the replication instance has only a private IP address. that prevents from exposure of data to other users',
     recommended_action: 'Disable Publicly Accessible feature in order to have private IP address and avoid exposing of private data.',
     link: 'https://docs.aws.amazon.com/dms/latest/userguide/CHAP_ReplicationInstance.PublicPrivate.html',
