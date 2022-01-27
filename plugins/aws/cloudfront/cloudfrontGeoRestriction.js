@@ -42,7 +42,7 @@ module.exports = {
                     'Geo restriction feature is enabled within CloudFront distribution.', 'global', distribution.ARN);
             } else {
                 helpers.addResult(results, 2,
-                    'Geo restriction is not enabled within CloudFront distribution.', 'global', distribution.ARN);
+                    'Geo restriction feature is not enabled within CloudFront distribution.', 'global', distribution.ARN);
             }
         });
 
