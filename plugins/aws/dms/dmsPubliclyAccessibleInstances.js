@@ -41,11 +41,11 @@ module.exports = {
 
                 if (!instance.PubliclyAccessible) {
                     helpers.addResult(results, 0,
-                        'DMS replication instances are not publicly accessible.',
+                        'DMS replication instance is not publicly accessible.',
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'DMS replication instances are publicly accessible.',
+                        'DMS replication instance is publicly accessible.',
                         region, resource);
                 }
             }
