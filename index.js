@@ -44,6 +44,7 @@ parser.add_argument('--china', {
 parser.add_argument('--csv', { help: 'Output: CSV file' });
 parser.add_argument('--json', { help: 'Output: JSON file' });
 parser.add_argument('--junit', { help: 'Output: Junit file' });
+parser.add_argument('--aws-s3-bucket', { help: 'Upload to: AWS S3 bucket'});
 parser.add_argument('--console', {
     help: 'Console output format. Default: table',
     choices: ['none', 'text', 'table'],
