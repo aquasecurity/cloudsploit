@@ -10,6 +10,12 @@ module.exports = {
     link: 'https://cloud.google.com/storage/docs/uniform-bucket-level-access#should-you-use',
     recommended_action: 'Make sure that storage buckets have uniform level access enabled',
     apis: ['buckets:list'],
+    remediation_min_version: '202201291836',
+    remediation_description: 'Unfiorm Level Access will be enabled on storage buckets',
+    apis_remediate: ['buckets:list'],
+    actions: {remediate:['storage.buckets.update'], rollback:['storage.buckets.update']},
+    permissions: {remediate: ['storage.buckets.setIamPolicy', 'storage.buckets.update'], rollback: ['storage.buckets.setIamPolicy','storage.buckets.update']},
+    realtime_triggers: ['storage.buckets.update', 'storage.buckets.create'],
   
     run: function(cache, settings, callback) {
         var results = [];
@@ -55,6 +61,41 @@ module.exports = {
         }, function(){
             // Global checking goes here
             callback(null, results, source);
+        });
+    },
+    remediate: function(config, cache, settings, resource, callback) {
+        var remediation_file = settings.remediation_file;
+
+        // inputs specific to the plugin
+        var pluginName = 'bucketUniformAccess';
+        var baseUrl = 'https://storage.googleapis.com/storage/v1/{resource}';
+        var method = 'PUT';
+        var putCall = this.actions.remediate;
+
+        // create the params necessary for the remediation
+        var body = {
+            iamConfiguration: {
+                uniformBucketLevelAccess: {
+                    enabled: true
+                }
+            }
+        };
+        // logging
+        remediation_file['pre_remediate']['actions'][pluginName][resource] = {
+            'UniformBucketLevelAccess': 'Disabled'
+        };
+
+        helpers.remediatePlugin(config, method, body, baseUrl, resource, remediation_file, putCall, pluginName, function(err, action) {
+            if (err) return callback(err);
+            if (action) action.action = putCall;
+
+
+            remediation_file['post_remediate']['actions'][pluginName][resource] = action;
+            remediation_file['remediate']['actions'][pluginName][resource] = {
+                'Action': 'Enabled'
+            };
+
+            callback(null, action);
         });
     }
 };
