@@ -408,11 +408,42 @@ var execute = function(LocalGoogleConfig, collection, service, callObj, callKey,
     }
 };
 
+function remediatePlugin(config, method, body, baseUrl, resource, remediation_file, putCall, pluginName, callback) {
+    makeRemediationCall(config, method, body, baseUrl, resource, function(err) {
+        if (err) {
+            remediation_file['remediate']['actions'][pluginName]['error'] = err;
+            return callback(err, null);
+        }
+
+        let action = body;
+        return callback(null, action);
+    });
+}
+function makeRemediationCall(GoogleConfig, method, body, baseUrl, resource, callCb) {
+    authenticate(GoogleConfig).then(client => {
+        if (resource) {
+            baseUrl = baseUrl.replace(/\{resource\}/g, resource);
+        }
+        client.request({
+            url: baseUrl,
+            method,
+            data: body
+        }, function(err, res) {
+            if (err) {
+                callCb(err);
+            } else if (res && res.data) {
+                callCb(null);
+            }
+        });
+    });
+}
+
 var helpers = {
     regions: regions,
     MAX_REGIONS_AT_A_TIME: 6,
     authenticate: authenticate,
     processCall: processCall,
+    remediatePlugin: remediatePlugin,
     PROTECTION_LEVELS: ['unspecified', 'default', 'cloudcmek', 'cloudhsm', 'external'],
 };
 
