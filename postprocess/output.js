@@ -28,10 +28,21 @@ function log(msg, settings) {
     if (!settings.mocha) console.log(msg);
 }
 
+function generateTimeStamp(){
+    let date_ob = new Date();
+
+    let date = ('0' + date_ob.getDate()).slice(-2);
+    let month = ('0' + (date_ob.getMonth() + 1)).slice(-2);
+    let year = date_ob.getFullYear();
+    let hours = date_ob.getHours();
+    let minutes = date_ob.getMinutes();
+    return `${year}${month}${date}${hours}${minutes}`;
+}
+
 function uploadToAWSS3Bucket(stream, fileName, bucketName){
     const params = {
         Bucket: bucketName || 'cloudsploit-output',
-        Key: fileName,
+        Key: `${fileName}-${generateTimeStamp()}`,
         Body: stream
     };
 
@@ -46,7 +57,7 @@ function uploadToAWSS3Bucket(stream, fileName, bucketName){
         console.log(`Finished uploading the file ${fileName} to Bucket ${bucketName}.`);
         
     }).promise();
-};
+}
 
 // For the console output, we don't need any state since we can write
 // directly to the console.
