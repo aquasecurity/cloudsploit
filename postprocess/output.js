@@ -40,9 +40,11 @@ function generateTimeStamp(){
 }
 
 function uploadToAWSS3Bucket(stream, fileName, bucketName){
+    var modifiedFileName = fileName.replace(/(\.[\w\d_-]+)$/i, `_${generateTimeStamp()}$1`);
+
     const params = {
         Bucket: bucketName || 'cloudsploit-output',
-        Key: `${fileName}-${generateTimeStamp()}`,
+        Key: modifiedFileName,
         Body: stream
     };
 
