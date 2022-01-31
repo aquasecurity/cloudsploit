@@ -68,7 +68,7 @@ module.exports = {
                         describeVirtualGateway.err ||
                         !describeVirtualGateway.data) {
                         helpers.addResult(results, 3,
-                            'Unable to query AppMesh virtual gateway description: ' + helpers.addError(describeVirtualGateway), region, resource);
+                            'Unable to describe AppMesh virtual gateway: ' + helpers.addError(describeVirtualGateway), region, resource);
                         continue;
                     }
 
