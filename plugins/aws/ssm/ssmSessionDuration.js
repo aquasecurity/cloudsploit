@@ -10,11 +10,28 @@ module.exports = {
     recommended_action: 'Terminate all the sessions which exceed the specified duration mentioned in settings.',
     link: 'https://docs.aws.amazon.com/systems-manager/latest/userguide/session-preferences-max-timeout.html',
     apis: ['SSM:describeSessions'],
+    settings: {
+        ssm_session_max_duration: {
+            name: 'Max Duration for SSM Session.',
+            description: 'Maximum duration for SSM session.',
+            regex: '^((1440)|(14[0-3][0-9]{1})|(1[0-3][0-9]{2})|([1-9][0-9]{2})|([1-9][0-9]{1})|([1-9]))$',
+            default: 5
+        }
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var acctRegion = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
+        var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
+
+        var sessionMaxDuration = settings.ssm_session_max_duration || this.settings.ssm_session_max_duration.default;
+        if (typeof sessionMaxDuration === 'string') {
+            sessionMaxDuration.match(this.settings.ssm_session_max_duration.regex);
+            sessionMaxDuration = parseInt(sessionMaxDuration);
+        }
 
         async.each(regions.ssm, function(region, rcb){
             var describeSessions = helpers.addSource(cache, source,
@@ -24,7 +41,7 @@ module.exports = {
 
             if (describeSessions.err || !describeSessions.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for active ssm sessions: ' + helpers.addError(describeSessions), region);
+                    'Unable to query for active SSM sessions: ' + helpers.addError(describeSessions), region);
                 return rcb();
             }
 
@@ -34,25 +51,25 @@ module.exports = {
                 return rcb();
             }
 
-            for (let session of describeSessions.data) {
-                let resource = session.SessionId;
-                let activeSessionTimeInMins = Math.floor((Math.abs(new Date() - new Date(session.StartDate)))/1000/60);
+            const uniqInstances = describeSessions.data.filter((value, index, self) =>
+                index === self.findIndex((t) => (t.Target === value.Target))
+            );
 
-                if (session.MaxSessionDuration) {
-                    if (session.MaxSessionDuration > activeSessionTimeInMins) {
+            for (let session of uniqInstances) {
+                var resource = `arn:${awsOrGov}:ec2:${region}:${accountId}:/instance/${session.Target}`;
+                let activeSessionTimeInMins = helpers.minutesBetween(new Date(), session.StartDate);
+
+                if (sessionMaxDuration) {
+                    if (sessionMaxDuration > activeSessionTimeInMins) {
                         helpers.addResult(results, 0,
                             `SSM Session duration length is ${activeSessionTimeInMins} minutes which is less than the \
-                            max time set in SSM Session Manager ${session.MaxSessionDuration} minutes`,
+                            max time set in SSM Session Manager ${sessionMaxDuration} minutes`,
                             region, resource);
                     } else {
                         helpers.addResult(results, 2,
                             `SSM Session duration length is ${activeSessionTimeInMins} minutes which is greater than \
                             the max time set in SSM Session Manager ${session.MaxSessionDuration} minutes`, region, resource);
                     }
-                } else {
-                    helpers.addResult(results, 1,
-                        'SSM Session max duration length is not set. Please set the maximum session duration \
-                        length in SSM Session Manager', region, resource);
                 }
             }
 
