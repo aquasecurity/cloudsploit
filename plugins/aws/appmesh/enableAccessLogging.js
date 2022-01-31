@@ -11,12 +11,10 @@ module.exports = {
     recommended_action: 'Modify App Mesh virtual gateways to configure access logging feature',
     apis: ['AppMesh:listMeshes', 'AppMesh:listVirtualGateways', 'AppMesh:describeVirtualGateway'],
     
-
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var region = helpers.regions(settings);
-        
 
         async.each(region.appmesh, function(region, rcb){
             var listMeshes = helpers.addSource(cache, source,
