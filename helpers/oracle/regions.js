@@ -2,6 +2,7 @@
 
 var regions = [
     'us-ashburn-1',
+    'il-jerusalem-1',
     'us-phoenix-1',
     'eu-frankfurt-1',
     'uk-london-1',
@@ -67,5 +68,7 @@ module.exports = {
     mountTarget: regions,
     namespace: regions,
     apiKey: ['default'],
-    authToken: ['default']
+    authToken: ['default'],
+    authToken: ['default'],
+    customerSecretKey: ['default']
 };
