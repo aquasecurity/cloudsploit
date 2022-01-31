@@ -2,13 +2,13 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Enable Access Logging for App Mesh Virtual Gateways',
+    title: 'App Mesh Virtual Gateway Access Logging',
     category: 'App Mesh',
     domain: 'Content Delivery',
-    description: 'Ensure that your Amazon App Mesh virtual gateways have access logging enabled and configured for all.',
-    more_info: 'The Amazon App Mesh virtual gateways Access Logging feature provide evidence for security audits and investigations, it also lets you keep an eye on application mesh user access and helps you meet compliance regulations. ',
+    description: 'Ensure that your Amazon App Mesh virtual gateways have access logging enabled.',
+    more_info: 'The Amazon App Mesh virtual gateways Access Logging feature provide evidence for security audits and investigations as well as let\'s you keep an eye on application mesh user access and helps you meet compliance regulations. ',
     link: 'https://docs.aws.amazon.com/app-mesh/latest/userguide/envoy-logs.html',
-    recommended_action: 'Enable the feature, configure the file path to write access logs, within the virtual gateway configuration settings.',
+    recommended_action: 'Modify App Mesh virtual gateways to configure access logging feature',
     apis: ['AppMesh:listMeshes', 'AppMesh:listVirtualGateways', 'AppMesh:describeVirtualGateway'],
     
 
@@ -57,7 +57,7 @@ module.exports = {
                 }
 
                 for (let gateway of listVirtualGateways.data.virtualGateways) {
-                    if (!gateway.arn) continue;
+                    if (!gateway.arn || gateway.virtualGatewayName) continue;
 
                     let resource = gateway.arn;
 
@@ -72,21 +72,20 @@ module.exports = {
                         continue;
                     }
 
-                    if (!describeVirtualGateway.data.virtualGateway ||
-                        !describeVirtualGateway.data.virtualGateway.spec ||
-                        !describeVirtualGateway.data.virtualGateway.spec.logging ||
-                        !describeVirtualGateway.data.virtualGateway.spec.logging.accessLog ||
-                        !describeVirtualGateway.data.virtualGateway.spec.logging.accessLog.file ||
-                        !describeVirtualGateway.data.virtualGateway.spec.logging.accessLog.file.path) {
-                        helpers.addResult(results, 2,
-                            'access logging is not enabled for Amazon App Mesh virtual gateways',
-                            region, resource);
-                        continue;         
-                    } else {
+                    if (describeVirtualGateway.data.virtualGateway &&
+                        describeVirtualGateway.data.virtualGateway.spec &&
+                        describeVirtualGateway.data.virtualGateway.spec.logging &&
+                        describeVirtualGateway.data.virtualGateway.spec.logging.accessLog &&
+                        describeVirtualGateway.data.virtualGateway.spec.logging.accessLog.file &&
+                        describeVirtualGateway.data.virtualGateway.spec.logging.accessLog.file.path &&
+                        describeVirtualGateway.data.virtualGateway.spec.logging.accessLog.file.path.length) {
                         helpers.addResult(results, 0,
-                            'access logging is enabled and configured for Amazon App Mesh virtual gateways',
+                            'App Mesh virtual gateway has access logging enabled',
                             region, resource);
-                        continue;
+                    } else {
+                        helpers.addResult(results, 2,
+                            'App Mesh virtual gateway does not have access logging enabled',
+                            region, resource);
                     }
                 }
             }
