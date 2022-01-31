@@ -5,9 +5,9 @@ module.exports = {
     title: 'SNS Appropriate Subscribers',
     category: 'SNS',
     domain: 'Application Integration',
-    description: 'Ensure that all your Amazon SNS subscriptions are inspected for appropriate subscribers',
+    description: 'Ensure that Amazon SNS subscriptions are valid and there are no unwanted subscribers.',
     more_info: 'Amazon Simple Notification Service (Amazon SNS) is a managed service that provides message delivery from publishers to subscribers. So check for appropriate subsribers in order to improve access security to your SNS topics. ',
-    recommended_action: 'Ensure that no unwanted subscribers are using the subscriptions periodically.',
+    recommended_action: 'Check for unwanted SNS subscriptions periodically',
     link: 'https://docs.aws.amazon.com/sns/latest/dg/sns-create-subscribe-endpoint-to-topic.html',
     apis: ['SNS:listSubscriptions'],
     settings: {

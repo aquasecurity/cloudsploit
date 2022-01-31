@@ -1771,7 +1771,7 @@ var postcalls = [
                 reliesOnCall: 'listTopics',
                 filterKey: 'TopicArn',
                 filterValue: 'TopicArn'
-            },
+            }
         },
         SQS: {
             getQueueAttributes: {
