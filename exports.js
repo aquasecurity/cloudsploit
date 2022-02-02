@@ -734,6 +734,10 @@ module.exports = {
         'excessivePolicyStatements'     : require(__dirname + '/plugins/oracle/identity/excessivePolicyStatements.js'),
         'policyLeastPrivilege'          : require(__dirname + '/plugins/oracle/identity/policyLeastPrivilege.js'),
         'usersEmailVerified'            : require(__dirname + '/plugins/oracle/identity/usersEmailVerified.js'),
+        'adminUserAPIKeys'              : require(__dirname + '/plugins/oracle/identity/adminUserAPIKeys.js'),
+        'userAuthTokenRotated'          : require(__dirname + '/plugins/oracle/identity/userAuthTokenRotated.js'),
+        'userCustomerSecretKeysRotated' : require(__dirname + '/plugins/oracle/identity/userCustomerSecretKeysRotated.js'),
+        'userAPIKeysRotated'            : require(__dirname + '/plugins/oracle/identity/userAPIKeysRotated.js'),
 
         'openSSH'                       : require(__dirname + '/plugins/oracle/networking/openSSH.js'),
         'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/oracle/networking/openOracleAutoDataWarehouse.js'),
