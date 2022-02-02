@@ -1,7 +1,8 @@
 var AWS = require('aws-sdk');
 var async = require('async');
+var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, callback) {
+module.exports = function(AWSConfig, collection, retries, callback) {
     var rds = new AWS.RDS(AWSConfig);
     async.eachLimit(collection.rds.describeDBParameterGroups[AWSConfig.region].data, 15, function(group, cb) {
         collection.rds.describeDBParameters[AWSConfig.region][group.DBParameterGroupName] = {};
@@ -35,9 +36,9 @@ module.exports = function(AWSConfig, collection, callback) {
             var localParams = JSON.parse(JSON.stringify(params || {}));
             if (marker) localParams['Marker'] = marker;
             if (marker) {
-                rds.describeDBParameters(localParams, paginateCb);
+                helpers.makeCustomCollectorCall(rds, 'describeDBParameters', localParams, retries, null, null, null, paginateCb);
             } else {
-                rds.describeDBParameters(params, paginateCb);
+                helpers.makeCustomCollectorCall(rds, 'describeDBParameters', params, retries, null, null, null, paginateCb);
             }
         }
 

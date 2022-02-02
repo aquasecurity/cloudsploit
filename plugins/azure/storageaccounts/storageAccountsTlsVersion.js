@@ -19,6 +19,12 @@ module.exports = {
             default: '1.2'
         }
     },
+    remediation_min_version: '202112312200',
+    remediation_description: 'TLS version 1.2 will be set for the affected Storage Accounts',
+    apis_remediate: ['storageAccounts:list'],
+    actions: {remediate:['storageAccounts:update'], rollback:['storageAccounts:update']},
+    permissions: {remediate: ['storageAccounts:update'], rollback: ['storageAccounts:update']},
+    realtime_triggers: ['microsoftstorage:storageaccounts:write'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -70,5 +76,49 @@ module.exports = {
         }, function() {
             callback(null, results, source);
         });
+    },
+    remediate: function(config, cache, settings, resource, callback) {
+        var remediation_file = settings.remediation_file;
+        var putCall = this.actions.remediate;
+
+        // inputs specific to the plugin
+        var pluginName = 'storageAccountsTlsVersion';
+        var baseUrl = 'https://management.azure.com/{resource}?api-version=2021-04-01';
+        var method = 'PATCH';
+
+        // for logging purposes
+        var saNameArr = resource.split('/');
+        var saName = saNameArr[saNameArr.length - 1];
+
+        // create the params necessary for the remediation
+        if (settings.region) {
+            var body = {
+                'location': settings.region,
+                'properties': {
+                    'minimumTlsVersion': 'TLS1_2'
+                }
+            };
+
+            // logging
+            remediation_file['pre_remediate']['actions'][pluginName][resource] = {
+                'TLS1.2': 'Disabled',
+                'StorageAccount': saName
+            };
+
+            helpers.remediatePlugin(config, method, body, baseUrl, resource, remediation_file, putCall, pluginName, function(err, action) {
+                if (err) return callback(err);
+                if (action) action.action = putCall;
+
+
+                remediation_file['post_remediate']['actions'][pluginName][resource] = action;
+                remediation_file['remediate']['actions'][pluginName][resource] = {
+                    'Action': 'Enabled'
+                };
+
+                callback(null, action);
+            });
+        } else {
+            callback('No region found');
+        }
     }
 };

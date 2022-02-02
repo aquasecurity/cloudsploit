@@ -42,6 +42,7 @@ module.exports = {
         'cloudfrontLoggingEnabled'      : require(__dirname + '/plugins/aws/cloudfront/cloudfrontLoggingEnabled.js'),
         'cloudfrontWafEnabled'          : require(__dirname + '/plugins/aws/cloudfront/cloudfrontWafEnabled.js'),
         'cloudfrontGeoRestriction'      : require(__dirname + '/plugins/aws/cloudfront/cloudfrontGeoRestriction.js'),
+        'compressObjectsAutomatically'  : require(__dirname + '/plugins/aws/cloudfront/compressObjectsAutomatically.js'),
         
         'volumeEncryption'              : require(__dirname + '/plugins/aws/comprehend/volumeEncryption.js'),
         'outputResultEncryption'        : require(__dirname + '/plugins/aws/comprehend/outputResultEncryption.js'),
@@ -196,8 +197,10 @@ module.exports = {
         'elbv2SslTermination'           : require(__dirname + '/plugins/aws/elbv2/elbv2SslTermination.js'),
 
         'emrClusterLogging'             : require(__dirname + '/plugins/aws/emr/emrClusterLogging.js'),
+        'emrClusterInVPC'               : require(__dirname + '/plugins/aws/emr/emrClusterInVPC.js'),
         'emrEncryptionInTransit'        : require(__dirname + '/plugins/aws/emr/emrEncryptionInTransit.js'),
         'emrEncryptionAtRest'           : require(__dirname + '/plugins/aws/emr/emrEncryptionAtRest.js'),
+        'emrDesiredInstanceType'        : require(__dirname + '/plugins/aws/emr/emrDesiredInstanceType.js'),
         'emrInstanceCount'              : require(__dirname + '/plugins/aws/emr/emrInstanceCount.js'),
 
         'esAccessFromIps'               : require(__dirname + '/plugins/aws/es/esAccessFromIps.js'),
@@ -217,6 +220,7 @@ module.exports = {
         'esDomainEncryptionEnabled'     : require(__dirname + '/plugins/aws/es/esDomainEncryptionEnabled.js'),
         'vaultPublicAccess'             : require(__dirname + '/plugins/aws/s3glacier/vaultPublicAccess.js'),
         'firehoseEncrypted'             : require(__dirname + '/plugins/aws/firehose/firehoseEncrypted.js'),
+        'deliveryStreamEncrypted'       : require(__dirname + '/plugins/aws/firehose/deliveryStreamEncrypted.js'),
 
         'eventBusCrossAccountAccess'    : require(__dirname + '/plugins/aws/eventbridge/eventBusCrossAccountAccess.js'),
 
@@ -266,6 +270,7 @@ module.exports = {
 
         'iamUserInUse'                  : require(__dirname + '/plugins/aws/iam/iamUserInUse.js'),
         'kinesisEncrypted'              : require(__dirname + '/plugins/aws/kinesis/kinesisEncrypted.js'),
+        'kinesisDataStreamsEncrypted'   : require(__dirname + '/plugins/aws/kinesis/kinesisDataStreamsEncrypted.js'),
         'videostreamDataEncrypted'      : require(__dirname + '/plugins/aws/kinesisvideo/videostreamDataEncrypted.js'),
 
         'kmsKeyRotation'                : require(__dirname + '/plugins/aws/kms/kmsKeyRotation.js'),
@@ -273,6 +278,8 @@ module.exports = {
         'kmsKeyPolicy'                  : require(__dirname + '/plugins/aws/kms/kmsKeyPolicy.js'),
         'kmsDefaultKeyUsage'            : require(__dirname + '/plugins/aws/kms/kmsDefaultKeyUsage.js'),
         'kmsAppTierCmk'                 : require(__dirname + '/plugins/aws/kms/kmsAppTierCmk.js'),
+        'kmsGrantLeastPrivilege'        : require(__dirname + '/plugins/aws/kms/kmsGrantLeastPrivilege.js'),
+        'kmsDuplicateGrants'            : require(__dirname + '/plugins/aws/kms/kmsDuplicateGrants.js'),
 
         'rdsAutomatedBackups'           : require(__dirname + '/plugins/aws/rds/rdsAutomatedBackups.js'),
         'rdsEncryptionEnabled'          : require(__dirname + '/plugins/aws/rds/rdsEncryptionEnabled.js'),
@@ -288,11 +295,13 @@ module.exports = {
         'rdsDeletionProtectionEnabled'  : require(__dirname + '/plugins/aws/rds/rdsDeletionProtectionEnabled.js'),
 
         'redisClusterEncryptionInTransit': require(__dirname + '/plugins/aws/elasticache/redisClusterEncryptionInTransit.js'),
+        'elasticacheClusterInVpc'       : require(__dirname + '/plugins/aws/elasticache/elasticacheClusterInVpc.js'),
         'elasticacheInstanceGeneration' : require(__dirname + '/plugins/aws/elasticache/elasticacheInstanceGeneration.js'),
         'redisEngineVersions'           : require(__dirname + '/plugins/aws/elasticache/redisEngineVersions.js'),
         'elasticacheNodesCount'         : require(__dirname + '/plugins/aws/elasticache/elasticacheNodesCount.js'),
         'elasticacheRedisMultiAZ'       : require(__dirname + '/plugins/aws/elasticache/elasticacheRedisMultiAZ.js'),
         'idleElastiCacheNode'           : require(__dirname + '/plugins/aws/elasticache/idleElastiCacheNode.js'),
+        'elasticaheDesiredNodeType'     : require(__dirname + '/plugins/aws/elasticache/elasticaheDesiredNodeType.js'),
 
         'domainAutoRenew'               : require(__dirname + '/plugins/aws/route53/domainAutoRenew.js'),
         'domainExpiry'                  : require(__dirname + '/plugins/aws/route53/domainExpiry.js'),
@@ -335,6 +344,7 @@ module.exports = {
         'sqsEncrypted'                  : require(__dirname + '/plugins/aws/sqs/sqsEncrypted.js'),
         'sqsPublicAccess'               : require(__dirname + '/plugins/aws/sqs/sqsPublicAccess.js'),
         'queueUnprocessedMessages'      : require(__dirname + '/plugins/aws/sqs/queueUnprocessedMessages.js'),
+        'sqsEncryptionEnabled'          : require(__dirname + '/plugins/aws/sqs/sqsEncryptionEnabled.js'),
 
         'ssmEncryptedParameters'        : require(__dirname + '/plugins/aws/ssm/ssmEncryptedParameters.js'),
         'ssmActiveOnAllInstances'       : require(__dirname + '/plugins/aws/ssm/ssmActiveOnAllInstances.js'),
@@ -731,6 +741,10 @@ module.exports = {
         'excessivePolicyStatements'     : require(__dirname + '/plugins/oracle/identity/excessivePolicyStatements.js'),
         'policyLeastPrivilege'          : require(__dirname + '/plugins/oracle/identity/policyLeastPrivilege.js'),
         'usersEmailVerified'            : require(__dirname + '/plugins/oracle/identity/usersEmailVerified.js'),
+        'adminUserAPIKeys'              : require(__dirname + '/plugins/oracle/identity/adminUserAPIKeys.js'),
+        'userAuthTokenRotated'          : require(__dirname + '/plugins/oracle/identity/userAuthTokenRotated.js'),
+        'userCustomerSecretKeysRotated' : require(__dirname + '/plugins/oracle/identity/userCustomerSecretKeysRotated.js'),
+        'userAPIKeysRotated'            : require(__dirname + '/plugins/oracle/identity/userAPIKeysRotated.js'),
 
         'openSSH'                       : require(__dirname + '/plugins/oracle/networking/openSSH.js'),
         'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/oracle/networking/openOracleAutoDataWarehouse.js'),
