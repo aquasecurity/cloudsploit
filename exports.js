@@ -73,6 +73,7 @@ module.exports = {
         'devOpsGuruNotificationEnabled' : require(__dirname + '/plugins/aws/devopsguru/devOpsGuruNotificationEnabled.js'),
        
         'dmsEncryptionEnabled'          : require(__dirname + '/plugins/aws/dms/dmsEncryptionEnabled.js'),
+        'dmsPubliclyAccessibleInstances': require(__dirname + '/plugins/aws/dms/dmsPubliclyAccessibleInstances.js'),
         'dmsMultiAZFeatureEnabled'      : require(__dirname + '/plugins/aws/dms/dmsMultiAZFeatureEnabled.js'),
         'autoMinorVersionUpgrade'       : require(__dirname + '/plugins/aws/dms/autoMinorVersionUpgrade.js'),
 
