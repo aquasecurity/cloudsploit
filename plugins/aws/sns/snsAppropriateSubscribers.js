@@ -53,7 +53,7 @@ module.exports = {
 
                 if (subscriber.Endpoint == config.sns_unwanted_subscribers_endpoint){
                     helpers.addResult(results, 2,
-                        'SNS subscriber is unwanted for topic', region, resource);
+                        'SNS subscription is an unwanted subscription', region, resource);
                 } else {
                     helpers.addResult(results, 0,
                         'SNS subscriber is appropriate for topic', region, resource);
