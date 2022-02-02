@@ -333,6 +333,7 @@ module.exports = {
 
         'notebookDataEncrypted'         : require(__dirname + '/plugins/aws/sagemaker/notebookDataEncrypted.js'),
         'notebookDirectInternetAccess'  : require(__dirname + '/plugins/aws/sagemaker/notebookDirectInternetAccess.js'),
+        'notebookInstanceInVpc'         : require(__dirname + '/plugins/aws/sagemaker/notebookInstanceInVpc.js'),
 
         'dkimEnabled'                   : require(__dirname + '/plugins/aws/ses/dkimEnabled.js'),
         'emailMessagesEncrypted'        : require(__dirname + '/plugins/aws/ses/emailMessagesEncrypted.js'),
