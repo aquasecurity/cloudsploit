@@ -55,6 +55,7 @@ module.exports = {
             for (let i in listSubscriptions.data) {
                 let subscriber = listSubscriptions.data[i];
                 let resource = subscriber.SubscriptionArn;
+                let endpoint ;
 
                 if (subscriber.Endpoint){
                     endpoint = subscriber.Endpoint.toLowerCase();
