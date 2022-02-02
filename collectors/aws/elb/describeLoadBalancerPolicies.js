@@ -2,8 +2,9 @@
 
 var AWS = require('aws-sdk');
 var async = require('async');
+var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, callback) {
+module.exports = function(AWSConfig, collection, retries, callback) {
     var elb = new AWS.ELB(AWSConfig);
 
     // Gather list of policies from load balancers
@@ -41,7 +42,12 @@ module.exports = function(AWSConfig, collection, callback) {
     async.eachLimit(policies, 15, function(policy, cb){
         collection.elb.describeLoadBalancerPolicies[AWSConfig.region][policy.DNSName] = {};
 
-        elb.describeLoadBalancerPolicies({LoadBalancerName: policy.LoadBalancerName, PolicyNames:policy.PolicyNames}, function(err, data){
+        let params = {
+            LoadBalancerName: policy.LoadBalancerName,
+            PolicyNames: policy.PolicyNames
+        };
+
+        helpers.makeCustomCollectorCall(elb, 'describeLoadBalancerPolicies', params, retries, null, null, null, function(err, data) {
             if (err) {
                 collection.elb.describeLoadBalancerPolicies[AWSConfig.region][policy.DNSName].err = err;
             } else {

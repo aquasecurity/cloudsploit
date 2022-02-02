@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that logging and log alerts exist for SQL configuration changes',
     more_info: 'Project Ownership is the highest level of privilege on a project, any changes in SQL configurations should be heavily monitored to prevent unauthorized changes.',
     link: 'https://cloud.google.com/logging/docs/logs-based-metrics/',
-    recommended_action: 'Ensure that log alerts exist for SQL configuration changes.',
+    recommended_action: 'Ensure that log metric and alert exist for SQL configuration changes.',
     apis: ['metrics:list', 'alertPolicies:list'],
     compliance: {
         hipaa: 'HIPAA requires the logging of all activity ' +
@@ -56,21 +56,25 @@ module.exports = {
 
             var testMetrics = 'protoPayload.methodName="cloudsql.instances.update"';
 
-
-            metrics.data.forEach(metric => {
+            let disabled = false;
+            for (let metric of metrics.data) {
                 if (metric.filter) {
-                    if (metricExists) return;
+                    if (metricExists) break;
 
-                    if (metric.filter.trim() === testMetrics) {
-                        metricExists = true;
-                        metricName = metric.metricDescriptor.type;
-                    } else {
-                        return;
+                    if (metric.filter.trim().indexOf(testMetrics) > -1) {
+                        if (metric.disabled) disabled = true;
+                        else {
+                            disabled = false;
+                            metricExists = true;
+                            metricName = metric.metricDescriptor.type;
+                        }
                     }
                 }
-            });
+            }
 
-            if (metricExists && metricName.length) {
+            if (disabled) {
+                helpers.addResult(results, 2, 'Log metric for SQL configuration changes is disbled', region);
+            } else if (metricExists && metricName.length) {
                 var conditionFound = false;
 
                 alertPolicies.data.forEach(alertPolicy => {
