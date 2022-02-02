@@ -13,7 +13,7 @@ module.exports = {
     settings: {
         sns_unwanted_subscribers_endpoint: {
             name: 'SNS Unwanted Subscribers Endpoint',
-            description: 'endpoint for SNS subscrptions that are unwanted',
+            description: 'Comma-separated list of subscription endpoint i.e. xyz@aquasec.com',
             regex: '^.*$',
             default: '',
         }
