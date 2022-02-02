@@ -56,7 +56,7 @@ module.exports = {
                         'SNS subscription is an unwanted subscription', region, resource);
                 } else {
                     helpers.addResult(results, 0,
-                        'SNS subscriber is appropriate for topic', region, resource);
+                        'SNS subscription is not an unwanted subscription', region, resource);
                 }
             }
 
