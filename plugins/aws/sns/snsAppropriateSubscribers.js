@@ -15,11 +15,12 @@ module.exports = {
             name: 'SNS Unwanted Subscribers Endpoint',
             description: 'endpoint for SNS subscrptions that are unwanted',
             regex: '^.*$',
-            default: '',
+            default: 'sadeed1999@gmail.com',
         }
     },
 
     run: function(cache, settings, callback) {
+        console.log(JSON.stringify(cache, null, 2))
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
@@ -27,6 +28,10 @@ module.exports = {
         var config = {
             sns_unwanted_subscribers_endpoint: settings.sns_unwanted_subscribers_endpoint || this.settings.sns_unwanted_subscribers_endpoint.default
         };
+
+        config.sns_unwanted_subscribers_endpoint = config.sns_unwanted_subscribers_endpoint.replace(/\s+/g, '');
+
+        if (!config.sns_unwanted_subscribers_endpoint.length) return callback(null, results, source);
 
         async.each(regions.sns, function(region, rcb){
             var listSubscriptions = helpers.addSource(cache, source,
@@ -51,7 +56,11 @@ module.exports = {
                 let subscriber = listSubscriptions.data[i];
                 let resource = subscriber.SubscriptionArn;
 
-                if (subscriber.Endpoint == config.sns_unwanted_subscribers_endpoint){
+                if (subscriber.Endpoint){
+                    endpoint = subscriber.Endpoint.toLowerCase();
+                }
+
+                if ((config.sns_unwanted_subscribers_endpoint.toLowerCase()).includes(endpoint)){
                     helpers.addResult(results, 2,
                         'SNS subscriber is unwanted for topic', region, resource);
                 } else {
