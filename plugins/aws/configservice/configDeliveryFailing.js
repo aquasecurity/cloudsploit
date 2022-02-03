@@ -22,12 +22,18 @@ module.exports = {
 
             if (!describeConfigurationRecorderStatus) return rcb();
 
-            if (describeConfigurationRecorderStatus.err || !describeConfigurationRecorderStatus.data ||
-                !describeConfigurationRecorderStatus.data.length) {
+            if (describeConfigurationRecorderStatus.err || !describeConfigurationRecorderStatus.data) {
                 helpers.addResult(results, 3,
                     'Unable to query for Config Service status: ' + helpers.addError(describeConfigurationRecorderStatus), region);
                 return rcb();
             }
+
+            if (!describeConfigurationRecorderStatus.data.length) {
+                helpers.addResult(results, 0,
+                    'No Config Service status found', region);
+                    return rcb();
+            }
+
 
             for (let record of describeConfigurationRecorderStatus.data) {
                 if (record.lastStatus.toUpperCase() === 'SUCCESS') {

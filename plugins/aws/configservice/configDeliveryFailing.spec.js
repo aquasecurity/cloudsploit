@@ -44,21 +44,30 @@ const createNullCache = () => {
 
 describe('configDeliveryFailing', () => {
     describe('run', () => {
-        it('should PASS if The AWS Config service succeeded in delivering the last log file to the designated recipient', () => {
+        it('should PASS if AWS Config service is delivering log files to the designated recipient successfully', () => {
             const cache = createCache([describeConfigurationRecorderStatus[0]]);
             configDeliveryFailing.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('The AWS Config service succeeded in delivering the last log file to the designated recipient');
+                expect(results[0].message).to.include('AWS Config service is delivering log files to the designated recipient successfully');
             })
         });
-        it('should FAIL if The AWS Config service failed to deliver the last log file to the designated recipient', () => {
+        it('should FAIL if AWS Config service is not delivering log files to the designated recipient successfully', () => {
             const cache = createCache([describeConfigurationRecorderStatus[1]]);
             configDeliveryFailing.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('The AWS Config service failed to deliver the last log file to the designated recipient.');
+                expect(results[0].message).to.include('AWS Config service is not delivering log files to the designated recipient successfully');
             })
+        });
+        it('should PASS if no Config Service status found', function (done) {
+            const cache = createCache([]);
+            configDeliveryFailing.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No Config Service status found');
+                done();
+            });
         });
         it('should UNKNOWN if Unable to query for Config Service status', () => {
             const cache = createNullCache();
