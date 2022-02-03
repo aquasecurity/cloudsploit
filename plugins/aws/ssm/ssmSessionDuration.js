@@ -27,7 +27,7 @@ module.exports = {
         var awsOrGov = helpers.defaultPartition(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
-        var sessionMaxDuration = settings.ssm_session_max_duration || this.settings.ssm_session_max_duration.default;
+        var sessionMaxDuration = parseInt(settings.ssm_session_max_duration || this.settings.ssm_session_max_duration.default);
 
         async.each(regions.ssm, function(region, rcb){
             var describeSessions = helpers.addSource(cache, source,
