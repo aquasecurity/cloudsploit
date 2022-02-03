@@ -25,7 +25,7 @@ module.exports = {
 
             if (describeAutoScalingGroups.err || !describeAutoScalingGroups.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for auto scaling groups: ' + 
+                    'Unable to query for Auto Scaling groups: ' + 
                     helpers.addError(describeAutoScalingGroups), region);
                 return rcb();
             }
@@ -42,11 +42,11 @@ module.exports = {
                 
                 if (group.DefaultCooldown) {
                     helpers.addResult(results, 0,
-                        'Amazon Auto Scaling Groups are utilizing cooldown periods.',
+                        'Auto Scaling group has cooldown period configured',
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'The cooldown period setting is not properly configured for the selected Amazon ASG.',
+                        'Auto Scaling group does not have cooldown period configured',
                         region, resource);
                 }
             }
