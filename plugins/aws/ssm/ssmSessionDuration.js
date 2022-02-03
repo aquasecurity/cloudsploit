@@ -28,10 +28,6 @@ module.exports = {
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
         var sessionMaxDuration = settings.ssm_session_max_duration || this.settings.ssm_session_max_duration.default;
-        if (typeof sessionMaxDuration === 'string') {
-            sessionMaxDuration.match(this.settings.ssm_session_max_duration.regex);
-            sessionMaxDuration = parseInt(sessionMaxDuration);
-        }
 
         async.each(regions.ssm, function(region, rcb){
             var describeSessions = helpers.addSource(cache, source,
