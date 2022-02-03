@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'A launch configuration is an instance configuration template that an Auto Scaling group uses to launch EC2 instances. When you create a launch configuration, you specify information for the instances.'+
         'Include the ID of the Amazon Machine Image (AMI), the instance type, a key pair, one or more security groups, and a block device mapping. so every unused Launch Configuration template should be removed for a better management of your AWS Auto Scaling components.',
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/LaunchConfiguration.html',
-    recommended_action: 'identify any Auto Scaling Launch Configuration templates that are not associated anymore with ASGs available in the selected AWS region.',
+    recommended_action: 'Identify and remove any Auto Scaling Launch Configuration templates that are not associated anymore with ASGs available in the selected AWS region.',
     apis: ['AutoScaling:describeAutoScalingGroups', 'AutoScaling:describeLaunchConfigurations'],
     
     
@@ -54,13 +54,13 @@ module.exports = {
             });
 
             describeLaunchConfigurations.data.forEach(config => {
-                if (usedLaunchConfig.includes(config.LaunchConfigurationName)) {
+                if (config.LaunchConfigurationName && usedLaunchConfig.includes(config.LaunchConfigurationName)) {
                     helpers.addResult(results, 0,
-                        `AutoScaling launch configuration "${config.LaunchConfigurationName}" is being used`,
+                        `Auto Scaling launch configuration "${config.LaunchConfigurationName}" is being used`,
                         region, config.LaunchConfigurationARN);
                 } else {
                     helpers.addResult(results, 2,
-                        `AutoScaling launch configuration "${config.LaunchConfigurationName}" is not being used`,
+                        `Auto Scaling launch configuration "${config.LaunchConfigurationName}" is not being used`,
                         region, config.LaunchConfigurationARN);
                 }
             });
