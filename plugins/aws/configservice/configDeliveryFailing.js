@@ -31,7 +31,7 @@ module.exports = {
             if (!describeConfigurationRecorderStatus.data.length) {
                 helpers.addResult(results, 0,
                     'No Config Service status found', region);
-                    return rcb();
+                return rcb();
             }
 
 
