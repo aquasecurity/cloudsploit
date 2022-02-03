@@ -41,7 +41,7 @@ module.exports = {
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'The configuration changes made to your AWS Global resources are not currently recorded.',
+                        'The configuration changes made to your AWS Global resources are not currently recorded',
                         region, resource);
                 }
             }
