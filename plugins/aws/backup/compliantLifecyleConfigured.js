@@ -53,7 +53,7 @@ module.exports = {
                 getBackupPlan.data.BackupPlan.Rules[0].Lifecycle.DeleteAfterDays == null &&
                 getBackupPlan.data.BackupPlan.Rules[0].Lifecycle.MoveToColdStorageAfterDays == null) {
                     helpers.addResult(results, 2,
-                        'there is no lifecycle configuration enabled for the selected Amazon Backup plan', region, resource);
+                        'No lifecycle configuration enabled for the selected Amazon Backup plan', region, resource);
                 } else {
                     helpers.addResult(results, 0,
                         'there is lifecycle configuration enabled for the selected Amazon Backup plan', region, resource);
