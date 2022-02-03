@@ -52,7 +52,7 @@ describe('referencingMissingS3Bucket', function () {
             });
         });
 
-        it('should FAIL if config service have these buckets not available in your account.', function (done) {
+        it('should FAIL if Config Service have these buckets not available in your account.', function (done) {
             const cache = createCache([describeDeliveryChannels[0]],null, null, { message: "A client error (404) occurred when calling the HeadBucket operation: Not Found.", code: 'NotFound' });
             referencingMissingS3Bucket.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
