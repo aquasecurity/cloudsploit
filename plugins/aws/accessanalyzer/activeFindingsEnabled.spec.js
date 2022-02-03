@@ -169,7 +169,7 @@ describe('activeFindingsEnabled', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Amazon IAM access analyzer has active findings.');
+                expect(results[0].message).to.include('Amazon IAM access analyzer has active findings');
                 done();
             });
         });
@@ -180,7 +180,7 @@ describe('activeFindingsEnabled', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Amazon IAM access analyzer have no active findings.');
+                expect(results[0].message).to.include('Amazon IAM access analyzer have no active findings');
                 
                 done();
             });
@@ -198,7 +198,7 @@ describe('activeFindingsEnabled', function () {
         });
 
         it('should UNKNOWN if unable to list analyzers', function (done) {
-            const cache = createCache(null, null, null, { message: "Unable to list analyzers" });
+            const cache = createCache(null, null, { message: "Unable to list analyzers" });
             activeFindingsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);

@@ -6,7 +6,7 @@ module.exports = {
     category: 'IAM',
     domain: 'Management and Governance',
     description: 'Ensure that IAM Access analyzer findings are reviewed for resolving security issues by taking all necessary actions.',
-    more_info: 'Access Analyzer review all of the findings in your account to determine whether the sharing is expected and approved. If the sharing identified in the finding is expected, you can archive the finding.' +
+    more_info: 'Access Analyzer review all of the findings in your account to determine whether the sharing is expected and approved. If the sharing identified in the finding is expected, you can archive the finding. ' +
         'When you archive a finding, the status is changed to Archived, and the finding is removed from the Active findings list. The finding is not deleted. You can view your archived findings at any time. Work through all of the findings in your account until you have zero active findings.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-work-with-findings.html',
     recommended_action: 'Enable Access Analyzer to work through all of the findings in your account until you have zero active findings',
@@ -45,7 +45,7 @@ module.exports = {
 
                 if (!listFindings || listFindings.err || !listFindings.data) {
                     helpers.addResult(results, 3,
-                        `Unable to get findings description: ${helpers.addError(listFindings)}`,
+                        `Unable to query list findings: ${helpers.addError(listFindings)}`,
                         region, resource);
                     continue;
                 } 
@@ -55,12 +55,10 @@ module.exports = {
                     helpers.addResult(results, 0,
                         'Amazon IAM access analyzer have no active findings',
                         region, resource);
-                    continue;         
                 } else {
                     helpers.addResult(results, 2,
                         'Amazon IAM access analyzer has active findings',
                         region, resource);
-                    continue;
                 }
             }
 
