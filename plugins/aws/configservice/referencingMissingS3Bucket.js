@@ -59,7 +59,7 @@ module.exports = {
 
             } else {
                 helpers.addResult(results, 0,
-                    'config service have buckets available in your account', 
+                    'Config Service have buckets available in your account', 
                     region);
             } 
 
