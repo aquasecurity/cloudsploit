@@ -24,12 +24,12 @@ module.exports = {
 
             if (listMeshes.err || !listMeshes.data) {
                 helpers.addResult(results, 3,
-                    `Unable to query for App Meshes: ${helpers.addError(listMeshes)}`,region);
+                    `Unable to query for App Mesh meshes: ${helpers.addError(listMeshes)}`,region);
                 return rcb();
             }
 
             if (!listMeshes.data.length) {
-                helpers.addResult(results, 0, 'No App Meshes found', region);
+                helpers.addResult(results, 0, 'No App Mesh meshes found', region);
                 return rcb();
             }
 
@@ -40,7 +40,6 @@ module.exports = {
 
                 var describeMesh = helpers.addSource(cache, source,
                     ['appmesh', 'describeMesh', region, mesh.meshName]);
-
 
                 if (!describeMesh || describeMesh.err || !describeMesh.data ||
                     !describeMesh.data.mesh) {
@@ -54,12 +53,12 @@ module.exports = {
                     describeMesh.data.mesh.spec.egressFilter &&
                     describeMesh.data.mesh.spec.egressFilter.type.toUpperCase() === 'DROP_ALL') {
                     helpers.addResult(results, 0,
-                        'Amazon App Mesh allows egress only from virtual nodes to other defined resources.',
+                        'Amazon App Mesh allows egress only from virtual nodes to other defined resources',
                         region, resource);
                     continue;         
                 } else {
                     helpers.addResult(results, 2,
-                        'Amazon App Mesh allows egress to any endpoint inside or outside of the service mesh.',
+                        'App Mesh mesh allows access to all endpoint inside or outside of the service mesh.',
                         region, resource);
                     continue;
                 }
