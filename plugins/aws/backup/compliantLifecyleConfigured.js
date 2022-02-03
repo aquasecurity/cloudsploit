@@ -56,7 +56,7 @@ module.exports = {
                         'No lifecycle configuration enabled for the selected Amazon Backup plan', region, resource);
                 } else {
                     helpers.addResult(results, 0,
-                        'there is lifecycle configuration enabled for the selected Amazon Backup plan', region, resource);
+                        'Lifecycle configuration enabled for the selected Amazon Backup plan', region, resource);
                 }
     
             }
