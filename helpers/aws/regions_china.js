@@ -114,5 +114,6 @@ module.exports = {
     lexmodelsv2: regions,
     fsx: regions,
     wisdom: regions,
-    voiceid: regions
+    voiceid: regions,
+    frauddetector: regions
 };
