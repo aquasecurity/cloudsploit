@@ -126,6 +126,7 @@ module.exports = {
         'ebsOldSnapshots'               : require(__dirname + '/plugins/aws/ec2/ebsOldSnapshots.js'),
         'ebsSnapshotPrivate'            : require(__dirname + '/plugins/aws/ec2/ebsSnapshotPrivate.js'),
         'ebsSnapshotPublic'             : require(__dirname + '/plugins/aws/ec2/ebsSnapshotPublic.js'),
+        'unusedSecurityGroups'          : require(__dirname + '/plugins/aws/ec2/unusedSecurityGroups.js'),
 
         'natMultiAz'                    : require(__dirname + '/plugins/aws/ec2/natMultiAz.js'),
         'defaultVpcInUse'               : require(__dirname + '/plugins/aws/ec2/defaultVpcInUse.js'),
