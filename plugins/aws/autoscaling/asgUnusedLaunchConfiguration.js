@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Availability',
     description: 'Ensure that any unused Auto Scaling Launch Configuration templates are identified and removed from your account in order to adhere to AWS best practices.',
     more_info: 'A launch configuration is an instance configuration template that an Auto Scaling group uses to launch EC2 instances. When you create a launch configuration, you specify information for the instances.'+
-        'Include the ID of the Amazon Machine Image (AMI), the instance type, a key pair, one or more security groups, and a block device mapping. so every unused Launch Configuration template should be removed for a better management of your AWS Auto Scaling components',
+        'Include the ID of the Amazon Machine Image (AMI), the instance type, a key pair, one or more security groups, and a block device mapping. so every unused Launch Configuration template should be removed for a better management of your AWS Auto Scaling components.',
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/LaunchConfiguration.html',
     recommended_action: 'identify any Auto Scaling Launch Configuration templates that are not associated anymore with ASGs available in the selected AWS region.',
     apis: ['AutoScaling:describeAutoScalingGroups', 'AutoScaling:describeLaunchConfigurations'],
@@ -29,24 +29,24 @@ module.exports = {
 
             if (describeLaunchConfigurations.err || !describeLaunchConfigurations.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for AutoScaling launch configurations: ' + helpers.addError(describeLaunchConfigurations), region);
+                    'Unable to query for Auto Scaling launch configurations: ' + helpers.addError(describeLaunchConfigurations), region);
                 return rcb();
             }
 
             if (!describeLaunchConfigurations.data.length) {
-                helpers.addResult(results, 0, 'No AutoScaling launch configurations found', region);
+                helpers.addResult(results, 0, 'No Auto Scaling launch configurations found', region);
                 return rcb();
             }
 
             if (!describeAutoScalingGroups || describeAutoScalingGroups.err || !describeAutoScalingGroups.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for AutoScaling groups: ' + helpers.addError(describeAutoScalingGroups), region);
+                    'Unable to query for Auto Scaling groups: ' + helpers.addError(describeAutoScalingGroups), region);
                 return rcb();
             }
 
             let usedLaunchConfig = [];
             describeAutoScalingGroups.data.forEach(group => {
-                if (!group.AutoScalingGroupARN) return;
+                if (!group.LaunchConfigurationName) return;
 
                 if (!usedLaunchConfig.includes(group.LaunchConfigurationName)) {
                     usedLaunchConfig.push(group.LaunchConfigurationName);

@@ -161,22 +161,22 @@ describe('asgUnusedLaunchConfiguration', function () {
             asgUnusedLaunchConfiguration.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No AutoScaling launch configurations found');
+                expect(results[0].message).to.include('No Auto Scaling launch configurations found');
                 done();
             });
         });
 
-        it('should UNKNOWN if Unable to query for AutoScaling launch configurations', function (done) {
+        it('should UNKNOWN if Unable to query for Auto Scaling launch configurations', function (done) {
             const cache = createErrorCache([],null);
             asgUnusedLaunchConfiguration.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for AutoScaling launch configurations');
+                expect(results[0].message).to.include('Unable to query for Auto Scaling launch configurations');
                 done();
             });
         });
 
-        it('should UNKNOWN if Unable to query for AutoScaling groups', function (done) {
+        it('should UNKNOWN if Unable to query for Auto Scaling groups', function (done) {
             const cache = createCache(null, [describeLaunchConfigurations[1]]);
             asgUnusedLaunchConfiguration.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
