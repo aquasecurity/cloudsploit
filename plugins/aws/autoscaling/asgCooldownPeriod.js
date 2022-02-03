@@ -31,7 +31,7 @@ module.exports = {
             }
 
             if (!describeAutoScalingGroups.data.length) {
-                helpers.addResult(results, 0, 'No auto scaling groups found', region);
+                helpers.addResult(results, 0, 'No Auto Scaling groups found', region);
                 return rcb();
             }
 
