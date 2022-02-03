@@ -42,7 +42,6 @@ module.exports = {
                 var listFindings = helpers.addSource(cache, source,
                     ['accessanalyzer', 'listFindings', region, analyzer.arn]);
 
-
                 if (!listFindings || listFindings.err || !listFindings.data) {
                     helpers.addResult(results, 3,
                         `Unable to query list findings: ${helpers.addError(listFindings)}`,
