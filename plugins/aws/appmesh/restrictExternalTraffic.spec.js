@@ -129,7 +129,7 @@ describe('restrictExternalTraffic', function () {
         });
 
         it('should UNKNOWN if Unable to get App Mesh description', function (done) {
-            const cache = createCache([listMeshes[0]], null, { message: "Unable to get App Mesh description" });
+            const cache = createCache([listMeshes[0]], null, null, { message: "Unable to get App Mesh description" });
             restrictExternalTraffic.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
