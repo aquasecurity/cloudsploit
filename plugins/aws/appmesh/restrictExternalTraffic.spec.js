@@ -124,16 +124,18 @@ describe('restrictExternalTraffic', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to query for App Meshes');
                 done();
             });
         });
 
         it('should UNKNOWN if Unable to get App Mesh description', function (done) {
-            const cache = createCache([listMeshes[0]], null, { message: "Unable to get App Mesh description" });
+            const cache = createCache([listMeshes[0]], null, null,  { message: "Unable to get App Mesh description" });
             restrictExternalTraffic.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to get App Mesh description');
                 done();
             });
         });
