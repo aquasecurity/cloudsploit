@@ -41,7 +41,7 @@ const createCache = (records, headBucket, recordsErr, headBucketErr) => {
 
 describe('referencingMissingS3Bucket', function () {
     describe('run', function () {
-        it('should PASS if config service have these buckets available in your account.', function (done) {
+        it('should PASS if Config Service have these buckets available in your account.', function (done) {
             const cache = createCache([describeDeliveryChannels[1]], null);
             referencingMissingS3Bucket.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
