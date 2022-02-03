@@ -13,7 +13,6 @@ module.exports = {
     apis: ['ConfigService:describeDeliveryChannels', 'S3:headBucket'],
   
     run: function(cache, settings, callback) {
-        console.log(JSON.stringify(cache, null, 2));
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);

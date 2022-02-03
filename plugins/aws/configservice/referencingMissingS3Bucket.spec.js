@@ -47,7 +47,7 @@ describe('referencingMissingS3Bucket', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('config service have buckets available in your account')
+                expect(results[0].message).to.include('Config Service have buckets available in your account')
                 done();
             });
         });
