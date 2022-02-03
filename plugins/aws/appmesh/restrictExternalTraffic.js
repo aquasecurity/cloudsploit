@@ -5,7 +5,7 @@ module.exports = {
     title: 'App Mesh Restrict External Traffic',
     category: 'App Mesh',
     domain: 'Content Delivery',
-    description: 'Ensure that virtual nodes have egress only access to other defined resources available within the service mesh.',
+    description: 'Ensure that Amazon App Mesh virtual nodes have egress only access to other defined resources available within the service mesh.',
     more_info: 'Amazon App Mesh gives control over the traffic flow to configure the microservices. Getting the control will allow you to decide if you want to give access to outside world for communication or not.',
     link: 'https://docs.aws.amazon.com/app-mesh/latest/userguide/meshes.html',
     recommended_action: 'Enable the feature to allow egress only from virtual nodes to other defined resources in the service mesh.',
