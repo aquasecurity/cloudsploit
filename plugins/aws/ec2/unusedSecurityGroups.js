@@ -52,7 +52,7 @@ module.exports = {
                 helpers.addResult(results, 0,
                     'security groups are being used', region,
                     resource);
-            }else {
+            } else {
                 helpers.addResult(results, 2,
                     'Unused security groups'+ strings.join(' '), region,
                     resource);
