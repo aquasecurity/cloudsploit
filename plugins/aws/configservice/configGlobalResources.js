@@ -37,7 +37,7 @@ module.exports = {
                 if (record.recordingGroup &&
                     record.recordingGroup.includeGlobalResourceTypes && record.recordingGroup.includeGlobalResourceTypes === true) {
                     helpers.addResult(results, 0,
-                        'The configuration changes made to your AWS Global resources are currently recorded.',
+                        'The configuration changes made to your AWS Global resources are currently recorded',
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
