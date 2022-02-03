@@ -54,7 +54,7 @@ module.exports = {
 
             if (deletedBucket.length) {
                 helpers.addResult(results, 2,
-                    `config service have these buckets  ${deletedBucket.join(', ')}, not available in your account`,
+                    `Config Service have these buckets  ${deletedBucket.join(', ')}, not available in your account`,
                     region);
 
             } else {
