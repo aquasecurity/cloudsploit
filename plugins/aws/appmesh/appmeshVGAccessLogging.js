@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'App Mesh Virtual Gateway Access Logging',
+    title: 'App Mesh VG Access Logging',
     category: 'App Mesh',
     domain: 'Content Delivery',
     description: 'Ensure that your Amazon App Mesh virtual gateways have access logging enabled.',
@@ -48,14 +48,14 @@ module.exports = {
                     continue;
                 }
 
-                if (!listVirtualGateways.data.virtualGateways || !listVirtualGateways.data.virtualGateways.length) {
+                if (!listVirtualGateways.data.virtualGateways ) {
                     helpers.addResult(results, 0,
                         'No AppMesh virtual gateways found', region, resource);
                     continue;
                 }
 
                 for (let gateway of listVirtualGateways.data.virtualGateways) {
-                    if (!gateway.arn || gateway.virtualGatewayName) continue;
+                    if (!gateway.arn) continue;
 
                     let resource = gateway.arn;
 

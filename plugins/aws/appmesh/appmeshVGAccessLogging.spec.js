@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-var enableAccessLogging = require('./enableAccessLogging');
+var appmeshVGAccessLogging = require('./appmeshVGAccessLogging');
 
 
 const listMeshes = [
@@ -130,25 +130,25 @@ const createCache = (listMeshes, listVirtualGateways,  describeVirtualGateway, l
         appmesh: {
             listMeshes: {
                 'us-east-1': {
-                    err: listMeshesErr,
-                    data: listMeshes
+                    data: listMeshes,
+                    err: listMeshesErr
                 }
             },
             listVirtualGateways: {
                 'us-east-1': {
                     [name]: {
-                        err: listVirtualGatewaysErr,
                         data: {
                             "virtualGateways":listVirtualGateways
-                        }     
+                        },
+                        err: listVirtualGatewaysErr,
                     }
                 }
             },
             describeVirtualGateway: {
                 'us-east-1': {
                     [gatewayName]: {
-                        err: describeVirtualGatewayErr,
-                        data: describeVirtualGateway
+                        data: describeVirtualGateway,
+                        err: describeVirtualGatewayErr
                     }
                 }
             },
@@ -166,12 +166,12 @@ const createNullCache = () => {
     };
 };
 
-describe('enableAccessLogging', function () {
+describe('appmeshVGAccessLogging', function () {
     describe('run', function () {
 
         it('should PASS if access logging is enabled and configured for Amazon App Mesh virtual gateways', function (done) {
             const cache = createCache([listMeshes[0]], [listVirtualGateways[1]], describeVirtualGateway[1]);
-            enableAccessLogging.run(cache, { }, (err, results) => {
+            appmeshVGAccessLogging.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('App Mesh virtual gateway has access logging enabled');
@@ -182,7 +182,7 @@ describe('enableAccessLogging', function () {
 
         it('should FAIL if access logging is not enabled for Amazon App Mesh virtual gateways', function (done) {
             const cache = createCache([listMeshes[0]], [listVirtualGateways[0]], describeVirtualGateway[0]);
-            enableAccessLogging.run(cache, { }, (err, results) => {
+            appmeshVGAccessLogging.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('App Mesh virtual gateway does not have access logging enabled');
@@ -193,7 +193,7 @@ describe('enableAccessLogging', function () {
 
         it('should PASS if No App Meshes found', function (done) {
             const cache = createCache([]);
-            enableAccessLogging.run(cache, { }, (err, results) => {
+            appmeshVGAccessLogging.run(cache, { }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].message).to.include('No App Meshes found');
                 expect(results[0].status).to.equal(0);
@@ -203,25 +203,27 @@ describe('enableAccessLogging', function () {
 
         it('should UNKNOWN if unable to query for App Meshes', function (done) {
             const cache = createCache(null, null, null, { message: 'Unable to query for App Meshes'});
-            enableAccessLogging.run(cache, { }, (err, results) => {
+            appmeshVGAccessLogging.run(cache, { }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query for App Meshes');
                 done();
             });
         });
 
         it('should UNKNOWN if unable to query for AppMesh virtual gateways', function (done) {
-            const cache = createCache([listMeshes[0]], {}, describeVirtualGateway[0], { message: 'Unable to query for AppMesh virtual gateways'});
-            enableAccessLogging.run(cache, { }, (err, results) => {
+            const cache = createCache([listMeshes[0]], null, describeVirtualGateway[0], null,  { message: 'Unable to query for AppMesh virtual gateways'});
+            appmeshVGAccessLogging.run(cache, { }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query for App Mesh virtual gateways');
                 done();
             });
         });
 
         it('should not return anything if list App Meshes response not found', function (done) {
             const cache = createNullCache();
-            enableAccessLogging.run(cache, { }, (err, results) => {
+            appmeshVGAccessLogging.run(cache, { }, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });
