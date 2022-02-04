@@ -54,7 +54,6 @@ module.exports = {
             for (let i in listSubscriptions.data) {
                 let subscriber = listSubscriptions.data[i];
                 let resource = subscriber.SubscriptionArn;
-                let endpoint ;
 
                 if (subscriber.Endpoint && config.sns_unwanted_subscribers_endpoint.toLowerCase().includes(subscriber.Endpoint.toLowerCase())){
                     helpers.addResult(results, 2,

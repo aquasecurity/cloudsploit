@@ -36,7 +36,7 @@ const createErrorCache = () => {
             listSubscriptions: {
                 'us-east-1': {
                     err: {
-                        message: 'Error listing notebook instances'
+                        message: 'Error listing subscriptions'
                     }
                 }
             }
@@ -53,6 +53,7 @@ describe('snsAppropriateSubscribers', function () {
             snsAppropriateSubscribers.run(cache, { sns_unwanted_subscribers_endpoint:'sadeed1999@gmail.com' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('SNS subscription is not an unwanted subscription');
                 done();
             });
         });
@@ -62,24 +63,27 @@ describe('snsAppropriateSubscribers', function () {
             snsAppropriateSubscribers.run(cache, { sns_unwanted_subscribers_endpoint:'sadeed1999@gmail.com' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('SNS subscription is an unwanted subscription');
                 done();
             });
         });
 
         it('should PASS if no SNS subscriptions found', function (done) {
             const cache = createCache([]);
-            snsAppropriateSubscribers.run(cache, {}, (err, results) => {
+            snsAppropriateSubscribers.run(cache, { sns_unwanted_subscribers_endpoint:'sadeed1999@gmail.com' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No SNS subscriptions Found');
                 done();
             });
         });
 
-        it('should UNKNOWN if unable to list SNS subscriptions', function (done) {
+        it('should UNKNOWN if Unable to query for SNS subscriptions', function (done) {
             const cache = createErrorCache();
-            snsAppropriateSubscribers.run(cache, {}, (err, results) => {
+            snsAppropriateSubscribers.run(cache, { sns_unwanted_subscribers_endpoint:'sadeed1999@gmail.com' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query for SNS subscriptions');
                 done();
             });
         });
