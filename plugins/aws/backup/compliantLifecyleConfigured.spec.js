@@ -67,8 +67,8 @@ const createCache = (plans, getBackupPlan, plansErr, getBackupPlanErr) => {
         backup: {
             listBackupPlans: {
                 'us-east-1': {
-                    err: plansErr,
-                    data: plans
+                    data: plans,
+                    err: plansErr
                 },
             },
             getBackupPlan: {
@@ -120,17 +120,6 @@ describe('compliantLifecyleConfigured', function () {
 
         it('should UNKNOWN if Unable to query Backup plans', function (done) {
             const cache = createCache(null, null, { message: "Unable to query Backup plans" });
-            compliantLifecyleConfigured.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(3);
-                expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Unable to query Backup plans')
-                done();
-            });
-        });
-
-        it('should UNKNOWN if Unable to get Backup plan description', function (done) {
-            const cache = createCache([listBackupPlans[0]], null, null, { message: "Unable to get Backup plan description" });
             compliantLifecyleConfigured.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
