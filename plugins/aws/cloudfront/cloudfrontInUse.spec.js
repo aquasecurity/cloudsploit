@@ -42,6 +42,7 @@ describe('cloudfrontInUse', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('global');
+                expect(results[0].message).to.include('AWS Cloudfront service is currently in use')
                 done();
             });
         });
@@ -52,17 +53,19 @@ describe('cloudfrontInUse', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('global');
+                expect(results[0].message).to.include('AWS Cloudfront service is not currently in use')
                 done();
             });
         });
 
 
         it('should UNKNOWN if unable to list distributions', function (done) {
-            const cache = createCache([], { message: 'Unable to list distributions' });
+            const cache = createCache(null, { message: 'Unable to list distributions' });
             cloudfrontInUse.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('global');
+                expect(results[0].message).to.include('Unable to list distributions')
                 done();
             });
         });
