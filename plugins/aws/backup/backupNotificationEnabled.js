@@ -60,7 +60,7 @@ module.exports = {
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'the selected Amazon Backup vault is not configured to send alert notifications for failed Amazon Backup jobs',
+                        'Selected Amazon Backup vault is not configured to send alert notifications for failed Amazon Backup jobs',
                         region, resource);
                 }    
 
