@@ -9,6 +9,7 @@
 name: roles/AquaCSPMSecurityAudit
 title: Aqua CSPM Security Audit
   - includedPermissions:
+  - cloudasset.assets.listResource
   - cloudkms.cryptoKeys.list
   - cloudkms.keyRings.list
   - cloudsql.instances.list
