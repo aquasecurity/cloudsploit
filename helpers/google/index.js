@@ -314,24 +314,63 @@ var execute = async function(LocalGoogleConfig, collection, service, callObj, ca
 
         makeApiCall(client, url, executorCb, null, {method: callObj.method, isPostCall, parentRecord, pagination: callObj.pagination, paginationKey: callObj.paginationKey});
     }
-
-
 };
+
+var isRateError = function(err) {
+    let isError = false;
+    var rateError = {message: 'rate', statusCode: 429};
+    if (err && err.code && rateError.statusCode == err.code){
+        isError = true;
+    } else if (err && rateError && rateError.message && err.message &&
+        err.message.toLowerCase().indexOf(rateError.message.toLowerCase()) > -1){
+        isError = true;
+    }
+
+    return isError;
+};
+
 function makeApiCall(client, originalUrl, callCb, nextToken, config) {
+    let retries = [];
+    var apiRetryAttempts = 3;
+    var apiRetryBackoff = 500;
+    var apiRetryCap = 1000;
+
     let url = originalUrl;
     let queryParams = '';
     if (config && config.pagination) {
-        queryParams = `${nextToken ? `&pageToken=${nextToken}` : ''}`;
+        queryParams = `${nextToken ? `?pageToken=${nextToken}` : ''}`;
     }
     url = `${originalUrl}${queryParams}`;
-    client.request({ 
-        url,
-        method: config.method ? config.method : 'GET'
-    })
-        .then((data) => {
-            callCb(null, data, originalUrl, config.isPostCall, config.parentRecord);
-        })
-        .catch((error) => callCb(error, null));
+    async.retry({
+        times: apiRetryAttempts,
+        interval: function(retryCount){
+            let retryExponential = 3;
+            let retryLeveler = 3;
+            let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
+            let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
+            let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
+
+            console.log(`Trying again in: ${retry_seconds/1000} seconds`);
+            retries.push({seconds: Math.round(retry_seconds/1000)});
+            return retry_seconds;
+        },
+        errorFilter: function(err) {
+            return isRateError(err);
+        }
+    }, function(cb) {
+        client.request({
+            url,
+            method: config.method ? config.method : 'GET'
+        }, function(err, res) {
+            if (err) {
+                cb(err, null);
+            } else if (res) {
+                callCb(null, res, originalUrl, config.isPostCall, config.parentRecord);
+            }
+        });
+    }, function(err, data){
+        callCb(err, data);
+    });    
 }
 
 function setData(collection, dataToAdd, postCall, parent) {
