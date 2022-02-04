@@ -41,22 +41,11 @@ module.exports = {
             for (var g in groups) {
                 var resource = 'arn:aws:ec2:' + region + ':' + groups[g].OwnerId + ':security-group/' +
                                groups[g].GroupId;      
-                if (groups[g].GroupId && !usedGroups.includes(groups[g].GroupId)) {
-                    strings.push(groups[g].GroupId);
-                    continue;
+                if (groups[g].GroupId && usedGroups.includes(groups[g].GroupId)) {
+                    helpers.addResult(results, 0, 'Security group is being used', region, resource)
+                } else {
+                     helpers.addResult(results, 2, 'Security group is not being used', region, resource)
                 }
-               
-            }
-            if (!strings.length) {
-                helpers.addResult(results, 0,
-                    'security groups are being used', region,
-                    resource);
-            } else {
-                helpers.addResult(results, 2,
-                    'Unused security groups'+ strings.join(' '), region,
-                    resource);
-                   
-            }
 
             rcb();
         }, function(){
