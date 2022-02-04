@@ -281,7 +281,7 @@ var execute = function(LocalGoogleConfig, collection, service, callObj, callKey,
     var executor = new google[callObj.api](options);
     var executorCb = function(err, data) {
         if (myEngine) {
-            if (err) {
+            if (err && Object.keys(err) && Object.keys(err).length) {
                 let errMessage = handleErrors(err);
                 collection[service][myEngine][callKey][region].err = errMessage;
             }
@@ -310,7 +310,7 @@ var execute = function(LocalGoogleConfig, collection, service, callObj, callKey,
                 regionCb();
             }
         } else {
-            if (err) {
+            if (err && Object.keys(err) && Object.keys(err).length) {
                 let errMessage = handleErrors(err);
                 collection[service][callKey][region].err = errMessage;
             }
