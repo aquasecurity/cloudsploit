@@ -85,23 +85,23 @@ const createCache = (mesh, describeMesh, meshErr, describeMeshErr) => {
 
 describe('restrictExternalTraffic', function () {
     describe('run', function () {
-        it('should PASS if App Mesh allows egress only from virtual nodes to other defined resources.', function (done) {
+        it('should PASS if Amazon App Mesh allows egress only from virtual nodes to other defined resources.', function (done) {
             const cache = createCache([listMeshes[0]], describeMesh[1]);
             restrictExternalTraffic.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Amazon App Mesh allows egress only from virtual nodes to other defined resources.');
+                expect(results[0].message).to.include('Amazon App Mesh allows egress only from virtual nodes to other defined resources');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
 
-        it('should FAIL if App Mesh allows egress to any endpoint inside or outside of the service mesh.', function (done) {
+        it('should FAIL if App Mesh mesh allows access to all endpoint inside or outside of the service mesh.', function (done) {
             const cache = createCache([listMeshes[0]], describeMesh[0]);
             restrictExternalTraffic.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Amazon App Mesh allows egress to any endpoint inside or outside of the service mesh.');
+                expect(results[0].message).to.include('App Mesh mesh allows access to all endpoint inside or outside of the service mesh.');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
@@ -112,7 +112,7 @@ describe('restrictExternalTraffic', function () {
             restrictExternalTraffic.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No App Meshes found');
+                expect(results[0].message).to.include('No App Mesh meshes found');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
