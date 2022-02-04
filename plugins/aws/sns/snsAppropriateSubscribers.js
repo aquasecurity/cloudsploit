@@ -15,7 +15,7 @@ module.exports = {
             name: 'SNS Unwanted Subscribers Endpoint',
             description: 'Comma-separated list of subscription endpoint i.e. xyz@aquasec.com',
             regex: '^.*$',
-            default: 'sadeed1999@gmail.com',
+            default: '',
         }
     },
 
