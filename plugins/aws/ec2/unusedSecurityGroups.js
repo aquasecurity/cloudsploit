@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Open All Ports Protocols',
+    title: 'Unused Security Groups',
     category: 'EC2',
     domain: 'Compute',
     description: 'Determine if security group has all ports or protocols open to the public',
