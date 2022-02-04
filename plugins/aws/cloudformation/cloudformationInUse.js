@@ -38,8 +38,6 @@ module.exports = {
                     'Amazon CloudFormation service is not currently in use',
                     region);  
             }
-        
-            
            
             rcb();
         }, function(){
