@@ -40,9 +40,9 @@ module.exports = {
                 var resource = 'arn:aws:ec2:' + region + ':' + groups[g].OwnerId + ':security-group/' +
                                groups[g].GroupId;      
                 if (groups[g].GroupId && usedGroups.includes(groups[g].GroupId)) {
-                    helpers.addResult(results, 0, 'Security group is being used', region, resource)
+                    helpers.addResult(results, 0, 'Security group is being used', region, resource);
                 } else {
-                     helpers.addResult(results, 2, 'Security group is not being used', region, resource)
+                    helpers.addResult(results, 2, 'Security group is not being used', region, resource);
                 }
             }
 
