@@ -197,8 +197,8 @@ describe('activeFindingsEnabled', function () {
             });
         });
 
-        it('should UNKNOWN if unable to list analyzers', function (done) {
-            const cache = createCache(null, null, { message: "Unable to list analyzers" });
+        it('should UNKNOWN if Unable to query for IAM access analyzers', function (done) {
+            const cache = createCache(null, null, { message: "Unable to query for IAM access analyzers" });
             activeFindingsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
