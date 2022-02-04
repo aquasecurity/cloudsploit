@@ -6,9 +6,9 @@ module.exports = {
     category: 'EC2',
     domain: 'Compute',
     description: 'Identify and remove unused EC2 security groups.',
-    more_info: 'Security groups should be created on a per-service basis and avoid allowing all ports or protocols.',
-    link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
-    recommended_action: 'Modify the security group to specify a specific port and protocol to allow.',
+    more_info: 'Keeping the number of security groups to a minimum makes the management easier and helps to avoid reaching the service limit.',
+    link: 'https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html',
+    recommended_action: 'Remove security groups that are not being used.',
     apis: ['EC2:describeSecurityGroups', 'EC2:describeNetworkInterfaces', 'Lambda:listFunctions'],
     
 
