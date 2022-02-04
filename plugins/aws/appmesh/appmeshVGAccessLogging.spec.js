@@ -195,23 +195,23 @@ describe('appmeshVGAccessLogging', function () {
             const cache = createCache([]);
             appmeshVGAccessLogging.run(cache, { }, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].message).to.include('No App Meshes found');
+                expect(results[0].message).to.include('No App Mesh meshes found');
                 expect(results[0].status).to.equal(0);
                 done();
             });
         });
 
-        it('should UNKNOWN if unable to query for App Meshes', function (done) {
+        it('should UNKNOWN if unable to query for App Mesh meshes', function (done) {
             const cache = createCache(null, null, null, { message: 'Unable to query for App Meshes'});
             appmeshVGAccessLogging.run(cache, { }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for App Meshes');
+                expect(results[0].message).to.include('Unable to query for App Mesh meshes');
                 done();
             });
         });
 
-        it('should UNKNOWN if unable to query for AppMesh virtual gateways', function (done) {
+        it('should UNKNOWN if unable to query for App Mesh virtual gateways', function (done) {
             const cache = createCache([listMeshes[0]], null, describeVirtualGateway[0], null,  { message: 'Unable to query for AppMesh virtual gateways'});
             appmeshVGAccessLogging.run(cache, { }, (err, results) => {
                 expect(results.length).to.equal(1);

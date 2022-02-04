@@ -24,12 +24,12 @@ module.exports = {
 
             if (listMeshes.err || !listMeshes.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for App Meshes: ' + helpers.addError(listMeshes),region);
+                    'Unable to query for App Mesh meshes: ' + helpers.addError(listMeshes),region);
                 return rcb();
             }
 
             if (!listMeshes.data.length) {
-                helpers.addResult(results, 0, 'No App Meshes found', region);
+                helpers.addResult(results, 0, 'No App Mesh meshes found', region);
                 return rcb();
             }
 
@@ -48,9 +48,9 @@ module.exports = {
                     continue;
                 }
 
-                if (!listVirtualGateways.data.virtualGateways ) {
+                if (!listVirtualGateways.data.virtualGateways) {
                     helpers.addResult(results, 0,
-                        'No AppMesh virtual gateways found', region, resource);
+                        'No App Mesh virtual gateways found', region, resource);
                     continue;
                 }
 
