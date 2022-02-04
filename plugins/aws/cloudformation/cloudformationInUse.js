@@ -25,7 +25,7 @@ module.exports = {
 
             if (describeStacks.err || !describeStacks.data) {
                 helpers.addResult(results, 3,
-                    `Unable to query cloudformation stacks: ${helpers.addError(describeStacks)}`, region);
+                    `Unable to query CloudFormation stacks: ${helpers.addError(describeStacks)}`, region);
                 return rcb();
             }
 
