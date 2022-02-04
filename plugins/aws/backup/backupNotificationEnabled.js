@@ -56,7 +56,7 @@ module.exports = {
                 if (getBackupVaultNotifications.data &&
                     getBackupVaultNotifications.data.BackupVaultEvents[0].toUpperCase() == 'BACKUP_JOB_COMPLETED'  ) {
                     helpers.addResult(results, 0,
-                        'the selected Amazon Backup vault is configured to send alert notifications for failed Amazon Backup jobs',
+                        'Selected Amazon Backup vault is configured to send alert notifications for failed Amazon Backup jobs',
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
