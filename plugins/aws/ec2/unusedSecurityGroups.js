@@ -39,7 +39,6 @@ module.exports = {
           
             let strings = [];
             for (var g in groups) {
-               
                 var resource = 'arn:aws:ec2:' + region + ':' + groups[g].OwnerId + ':security-group/' +
                                groups[g].GroupId;      
                 if (groups[g].GroupId && !usedGroups.includes(groups[g].GroupId)) {
