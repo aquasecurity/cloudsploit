@@ -18,7 +18,7 @@ module.exports = {
              'those buckets should not enable global user access.'
     },
     remediation_description: 'Bucket ACL will be modified to be private to bucket owner.',
-    remediation_min_version: '202108172230',
+    remediation_min_version: '202201131602',
     apis_remediate: ['S3:listBuckets', 'S3:getBucketLocation'],
     actions: {
         remediate: ['S3:putBucketAcl'],
