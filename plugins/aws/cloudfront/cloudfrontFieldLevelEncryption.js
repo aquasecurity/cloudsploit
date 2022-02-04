@@ -12,7 +12,6 @@ module.exports = {
     apis: ['CloudFront:listDistributions'],
 
     run: function(cache, settings, callback) {
-
         var results = [];
         var source = {};
         var region = helpers.defaultRegion(settings);
@@ -34,14 +33,13 @@ module.exports = {
         }
 
         listDistributions.data.forEach(distribution => {
-            if (!distribution.DefaultCacheBehavior ||
-                !distribution.DefaultCacheBehavior.FieldLevelEncryptionId ||
-                distribution.DefaultCacheBehavior.FieldLevelEncryptionId === '') {
-                helpers.addResult(results, 2,
-                    'Distribution does not have field level encryption enabled', 'global', distribution.ARN);
-            } else {
+            if (distribution.DefaultCacheBehavior &&
+                distribution.DefaultCacheBehavior.FieldLevelEncryptionId) {
                 helpers.addResult(results, 0,
                     'Distribution have field level encryption enabled', 'global', distribution.ARN);
+            } else {
+                helpers.addResult(results, 2,
+                    'Distribution does not have field level encryption enabled', 'global', distribution.ARN);
             }
         });
 
