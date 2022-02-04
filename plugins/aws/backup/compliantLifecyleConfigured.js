@@ -5,7 +5,7 @@ module.exports = {
     title: 'Backup Vault Encrypted',
     category: 'Backup',
     domain: 'Storage',
-    description: 'Ensure that a compliant lifecycle configuration is enabled for your Amazon Backup plans in order to meet compliance requirements when it comes to security and cost optimization.',
+    description: 'Ensure that a compliant lifecycle configuration is enabled for your Amazon Backup plans in order to meet compliance requirements when it comes to security and cost optimization. ',
     more_info: 'The AWS Backup lifecycle configuration contains an array of Transition objects specifying how long in days before a recovery point transitions to cold storage or is deleted.'+ 
         'DeleteAfterDays specifies the number of days after creation that a recovery point is deleted. MoveToColdStorageAfterDays Specifies the number of days after creation that a recovery point is moved to cold storage.',
     recommended_action: 'Enable compliant lifecycle configuration for your Amazon Backup plans in order to meet compliance requirements',
