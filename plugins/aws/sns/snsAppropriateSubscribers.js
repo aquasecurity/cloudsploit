@@ -56,10 +56,6 @@ module.exports = {
                 let resource = subscriber.SubscriptionArn;
                 let endpoint ;
 
-                if (subscriber.Endpoint){
-                    endpoint = subscriber.Endpoint.toLowerCase();
-                }
-
                 if (subscriber.Endpoint && config.sns_unwanted_subscribers_endpoint.toLowerCase().includes(subscriber.Endpoint.toLowerCase())){
                     helpers.addResult(results, 2,
                         'SNS subscription is an unwanted subscription', region, resource);
