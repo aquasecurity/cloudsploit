@@ -38,13 +38,13 @@ const describeStacks = [
 
 
 
-const createCache = (backupVault, backupVaultErr) => { 
+const createCache = (describeStacks, describeStacksErr) => { 
     return {
         cloudformation: {
             describeStacks: {
                 'us-east-1': {
-                    err: backupVaultErr,
-                    data: backupVault
+                    err: describeStacksErr,
+                    data: describeStacks
                 },
             },
         },
@@ -76,7 +76,7 @@ describe('cloudformationInUse', function () {
         });
 
         it('should UNKNOWN if Unable to query cloudformation stacks', function (done) {
-            const cache = createCache(null, { message: "Unable to query cloudformation stacks encryption" });
+            const cache = createCache(null, { message: "Unable to query cloudformation stacks" });
             cloudformationInUse.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
