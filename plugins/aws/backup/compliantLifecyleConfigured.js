@@ -58,7 +58,6 @@ module.exports = {
                     helpers.addResult(results, 0,
                         'Lifecycle configuration enabled for the selected Amazon Backup plan', region, resource);
                 }
-    
             }
 
             rcb();
