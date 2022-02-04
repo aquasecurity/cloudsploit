@@ -1,7 +1,7 @@
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'CloudFront WAF Enabled',
+    title: 'CloudFront Enabled',
     category: 'CloudFront',
     domain: 'Content Delivery',
     description: 'Ensure that AWS CloudFront service is used within your AWS account.',
