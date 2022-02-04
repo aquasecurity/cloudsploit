@@ -202,22 +202,22 @@ const createNullCache = () => {
 
 describe('unusedSecurityGroups', function () {
     describe('run', function () {
-        it('should PASS if security groups are being used', function (done) {
+        it('should PASS if Security group is being used', function (done) {
             const cache = createCache([describeSecurityGroups[0]], [describeNetworkInterfaces[0]], [listFunctions[0]]);
             unusedSecurityGroups.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('security groups are being used');
+                expect(results[0].message).to.include('Security group is being used');
                 done();
             });
         });
 
-        it('should FAIL if Unused security groups', function (done) {
+        it('should FAIL if Security group is not being used', function (done) {
             const cache = createCache([describeSecurityGroups[0]], [describeSecurityGroups[0]], [listFunctions[0]]);
             unusedSecurityGroups.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Unused security groups');
+                expect(results[0].message).to.include('Security group is not being used');
                 done();
             });
         });
@@ -232,7 +232,7 @@ describe('unusedSecurityGroups', function () {
             });
         });
 
-        it('should UNKNWON unable to describe security groups', function (done) {
+        it('should UNKNWON Unable to query for security groups', function (done) {
             const cache = createErrorCache();
             unusedSecurityGroups.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);

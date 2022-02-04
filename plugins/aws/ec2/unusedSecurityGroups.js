@@ -36,8 +36,6 @@ module.exports = {
 
             var groups = describeSecurityGroups.data;
             var usedGroups = helpers.getUsedSecurityGroups(cache, results, region, rcb);
-          
-            let strings = [];
             for (var g in groups) {
                 var resource = 'arn:aws:ec2:' + region + ':' + groups[g].OwnerId + ':security-group/' +
                                groups[g].GroupId;      
@@ -46,6 +44,7 @@ module.exports = {
                 } else {
                      helpers.addResult(results, 2, 'Security group is not being used', region, resource)
                 }
+            }
 
             rcb();
         }, function(){
