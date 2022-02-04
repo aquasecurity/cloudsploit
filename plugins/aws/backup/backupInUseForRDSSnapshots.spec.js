@@ -81,7 +81,7 @@ describe('backupInUseForRDSSnapshots', function () {
         });
 
         it('should UNKNOWN if Unable to query for RDS snapshots', function (done) {
-            const cache = createCache(null, null, null, { message: "Unable to query for RDS snapshots" });
+            const cache = createCache(null, { message: "Unable to query for RDS snapshots" });
             backupInUseForRDSSnapshots.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
