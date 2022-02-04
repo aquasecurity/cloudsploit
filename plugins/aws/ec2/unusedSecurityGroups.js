@@ -5,7 +5,7 @@ module.exports = {
     title: 'Unused Security Groups',
     category: 'EC2',
     domain: 'Compute',
-    description: 'Determine if security group has all ports or protocols open to the public',
+    description: 'Identify and remove unused EC2 security groups.',
     more_info: 'Security groups should be created on a per-service basis and avoid allowing all ports or protocols.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
     recommended_action: 'Modify the security group to specify a specific port and protocol to allow.',
