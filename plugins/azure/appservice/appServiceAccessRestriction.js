@@ -11,7 +11,7 @@ module.exports = {
     recommended_action: 'Add access restriction rules under network settings for the app services',
     link: 'https://docs.microsoft.com/en-us/azure/app-service/app-service-ip-restrictions#set-up-azure-functions-access-restrictions',
     apis: ['webApps:list', 'webApps:listConfigurations'],
-    remediation_min_version: '202201041500',
+    remediation_min_version: '202201131602',
     remediation_description: 'Access restriction rule will be added to deny access from any source for affected app services',
     apis_remediate: ['webApps:list', 'webApps:listConfigurations'],
     actions: {remediate:['webApps:updateconfiguration'], rollback:['webApps:updateconfiguration']},
