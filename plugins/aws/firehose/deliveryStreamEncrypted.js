@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Firehose Delivery Streams Encrypted',
+    title: 'Firehose Delivery Streams CMK Encrypted',
     category: 'Firehose',
     domain: 'Content Delivery',
     description: 'Ensures Firehose delivery stream are encrypted using AWS KMS key of desired encryption level.',
