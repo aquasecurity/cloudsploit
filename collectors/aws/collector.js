@@ -104,6 +104,9 @@ var calls = {
         listBackupVaults: {
             property: 'BackupVaultList',
             paginate: 'NextToken',
+        },
+        describeRegionSettings: {
+            property: 'ResourceTypeOptInPreference',
         }
     },
     CloudFormation: {
