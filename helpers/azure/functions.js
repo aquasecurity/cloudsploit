@@ -251,10 +251,10 @@ function checkLogAlerts(activityLogAlerts, conditionResource, text, results, loc
         }
     }
 
-    if ((conditionResource == 'microsoft.security/policies' || conditionResource == 'microsoft.network/loadbalancers') && alertCreateUpdateEnabled) {
+    if (conditionResource == 'microsoft.security/policies' && alertCreateUpdateEnabled) {
         addResult(results, 0,
             `Log Alert for ${text} write/update is enabled`, location, subscriptionId);
-    } else if ((conditionResource == 'microsoft.security/policies' || conditionResource == 'microsoft.network/loadbalancers') && !alertCreateUpdateEnabled) {
+    } else if (conditionResource == 'microsoft.security/policies' && !alertCreateUpdateEnabled) {
         addResult(results, 2,
             `Log Alert for ${text} write/update is not enabled`, location, subscriptionId);
     } else if ((alertCreateDeleteEnabled && alertDeleteEnabled && alertCreateUpdateEnabled) ||

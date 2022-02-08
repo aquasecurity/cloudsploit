@@ -20,7 +20,7 @@ const activityLogAlerts = [
                 },
                 {
                     "field": "operationName",
-                    "equals": "Microsoft.Network/loadbalancers/delete"
+                    "equals": "Microsoft.Network/loadbalancers/"
                 }
             ]
         },
@@ -52,6 +52,10 @@ const activityLogAlerts = [
                 {
                     "field": "operationName",
                     "equals": "Microsoft.Network/loadbalancers/write"
+                },
+                {
+                    "field": "operationName",
+                    "equals": "Microsoft.Network/loadbalancers/delete"
                 }
             ]
         },
@@ -103,26 +107,26 @@ describe("loadBalancerLoggingEnabled", function () {
         });
     });
 
-    it("should give failing result if Load Balancers write/update is not enabled", function (done) {
+    it("should give failing result if Load Balancers write and delete is not enabled", function (done) {
         const cache = createCache(null, [activityLogAlerts[0]]);
         loadBalancerLoggingEnabled.run(cache, {}, (err, results) => {
             expect(results.length).to.equal(1);
             expect(results[0].status).to.equal(2);
             expect(results[0].message).to.include(
-                "Log Alert for Load Balancers write/update is not enabled"
+                "Log Alert for Load Balancers write and delete is not enabled"
             );
             expect(results[0].region).to.equal("global");
             done();
         });
     });
 
-    it("should give passing result if Load Balancers write/update is enabled", function (done) {
+    it("should give passing result if Load Balancers write and delete is enabled", function (done) {
         const cache = createCache(null, [activityLogAlerts[1]]);
         loadBalancerLoggingEnabled.run(cache, {}, (err, results) => {
             expect(results.length).to.equal(1);
             expect(results[0].status).to.equal(0);
             expect(results[0].message).to.include(
-                "Log Alert for Load Balancers write/update is enabled"
+                "Log Alert for Load Balancers write and delete is enabled"
             );
             expect(results[0].region).to.equal("global");
             done();
