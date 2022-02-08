@@ -20,7 +20,7 @@ const activityLogAlerts = [
                 },
                 {
                     "field": "operationName",
-                    "equals": "Microsoft.Sql/servers/databases/delete"
+                    "equals": "Microsoft.Sql/servers/databases/"
                 }
             ]
         },
@@ -52,6 +52,10 @@ const activityLogAlerts = [
                 {
                     "field": "operationName",
                     "equals": "Microsoft.Sql/servers/databases/write"
+                },
+                {
+                    "field": "operationName",
+                    "equals": "Microsoft.Sql/servers/databases/delete"
                 }
             ]
         },
@@ -103,26 +107,26 @@ describe("sqlServerDatabaseLoggingEnabled", function () {
         });
     });
 
-    it("should give failing result if SQL Server Database write/update is not enabled", function (done) {
+    it("should give failing result if SQL Server Database write and delete is not enabled", function (done) {
         const cache = createCache(null, [activityLogAlerts[0]]);
         sqlServerDatabaseLoggingEnabled.run(cache, {}, (err, results) => {
             expect(results.length).to.equal(1);
             expect(results[0].status).to.equal(2);
             expect(results[0].message).to.include(
-                "Log Alert for SQL Server Database write/update is not enabled"
+                "Log Alert for SQL Server Database write and delete is not enabled"
             );
             expect(results[0].region).to.equal("global");
             done();
         });
     });
 
-    it("should give passing result if SQL Server Database write/update is enabled", function (done) {
+    it("should give passing result if SQL Server Database write and delete is enabled", function (done) {
         const cache = createCache(null, [activityLogAlerts[1]]);
         sqlServerDatabaseLoggingEnabled.run(cache, {}, (err, results) => {
             expect(results.length).to.equal(1);
             expect(results[0].status).to.equal(0);
             expect(results[0].message).to.include(
-                "Log Alert for SQL Server Database write/update is enabled"
+                "Log Alert for SQL Server Database write and delete is enabled"
             );
             expect(results[0].region).to.equal("global");
             done();
