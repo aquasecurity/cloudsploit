@@ -51,20 +51,27 @@ module.exports = {
                 index === self.findIndex((t) => (t.Target === value.Target))
             );
 
-            for (let session of uniqInstances) {
-                var resource = `arn:${awsOrGov}:ec2:${region}:${accountId}:/instance/${session.Target}`;
-                let activeSessionTimeInMins = helpers.minutesBetween(new Date(), session.StartDate);
+            const sessionsByInstances = uniqInstances.map((instance) => {
+                return { instanceId: instance.Target, sessions: describeSessions.data.filter(session => session.Target === instance.Target) };
+            });
 
-                if (sessionMaxDuration) {
-                    if (sessionMaxDuration > activeSessionTimeInMins) {
-                        helpers.addResult(results, 0,
-                            `SSM Session duration length is ${activeSessionTimeInMins} minutes which is less than the \
-                            max time set in SSM Session Manager ${sessionMaxDuration} minutes`,
-                            region, resource);
-                    } else {
-                        helpers.addResult(results, 2,
-                            `SSM Session duration length is ${activeSessionTimeInMins} minutes which is greater than \
-                            the max time set in SSM Session Manager ${session.MaxSessionDuration} minutes`, region, resource);
+            for (let instance of sessionsByInstances) {
+                var resource = `arn:${awsOrGov}:ec2:${region}:${accountId}:/instance/${instance.instanceId}`;
+
+                for (let session of instance.sessions) {
+                    let activeSessionTimeInMins = helpers.minutesBetween(new Date(), session.StartDate);
+
+                    if (sessionMaxDuration) {
+                        if (sessionMaxDuration > activeSessionTimeInMins) {
+                            helpers.addResult(results, 0,
+                                `SSM Session duration length is ${activeSessionTimeInMins} minutes which is less than the \
+                                max time set in SSM Session Manager ${sessionMaxDuration} minutes`,
+                                region, resource);
+                        } else {
+                            helpers.addResult(results, 2,
+                                `SSM Session duration length is ${activeSessionTimeInMins} minutes which is greater than \
+                                the max time set in SSM Session Manager ${session.MaxSessionDuration} minutes`, region, resource);
+                        }
                     }
                 }
             }
