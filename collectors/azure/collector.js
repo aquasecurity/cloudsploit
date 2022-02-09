@@ -524,12 +524,31 @@ function parseCollection(path, obj) {
     }
 }
 
+var rateError = {message: 'Too Many Requests', statusCode: 429};
+
+var apiRetryAttempts = 2;
+var apiRetryBackoff = 500;
+var apiRetryCap = 1000;
+
 var collect = function(AzureConfig, settings, callback) {
     // Used to gather info only
     if (settings.gather) {
         return callback(null, calls, postcalls, tertiarycalls, specialcalls);
     }
+
+    // Used to track rate limiting retries
+    let retries = [];
     
+    var isRateError = function(err) {
+        let isError = false;
+
+        if (err && err.statusCode && rateError && rateError.statusCode == err.statusCode) {
+            isError = true;
+        }
+
+        return isError;
+    };
+
     var helpers = require(__dirname + '/../../helpers/azure/auth.js');
     
     // Login using the Azure config
@@ -538,13 +557,35 @@ var collect = function(AzureConfig, settings, callback) {
 
         var collection = {};
 
-        var processCall = function(obj, cb) {
+        var processCall = function(obj, callback) {
             var localUrl = obj.url.replace(/\{subscriptionId\}/g, AzureConfig.SubscriptionID);
-            helpers.call({
-                url: localUrl,
-                post: obj.post,
-                token: obj.graph ? loginData.graphToken : (obj.vault ? loginData.vaultToken : loginData.token)
-            }, cb);
+            async.retry({
+                times: apiRetryAttempts,
+                interval: function(retryCount){
+                    let retryExponential = 3;
+                    let retryLeveler = 3;
+                    let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
+                    let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
+                    let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
+
+                    console.log(`Trying again in: ${retry_seconds/1000} seconds`);
+                    retries.push({seconds: Math.round(retry_seconds/1000)});
+                    return retry_seconds;
+                },
+                errorFilter: function(err) {
+                    return isRateError(err);
+                }
+            }, function(cb) {
+                helpers.call({
+                    url: localUrl,
+                    post: obj.post,
+                    token: obj.graph ? loginData.graphToken : (obj.vault ? loginData.vaultToken : loginData.token)
+                }, function(err, data){
+                    return cb(err, data);
+                });
+            }, function(err, data){
+                callback(err, data);
+            });
         };
 
         async.series([
@@ -776,7 +817,7 @@ var collect = function(AzureConfig, settings, callback) {
                                 reliesOn[path] = parseCollection(path, collection);
                             });
                         }
-                        collectors[service][one](collection, reliesOn, function(){
+                        collectors[service][one](collection, reliesOn, retries, function(){
                             subCallCb();
                         });
                     }, function(){
@@ -790,7 +831,7 @@ var collect = function(AzureConfig, settings, callback) {
             // Finalize
             function() {
                 //console.log(JSON.stringify(collection, null,2));
-                callback(null, collection);
+                callback(null, collection, retries);
             }
         ]);
     });

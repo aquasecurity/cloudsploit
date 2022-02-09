@@ -2,6 +2,12 @@ var shared = require(__dirname + '/../shared.js');
 var auth = require(__dirname + '/auth.js');
 var async = require('async');
 
+var rateError = {message: 'Too Many Requests', statusCode: 429};
+
+var apiRetryAttempts = 2;
+var apiRetryBackoff = 500;
+var apiRetryCap = 1000;
+
 const defualyPolicyAssignments = {
     adaptiveApplicationControlsMonitoringEffect: 'AuditIfNotExists',
     diskEncryptionMonitoringEffect: 'AuditIfNotExists',
@@ -677,6 +683,42 @@ function remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, 
     });
 }
 
+function isRateError(err) {
+    let isError = false;
+
+    if (err && err.statusCode && rateError && rateError.statusCode == err.statusCode) {
+        isError = true;
+    }
+
+    return isError;
+}
+
+function makeCustomCollectorCall(executor, callKey, params, retries, callback) {
+    async.retry({
+        times: apiRetryAttempts,
+        interval: function(retryCount){
+            let retryExponential = 3;
+            let retryLeveler = 3;
+            let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
+            let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
+            let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
+
+            console.log(`Trying ${callKey} again in: ${retry_seconds/1000} seconds`);
+            retries.push({seconds: Math.round(retry_seconds/1000)});
+            return retry_seconds;
+        },
+        errorFilter: function(err) {
+            return isRateError(err);
+        }
+    }, function(cb) {
+        executor[callKey](params, function(err, data) {
+            return cb(err, data);
+        });
+    }, function(err, result) {
+        callback(err, result);
+    });
+}
+
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
@@ -687,5 +729,7 @@ module.exports = {
     remediatePlugin: remediatePlugin,
     processCall: processCall,
     remediateOpenPorts: remediateOpenPorts,
-    remediateOpenPortsHelper: remediateOpenPortsHelper
+    remediateOpenPortsHelper: remediateOpenPortsHelper,
+    isRateError: isRateError,
+    makeCustomCollectorCall: makeCustomCollectorCall
 };
