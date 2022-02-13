@@ -280,7 +280,7 @@ function createResourceName(resourceType, resourceId, project, locationType, loc
     return resourceName;
 }
 
-function checkOrgPolicy(orgPolicies, constraintName, constraintType, shouldBeEnabled, ifNotFound, displayName, results) {
+function checkOrgPolicy(orgPolicies, constraintName, constraintType, shouldBeEnabled, ifNotFound, displayName, results, resource) {
     let isEnabled = false;
     if (orgPolicies && orgPolicies.policies) {
         let policyToCheck = orgPolicies.policies.find(policy => (
@@ -311,7 +311,7 @@ function checkOrgPolicy(orgPolicies, constraintName, constraintType, shouldBeEna
         message = shouldBeEnabled ? failureMessage : successMessage;
     }
 
-    shared.addResult(results, status, message, 'global');
+    shared.addResult(results, status, message, 'global', resource);
 
 }
 

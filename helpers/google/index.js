@@ -408,6 +408,32 @@ var execute = function(LocalGoogleConfig, collection, service, callObj, callKey,
     }
 };
 
+function remediateOrgPolicy(config, constraintName, policyType, policyValue, resource, remediation_file, putCall, pluginName, callback) {
+
+    // url to update org policy
+    var baseUrl = 'https://cloudresourcemanager.googleapis.com/v1/{resource}:setOrgPolicy';
+    var method = 'POST';
+
+    // create the params necessary for the remediation
+    var body;
+    if (policyType == 'booleanPolicy') {
+        body = {
+            policy: {
+                constraint: constraintName,
+                booleanPolicy: {
+                    enforced: policyValue
+                }
+            }
+        };
+    }
+    // logging
+    remediation_file['pre_remediate']['actions'][pluginName][resource] = {
+        constraintName: policyValue ? 'Disabled' : 'Enabled'
+    };
+
+    remediatePlugin(config, method, body, baseUrl, resource, remediation_file, putCall, pluginName, callback);
+}
+
 function remediatePlugin(config, method, body, baseUrl, resource, remediation_file, putCall, pluginName, callback) {
     makeRemediationCall(config, method, body, baseUrl, resource, function(err) {
         if (err) {
@@ -444,6 +470,7 @@ var helpers = {
     authenticate: authenticate,
     processCall: processCall,
     remediatePlugin: remediatePlugin,
+    remediateOrgPolicy: remediateOrgPolicy,
     PROTECTION_LEVELS: ['unspecified', 'default', 'cloudcmek', 'cloudhsm', 'external'],
 };
 
