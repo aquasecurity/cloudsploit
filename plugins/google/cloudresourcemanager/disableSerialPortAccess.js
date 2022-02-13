@@ -10,9 +10,11 @@ module.exports = {
     recommended_action: 'Ensure that "Disable VM serial port access" constraint is enforced at the organization level.',
     apis: ['organizations:list', 'organizations:listOrgPolicies'],
     remediation_min_version: '202202140432',
+    remediation_description: 'The "Disable VM serial port access" constraint will be enforced at the organization level.',
     apis_remediate: ['organizations:list', 'organizations:listOrgPolicies'],
     actions: {remediate:['SetOrgPolicy'], rollback:['SetOrgPolicy']},
     permissions: {remediate: ['orgpolicy.policy.set'], rollback: ['orgpolicy.policy.set']},
+    realtime_triggers: ['SetOrgPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];
