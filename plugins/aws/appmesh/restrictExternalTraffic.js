@@ -6,9 +6,11 @@ module.exports = {
     category: 'App Mesh',
     domain: 'Content Delivery',
     description: 'Ensure that Amazon App Mesh virtual nodes have egress only access to other defined resources available within the service mesh.',
-    more_info: 'Amazon App Mesh gives control over the traffic flow to configure the microservices. Getting the control will allow you to decide if you want to give access to outside world for communication or not.',
-    link: 'https://docs.aws.amazon.com/app-mesh/latest/userguide/meshes.html',
-    recommended_action: 'Enable the feature to allow egress only from virtual nodes to other defined resources in the service mesh.',
+    more_info: 'Amazon App Mesh gives you controls to choose whether or not to allow App Mesh services to communicate with outside world. ' +
+        'If you choose to deny external traffic, the proxies will not forward traffic to external services not defined in the mesh. ' +
+        'The traffic to the external services should be denied to adhere to cloud security best practices and minimize the security risks.',
+    link: 'https://docs.aws.amazon.com/app-mesh/latest/userguide/security.html',
+    recommended_action: 'Deny all traffic to the external services',
     apis: ['AppMesh:listMeshes', 'AppMesh:describeMesh'],
 
     run: function(cache, settings, callback) {
@@ -44,23 +46,21 @@ module.exports = {
                 if (!describeMesh || describeMesh.err || !describeMesh.data ||
                     !describeMesh.data.mesh) {
                     helpers.addResult(results, 3,
-                        `Unable to get App Mesh description: ${helpers.addError(describeMesh)}`,
+                        `Unable to describe App Mesh mesh: ${helpers.addError(describeMesh)}`,
                         region, resource);
                     continue;
                 } 
 
                 if (describeMesh.data.mesh.spec &&
                     describeMesh.data.mesh.spec.egressFilter &&
-                    describeMesh.data.mesh.spec.egressFilter.type.toUpperCase() === 'DROP_ALL') {
-                    helpers.addResult(results, 0,
-                        'Amazon App Mesh allows egress only from virtual nodes to other defined resources',
-                        region, resource);
-                    continue;         
-                } else {
+                    describeMesh.data.mesh.spec.egressFilter.type.toUpperCase() === 'ALLOW_ALL') {
                     helpers.addResult(results, 2,
-                        'App Mesh mesh allows access to all endpoint inside or outside of the service mesh.',
+                        'App Mesh mesh allows allows all external egress traffic',
+                        region, resource);       
+                } else {
+                    helpers.addResult(results, 0,
+                        'App Mesh mesh denies all external egress traffic',
                         region, resource);
-                    continue;
                 }
             }
 

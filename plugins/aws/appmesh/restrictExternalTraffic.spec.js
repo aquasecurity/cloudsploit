@@ -85,23 +85,23 @@ const createCache = (mesh, describeMesh, meshErr, describeMeshErr) => {
 
 describe('restrictExternalTraffic', function () {
     describe('run', function () {
-        it('should PASS if Amazon App Mesh allows egress only from virtual nodes to other defined resources.', function (done) {
+        it('should PASS if App Mesh mesh denies all external egress traffic', function (done) {
             const cache = createCache([listMeshes[0]], describeMesh[1]);
             restrictExternalTraffic.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Amazon App Mesh allows egress only from virtual nodes to other defined resources');
+                expect(results[0].message).to.include('App Mesh mesh denies all external egress traffic');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
 
-        it('should FAIL if App Mesh mesh allows access to all endpoint inside or outside of the service mesh.', function (done) {
+        it('should FAIL if App Mesh mesh allows allows all external egress traffic', function (done) {
             const cache = createCache([listMeshes[0]], describeMesh[0]);
             restrictExternalTraffic.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('App Mesh mesh allows access to all endpoint inside or outside of the service mesh.');
+                expect(results[0].message).to.include('App Mesh mesh allows allows all external egress traffic');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
@@ -118,24 +118,24 @@ describe('restrictExternalTraffic', function () {
             });
         });
         
-        it('should UNKNOWN if Unable to query for App Meshes', function (done) {
-            const cache = createCache(null, null, { message: "Unable to query for App Meshes" });
+        it('should UNKNOWN if Unable to query for App Mesh meshes', function (done) {
+            const cache = createCache(null, null, { message: "Unable to query for App Mesh meshes" });
             restrictExternalTraffic.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Unable to query for App Meshes');
+                expect(results[0].message).to.include('Unable to query for App Mesh meshes');
                 done();
             });
         });
 
-        it('should UNKNOWN if Unable to get App Mesh description', function (done) {
-            const cache = createCache([listMeshes[0]], null, null, { message: "Unable to get App Mesh description" });
+        it('should UNKNOWN if Unable to describe App Mesh mesh', function (done) {
+            const cache = createCache([listMeshes[0]], null, null, { message: "Unable to describe App Mesh mesh" });
             restrictExternalTraffic.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Unable to get App Mesh description');
+                expect(results[0].message).to.include('Unable to describe App Mesh mesh');
                 done();
             });
         });
