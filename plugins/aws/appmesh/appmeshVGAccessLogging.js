@@ -6,9 +6,9 @@ module.exports = {
     category: 'App Mesh',
     domain: 'Content Delivery',
     description: 'Ensure that your Amazon App Mesh virtual gateways have access logging enabled.',
-    more_info: 'The Amazon App Mesh virtual gateways Access Logging feature provide evidence for security audits and investigations as well as let\'s you keep an eye on application mesh user access and helps you meet compliance regulations. ',
+    more_info: 'Enabling access logging feature for App Mesh virtual gateways lets you track application mesh user access, helps you meet compliance regulations, and gives insight into security audits and investigations. ',
     link: 'https://docs.aws.amazon.com/app-mesh/latest/userguide/envoy-logs.html',
-    recommended_action: 'Modify App Mesh virtual gateways to configure access logging feature',
+    recommended_action: 'To enable access logging, modify virtual gateway configuration settings and configure the file path to write access logs to.',
     apis: ['AppMesh:listMeshes', 'AppMesh:listVirtualGateways', 'AppMesh:describeVirtualGateway'],
     
     run: function(cache, settings, callback) {
@@ -34,7 +34,7 @@ module.exports = {
             }
 
             for (let mesh of listMeshes.data){
-                if (!mesh.arn) continue;
+                if (!mesh.arn || !mesh.meshName) continue;
 
                 let resource = mesh.arn;
 
@@ -55,7 +55,7 @@ module.exports = {
                 }
 
                 for (let gateway of listVirtualGateways.data.virtualGateways) {
-                    if (!gateway.arn) continue;
+                    if (!gateway.arn || gateway.virtualGatewayName) continue;
 
                     let resource = gateway.arn;
 
