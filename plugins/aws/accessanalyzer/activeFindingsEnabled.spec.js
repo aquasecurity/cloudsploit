@@ -180,7 +180,7 @@ describe('activeFindingsEnabled', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Amazon IAM access analyzer have no active findings');
+                expect(results[0].message).to.include('Amazon IAM Access Analyzer has no active findings');
                 
                 done();
             });
@@ -203,7 +203,7 @@ describe('activeFindingsEnabled', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Unable to query for IAM access analyzers');
+                expect(results[0].message).to.include('Unable to query for IAM Access Analyzer analyzers');
                 done();
             });
         });
