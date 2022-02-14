@@ -24,27 +24,25 @@ module.exports = {
 
             if (describeConfigurationRecorderStatus.err || !describeConfigurationRecorderStatus.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for Config Service status: ' + helpers.addError(describeConfigurationRecorderStatus), region);
+                    'Unable to query for Config Service configuration recorder statuses: ' + helpers.addError(describeConfigurationRecorderStatus), region);
                 return rcb();
             }
 
             if (!describeConfigurationRecorderStatus.data.length) {
                 helpers.addResult(results, 0,
-                    'No Config Service status found', region);
+                    'No Config Service configuration recorder statuses found', region);
                 return rcb();
             }
 
 
-            for (let record of describeConfigurationRecorderStatus.data) {
-                if (record.lastStatus.toUpperCase() === 'SUCCESS') {
-                    helpers.addResult(results, 0,
-                        'AWS Config service is delivering log files to the designated recipient successfully',
-                        region);
-                } else {
-                    helpers.addResult(results, 2,
-                        'AWS Config service is not delivering log files to the designated recipient successfully',
-                        region);
-                }
+            if (describeConfigurationRecorderStatus.data[0].lastStatus.toUpperCase() === 'SUCCESS') {
+                helpers.addResult(results, 0,
+                    'AWS Config service is delivering log files to the designated recipient successfully',
+                    region);
+            } else {
+                helpers.addResult(results, 2,
+                    'AWS Config service is not delivering log files to the designated recipient successfully',
+                    region);
             }
 
             rcb();

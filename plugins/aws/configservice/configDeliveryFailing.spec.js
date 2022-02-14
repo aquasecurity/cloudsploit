@@ -60,21 +60,21 @@ describe('configDeliveryFailing', () => {
                 expect(results[0].message).to.include('AWS Config service is not delivering log files to the designated recipient successfully');
             })
         });
-        it('should PASS if no Config Service status found', function (done) {
+        it('should PASS if no Config Service configuration recorder statuses found', function (done) {
             const cache = createCache([]);
             configDeliveryFailing.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No Config Service status found');
+                expect(results[0].message).to.include('No Config Service configuration recorder statuses found');
                 done();
             });
         });
-        it('should UNKNOWN if Unable to query for Config Service status', () => {
+        it('should UNKNOWN if unable to query for Config Service configuration recorder statuses', () => {
             const cache = createNullCache();
             configDeliveryFailing.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for Config Service status');
+                expect(results[0].message).to.include('Unable to query for Config Service configuration recorder statuses');
             })
         });
         it('should not return anything if list config services status response is not found', () => {
