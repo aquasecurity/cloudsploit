@@ -136,7 +136,7 @@ const createErrorCache = () => {
 
 describe('asgUnusedLaunchConfiguration', function () {
     describe('run', function () {
-        it('should PASS if AutoScaling launch configuration is being used', function (done) {
+        it('should PASS if Auto Scaling launch configuration is being used', function (done) {
             const cache = createCache([describeAutoScalingGroups[0]], [describeLaunchConfigurations[0]]);
             asgUnusedLaunchConfiguration.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -146,7 +146,7 @@ describe('asgUnusedLaunchConfiguration', function () {
             });
         });
 
-        it('should FAIL if AutoScaling launch configuration is not being used', function (done) {
+        it('should FAIL if Auto Scaling launch configuration is not being used', function (done) {
             const cache = createCache([describeAutoScalingGroups[0]], [describeLaunchConfigurations[1]]);
         asgUnusedLaunchConfiguration.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -156,7 +156,7 @@ describe('asgUnusedLaunchConfiguration', function () {
             });
         });
 
-        it('should PASS if no AutoScaling launch configurations found', function (done) {
+        it('should PASS if no Auto Scaling launch configurations found', function (done) {
             const cache = createCache([], []);
             asgUnusedLaunchConfiguration.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -175,16 +175,5 @@ describe('asgUnusedLaunchConfiguration', function () {
                 done();
             });
         });
-
-        it('should UNKNOWN if Unable to query for Auto Scaling groups', function (done) {
-            const cache = createCache(null, [describeLaunchConfigurations[1]]);
-            asgUnusedLaunchConfiguration.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for Auto Scaling groups');
-                done();
-            });
-        });
-
     });
 });
