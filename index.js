@@ -81,7 +81,9 @@ parser.add_argument('--run-asl', {
 });
 
 let settings = parser.parse_args();
+console.log(settings);
 let cloudConfig = {};
+
 
 // Now execute the scans using the defined configuration information.
 if (!settings.config) {
