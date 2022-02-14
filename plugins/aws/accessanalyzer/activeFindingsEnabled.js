@@ -56,7 +56,7 @@ module.exports = {
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'Amazon IAM access analyzer has active findings',
+                        'Amazon IAM Access Analyzer has active findings',
                         region, resource);
                 }
             }
