@@ -6,10 +6,10 @@ module.exports = {
     category: 'IAM',
     domain: 'Management and Governance',
     description: 'Ensure that IAM Access analyzer findings are reviewed for resolving security issues by taking all necessary actions.',
-    more_info: 'Access Analyzer review all of the findings in your account to determine whether the sharing is expected and approved. If the sharing identified in the finding is expected, you can archive the finding. ' +
-        'When you archive a finding, the status is changed to Archived, and the finding is removed from the Active findings list. The finding is not deleted. You can view your archived findings at any time. Work through all of the findings in your account until you have zero active findings.',
+    more_info: 'IAM Access Analyzer helps you evaluate access permissions across your AWS cloud environment and gives insights into intended access to your resources. It can monitor the access policies associated with S3 buckets, KMS keys, SQS queues, IAM roles and Lambda functions for permissions changes. ' +
+        'You can view IAM Acceess Analyzer findings at any time. Work through all of the findings in your account until you have zero active findings.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-work-with-findings.html',
-    recommended_action: 'Enable Access Analyzer to work through all of the findings in your account until you have zero active findings',
+    recommended_action: 'Investigate into active findings in your account and do the needful until you have zero active findings.',
     apis: ['AccessAnalyzer:listAnalyzers', 'AccessAnalyzer:listFindings'],
 
     run: function(cache, settings, callback) {
@@ -25,12 +25,12 @@ module.exports = {
 
             if (listAnalyzers.err || !listAnalyzers.data) {
                 helpers.addResult(results, 3,
-                    `Unable to query for IAM access analyzers: ${helpers.addError(listAnalyzers)}`,region);
+                    `Unable to query for IAM Access Analyzers analyzers: ${helpers.addError(listAnalyzers)}`, region);
                 return rcb();
             }
 
             if (!listAnalyzers.data.length) {
-                helpers.addResult(results, 0, 'No IAM access analyzers found', region);
+                helpers.addResult(results, 0, 'No IAM Access Analyzer analyzers found', region);
                 return rcb();
             }
 
@@ -44,7 +44,7 @@ module.exports = {
 
                 if (!listFindings || listFindings.err || !listFindings.data) {
                     helpers.addResult(results, 3,
-                        `Unable to query list findings: ${helpers.addError(listFindings)}`,
+                        `Unable to IAM Access Analyzer findings: ${helpers.addError(listFindings)}`,
                         region, resource);
                     continue;
                 } 
