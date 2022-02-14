@@ -192,13 +192,13 @@ describe('activeFindingsEnabled', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('No IAM access analyzers found');
+                expect(results[0].message).to.include('No IAM Access Analyzer analyzers found');
                 done();
             });
         });
 
         it('should UNKNOWN if Unable to query for IAM access analyzers', function (done) {
-            const cache = createCache(null, null, { message: "Unable to query for IAM access analyzers" });
+            const cache = createCache(null, null, { message: "Unable to query for IAM Access Analyzer analyzers" });
             activeFindingsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
