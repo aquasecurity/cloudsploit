@@ -3,7 +3,7 @@
 module.exports = {
     aws : {
         'accessAnalyzerEnabled'         : require(__dirname + '/plugins/aws/accessanalyzer/accessAnalyzerEnabled.js'),
-        'activeFindingsEnabled'         : require(__dirname + '/plugins/aws/accessanalyzer/activeFindingsEnabled.js'),
+        'accessAnalyzerActiveFindings'  : require(__dirname + '/plugins/aws/accessanalyzer/accessAnalyzerActiveFindings.js'),
 
         'acmValidation'                 : require(__dirname + '/plugins/aws/acm/acmValidation.js'),
         'acmCertificateExpiry'          : require(__dirname + '/plugins/aws/acm/acmCertificateExpiry.js'),

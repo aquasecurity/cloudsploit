@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var activeFindingsEnabled = require('./activeFindingsEnabled');
+var accessAnalyzerActiveFindings = require('./accessAnalyzerActiveFindings');
 
 const listAnalyzers = [
     {
@@ -161,11 +161,11 @@ const createCache = (analyzer, listFindings, analyzerErr, listFindingsErr) => {
     };
 };
 
-describe('activeFindingsEnabled', function () {
+describe('accessAnalyzerActiveFindings', function () {
     describe('run', function () {
         it('should FAIL if Amazon IAM access analyzer has active findings.', function (done) {
             const cache = createCache(listAnalyzers, listFindings[0]);
-            activeFindingsEnabled.run(cache, {}, (err, results) => {
+            accessAnalyzerActiveFindings.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
@@ -176,7 +176,7 @@ describe('activeFindingsEnabled', function () {
 
         it('should PASS if Amazon IAM access analyzer have no active findings.', function (done) {
             const cache = createCache(listAnalyzers, listFindings[1]);
-            activeFindingsEnabled.run(cache, {}, (err, results) => {
+            accessAnalyzerActiveFindings.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -188,7 +188,7 @@ describe('activeFindingsEnabled', function () {
 
         it('should PASS if no analyzers found', function (done) {
             const cache = createCache([]);
-            activeFindingsEnabled.run(cache, {}, (err, results) => {
+            accessAnalyzerActiveFindings.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -199,7 +199,7 @@ describe('activeFindingsEnabled', function () {
 
         it('should UNKNOWN if Unable to query for IAM access analyzers', function (done) {
             const cache = createCache(null, null, { message: "Unable to query for IAM access analyzers" });
-            activeFindingsEnabled.run(cache, {}, (err, results) => {
+            accessAnalyzerActiveFindings.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
