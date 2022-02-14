@@ -76,15 +76,6 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
         var openV6Ports = [];
         var resource = `arn:aws:ec2:${region}:${groups[g].OwnerId}:security-group/${groups[g].GroupId}`;
 
-        if (config.ec2_skip_unused_groups) {
-            if (groups[g].GroupId && !usedGroups.includes(groups[g].GroupId)) {
-                addResult(results, 1, `Security Group: ${groups[g].GroupId} is not in use`,
-                    region, resource);
-                usedGroup = true;
-                continue;
-            }
-        }
-
         for (var p in groups[g].IpPermissions) {
             var permission = groups[g].IpPermissions[p];
 
@@ -165,8 +156,15 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
                 }
             }
 
-            addResult(results, 2, resultsString,
-                region, resource);
+            if (config.ec2_skip_unused_groups && groups[g].GroupId && !usedGroups.includes(groups[g].GroupId)) {
+                addResult(results, 1, `Security Group: ${groups[g].GroupId} is not in use`,
+                    region, resource);
+                usedGroup = true;
+            } else {
+                addResult(results, 2, resultsString,
+                    region, resource);
+            }
+    
         }
     }
 
