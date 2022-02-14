@@ -52,7 +52,7 @@ module.exports = {
                 let filtered = listFindings.data.findings.filter(finding => finding.status === 'ACTIVE');
                 if (!filtered.length) {
                     helpers.addResult(results, 0,
-                        'Amazon IAM Access Analyzer have no active findings',
+                        'Amazon IAM Access Analyzer has no active findings',
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
