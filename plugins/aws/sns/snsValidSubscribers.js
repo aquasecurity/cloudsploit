@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'SNS Appropriate Subscribers',
+    title: 'SNS Valid Subscribers',
     category: 'SNS',
     domain: 'Application Integration',
     description: 'Ensure that Amazon SNS subscriptions are valid and there are no unwanted subscribers.',
@@ -11,8 +11,8 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/sns/latest/dg/sns-create-subscribe-endpoint-to-topic.html',
     apis: ['SNS:listSubscriptions'],
     settings: {
-        sns_unwanted_subscribers_endpoint: {
-            name: 'SNS Unwanted Subscribers Endpoint',
+        sns_unwanted_subscribers: {
+            name: 'SNS Unwanted Subscribers',
             description: 'Comma-separated list of subscription endpoint i.e. xyz@aquasec.com',
             regex: '^.*$',
             default: '',
@@ -25,12 +25,14 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var config = {
-            sns_unwanted_subscribers_endpoint: settings.sns_unwanted_subscribers_endpoint || this.settings.sns_unwanted_subscribers_endpoint.default
+            sns_unwanted_subscribers: settings.sns_unwanted_subscribers || this.settings.sns_unwanted_subscribers.default
         };
 
-        config.sns_unwanted_subscribers_endpoint = config.sns_unwanted_subscribers_endpoint.replace(/\s+/g, '');
+        config.sns_unwanted_subscribers = config.sns_unwanted_subscribers.replace(/\s+/g, '');
 
-        if (!config.sns_unwanted_subscribers_endpoint.length) return callback(null, results, source);
+        if (!config.sns_unwanted_subscribers.length) return callback(null, results, source);
+
+        config.sns_unwanted_subscribers = config.sns_unwanted_subscribers.toLowerCase();
 
         async.each(regions.sns, function(region, rcb){
             var listSubscriptions = helpers.addSource(cache, source,
@@ -55,7 +57,7 @@ module.exports = {
                 let subscriber = listSubscriptions.data[i];
                 let resource = subscriber.SubscriptionArn;
 
-                if (subscriber.Endpoint && config.sns_unwanted_subscribers_endpoint.toLowerCase().includes(subscriber.Endpoint.toLowerCase())){
+                if (subscriber.Endpoint && config.sns_unwanted_subscribers.includes(subscriber.Endpoint.toLowerCase())){
                     helpers.addResult(results, 2,
                         'SNS subscription is an unwanted subscription', region, resource);
                 } else {
