@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-const referencingMissingS3Bucket = require('./referencingMissingS3Bucket');
+const configServiceMissingBucket = require('./configServiceMissingBucket');
 
 const describeDeliveryChannels = [
     {
@@ -39,33 +39,33 @@ const createCache = (records, headBucket, recordsErr, headBucketErr) => {
     }
 }
 
-describe('referencingMissingS3Bucket', function () {
+describe('configServiceMissingBucket', function () {
     describe('run', function () {
-        it('should PASS if Config Service have these buckets available in your account.', function (done) {
+        it('should PASS if Config Service is not referencing any deleted bucket', function (done) {
             const cache = createCache([describeDeliveryChannels[1]], null);
-            referencingMissingS3Bucket.run(cache, {}, (err, results) => {
+            configServiceMissingBucket.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Config Service have buckets available in your account')
+                expect(results[0].message).to.include('Config Service is not referencing any deleted bucket')
                 done();
             });
         });
 
-        it('should FAIL if Config Service have these buckets not available in your account.', function (done) {
+        it('should FAIL if Config Service is referencing these deleted buckets', function (done) {
             const cache = createCache([describeDeliveryChannels[0]],null, null, { message: "A client error (404) occurred when calling the HeadBucket operation: Not Found.", code: 'NotFound' });
-            referencingMissingS3Bucket.run(cache, {}, (err, results) => {
+            configServiceMissingBucket.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('not available in your account')
+                expect(results[0].message).to.include('Config Service is referencing these deleted buckets')
                 done();
             });
         });
 
         it('should PASS if no Config delivery channels found', function (done) {
             const cache = createCache([]);
-            referencingMissingS3Bucket.run(cache, {}, (err, results) => {
+            configServiceMissingBucket.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -74,9 +74,9 @@ describe('referencingMissingS3Bucket', function () {
             });
         });
 
-        it('should UNKNOWN if Unable to query S3 headbucket', function (done) {
-            const cache = createCache(null, null, null, { message: "Unable to query S3 headbucket" });
-            referencingMissingS3Bucket.run(cache, {}, (err, results) => {
+        it('should UNKNOWN if Unable to query S3 bucket', function (done) {
+            const cache = createCache(null, null, null, { message: "Unable to query S3 bucket" });
+            configServiceMissingBucket.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
@@ -85,8 +85,8 @@ describe('referencingMissingS3Bucket', function () {
         });
 
         it('should UNKNOWN if Unable to query Config delivery channels', function (done) {
-            const cache = createCache(null, null, null, { message: "Unable to query Config delivery channels" });
-            referencingMissingS3Bucket.run(cache, {}, (err, results) => {
+            const cache = createCache(null, null, { message: "Unable to query Config delivery channels" });
+            configServiceMissingBucket.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');

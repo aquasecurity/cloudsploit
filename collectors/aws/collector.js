@@ -1324,10 +1324,10 @@ var postcalls = [
                 filterValue: 'Name'
             },
             headBucket: {
-                reliesOnService: 'configservice',
-                reliesOnCall: 'describeDeliveryChannels',
+                reliesOnService: 's3',
+                reliesOnCall: 'listBuckets',
                 filterKey: 'Bucket',
-                filterValue: 's3BucketName'
+                filterValue: 'Name'
             },
         },
         EC2: {
