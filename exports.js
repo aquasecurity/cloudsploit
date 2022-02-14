@@ -64,6 +64,7 @@ module.exports = {
         'cloudtrailManagementEvents'    : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailManagementEvents.js'),
         'cloudtrailS3Bucket'            : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailS3Bucket.js'),
         'globalLoggingDuplicated'       : require(__dirname + '/plugins/aws/cloudtrail/globalLoggingDuplicated.js'),
+        'cloudtrailNotificationsEnabled': require(__dirname + '/plugins/aws/cloudtrail/cloudtrailNotificationsEnabled.js'),
 
         'configServiceEnabled'          : require(__dirname + '/plugins/aws/configservice/configServiceEnabled.js'),
 
