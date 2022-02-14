@@ -1,7 +1,6 @@
 const expect = require('chai').expect;
 var appmeshVGAccessLogging = require('./appmeshVGAccessLogging');
 
-
 const listMeshes = [
     {
         "arn": "arn:aws:appmesh:us-east-1:000011112222:mesh/mine1",
@@ -23,7 +22,7 @@ const listVirtualGateways = [
         "meshOwner": "000011112222",
         "resourceOwner": "000011112222",
         "version": 1,
-        "virtualGatewayName": "number2"
+        "virtualGatewayName": "number2",
     },
     {
         "arn": "arn:aws:appmesh:us-east-1:000011112222:mesh/mine1/virtualGateway/number1",
