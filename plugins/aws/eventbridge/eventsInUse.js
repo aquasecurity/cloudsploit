@@ -1,13 +1,13 @@
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'CloudFront Enabled',
-    category: 'CloudFront',
-    domain: 'Content Delivery',
-    description: 'Ensure that AWS CloudFront service is used within your AWS account.',
-    more_info: 'Amazon CloudFront is a web service that speeds up distribution of your static and dynamic web content, such as .html, .css, .js, and image files, to your users. CloudFront delivers your content through a worldwide network of data centers called edge locations.',
-    link: 'https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html',
-    recommended_action: 'Check if CloudFront is in use or not by observing the data received.',
+    title: 'AWS CloudWatch Events In Use',
+    category: 'EventBridge',
+    domain: 'Management and Governance',
+    description: 'Ensure that Amazon CloudWatch Events service is in use in order to enable you to react selectively and efficiently to system events.',
+    more_info: 'Amazon CloudWatch Events delivers a near real-time stream of system events that describe changes in Amazon Web Services (AWS) resources. Using simple rules that you can quickly set up, you can match events and route them to one or more target functions or streams.',
+    link: 'https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/WhatIsCloudWatchEvents.html',
+    recommended_action: 'Check if CloudWatch events are in use or not by observing the data received.',
     apis: ['EventBridge:listRules'],
 
     run: function(cache, settings, callback) {
