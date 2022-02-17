@@ -122,7 +122,7 @@ describe('cloudtrailNotificationsEnabled', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('SNS notifications are deleted for the selected CloudTrail after manufacture of trail')
+                expect(results[0].message).to.include('SNS notifications are deleted for the selected CloudTrail trail after manufacture of trail')
                 done();
             });
         });
