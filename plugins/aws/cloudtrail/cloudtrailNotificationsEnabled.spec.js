@@ -32,7 +32,6 @@ const describeTrails = [
     }
 ];
 const listTopics =[
-    
             {
                 "TopicArn": "arn:aws:sns:us-east-1:000011112222:Default_CloudWatch_Alarms_Topic"
             },
