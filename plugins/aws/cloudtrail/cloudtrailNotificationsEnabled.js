@@ -54,7 +54,7 @@ module.exports = {
                 if (getTopicAttributes && getTopicAttributes.err && getTopicAttributes.err.code &&
                     getTopicAttributes.err.code == 'NotFound') {
                     helpers.addResult(results, 2,
-                        'SNS notifications are deleted for the selected CloudTrail after manufacture of trail', region, resource);
+                        'SNS notifications are deleted for the selected CloudTrail trail after manufacture of trail', region, resource);
                     continue;
                 } 
 
