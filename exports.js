@@ -53,6 +53,7 @@ module.exports = {
         'driftDetection'                :  require(__dirname + '/plugins/aws/cloudformation/driftDetection.js'),
         'stackTerminationProtection'    : require(__dirname + '/plugins/aws/cloudformation/stackTerminationProtection.js'),
         'stackNotifications'            : require(__dirname + '/plugins/aws/cloudformation/stackNotifications.js'),
+        'cloudformationAdminPriviliges' : require(__dirname + '/plugins/aws/cloudformation/cloudformationAdminPriviliges.js'),
 
         'cloudtrailBucketAccessLogging' : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailBucketAccessLogging.js'),
         'cloudtrailBucketDelete'        : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailBucketDelete.js'),
