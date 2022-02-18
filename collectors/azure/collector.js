@@ -235,14 +235,16 @@ var postcalls = {
         listByVault: {
             reliesOnPath: 'recoveryServiceVaults.listBySubscriptionId',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/backupProtectedItems?api-version=2019-05-13'
+            url: 'https://management.azure.com/{id}/backupProtectedItems?api-version=2019-05-13',
+            rateLimit: 100
         }
     },
     backupPolicies: {
         listByVault: {
             reliesOnPath: 'recoveryServiceVaults.listBySubscriptionId',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/backupPolicies?api-version=2019-05-13'
+            url: 'https://management.azure.com/{id}/backupPolicies?api-version=2019-05-13',
+            rateLimit: 100
         }
     },
     serverBlobAuditingPolicies: {
@@ -305,7 +307,8 @@ var postcalls = {
         get: {
             reliesOnPath: 'virtualMachines.listAll',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}?api-version=2020-12-01'
+            url: 'https://management.azure.com/{id}?api-version=2020-12-01',
+            rateLimit: 100
         }
     },
     virtualMachineExtensions: {
@@ -501,6 +504,7 @@ var specialcalls = {
     blobService: {
         listContainersSegmented: {
             reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 1000
         }
     },
     queueService: {
@@ -540,11 +544,21 @@ var collect = function(AzureConfig, settings, callback) {
 
         var processCall = function(obj, cb) {
             var localUrl = obj.url.replace(/\{subscriptionId\}/g, AzureConfig.SubscriptionID);
-            helpers.call({
-                url: localUrl,
-                post: obj.post,
-                token: obj.graph ? loginData.graphToken : (obj.vault ? loginData.vaultToken : loginData.token)
-            }, cb);
+            if (obj.rateLimit) {
+                setTimeout(function() {
+                    helpers.call({
+                        url: localUrl,
+                        post: obj.post,
+                        token: obj.graph ? loginData.graphToken : (obj.vault ? loginData.vaultToken : loginData.token)
+                    }, cb);
+                }, obj.rateLimit);
+            } else {
+                helpers.call({
+                    url: localUrl,
+                    post: obj.post,
+                    token: obj.graph ? loginData.graphToken : (obj.vault ? loginData.vaultToken : loginData.token)
+                }, cb);
+            }
         };
 
         async.series([
@@ -592,7 +606,8 @@ var collect = function(AzureConfig, settings, callback) {
                                         post: subCallObj.post,
                                         token: subCallObj.token,
                                         graph: subCallObj.graph,
-                                        vault: subCallObj.vault
+                                        vault: subCallObj.vault,
+                                        rateLimit: subCallObj.rateLimit
                                     };
                                     // Check and replace properties
                                     if (subCallObj.properties && subCallObj.properties.length) {
@@ -669,7 +684,8 @@ var collect = function(AzureConfig, settings, callback) {
                                         post: subCallObj.post,
                                         token: subCallObj.token,
                                         graph: subCallObj.graph,
-                                        vault: subCallObj.vault
+                                        vault: subCallObj.vault,
+                                        rateLimit: subCallObj.rateLimit
                                     };
                                     // Check and replace properties
                                     if (subCallObj.properties && subCallObj.properties.length) {
@@ -777,7 +793,13 @@ var collect = function(AzureConfig, settings, callback) {
                             });
                         }
                         collectors[service][one](collection, reliesOn, function(){
-                            subCallCb();
+                            if (subCallObj.rateLimit) {
+                                setTimeout(function() {
+                                    subCallCb();
+                                }, subCallObj.rateLimit);
+                            } else {
+                                subCallCb();
+                            }
                         });
                     }, function(){
                         callCb();
