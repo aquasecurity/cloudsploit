@@ -33,7 +33,8 @@ var calls = {
     },
     storageAccounts: {
         list: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Storage/storageAccounts?api-version=2019-06-01'
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Storage/storageAccounts?api-version=2019-06-01',
+            rateLimit: 33.3
         }
     },
     virtualNetworks: {
@@ -235,16 +236,14 @@ var postcalls = {
         listByVault: {
             reliesOnPath: 'recoveryServiceVaults.listBySubscriptionId',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/backupProtectedItems?api-version=2019-05-13',
-            rateLimit: 100
+            url: 'https://management.azure.com/{id}/backupProtectedItems?api-version=2019-05-13'
         }
     },
     backupPolicies: {
         listByVault: {
             reliesOnPath: 'recoveryServiceVaults.listBySubscriptionId',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/backupPolicies?api-version=2019-05-13',
-            rateLimit: 100
+            url: 'https://management.azure.com/{id}/backupPolicies?api-version=2019-05-13'
         }
     },
     serverBlobAuditingPolicies: {
@@ -307,8 +306,7 @@ var postcalls = {
         get: {
             reliesOnPath: 'virtualMachines.listAll',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}?api-version=2020-12-01',
-            rateLimit: 100
+            url: 'https://management.azure.com/{id}?api-version=2020-12-01'
         }
     },
     virtualMachineExtensions: {
@@ -343,26 +341,30 @@ var postcalls = {
         list: {
             reliesOnPath: 'storageAccounts.list',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/blobServices/default/containers?api-version=2019-06-01'
+            url: 'https://management.azure.com/{id}/blobServices/default/containers?api-version=2019-06-01',
+            rateLimit: 33.3
         }
     },
     blobServices: {
         list: {
             reliesOnPath: 'storageAccounts.list',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/blobServices?api-version=2019-06-01'
+            url: 'https://management.azure.com/{id}/blobServices?api-version=2019-06-01',
+            rateLimit: 33.3
         },
         getServiceProperties: {
             reliesOnPath: 'storageAccounts.list',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/blobServices/default?api-version=2019-06-01'
+            url: 'https://management.azure.com/{id}/blobServices/default?api-version=2019-06-01',
+            rateLimit: 33.
         }
     },
     fileShares: {
         list: {
             reliesOnPath: 'storageAccounts.list',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/fileServices/default/shares?api-version=2019-06-01'
+            url: 'https://management.azure.com/{id}/fileServices/default/shares?api-version=2019-06-01',
+            rateLimit: 33.3
         }
     },
     storageAccounts: {
@@ -370,7 +372,8 @@ var postcalls = {
             reliesOnPath: 'storageAccounts.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/listKeys?api-version=2019-06-01',
-            post: true
+            post: true,
+            rateLimit: 33.3
         }
     },
     encryptionProtectors: {
@@ -494,22 +497,25 @@ var specialcalls = {
     tableService: {
         listTablesSegmented: {
             reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 33.3
         }
     },
     fileService: {
         listSharesSegmented: {
             reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 33.3
         }
     },
     blobService: {
         listContainersSegmented: {
             reliesOnPath: ['storageAccounts.listKeys'],
-            rateLimit: 1000
+            rateLimit: 33.3
         }
     },
     queueService: {
         listQueuesSegmented: {
             reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 33.3
         }
     }
 };
