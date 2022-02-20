@@ -17,7 +17,6 @@ const createCache = (err, data) => {
                     ],
                     err: null
                 }
-
             },
             listOrgPolicies: {
                 'global': {
