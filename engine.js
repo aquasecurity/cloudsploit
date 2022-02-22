@@ -62,7 +62,7 @@ var engine = function(cloudConfig, settings) {
 
         // Skip plugins that don't match the ID flag
         var skip = false;
-        if (settings.plugin && settings.plugin !== pluginId) {
+        if ((settings.plugin && settings.plugin !== pluginId) || (settings.plugins && !settings.plugins.includes(pluginId))) {
             skip = true;
         } else {
             // Skip GitHub plugins that do not match the run type
