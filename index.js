@@ -75,6 +75,10 @@ parser.add_argument('--cloud', {
     choices: ['aws', 'azure', 'github', 'google', 'oracle','alibaba'],
     action: 'append'
 });
+parser.add_argument('--gcp-bucket', {
+    help: 'The name of the gcp bucket to upload the generated reports',
+    action: 'append'
+});
 parser.add_argument('--run-asl', {
     help: 'When set, it will execute custom plugins.',
     action: 'store_false'

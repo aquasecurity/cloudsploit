@@ -1,6 +1,9 @@
 var fs = require('fs');
 var ttytable = require('tty-table');
 
+
+const {Storage} = require('@google-cloud/storage');
+
 function exchangeStatusWord(result) {
     if (result.status === 0) return 'OK';
     if (result.status === 1) return 'WARN';
@@ -15,6 +18,38 @@ function commaSafe(str) {
 
 function log(msg, settings) {
     if (!settings.mocha) console.log(msg);
+}
+
+function generateTimeStamp(){
+    let date_ob = new Date();
+
+    let date = ('0' + date_ob.getDate()).slice(-2);
+    let month = ('0' + (date_ob.getMonth() + 1)).slice(-2);
+    let year = date_ob.getFullYear();
+    let hours = date_ob.getHours();
+    let minutes = date_ob.getMinutes();
+    return `${year}${month}${date}${hours}${minutes}`;
+}
+
+function uploadToBucket(fileName, bucketName){
+    const creds = {
+        'type': process.env.type,
+        'project_id': process.env.GOOGLE_PROJECT_ID,
+        'private_key_id': process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    };
+    
+    const storage = new Storage({
+        credentials: creds
+    });
+
+    var modifiedFileName = fileName.replace(/(\.[\w\d_-]+)$/i, `_${generateTimeStamp()}$1`);
+
+    console.log(`Using Bucket ${bucketName} for uploading the file ${fileName}`);
+    
+    return storage.bucket(bucketName).upload(fileName, {
+        destination: modifiedFileName,
+    },
+    ).promise();
 }
 
 // For the console output, we don't need any state since we can write
@@ -105,6 +140,13 @@ module.exports = {
             close: function() {
                 this.writer.end();
                 log(`INFO: CSV file written to ${settings.csv}`, settings);
+                if (settings.gcp_bucket){
+                    (async()=>{
+                        const result  = await uploadToBucket(settings.csv, settings.gcp_bucket);
+                        console.log(result);           
+                    })();
+                    log(`INFO: CSV file uploaded to ${settings.gcp_bucket}`, settings);
+                }
             }
         };
     },
@@ -139,6 +181,13 @@ module.exports = {
                 this.stream.write(JSON.stringify(results, null, 2));
                 this.stream.end();
                 log(`INFO: JSON file written to ${settings.json}`, settings);
+                if (settings.gcp_bucket){
+                    (async()=>{
+                        const result  = await uploadToBucket(settings.json, settings.gcp_bucket);
+                        console.log(result);           
+                    })();
+                    log(`INFO: JSON file uploaded to ${settings.gcp_bucket}`, settings);
+                }
             }
         };
     },
@@ -229,7 +278,14 @@ module.exports = {
                 this.stream.write('</testsuites>\n');
                 
                 this.stream.end();
-                log(`INFO: JUnit file written to ${settings.junit}`, settings);
+                if (settings.gcp_bucket){
+                    log(`INFO: JUnit file written to ${settings.junit}`, settings);
+                    (async()=>{
+                        const result  = await uploadToBucket(settings.junit, settings.gcp_bucket);
+                        console.log(result);           
+                    })();
+                    log(`INFO: JUnit file uploaded to ${settings.gcp_bucket}`, settings);
+                }
             },
 
             /**
@@ -300,6 +356,13 @@ module.exports = {
                 this.stream.write(JSON.stringify(results, null, 2));
                 this.stream.end();
                 log(`INFO: Collection file written to ${settings.collection}`, settings);
+                if (settings.gcp_bucket){
+                    (async()=>{
+                        const result  = await uploadToBucket(settings.collection, settings.gcp_bucket);
+                        console.log(result);           
+                    })();
+                    log(`INFO: Collection file uploaded to ${settings.gcp_bucket}`, settings);
+                }
             }
         };
     },
