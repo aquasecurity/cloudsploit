@@ -164,7 +164,6 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
                 addResult(results, 2, resultsString,
                     region, resource);
             }
-    
         }
     }
 
