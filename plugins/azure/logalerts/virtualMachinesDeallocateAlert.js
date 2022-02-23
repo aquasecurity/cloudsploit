@@ -17,9 +17,7 @@ module.exports = {
         var locations = helpers.locations(settings.govcloud);
 
         async.each(locations.activityLogAlerts, function(location, rcb) {
-
             var conditionResource = 'microsoft.compute/virtualmachines';
-
             var text = 'Virtual Machines';
 
             var activityLogAlerts = helpers.addSource(cache, source,
@@ -39,7 +37,6 @@ module.exports = {
             }
 
             let alertDeallocateEnabled = false;
-
             let subscriptionId;
 
             for (let res in activityLogAlerts.data) {
