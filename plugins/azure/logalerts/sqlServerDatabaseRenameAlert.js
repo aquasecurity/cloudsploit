@@ -17,9 +17,7 @@ module.exports = {
         var locations = helpers.locations(settings.govcloud);
 
         async.each(locations.activityLogAlerts, function(location, rcb) {
-
             var conditionResource = 'microsoft.sql/servers/databases';
-
             var text = 'SQL Server Database';
 
             var activityLogAlerts = helpers.addSource(cache, source,
@@ -51,7 +49,6 @@ module.exports = {
                 const allConditions = activityLogAlertResource.condition;
 
                 if (!allConditions || !allConditions.allOf || !allConditions.allOf.length) continue;
-
 
                 var conditionOperation = allConditions.allOf.filter((d) => {
                     return (d.equals && d.equals.toLowerCase().indexOf(conditionResource) > -1);
