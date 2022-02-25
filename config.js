@@ -63,6 +63,9 @@ module.exports = {
             // url: process.env.GITHUB_URL || 'https://api.github.com',
             // login: process.env.GITHUB_LOGIN || 'myusername',
             // organization: process.env.GITHUB_ORG || false
+        },
+        alibaba:{
+            
         }
     }
 };

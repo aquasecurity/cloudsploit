@@ -27,5 +27,5 @@ ENV PATH "$PATH:/var/scan/node_modules/.bin"
 # command line arguments to the run command to control how this executes.
 # Thus, you can use the parameters that you would normally give to index.js
 # when running in a container.
-ENTRYPOINT ["cloudsploit-scan"]
+ENTRYPOINT ["cloudsploit-scan", "--config=/var/scan/cloudsploit/config.js"]
 CMD []
