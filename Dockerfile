@@ -17,8 +17,6 @@ RUN cd /var/scan \
 && npm install ${PACKAGENAME} \
 && npm link /var/scan/cloudsploit
 
-RUN ls -la /var/scan/cloudsploit
-
 # Setup the container's path so that you can run cloudsploit directly
 # in case someone wants to customize it when running the container.
 ENV PATH "$PATH:/var/scan/node_modules/.bin"
