@@ -111,8 +111,10 @@ if (settings.compliance && settings.compliance.indexOf('cis') > -1) {
 console.log(`INFO: Using CloudSploit config file: ${settings.config}`);
 
 try {
+    console.log(process.env.GOOGLE_PRIVATE_KEY);
     var config = require(settings.config);
 } catch (e) {
+    console.log(e);
     console.error('ERROR: Config file could not be loaded. Please ensure you have copied the config_example.js file to config.js');
     process.exit(1);
 }

@@ -31,27 +31,25 @@ function generateTimeStamp(){
     return `${year}${month}${date}${hours}${minutes}`;
 }
 
-function uploadToBucket(fileName, bucketName){
+async function uploadToBucket(fileName, bucketName){
     const creds = {
-        'project_id': process.env.GOOGLE_PROJECT_ID,
-        'credentials': {
-            'client_email': process.env.GOOGLE_CLIENT_EMAIL,
-            'private_key': process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n')
-        }
+        'client_email': process.env.GOOGLE_CLIENT_EMAIL,
+        'private_key': process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n')
     };
     
     const storage = new Storage({
+        projectId: process.env.GOOGLE_PROJECT_ID,
         credentials: creds
     });
 
     var modifiedFileName = fileName.replace(/(\.[\w\d_-]+)$/i, `_${generateTimeStamp()}$1`);
 
-    console.log(`Using Bucket ${bucketName} for uploading the file ${fileName}`);
+    console.log(`Using Bucket ${bucketName} for uploading the file ${fileName} as ${modifiedFileName}`);
     
-    return storage.bucket(bucketName).upload(fileName, {
+    return storage.bucket(`${bucketName}`).upload(fileName, {
         destination: modifiedFileName,
     },
-    ).promise();
+    );
 }
 
 // For the console output, we don't need any state since we can write
@@ -146,8 +144,8 @@ module.exports = {
                     (async()=>{
                         const result  = await uploadToBucket(settings.csv, settings.gcp_bucket);
                         console.log(result);           
+                        log(`INFO: CSV file uploaded to ${settings.gcp_bucket}`, settings);
                     })();
-                    log(`INFO: CSV file uploaded to ${settings.gcp_bucket}`, settings);
                 }
             }
         };
@@ -187,8 +185,8 @@ module.exports = {
                     (async()=>{
                         const result  = await uploadToBucket(settings.json, settings.gcp_bucket);
                         console.log(result);           
+                        log(`INFO: JSON file uploaded to ${settings.gcp_bucket}`, settings);
                     })();
-                    log(`INFO: JSON file uploaded to ${settings.gcp_bucket}`, settings);
                 }
             }
         };
@@ -285,8 +283,8 @@ module.exports = {
                     (async()=>{
                         const result  = await uploadToBucket(settings.junit, settings.gcp_bucket);
                         console.log(result);           
+                        log(`INFO: JUnit file uploaded to ${settings.gcp_bucket}`, settings);
                     })();
-                    log(`INFO: JUnit file uploaded to ${settings.gcp_bucket}`, settings);
                 }
             },
 
@@ -362,8 +360,8 @@ module.exports = {
                     (async()=>{
                         const result  = await uploadToBucket(settings.collection, settings.gcp_bucket);
                         console.log(result);           
+                        log(`INFO: Collection file uploaded to ${settings.gcp_bucket}`, settings);
                     })();
-                    log(`INFO: Collection file uploaded to ${settings.gcp_bucket}`, settings);
                 }
             }
         };
