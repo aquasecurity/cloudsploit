@@ -146,6 +146,7 @@ module.exports = {
                         console.log(result);           
                         log(`INFO: CSV file uploaded to ${settings.gcp_bucket}`, settings);
                     })();
+                    
                 }
             }
         };
