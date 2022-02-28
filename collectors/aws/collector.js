@@ -146,6 +146,11 @@ var calls = {
             property: 'trailList'
         }
     },
+    CloudWatch: {
+        describeAlarmForOrgEventsMetric: {
+            override: true
+        }
+    },
     CloudWatchLogs: {
         describeLogGroups: {
             property: 'logGroups',
