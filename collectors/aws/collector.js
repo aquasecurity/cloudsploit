@@ -146,6 +146,11 @@ var calls = {
             property: 'trailList'
         }
     },
+     CloudWatch: {
+        describeAlarmForEC2InstanceMetric: {
+            override: true
+        }
+    },
     CloudWatchLogs: {
         describeLogGroups: {
             property: 'logGroups',

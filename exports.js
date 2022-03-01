@@ -68,6 +68,8 @@ module.exports = {
         'cloudtrailS3Bucket'            : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailS3Bucket.js'),
         'globalLoggingDuplicated'       : require(__dirname + '/plugins/aws/cloudtrail/globalLoggingDuplicated.js'),
 
+        'ec2InstanceChangesAlarm'       : require(__dirname + '/plugins/aws/cloudwatch/ec2InstanceChangesAlarm.js'),
+
         'configServiceEnabled'          : require(__dirname + '/plugins/aws/configservice/configServiceEnabled.js'),
 
         'devOpsGuruNotificationEnabled' : require(__dirname + '/plugins/aws/devopsguru/devOpsGuruNotificationEnabled.js'),
