@@ -146,7 +146,7 @@ var calls = {
             property: 'trailList'
         }
     },
-     CloudWatch: {
+    CloudWatch: {
         describeAlarmForEC2InstanceMetric: {
             override: true
         }
