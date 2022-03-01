@@ -384,6 +384,8 @@ module.exports = {
         'logRetentionPeriod'            : require(__dirname + '/plugins/aws/cloudwatchlogs/logRetentionPeriod.js'),
         'logGroupsEncrypted'            : require(__dirname + '/plugins/aws/cloudwatchlogs/logGroupsEncrypted.js'),
 
+        'vpcFlowLogsMetricAlarm'        : require(__dirname + '/plugins/aws/cloudwatch/vpcFlowLogsMetricAlarm.js'),
+
         'timestreamDatabaseEncrypted'   : require(__dirname + '/plugins/aws/timestreamwrite/timestreamDatabaseEncrypted.js'),
 
         'mqAutoMinorVersionUpgrade'     : require(__dirname + '/plugins/aws/mq/mqAutoMinorVersionUpgrade.js'),

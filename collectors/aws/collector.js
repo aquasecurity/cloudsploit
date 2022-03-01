@@ -146,6 +146,11 @@ var calls = {
             property: 'trailList'
         }
     },
+    CloudWatch: {
+        describeAlarms: {
+            property: 'MetricAlarms'
+        }
+    },
     CloudWatchLogs: {
         describeLogGroups: {
             property: 'logGroups',
@@ -160,7 +165,7 @@ var calls = {
             params: {
                 limit: 50 // The max available
             }
-        }
+        },
     },
     CodeArtifact: {
         listDomains: {
