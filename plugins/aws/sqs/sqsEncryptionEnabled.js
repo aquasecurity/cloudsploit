@@ -43,13 +43,13 @@ module.exports = {
 
             if (!listQueues) return rcb();
 
-            if (listQueues.err || !listQueues.data) {
+            if (listQueues.err) {
                 helpers.addResult(results, 3,
                     'Unable to query SQS queues: ' + helpers.addError(listQueues), region);
                 return rcb();
             }
 
-            if (!listQueues.data.length) {
+            if (!listQueues.data.length || !listQueues.data) {
                 helpers.addResult(results, 0, 'No SQS queues found', region);
                 return rcb();
             }
