@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Compliance',
     description: 'Ensure that there is an Amazon CloudWatch alarm implemented within your AWS Master account that is triggered each time an administrator-specific action occurs within your AWS EC2 Instances.',
     more_info: 'Using Amazon CloudWatch alarms to detect administrator-specific changes such as create organization, delete organization, create new accounts within an organization or remove a member account from an organization is considered best practice and can help you prevent any unwanted, accidental or intentional modifications that may lead to unauthorized access or other security breaches.',
-    recommended_action: 'Ensure that alarms are enabled for organizations to alert the user of the changes being made.',
+    recommended_action: 'You can create a CloudWatch alarm that monitors CloudWatch metrics for one of your instances. CloudWatch will automatically send you a notification when the metric reaches a threshold you specify.',
     link: 'https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/AlarmThatSendsEmail.html',
     apis: ['CloudWatch:describeAlarmForEC2InstanceMetric'],
 
