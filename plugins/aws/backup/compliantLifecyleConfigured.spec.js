@@ -118,7 +118,7 @@ describe('compliantLifecyleConfigured', function () {
             });
         });
 
-        it('should UNKNOWN if Unable to query Backup plans', function (done) {
+        it('should UNKNOWN if Unable to list Backup plans', function (done) {
             const cache = createCache(null, null, { message: "Unable to query Backup plans" });
             compliantLifecyleConfigured.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
