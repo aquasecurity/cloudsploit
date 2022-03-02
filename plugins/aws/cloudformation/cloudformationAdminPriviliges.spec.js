@@ -208,6 +208,7 @@ const createCache = (listStacks, describeStacks, listRoles, listAttachedRolePoli
     var roleName = (listRoles && listRoles.length) ? listRoles[0].RoleName : null;
     var policyArn = (listAttachedRolePolicies && listAttachedRolePolicies.AttachedPolicies) ? listAttachedRolePolicies.AttachedPolicies[0].PolicyArn : null;
     var policyName = (listRolePolicies) ? listRolePolicies.PolicyNames[0] : null;
+
     return {
         cloudformation: {
             listStacks: {
