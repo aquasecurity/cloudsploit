@@ -26,7 +26,6 @@ const createCache = (data, err) => {
     };
 };
 
-
 const createNullCache = () => {
     return {
         eventbridge: {
