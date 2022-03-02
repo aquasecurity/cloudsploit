@@ -76,7 +76,7 @@ describe('ec2InstanceChangesAlarm', function () {
         });
 
         it('should UNKNOWN if unable to describe CloudWatch metric alarms', function (done) {
-            const cache = createCache(describeAlarmForEC2InstanceMetric, { message: 'unable to list CloudWatch metric alarms' });
+            const cache = createCache(describeAlarmForEC2InstanceMetric, { message: 'unable to describe CloudWatch metric alarms' });
             ec2InstanceChangesAlarm.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
