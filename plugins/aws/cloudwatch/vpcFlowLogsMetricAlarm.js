@@ -76,7 +76,6 @@ module.exports = {
                 helpers.addResult(results, 0,
                     'CloudWatch alarms are configured for the VPC Flow Logs', 
                     region);
-                
             } else {
                 helpers.addResult(results, 2,
                     'CloudWatch alarms are not configured for the VPC Flow Logs', region);
