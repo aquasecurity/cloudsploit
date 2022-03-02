@@ -18,7 +18,6 @@ const listEventBuses = [
     },
 ];
 
-
 const createCache = (eventBus, eventBusErr) => {
     return {
         eventbridge: {
