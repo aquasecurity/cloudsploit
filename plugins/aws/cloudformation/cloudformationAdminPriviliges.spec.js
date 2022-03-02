@@ -57,7 +57,6 @@ const describeStacks = [
             "StackDriftStatus": "NOT_CHECKED"
         }
     },
-
     {
         "StackId": "arn:aws:cloudformation:us-east-1:000011112222:stack/sam-app/e26f50d0-6efd-11ec-bb7d-0e5217d78663",
         "StackName": "sam-app",
