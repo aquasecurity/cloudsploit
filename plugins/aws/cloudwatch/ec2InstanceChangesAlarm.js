@@ -24,7 +24,7 @@ module.exports = {
 
             if (describeAlarmForEC2InstanceMetric.err || !describeAlarmForEC2InstanceMetric.data) {
                 helpers.addResult(results, 3,
-                    `Unable to list CloudWatch metric alarms: ${helpers.addError(describeAlarmForEC2InstanceMetric)}`, 
+                    `Unable to describe CloudWatch metric alarms: ${helpers.addError(describeAlarmForEC2InstanceMetric)}`, 
                     region);
                 return rcb();
             }
