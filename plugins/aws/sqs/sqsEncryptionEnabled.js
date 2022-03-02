@@ -49,7 +49,7 @@ module.exports = {
                 return rcb();
             }
 
-            if (!listQueues.data.length || !listQueues.data) {
+            if (!listQueues.data || !listQueues.data.length) {
                 helpers.addResult(results, 0, 'No SQS queues found', region);
                 return rcb();
             }
