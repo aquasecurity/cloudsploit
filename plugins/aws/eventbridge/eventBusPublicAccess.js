@@ -76,8 +76,6 @@ module.exports = {
                 for (var statement of statements) {
                     var effectEval = (statement.Effect && statement.Effect == 'Allow' ? true : false);
                     var principalEval = helpers.globalPrincipal(statement.Principal);
-
-                    // Evaluates whether condition is scoped or global
                     let scopedCondition;
                     if (statement.Condition) scopedCondition = helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, false, accountId);
 
