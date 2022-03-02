@@ -90,7 +90,6 @@ const createCache = (describeTrails, listTopics, getTopicAttributes, describeTra
     }
 };
 
-
 describe('cloudtrailNotificationsEnabled', function () {
     describe('run', function () {
         it('should PASS if SNS notifications are enabled for trail', function (done) {
