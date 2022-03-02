@@ -27,8 +27,6 @@ const listStacks = [
 ];
 
 const describeStacks = [
-
-    
     {
         "StackId": "arn:aws:cloudformation:us-east-1:000011112222:stack/aws-sam-cli-managed-default/b6136b70-6efd-11ec-b78c-0e81d5d55d65",
         "StackName": "aws-sam-cli-managed-default",
