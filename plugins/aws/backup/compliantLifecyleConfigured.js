@@ -25,7 +25,7 @@ module.exports = {
 
             if (listBackupPlans.err || !listBackupPlans.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query Backup plans: ' + helpers.addError(listBackupPlans), region);
+                    'Unable to list Backup plans: ' + helpers.addError(listBackupPlans), region);
                 return rcb();
             }
 
