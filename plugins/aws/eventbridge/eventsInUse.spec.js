@@ -10,7 +10,8 @@ const listRules = [
         Description: 'This rule is used to route Instance notifications to EC2 Auto Scaling',
         ManagedBy: 'autoscaling.amazonaws.com',
         EventBusName: 'default'
-    }
+    },
+    {}
 ];
 
 const createCache = (data, err) => {
