@@ -298,7 +298,6 @@ const createNullCache = () => {
 
 describe('cloudformationAdminPriviliges', function () {
     describe('run', function () {
-
         it('should PASS if CloudFormation stack does not have admin privileges', function (done) {
             const cache = createCache([listStacks[0]], describeStacks[0], [listRoles[1]], listAttachedRolePolicies[1], listRolePolicies[0], [getRolePolicy[0]]);
             cloudformationAdminPriviliges.run(cache, {}, (err, results) => {
