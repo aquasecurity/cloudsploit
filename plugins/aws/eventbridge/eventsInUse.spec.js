@@ -60,7 +60,6 @@ describe('eventsInUse', function () {
             });
         });
 
-
         it('should UNKNOWN if Unable to list CloudWatch events rules', function (done) {
             const cache = createCache(null, { message: 'Unable to list CloudWatch events rules' });
             eventsInUse.run(cache, {}, (err, results) => {
