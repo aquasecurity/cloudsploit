@@ -15,7 +15,6 @@ module.exports = {
         'IAM:listPolicies', 'IAM:getPolicy', 'IAM:getPolicyVersion', 'IAM:getRolePolicy', 'STS:getCallerIdentity'],
 
     run: function(cache, settings, callback) {
-        // console.log(JSON.stringify(cache, null, 2));
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
