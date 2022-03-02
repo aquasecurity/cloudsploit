@@ -43,7 +43,6 @@ const listTopics =[
             }
 ];
 
-
 const getTopicAttributes =[
     {
         "Attributes": {
