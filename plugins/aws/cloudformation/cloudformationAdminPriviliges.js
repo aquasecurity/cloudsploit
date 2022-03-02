@@ -89,7 +89,6 @@ module.exports = {
                 }
 
                 for (var policy of listAttachedRolePolicies.data.AttachedPolicies) {
-                   
                     if (!policy.PolicyArn) continue;
 
                     if (policy.PolicyArn === managedAdminPolicy) {
