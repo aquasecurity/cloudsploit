@@ -202,7 +202,6 @@ const getPolicyVersion = [
     }
 ];
 
-
 const createCache = (listStacks, describeStacks, listRoles, listAttachedRolePolicies, listRolePolicies, getRolePolicy, getPolicy, getPolicyVersion) => {
     var stackName = (listStacks && listStacks.length) ? listStacks[0].StackName : null;
     var roleName = (listRoles && listRoles.length) ? listRoles[0].RoleName : null;
