@@ -58,7 +58,7 @@ const createCache = (listBackupVaults, getBackupVaultNotifications, listBackupVa
 
 describe('backupNotificationEnabled', function () {
     describe('run', function () {
-        it('should PASS if Selected Amazon Backup vault is configured to send alert notifications for failed Amazon Backup jobs', function (done) {
+        it('should PASS if Selected vault is configured to send alert notifications for failed Backup jobs', function (done) {
             const cache = createCache([listBackupVaults[0]], getBackupVaultNotifications[0]);
             backupNotificationEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
