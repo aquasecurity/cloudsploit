@@ -69,7 +69,7 @@ describe('backupNotificationEnabled', function () {
             });
         });
 
-        it('should FAIL if Selected Amazon Backup vault is not configured to send alert notifications for failed Amazon Backup jobs', function (done) {
+        it('should FAIL if Selected vault is not configured to send alert notifications for failed Backup jobs', function (done) {
             const cache = createCache([listBackupVaults[0]], getBackupVaultNotifications[1] );
             backupNotificationEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
