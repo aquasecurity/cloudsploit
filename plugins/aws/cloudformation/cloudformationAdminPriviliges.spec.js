@@ -91,8 +91,6 @@ const describeStacks = [
             "StackDriftStatus": "NOT_CHECKED"
         }
     }
-
-   
 ];
 
 const listRoles = [
