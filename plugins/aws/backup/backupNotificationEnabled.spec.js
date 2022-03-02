@@ -64,7 +64,7 @@ describe('backupNotificationEnabled', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Selected Amazon Backup vault is configured to send alert notifications for failed Amazon Backup jobs')
+                expect(results[0].message).to.include('Selected vault is configured to send alert notifications for failed Backup jobs')
                 done();
             });
         });
