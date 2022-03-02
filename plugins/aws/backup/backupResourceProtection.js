@@ -58,7 +58,7 @@ module.exports = {
 
             let allPassed = true;
             config.backup_resource_type.forEach(element => {
-                if (myObjLower[element]=== false){
+                if (myObjLower[element] === false) {
                     allPassed = false;
                     return;
                 }   
