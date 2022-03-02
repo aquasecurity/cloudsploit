@@ -50,7 +50,6 @@ const createNullCache = () => {
 
 describe('eventBusPublicAccess', function () {
     describe('run', function () {
-
         it('should PASS if Event bus policy is not exposed to everyone', function (done) {
             const cache = createCache([listEventBuses[1]]);
             eventBusPublicAccess.run(cache, {}, (err, results) => {
