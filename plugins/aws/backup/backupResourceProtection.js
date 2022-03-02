@@ -13,7 +13,7 @@ module.exports = {
     settings: {
         backup_resource_type: {
             name: 'Protected Amazon Backup Resource Types',
-            description: 'If set, Backup protected resource types should have a retention settings of boolean true or false equal to this value',
+            description: 'If set, Backup protected resource types should have a retention settings of boolean true or false.',
             regex: '^.*$',
             default:'rds, efs, aurora, dynamodb, storage gateway, ec2, ebs, virtual machine'
         }
