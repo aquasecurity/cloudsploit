@@ -62,7 +62,6 @@ module.exports = {
                     !getTopicAttributes.data) {
                     helpers.addResult(results, 2,
                         'SNS notifications are not enabled for trail', region, resource);
-                    continue;
                 }  else {
                     helpers.addResult(results, 0,
                         'SNS notifications are enabled for trail',
