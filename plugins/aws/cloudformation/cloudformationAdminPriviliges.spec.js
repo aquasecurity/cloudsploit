@@ -24,7 +24,6 @@ const listStacks = [
             "StackDriftStatus": "NOT_CHECKED"
         }
     }
-    
 ];
 
 const describeStacks = [
