@@ -22,7 +22,7 @@ const describeDBSnapshots = [
             "PercentProgress": 100,
             "StorageType": "gp2",
             "Encrypted": false,
-            "DBSnapshotArn": "arn:aws:rds:us-east-1:101363889637:snapshot:database-1-final-snapshot",
+            "DBSnapshotArn": "arn:aws:rds:us-east-1:000011112222:snapshot:database-1-final-snapshot",
             "IAMDatabaseAuthenticationEnabled": false,
             "ProcessorFeatures": [],
             "DbiResourceId": "db-AVTEMNYVJCF3INR3EROOHGZXQQ",
