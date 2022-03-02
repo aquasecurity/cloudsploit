@@ -74,7 +74,8 @@ module.exports = {
             let alarms =  describeAlarms.data.find(alarm => alarm.MetricName === filters.metricTransformations[0].metricName);
             if (alarms){
                 helpers.addResult(results, 0,
-                    'CloudWatch alarms are configured for the VPC Flow Logs', region);
+                    'CloudWatch alarms are configured for the VPC Flow Logs', 
+                    region);
                 
             } else {
                 helpers.addResult(results, 2,
