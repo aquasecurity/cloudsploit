@@ -74,7 +74,6 @@ module.exports = {
                 var actions = [];
 
                 for (var statement of statements) {
-                    // Evaluates whether the effect of the statement is to "allow" access to the SNS
                     var effectEval = (statement.Effect && statement.Effect == 'Allow' ? true : false);
 
                     // Evaluates whether the principal is open to everyone/anonymous
