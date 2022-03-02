@@ -78,6 +78,5 @@ describe('eventsInUse', function () {
                 done();
             });
         });
-
     });
 });
