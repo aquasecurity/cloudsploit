@@ -30,7 +30,6 @@ const describeRegionSettings = [
     }
 ];
 
-
 const createCache = (resource, resourceErr) => {
     return {
         backup: {
