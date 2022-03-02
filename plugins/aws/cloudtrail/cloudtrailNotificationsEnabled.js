@@ -40,7 +40,7 @@ module.exports = {
 
             if (listTopics.err || !listTopics.data) {
                 helpers.addResult(results, 3,
-                    `Unable to query for topics: ${helpers.addError(listTopics)}`, region);
+                    `Unable to list topics: ${helpers.addError(listTopics)}`, region);
                 return rcb();
             }
 
