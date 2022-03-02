@@ -76,7 +76,6 @@ module.exports = {
                 for (var statement of statements) {
                     var effectEval = (statement.Effect && statement.Effect == 'Allow' ? true : false);
 
-                    // Evaluates whether the principal is open to everyone/anonymous
                     var principalEval = helpers.globalPrincipal(statement.Principal);
 
                     // Evaluates whether condition is scoped or global
