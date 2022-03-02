@@ -78,8 +78,8 @@ module.exports = {
                     region);
             } else {
                 helpers.addResult(results, 2,
-                    'CloudWatch alarms are not configured for the VPC Flow Logs', region);
-                
+                    'CloudWatch alarms are not configured for the VPC Flow Logs', 
+                    region);
             }
                     
             rcb();
