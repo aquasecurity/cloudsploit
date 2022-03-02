@@ -23,7 +23,7 @@ module.exports = {
 
         if (listDistributions.err || !listDistributions.data) {
             helpers.addResult(results, 3,
-                'Unable to query for CloudFront distributions: ' + helpers.addError(listDistributions));
+                'Unable to list CloudFront distributions: ' + helpers.addError(listDistributions));
             return callback(null, results, source);
         }
 
