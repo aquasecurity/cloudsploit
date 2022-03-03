@@ -1888,11 +1888,6 @@ var postcalls = [
                 reliesOnCall: 'listRoles',
                 filterKey: 'RoleName',
                 filterValue: 'RoleName'
-            },
-            getInstanceProfile: {
-                reliesOnService: 'ec2',
-                reliesOnCall: 'describeInstances',
-                override: true
             }
         },
         EKS:{
@@ -2208,7 +2203,7 @@ var collect = function(AWSConfig, settings, callback) {
                                         let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
                                         let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
 
-                                        console.log(`Trying again in: ${retry_seconds/1000} seconds`);
+                                        console.log(`Trying ${callKey} again in: ${retry_seconds/1000} seconds`);
                                         retries.push({seconds: Math.round(retry_seconds/1000)});
                                         return retry_seconds;
                                     },
@@ -2232,7 +2227,7 @@ var collect = function(AWSConfig, settings, callback) {
                                         let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
                                         let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
 
-                                        console.log(`Trying again in: ${retry_seconds/1000} seconds`);
+                                        console.log(`Trying ${callKey} again in: ${retry_seconds/1000} seconds`);
                                         retries.push({seconds: Math.round(retry_seconds/1000)});
                                         return retry_seconds;
                                     },
@@ -2358,7 +2353,7 @@ var collect = function(AWSConfig, settings, callback) {
                                             let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
                                             let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
 
-                                            console.log(`Trying again in: ${retry_seconds/1000} seconds`);
+                                            console.log(`Trying ${callKey} again in: ${retry_seconds/1000} seconds`);
                                             retries.push({seconds: Math.round(retry_seconds/1000)});
                                             return retry_seconds;
                                         },
