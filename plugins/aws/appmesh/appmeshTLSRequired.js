@@ -76,7 +76,7 @@ module.exports = {
                         helpers.addResult(results, 0,
                             'App Mesh virtual gateway does not have listeners', region, gatewayArn);
                     } else {
-                        const tlsEnabled = virtual.spec.listeners.every(listener => listener.tls && listener.tls.mode && listener.tls.mode.toUpperCase() === 'STRICT');
+                        const tlsEnabled = describeVirtualGateway.data.virtualGateway.spec.listeners.every(listener => listener.tls && listener.tls.mode && listener.tls.mode.toUpperCase() === 'STRICT');
                         const status = tlsEnabled ? 0 : 2;
                         helpers.addResult(results, status,
                             `App Mesh virtual gateway listeners ${tlsEnabled ? 'restrict ' : 'does not restrict '} TLS enabled connections`,
