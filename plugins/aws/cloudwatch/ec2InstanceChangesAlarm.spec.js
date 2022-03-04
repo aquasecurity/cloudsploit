@@ -55,32 +55,35 @@ const createNullCache = () => {
 
 describe('ec2InstanceChangesAlarm', function () {
     describe('run', function () {
-        it('should PASS if Alarms detecting changes in EC2 instances are enabled', function (done) {
+        it('should PASS if CloudWatch alarm exists to detect changes in EC2 instances', function (done) {
             const cache = createCache([describeAlarmForEC2InstanceMetric[0]]);
             ec2InstanceChangesAlarm.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('CloudWatch alarm exists to detect changes in EC2 instances')
                 done();
             });
         });
 
-        it('should FAIL if Alarms detecting changes in EC2 instances are not enabled', function (done) {
+        it('should FAIL if CloudWatch alarm does not exist to detect changes in EC2 instances', function (done) {
             const cache = createCache(describeAlarmForEC2InstanceMetric[1]);
             ec2InstanceChangesAlarm.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('CloudWatch alarm does not exist to detect changes in EC2 instances')
                 done();
             });
         });
 
-        it('should UNKNOWN if unable to describe CloudWatch metric alarms', function (done) {
-            const cache = createCache(describeAlarmForEC2InstanceMetric, { message: 'unable to describe CloudWatch metric alarms' });
+        it('should UNKNOWN if Unable to describe CloudWatch metric alarms', function (done) {
+            const cache = createCache(describeAlarmForEC2InstanceMetric, { message: 'Unable to describe CloudWatch metric alarms' });
             ec2InstanceChangesAlarm.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to describe CloudWatch metric alarms')
                 done();
             });
         });
