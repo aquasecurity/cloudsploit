@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Compliance',
     description: 'Ensure that there is an Amazon CloudWatch alarm implemented within your AWS account to detect administrator-specific actions occurred within your AWS Organization.',
     more_info: 'Using Amazon CloudWatch alarms to detect administrator-specific changes such as create organization, delete organization, create new accounts within an organization or remove a member account from an organization is considered best practice and can help you prevent any unwanted, accidental or intentional modifications that may lead to unauthorized access or other security breaches.',
-    recommended_action: 'Create an CloudWatch alarm to detect any administrator changes within you AWS organization.',
+    recommended_action: 'Create a CloudWatch alarm to detect any administrator changes within you AWS organization.',
     link: 'https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/AlarmThatSendsEmail.html',
     apis: ['CloudWatch:describeAlarmForOrgEventsMetric'],
 

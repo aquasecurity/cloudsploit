@@ -55,37 +55,40 @@ const createNullCache = () => {
 
 describe('organizationChangesAlarm', function () {
     describe('run', function () {
-        it('should PASS if Alarms detecting changes in Amazon Organizations are enabled', function (done) {
+        it('should PASS if CloudWatch Alarm exists to detect organization changes', function (done) {
             const cache = createCache([describeAlarmForOrgEventsMetric[0]]);
             organizationChangesAlarm.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('CloudWatch Alarm exists to detect organization changes')
                 done();
             });
         });
 
-        it('should FAIL if Alarms detecting changes in Amazon Organizations are not enabled', function (done) {
+        it('should FAIL if CloudWatch Alarm does not exist to detect organization changes', function (done) {
             const cache = createCache(describeAlarmForOrgEventsMetric[1]);
             organizationChangesAlarm.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('CloudWatch Alarm does not exist to detect organization changes')
                 done();
             });
         });
 
         it('should UNKNOWN if unable to describe CloudWatch metric alarms', function (done) {
-            const cache = createCache(describeAlarmForOrgEventsMetric, { message: 'unable to list CloudWatch metric alarms' });
+            const cache = createCache(describeAlarmForOrgEventsMetric, { message: 'unable to describe CloudWatch metric alarms' });
             organizationChangesAlarm.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('unable to describe CloudWatch metric alarms')
                 done();
             });
         });
 
-        it('should not return anything if list CloudWatch metric alarms response not found', function (done) {
+        it('should not return anything if describe CloudWatch metric alarms response not found', function (done) {
             const cache = createNullCache();
             organizationChangesAlarm.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
