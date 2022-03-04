@@ -24,7 +24,7 @@ module.exports = {
 
             if (describeAlarmForOrgEventsMetric.err || !describeAlarmForOrgEventsMetric.data) {
                 helpers.addResult(results, 3,
-                    `Unable to list CloudWatch metric alarms: ${helpers.addError(describeAlarmForOrgEventsMetric)}`, 
+                    `Unable to describe CloudWatch metric alarms: ${helpers.addError(describeAlarmForOrgEventsMetric)}`, 
                     region);
                 return rcb();
             }
