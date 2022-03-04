@@ -64,7 +64,7 @@ module.exports = {
 
                     if (!describeVirtualGateway ||
                         describeVirtualGateway.err ||
-                        !describeVirtualGateway.data) {
+                        !describeVirtualGateway.data || describeVirtualGateway.data.virtualGateway) {
                         helpers.addResult(results, 3,
                             'Unable to App Mesh virtual gateways: ' + helpers.addError(describeVirtualGateway), region, gatewayArn);
                         continue;
