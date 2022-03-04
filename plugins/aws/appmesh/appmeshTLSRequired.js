@@ -6,7 +6,7 @@ module.exports = {
     category: 'App Mesh',
     domain: 'Content Delivery',
     description: 'Ensure that AWS App Mesh virtual gateways Listener only accepts connections with TLS enabled.',
-    more_info: 'In App Mesh, Transport Layer Security (TLS) encrypts communication between the Envoy proxies deployed on compute resources that are represented in App Mesh by mesh endpoints. An object that represents the Transport Layer Security (TLS) properties for a listener.',
+    more_info: 'In App Mesh, Transport Layer Security (TLS) encrypts communication between the Envoy proxies deployed on compute resources that are represented in App Mesh by mesh endpoints.',
     link: 'https://docs.aws.amazon.com/app-mesh/latest/APIReference/API_ListenerTls.html',
     recommended_action: 'Restrict TLS enabled connections to AWS App Mesh virtual gateways Listeners in your account',
     apis: ['AppMesh:listMeshes', 'AppMesh:listVirtualGateways', 'AppMesh:describeVirtualGateway'],
@@ -64,7 +64,7 @@ module.exports = {
 
                     if (!describeVirtualGateway ||
                         describeVirtualGateway.err ||
-                        !describeVirtualGateway.data || describeVirtualGateway.data.virtualGateway) {
+                        !describeVirtualGateway.data) {
                         helpers.addResult(results, 3,
                             'Unable to describe App Mesh virtual gateway: ' + helpers.addError(describeVirtualGateway), region, gatewayArn);
                         continue;
@@ -79,7 +79,7 @@ module.exports = {
                         const tlsEnabled = describeVirtualGateway.data.virtualGateway.spec.listeners.every(listener => listener.tls && listener.tls.mode && listener.tls.mode.toUpperCase() === 'STRICT');
                         const status = tlsEnabled ? 0 : 2;
                         helpers.addResult(results, status,
-                            `App Mesh virtual gateway listeners ${tlsEnabled ? 'restrict ' : 'does not restrict '} TLS enabled connections`,
+                            `App Mesh virtual gateway listeners ${tlsEnabled ? 'restrict' : 'does not restrict'} TLS enabled connections`,
                             region, gatewayArn);
                     }
                 }

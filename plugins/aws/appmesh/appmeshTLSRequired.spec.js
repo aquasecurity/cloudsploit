@@ -210,6 +210,7 @@ describe('appmeshTLSRequired', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('App Mesh virtual gateway listeners restrict TLS enabled connections')
                 done();
             });
         });
@@ -220,6 +221,7 @@ describe('appmeshTLSRequired', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('App Mesh virtual gateway listeners does not restrict TLS enabled connections')
                 done();
             });
         });
@@ -229,15 +231,17 @@ describe('appmeshTLSRequired', function () {
             appmeshTLSRequired.run(cache, { }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No App Mesh meshes found')
                 done();
             });
         });
 
-        it('should UNKNOWN if unable to list App Mesh meshes', function (done) {
+        it('should UNKNOWN if Unable to list App Mesh meshes', function (done) {
             const cache = createCache(null, null, null, { message: 'Unable to list App Mesh meshes'});
             appmeshTLSRequired.run(cache, { }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to list App Mesh meshes')
                 done();
             });
         });
@@ -247,6 +251,7 @@ describe('appmeshTLSRequired', function () {
             appmeshTLSRequired.run(cache, { }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to list App Mesh virtual gateways')
                 done();
             });
         });
