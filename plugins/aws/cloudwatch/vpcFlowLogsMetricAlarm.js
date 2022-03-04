@@ -12,7 +12,7 @@ module.exports = {
     apis: ['CloudWatchLogs:describeMetricFilters', 'CloudWatch:describeAlarms'],
     settings: {
         vpc_flow_log_group: {
-            name: 'CloudWatch VPC flow log group name',
+            name: 'CloudWatch VPC Flow Log Group Name',
             description: 'Log group name for VPC to detect the log group being used by CLoudWatch logs',
             regex: '^.*$',
             default: ''
@@ -48,10 +48,10 @@ module.exports = {
                 return rcb();
             }
 
-            let filters = describeMetricFilters.data.find(metrics => metrics.logGroupName === config.vpc_flow_log_group);
-            if (!filters) {
+            let cwVpcLogGroup = describeMetricFilters.data.find(metrics => metrics.logGroupName === config.vpc_flow_log_group);
+            if (!cwVpcLogGroup) {
                 helpers.addResult(results, 2,
-                    'No desired VPC group found', region);
+                    'Unable to locate the specified log group', region);
                 return rcb();
             }
 
@@ -71,14 +71,14 @@ module.exports = {
                 return rcb();
             }
 
-            let alarms =  describeAlarms.data.find(alarm => alarm.MetricName === filters.metricTransformations[0].metricName);
+            let alarms =  describeAlarms.data.find(alarm => cwVpcLogGroup.metricTransformations && cwVpcLogGroup.metricTransformations.length && cwVpcLogGroup.metricTransformations[0].metricName && alarm.MetricName === cwVpcLogGroup.metricTransformations[0].metricName);
             if (alarms){
                 helpers.addResult(results, 0,
-                    'CloudWatch alarms are configured for the VPC Flow Logs', 
+                    'CloudWatch alarm is configured for the VPC Flow Logs', 
                     region);
             } else {
                 helpers.addResult(results, 2,
-                    'CloudWatch alarms are not configured for the VPC Flow Logs', 
+                    'CloudWatch alarm is not configured for the VPC Flow Logs', 
                     region);
             }
                     

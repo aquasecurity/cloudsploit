@@ -165,7 +165,7 @@ var calls = {
             params: {
                 limit: 50 // The max available
             }
-        },
+        }
     },
     CodeArtifact: {
         listDomains: {
