@@ -139,20 +139,22 @@ const createNullCache = () => {
 
 describe('vpcFlowLogsMetricAlarm', function () {
     describe('run', function () {
-        it('should PASS if CloudWatch alarms are configured for the VPC Flow Logs', function (done) {
+        it('should PASS if CloudWatch alarm is configured for the VPC Flow Logs', function (done) {
             const cache = createCache([describeMetricFilters[0]], [describeAlarms[0]]);
             vpcFlowLogsMetricAlarm.run(cache, { vpc_flow_log_group: 'vpc_flow_log_group_name'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('CloudWatch alarm is configured for the VPC Flow Logs')
                 done();
             });
         });
         
-        it('should FAIL if CloudWatch alarms are not configured for the VPC Flow Logs', function (done) {
+        it('should FAIL if CloudWatch alarm is not configured for the VPC Flow Logs', function (done) {
             const cache = createCache([describeMetricFilters[0]], [describeAlarms[1]]);
             vpcFlowLogsMetricAlarm.run(cache, { vpc_flow_log_group: 'vpc_flow_log_group_name' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('CloudWatch alarm is not configured for the VPC Flow Logs')
                 done();
             });
         });
@@ -162,6 +164,7 @@ describe('vpcFlowLogsMetricAlarm', function () {
             vpcFlowLogsMetricAlarm.run(cache, { vpc_flow_log_group: 'vpc_flow_log_group_name' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('No CloudWatch metric alarms found')
                 done();
             });
         });
@@ -171,24 +174,27 @@ describe('vpcFlowLogsMetricAlarm', function () {
             vpcFlowLogsMetricAlarm.run(cache, { vpc_flow_log_group: 'vpc_flow_log_group_name' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query for CloudWatch metric alarms')
                 done();
             });
         });
 
-        it('should FAIL if no desired VPC group found', function (done) {
+        it('should FAIL if Unable to locate the specified log group', function (done) {
             const cache = createCache([describeMetricFilters[1]], describeAlarms[1]);
             vpcFlowLogsMetricAlarm.run(cache, { vpc_flow_log_group: 'vpc_flow_log_group_name' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('Unable to locate the specified log group')
                 done();
             });
         });
 
-        it('should FAIL if no CloudWatch logs metric filters found', function (done) {
+        it('should FAIL if No CloudWatch logs metric filters found', function (done) {
             const cache = createCache([]);
             vpcFlowLogsMetricAlarm.run(cache, { vpc_flow_log_group: 'vpc_flow_log_group_name' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('No CloudWatch logs metric filters found')
                 done();
             });
         });
@@ -198,6 +204,7 @@ describe('vpcFlowLogsMetricAlarm', function () {
             vpcFlowLogsMetricAlarm.run(cache, { vpc_flow_log_group: 'vpc_flow_log_group_name' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to describe CloudWatch logs metric filters')
                 done();
             });
         });
