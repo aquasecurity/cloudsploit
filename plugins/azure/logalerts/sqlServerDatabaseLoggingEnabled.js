@@ -17,11 +17,8 @@ module.exports = {
         var locations = helpers.locations(settings.govcloud);
 
         async.each(locations.activityLogAlerts, function(location, rcb) {
-
             var conditionResource = 'microsoft.sql/servers/databases';
-
             var text = 'SQL Server Database';
-
             var activityLogAlerts = helpers.addSource(cache, source,
                 ['activityLogAlerts', 'listBySubscriptionId', location]);
 
