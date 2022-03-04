@@ -55,8 +55,7 @@ module.exports = {
                 }
 
                 for (let gateway of listVirtualGateways.data.virtualGateways) {
-                    if (!gateway.virtualGatewayName) continue;
-                    if (!gateway.arn) continue;
+                    if (!gateway.virtualGatewayName || !gateway.arn) continue;
 
                     var gatewayArn = gateway.arn;
 
