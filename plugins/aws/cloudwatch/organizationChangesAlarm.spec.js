@@ -75,7 +75,7 @@ describe('organizationChangesAlarm', function () {
             });
         });
 
-        it('should UNKNOWN if unable to list CloudWatch metric alarms', function (done) {
+        it('should UNKNOWN if unable to describe CloudWatch metric alarms', function (done) {
             const cache = createCache(describeAlarmForOrgEventsMetric, { message: 'unable to list CloudWatch metric alarms' });
             organizationChangesAlarm.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
