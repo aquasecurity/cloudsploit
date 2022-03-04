@@ -1,54 +1,26 @@
 var expect = require('chai').expect;
-const openOracleAutoDataWarehouse = require('./openOracleAutoDataWarehouse');
+const unusedSecurityGroups = require('./unusedSecurityGroups');
 
 const describeSecurityGroups = [
     {
         "Description": "default VPC security group",
         "GroupName": "default",
-        "IpPermissions": [],
+        "IpPermissions": [
+            {
+                "IpProtocol": "-1",
+                "IpRanges": [],
+                "Ipv6Ranges": [],
+                "PrefixListIds": [],
+                "UserIdGroupPairs": [
+                    {
+                        "GroupId": "sg-aa941691",
+                        "UserId": "111122223333"
+                    }
+                ]
+            }
+        ],
         "OwnerId": "111122223333",
         "GroupId": "sg-aa941691",
-        "IpPermissionsEgress": [],
-        "VpcId": "vpc-99de2fe4"
-    },
-    {
-        "Description": "Master group for Elastic MapReduce created on 2020-08-31T17:07:19.819Z",
-        "GroupName": "ElasticMapReduce-master",
-        "IpPermissions": [
-            {
-                "FromPort": 0,
-                "IpProtocol": "tcp",
-                "IpRanges": [
-                    {
-                        "CidrIp": "0.0.0.0/0"
-                    }
-                ],
-                "Ipv6Ranges": [],
-                "PrefixListIds": [],
-                "ToPort": 65535,
-                "UserIdGroupPairs": [
-                    {
-                        "GroupId": "sg-02e2c70cd463dca29",
-                        "UserId": "111122223333"
-                    }
-                ]
-            },
-            {
-                "FromPort": 8443,
-                "IpProtocol": "tcp",
-                "IpRanges": [
-                    {
-                        "CidrIp": "72.21.196.64/29"
-                    }
-                ],
-                "Ipv6Ranges": [],
-                "PrefixListIds": [],
-                "ToPort": 8443,
-                "UserIdGroupPairs": []
-            }
-        ],
-        "OwnerId": "111122223333",
-        "GroupId": "sg-02e2c70cd463dca29",
         "IpPermissionsEgress": [
             {
                 "IpProtocol": "-1",
@@ -64,60 +36,9 @@ const describeSecurityGroups = [
         ],
         "VpcId": "vpc-99de2fe4"
     },
-    {
-        "Description": "Master group for Elastic MapReduce created on 2020-08-31T17:07:19.819Z",
-        "GroupName": "ElasticMapReduce-master",
-        "IpPermissions": [
-            {
-                "FromPort": 0,
-                "IpProtocol": "tcp",
-                "IpRanges": [
-                    {
-                        "CidrIp": "0.0.0.0/0"
-                    }
-                ],
-                "Ipv6Ranges": [],
-                "PrefixListIds": [],
-                "ToPort": 65535,
-                "UserIdGroupPairs": [
-                    {
-                        "GroupId": "sg-02e2c70cd463dca29",
-                        "UserId": "111122223333"
-                    }
-                ]
-            },
-            {
-                "FromPort": 8443,
-                "IpProtocol": "tcp",
-                "IpRanges": [
-                    {
-                        "CidrIp": "72.21.196.64/29"
-                    }
-                ],
-                "Ipv6Ranges": [],
-                "PrefixListIds": [],
-                "ToPort": 8443,
-                "UserIdGroupPairs": []
-            }
-        ],
-        "OwnerId": "111122223333",
-        "GroupId": "sg-001639e564442dfec",
-        "IpPermissionsEgress": [
-            {
-                "IpProtocol": "-1",
-                "IpRanges": [
-                    {
-                        "CidrIp": "0.0.0.0/0"
-                    }
-                ],
-                "Ipv6Ranges": [],
-                "PrefixListIds": [],
-                "UserIdGroupPairs": []
-            }
-        ],
-        "VpcId": "vpc-99de2fe4"
-    }
+    
 ];
+
 const describeNetworkInterfaces = [
     {
         "AvailabilityZone": "us-east-1b",
@@ -156,7 +77,7 @@ const describeNetworkInterfaces = [
         "TagSet": [],
         "VpcId": "vpc-99de2fe4"
     },
-]
+];
 
 const listFunctions = [
     {
@@ -206,28 +127,56 @@ const listFunctions = [
     },
 ]
 
-const createCache = (securityGroups, networkInterfaces, functions, securityGroupsErr, networkInterfacesErr, functionsErr) => {
+
+const createCache = (groups, interfaces, functions) => {
     return {
         ec2:{
             describeSecurityGroups: {
                 'us-east-1': {
-                    err: securityGroupsErr,
-                    data: securityGroups
-                }
+                    data: groups
+                },
             },
             describeNetworkInterfaces: {
                 'us-east-1': {
-                    err: networkInterfacesErr,
-                    data: networkInterfaces
-                }
+                    data: interfaces
+                },
             },
         },
         lambda: {
             listFunctions: {
                 'us-east-1': {
-                    err: functionsErr,
                     data: functions
                 }
+            }
+        }
+    };
+};
+
+const createErrorCache = () => {
+    return {
+        ec2:{
+            describeSecurityGroups: {
+                'us-east-1': {
+                    err: {
+                        message: 'error describing security groups'
+                    },
+                },
+            },
+            describeNetworkInterfaces: {
+                'us-east-1': {
+                    err: {
+                        message: 'error describing network interfaces'
+                    },
+                },
+            }
+        },
+        lambda: {
+            listFunctions: {
+                'us-east-1': {
+                    err: {
+                        message: 'error listing lambda functions'
+                    },
+                },
             }
         }
     };
@@ -246,60 +195,56 @@ const createNullCache = () => {
         lambda: {
             listFunctions: {
                 'us-east-1': null,
-            },
-        },
+            }
+        }
     };
 };
-describe('openOracleAutoDataWarehouse', function () {
+
+describe('unusedSecurityGroups', function () {
     describe('run', function () {
-        it('should PASS if no public open ports found', function (done) {
+        it('should PASS if Security group is being used', function (done) {
             const cache = createCache([describeSecurityGroups[0]], [describeNetworkInterfaces[0]], [listFunctions[0]]);
-            openOracleAutoDataWarehouse.run(cache, {}, (err, results) => {
+            unusedSecurityGroups.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Security group is being used');
                 done();
             });
         });
 
-        it('should FAIL if security group has Oracle Auto Data Warehouse TCP port open to public', function (done) {
-            const cache = createCache([describeSecurityGroups[1]], [describeNetworkInterfaces[0]], [listFunctions[0]]);
-            openOracleAutoDataWarehouse.run(cache, {}, (err, results) => {
+        it('should FAIL if Security group is not being used', function (done) {
+            const cache = createCache([describeSecurityGroups[0]], [describeSecurityGroups[0]], [listFunctions[0]]);
+            unusedSecurityGroups.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                done();
-            });
-        });
-
-        it('should WARN if security group is unused', function (done) {
-            const cache = createCache([describeSecurityGroups[2]], [describeNetworkInterfaces[0]], []);
-            openOracleAutoDataWarehouse.run(cache, {ec2_skip_unused_groups: 'true'}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(1);
+                expect(results[0].message).to.include('Security group is not being used');
                 done();
             });
         });
 
         it('should PASS if no security groups found', function (done) {
             const cache = createCache([]);
-            openOracleAutoDataWarehouse.run(cache, {}, (err, results) => {
+            unusedSecurityGroups.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No security groups present');
                 done();
             });
         });
 
-        it('should UNKNWON unable to describe security groups', function (done) {
-            const cache = createCache(null, { message: 'Unable to describe security groups'});
-            openOracleAutoDataWarehouse.run(cache, {}, (err, results) => {
+        it('should UNKNWON Unable to query for security groups', function (done) {
+            const cache = createErrorCache();
+            unusedSecurityGroups.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query for security groups');
                 done();
             });
         });
 
         it('should not return anything if describe security groups response not found', function (done) {
             const cache = createNullCache();
-            openOracleAutoDataWarehouse.run(cache, {}, (err, results) => {
+            unusedSecurityGroups.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });
