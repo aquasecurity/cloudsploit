@@ -5,7 +5,7 @@ module.exports = {
     title: 'EC2 Instance Changes Alarm',
     category: 'CloudWatch',
     domain: 'Compliance',
-    description: 'Ensure that  each time an administrator-specific action occurs within your AWS EC2 Instances, there is an Amazon CloudWatch alarm implemented within your AWS Master account that is triggered.',
+    description: 'Ensure that  each time an administrator-specific action occurs within your AWS EC2 Instances, there is an Amazon CloudWatch alarm implemented which gets triggered.',
     more_info: 'Using Amazon CloudWatch alarm actions, you can create alarms that automatically stop, terminate, reboot, or recover your EC2 instances. You can use the stop or terminate actions to help you save money when you no longer need an instance to be running.',
     recommended_action: 'You can create a CloudWatch alarm that monitors CloudWatch metrics for one of your instances. CloudWatch will automatically send you a notification when the metric reaches a threshold you specify.',
     link: 'https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/AlarmThatSendsEmail.html',
@@ -31,11 +31,11 @@ module.exports = {
 
             if (describeAlarmForEC2InstanceMetric.data.length) {
                 helpers.addResult(results, 0,
-                    'Alarms detecting changes in EC2 instances are enabled', 
+                    'CloudWatch alarm exists to detect changes in EC2 instances', 
                     region);
             } else {
                 helpers.addResult(results, 2,
-                    'Alarms detecting changes in EC2 instances are not enabled',
+                    'CloudWatch alarm does not exist to detect changes in EC2 instances',
                     region);
             }
 
