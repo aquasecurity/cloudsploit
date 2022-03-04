@@ -13,7 +13,7 @@ module.exports = {
     settings: {
         vpc_flow_log_group: {
             name: 'CloudWatch VPC Flow Log Group Name',
-            description: 'Log group name for VPC to detect the log group being used by CLoudWatch logs',
+            description: 'Existing CloudWatch log group name created to log VPC flow logs',
             regex: '^.*$',
             default: ''
         }
