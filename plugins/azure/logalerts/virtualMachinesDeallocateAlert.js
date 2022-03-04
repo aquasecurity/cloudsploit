@@ -19,7 +19,6 @@ module.exports = {
         async.each(locations.activityLogAlerts, function(location, rcb) {
             var conditionResource = 'microsoft.compute/virtualmachines';
             var text = 'Virtual Machines';
-
             var activityLogAlerts = helpers.addSource(cache, source,
                 ['activityLogAlerts', 'listBySubscriptionId', location]);
 
@@ -49,7 +48,6 @@ module.exports = {
                 const allConditions = activityLogAlertResource.condition;
 
                 if (!allConditions || !allConditions.allOf || !allConditions.allOf.length) continue;
-
 
                 var conditionOperation = allConditions.allOf.filter((d) => {
                     return (d.equals && d.equals.toLowerCase().indexOf(conditionResource) > -1);
