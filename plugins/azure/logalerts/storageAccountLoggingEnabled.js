@@ -5,9 +5,9 @@ module.exports = {
     title: 'Storage Account Logging Enabled',
     category: 'Log Alerts',
     domain: 'Management and Governance',
-    description: 'Ensures Activity Log alerts for the create or update and delete Storage Account events are enabled',
-    more_info: 'Monitoring for create or update and delete Storage Account events gives insight into network access changes and may reduce the time it takes to detect suspicious activity.',
-    recommended_action: 'Add a new log alert to the Alerts service that monitors for Storage Account create or update and delete events.',
+    description: 'Ensure that Activity Log alerts for the create/update and delete Storage Account events are enabled.',
+    more_info: 'Monitoring for create/update and delete Storage Account events gives insight into network access changes and may reduce the time it takes to detect suspicious activity.',
+    recommended_action: 'Add a new log alert to the Alerts service that monitors for Storage Account create/update and delete events.',
     link: 'https://docs.microsoft.com/en-us/azure/azure-monitor/platform/activity-log-alerts',
     apis: ['activityLogAlerts:listBySubscriptionId'],
 
@@ -17,11 +17,8 @@ module.exports = {
         var locations = helpers.locations(settings.govcloud);
 
         async.each(locations.activityLogAlerts, function(location, rcb) {
-
             var conditionResource = 'microsoft.storage/storageaccounts';
-
             var text = 'Storage Accounts';
-
             var activityLogAlerts = helpers.addSource(cache, source,
                 ['activityLogAlerts', 'listBySubscriptionId', location]);
 
