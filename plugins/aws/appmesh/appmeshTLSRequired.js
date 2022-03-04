@@ -35,7 +35,6 @@ module.exports = {
 
             for (let mesh of listMeshes.data){
                 if (!mesh.meshName || !mesh.arn) continue;
-                if (!mesh.arn) continue;
 
                 let resource = mesh.arn;
 
