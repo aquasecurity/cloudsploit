@@ -70,9 +70,9 @@ module.exports = {
                         continue;
                     }
 
-                    let virtual = describeVirtualGateway.data.virtualGateway;
-                   
-                    if (!virtual.spec.listeners.length) {
+                    if (!describeVirtualGateway.data.virtualGateway.spec ||
+                        !describeVirtualGateway.data.virtualGateway.spec.listeners ||
+                        !describeVirtualGateway.data.virtualGateway.spec.listeners.length) {
                         helpers.addResult(results, 0,
                             'App Mesh virtual gateway does not have listeners', region, gatewayArn);
                     } else {
