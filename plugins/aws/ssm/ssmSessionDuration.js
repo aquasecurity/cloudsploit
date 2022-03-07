@@ -58,21 +58,23 @@ module.exports = {
             for (let instance of sessionsByInstances) {
                 var resource = `arn:${awsOrGov}:ec2:${region}:${accountId}:/instance/${instance.instanceId}`;
 
+                let failingSessions = '';
                 for (let session of instance.sessions) {
                     let activeSessionTimeInMins = helpers.minutesBetween(new Date(), session.StartDate);
-
-                    if (sessionMaxDuration) {
-                        if (sessionMaxDuration > activeSessionTimeInMins) {
-                            helpers.addResult(results, 0,
-                                `SSM Session duration length is ${activeSessionTimeInMins} minutes which is less than the \
-                                max time set in SSM Session Manager ${sessionMaxDuration} minutes`,
-                                region, resource);
-                        } else {
-                            helpers.addResult(results, 2,
-                                `SSM Session duration length is ${activeSessionTimeInMins} minutes which is greater than \
-                                the max time set in SSM Session Manager ${session.MaxSessionDuration} minutes`, region, resource);
-                        }
+                    
+                    if (sessionMaxDuration && sessionMaxDuration < activeSessionTimeInMins) {
+                        failingSessions += `${session.SessionId} - ${activeSessionTimeInMins} mins\n`;
                     }
+                }
+
+                if (failingSessions.length) {
+                    helpers.addResult(results, 2,
+                        `Following SSM Sessions duration length is greater than \
+                        the max time set in SSM Session Manager ${failingSessions}`,
+                        region, resource);
+                } else {
+                    helpers.addResult(results, 0,
+                        'All SSM Sessions duration length is less than the max time set in SSM Session Manager', region, resource);
                 }
             }
 
