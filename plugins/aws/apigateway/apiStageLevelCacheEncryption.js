@@ -60,7 +60,7 @@ module.exports = {
 
                     var stageArn = `arn:${awsOrGov}:apigateway:${region}::/restapis/${api.id}/stages/${stage.stageName}`;
 
-                    if (!stage.methodSettings || !stage.methodSettings['*/*']) {
+                    if (!stage.methodSettings || !stage.methodSettings['*/*'] || !stage.methodSettings['*/*'].cachingEnabled) {
                         helpers.addResult(results, 0,
                             'Response caching is not enabled for the selected API stage', region);
                         return;
