@@ -35,7 +35,7 @@ module.exports = {
             }
 
             for (let api of getRestApis.data){
-                if (!api.id) return cb();
+                if (!api.id) continue;
                 var apiArn = `arn:${awsOrGov}:apigateway:${region}::/restapis/${api.id}`;
 
                 var getStages = helpers.addSource(cache, source,
@@ -61,9 +61,9 @@ module.exports = {
                     var stageArn = `arn:${awsOrGov}:apigateway:${region}::/restapis/${api.id}/stages/${stage.stageName}`;
 
                     if (!stage.methodSettings || !stage.methodSettings['*/*']) {
-                    helpers.addResult(results, 0,
-                        'Response caching is not enabled for the selected API stage', region);
-                    return;
+                        helpers.addResult(results, 0,
+                            'Response caching is not enabled for the selected API stage', region);
+                        return;
                     }
 
                     if (stage.methodSettings && stage.methodSettings['*/*'] && stage.methodSettings['*/*'].cacheDataEncrypted &&
@@ -77,7 +77,7 @@ module.exports = {
                             region, stageArn);
                     }
                 });
-            };
+            }
 
             rcb();
            
