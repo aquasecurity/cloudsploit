@@ -66,8 +66,7 @@ module.exports = {
                         return;
                     }
 
-                    if (stage.methodSettings && stage.methodSettings['*/*'] && stage.methodSettings['*/*'].cacheDataEncrypted &&
-                        stage.methodSettings['*/*'].cacheDataEncrypted === true) {
+                    if (stage.methodSettings['*/*'].cacheDataEncrypted) {
                         helpers.addResult(results, 0,
                             'API Gateway API stage has cache data encrypted',
                             region, stageArn);
