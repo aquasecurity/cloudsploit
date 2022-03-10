@@ -282,7 +282,7 @@ var execute = async function(LocalGoogleConfig, collection, service, callObj, ca
             } else if (!myEngine && !(collection[service][callKey][region].data.length)) {
                 collection[service][callKey][region].data = [];
             }
-            resultItems = setData(collectionItems, data.data, postCall, parent);
+            resultItems = setData(collection[service][callKey][region], data.data, postCall, parent);
         } else {
             set = false;
             myEngine ? collection[service][myEngine][callKey][region].data = [] : collection[service][callKey][region].data = [];
