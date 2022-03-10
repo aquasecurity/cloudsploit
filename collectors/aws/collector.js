@@ -296,7 +296,8 @@ var calls = {
             property: 'TableNames',
             paginate: 'LastEvaluatedTableName',
             paginateReqProp: 'ExclusiveStartTableName'
-        }
+        },
+        listBackups: {}
     },
     DAX: {
         describeClusters: {
