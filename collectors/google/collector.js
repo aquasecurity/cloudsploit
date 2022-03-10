@@ -398,6 +398,15 @@ var postcalls = {
             pagination: true,
             paginationKey: 'pageSize'
         }
+    },
+    images: {
+        getIamPolicy: {
+            url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/global/images/{name}/getIamPolicy',
+            reliesOnService: ['images'],
+            reliesOnCall: ['list'],
+            properties: ['name'],
+            pagination: false
+        }
     }
 };
 

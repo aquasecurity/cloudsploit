@@ -375,6 +375,16 @@ function makeApiCall(client, originalUrl, callCb, nextToken, config) {
 }
 
 function setData(collection, dataToAdd, postCall, parent) {
+    if (postCall && !!parent) {
+        if (dataToAdd && dataToAdd.length) {
+            dataToAdd.map(item => {
+                item.parent = parent;
+                return item;
+            });
+        } else if (Object.keys(dataToAdd) && Object.keys(dataToAdd).length) {
+            dataToAdd.parent = parent;
+        }
+    }
     if (dataToAdd.constructor.name === 'Array') {
         collection.data = collection.data.concat(dataToAdd);
     } else {
@@ -383,16 +393,6 @@ function setData(collection, dataToAdd, postCall, parent) {
             collection.data = existingData.concat(dataToAdd);
         } else {
             collection.data = dataToAdd;
-        }
-    }
-    if (postCall && !!parent) {
-        if (collection.data && collection.data.length) {
-            collection.data.map(item => {
-                item.parent = parent;
-                return item;
-            });
-        } else if (Object.keys(collection.data) && Object.keys(collection.data).length) {
-            collection.data.parent = parent;
         }
     }
     return collection;
