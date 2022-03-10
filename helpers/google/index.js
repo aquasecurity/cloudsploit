@@ -282,6 +282,7 @@ var execute = async function(LocalGoogleConfig, collection, service, callObj, ca
             } else if (!myEngine && !(collection[service][callKey][region].data.length)) {
                 collection[service][callKey][region].data = [];
             }
+            resultItems = setData(collectionItems, data.data, postCall, parent);
         } else {
             set = false;
             myEngine ? collection[service][myEngine][callKey][region].data = [] : collection[service][callKey][region].data = [];
@@ -385,10 +386,14 @@ function setData(collection, dataToAdd, postCall, parent) {
         }
     }
     if (postCall && !!parent) {
-        collection.data.map(item => {
-            item.parent = parent;
-            return item;
-        });
+        if (collection.data && collection.data.length) {
+            collection.data.map(item => {
+                item.parent = parent;
+                return item;
+            });
+        } else if (Object.keys(collection.data) && Object.keys(collection.data).length) {
+            collection.data.parent = parent;
+        }
     }
     return collection;
 }
