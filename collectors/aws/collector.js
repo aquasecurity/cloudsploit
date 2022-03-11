@@ -242,6 +242,10 @@ var calls = {
         },
         describeConfigurationRecorderStatus: {
             property: 'ConfigurationRecordersStatus'
+        },
+        describeConfigRules: {
+            property: 'ConfigRules',
+            paginate: 'NextToken' 
         }
     },
     CustomerProfiles: {
@@ -1164,6 +1168,14 @@ var postcalls = [
                 reliesOnCall: 'describeCacheClusters',
                 override: true,
             },
+        },
+        ConfigService: {
+            getComplianceDetailsByConfigRule: {
+                reliesOnService: 'configservice',
+                reliesOnCall: 'describeConfigRules',
+                filterKey: 'ConfigRuleName',
+                filterValue: 'ConfigRuleName'
+            }
         },
         CodeStar: {
             describeProject: {
