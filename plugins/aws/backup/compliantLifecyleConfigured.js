@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Backup Vault Encrypted',
+    title: 'AWS Backup Compliant Lifecycle Configured',
     category: 'Backup',
     domain: 'Storage',
     description: 'Ensure that a compliant lifecycle configuration is enabled for your Amazon Backup plans in order to meet compliance requirements when it comes to security and cost optimization. ',
