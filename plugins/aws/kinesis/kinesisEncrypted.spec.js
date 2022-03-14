@@ -92,55 +92,7 @@ const describeStream = [
     }
 ];
 
-const describeKey = [
-    {
-        "KeyMetadata": {
-            "AWSAccountId": "000011112222",
-            "KeyId": "ad013a33-b01d-4d88-ac97-127399c18b3e",
-            "Arn": "arn:aws:kms:us-east-1:000011112222:key/ad013a33-b01d-4d88-ac97-127399c18b3e",
-            "CreationDate": "2020-12-15T01:16:53.045000+05:00",
-            "Enabled": true,
-            "Description": "Default master key that protects my Glue data when no other key is defined",
-            "KeyUsage": "ENCRYPT_DECRYPT",
-            "KeyState": "Enabled",
-            "Origin": "AWS_KMS",
-            "KeyManager": "CUSTOMER",
-            "CustomerMasterKeySpec": "SYMMETRIC_DEFAULT",
-            "EncryptionAlgorithms": [
-                "SYMMETRIC_DEFAULT"
-            ]
-        }
-    },
-    {
-        "KeyMetadata": {
-            "AWSAccountId": "000011112222",
-            "KeyId": "ad013a33-b01d-4d88-ac97-127399c18b3e",
-            "Arn": "arn:aws:kms:us-east-1:000011112222:key/ad013a33-b01d-4d88-ac97-127399c18b3e",
-            "CreationDate": "2020-12-15T01:16:53.045000+05:00",
-            "Enabled": true,
-            "Description": "Default master key that protects my Glue data when no other key is defined",
-            "KeyUsage": "ENCRYPT_DECRYPT",
-            "KeyState": "Enabled",
-            "Origin": "AWS_KMS",
-            "KeyManager": "AWS",
-            "CustomerMasterKeySpec": "SYMMETRIC_DEFAULT",
-            "EncryptionAlgorithms": [
-                "SYMMETRIC_DEFAULT"
-            ]
-        }
-    
-    }
-];
-
-const listKeys = [
-    {
-        "KeyId": "ad013a33-b01d-4d88-ac97-127399c18b3e",
-        "KeyArn": "arn:aws:kms:us-east-1:000011112222:key/ad013a33-b01d-4d88-ac97-127399c18b3e"
-    }
-]
-
-const createCache = (streams, keys, describeStream, describeKey, streamsErr, keysErr, describeKeyErr, describeStreamErr) => {
-    var keyId = (keys && keys.length) ? keys[0].KeyId : null;
+const createCache = (streams, describeStream, streamsErr, describeStreamErr) => {
     var stream = (streams && streams.length) ? streams[0]: null;
     return {
         kinesis: {
@@ -159,29 +111,13 @@ const createCache = (streams, keys, describeStream, describeKey, streamsErr, key
                 }
             }
         },
-        kms: {
-            listKeys: {
-                'us-east-1': {
-                    data: keys,
-                    err: keysErr
-                }
-            },
-            describeKey: {
-                'us-east-1': {
-                    [keyId]: {
-                        err: describeKeyErr,
-                        data: describeKey
-                    },
-                },
-            },
-        },
     };
 };
 
 describe('kinesisEncrypted', function () {
     describe('run', function () {
         it('should PASS if Kinesis stream uses a KMS key for SSE', function (done) {
-            const cache = createCache([listStreams[0]], listKeys, describeStream[2], describeKey[0]);
+            const cache = createCache([listStreams[0]], describeStream[2]);
             kinesisEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -192,7 +128,7 @@ describe('kinesisEncrypted', function () {
         });
 
         it('should FAIL if The Kinesis stream does not use a KMS key for SSE', function (done) {
-            const cache = createCache([listStreams[0]], listKeys, describeStream[1], describeKey[1]);
+            const cache = createCache([listStreams[0]], describeStream[1]);
             kinesisEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -203,7 +139,7 @@ describe('kinesisEncrypted', function () {
         });
 
         it('should WARN if Kinesis stream uses the default KMS key', function (done) {
-            const cache = createCache([listStreams[0]], listKeys, describeStream[0], describeKey[1]);
+            const cache = createCache([listStreams[0]], describeStream[0]);
             kinesisEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(1);
@@ -225,7 +161,7 @@ describe('kinesisEncrypted', function () {
         });
 
         it('should UNKNOWN if unable to list Kinesis streams', function (done) {
-            const cache = createCache(null, null, null, null, { message: "Unable to list Kinesis streams" });
+            const cache = createCache(null, null, { message: "Unable to list Kinesis streams" });
             kinesisEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
@@ -235,15 +171,6 @@ describe('kinesisEncrypted', function () {
             });
         });
 
-        it('should UNKNOWN if unable to list KMS keys', function (done) {
-            const cache = createCache(listStreams, null, null, null, null, { message: "Unable to list KMS keys" });
-            kinesisEncrypted.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(3);
-                expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Unable to list KMS keys');
-                done();
-            });
-        });
+       
     });
 })
