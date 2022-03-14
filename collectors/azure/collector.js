@@ -356,7 +356,7 @@ var postcalls = {
             reliesOnPath: 'storageAccounts.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/blobServices/default?api-version=2019-06-01',
-            rateLimit: 33.
+            rateLimit: 500
         }
     },
     fileShares: {
