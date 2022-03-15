@@ -128,22 +128,22 @@ const createNullCache = () => {
 
 describe('asgCooldownPeriod', function () {
     describe('run', function () {
-        it('should PASS if Amazon Auto Scaling Groups are utilizing cooldown periods', function (done) {
+        it('should PASS if Amazon Auto Scaling Groups are utilizing cool down period', function (done) {
             const cache = createCache([autoScalingGroups[0]]);
             asgCooldownPeriod.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Auto Scaling group has cooldown period configured');
+                expect(results[0].message).to.include('Auto Scaling group has cool down period configured');
                 done();
             });
         });
 
-        it('should FAIL if The cooldown period setting is not properly configured for the selected Amazon ASG', function (done) {
+        it('should FAIL if the cool down period setting is not properly configured for the selected Amazon ASG', function (done) {
             const cache = createCache([autoScalingGroups[1]]);
             asgCooldownPeriod.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Auto Scaling group does not have cooldown period configured');
+                expect(results[0].message).to.include('Auto Scaling group does not have cool down period configured');
                 done();
             });
         });

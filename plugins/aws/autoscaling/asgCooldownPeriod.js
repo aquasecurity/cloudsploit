@@ -5,11 +5,10 @@ module.exports = {
     title: 'Auto Scaling Group Cooldown Period',
     category: 'AutoScaling',
     domain: 'Availability',
-    description: 'Ensure that your AWS Auto Scaling Groups are configured to use a cooldown period.',
-    more_info: 'A scaling cooldown helps you prevent your Auto Scaling group from launching or terminating additional instances before the effects of previous activities are visible.'+
-        'When you use simple scaling, after the Auto Scaling group scales using a simple scaling policy, it waits for a cooldown period to complete before any further scaling activities initiated by simple scaling policies can start.',
+    description: 'Ensure that your AWS Auto Scaling Groups are configured to use a cool down period.',
+    more_info: 'A scaling cool down helps you prevent your Auto Scaling group from launching or terminating additional instances before the effects of previous activities are visible.'
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/Cooldown.html',
-    recommended_action: 'Implementing a proper cooldown period to temporarily suspend any scaling actions.',
+    recommended_action: 'Implement proper cool down period for Auto Scaling groups to temporarily suspend any scaling actions.',
     apis: ['AutoScaling:describeAutoScalingGroups'],
 
     run: function(cache, settings, callback) {
@@ -42,11 +41,11 @@ module.exports = {
                 
                 if (group.DefaultCooldown) {
                     helpers.addResult(results, 0,
-                        'Auto Scaling group has cooldown period configured',
+                        'Auto Scaling group has cool down period configured',
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'Auto Scaling group does not have cooldown period configured',
+                        'Auto Scaling group does not have cool down period configured',
                         region, resource);
                 }
             }
