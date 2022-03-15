@@ -12,7 +12,6 @@ module.exports = {
     recommended_action: 'Identify and remove any Auto Scaling Launch Configuration templates that are not associated anymore with ASGs available in the selected AWS region.',
     apis: ['AutoScaling:describeAutoScalingGroups', 'AutoScaling:describeLaunchConfigurations'],
     
-    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
@@ -54,6 +53,8 @@ module.exports = {
             });
 
             describeLaunchConfigurations.data.forEach(config => {
+                if (!config.LaunchConfigurationARN) return;
+
                 if (config.LaunchConfigurationName && usedLaunchConfig.includes(config.LaunchConfigurationName)) {
                     helpers.addResult(results, 0,
                         `Auto Scaling launch configuration "${config.LaunchConfigurationName}" is being used`,
