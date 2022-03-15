@@ -6,7 +6,7 @@ module.exports = {
     category: 'AutoScaling',
     domain: 'Availability',
     description: 'Ensure that your AWS Auto Scaling Groups are configured to use a cool down period.',
-    more_info: 'A scaling cool down helps you prevent your Auto Scaling group from launching or terminating additional instances before the effects of previous activities are visible.'
+    more_info: 'A scaling cool down helps you prevent your Auto Scaling group from launching or terminating additional instances before the effects of previous activities are visible.',
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/Cooldown.html',
     recommended_action: 'Implement proper cool down period for Auto Scaling groups to temporarily suspend any scaling actions.',
     apis: ['AutoScaling:describeAutoScalingGroups'],
