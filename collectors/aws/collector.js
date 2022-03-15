@@ -1067,6 +1067,14 @@ var postcalls = [
                 filterValue: 'CertificateArn'
             }
         },
+        AccessAnalyzer: {
+            listFindings: {
+                reliesOnService: 'accessanalyzer',
+                reliesOnCall: 'listAnalyzers',
+                override: true
+            }
+        },
+        
         APIGateway: {
             getStages: {
                 reliesOnService: 'apigateway',
