@@ -388,6 +388,11 @@ var postcalls = {
             reliesOnPath: 'webApps.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/config?api-version=2019-08-01'
+        },
+        getBackupConfigurations: {
+            reliesOnPath: 'webApps.list',
+            properties: ['resourceGroupName', 'name'],
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/config/backup/list?api-version=2021-02-01'
         }
     },
     endpoints: {
