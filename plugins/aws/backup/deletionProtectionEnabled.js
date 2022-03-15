@@ -5,7 +5,7 @@ module.exports = {
     title: 'Backup Deletion Protection Enabled',
     category: 'Backup',
     domain: 'Storage',
-    description: 'Ensure that an Amazon Backup vault access policy is configured to prevent the deletion of AWS backups in the backup vault',
+    description: 'Ensure that an Amazon Backup vault access policy is configured to prevent the deletion of AWS backups in the backup vault.',
     more_info: 'With AWS Backup, you can assign policies to backup vaults and the resources they contain. Assigning policies allows you to do things like grant access to users to create backup plans and on-demand backups, but limit their ability to delete recovery points after they are created.',
     recommended_action: 'Enable access policy to prevent deletion of AWS Backup vaults and their resources.',
     link: 'https://docs.aws.amazon.com/aws-backup/latest/devguide/creating-a-vault-access-policy.html',
@@ -29,12 +29,12 @@ module.exports = {
             }
 
             if (!listBackupVaults.data.length) {
-                helpers.addResult(results, 0, 'No Backup vault list found', region);
+                helpers.addResult(results, 0, 'No Backup vaults found', region);
                 return rcb();
             }
 
             for (let vault of listBackupVaults.data){
-                if (!vault.BackupVaultArn) continue;
+                if (!vault.BackupVaultArn || !vault.BackupVaultName) continue;
                
                 let resource = vault.BackupVaultArn;
 
