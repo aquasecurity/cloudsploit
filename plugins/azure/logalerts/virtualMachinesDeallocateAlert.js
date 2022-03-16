@@ -5,7 +5,7 @@ module.exports = {
     title: 'Virtual Machine Deallocate Alert Enabled',
     category: 'Log Alerts',
     domain: 'Management and Governance',
-    description: 'Ensures Activity Log alerts for the deallocate Virtual Machine events are enabled',
+    description: 'Ensure that Activity Log alerts for the deallocate Virtual Machine events are enabled.',
     more_info: 'Monitoring for deallocate Virtual Machine events gives insight into network access changes and may reduce the time it takes to detect suspicious activity.',
     recommended_action: 'Add a new log alert to the Alerts service that monitors for Virtual Machine deallocate events.',
     link: 'https://docs.microsoft.com/en-us/azure/azure-monitor/platform/activity-log-alerts',
@@ -54,7 +54,7 @@ module.exports = {
                 });
                 if (conditionOperation && conditionOperation.length) {
                     allConditions.allOf.forEach(condition => {
-                        if (condition.equals && condition.equals.toLowerCase().indexOf(conditionResource + '/deallocate') > -1) {
+                        if (condition.equals && condition.equals.toLowerCase() && condition.equals.toLowerCase().indexOf(conditionResource + '/deallocate') > -1) {
                             alertDeallocateEnabled = (!alertDeallocateEnabled && activityLogAlertResource.enabled ? true : alertDeallocateEnabled);
                         }
                     });
