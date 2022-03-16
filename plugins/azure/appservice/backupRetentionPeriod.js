@@ -9,12 +9,21 @@ module.exports = {
     more_info: 'Always On feature keeps the app loaded even when there\'s no traffic. It\'s required for continuous WebJobs or for WebJobs that are triggered using a CRON expression.',
     recommended_action: 'Enable Always On feature for Azure Web Apps',
     link: 'https://docs.microsoft.com/en-us/azure/app-service/configure-common',
-    apis: ['webApps:list', 'webApps:listConfigurations'],
+    apis: ['webApps:list', 'webApps:getBackupConfiguration'],
+    settings: {
+        webapps_backup_retention_period: {
+            name: 'Backup retention period in days',
+            description: 'Backup retention period for web apps in days.',
+            regex: '^[1-9]{1}[0-9]{0,3}$',
+            default: 7
+        }
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
+        var webapps_backup_retention_period = parseInt(settings.webapps_backup_retention_period || this.settings.webapps_backup_retention_period.default); 
 
         async.each(locations.webApps, function(location, rcb) {
             const webApps = helpers.addSource(cache, source,
@@ -34,22 +43,32 @@ module.exports = {
 
             async.each(webApps.data, function(webApp, scb) {
                 if (webApp && webApp.kind && webApp.kind === 'functionapp') {
-                    helpers.addResult(results, 0, 'Always On feature can not be configured for the function App', location, webApp.id);
+                    helpers.addResult(results, 0, 'WebApps backup can not be configured for the function App', location, webApp.id);
                     return scb();
                 }
 
                 const configs = helpers.addSource(cache, source,
-                    ['webApps', 'getBackupConfigurations', location, 'akhtar-rg', 'akhtar-test']);
+                    ['webApps', 'getBackupConfiguration', location, webApp.id]);
 
-                if (!configs || configs.err || !configs.data || !configs.data.length) {
-                    helpers.addResult(results, 3, 'Unable to query for Web App Configs: ' + helpers.addError(configs), location);
+                if (!configs || configs.err || !configs.data) {
+                    helpers.addResult(results, 3, 'Unable to query for Web App Backup Configs: ' + helpers.addError(configs), location);
                     return scb();
                 }
-                const alwaysOnEnabled = configs.find(config => config.backupSchedule);
-                if (alwaysOnEnabled) {
-                    helpers.addResult(results, 0, 'Always On feature is enabled for the Web App', location, webApp.id);
+
+                const { backupSchedule } = configs.data;
+                if (backupSchedule && backupSchedule.retentionPeriodInDays) {
+                    if (backupSchedule.retentionPeriodInDays >= webapps_backup_retention_period) {
+                        helpers.addResult(results, 0,
+                            `WebApp has a backup retention period of ${backupSchedule.retentionPeriodInDays} of ${webapps_backup_retention_period} days limit`,
+                            location, webApp.id);
+                    } else {
+                        helpers.addResult(results, 2,
+                            `WebApp has a backup retention period of ${backupSchedule.retentionPeriodInDays} of ${webapps_backup_retention_period} days limit`,
+                            location, webApp.id);
+                    }
                 } else {
-                    helpers.addResult(results, 2, 'Always On feature is disabled for the Web App', location, webApp.id);
+                    helpers.addResult(results, 2,
+                        'No backup configurations found for this WebApp', location, webApp.id);
                 }
 
                 scb();
