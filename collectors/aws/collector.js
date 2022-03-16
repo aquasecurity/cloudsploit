@@ -248,6 +248,9 @@ var calls = {
         },
         describeConfigurationRecorderStatus: {
             property: 'ConfigurationRecordersStatus'
+        },
+        describeDeliveryChannels: {
+            property: 'DeliveryChannels'
         }
     },
     CustomerProfiles: {
@@ -1357,6 +1360,12 @@ var postcalls = [
                 override: true
             },
             getBucketAccelerateConfiguration: {
+                reliesOnService: 's3',
+                reliesOnCall: 'listBuckets',
+                filterKey: 'Bucket',
+                filterValue: 'Name'
+            },
+            headBucket: {
                 reliesOnService: 's3',
                 reliesOnCall: 'listBuckets',
                 filterKey: 'Bucket',
