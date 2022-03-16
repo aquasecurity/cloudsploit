@@ -55,6 +55,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    AppMesh: {
+        listMeshes: {
+            property: 'meshes',
+            paginate: 'nextToken'
+        }
+    },
     AppRunner: {
         listServices: {
             property: 'ServiceSummaryList',
@@ -246,6 +252,9 @@ var calls = {
         describeConfigRules: {
             property: 'ConfigRules',
             paginate: 'NextToken' 
+        },
+        describeDeliveryChannels: {
+            property: 'DeliveryChannels'
         }
     },
     CustomerProfiles: {
@@ -1071,12 +1080,28 @@ var postcalls = [
                 filterValue: 'CertificateArn'
             }
         },
+        AccessAnalyzer: {
+            listFindings: {
+                reliesOnService: 'accessanalyzer',
+                reliesOnCall: 'listAnalyzers',
+                override: true
+            }
+        },
+        
         APIGateway: {
             getStages: {
                 reliesOnService: 'apigateway',
                 reliesOnCall: 'getRestApis',
                 filterKey: 'restApiId',
                 filterValue: 'id'
+            }
+        },
+        AppMesh: {
+            listVirtualGateways: {
+                reliesOnService: 'appmesh',
+                reliesOnCall: 'listMeshes',
+                filterKey: 'meshName',
+                filterValue: 'meshName'
             }
         },
         AppRunner: {
@@ -1245,6 +1270,11 @@ var postcalls = [
                 reliesOnService: 'dynamodb',
                 reliesOnCall: 'listTables',
                 override: true
+            },
+            listBackups: {
+                reliesOnService: 'dynamodb',
+                reliesOnCall: 'listTables',
+                override: true
             }
         },
         ElastiCache: {
@@ -1342,6 +1372,12 @@ var postcalls = [
                 override: true
             },
             getBucketAccelerateConfiguration: {
+                reliesOnService: 's3',
+                reliesOnCall: 'listBuckets',
+                filterKey: 'Bucket',
+                filterValue: 'Name'
+            },
+            headBucket: {
                 reliesOnService: 's3',
                 reliesOnCall: 'listBuckets',
                 filterKey: 'Bucket',
@@ -1863,6 +1899,13 @@ var postcalls = [
             getClientCertificate: {
                 reliesOnService: 'apigateway',
                 reliesOnCall: 'getRestApis',
+                override: true
+            }
+        },
+        AppMesh: {
+            describeVirtualGateway: {
+                reliesOnService: 'appmesh',
+                reliesOnCall: 'listMeshes',
                 override: true
             }
         },
