@@ -716,6 +716,8 @@ module.exports = {
         'advancedThreatProtection'      : require(__dirname + '/plugins/azure/cosmosdb/advancedThreatProtection.js'),
         'cosmosPublicAccessDisabled'    : require(__dirname + '/plugins/azure/cosmosdb/cosmosPublicAccessDisabled.js'),
         'automaticFailoverEnabled'      : require(__dirname + '/plugins/azure/cosmosdb/automaticFailoverEnabled.js'),
+
+        'checkAdvisorRecommendations'   : require(__dirname + '/plugins/azure/advisor/checkAdvisorRecommendations.js'),
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
