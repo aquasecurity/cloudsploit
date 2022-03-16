@@ -70,22 +70,22 @@ const createNullCache = () => {
 
 describe('dynamoTableBackupExists', function () {
     describe('run', function () {
-        it('should FAIL if AWS DynamoDB backup is not in use for the selected table', function (done) {
+        it('should FAIL if no backup exists for DynamoDB table', function (done) {
             const cache = createCache([listTables[0]], listBackups[1]);
             dynamoTableBackupExists.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('AWS DynamoDB backup is not in use for the selected table')
+                expect(results[0].message).to.include('No backup exists for DynamoDB table')
                 done();
             });
         });
 
-        it('should PASS if AWS DynamoDB backup is in use for the selected table', function (done) {
+        it('should PASS if backup exists for DynamoDB table', function (done) {
             const cache = createCache([listTables[1]], listBackups[0]);
             dynamoTableBackupExists.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('AWS DynamoDB backup is in use for the selected table')
+                expect(results[0].message).to.include('Backup exists for DynamoDB table')
                 done();
             });
         });
