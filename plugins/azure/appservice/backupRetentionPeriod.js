@@ -2,13 +2,13 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Web Apps Always On Enabled',
+    title: 'Web Apps Backup Retention Period',
     category: 'App Service',
     domain: 'Application Integration',
-    description: 'Ensures that Azure Web Apps have Always On feature enabled.',
-    more_info: 'Always On feature keeps the app loaded even when there\'s no traffic. It\'s required for continuous WebJobs or for WebJobs that are triggered using a CRON expression.',
-    recommended_action: 'Enable Always On feature for Azure Web Apps',
-    link: 'https://docs.microsoft.com/en-us/azure/app-service/configure-common',
+    description: 'Ensures that Azure Web Apps have recommended backup retention period.',
+    more_info: 'Retaining application backups for a longer period of time will allow you to handle more efficiently your app data restoration process..',
+    recommended_action: 'Configure backup retention period for Azure Web Apps',
+    link: 'https://docs.microsoft.com/en-us/azure/app-service/manage-backup',
     apis: ['webApps:list', 'webApps:getBackupConfiguration'],
     settings: {
         webapps_backup_retention_period: {
