@@ -103,17 +103,6 @@ describe('cloudtrailNotificationsEnabled', function () {
             });
         });
 
-        it('should FAIL if SNS notifications are not enabled for trail', function (done) {
-            const cache = createCache([describeTrails[0]], listTopics[0], getTopicAttributes[1] );
-            cloudtrailNotificationsEnabled.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('SNS notifications are not enabled for trail')
-                done();
-            });
-        });
-
         it('should FAIL if SNS notifications are deleted for the selected CloudTrail trail after manufacture of trail', function (done) {
             const cache = createCache([describeTrails[1]], listTopics[2], null, null, null, { message: 'An error occurred (NotFound) when calling the GetTopicAttributes operation: Topic does not exist', code : 'NotFound' } );
             cloudtrailNotificationsEnabled.run(cache, {}, (err, results) => {
@@ -142,6 +131,16 @@ describe('cloudtrailNotificationsEnabled', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for trails')
+                done();
+            });
+        });
+
+        it('should UNKNOWN if Unable to query for SNS notifications', function (done) {
+            const cache = createCache([describeTrails[1]], listTopics[1], null, null, null, { message: 'Unable to query for SNS notifications' });
+            cloudtrailNotificationsEnabled.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query for SNS notifications')
                 done();
             });
         });
