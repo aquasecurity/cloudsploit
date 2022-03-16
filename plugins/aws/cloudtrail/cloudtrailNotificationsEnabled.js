@@ -58,8 +58,14 @@ module.exports = {
                     continue;
                 } 
 
-                if (!getTopicAttributes || getTopicAttributes.err ||
-                    !getTopicAttributes.data) {
+                if (getTopicAttributes.err) {
+                    helpers.addResult(results, 3,
+                        'unable to query for SNS notifications'+ helpers.addError(getTopicAttributes), 
+                        region, resource);
+                    continue;
+                } 
+
+                if (!getTopicAttributes || !getTopicAttributes.data) {
                     helpers.addResult(results, 2,
                         'SNS notifications are not enabled for trail', 
                         region, resource);
