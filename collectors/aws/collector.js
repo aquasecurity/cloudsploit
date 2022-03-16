@@ -1255,6 +1255,11 @@ var postcalls = [
                 reliesOnService: 'dynamodb',
                 reliesOnCall: 'listTables',
                 override: true
+            },
+            listBackups: {
+                reliesOnService: 'dynamodb',
+                reliesOnCall: 'listTables',
+                override: true
             }
         },
         ElastiCache: {
