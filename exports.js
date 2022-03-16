@@ -588,7 +588,7 @@ module.exports = {
         'virtualNetworkRuleEnabled'     : require(__dirname + '/plugins/azure/logalerts/virtualNetworkRuleEnabled.js'),
         'securitySolutionLogging'       : require(__dirname + '/plugins/azure/logalerts/securitySolutionLogging.js'),
         'nsgRuleLoggingEnabled'         : require(__dirname + '/plugins/azure/logalerts/nsgRuleLoggingEnabled.js'),
-        'policyAssignmentLogging'       : require(__dirname + '/plugins/azure/logalerts/policyAssignmentLogging.js'),1
+        'policyAssignmentLogging'       : require(__dirname + '/plugins/azure/logalerts/policyAssignmentLogging.js'),
         'postgreSqlDBLoggingEnabled'    : require(__dirname + '/plugins/azure/logalerts/postgreSqlDBLoggingEnabled.js'),
         'sqlServerDatabaseRenameAlert'  : require(__dirname + '/plugins/azure/logalerts/sqlServerDatabaseRenameAlert.js'),
         'virtualMachinesPowerOffAlert'  : require(__dirname + '/plugins/azure/logalerts/virtualMachinesPowerOffAlert.js'),
