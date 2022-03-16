@@ -17,6 +17,8 @@ module.exports = {
         'detailedCloudWatchMetrics'     : require(__dirname + '/plugins/aws/apigateway/detailedCloudWatchMetrics.js'),
         'apigatewayClientCertificate'   : require(__dirname + '/plugins/aws/apigateway/apigatewayClientCertificate.js'),
 
+        'appmeshTLSRequired'            : require(__dirname + '/plugins/aws/appmesh/appmeshTLSRequired.js'),
+
         'asgMultiAz'                    : require(__dirname + '/plugins/aws/autoscaling/asgMultiAz.js'),
         'asgActiveNotifications'        : require(__dirname + '/plugins/aws/autoscaling/asgActiveNotifications.js'),
         'asgCooldownPeriod'             : require(__dirname + '/plugins/aws/autoscaling/asgCooldownPeriod.js'),
