@@ -5,10 +5,10 @@ module.exports = {
     title: 'DynamoDB Table Backup Exists',
     category: 'DynamoDB',
     domain: 'Databases',
-    description: 'Ensures that Amazon DynamoDB tables are using on-demand backups for DynamoDB tables.',
-    more_info: 'With AWS Backup, you can configure backup policies and monitor activity for your AWS resources and on-premises workloads in one place. Using DynamoDB with AWS Backup, you can copy your on-demand backups across AWS accounts and Regions, add cost allocation tags to on-demand backups, and transition on-demand backups to cold storage for lower costs.',
+    description: 'Ensures that Amazon DynamoDB tables are using on-demand backups.',
+    more_info: 'With AWS Backup, you can configure backup policies and monitor activity for your AWS resources and on-premises workloads in one place. Using DynamoDB with AWS Backup, you can copy your on-demand backups across AWS accounts and regions, add cost allocation tags to on-demand backups, and transition on-demand backups to cold storage for lower costs.',
     link: 'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/BackupRestore.html',
-    recommended_action: 'Enable on-demand backups and restore functionality features for DynamoDB tables.',
+    recommended_action: 'Create on-demand backups for DynamoDB tables.',
     apis: ['DynamoDB:listTables', 'DynamoDB:listBackups'],
 
     run: function(cache, settings, callback) {
@@ -37,7 +37,7 @@ module.exports = {
             var listBackups = helpers.addSource(cache, source,
                 ['dynamodb', 'listBackups', region]);
 
-            if (!listBackups || listBackups.err || !listBackups.data) {
+            if (!listBackups || listBackups.err || !listBackups.data || !listBackups.data.BackupSummaries) {
                 helpers.addResult(results, 3,
                     `Unable to query for DynamoDB backups: ${helpers.addError(listBackups)}`,
                     region);
@@ -47,10 +47,10 @@ module.exports = {
             for (let table of listTables.data){
                 let backupTable = listBackups.data.BackupSummaries.find(backup => backup.TableName == table);
                 if (!backupTable) {
-                    helpers.addResult(results, 2, 'AWS DynamoDB backup is not in use for the selected table', 
+                    helpers.addResult(results, 2, 'No backup exists for DynamoDB table', 
                         region);    
                 } else {
-                    helpers.addResult(results, 0, 'AWS DynamoDB backup is in use for the selected table', 
+                    helpers.addResult(results, 0, 'Backup exists for DynamoDB table', 
                         region);
                 }
             }
