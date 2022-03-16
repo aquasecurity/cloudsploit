@@ -27,30 +27,39 @@ const listBackups = [
     }
 ];
 
-const createCache = (tables, backup) => {
+const createCache = (table, backups) => {
     return {
-        dynamodb: {
+        dynamodb:{
             listTables: {
                 'us-east-1': {
-                    data: tables,
+                    data: table
                 },
             },
             listBackups: {
                 'us-east-1': {
-                    data: backup
-                }
-            }
+                    [table]: {
+                        data: backups
+                    },
+                },
+            },
         },
     };
 };
 
 const createErrorCache = () => {
     return {
-        dynamodb: {
+        dynamodb:{
             listTables: {
                 'us-east-1': {
                     err: {
-                        message: 'error listing tables'
+                        message: 'error listing DynamoDB tables'
+                    },
+                },
+            },
+            listBackups: {
+                'us-east-1': {
+                    err: {
+                        message: 'error describing property'
                     },
                 },
             },
@@ -60,8 +69,11 @@ const createErrorCache = () => {
 
 const createNullCache = () => {
     return {
-        dynamodb: {
+        dynamodb:{
             listTables: {
+                'us-east-1': null,
+            },
+            listBackups: {
                 'us-east-1': null,
             },
         },

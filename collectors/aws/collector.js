@@ -297,7 +297,6 @@ var calls = {
             paginate: 'LastEvaluatedTableName',
             paginateReqProp: 'ExclusiveStartTableName'
         },
-        listBackups: {}
     },
     DAX: {
         describeClusters: {
@@ -1231,6 +1230,11 @@ var postcalls = [
                 override: true
             },
             describeContinuousBackups: {
+                reliesOnService: 'dynamodb',
+                reliesOnCall: 'listTables',
+                override: true
+            },
+            listBackups: {
                 reliesOnService: 'dynamodb',
                 reliesOnCall: 'listTables',
                 override: true

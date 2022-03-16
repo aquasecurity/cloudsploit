@@ -38,20 +38,20 @@ module.exports = {
                 return rcb();
             }
 
-            var listBackups = helpers.addSource(cache, source,
-                ['dynamodb', 'listBackups', region]);
-
-            if (!listBackups || listBackups.err || !listBackups.data || !listBackups.data.BackupSummaries) {
-                helpers.addResult(results, 3,
-                    `Unable to query for DynamoDB backups: ${helpers.addError(listBackups)}`,
-                    region);
-                return rcb();
-            }
-
             for (let table of listTables.data){
                 var resource = `arn:${awsOrGov}:dynamodb:${region}:${accountId}:table/${table}`;
-                let backupTable = listBackups.data.BackupSummaries.find(backup => backup.TableName == table);
-                if (!backupTable) {
+
+                var listBackups = helpers.addSource(cache, source,
+                    ['dynamodb', 'listBackups', region, table]);
+    
+                if (!listBackups || listBackups.err || !listBackups.data || !listBackups.data.BackupSummaries) {
+                    helpers.addResult(results, 3,
+                        `Unable to query backups for DynamoDB table: ${helpers.addError(listBackups)}`,
+                        region, resource);
+                    return rcb();
+                }
+               
+                if (!listBackups.data.BackupSummaries.length) {
                     helpers.addResult(results, 2, 'No backup exists for DynamoDB table', 
                         region, resource);    
                 } else {
