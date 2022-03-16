@@ -590,6 +590,8 @@ module.exports = {
         'nsgRuleLoggingEnabled'         : require(__dirname + '/plugins/azure/logalerts/nsgRuleLoggingEnabled.js'),
         'policyAssignmentLogging'       : require(__dirname + '/plugins/azure/logalerts/policyAssignmentLogging.js'),
         'storageAccountLoggingEnabled'  : require(__dirname + '/plugins/azure/logalerts/storageAccountLoggingEnabled.js'),
+        'sqlServerDatabaseLoggingEnabled' : require(__dirname + '/plugins/azure/logalerts/sqlServerDatabaseLoggingEnabled.js'),
+        'loadBalancerLoggingEnabled'    : require(__dirname + '/plugins/azure/logalerts/loadBalancerLoggingEnabled.js'),
         'virtualMachineLogging'         : require(__dirname + '/plugins/azure/logalerts/virtualMachineLogging.js'),
         'postgreSqlDBLoggingEnabled'    : require(__dirname + '/plugins/azure/logalerts/postgreSqlDBLoggingEnabled.js'),
         'sqlServerDatabaseRenameAlert'  : require(__dirname + '/plugins/azure/logalerts/sqlServerDatabaseRenameAlert.js'),
