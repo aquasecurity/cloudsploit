@@ -50,27 +50,31 @@ module.exports = {
                 var subAlone = subscription.split('/').slice(2, 3).join('/');
                 var action = false;
                 var scope = false;
-
                 if (roleDefinition.permissions &&
                     roleDefinition.permissions.length) {
                     roleDefinition.permissions.forEach(permission => {
-                        if (permission.actions &&
-                            (permission.actions.indexOf('locks') > -1)) {
-                            action = true;
+                        if (permission.actions && permission.actions) {
+                            permission.actions.forEach(ac => {
+                                if (ac.indexOf('locks') > -1) {
+                                    action = true;
+                                }
+                            });
                         }
                     });
                 }
-                if (roleDefinition.assignableScopes &&
-                    ((roleDefinition.assignableScopes.indexOf('/') > -1) ||
-                        (roleDefinition.assignableScopes.indexOf(subAlone) > -1) ||
-                        (roleDefinition.assignableScopes.indexOf(subscription) > -1))) {
-                    scope = true;
+
+                if (roleDefinition.assignableScopes) {
+                    roleDefinition.assignableScopes.forEach(sc => {
+                        if ((sc.indexOf('/') > -1) || (sc.indexOf(subAlone) > -1) || (sc.indexOf(subscription) > -1)) {
+                            scope = true;
+                        }
+                    });
                 }
 
                 if (action && scope) {
-                    helpers.addResult(results, 2, 'Resource locking administrator role is enabled for current subscription', location, roleDefinition.id);
+                    helpers.addResult(results, 0, 'Resource locking administrator role is enabled for current subscription', location, roleDefinition.id);
                 } else {
-                    helpers.addResult(results, 0, 'Resource locking administrator role is not enabled for current subscription', location, roleDefinition.id);
+                    helpers.addResult(results, 2, 'Resource locking administrator role is not enabled for current subscription', location, roleDefinition.id);
                 }
             });
             
