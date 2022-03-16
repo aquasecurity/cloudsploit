@@ -48,7 +48,7 @@ module.exports = {
                     helpers.addResult(results, 3,
                         `Unable to query backups for DynamoDB table: ${helpers.addError(listBackups)}`,
                         region, resource);
-                    return rcb();
+                    continue;
                 }
                
                 if (!listBackups.data.BackupSummaries.length) {

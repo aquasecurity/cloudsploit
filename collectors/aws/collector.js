@@ -296,7 +296,7 @@ var calls = {
             property: 'TableNames',
             paginate: 'LastEvaluatedTableName',
             paginateReqProp: 'ExclusiveStartTableName'
-        },
+        }
     },
     DAX: {
         describeClusters: {
