@@ -309,7 +309,6 @@ var postcalls = {
             filterConfig: [true, false],
         }
     },
-
     customerSecretKey: {
         list: {
             api: 'iam',
