@@ -587,6 +587,7 @@ module.exports = {
         'securitySolutionLogging'       : require(__dirname + '/plugins/azure/logalerts/securitySolutionLogging.js'),
         'nsgRuleLoggingEnabled'         : require(__dirname + '/plugins/azure/logalerts/nsgRuleLoggingEnabled.js'),
         'policyAssignmentLogging'       : require(__dirname + '/plugins/azure/logalerts/policyAssignmentLogging.js'),
+        'virtualMachinesPowerOffAlert'  : require(__dirname + '/plugins/azure/logalerts/virtualMachinesPowerOffAlert.js'),
         'virtualMachinesDeallocateAlert': require(__dirname + '/plugins/azure/logalerts/virtualMachinesDeallocateAlert.js'),
 
         'monitorEndpointProtection'     : require(__dirname + '/plugins/azure/securitycenter/monitorEndpointProtection.js'),
