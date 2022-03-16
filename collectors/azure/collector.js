@@ -388,6 +388,12 @@ var postcalls = {
             reliesOnPath: 'webApps.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/config?api-version=2019-08-01'
+        },
+        listAppSettings: {
+            reliesOnPath: 'webApps.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/config/appsettings/list?api-version=2021-02-01',
+            post: true
         }
     },
     endpoints: {
