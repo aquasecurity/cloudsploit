@@ -70,10 +70,10 @@ const describeSecurityGroups = [
         "IpPermissions": [
             {
                 "FromPort": 0,
-                "IpProtocol": "tcp",
+                "IpProtocol": "udp",
                 "IpRanges": [
                     {
-                        "CidrIp": "10.0.0.0/0"
+                        "CidrIp": "0.0.0.0/0"
                     }
                 ],
                 "Ipv6Ranges": [],
@@ -81,7 +81,7 @@ const describeSecurityGroups = [
                 "ToPort": 65535,
                 "UserIdGroupPairs": [
                     {
-                        "GroupId": "sg-001639e564442dfec",
+                        "GroupId": "sg-02e2c70cd463dca29",
                         "UserId": "111122223333"
                     }
                 ]

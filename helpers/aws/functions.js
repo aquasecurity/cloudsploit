@@ -67,7 +67,8 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
     var found = false;
     var usedGroup = false;
     if (config.ec2_skip_unused_groups) {
-        var usedGroups = getUsedSecurityGroups(cache, results, region, callback);
+        var usedGroups = getUsedSecurityGroups(cache, results, region);
+        if (usedGroups && usedGroups.length && usedGroups[0] === 'Error') return callback();
     }
 
     for (var g in groups) {
@@ -75,15 +76,6 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
         var openV4Ports = [];
         var openV6Ports = [];
         var resource = `arn:aws:ec2:${region}:${groups[g].OwnerId}:security-group/${groups[g].GroupId}`;
-
-        if (config.ec2_skip_unused_groups) {
-            if (groups[g].GroupId && !usedGroups.includes(groups[g].GroupId)) {
-                addResult(results, 1, `Security Group: ${groups[g].GroupId} is not in use`,
-                    region, resource);
-                usedGroup = true;
-                continue;
-            }
-        }
 
         for (var p in groups[g].IpPermissions) {
             var permission = groups[g].IpPermissions[p];
@@ -165,8 +157,14 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
                 }
             }
 
-            addResult(results, 2, resultsString,
-                region, resource);
+            if (config.ec2_skip_unused_groups && groups[g].GroupId && !usedGroups.includes(groups[g].GroupId)) {
+                addResult(results, 1, `Security Group: ${groups[g].GroupId} is not in use`,
+                    region, resource);
+                usedGroup = true;
+            } else {
+                addResult(results, 2, resultsString,
+                    region, resource);
+            }
         }
     }
 
@@ -853,7 +851,7 @@ function getOrganizationAccounts(listAccounts, accountId) {
     return orgAccountIds;
 }
 
-function getUsedSecurityGroups(cache, results, region, callback) {
+function getUsedSecurityGroups(cache, results, region) {
     let result = [];
     const describeNetworkInterfaces = helpers.addSource(cache, {},
         ['ec2', 'describeNetworkInterfaces', region]);
@@ -861,7 +859,7 @@ function getUsedSecurityGroups(cache, results, region, callback) {
     if (!describeNetworkInterfaces || describeNetworkInterfaces.err || !describeNetworkInterfaces.data) {
         helpers.addResult(results, 3,
             'Unable to query for network interfaces: ' + helpers.addError(describeNetworkInterfaces), region);
-        return callback();
+        return  result['Error'];
     }
 
     const listFunctions = helpers.addSource(cache, {},
@@ -870,7 +868,7 @@ function getUsedSecurityGroups(cache, results, region, callback) {
     if (!listFunctions || listFunctions.err || !listFunctions.data) {
         helpers.addResult(results, 3,
             'Unable to list lambda functions: ' + helpers.addError(listFunctions), region);
-        return callback();
+        return  result['Error'];
     }
 
     describeNetworkInterfaces.data.forEach(interface => {
