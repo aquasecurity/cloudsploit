@@ -55,6 +55,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    AppMesh: {
+        listMeshes: {
+            property: 'meshes',
+            paginate: 'nextToken'
+        }
+    },
     AppRunner: {
         listServices: {
             property: 'ServiceSummaryList',
@@ -1067,12 +1073,28 @@ var postcalls = [
                 filterValue: 'CertificateArn'
             }
         },
+        AccessAnalyzer: {
+            listFindings: {
+                reliesOnService: 'accessanalyzer',
+                reliesOnCall: 'listAnalyzers',
+                override: true
+            }
+        },
+        
         APIGateway: {
             getStages: {
                 reliesOnService: 'apigateway',
                 reliesOnCall: 'getRestApis',
                 filterKey: 'restApiId',
                 filterValue: 'id'
+            }
+        },
+        AppMesh: {
+            listVirtualGateways: {
+                reliesOnService: 'appmesh',
+                reliesOnCall: 'listMeshes',
+                filterKey: 'meshName',
+                filterValue: 'meshName'
             }
         },
         AppRunner: {
@@ -1851,6 +1873,13 @@ var postcalls = [
             getClientCertificate: {
                 reliesOnService: 'apigateway',
                 reliesOnCall: 'getRestApis',
+                override: true
+            }
+        },
+        AppMesh: {
+            describeVirtualGateway: {
+                reliesOnService: 'appmesh',
+                reliesOnCall: 'listMeshes',
                 override: true
             }
         },
