@@ -9,12 +9,16 @@ module.exports = {
     more_info: 'With AWS Backup, you can configure backup policies and monitor activity for your AWS resources and on-premises workloads in one place. Using DynamoDB with AWS Backup, you can copy your on-demand backups across AWS accounts and regions, add cost allocation tags to on-demand backups, and transition on-demand backups to cold storage for lower costs.',
     link: 'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/BackupRestore.html',
     recommended_action: 'Create on-demand backups for DynamoDB tables.',
-    apis: ['DynamoDB:listTables', 'DynamoDB:listBackups'],
+    apis: ['DynamoDB:listTables', 'DynamoDB:listBackups', 'STS:getCallerIdentity'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+
+        var acctRegion = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
+        var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
         async.each(regions.dynamodb, function(region, rcb){
             var listTables = helpers.addSource(cache, source,
@@ -45,13 +49,14 @@ module.exports = {
             }
 
             for (let table of listTables.data){
+                var resource = `arn:${awsOrGov}:dynamodb:${region}:${accountId}:table/${table}`;
                 let backupTable = listBackups.data.BackupSummaries.find(backup => backup.TableName == table);
                 if (!backupTable) {
                     helpers.addResult(results, 2, 'No backup exists for DynamoDB table', 
-                        region);    
+                        region, resource);    
                 } else {
                     helpers.addResult(results, 0, 'Backup exists for DynamoDB table', 
-                        region);
+                        region, resource);
                 }
             }
 
