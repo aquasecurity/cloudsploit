@@ -5,10 +5,10 @@ module.exports = {
     title: 'App Mesh TLS Required',
     category: 'App Mesh',
     domain: 'Content Delivery',
-    description: 'Ensure that AWS App Mesh virtual gateways Listener only accepts connections with TLS enabled.',
-    more_info: 'In App Mesh, Transport Layer Security (TLS) encrypts communication between the Envoy proxies deployed on compute resources that are represented in App Mesh by mesh endpoints, such as Virtual nodes and Virtual gateways. The proxy negotiates and terminates TLS.',
+    description: 'Ensure that AWS App Mesh virtual gateway listeners only accepts TLS enabled connections.',
+    more_info: 'In App Mesh, Transport Layer Security (TLS) encrypts communication between the envoy proxies deployed on compute resources that are represented in App Mesh by mesh endpoints, such as Virtual nodes and Virtual gateways.',
     link: 'https://docs.aws.amazon.com/app-mesh/latest/APIReference/API_ListenerTls.html',
-    recommended_action: 'Restrict TLS enabled connections to AWS App Mesh virtual gateways Listeners in your account',
+    recommended_action: 'Restrict AWS App Mesh virtual gateway listeners to accept only TLS enabled connections.',
     apis: ['AppMesh:listMeshes', 'AppMesh:listVirtualGateways', 'AppMesh:describeVirtualGateway'],
    
     run: function(cache, settings, callback) {
