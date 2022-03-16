@@ -54,7 +54,7 @@ module.exports = {
                 });
                 if (conditionOperation && conditionOperation.length) {
                     allConditions.allOf.forEach(condition => {
-                        if (condition.equals && condition.equals.toLowerCase().indexOf(conditionResource + '/poweroff') > -1) {
+                        if (condition.equals && condition.equals.toLowerCase() && condition.equals.toLowerCase().indexOf(conditionResource + '/poweroff') > -1) {
                             alertPowerOffEnabled = (!alertPowerOffEnabled && activityLogAlertResource.enabled ? true : alertPowerOffEnabled);
                         }
                     });
