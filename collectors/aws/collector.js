@@ -248,6 +248,9 @@ var calls = {
         },
         describeConfigurationRecorderStatus: {
             property: 'ConfigurationRecordersStatus'
+        },
+        describeDeliveryChannels: {
+            property: 'DeliveryChannels'
         }
     },
     CustomerProfiles: {
@@ -487,9 +490,11 @@ var calls = {
             paginate: 'nextToken',
             params: {
                 maxResults: 1000
-            }
+            },
+            sendIntegration: true
         },
         describeRegistry: {
+            sendIntegration: true
         },
     },
     ECRPUBLIC :{
@@ -498,7 +503,8 @@ var calls = {
             paginate: 'nextToken',
             params: {
                 maxResults: 1000
-            }
+            },
+            sendIntegration: true
         },
     },
     EFS: {
@@ -511,7 +517,8 @@ var calls = {
     EKS: {
         listClusters: {
             property: 'clusters',
-            paginate: 'nextToken'
+            paginate: 'nextToken',
+            sendIntegration: true
         }
     },
     ECS: {
@@ -737,7 +744,8 @@ var calls = {
         listFunctions: {
             property: 'Functions',
             paginate: 'NextMarker',
-            paginateReqProp: 'Marker'
+            paginateReqProp: 'Marker',
+            sendIntegration: true
         }
     },
     LookoutEquipment: {
@@ -887,7 +895,8 @@ var calls = {
     },
     S3: {
         listBuckets: {
-            property: 'Buckets'
+            property: 'Buckets',
+            sendIntegration: true
         }
     },
     SageMaker: {
@@ -1067,12 +1076,28 @@ var postcalls = [
                 filterValue: 'CertificateArn'
             }
         },
+        AccessAnalyzer: {
+            listFindings: {
+                reliesOnService: 'accessanalyzer',
+                reliesOnCall: 'listAnalyzers',
+                override: true
+            }
+        },
+        
         APIGateway: {
             getStages: {
                 reliesOnService: 'apigateway',
                 reliesOnCall: 'getRestApis',
                 filterKey: 'restApiId',
                 filterValue: 'id'
+            }
+        },
+        AppMesh: {
+            listVirtualGateways: {
+                reliesOnService: 'appmesh',
+                reliesOnCall: 'listMeshes',
+                filterKey: 'meshName',
+                filterValue: 'meshName'
             }
         },
         AppRunner: {
@@ -1241,6 +1266,11 @@ var postcalls = [
                 reliesOnService: 'dynamodb',
                 reliesOnCall: 'listTables',
                 override: true
+            },
+            listBackups: {
+                reliesOnService: 'dynamodb',
+                reliesOnCall: 'listTables',
+                override: true
             }
         },
         ElastiCache: {
@@ -1343,6 +1373,12 @@ var postcalls = [
                 filterKey: 'Bucket',
                 filterValue: 'Name'
             },
+            headBucket: {
+                reliesOnService: 's3',
+                reliesOnCall: 'listBuckets',
+                filterKey: 'Bucket',
+                filterValue: 'Name'
+            },
         },
         EC2: {
             describeSubnets: {
@@ -1381,19 +1417,22 @@ var postcalls = [
                 reliesOnService: 'ecr',
                 reliesOnCall: 'describeRegistries',
                 filterKey: 'registryId',
-                filterValue: 'registryId'
-            },
+                filterValue: 'registryId',
+                sendIntegration: true
+            }
         },
         EKS: {
             describeCluster: {
                 reliesOnService: 'eks',
                 reliesOnCall: 'listClusters',
-                override: true
+                override: true,
+                sendIntegration: true
             },
             listNodegroups: {
                 reliesOnService: 'eks',
                 reliesOnCall: 'listClusters',
-                override: true
+                override: true,
+                sendIntegration: true
             }
         },
         ECS: {
@@ -1568,7 +1607,14 @@ var postcalls = [
                 filterKey: 'UserName',
                 filterValue: 'UserName',
                 rateLimit: 100
-            }
+            },
+            getInstanceProfile: {
+                reliesOnService: 'ec2',
+                reliesOnCall: 'describeInstances',
+                override: true,
+                sendIntegration: true,
+                reliesIntegration: true
+            },
         },
         Kendra: {
             describeIndex : {
@@ -1811,20 +1857,14 @@ var postcalls = [
             listResourcesForWebACL: {
                 reliesOnService: 'wafregional',
                 reliesOnCall: 'listWebACLs',
-                filterKey: 'WebACLId',
-                filterValue: 'WebACLId',
-                checkMultiple: ['APPLICATION_LOAD_BALANCER', 'API_GATEWAY'],
-                checkMultipleKey: 'ResourceType'
+                override: true
             }
         },
         WAFV2: {
             listResourcesForWebACL: {
                 reliesOnService: 'wafv2',
                 reliesOnCall: 'listWebACLs',
-                filterKey: 'WebACLArn',
-                filterValue: 'ARN',
-                checkMultiple: ['APPLICATION_LOAD_BALANCER', 'API_GATEWAY'],
-                checkMultipleKey: 'ResourceType'
+                override: true
             }
         },
         GuardDuty: {
@@ -1855,6 +1895,13 @@ var postcalls = [
             getClientCertificate: {
                 reliesOnService: 'apigateway',
                 reliesOnCall: 'getRestApis',
+                override: true
+            }
+        },
+        AppMesh: {
+            describeVirtualGateway: {
+                reliesOnService: 'appmesh',
+                reliesOnCall: 'listMeshes',
                 override: true
             }
         },
@@ -1898,7 +1945,8 @@ var postcalls = [
             describeNodegroups: {
                 reliesOnService: 'eks',
                 reliesOnCall: 'listClusters',
-                override: true
+                override: true,
+                sendIntegration: true
             }
         },
         LookoutVision: {
@@ -2039,6 +2087,47 @@ var collect = function(AWSConfig, settings, callback) {
         return isError;
     };
 
+    var processIntegration = function(serviceLower, callKey, callObj, region, settings, iCb) {
+        if (!callObj.sendIntegration) return iCb();
+
+        if (callObj.reliesIntegration) {
+            let localEvent = {};
+            localEvent.collection = {};
+            localEvent.collection[serviceLower] = {};
+            localEvent.collection[serviceLower][callKey] = collection[serviceLower][callKey];
+            localEvent.collection[serviceLower][callKey][region].data = collection[serviceLower][callKey][region].data;
+
+            if (!localEvent.collection[callObj.reliesOnService]) localEvent.collection[callObj.reliesOnService] = {};
+            localEvent.collection[callObj.reliesOnService][callObj.reliesOnCall] = collection[callObj.reliesOnService][callObj.reliesOnCall];
+            localEvent.identifier = settings.identifier;
+
+            localEvent.previousCollection = settings.previousCollection;
+
+            settings.integration(localEvent, function() {
+                if (debugMode) console.log(`Processed Event: ${JSON.stringify(localEvent)}`);
+
+                return iCb();
+            });
+        } else {
+            let localEvent = {};
+            localEvent.collection = {};
+            localEvent.collection[serviceLower] = {};
+            localEvent.collection[serviceLower][callKey] = {};
+            localEvent.collection[serviceLower][callKey][region] = {};
+            localEvent.collection[serviceLower][callKey][region].data = collection[serviceLower][callKey][region].data;
+
+            localEvent.identifier = settings.identifier;
+
+            localEvent.previousCollection = settings.previousCollection;
+
+            settings.integration(localEvent, function() {
+                if (debugMode) console.log(`Processed Event: ${JSON.stringify(localEvent)}`);
+
+                return iCb();
+            });
+        }
+    };
+
     let runApiCalls = [];
 
     var AWSEC2 = new AWS.EC2(AWSConfig);
@@ -2132,42 +2221,22 @@ var collect = function(AWSConfig, settings, callback) {
                                 collection[serviceLower][callKey][region].data = dataToAdd;
                             }
 
-                            if (dataToAdd && dataToAdd.length && settings.identifier){
-                                var localEvent = {};
-                                localEvent.collection = {};
-                                localEvent.collection[serviceLower] = {};
-                                localEvent.collection[serviceLower][callKey] = {};
-                                localEvent.collection[serviceLower][callKey][region] = {};
-                                localEvent.collection[serviceLower][callKey][region].data = dataToAdd;
+                            // If a "paginate" property is set, e.g. NextToken
+                            var nextToken = callObj.paginate;
+                            if (settings.paginate && nextToken && data[nextToken]) {
+                                paginating = true;
+                                var paginateProp = callObj.paginateReqProp ? callObj.paginateReqProp : nextToken;
+                                return execute([paginateProp, data[nextToken]]);
+                            }
 
-                                localEvent.identifier = settings.identifier;
-
-                                localEvent.previousCollection = settings.previousCollection;
-
-                                settings.integration(localEvent, function() {
-                                    if (debugMode) console.log(`Processed Event: ${JSON.stringify(localEvent)}`);
-
-                                    // If a "paginate" property is set, e.g. NextToken
-                                    var nextToken = callObj.paginate;
-                                    if (settings.paginate && nextToken && data[nextToken]) {
-                                        paginating = true;
-                                        var paginateProp = callObj.paginateReqProp ? callObj.paginateReqProp : nextToken;
-                                        return execute([paginateProp, data[nextToken]]);
-                                    }
-
+                            if (settings.identifier) {
+                                processIntegration(serviceLower, callKey, callObj, region, settings, function() {
                                     return regionCb();
                                 });
                             } else {
-                                // If a "paginate" property is set, e.g. NextToken
-                                var nextToken = callObj.paginate;
-                                if (settings.paginate && nextToken && data[nextToken]) {
-                                    paginating = true;
-                                    var paginateProp = callObj.paginateReqProp ? callObj.paginateReqProp : nextToken;
-                                    return execute([paginateProp, data[nextToken]]);
-                                }
-
-                                return regionCb();
+                                regionCb();
                             }
+
                         };
 
                         function execute(nextTokens) { // eslint-disable-line no-inner-declarations
@@ -2185,7 +2254,7 @@ var collect = function(AWSConfig, settings, callback) {
                                         let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
                                         let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
 
-                                        console.log(`Trying again in: ${retry_seconds/1000} seconds`);
+                                        console.log(`Trying ${callKey} again in: ${retry_seconds/1000} seconds`);
                                         retries.push({seconds: Math.round(retry_seconds/1000)});
                                         return retry_seconds;
                                     },
@@ -2209,7 +2278,7 @@ var collect = function(AWSConfig, settings, callback) {
                                         let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
                                         let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
 
-                                        console.log(`Trying again in: ${retry_seconds/1000} seconds`);
+                                        console.log(`Trying ${callKey} again in: ${retry_seconds/1000} seconds`);
                                         retries.push({seconds: Math.round(retry_seconds/1000)});
                                         return retry_seconds;
                                     },
@@ -2291,12 +2360,25 @@ var collect = function(AWSConfig, settings, callback) {
 
                             if (callObj.override) {
                                 collectors[serviceLower][callKey](LocalAWSConfig, collection, retries, function() {
+
                                     if (callObj.rateLimit) {
                                         setTimeout(function() {
-                                            regionCb();
+                                            if (settings.identifier) {
+                                                processIntegration(serviceLower, callKey, callObj, region, settings, function() {
+                                                    return regionCb();
+                                                });
+                                            } else {
+                                                regionCb();
+                                            }
                                         }, callObj.rateLimit);
                                     } else {
-                                        regionCb();
+                                        if (settings.identifier) {
+                                            processIntegration(serviceLower, callKey, callObj, region, settings, function() {
+                                                return regionCb();
+                                            });
+                                        } else {
+                                            regionCb();
+                                        }
                                     }
                                 });
                             } else {
@@ -2308,94 +2390,57 @@ var collect = function(AWSConfig, settings, callback) {
                                 }
 
                                 async.eachLimit(collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region].data, 10, function(dep, depCb) {
-                                    if (callObj.checkMultiple) {
-                                        async.each(callObj.checkMultiple, function(thisCheck, tcCb){
-                                            collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]] = {};
+                                    collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]] = {};
 
-                                            var filter = {};
-                                            filter[callObj.filterKey] = dep[callObj.filterValue];
-                                            filter[callObj.checkMultipleKey] = thisCheck;
+                                    var filter = {};
+                                    filter[callObj.filterKey] = dep[callObj.filterValue];
 
-                                            async.retry({
-                                                times: apiRetryAttempts,
-                                                interval: function(retryCount){
-                                                    let retryExponential = 3;
-                                                    let retryLeveler = 3;
-                                                    let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
-                                                    let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
-                                                    let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
+                                    async.retry({
+                                        times: apiRetryAttempts,
+                                        interval: function(retryCount){
+                                            let retryExponential = 3;
+                                            let retryLeveler = 3;
+                                            let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
+                                            let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
+                                            let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
 
-                                                    console.log(`Trying again in: ${retry_seconds/1000} seconds`);
-                                                    retries.push({seconds: Math.round(retry_seconds/1000)});
-                                                    return retry_seconds;
-                                                },
-                                                errorFilter: function(err) {
-                                                    return isRateError(err);
-                                                }
-                                            }, function(cb) {
-                                                executor[callKey](filter, function(err, data) {
-                                                    if (isRateError(err)) {
-                                                        return cb(err);
-                                                    } else if (err) {
-                                                        collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = err;
-                                                        logError(serviceLower, callKey, region, err);
-                                                        return cb();
-                                                    } else {
-                                                        if (data) {
-                                                            if (!collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data) {
-                                                                collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = data;
-                                                            }
-                                                        }
-                                                        return cb();
-                                                    }
-                                                });
-                                            }, function(){
-                                                tcCb();
-                                            });
-                                        }, function() {
+                                            console.log(`Trying ${callKey} again in: ${retry_seconds/1000} seconds`);
+                                            retries.push({seconds: Math.round(retry_seconds/1000)});
+                                            return retry_seconds;
+                                        },
+                                        errorFilter: function(err) {
+                                            return isRateError(err);
+                                        }
+                                    }, function(cb) {
+                                        executor[callKey](filter, function(err, data) {
+                                            if (isRateError(err)) {
+                                                return cb(err);
+                                            } else if (err) {
+                                                collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = err;
+                                                logError(serviceLower, callKey, region, err);
+                                                return cb();
+                                            } else {
+                                                collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = data;
+                                                return cb();
+                                            }
+                                        });
+                                    }, function(){
+                                        if (callObj.rateLimit) {
+                                            setTimeout(function() {
+                                                depCb();
+                                            }, callObj.rateLimit);
+                                        } else {
                                             depCb();
+                                        }
+                                    });
+                                }, function() {
+                                    if (settings.identifier) {
+                                        processIntegration(serviceLower, callKey, callObj, region, settings, function() {
+                                            return regionCb();
                                         });
                                     } else {
-                                        collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]] = {};
-
-                                        var filter = {};
-                                        filter[callObj.filterKey] = dep[callObj.filterValue];
-
-                                        async.retry({
-                                            times: apiRetryAttempts,
-                                            interval: function(retryCount){
-                                                let retryExponential = 3;
-                                                let retryLeveler = 3;
-                                                let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
-                                                let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
-                                                let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
-
-                                                console.log(`Trying again in: ${retry_seconds/1000} seconds`);
-                                                retries.push({seconds: Math.round(retry_seconds/1000)});
-                                                return retry_seconds;
-                                            },
-                                            errorFilter: function(err) {
-                                                return isRateError(err);
-                                            }
-                                        }, function(cb) {
-                                            executor[callKey](filter, function(err, data) {
-                                                if (isRateError(err)) {
-                                                    return cb(err);
-                                                } else if (err) {
-                                                    collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = err;
-                                                    logError(serviceLower, callKey, region, err);
-                                                    return cb();
-                                                } else {
-                                                    collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = data;
-                                                    return cb();
-                                                }
-                                            });
-                                        }, function(){
-                                            depCb();
-                                        });
+                                        regionCb();
                                     }
-                                }, function() {
-                                    regionCb();
                                 });
                             }
                         }, function() {
