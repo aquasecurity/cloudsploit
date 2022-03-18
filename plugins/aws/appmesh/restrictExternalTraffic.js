@@ -55,11 +55,11 @@ module.exports = {
                     describeMesh.data.mesh.spec.egressFilter &&
                     describeMesh.data.mesh.spec.egressFilter.type.toUpperCase() === 'ALLOW_ALL') {
                     helpers.addResult(results, 2,
-                        'App Mesh mesh allows allows all external egress traffic',
+                        'App Mesh mesh allows access to external services',
                         region, resource);       
                 } else {
                     helpers.addResult(results, 0,
-                        'App Mesh mesh denies all external egress traffic',
+                        'App Mesh mesh does not allow access to external services',
                         region, resource);
                 }
             }
