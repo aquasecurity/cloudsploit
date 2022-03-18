@@ -1108,14 +1108,6 @@ var postcalls = [
                 filterValue: 'ServiceArn'
             }
         },
-        AppMesh: {
-            describeMesh: {
-                reliesOnService: 'appmesh',
-                reliesOnCall: 'listMeshes',
-                filterKey: 'meshName',
-                filterValue: 'meshName'
-            }
-        },
         Appflow: {
             describeFlow: {
                 reliesOnService: 'appflow',
