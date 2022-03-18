@@ -101,7 +101,7 @@ describe('restrictExternalTraffic', function () {
             restrictExternalTraffic.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include(App Mesh mesh allows access to external services');
+                expect(results[0].message).to.include('App Mesh mesh allows access to external services');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
