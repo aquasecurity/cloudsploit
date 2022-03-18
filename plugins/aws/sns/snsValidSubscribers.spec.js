@@ -48,9 +48,9 @@ const createErrorCache = () => {
 
 describe('snsValidSubscribers', function () {
     describe('run', function () {
-        it('should PASS if SNS subscriber is appropriate for topic', function (done) {
+        it('should PASS if SNS subscription is wanted', function (done) {
             const cache = createCache([listSubscriptions[0]]);
-            snsValidSubscribers.run(cache, { sns_unwanted_subscribers: 'sadeed1999@gmail.com' }, (err, results) => {
+            snsValidSubscribers.run(cache, { sns_unwanted_subscribers: 'xyz@aquasec.com' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('SNS subscription is not an unwanted subscription');
@@ -58,9 +58,9 @@ describe('snsValidSubscribers', function () {
             });
         });
 
-        it('should FAIL if SNS subscriber is unwanted for topic', function (done) {
+        it('should FAIL if SNS subscription is unwanted', function (done) {
             const cache = createCache([listSubscriptions[1]]);
-            snsValidSubscribers.run(cache, { sns_unwanted_subscribers: 'sadeed1999@gmail.com' }, (err, results) => {
+            snsValidSubscribers.run(cache, { sns_unwanted_subscribers: 'xyz@aquasec.com' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('SNS subscription is an unwanted subscription');
@@ -70,7 +70,7 @@ describe('snsValidSubscribers', function () {
 
         it('should PASS if no SNS subscriptions found', function (done) {
             const cache = createCache([]);
-            snsValidSubscribers.run(cache, { sns_unwanted_subscribers: 'sadeed1999@gmail.com' }, (err, results) => {
+            snsValidSubscribers.run(cache, { sns_unwanted_subscribers: 'xyz@aquasec.com' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No SNS subscriptions Found');
@@ -80,7 +80,7 @@ describe('snsValidSubscribers', function () {
 
         it('should UNKNOWN if Unable to query for SNS subscriptions', function (done) {
             const cache = createErrorCache();
-            snsValidSubscribers.run(cache, { sns_unwanted_subscribers: 'sadeed1999@gmail.com' }, (err, results) => {
+            snsValidSubscribers.run(cache, { sns_unwanted_subscribers: 'xyz@aquasec.com' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for SNS subscriptions');
