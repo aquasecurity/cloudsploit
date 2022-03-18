@@ -1098,6 +1098,12 @@ var postcalls = [
                 reliesOnCall: 'listMeshes',
                 filterKey: 'meshName',
                 filterValue: 'meshName'
+            },
+            describeMesh: {
+                reliesOnService: 'appmesh',
+                reliesOnCall: 'listMeshes',
+                filterKey: 'meshName',
+                filterValue: 'meshName'
             }
         },
         AppRunner: {
