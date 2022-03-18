@@ -85,7 +85,7 @@ const describeSecurityGroups = [
         "GroupName": "launch-wizard-1",
         "IpPermissions": [
             {
-                "FromPort": 80,
+                "FromPort": 0,
                 "IpProtocol": "tcp",
                 "IpRanges": [
                     {
@@ -94,9 +94,14 @@ const describeSecurityGroups = [
                 ],
                 "Ipv6Ranges": [],
                 "PrefixListIds": [],
-                "ToPort": 80,
-                "UserIdGroupPairs": []
-            }
+                "ToPort": 65535,
+                "UserIdGroupPairs": [
+                    {
+                        "GroupId": "sg-02e2c70cd463dca29",
+                        "UserId": "111122223333"
+                    }
+                ]
+            },
         ],
         "OwnerId": "12345654321",
         "GroupId": "sg-02e2c70cd463dcafe",
