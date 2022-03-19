@@ -948,7 +948,11 @@ var calls = {
         listTopics: {
             property: 'Topics',
             paginate: 'NextToken'
-        }
+        },
+        listSubscriptions: {
+            property: 'Subscriptions',
+            paginate: 'NextToken'
+        },
     },
     SQS: {
         listQueues: {
