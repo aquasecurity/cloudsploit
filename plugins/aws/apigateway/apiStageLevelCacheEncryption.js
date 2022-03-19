@@ -5,8 +5,8 @@ module.exports = {
     title: 'API Stage-Level Cache Encryption',
     category: 'API Gateway',
     domain: 'Availability',
-    description: 'Ensure that your Amazon API Gateway REST APIs are configured to encrypt API cached responses in order to protect data while in transit.',
-    more_info: 'The APIs created with Amazon API Gateway expose HTTPS endpoints only. API Gateway does not support unencrypted (HTTP) endpoints.For greater security, you can choose a minimum Transport Layer Security (TLS) protocol version to be enforced for your API Gateway custom domain.',
+    description: 'Ensure that your Amazon API Gateway REST APIs are configured to encrypt API cached responses.',
+    more_info: 'It is strongly recommended to enforce encryption for API cached responses in order to protect your data from unauthorized access.',
     recommended_action: 'Modify API Gateway API stages to enable encryption on cache data',
     link: 'https://docs.aws.amazon.com/apigateway/latest/developerguide/data-protection-encryption.html',
     apis: ['APIGateway:getRestApis', 'APIGateway:getStages'],
@@ -25,17 +25,18 @@ module.exports = {
 
             if (getRestApis.err || !getRestApis.data) {
                 helpers.addResult(results, 3,
-                    `Unable to query for API Gateway Rest APIs: ${helpers.addError(getRestApis)}`, region);
+                    `Unable to query for API Gateway rest APIs: ${helpers.addError(getRestApis)}`, region);
                 return rcb();
             }
 
             if (!getRestApis.data.length) {
-                helpers.addResult(results, 0, 'No API Gateway Rest APIs found', region);
+                helpers.addResult(results, 0, 'No API Gateway rest APIs found', region);
                 return rcb();
             }
 
             for (let api of getRestApis.data){
                 if (!api.id) continue;
+
                 var apiArn = `arn:${awsOrGov}:apigateway:${region}::/restapis/${api.id}`;
 
                 var getStages = helpers.addSource(cache, source,
@@ -43,14 +44,14 @@ module.exports = {
 
                 if (!getStages || getStages.err || !getStages.data || !getStages.data.item) {
                     helpers.addResult(results, 3,
-                        `Unable to query for API Gateway Rest API Stages: ${helpers.addError(getStages)}`,
+                        `Unable to query API Gateway stages: ${helpers.addError(getStages)}`,
                         region, apiArn);
                     continue;
                 }
 
                 if (!getStages.data.item.length) {
                     helpers.addResult(results, 0,
-                        'No Rest API Stages found',
+                        'No rest API Gateway stages found',
                         region, apiArn);
                     continue;
                 }
@@ -62,17 +63,17 @@ module.exports = {
 
                     if (!stage.methodSettings || !stage.methodSettings['*/*'] || !stage.methodSettings['*/*'].cachingEnabled) {
                         helpers.addResult(results, 0,
-                            'Response caching is not enabled for the selected API stage', region);
+                            'Response caching is not enabled for the API stage', region, stageArn);
                         return;
                     }
 
                     if (stage.methodSettings['*/*'].cacheDataEncrypted) {
                         helpers.addResult(results, 0,
-                            'API Gateway API stage has cache data encrypted',
+                            'API Gateway stage encrypts cache data',
                             region, stageArn);
                     } else {
                         helpers.addResult(results, 2,
-                            'API Gateway API stage does not have cache data encrypted',
+                            'API Gateway stage does not encrypt cache data',
                             region, stageArn);
                     }
                 });

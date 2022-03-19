@@ -176,35 +176,35 @@ const createNullCache = () => {
 
 describe('apiStageLevelCacheEncryption', function () {
     describe('run', function () {
-        it('should PASS if API Gateway API stage has cache data encrypted', function (done) {
+        it('should PASS if API Gateway stage encrypts cache data', function (done) {
             const cache = createCache([getRestApis[0]], getStages[0]);
             apiStageLevelCacheEncryption.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('API Gateway API stage has cache data encrypted')
+                expect(results[0].message).to.include('API Gateway stage encrypts cache data')
                 done();
             });
         });
 
-        it('should FAIL if API Gateway API stage does not have cache data encrypted', function (done) {
+        it('should FAIL if API Gateway stage does not encrypt cache data', function (done) {
             const cache = createCache([getRestApis[1]], getStages[1]);
             apiStageLevelCacheEncryption.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('API Gateway API stage does not have cache data encrypted')
+                expect(results[0].message).to.include('API Gateway stage does not encrypt cache data')
                 done();
             });
         });
 
-        it('should PASS if Response caching is not enabled for the selected API stage', function (done) {
+        it('should PASS if Response caching is not enabled for the API stage', function (done) {
             const cache = createCache([getRestApis[0]], getStages[2]);
             apiStageLevelCacheEncryption.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Response caching is not enabled for the selected API stage')
+                expect(results[0].message).to.include('Response caching is not enabled for the API stage')
                 done();
             });
         });
@@ -215,7 +215,7 @@ describe('apiStageLevelCacheEncryption', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('No API Gateway Rest APIs found')
+                expect(results[0].message).to.include('No API Gateway rest APIs found')
                 done();
             });
         });
@@ -226,7 +226,7 @@ describe('apiStageLevelCacheEncryption', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('No Rest API Stages found')
+                expect(results[0].message).to.include('No rest API Gateway stages found')
                 done();
             });
         });
@@ -237,29 +237,20 @@ describe('apiStageLevelCacheEncryption', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Unable to query for API Gateway Rest APIs')
+                expect(results[0].message).to.include('Unable to query for API Gateway rest APIs')
                 done();
             });
         });
 
-        it('should UNKNOWN if unable to get API Gateway Rest API Stages', function (done) {
+        it('should UNKNOWN if unable to get API Gateway Stages', function (done) {
             const cache = createCache([getRestApis[0]], null);
             apiStageLevelCacheEncryption.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Unable to query for API Gateway Rest API Stages')
+                expect(results[0].message).to.include('Unable to query API Gateway stages')
                 done();
             });
         });
-
-        it('should not return anything if get Rest APIs response is not found', function (done) {
-            const cache = createNullCache();
-            apiStageLevelCacheEncryption.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(0);
-                done();
-            });
-        });
-
     });
 });
