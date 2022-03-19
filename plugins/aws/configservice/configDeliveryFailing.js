@@ -34,8 +34,8 @@ module.exports = {
                 return rcb();
             }
 
-
-            if (describeConfigurationRecorderStatus.data[0].lastStatus.toUpperCase() === 'SUCCESS') {
+            if (describeConfigurationRecorderStatus.data[0].lastStatus &&
+                describeConfigurationRecorderStatus.data[0].lastStatus.toUpperCase() === 'SUCCESS') {
                 helpers.addResult(results, 0,
                     'AWS Config service is delivering log files to the designated recipient successfully',
                     region);
