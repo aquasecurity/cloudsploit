@@ -6,7 +6,7 @@ module.exports = {
     category: 'ACM',
     domain: 'Identity and Access management',
     description: 'Ensure that ACM single domain name certificates are used instead of wildcard certificates within your AWS account.',
-    more_info: 'ACM certificates are domain validated. That is, the subject field of an ACM certificate identifies a domain name and nothing more. ACM allows you to use an asterisk (*) in the domain name to create an ACM certificate containing a wildcard name that can protect several sites in the same domain. '+ 
+    more_info: 'ACM certificates are domain validated i.e. the subject field of an ACM certificate identifies a domain name and nothing more. ACM allows you to use an asterisk (*) in the domain name to create an ACM certificate containing a wildcard name that can protect several sites in the same domain.' + 
         'When you request a wildcard certificate, the asterisk (*) must be in the leftmost position of the domain name and can protect only one subdomain level.',
     link: 'https://docs.aws.amazon.com/acm/latest/userguide/acm-certificate.html',
     recommended_action: 'Configure ACM managed certificates to use single name domain instead of wildcards.',
