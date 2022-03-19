@@ -26,12 +26,12 @@ module.exports = {
 
             if (getRestApis.err || !getRestApis.data) {
                 helpers.addResult(results, 3,
-                    `Unable to query for API Gateway Rest APIs: ${helpers.addError(getRestApis)}`, region);
+                    `Unable to query for API Gateway rest APIs: ${helpers.addError(getRestApis)}`, region);
                 return rcb();
             }
 
             if (!getRestApis.data.length) {
-                helpers.addResult(results, 0, 'No API Gateway Rest APIs found', region);
+                helpers.addResult(results, 0, 'No API Gateway rest APIs found', region);
                 return rcb();
             }
 
@@ -44,14 +44,14 @@ module.exports = {
 
                 if (!getStages || getStages.err || !getStages.data || !getStages.data.item) {
                     helpers.addResult(results, 3,
-                        `Unable to query for API Gateway Rest API Stages: ${helpers.addError(getStages)}`,
+                        `Unable to query for API Gateway rest API Stages: ${helpers.addError(getStages)}`,
                         region, apiArn);
                     continue;
                 }
 
                 if (!getStages.data.item.length) {
                     helpers.addResult(results, 0,
-                        'No Rest API Stages found',
+                        'No rest API Stages found',
                         region, apiArn);
                     continue;
                 }
