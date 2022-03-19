@@ -533,12 +533,6 @@ var calls = {
             paginate: 'NextToken'
         }
     },
-    ElastiCache: {
-        describeCacheClusters: {
-            property: 'CacheClusters',
-            paginate: 'NextToken'
-        }
-    },
     ElasticTranscoder: {
         // TODO: Pagination via NextPageToken and PageToken
         listPipelines: {
