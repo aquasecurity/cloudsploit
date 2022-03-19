@@ -53,7 +53,7 @@ describe('snsValidSubscribers', function () {
             snsValidSubscribers.run(cache, { sns_unwanted_subscribers: 'xyz@aquasec.com' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('SNS subscription is not an unwanted subscription');
+                expect(results[0].message).to.include('SNS subscription is a wanted subscription');
                 done();
             });
         });

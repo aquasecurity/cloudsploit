@@ -62,7 +62,7 @@ module.exports = {
                         'SNS subscription is an unwanted subscription', region, resource);
                 } else {
                     helpers.addResult(results, 0,
-                        'SNS subscription is not an unwanted subscription', region, resource);
+                        'SNS subscription is a wanted subscription', region, resource);
                 }
             }
 
