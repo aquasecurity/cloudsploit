@@ -59,7 +59,7 @@ describe('snsValidSubscribers', function () {
         });
 
         it('should FAIL if SNS subscription is unwanted', function (done) {
-            const cache = createCache([listSubscriptions[2]]);
+            const cache = createCache([listSubscriptions[0]]);
             snsValidSubscribers.run(cache, { sns_unwanted_subscribers: 'xyz@aquasec.com' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
