@@ -112,24 +112,24 @@ const createCache = (listData, listErr, describeData, describeErr) => {
 
 describe('acmSingleDomainNameCertificate', function () {
     describe('run', function () {
-        it('should PASS if Selected AWS ACM certificate is a single domain name certificate', function (done) {
+        it('should PASS if ACM certificate is a single domain name certificate', function (done) {
             const cache = createCache([listCertificates[0]], null, describeCertificate[0]);
             acmSingleDomainNameCertificate.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Selected AWS ACM certificate is a single domain name certificate')
+                expect(results[0].message).to.include('ACM certificate is a single domain name certificate')
                 done();
             });
         });
 
-        it('should FAIL if Selected AWS ACM certificate is a wildcard certificate', function (done) {
+        it('should FAIL if ACM certificate is a wildcard certificate', function (done) {
             const cache = createCache([listCertificates[0]], null, describeCertificate[1]);
             acmSingleDomainNameCertificate.run(cache, { acm_certificate_expiry_warn: '35' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Selected AWS ACM certificate is a wildcard certificate')
+                expect(results[0].message).to.include('ACM certificate is a wildcard certificate')
                 done();
             });
         });
