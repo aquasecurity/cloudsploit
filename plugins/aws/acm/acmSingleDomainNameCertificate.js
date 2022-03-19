@@ -6,8 +6,7 @@ module.exports = {
     category: 'ACM',
     domain: 'Identity and Access management',
     description: 'Ensure that ACM single domain name certificates are used instead of wildcard certificates within your AWS account.',
-    more_info: 'ACM certificates are domain validated i.e. the subject field of an ACM certificate identifies a domain name and nothing more. ACM allows you to use an asterisk (*) in the domain name to create an ACM certificate containing a wildcard name that can protect several sites in the same domain.' + 
-        'When you request a wildcard certificate, the asterisk (*) must be in the leftmost position of the domain name and can protect only one subdomain level.',
+    more_info: 'Using wildcard certificates can compromise the security of all sites i.e. domains and subdomains if the private key of a certificate is hacked. So it is recommended to use ACM single domain name certificates instead of wildcard certificates.',
     link: 'https://docs.aws.amazon.com/acm/latest/userguide/acm-certificate.html',
     recommended_action: 'Configure ACM managed certificates to use single name domain instead of wildcards.',
     apis: ['ACM:listCertificates', 'ACM:describeCertificate'],
@@ -36,6 +35,7 @@ module.exports = {
 
             // Loop through certificates
             listCertificates.data.forEach(function(cert){
+                if (!cert.CertificateArn) return;
                 var describeCertificate = helpers.addSource(cache, source,
                     ['acm', 'describeCertificate', region, cert.CertificateArn]);
 
@@ -50,15 +50,15 @@ module.exports = {
                     describeCertificate.data.Certificate.DomainName &&
                     describeCertificate.data.Certificate.DomainName.includes('*')) {
                     helpers.addResult(results, 2,
-                        'Selected AWS ACM certificate is a wildcard certificate', region,
+                        'ACM certificate is a wildcard certificate', region,
                         cert.CertificateArn);
                 } else {
                     helpers.addResult(results, 0,
-                        'Selected AWS ACM certificate is a single domain name certificate', region, 
+                        'ACM certificate is a single domain name certificate', region, 
                         cert.CertificateArn);
                 } 
-                
             });
+
             rcb();
         }, function(){
             callback(null, results, source);
