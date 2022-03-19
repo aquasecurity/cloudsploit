@@ -44,15 +44,21 @@ module.exports = {
                     helpers.addResult(results, 3,
                         `Unable to get Backup plan description: ${helpers.addError(getBackupPlan)}`,
                         region, resource);
-                } 
-                
-                let found = getBackupPlan.data.BackupPlan.Rules.find(rule => rule.Lifecycle.DeleteAfterDays == null && rule.Lifecycle.MoveToColdStorageAfterDays == null);
-                if (found) {
+                }
+
+                if (!getBackupPlan.data.BackupPlan ||
+                    !getBackupPlan.data.BackupPlan.Rules) {
                     helpers.addResult(results, 2,
-                        'No lifecycle configuration enabled for the selected Amazon Backup plan', region, resource);
-                } else {
+                        'No lifecycle configuration rules found for Backup plan', region, resource);
+                }
+                
+                let found = getBackupPlan.data.BackupPlan.Rules.find(rule => rule.Lifecycle.DeleteAfterDays && rule.Lifecycle.MoveToColdStorageAfterDays);
+                if (found) {
                     helpers.addResult(results, 0,
-                        'Lifecycle configuration enabled for the selected Amazon Backup plan', region, resource);
+                        'Backup plan has lifecycle configuration enabled', region, resource);
+                } else {
+                    helpers.addResult(results, 2,
+                        'Backup plan does not have lifecycle configuration enabled', region, resource);
                 }
             }
 

@@ -92,24 +92,24 @@ const createCache = (plans, getBackupPlan, plansErr, getBackupPlanErr) => {
 
 describe('compliantLifecyleConfigured', function () {
     describe('run', function () {
-        it('should PASS if Lifecycle configuration enabled for the selected Amazon Backup plan.', function (done) {
+        it('should PASS if Backup plan has lifecycle configuration enabled', function (done) {
             const cache = createCache([listBackupPlans[0]], getBackupPlan[0]);
             compliantLifecyleConfigured.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Lifecycle configuration enabled for the selected Amazon Backup plan')
+                expect(results[0].message).to.include('Backup plan has lifecycle configuration enabled')
                 done();
             });
         });
 
-        it('should FAIL if No lifecycle configuration enabled for the selected Amazon Backup plan.', function (done) {
+        it('should FAIL if Backup plan does not have lifecycle configuration enabled', function (done) {
             const cache = createCache([listBackupPlans[1]], getBackupPlan[1]);
             compliantLifecyleConfigured.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('No lifecycle configuration enabled for the selected Amazon Backup plan')
+                expect(results[0].message).to.include('Backup plan does not have lifecycle configuration enabled')
                 done();
             });
         });
