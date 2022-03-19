@@ -53,8 +53,9 @@ module.exports = {
                 return rcb();
             }
 
-            for (let i in listSubscriptions.data) {
-                let subscriber = listSubscriptions.data[i];
+            for (let subscriber of listSubscriptions.data) {
+                if (!subscriber.SubscriptionArn) continue;
+
                 let resource = subscriber.SubscriptionArn;
 
                 if (subscriber.Endpoint && config.sns_unwanted_subscribers.includes(subscriber.Endpoint.toLowerCase())){
