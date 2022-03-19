@@ -32,7 +32,8 @@ var globalServices = [
     'CloudFront',
     'Route53',
     'Route53Domains',
-    'WAFRegional'
+    'WAFRegional',
+    'WAF'
 ];
 
 var calls = [
@@ -55,12 +56,32 @@ var calls = [
                 paginate: 'NextToken'
             }
         },
+        AppRunner: {
+            listServices: {
+                property: 'ServiceSummaryList',
+                paginate: 'NextToken'
+            }
+        },
+        Appflow: {
+            listFlows: {
+                property: 'flows',
+                paginate: 'nextToken'
+            }
+        },
         Athena: {
             listWorkGroups: {
                 property: 'WorkGroups',
                 paginate: 'NextToken',
                 params: {
                     MaxResults: 50
+                }
+            }
+        },
+        AuditManager: {
+            getSettings: {
+                property: 'settings',
+                params: {
+                    attribute: 'ALL'
                 }
             }
         },
@@ -78,6 +99,12 @@ var calls = [
                 params: {
                     MaxRecords: 100
                 }
+            }
+        },
+        Backup: {
+            listBackupVaults: {
+                property: 'BackupVaultList',
+                paginate: 'NextToken',
             }
         },
         CloudFormation: {
@@ -136,6 +163,12 @@ var calls = [
                 }
             }
         },
+        CodeArtifact: {
+            listDomains: {
+                property: 'domains',
+                paginate: 'nextToken'
+            }
+        },
         CodeStar: {
             listProjects: {
                 property: 'projects',
@@ -145,6 +178,12 @@ var calls = [
         CodeBuild: {
             listProjects: {
                 property: 'projects',
+                paginate: 'nextToken'
+            }
+        },
+        CodePipeline: {
+            listPipelines: {
+                property: 'pipelines',
                 paginate: 'nextToken'
             }
         },
@@ -192,12 +231,30 @@ var calls = [
                 }
             }
         },
+        Connect: {
+            listInstances: {
+                property: 'InstanceSummaryList',
+                paginate: 'NextToken'
+            }
+        },
         ConfigService: {
             describeConfigurationRecorders: {
                 property: 'ConfigurationRecorders'
             },
             describeConfigurationRecorderStatus: {
                 property: 'ConfigurationRecordersStatus'
+            }
+        },
+        CustomerProfiles: {
+            listDomains: {
+                property: 'Items',
+                paginate: 'NextToken',
+            }
+        },
+        DataBrew: {
+            listJobs: {
+                property: 'Jobs',
+                paginate: 'NextToken'
             }
         },
         DevOpsGuru: {
@@ -231,6 +288,12 @@ var calls = [
                 paginate: 'Marker'
             }
         },
+        DocDB: {
+            describeDBClusters: {
+                property: 'DBClusters',
+                paginate: 'Marker'
+            }
+        },
         DynamoDB: {
             listTables: {
                 property: 'TableNames',
@@ -241,6 +304,12 @@ var calls = [
         DAX: {
             describeClusters: {
                 property: 'Clusters',
+                paginate: 'NextToken'
+            }
+        },
+        TimestreamWrite: {
+            listDatabases: {
+                property: 'Databases',
                 paginate: 'NextToken'
             }
         },
@@ -399,14 +468,38 @@ var calls = [
             }
 
         },
+        ElastiCache: {
+            describeCacheClusters: {
+                property: 'CacheClusters',
+                paginate: 'Marker'
+            },
+            describeReservedCacheNodes: {
+                property: 'ReservedCacheNodes',
+                paginate: 'Marker'
+            }
+        },
         ECR: {
             describeRepositories: {
                 property: 'repositories',
                 paginate: 'nextToken',
                 params: {
                     maxResults: 1000
-                }
+                },
+                sendIntegration: true
+            },
+            describeRegistry: {
+                sendIntegration: true
             }
+        },
+        ECRPUBLIC :{
+            describeRegistries: {
+                property: 'registries',
+                paginate: 'nextToken',
+                params: {
+                    maxResults: 1000
+                },
+                sendIntegration: true
+            },
         },
         EFS: {
             describeFileSystems: {
@@ -418,7 +511,8 @@ var calls = [
         EKS: {
             listClusters: {
                 property: 'clusters',
-                paginate: 'nextToken'
+                paginate: 'nextToken',
+                sendIntegration: true
             }
         },
         ECS: {
@@ -473,6 +567,37 @@ var calls = [
                 }
             }
         },
+        Finspace: {
+            listEnvironments: {
+                property: 'environments',
+                paginate: 'nextToken'
+            }
+        },
+        ForecastService: {
+            listDatasets: {
+                property: 'Datasets',
+                paginate: 'NextToken'
+            },
+            listForecastExportJobs: {
+                property: 'ForecastExportJobs',
+                paginate: 'NextToken'
+            }
+        },
+        FSx: {
+            describeFileSystems: {
+                property: 'FileSystems',
+                paginate: 'NextToken'
+            }
+        },
+        FraudDetector: {
+            getDetectors: {
+                property: 'detectors',
+                paginate: 'nextToken'
+            },
+            getKMSEncryptionKey: {
+                property: 'kmsKey'
+            }
+        },
         Glue: {
             getDataCatalogEncryptionSettings: {
                 property: 'DataCatalogEncryptionSettings',
@@ -480,6 +605,22 @@ var calls = [
             getSecurityConfigurations: {
                 property: 'SecurityConfigurations',
                 paginate: 'NextMarker'
+            }
+        },
+        Glacier: {
+            listVaults: {
+                paginate: 'Marker',
+                property: 'VaultList',
+                params: {
+                    accountId: '-',
+                    limit: '50'
+                },
+            }
+        },
+        HealthLake: {
+            listFHIRDatastores: {
+                property: 'DatastorePropertiesList',
+                paginate: 'NextToken'
             }
         }
     },
@@ -522,9 +663,19 @@ var calls = [
                 override: true
             }
         },
+        IoTSiteWise: {
+            describeDefaultEncryptionConfiguration: {
+            }
+        },
         Kinesis: {
             listStreams: {
                 property: 'StreamNames'
+            }
+        },
+        KinesisVideo: {
+            listStreams: {
+                property: 'StreamInfoList',
+                paginate: 'NextToken',
             }
         },
         Firehose: {
@@ -536,6 +687,18 @@ var calls = [
             listDetectors: {
                 property: 'DetectorIds',
                 paginate: 'NextToken',
+            }
+        },
+        Kafka: {
+            listClusters: {
+                property: 'ClusterInfoList',
+                paginate: 'NextToken'
+            }
+        },
+        Kendra: {
+            listIndices: {
+                property: 'IndexConfigurationSummaryItems',
+                paginate: 'NextToken'
             }
         },
         KMS: {
@@ -560,13 +723,72 @@ var calls = [
             listFunctions: {
                 property: 'Functions',
                 paginate: 'NextMarker',
-                paginateReqProp: 'Marker'
+                paginateReqProp: 'Marker',
+                sendIntegration: true
+            }
+        },
+        LookoutEquipment: {
+            listDatasets: {
+                property: 'DatasetSummaries',
+                paginate: 'NextToken'
+            }
+        },
+        Location: {
+            listTrackers: {
+                property: 'Entries',
+                paginate: 'NextToken',
+            },
+            listGeofenceCollections: {
+                property: 'Entries',
+                paginate: 'NextToken',
+            }
+        },
+        LookoutVision: {
+            listProjects: {
+                property: 'Projects',
+                paginate: 'NextToken'
+            }
+        },
+        LexModelsV2: {
+            listBots: {
+                property: 'botSummaries',
+                paginate: 'nextToken'
+            }
+        },
+        LookoutMetrics: {
+            listAnomalyDetectors: {
+                property: 'AnomalyDetectorSummaryList',
+                paginate: 'NextToken'
+            }
+        },
+        MemoryDB: {
+            describeClusters: {
+                property:'Clusters',
+                paginate:'NextToken'
+            }
+        },
+        ManagedBlockchain: {
+            listNetworks: {
+                property: 'Networks',
+                paginate: 'NextToken'
+            }
+        },
+        MQ: {
+            listBrokers:{
+                property:'BrokerSummaries',
+                paginate:'NextToken'
             }
         },
         MWAA: {
             listEnvironments: {
                 property: 'Environments',
                 paginate: 'NextToken'
+            }
+        },
+        Neptune: {
+            describeDBClusters: {
+                property: 'DBClusters',
+                paginate: 'Marker'
             }
         },
         Organizations: {
@@ -580,6 +802,18 @@ var calls = [
                 property: 'Accounts',
                 paginate: 'NextToken'
             },
+        },
+        Proton: {
+            listEnvironmentTemplates: {
+                property: 'templates',
+                paginate: 'nextToken'
+            }
+        },
+        QLDB: {
+            listLedgers: {
+                property: 'Ledgers',
+                paginate: 'NextToken'
+            }
         },
         RDS: {
             describeDBInstances: {
@@ -640,7 +874,8 @@ var calls = [
         },
         S3: {
             listBuckets: {
-                property: 'Buckets'
+                property: 'Buckets',
+                sendIntegration: true
             }
         },
         SageMaker: {
@@ -740,6 +975,18 @@ var calls = [
                 }
             }
         },
+        Translate: {
+            listTextTranslationJobs: {
+                property: 'TextTranslationJobPropertiesList',
+                paginate: 'NextToken'
+            }
+        },
+        VoiceID: {
+            listDomains: {
+                property: 'DomainSummaries',
+                paginate: 'NextToken'
+            }
+        },
         WAFRegional: {
             listWebACLs: {
                 property: 'WebACLs',
@@ -753,6 +1000,12 @@ var calls = [
                 params: {
                     Scope: 'REGIONAL'
                 }
+            }
+        },
+        WAF: {
+            listWebACLs: {
+                property: 'WebACLs',
+                paginate: 'NextMarker'
             }
         },
         WorkSpaces: {
@@ -772,6 +1025,12 @@ var calls = [
         XRay: {
             getEncryptionConfig: {
                 property: 'EncryptionConfig'
+            }
+        },
+        Wisdom: {
+            listAssistants: {
+                property: 'assistantSummaries',
+                paginate: 'NextToken'
             }
         }
     },
@@ -812,6 +1071,22 @@ var postcalls = [
                 reliesOnCall: 'getRestApis',
                 filterKey: 'restApiId',
                 filterValue: 'id'
+            }
+        },
+        AppRunner: {
+            describeService: {
+                reliesOnService: 'apprunner',
+                reliesOnCall: 'listServices',
+                filterKey: 'ServiceArn',
+                filterValue: 'ServiceArn'
+            }
+        },
+        Appflow: {
+            describeFlow: {
+                reliesOnService: 'appflow',
+                reliesOnCall: 'listFlows',
+                filterKey: 'flowName',
+                filterValue: 'flowName'
             }
         },
         Athena: {
@@ -875,10 +1150,53 @@ var postcalls = [
                 filterValue: 'projectId'
             }
         },
+        CustomerProfiles: {
+            getDomain: {
+                reliesOnService: 'customerprofiles',
+                reliesOnCall: 'listDomains',
+                filterKey: 'DomainName',
+                filterValue: 'DomainName'
+            }
+        },
         CodeBuild: {
             batchGetProjects: {
                 reliesOnService: 'codebuild',
                 reliesOnCall: 'listProjects',
+                override: true
+            }
+        },
+        CodePipeline: {
+            getPipeline: {
+                reliesOnService: 'codepipeline',
+                reliesOnCall: 'listPipelines',
+                filterKey: 'name',
+                filterValue: 'name'
+            }
+        },
+        Connect: {
+            listInstanceCallRecordingStorageConfigs: {
+                reliesOnService: 'connect',
+                reliesOnCall: 'listInstances',
+                override: true
+            },
+            listInstanceMediaStreamStorageConfigs: {
+                reliesOnService: 'connect',
+                reliesOnCall: 'listInstances',
+                override: true
+            },
+            listInstanceChatTranscriptStorageConfigs: {
+                reliesOnService: 'connect',
+                reliesOnCall: 'listInstances',
+                override: true
+            },
+            listInstanceExportedReportStorageConfigs: {
+                reliesOnService: 'connect',
+                reliesOnCall: 'listInstances',
+                override: true
+            },
+            instanceAttachmentStorageConfigs: {
+                reliesOnService: 'connect',
+                reliesOnCall: 'listInstances',
                 override: true
             }
         },
@@ -893,6 +1211,14 @@ var postcalls = [
                 reliesOnCall: 'listTables',
                 override: true
             },
+        },
+        ElastiCache: {
+            describeReplicationGroups: {
+                reliesOnService: 'elasticache',
+                reliesOnCall: 'describeCacheClusters',
+                filterKey: 'ReplicationGroupId',
+                filterValue: 'ReplicationGroupId'
+            }
         },
         ES: {
             describeElasticsearchDomain: {
@@ -1019,16 +1345,27 @@ var postcalls = [
                 filterValue: 'repositoryName'
             }
         },
+        ECRPUBLIC :{
+            describeRepositories: {
+                reliesOnService: 'ecr',
+                reliesOnCall: 'describeRegistries',
+                filterKey: 'registryId',
+                filterValue: 'registryId',
+                sendIntegration: true
+            },
+        },
         EKS: {
             describeCluster: {
                 reliesOnService: 'eks',
                 reliesOnCall: 'listClusters',
-                override: true
+                override: true,
+                sendIntegration: true
             },
             listNodegroups: {
                 reliesOnService: 'eks',
                 reliesOnCall: 'listClusters',
-                override: true
+                override: true,
+                sendIntegration: true
             }
         },
         ECS: {
@@ -1048,6 +1385,14 @@ var postcalls = [
                 reliesOnService: 'elasticbeanstalk',
                 reliesOnCall: 'describeEnvironments',
                 override: true
+            }
+        },
+        ElasticTranscoder: {
+            listJobsByPipeline : {
+                reliesOnService: 'elastictranscoder',
+                reliesOnCall: 'listPipelines',
+                filterKey: 'PipelineId',
+                filterValue: 'Id'
             }
         },
         ELB: {
@@ -1112,6 +1457,22 @@ var postcalls = [
                 filterValue: 'PolicyId'
             }
         },
+        ForecastService: {
+            describeDataset: {
+                reliesOnService: 'forecastservice',
+                reliesOnCall: 'listDatasets',
+                filterKey: 'DatasetArn',
+                filterValue: 'DatasetArn'
+            }
+        },
+        Glacier: {
+            getVaultAccessPolicy: {
+                reliesOnService: 'glacier',
+                reliesOnCall: 'listVaults',
+                filterKey: 'vaultName',
+                filterValue: 'VaultName'
+            }
+        },
     },
     {
         CloudFormation: {
@@ -1129,7 +1490,23 @@ var postcalls = [
                 filterValue: 'StackName',
                 rateLimit: 500 // ms to rate limit between stacks
             }
-        }
+        },
+        WAFRegional: {
+            listResourcesForWebACL: {
+                reliesOnService: 'wafregional',
+                reliesOnCall: 'listWebACLs',
+                override: true,
+                rateLimit: 600
+            }
+        },
+        WAFV2: {
+            listResourcesForWebACL: {
+                reliesOnService: 'wafv2',
+                reliesOnCall: 'listWebACLs',
+                override: true,
+                rateLimit: 600
+            }
+        },
     },
     {
         IAM: {
@@ -1167,6 +1544,13 @@ var postcalls = [
                 filterKey: 'UserName',
                 filterValue: 'UserName',
                 rateLimit: 200
+            },
+            getInstanceProfile: {
+                reliesOnService: 'ec2',
+                reliesOnCall: 'describeInstances',
+                override: true,
+                sendIntegration: true,
+                reliesIntegration: true
             },
             listGroupPolicies: {
                 reliesOnService: 'iam',
@@ -1322,26 +1706,6 @@ var postcalls = [
                 filterValue: 'id'
             },
         },
-        WAFRegional: {
-            listResourcesForWebACL: {
-                reliesOnService: 'wafregional',
-                reliesOnCall: 'listWebACLs',
-                filterKey: 'WebACLId',
-                filterValue: 'WebACLId',
-                checkMultiple: ['APPLICATION_LOAD_BALANCER', 'API_GATEWAY'],
-                checkMultipleKey: 'ResourceType'
-            }
-        },
-        WAFV2: {
-            listResourcesForWebACL: {
-                reliesOnService: 'wafv2',
-                reliesOnCall: 'listWebACLs',
-                filterKey: 'WebACLArn',
-                filterValue: 'ARN',
-                checkMultiple: ['APPLICATION_LOAD_BALANCER', 'API_GATEWAY'],
-                checkMultipleKey: 'ResourceType'
-            }
-        },
         GuardDuty: {
             getDetector: {
                 reliesOnService: 'guardduty',
@@ -1394,7 +1758,8 @@ var postcalls = [
             describeNodegroups: {
                 reliesOnService: 'eks',
                 reliesOnCall: 'listClusters',
-                override: true
+                override: true,
+                sendIntegration: true
             }
         }
     },
@@ -1466,7 +1831,7 @@ var CALLS_CONFIG = {
     POSTCALLS_PARTS: 8
 };
 
-var rateError = [{message: 'rate'}];
+var rateError = {message: 'rate', statusCode: 429};
 
 var apiRetryAttempts = 2;
 var apiRetryBackoff = 500;
@@ -1507,6 +1872,7 @@ var collect = function(AWSConfig, settings, callback) {
     if (settings.collection) {
         collection = settings.collection;
     }
+
 
     var debugApiCalls = function(call, service, finished) {
         if (!debugMode) return;
@@ -1554,27 +1920,57 @@ var collect = function(AWSConfig, settings, callback) {
     };
 
     var isRateError = function(err) {
-        let isError=false;
-        for (var e in rateError) {
-            if (err &&
-                err.statusCode &&
-                rateError[e] &&
-                rateError[e].statusCode &&
-                rateError[e].statusCode.filter(code => {
-                    return code == err.statusCode;
-                }).length){
-                isError=true;
-                break;
-            } else if (err &&
-                rateError[e] &&
-                rateError[e].message &&
-                err.message &&
-                err.message.toLowerCase().indexOf(rateError[e].message.toLowerCase())>-1){
-                isError=true;
-                break;
-            }
+        let isError = false;
+
+        if (err && err.statusCode && rateError.statusCode == err.statusCode){
+            isError = true;
+        } else if (err && rateError && rateError.message && err.message &&
+            err.message.toLowerCase().indexOf(rateError.message.toLowerCase()) > -1){
+            isError = true;
         }
+
         return isError;
+    };
+
+    var processIntegration = function(serviceLower, callKey, callObj, region, settings, iCb) {
+        if (!callObj.sendIntegration) return iCb();
+
+        if (callObj.reliesIntegration) {
+            let localEvent = {};
+            localEvent.collection = {};
+            localEvent.collection[serviceLower] = {};
+            localEvent.collection[serviceLower][callKey] = collection[serviceLower][callKey];
+            localEvent.collection[serviceLower][callKey][region].data = collection[serviceLower][callKey][region].data;
+
+            if (!localEvent.collection[callObj.reliesOnService]) localEvent.collection[callObj.reliesOnService] = {};
+            localEvent.collection[callObj.reliesOnService][callObj.reliesOnCall] = collection[callObj.reliesOnService][callObj.reliesOnCall];
+            localEvent.identifier = settings.identifier;
+
+            localEvent.previousCollection = settings.previousCollection;
+
+            settings.integration(localEvent, function() {
+                if (debugMode) console.log(`Processed Event: ${JSON.stringify(localEvent)}`);
+
+                return iCb();
+            });
+        } else {
+            let localEvent = {};
+            localEvent.collection = {};
+            localEvent.collection[serviceLower] = {};
+            localEvent.collection[serviceLower][callKey] = {};
+            localEvent.collection[serviceLower][callKey][region] = {};
+            localEvent.collection[serviceLower][callKey][region].data = collection[serviceLower][callKey][region].data;
+
+            localEvent.identifier = settings.identifier;
+
+            localEvent.previousCollection = settings.previousCollection;
+
+            settings.integration(localEvent, function() {
+                if (debugMode) console.log(`Processed Event: ${JSON.stringify(localEvent)}`);
+
+                return iCb();
+            });
+        }
     };
 
     callsPart = settings.part - 1;
@@ -1644,7 +2040,7 @@ var collect = function(AWSConfig, settings, callback) {
                     LocalAWSConfig.region = region;
 
                     if (callObj.override) {
-                        collectors[serviceLower][callKey](LocalAWSConfig, collection, function() {
+                        collectors[serviceLower][callKey](LocalAWSConfig, collection, retries, function() {
                             if (callObj.rateLimit) {
                                 setTimeout(function() {
                                     regionCb();
@@ -1681,8 +2077,13 @@ var collect = function(AWSConfig, settings, callback) {
                                 var paginateProp = callObj.paginateReqProp ? callObj.paginateReqProp : nextToken;
                                 return execute([paginateProp, data[nextToken]]);
                             }
-
-                            return regionCb();
+                            if (settings.identifier) {
+                                processIntegration(serviceLower, callKey, callObj, region, settings, function() {
+                                    return regionCb();
+                                });
+                            } else {
+                                regionCb();
+                            }
                         };
 
                         function execute(nextTokens) { // eslint-disable-line no-inner-declarations
@@ -1703,14 +2104,13 @@ var collect = function(AWSConfig, settings, callback) {
                                         console.log(`Trying again in: ${retry_seconds/1000} seconds`);
                                         retries.push({seconds: Math.round(retry_seconds/1000)});
                                         return retry_seconds;
+                                    },
+                                    errorFilter: function(err) {
+                                        return isRateError(err);
                                     }
                                 }, function(cb) {
                                     executor[callKey](localParams, function(err, data) {
-                                        if (isRateError(err)) {
-                                            return cb(err);
-                                        } else {
-                                            return cb(err, data);
-                                        }
+                                        return cb(err, data);
                                     });
                                 }, function(err, data){
                                     executorCb(err, data);
@@ -1728,14 +2128,13 @@ var collect = function(AWSConfig, settings, callback) {
                                         console.log(`Trying again in: ${retry_seconds/1000} seconds`);
                                         retries.push({seconds: Math.round(retry_seconds/1000)});
                                         return retry_seconds;
+                                    },
+                                    errorFilter: function(err) {
+                                        return isRateError(err);
                                     }
                                 }, function(cb) {
                                     executor[callKey](function(err, data) {
-                                        if (isRateError(err)) {
-                                            return cb(err);
-                                        } else {
-                                            return cb(err, data);
-                                        }
+                                        return cb(err, data);
                                     });
                                 }, function(err, data){
                                     executorCb(err, data);
@@ -1812,13 +2211,25 @@ var collect = function(AWSConfig, settings, callback) {
                         if (callObj.signatureVersion) LocalAWSConfig.signatureVersion = callObj.signatureVersion;
 
                         if (callObj.override) {
-                            collectors[serviceLower][callKey](LocalAWSConfig, collection, function() {
+                            collectors[serviceLower][callKey](LocalAWSConfig, collection, retries, function() {
                                 if (callObj.rateLimit) {
                                     setTimeout(function() {
-                                        regionCb();
+                                        if (settings.identifier) {
+                                            processIntegration(serviceLower, callKey, callObj, region, settings, function() {
+                                                return regionCb();
+                                            });
+                                        } else {
+                                            regionCb();
+                                        }
                                     }, callObj.rateLimit);
                                 } else {
-                                    regionCb();
+                                    if (settings.identifier) {
+                                        processIntegration(serviceLower, callKey, callObj, region, settings, function() {
+                                            return regionCb();
+                                        });
+                                    } else {
+                                        regionCb();
+                                    }
                                 }
                             });
                         } else {
@@ -1830,88 +2241,59 @@ var collect = function(AWSConfig, settings, callback) {
                             }
 
                             async.eachLimit(collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region].data, 10, function(dep, depCb) {
-                                if (callObj.checkMultiple) {
-                                    async.each(callObj.checkMultiple, function(thisCheck, tcCb){
-                                        collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]] = {};
+                                collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]] = {};
+                                var filter = {};
+                                filter[callObj.filterKey] = dep[callObj.filterValue];
 
-                                        var filter = {};
-                                        filter[callObj.filterKey] = dep[callObj.filterValue];
-                                        filter[callObj.checkMultipleKey] = thisCheck;
-                                        
-                                        async.retry({
-                                            times: apiRetryAttempts,
-                                            interval: function(retryCount){
-                                                let retryExponential = 3;
-                                                let retryLeveler = 3;
-                                                let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
-                                                let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
-                                                let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
+                                async.retry({
+                                    times: apiRetryAttempts,
+                                    interval: function(retryCount){
+                                        let retryExponential = 3;
+                                        let retryLeveler = 3;
+                                        let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
+                                        let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
+                                        let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
 
-                                                console.log(`Trying again in: ${retry_seconds/1000} seconds`);
-                                                retries.push({seconds: Math.round(retry_seconds/1000)});
-                                                return retry_seconds;
-                                            }
-                                        }, function(cb) {
-                                            executor[callKey](filter, function(err, data) {
-                                                if (isRateError(err)) {
-                                                    return cb(err);
-                                                } else if (err) {
-                                                    collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = err;
-                                                    logError(serviceLower, callKey, region, err);
-                                                    return cb();
-                                                } else {
-                                                    if (data) {
-                                                        if (!collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data) {
-                                                            collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = data;
-                                                        }
-                                                    }
-                                                    return cb();
-                                                }
-                                            });
-                                        }, function(){
-                                            tcCb();
-                                        });
-                                    }, function() {
+                                        console.log(`Trying again in: ${retry_seconds/1000} seconds`);
+                                        retries.push({seconds: Math.round(retry_seconds/1000)});
+                                        return retry_seconds;
+                                    },
+                                    errorFilter: function(err) {
+                                        return isRateError(err);
+                                    }
+                                }, function(cb) {
+                                    executor[callKey](filter, function(err, data) {
+                                        if (isRateError(err)) {
+                                            return cb(err);
+                                        } else if (err) {
+                                            collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = err;
+                                            logError(serviceLower, callKey, region, err);
+                                            return cb();
+                                        } else {
+                                            collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = data;
+                                            return cb();
+                                        }
+                                    });
+                                }, function(err){
+                                    if (err) collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = err;
+
+                                    if (callObj.rateLimit) {
+                                        setTimeout(function() {
+                                            depCb();
+                                        }, callObj.rateLimit);
+                                    } else {
                                         depCb();
+                                    }
+                                });
+
+                            }, function() {
+                                if (settings.identifier) {
+                                    processIntegration(serviceLower, callKey, callObj, region, settings, function() {
+                                        return regionCb();
                                     });
                                 } else {
-                                    collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]] = {};
-
-                                    var filter = {};
-                                    filter[callObj.filterKey] = dep[callObj.filterValue];
-
-                                    async.retry({
-                                        times: apiRetryAttempts,
-                                        interval: function(retryCount){
-                                            let retryExponential = 3;
-                                            let retryLeveler = 3;
-                                            let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
-                                            let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
-                                            let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
-
-                                            console.log(`Trying again in: ${retry_seconds/1000} seconds`);
-                                            retries.push({seconds: Math.round(retry_seconds/1000)});
-                                            return retry_seconds;
-                                        }
-                                    }, function(cb) {
-                                        executor[callKey](filter, function(err, data) {
-                                            if (isRateError(err)) {
-                                                return cb(err);
-                                            } else if (err) {
-                                                collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = err;
-                                                logError(serviceLower, callKey, region, err);
-                                                return cb();
-                                            } else {
-                                                collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = data;
-                                                return cb();
-                                            }
-                                        });
-                                    }, function(){
-                                        return depCb();
-                                    });
+                                    regionCb();
                                 }
-                            }, function() {
-                                regionCb();
                             });
                         }
                     }, function() {

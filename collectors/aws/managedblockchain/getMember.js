@@ -1,7 +1,8 @@
 var AWS = require('aws-sdk');
 var async = require('async');
+var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, callback) {
+module.exports = function(AWSConfig, collection, retries, callback) {
     var managedblockchain = new AWS.ManagedBlockchain(AWSConfig);
 
     if (!collection.managedblockchain ||
@@ -22,10 +23,7 @@ module.exports = function(AWSConfig, collection, callback) {
         async.eachLimit(collection.managedblockchain.listMembers[AWSConfig.region][network.Id].data.Members, 5, function(member, mcb){
             collection.managedblockchain.getMember[AWSConfig.region][member.Id] = {};
 
-            managedblockchain.getMember({
-                MemberId: member.Id,
-                NetworkId: network.Id
-            }, function(err, data){
+            helpers.makeCustomCollectorCall(managedblockchain, 'getMember', {MemberId: member.Id,NetworkId: network.Id}, retries, null, null, null, function(err, data) {
                 if (err) {
                     collection.managedblockchain.getMember[AWSConfig.region][member.Id].err = err;
                 }
