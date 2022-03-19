@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Set the minimum TLS version to 1.2 for all App Services.',
     link: 'https://azure.microsoft.com/en-in/updates/app-service-and-functions-hosted-apps-can-now-update-tls-versions/',
     apis: ['webApps:list', 'webApps:listConfigurations'],
-    remediation_min_version: '202112312300',
+    remediation_min_version: '202201131602',
     remediation_description: 'TLS version 1.2 will be set for the affected Web Apps',
     apis_remediate: ['webApps:list'],
     actions: {remediate:['webApps:write'], rollback:['webApps:write']},
