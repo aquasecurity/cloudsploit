@@ -6,14 +6,14 @@ const listSubscriptions = [
         "SubscriptionArn": "arn:aws:sns:us-east-1:000011112222:Default_CloudWatch_Alarms_Topic:18c0d0b0-f39e-4ac8-8e08-88f239768f61",
         "Owner": "000011112222",
         "Protocol": "email",
-        "Endpoint": "makhtar.pucit@gmail.com",
+        "Endpoint": "xyz@aquasec.com",
         "TopicArn": "arn:aws:sns:us-east-1:000011112222:Default_CloudWatch_Alarms_Topic"
     },
     {
         "SubscriptionArn": "arn:aws:sns:us-east-1:000011112222:aqua-cspm-sns-000011112222:1a1450c0-03bd-4feb-a99f-bba3ca0540e9",
         "Owner": "000011112222",
         "Protocol": "email",
-        "Endpoint": "sadeed1999@gmail.com",
+        "Endpoint": "xxz@aquasec.com",
         "TopicArn": "arn:aws:sns:us-east-1:000011112222:aqua-cspm-sns-000011112222"
     }
 ];
