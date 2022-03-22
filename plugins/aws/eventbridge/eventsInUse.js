@@ -4,6 +4,7 @@ module.exports = {
     title: 'AWS CloudWatch Events In Use',
     category: 'EventBridge',
     domain: 'Management and Governance',
+    severity: 'Low',
     description: 'Ensure that Amazon CloudWatch Events service is in use in order to enable you to react selectively and efficiently to system events.',
     more_info: 'Amazon CloudWatch Events delivers a near real-time stream of system events that describe changes in Amazon Web Services (AWS) resources. Using simple rules that you can quickly set up, you can match events and route them to one or more target functions or streams.',
     link: 'https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/WhatIsCloudWatchEvents.html',
