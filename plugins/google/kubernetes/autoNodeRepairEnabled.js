@@ -5,6 +5,7 @@ module.exports = {
     title: 'Automatic Node Repair Enabled',
     category: 'Kubernetes',
     domain: 'Containers',
+    severity: 'Low',
     description: 'Ensures all Kubernetes cluster nodes have automatic repair enabled',
     more_info: 'When automatic repair on nodes is enabled, the Kubernetes engine performs health checks on all nodes, automatically repairing nodes that fail health checks. This ensures that the Kubernetes environment stays optimal.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair',

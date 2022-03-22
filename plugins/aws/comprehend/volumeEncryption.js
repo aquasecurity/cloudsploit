@@ -5,6 +5,7 @@ module.exports = {
     title: 'Amazon Comprehend Volume Encryption',
     category: 'Comprehend',
     domain: 'Compute',
+    severity: 'Low', 
     description: 'Ensures the Comprehend service is using encryption for all volumes storing data at rest.',
     more_info: 'Comprehend supports using KMS keys to encrypt data at rest, which should be enabled.',
     link: 'https://docs.aws.amazon.com/comprehend/latest/dg/kms-in-comprehend.html',

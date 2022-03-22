@@ -4,6 +4,7 @@ module.exports = {
     title: 'S3 Versioned Buckets Lifecycle Configuration',
     category: 'S3',
     domain: 'Storage',
+    severity: 'Low', 
     description: 'Ensure that S3 buckets having versioning enabled also have liecycle policy configured for non-current objects.',
     more_info: 'When object versioning is enabled on a bucket, every modification/update to an object results in a new version of the object that will be stored indefinitely. ' +
         'Enable a lifecycle policy, so that non-current object versions are removed or transitioned in a predictable manner.',

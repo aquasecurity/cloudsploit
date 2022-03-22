@@ -5,6 +5,7 @@ module.exports = {
     title: 'Ingress All Traffic Disabled',
     category: 'Cloud Functions',
     domain: 'Serverless',
+    severity: 'Low',
     description: 'Ensure that Cloud Functions are configured to allow only internal traffic or traffic from Cloud Load Balancer.',
     more_info: 'You can secure your google cloud functions by implementing network based access control.',
     link: 'https://cloud.google.com/functions/docs/securing/authenticating',

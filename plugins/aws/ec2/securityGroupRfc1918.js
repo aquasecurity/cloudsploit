@@ -5,6 +5,7 @@ module.exports = {
     title: 'Open RFC 1918',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensures EC2 security groups are configured to deny inbound traffic from RFC-1918 CIDRs',
     more_info: 'RFC-1918 IP addresses are considered reserved private addresses and should not be used in security groups.',
     link: 'https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html',

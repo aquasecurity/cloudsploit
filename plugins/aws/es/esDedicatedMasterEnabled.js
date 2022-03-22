@@ -5,6 +5,7 @@ module.exports = {
     title: 'ElasticSearch Dedicated Master Enabled',
     category: 'ES',
     domain: 'Databases',
+    severity: 'Low', 
     description: 'Ensure that Amazon Elasticsearch domains are using dedicated master nodes.',
     more_info: 'Using Elasticsearch dedicated master nodes to separate management tasks from index and search requests will improve the clusters ability to manage easily different types of workload and make them more resilient in production.',
     link: 'http://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-createupdatedomains.html',

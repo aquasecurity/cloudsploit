@@ -5,6 +5,7 @@ module.exports = {
     title: 'Service Account Key Rotation',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensures that service account keys are rotated within 90 days of creation.',
     more_info: 'Service account keys should be rotated so older keys that that might have been lost or compromised cannot be used to access Google services.',
     link: 'https://cloud.google.com/iam/docs/creating-managing-service-account-keys',

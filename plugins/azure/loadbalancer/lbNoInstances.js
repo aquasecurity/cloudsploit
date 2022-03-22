@@ -5,6 +5,7 @@ module.exports = {
     title: 'LB No Instances',
     category: 'Load Balancer',
     domain: 'Availability',
+    severity: 'Low',
     description: 'Detects load balancers that have no backend instances attached',
     more_info: 'All load balancers should have backend server resources. Those without any are consuming costs without providing any functionality. Additionally, old load balancers with no instances pose a security concern if new instances are accidentally attached.',
     link: 'https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-overview',

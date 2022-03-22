@@ -5,6 +5,7 @@ module.exports = {
     title: 'Open Cassandra',
     category: 'VPC Network',
     domain: 'Network Access Control',
+    severity: 'Low',
     description: 'Determines if TCP port 7001 for Cassandra is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Cassandra should be restricted to known IP addresses.',
     link: 'https://cloud.google.com/vpc/docs/using-firewalls',

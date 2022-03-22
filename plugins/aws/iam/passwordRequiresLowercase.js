@@ -4,6 +4,7 @@ module.exports = {
     title: 'Password Requires Lowercase',
     category: 'IAM',
     domain: 'Identity and Access management',
+    domain: 'Databases',
     description: 'Ensures password policy requires at least one lowercase letter',
     more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',

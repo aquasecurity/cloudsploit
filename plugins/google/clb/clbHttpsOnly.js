@@ -5,6 +5,7 @@ module.exports = {
     title: 'CLB HTTPS Only',
     category: 'CLB',
     domain: 'Availability',
+    severity: 'Low',
     description: 'Ensures that HTTP(S) CLBs are configured to only accept connections on HTTPS ports.',
     more_info: 'For maximum security, CLBs can be configured to only accept HTTPS connections. Standard HTTP connections will be blocked. This should only be done if the client application is configured to query HTTPS directly and not rely on a redirect from HTTP.',
     link: 'https://cloud.google.com/vpc/docs/vpc',

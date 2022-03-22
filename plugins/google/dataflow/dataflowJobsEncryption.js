@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Dataflow Jobs Encryption',
     category: 'Dataflow',
+    severity: 'Low',
     description: 'Ensure that Google Dataflow jobs are encrypted with desired encryption level.',
     more_info: 'Google encrypts all jobs in Dataflow by default. Protecting source and sinks data for Dataflow batch pipeline with CMEK gives user more granular access to encryption and decryption process.',
     link: 'https://cloud.google.com/dataflow/docs/guides/customer-managed-encryption-keys',

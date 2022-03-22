@@ -5,6 +5,7 @@ module.exports = {
     title: 'ElasticSearch Logging Enabled',
     category: 'ES',
     domain: 'Databases',
+    severity: 'Low', 
     description: 'Ensures ElasticSearch domains are configured to log data to CloudWatch',
     more_info: 'ElasticSearch domains should be configured with logging enabled with logs sent to CloudWatch for analysis and long-term storage.',
     link: 'https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-createupdatedomains.html#es-createdomain-configure-slow-logs',

@@ -5,6 +5,7 @@ module.exports = {
     title: 'SQL Contained Database Authentication',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'Low',
     description: 'Ensures SQL instances of SQL Server type have Contained Database Authentication flag disabled.',
     more_info: 'Enabling Contained Database Authentication flag allows users to connect to the database without authenticating ' +
         'a login at the Database Engine level along with other security threats.',

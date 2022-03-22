@@ -5,6 +5,7 @@ module.exports = {
     title: 'Service Limits',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'Low',
     description: 'Determines if the number of resources is close to the per-account limit.',
     more_info: 'Google limits accounts to certain numbers of resources. Exceeding those limits could prevent resources from launching.',
     link: 'https://cloud.google.com/resource-manager/docs/limits',

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Repo Outside Collaborators',
     types: ['org'],
     category: 'Repos',
+    severity: 'Medium',
     description: 'Ensures organization repositories do not have outside collaborators with admin or push permissions.',
     more_info: 'Allowing outside collaborators admin or push access to organization repositories places the organization at risk from non-member contributions that can be pushed without review.',
     link: 'https://help.github.com/en/articles/adding-outside-collaborators-to-repositories-in-your-organization',
