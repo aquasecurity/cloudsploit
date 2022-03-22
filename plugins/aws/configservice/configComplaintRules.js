@@ -54,7 +54,6 @@ module.exports = {
                     helpers.addResult(results, 2, 'Amazon Config rule returns noncompliant evaluation results',
                         region, resource);
                 }
-                
             }
 
             rcb();  
