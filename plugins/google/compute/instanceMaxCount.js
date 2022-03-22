@@ -6,7 +6,6 @@ module.exports = {
     category: 'Compute',
     domain: 'Compute',
     severity: 'Medium',
-    severity: 'Low',
     description: 'Ensures the total number of VM instances does not exceed a set threshold',
     more_info: 'The number of running VM instances should be carefully audited, especially in unused regions, to ensure only approved applications are consuming compute resources. Many compromised Google accounts see large numbers of VM instances launched.',
     link: 'https://cloud.google.com/compute/docs/instances/',
