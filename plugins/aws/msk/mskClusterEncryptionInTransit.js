@@ -5,6 +5,7 @@ module.exports = {
     title: 'MSK Cluster Encryption In-Transit',
     category: 'MSK',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensure that your Amazon MSK clusters have encryption in-transit enabled.',
     more_info: 'Amazon MSK in-transit encryption is an optional feature, it encrypts data in transit between the brokers of your MSK cluster. You can override this default at the time you create the cluster.',
     link: 'https://docs.aws.amazon.com/msk/latest/developerguide/msk-encryption.html',
