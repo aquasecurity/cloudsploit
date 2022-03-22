@@ -46,6 +46,7 @@ module.exports = {
                         `Unable to get Evaluation Results: ${helpers.addError(getComplianceDetailsByConfigRule)}`,
                         region, resource);
                 }
+
                 if (!getComplianceDetailsByConfigRule.data.EvaluationResults ||
                     !getComplianceDetailsByConfigRule.data.EvaluationResults.length){
                     helpers.addResult(results, 0, 'Amazon Config rule returns compliant evaluation results',
