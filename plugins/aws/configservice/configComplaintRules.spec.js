@@ -75,7 +75,6 @@ const createNullCache = () => {
     };
 };
 
-
 describe('configComplaintRules', function () {
     describe('run', function () {
         it('should PASS if Amazon Config rule returns compliant evaluation results', function (done) {
