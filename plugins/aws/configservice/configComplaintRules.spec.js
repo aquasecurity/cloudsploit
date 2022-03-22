@@ -4,7 +4,7 @@ var configComplaintRules = require('./configComplaintRules');
 const describeConfigRules = [
     {
         "ConfigRuleName": "restricted-ssh",
-        "ConfigRuleArn": "arn:aws:config:us-east-1:101363889637:config-rule/config-rule-vhwbj2",
+        "ConfigRuleArn": "arn:aws:config:us-east-1:000011112222:config-rule/config-rule-vhwbj2",
         "ConfigRuleId": "config-rule-vhwbj2",
         "Description": "Checks whether security groups that are in use disallow unrestricted incoming SSH traffic.",            "Scope": {
             "ComplianceResourceTypes": [
