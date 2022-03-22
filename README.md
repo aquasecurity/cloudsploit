@@ -222,6 +222,7 @@ See [Output Formats](#output-formates) below for more output options.
     --csv CSV             Output: CSV file
     --json JSON           Output: JSON file
     --junit JUNIT         Output: Junit file
+    --gcp-bucket          Upload: Gcloud Bucket Name
     --table               Output: table
     --console {none,text,table}
                           Console output format. Default: table
