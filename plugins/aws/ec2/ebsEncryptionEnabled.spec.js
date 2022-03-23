@@ -1,7 +1,7 @@
 var expect = require('chai').expect;
 const ebsEncryptionEnabled = require('./ebsEncryptionEnabled');
 
-describeVolumes = [
+const describeVolumes = [
     {
         "Encrypted": false,
         "VolumeId": "vol-0ebea24b6b5ab89d5",
@@ -48,7 +48,7 @@ const createCache = (volumes, keys) => {
             describeKey: {
                 'us-east-1': {
                     'mykmskey': {
-                    data: keys
+                        data: keys
                     }
                 }
             }
@@ -108,7 +108,7 @@ describe('ebsEncryptionEnabled', function () {
             });
         });
 
-        it('should UNKNOWN if EBS volume is not encrypted to target encryption level', function (done) {
+        it('should WARN if EBS volume is not encrypted to target encryption level', function (done) {
             const cache = createCache([describeVolumes[1]], describeKey[0]);
             ebsEncryptionEnabled.run(cache, {  ebs_encryption_level: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);

@@ -91,7 +91,7 @@ module.exports = {
 
                 var kmsKeyId = volume.KmsKeyId.split('/')[1];
                 var describeKey = helpers.addSource(cache, source, ['kms', 'describeKey', region, kmsKeyId]);
-                if (!describeKey || describeKey.err || !describeKey.data) {
+                if (!describeKey || describeKey.err || !describeKey.data || !describeKey.data.KeyMetadata) {
                     helpers.addResult(results, 3, 'Could not describe KMS key', region, volume.KmsKeyId);
                     continue;
                 }
