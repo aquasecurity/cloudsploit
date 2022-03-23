@@ -5,7 +5,7 @@ module.exports = {
     title: 'Org Default Permission',
     types: ['org'],
     category: 'Orgs',
-    severity: 'Medium',
+    severity: 'MEDIUM',
     description: 'Checks the default permission given to new users added to an organization.',
     more_info: 'The default permission given to new organization users should be set to none. Read permissions risk exposing private repositories, while write or admin permissions risk sensitive access to repositories for new users.',
     link: 'https://help.github.com/en/articles/repository-permission-levels-for-an-organization',

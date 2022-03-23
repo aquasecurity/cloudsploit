@@ -5,7 +5,7 @@ module.exports = {
     title: 'Member Admin',
     category: 'IAM',
     domain: 'Identity and Access Management',
-    severity: 'Low',
+    severity: 'LOW',
     description: 'Ensure that IAM members do not use primitive roles such as owner, editor or viewer.',
     more_info: 'For best security practices, use only predefined IAM roles and do not use primitive roles to prevent any unauthorized access to your resources.',
     link: 'https://cloud.google.com/iam/docs/overview',

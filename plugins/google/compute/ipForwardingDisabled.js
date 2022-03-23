@@ -5,7 +5,7 @@ module.exports = {
     title: 'IP Forwarding Disabled',
     category: 'Compute',
     domain: 'Compute',
-    severity: 'Low',
+    severity: 'LOW',
     description: 'Ensures that IP forwarding is disabled on all instances',
     more_info: 'Disabling IP forwarding ensures that the instance only sends and receives packets with matching destination or source IPs.',
     link: 'https://cloud.google.com/vpc/docs/using-routes',

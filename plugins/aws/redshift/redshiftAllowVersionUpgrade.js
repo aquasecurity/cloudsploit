@@ -5,7 +5,7 @@ module.exports = {
     title: 'Redshift Cluster Allow Version Upgrade',
     category: 'Redshift',
     domain: 'Databases',
-    severity: 'Low', 
+    severity: 'LOW', 
     description: 'Ensure that version upgrade is enabled for Redshift clusters to automatically receive upgrades during the maintenance window.',
     more_info: 'Redshift clusters should be configured to allow version upgrades to get the newest features, bug fixes or the latest security patches released.',
     link: 'https://docs.amazonaws.cn/en_us/redshift/latest/mgmt/redshift-mgmt.pdf',

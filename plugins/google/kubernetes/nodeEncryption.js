@@ -5,7 +5,7 @@ module.exports = {
     title: 'Node Encryption Enabled',
     category: 'Kubernetes',
     domain: 'Containers',
-    severity: 'Low',
+    severity: 'LOW',
     description: 'Ensure that GKE cluster nodes are encrypted using desired encryption protection level. ',
     more_info: 'Using Customer Managed Keys (CMKs) gives you better control over the encryption/decryption process of your cluster nodes.',
     link: 'https://cloud.google.com/security/encryption/default-encryption',

@@ -5,7 +5,7 @@ module.exports = {
     title: 'Persistent Disks Auto Delete',
     category: 'Compute',
     domain: 'Compute',
-    severity: 'Low',
+    severity: 'LOW',
     description: 'Ensure that auto-delete is disabled for attached persistent disks.',
     more_info: 'When auto-delete is enabled, the attached persistent disk are deleted with VM instance deletion. In cloud environments, you might want to keep the attached persistent disks even when the associated VM instance is deleted.',
     link: 'https://cloud.google.com/compute/docs/disks',

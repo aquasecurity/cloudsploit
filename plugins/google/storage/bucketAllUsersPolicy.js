@@ -5,7 +5,7 @@ module.exports = {
     title: 'Storage Bucket All Users Policy',
     category: 'Storage',
     domain: 'Storage',
-    severity: 'High',
+    severity: 'HIGH',
     description: 'Ensures Storage bucket policies do not allow global write, delete, or read permissions',
     more_info: 'Storage buckets can be configured to allow the global principal to access the bucket via the bucket policy. This policy should be restricted only to known users or accounts.',
     link: 'https://cloud.google.com/storage/docs/access-control/iam',

@@ -4,7 +4,7 @@ module.exports = {
     title: 'Password Requires Lowercase',
     category: 'Identity',
     domain: 'Identity and Access Management',
-    severity: 'Low',
+    severity: 'LOW',
     description: 'Ensures password policy requires at least one lowercase letter.',
     more_info: 'A strong password policy enforces minimum length, expiration, reuse, and symbol usage.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Identity/Tasks/managingpasswordrules.htm',

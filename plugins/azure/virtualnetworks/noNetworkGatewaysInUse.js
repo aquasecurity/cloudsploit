@@ -5,7 +5,7 @@ module.exports = {
     title: 'No Network Gateways In Use',
     category: 'Virtual Networks',
     domain: 'Network Access Control',
-    severity: 'Low',
+    severity: 'LOW',
     description: 'Ensures that Virtual Networks are using subnets and network security groups instead of virtual network gateways.',
     more_info: 'Use subnets and network security groups to control network traffic instead of using virtual network gateways to meet your organization\'s security and compliance requirements.',
     link: 'https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-about-vpngateways',

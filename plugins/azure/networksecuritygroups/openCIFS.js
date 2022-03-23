@@ -5,7 +5,7 @@ module.exports = {
     title: 'Open CIFS',
     category: 'Network Security Groups',
     domain: 'Network Access Control',
-    severity: 'Low',
+    severity: 'LOW',
     description: 'Determine if UDP port 445 for CIFS is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as CIFS should be restricted to known IP addresses.',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',

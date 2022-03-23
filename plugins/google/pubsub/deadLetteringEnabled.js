@@ -5,7 +5,7 @@ module.exports = {
     title: 'Dead Lettering Enabled',
     category: 'Pub/Sub',
     domain: 'Application Integration',
-    severity: 'Low',
+    severity: 'LOW',
     description: 'Ensure that each Google Pub/Sub subscription is configured to use dead-letter topic.',
     more_info: 'Enabling dead lettering will handle message failures by forwarding undelivered messages to a dead-letter topic that stores the message for later access.',
     link: 'https://cloud.google.com/pubsub/docs/dead-letter-topics',

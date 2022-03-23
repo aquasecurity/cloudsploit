@@ -5,7 +5,7 @@ module.exports = {
     title: 'Open SMBoTCP',
     category: 'Network Security Groups',
     domain: 'Network Access Control',
-    severity: 'Medium',
+    severity: 'MEDIUM',
     description: 'Determine if TCP port 445 for Windows SMB over TCP is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as SMB should be restricted to known IP addresses.',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',

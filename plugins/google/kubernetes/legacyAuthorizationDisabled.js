@@ -5,7 +5,7 @@ module.exports = {
     title: 'Legacy Authorization Disabled',
     category: 'Kubernetes',
     domain: 'Containers',
-    severity: 'Medium',
+    severity: 'MEDIUM',
     description: 'Ensure legacy authorization is set to disabled on Kubernetes clusters',
     more_info: 'The legacy authorizer in Kubernetes grants broad, statically defined permissions.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster',

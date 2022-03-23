@@ -5,7 +5,7 @@ module.exports = {
     title: 'No User IAM Policies',
     category: 'IAM',
     domain: 'Identity and Access management',
-    severity: 'Low', 
+    severity: 'LOW', 
     description: 'Ensures IAM policies are not connected directly to IAM users',
     more_info: 'To reduce management complexity, IAM permissions should only be assigned to roles and groups. Users can then be added to those groups. Policies should not be applied directly to a user.',
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#use-groups-for-permissions',

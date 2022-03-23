@@ -5,7 +5,7 @@ module.exports = {
     title: 'VPC Network Route Logging',
     category: 'Logging',
     domain: 'Management and Governance',
-    severity: 'Medium',
+    severity: 'MEDIUM',
     description: 'Ensures that logging and log alerts exist for VPC network route changes',
     more_info: 'Project Ownership is the highest level of privilege on a project, any changes in VPC network route should be heavily monitored to prevent unauthorized changes.',
     link: 'https://cloud.google.com/logging/docs/logs-based-metrics/',

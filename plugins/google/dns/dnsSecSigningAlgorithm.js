@@ -5,7 +5,7 @@ module.exports = {
     title: 'DNS Security Signing Algorithm',
     category: 'DNS',
     domain: 'Content Delivery',
-    severity: 'Low',
+    severity: 'LOW',
     description: 'Ensures that DNS Security is not using the RSASHA1 algorithm for key or zone signing',
     more_info: 'DNS Security is a feature that authenticates all responses to domain name lookups. This prevents attackers from committing DNS hijacking or man in the middle attacks.',
     link: 'https://cloud.google.com/dns/docs/dnssec',

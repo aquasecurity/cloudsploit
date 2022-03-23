@@ -4,7 +4,7 @@ module.exports = {
     title: 'Password Requires Symbols',
     category: 'RAM',
     domain: 'Identity and Access Management',
-    severity: 'Low', 
+    severity: 'LOW', 
     description: 'Ensure that RAM password security settings require at least one symbol.',
     more_info: 'A strong password policy enforces minimum length, expiration, reuse, and symbol usage.',
     link: 'https://www.alibabacloud.com/help/doc-detail/116413.htm',

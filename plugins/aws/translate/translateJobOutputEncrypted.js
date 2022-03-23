@@ -5,7 +5,7 @@ module.exports = {
     title: 'Translate Job Output Encrypted',
     category: 'Translate',
     domain: 'Compute',
-    severity: 'Low', 
+    severity: 'LOW', 
     description: 'Ensure that your Amazon Translate jobs have CMK encryption enabled for output data residing on S3.',
     more_info: 'Amazon Translate encrypts your output data with AWS-manager keys by default. ' +
         'Encrypt your files using customer-managed keys in order to gain more granular control over encryption/decryption process.',

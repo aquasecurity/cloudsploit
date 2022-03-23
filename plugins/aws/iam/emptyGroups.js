@@ -5,7 +5,7 @@ module.exports = {
     title: 'Empty Groups',
     category: 'IAM',
     domain: 'Identity and Access management',
-    severity: 'Low', 
+    severity: 'LOW', 
     description: 'Ensures all groups have at least one member',
     more_info: 'While having empty groups does not present a direct security risk, it does broaden the management landscape which could potentially introduce risks in the future.',
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_WorkingWithGroupsAndUsers.html',

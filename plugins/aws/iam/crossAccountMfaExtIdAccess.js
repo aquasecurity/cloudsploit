@@ -4,7 +4,7 @@ module.exports = {
     title: 'Cross-Account Access External ID and MFA',
     category: 'IAM',
     domain: 'Identity and Access management',
-    severity: 'Low', 
+    severity: 'LOW', 
     description: 'Ensures that either MFA or external IDs are used to access AWS roles.',
     more_info: 'IAM roles should be configured to require either a shared external ID or use an MFA device when assuming the role.',
     link: 'https://aws.amazon.com/blogs/aws/mfa-protection-for-cross-account-access/',

@@ -5,7 +5,7 @@ module.exports = {
     title: 'Forecast Dataset Export Encrypted',
     category: 'Forecast',
     domain: 'Content Delivery',
-    severity: 'Low', 
+    severity: 'LOW', 
     description: 'Ensure that AWS Forecast exports have encryption enabled before they are being saved on S3.',
     more_info: 'In AWS Forecast, you can save forecast reports on S3 in CSV format. Make sure to encrypt these export before writing them to the bucket in order to follow your organizations\'s security and compliance requirements.',
     recommended_action: 'Create Forecast exports with encryption enabled',

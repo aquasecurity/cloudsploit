@@ -5,7 +5,7 @@ module.exports = {
     title: 'Application Whitelisting Enabled',
     category: 'Security Center',
     domain: 'Management and Governance',
-    severity: 'Low',
+    severity: 'LOW',
     description: 'Ensures that Security Center Monitor Adaptive Application Whitelisting is enabled',
     more_info: 'Adaptive application controls work in conjunction with machine learning to analyze processes running in a VM and help control which applications can run, hardening the VM against malware.',
     recommended_action: 'Enable Adaptive Application Controls for Virtual Machines from the Azure Security Center by ensuring AuditIfNotExists setting is used.',

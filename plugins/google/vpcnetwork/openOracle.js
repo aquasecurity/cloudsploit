@@ -5,7 +5,7 @@ module.exports = {
     title: 'Open Oracle',
     category: 'VPC Network',
     domain: 'Network Access Control',
-    severity: 'Low',
+    severity: 'LOW',
     description: 'Determines if TCP port 1521 for Oracle is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Oracle should be restricted to known IP addresses.',
     link: 'https://cloud.google.com/vpc/docs/using-firewalls',

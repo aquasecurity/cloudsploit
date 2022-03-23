@@ -5,7 +5,7 @@ module.exports = {
     title: 'ECR Repository Policy',
     category: 'ECR',
     domain: 'Containers',
-    severity: 'Low', 
+    severity: 'LOW', 
     description: 'Ensures ECR repository policies do not enable global or public access to images',
     more_info: 'ECR repository policies should limit access to images to known IAM entities and AWS accounts and avoid the use of account-level wildcards.',
     link: 'https://docs.aws.amazon.com/AmazonECR/latest/userguide/RepositoryPolicyExamples.html',

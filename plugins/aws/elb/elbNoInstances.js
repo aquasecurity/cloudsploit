@@ -5,7 +5,7 @@ module.exports = {
     title: 'ELB No Instances',
     category: 'ELB',
     domain: 'Content Delivery',
-    severity: 'Low', 
+    severity: 'LOW', 
     description: 'Detects ELBs that have no backend instances attached',
     more_info: 'All ELBs should have backend server resources. ' +
                'Those without any are consuming costs without providing ' +

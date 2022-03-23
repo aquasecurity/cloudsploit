@@ -5,7 +5,7 @@ module.exports = {
     title: 'Open VNC Server',
     category: 'VPC Network',
     domain: 'Network Access Control',
-    severity: 'Low',
+    severity: 'LOW',
     description: 'Determines if TCP port 5900 for VNC Server is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as VNC Server should be restricted to known IP addresses.',
     link: 'https://cloud.google.com/vpc/docs/using-firewalls',

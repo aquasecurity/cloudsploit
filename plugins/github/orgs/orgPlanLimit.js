@@ -5,7 +5,7 @@ module.exports = {
     title: 'Org Plan Limit',
     types: ['org'],
     category: 'Orgs',
-    severity: 'Low',
+    severity: 'LOW',
     description: 'Checks that the number of seats is not close to the limit of available licensed seats.',
     more_info: 'Running out of licenses will prevent developers from adding new users.',
     link: 'https://developer.github.com/v3/orgs/#get-an-organization',

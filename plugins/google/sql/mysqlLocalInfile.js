@@ -5,7 +5,7 @@ module.exports = {
     title: 'MySQL Local Infile Disabled',
     category: 'SQL',
     domain: 'Databases',
-    severity: 'Low',
+    severity: 'LOW',
     description: 'Ensures SQL instances for MySQL type does not have local infile flag enabled.',
     more_info: 'SQL instances for MySQL type database provides local_infile flag, which can be used to load data from client or server systems. It controls the load data statements for database. Anyone using this server can access any file on the client system. For security reasons it should be disabled.',
     link: 'https://cloud.google.com/sql/docs/mysql/flags',

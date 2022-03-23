@@ -5,7 +5,7 @@ module.exports = {
     title: 'Service Account Token Creator',
     category: 'IAM',
     domain: 'Identity and Access Management',
-    severity: 'Low',
+    severity: 'LOW',
     description: 'Ensures that no users have the Service Account Token Creator role.',
     more_info: 'For best security practices, IAM users should not have Service Account Token Creator role.',
     link: 'https://cloud.google.com/iam/docs/overview',

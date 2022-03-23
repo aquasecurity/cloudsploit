@@ -4,7 +4,7 @@ module.exports = {
     title: 'Users Password Last Used',
     category: 'IAM',
     domain: 'Identity and Access management',
-    severity: 'Medium', 
+    severity: 'MEDIUM', 
     description: 'Detects users with password logins that have not been used ' +
                  'for a period of time and that should be decommissioned',
     more_info: 'Having numerous, unused user accounts extends the attack surface. ' +

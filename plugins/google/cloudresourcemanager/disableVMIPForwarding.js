@@ -4,7 +4,7 @@ module.exports = {
     title: 'Disable VM IP Forwarding',
     category: 'Resource Manager',
     domain: 'Management and Governance',
-    severity: 'Low',
+    severity: 'LOW',
     description: 'Determine if "Restrict VM IP Forwarding" constraint policy is enforced at the GCP organization level.',
     more_info: 'Enforcing the "Restrict VM IP Forwarding" constraint allows you to define the VM instances that can ensble IP forwarding.',
     link: 'https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints',

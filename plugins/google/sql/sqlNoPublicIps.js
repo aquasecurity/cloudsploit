@@ -5,7 +5,7 @@ module.exports = {
     title: 'SQL No Public IPs',
     category: 'SQL',
     domain: 'Databases',
-    severity: 'Low',
+    severity: 'LOW',
     description: 'Ensure that SQL instances are using private IPs instead of public IPs.',
     more_info: 'Cloud SQL databases should always use private IP addresses which provide improved network security and lower latency.',
     link: 'https://cloud.google.com/sql/docs/mysql/configure-private-ip',

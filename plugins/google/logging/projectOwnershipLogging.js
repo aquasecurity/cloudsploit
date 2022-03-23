@@ -5,7 +5,7 @@ module.exports = {
     title: 'Project Ownership Logging',
     category: 'Logging',
     domain: 'Management and Governance',
-    severity: 'Low',
+    severity: 'LOW',
     description: 'Ensures that logging and log alerts exist for project ownership assignments and changes',
     more_info: 'Project Ownership is the highest level of privilege on a project, any changes in project ownership should be heavily monitored to prevent unauthorized changes.',
     link: 'https://cloud.google.com/logging/docs/logs-based-metrics/',

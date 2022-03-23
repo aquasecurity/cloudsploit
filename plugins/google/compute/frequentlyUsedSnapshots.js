@@ -4,7 +4,7 @@ module.exports = {
     title: 'Frequently Used Snapshots',
     category: 'Compute',
     domain: 'Compute',
-    severity: 'Low',
+    severity: 'LOW',
     description: 'Ensure that frequently used disks are created from images instead of snapshots to save networking cost.',
     more_info: 'If you are repeatedly using a snapshot in the same zone to create a persistent disk, save networking costs by using the snapshot once and creating an image of that snapshot. Store this image and use it to create your disk and start a VM instance.',
     link: 'https://cloud.google.com/compute/docs/disks/snapshot-best-practices#prepare_for_consistency',

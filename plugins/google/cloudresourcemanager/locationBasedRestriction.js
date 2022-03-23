@@ -4,7 +4,7 @@ module.exports = {
     title: 'Location-Based Service Restriction',
     category: 'Resource Manager',
     domain: 'Management and Governance',
-    severity: 'Low',
+    severity: 'LOW',
     description: 'Determine if "Resource Location Restriction" is enforced on the GCP organization level.',
     more_info: 'Enforcing the "Resource Location Restriction" constraint allows you to define the locations where your cloud resources can be created.',
     link: 'https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints',

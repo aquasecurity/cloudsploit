@@ -5,7 +5,7 @@ module.exports = {
     title: 'ElasticSearch Node To Node Encryption',
     category: 'ES',
     domain: 'Databases',
-    severity: 'Low', 
+    severity: 'LOW', 
     description: 'Ensures ElasticSearch domain traffic is encrypted in transit between nodes',
     more_info: 'ElasticSearch domains should use node-to-node encryption to ensure data in transit remains encrypted using TLS 1.2.',
     link: 'https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/ntn.html',

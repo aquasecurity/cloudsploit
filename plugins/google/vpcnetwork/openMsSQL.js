@@ -5,7 +5,7 @@ module.exports = {
     title: 'Open MSSQL',
     category: 'VPC Network',
     domain: 'Network Access Control',
-    severity: 'Low',
+    severity: 'LOW',
     description: 'Determines if TCP port 1433 for MSSQL is open to the public.',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as MSSQL should be restricted to known IP addresses.',
     link: 'https://cloud.google.com/vpc/docs/using-firewalls',

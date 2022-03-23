@@ -7,7 +7,7 @@ module.exports = {
     title: 'Kinesis Streams Encrypted',
     category: 'Kinesis',
     domain: 'Content Delivery',
-    severity: 'Low', 
+    severity: 'LOW', 
     description: 'Ensures Kinesis Streams encryption is enabled',
     more_info: 'Data sent to Kinesis Streams can be encrypted using KMS server-side encryption. Existing streams can be modified to add encryption with minimal overhead.',
     recommended_action: 'Enable encryption using KMS for all Kinesis Streams.',

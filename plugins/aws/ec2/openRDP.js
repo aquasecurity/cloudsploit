@@ -5,7 +5,7 @@ module.exports = {
     title: 'Open RDP',
     category: 'EC2',
     domain: 'Compute',
-    severity: 'Medium', 
+    severity: 'MEDIUM', 
     description: 'Determine if TCP port 3389 for RDP is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as RDP should be restricted to known IP addresses.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',

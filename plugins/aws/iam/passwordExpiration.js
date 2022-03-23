@@ -4,7 +4,7 @@ module.exports = {
     title: 'Password Expiration',
     category: 'IAM',
     domain: 'Identity and Access management',
-    severity: 'Medium', 
+    severity: 'MEDIUM', 
     description: 'Ensures password policy enforces a password expiration',
     more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',

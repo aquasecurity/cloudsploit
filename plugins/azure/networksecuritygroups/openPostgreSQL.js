@@ -5,7 +5,7 @@ module.exports = {
     title: 'Open PostgreSQL',
     category: 'Network Security Groups',
     domain: 'Network Access Control',
-    severity: 'Medium',
+    severity: 'MEDIUM',
     description: 'Determine if TCP port 5432 for PostgreSQL is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as PostgreSQL should be restricted to known IP addresses.',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',

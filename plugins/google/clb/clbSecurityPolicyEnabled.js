@@ -5,7 +5,7 @@ module.exports = {
     title: 'Security Policy Enabled',
     category: 'CLB',
     domain: 'Availability',
-    severity: 'Low',
+    severity: 'LOW',
     description: 'Ensures all backend services have an attached security policy',
     more_info: 'Security policies on backend services control the traffic on the load balancer. This creates edge security and can deny or allow specified IP addresses.',
     link: 'https://cloud.google.com/armor/docs/security-policy-concepts',

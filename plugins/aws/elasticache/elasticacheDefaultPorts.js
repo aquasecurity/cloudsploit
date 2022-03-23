@@ -5,7 +5,7 @@ module.exports = {
     title: 'ElastiCache Default Ports',
     category: 'ElastiCache',
     domain: 'Databases',
-    severity: 'Low',
+    severity: 'LOW',
     description: 'Ensure AWS ElastiCache clusters are not using the default ports set for Redis and Memcached cache engines.',
     more_info: 'ElastiCache clusters should be configured not to use the default assigned port value for Redis (6379) and Memcached (11211).',
     link: 'https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/accessing-elasticache.html',

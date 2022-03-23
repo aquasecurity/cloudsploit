@@ -5,7 +5,7 @@ module.exports = {
     title: 'MQ Desired Broker Instance Type',
     category: 'MQ',
     domain: 'Application Integration',
-    severity: 'Low', 
+    severity: 'LOW', 
     description: 'Ensure that the Amazon MQ broker instances are created with desired instance types.',
     more_info: 'Set limits for the type of Amazon MQ broker instances created in your AWS account to address internal compliance ' +
         'requirements and prevent unexpected charges on your AWS bill.',

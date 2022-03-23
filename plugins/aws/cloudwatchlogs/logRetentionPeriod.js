@@ -5,7 +5,7 @@ module.exports = {
     title: 'CloudWatch Log Retention Period',
     category: 'CloudWatchLogs',
     domain: 'Compliance',
-    severity: 'Low', 
+    severity: 'LOW', 
     description: 'Ensures that the CloudWatch Log retention period is set above a specified length of time.',
     more_info: 'Retention settings can be used to specify how long log events are kept in CloudWatch Logs. Expired log events get deleted automatically.',
     recommended_action: 'Ensure CloudWatch logs are retained for at least 90 days.',

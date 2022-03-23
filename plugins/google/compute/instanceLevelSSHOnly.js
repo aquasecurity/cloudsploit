@@ -5,7 +5,7 @@ module.exports = {
     title: 'Instance Level SSH Only',
     category: 'Compute',
     domain: 'Compute',
-    severity: 'High',
+    severity: 'HIGH',
     description: 'Ensures that instances are not configured to allow project-wide SSH keys',
     more_info: 'To support the principle of least privilege and prevent potential privilege escalation it is recommended that instances are not give access to project-wide SSH keys through instance metadata.',
     link: 'https://cloud.google.com/compute/docs/instances/adding-removing-ssh-keys',
