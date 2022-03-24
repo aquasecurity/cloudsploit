@@ -321,6 +321,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    Imagebuilder: {
+        listInfrastructureConfigurations: {
+            property: 'infrastructureConfigurationSummaryList',
+            paginate: 'nextToken'
+        }
+    },
     TimestreamWrite: {
         listDatabases: {
             property: 'Databases',
@@ -1406,6 +1412,14 @@ var postcalls = [
                 filterValue: 'Name'
             },
         },
+        Imagebuilder: {
+            getInfrastructureConfiguration: {
+                reliesOnService: 'imagebuilder',
+                reliesOnCall: 'listInfrastructureConfigurations',
+                filterKey: 'infrastructureConfigurationArn',
+                filterValue: 'arn'
+            },
+        },
         EC2: {
             describeSubnets: {
                 reliesOnService: 'ec2',
@@ -1572,6 +1586,7 @@ var postcalls = [
                 filterValue: 'VaultName'
             }
         },
+
         IAM: {
             getGroup: {
                 reliesOnService: 'iam',
