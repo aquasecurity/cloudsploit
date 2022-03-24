@@ -110,6 +110,10 @@ var calls = {
         listBackupVaults: {
             property: 'BackupVaultList',
             paginate: 'NextToken',
+        },
+        listBackupPlans: {
+            property: 'BackupPlansList',
+            paginate: 'NextToken',
         }
     },
     CloudFormation: {
@@ -952,7 +956,11 @@ var calls = {
         listTopics: {
             property: 'Topics',
             paginate: 'NextToken'
-        }
+        },
+        listSubscriptions: {
+            property: 'Subscriptions',
+            paginate: 'NextToken'
+        },
     },
     SQS: {
         listQueues: {
@@ -1102,6 +1110,12 @@ var postcalls = [
                 reliesOnCall: 'listMeshes',
                 filterKey: 'meshName',
                 filterValue: 'meshName'
+            },
+            describeMesh: {
+                reliesOnService: 'appmesh',
+                reliesOnCall: 'listMeshes',
+                filterKey: 'meshName',
+                filterValue: 'meshName'
             }
         },
         AppRunner: {
@@ -1138,6 +1152,14 @@ var postcalls = [
                 reliesOnService: 'autoscaling',
                 reliesOnCall: 'describeAutoScalingGroups',
                 override: true
+            }
+        },
+        Backup: {
+            getBackupPlan: {
+                reliesOnService: 'backup',
+                reliesOnCall: 'listBackupPlans',
+                filterKey: 'BackupPlanId',
+                filterValue: 'BackupPlanId',
             }
         },
         CloudFormation: {    
