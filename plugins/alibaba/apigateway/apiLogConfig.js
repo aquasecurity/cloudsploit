@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/alibaba');
 module.exports = {
     title: 'API Log Config',
     category: 'APIGateway',
-    severity: 'LOW'
+    severity: 'LOW',
     description: 'Ensure that API Gateway APIs are configured to publish logs to Log Service.',
     more_info: 'Publishing logs to Log Service helps in debugging issues related to request execution or client access to your API.',
     link: 'https://www.alibabacloud.com/help/doc-detail/64818.htm',
