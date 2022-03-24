@@ -5,7 +5,7 @@ module.exports = {
     title: 'Backup Resource Protection',
     category: 'Backup',
     domain: 'Storage',
-    severity: 'Low',
+    severity: 'LOW',
     description: 'Ensure that protected resource types feature is enabled and configured for Amazon Backup service within your AWS cloud account.',
     more_info: 'Amazon Backup Protected Resource Types feature allows you to choose which resource types are protected by backup plans on per-region basis.',
     recommended_action: 'Enable protected resource type feature in order to meet compliance requirements.',
