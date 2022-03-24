@@ -688,6 +688,12 @@ var calls = {
             override: true
         }
     },
+    Imagebuilder: {
+        listImageRecipes: {
+            property: 'imageRecipeSummaryList',
+            paginate: 'nextToken'
+        }
+    },
     IoTSiteWise: {
         describeDefaultEncryptionConfiguration: {    
         }
@@ -1559,6 +1565,14 @@ var postcalls = [
                 filterKey: 'vaultName',
                 filterValue: 'VaultName'
             }
+        },
+        Imagebuilder: {
+            getImageRecipe: {
+                reliesOnService: 'imagebuilder',
+                reliesOnCall: 'listImageRecipes',
+                filterKey: 'imageRecipeArn',
+                filterValue: 'arn'
+            },
         },
         IAM: {
             getGroup: {
