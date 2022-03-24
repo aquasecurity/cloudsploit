@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Config Complaint Rules',
+    title: 'AWS Config Complaint Rules',
     category: 'ConfigService',
     domain: 'Management and Governance',
     severity: 'Low',
