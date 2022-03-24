@@ -5,7 +5,7 @@ module.exports = {
     title: 'VPC Flow Logs Metric Alarm',
     category: 'CloudWatch',
     domain: 'Compliance',
-    severity: 'Low',
+    severity: 'LOW',
     description: 'Ensure that CloudWatch group and alarm exist to detect any changes within VPC flow logs.',
     more_info: 'A metric alarm watches a single CloudWatch metric or the result of a math expression based on CloudWatch metrics. The alarm performs one or more actions based on the value of the metric or expression relative to a threshold over a number of time periods. The action can be sending a notification to an Amazon SNS topic.',
     recommended_action: '1. Create a log group in CloudWatch logs; 2. Create a metric filter for log group with Namespace=LogMetrics, metric Threshold=1 and check for logGroupName; 3.Create CloudWatch alarm for the metric filter',
