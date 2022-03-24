@@ -6,7 +6,7 @@ module.exports = {
     category: 'CloudWatch',
     domain: 'Compliance',
     severity: 'LOW',
-    description: 'Ensure that  each time an administrator-specific action occurs within your AWS EC2 Instances, there is an Amazon CloudWatch alarm implemented which gets triggered.',
+    description: 'Ensure that each time an administrator-specific action occurs within your AWS EC2 instances, there is an Amazon CloudWatch alarm implemented which gets triggered.',
     more_info: 'Using Amazon CloudWatch alarm actions, you can create alarms that automatically stop, terminate, reboot, or recover your EC2 instances. You can use the stop or terminate actions to help you save money when you no longer need an instance to be running.',
     recommended_action: '1. Create a log group in CloudWatch logs; 2. Create a metric filter for log group with Namespace=CloudTrailMetrics and metric Threshold=1; 3.Create CloudWatch alarm for the metric filter.',
     link: 'https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/AlarmThatSendsEmail.html',
