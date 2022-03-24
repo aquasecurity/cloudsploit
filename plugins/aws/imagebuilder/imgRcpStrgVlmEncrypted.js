@@ -48,7 +48,7 @@ module.exports = {
                     continue;
                 } 
 
-                let result = getImageRecipe.data.imageRecipe.blockDeviceMappings.every(maping => maping.ebs && maping.ebs.encrypted);
+                let result = getImageRecipe.data.imageRecipe.blockDeviceMappings.every(mapping => mapping.ebs && mapping.ebs.encrypted);
                 if (result) {
                     helpers.addResult(results, 0,
                         'Image recipe has ebs volume storage encrypted',
