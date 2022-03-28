@@ -47,13 +47,13 @@ describe('cloudfrontInUse', function () {
             });
         });
 
-        it('should FAIL if Cloudfront service is not in use', function (done) {
+        it('should FAIL if CloudFront service is not in use', function (done) {
             const cache = createCache(listDistributions[1]);
             cloudfrontInUse.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('global');
-                expect(results[0].message).to.include('Cloudfront service is not in use')
+                expect(results[0].message).to.include('CloudFront service is not in use')
                 done();
             });
         });
