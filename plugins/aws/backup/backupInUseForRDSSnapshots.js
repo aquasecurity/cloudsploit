@@ -34,16 +34,14 @@ module.exports = {
                 return rcb();
             }
 
-            for (let snapshot of describeDBSnapshots.data){
-                var dbResource = snapshot.DBSnapshotArn;
+           let snapshots = describeDBSnapshots.data.find(snapshot=>snapshot.SnapshotType === 'awsbackup');
 
-                if (snapshot.SnapshotType &&
-                    snapshot.SnapshotType.toLowerCase() === 'awsbackup') {
-                    helpers.addResult(results, 0, 'Amazon Backup is in use for Amazon RDS to take snapshots', region, dbResource);
-                } else {
-                    helpers.addResult(results, 2, 'Amazon Backup is not in use for Amazon RDS to take snapshots', region, dbResource);
-                }
+            if (snapshots) {
+                helpers.addResult(results, 0, 'Amazon Backup is in use for Amazon RDS to take snapshots', region);
+            } else {
+                helpers.addResult(results, 2, 'Amazon Backup is not in use for Amazon RDS to take snapshots', region);
             }
+            
 
             rcb();
         }, function(){
