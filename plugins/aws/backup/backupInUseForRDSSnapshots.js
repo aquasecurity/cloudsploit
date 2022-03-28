@@ -37,9 +37,9 @@ module.exports = {
             let snapshots = describeDBSnapshots.data.find(snapshot => snapshot.SnapshotType && snapshot.SnapshotType.toLowerCase() === 'awsbackup');
 
             if (snapshots) {
-                helpers.addResult(results, 0, 'Amazon Backup is in use for Amazon RDS to take snapshots', region);
+                helpers.addResult(results, 0, 'Backup service is in use for RDS snapshots', region);
             } else {
-                helpers.addResult(results, 2, 'Amazon Backup is not in use for Amazon RDS to take snapshots', region);
+                helpers.addResult(results, 2, 'Backup service is not in use for RDS snapshots', region);
             }
             
 

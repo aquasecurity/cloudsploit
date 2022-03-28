@@ -50,22 +50,24 @@ const createCache = (snapshots, snapshotsErr) => {
 
 describe('backupInUseForRDSSnapshots', function () {
     describe('run', function () {
-        it('should PASS if Amazon Backup is in use for Amazon RDS to take snapshots', function (done) {
+        it('should PASS if Backup service is in use for RDS snapshots', function (done) {
             const cache = createCache([describeDBSnapshots[0]]);
             backupInUseForRDSSnapshots.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Backup service is in use for RDS snapshots');
                 done();
             });
         });
 
-        it('should FAIL if Amazon Backup is not in use for Amazon RDS to take snapshots', function (done) {
+        it('should FAIL if Backup service is not in use for RDS snapshots', function (done) {
             const cache = createCache([describeDBSnapshots[1]]);
             backupInUseForRDSSnapshots.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Backup service is not in use for RDS snapshots');
                 done();
             });
         });
@@ -76,6 +78,7 @@ describe('backupInUseForRDSSnapshots', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('No RDS snapshots found');
                 done();
             });
         });
@@ -86,6 +89,7 @@ describe('backupInUseForRDSSnapshots', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to query for RDS snapshots');
                 done();
             });
         });
