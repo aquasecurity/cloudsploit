@@ -6,7 +6,7 @@ module.exports = {
     category: 'Backup',
     domain: 'Storage',
     severity: 'LOW',
-    description: 'Ensure that protected resource types feature is enabled and configured for Amazon Backup service within your AWS cloud account.',
+    description: 'Ensure that protected resource types feature is enabled and configured for Amazon Backup service within your AWS cloud account. ',
     more_info: 'Amazon Backup Protected Resource Types feature allows you to choose which resource types are protected by backup plans on per-region basis.',
     recommended_action: 'Enable protected resource type feature in order to meet compliance requirements.',
     link: 'https://docs.aws.amazon.com/aws-backup/latest/devguide/whatisbackup.html',
@@ -14,9 +14,9 @@ module.exports = {
     settings: {
         backup_resource_type: {
             name: 'Protected Amazon Backup Resource Types',
-            description: 'If set, Backup protected resource types should have a retention settings of boolean true or false.',
+            description: 'If set, Backup protected resource types should have a retention settings of boolean true or false.Comma seperated list of resource types that should be backup protected',
             regex: '^.*$',
-            default:'rds, efs, aurora, dynamodb, storage gateway, ec2, ebs, virtual machine'
+            default:''
         }
     },
 
@@ -24,11 +24,12 @@ module.exports = {
         var config = {
             backup_resource_type:(settings.backup_resource_type || this.settings.backup_resource_type.default)
         };
+
+        if (!config.backup_resource_type.length) return callback(null, results, source);
+
         config.backup_resource_type = config.backup_resource_type.replace(/\s/g, '');
         config.backup_resource_type = config.backup_resource_type.split(',');
         config.backup_resource_type = config.backup_resource_type.map(v => v.toLowerCase());
-
-        if (!config.backup_resource_type.length) return callback(null, results, source);
 
         var results = [];
         var source = {};
@@ -55,11 +56,11 @@ module.exports = {
                     acc[key.toLowerCase()] = obj[key];
                     return acc;
                 }, {});
-            let myObjLower = lowercaseKeys(objt);   
+            let loweredResourceType = lowercaseKeys(objt);   
 
             let allPassed = true;
-            config.backup_resource_type.forEach(element => {
-                if (myObjLower[element] === false) {
+            config.backup_resource_type.some(element => {
+                if (loweredResourceType[element] === false) {
                     allPassed = false;
                     return;
                 }   
