@@ -8,7 +8,7 @@ module.exports = {
     severity: 'LOW',
     description: 'Ensure that an Amazon Backup vault access policy is configured to prevent the deletion of AWS backups in the backup vault.',
     more_info: 'With AWS Backup, you can assign policies to backup vaults and the resources they contain. Assigning policies allows you to do things like grant access to users to create backup plans and on-demand backups, but limit their ability to delete recovery points after they are created.',
-    recommended_action: 'Enable access policy to prevent deletion of AWS Backup vaults and their resources.',
+    recommended_action: 'Add a statement in Backup vault access policy which denies global access to action: backup:DeleteRecoveryPoint',
     link: 'https://docs.aws.amazon.com/aws-backup/latest/devguide/creating-a-vault-access-policy.html',
     apis: ['Backup:listBackupVaults', 'Backup:getBackupVaultAccessPolicy' ],
 
@@ -45,30 +45,33 @@ module.exports = {
                 if (getBackupVaultAccessPolicy && getBackupVaultAccessPolicy.err && getBackupVaultAccessPolicy.err.code &&
                         getBackupVaultAccessPolicy.err.code == 'ResourceNotFoundException') {
                     helpers.addResult(results, 2,
-                        'Backup vault does not have any policy attached', region, resource);
+                        'No access policy found for Backup vault', region, resource);
                     continue;
                 }
     
                 if (!getBackupVaultAccessPolicy || getBackupVaultAccessPolicy.err || !getBackupVaultAccessPolicy.data) {
-                    helpers.addResult(results, 3, `Unable to get Backup vault policy: ${helpers.addError(getBackupVaultAccessPolicy)}`, region, resource);
+                    helpers.addResult(results, 3, `Unable to get Backup vault access policy: ${helpers.addError(getBackupVaultAccessPolicy)}`, region, resource);
                     continue;
                 }
     
                 let statements = helpers.normalizePolicyDocument(getBackupVaultAccessPolicy.data.Policy);
+                let deleteProtected = false;
 
                 for (let statement of statements){  
-                    if (statement.Action[0] === 'backup:DeleteRecoveryPoint' ) {
-                        helpers.addResult(results, 0,
-                            'the selected Amazon Backup vault is associated with an access policy, that have deletion protection configured',
-                            region, resource);
-                    } else {
-                        helpers.addResult(results, 2,
-                            'the selected Amazon Backup vault is associated with an access policy, that have no deletion protection configured',
-                            region, resource);
+                    if (statement.Effect && statement.Effect.toUpperCase() === 'DENY' &&
+                        statement.Principal && helpers.globalPrincipal(statement.Principal) &&
+                        statement.Action && statement.Action.find(action => action.toUpperCase().includes('BACKUP:DELETERECOVERYPOINT'))) {
+                        deleteProtected = true;
                     }
-                    
                 }
-                
+
+                if (deleteProtected) {
+                    helpers.addResult(results, 0,
+                        'Backup vault has deletion protection enabled', region, resource);
+                } else {
+                    helpers.addResult(results, 2,
+                        'Backup vault does not have deletion protection enabled', region, resource);
+                }
             }
 
             rcb();

@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-const deletionProtectionEnabled = require('./deletionProtectionEnabled');
+const backupDeletionProtection = require('./backupDeletionProtection');
 
 const listBackupVaults = [
     {
@@ -29,14 +29,10 @@ const getBackupVaultAccessPolicy =[
             "Version":"2012-10-17",
             "Statement":[
                 {
-
-                    "Effect": 'Allow',
+                    "Effect": 'Deny',
                     "Principal": '*',
                     "Action": [ 'backup:DeleteRecoveryPoint' ],
-                    "Resource": [ '*' ],
-                    "Condition": {
-                    'ForAnyValue:StringLike': { 'aws:PrincipalOrgPaths': 'o-lcjto3x5wd/r-z1be/ou-[OU]/*' }
-                    }
+                    "Resource": [ '*' ]
                 },
             ],
         }   
@@ -48,13 +44,12 @@ const getBackupVaultAccessPolicy =[
             "Version":"2012-10-17",
             "Statement":[
                 {
-
                     "Effect": 'Allow',
                     "Principal": '*',
                     "Action": [ 'backup:CopyIntoBackupVault' ],
                     "Resource": [ '*' ],
                     "Condition": {
-                    'ForAnyValue:StringLike': { 'aws:PrincipalOrgPaths': 'o-lcjto3x5wd/r-z1be/ou-[OU]/*' }
+                        'ForAnyValue:StringLike': { 'aws:PrincipalOrgPaths': 'o-lcjto3x5wd/r-z1be/ou-[OU]/*' }
                     }
                 },
             ],
@@ -85,37 +80,37 @@ const createCache = (listBackupVaults, getBackupVaultAccessPolicy, listBackupVau
 };
 
 
-describe('deletionProtectionEnabled', function () {
+describe('backupDeletionProtection', function () {
     describe('run', function () {
-        it('should PASS if the selected Amazon Backup vault is associated with an access policy, that have deletion protection configured', function (done) {
+        it('should PASS if Backup vault has deletion protection enabled', function (done) {
             const cache = createCache([listBackupVaults[1]], getBackupVaultAccessPolicy[0]);
-            deletionProtectionEnabled.run(cache, {}, (err, results) => {
+            backupDeletionProtection.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('the selected Amazon Backup vault is associated with an access policy, that have deletion protection configured')
+                expect(results[0].message).to.include('Backup vault has deletion protection enabled')
                 done();
             });
         });
 
-        it('should FAIL if the selected Amazon Backup vault is associated with an access policy, that have no deletion protection configured', function (done) {
+        it('should FAIL if Backup vault does not have deletion protection enabled', function (done) {
             const cache = createCache([listBackupVaults[0]], getBackupVaultAccessPolicy[1] );
-            deletionProtectionEnabled.run(cache, {}, (err, results) => {
+            backupDeletionProtection.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('the selected Amazon Backup vault is associated with an access policy, that have no deletion protection configured')
+                expect(results[0].message).to.include('Backup vault does not have deletion protection enabled')
                 done();
             });
         });
 
-        it('should FAIL if Backup vault does not have any policy attached', function (done) {
+        it('should FAIL if no access policy found for Backup vault', function (done) {
             const cache = createCache([listBackupVaults[0]], null , null, { message: 'An error occurred (ResourceNotFoundException) when calling the GetBackupVaultAccessPolicy operation', code : 'ResourceNotFoundException' } );
-            deletionProtectionEnabled.run(cache, {}, (err, results) => {
+            backupDeletionProtection.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Backup vault does not have any policy attached')
+                expect(results[0].message).to.include('No access policy found for Backup vault')
                 done();
             });
         });
@@ -123,7 +118,7 @@ describe('deletionProtectionEnabled', function () {
 
         it('should PASS if no Backup vault list found', function (done) {
             const cache = createCache([]);
-            deletionProtectionEnabled.run(cache, {}, (err, results) => {
+            backupDeletionProtection.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -134,7 +129,7 @@ describe('deletionProtectionEnabled', function () {
 
         it('should UNKNOWN if Unable to query for Backup vault list', function (done) {
             const cache = createCache(null, { message: 'Unable to query for Backup vault list' });
-            deletionProtectionEnabled.run(cache, {}, (err, results) => {
+            backupDeletionProtection.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for Backup vault list')
@@ -144,7 +139,7 @@ describe('deletionProtectionEnabled', function () {
 
         it('should UNKNOWN if Unable to get Backup vault policy', function (done) {
             const cache = createCache([listBackupVaults[0]], null, null,  { message: 'Unable to get Backup vault policy' });
-            deletionProtectionEnabled.run(cache, {}, (err, results) => {
+            backupDeletionProtection.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to get Backup vault policy')
