@@ -41,7 +41,6 @@ module.exports = {
             } else {
                 helpers.addResult(results, 2, 'Backup service is not in use for RDS snapshots', region);
             }
-            
 
             rcb();
         }, function(){
