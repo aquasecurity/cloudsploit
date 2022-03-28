@@ -85,7 +85,7 @@ describe('ssmSessionDuration', function () {
     describe('run', function () {
         it('should PASS if there are no active sessions under SSM Session Manager', function (done) {
             const cache = createCache([]);
-            ssmSessionDuration.run(cache, {}, (err, results) => {
+            ssmSessionDuration.run(cache, { ssm_session_max_duration: '40' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -94,7 +94,7 @@ describe('ssmSessionDuration', function () {
 
         it('should PASS if the session`s active time is within the max time limit set in SSM Session Manager', function (done) {
             const cache = createCache([describeSessions[1]]);
-            ssmSessionDuration.run(cache, { ssm_session_max_duration: 40 }, (err, results) => {
+            ssmSessionDuration.run(cache, { ssm_session_max_duration: '40' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -103,7 +103,7 @@ describe('ssmSessionDuration', function () {
 
         it('should FAIL if the session`s active time is greater than the max time limit set in SSM Session Manager', function (done) {
             const cache = createCache([describeSessions[0]]);
-            ssmSessionDuration.run(cache, { ssm_session_max_duration: 20 }, (err, results) => {
+            ssmSessionDuration.run(cache, { ssm_session_max_duration: '20' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -112,7 +112,7 @@ describe('ssmSessionDuration', function () {
 
         it('should UNKNOWN if error while fetching active sessions', function (done) {
             const cache = createErrorCache();
-            ssmSessionDuration.run(cache, {}, (err, results) => {
+            ssmSessionDuration.run(cache, { ssm_session_max_duration: '40' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();

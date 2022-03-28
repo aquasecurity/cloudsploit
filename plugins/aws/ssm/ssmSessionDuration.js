@@ -15,7 +15,7 @@ module.exports = {
             name: 'Max Duration for SSM Session',
             description: 'Maximum duration in minutes for SSM session.',
             regex: '^((1440)|(14[0-3][0-9]{1})|(1[0-3][0-9]{2})|([1-9][0-9]{2})|([1-9][0-9]{1})|([1-9]))$',
-            default: ''
+            default: '5'
         }
     },
 
@@ -23,11 +23,14 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+
         var acctRegion = helpers.defaultRegion(settings);
         var awsOrGov = helpers.defaultPartition(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
         var sessionMaxDuration = settings.ssm_session_max_duration || this.settings.ssm_session_max_duration.default;
+
+        if (!sessionMaxDuration || !sessionMaxDuration.trim().length) return callback(null, results, source);
 
         async.each(regions.ssm, function(region, rcb){
             var describeSessions = helpers.addSource(cache, source,
@@ -48,7 +51,7 @@ module.exports = {
             }
 
             const uniqInstances = describeSessions.data.filter((value, index, self) =>
-                index === self.findIndex((t) => (t.Target === value.Target))
+                index === self.findIndex((t) => (t.Target && value.Target && t.Target === value.Target))
             );
 
             const sessionsByInstances = uniqInstances.map((instance) => {
@@ -70,11 +73,11 @@ module.exports = {
                 if (failingSessions.length) {
                     helpers.addResult(results, 2,
                         `Following SSM Sessions duration length is greater than \
-                        the max time set in SSM Session Manager ${failingSessions}`,
+                        the max time threshold: ${failingSessions}`,
                         region, resource);
                 } else {
                     helpers.addResult(results, 0,
-                        'All SSM Sessions duration length is less than the max time set in SSM Session Manager', region, resource);
+                        'All SSM Sessions duration length is less than the max time threshold', region, resource);
                 }
             }
 
