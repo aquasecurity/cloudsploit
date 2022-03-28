@@ -36,24 +36,24 @@ const createNullCache = () => {
 
 describe('cloudfrontInUse', function () {
     describe('run', function () {
-        it('should PASS if AWS Cloudfront service is currently in use', function (done) {
+        it('should PASS if AWS CloudFront service is in use', function (done) {
             const cache = createCache([listDistributions[0]]);
             cloudfrontInUse.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('global');
-                expect(results[0].message).to.include('AWS Cloudfront service is currently in use')
+                expect(results[0].message).to.include('CloudFront service is in use')
                 done();
             });
         });
 
-        it('should FAIL if AWS Cloudfront service is not currently in use', function (done) {
+        it('should FAIL if Cloudfront service is not in use', function (done) {
             const cache = createCache(listDistributions[1]);
             cloudfrontInUse.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('global');
-                expect(results[0].message).to.include('AWS Cloudfront service is not currently in use')
+                expect(results[0].message).to.include('Cloudfront service is not in use')
                 done();
             });
         });

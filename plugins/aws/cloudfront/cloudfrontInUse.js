@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensure that AWS CloudFront service is used within your AWS account.',
     more_info: 'Amazon CloudFront is a web service that speeds up distribution of your static and dynamic web content, such as .html, .css, .js, and image files, to your users. CloudFront delivers your content through a worldwide network of data centers called edge locations.',
     link: 'https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html',
-    recommended_action: 'Check if CloudFront is in use or not by observing the data received.',
+    recommended_action: 'Create CloudFront distributions as per requirement.',
     apis: ['CloudFront:listDistributions'],
 
     run: function(cache, settings, callback) {
@@ -30,11 +30,11 @@ module.exports = {
 
         if (listDistributions.data.length) {
             helpers.addResult(results, 0, 
-                'AWS Cloudfront service is currently in use', 
+                'CloudFront service is in use', 
                 'global');
         } else {
             helpers.addResult(results, 2,
-                'AWS Cloudfront service is not currently in use', 
+                'CloudFront service is not in use', 
                 'global');
         }
 
