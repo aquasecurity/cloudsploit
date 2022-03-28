@@ -13,7 +13,7 @@ const describeRegionSettings = [
         "Neptune": true,
         "RDS": true,
         "Storage Gateway": true,
-        "VirtualMachine": false
+        "VirtualMachine": true
     },
     {
         "Aurora": true,
@@ -45,21 +45,21 @@ const createCache = (resource, resourceErr) => {
 
 describe('backupResourceProtection', function () {
     describe('run', function () {
-        it('should PASS if Backup configuration for protected resource types is compliant', function (done) {
-            const cache = createCache([describeRegionSettings[1]]);
+        it('should PASS if All desired resource types are protected by Backup service', function (done) {
+            const cache = createCache(describeRegionSettings[0]);
             backupResourceProtection.run(cache, { backup_resource_type:'rds, efs, aurora, dynamodb, storage gateway, ec2, ebs, virtual machine'}, (err, results) => {
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Backup configuration for protected resource types is compliant');
+                expect(results[0].message).to.include('All desired resource types are protected by Backup service');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
 
-        it('should FAIL if Backup configuration for protected resource types is not compliant', function (done) {
-            const cache = createCache(describeRegionSettings[0]);
+        it('should FAIL if These desired resource types are not protected by Backup service', function (done) {
+            const cache = createCache(describeRegionSettings[1]);
             backupResourceProtection.run(cache, { backup_resource_type:'rds, efs, aurora, dynamodb, storage gateway, ec2, ebs, virtual machine'}, (err, results) =>{
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Backup configuration for protected resource types is not compliant');
+                expect(results[0].message).to.include('These desired resource types are not protected by Backup service');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });

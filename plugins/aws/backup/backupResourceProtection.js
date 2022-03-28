@@ -26,10 +26,8 @@ module.exports = {
         };
 
         if (!config.backup_resource_type.length) return callback(null, results, source);
-
         config.backup_resource_type = config.backup_resource_type.replace(/\s/g, '');
-        config.backup_resource_type = config.backup_resource_type.split(',');
-        config.backup_resource_type = config.backup_resource_type.map(v => v.toLowerCase());
+        config.backup_resource_type = config.backup_resource_type.toLowerCase().split(',');
 
         var results = [];
         var source = {};
@@ -50,22 +48,26 @@ module.exports = {
                 return rcb();
             }
 
-            let objt = describeRegionSettings.data;
             const lowercaseKeys = obj =>
                 Object.keys(obj).reduce((acc, key) => {
-                    acc[key.toLowerCase()] = obj[key];
+                    acc[key.toLowerCase().replace(/\s/g, '')] = obj[key];
                     return acc;
                 }, {});
-            let loweredResourceType = lowercaseKeys(objt);   
+            let loweredResourceType = lowercaseKeys(describeRegionSettings.data);   
+        
+            let missingResourceTypes = [];
+            config.backup_resource_type.forEach(element => {
+                if (!loweredResourceType[element]) {
+                    missingResourceTypes.push(element);
+                }
+            });
 
-            let allPassed = config.backup_resource_type.every(element => loweredResourceType[element]));
-                
-            if (allPassed) {
+            if (!missingResourceTypes.length) {
                 helpers.addResult(results, 0,
                     'All desired resource types are protected by Backup service', region);
             } else {
                 helpers.addResult(results, 2,
-                    'Few or all desired resource types are not protected by Backup service', region);
+                    'These desired resource types are not protected by Backup service: ' + missingResourceTypes.join(', '), region);
             } 
 
             rcb();
