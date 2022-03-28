@@ -6,8 +6,8 @@ module.exports = {
     category: 'Backup',
     domain: 'Storage',
     severity: 'LOW',
-    description: 'Ensure that protected resource types feature is enabled and configured for Amazon Backup service within your AWS cloud account. ',
-    more_info: 'Amazon Backup Protected Resource Types feature allows you to choose which resource types are protected by backup plans on per-region basis.',
+    description: 'Ensure that protected resource types feature is enabled and configured for Amazon Backup service within.',
+    more_info: 'Amazon Backup protected resource types feature allows you to choose which resource types are protected by backup plans on per-region basis.',
     recommended_action: 'Enable protected resource type feature in order to meet compliance requirements.',
     link: 'https://docs.aws.amazon.com/aws-backup/latest/devguide/whatisbackup.html',
     apis: ['Backup:describeRegionSettings'],
@@ -62,10 +62,10 @@ module.exports = {
                 
             if (allPassed) {
                 helpers.addResult(results, 0,
-                    'Backup configuration for protected resource types is compliant', region);
+                    'All desired resource types are protected by Backup service', region);
             } else {
                 helpers.addResult(results, 2,
-                    'Backup configuration for protected resource types is not compliant', region);
+                    'Few or all desired resource types are not protected by Backup service', region);
             } 
 
             rcb();
