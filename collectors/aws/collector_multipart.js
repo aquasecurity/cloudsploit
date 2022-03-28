@@ -56,12 +56,32 @@ var calls = [
                 paginate: 'NextToken'
             }
         },
+        AppRunner: {
+            listServices: {
+                property: 'ServiceSummaryList',
+                paginate: 'NextToken'
+            }
+        },
+        Appflow: {
+            listFlows: {
+                property: 'flows',
+                paginate: 'nextToken'
+            }
+        },
         Athena: {
             listWorkGroups: {
                 property: 'WorkGroups',
                 paginate: 'NextToken',
                 params: {
                     MaxResults: 50
+                }
+            }
+        },
+        AuditManager: {
+            getSettings: {
+                property: 'settings',
+                params: {
+                    attribute: 'ALL'
                 }
             }
         },
@@ -79,6 +99,12 @@ var calls = [
                 params: {
                     MaxRecords: 100
                 }
+            }
+        },
+        Backup: {
+            listBackupVaults: {
+                property: 'BackupVaultList',
+                paginate: 'NextToken',
             }
         },
         CloudFormation: {
@@ -137,6 +163,12 @@ var calls = [
                 }
             }
         },
+        CodeArtifact: {
+            listDomains: {
+                property: 'domains',
+                paginate: 'nextToken'
+            }
+        },
         CodeStar: {
             listProjects: {
                 property: 'projects',
@@ -146,6 +178,12 @@ var calls = [
         CodeBuild: {
             listProjects: {
                 property: 'projects',
+                paginate: 'nextToken'
+            }
+        },
+        CodePipeline: {
+            listPipelines: {
+                property: 'pipelines',
                 paginate: 'nextToken'
             }
         },
@@ -193,12 +231,30 @@ var calls = [
                 }
             }
         },
+        Connect: {
+            listInstances: {
+                property: 'InstanceSummaryList',
+                paginate: 'NextToken'
+            }
+        },
         ConfigService: {
             describeConfigurationRecorders: {
                 property: 'ConfigurationRecorders'
             },
             describeConfigurationRecorderStatus: {
                 property: 'ConfigurationRecordersStatus'
+            }
+        },
+        CustomerProfiles: {
+            listDomains: {
+                property: 'Items',
+                paginate: 'NextToken',
+            }
+        },
+        DataBrew: {
+            listJobs: {
+                property: 'Jobs',
+                paginate: 'NextToken'
             }
         },
         DevOpsGuru: {
@@ -232,6 +288,12 @@ var calls = [
                 paginate: 'Marker'
             }
         },
+        DocDB: {
+            describeDBClusters: {
+                property: 'DBClusters',
+                paginate: 'Marker'
+            }
+        },
         DynamoDB: {
             listTables: {
                 property: 'TableNames',
@@ -242,6 +304,12 @@ var calls = [
         DAX: {
             describeClusters: {
                 property: 'Clusters',
+                paginate: 'NextToken'
+            }
+        },
+        TimestreamWrite: {
+            listDatabases: {
+                property: 'Databases',
                 paginate: 'NextToken'
             }
         },
@@ -400,15 +468,27 @@ var calls = [
             }
 
         },
+        ElastiCache: {
+            describeCacheClusters: {
+                property: 'CacheClusters',
+                paginate: 'Marker'
+            },
+            describeReservedCacheNodes: {
+                property: 'ReservedCacheNodes',
+                paginate: 'Marker'
+            }
+        },
         ECR: {
             describeRepositories: {
                 property: 'repositories',
                 paginate: 'nextToken',
                 params: {
                     maxResults: 1000
-                }
+                },
+                sendIntegration: true
             },
             describeRegistry: {
+                sendIntegration: true
             }
         },
         ECRPUBLIC :{
@@ -417,7 +497,8 @@ var calls = [
                 paginate: 'nextToken',
                 params: {
                     maxResults: 1000
-                }
+                },
+                sendIntegration: true
             },
         },
         EFS: {
@@ -430,7 +511,8 @@ var calls = [
         EKS: {
             listClusters: {
                 property: 'clusters',
-                paginate: 'nextToken'
+                paginate: 'nextToken',
+                sendIntegration: true
             }
         },
         ECS: {
@@ -485,6 +567,37 @@ var calls = [
                 }
             }
         },
+        Finspace: {
+            listEnvironments: {
+                property: 'environments',
+                paginate: 'nextToken'
+            }
+        },
+        ForecastService: {
+            listDatasets: {
+                property: 'Datasets',
+                paginate: 'NextToken'
+            },
+            listForecastExportJobs: {
+                property: 'ForecastExportJobs',
+                paginate: 'NextToken'
+            }
+        },
+        FSx: {
+            describeFileSystems: {
+                property: 'FileSystems',
+                paginate: 'NextToken'
+            }
+        },
+        FraudDetector: {
+            getDetectors: {
+                property: 'detectors',
+                paginate: 'nextToken'
+            },
+            getKMSEncryptionKey: {
+                property: 'kmsKey'
+            }
+        },
         Glue: {
             getDataCatalogEncryptionSettings: {
                 property: 'DataCatalogEncryptionSettings',
@@ -492,6 +605,22 @@ var calls = [
             getSecurityConfigurations: {
                 property: 'SecurityConfigurations',
                 paginate: 'NextMarker'
+            }
+        },
+        Glacier: {
+            listVaults: {
+                paginate: 'Marker',
+                property: 'VaultList',
+                params: {
+                    accountId: '-',
+                    limit: '50'
+                },
+            }
+        },
+        HealthLake: {
+            listFHIRDatastores: {
+                property: 'DatastorePropertiesList',
+                paginate: 'NextToken'
             }
         }
     },
@@ -534,9 +663,19 @@ var calls = [
                 override: true
             }
         },
+        IoTSiteWise: {
+            describeDefaultEncryptionConfiguration: {
+            }
+        },
         Kinesis: {
             listStreams: {
                 property: 'StreamNames'
+            }
+        },
+        KinesisVideo: {
+            listStreams: {
+                property: 'StreamInfoList',
+                paginate: 'NextToken',
             }
         },
         Firehose: {
@@ -548,6 +687,18 @@ var calls = [
             listDetectors: {
                 property: 'DetectorIds',
                 paginate: 'NextToken',
+            }
+        },
+        Kafka: {
+            listClusters: {
+                property: 'ClusterInfoList',
+                paginate: 'NextToken'
+            }
+        },
+        Kendra: {
+            listIndices: {
+                property: 'IndexConfigurationSummaryItems',
+                paginate: 'NextToken'
             }
         },
         KMS: {
@@ -572,13 +723,72 @@ var calls = [
             listFunctions: {
                 property: 'Functions',
                 paginate: 'NextMarker',
-                paginateReqProp: 'Marker'
+                paginateReqProp: 'Marker',
+                sendIntegration: true
+            }
+        },
+        LookoutEquipment: {
+            listDatasets: {
+                property: 'DatasetSummaries',
+                paginate: 'NextToken'
+            }
+        },
+        Location: {
+            listTrackers: {
+                property: 'Entries',
+                paginate: 'NextToken',
+            },
+            listGeofenceCollections: {
+                property: 'Entries',
+                paginate: 'NextToken',
+            }
+        },
+        LookoutVision: {
+            listProjects: {
+                property: 'Projects',
+                paginate: 'NextToken'
+            }
+        },
+        LexModelsV2: {
+            listBots: {
+                property: 'botSummaries',
+                paginate: 'nextToken'
+            }
+        },
+        LookoutMetrics: {
+            listAnomalyDetectors: {
+                property: 'AnomalyDetectorSummaryList',
+                paginate: 'NextToken'
+            }
+        },
+        MemoryDB: {
+            describeClusters: {
+                property:'Clusters',
+                paginate:'NextToken'
+            }
+        },
+        ManagedBlockchain: {
+            listNetworks: {
+                property: 'Networks',
+                paginate: 'NextToken'
+            }
+        },
+        MQ: {
+            listBrokers:{
+                property:'BrokerSummaries',
+                paginate:'NextToken'
             }
         },
         MWAA: {
             listEnvironments: {
                 property: 'Environments',
                 paginate: 'NextToken'
+            }
+        },
+        Neptune: {
+            describeDBClusters: {
+                property: 'DBClusters',
+                paginate: 'Marker'
             }
         },
         Organizations: {
@@ -592,6 +802,18 @@ var calls = [
                 property: 'Accounts',
                 paginate: 'NextToken'
             },
+        },
+        Proton: {
+            listEnvironmentTemplates: {
+                property: 'templates',
+                paginate: 'nextToken'
+            }
+        },
+        QLDB: {
+            listLedgers: {
+                property: 'Ledgers',
+                paginate: 'NextToken'
+            }
         },
         RDS: {
             describeDBInstances: {
@@ -652,7 +874,8 @@ var calls = [
         },
         S3: {
             listBuckets: {
-                property: 'Buckets'
+                property: 'Buckets',
+                sendIntegration: true
             }
         },
         SageMaker: {
@@ -752,6 +975,18 @@ var calls = [
                 }
             }
         },
+        Translate: {
+            listTextTranslationJobs: {
+                property: 'TextTranslationJobPropertiesList',
+                paginate: 'NextToken'
+            }
+        },
+        VoiceID: {
+            listDomains: {
+                property: 'DomainSummaries',
+                paginate: 'NextToken'
+            }
+        },
         WAFRegional: {
             listWebACLs: {
                 property: 'WebACLs',
@@ -790,6 +1025,12 @@ var calls = [
         XRay: {
             getEncryptionConfig: {
                 property: 'EncryptionConfig'
+            }
+        },
+        Wisdom: {
+            listAssistants: {
+                property: 'assistantSummaries',
+                paginate: 'NextToken'
             }
         }
     },
@@ -830,6 +1071,22 @@ var postcalls = [
                 reliesOnCall: 'getRestApis',
                 filterKey: 'restApiId',
                 filterValue: 'id'
+            }
+        },
+        AppRunner: {
+            describeService: {
+                reliesOnService: 'apprunner',
+                reliesOnCall: 'listServices',
+                filterKey: 'ServiceArn',
+                filterValue: 'ServiceArn'
+            }
+        },
+        Appflow: {
+            describeFlow: {
+                reliesOnService: 'appflow',
+                reliesOnCall: 'listFlows',
+                filterKey: 'flowName',
+                filterValue: 'flowName'
             }
         },
         Athena: {
@@ -893,10 +1150,53 @@ var postcalls = [
                 filterValue: 'projectId'
             }
         },
+        CustomerProfiles: {
+            getDomain: {
+                reliesOnService: 'customerprofiles',
+                reliesOnCall: 'listDomains',
+                filterKey: 'DomainName',
+                filterValue: 'DomainName'
+            }
+        },
         CodeBuild: {
             batchGetProjects: {
                 reliesOnService: 'codebuild',
                 reliesOnCall: 'listProjects',
+                override: true
+            }
+        },
+        CodePipeline: {
+            getPipeline: {
+                reliesOnService: 'codepipeline',
+                reliesOnCall: 'listPipelines',
+                filterKey: 'name',
+                filterValue: 'name'
+            }
+        },
+        Connect: {
+            listInstanceCallRecordingStorageConfigs: {
+                reliesOnService: 'connect',
+                reliesOnCall: 'listInstances',
+                override: true
+            },
+            listInstanceMediaStreamStorageConfigs: {
+                reliesOnService: 'connect',
+                reliesOnCall: 'listInstances',
+                override: true
+            },
+            listInstanceChatTranscriptStorageConfigs: {
+                reliesOnService: 'connect',
+                reliesOnCall: 'listInstances',
+                override: true
+            },
+            listInstanceExportedReportStorageConfigs: {
+                reliesOnService: 'connect',
+                reliesOnCall: 'listInstances',
+                override: true
+            },
+            instanceAttachmentStorageConfigs: {
+                reliesOnService: 'connect',
+                reliesOnCall: 'listInstances',
                 override: true
             }
         },
@@ -911,6 +1211,14 @@ var postcalls = [
                 reliesOnCall: 'listTables',
                 override: true
             },
+        },
+        ElastiCache: {
+            describeReplicationGroups: {
+                reliesOnService: 'elasticache',
+                reliesOnCall: 'describeCacheClusters',
+                filterKey: 'ReplicationGroupId',
+                filterValue: 'ReplicationGroupId'
+            }
         },
         ES: {
             describeElasticsearchDomain: {
@@ -1042,19 +1350,22 @@ var postcalls = [
                 reliesOnService: 'ecr',
                 reliesOnCall: 'describeRegistries',
                 filterKey: 'registryId',
-                filterValue: 'registryId'
+                filterValue: 'registryId',
+                sendIntegration: true
             },
         },
         EKS: {
             describeCluster: {
                 reliesOnService: 'eks',
                 reliesOnCall: 'listClusters',
-                override: true
+                override: true,
+                sendIntegration: true
             },
             listNodegroups: {
                 reliesOnService: 'eks',
                 reliesOnCall: 'listClusters',
-                override: true
+                override: true,
+                sendIntegration: true
             }
         },
         ECS: {
@@ -1074,6 +1385,14 @@ var postcalls = [
                 reliesOnService: 'elasticbeanstalk',
                 reliesOnCall: 'describeEnvironments',
                 override: true
+            }
+        },
+        ElasticTranscoder: {
+            listJobsByPipeline : {
+                reliesOnService: 'elastictranscoder',
+                reliesOnCall: 'listPipelines',
+                filterKey: 'PipelineId',
+                filterValue: 'Id'
             }
         },
         ELB: {
@@ -1136,6 +1455,22 @@ var postcalls = [
                 reliesOnCall: 'getLifecyclePolicies',
                 filterKey: 'PolicyId',
                 filterValue: 'PolicyId'
+            }
+        },
+        ForecastService: {
+            describeDataset: {
+                reliesOnService: 'forecastservice',
+                reliesOnCall: 'listDatasets',
+                filterKey: 'DatasetArn',
+                filterValue: 'DatasetArn'
+            }
+        },
+        Glacier: {
+            getVaultAccessPolicy: {
+                reliesOnService: 'glacier',
+                reliesOnCall: 'listVaults',
+                filterKey: 'vaultName',
+                filterValue: 'VaultName'
             }
         },
     },
@@ -1209,6 +1544,13 @@ var postcalls = [
                 filterKey: 'UserName',
                 filterValue: 'UserName',
                 rateLimit: 200
+            },
+            getInstanceProfile: {
+                reliesOnService: 'ec2',
+                reliesOnCall: 'describeInstances',
+                override: true,
+                sendIntegration: true,
+                reliesIntegration: true
             },
             listGroupPolicies: {
                 reliesOnService: 'iam',
@@ -1416,7 +1758,8 @@ var postcalls = [
             describeNodegroups: {
                 reliesOnService: 'eks',
                 reliesOnCall: 'listClusters',
-                override: true
+                override: true,
+                sendIntegration: true
             }
         }
     },
@@ -1530,6 +1873,7 @@ var collect = function(AWSConfig, settings, callback) {
         collection = settings.collection;
     }
 
+
     var debugApiCalls = function(call, service, finished) {
         if (!debugMode) return;
         finished ? console.log(`[INFO] ${service}:${call} returned`) : console.log(`[INFO] ${service}:${call} invoked`);
@@ -1586,6 +1930,47 @@ var collect = function(AWSConfig, settings, callback) {
         }
 
         return isError;
+    };
+
+    var processIntegration = function(serviceLower, callKey, callObj, region, settings, iCb) {
+        if (!callObj.sendIntegration) return iCb();
+
+        if (callObj.reliesIntegration) {
+            let localEvent = {};
+            localEvent.collection = {};
+            localEvent.collection[serviceLower] = {};
+            localEvent.collection[serviceLower][callKey] = collection[serviceLower][callKey];
+            localEvent.collection[serviceLower][callKey][region].data = collection[serviceLower][callKey][region].data;
+
+            if (!localEvent.collection[callObj.reliesOnService]) localEvent.collection[callObj.reliesOnService] = {};
+            localEvent.collection[callObj.reliesOnService][callObj.reliesOnCall] = collection[callObj.reliesOnService][callObj.reliesOnCall];
+            localEvent.identifier = settings.identifier;
+
+            localEvent.previousCollection = settings.previousCollection;
+
+            settings.integration(localEvent, function() {
+                if (debugMode) console.log(`Processed Event: ${JSON.stringify(localEvent)}`);
+
+                return iCb();
+            });
+        } else {
+            let localEvent = {};
+            localEvent.collection = {};
+            localEvent.collection[serviceLower] = {};
+            localEvent.collection[serviceLower][callKey] = {};
+            localEvent.collection[serviceLower][callKey][region] = {};
+            localEvent.collection[serviceLower][callKey][region].data = collection[serviceLower][callKey][region].data;
+
+            localEvent.identifier = settings.identifier;
+
+            localEvent.previousCollection = settings.previousCollection;
+
+            settings.integration(localEvent, function() {
+                if (debugMode) console.log(`Processed Event: ${JSON.stringify(localEvent)}`);
+
+                return iCb();
+            });
+        }
     };
 
     callsPart = settings.part - 1;
@@ -1685,41 +2070,19 @@ var collect = function(AWSConfig, settings, callback) {
                                 collection[serviceLower][callKey][region].data = dataToAdd;
                             }
 
-                            if (dataToAdd && dataToAdd.length && settings.identifier){
-                                var localEvent = {};
-                                localEvent.collection = {};
-                                localEvent.collection[serviceLower] = {};
-                                localEvent.collection[serviceLower][callKey] = {};
-                                localEvent.collection[serviceLower][callKey][region] = {};
-                                localEvent.collection[serviceLower][callKey][region].data = dataToAdd;
-
-                                localEvent.identifier = settings.identifier;
-
-                                localEvent.previousCollection = settings.previousCollection;
-
-                                settings.integration(localEvent, function() {
-                                    if (debugMode) console.log(`Processed Event: ${JSON.stringify(localEvent)}`);
-
-                                    // If a "paginate" property is set, e.g. NextToken
-                                    var nextToken = callObj.paginate;
-                                    if (settings.paginate && nextToken && data[nextToken]) {
-                                        paginating = true;
-                                        var paginateProp = callObj.paginateReqProp ? callObj.paginateReqProp : nextToken;
-                                        return execute([paginateProp, data[nextToken]]);
-                                    }
-
+                            // If a "paginate" property is set, e.g. NextToken
+                            var nextToken = callObj.paginate;
+                            if (settings.paginate && nextToken && data[nextToken]) {
+                                paginating = true;
+                                var paginateProp = callObj.paginateReqProp ? callObj.paginateReqProp : nextToken;
+                                return execute([paginateProp, data[nextToken]]);
+                            }
+                            if (settings.identifier) {
+                                processIntegration(serviceLower, callKey, callObj, region, settings, function() {
                                     return regionCb();
                                 });
                             } else {
-                                // If a "paginate" property is set, e.g. NextToken
-                                var nextToken = callObj.paginate;
-                                if (settings.paginate && nextToken && data[nextToken]) {
-                                    paginating = true;
-                                    var paginateProp = callObj.paginateReqProp ? callObj.paginateReqProp : nextToken;
-                                    return execute([paginateProp, data[nextToken]]);
-                                }
-
-                                return regionCb();
+                                regionCb();
                             }
                         };
 
@@ -1851,10 +2214,22 @@ var collect = function(AWSConfig, settings, callback) {
                             collectors[serviceLower][callKey](LocalAWSConfig, collection, retries, function() {
                                 if (callObj.rateLimit) {
                                     setTimeout(function() {
-                                        regionCb();
+                                        if (settings.identifier) {
+                                            processIntegration(serviceLower, callKey, callObj, region, settings, function() {
+                                                return regionCb();
+                                            });
+                                        } else {
+                                            regionCb();
+                                        }
                                     }, callObj.rateLimit);
                                 } else {
-                                    regionCb();
+                                    if (settings.identifier) {
+                                        processIntegration(serviceLower, callKey, callObj, region, settings, function() {
+                                            return regionCb();
+                                        });
+                                    } else {
+                                        regionCb();
+                                    }
                                 }
                             });
                         } else {
@@ -1912,7 +2287,13 @@ var collect = function(AWSConfig, settings, callback) {
                                 });
 
                             }, function() {
-                                regionCb();
+                                if (settings.identifier) {
+                                    processIntegration(serviceLower, callKey, callObj, region, settings, function() {
+                                        return regionCb();
+                                    });
+                                } else {
+                                    regionCb();
+                                }
                             });
                         }
                     }, function() {

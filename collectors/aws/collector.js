@@ -55,6 +55,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    AppMesh: {
+        listMeshes: {
+            property: 'meshes',
+            paginate: 'nextToken'
+        }
+    },
     AppRunner: {
         listServices: {
             property: 'ServiceSummaryList',
@@ -103,6 +109,10 @@ var calls = {
     Backup: {
         listBackupVaults: {
             property: 'BackupVaultList',
+            paginate: 'NextToken',
+        },
+        listBackupPlans: {
+            property: 'BackupPlansList',
             paginate: 'NextToken',
         }
     },
@@ -242,6 +252,13 @@ var calls = {
         },
         describeConfigurationRecorderStatus: {
             property: 'ConfigurationRecordersStatus'
+        },
+        describeConfigRules: {
+            property: 'ConfigRules',
+            paginate: 'NextToken' 
+        },
+        describeDeliveryChannels: {
+            property: 'DeliveryChannels'
         }
     },
     CustomerProfiles: {
@@ -939,7 +956,11 @@ var calls = {
         listTopics: {
             property: 'Topics',
             paginate: 'NextToken'
-        }
+        },
+        listSubscriptions: {
+            property: 'Subscriptions',
+            paginate: 'NextToken'
+        },
     },
     SQS: {
         listQueues: {
@@ -1067,12 +1088,34 @@ var postcalls = [
                 filterValue: 'CertificateArn'
             }
         },
+        AccessAnalyzer: {
+            listFindings: {
+                reliesOnService: 'accessanalyzer',
+                reliesOnCall: 'listAnalyzers',
+                override: true
+            }
+        },
+        
         APIGateway: {
             getStages: {
                 reliesOnService: 'apigateway',
                 reliesOnCall: 'getRestApis',
                 filterKey: 'restApiId',
                 filterValue: 'id'
+            }
+        },
+        AppMesh: {
+            listVirtualGateways: {
+                reliesOnService: 'appmesh',
+                reliesOnCall: 'listMeshes',
+                filterKey: 'meshName',
+                filterValue: 'meshName'
+            },
+            describeMesh: {
+                reliesOnService: 'appmesh',
+                reliesOnCall: 'listMeshes',
+                filterKey: 'meshName',
+                filterValue: 'meshName'
             }
         },
         AppRunner: {
@@ -1118,6 +1161,12 @@ var postcalls = [
                 filterKey: 'BackupVaultName',
                 filterValue: 'BackupVaultName',
             },
+            getBackupPlan: {
+                reliesOnService: 'backup',
+                reliesOnCall: 'listBackupPlans',
+                filterKey: 'BackupPlanId',
+                filterValue: 'BackupPlanId',
+            }
         },
         CloudFormation: {    
             describeStackEvents: {
@@ -1172,6 +1221,14 @@ var postcalls = [
                 reliesOnCall: 'describeCacheClusters',
                 override: true,
             },
+        },
+        ConfigService: {
+            getComplianceDetailsByConfigRule: {
+                reliesOnService: 'configservice',
+                reliesOnCall: 'describeConfigRules',
+                filterKey: 'ConfigRuleName',
+                filterValue: 'ConfigRuleName'
+            }
         },
         CodeStar: {
             describeProject: {
@@ -1238,6 +1295,11 @@ var postcalls = [
                 override: true
             },
             describeContinuousBackups: {
+                reliesOnService: 'dynamodb',
+                reliesOnCall: 'listTables',
+                override: true
+            },
+            listBackups: {
                 reliesOnService: 'dynamodb',
                 reliesOnCall: 'listTables',
                 override: true
@@ -1338,6 +1400,12 @@ var postcalls = [
                 override: true
             },
             getBucketAccelerateConfiguration: {
+                reliesOnService: 's3',
+                reliesOnCall: 'listBuckets',
+                filterKey: 'Bucket',
+                filterValue: 'Name'
+            },
+            headBucket: {
                 reliesOnService: 's3',
                 reliesOnCall: 'listBuckets',
                 filterKey: 'Bucket',
@@ -1862,6 +1930,13 @@ var postcalls = [
                 override: true
             }
         },
+        AppMesh: {
+            describeVirtualGateway: {
+                reliesOnService: 'appmesh',
+                reliesOnCall: 'listMeshes',
+                override: true
+            }
+        },
         EMR: {
             describeSecurityConfiguration: {
                 reliesOnService: 'emr',
@@ -1896,11 +1971,6 @@ var postcalls = [
                 reliesOnCall: 'listRoles',
                 filterKey: 'RoleName',
                 filterValue: 'RoleName'
-            },
-            getInstanceProfile: {
-                reliesOnService: 'ec2',
-                reliesOnCall: 'describeInstances',
-                override: true
             }
         },
         EKS:{
@@ -2216,7 +2286,7 @@ var collect = function(AWSConfig, settings, callback) {
                                         let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
                                         let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
 
-                                        console.log(`Trying again in: ${retry_seconds/1000} seconds`);
+                                        console.log(`Trying ${callKey} again in: ${retry_seconds/1000} seconds`);
                                         retries.push({seconds: Math.round(retry_seconds/1000)});
                                         return retry_seconds;
                                     },
@@ -2240,7 +2310,7 @@ var collect = function(AWSConfig, settings, callback) {
                                         let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
                                         let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
 
-                                        console.log(`Trying again in: ${retry_seconds/1000} seconds`);
+                                        console.log(`Trying ${callKey} again in: ${retry_seconds/1000} seconds`);
                                         retries.push({seconds: Math.round(retry_seconds/1000)});
                                         return retry_seconds;
                                     },
@@ -2366,7 +2436,7 @@ var collect = function(AWSConfig, settings, callback) {
                                             let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
                                             let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
 
-                                            console.log(`Trying again in: ${retry_seconds/1000} seconds`);
+                                            console.log(`Trying ${callKey} again in: ${retry_seconds/1000} seconds`);
                                             retries.push({seconds: Math.round(retry_seconds/1000)});
                                             return retry_seconds;
                                         },
