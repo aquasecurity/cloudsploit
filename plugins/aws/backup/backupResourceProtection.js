@@ -58,13 +58,7 @@ module.exports = {
                 }, {});
             let loweredResourceType = lowercaseKeys(objt);   
 
-            let allPassed = true;
-            config.backup_resource_type.some(element => {
-                if (loweredResourceType[element] === false) {
-                    allPassed = false;
-                    return;
-                }   
-            });
+            let allPassed = config.backup_resource_type.every(element => loweredResourceType[element]));
                 
             if (allPassed) {
                 helpers.addResult(results, 0,
