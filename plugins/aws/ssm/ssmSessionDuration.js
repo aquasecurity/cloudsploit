@@ -12,10 +12,10 @@ module.exports = {
     apis: ['SSM:describeSessions'],
     settings: {
         ssm_session_max_duration: {
-            name: 'Max Duration for SSM Session.',
-            description: 'Maximum duration for SSM session.',
+            name: 'Max Duration for SSM Session',
+            description: 'Maximum duration in minutes for SSM session.',
             regex: '^((1440)|(14[0-3][0-9]{1})|(1[0-3][0-9]{2})|([1-9][0-9]{2})|([1-9][0-9]{1})|([1-9]))$',
-            default: 5
+            default: ''
         }
     },
 
@@ -27,7 +27,7 @@ module.exports = {
         var awsOrGov = helpers.defaultPartition(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
-        var sessionMaxDuration = parseInt(settings.ssm_session_max_duration || this.settings.ssm_session_max_duration.default);
+        var sessionMaxDuration = settings.ssm_session_max_duration || this.settings.ssm_session_max_duration.default;
 
         async.each(regions.ssm, function(region, rcb){
             var describeSessions = helpers.addSource(cache, source,
