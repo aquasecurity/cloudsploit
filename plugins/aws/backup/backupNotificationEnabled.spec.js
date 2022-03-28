@@ -58,35 +58,35 @@ const createCache = (listBackupVaults, getBackupVaultNotifications, listBackupVa
 
 describe('backupNotificationEnabled', function () {
     describe('run', function () {
-        it('should PASS if Selected vault is configured to send alert notifications for failed Backup jobs', function (done) {
-            const cache = createCache([listBackupVaults[0]], getBackupVaultNotifications[0]);
+        it('should PASS if Backup vault is configured to send alert notifications for failed Backup job events', function (done) {
+            const cache = createCache([listBackupVaults[0]], getBackupVaultNotifications[1]);
             backupNotificationEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Selected vault is configured to send alert notifications for failed Backup jobs')
+                expect(results[0].message).to.include('Backup vault is configured to send alert notifications for failed Backup job events')
                 done();
             });
         });
 
-        it('should FAIL if Selected vault is not configured to send alert notifications for failed Backup jobs', function (done) {
-            const cache = createCache([listBackupVaults[0]], getBackupVaultNotifications[1] );
+        it('should FAIL if Backup vault is not configured to send alert notifications for failed Backup job events', function (done) {
+            const cache = createCache([listBackupVaults[0]], getBackupVaultNotifications[0] );
             backupNotificationEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Selected vault is not configured to send alert notifications for failed Backup jobs')
+                expect(results[0].message).to.include('Backup vault is not configured to send alert notifications for failed Backup job events')
                 done();
             });
         });
 
-        it('should FAIL if Event notifications are not enabled for the selected Amazon Backup vault', function (done) {
+        it('should FAIL if Backup vault does not have any notifications configured', function (done) {
             const cache = createCache([listBackupVaults[0]], null , null, { message: 'An error occurred (ResourceNotFoundException) when calling the getBackupVaultNotifications operation', code : 'ResourceNotFoundException' } );
             backupNotificationEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Event notifications are not enabled for the selected Amazon Backup vault')
+                expect(results[0].message).to.include('Backup vault does not have any notifications configured')
                 done();
             });
         });
@@ -98,7 +98,7 @@ describe('backupNotificationEnabled', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('No Backup vault list found')
+                expect(results[0].message).to.include('No Backup vaults found')
                 done();
             });
         });
@@ -118,7 +118,7 @@ describe('backupNotificationEnabled', function () {
             backupNotificationEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to get event notifications for selected Amazon Backup vault')
+                expect(results[0].message).to.include('Unable to get event notifications for Backup vault')
                 done();
             });
         });
