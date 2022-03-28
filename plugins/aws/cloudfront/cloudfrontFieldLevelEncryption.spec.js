@@ -46,7 +46,7 @@ const createNullCache = () => {
 
 describe('cloudfrontFieldLevelEncryption', function () {
     describe('run', function () {
-        it('should PASS if distribution have field level encryption enabled', function (done) {
+        it('should PASS if distribution has field level encryption enabled', function (done) {
             const cache = createCache([listDistributions[0]]);
             cloudfrontFieldLevelEncryption.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
