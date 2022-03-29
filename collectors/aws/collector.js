@@ -654,6 +654,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    Imagebuilder: {
+        listComponents: {
+            property: 'componentVersionList',
+            paginate: 'nextToken'
+        }
+    },
     IAM: {
         listServerCertificates: {
             property: 'ServerCertificateMetadataList',
@@ -1571,6 +1577,14 @@ var postcalls = [
                 filterKey: 'vaultName',
                 filterValue: 'VaultName'
             }
+        },
+        Imagebuilder: {
+            getComponent: {
+                reliesOnService: 'imagebuilder',
+                reliesOnCall: 'listComponents',
+                filterKey: 'componentBuildVersionArn',
+                filterValue: 'arn'
+            },
         },
         IAM: {
             getGroup: {
