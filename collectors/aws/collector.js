@@ -654,6 +654,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    Imagebuilder: {
+        listContainerRecipes: {
+            property: 'containerRecipeSummaryList',
+            paginate: 'nextToken'
+        }
+    },
     IAM: {
         listServerCertificates: {
             property: 'ServerCertificateMetadataList',
@@ -1563,6 +1569,14 @@ var postcalls = [
                 filterKey: 'DatasetArn',
                 filterValue: 'DatasetArn'
             }
+        },
+        Imagebuilder: {
+            getContainerRecipe: {
+                reliesOnService: 'imagebuilder',
+                reliesOnCall: 'listContainerRecipes',
+                filterKey: 'containerRecipeArn',
+                filterValue: 'arn'
+            },
         },
         Glacier: {
             getVaultAccessPolicy: {
