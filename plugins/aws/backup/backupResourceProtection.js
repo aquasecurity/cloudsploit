@@ -14,7 +14,7 @@ module.exports = {
     settings: {
         backup_resource_type: {
             name: 'Protected Amazon Backup Resource Types',
-            description: 'If set, Backup protected resource types should have a retention settings of boolean true or false.Comma seperated list of resource types that should be backup protected',
+            description: 'Comma separated list of resource types that should be backup protected i.e. rds,efs',
             regex: '^.*$',
             default:''
         }
