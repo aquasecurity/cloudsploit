@@ -50,15 +50,15 @@ module.exports = {
                 return rcb();
             }
 
-            let loweredResourceTypes  = Object.keys(describeRegionSettings.data).reduce((acc, key) => {
-                    acc[key.toLowerCase().replace(/\s/g, '')] = obj[key];
-                    return acc;
+            let loweredResourceTypes = Object.keys(describeRegionSettings.data).reduce((acc, key) => {
+                acc[key.toLowerCase().replace(/\s/g, '')] = describeRegionSettings.data[key];
+                return acc;
             }, {});
    
         
             let missingResourceTypes = [];
             config.backup_resource_type.forEach(element => {
-                if (!loweredResourceType[element]) {
+                if (!loweredResourceTypes[element]) {
                     missingResourceTypes.push(element);
                 }
             });
