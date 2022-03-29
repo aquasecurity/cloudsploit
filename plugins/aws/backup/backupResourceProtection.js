@@ -50,12 +50,11 @@ module.exports = {
                 return rcb();
             }
 
-            const lowercaseKeys = obj =>
-                Object.keys(obj).reduce((acc, key) => {
+            let loweredResourceTypes  = Object.keys(describeRegionSettings.data).reduce((acc, key) => {
                     acc[key.toLowerCase().replace(/\s/g, '')] = obj[key];
                     return acc;
-                }, {});
-            let loweredResourceType = lowercaseKeys(describeRegionSettings.data);   
+            }, {});
+   
         
             let missingResourceTypes = [];
             config.backup_resource_type.forEach(element => {
