@@ -25,8 +25,10 @@ module.exports = {
             backup_resource_type:(settings.backup_resource_type || this.settings.backup_resource_type.default)
         };
 
-        if (!config.backup_resource_type.length) return callback(null, results, source);
         config.backup_resource_type = config.backup_resource_type.replace(/\s/g, '');
+
+        if (!config.backup_resource_type.length) return callback(null, results, source);
+
         config.backup_resource_type = config.backup_resource_type.toLowerCase().split(',');
 
         var results = [];
