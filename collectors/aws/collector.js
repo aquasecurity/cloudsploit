@@ -575,8 +575,6 @@ var calls = {
             params:{                
                 Limit: 100,
             }
-        },
-        describeEventBus: {
         }
     },
     Finspace: {
