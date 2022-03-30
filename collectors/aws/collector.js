@@ -992,6 +992,13 @@ var calls = {
             params: {
                 SettingId: '/ssm/documents/console/public-sharing-permission'
             }
+        },
+        describeSessions: {
+            property: 'Sessions',
+            paginate: 'NextToken',
+            params: {
+                State: 'Active'
+            }
         }
     },
     STS: {
@@ -1155,6 +1162,18 @@ var postcalls = [
             }
         },
         Backup: {
+            getBackupVaultNotifications: {
+                reliesOnService: 'backup',
+                reliesOnCall: 'listBackupVaults',
+                filterKey: 'BackupVaultName',
+                filterValue: 'BackupVaultName',
+            },
+            getBackupVaultAccessPolicy: {
+                reliesOnService: 'backup',
+                reliesOnCall: 'listBackupVaults',
+                filterKey: 'BackupVaultName',
+                filterValue: 'BackupVaultName',
+            },
             getBackupPlan: {
                 reliesOnService: 'backup',
                 reliesOnCall: 'listBackupPlans',
