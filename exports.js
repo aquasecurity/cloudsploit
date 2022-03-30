@@ -504,6 +504,7 @@ module.exports = {
         'instanceAttachmentsEncrypted'  : require(__dirname + '/plugins/aws/connect/instanceAttachmentsEncrypted.js'),
         
         'backupVaultEncrypted'          : require(__dirname + '/plugins/aws/backup/backupVaultEncrypted.js'),
+        'backupResourceProtection'      : require(__dirname + '/plugins/aws/backup/backupResourceProtection.js'),
         'backupInUseForRDSSnapshots'    : require(__dirname + '/plugins/aws/backup/backupInUseForRDSSnapshots.js'),
         'backupNotificationEnabled'     : require(__dirname + '/plugins/aws/backup/backupNotificationEnabled.js'),
         'backupDeletionProtection'      : require(__dirname + '/plugins/aws/backup/backupDeletionProtection.js'),
