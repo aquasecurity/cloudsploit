@@ -2,14 +2,14 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'CloudTrail Management Events',
+    title: 'CloudTrail Notifications Enabled',
     category: 'CloudTrail',
     domain: 'Compliance',
-    severity: 'LOW',
-    description: 'Ensures that AWS CloudTrail trails are configured to log management events.',
-    more_info: 'AWS CloudTrail trails should be configured to log management events to record management operations that are performed on resources in your AWS account.',
-    recommended_action: 'Update CloudTrail service to enable management events logging',
-    link: 'https://docs.aws.amazon.com/awscloudtrail/latest/userguide/logging-management-events-with-cloudtrail.html',
+    severity: 'MEDIUM',
+    description: 'Ensure that Amazon CloudTrail trails are using active Simple Notification Service (SNS) topics to deliver notifications.',
+    more_info: 'CloudTrail trails should reference active SNS topics to notify for log files delivery to S3 buckets. Otherwise, you will lose the ability to take immediate actions based on log information.',
+    recommended_action: 'Make sure that CloudTrail trails are using active SNS topics and that SNS topics have not been deleted after trail creation.',
+    link: 'https://docs.aws.amazon.com/awscloudtrail/latest/userguide/configure-sns-notifications-for-cloudtrail.html',
     apis: ['CloudTrail:describeTrails', 'SNS:listTopics', 'SNS:getTopicAttributes'],
 
     run: function(cache, settings, callback) {
@@ -25,12 +25,12 @@ module.exports = {
 
             if (describeTrails.err || !describeTrails.data) {
                 helpers.addResult(results, 3,
-                    `Unable to query for trails: ${helpers.addError(describeTrails)}`, region);
+                    `Unable to query for CloudTrail trails: ${helpers.addError(describeTrails)}`, region);
                 return rcb();
             }
 
             if (!describeTrails.data.length) {
-                helpers.addResult(results, 0, 'no trail found', region);
+                helpers.addResult(results, 0, 'No CloudTrail trails found', region);
                 return rcb();
             }
 
@@ -41,7 +41,7 @@ module.exports = {
 
             if (listTopics.err || !listTopics.data) {
                 helpers.addResult(results, 3,
-                    `Unable to list topics: ${helpers.addError(listTopics)}`, region);
+                    `Unable to query for SNS topics: ${helpers.addError(listTopics)}`, region);
                 return rcb();
             }
 
@@ -49,24 +49,25 @@ module.exports = {
                 if (!trail.TrailARN) continue;
 
                 var resource = trail.TrailARN;
+
                 var getTopicAttributes = helpers.addSource(cache, source,
                     ['sns', 'getTopicAttributes', region, trail.SnsTopicARN]);
 
                 if (getTopicAttributes && getTopicAttributes.err && getTopicAttributes.err.code &&
                     getTopicAttributes.err.code == 'NotFound') {
                     helpers.addResult(results, 2,
-                        'SNS notifications are deleted for the selected CloudTrail trail after manufacture of trail', region, resource);
+                        'CloudTrail trail SNS topic not found', region, resource);
                     continue;
                 } 
 
                 if (!getTopicAttributes || getTopicAttributes.err ||
                     !getTopicAttributes.data) {
                     helpers.addResult(results, 3,
-                        `Unable to query for SNS notifications: ${helpers.addError(describeTrails)}`, 
+                        `Unable to query for SNS topic: ${helpers.addError(describeTrails)}`, 
                         region, resource);
                 }  else {
                     helpers.addResult(results, 0,
-                        'SNS notifications are enabled for trail',
+                        'CloudTrail trail is using active SNS topic',
                         region, resource);
                 }
             }
