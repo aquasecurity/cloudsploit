@@ -39,40 +39,40 @@ const createNullCache = () => {
 
 describe('eventsInUse', function () {
     describe('run', function () {
-        it('should PASS if AWS CloudWatch events are currently in use', function (done) {
+        it('should PASS if EventBridge event rules are in use', function (done) {
             const cache = createCache([listRules[0]]);
             eventsInUse.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('AWS CloudWatch events are currently in use')
+                expect(results[0].message).to.include('EventBridge event rules are in use')
                 done();
             });
         });
 
-        it('should FAIL if AWS CloudWatch events are not currently in use', function (done) {
+        it('should FAIL if EventBridge event rules are not in use', function (done) {
             const cache = createCache(listRules[1]);
             eventsInUse.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('AWS CloudWatch events are not currently in use')
+                expect(results[0].message).to.include('EventBridge event rules are not in use')
                 done();
             });
         });
 
-        it('should UNKNOWN if Unable to list CloudWatch events rules', function (done) {
-            const cache = createCache(null, { message: 'Unable to list CloudWatch events rules' });
+        it('should UNKNOWN if Unable to list EventBridge events rules', function (done) {
+            const cache = createCache(null, { message: 'Unable to list EventBridge event rules' });
             eventsInUse.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Unable to list CloudWatch events rules')
+                expect(results[0].message).to.include('Unable to list EventBridge event rules')
                 done();
             });
         });
 
-        it('should not return any results if list CloudWatch events rules response not found', function (done) {
+        it('should not return any results if list EventBridge event rules response not found', function (done) {
             const cache = createNullCache();
             eventsInUse.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
