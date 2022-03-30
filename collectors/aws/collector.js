@@ -143,6 +143,10 @@ var calls = {
                 ]
             }
         },
+        describeStacks: {
+            property: 'Stacks',
+            paginate: 'NextToken',
+        }
     },
     CloudFront: {
         // TODO: Pagination is using an older format
