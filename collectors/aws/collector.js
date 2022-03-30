@@ -1162,6 +1162,12 @@ var postcalls = [
             }
         },
         Backup: {
+            getBackupVaultAccessPolicy: {
+                reliesOnService: 'backup',
+                reliesOnCall: 'listBackupVaults',
+                filterKey: 'BackupVaultName',
+                filterValue: 'BackupVaultName',
+            },
             getBackupPlan: {
                 reliesOnService: 'backup',
                 reliesOnCall: 'listBackupPlans',

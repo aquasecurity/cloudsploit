@@ -501,6 +501,7 @@ module.exports = {
         'instanceAttachmentsEncrypted'  : require(__dirname + '/plugins/aws/connect/instanceAttachmentsEncrypted.js'),
         
         'backupVaultEncrypted'          : require(__dirname + '/plugins/aws/backup/backupVaultEncrypted.js'),
+        'backupDeletionProtection'      : require(__dirname + '/plugins/aws/backup/backupDeletionProtection.js'),
         'compliantLifecyleConfigured'   : require(__dirname + '/plugins/aws/backup/compliantLifecyleConfigured.js'),
 
         'equipmentdatasetEncrypted'     : require(__dirname + '/plugins/aws/lookout/equipmentdatasetEncrypted.js'),
