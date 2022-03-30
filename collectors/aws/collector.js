@@ -177,7 +177,7 @@ var calls = {
             params: {
                 limit: 50 // The max available
             }
-        }
+        },
     },
     CodeArtifact: {
         listDomains: {
@@ -603,6 +603,10 @@ var calls = {
             params:{                
                 Limit: 100,
             }
+        },
+        listRules: {
+            property: 'Rules',
+            paginate: 'NextToken',
         }
     },
     Finspace: {
