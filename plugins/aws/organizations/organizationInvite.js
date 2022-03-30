@@ -16,6 +16,8 @@ module.exports = {
         var region = helpers.defaultRegion(settings);
         var listHandshakesForAccount = helpers.addSource(cache, source, ['organizations', 'listHandshakesForAccount', region]);
 
+        if (!listHandshakesForAccount) return callback(null, results, source);
+
         if (!listHandshakesForAccount.data || listHandshakesForAccount.err) {
             helpers.addResult(results, 3, 'Cannot list organization handshakes', 'global');
             return callback(null, results, source);

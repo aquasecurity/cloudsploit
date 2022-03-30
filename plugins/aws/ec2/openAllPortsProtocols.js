@@ -69,15 +69,6 @@ module.exports = {
                                groups[g].OwnerId + ':security-group/' +
                                groups[g].GroupId;
 
-                if (config.ec2_skip_unused_groups) {
-                    if (groups[g].GroupId && !usedGroups.includes(groups[g].GroupId)) {
-                        helpers.addResult(results, 1, `Security Group: ${groups[g].GroupId} is not in use`,
-                            region, resource);
-                        usedGroup = true;
-                        continue;
-                    }
-                }
-
                 for (var p in groups[g].IpPermissions) {
                     var permission = groups[g].IpPermissions[p];
 
@@ -119,11 +110,17 @@ module.exports = {
                 }
 
                 if (strings.length) {
-                    helpers.addResult(results, 2,
-                        'Security group: ' + groups[g].GroupId +
-                        ' (' + groups[g].GroupName +
-                        ') has ' + strings.join(' and '), region,
-                        resource);
+                    if (config.ec2_skip_unused_groups && groups[g].GroupId && !usedGroups.includes(groups[g].GroupId)) {
+                        helpers.addResult(results, 1, `Security Group: ${groups[g].GroupId} is not in use`,
+                            region, resource);
+                        usedGroup = true;
+                    } else {
+                        helpers.addResult(results, 2,
+                            'Security group: ' + groups[g].GroupId +
+                            ' (' + groups[g].GroupName +
+                            ') has ' + strings.join(' and '), region,
+                            resource);
+                    }
                 }
             }
 
