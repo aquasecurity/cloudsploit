@@ -249,6 +249,7 @@ module.exports = {
         'deliveryStreamEncrypted'       : require(__dirname + '/plugins/aws/firehose/deliveryStreamEncrypted.js'),
 
         'eventBusCrossAccountAccess'    : require(__dirname + '/plugins/aws/eventbridge/eventBusCrossAccountAccess.js'),
+        'eventBusPublicAccess'          : require(__dirname + '/plugins/aws/eventbridge/eventBusPublicAccess.js'),
         'eventsInUse'                   : require(__dirname + '/plugins/aws/eventbridge/eventsInUse.js'),
 
         'glueCloudwatchLogsEncrypted'   : require(__dirname + '/plugins/aws/glue/glueCloudwatchLogsEncrypted.js'),
