@@ -58,9 +58,9 @@ module.exports = {
                         'CloudFormation stack does not have a role attached', region, resource);
                     return cb();
                 }
-                     
-                var roleNameArr = describeStacks.data.Stacks[0].RoleARN.split('/');
-                var roleName = roleNameArr[roleNameArr.length - 1];
+
+                var roleName = describeStacks.data.Stacks[0].RoleARN.split('/')[1] ?
+                    describeStacks.data.Stacks[0].RoleARN.split('/')[1] : describeStacks.data.Stacks[0].RoleARN;
                 var adminPrivileged;
 
                 var listAttachedRolePolicies = helpers.addSource(cache, source,
