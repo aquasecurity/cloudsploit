@@ -16,6 +16,8 @@ module.exports = {
         var region = helpers.defaultRegion(settings);
         var describeOrganization = helpers.addSource(cache, source, ['organizations', 'describeOrganization', region]);
 
+        if (!describeOrganization) return callback(null, results, source);
+
         if (!describeOrganization.data || describeOrganization.err) {
             if (!describeOrganization.err || describeOrganization.err.code !== 'AWSOrganizationsNotInUseException') {
                 helpers.addResult(results, 3, 'Cannot describe the organization', 'global');
