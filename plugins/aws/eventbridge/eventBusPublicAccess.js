@@ -5,20 +5,16 @@ module.exports = {
     title: 'Event Bus Public Access',
     category: 'EventBridge',
     domain: 'Management and Governance',
-    severity: 'MEDIUM',
+    severity: 'HIGH',
     description: 'Ensure that EventBridge event bus is configured to prevent exposure to public access.',
     more_info: 'The default event bus in your Amazon account only allows events from one account. You can grant additional permissions to an event bus by attaching a resource-based policy to it.',
     link: 'https://docs.amazonaws.cn/en_us/eventbridge/latest/userguide/eb-event-bus-perms.html',
-    recommended_action: 'Configure EventBridge event bus policies that allow access to whitelisted/trusted cross-account principals but not public access.',
+    recommended_action: 'Configure EventBridge event bus policies that allow access to whitelisted/trusted account principals but not public access.',
     apis: ['EventBridge:listEventBuses', 'STS:getCallerIdentity'],
     settings: {
         event_bus_policy_condition_keys: {
             name: 'Event Bus Policy Allowed Condition Keys',
-            description: 'Comma separated list of AWS IAM condition keys that should be allowed i.e. aws:SourceAccount, aws:SourceArn' +
-                'This setting assumes following rules:' +
-                '1. As a best practice, "Deny" with "StringNotLike" and "Allow" with "StringLike" are used to prevent accidental privileged access' +
-                '2. IAM condition keys which work with "Numeric" or "Date" operators are not used' +
-                '3. Bool values are set to "true" with "Allow" and "false" with "Deny"',
+            description: 'Comma separated list of AWS IAM condition keys that should be allowed i.e. aws:SourceAccount, aws:SourceArn',
             regex: '^.*$',
             default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceOwner,aws:SourceArn,aws:SourceAccount'
         }
@@ -51,7 +47,7 @@ module.exports = {
             }
 
             if (!listEventBuses.data.length) {
-                helpers.addResult(results, 0, 'No Event bus found', region);
+                helpers.addResult(results, 0, 'No Event buses found', region);
                 return rcb();
             }
           
@@ -67,12 +63,12 @@ module.exports = {
 
                 if (!statements || !statements.length) {
                     helpers.addResult(results, 0,
-                        'The Event bus policy does not have statements',
+                        'Event bus policy does not have statements',
                         region, eventBus.Arn);
                     return;
                 }
 
-                var actions = [];
+                var publicActions = [];
 
                 for (var statement of statements) {
                     var effectEval = (statement.Effect && statement.Effect == 'Allow' ? true : false);
@@ -82,20 +78,20 @@ module.exports = {
 
                     if (!scopedCondition && principalEval && effectEval) {
                         if (statement.Action && typeof statement.Action === 'string') {
-                            if (actions.indexOf(statement.Action) === -1) {
-                                actions.push(statement.Action);
+                            if (publicActions.indexOf(statement.Action) === -1) {
+                                publicActions.push(statement.Action);
                             }
                         } else if (statement.Action && statement.Action.length) {
                             for (var a in statement.Action) {
-                                if (actions.indexOf(statement.Action[a]) === -1) {
-                                    actions.push(statement.Action[a]);
+                                if (publicActions.indexOf(statement.Action[a]) === -1) {
+                                    publicActions.push(statement.Action[a]);
                                 }
                             }
                         }
                     }
                 }
 
-                if (actions.length) {
+                if (publicActions.length) {
                     helpers.addResult(results, 2,
                         'Event bus policy is exposed to everyone' ,
                         region, eventBus.Arn);
