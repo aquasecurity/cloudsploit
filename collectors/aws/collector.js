@@ -163,6 +163,11 @@ var calls = {
             property: 'trailList'
         }
     },
+    CloudWatch: {
+        describeAlarms: {
+            property: 'MetricAlarms'
+        }
+    },
     CloudWatchLogs: {
         describeLogGroups: {
             property: 'logGroups',
