@@ -41,12 +41,12 @@ module.exports = {
 
                 if (cluster.EncryptionInfo && 
                     cluster.EncryptionInfo.EncryptionInTransit && 
-                    cluster.EncryptionInfo.EncryptionInTransit.InCluster === false) {
-                    helpers.addResult(results, 2,
-                        'TLS encryption within the cluster is not enabled', region, resource);
-                } else {
+                    cluster.EncryptionInfo.EncryptionInTransit.InCluster) {
                     helpers.addResult(results, 0,
                         'TLS encryption within the cluster is enabled', region, resource);
+                } else {
+                    helpers.addResult(results, 2,
+                        'TLS encryption within the cluster is not enabled', region, resource);
                 }
             }
 

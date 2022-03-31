@@ -80,7 +80,7 @@ const createNullCache = () => {
 
 describe('mskClusterEncryptionInTransit', function () {
     describe('run', function () {
-        it('should FAIL if encryption in transit is not enabled for MSK clusters', function (done) {
+        it('should FAIL if TLS encryption within the cluster is not enabled', function (done) {
             const cache = createCache([listClusters[1]]);
             mskClusterEncryptionInTransit.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -89,7 +89,7 @@ describe('mskClusterEncryptionInTransit', function () {
             });
         });
 
-        it('should PASS if encryption in transit is enabled for MSK clusters', function (done) {
+        it('should PASS if TLS encryption within the cluster is enabled', function (done) {
             const cache = createCache([listClusters[0]]);
             mskClusterEncryptionInTransit.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
