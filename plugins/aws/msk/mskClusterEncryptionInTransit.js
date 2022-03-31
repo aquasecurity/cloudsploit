@@ -46,7 +46,7 @@ module.exports = {
                         'TLS encryption within the cluster is not enabled', region, resource);
                 } else {
                     helpers.addResult(results, 0,
-                        'Cluster has in-transit encryption enabled', region, resource);
+                        'TLS encryption within the cluster is enabled', region, resource);
                 }
             }
 
