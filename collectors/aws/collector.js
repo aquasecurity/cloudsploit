@@ -165,7 +165,8 @@ var calls = {
     },
     CloudWatch: {
         describeAlarms: {
-            property: 'MetricAlarms'
+            property: 'MetricAlarms',
+            paginate: 'NextToken'
         }
     },
     CloudWatchLogs: {
