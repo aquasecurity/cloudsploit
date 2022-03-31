@@ -164,6 +164,9 @@ var calls = {
         }
     },
     CloudWatch: {
+        describeAlarmForOrgEventsMetric: {
+            override: true
+        },
         describeAlarms: {
             property: 'MetricAlarms',
             paginate: 'NextToken'
