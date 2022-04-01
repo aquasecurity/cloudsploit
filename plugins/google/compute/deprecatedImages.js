@@ -5,6 +5,7 @@ module.exports = {
     title: 'Deprecated Images',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'LOW',
     description: 'Ensure that Compute instances are not created from deprecated images.',
     more_info: 'Deprecated Compute Disk Images should not be used to create VM instances.',
     link: 'https://cloud.google.com/compute/docs/images/image-management-best-practices',

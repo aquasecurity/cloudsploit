@@ -5,6 +5,7 @@ module.exports = {
     title: 'Open FTP',
     category: 'VPC Network',
     domain: 'Network Access Control',
+    severity: 'HIGH',
     description: 'Determines if TCP port 20 or 21 for FTP is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as FTP should be restricted to known IP addresses.',
     link: 'https://cloud.google.com/vpc/docs/using-firewalls',

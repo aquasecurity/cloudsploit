@@ -5,6 +5,7 @@ module.exports = {
     title: 'Secure Boot Enabled',
     category: 'Kubernetes',
     domain: 'Containers',
+    severity: 'LOW',
     description: 'Ensures all Kubernetes cluster nodes have secure boot feature enabled.',
     more_info: 'Secure Boot feature protects your cluster nodes from malware and makes sure the system runs only authentic software.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/shielded-gke-nodes#secure_boot',

@@ -5,6 +5,7 @@ module.exports = {
     title: 'VM Instance Deletion Protection',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'LOW',
     description: 'Ensure that Virtual Machine instances have deletion protection enabled.',
     more_info: 'VM instances should have deletion protection enabled in order to prevent them for being accidentally deleted.',
     link: 'https://cloud.google.com/compute/docs/instances/preventing-accidental-vm-deletion',

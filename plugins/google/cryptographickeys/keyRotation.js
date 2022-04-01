@@ -5,6 +5,7 @@ module.exports = {
     title: 'Key Rotation',
     category: 'Cryptographic Keys',
     domain: 'Identity and Access Management',
+    severity: 'MEDIUM',
     description: 'Ensures cryptographic keys are set to rotate on a regular schedule',
     more_info: 'All cryptographic keys should have key rotation enabled. Google will handle the rotation of the encryption key itself, as well as storage of previous keys, so previous data does not need to be re-encrypted before the rotation occurs.',
     link: 'https://cloud.google.com/vpc/docs/using-cryptoKeys',

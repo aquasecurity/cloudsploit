@@ -4,6 +4,7 @@ module.exports = {
     title: 'Restrict VPC Peering',
     category: 'Resource Manager',
     domain: 'Management and Governance',
+    severity: 'LOW',
     description: 'Determine if "Restrict VPC Peering" is enforced on the GCP organization level.',
     more_info: 'Enforcing the "Restrict VPC Peering" constraint allows you to define which VPC Networks are allowed to be peered with other networks.',
     link: 'https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints',

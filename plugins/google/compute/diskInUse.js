@@ -4,6 +4,7 @@ module.exports = {
     title: 'Disk In Use',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'LOW',
     description: 'Ensure that there are no unused Compute disks.',
     more_info: 'Unused Compute disks should be deleted to prevent accidental exposure of data and to avoid unnecessary billing.',
     link: 'https://cloud.google.com/compute/docs/disks',

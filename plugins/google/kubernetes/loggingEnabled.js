@@ -5,6 +5,7 @@ module.exports = {
     title: 'Logging Enabled',
     category: 'Kubernetes',
     domain: 'Containers',
+    severity: 'MEDIUM',
     description: 'Ensures all Kubernetes clusters have logging enabled',
     more_info: 'This setting should be enabled to ensure Kubernetes control plane logs are properly recorded.',
     link: 'https://cloud.google.com/monitoring/kubernetes-engine/legacy-stackdriver/logging',

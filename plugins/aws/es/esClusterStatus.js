@@ -5,6 +5,7 @@ module.exports = {
     title: 'ElasticSearch Cluster Status',
     category: 'ES',
     domain: 'Databases',
+    severity: 'LOW', 
     description: 'Ensure that ElasticSearch clusters are healthy, i.e status is green.',
     more_info: 'Unhealthy Amazon ES clusters with the status set to "Red" is crucial for availability of ElasticSearch applications.',
     link: 'https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/cloudwatch-alarms.html',

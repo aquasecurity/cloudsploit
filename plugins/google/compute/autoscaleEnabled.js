@@ -5,6 +5,7 @@ module.exports = {
     title: 'Autoscale Enabled',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'LOW',
     description: 'Ensures instance groups have autoscale enabled for high availability',
     more_info: 'Enabling autoscale increases efficiency and improves cost management for resources.',
     link: 'https://cloud.google.com/compute/docs/autoscaler/',

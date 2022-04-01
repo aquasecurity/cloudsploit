@@ -5,6 +5,7 @@ module.exports = {
     title: 'LookoutEquipment Dataset Encrypted',
     category: 'LookoutEquipment',
     domain: 'Content Delivery',
+    severity: 'LOW', 
     description: 'Ensure that Amazon Lookout for Equipment datasets are encrypted using desired KMS encryption level',
     more_info: 'Amazon Lookout for Equipment encrypts your data at rest with AWS owned KMS key by default. ' +
         'It is recommended to use customer-managed keys instead you will gain more granular control over encryption/decryption process.',

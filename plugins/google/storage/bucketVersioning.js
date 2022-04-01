@@ -5,6 +5,7 @@ module.exports = {
     title: 'Bucket Versioning',
     category: 'Storage',
     domain: 'Storage',
+    severity: 'LOW',
     description: 'Ensures object versioning is enabled on storage buckets',
     more_info: 'Object versioning can help protect against the overwriting of objects or data loss in the event of a compromise.',
     link: 'https://cloud.google.com/storage/docs/using-object-versioning',

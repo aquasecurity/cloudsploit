@@ -5,6 +5,7 @@ module.exports = {
     title: 'CloudTrail Bucket Private',
     category: 'CloudTrail',
     domain: 'Compliance',
+    severity: 'MEDIUM', 
     description: 'Ensures CloudTrail logging bucket is not publicly accessible',
     more_info: 'CloudTrail buckets contain large amounts of sensitive account data and should only be accessible by logged in users.',
     recommended_action: 'Set the S3 bucket access policy for all CloudTrail buckets to only allow known users to access its files.',

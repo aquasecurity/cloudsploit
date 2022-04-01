@@ -5,6 +5,7 @@ module.exports = {
     title: 'ElasticSearch Encrypted Domain',
     category: 'ES',
     domain: 'Databases',
+    severity: 'LOW', 
     description: 'Ensures ElasticSearch domains are encrypted with KMS',
     more_info: 'ElasticSearch domains should be encrypted to ensure data at rest is secured.',
     link: 'https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/encryption-at-rest.html',

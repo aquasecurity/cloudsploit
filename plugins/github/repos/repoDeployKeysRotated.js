@@ -5,6 +5,7 @@ module.exports = {
     title: 'Repo Deploy Keys Rotated',
     types: ['org', 'user'],
     category: 'Repos',
+    severity: 'MEDIUM',
     description: 'Ensures deploy keys associated with a repository are rotated regularly.',
     more_info: 'Deploy keys can have significant access to a repository and should be rotated on a regular basis.',
     link: 'https://developer.github.com/v3/guides/managing-deploy-keys/',

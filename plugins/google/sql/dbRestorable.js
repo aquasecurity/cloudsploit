@@ -5,6 +5,7 @@ module.exports = {
     title: 'DB Restorable',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'MEDIUM',
     description: 'Ensures SQL instances can be restored to a recent point',
     more_info: 'Google will maintain a point to which the database can be restored. This point should not drift too far into the past, or else the risk of irrecoverable data loss may occur.',
     link: 'https://cloud.google.com/sql/docs/mysql/instance-settings',

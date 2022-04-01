@@ -5,6 +5,7 @@ module.exports = {
     title: 'ElasticSearch Exposed Domain',
     category: 'ES',
     domain: 'Databases',
+    severity: 'LOW', 
     description: 'Ensures ElasticSearch domains are not publicly exposed to all AWS accounts',
     more_info: 'ElasticSearch domains should not be publicly exposed to all AWS accounts.',
     link: 'https://aws.amazon.com/blogs/database/set-access-control-for-amazon-elasticsearch-service/',

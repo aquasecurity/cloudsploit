@@ -5,6 +5,7 @@ module.exports = {
     title: 'VM Instances Least Privilege',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'LOW',
     description: 'Ensures that instances are not configured to use the default service account with full access to all cloud APIs',
     more_info: 'To support the principle of least privilege and prevent potential privilege escalation, it is recommended that instances are not assigned to the default service account, Compute Engine default service account with a scope allowing full access to all cloud APIs.',
     link: 'https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances',

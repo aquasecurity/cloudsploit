@@ -5,6 +5,7 @@ module.exports = {
     title: 'Org MFA Required',
     types: ['org'],
     category: 'Orgs',
+    severity: 'HIGH',
     description: 'Checks whether multi-factor authentication is required at the org-level.',
     more_info: 'MFA should be enabled and enforced for all users of an organization.',
     link: 'https://help.github.com/en/articles/requiring-two-factor-authentication-in-your-organization',

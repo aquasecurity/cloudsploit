@@ -5,6 +5,7 @@ module.exports = {
     title: 'ElasticSearch Access From IP Addresses',
     category: 'ES',
     domain: 'Databases',
+    severity: 'LOW', 
     description: 'Ensure only whitelisted IP addresses can access Amazon Elasticsearch domains.',
     more_info: 'ElasticSearch domains should only be accessible only from whitelisted IP addresses to avoid unauthorized access.',
     link: 'https://aws.amazon.com/blogs/security/how-to-control-access-to-your-amazon-elasticsearch-service-domain/',
