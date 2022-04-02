@@ -1,6 +1,7 @@
 var async = require('async');
+var helpers = require(__dirname + '/../../../helpers/azure');
 
-module.exports = function(collection, reliesOn, callback) {
+module.exports = function(collection, reliesOn, retries, callback) {
     if (!reliesOn['storageAccounts.listKeys']) return callback();
 
     var azureStorage = require('azure-storage');
@@ -21,7 +22,7 @@ module.exports = function(collection, reliesOn, callback) {
                 var storageAccountName = resourceId.substring(resourceId.lastIndexOf('/') + 1);
                 var storageService = new azureStorage['FileService'](storageAccountName, subObj.data.keys[0].value);
 
-                storageService.listSharesSegmented(null, function(serviceErr, serviceResults) {
+                helpers.makeCustomCollectorCall(storageService, 'listSharesSegmented', null, retries, function(serviceErr, serviceResults) {
                     if (serviceErr || !serviceResults) {
                         collection['fileService']['listSharesSegmented'][region][resourceId].err = (serviceErr || 'No data returned');
                         sCb();
@@ -33,7 +34,7 @@ module.exports = function(collection, reliesOn, callback) {
                             var entryId = `${resourceId}/fileService/${entryObj.name}`;
                             collection['fileService']['getShareAcl'][region][entryId] = {};
 
-                            storageService.getShareAcl(entryObj.name, function(getErr, getData) {
+                            helpers.makeCustomCollectorCall(storageService, 'getShareAcl', entryObj.name, retries, function(getErr, getData) {
                                 if (getErr || !getData) {
                                     collection['fileService']['getShareAcl'][region][entryId].err = (getErr || 'No data returned');
                                 } else {

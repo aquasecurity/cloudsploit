@@ -1,6 +1,7 @@
 var async = require('async');
+var helpers = require(__dirname + '/../../../helpers/azure');
 
-module.exports = function(collection, reliesOn, callback) {
+module.exports = function(collection, reliesOn, retries, callback) {
     if (!reliesOn['storageAccounts.listKeys']) return callback();
 
     var azureStorage = require('azure-storage');
@@ -21,7 +22,7 @@ module.exports = function(collection, reliesOn, callback) {
                 var storageAccountName = resourceId.substring(resourceId.lastIndexOf('/') + 1);
                 var storageService = new azureStorage['TableService'](storageAccountName, subObj.data.keys[0].value);
                 
-                storageService.listTablesSegmented(null, function(tableErr, tableResults) {
+                helpers.makeCustomCollectorCall(storageService, 'listTablesSegmented', null, retries, function(tableErr, tableResults) {
                     if (tableErr || !tableResults) {
                         collection['tableService']['listTablesSegmented'][region][resourceId].err = (tableErr || 'No data returned');
                         sCb();
@@ -33,7 +34,7 @@ module.exports = function(collection, reliesOn, callback) {
                             var tableId = `${resourceId}/tableService/${tableName}`;
                             collection['tableService']['getTableAcl'][region][tableId] = {};
 
-                            storageService.getTableAcl(tableName, function(getErr, getData){
+                            helpers.makeCustomCollectorCall(storageService, 'getTableAcl', tableName, retries, function(getErr, getData) {
                                 if (getErr || !getData) {
                                     collection['tableService']['getTableAcl'][region][tableId].err = (getErr || 'No data returned');
                                 } else {
