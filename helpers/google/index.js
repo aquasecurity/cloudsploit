@@ -161,7 +161,7 @@ var run = function(GoogleConfig, collection, settings, service, callObj, callKey
 
                 records = collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][region].data;
                 if (callObj.subObj) records = records.filter(record => !!record[callObj.subObj]);
-                async.eachLimit(records, 10, function(record, recordCb) {
+                async.eachLimit(records, 10, function(record, recordCb) {                   
                     for (var property in callObj.properties) {
                         callObj.urlToCall = callObj.url.replace(`{${callObj.properties[property]}}`, !callObj.subObj ? record[callObj.properties[property]] :  record[callObj.subObj][callObj.properties[property]]);
                     }
@@ -273,6 +273,8 @@ var execute = async function(LocalGoogleConfig, collection, service, callObj, ca
             resultItems = setData(collectionItems, data.data[service], postCall, parent);
         } else if (!myEngine && data.data.accounts) {
             resultItems = setData(collectionItems, data.data.accounts, postCall, parent);
+        } else if (!myEngine && data.data.keys) {
+            resultItems = setData(collectionItems, data.data.keys, postCall, parent);
         } else if (!myEngine && data.data) {
             set = false;
             if (data.data.constructor.name === 'Array') {
