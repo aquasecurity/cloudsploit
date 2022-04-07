@@ -49,6 +49,7 @@ module.exports = {
                         'Unauthentication is disabled for clients, and all actions are not allowed', region, resource);
                 }
             }
+            
             rcb();
         }, function(){
             callback(null, results, source);
