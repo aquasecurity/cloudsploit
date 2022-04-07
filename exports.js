@@ -930,6 +930,7 @@ module.exports = {
         'memberAdmin'                   : require(__dirname + '/plugins/google/iam/memberAdmin.js'),
 
         'restrictedAPIKeys'             : require(__dirname + '/plugins/google/api/restrictedAPIKeys.js'),
+        'apiKeyRotation'                : require(__dirname + '/plugins/google/api/apiKeyRotation.js'),
       
         'privateEndpoint'               : require(__dirname + '/plugins/google/kubernetes/privateEndpoint.js'),
         'monitoringEnabled'             : require(__dirname + '/plugins/google/kubernetes/monitoringEnabled.js'),
