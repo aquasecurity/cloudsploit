@@ -701,21 +701,26 @@ function remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, 
             function(rCb) {
                 if (!settings.input || (openIpRange && (!settings.input[ipv4InputKey] || !settings.input[ipv4InputKey].length)) && (openIpv6Range && (!settings.input[ipv6InputKey] || !settings.input[ipv6InputKey].length))) return rCb();
 
-                var newIpRange = settings.input[ipv4InputKey] ? {CidrIp: settings.input[ipv4InputKey]} : null;
-                var newIpv6Range = settings.input[ipv6InputKey] ? {CidrIpv6: settings.input[ipv6InputKey]} : null;
-                if (ipDescription && newIpRange) newIpRange.Description = ipDescription;
-                if (ipv6Description && newIpv6Range) newIpRange.Description = ipv6Description;
-
                 if (openIpRange && !localIpExists && settings.input[ipv4InputKey]) {
-                    params.IpPermissions[0].IpRanges.push(newIpRange);
-                    finalIpRanges.push(newIpRange);
+                    var newIpCidrRange = settings.input[ipv4InputKey].split(',');
+                    for (var newIpCidr of newIpCidrRange) {
+                        var newIpRange = {CidrIp: newIpCidr};
+                        if (ipDescription && newIpRange) newIpRange.Description = ipDescription;
+                        params.IpPermissions[0].IpRanges.push(newIpRange);
+                        finalIpRanges.push(newIpRange);
+                    }
                 } else if (!openIpRange || (openIpRange && localIpExists) || (!settings.input[ipv4InputKey] || !settings.input[ipv4InputKey].length)) {
                     params.IpPermissions[0].IpRanges = null;
                 }
 
                 if (openIpv6Range && !localIpV6Exists && settings.input[ipv6InputKey]) {
-                    params.IpPermissions[0].Ipv6Ranges.push(newIpv6Range);
-                    finalIpv6Ranges.push(newIpv6Range);
+                    var newIpv6CidrRange = settings.input[ipv6InputKey].split(',');
+                    for (var newIpv6Cidr of newIpv6CidrRange) {
+                        var newIpv6Range = {CidrIpv6: newIpv6Cidr};
+                        if (ipv6Description && newIpv6Range) newIpv6Range.Description = ipv6Description;
+                        params.IpPermissions[0].Ipv6Ranges.push(newIpv6Range);
+                        finalIpv6Ranges.push(newIpv6Range);
+                    }
                 } else if (!openIpv6Range || (openIpv6Range && localIpV6Exists) || (!settings.input[ipv6InputKey] || !settings.input[ipv6InputKey].length)) {
                     params.IpPermissions[0].Ipv6Ranges = null;
                 }
