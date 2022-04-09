@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Identity and Access Management',
     description: 'Ensure that a Customer-Managed Key (CMK) is created and configured for your Microsoft Azure application tier.',
     more_info: 'Setting a CMK for app tier, you gain full control over who can use this key to access the application data, implementing the principle of least privilege on the encryption key ownership and usage.',
-    recommended_action: 'Ensure each Key Vault has an expiry time set that provides for sufficient rotation.',
+    recommended_action: 'Ensure each Key Vault has a CMK created and configured.',
     link: 'https://docs.microsoft.com/en-us/azure/azure-app-configuration/concept-customer-managed-keys',
     apis: ['vaults:list', 'vaults:getKeys'],
 
