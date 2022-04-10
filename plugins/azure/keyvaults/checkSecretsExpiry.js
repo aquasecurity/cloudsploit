@@ -2,13 +2,13 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Key Expiration Enabled',
+    title: 'Secret Expiration Enabled',
     category: 'Key Vaults',
     domain: 'Identity and Access Management',
-    description: 'Ensure that all Keys in Azure Key Vault have an expiry time set.',
-    more_info: 'Setting an expiry time on all keys forces key rotation and removes unused and forgotten keys from being used.',
+    description: 'Ensures that all secrets in Azure Key Vault have an expiry time set.',
+    more_info: 'Setting an expiry time on all secrets forces secret rotation and removes unused and forgotten secrets from being used.',
     recommended_action: 'Ensure each Key Vault has an expiry time set that provides for sufficient rotation.',
-    link: 'https://docs.microsoft.com/en-us/azure/key-vault/about-keys-secrets-and-certificates',
+    link: 'https://docs.microsoft.com/en-us/azure/secret-vault/about-secrets-secrets-and-certificates',
     apis: ['vaults:list', 'vaults:getSecrets'],
 
     run: function(cache, settings, callback) {
@@ -52,10 +52,10 @@ module.exports = {
                             } else if (attributes.expiry) {
                                 if (new Date(Date.now()) < new Date(attributes.expiry)) {
                                     helpers.addResult(results, 0,
-                                        'Expiry date is set for the secret and is within the set expiry period', location, secretId);
+                                        'Expiry date is set for the secret and date is not yet reached', location, secretId);
                                 } else {
                                     helpers.addResult(results, 2,
-                                        'Expiry date is set for the secret and is greater than the set expiry period', location, secretId);
+                                        'Expiry date is set for the secret and date has been reached', location, secretId);
                                 }
                             } else {
                                 helpers.addResult(results, 2,
