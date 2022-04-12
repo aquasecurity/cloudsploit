@@ -967,6 +967,288 @@ function makeCustomCollectorCall(executor, callKey, params, retries, apiRetryAtt
     });
 }
 
+var debugApiCalls = function(call, service, debugMode, finished) {
+    if (!debugMode) return;
+    finished ? console.log(`[INFO] ${service}:${call} returned`) : console.log(`[INFO] ${service}:${call} invoked`);
+};
+
+var logError = function(service, call, region, err, errorsLocal, apiCallErrorsLocal, apiCallTypeErrorsLocal, totalApiCallErrorsLocal, errorSummaryLocal, errorTypeSummaryLocal, debugMode) {
+    totalApiCallErrorsLocal++;
+
+    if (!errorSummaryLocal[service]) errorSummaryLocal[service] = {};
+
+    if (!errorSummaryLocal[service][call]) errorSummaryLocal[service][call] = {};
+
+    if (err.code && !errorSummaryLocal[service][call][err.code]) {
+        apiCallErrorsLocal++;
+        errorSummaryLocal[service][call][err.code] = {};
+        errorSummaryLocal[service][call][err.code].total = apiCallErrorsLocal;
+        errorSummaryLocal.total = totalApiCallErrorsLocal;
+    }
+
+    if (err.code && !errorTypeSummaryLocal[err.code]) errorTypeSummaryLocal[err.code] = {};
+    if (err.code && !errorTypeSummaryLocal[err.code][service]) errorTypeSummaryLocal[err.code][service] = {};
+    if (err.code && !errorTypeSummaryLocal[err.code][service][call]) {
+        apiCallTypeErrorsLocal++;
+        errorTypeSummaryLocal[err.code][service][call] = {};
+        errorTypeSummaryLocal[err.code][service][call].total = apiCallTypeErrorsLocal;
+        errorTypeSummaryLocal.total = totalApiCallErrorsLocal;
+    }
+
+    if (debugMode){
+        if (!errorsLocal[service]) errorsLocal[service] = {};
+        if (!errorsLocal[service][call]) errorsLocal[service][call] = {};
+        if (err.code && !errorsLocal[service][call][err.code]) {
+            errorsLocal[service][call][err.code] = {};
+            errorsLocal[service][call][err.code].total = apiCallErrorsLocal;
+            if (err.requestId) {
+                errorsLocal[service][call][err.code][err.requestId] = {};
+                if (err.statusCode) errorsLocal[service][call][err.code][err.requestId].statusCode = err.statusCode;
+                if (err.message) errorsLocal[service][call][err.code][err.requestId].message = err.message;
+                if (err.time) errorsLocal[service][call][err.code][err.requestId].time = err.time;
+                if (region) errorsLocal[service][call][err.code][err.requestId].region = region;
+            }
+        }
+    }
+};
+
+var collectRateError = function(err, rateError) {
+    let isError = false;
+
+    if (err && err.statusCode && rateError && rateError.statusCode == err.statusCode) {
+        isError = true;
+    } else if (err && rateError && rateError.message && err.message &&
+        err.message.toLowerCase().indexOf(rateError.message.toLowerCase()) > -1) {
+        isError = true;
+    }
+
+    return isError;
+};
+
+var processIntegration = function(serviceName, settings, collection, calls, postcalls, debugMode, iCb) {
+    let localEvent = {};
+
+    localEvent.collection = {};
+    localEvent.previousCollection = {};
+
+    localEvent.collection[serviceName.toLowerCase()] = {};
+    localEvent.previousCollection[serviceName.toLowerCase()] = {};
+
+    localEvent.collection[serviceName.toLowerCase()] = collection[serviceName.toLowerCase()] ? collection[serviceName.toLowerCase()] : {};
+    localEvent.previousCollection[serviceName.toLowerCase()] = settings.previousCollection && settings.previousCollection[serviceName.toLowerCase()] ? settings.previousCollection[serviceName.toLowerCase()] : {};
+
+    localEvent.identifier = settings.identifier;
+    localEvent.identifier.service = serviceName.toLowerCase();
+
+    processIntegrationAdditionalData(serviceName, settings, collection, calls, postcalls, localEvent.collection);
+    processIntegrationAdditionalData(serviceName, settings, settings.previousCollection, calls, postcalls, localEvent.previousCollection);
+
+    settings.integration(localEvent, function() {
+        if (debugMode) console.log(`Processed Event: ${JSON.stringify(localEvent)}`);
+
+        return iCb();
+    });
+};
+
+var processIntegrationAdditionalData = function(serviceName, settings, localCollection, calls, postcalls, localEventCollection){
+    if (localCollection == undefined ||
+        (localCollection &&
+            (JSON.stringify(localCollection)==='{}' ||
+                localCollection[serviceName.toLowerCase()] == undefined ||
+                JSON.stringify(localCollection[serviceName.toLowerCase()])==='{}'))) {
+        return;
+    }
+
+    let callsMap = Object.keys(calls[serviceName]);
+    let foundData=[];
+
+    if (callsMap.find(mycall => mycall == 'sendIntegration') &&
+        reliesOnFound(calls, localCollection, serviceName)) {
+        foundData = reliesOnData(calls, localCollection, serviceName);
+    } else if (callsMap.find(mycall => mycall == 'sendIntegration') &&
+        integrationReliesOnFound(calls, localCollection, serviceName)) {
+        foundData = integrationReliesOnData(calls, localCollection, serviceName);
+
+        if (foundData &&
+            Object.keys(foundData).length){
+            for (let d of Object.keys(foundData)){
+                settings.identifier.service = d;
+                localEventCollection[d]=foundData[d];
+            }
+        }
+    }
+
+    for (let postcall of postcalls) {
+        if (!postcall[serviceName]) continue;
+        let postCallsMap = Object.keys(postcall[serviceName]);
+
+        foundData=[];
+
+        if (postCallsMap.find(mycall => mycall == 'sendIntegration') &&
+            reliesOnFound(postcall, localCollection, serviceName)){
+            foundData = reliesOnData(postcall, localCollection, serviceName);
+        } else if (postCallsMap.find(mycall => mycall == 'sendIntegration') &&
+            integrationReliesOnFound(postcall, localCollection, serviceName)){
+            foundData = integrationReliesOnData(postcall, localCollection, serviceName);
+
+            if (foundData &&
+                Object.keys(foundData).length){
+                for (let d of Object.keys(foundData)){
+                    settings.identifier.service = d;
+                    localEventCollection[d]=foundData[d];
+                }
+            }
+        }
+    }
+};
+
+var reliesOnFound = function(calls, localCollection, serviceName){
+    let callsMap = Object.keys(calls[serviceName]);
+
+    if (callsMap.find(mycall => mycall == 'sendIntegration')) {
+        if (calls[serviceName] &&
+            calls[serviceName].sendIntegration &&
+            calls[serviceName].sendIntegration.enabled &&
+            calls[serviceName].sendIntegration.reliesOnCalls &&
+            calls[serviceName].sendIntegration.reliesOnCalls.length) {
+
+            let allRelies = true;
+
+            for (let rc of calls[serviceName].sendIntegration.reliesOnCalls) {
+                let svc = rc.split(':')[0];
+                let svcCall = rc.split(':')[1];
+                if (!(localCollection[svc.toLowerCase()] &&
+                    localCollection[svc.toLowerCase()][svcCall] &&
+                    Object.keys(localCollection[svc.toLowerCase()][svcCall]) &&
+                    Object.keys(localCollection[svc.toLowerCase()][svcCall]).length>0)){
+                    allRelies = false;
+                }
+            }
+
+            return allRelies;
+        }
+    }
+};
+
+var integrationReliesOnFound = function(calls, localCollection, serviceName){
+    let callsMap = Object.keys(calls[serviceName]);
+
+    if (callsMap.find(mycall => mycall == 'sendIntegration')) {
+        if (calls[serviceName] &&
+            calls[serviceName].sendIntegration &&
+            calls[serviceName].sendIntegration.enabled &&
+            calls[serviceName].sendIntegration.integrationReliesOn &&
+            calls[serviceName].sendIntegration.integrationReliesOn.calls &&
+            calls[serviceName].sendIntegration.integrationReliesOn.calls.length) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+};
+
+var reliesOnData = function(calls, localCollection, serviceName){
+    let callsMap = Object.keys(calls[serviceName]);
+
+    if (callsMap.find(mycall => mycall == 'sendIntegration')) {
+        if (calls[serviceName] &&
+            calls[serviceName].sendIntegration &&
+            calls[serviceName].sendIntegration.enabled &&
+            calls[serviceName].sendIntegration.reliesOnCalls &&
+            calls[serviceName].sendIntegration.reliesOnCalls.length) {
+
+            let allRelies = true;
+
+            for (let rc of calls[serviceName].sendIntegration.reliesOnCalls) {
+                let svc = rc.split(':')[0];
+                let svcCall = rc.split(':')[1];
+                if (!(localCollection[svc.toLowerCase()] &&
+                    localCollection[svc.toLowerCase()][svcCall] &&
+                    Object.keys(localCollection[svc.toLowerCase()][svcCall]) &&
+                    Object.keys(localCollection[svc.toLowerCase()][svcCall]).length>0)){
+                    allRelies = false;
+                }
+
+                return allRelies ? localCollection[svc.toLowerCase()] : [];
+            }
+        }
+    }
+};
+
+var integrationReliesOnData = function(calls, localCollection, serviceName){
+    let callsMap = Object.keys(calls[serviceName]);
+
+    if (callsMap.find(mycall => mycall == 'sendIntegration')) {
+        if (calls[serviceName] &&
+            calls[serviceName].sendIntegration &&
+            calls[serviceName].sendIntegration.enabled &&
+            calls[serviceName].sendIntegration.integrationReliesOn &&
+            calls[serviceName].sendIntegration.integrationReliesOn.calls &&
+            calls[serviceName].sendIntegration.integrationReliesOn.calls.length) {
+
+            let serviceReliedOn = {};
+            if (localCollection &&
+                calls[serviceName] &&
+                calls[serviceName].sendIntegration &&
+                calls[serviceName].sendIntegration.integrationReliesOn &&
+                calls[serviceName].sendIntegration.integrationReliesOn.serviceName &&
+                localCollection[calls[serviceName].sendIntegration.integrationReliesOn.serviceName.toLowerCase()]) {
+                serviceReliedOn[calls[serviceName].sendIntegration.integrationReliesOn.serviceName.toLowerCase()] = localCollection[calls[serviceName].sendIntegration.integrationReliesOn.serviceName.toLowerCase()];
+            }
+            return serviceReliedOn;
+        } else {
+            return {};
+        }
+    }
+};
+
+var callsCollected = function(serviceName, localCollection, calls, postcalls) {
+    var callsFoundMap = {};
+    let serviceCallMap = Object.keys(localCollection[serviceName.toLowerCase()]);
+
+    for (let call of serviceCallMap){
+        if (!(localCollection[serviceName.toLowerCase()] &&
+            localCollection[serviceName.toLowerCase()][call] &&
+            Object.keys(localCollection[serviceName.toLowerCase()][call]) &&
+            Object.keys(localCollection[serviceName.toLowerCase()][call]).length>0)){
+            return false;
+        }
+    }
+
+    if (calls[serviceName]) {
+        let callsMap = Object.keys(calls[serviceName]);
+        for (let checkCall of serviceCallMap) {
+            if (callsMap.find(mycall => mycall != 'sendIntegration' && mycall == checkCall)){
+                if (reliesOnFound(calls, localCollection, serviceName)==false) return false;
+
+                if (callsMap.find(mycall => mycall != 'sendIntegration' && mycall == checkCall) == serviceCallMap.find(mycall => mycall == checkCall)){
+                    callsFoundMap[checkCall]=true;
+                } else {
+                    return false;
+                }
+            }
+        }
+    }
+
+    for (let postcall of postcalls) {
+        if (!postcall[serviceName]) continue;
+        let postCallsMap = Object.keys(postcall[serviceName]);
+
+        for (let checkCall of serviceCallMap) {
+            if (callsFoundMap[checkCall]) continue;
+            if (reliesOnFound(postcall, localCollection, serviceName)==false) return false;
+
+            if (postCallsMap.find(mycall => mycall != 'sendIntegration' && mycall == checkCall)){
+                if (!(postCallsMap.find(mycall => mycall != 'sendIntegration' && mycall == checkCall) == serviceCallMap.find(mycall => mycall == checkCall))){
+                    return false;
+                }
+            }
+        }
+    }
+
+    return true;
+};
+
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
@@ -996,5 +1278,10 @@ module.exports = {
     getUsedSecurityGroups: getUsedSecurityGroups,
     getPrivateSubnets: getPrivateSubnets,
     getSubnetRTMap: getSubnetRTMap,
-    makeCustomCollectorCall: makeCustomCollectorCall
+    makeCustomCollectorCall: makeCustomCollectorCall,
+    debugApiCalls: debugApiCalls,
+    logError: logError,
+    collectRateError: collectRateError,
+    processIntegration: processIntegration,
+    callsCollected: callsCollected
 };
