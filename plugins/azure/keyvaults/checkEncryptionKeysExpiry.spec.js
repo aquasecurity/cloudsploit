@@ -1,42 +1,86 @@
-var assert = require('assert');
 var expect = require('chai').expect;
-var auth = require('./secretExpirationEnabled');
+var auth = require('./checkEncryptionKeysExpiry');
 
 const listKeyVaults = [
     {
-        "id": "/subscriptions/abcdef123-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.KeyVault/vaults/testvault",
-        "name": "testvault",
-        "type": "Microsoft.KeyVault/vaults",
-        "location": "eastus",
-        "tags": {},
-        "sku": {
-            "family": "A",
-            "name": "Standard"
-        }
-    }
-];
-
-const getKeys = [
-    {
-        '/subscriptions/abcdef123-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.KeyVault/vaults/testvault': {
-            data: [
-                {
-                    "id": "https://testvault.vault.azure.net/secrets/mysecret",
-                    "attributes": {
-                        "enabled": true,
-                        "exp": 1635448252,
-                        "created": 1572289869,
-                        "updated": 1572290380,
-                        "recoveryLevel": "Recoverable+Purgeable"
-                    },
-                    "tags": {}
+        id: '/subscriptions/dce7d7as-ebf6-437f-a3b0-28fc0d22111e/resourceGroups/akhtar-rg/providers/Microsoft.KeyVault/vaults/nauman-test',
+        name: 'nauman-test',
+        type: 'Microsoft.KeyVault/vaults',
+        location: 'eastus',
+        tags: { owner: 'kubernetes' },
+        sku: { family: 'A', name: 'Standard' },
+        tenantId: '2d4f0836-5935-47f5-954c-14e713119ac2',
+        accessPolicies: [
+            {
+                tenantId: '2d4f0836-5935-47f5-954c-14e713119ac2',
+                objectId: 'b4062000-c33b-448b-817e-fa0f17bef4b9',
+                permissions: { 
+                    keys: ['Get', 'List'],
+                    secrets: ['Get', 'List'],
+                    certificates: ['Get', 'List']
                 }
-            ]
+            }
+        ],
+        enableSoftDelete: true,
+        softDeleteRetentionInDays: 7,
+        enableRbacAuthorization: false,
+        vaultUri: 'https://nauman-test.vault.azure.net/',
+        provisioningState: 'Succeeded'
+      }
+  ];
+  
+  const getKeys = [
+    {
+        "attributes": {
+          "created": "2022-04-10T17:57:43+00:00",
+          "enabled": true,
+          "expires": null,
+          "notBefore": null,
+          "recoveryLevel": "CustomizedRecoverable+Purgeable",
+          "updated": "2022-04-10T17:57:43+00:00"
+        },
+        "kid": "https://nauman-test.vault.azure.net/keys/nauman-test",
+        "managed": null,
+        "name": "nauman-test",
+        "tags": {
+          "hello": "world"
+        }
+    },
+    {
+        "attributes": {
+          "created": "2022-04-10T17:57:43+00:00",
+          "enabled": true,
+          "expires": "2022-08-31T17:52:06+00:00",
+          "notBefore": null,
+          "recoveryLevel": "CustomizedRecoverable+Purgeable",
+          "updated": "2022-04-10T17:57:43+00:00"
+        },
+        "kid": "https://nauman-test.vault.azure.net/keys/nauman-test",
+        "managed": null,
+        "name": "nauman-test",
+        "tags": {
+          "hello": "world"
+        }
+    },
+    {
+        "attributes": {
+          "created": "2022-04-10T17:57:43+00:00",
+          "enabled": true,
+          "expires": "2022-04-01T17:52:06+00:00",
+          "notBefore": null,
+          "recoveryLevel": "CustomizedRecoverable+Purgeable",
+          "updated": "2022-04-10T17:57:43+00:00"
+        },
+        "kid": "https://nauman-test.vault.azure.net/keys/nauman-test",
+        "managed": null,
+        "name": "nauman-test",
+        "tags": {
+          "hello": "world"
         }
     }
 ];
 
-const createCache = (err, list, get) => {
+const createCache = (err, list, keys) => {
     return {
         vaults: {
             list: {
@@ -45,16 +89,21 @@ const createCache = (err, list, get) => {
                     data: list
                 }
             },
-            getSecrets: {
-                'eastus': get
+            getKeys: {
+                'eastus': {
+                    '/subscriptions/dce7d7as-ebf6-437f-a3b0-28fc0d22111e/resourceGroups/akhtar-rg/providers/Microsoft.KeyVault/vaults/nauman-test': {
+                        err: err,
+                        data: keys
+                    }
+                }
             }
         }
     }
 };
 
-describe('secretExpirationEnabled', function() {
+describe('checkEncryptionKeysExpiry', function() {
     describe('run', function() {
-        it('should give passing result if no secrets found', function(done) {
+        it('should give passing result if no keys found', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -66,40 +115,40 @@ describe('secretExpirationEnabled', function() {
             auth.run(createCache(null, [], {}), {}, callback);
         });
 
-        it('should give failing result if expiration is not set on secrets', function(done) {
+        it('should give failing result if expiration is not set on keys', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Expiry date is not set for the secret');
+                expect(results[0].message).to.include('Key expiration is not enabled');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
 
-            auth.run(createCache(null, listKeyVaults, getKeys[0]), {}, callback);
+            auth.run(createCache(null, [listKeyVaults[0]], [getKeys[0]]), {}, callback);
         });
 
-        it('should give passing result if expiration is set on keys', function(done) {
+        it('should give passing result if expiry date is not yet reached', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Expiry date is set for the secret');
+                expect(results[0].message).to.include('Key expiry date is not yet reached');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
 
-            auth.run(createCache(null, listKeyVaults, getKeys[0]), {}, callback);
+            auth.run(createCache(null, listKeyVaults, [getKeys[1]]), {}, callback);
         });
 
-        it('should give passing result if key is disabled', function(done) {
+        it('should give failing results if the key has reached its expiry date', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('The secret is disabled');
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('Key has reached its expiry date');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
 
-            auth.run(createCache(null, listKeyVaults, getKeys[0]), {}, callback);
-        })
-    })
+            auth.run(createCache(null, listKeyVaults, [getKeys[2]]), {}, callback);
+        });
+    });
 });
