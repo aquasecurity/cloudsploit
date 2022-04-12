@@ -1418,7 +1418,7 @@ var postcalls = [
                 filterKey: 'Bucket',
                 filterValue: 'Name'
             },
-			headBucket: {
+            headBucket: {
                 reliesOnService: 's3',
                 reliesOnCall: 'listBuckets',
                 filterKey: 'Bucket',
