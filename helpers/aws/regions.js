@@ -125,7 +125,7 @@ module.exports = {
     codebuild: regions,
     mq: regions,
     glacier: regions,
-    backup: regions,
+    backup: [...regions, ...newRegions],
     elasticache: [...regions, ...newRegions],
     timestreamwrite:  ['us-east-1', 'us-east-2', 'us-west-2', 'eu-central-1', 'eu-west-1'],
     neptune: ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'ca-central-1', 'eu-central-1',
