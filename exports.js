@@ -362,6 +362,7 @@ module.exports = {
         'notebookInstanceInVpc'         : require(__dirname + '/plugins/aws/sagemaker/notebookInstanceInVpc.js'),
 
         'dkimEnabled'                   : require(__dirname + '/plugins/aws/ses/dkimEnabled.js'),
+        'identityVerificationStatus'    : require(__dirname + '/plugins/aws/ses/identityVerificationStatus.js'),
         'emailMessagesEncrypted'        : require(__dirname + '/plugins/aws/ses/emailMessagesEncrypted.js'),
 
         'topicEncrypted'                : require(__dirname + '/plugins/aws/sns/topicEncrypted.js'),

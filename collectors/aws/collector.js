@@ -950,8 +950,8 @@ var calls = {
             property: 'Identities',
             paginate: 'NextToken',
             params: {
-                IdentityType: 'Domain', // TODO: maybe don't filter these?
-                MaxItems: 1000
+                IdentityType: 'EmailAddress', // TODO: maybe don't filter these?
+                MaxItems: 100
             },
             rateLimit: 1000 // ms to rate limit between regions
         },
@@ -1886,6 +1886,12 @@ var postcalls = [
         },
         SES: {
             getIdentityDkimAttributes: {
+                reliesOnService: 'ses',
+                reliesOnCall: 'listIdentities',
+                override: true,
+                rateLimit: 1000
+            },
+            getIdentityVerificationAttributes: {
                 reliesOnService: 'ses',
                 reliesOnCall: 'listIdentities',
                 override: true,
