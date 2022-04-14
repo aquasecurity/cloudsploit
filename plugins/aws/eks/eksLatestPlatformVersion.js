@@ -22,10 +22,11 @@ module.exports = {
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
         var latestVersions = {
-            '1.21' : 4,
-            '1.20' : 3,
-            '1.19': 7,
-            '1.18': 9,
+            '1.22' : 1,
+            '1.21' : 6,
+            '1.20' : 5,
+            '1.19': 9,
+            '1.18': 11,
         };
 
         var deprecatedVersions = {
