@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var ebsEncryptedSnapshots = require('./ebsEncryptedSnapshots');
+var ebsOldSnapshots = require('./ebsOldSnapshots');
 
 const describeSnapshots = [
     {
@@ -65,29 +65,29 @@ const createNullCache = () => {
     };
 };
 
-describe('ebsEncryptedSnapshots', function () {
+describe('ebsOldSnapshots', function () {
     describe('run', function () {
         it('should PASS if no old EBS snapshots found', function (done) {
             const cache = createCache([describeSnapshots[0]]);
-            ebsEncryptedSnapshots.run(cache, {}, (err, results) => {
+            ebsOldSnapshots.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
             });
         });
 
-        it('should FAIL if EBS snapshot is too old', function (done) {
+        it('should FAIL if EBS snapshot is old', function (done) {
             const cache = createCache([describeSnapshots[1]]);
-            ebsEncryptedSnapshots.run(cache, {}, (err, results) => {
+            ebsOldSnapshots.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
             });
         });
 
-        it('should PASS if no EBS volumes found', function (done) {
+        it('should PASS if No EBS snapshots present', function (done) {
             const cache = createCache([]);
-            ebsEncryptedSnapshots.run(cache, {}, (err, results) => {
+            ebsOldSnapshots.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -96,15 +96,15 @@ describe('ebsEncryptedSnapshots', function () {
 
         it('should not return any results if describe EC2 snapshots response not found', function (done) {
             const cache = createNullCache();
-            ebsEncryptedSnapshots.run(cache, {}, (err, results) => {
+            ebsOldSnapshots.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });
         });
 
-        it('should UNKNOWN if unable tp describe EC2 snapshots', function (done) {
+        it('should UNKNOWN if unable t0 describe EC2 snapshots', function (done) {
             const cache = createErrorCache();
-            ebsEncryptedSnapshots.run(cache, {}, (err, results) => {
+            ebsOldSnapshots.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();

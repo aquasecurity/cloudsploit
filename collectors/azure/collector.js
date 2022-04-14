@@ -33,7 +33,8 @@ var calls = {
     },
     storageAccounts: {
         list: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Storage/storageAccounts?api-version=2019-06-01'
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Storage/storageAccounts?api-version=2019-06-01',
+            rateLimit: 3000
         }
     },
     virtualNetworks: {
@@ -340,26 +341,30 @@ var postcalls = {
         list: {
             reliesOnPath: 'storageAccounts.list',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/blobServices/default/containers?api-version=2019-06-01'
+            url: 'https://management.azure.com/{id}/blobServices/default/containers?api-version=2019-06-01',
+            rateLimit: 3000
         }
     },
     blobServices: {
         list: {
             reliesOnPath: 'storageAccounts.list',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/blobServices?api-version=2019-06-01'
+            url: 'https://management.azure.com/{id}/blobServices?api-version=2019-06-01',
+            rateLimit: 3000
         },
         getServiceProperties: {
             reliesOnPath: 'storageAccounts.list',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/blobServices/default?api-version=2019-06-01'
+            url: 'https://management.azure.com/{id}/blobServices/default?api-version=2019-06-01',
+            rateLimit: 500
         }
     },
     fileShares: {
         list: {
             reliesOnPath: 'storageAccounts.list',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/fileServices/default/shares?api-version=2019-06-01'
+            url: 'https://management.azure.com/{id}/fileServices/default/shares?api-version=2019-06-01',
+            rateLimit: 3000
         }
     },
     storageAccounts: {
@@ -367,7 +372,8 @@ var postcalls = {
             reliesOnPath: 'storageAccounts.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/listKeys?api-version=2019-06-01',
-            post: true
+            post: true,
+            rateLimit: 3000
         }
     },
     encryptionProtectors: {
@@ -491,21 +497,25 @@ var specialcalls = {
     tableService: {
         listTablesSegmented: {
             reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
         }
     },
     fileService: {
         listSharesSegmented: {
             reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
         }
     },
     blobService: {
         listContainersSegmented: {
             reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
         }
     },
     queueService: {
         listQueuesSegmented: {
             reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
         }
     }
 };
@@ -540,11 +550,21 @@ var collect = function(AzureConfig, settings, callback) {
 
         var processCall = function(obj, cb) {
             var localUrl = obj.url.replace(/\{subscriptionId\}/g, AzureConfig.SubscriptionID);
-            helpers.call({
-                url: localUrl,
-                post: obj.post,
-                token: obj.graph ? loginData.graphToken : (obj.vault ? loginData.vaultToken : loginData.token)
-            }, cb);
+            if (obj.rateLimit) {
+                setTimeout(function() {
+                    helpers.call({
+                        url: localUrl,
+                        post: obj.post,
+                        token: obj.graph ? loginData.graphToken : (obj.vault ? loginData.vaultToken : loginData.token)
+                    }, cb);
+                }, obj.rateLimit);
+            } else {
+                helpers.call({
+                    url: localUrl,
+                    post: obj.post,
+                    token: obj.graph ? loginData.graphToken : (obj.vault ? loginData.vaultToken : loginData.token)
+                }, cb);
+            }
         };
 
         async.series([
@@ -592,7 +612,8 @@ var collect = function(AzureConfig, settings, callback) {
                                         post: subCallObj.post,
                                         token: subCallObj.token,
                                         graph: subCallObj.graph,
-                                        vault: subCallObj.vault
+                                        vault: subCallObj.vault,
+                                        rateLimit: subCallObj.rateLimit
                                     };
                                     // Check and replace properties
                                     if (subCallObj.properties && subCallObj.properties.length) {
@@ -669,7 +690,8 @@ var collect = function(AzureConfig, settings, callback) {
                                         post: subCallObj.post,
                                         token: subCallObj.token,
                                         graph: subCallObj.graph,
-                                        vault: subCallObj.vault
+                                        vault: subCallObj.vault,
+                                        rateLimit: subCallObj.rateLimit
                                     };
                                     // Check and replace properties
                                     if (subCallObj.properties && subCallObj.properties.length) {
@@ -777,7 +799,13 @@ var collect = function(AzureConfig, settings, callback) {
                             });
                         }
                         collectors[service][one](collection, reliesOn, function(){
-                            subCallCb();
+                            if (subCallObj.rateLimit) {
+                                setTimeout(function() {
+                                    subCallCb();
+                                }, subCallObj.rateLimit);
+                            } else {
+                                subCallCb();
+                            }
                         });
                     }, function(){
                         callCb();

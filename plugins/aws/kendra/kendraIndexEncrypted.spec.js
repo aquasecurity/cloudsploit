@@ -164,7 +164,7 @@ describe('kendraIndexEncrypted', function () {
         });
 
         it('should UNKNOWN if unable to list KMS keys', function (done) {
-            const cache = createCache(listIndices, null, null, null, { message: "Unable to list KMS keys" });
+            const cache = createCache(listIndices, null, null, null, null, { message: "Unable to list KMS keys" });
             kendraIndexEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
