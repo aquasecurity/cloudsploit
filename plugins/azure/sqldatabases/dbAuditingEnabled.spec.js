@@ -32,7 +32,40 @@ const databaseBlobAuditingPolicies = [
     }
 ];
 
-const createCache = (servers, databases, databaseBlobAuditingPolicies, serversErr, databasesErr) => {
+const serverBlobAuditingPolicies = [
+    {
+        "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Sql/servers/test-server/auditingSettings/Default",
+        "name": "Default",
+        "type": "Microsoft.Sql/servers/auditingSettings",
+        "isDevopsAuditEnabled": false,
+        "retentionDays": 0,
+        "auditActionsAndGroups": [
+            "SUCCESSFUL_DATABASE_AUTHENTICATION_GROUP",
+            "FAILED_DATABASE_AUTHENTICATION_GROUP",
+            "BATCH_COMPLETED_GROUP"
+        ],
+        "isStorageSecondaryKeyInUse": false,
+        "isAzureMonitorTargetEnabled": false,
+        "state": "Enabled",
+    },
+    {
+        "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Sql/servers/test-server/auditingSettings/Default",
+        "name": "Default",
+        "type": "Microsoft.Sql/servers/auditingSettings",
+        "isDevopsAuditEnabled": false,
+        "retentionDays": 0,
+        "auditActionsAndGroups": [
+            "SUCCESSFUL_DATABASE_AUTHENTICATION_GROUP",
+            "FAILED_DATABASE_AUTHENTICATION_GROUP",
+            "BATCH_COMPLETED_GROUP"
+        ],
+        "isStorageSecondaryKeyInUse": false,
+        "isAzureMonitorTargetEnabled": false,
+        "state": "Disabled",
+    }
+]
+
+const createCache = (servers, serverBlobAuditingPolicies, databases, databaseBlobAuditingPolicies, serversErr, databasesErr) => {
     const serverId = (servers && servers.length) ? servers[0].id : null;
     const dbId = (databases && databases.length) ? databases[0].id : null;
     return {
@@ -59,6 +92,15 @@ const createCache = (servers, databases, databaseBlobAuditingPolicies, serversEr
                 'eastus': {
                     [dbId]: {
                         data: databaseBlobAuditingPolicies
+                    }
+                }
+            }
+        },
+        serverBlobAuditingPolicies: {
+            get: {
+                'eastus': {
+                    [serverId]: {
+                        data: serverBlobAuditingPolicies
                     }
                 }
             }
@@ -95,6 +137,7 @@ describe('dbAuditingEnabled', function() {
 
             const cache = createCache(
                 servers,
+                [],
                 []
             );
 
@@ -112,6 +155,7 @@ describe('dbAuditingEnabled', function() {
 
             const cache = createCache(
                 servers,
+                [],
                 databases,
                 []
             );
@@ -130,6 +174,7 @@ describe('dbAuditingEnabled', function() {
 
             const cache = createCache(
                 servers,
+                [],
                 databases,
                 [databaseBlobAuditingPolicies[1]]
             );
@@ -148,8 +193,26 @@ describe('dbAuditingEnabled', function() {
 
             const cache = createCache(
                 servers,
+                [],
                 databases,
                 [databaseBlobAuditingPolicies[0]]
+            );
+
+            dbAuditingEnabled.run(cache, {}, callback);
+        });
+
+        it('should give passing result if server auditing is enabled on the SQL server', function(done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Server Auditing is enabled on the SQL server');
+                expect(results[0].region).to.equal('eastus');
+                done()
+            };
+
+            const cache = createCache(
+                servers,
+                [serverBlobAuditingPolicies[0]]
             );
 
             dbAuditingEnabled.run(cache, {}, callback);
@@ -165,6 +228,7 @@ describe('dbAuditingEnabled', function() {
             };
 
             const cache = createCache(
+                [],
                 [],
                 [],
                 [],
@@ -185,6 +249,7 @@ describe('dbAuditingEnabled', function() {
 
             const cache = createCache(
                 servers,
+                [],
                 [],
                 [],
                 null,
