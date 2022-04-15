@@ -8,17 +8,17 @@ const listIdentities = [
 ];
 
 const getIdentityVerificationAttributes = [
-{
-    "sadeed1999@gmail.com": {
-        "VerificationStatus": "Success"
+    {
+            "sadeed1999@gmail.com": {
+                "VerificationStatus": "Success"
+            },
     },
-},
-{
-    "mujtabatarar@gmail.com": {
-        "VerificationStatus": "Pending"
+    {
+            "mujtabatarar@gmail.com": {
+                "VerificationStatus": "Pending"
+            }
     }
     
-}
 ];
 
 const createCache = (listIdentities, mailAttributes, listErr, getErr) => {
@@ -33,7 +33,7 @@ const createCache = (listIdentities, mailAttributes, listErr, getErr) => {
             getIdentityVerificationAttributes: {
                 'us-east-1': {
                     err: getErr,
-                    data: {
+                    data:  {
                         "VerificationAttributes": mailAttributes 
                     }
                 }
