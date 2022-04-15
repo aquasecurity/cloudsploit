@@ -285,7 +285,7 @@ var calls = {
         list: {
             url: 'https://cloudresourcemanager.googleapis.com/v1beta1/organizations',
             pagination: false
-        },
+        }
     },
     urlMaps: { // https://compute.googleapis.com/compute/v1/projects/{project}/global/urlMaps
         list: {
