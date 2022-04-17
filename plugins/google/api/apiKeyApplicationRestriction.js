@@ -44,7 +44,9 @@ module.exports = {
             if (key.restrictions) {
                 if (key.restrictions.browserKeyRestrictions && key.restrictions.browserKeyRestrictions.allowedReferrers
                     && key.restrictions.browserKeyRestrictions.allowedReferrers.length) {
-                    isRestricted = true;
+                    isRestricted = key.restrictions.browserKeyRestrictions.allowedReferrers.every(referrer =>
+                        referrer.match(/^(\*\.)?([\w-]+\.)+[\w-]+$/)
+                    );
                 } 
                 if (key.restrictions.serverKeyRestrictions && key.restrictions.serverKeyRestrictions.allowedIps
                     && key.restrictions.serverKeyRestrictions.allowedIps.length) {
@@ -56,10 +58,10 @@ module.exports = {
             }
             if (isRestricted) {
                 helpers.addResult(results, 0,
-                    'API Key usage is restricted to restricted to trusted hosts, HTTP referrers, or applications', 'global', key.name);
+                    'API Key usage is restricted to trusted hosts, HTTP referrers, or applications', 'global', key.name);
             } else {
                 helpers.addResult(results, 2,
-                    'API Key usage is not restricted to restricted to trusted hosts, HTTP referrers, or applications', 'global', key.name);
+                    'API Key usage is not restricted to trusted hosts, HTTP referrers, or applications', 'global', key.name);
             }
         });
 
