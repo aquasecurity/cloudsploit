@@ -14,7 +14,8 @@ module.exports = {
         allowed_certificate_key_types: {
             name: 'Key Vault Certificate Key Types',
             description: 'Key types supported for certificates in Azure Key Vault',
-            regex: '^(RSA|EC)$'
+            regex: '^(RSA|EC)$',
+            default: 'RSA'
         }
     },
 
