@@ -409,7 +409,14 @@ var postcalls = {
             properties: ['vaultUri'],
             url: '{vaultUri}secrets?api-version=7.0',
             vault: true
+        },
+        getCertificates: {
+            reliesOnPath: 'vaults.list',
+            properties: ['vaultUri'],
+            url: '{vaultUri}certificates?api-version=7.3',
+            vault: true
         }
+
     },
     databases: {
         listByServer: {
@@ -484,6 +491,14 @@ var tertiarycalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/backupShortTermRetentionPolicies?api-version=2017-10-01-preview'
         }
+    },
+    getCertificatePolicy: {
+        get: {
+            reliesOnPath: 'vaults.getCertificates',
+            properties: ['id'],
+            url: '{id}/policy?api-version=7.3',
+            vault: true
+        }
     }
 };
 
@@ -529,9 +544,9 @@ var collect = function(AzureConfig, settings, callback) {
     if (settings.gather) {
         return callback(null, calls, postcalls, tertiarycalls, specialcalls);
     }
-    
+
     var helpers = require(__dirname + '/../../helpers/azure/auth.js');
-    
+
     // Login using the Azure config
     helpers.login(AzureConfig, function(loginErr, loginData) {
         if (loginErr) return callback(loginErr);
@@ -556,7 +571,7 @@ var collect = function(AzureConfig, settings, callback) {
                         subCallCb();
                     });
                 }
-                
+
                 async.eachOfLimit(calls, 10, function(callObj, service, callCb) {
                     if (!collection[service]) collection[service] = {};
                     // Loop through sub-calls
@@ -565,7 +580,7 @@ var collect = function(AzureConfig, settings, callback) {
                         if (settings &&
                             settings.api_calls &&
                             settings.api_calls.indexOf([service, one].join(':')) === -1) return subCallCb();
-                        
+
                         if (!collection[service][one]) collection[service][one] = {};
                         processTopCall(collection[service][one], service, subCallObj, subCallCb);
                     }, function() {
@@ -633,7 +648,7 @@ var collect = function(AzureConfig, settings, callback) {
                         subCallCb();
                     }
                 }
-                
+
                 async.eachOfLimit(postcalls, 10, function(callObj, service, callCb) {
                     if (!collection[service]) collection[service] = {};
                     // Loop through sub-calls
@@ -641,7 +656,7 @@ var collect = function(AzureConfig, settings, callback) {
                         if (settings &&
                             settings.api_calls &&
                             settings.api_calls.indexOf([service, one].join(':')) === -1) return subCallCb();
-                        
+
                         if (!collection[service][one]) collection[service][one] = {};
                         processTopCall(collection[service][one], service, subCallObj, subCallCb);
                     }, function() {
@@ -698,7 +713,7 @@ var collect = function(AzureConfig, settings, callback) {
                                         resourceDataCb();
                                     });
                                 }
-                                
+
                                 if (Array.isArray(resourceObj)) {
                                     async.eachLimit(resourceObj, 10, function(resourceData, resourceDataCb) {
                                         processResource(resourceData, resourceDataCb);
@@ -734,7 +749,7 @@ var collect = function(AzureConfig, settings, callback) {
                         if (settings &&
                             settings.api_calls &&
                             settings.api_calls.indexOf([service, one].join(':')) === -1) return subCallCb();
-                        
+
                         if (!collection[service][one]) collection[service][one] = {};
                         if (subCallObj.url) {
                             processTopCall(collection[service][one], service, subCallObj, subCallCb);
@@ -744,7 +759,7 @@ var collect = function(AzureConfig, settings, callback) {
                                 if (settings &&
                                     settings.api_calls &&
                                     settings.api_calls.indexOf([service, one, two].join(':')) === -1) return subCallCb();
-                                
+
                                 if (!collection[service][one][two]) collection[service][one][two] = {};
                                 processTopCall(collection[service][one][two], service, innerCallObj, innerCb);
                             }, function() {

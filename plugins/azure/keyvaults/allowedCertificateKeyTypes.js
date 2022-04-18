@@ -9,12 +9,22 @@ module.exports = {
     more_info: 'Having the right key type set for your Azure Key Vault SSL certificates will enforce the best practices as specified in the security and compliance regulations implemented within your organization.',
     recommended_action: 'Ensure that Key Vault SSL certificates are using the allowed key types.',
     link: 'https://docs.microsoft.com/en-us/azure/key-vault/certificates/certificate-access-control',
-    apis: ['vaults:list', 'vaults:getKeys'],
+    apis: ['vaults:list', 'vaults:getCertificates', 'getCertificatePolicy:get'],
+    settings: {
+        allowed_certificate_key_types: {
+            name: 'Key Vault Certificate Key Types',
+            description: 'Key types supported for certificates in Azure Key Vault',
+            regex: '^(RSA|EC)$'
+        }
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
+        var config = {
+            allowed_certificate_key_types: settings.allowed_certificate_key_types || this.settings.allowed_certificate_key_types,
+        };
 
         async.each(locations.vaults, function(location, rcb) {
             var vaults = helpers.addSource(cache, source,
@@ -33,30 +43,33 @@ module.exports = {
             }
 
             vaults.data.forEach((vault) => {
-                var keys = helpers.addSource(cache, source,
-                    ['vaults', 'getKeys', location, vault.id]);
+                var certificates = helpers.addSource(cache, source,
+                    ['vaults', 'getCertificates', location, vault.id]);
 
-                if (!keys || keys.err || !keys.data) {
-                    helpers.addResult(results, 3, 'Unable to query for Key Vault keys: ' + helpers.addError(keys), location, vault.id);
-                } else if (!keys.data.length) {
-                    helpers.addResult(results, 0, 'No Key Vault keys found', location, vault.id);
+                if (!certificates || certificates.err || !certificates.data) {
+                    helpers.addResult(results, 3, 'Unable to query for Key Vault certificates: ' + helpers.addError(certificates), location, vault.id);
+                } else if (!certificates.data.length) {
+                    helpers.addResult(results, 0, 'No Key Vault Certificates found', location, vault.id);
                 } else {
-                    keys.data.forEach((key) => {
-                        var keyName = key.kid.substring(key.kid.lastIndexOf('/') + 1);
-                        var keyId = `${vault.id}/keys/${keyName}`;
+                    certificates.data.forEach((certificate) => {
+                        var certificatePolicy = helpers.addSource(cache, source,
+                            ['getCertificatePolicy', 'get', location, certificate.id]);
 
-                        if (key.attributes) {
-                            let attributes = key.attributes;
-                            if ((attributes.expires && attributes.expires !== null && attributes.expires !== '') || (attributes.exp && attributes.exp !== null && attributes.exp !== '')) {
-                                helpers.addResult(results, 0,
-                                    'Expiry date is set for the key', location, keyId);
-                            } else {
-                                helpers.addResult(results, 2,
-                                    'Expiry date is not set for the key', location, keyId);
-                            }
+                        if (!certificatePolicy || certificatePolicy.err || !certificatePolicy.data) {
+                            helpers.addResult(results, 3, 'Unable to query for Certificate Policy: ' + helpers.addError(certificatePolicy), location, certificate.id);
                         } else {
-                            helpers.addResult(results, 2,
-                                'Expiry date is not set for the key', location, keyId);
+                            const certificateKeys = certificatePolicy.data.key_props;
+                            if (certificateKeys && certificateKeys.kty) {
+                                const allowedCertTypesRegex = new RegExp(config.allowed_certificate_key_types.regex);
+
+                                if (allowedCertTypesRegex.test(certificateKeys.kty)) {
+                                    helpers.addResult(results, 0, 'Certificate key type is set to Allowed Key Types: ' + certificateKeys.kty, location, certificate.id);
+                                } else {
+                                    helpers.addResult(results, 2, 'Certificate key type is not set to Allowed Key Types: ' + certificateKeys.kty, location, certificate.id);
+                                }
+                            } else {
+                                helpers.addResult(results, 3, 'Unable to list key type for Key Vault Certificate: ' + helpers.addError(certificatePolicy), location, certificate.id);
+                            }
                         }
                     });
                 }
