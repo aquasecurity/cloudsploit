@@ -68,12 +68,13 @@ const createCache = (recommendation, recommendationErr) => {
 
 describe('ec2InstancesOptimized', function () {
     describe('run', function () {
-        it('should PASS if EC2 instance is optimized', function (done) {
+        it('should PASS if All EC2 instances are optimized', function (done) {
             const cache = createCache([getRecommendationSummaries[0]]);
             ec2InstancesOptimized.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('All EC2 instances are optimized');
                 done();
             });
         });
@@ -84,6 +85,7 @@ describe('ec2InstancesOptimized', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('EC2 instances are not optimized');
                 done();
             });
         });
@@ -94,16 +96,18 @@ describe('ec2InstancesOptimized', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Optimization for summaries is not configured');
                 done();
             });
         });
 
         it('should UNKNOWN if Unable to get recommendation summaries', function (done) {
-            const cache = createCache(null, { message: "Unable to obtain data" });
+            const cache = createCache(null, { message: "Unable to get recommendation summaries" });
             ec2InstancesOptimized.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to get recommendation summaries');
                 done();
             });
         });
