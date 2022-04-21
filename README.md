@@ -78,7 +78,7 @@ A commercial version of CloudSploit hosted at Aqua Wave. Try [Aqua Wave](https:/
 Ensure that NodeJS is installed. If not, install it from [here](https://nodejs.org/download/).
 
 ```
-$ git clone git@github.com:cloudsploit/scans.git
+$ git clone git@github.com:aquasecurity/cloudsploit.git
 $ npm install
 ```
 
