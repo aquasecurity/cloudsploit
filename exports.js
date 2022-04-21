@@ -61,6 +61,8 @@ module.exports = {
         'volumeEncryption'              : require(__dirname + '/plugins/aws/comprehend/volumeEncryption.js'),
         'outputResultEncryption'        : require(__dirname + '/plugins/aws/comprehend/outputResultEncryption.js'),
 
+        'asgOptimized'                  : require(__dirname + '/plugins/aws/computeoptimizer/asgOptimized.js'),
+
         'plainTextParameters'           : require(__dirname + '/plugins/aws/cloudformation/plainTextParameters.js'),
         'stackFailedStatus'             : require(__dirname + '/plugins/aws/cloudformation/stackFailedStatus.js'),
         'driftDetection'                :  require(__dirname + '/plugins/aws/cloudformation/driftDetection.js'),
