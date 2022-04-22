@@ -554,7 +554,7 @@ var collect = function(AzureConfig, settings, callback) {
                 url: localUrl,
                 post: obj.post,
                 token: obj.graph ? loginData.graphToken : (obj.vault ? loginData.vaultToken : loginData.token)
-            }, function (err, data) {
+            }, function(err, data) {
                 if (err) return cb(err);
 
                 if (data.value && Array.isArray(data.value) && localData && localData.value && data.value.length) {
@@ -570,12 +570,12 @@ var collect = function(AzureConfig, settings, callback) {
                     return cb(null, localData || data);
                 }
             });
-        }
+        };
 
         var processCall = function(obj, cb, localData) {
             var localUrl = obj.url.replace(/\{subscriptionId\}/g, AzureConfig.SubscriptionID);
             if (obj.rateLimit) {
-                setTimeout(function () {
+                setTimeout(function() {
                     makeCall(localUrl, obj, cb, localData);
                 }, obj.rateLimit);
             } else {
