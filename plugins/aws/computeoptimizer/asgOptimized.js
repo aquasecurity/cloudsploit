@@ -43,8 +43,14 @@ module.exports = {
 
             let findings = getRecommendationSummaries.data.find(resourceType => resourceType.recommendationResourceType === 'AutoScalingGroup');
             if (findings) {
-                let notOptimized = findings.summaries.find(summary => summary.name && summary.name.toUpperCase() === 'NOT_OPTIMIZED');
-                if (notOptimized.value){
+                
+                let notOptimized = findings.summaries.find(notOpt => notOpt.name && notOpt.name.toUpperCase() === 'NOT_OPTIMIZED');
+                let Optimized = findings.summaries.find(opt => opt.name && opt.name.toUpperCase() === 'OPTIMIZED');
+      
+                if (!notOptimized.value && !Optimized.value){
+                    helpers.addResult(results, 0,
+                        'Auto Scaling Groups have no recommendations enabled', region);
+                } else if (notOptimized.value){
                     helpers.addResult(results, 2,
                         `Auto Scaling Groups are not optimized,  NOT_OPTIMIZED: ${notOptimized.value}`, region);
                 } else {

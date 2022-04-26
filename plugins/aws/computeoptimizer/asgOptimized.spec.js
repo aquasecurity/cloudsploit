@@ -6,7 +6,7 @@ const getRecommendationSummaries =  [
         "summaries": [
             {
                 "name": "OPTIMIZED",
-                "value": 0.0
+                "value": 1.0
             },
             {
                 "name": "NOT_OPTIMIZED",
@@ -31,6 +31,26 @@ const getRecommendationSummaries =  [
             {
                 "name": "NOT_OPTIMIZED",
                 "value": 1.0
+            }
+        ],
+        "recommendationResourceType": "AutoScalingGroup",
+        "accountId": "000011112222",
+        "currentPerformanceRiskRatings": {
+            "high": 0,
+            "medium": 0,
+            "low": 0,
+            "veryLow": 0
+        }
+    },
+    {
+        "summaries": [
+            {
+                "name": "OPTIMIZED",
+                "value": 0.0
+            },
+            {
+                "name": "NOT_OPTIMIZED",
+                "value": 0.0
             }
         ],
         "recommendationResourceType": "AutoScalingGroup",
@@ -78,6 +98,17 @@ describe('asgOptimized', function () {
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
                 expect(results[0].message).to.include('Auto Scaling Groups are not optimized');
+                done();
+            });
+        });
+
+        it('should PASS if Auto Scaling Groups have no recommendations enabled', function (done) {
+            const cache = createCache([getRecommendationSummaries[2]]);
+            asgOptimized.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Auto Scaling Groups have no recommendations enabled');
                 done();
             });
         });
