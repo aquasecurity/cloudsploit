@@ -6,7 +6,7 @@ const getRecommendationSummaries =  [
         "summaries": [
             {
                 "name": "OPTIMIZED",
-                "value": 0.0
+                "value": 1.0
             },
             {
                 "name": "UNDER_PROVISIONED",
@@ -49,7 +49,31 @@ const getRecommendationSummaries =  [
             "low": 0,
             "veryLow": 0
         }
-    }
+    },
+    {
+        "summaries": [
+            {
+                "name": "OPTIMIZED",
+                "value": 0.0
+            },
+            {
+                "name": "UNDER_PROVISIONED",
+                "value": 0.0
+            },
+            {
+                "name": "OVER_PROVISIONED",
+                "value": 0.0
+            }
+        ],
+        "recommendationResourceType": "Ec2Instance",
+        "accountId": "000011112222",
+        "currentPerformanceRiskRatings": {
+            "high": 0,
+            "medium": 0,
+            "low": 0,
+            "veryLow": 0
+        }
+    },
 ];
 
 
@@ -86,6 +110,17 @@ describe('ec2InstancesOptimized', function () {
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
                 expect(results[0].message).to.include('EC2 instances are not optimized');
+                done();
+            });
+        });
+
+        it('should PASS if EC2 instances have no recommendations enabled', function (done) {
+            const cache = createCache([getRecommendationSummaries[2]]);
+            ec2InstancesOptimized.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('EC2 instances have no recommendations enabled');
                 done();
             });
         });

@@ -43,9 +43,13 @@ module.exports = {
 
             let findings = getRecommendationSummaries.data.find(resourceType => resourceType.recommendationResourceType === 'Ec2Instance');
             if (findings) {
-                let underProvisioned = findings.summaries.find(summary => summary.name === 'UNDER_PROVISIONED' );
-                let overProvisioned = findings.summaries.find(summary => summary.name === 'OVER_PROVISIONED' );
-                if (underProvisioned.value || overProvisioned.value){
+                let underProvisioned = findings.summaries.find(underProv => underProv.name === 'UNDER_PROVISIONED' );
+                let optimized = findings.summaries.find(opt => opt.name === 'OPTIMIZED' );
+                let overProvisioned = findings.summaries.find(overProv => overProv.name === 'OVER_PROVISIONED' );
+                if (!underProvisioned.value && !overProvisioned.value && !optimized.value){
+                    helpers.addResult(results, 0,
+                        'EC2 instances have no recommendations enabled', region);
+                } else if (underProvisioned.value || overProvisioned.value){
                     helpers.addResult(results, 2,
                         `EC2 instances are not optimized,  under provisioned: ${underProvisioned.value}, over provisioned: ${underProvisioned.value} `, region);
                 } else {
