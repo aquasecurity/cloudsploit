@@ -43,8 +43,14 @@ module.exports = {
 
             let findings = getRecommendationSummaries.data.find(resourceType => resourceType.recommendationResourceType === 'EbsVolume');
             if (findings) {
-                let notOptimized = findings.summaries.find(summary => summary.name === 'NotOptimized');
-                if (notOptimized.value){
+      
+                let notOptimized = findings.summaries.find(notOpt => notOpt.name === 'NotOptimized');
+                let optimized = findings.summaries.find(opt => opt.name === 'Optimized');
+                
+                if (!notOptimized.value  && !optimized.value){
+                    helpers.addResult(results, 0,
+                        'EBS volumes have no recommendations enabled', region);
+                } else if (notOptimized.value){
                     helpers.addResult(results, 2,
                         `EBS volumes are not optimized,  NOT_OPTIMIZED: ${notOptimized.value}`, region);
                 } else {

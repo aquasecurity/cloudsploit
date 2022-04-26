@@ -6,7 +6,7 @@ const getRecommendationSummaries =  [
         "summaries": [
             {
                 "name": "Optimized",
-                "value": 0.0
+                "value": 1.0
             },
             {
                 "name": "NotOptimized",
@@ -41,7 +41,27 @@ const getRecommendationSummaries =  [
             "low": 0,
             "veryLow": 0
         }
-    }
+    },
+    {
+        "summaries": [
+            {
+                "name": "Optimized",
+                "value": 0.0
+            },
+            {
+                "name": "NotOptimized",
+                "value": 0.0
+            }
+        ],
+        "recommendationResourceType": "EbsVolume",
+        "accountId": "101363889637",
+        "currentPerformanceRiskRatings": {
+            "high": 0,
+            "medium": 0,
+            "low": 0,
+            "veryLow": 0
+        }
+    },
 ];
 
 
@@ -78,6 +98,17 @@ describe('ebsVolumesOptimized', function () {
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
                 expect(results[0].message).to.include('EBS volumes are not optimized');
+                done();
+            });
+        });
+
+        it('should PASS if EBS volumes have no recommendations enabled', function (done) {
+            const cache = createCache([getRecommendationSummaries[2]]);
+            ebsVolumesOptimized.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('EBS volumes have no recommendations enabled');
                 done();
             });
         });
