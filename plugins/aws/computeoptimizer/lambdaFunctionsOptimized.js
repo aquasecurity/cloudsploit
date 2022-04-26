@@ -43,8 +43,12 @@ module.exports = {
 
             let findings = getRecommendationSummaries.data.find(resourceType => resourceType.recommendationResourceType === 'LambdaFunction');
             if (findings) {
-                let notOptimized = findings.summaries.find(summary => summary.name === 'NotOptimized');
-                if (notOptimized.value){
+                let notOptimized = findings.summaries.find(notOpt => notOpt.name === 'NotOptimized');
+                let Optimized = findings.summaries.find(Opt => Opt.name === 'Optimized');
+                if (!notOptimized.value && !Optimized.value){
+                    helpers.addResult(results, 0,
+                        'Lambda Functions have no recommendations enabled', region);
+                } else if (notOptimized.value){
                     helpers.addResult(results, 2,
                         `Lambda Functions are not optimized,  NOT_OPTIMIZED Functions: ${notOptimized.value}`, region);
                 } else {
