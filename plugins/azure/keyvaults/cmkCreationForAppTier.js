@@ -1,5 +1,6 @@
 var async = require('async');
 var helpers = require('../../../helpers/azure');
+var _ = require('underscore');
 
 module.exports = {
     title: 'CMK Creation for App Tier Enabled',
@@ -10,11 +11,22 @@ module.exports = {
     recommended_action: 'Ensure each Key Vault has a CMK created and configured.',
     link: 'https://docs.microsoft.com/en-us/azure/azure-app-configuration/concept-customer-managed-keys',
     apis: ['vaults:list', 'vaults:getKeys'],
+    settings: {
+        app_tier_tag_sets: {
+            name: 'App Tier Tag Sets',
+            description: 'A string of allowed tag set objects to use for the CMKs creation for App Tier',
+            regex: '^.*$s',
+            default: ''
+        }
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
+        var config = {
+            app_tier_tag_sets: settings.app_tier_tag_sets || this.settings.app_tier_tag_sets.default
+        };
 
         async.each(locations.vaults, function(location, rcb) {
             var vaults = helpers.addSource(cache, source,
@@ -45,18 +57,21 @@ module.exports = {
                         var keyName = key.kid.substring(key.kid.lastIndexOf('/') + 1);
                         var keyId = `${vault.id}/keys/${keyName}`;
 
-                        if (key.attributes) {
-                            let attributes = key.attributes;
-                            if ((attributes.expires && attributes.expires !== null && attributes.expires !== '') || (attributes.exp && attributes.exp !== null && attributes.exp !== '')) {
+                        if (key.tags) {
+                            const tags = key.tags;
+                            const allowedTagSets = config.app_tier_tag_sets.length ? JSON.parse(config.app_tier_tag_sets) : {};
+                            const result = _.pick(tags, (v, k) => _.isEqual(allowedTagSets[k], v));
+
+                            if (Object.entries(result).length) {
                                 helpers.addResult(results, 0,
-                                    'Expiry date is set for the key', location, keyId);
+                                    'CMK Creation for App Tier is enabled', location, keyId);
                             } else {
                                 helpers.addResult(results, 2,
-                                    'Expiry date is not set for the key', location, keyId);
+                                    'CMK Creation for App Tier is not enabled', location, keyId);
                             }
                         } else {
                             helpers.addResult(results, 2,
-                                'Expiry date is not set for the key', location, keyId);
+                                'CMK Creation for App Tier is not enabled', location, keyId);
                         }
                     });
                 }
