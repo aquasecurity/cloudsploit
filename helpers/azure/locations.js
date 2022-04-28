@@ -10,13 +10,6 @@ var locations = [
     'centralus',            // (US) Central US
     'northcentralus',       // (US) North Central US
     'westus',               // (US) West US
-    'centralusstage',       // (US) Central US (Stage)
-    'eastusstage',          // (US) East US (Stage)
-    'eastus2stage',         // (US) East US 2 (Stage)
-    'northcentralusstage',  // (US) North Central US (Stage)
-    'southcentralusstage',  // (US) South Central US (Stage)
-    'westusstage',          // (US) West US (Stage)
-    'westus2stage',         // (US) West US 2 (Stage)
     'eastus2euap',          // (US) East US 2 EUAP
     'westcentralus',        // (US) West Central US
     'centraluseuap',        // (US) Central US EUAP
@@ -27,8 +20,6 @@ var locations = [
     'japaneast',            // (Asia Pacific) Japan East
     'jioindiawest',         // (Asia Pacific) Jio India West
     'koreacentral',         // (Asia Pacific) Korea Central
-    'eastasiastage',        // (Asia Pacific) East Asia (Stage)
-    'southeastasiastage',   // (Asia Pacific) Southeast Asia (Stage)
     'australiacentral',     // (Asia Pacific) Australia Central
     'australiacentral2',    // (Asia Pacific) Australia Central 2
     'australiasoutheast',   // (Asia Pacific) Australia Southeast
