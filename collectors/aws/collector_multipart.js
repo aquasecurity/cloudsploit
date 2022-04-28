@@ -27,9 +27,9 @@ var agent = new https.Agent({maxSockets: 100});
 AWS.config.update({httpOptions: {agent: agent}});
 
 var CALLS_CONFIG = {
-    TOTAL_PARTS: 12,
+    TOTAL_PARTS: 13,
     CALLS_PARTS: 4,
-    POSTCALLS_PARTS: 8
+    POSTCALLS_PARTS: 9
 };
 
 var rateError = {message: 'rate', statusCode: 429};
@@ -242,7 +242,7 @@ var collect = function(AWSConfig, settings, callback) {
                         execute();
                     }
                 }, function() {
-                    helpers.debugApiCalls(callKey, serviceName, debugMode);
+                    helpers.debugApiCalls(callKey, serviceName, debugMode, true);
                     callCb();
                 });
             }, function() {
@@ -394,7 +394,7 @@ var collect = function(AWSConfig, settings, callback) {
                             });
                         }
                     }, function() {
-                        helpers.debugApiCalls(callKey, serviceName, debugMode);
+                        helpers.debugApiCalls(callKey, serviceName, debugMode, true);
                         callCb();
                     });
                 }, function() {

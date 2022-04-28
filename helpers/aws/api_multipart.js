@@ -1315,7 +1315,9 @@ var postcalls = [
             sendIntegration: {
                 enabled: true
             }
-        },
+        }
+    },
+    {
         EC2: {
             describeSubnets: {
                 reliesOnService: 'ec2',
