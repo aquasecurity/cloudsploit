@@ -245,7 +245,15 @@ var calls = {
             filterKey: ['compartmentId'],
             filterValue: ['compartmentId'],
         }
-    }
+    },
+    vault: {
+        list: {
+            api: 'kms',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+            restVersion: '/20180608',
+        }
+    },
 };
 
 // Important Note: All relies must be passed in an array format []
@@ -379,6 +387,16 @@ var postcalls = {
             filterKey: ['compartmentId', 'assetId'],
             filterValue: ['compartmentId', 'id'],
             filterConfig: [true, false],
+        }
+    },
+    keys: {
+        list: {
+            api: 'kms',
+            reliesOnService: ['vault'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'managementEndpoint'],
+            filterValue: ['compartmentId', 'managementEndpoint'],
+            restVersion: '/20180608'
         }
     },
 };

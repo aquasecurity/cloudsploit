@@ -76,5 +76,7 @@ module.exports = {
     namespace: regions,
     apiKey: ['default'],
     authToken: ['default'],
-    customerSecretKey: ['default']
+    customerSecretKey: ['default'],
+    vault: regions,
+    keys: regions
 };
