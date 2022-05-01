@@ -1,23 +1,34 @@
 var async = require('async');
 var helpers = require('../../../helpers/azure');
+var _ = require('underscore');
 
 module.exports = {
-    title: 'Key Expiration Enabled',
+    title: 'CMK Creation for Database Tier Enabled',
     category: 'Key Vaults',
     domain: 'Identity and Access Management',
-    description: 'Ensure that all Keys in Azure Key Vault have an expiry time set.',
-    more_info: 'Setting an expiry time on all keys forces key rotation and removes unused and forgotten keys from being used.',
-    recommended_action: 'Ensure each Key Vault has an expiry time set that provides for sufficient rotation.',
-    link: 'https://docs.microsoft.com/en-us/azure/key-vault/about-keys-secrets-and-certificates',
+    description: 'Ensures that a Customer-Managed Key (CMK) is created and configured for your Microsoft Azure database tier.',
+    more_info: 'Setting a CMK for database tier, you gain full control over who can use this key to access the database tier data, implementing the principle of least privilege on the encryption key ownership and usage.',
+    recommended_action: 'Ensure each Key Vault has a CMK created and configured for database tier.',
+    link: 'https://docs.microsoft.com/en-us/azure/azure-sql/database/transparent-data-encryption-byok-overview?view=azuresql',
     apis: ['vaults:list', 'vaults:getKeys'],
+    settings: {
+        database_tier_tag_sets: {
+            name: 'Database Tier Tag Sets',
+            description: 'An object of allowed tag set key value pairs to use for the CMKs creation for Database Tier',
+            default: {}
+        }
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
+        var config = {
+            database_tier_tag_sets: settings.database_tier_tag_sets || this.settings.database_tier_tag_sets.default
+        };
 
         async.each(locations.vaults, function(location, rcb) {
-            var vaults = helpers.addSource(cache, source, 
+            var vaults = helpers.addSource(cache, source,
                 ['vaults', 'list', location]);
 
             if (!vaults) return rcb();
@@ -32,7 +43,7 @@ module.exports = {
                 return rcb();
             }
 
-            vaults.data.forEach(function(vault){
+            vaults.data.forEach((vault) => {
                 var keys = helpers.addSource(cache, source,
                     ['vaults', 'getKeys', location, vault.id]);
 
@@ -41,21 +52,25 @@ module.exports = {
                 } else if (!keys.data.length) {
                     helpers.addResult(results, 0, 'No Key Vault keys found', location, vault.id);
                 } else {
-                    keys.data.forEach(function(key) {
+                    keys.data.forEach((key) => {
                         var keyName = key.kid.substring(key.kid.lastIndexOf('/') + 1);
                         var keyId = `${vault.id}/keys/${keyName}`;
-                        
-                        if (key.attributes && key.attributes.expires) {
-                            if (new Date(Date.now()) < new Date(key.attributes.expires)) {
+
+                        if (key.tags) {
+                            const tags = key.tags;
+                            const allowedTagSets = config.database_tier_tag_sets;
+                            const result = _.pick(tags, (v, k) => _.isEqual(allowedTagSets[k], v));
+
+                            if (Object.entries(result).length) {
                                 helpers.addResult(results, 0,
-                                    'Key expiry date is not yet reached', location, keyId);
+                                    'CMK Creation for Database Tier is enabled', location, keyId);
                             } else {
                                 helpers.addResult(results, 2,
-                                    'Key has reached its expiry date', location, keyId);
+                                    'CMK Creation for Database Tier is disabled', location, keyId);
                             }
                         } else {
                             helpers.addResult(results, 2,
-                                'Key expiration is not enabled', location, keyId);
+                                'CMK Creation for Database Tier is disabled', location, keyId);
                         }
                     });
                 }
