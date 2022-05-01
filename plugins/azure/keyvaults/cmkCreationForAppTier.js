@@ -14,9 +14,8 @@ module.exports = {
     settings: {
         app_tier_tag_sets: {
             name: 'App Tier Tag Sets',
-            description: 'A string of allowed tag set objects to use for the CMKs creation for App Tier',
-            regex: '^.*$s',
-            default: ''
+            description: 'An object of allowed tag set objects to use for the CMKs creation for App Tier',
+            default: {}
         }
     },
 
@@ -59,7 +58,7 @@ module.exports = {
 
                         if (key.tags) {
                             const tags = key.tags;
-                            const allowedTagSets = config.app_tier_tag_sets.length ? JSON.parse(config.app_tier_tag_sets) : {};
+                            const allowedTagSets = config.app_tier_tag_sets;
                             const result = _.pick(tags, (v, k) => _.isEqual(allowedTagSets[k], v));
 
                             if (Object.entries(result).length) {
@@ -67,11 +66,11 @@ module.exports = {
                                     'CMK Creation for App Tier is enabled', location, keyId);
                             } else {
                                 helpers.addResult(results, 2,
-                                    'CMK Creation for App Tier is not enabled', location, keyId);
+                                    'CMK Creation for App Tier is disabled', location, keyId);
                             }
                         } else {
                             helpers.addResult(results, 2,
-                                'CMK Creation for App Tier is not enabled', location, keyId);
+                                'CMK Creation for App Tier is disabled', location, keyId);
                         }
                     });
                 }
