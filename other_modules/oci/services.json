@@ -34,6 +34,18 @@
                 "method": "GET",
                 "path": "clusters",
                 "endpoint": "containerengine.{{region}}.oci.oraclecloud.com"
+            },
+            "get": {
+                "encodedGet": "id",
+                "allowedQueryStrings": [
+                    "compartmentId",
+                    "page",
+                    "limit"
+                ],
+                "method": "GET",
+                "path": "clusters",
+                "endpoint": "containerengine.{{region}}.oci.oraclecloud.com"
+                
             }
         }
     },
@@ -394,6 +406,30 @@
             }
         }
     },
+    "kms": {   
+        "vault": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId", "page", "limit"
+                ],
+                "method": "GET",
+                "path": "vaults",
+                "endpoint": "kms.{{region}}.oraclecloud.com"
+            }
+        },
+
+        "keys": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId", "page", "limit"
+                ],
+                "method": "GET",
+                "path": "keys",
+                "endpoint": "{{managementEndpoint}}"
+            }
+        }
+    },
+
     "loadBalance": {
         "loadBalancer": {
             "list": {

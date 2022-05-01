@@ -855,6 +855,7 @@ module.exports = {
         'logRetentionPeriod'            : require(__dirname + '/plugins/oracle/audit/logRetentionPeriod.js'),
 
         'okePrivateEndpoint'            : require(__dirname + '/plugins/oracle/oke/okePrivateEndpoint.js'),
+        'okeSecretsEncrypted'           : require(__dirname + '/plugins/oracle/oke/okeSecretsEncrypted.js'),
     },
     google: {
         'excessiveFirewallRules'        : require(__dirname + '/plugins/google/vpcnetwork/excessiveFirewallRules.js'),
