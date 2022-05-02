@@ -409,6 +409,12 @@ var postcalls = {
             properties: ['vaultUri'],
             url: '{vaultUri}secrets?api-version=7.0',
             vault: true
+        },
+        getCertificates: {
+            reliesOnPath: 'vaults.list',
+            properties: ['vaultUri'],
+            url: '{vaultUri}certificates?api-version=7.3',
+            vault: true
         }
     },
     databases: {
@@ -483,6 +489,14 @@ var tertiarycalls = {
             reliesOnPath: 'databases.listByServer',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/backupShortTermRetentionPolicies?api-version=2017-10-01-preview'
+        }
+    },
+    getCertificatePolicy: {
+        get: {
+            reliesOnPath: 'vaults.getCertificates',
+            properties: ['id'],
+            url: '{id}/policy?api-version=7.3',
+            vault: true
         }
     }
 };
