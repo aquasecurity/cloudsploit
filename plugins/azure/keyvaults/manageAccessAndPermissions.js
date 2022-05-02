@@ -1,0 +1,111 @@
+var async = require('async');
+var helpers = require('../../../helpers/azure');
+var _ = require('underscore');
+
+module.exports = {
+    title: 'Manage Access and Permissions',
+    category: 'Key Vaults',
+    domain: 'Identity and Access Management',
+    description: 'Ensures that there is no Microsoft Azure user, group or application with full administrator privileges.',
+    more_info: 'Having the right key type set for your Azure Key Vault SSL certificates will enforce the best practices as specified in the security and compliance regulations implemented within your organization.',
+    recommended_action: 'Ensure that Key Vault SSL certificates are using the allowed key types.',
+    link: 'https://docs.microsoft.com/en-us/azure/key-vault/certificates/certificate-access-control',
+    apis: ['vaults:list', 'vaults:getKeys'],
+
+    run: function(cache, settings, callback) {
+        var results = [];
+        var source = {};
+        var locations = helpers.locations(settings.govcloud);
+
+        async.each(locations.vaults, function(location, rcb) {
+            var vaults = helpers.addSource(cache, source,
+                ['vaults', 'list', location]);
+
+            if (!vaults) return rcb();
+
+            if (vaults.err || !vaults.data) {
+                helpers.addResult(results, 3, 'Unable to query for Key Vaults: ' + helpers.addError(vaults), location);
+                return rcb();
+            }
+
+            if (!vaults.data.length) {
+                helpers.addResult(results, 0, 'No Key Vaults found', location);
+                return rcb();
+            }
+
+            const fullPermissions = {
+                'certificates': [
+                    'Get',
+                    'List',
+                    'Update',
+                    'Create',
+                    'Import',
+                    'Delete',
+                    'Recover',
+                    'Backup',
+                    'Restore',
+                    'ManageContacts',
+                    'ManageIssuers',
+                    'GetIssuers',
+                    'ListIssuers',
+                    'SetIssuers',
+                    'DeleteIssuers',
+                    'Purge'
+                ],
+                'keys': [
+                    'Get',
+                    'List',
+                    'Update',
+                    'Create',
+                    'Import',
+                    'Delete',
+                    'Recover',
+                    'Backup',
+                    'Restore',
+                    'Decrypt',
+                    'Encrypt',
+                    'UnwrapKey',
+                    'WrapKey',
+                    'Verify',
+                    'Sign',
+                    'Purge'
+                ],
+                'secrets': [
+                    'Get',
+                    'List',
+                    'Set',
+                    'Delete',
+                    'Recover',
+                    'Backup',
+                    'Restore',
+                    'Purge'
+                ]
+            };
+
+            vaults.data.forEach((vault) => {
+                let certPermissions, keysPermissions, secretsPermissions;
+
+                vault.accessPolicies.forEach((policy) => {
+                    certPermissions = _.difference(policy.certificates, fullPermissions.certificates);
+                    keysPermissions = _.difference(policy.keys, fullPermissions.keys);
+                    secretsPermissions = _.difference(policy.certificates, fullPermissions.certificates);
+                });
+                console.log('certPermissions', certPermissions);
+                console.log('keysPermissions', keysPermissions);
+                console.log('secretsPermissions', secretsPermissions);
+                if (certPermissions.length === fullPermissions.certificates.length || keysPermissions.length === fullPermissions.keys.length
+                    || secretsPermissions.length === fullPermissions.secrets.length) {
+                    helpers.addResult(results, 2,
+                        'User/Group or Application has full access to the specified vault', location, vault.id);
+                } else {
+                    helpers.addResult(results, 0,
+                        'No User/Group or Application has full access to the specified vault', location, vault.id);
+                }
+            });
+
+            rcb();
+        }, function() {
+            callback(null, results, source);
+        });
+    }
+};
