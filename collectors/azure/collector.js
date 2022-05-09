@@ -579,7 +579,7 @@ var collect = function(AzureConfig, settings, callback) {
                     makeCall(localUrl, obj, cb, localData);
                 }, obj.rateLimit);
             } else {
-                makeCall(obj, cb, localData);
+                makeCall(localUrl, obj, cb, localData);
             }
         };
 

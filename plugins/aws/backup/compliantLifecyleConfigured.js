@@ -44,12 +44,14 @@ module.exports = {
                     helpers.addResult(results, 3,
                         `Unable to get Backup plan description: ${helpers.addError(getBackupPlan)}`,
                         region, resource);
+                    continue;
                 }
 
                 if (!getBackupPlan.data.BackupPlan ||
                     !getBackupPlan.data.BackupPlan.Rules) {
                     helpers.addResult(results, 2,
                         'No lifecycle configuration rules found for Backup plan', region, resource);
+                    continue;
                 }
                 
                 let found = getBackupPlan.data.BackupPlan.Rules.find(rule => rule.Lifecycle.DeleteAfterDays && rule.Lifecycle.MoveToColdStorageAfterDays);
