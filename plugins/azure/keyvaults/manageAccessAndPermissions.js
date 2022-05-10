@@ -8,9 +8,9 @@ module.exports = {
     domain: 'Identity and Access Management',
     description: 'Ensures that there is no Microsoft Azure user, group or application with full administrator privileges.',
     more_info: 'Having the right key type set for your Azure Key Vault SSL certificates will enforce the best practices as specified in the security and compliance regulations implemented within your organization.',
-    recommended_action: 'Ensure that Key Vault SSL certificates are using the allowed key types.',
-    link: 'https://docs.microsoft.com/en-us/azure/key-vault/certificates/certificate-access-control',
-    apis: ['vaults:list', 'vaults:getKeys'],
+    recommended_action: 'Ensure that no Microsoft Azure user, group or application is using administrator privileges.',
+    link: 'https://docs.microsoft.com/en-us/azure/key-vault/general/rbac-guide?tabs=azure-cli',
+    apis: ['vaults:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -79,22 +79,31 @@ module.exports = {
                     'Backup',
                     'Restore',
                     'Purge'
+                ],
+                'storage': [
+                    'get',
+                    'list',
+                    'delete',
+                    'set',
+                    'update',
+                    'regeneratekey',
+                    'setsas',
+                    'listsas',
+                    'getsas',
+                    'deletesas'
                 ]
             };
 
             vaults.data.forEach((vault) => {
-                let certPermissions, keysPermissions, secretsPermissions;
+                let policyFound = false;
 
                 vault.accessPolicies.forEach((policy) => {
-                    certPermissions = _.difference(policy.certificates, fullPermissions.certificates);
-                    keysPermissions = _.difference(policy.keys, fullPermissions.keys);
-                    secretsPermissions = _.difference(policy.certificates, fullPermissions.certificates);
+                    if (_.isEqual(fullPermissions, policy.permissions)) {
+                        policyFound = true;
+                    }
                 });
-                console.log('certPermissions', certPermissions);
-                console.log('keysPermissions', keysPermissions);
-                console.log('secretsPermissions', secretsPermissions);
-                if (certPermissions.length === fullPermissions.certificates.length || keysPermissions.length === fullPermissions.keys.length
-                    || secretsPermissions.length === fullPermissions.secrets.length) {
+
+                if (policyFound) {
                     helpers.addResult(results, 2,
                         'User/Group or Application has full access to the specified vault', location, vault.id);
                 } else {
