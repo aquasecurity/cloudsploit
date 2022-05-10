@@ -125,7 +125,8 @@ var calls = [
                 paginate: 'nextToken',
                 params: {
                     limit: 50
-                }
+                },
+                rateLimit: 500
             },
             describeMetricFilters: {
                 property: 'metricFilters',
@@ -1315,7 +1316,9 @@ var postcalls = [
             sendIntegration: {
                 enabled: true
             }
-        },
+        }
+    },
+    {
         EC2: {
             describeSubnets: {
                 reliesOnService: 'ec2',
