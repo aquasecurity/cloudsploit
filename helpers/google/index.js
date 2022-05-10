@@ -386,7 +386,11 @@ function setData(collection, dataToAdd, postCall, parent) {
         }
     }
     if (dataToAdd.constructor.name === 'Array') {
-        collection.data = collection.data.concat(dataToAdd);
+        if (Array.isArray(collection.data)) {
+            collection.data = collection.data.concat(dataToAdd);
+        } else {
+            collection.data = dataToAdd.push(collection.data);
+        }
     } else {
         let existingData = collection.data;
         if (existingData && existingData.length) {
