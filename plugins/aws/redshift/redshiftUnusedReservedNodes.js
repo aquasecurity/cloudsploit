@@ -57,7 +57,7 @@ module.exports = {
             });
 
             describeReservedNodes.data.forEach(node => {
-               var resource = `arn:${awsOrGov}:redshift:${region}:${accountId}:reserved-node:${node.ReservedNodeId}`;
+                var resource = `arn:${awsOrGov}:redshift:${region}:${accountId}:reserved-node:${node.ReservedNodeId}`;
                 if (usedReservedNodes.includes(node.NodeType)) {
                     helpers.addResult(results, 0,
                         `Redshift reserved node "${node.ReservedNodeId}" is being used`,
