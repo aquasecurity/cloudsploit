@@ -15,6 +15,8 @@ module.exports = {
         app_tier_tag_sets: {
             name: 'App Tier Tag Sets',
             description: 'An object of allowed tag set key value pairs to use for the CMKs creation for App Tier',
+            // eslint-disable-next-line no-useless-escape
+            regex: '/("?)\b(\w+)\1\s*:\s*("?)((?:\w+[-+*%])*?\w+)\b\3/g',
             default: {}
         }
     },
