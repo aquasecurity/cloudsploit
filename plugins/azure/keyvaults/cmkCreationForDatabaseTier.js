@@ -15,6 +15,8 @@ module.exports = {
         database_tier_tag_sets: {
             name: 'Database Tier Tag Sets',
             description: 'An object of allowed tag set key value pairs to use for the CMKs creation for Database Tier',
+            // eslint-disable-next-line no-useless-escape
+            regex: '/("?)\b(\w+)\1\s*:\s*("?)((?:\w+[-+*%])*?\w+)\b\3/g',
             default: {}
         }
     },
