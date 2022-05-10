@@ -49,7 +49,6 @@ module.exports = {
             var vpcMap = {};
 
             for (var i in describeVpcs.data) {
-                // var arn = 'arn:' + awsOrGov + ':ec2:' + region + ':' + accountId + ':vpc/' + describeVpcs.data[i].VpcId;
                 if (!describeVpcs.data[i].VpcId) continue;
                 vpcMap[describeVpcs.data[i].VpcId] = [];
             }
