@@ -100,6 +100,7 @@ module.exports = {
 
         var acctRegion = helpers.defaultRegion(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.elb, function(region, rcb){
             var describeLoadBalancers = helpers.addSource(cache, source,
