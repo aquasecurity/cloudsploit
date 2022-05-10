@@ -46,7 +46,7 @@ module.exports = {
                     deletedBuckets.push(record);
                 } else if (!headBucket || headBucket.err) {
                     helpers.addResult(results, 3,
-                        'Unable to query S3 bucket: ' + helpers.addError(headBucket), region);
+                        'Unable to query S3 bucket: ' + helpers.addError(headBucket), region, record.s3BucketName);
                     continue;
                 }
             }

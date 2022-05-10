@@ -13,6 +13,7 @@ module.exports = {
     apis: ['CloudTrail:describeTrails', 'SNS:listTopics', 'SNS:getTopicAttributes'],
 
     run: function(cache, settings, callback) {
+        // console.log(JSON.stringify(cache, null, 2));
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
@@ -41,7 +42,7 @@ module.exports = {
 
             if (listTopics.err || !listTopics.data) {
                 helpers.addResult(results, 3,
-                    `Unable to query for SNS topics: ${helpers.addError(listTopics)}`, region);
+                    `Unable to list SNS topics: ${helpers.addError(listTopics)}`, region);
                 return rcb();
             }
 
@@ -52,20 +53,15 @@ module.exports = {
 
                 var getTopicAttributes = helpers.addSource(cache, source,
                     ['sns', 'getTopicAttributes', region, trail.SnsTopicARN]);
-
-                if (getTopicAttributes && getTopicAttributes.err && getTopicAttributes.err.code &&
-                    getTopicAttributes.err.code == 'NotFound') {
+                
+                if (!getTopicAttributes) {
                     helpers.addResult(results, 2,
                         'CloudTrail trail SNS topic not found', region, resource);
-                    continue;
-                } 
-
-                if (!getTopicAttributes || getTopicAttributes.err ||
-                    !getTopicAttributes.data) {
+                } else if (getTopicAttributes.err || !getTopicAttributes.data) {
                     helpers.addResult(results, 3,
-                        `Unable to query for SNS topic: ${helpers.addError(describeTrails)}`, 
+                        `Unable to query for SNS topic: ${helpers.addError(getTopicAttributes)}`, 
                         region, resource);
-                }  else {
+                } else {
                     helpers.addResult(results, 0,
                         'CloudTrail trail is using active SNS topic',
                         region, resource);
