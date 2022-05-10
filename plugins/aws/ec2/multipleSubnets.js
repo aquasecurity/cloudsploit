@@ -17,6 +17,7 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var acctRegion = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
         async.each(regions.ec2, function(region, rcb){
@@ -58,7 +59,7 @@ module.exports = {
                 return rcb();
             }
 
-            var resource = 'arn:aws:ec2:' + region + ':' + accountId + 'vpc/'+ vpcId;
+            var resource = 'arn:' + awsOrGov + ':ec2:' + region + ':' + accountId + ':vpc/' + vpcId;
 
             if (describeSubnets.data.Subnets.length > 1) {
                 helpers.addResult(results, 0,

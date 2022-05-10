@@ -26,6 +26,7 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var acctRegion = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
         async.each(regions.flowlogs, function(region, rcb){
@@ -72,7 +73,7 @@ module.exports = {
 
             // Loop through VPCs and add results
             for (var v in vpcMap) {    
-                var resource = 'arn:aws:ec2:' + region + ':' + accountId + 'vpc/' + v;
+                var resource = 'arn:' + awsOrGov + ':ec2:' + region + ':' + accountId + ':vpc/' + v;
                 if (!vpcMap[v].length) {
                     helpers.addResult(results, 2, 'VPC flow logs are not enabled', region, resource);
                 } else {
