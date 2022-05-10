@@ -96,7 +96,7 @@ const createCache = (err, list, certs, getCertificatePolicy) => {
     }
 };
 
-describe('rsaCertificateKeySize', function() {
+describe('rsaCertificateAllowedKeySizes', function() {
     describe('run', function() {
         it('should give passing result if no key vaults found', function(done) {
             const callback = (err, results) => {
