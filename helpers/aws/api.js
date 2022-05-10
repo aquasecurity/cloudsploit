@@ -147,7 +147,8 @@ var calls = {
             paginate: 'nextToken',
             params: {
                 limit: 50
-            }
+            },
+            rateLimit: 500
         },
         describeMetricFilters: {
             property: 'metricFilters',
