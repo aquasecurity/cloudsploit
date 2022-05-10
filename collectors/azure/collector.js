@@ -557,9 +557,9 @@ var collect = function(AzureConfig, settings, callback) {
             }, function(err, data) {
                 if (err) return cb(err);
 
-                if (data.value && Array.isArray(data.value) && localData && localData.value && data.value.length) {
+                if (data && data.value && Array.isArray(data.value) && data.value.length && localData && localData.value) {
                     localData.value = localData.value.concat(data.value);
-                } else if (localData && localData.value && localData.value.length) {
+                } else if (localData && localData.value && localData.value.length && (!data || !((obj.paginate && data[obj.paginate]) || data['nextLink']))) {
                     return cb(null, localData);
                 }
 
@@ -567,7 +567,7 @@ var collect = function(AzureConfig, settings, callback) {
                     obj.url = data['nextLink'] || data[obj.paginate];
                     processCall(obj, cb, localData || data);
                 } else {
-                    return cb(null, localData || data);
+                    return cb(null, localData || data || []);
                 }
             });
         };
