@@ -58,20 +58,20 @@ module.exports = {
                 return rcb();
             }
 
-            var subnetArn = 'arn:aws:ec2:' + region + ':' + accountId + ':subnet/' + describeSubnets.data.Subnets[0].SubnetId;
+            var resource = 'arn:aws:ec2:' + region + ':' + accountId + 'vpc/'+ vpcId;
 
             if (describeSubnets.data.Subnets.length > 1) {
                 helpers.addResult(results, 0,
                     'There are ' + describeSubnets.data.Subnets.length + ' subnets used in one VPC.',
-                    region, subnetArn);
+                    region, resource);
             } else if (describeSubnets.data.Subnets.length === 1) {
                 helpers.addResult(results, 2,
                     'Only one subnet (' + describeSubnets.data.Subnets[0].SubnetId + ') in one VPC is used.',
-                    region, subnetArn);
+                    region, resource);
             } else {
                 helpers.addResult(results, 0,
                     'The VPC does not contain any subnets',
-                    region, subnetArn);
+                    region, resource);
             }
 
             rcb();

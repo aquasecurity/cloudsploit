@@ -26,7 +26,6 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var acctRegion = helpers.defaultRegion(settings);
-        var awsOrGov = helpers.defaultPartition(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
         async.each(regions.flowlogs, function(region, rcb){
@@ -49,7 +48,7 @@ module.exports = {
             var vpcMap = {};
 
             for (var i in describeVpcs.data) {
-                var arn = 'arn:' + awsOrGov + ':ec2:' + region + ':' + accountId + ':vpc/' + describeVpcs.data[i].VpcId;
+                // var arn = 'arn:' + awsOrGov + ':ec2:' + region + ':' + accountId + ':vpc/' + describeVpcs.data[i].VpcId;
                 if (!describeVpcs.data[i].VpcId) continue;
                 vpcMap[describeVpcs.data[i].VpcId] = [];
             }
@@ -72,9 +71,10 @@ module.exports = {
             }
 
             // Loop through VPCs and add results
-            for (var v in vpcMap) {
+            for (var v in vpcMap) {    
+                var resource = 'arn:aws:ec2:' + region + ':' + accountId + 'vpc/' + v;
                 if (!vpcMap[v].length) {
-                    helpers.addResult(results, 2, 'VPC flow logs are not enabled', region, arn);
+                    helpers.addResult(results, 2, 'VPC flow logs are not enabled', region, resource);
                 } else {
                     var activeLogs = false;
 
@@ -86,9 +86,9 @@ module.exports = {
                     }
 
                     if (activeLogs) {
-                        helpers.addResult(results, 0, 'VPC flow logs are enabled', region, arn);
+                        helpers.addResult(results, 0, 'VPC flow logs are enabled', region, resource);
                     } else {
-                        helpers.addResult(results, 2, 'VPC flow logs are enabled, but not active', region, arn);
+                        helpers.addResult(results, 2, 'VPC flow logs are enabled, but not active', region, resource);
                     }
                 }
             }
