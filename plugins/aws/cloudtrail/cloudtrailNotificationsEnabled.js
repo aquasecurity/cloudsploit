@@ -13,7 +13,6 @@ module.exports = {
     apis: ['CloudTrail:describeTrails', 'SNS:listTopics', 'SNS:getTopicAttributes'],
 
     run: function(cache, settings, callback) {
-        // console.log(JSON.stringify(cache, null, 2));
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
@@ -53,7 +52,7 @@ module.exports = {
 
                 var getTopicAttributes = helpers.addSource(cache, source,
                     ['sns', 'getTopicAttributes', region, trail.SnsTopicARN]);
-                
+
                 if (!getTopicAttributes) {
                     helpers.addResult(results, 2,
                         'CloudTrail trail SNS topic not found', region, resource);
