@@ -244,6 +244,10 @@ var calls = {
         },
         describeDeliveryChannels: {
             property: 'DeliveryChannels'
+        },
+        getDiscoveredResourceCounts: {
+            property: 'DiscoveredResources',
+            paginate: 'NextToken'
         }
     },
     CustomerProfiles: {
