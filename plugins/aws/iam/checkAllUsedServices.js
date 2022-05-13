@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/aws');
 var managedAdminPolicy = 'arn:aws:iam::aws:policy/AdministratorAccess';
 
 module.exports = {
-    title: 'IAM Role Policies',
+    title: 'Check All Used Services',
     category: 'IAM',
     domain: 'Identity and Access management',
     description: 'Ensures IAM role policies are properly scoped with specific permissions',
@@ -105,6 +105,8 @@ module.exports = {
             return callback(null, results, source);
         }
 
+        discoveredResources = discoveredResources.data.map((res) => { return { resource: res.resourceType.slice(res.resourceType.lastIndexOf(':') + 1, res.resourceType.length), count: res.count }; });
+
         var listRoles = helpers.addSource(cache, source,
             ['iam', 'listRoles', region]);
 
@@ -163,6 +165,7 @@ module.exports = {
                 return cb();
             }
 
+            var policyFailures = [];
             var roleFailures = [];
 
             // See if role has admin managed policy
@@ -195,7 +198,18 @@ module.exports = {
                             getPolicyVersion.data.PolicyVersion.Document) {
                             let statements = helpers.normalizePolicyDocument(
                                 getPolicyVersion.data.PolicyVersion.Document);
+                            
                             if (!statements) break;
+                            
+                            let resource = statements.find((doc) => doc.Resource[0].includes('arn:')); 
+                            if (resource) {
+                                let resourceName = resource && resource.Resource[0].split(':')[2];
+                                let service = discoveredResources.find((res) => res.resource.toLowerCase() === resourceName.toLowerCase());
+                                if (!service || service.count < 1) {
+                                    let failMsg = `Role has policy with resource ${resourceName} which is not being used in this account`;
+                                    if (failMsg && roleFailures.indexOf(failMsg) === -1) policyFailures.push(failMsg);
+                                }
+                            }
 
                             addRoleFailures(roleFailures, statements, 'managed', config.ignore_service_specific_wildcards);
                         }
@@ -215,16 +229,30 @@ module.exports = {
                         getRolePolicy[policyName].data.PolicyDocument) {
                         var statements = helpers.normalizePolicyDocument(
                             getRolePolicy[policyName].data.PolicyDocument);
+
                         if (!statements) break;
+
+                        for (let statement of statements) {
+                            let resources = [... new Set(statement.Action.map((action) => action.split(':')[0].toLowerCase()))];
+                            resources.forEach((resource) => {
+                                let service = discoveredResources.find((res) => res.resource.toLowerCase() === resource.toLowerCase());
+                                if (!service || service.count < 1) {
+                                    let failMsg = `Role has policy with resource ${resource} which is not being used in this account`;
+                                    if (failMsg && roleFailures.indexOf(failMsg) === -1) policyFailures.push(failMsg);
+                                }
+                            });
+                        }
+
                         addRoleFailures(roleFailures, statements, 'inline', config.ignore_service_specific_wildcards);
                     }
                 }
             }
 
-            if (roleFailures.length) {
-                helpers.addResult(results, 2,
-                    roleFailures.join(', '),
-                    'global', role.Arn, custom);
+
+            if (policyFailures.length) {
+                helpers.addResult(results, 2, policyFailures.join(', '), 'global', role.Arn, custom);
+            } else if (roleFailures.length) {
+                helpers.addResult(results, 2, roleFailures.join(', '), 'global', role.Arn, custom);
             } else {
                 helpers.addResult(results, 0,
                     'Role does not have overly-permissive policy',

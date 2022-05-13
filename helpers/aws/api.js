@@ -246,7 +246,7 @@ var calls = {
             property: 'DeliveryChannels'
         },
         getDiscoveredResourceCounts: {
-            property: 'DiscoveredResources',
+            property: 'resourceCounts',
             paginate: 'NextToken'
         }
     },
