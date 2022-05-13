@@ -14,11 +14,9 @@ module.exports = function(AWSConfig, collection, retries, callback) {
         };
 
         helpers.makeCustomCollectorCall(eks, 'describeCluster', params, retries, null, null, null, function(err, data) {
-            if (err) {
-                collection.eks.describeCluster[AWSConfig.region][cluster].err = err;
-            }
+            if (err) collection.eks.describeCluster[AWSConfig.region][cluster].err = err;
 
-            collection.eks.describeCluster[AWSConfig.region][cluster].data = data;
+            if (data) collection.eks.describeCluster[AWSConfig.region][cluster].data = data;
 
             cb();
         });

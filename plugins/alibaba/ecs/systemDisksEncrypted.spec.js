@@ -279,26 +279,6 @@ describe("systemDisksEncrypted", function () {
       );
     });
 
-
-
-    it("should FAIL if System disk is not encrypted to target level and combine results when reach results limit", function (done) {
-      const cache = createCache([describeDisks[3]], listKeys, describeKey);
-      systemDisksEncrypted.run(
-        cache,
-        {
-          system_disks_encryption_level,
-          system_disks_result_limit,
-        },
-        (err, results) => {
-          expect(results.length).to.equal(1);
-          expect(results[0].status).to.equal(2);
-          expect(results[0].message).to.include(`More than ${system_disks_result_limit} system disks are not encrypted to ${system_disks_encryption_level}`);
-          expect(results[0].region).to.equal("cn-hangzhou");
-          done();
-        }
-      );
-    });
-
     it("should PASS if no ECS disks found", function (done) {
       const cache = createCache([]);
       systemDisksEncrypted.run(cache, {}, (err, results) => {
