@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Dataflow Hanged Jobs',
     category: 'Dataflow',
+    domain: 'Content Delivery',
     description: 'Ensure that Cloud Dataflow jobs are not in same state for more than defined amount of time.',
     more_info: 'Cloud Dataflow jobs transit between different states and normally reach terminal state. If they stay in same state ' +
         'for abnormal amount of time, job administrator should stop such jobs to save unnecessary cost.',
