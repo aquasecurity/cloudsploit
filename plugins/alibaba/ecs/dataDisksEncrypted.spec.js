@@ -281,22 +281,11 @@ describe('dataDisksEncrypted', function () {
         });
 
         it('should PASS if data disks are encrypted', function (done) {
-            const cache = createCache([describeDisks[0], describeDisks[2]], listKeys);
+            const cache = createCache([describeDisks[0]], listKeys);
             dataDisksEncrypted.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(2);
+                expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Data disk is encrypted');
-                expect(results[0].region).to.equal('cn-hangzhou');
-                done();
-            });
-        });
-
-        it('should FAIL if Data disk is not encrypted to target level and combine results when reach results limit', function (done) {
-            const cache = createCache([describeDisks[0], describeDisks[2]], listKeys);
-            dataDisksEncrypted.run(cache, { data_disks_encryption_level: 'alibabacmk', data_disks_result_limit: '1' }, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('data disks are not encrypted');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });

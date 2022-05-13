@@ -18,12 +18,6 @@ module.exports = {
             regex: '^(default|cloudcmek|cloudhsm|external)$',
             default: 'cloudcmek'
         },
-        disk_result_limit: {
-            name: 'Persistent Disks Auto Delete Result Limit',
-            description: 'If the number of results is greater than this value, combine them into one result',
-            regex: '^[0-9]*$',
-            default: '20',
-        }
     },
 
     run: function(cache, settings, callback) {
@@ -32,7 +26,6 @@ module.exports = {
         var regions = helpers.regions();
 
         let desiredEncryptionLevelStr = settings.disk_encryption_level || this.settings.disk_encryption_level.default;
-        var disk_result_limit = parseInt(settings.disk_result_limit || this.settings.disk_result_limit.default);
 
         var desiredEncryptionLevel = helpers.PROTECTION_LEVELS.indexOf(desiredEncryptionLevelStr);
 
@@ -66,9 +59,7 @@ module.exports = {
                     var zones = regions.zones;
                     
                     async.each(zones[region], function(zone, zcb) {
-                        var badDisks = [];
-                        var goodDisks = [];
-                        
+    
                         var disks = helpers.addSource(cache, source,
                             ['disks', 'list', zone]);
 
@@ -84,8 +75,14 @@ module.exports = {
                             noDisks.push(zone);
                             return zcb();
                         }
+
+                        var disksFound = false; 
+
                         disks.data.forEach(disk => {
                             if (!disk.id || !disk.selfLink || !disk.creationTimestamp) return;
+
+                            disksFound = true; 
+
                             let currentEncryptionLevel;
 
                             if (disk.diskEncryptionKey && disk.diskEncryptionKey.kmsKeyName) {
@@ -94,40 +91,18 @@ module.exports = {
                                 currentEncryptionLevel = 1; //default
                             }
 
+                            let resource = helpers.createResourceName('disks', disk.name, project, 'zone', zone);
+
                             if (currentEncryptionLevel < desiredEncryptionLevel) {
-                                badDisks.push(disk.name);
+                                helpers.addResult(results, 2,
+                                    'Disk encryption level is less than desired encryption level', region, resource);
                             } else {
-                                goodDisks.push(disk.name);
+                                helpers.addResult(results, 0,
+                                    'Disk encryption level is greater than or equal to desired encryption level', region, resource);
                             }
                         });
 
-                        if (badDisks.length) {
-                            if (badDisks.length > disk_result_limit) {
-                                helpers.addResult(results, 2,
-                                    `${badDisks.length} disks have encryption level less than desired encryption level`, region);
-                            } else {
-                                badDisks.forEach(disk => {
-                                    let resource = helpers.createResourceName('disks', disk, project, 'zone', zone);
-                                    helpers.addResult(results, 2,
-                                        'Disk encryption level is less than desired encryption level', region, resource);
-                                });
-                            }
-                        }
-
-                        if (goodDisks.length) {
-                            if (goodDisks.length > disk_result_limit) {
-                                helpers.addResult(results, 0,
-                                    `${goodDisks.length} disks have encryption level greater than or equal to desired encryption level`, region);
-                            } else {
-                                goodDisks.forEach(disk => {
-                                    let resource = helpers.createResourceName('disks', disk, project, 'zone', zone);
-                                    helpers.addResult(results, 0,
-                                        'Disk encryption level is greater than or equal to desired encryption level', region, resource);
-                                });
-                            }
-                        }
-
-                        if (!goodDisks.length && !badDisks.length) noDisks.push(zone);
+                        if (!disksFound) noDisks.push(zone);
 
                         zcb();
                     }, function() {
