@@ -9,10 +9,16 @@ var hoursBetween = function(date1, date2) {
     return Math.round(Math.abs((new Date(date1).getTime() - new Date(date2).getTime())/(ONE_HOUR)));
 };
 
+var minutesBetween = function(date1, date2) {
+    return Math.round(Math.abs((new Date(date1).getTime() - new Date(date2).getTime())/(60*1000)));
+};
+
 module.exports = {
     daysBetween: daysBetween,
 
     hoursBetween: hoursBetween,
+
+    minutesBetween: minutesBetween,
 
     daysAgo: function(date) {
         return daysBetween(date, new Date());
