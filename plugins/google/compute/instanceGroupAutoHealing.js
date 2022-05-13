@@ -5,7 +5,7 @@ module.exports = {
     title: 'Instance Group Auto Healing Enabled',
     category: 'Compute',
     domain: 'Compute',
-    description: 'Ensures instance groups have auto-healing enabled for high availability.',
+    description: 'Ensure that instance groups have auto-healing enabled for high availability.',
     more_info: 'To improve the availability of your application, configure a health check to verify that the application is responding as expected.',
     link: 'https://cloud.google.com/compute/docs/instance-groups/autohealing-instances-in-migs',
     recommended_action: 'Ensure autohealing is enabled for all instance groups.',
