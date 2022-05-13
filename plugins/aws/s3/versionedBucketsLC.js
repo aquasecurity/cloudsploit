@@ -32,11 +32,6 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        var nonCurrentVersionRules = [
-            'NoncurrentVersionTransitions',
-            'NoncurrentVersionExpiration'
-        ];
-
         listBuckets.data.forEach(function(bucket){
             var bucketLocation = helpers.getS3BucketLocation(cache, region, bucket.Name);
 
@@ -68,7 +63,8 @@ module.exports = {
                     if (ruleExists) {
                         var ruleForNonCurrent = getBucketLifecycleConfiguration.data.Rules.find(rule => rule.Status &&
                                 rule.Status.toUpperCase() === 'ENABLED' &&
-                                Object.keys(rule).some(key => nonCurrentVersionRules.includes(key) && rule[key].length));
+                                Object.keys(rule).some(key => (key == 'NoncurrentVersionTransitions' && rule[key].length) ||
+                                                                key == 'NoncurrentVersionExpiration' && Object.keys(rule[key]).length));
                         if (ruleForNonCurrent) {
                             helpers.addResult(results, 0,
                                 `S3 bucket ${bucket.Name} has versioning and lifecycle configuration enabled for non-current versions`,
