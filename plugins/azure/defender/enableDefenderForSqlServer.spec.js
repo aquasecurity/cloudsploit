@@ -1,6 +1,6 @@
 var assert = require('assert');
 var expect = require('chai').expect;
-var auth = require('./enableAzureDefender');
+var auth = require('./enableDefenderForSqlServer');
 
 const createCache = (err, data) => {
     return {
@@ -15,7 +15,7 @@ const createCache = (err, data) => {
     }
 };
 
-describe('enableAzureDefender', function() {
+describe('enableDefenderForSqlServer', function() {
     describe('run', function() {
         it('should give passing result if no pricings found', function(done) {
             const callback = (err, results) => {
