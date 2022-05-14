@@ -85,30 +85,68 @@ module.exports = {
         var results = [];
         var source = {};
 
-        var region = helpers.defaultRegion(settings);
+        var regions = helpers.regions(settings);
+        var iamRegion = helpers.defaultRegion(settings);
 
-        var configSRecorderStatus = helpers.addSource(cache, source,
-            ['configservice', 'describeConfigurationRecorderStatus', region]);
+        var allResources = [];
 
-        if (configSRecorderStatus.data[0].recording) {
-            helpers.addResult(results, 2,
-                'Config Service Recording is not enabled' + helpers.addError(configSRecorderStatus));
+        async.each(regions.configservice, function(region, rcb) {
+            var configSRecorderStatus = helpers.addSource(cache, source,
+                ['configservice', 'describeConfigurationRecorderStatus', region]);
+    
+            if (!configSRecorderStatus) {
+                return rcb();
+            }
+
+            if (configSRecorderStatus.err || !configSRecorderStatus.data) {
+                helpers.addResult(results, 0,
+                    'Unable to query config service: ' + helpers.addError(configSRecorderStatus));
+                return rcb(null, results, source);
+            }
+    
+            if (!configSRecorderStatus.data.length) {
+                helpers.addResult(results, 0,
+                    'Config service is not configured: ' + helpers.addError(configSRecorderStatus));
+                return rcb(null, results, source);
+            }
+
+            if (!configSRecorderStatus.data[0].recording) {
+                helpers.addResult(results, 0,
+                    'Config service is not configured: ' + helpers.addError(configSRecorderStatus));
+                return rcb(null, results, source);
+            }
+
+            if (!configSRecorderStatus.data[0].lastStatus &&
+                (configSRecorderStatus.data[0].lastStatus.toUpperCase() !== 'SUCCESS' ||
+                 configSRecorderStatus.data[0].lastStatus.toUpperCase() !== 'PENDING')) {
+                helpers.addResult(results, 0,
+                    'Config Service is configured, and recording, but not delivering properly', region);
+                return rcb(null, results, source);
+            }
+
+            var discoveredResources = helpers.addSource(cache, source,
+                ['configservice', 'getDiscoveredResourceCounts', region]);
+    
+            if (discoveredResources.err || !discoveredResources.data) {
+                helpers.addResult(results, 3,
+                    'Unable to query for Config Resources: ' + helpers.addError(discoveredResources));
+                return rcb(null, results, source);
+            }
+
+            allResources.push(discoveredResources.data);
+
+            rcb();
+        });
+
+        if (allResources.length === 0) {
+            helpers.addResult(results, 2, 'No Config Resources found.');
             return callback(null, results, source);
         }
 
-        var discoveredResources = helpers.addSource(cache, source,
-            ['configservice', 'getDiscoveredResourceCounts', region]);
-
-        if (discoveredResources.err || !discoveredResources.data) {
-            helpers.addResult(results, 3,
-                'Unable to query for Config Resources: ' + helpers.addError(discoveredResources));
-            return callback(null, results, source);
-        }
-
-        discoveredResources = discoveredResources.data.map((res) => { return { resource: res.resourceType.slice(res.resourceType.lastIndexOf(':') + 1, res.resourceType.length), count: res.count }; });
+        allResources = allResources.map((res) => { return { resource: res.resourceType.slice(res.resourceType.lastIndexOf(':') + 1, res.resourceType.length), count: res.count }; });
 
         var listRoles = helpers.addSource(cache, source,
-            ['iam', 'listRoles', region]);
+            ['iam', 'listRoles', iamRegion]);
 
         if (!listRoles) return callback(null, results, source);
 
@@ -144,14 +182,14 @@ module.exports = {
 
             // Get managed policies attached to role
             var listAttachedRolePolicies = helpers.addSource(cache, source,
-                ['iam', 'listAttachedRolePolicies', region, role.RoleName]);
+                ['iam', 'listAttachedRolePolicies', iamRegion, role.RoleName]);
 
             // Get inline policies attached to role
             var listRolePolicies = helpers.addSource(cache, source,
-                ['iam', 'listRolePolicies', region, role.RoleName]);
+                ['iam', 'listRolePolicies', iamRegion, role.RoleName]);
 
             var getRolePolicy = helpers.addSource(cache, source,
-                ['iam', 'getRolePolicy', region, role.RoleName]);
+                ['iam', 'getRolePolicy', iamRegion, role.RoleName]);
 
             if (!listAttachedRolePolicies || listAttachedRolePolicies.err) {
                 helpers.addResult(results, 3,
@@ -183,14 +221,14 @@ module.exports = {
                     if (config.ignore_customer_managed_iam_policies && /^arn:aws:iam::[0-9]{12}:.*/.test(policy.PolicyArn)) continue;
 
                     var getPolicy = helpers.addSource(cache, source,
-                        ['iam', 'getPolicy', region, policy.PolicyArn]);
+                        ['iam', 'getPolicy', iamRegion, policy.PolicyArn]);
 
                     if (getPolicy &&
                         getPolicy.data &&
                         getPolicy.data.Policy &&
                         getPolicy.data.Policy.DefaultVersionId) {
                         var getPolicyVersion = helpers.addSource(cache, source,
-                            ['iam', 'getPolicyVersion', region, policy.PolicyArn]);
+                            ['iam', 'getPolicyVersion', iamRegion, policy.PolicyArn]);
 
                         if (getPolicyVersion &&
                             getPolicyVersion.data &&
@@ -204,7 +242,7 @@ module.exports = {
                             let resource = statements.find((doc) => doc.Resource[0].includes('arn:')); 
                             if (resource) {
                                 let resourceName = resource && resource.Resource[0].split(':')[2];
-                                let service = discoveredResources.find((res) => res.resource.toLowerCase() === resourceName.toLowerCase());
+                                let service = allResources.find((res) => res.resource.toLowerCase() === resourceName.toLowerCase());
                                 if (!service || service.count < 1) {
                                     let failMsg = `Role has policy with resource ${resourceName} which is not being used in this account`;
                                     if (failMsg && roleFailures.indexOf(failMsg) === -1) policyFailures.push(failMsg);
@@ -235,7 +273,7 @@ module.exports = {
                         for (let statement of statements) {
                             let resources = [... new Set(statement.Action.map((action) => action.split(':')[0].toLowerCase()))];
                             resources.forEach((resource) => {
-                                let service = discoveredResources.find((res) => res.resource.toLowerCase() === resource.toLowerCase());
+                                let service = allResources.find((res) => res.resource.toLowerCase() === resource.toLowerCase());
                                 if (!service || service.count < 1) {
                                     let failMsg = `Role has policy with resource ${resource} which is not being used in this account`;
                                     if (failMsg && roleFailures.indexOf(failMsg) === -1) policyFailures.push(failMsg);
