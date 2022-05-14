@@ -34,7 +34,7 @@ describe('enableAzureDefender', function() {
             auth.run(cache, {}, callback);
         });
 
-        it('should give failing result if disable App Service', function(done) {
+        it('should give failing result if Azure Defender is not enabled', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -59,11 +59,11 @@ describe('enableAzureDefender', function() {
             auth.run(cache, {}, callback);
         });
 
-        it('should give passing result if enabled App Service', function(done) {
+        it('should give passing result if Azure Defender is enabled', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Azure Defender is not enabled for the subscription');
+                expect(results[0].message).to.include('Azure Defender is enabled for the subscription');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -73,7 +73,7 @@ describe('enableAzureDefender', function() {
                 [
                     {
                         "id": "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a/providers/Microsoft.Security/pricings/default",
-                        "name": "default",
+                        "name": "SqlServers",
                         "type": "Microsoft.Security/pricings",
                         "pricingTier": "Standard",
                         "location": "global"
