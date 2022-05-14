@@ -1,6 +1,6 @@
 var assert = require('assert');
 var expect = require('chai').expect;
-var auth = require('./enableDefenderForSqlServer');
+var auth = require('./enableDefenderForSqlDatabases');
 
 const createCache = (err, data) => {
     return {
@@ -15,7 +15,7 @@ const createCache = (err, data) => {
     }
 };
 
-describe('enableDefenderForSqlServer', function() {
+describe('enableDefenderForSqlDatabases', function() {
     describe('run', function() {
         it('should give passing result if no pricings found', function(done) {
             const callback = (err, results) => {
@@ -34,11 +34,11 @@ describe('enableDefenderForSqlServer', function() {
             auth.run(cache, {}, callback);
         });
 
-        it('should give failing result if Azure Defender is not enabled', function(done) {
+        it('should give failing result if Azure Defender for Sql Databases is not enabled', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Azure Defender is not enabled for the subscription');
+                expect(results[0].message).to.include('Azure Defender is not enabled for Sql Databases');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -59,11 +59,11 @@ describe('enableDefenderForSqlServer', function() {
             auth.run(cache, {}, callback);
         });
 
-        it('should give passing result if Azure Defender is enabled', function(done) {
+        it('should give passing result if Azure Defender for Sql Databases is enabled', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Azure Defender is enabled for the subscription');
+                expect(results[0].message).to.include('Azure Defender is enabled for Sql Databases');
                 expect(results[0].region).to.equal('global');
                 done()
             };

@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Enable Azure SQL Database Auditing',
+    title: 'Enable Defender For SQL Databases',
     category: 'Defender',
     domain: 'Security',
     description: 'Enabling Microsoft Defender for Azure SQL Databases allows for greater defense-in-depth, with threat detection provided by the Microsoft Security Response Center (MSRC).',
@@ -34,14 +34,15 @@ module.exports = {
             }
 
             let sqlServersPricing = pricings.data.find((pricing) => pricing.name.toLowerCase() === 'sqlservers');
+
             if (sqlServersPricing) {
-                if (sqlServersPricing.pricingTier === 'Standard') {
-                    helpers.addResult(results, 0, 'Azure Defender is enabled for the subscription', location, sqlServersPricing.id);
+                if (sqlServersPricing.pricingTier.toLowerCase() === 'standard') {
+                    helpers.addResult(results, 0, 'Azure Defender is enabled for Sql Databases', location, sqlServersPricing.id);
                 } else {
-                    helpers.addResult(results, 2, 'Azure Defender is not enabled for the subscription', location, sqlServersPricing.id);
+                    helpers.addResult(results, 2, 'Azure Defender is not enabled for Sql Databases', location, sqlServersPricing.id);
                 }
             } else {
-                helpers.addResult(results, 0, 'Azure Defender is not enabled for the subscription', location);
+                helpers.addResult(results, 2, 'Azure Defender is not enabled for Sql Databases', location);
             }
 
             rcb();

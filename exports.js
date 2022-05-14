@@ -761,7 +761,7 @@ module.exports = {
         'cosmosPublicAccessDisabled'    : require(__dirname + '/plugins/azure/cosmosdb/cosmosPublicAccessDisabled.js'),
         'automaticFailoverEnabled'      : require(__dirname + '/plugins/azure/cosmosdb/automaticFailoverEnabled.js'),
 
-        'enableDefenderForSqlServer'    : require(__dirname + '/plugins/azure/defender/enableDefenderForSqlServer.js'),
+        'enableDefenderForSqlDatabases' : require(__dirname + '/plugins/azure/defender/enableDefenderForSqlDatabases.js'),
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
