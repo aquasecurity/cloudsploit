@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var advancedDataSecurityEnabled = require('./enableRecurringScans');
+var enableRecurringScans = require('./enableRecurringScans');
 
 const servers = [
     {
@@ -7,7 +7,7 @@ const servers = [
     }
 ];
 
-const serverSecurityAlertPolicies = [
+const vulnerabilityAssessments = [
     {
         id: '/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Sql/servers/test-server/vulnerabilityAssessments/Default',
         name: 'Default',
@@ -63,7 +63,7 @@ describe('enableRecurringScans', function() {
                 []
             );
 
-            advancedDataSecurityEnabled.run(cache, {}, callback);
+            enableRecurringScans.run(cache, {}, callback);
         });
 
         it('should give failing result if No Vulnerability Assessments settings found', function(done) {
@@ -80,7 +80,7 @@ describe('enableRecurringScans', function() {
                 []
             );
 
-            advancedDataSecurityEnabled.run(cache, {}, callback);
+            enableRecurringScans.run(cache, {}, callback);
         });
 
         it('should give failing result if Recurring Scans for Sql Server is disabled', function(done) {
@@ -94,10 +94,10 @@ describe('enableRecurringScans', function() {
 
             const cache = createCache(
                 servers,
-                [serverSecurityAlertPolicies[1]]
+                [vulnerabilityAssessments[1]]
             );
 
-            advancedDataSecurityEnabled.run(cache, {}, callback);
+            enableRecurringScans.run(cache, {}, callback);
         });
 
         it('should give passing result if Recurring Scans for the SQL server is enabled', function(done) {
@@ -111,10 +111,10 @@ describe('enableRecurringScans', function() {
 
             const cache = createCache(
                 servers,
-                [serverSecurityAlertPolicies[0]]
+                [vulnerabilityAssessments[0]]
             );
 
-            advancedDataSecurityEnabled.run(cache, {}, callback);
+            enableRecurringScans.run(cache, {}, callback);
         });
 
         it('should give unknown result if unable to query for SQL servers', function(done) {
@@ -132,7 +132,7 @@ describe('enableRecurringScans', function() {
                 { message: 'unable to query servers'}
             );
 
-            advancedDataSecurityEnabled.run(cache, {}, callback);
+            enableRecurringScans.run(cache, {}, callback);
         });
 
         it('should give unknown result if Unable to query for Vulnerability Assessments settings', function(done) {
@@ -151,7 +151,7 @@ describe('enableRecurringScans', function() {
                 { message: 'Unable to query for Vulnerability Assessments settings'}
             );
 
-            advancedDataSecurityEnabled.run(cache, {}, callback);
+            enableRecurringScans.run(cache, {}, callback);
         });
     })
 });
