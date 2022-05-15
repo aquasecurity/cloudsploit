@@ -268,6 +268,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/failoverGroups?api-version=2017-03-01-preview'
         }
     },
+    vulnerabilityAssessments: {
+        listByServer: {
+            reliesOnPath: 'servers.listSql',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/vulnerabilityAssessments?api-version=2021-02-01-preview'
+        }
+    },
     serverAutomaticTuning: {
         get: {
             reliesOnPath: 'servers.listSql',
