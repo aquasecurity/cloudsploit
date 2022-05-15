@@ -2,13 +2,13 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Advanced Threat Protection Enabled',
+    title: 'Enable Recurring Scans',
     category: 'SQL Server',
     domain: 'Databases',
-    description: 'Ensures that Advanced Threat Protection is enabled for SQL Servers',
-    more_info: 'Azure Defender for SQL is a unified package for advanced SQL security capabilities. Azure Defender is available for Azure SQL Database, Azure SQL Managed Instance, and Azure Synapse Analytics. It includes functionality for discovering and classifying sensitive data, surfacing and mitigating potential database vulnerabilities, and detecting anomalous activities that could indicate a threat to your database. It provides a single go-to location for enabling and managing these capabilities.',
-    recommended_action: 'Ensure that ThreatDetectionState is set to Enabled',
-    link: 'https://docs.microsoft.com/en-us/azure/azure-sql/database/azure-defender-for-sql',
+    description: 'Ensures that Period Recurring Scans is enabled for SQL Servers',
+    more_info: 'VA setting Periodic recurring scans schedules periodic (weekly) vulnerability scanning for the SQL server and corresponding Databases. Periodic and regular vulnerability scanning provides risk visibility based on updated known vulnerability signatures and best practices.',
+    recommended_action: 'Ensure that recurringScans is set to Enabled',
+    link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-vulnerability-assessment',
     apis: ['servers:listSql', 'vulnerabilityAssessments:listByServer'],
 
     run: function(cache, settings, callback) {
