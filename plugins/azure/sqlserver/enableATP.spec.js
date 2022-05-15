@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var advancedDataSecurityEnabled = require('./enableATP');
+var enableATP = require('./enableATP');
 
 const servers = [
     {
@@ -7,7 +7,7 @@ const servers = [
     }
 ];
 
-const serverSecurityAlertPolicies = [
+const advancedThreatProtectionSettings = [
     {
         id: '/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Sql/servers/test-server/advancedThreatProtectionSettings/Default',
         name: 'Default',
@@ -63,7 +63,7 @@ describe('enableATP', function() {
                 []
             );
 
-            advancedDataSecurityEnabled.run(cache, {}, callback);
+            enableATP.run(cache, {}, callback);
         });
 
         it('should give failing result if no Database Advanced Threat Protection settings found', function(done) {
@@ -80,7 +80,7 @@ describe('enableATP', function() {
                 []
             );
 
-            advancedDataSecurityEnabled.run(cache, {}, callback);
+            enableATP.run(cache, {}, callback);
         });
 
         it('should give failing result if Advanced Threat Protection for the SQL server is disabled', function(done) {
@@ -94,10 +94,10 @@ describe('enableATP', function() {
 
             const cache = createCache(
                 servers,
-                [serverSecurityAlertPolicies[1]]
+                [advancedThreatProtectionSettings[1]]
             );
 
-            advancedDataSecurityEnabled.run(cache, {}, callback);
+            enableATP.run(cache, {}, callback);
         });
 
         it('should give passing result if Advanced Threat Protection for the SQL server is enabled', function(done) {
@@ -111,10 +111,10 @@ describe('enableATP', function() {
 
             const cache = createCache(
                 servers,
-                [serverSecurityAlertPolicies[0]]
+                [advancedThreatProtectionSettings[0]]
             );
 
-            advancedDataSecurityEnabled.run(cache, {}, callback);
+            enableATP.run(cache, {}, callback);
         });
 
         it('should give unknown result if unable to query for SQL servers', function(done) {
@@ -132,7 +132,7 @@ describe('enableATP', function() {
                 { message: 'unable to query servers'}
             );
 
-            advancedDataSecurityEnabled.run(cache, {}, callback);
+            enableATP.run(cache, {}, callback);
         });
 
         it('should give unknown result if Unable to query for Database Advanced Threat Protection settings', function(done) {
@@ -151,7 +151,7 @@ describe('enableATP', function() {
                 { message: 'Unable to query for Database Advanced Threat Protection settings'}
             );
 
-            advancedDataSecurityEnabled.run(cache, {}, callback);
+            enableATP.run(cache, {}, callback);
         });
     })
 });
