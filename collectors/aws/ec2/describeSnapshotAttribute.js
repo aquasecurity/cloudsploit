@@ -5,7 +5,7 @@ var helpers = require(__dirname + '/../../../helpers/aws');
 module.exports = function(AWSConfig, collection, retries, callback) {
     var ec2 = new AWS.EC2(AWSConfig);
 
-    async.eachLimit(collection.ec2.describeSnapshots[AWSConfig.region].data, 15, function(snapshot, cb){
+    async.eachLimit(collection.ec2.describeSnapshots[AWSConfig.region].data, 20, function(snapshot, cb){
         collection.ec2.describeSnapshotAttribute[AWSConfig.region][snapshot.SnapshotId] = {};
         var params = {
             Attribute: 'createVolumePermission',
