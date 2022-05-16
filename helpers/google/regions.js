@@ -11,6 +11,7 @@ var regions = [
     'northamerica-northeast1',      // Montreal
     'northamerica-northeast2',      // Toronto
     'southamerica-east1',           // Sao Paulo
+    'southamerica-west1',           // Santiago
     'europe-west1',                 // Belgium
     'europe-west2',                 // London
     'europe-west3',                 // Frankfurt
@@ -43,6 +44,7 @@ var zones = {
     'northamerica-northeast1'       : ['northamerica-northeast1-a', 'northamerica-northeast1-b', 'northamerica-northeast1-c'],
     'northamerica-northeast2'       : ['northamerica-northeast2-a', 'northamerica-northeast2-b', 'northamerica-northeast2-c'],
     'southamerica-east1'            : ['southamerica-east1-a', 'southamerica-east1-b', 'southamerica-east1-c'],
+    'southamerica-west1'            : ['southamerica-west1-a', 'southamerica-west1-b', 'southamerica-west1-c'],
     'europe-west1'                  : ['europe-west1-b', 'europe-west1-c', 'europe-west1-d'],
     'europe-west2'                  : ['europe-west2-a', 'europe-west2-b', 'europe-west2-c'],
     'europe-west3'                  : ['europe-west3-a', 'europe-west3-b', 'europe-west3-c'],

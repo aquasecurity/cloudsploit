@@ -5,7 +5,7 @@ var helpers = require(__dirname + '/../../../helpers/aws');
 module.exports = function(AWSConfig, collection, retries, callback) {
     var wafv2 = new AWS.WAFV2(AWSConfig);
     async.eachLimit(collection.wafv2.listWebACLs[AWSConfig.region].data, 15, function(dep, depCb){
-        async.each(['APPLICATION_LOAD_BALANCER', 'API_GATEWAY'], function(thisCheck, tcCb){
+        async.eachLimit(['APPLICATION_LOAD_BALANCER', 'API_GATEWAY'], 1,  function(thisCheck, tcCb){
             if (!collection['wafv2']['listResourcesForWebACL'][AWSConfig.region][dep['ARN']]) collection['wafv2']['listResourcesForWebACL'][AWSConfig.region][dep['ARN']] = {};
 
             var filter = {};
