@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Restricted API Keys',
     category: 'API',
-    domain: 'API',
+    domain: 'Identity and Access Management',
     description: 'Ensure that your Google Cloud API Keys are periodically regenerated.',
     more_info: 'Make sure that your Google API Keys are regenerated regularly to avoid data leaks and unauthorized access through outdated API Keys.',
     link: 'https://cloud.google.com/docs/authentication/api-keys',
