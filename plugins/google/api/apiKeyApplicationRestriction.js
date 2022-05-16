@@ -5,7 +5,7 @@ module.exports = {
     category: 'API',
     domain: 'Identity and Access Management',
     description: 'Ensure there are no unrestricted API keys available within your GCP project.',
-    more_info: 'To reduce the risk of attacks, Google Cloud API keys should be restricted only to trusted hosts, HTTP referrers, and Android/iOS mobile applications..',
+    more_info: 'To reduce the risk of attacks, Google Cloud API keys should be restricted only to trusted hosts, HTTP referrers, and Android/iOS mobile applications.',
     link: 'https://cloud.google.com/docs/authentication/api-keys#adding_application_restrictions',
     recommended_action: 'Ensure that Application restrictions are set for all Google Cloud API Keys.',
     apis: ['apiKeys:list', 'projects:get'],
