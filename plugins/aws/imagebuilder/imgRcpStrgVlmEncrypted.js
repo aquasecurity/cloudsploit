@@ -59,7 +59,6 @@ module.exports = {
                         'Image recipe does not have ebs volume storage encrypted',
                         region, resource);
                 }
-
             }
 
             rcb();
