@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Restricted API Keys',
     category: 'API',
-    domain: 'API',
+    domain: 'Identity and Access Management',
     description: 'Ensure that your Google Cloud API Keys are restricted to only those APIs that your application needs access to.',
     more_info: 'API keys are unrestricted by default. Unrestricted keys are insecure because they can be used by anyone from anywhere. To reduce the risk of attacks, Google Cloud API keys should be restricted to call only the APIs required by your application.',
     link: 'https://cloud.google.com/docs/authentication/api-keys#api_key_restrictions',
