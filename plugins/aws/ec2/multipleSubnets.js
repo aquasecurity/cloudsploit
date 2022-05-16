@@ -9,12 +9,16 @@ module.exports = {
     more_info: 'VPCs should be designed to have separate public and private subnets, ideally across availability zones, enabling a DMZ-style architecture.',
     link: 'https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Subnets.html#SubnetSecurity',
     recommended_action: 'Create at least two subnets in each VPC, utilizing one for public traffic and the other for private traffic.',
-    apis: ['EC2:describeVpcs', 'EC2:describeSubnets'],
+    apis: ['EC2:describeVpcs', 'EC2:describeSubnets', 'STS:getCallerIdentity'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+
+        var acctRegion = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
+        var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
         async.each(regions.ec2, function(region, rcb){
             var describeVpcs = helpers.addSource(cache, source,
@@ -55,18 +59,20 @@ module.exports = {
                 return rcb();
             }
 
+            var resource = 'arn:' + awsOrGov + ':ec2:' + region + ':' + accountId + ':vpc/' + vpcId;
+
             if (describeSubnets.data.Subnets.length > 1) {
                 helpers.addResult(results, 0,
                     'There are ' + describeSubnets.data.Subnets.length + ' subnets used in one VPC.',
-                    region, vpcId);
+                    region, resource);
             } else if (describeSubnets.data.Subnets.length === 1) {
                 helpers.addResult(results, 2,
                     'Only one subnet (' + describeSubnets.data.Subnets[0].SubnetId + ') in one VPC is used.',
-                    region, vpcId);
+                    region, resource);
             } else {
                 helpers.addResult(results, 0,
                     'The VPC does not contain any subnets',
-                    region, vpcId);
+                    region, resource);
             }
 
             rcb();

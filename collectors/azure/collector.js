@@ -49,7 +49,8 @@ var calls = {
     },
     virtualMachines: {
         listAll: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachines?api-version=2019-12-01'
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachines?api-version=2019-12-01',
+            paginate: 'nextLink'
         }
     },
     snapshots: {
@@ -548,22 +549,37 @@ var collect = function(AzureConfig, settings, callback) {
 
         var collection = {};
 
-        var processCall = function(obj, cb) {
+        let makeCall = function(localUrl, obj, cb, localData) {
+            helpers.call({
+                url: localUrl,
+                post: obj.post,
+                token: obj.graph ? loginData.graphToken : (obj.vault ? loginData.vaultToken : loginData.token)
+            }, function(err, data) {
+                if (err) return cb(err);
+
+                if (data && data.value && Array.isArray(data.value) && data.value.length && localData && localData.value) {
+                    localData.value = localData.value.concat(data.value);
+                } else if (localData && localData.value && localData.value.length && (!data || !((obj.paginate && data[obj.paginate]) || data['nextLink']))) {
+                    return cb(null, localData);
+                }
+
+                if (data && ((obj.paginate && data[obj.paginate]) || data['nextLink'])) {
+                    obj.url = data['nextLink'] || data[obj.paginate];
+                    processCall(obj, cb, localData || data);
+                } else {
+                    return cb(null, localData || data || []);
+                }
+            });
+        };
+
+        var processCall = function(obj, cb, localData) {
             var localUrl = obj.url.replace(/\{subscriptionId\}/g, AzureConfig.SubscriptionID);
             if (obj.rateLimit) {
                 setTimeout(function() {
-                    helpers.call({
-                        url: localUrl,
-                        post: obj.post,
-                        token: obj.graph ? loginData.graphToken : (obj.vault ? loginData.vaultToken : loginData.token)
-                    }, cb);
+                    makeCall(localUrl, obj, cb, localData);
                 }, obj.rateLimit);
             } else {
-                helpers.call({
-                    url: localUrl,
-                    post: obj.post,
-                    token: obj.graph ? loginData.graphToken : (obj.vault ? loginData.vaultToken : loginData.token)
-                }, cb);
+                makeCall(localUrl, obj, cb, localData);
             }
         };
 
