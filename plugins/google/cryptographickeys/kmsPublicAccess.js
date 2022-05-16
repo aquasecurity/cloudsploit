@@ -52,12 +52,12 @@ module.exports = {
 
             if (!cryptoKeysIamPolicies || cryptoKeysIamPolicies.err || !cryptoKeysIamPolicies.data) {
                 helpers.addResult(results, 3, 'Unable to query IAM Policies for Cryptographic Keys: ' + helpers.addError(cryptoKeysIamPolicies), region);
-                return callback(null, results, source);
+                return rcb();
             }
 
             if (!cryptoKeysIamPolicies.data.length) {
                 helpers.addResult(results, 0, 'No IAM Policies found', region);
-                return callback(null, results, source);
+                return rcb();
             }
 
             cryptoKeysIamPolicies = cryptoKeysIamPolicies.data;
