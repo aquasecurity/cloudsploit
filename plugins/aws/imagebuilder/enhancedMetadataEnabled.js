@@ -29,7 +29,7 @@ module.exports = {
 
             if (!listImagePipelines.data.length) {
                 helpers.addResult(results, 0,
-                    'No image pipeline list found', region);
+                    'No Image Builder image pipelines found', region);
                 return rcb();
             }
 
