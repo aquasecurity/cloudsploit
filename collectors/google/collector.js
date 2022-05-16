@@ -285,7 +285,7 @@ var calls = {
         list: {
             url: 'https://cloudresourcemanager.googleapis.com/v1beta1/organizations',
             pagination: false
-        },
+        }
     },
     urlMaps: { // https://compute.googleapis.com/compute/v1/projects/{project}/global/urlMaps
         list: {
@@ -409,6 +409,9 @@ var collect = function(GoogleConfig, settings, callback) {
 
     var regions = helpers.regions();
 
+    if (settings.gather) {
+        return callback(null, calls, postcalls);
+    }
     helpers.authenticate(GoogleConfig)
         .then(client => {
             async.eachOfLimit(calls, 10, function(call, service, serviceCb) {
