@@ -60,7 +60,6 @@ module.exports = {
                         'Imagebuilder does not have infrastructure configuration notifications enabled',
                         region, resource);
                 }
-
             }
 
             rcb();
