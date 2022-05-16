@@ -76,7 +76,6 @@ module.exports = {
                 kmsAliasArnMap[alias.AliasArn] = keyArn;
             });
 
-            console.log(kmsAliasArnMap);
          
             for (let recipe of listContainerRecipes.data) {
                 let resource = recipe.arn;
