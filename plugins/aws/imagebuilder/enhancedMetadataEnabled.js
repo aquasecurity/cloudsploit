@@ -38,7 +38,7 @@ module.exports = {
 
                 let resource = image.arn;
 
-                if (image.enhancedImageMetadataEnabled == true) {
+                if (image.enhancedImageMetadataEnabled) {
                     helpers.addResult(results, 0,
                         'Image pipeline has enhanced metadata collection enabled',
                         region, resource);
