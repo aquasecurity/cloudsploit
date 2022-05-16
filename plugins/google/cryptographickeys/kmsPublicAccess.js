@@ -63,6 +63,8 @@ module.exports = {
             cryptoKeysIamPolicies = cryptoKeysIamPolicies.data;
 
             cryptoKeys.data.forEach(cryptoKey => {     
+                if (!cryptoKey.name) return;
+
                 let keyIamPolicy = cryptoKeysIamPolicies.find(iamPolicy => iamPolicy.parent && iamPolicy.parent.name === cryptoKey.name);
 
                 if (!keyIamPolicy || !keyIamPolicy.bindings || !keyIamPolicy.bindings.length) {
