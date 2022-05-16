@@ -24,7 +24,14 @@ var regions = [
     'ap-chuncheon-1',
     'me-dubai-1',
     'uk-cardiff-1',
-    'us-sanjose-1'
+    'us-sanjose-1',
+    'eu-marseille-1',
+    'il-jerusalem-1',
+    'eu-milan-1',
+    'ap-singapore-1',
+    'eu-amsterdam-1',
+    'af-johannesburg-1',
+    'eu-stockholm-1'
 ];
 
 module.exports = {
