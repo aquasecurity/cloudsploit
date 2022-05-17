@@ -56,7 +56,7 @@ module.exports = {
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'Imagebuilder does not have infrastructure configuration notifications enabled',
+                        'Infrastructure configuration does not have SNS notifications enabled',
                         region, resource);
                 }
             }
