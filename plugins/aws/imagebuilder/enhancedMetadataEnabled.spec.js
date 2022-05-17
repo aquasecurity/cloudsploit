@@ -69,7 +69,8 @@ describe('enhancedMetadataEnabled', () => {
             enhancedMetadataEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Image pipeline has enhanced metadata collection enabled')
+                expect(results[0].message).to.include('Image pipeline has enhanced metadata collection enabled');
+                expect(results[0].region).to.equal('us-east-1');
             })
         });
         it('should FAIL if Image pipeline does not have enhanced metadata collection enabled', () => {
@@ -77,7 +78,8 @@ describe('enhancedMetadataEnabled', () => {
             enhancedMetadataEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Image pipeline does not have enhanced metadata collection enabled')
+                expect(results[0].message).to.include('Image pipeline does not have enhanced metadata collection enabled');
+                expect(results[0].region).to.equal('us-east-1');
             })
         });
         it('should PASS if No image pipeline list found', () => {
@@ -85,7 +87,8 @@ describe('enhancedMetadataEnabled', () => {
             enhancedMetadataEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No Image Builder image pipelines found')
+                expect(results[0].message).to.include('No Image Builder image pipelines found');
+                expect(results[0].region).to.equal('us-east-1');
             })
         });
         it('should UNKNOWN if Unable to list image pipeline', () => {
@@ -93,7 +96,8 @@ describe('enhancedMetadataEnabled', () => {
             enhancedMetadataEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to list image pipeline')
+                expect(results[0].message).to.include('Unable to list image pipeline');
+                expect(results[0].region).to.equal('us-east-1');
             })
         });
         it('should not return anything if list image pipeline response is not found', () => {
