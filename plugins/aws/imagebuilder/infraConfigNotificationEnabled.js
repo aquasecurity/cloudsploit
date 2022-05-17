@@ -48,7 +48,6 @@ module.exports = {
                         region, resource);
                     continue;
                 } 
-
                
                 if (getInfrastructureConfiguration.data.infrastructureConfiguration && 
                     getInfrastructureConfiguration.data.infrastructureConfiguration.snsTopicArn) {
