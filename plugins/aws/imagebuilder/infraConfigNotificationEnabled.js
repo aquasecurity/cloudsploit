@@ -53,7 +53,7 @@ module.exports = {
                 if (getInfrastructureConfiguration.data.infrastructureConfiguration && 
                     getInfrastructureConfiguration.data.infrastructureConfiguration.snsTopicArn) {
                     helpers.addResult(results, 0,
-                        'Imagebuilder has infrastructure configuration notifications enabled',
+                        'Infrastructure configuration has SNS notifications enabled',
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
