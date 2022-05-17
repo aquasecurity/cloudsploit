@@ -46,7 +46,7 @@ module.exports = {
             }
 
             if (!listContainerRecipes.data || !listContainerRecipes.data.length) {
-                helpers.addResult(results, 0, 'No container recipe list found', region);
+                helpers.addResult(results, 0, 'No container recipes found', region);
                 return rcb();
             }
 
