@@ -81,24 +81,24 @@ const createCache = (recipe, getInfrastructureConfiguration, recipeErr, getInfra
 
 describe('infraConfigNotificationEnabled', function () {
     describe('run', function () {
-        it('should FAIL if Imagebuilder does not have infrastructure configuration notifications enabled', function (done) {
+        it('should FAIL if Infrastructure configuration does not have SNS notifications enabled', function (done) {
             const cache = createCache([listInfrastructureConfigurations[0]], getInfrastructureConfiguration[1]);
             infraConfigNotificationEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Imagebuilder does not have infrastructure configuration notifications enabled');
+                expect(results[0].message).to.include('Infrastructure configuration does not have SNS notifications enabled');
                 done();
             });
         });
 
-        it('should PASS if Imagebuilder has infrastructure configuration notifications enabled', function (done) {
+        it('should PASS if Infrastructure configuration has SNS notifications enabled', function (done) {
             const cache = createCache([listInfrastructureConfigurations[1]], getInfrastructureConfiguration[0]);
             infraConfigNotificationEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Imagebuilder has infrastructure configuration notifications enabled');
+                expect(results[0].message).to.include('Infrastructure configuration has SNS notifications enabled');
                 done();
             });
         });

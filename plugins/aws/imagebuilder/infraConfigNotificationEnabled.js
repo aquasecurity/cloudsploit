@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Infrastructure Configuration Notification Enabled',
-    category: 'Imagebuilder',
+    category: 'Image Builder',
     domain: 'Compute',
     severity: 'LOW',
     description: 'Ensure that Image Builder infrastructure configurations have SNS notifications enabled.',

@@ -684,6 +684,12 @@ var calls = {
             override: true
         }
     },
+    Imagebuilder: {
+        listInfrastructureConfigurations: {
+            property: 'infrastructureConfigurationSummaryList',
+            paginate: 'nextToken'
+        }
+    },
     IoTSiteWise: {
         describeDefaultEncryptionConfiguration: {
         }
@@ -1326,6 +1332,14 @@ var postcalls = [
                 reliesOnCall: 'listDomainNames',
                 filterKey: 'DomainName',
                 filterValue: 'DomainName'
+            }
+        },
+        Imagebuilder: {
+            getInfrastructureConfiguration: {
+                reliesOnService: 'imagebuilder',
+                reliesOnCall: 'listInfrastructureConfigurations',
+                filterKey: 'infrastructureConfigurationArn',
+                filterValue: 'arn'
             }
         },
         S3: {
