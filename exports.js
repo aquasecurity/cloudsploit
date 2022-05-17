@@ -259,7 +259,7 @@ module.exports = {
         'bookmarkEncryptionEnabled'     : require(__dirname + '/plugins/aws/glue/bookmarkEncryptionEnabled.js'),
         'dataCatalogEncryptionEnabled'  : require(__dirname + '/plugins/aws/glue/dataCatalogEncryptionEnabled.js'),
 
-        'imgRcpStrgVlmEncrypted'        : require(__dirname + '/plugins/aws/imagebuilder/imgRcpStrgVlmEncrypted.js'),
+        'imageRecipeVolumeEncrypted'    : require(__dirname + '/plugins/aws/imagebuilder/imgRcpStrgVlmEncrypted.js'),
 
         'accessKeysExtra'               : require(__dirname + '/plugins/aws/iam/accessKeysExtra.js'),
         'accessKeysLastUsed'            : require(__dirname + '/plugins/aws/iam/accessKeysLastUsed.js'),
