@@ -23,7 +23,7 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
-        var cmk_unencrypted_threshold = settings.cmk_unencrypted_threshold || this.settings.cmk_unencrypted_threshold.default; 
+        var cmk_unencrypted_threshold = parseInt(settings.cmk_unencrypted_threshold || this.settings.cmk_unencrypted_threshold.default); 
 
         async.each(regions.efs, function(region, rcb) {
             var describeFileSystems = helpers.addSource(cache, source,
