@@ -167,23 +167,23 @@ const createCache = (recipe, keys, kmsAliases, getComponent, describeKey, recipe
 
 describe('imgBuilderComponentsEncrypted', function () {
     describe('run', function () {
-        it('should PASS if Imagebuilder component is encrypted with awscmk', function (done) {
+        it('should PASS if Image builder component is encrypted with awscmk', function (done) {
             const cache = createCache([listComponents[0]], listKeys, listAliases, getComponent[0], describeKey[0]);
             imgBuilderComponentsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Imagebuilder component is encrypted with awscmk');
+                expect(results[0].message).to.include('Image builder component is encrypted with awscmk');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
 
-        it('should FAIL if Imagebuilder component is encrypted with awskms', function (done) {
+        it('should FAIL if Image builder component is encrypted with awskms', function (done) {
             const cache = createCache([listComponents[1]], listKeys, listAliases, getComponent[1], describeKey[1]);
             imgBuilderComponentsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Imagebuilder component is encrypted with');
+                expect(results[0].message).to.include('Image builder component is encrypted with');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });

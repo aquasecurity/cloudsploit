@@ -1,7 +1,6 @@
-// Source: https://azure.microsoft.com/en-us/global-infrastructure/services/
-
 var regions = [
-    'us-gov-ashburn-1'
+    'us-gov-ashburn-1',
+    'us-gov-phoenix-1'
 ];
 
 module.exports = {

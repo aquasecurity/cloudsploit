@@ -3,13 +3,13 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Image Builder Components Encrypted',
-    category: 'Imagebuilder',
-    domain: 'compute',
+    category: 'Image Builder',
+    domain: 'Compute',
     severity: 'LOW',
-    description: 'Ensure that Imagebuilder components are encrypted.',
-    more_info: 'Image Builder is a fully managed AWS service that makes it easier to automate the creation, management, and deployment of customized, secure, and up-to-date server images that are pre-installed and pre-configured with software and settings to meet specific IT standards.',
+    description: 'Ensure that Image Builder components are encrypted.',
+    more_info: 'Build components contain software, settings, and configurations that are installed or applied during the process of building custom images. Tests are run after a custom image is built to validate functionality, security, performance, etc. Custom components are encrypted with your KMS key or a KMS key owned by Image Builder.',
     link: 'https://docs.aws.amazon.com/imagebuilder/latest/userguide/data-protection.html',
-    recommended_action: 'Ensure that components are encrypted using AWS keys or customer managed keys in Imagebuilder service',
+    recommended_action: 'Ensure that components are encrypted using AWS keys or customer managed keys in Image Builder service',
     apis: ['Imagebuilder:listComponents', 'Imagebuilder:getComponent', 'KMS:listAliases', 'KMS:listKeys', 
         'KMS:describeKey'],
     settings: {
@@ -115,12 +115,12 @@ module.exports = {
 
                 if (currentEncryptionLevel >= desiredEncryptionLevel) {
                     helpers.addResult(results, 0,
-                        `Imagebuilder component is encrypted with ${currentEncryptionLevelString} \
+                        `Image builder component is encrypted with ${currentEncryptionLevelString} \
                         which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `Imagebuilder component is encrypted with ${currentEncryptionLevelString} \
+                        `Image builder component is encrypted with ${currentEncryptionLevelString} \
                         which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 }
