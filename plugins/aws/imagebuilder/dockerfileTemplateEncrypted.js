@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Dockerfile Template Encrypted',
-    category: 'Imagebuilder',
+    category: 'Image Builder',
     domain: 'compute',
     severity: 'LOW',
     description: 'Ensure that Image Recipe Dockerfile Template are encrypted.',
