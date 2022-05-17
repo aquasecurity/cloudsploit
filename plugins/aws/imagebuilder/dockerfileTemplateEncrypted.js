@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Compute',
     severity: 'LOW',
     description: 'Ensure that Image Recipe Dockerfile Template are encrypted.',
-    more_info: 'Image Builder is a fully managed AWS service that makes it easier to automate the creation, management, and deployment of customized, secure, and up-to-date server images that are pre-installed and pre-configured with software and settings to meet specific IT standards.',
+    more_info: 'Image Builder now offers a managed service for building Docker images. With Image Builder, you can automatically produce new up-to-date container images and publish them to specified Amazon Elastic Container Registry (Amazon ECR) repositories after running stipulated tests. Custom components are encrypted with your KMS key or a KMS key owned by Image Builder. ',
     link: 'https://docs.aws.amazon.com/imagebuilder/latest/userguide/data-protection.html',
     recommended_action: 'Ensure that container recipe docker file templates are encrypted using AWS keys or customer managed keys in Imagebuilder service',
     apis: ['Imagebuilder:listContainerRecipes', 'Imagebuilder:getContainerRecipe', 'KMS:listAliases', 'KMS:listKeys', 
