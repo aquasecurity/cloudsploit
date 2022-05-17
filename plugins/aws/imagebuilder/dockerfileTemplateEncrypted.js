@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Dockerfile Template Encrypted',
     category: 'Image Builder',
-    domain: 'compute',
+    domain: 'Compute',
     severity: 'LOW',
     description: 'Ensure that Image Recipe Dockerfile Template are encrypted.',
     more_info: 'Image Builder is a fully managed AWS service that makes it easier to automate the creation, management, and deployment of customized, secure, and up-to-date server images that are pre-installed and pre-configured with software and settings to meet specific IT standards.',
