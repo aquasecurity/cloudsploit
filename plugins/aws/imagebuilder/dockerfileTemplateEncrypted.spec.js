@@ -205,7 +205,7 @@ describe('dockerfileTemplateEncrypted', function () {
             });
         });
 
-        it('should PASS if no container recipe list found', function (done) {
+        it('should PASS if No container recipes found', function (done) {
             const cache = createCache([]);
             dockerfileTemplateEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
