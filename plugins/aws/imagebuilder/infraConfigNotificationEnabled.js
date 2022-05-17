@@ -6,7 +6,7 @@ module.exports = {
     category: 'Imagebuilder',
     domain: 'Compute',
     severity: 'LOW',
-    description: 'Ensure that Imagebuilder infrastructure configuration have sns notifications enabled.',
+    description: 'Ensure that Image Builder infrastructure configurations have SNS notifications enabled.',
     more_info: 'Infrastructure configurations allow you to specify the infrastructure within which to build and test your EC2 Image Builder image.',
     link: 'https://docs.aws.amazon.com/imagebuilder/latest/userguide/manage-infra-config.html',
     recommended_action: 'Enable sns notification in Imagebuilder infrastructure configurations to get notified of any changes in the service',
