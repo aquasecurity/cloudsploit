@@ -2,17 +2,12 @@
 
 var regions = [
     'us-ashburn-1',
-    'us-phoenix-1',
     'eu-frankfurt-1',
-    'uk-london-1',
     'ca-toronto-1',
-    'ap-mumbai-1',
     'ap-seoul-1',
     'ap-tokyo-1',
     'ap-sydney-1',
     'sa-saopaulo-1',
-    'ap-osaka-1',
-    'eu-zurich-1',
 ];
 
 module.exports = {

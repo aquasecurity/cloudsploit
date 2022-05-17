@@ -419,14 +419,14 @@
                 ],
                 "method": "GET",
                 "path": "waasPolicies",
-                "endpoint": "waas.{{region}}.oraclecloud.com"
+                "endpoint": "waas.{{region}}.oci.oraclecloud.com"
             },
             "get": {
                 "allowedHeaders": ["opc-request-id"],
                 "encodedGet": "waasPolicyId",
                 "method": "GET",
                 "path": "waasPolicies",
-                "endpoint": "waas.{{region}}.oraclecloud.com"
+                "endpoint": "waas.{{region}}.oci.oraclecloud.com"
             }
         }
     }
