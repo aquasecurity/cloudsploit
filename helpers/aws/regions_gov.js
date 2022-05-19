@@ -114,6 +114,6 @@ module.exports = {
     fsx: regions,
     wisdom: regions,
     voiceid: regions,
-    frauddetector: regions,
-    appmesh: regions
+    appmesh: regions,
+    frauddetector: regions
 };
