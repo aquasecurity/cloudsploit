@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Application Integration',
     description: 'Proactively check for Key Vault keys expiry date and rotate then before expiry date is reached.',
     more_info: 'After expiry date has reached for Key Vault key, it cannot be used anymore for cryptographic operations anymore.',
-    recommended_action: 'Ensure that Key Vault key are rotated before they get expired.',
+    recommended_action: 'Ensure that Key Vault keys are rotated before they get expired.',
     link: 'https://docs.microsoft.com/en-us/azure/key-vault/about-keys-secrets-and-certificates',
     apis: ['vaults:list', 'vaults:getKeys'],
     settings: {
