@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Web Apps Azure Active Directory Enabled',
+    title: 'Web Apps Active Directory Enabled',
     category: 'App Service',
     domain: 'Application Integration',
     description: 'Ensures that Azure Web Apps have registration with Azure Active Directory.',
