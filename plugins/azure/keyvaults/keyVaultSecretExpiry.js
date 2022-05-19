@@ -60,8 +60,9 @@ module.exports = {
                             let attributes = secret.attributes;
                             if (!attributes.enabled) {
                                 helpers.addResult(results, 0, 'Secret is not enabled', location, secretId);
-                            } else if (attributes.expiry) {
-                                let difference = Math.round((new Date(attributes.expiry).getTime() - (new Date).getTime())/(24*60*60*1000));
+                            } else if (attributes.exp || attributes.expiry) {
+                                let secretExpiry = attributes.exp ? attributes.exp * 1000 : attributes.expiry;
+                                let difference = Math.round((new Date(secretExpiry).getTime() - (new Date).getTime())/(24*60*60*1000));
                                 if (difference > config.key_vault_secret_expiry_fail) {
                                     helpers.addResult(results, 0,
                                         `Secret expires in ${difference} days`, location, secretId);

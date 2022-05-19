@@ -1,5 +1,14 @@
 var expect = require('chai').expect;
-var auth = require('./checkSecretsExpiry');
+var auth = require('./keyVaultSecretExpiry');
+
+var secretExpiryPass = new Date();
+secretExpiryPass.setMonth(secretExpiryPass.getMonth() + 2);
+
+var secretExpiryFail = new Date();
+secretExpiryFail.setMonth(secretExpiryFail.getMonth() + 1);
+
+var secretExpired = new Date();
+secretExpired.setMonth(secretExpired.getMonth() - 1);
 
 const listKeyVaults = [
     {
@@ -43,6 +52,22 @@ const getSecrets = [
                 }
             ]
         }
+    },{
+        '/subscriptions/abcdef123-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.KeyVault/vaults/testvault': {
+            data: [
+                {
+                    "id": "https://testvault.vault.azure.net/secrets/mysecret",
+                    "attributes": {
+                        "enabled": true,
+                        "expiry": secretExpiryPass,
+                        "created": 1572289869,
+                        "updated": 1572290380,
+                        "recoveryLevel": "Recoverable+Purgeable"
+                    },
+                    "tags": {}
+                }
+            ]
+        }
     },
     {
         '/subscriptions/abcdef123-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.KeyVault/vaults/testvault': {
@@ -51,7 +76,24 @@ const getSecrets = [
                     "id": "https://testvault.vault.azure.net/secrets/mysecret",
                     "attributes": {
                         "enabled": true,
-                        "expiry": '2022-12-10T21:08:47.684Z',
+                        "expiry": secretExpiryFail,
+                        "created": 1572289869,
+                        "updated": 1572290380,
+                        "recoveryLevel": "Recoverable+Purgeable"
+                    },
+                    "tags": {}
+                }
+            ]
+        }
+    },
+    {
+        '/subscriptions/abcdef123-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.KeyVault/vaults/testvault': {
+            data: [
+                {
+                    "id": "https://testvault.vault.azure.net/secrets/mysecret",
+                    "attributes": {
+                        "enabled": true,
+                        "expiry": secretExpired,
                         "created": 1572289869,
                         "updated": 1572290380,
                         "recoveryLevel": "Recoverable+Purgeable"
@@ -68,7 +110,7 @@ const getSecrets = [
                     "id": "https://testvault.vault.azure.net/secrets/mysecret",
                     "attributes": {
                         "enabled": false,
-                        "expiry": 1635448252,
+                        "expiry": secretExpired,
                         "created": 1572289869,
                         "updated": 1572290380,
                         "recoveryLevel": "Recoverable+Purgeable"
@@ -96,7 +138,7 @@ const createCache = (err, list, get) => {
     }
 };
 
-describe('checkSecretsExpiry', function() {
+describe('keyVaultSecretExpiry', function() {
     describe('run', function() {
         it('should give passing result if no secrets found', function(done) {
             const callback = (err, results) => {
@@ -110,11 +152,11 @@ describe('checkSecretsExpiry', function() {
             auth.run(createCache(null, [], {}), {}, callback);
         });
 
-        it('should give failing result if expiration is not set on secrets', function(done) {
+        it('should give passing result if secret expiration is not enabled', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Expiry date is not set for the secret');
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Secret expiration is not enabled');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
@@ -122,11 +164,11 @@ describe('checkSecretsExpiry', function() {
             auth.run(createCache(null, [listKeyVaults[0]], getSecrets[0]), {}, callback);
         });
 
-        it('should give passing result if expiration is set on keys', function(done) {
+        it('should give passing result if secret expiry is not yet reached', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Expiry date is set for the secret');
+                expect(results[0].message).to.include('Secret expires');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
@@ -134,16 +176,40 @@ describe('checkSecretsExpiry', function() {
             auth.run(createCache(null, [listKeyVaults[0]], getSecrets[1]), {}, callback);
         });
 
-        it('should give passing result if key is disabled', function(done) {
+        it('should give failing result if secret has expired', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('The secret is disabled');
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('Secret expired');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
 
-            auth.run(createCache(null, [listKeyVaults[0]], getSecrets[2]), {}, callback);
+            auth.run(createCache(null, [listKeyVaults[0]], getSecrets[3]), {}, callback);
+        });
+
+        it('should give failing result if secret expires within failure expiry date', function(done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('Secret expires');
+                expect(results[0].region).to.equal('eastus');
+                done()
+            };
+
+            auth.run(createCache(null, [listKeyVaults[0]], getSecrets[2]), { key_vault_secret_expiry_fail: '40' }, callback);
+        });
+
+        it('should give passing result if key is disabled', function(done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Secret is not enabled');
+                expect(results[0].region).to.equal('eastus');
+                done()
+            };
+
+            auth.run(createCache(null, [listKeyVaults[0]], getSecrets[4]), {}, callback);
         });
     })
 });
