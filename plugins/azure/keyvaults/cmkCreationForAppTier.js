@@ -1,23 +1,21 @@
 var async = require('async');
 var helpers = require('../../../helpers/azure');
-var _ = require('underscore');
 
 module.exports = {
     title: 'CMK Creation for App Tier Enabled',
     category: 'Key Vaults',
-    domain: 'Identity and Access Management',
+    domain: 'Application Integration',
     description: 'Ensure that a Customer-Managed Key (CMK) is created and configured for your Microsoft Azure application tier.',
     more_info: 'Setting a CMK for app tier, you gain full control over who can use this key to access the application data, implementing the principle of least privilege on the encryption key ownership and usage.',
-    recommended_action: 'Ensure each Key Vault has a CMK created and configured.',
+    recommended_action: 'Ensure a CMK created and configured for application tier in each region.',
     link: 'https://docs.microsoft.com/en-us/azure/azure-app-configuration/concept-customer-managed-keys',
     apis: ['vaults:list', 'vaults:getKeys'],
     settings: {
-        app_tier_tag_sets: {
-            name: 'App Tier Tag Sets',
-            description: 'An object of allowed tag set key value pairs to use for the CMKs creation for App Tier',
-            // eslint-disable-next-line no-useless-escape
-            regex: '/("?)\b(\w+)\1\s*:\s*("?)((?:\w+[-+*%])*?\w+)\b\3/g',
-            default: {}
+        app_tier_tag_key: {
+            name: 'App-Tier Tag Key',
+            description: 'Tag key to indicate App-Tier Key Vault keys',
+            regex: '^.*$s',
+            default: 'hello'
         }
     },
 
@@ -26,8 +24,10 @@ module.exports = {
         var source = {};
         var locations = helpers.locations(settings.govcloud);
         var config = {
-            app_tier_tag_sets: settings.app_tier_tag_sets || this.settings.app_tier_tag_sets.default
+            app_tier_tag_key: settings.app_tier_tag_key || this.settings.app_tier_tag_key.default
         };
+
+        if (!config.app_tier_tag_key.length) return callback(null, results, source);
 
         async.each(locations.vaults, function(location, rcb) {
             var vaults = helpers.addSource(cache, source,
@@ -41,42 +41,39 @@ module.exports = {
             }
 
             if (!vaults.data.length) {
-                helpers.addResult(results, 0, 'No Key Vaults found', location);
+                helpers.addResult(results, 2, 'No Key Vaults found', location);
                 return rcb();
             }
 
+            let appTierKey;
             vaults.data.forEach((vault) => {
                 var keys = helpers.addSource(cache, source,
                     ['vaults', 'getKeys', location, vault.id]);
 
                 if (!keys || keys.err || !keys.data) {
                     helpers.addResult(results, 3, 'Unable to query for Key Vault keys: ' + helpers.addError(keys), location, vault.id);
-                } else if (!keys.data.length) {
-                    helpers.addResult(results, 0, 'No Key Vault keys found', location, vault.id);
-                } else {
-                    keys.data.forEach((key) => {
+                    return;
+                }
+
+                if (keys.data.length) {
+                    for (let key of keys.data) {
                         var keyName = key.kid.substring(key.kid.lastIndexOf('/') + 1);
                         var keyId = `${vault.id}/keys/${keyName}`;
-
                         if (key.tags) {
-                            const tags = key.tags;
-                            const allowedTagSets = config.app_tier_tag_sets;
-                            const result = _.pick(tags, (v, k) => _.isEqual(allowedTagSets[k], v));
-
-                            if (Object.entries(result).length) {
-                                helpers.addResult(results, 0,
-                                    'CMK Creation for App Tier is enabled', location, keyId);
-                            } else {
-                                helpers.addResult(results, 2,
-                                    'CMK Creation for App Tier is disabled', location, keyId);
+                            if (Object.keys(key.tags).includes(config.app_tier_tag_key)) {
+                                appTierKey = keyId;
+                                break;
                             }
-                        } else {
-                            helpers.addResult(results, 2,
-                                'CMK Creation for App Tier is disabled', location, keyId);
                         }
-                    });
+                    }
                 }
             });
+
+            if (appTierKey) {
+                helpers.addResult(results, 0, `CMK exists for application tier: ${appTierKey}`, location);
+            } else {
+                helpers.addResult(results, 2, 'CMK does not exist for application tier', location);
+            }
 
             rcb();
         }, function() {
