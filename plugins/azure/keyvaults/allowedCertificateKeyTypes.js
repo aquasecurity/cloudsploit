@@ -13,7 +13,7 @@ module.exports = {
     settings: {
         allowed_certificate_key_types: {
             name: 'Key Vault Certificate Key Types',
-            description: 'Comma seprated key types supported for certificates in Azure Key Vault',
+            description: 'Comma separated key types supported for certificates in Azure Key Vault',
             regex: '^(RSA|EC)$',
             default: ''
         }
