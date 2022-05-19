@@ -15,7 +15,7 @@ module.exports = {
             name: 'App-Tier Tag Key',
             description: 'Tag key to indicate App-Tier Key Vault keys',
             regex: '^.*$s',
-            default: 'hello'
+            default: ''
         }
     },
 
