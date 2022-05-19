@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var azureActiveDirectoryEnabled = require('./azureActiveDirectoryEnabled');
+var webAppsADEnabled = require('./webAppsADEnabled');
 
 const webApps = [
     {
@@ -48,11 +48,11 @@ const createCache = (apps) => {
     };
 };
 
-describe('azureActiveDirectoryEnabled', function() {
+describe('webAppsADEnabled', function() {
     describe('run', function() {
         it('should give passing result if no web apps', function(done) {
             const cache = createCache([]);
-            azureActiveDirectoryEnabled.run(cache, {}, (err, results) => {
+            webAppsADEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No existing Web Apps found');
@@ -63,7 +63,7 @@ describe('azureActiveDirectoryEnabled', function() {
 
         it('should give unknown result if unable to query for web apps', function(done) {
             const cache = createCache(null);
-            azureActiveDirectoryEnabled.run(cache, {}, (err, results) => {
+            webAppsADEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for Web Apps');
@@ -74,7 +74,7 @@ describe('azureActiveDirectoryEnabled', function() {
 
         it('should give passing result if Registration with Azure Active Directory is enabled', function(done) {
             const cache = createCache([webApps[1]]);
-            azureActiveDirectoryEnabled.run(cache, {}, (err, results) => {
+            webAppsADEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Registration with Azure Active Directory is enabled for the Web App');
@@ -85,7 +85,7 @@ describe('azureActiveDirectoryEnabled', function() {
 
         it('should give failing result if Registration with Azure Active Directory is disabled', function(done) {
             const cache = createCache([webApps[0]]);
-            azureActiveDirectoryEnabled.run(cache, {}, (err, results) => {
+            webAppsADEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Registration with Azure Active Directory is disabled for the Web App');
