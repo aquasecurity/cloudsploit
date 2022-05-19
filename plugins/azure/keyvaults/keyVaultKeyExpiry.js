@@ -56,8 +56,12 @@ module.exports = {
                         var keyName = key.kid.substring(key.kid.lastIndexOf('/') + 1);
                         var keyId = `${vault.id}/keys/${keyName}`;
 
-                        if (key.attributes && key.attributes.expires) {
-                            let difference = Math.round((new Date(key.attributes.expires).getTime() - (new Date).getTime())/(24*60*60*1000));
+                        if (!key.attributes || !key.attributes.enabled) {
+                            helpers.addResult(results, 0,
+                                'Key is not enabled', location, keyId);
+                        } else if (key.attributes && (key.attributes.expires || key.attributes.exp)) {
+                            let keyExpiry = key.attributes.exp ? key.attributes.exp * 1000 : key.attributes.expires;
+                            let difference = Math.round((new Date(keyExpiry).getTime() - (new Date).getTime())/(24*60*60*1000));
                             if (difference > config.key_vault_key_expiry_fail) {
                                 helpers.addResult(results, 0,
                                     `Key expires in ${difference} days`, location, keyId);
