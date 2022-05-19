@@ -2,19 +2,30 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Key Expiration Enabled',
+    title: 'Key Vault Key Expiry',
     category: 'Key Vaults',
-    domain: 'Identity and Access Management',
-    description: 'Ensure that all Keys in Azure Key Vault have an expiry time set.',
-    more_info: 'Setting an expiry time on all keys forces key rotation and removes unused and forgotten keys from being used.',
-    recommended_action: 'Ensure each Key Vault has an expiry time set that provides for sufficient rotation.',
+    domain: 'Application Integration',
+    description: 'Proactively check for Key Vault keys expiry date and rotate then before expiry date is reached.',
+    more_info: 'After expiry date has reached for Key Vault key, it cannot be used anymore for cryptographic operations anymore.',
+    recommended_action: 'Ensure that Key Vault key are rotated before they get expired.',
     link: 'https://docs.microsoft.com/en-us/azure/key-vault/about-keys-secrets-and-certificates',
     apis: ['vaults:list', 'vaults:getKeys'],
+    settings: {
+        key_vault_key_expiry_fail: {
+            name: 'Key Vault Key Expiry Fail',
+            description: 'Return a failing result when key expiration date is within this number of days in the future',
+            regex: '^[1-9]{1}[0-9]{0,3}$',
+            default: '30'
+        }
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
+        var config = {
+            key_vault_key_expiry_fail: parseInt(settings.key_vault_key_expiry_fail || this.settings.key_vault_key_expiry_fail.default)
+        }
 
         async.each(locations.vaults, function(location, rcb) {
             var vaults = helpers.addSource(cache, source, 
@@ -44,17 +55,21 @@ module.exports = {
                     keys.data.forEach(function(key) {
                         var keyName = key.kid.substring(key.kid.lastIndexOf('/') + 1);
                         var keyId = `${vault.id}/keys/${keyName}`;
-                        
+
                         if (key.attributes && key.attributes.expires) {
-                            if (new Date(Date.now()) < new Date(key.attributes.expires)) {
+                            let difference = Math.round((new Date(key.attributes.expires).getTime() - (new Date).getTime())/(24*60*60*1000));
+                            if (difference > config.key_vault_key_expiry_fail) {
                                 helpers.addResult(results, 0,
-                                    'Key expiry date is not yet reached', location, keyId);
+                                    `Key expires in ${difference} days`, location, keyId);
+                            } else if (difference > 0){
+                                helpers.addResult(results, 2,
+                                    `Key expires in ${difference} days`, location, keyId);
                             } else {
                                 helpers.addResult(results, 2,
-                                    'Key has reached its expiry date', location, keyId);
+                                    `Key expired ${Math.abs(difference)} days ago`, location, keyId);
                             }
                         } else {
-                            helpers.addResult(results, 2,
+                            helpers.addResult(results, 0,
                                 'Key expiration is not enabled', location, keyId);
                         }
                     });

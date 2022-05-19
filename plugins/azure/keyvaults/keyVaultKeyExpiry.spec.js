@@ -1,9 +1,18 @@
 var expect = require('chai').expect;
-var auth = require('./checkEncryptionKeysExpiry');
+var auth = require('./keyVaultKeyExpiry');
+
+var keyExpiryPass = new Date();
+keyExpiryPass.setMonth(keyExpiryPass.getMonth() + 2);
+
+var keyExpiryFail = new Date();
+keyExpiryFail.setMonth(keyExpiryFail.getMonth() + 1);
+
+var keyExpired = new Date();
+keyExpired.setMonth(keyExpired.getMonth() - 1);
 
 const listKeyVaults = [
     {
-        id: '/subscriptions/dce7d7as-ebf6-437f-a3b0-28fc0d22111e/resourceGroups/akhtar-rg/providers/Microsoft.KeyVault/vaults/nauman-test',
+        id: '/subscriptions/abcdfget-ebf6-437f-a3b0-28fc0d22111e/resourceGroups/akhtar-rg/providers/Microsoft.KeyVault/vaults/nauman-test',
         name: 'nauman-test',
         type: 'Microsoft.KeyVault/vaults',
         location: 'eastus',
@@ -50,7 +59,7 @@ const listKeyVaults = [
         "attributes": {
           "created": "2022-04-10T17:57:43+00:00",
           "enabled": true,
-          "expires": "2022-08-31T17:52:06+00:00",
+          "expires": keyExpiryPass,
           "notBefore": null,
           "recoveryLevel": "CustomizedRecoverable+Purgeable",
           "updated": "2022-04-10T17:57:43+00:00"
@@ -66,7 +75,23 @@ const listKeyVaults = [
         "attributes": {
           "created": "2022-04-10T17:57:43+00:00",
           "enabled": true,
-          "expires": "2022-04-01T17:52:06+00:00",
+          "expires": keyExpiryFail,
+          "notBefore": null,
+          "recoveryLevel": "CustomizedRecoverable+Purgeable",
+          "updated": "2022-04-10T17:57:43+00:00"
+        },
+        "kid": "https://nauman-test.vault.azure.net/keys/nauman-test",
+        "managed": null,
+        "name": "nauman-test",
+        "tags": {
+          "hello": "world"
+        }
+    },
+    {
+        "attributes": {
+          "created": "2022-04-10T17:57:43+00:00",
+          "enabled": true,
+          "expires": keyExpired,
           "notBefore": null,
           "recoveryLevel": "CustomizedRecoverable+Purgeable",
           "updated": "2022-04-10T17:57:43+00:00"
@@ -91,7 +116,7 @@ const createCache = (err, list, keys) => {
             },
             getKeys: {
                 'eastus': {
-                    '/subscriptions/dce7d7as-ebf6-437f-a3b0-28fc0d22111e/resourceGroups/akhtar-rg/providers/Microsoft.KeyVault/vaults/nauman-test': {
+                    '/subscriptions/abcdfget-ebf6-437f-a3b0-28fc0d22111e/resourceGroups/akhtar-rg/providers/Microsoft.KeyVault/vaults/nauman-test': {
                         err: err,
                         data: keys
                     }
@@ -101,7 +126,7 @@ const createCache = (err, list, keys) => {
     }
 };
 
-describe('checkEncryptionKeysExpiry', function() {
+describe('keyVaultKeyExpiry', function() {
     describe('run', function() {
         it('should give passing result if no keys found', function(done) {
             const callback = (err, results) => {
@@ -115,10 +140,10 @@ describe('checkEncryptionKeysExpiry', function() {
             auth.run(createCache(null, [], {}), {}, callback);
         });
 
-        it('should give failing result if expiration is not set on keys', function(done) {
+        it('should give passing result if expiration is not set on keys', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
+                expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Key expiration is not enabled');
                 expect(results[0].region).to.equal('eastus');
                 done()
@@ -131,24 +156,36 @@ describe('checkEncryptionKeysExpiry', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Key expiry date is not yet reached');
+                expect(results[0].message).to.include('Key expires in');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
 
-            auth.run(createCache(null, listKeyVaults, [getKeys[1]]), {}, callback);
+            auth.run(createCache(null, listKeyVaults, [getKeys[1]]), { key_vault_key_expiry_fail: '30' }, callback);
         });
 
-        it('should give failing results if the key has reached its expiry date', function(done) {
+        it('should give failing results if the key has reached', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Key has reached its expiry date');
+                expect(results[0].message).to.include('Key expired');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
 
-            auth.run(createCache(null, listKeyVaults, [getKeys[2]]), {}, callback);
+            auth.run(createCache(null, listKeyVaults, [getKeys[3]]), { key_vault_key_expiry_fail: '40' }, callback);
+        });
+
+        it('should give failing results if the key expired within failure expiry date', function(done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('Key expires');
+                expect(results[0].region).to.equal('eastus');
+                done()
+            };
+
+            auth.run(createCache(null, listKeyVaults, [getKeys[2]]), { key_vault_key_expiry_fail: '40' }, callback);
         });
     });
 });
