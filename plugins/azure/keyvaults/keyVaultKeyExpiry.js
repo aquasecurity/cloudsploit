@@ -25,7 +25,7 @@ module.exports = {
         var locations = helpers.locations(settings.govcloud);
         var config = {
             key_vault_key_expiry_fail: parseInt(settings.key_vault_key_expiry_fail || this.settings.key_vault_key_expiry_fail.default)
-        }
+        };
 
         async.each(locations.vaults, function(location, rcb) {
             var vaults = helpers.addSource(cache, source, 
