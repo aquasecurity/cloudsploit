@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var auth = require('./rsaCertificateAllowedKeySizes');
+var auth = require('./rsaCertificateKeySize');
 
 const listVaults = [
     {
@@ -96,7 +96,7 @@ const createCache = (err, list, certs, getCertificatePolicy) => {
     }
 };
 
-describe('rsaCertificateAllowedKeySizes', function() {
+describe('rsaCertificateKeySize', function() {
     describe('run', function() {
         it('should give passing result if no key vaults found', function(done) {
             const callback = (err, results) => {
@@ -174,7 +174,7 @@ describe('rsaCertificateAllowedKeySizes', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('RSA Certificate key size is within the Allowed Key Sizes');
+                expect(results[0].message).to.include('RSA Certificate key size is 2048');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
@@ -186,7 +186,7 @@ describe('rsaCertificateAllowedKeySizes', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('RSA Certificate key size is not within the Allowed Key Sizes');
+                expect(results[0].message).to.include('RSA Certificate key size is 1098');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
