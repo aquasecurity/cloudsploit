@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var auth = require('./cmkCreationForAppTier');
+var auth = require('./appTierCmkInUse');
 
 const listVaults = [
     {
@@ -73,7 +73,7 @@ const createCache = (err, list, keys) => {
     }
 };
 
-describe('cmkCreationForAppTier', function() {
+describe('appTierCmkInUse', function() {
     describe('run', function() {
         it('should give failing result if no key vaults found', function(done) {
             const callback = (err, results) => {

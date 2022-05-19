@@ -755,7 +755,7 @@ module.exports = {
         'kvRecoveryEnabled'             : require(__dirname + '/plugins/azure/keyvaults/kvRecoveryEnabled.js'),
         'keyExpirationEnabled'          : require(__dirname + '/plugins/azure/keyvaults/keyExpirationEnabled.js'),
         'secretExpirationEnabled'       : require(__dirname + '/plugins/azure/keyvaults/secretExpirationEnabled.js'),
-        'cmkCreationForAppTier'         : require(__dirname + '/plugins/azure/keyvaults/cmkCreationForAppTier.js'),
+        'appTierCmkInUse'               : require(__dirname + '/plugins/azure/keyvaults/appTierCmkInUse.js'),
 
         'advancedThreatProtection'      : require(__dirname + '/plugins/azure/cosmosdb/advancedThreatProtection.js'),
         'cosmosPublicAccessDisabled'    : require(__dirname + '/plugins/azure/cosmosdb/cosmosPublicAccessDisabled.js'),
