@@ -45,7 +45,7 @@ module.exports = {
 
             let ports = {
                 'TCP': ['*'],
-                'UDP': ['*'],
+                'UCP': ['*'],
                 '*' : ['*']
             };
 
