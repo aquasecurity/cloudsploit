@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var auth = require('./manageAccessAndPermissions');
+var auth = require('./manageKeyAccessAndPermissions');
 
 const listVaults = [
     {
@@ -137,7 +137,7 @@ const createCache = (err, list, get) => {
     }
 };
 
-describe('manageAccessAndPermissions', function() {
+describe('manageKeyAccessAndPermissions', function() {
     describe('run', function() {
         it('should give passing result if no key vaults found', function(done) {
             const callback = (err, results) => {
@@ -167,7 +167,7 @@ describe('manageAccessAndPermissions', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No User/Group or Application has full access to the specified vault');
+                expect(results[0].message).to.include('No User/Group or Application has full access to the vault');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
@@ -175,11 +175,11 @@ describe('manageAccessAndPermissions', function() {
             auth.run(createCache(null, [listVaults[0]]), {}, callback);
         });
 
-        it('should give failing result if a User/Group or Application has full access to the specified vault', function(done) {
+        it('should give failing result if a User/Group or Application has full access to the vault', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('User/Group or Application has full access to the specified vault');
+                expect(results[0].message).to.include('User/Group or Application has full access to the vault');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };

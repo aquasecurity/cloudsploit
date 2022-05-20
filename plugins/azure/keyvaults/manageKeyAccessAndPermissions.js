@@ -3,11 +3,11 @@ var helpers = require('../../../helpers/azure');
 var _ = require('underscore');
 
 module.exports = {
-    title: 'Manage Access and Permissions',
+    title: 'Manage Key Access and Permissions',
     category: 'Key Vaults',
-    domain: 'Identity and Access Management',
-    description: 'Ensures that there is no Microsoft Azure user, group or application with full administrator privileges.',
-    more_info: 'Having the right key type set for your Azure Key Vault SSL certificates will enforce the best practices as specified in the security and compliance regulations implemented within your organization.',
+    domain: 'Application Integration',
+    description: 'Ensures that no Microsoft Azure user, group or application with full administrator privileges to the Key Vaults.',
+    more_info: 'A principal such as a user, group or application should have access to execute only specific operations for Azure Key Vault keys, secrets or certificates as a security best practice.',
     recommended_action: 'Ensure that no Microsoft Azure user, group or application is using administrator privileges.',
     link: 'https://docs.microsoft.com/en-us/azure/key-vault/general/rbac-guide?tabs=azure-cli',
     apis: ['vaults:list'],
@@ -105,10 +105,10 @@ module.exports = {
 
                 if (policyFound) {
                     helpers.addResult(results, 2,
-                        'User/Group or Application has full access to the specified vault', location, vault.id);
+                        'User/Group or Application has full access to the vault', location, vault.id);
                 } else {
                     helpers.addResult(results, 0,
-                        'No User/Group or Application has full access to the specified vault', location, vault.id);
+                        'No User/Group or Application has full access to the vault', location, vault.id);
                 }
             });
 
