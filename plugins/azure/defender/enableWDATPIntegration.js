@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Enable WDATP Integration',
     category: 'Defender',
-    domain: 'Security',
+    domain: 'Management and Governance',
     description: 'Ensures that Microsoft Defender for Endpoint integration is enabled for Microsoft Defender for Cloud.',
     more_info: 'WDATP integration brings comprehensive Endpoint Detection and Response (EDR) capabilities within Microsoft Defender for Cloud. This integration helps to spot abnormalities, detect and respond to advanced attacks on Windows server endpoints monitored by Microsoft Defender for Cloud. Windows Defender ATP in Microsoft Defender for Cloud supports detection on Windows Server 2016, 2012 R2, and 2008 R2 SP1 operating systems in a Standard service subscription.',
     recommended_action: 'Ensure that Microsoft Defender for Endpoint integration is selected with Microsoft Defender for Cloud.',
