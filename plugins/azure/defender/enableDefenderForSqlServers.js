@@ -5,10 +5,10 @@ module.exports = {
     title: 'Enable Defender For SQL Servers',
     category: 'Defender',
     domain: 'Management and Governance',
-    description: 'Ensures that Microsoft Defender is enabled for Azure SQL Server Databases.',
-    more_info: 'Turning on Microsoft Defender for Azure SQL Server Databases enables threat detection for Azure SQL database servers, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.',
-    recommended_action: 'Turning on Microsoft Defender for Azure SQL Databases incurs an additional cost per resource.',
-    link: 'https://docs.microsoft.com/en-us/azure/security-center/security-center-detection-capabilities',
+    description: 'Ensures that Microsoft Defender is enabled for SQL Servers.',
+    more_info: 'Turning on Microsoft Defender for SQL Servers enables threat detection for Azure SQL database servers, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.',
+    recommended_action: 'Enable Microsoft Defender for SQL Servers in Defender plans for the subscription.',
+    link: 'https://docs.microsoft.com/en-us/azure/defender-for-cloud/defender-for-sql-introduction',
     apis: ['pricings:list'],
 
     run: function(cache, settings, callback) {
@@ -37,12 +37,12 @@ module.exports = {
 
             if (sqlServersPricing) {
                 if (sqlServersPricing.pricingTier.toLowerCase() === 'standard') {
-                    helpers.addResult(results, 0, 'Azure Defender is enabled for SQL Server Databases', location, sqlServersPricing.id);
+                    helpers.addResult(results, 0, 'Azure Defender is enabled for SQL Servers', location, sqlServersPricing.id);
                 } else {
-                    helpers.addResult(results, 2, 'Azure Defender is not enabled for SQL Server Databases', location, sqlServersPricing.id);
+                    helpers.addResult(results, 2, 'Azure Defender is not enabled for SQL Servers', location, sqlServersPricing.id);
                 }
             } else {
-                helpers.addResult(results, 2, 'Azure Defender is not enabled for SQL Server Databases', location);
+                helpers.addResult(results, 2, 'Azure Defender is not enabled for SQL Servers', location);
             }
 
             rcb();
