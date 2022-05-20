@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var auth = require('./cmkCreationForDatabaseTier');
+var auth = require('./databaseTierCmkInUse');
 
 const listVaults = [
     {
@@ -37,7 +37,7 @@ const getKeys = [
             "recoveryLevel": "Recoverable+Purgeable"
         },
         "tags": {
-            "Owner": "AzSQLManager"
+            "databasetier": "db-rier"
         }
     },
     {
@@ -73,18 +73,18 @@ const createCache = (err, list, keys) => {
     }
 };
 
-describe('cmkCreationForDatabaseTier', function() {
+describe('databaseTierCmkInUse', function() {
     describe('run', function() {
-        it('should give passing result if no key vaults found', function(done) {
+        it('should give failing result if no key vaults found', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
+                expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('No Key Vaults found');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
 
-            auth.run(createCache(null, [], {}), {}, callback);
+            auth.run(createCache(null, [], {}), { db_tier_tag_key: 'dbtier' }, callback);
         });
 
         it('should give unkown result if Unable to query for Key Vaults', function(done) {
@@ -96,55 +96,43 @@ describe('cmkCreationForDatabaseTier', function() {
                 done()
             };
 
-            auth.run(createCache(null, null, {}), {}, callback);
-        });
-
-        it('should give passing result if no key vault keys found', function(done) {
-            const callback = (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No Key Vault keys found');
-                expect(results[0].region).to.equal('eastus');
-                done()
-            };
-
-            auth.run(createCache(null, [listVaults[0]], []), {}, callback);
+            auth.run(createCache(null, null, {}), { db_tier_tag_key: 'dbtier' }, callback);
         });
 
         it('should give unkown result if Unable to query for Key Vaults keys', function(done) {
             const callback = (err, results) => {
-                expect(results.length).to.equal(1);
+                expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for Key Vault keys');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
 
-            auth.run(createCache(null, [listVaults[0]], null), {}, callback);
+            auth.run(createCache(null, [listVaults[0]], null), { db_tier_tag_key: 'dbtier' }, callback);
         });
 
-        it('should give passing result if CMK Creation for Database Tier is enabled', function(done) {
+        it('should give passing result if CMK exists for database tier', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('CMK Creation for Database Tier is enabled');
+                expect(results[0].message).to.include('CMK exists for database tier');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
 
-            auth.run(createCache(null, [listVaults[1]], [getKeys[0]]), { database_tier_tag_sets: { Owner: 'AzSQLManager' } }, callback);
+            auth.run(createCache(null, [listVaults[1]], [getKeys[0]]), { db_tier_tag_key: 'databasetier' }, callback);
         });
 
-        it('should give failing result if CMK Creation for Database Tier is disabled', function(done) {
+        it('should give failing result if CMK does not exist for database tier', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('CMK Creation for Database Tier is disabled');
+                expect(results[0].message).to.include('CMK does not exist for database tier');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
 
-            auth.run(createCache(null, [listVaults[1]], [getKeys[0]]), {}, callback);
+            auth.run(createCache(null, [listVaults[1]], [getKeys[0]]), { db_tier_tag_key: 'dbtire' }, callback);
         })
     })
 });
