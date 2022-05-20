@@ -33,7 +33,7 @@ module.exports = {
                 return rcb();
             }
 
-            const wdatpIntegration = defenderSettings.data.find((settings) => settings.name.toLowerCase() === 'wdatp');
+            const wdatpIntegration = defenderSettings.data.find((settings) => settings.name && settings.name.toLowerCase() === 'wdatp');
             if (wdatpIntegration && wdatpIntegration.enabled) {
                 helpers.addResult(results, 0, 'WDATP integration is enabled for Microsoft Defender', location, wdatpIntegration.id);
             } else {
