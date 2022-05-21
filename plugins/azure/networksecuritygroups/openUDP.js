@@ -2,7 +2,7 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Disable Open UDP Ports',
+    title: 'Open UDP Ports',
     category: 'Network Security Groups',
     domain: 'Network Access Control',
     description: 'Ensures that Internet exposed UDP ports on network security groups are disabled.',
@@ -47,7 +47,7 @@ module.exports = {
                         return (rule.properties &&
                             rule.properties.access &&
                             rule.properties.access.toLowerCase() == 'allow' &&
-                            rule.properties.direction.toLowerCase() === 'inboud' &&
+                            rule.properties.direction.toLowerCase() === 'inbound' &&
                             rule.properties.protocol.toLowerCase() === 'udp');
                     });
 
