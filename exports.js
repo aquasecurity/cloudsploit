@@ -710,7 +710,7 @@ module.exports = {
         'sqlServerTlsVersion'           : require(__dirname + '/plugins/azure/sqlserver/sqlServerTlsVersion.js'),
         'autoFailoverGroupsEnabled'     : require(__dirname + '/plugins/azure/sqlserver/autoFailoverGroupsEnabled.js'),
         'automaticTuningEnabled'        : require(__dirname + '/plugins/azure/sqlserver/automaticTuningEnabled.js'),
-        'enableSendScanReports'         : require(__dirname + '/plugins/azure/sqlserver/enableSendScanReports.js'),
+        'sqlServerSendScanReports'      : require(__dirname + '/plugins/azure/sqlserver/sqlServerSendScanReports.js'),
 
         'javaVersion'                   : require(__dirname + '/plugins/azure/appservice/javaVersion.js'),
         'phpVersion'                    : require(__dirname + '/plugins/azure/appservice/phpVersion.js'),

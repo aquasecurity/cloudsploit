@@ -5,7 +5,7 @@ module.exports = {
     title: 'Send Scan Reports Enabled',
     category: 'SQL Server',
     domain: 'Databases',
-    description: 'Ensures that Send Scan Reports is enabled for SQL Servers',
+    description: 'Ensures that Send Scan Reports is enabled for SQL Servers.',
     more_info: 'Vulnerability Assessment (VA) scan reports and alerts will be sent to email ids configured at Send scan reports to. This may help in reducing time required for identifying risks and taking corrective measures.',
     recommended_action: 'Configure Send scan reports to with email ids of concerned data owners/stakeholders for a critical SQL servers.',
     link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-vulnerability-assessment',
@@ -40,10 +40,10 @@ module.exports = {
 
                 if (!vulnerabilityAssessments || vulnerabilityAssessments.err || !vulnerabilityAssessments.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for Vulnerability Assessments settings: ' + helpers.addError(vulnerabilityAssessments), location, server.id);
+                        'Unable to query for Vulnerability Assessments setting: ' + helpers.addError(vulnerabilityAssessments), location, server.id);
                 } else {
                     if (!vulnerabilityAssessments.data.length) {
-                        helpers.addResult(results, 2, 'No Vulnerability Assessments settings found', location, server.id);
+                        helpers.addResult(results, 2, 'No Vulnerability Assessments setting found', location, server.id);
                     } else {
                         vulnerabilityAssessments.data.forEach(vulnerabilityAssessment => {
                             if (vulnerabilityAssessment.recurringScans && vulnerabilityAssessment.recurringScans.emails
