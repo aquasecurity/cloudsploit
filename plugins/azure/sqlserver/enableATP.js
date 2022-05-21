@@ -5,7 +5,7 @@ module.exports = {
     title: 'Advanced Threat Protection Enabled',
     category: 'SQL Server',
     domain: 'Databases',
-    description: 'Ensures that Advanced Threat Protection is enabled for SQL Servers',
+    description: 'Ensures that Advanced Threat Protection is enabled on SQL Servers.',
     more_info: 'Azure Defender for SQL is a unified package for advanced SQL security capabilities. Azure Defender is available for Azure SQL Database, Azure SQL Managed Instance, and Azure Synapse Analytics. It includes functionality for discovering and classifying sensitive data, surfacing and mitigating potential database vulnerabilities, and detecting anomalous activities that could indicate a threat to your database. It provides a single go-to location for enabling and managing these capabilities.',
     recommended_action: 'Ensure that ThreatDetectionState is set to Enabled',
     link: 'https://docs.microsoft.com/en-us/azure/azure-sql/database/azure-defender-for-sql',
@@ -40,10 +40,10 @@ module.exports = {
 
                 if (!advancedThreatProtectionSettings || advancedThreatProtectionSettings.err || !advancedThreatProtectionSettings.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for Database Advanced Threat Protection settings: ' + helpers.addError(advancedThreatProtectionSettings), location, server.id);
+                        'Unable to query for Advanced Threat Protection settings: ' + helpers.addError(advancedThreatProtectionSettings), location, server.id);
                 } else {
                     if (!advancedThreatProtectionSettings.data.length) {
-                        helpers.addResult(results, 2, 'No Database Advanced Threat Protection settings found', location, server.id);
+                        helpers.addResult(results, 2, 'No Advanced Threat Protection setting found', location, server.id);
                     } else {
                         advancedThreatProtectionSettings.data.forEach(threadProtectionSetting => {
                             if (threadProtectionSetting.state &&

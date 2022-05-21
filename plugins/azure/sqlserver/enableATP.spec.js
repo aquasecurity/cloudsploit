@@ -70,7 +70,7 @@ describe('enableATP', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('No Database Advanced Threat Protection settings found');
+                expect(results[0].message).to.include('No Advanced Threat Protection setting found');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
