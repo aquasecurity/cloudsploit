@@ -134,16 +134,22 @@ module.exports = {
             }
 
             allResources.push(...discoveredResources.data);
-
             rcb();
         });
 
-        if (allResources.length === 0) {
+        if (!allResources.length) {
             helpers.addResult(results, 2, 'No Config Resources found.');
             return callback(null, results, source);
         }
 
-        allResources = allResources.map((res) => { return { resource: res.resourceType.slice(res.resourceType.lastIndexOf(':') + 1, res.resourceType.length), count: res.count }; });
+        allResources = allResources.map((resource) => {
+            let arr  = resource.resourceType.split(':');
+            return {
+                service: arr[2].toLowerCase(),
+                subService: arr[4].toLowerCase(),
+                count: resource.count
+            };
+        });
 
         var listRoles = helpers.addSource(cache, source,
             ['iam', 'listRoles', iamRegion]);
@@ -239,12 +245,12 @@ module.exports = {
 
                             if (!statements) break;
 
-                            let resource = statements.find((doc) => doc.Resource[0].includes('arn:'));
-                            if (resource) {
-                                let resourceName = resource && resource.Resource[0].split(':')[2];
-                                let service = allResources.find((res) => res.resource.toLowerCase() === resourceName.toLowerCase());
-                                if (!service || service.count < 1) {
-                                    if (policyFailures.indexOf(resourceName) === -1) policyFailures.push(resourceName);
+                            let service = statements.find((doc) => doc.Resource[0].includes('arn:'));
+                            if (service) {
+                                let serviceName = service.Resource[0].split(':')[2];
+                                let serviceFound =  allResources.find((resource) => resource.service === serviceName && resource.count > 0);
+                                if (!serviceFound) {
+                                    if (policyFailures.indexOf(serviceName) === -1) policyFailures.push(serviceName);
                                 }
                             }
 
@@ -270,11 +276,11 @@ module.exports = {
                         if (!statements) break;
 
                         for (let statement of statements) {
-                            let resources = [... new Set(statement.Action.map((action) => action.split(':')[0].toLowerCase()))];
-                            resources.forEach((resource) => {
-                                let service = allResources.find((res) => res.resource.toLowerCase() === resource.toLowerCase());
-                                if (!service || service.count < 1) {
-                                    if (policyFailures.indexOf(resource) === -1) policyFailures.push(resource);
+                            let services = [... new Set(statement.Action.map((action) => action.split(':')[0].toLowerCase()))];
+                            services.forEach((service) => {
+                                let serviceFound =  allResources.find((resource) => resource.service === service && resource.count > 0);
+                                if (!serviceFound) {
+                                    if (policyFailures.indexOf(service) === -1) policyFailures.push(service);
                                 }
                             });
                         }
