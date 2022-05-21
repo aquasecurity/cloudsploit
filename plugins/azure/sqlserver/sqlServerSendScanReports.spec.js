@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var enableSendScanReports = require('./enableSendScanReports');
+var sqlServerSendScanReports = require('./sqlServerSendScanReports');
 
 const servers = [
     {
@@ -48,7 +48,7 @@ const createCache = (servers, policies, serversErr, policiesErr) => {
     }
 };
 
-describe('enableSendScanReports', function() {
+describe('sqlServerSendScanReports', function() {
     describe('run', function() {
         it('should give passing result if no SQL servers found', function(done) {
             const callback = (err, results) => {
@@ -63,14 +63,14 @@ describe('enableSendScanReports', function() {
                 []
             );
 
-            enableSendScanReports.run(cache, {}, callback);
+            sqlServerSendScanReports.run(cache, {}, callback);
         });
 
         it('should give failing result if No Vulnerability Assessments settings found', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('No Vulnerability Assessments settings found');
+                expect(results[0].message).to.include('No Vulnerability Assessments setting found');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
@@ -80,7 +80,7 @@ describe('enableSendScanReports', function() {
                 []
             );
 
-            enableSendScanReports.run(cache, {}, callback);
+            sqlServerSendScanReports.run(cache, {}, callback);
         });
 
         it('should give failing result if Send Scan Reports for the SQL server is disabled', function(done) {
@@ -97,7 +97,7 @@ describe('enableSendScanReports', function() {
                 [vulnerabilityAssessments[1]]
             );
 
-            enableSendScanReports.run(cache, {}, callback);
+            sqlServerSendScanReports.run(cache, {}, callback);
         });
 
         it('should give passing result if Send Scan Reports for the SQL server is enabled', function(done) {
@@ -114,7 +114,7 @@ describe('enableSendScanReports', function() {
                 [vulnerabilityAssessments[0]]
             );
 
-            enableSendScanReports.run(cache, {}, callback);
+            sqlServerSendScanReports.run(cache, {}, callback);
         });
 
         it('should give unknown result if unable to query for SQL servers', function(done) {
@@ -132,7 +132,7 @@ describe('enableSendScanReports', function() {
                 { message: 'unable to query servers'}
             );
 
-            enableSendScanReports.run(cache, {}, callback);
+            sqlServerSendScanReports.run(cache, {}, callback);
         });
 
         it('should give unknown result if Unable to query for Vulnerability Assessments settings', function(done) {
@@ -151,7 +151,7 @@ describe('enableSendScanReports', function() {
                 { message: 'Unable to query for Vulnerability Assessments settings'}
             );
 
-            enableSendScanReports.run(cache, {}, callback);
+            sqlServerSendScanReports.run(cache, {}, callback);
         });
     })
 });
