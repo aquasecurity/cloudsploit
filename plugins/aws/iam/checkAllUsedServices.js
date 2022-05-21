@@ -93,7 +93,7 @@ module.exports = {
         async.each(regions.configservice, function(region, rcb) {
             var configSRecorderStatus = helpers.addSource(cache, source,
                 ['configservice', 'describeConfigurationRecorderStatus', region]);
-    
+
             if (!configSRecorderStatus) {
                 return rcb();
             }
@@ -103,7 +103,7 @@ module.exports = {
                     'Unable to query config service: ' + helpers.addError(configSRecorderStatus));
                 return rcb(null, results, source);
             }
-    
+
             if (!configSRecorderStatus.data.length) {
                 helpers.addResult(results, 0,
                     'Config service is not configured: ' + helpers.addError(configSRecorderStatus));
@@ -126,14 +126,14 @@ module.exports = {
 
             var discoveredResources = helpers.addSource(cache, source,
                 ['configservice', 'getDiscoveredResourceCounts', region]);
-    
+
             if (discoveredResources.err || !discoveredResources.data) {
                 helpers.addResult(results, 3,
                     'Unable to query for Config Resources: ' + helpers.addError(discoveredResources));
                 return rcb(null, results, source);
             }
 
-            allResources.push(discoveredResources.data);
+            allResources.push(...discoveredResources.data);
 
             rcb();
         });
@@ -236,16 +236,15 @@ module.exports = {
                             getPolicyVersion.data.PolicyVersion.Document) {
                             let statements = helpers.normalizePolicyDocument(
                                 getPolicyVersion.data.PolicyVersion.Document);
-                            
+
                             if (!statements) break;
-                            
-                            let resource = statements.find((doc) => doc.Resource[0].includes('arn:')); 
+
+                            let resource = statements.find((doc) => doc.Resource[0].includes('arn:'));
                             if (resource) {
                                 let resourceName = resource && resource.Resource[0].split(':')[2];
                                 let service = allResources.find((res) => res.resource.toLowerCase() === resourceName.toLowerCase());
                                 if (!service || service.count < 1) {
-                                    let failMsg = `Role has policy with resource ${resourceName} which is not being used in this account`;
-                                    if (failMsg && roleFailures.indexOf(failMsg) === -1) policyFailures.push(failMsg);
+                                    if (policyFailures.indexOf(resourceName) === -1) policyFailures.push(resourceName);
                                 }
                             }
 
@@ -275,8 +274,7 @@ module.exports = {
                             resources.forEach((resource) => {
                                 let service = allResources.find((res) => res.resource.toLowerCase() === resource.toLowerCase());
                                 if (!service || service.count < 1) {
-                                    let failMsg = `Role has policy with resource ${resource} which is not being used in this account`;
-                                    if (failMsg && roleFailures.indexOf(failMsg) === -1) policyFailures.push(failMsg);
+                                    if (policyFailures.indexOf(resource) === -1) policyFailures.push(resource);
                                 }
                             });
                         }
@@ -286,11 +284,10 @@ module.exports = {
                 }
             }
 
-
-            if (policyFailures.length) {
-                helpers.addResult(results, 2, policyFailures.join(', '), 'global', role.Arn, custom);
-            } else if (roleFailures.length) {
-                helpers.addResult(results, 2, roleFailures.join(', '), 'global', role.Arn, custom);
+            if (policyFailures.length || roleFailures.length) {
+                let failureMsg = policyFailures.length ? 'Role has policy with following resources which are not being used in this account: ' +
+                    '[ ' + policyFailures.join(', ') + ' ]' + '\r\n' + roleFailures.join(', ') : roleFailures.join(', ');
+                helpers.addResult(results, 2, failureMsg, 'global', role.Arn, custom);
             } else {
                 helpers.addResult(results, 0,
                     'Role does not have overly-permissive policy',
@@ -298,7 +295,7 @@ module.exports = {
             }
 
             cb();
-        }, function(){
+        }, function() {
             callback(null, results, source);
         });
     }
