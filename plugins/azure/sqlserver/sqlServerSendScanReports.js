@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Send Scan Reports Enabled',
+    title: 'SQL Server Send Scan Reports Enabled',
     category: 'SQL Server',
     domain: 'Databases',
     description: 'Ensures that Send Scan Reports is enabled for SQL Servers.',
@@ -40,7 +40,7 @@ module.exports = {
 
                 if (!vulnerabilityAssessments || vulnerabilityAssessments.err || !vulnerabilityAssessments.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for Vulnerability Assessments setting: ' + helpers.addError(vulnerabilityAssessments), location, server.id);
+                        'Unable to query for Vulnerability Assessments settings: ' + helpers.addError(vulnerabilityAssessments), location, server.id);
                 } else {
                     if (!vulnerabilityAssessments.data.length) {
                         helpers.addResult(results, 2, 'No Vulnerability Assessments setting found', location, server.id);
