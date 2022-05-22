@@ -83,7 +83,7 @@ module.exports = {
     more_info: 'Various security vulnerabilities have rendered several ciphers insecure. Only the recommended ciphers should be used.',
     link: 'http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/elb-security-policy-options.html',
     recommended_action: 'Update your ELBs to use the recommended cipher suites',
-    apis: ['ELB:describeLoadBalancers', 'ELB:describeLoadBalancerPolicies', 'STS:getCallerIdentity'],
+    apis: ['ELB:describeLoadBalancers', 'ELB:describeLoadBalancerPolicies'],
     compliance: {
         hipaa: 'All HIPAA data should be encrypted in transit. Using secure ciphers ' +
                 'is a critical aspect of this requirement. Using outdated ciphers with ' +
@@ -97,10 +97,6 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
-
-        var acctRegion = helpers.defaultRegion(settings);
-        var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
-        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.elb, function(region, rcb){
             var describeLoadBalancers = helpers.addSource(cache, source,
@@ -121,7 +117,6 @@ module.exports = {
 
             async.each(describeLoadBalancers.data, function(lb, cb){
                 if (!lb.DNSName) return cb();
-                var resource = `arn:${awsOrGov}:elasticloadbalancing:${region}:${accountId}:loadbalancer/${lb.LoadBalancerName}`;
 
                 var describeLoadBalancerPolicies = helpers.addSource(cache, source,
                     ['elb', 'describeLoadBalancerPolicies', region, lb.DNSName]);
@@ -134,7 +129,7 @@ module.exports = {
                     helpers.addResult(results, 3,
                         'Unable to query load balancer policies for ELB: ' + lb.LoadBalancerName +
                         ': ' + helpers.addError(describeLoadBalancerPolicies),
-                        region, resource);
+                        region, lb.DNSName);
 
                     return cb();
                 }
@@ -156,11 +151,11 @@ module.exports = {
                     if (elbBad.length) {
                         helpers.addResult(results, 1,
                             'ELB: ' + lb.LoadBalancerName + ' uses insecure protocols or ciphers: ' + elbBad.join(', '),
-                            region, resource);
+                            region, lb.DNSName);
                     } else {
                         helpers.addResult(results, 0,
                             'ELB: ' + lb.LoadBalancerName + ' uses secure protocols and ciphers',
-                            region, resource);
+                            region, lb.DNSName);
                     }
                 }
 

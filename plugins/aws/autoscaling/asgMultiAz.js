@@ -36,17 +36,16 @@ module.exports = {
 
             // loop through autoscaling Instances
             describeAutoScalingGroups.data.forEach(function(Asg){
-                var resource = Asg.AutoScalingGroupARN;
                 if (Asg.AvailabilityZones.length <=1) {
                     helpers.addResult(results, 2,
                         'Auto scaling group is only using ' + Asg.AvailabilityZones.length +
                         ' availability zones',
-                        region, resource);
+                        region, Asg.AutoScalingGroupName);
                 } else {
                     helpers.addResult(results, 0,
                         'Auto scaling group using ' + Asg.AvailabilityZones.length +
                         ' availability zones',
-                        region, resource);
+                        region, Asg.AutoScalingGroupName);
                 }
             });
             rcb();

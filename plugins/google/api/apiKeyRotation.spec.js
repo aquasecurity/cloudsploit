@@ -1,25 +1,18 @@
 var expect = require('chai').expect;
-var plugin = require('./restrictedAPIKeys');
+var plugin = require('./apiKeyRotation');
 
 
 const apiKeys = [
         {
           "name": "projects/my-project/locations/global/keys/my-key-1",
           "displayName": "API Key 1",
-          "restrictions": {
-            "apiTargets": [
-              {
-                "service": "apigateway.googleapis.com"
-              },
-              {
-                "service": "apikeys"
-              }
-            ]
-          },
+          "createTime": new Date(),
         },
         {
           "name": "projects/my-project/locations/global/keys/my-key-2",
           "displayName": "API key 2",
+          "createTime": '2021-04-07T17:23:05.126949Z',
+
         }
 ];
 
@@ -80,11 +73,11 @@ describe('restrictedAPIKeys', function () {
             plugin.run(cache, {}, callback);
         });
 
-        it('should give passing result if google cloud api key is restricted', function (done) {
+        it('should give passing result if google cloud api key is not outdated', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('API Key is restricted');
+                expect(results[0].message).to.include('which is equal to or less than');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -97,11 +90,11 @@ describe('restrictedAPIKeys', function () {
             plugin.run(cache, {}, callback);
         });
 
-        it('should give failing result if google cloud api key is not restricted', function (done) {
+        it('should give failing result if google cloud api key is outdated', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('API Key is not restricted');
+                expect(results[0].message).to.include('which is greater than');
                 expect(results[0].region).to.equal('global')
                 done();
             };
