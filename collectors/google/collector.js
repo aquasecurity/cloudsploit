@@ -111,6 +111,13 @@ var calls = {
             pagination: true
         }
     },
+    instanceGroupManagers: {
+        list: {
+            url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/zones/{locationId}/instanceGroupManagers',
+            location: 'zone',
+            pagination: true
+        }
+    },
     functions: {
         list : {
             url: 'https://cloudfunctions.googleapis.com/v1/projects/{projectId}/locations/{locationId}/functions',

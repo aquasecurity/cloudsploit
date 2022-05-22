@@ -83,6 +83,7 @@ module.exports = {
         sql: ['global'],
         spanner: ['global']
     },
+    instanceGroupManagers: regions,
     functions: [
         'us-east1', 'us-east4', 'us-west2', 'us-west3', 'us-west4', 'us-central1', 'northamerica-northeast1', 'southamerica-east1',
         'europe-west1', 'europe-west2', 'europe-west3', 'europe-west6', 'europe-central2', 'asia-south1', 'asia-southeast1', 'asia-southeast2',

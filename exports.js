@@ -931,6 +931,7 @@ module.exports = {
         'applicationConsistentSnapshots': require(__dirname + '/plugins/google/compute/applicationConsistentSnapshots.js'),
         'deprecatedImages'              : require(__dirname + '/plugins/google/compute/deprecatedImages.js'),
         'enableUsageExport'             : require(__dirname + '/plugins/google/compute/enableUsageExport.js'),
+        'instanceGroupAutoHealing'      : require(__dirname + '/plugins/google/compute/instanceGroupAutoHealing.js'),
         'publicDiskImages'              : require(__dirname + '/plugins/google/compute/publicDiskImages.js'),
 
         'keyRotation'                   : require(__dirname + '/plugins/google/cryptographickeys/keyRotation.js'),
