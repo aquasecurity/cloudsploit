@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Advisor Recommendations',
+    title: 'Active Advisor Recommendations',
     category: 'Advisor',
     domain: 'Application Integration',
     description: 'Ensure that all Microsoft Azure Advisor recommendations found are implemented to optimize your cloud deployments, increase security, and reduce costs.',
