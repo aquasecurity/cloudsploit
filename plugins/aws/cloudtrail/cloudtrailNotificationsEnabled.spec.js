@@ -89,33 +89,6 @@ const createCache = (describeTrails, listTopics, getTopicAttributes, describeTra
         }
     }
 };
-const createNullCache = (describeTrails, listTopics, describeTrailsErr, listTopicsErr) => {
-    let Arn = (describeTrails && describeTrails.length) ? describeTrails[0].SnsTopicARN : null;
-    return {
-        cloudtrail: {
-            describeTrails: {
-                'us-east-1': {
-                    data: describeTrails,
-                    err: describeTrailsErr
-                }
-            },
-        },
-        sns: {
-            listTopics: {
-                'us-east-1': {
-                    data: listTopics,
-                    err: listTopicsErr
-                }
-            },
-            getTopicAttributes: {
-                'us-east-1': {
-                    [Arn]: null
-                }
-            }
-        
-        }
-    }
-};
 
 describe('cloudtrailNotificationsEnabled', function () {
     describe('run', function () {
@@ -131,7 +104,7 @@ describe('cloudtrailNotificationsEnabled', function () {
         });
 
         it('should FAIL if CloudTrail trail SNS topic not found', function (done) {
-            const cache = createNullCache([describeTrails[1]], listTopics[2]);
+            const cache = createCache([describeTrails[1]], listTopics[2], null, null, null, { message: 'An error occurred (NotFound) when calling the GetTopicAttributes operation: Topic does not exist', code : 'NotFound' } );
             cloudtrailNotificationsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -162,12 +135,12 @@ describe('cloudtrailNotificationsEnabled', function () {
             });
         });
 
-        it('should UNKNOWN if unable to list SNS topics', function (done) {
+        it('should UNKNOWN if unable to query for SNS topics', function (done) {
             const cache = createCache([describeTrails[1]], [], null, null, { message: 'Unable to query for SNS topics' });
             cloudtrailNotificationsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to list SNS topics')
+                expect(results[0].message).to.include('Unable to query for SNS topics')
                 done();
             });
         });
