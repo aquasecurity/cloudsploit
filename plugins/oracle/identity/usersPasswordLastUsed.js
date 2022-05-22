@@ -69,7 +69,7 @@ module.exports = {
                     returnCode = 0;
                 }
 
-                helpers.addResult(results, returnCode, returnMsg, 'global', user.name);
+                helpers.addResult(results, returnCode, returnMsg, 'global', user.id);
 
                 found = true;
             }
