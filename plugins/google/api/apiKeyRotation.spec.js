@@ -6,7 +6,7 @@ const apiKeys = [
         {
           "name": "projects/my-project/locations/global/keys/my-key-1",
           "displayName": "API Key 1",
-          "createTime": '2022-04-07T17:23:05.126949Z',
+          "createTime": new Date(),
         },
         {
           "name": "projects/my-project/locations/global/keys/my-key-2",
