@@ -19,12 +19,6 @@ module.exports = {
             description: 'Return a failing result when users with password logins exceed this number of days without being used',
             regex: '^[1-9]{1}[0-9]{0,3}$',
             default: 180
-        },
-        identity_users_password_last_used_warn: {
-            name: 'Users Password Last Used Warn',
-            description: 'Return a warning result when users with password logins exceed this number of days without being used',
-            regex: '^[1-9]{1}[0-9]{0,3}$',
-            default: 90
         }
     },
 
@@ -34,7 +28,6 @@ module.exports = {
         var source = {};
         var config = {
             identity_users_password_last_used_fail: settings.identity_users_password_last_used_fail || this.settings.identity_users_password_last_used_fail.default,
-            identity_users_password_last_used_warn: settings.identity_users_password_last_used_warn || this.settings.identity_users_password_last_used_warn.default
         };
 
         var region = helpers.objectFirstKey(cache['regionSubscription']['list']);
@@ -73,8 +66,6 @@ module.exports = {
                 
                 if (daysAgo > config.identity_users_password_last_used_fail) {
                     returnCode = 2;
-                } else if (daysAgo > config.identity_users_password_last_used_warn) {
-                    returnCode = 1;  
                 } else {
                     returnCode = 0;
                 }

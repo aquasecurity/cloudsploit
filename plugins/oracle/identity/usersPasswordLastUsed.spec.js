@@ -1,8 +1,6 @@
 var expect = require('chai').expect;
 var plugin = require('./usersPasswordLastUsed');
 
-var warnDate = new Date();
-warnDate.setMonth(warnDate.getMonth() - 4);
 var passDate = new Date();
 passDate.setMonth(passDate.getMonth() - 2);
 var failDate = new Date();
@@ -25,25 +23,6 @@ const user = [
         "isMfaActivated": true,
         "id": "111",
         "timeCreated": failDate,
-    },
-    {
-        "defined-tags": {},
-        "description": "login user",
-        "email": "user1@gmail.com",
-        "isMfaActivated": false,
-        "id": "111",
-        "timeCreated": warnDate,
-        "lastSuccessfulLoginTime": warnDate,
-
-    },
-    {
-        "defined-tags": {},
-        "description": "login user",
-        "email": "user1@gmail.com",
-        "isMfaActivated": false,
-        "id": "111",
-        "timeCreated": warnDate,
-
     },
     {
         "email": "user2@gmail.com",
@@ -155,7 +134,7 @@ describe('usersPasswordLastUsed', function () {
 
             const cache = createCache(
                 null,
-                [user[6], user[6]]
+                [user[4], user[4]]
             );
 
             plugin.run(cache, {}, callback);
@@ -171,10 +150,10 @@ describe('usersPasswordLastUsed', function () {
 
             const cache = createCache(
                 null,
-                [user[4], user[5]]
+                [user[2], user[3]]
             );
 
-            plugin.run(cache, { identity_users_password_last_used_fail: 180, identity_users_password_last_used_warn: 90 }, callback);
+            plugin.run(cache, { identity_users_password_last_used_fail: 180 }, callback);
         })
 
         it('should PASS if the user was created within the pass limit but never used', function (done) {
@@ -187,42 +166,10 @@ describe('usersPasswordLastUsed', function () {
 
             const cache = createCache(
                 null,
-                [user[5], user[4]]
-            );
-
-            plugin.run(cache, { identity_users_password_last_used_fail: 180, identity_users_password_last_used_warn: 90 }, callback);
-        })
-
-        it('should WARN if the user password was last used within the warn limit', function (done) {
-            const callback = (err, results) => {
-                expect(results.length).to.be.above(0)
-                expect(results[0].status).to.equal(1)
-                expect(results[0].region).to.equal('global')
-                done()
-            };
-
-            const cache = createCache(
-                null,
-                [user[2], user[3]]
-            );
-
-            plugin.run(cache, { identity_users_password_last_used_fail: 180, identity_users_password_last_used_warn: 90 }, callback);
-        })
-
-        it('should WARN if the user was created within the warn limit but never used', function (done) {
-            const callback = (err, results) => {
-                expect(results.length).to.be.above(0)
-                expect(results[0].status).to.equal(1)
-                expect(results[0].region).to.equal('global')
-                done()
-            };
-
-            const cache = createCache(
-                null,
                 [user[3], user[2]]
             );
 
-            plugin.run(cache, { identity_users_password_last_used_fail: 180, identity_users_password_last_used_warn: 90 }, callback);
+            plugin.run(cache, { identity_users_password_last_used_fail: 180 }, callback);
         })
 
         it('should FAIL if the user password was last used within the fail limit', function (done) {
@@ -238,7 +185,7 @@ describe('usersPasswordLastUsed', function () {
                 [user[0], user[1]]
             );
 
-            plugin.run(cache, { identity_users_password_last_used_fail: 180, identity_users_password_last_used_warn: 90 }, callback);
+            plugin.run(cache, { identity_users_password_last_used_fail: 180 }, callback);
         })
 
         it('should FAIL if the user was created within the fail limit but never used', function (done) {
@@ -254,7 +201,7 @@ describe('usersPasswordLastUsed', function () {
                 [user[1], user[0]]
             );
 
-            plugin.run(cache, { identity_users_password_last_used_fail: 180, identity_users_password_last_used_warn: 90 }, callback);
+            plugin.run(cache, { identity_users_password_last_used_fail: 180 }, callback);
         })
 
     });
