@@ -10,8 +10,7 @@ module.exports = {
     recommended_action: 'Delete old user accounts that allow password-based logins and have not been used recently.',
     apis: ['user:list'],
     compliance: {
-        pci: 'PCI requires that all user credentials are rotated every 90 days. If the user password has not been used in the last 90 days, the user should be deactivated.',
-        cis1: '1.3 Ensure credentials unused for 90 days or greater are disabled'
+        pci: 'PCI requires that all user credentials are rotated every 90 days. If the user password has not been used in the last 90 days, the user should be deactivated.'
     },
     settings: {
         identity_users_password_last_used_fail: {
