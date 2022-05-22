@@ -26,7 +26,7 @@ module.exports = {
         var results = [];
         var source = {};
         var config = {
-            identity_users_password_last_used_fail: settings.identity_users_password_last_used_fail || this.settings.identity_users_password_last_used_fail.default,
+            identity_users_password_last_used_fail: parseInt(settings.identity_users_password_last_used_fail || this.settings.identity_users_password_last_used_fail.default)
         };
 
         var region = helpers.objectFirstKey(cache['regionSubscription']['list']);
