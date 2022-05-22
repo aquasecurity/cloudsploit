@@ -418,6 +418,15 @@ var postcalls = {
             reliesOnCall: ['list'],
             properties: ['name']
         }
+    },
+    images: {
+        getIamPolicy: {
+            url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/global/images/{name}/getIamPolicy',
+            reliesOnService: ['images'],
+            reliesOnCall: ['list'],
+            properties: ['name'],
+            pagination: false
+        }
     }
 };
 var tertiarycalls = {
