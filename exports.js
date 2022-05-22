@@ -957,8 +957,8 @@ module.exports = {
         'storageAutoIncreaseEnabled'    : require(__dirname + '/plugins/google/sql/storageAutoIncreaseEnabled.js'),
         'serverCertificateRotation'     : require(__dirname + '/plugins/google/sql/serverCertificateRotation.js'),
         'sqlCMKEncryption'              : require(__dirname + '/plugins/google/sql/sqlCMKEncryption.js'),
+        'mysqlLatestVersion'            : require(__dirname + '/plugins/google/sql/mysqlLatestVersion.js'),
         'postgresqlLatestVersion'       : require(__dirname + '/plugins/google/sql/postgresqlLatestVersion.js'),
-
 
         'bucketVersioning'              : require(__dirname + '/plugins/google/storage/bucketVersioning.js'),
         'bucketLogging'                 : require(__dirname + '/plugins/google/storage/bucketLogging.js'),
