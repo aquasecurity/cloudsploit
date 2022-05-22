@@ -426,7 +426,6 @@ var collect = function(GoogleConfig, settings, callback) {
                         postcallCb();
                     });
                 }, function() {
-                    JSON.stringify(collection, null, 2);
                     callback(null, collection);
                 });
             });

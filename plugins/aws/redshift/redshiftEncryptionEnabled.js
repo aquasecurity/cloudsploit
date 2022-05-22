@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'AWS provides at-read encryption for Redshift clusters which should be enabled to ensure the integrity of data stored within the cluster.',
     link: 'http://docs.aws.amazon.com/redshift/latest/mgmt/working-with-db-encryption.html',
     recommended_action: 'Redshift does not currently allow modifications to encryption after the cluster has been launched, so a new cluster will need to be created with encryption enabled.',
-    apis: ['Redshift:describeClusters', 'STS:getCallerIdentity'],
+    apis: ['Redshift:describeClusters'],
     compliance: {
         hipaa: 'All data in HIPAA environments must be encrypted, including ' +
                 'data at rest. Redshift encryption ensures that this HIPAA control ' +
@@ -21,11 +21,6 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
-
-        var acctRegion = helpers.defaultRegion(settings);
-        var accountId = helpers.addSource(cache, source,
-            ['sts', 'getCallerIdentity', acctRegion, 'data']);
-        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.redshift, function(region, rcb){
             var describeClusters = helpers.addSource(cache, source,
@@ -47,13 +42,12 @@ module.exports = {
             for (var i in describeClusters.data) {
                 // For resource, attempt to use the endpoint address (more specific) but fallback to the instance identifier
                 var cluster = describeClusters.data[i];
-                var clusterIdentifier = cluster.ClusterIdentifier;
-                var resource = `arn:${awsOrGov}:redshift:${region}:${accountId}:cluster:${clusterIdentifier}`;
+                var clusterResource = (cluster.Endpoint && cluster.Endpoint.Address) ? cluster.Endpoint.Address : cluster.ClusterIdentifier;
 
                 if (cluster.Encrypted) {
-                    helpers.addResult(results, 0, 'Redshift cluster is encrypted', region, resource);
+                    helpers.addResult(results, 0, 'Redshift cluster is encrypted', region, clusterResource);
                 } else {
-                    helpers.addResult(results, 1, 'Redshift cluster is not encrypted', region, resource);
+                    helpers.addResult(results, 1, 'Redshift cluster is not encrypted', region, clusterResource);
                 }
             }
             
