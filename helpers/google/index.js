@@ -160,7 +160,7 @@ var run = function(GoogleConfig, collection, settings, service, callObj, callKey
 
                 records = collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][region].data;
                 if (callObj.subObj) records = records.filter(record => !!record[callObj.subObj]);
-                async.eachLimit(records, 10, function(record, recordCb) {                   
+                async.eachLimit(records, 10, function(record, recordCb) {
                     for (var property in callObj.properties) {
                         callObj.urlToCall = callObj.url.replace(`{${callObj.properties[property]}}`, !callObj.subObj ? record[callObj.properties[property]] :  record[callObj.subObj][callObj.properties[property]]);
                     }
