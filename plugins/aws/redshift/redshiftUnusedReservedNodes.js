@@ -9,17 +9,12 @@ module.exports = {
     more_info: 'Amazon Redshift reserved nodes must be utilized to avoid unnecessary billing.',
     link: 'https://docs.aws.amazon.com/redshift/latest/mgmt/purchase-reserved-node-instance.html',
     recommended_action: 'Provision new Redshift clusters matching the criteria of reserved nodes',
-    apis: ['Redshift:describeClusters', 'Redshift:describeReservedNodes', 'STS:getCallerIdentity'],
+    apis: ['Redshift:describeClusters', 'Redshift:describeReservedNodes'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
-
-        var acctRegion = helpers.defaultRegion(settings);
-        var accountId = helpers.addSource(cache, source,
-            ['sts', 'getCallerIdentity', acctRegion, 'data']);
-        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.redshift, function(region, rcb){
             var describeClusters = helpers.addSource(cache, source,
@@ -57,15 +52,14 @@ module.exports = {
             });
 
             describeReservedNodes.data.forEach(node => {
-                var resource = `arn:${awsOrGov}:redshift:${region}:${accountId}:reserved-node:${node.ReservedNodeId}`;
                 if (usedReservedNodes.includes(node.NodeType)) {
                     helpers.addResult(results, 0,
                         `Redshift reserved node "${node.ReservedNodeId}" is being used`,
-                        region, resource);
+                        region, node.ReservedNodeId);
                 } else {
                     helpers.addResult(results, 2,
                         `Redshift reserved node "${node.ReservedNodeId}" is not being used`,
-                        region, resource);
+                        region, node.ReservedNodeId);
                 }
             });
 

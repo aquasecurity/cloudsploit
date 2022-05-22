@@ -50,11 +50,10 @@ module.exports = {
                 distribution.Origins.Items.length) {
                 
                 for (let origin of distribution.Origins.Items) {
-                    if (origin.S3OriginConfig && origin.DomainName) {
+                    if (origin.S3OriginConfig) {
                         s3OriginFound = true;
-                        let bucketName = origin.DomainName.replace(/.s3.*.com/, '');
-                        if (bucketName &&
-                            origin.S3OriginConfig.OriginAccessIdentity &&
+                        let bucketName = origin.DomainName.substring(0, origin.DomainName.indexOf('.s3.amazonaws.com'));
+                        if (origin.S3OriginConfig.OriginAccessIdentity &&
                             origin.S3OriginConfig.OriginAccessIdentity.length) {
 
                             let oaiId = origin.S3OriginConfig.OriginAccessIdentity.substring(origin.S3OriginConfig.OriginAccessIdentity.lastIndexOf('/') + 1);
