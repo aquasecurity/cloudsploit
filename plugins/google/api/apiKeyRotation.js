@@ -1,7 +1,7 @@
 var helpers = require('../../../helpers/google');
 
 module.exports = {
-    title: 'Restricted API Keys',
+    title: 'API Key Rotation',
     category: 'API',
     domain: 'Identity and Access Management',
     description: 'Ensure that your Google Cloud API Keys are periodically regenerated.',
