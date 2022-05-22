@@ -934,6 +934,7 @@ module.exports = {
 
         'keyRotation'                   : require(__dirname + '/plugins/google/cryptographickeys/keyRotation.js'),
         'keyProtectionLevel'            : require(__dirname + '/plugins/google/cryptographickeys/keyProtectionLevel.js'),
+        'kmsPublicAccess'               : require(__dirname + '/plugins/google/cryptographickeys/kmsPublicAccess.js'),
 
         'dbRestorable'                  : require(__dirname + '/plugins/google/sql/dbRestorable.js'),
         'dbAutomatedBackups'            : require(__dirname + '/plugins/google/sql/dbAutomatedBackups.js'),

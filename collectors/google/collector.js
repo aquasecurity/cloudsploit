@@ -420,6 +420,17 @@ var postcalls = {
         }
     }
 };
+var tertiarycalls = {
+    cryptoKeys: {
+        getIamPolicy: {
+            url: 'https://cloudkms.googleapis.com/v1/{name}:getIamPolicy',
+            location: 'region',
+            reliesOnService: ['cryptoKeys'],
+            reliesOnCall: ['list'],
+            properties: ['name'],
+        }    
+    },
+};
 
 var collect = function(GoogleConfig, settings, callback) {
     var collection = {};
@@ -446,7 +457,13 @@ var collect = function(GoogleConfig, settings, callback) {
                         postcallCb();
                     });
                 }, function() {
-                    callback(null, collection);
+                    async.eachOfLimit(tertiarycalls, 10, function(tertiaryCallObj, service, tertiaryCallCb) {
+                        helpers.processCall(GoogleConfig, collection, settings, regions, tertiaryCallObj, service, client, function() {
+                            tertiaryCallCb();
+                        });
+                    }, function() {
+                        callback(null, collection);
+                    });
                 });
             });
         });
