@@ -31,7 +31,7 @@ module.exports = {
                 helpers.addResult(results, 0, 'No Advisor Recommendations found', location);
                 return rcb();
             } else {
-                helpers.addResult(results, 2, 'Advisor Recommendations found', location);
+                helpers.addResult(results, 2, 'Active Advisor Recommendations found', location);
             }
 
             rcb();
