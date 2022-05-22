@@ -409,6 +409,9 @@ var collect = function(GoogleConfig, settings, callback) {
 
     var regions = helpers.regions();
 
+    if (settings.gather) {
+        return callback(null, calls, postcalls);
+    }
     helpers.authenticate(GoogleConfig)
         .then(client => {
             async.eachOfLimit(calls, 10, function(call, service, serviceCb) {
@@ -423,7 +426,6 @@ var collect = function(GoogleConfig, settings, callback) {
                         postcallCb();
                     });
                 }, function() {
-                    JSON.stringify(collection, null, 2);
                     callback(null, collection);
                 });
             });

@@ -4,7 +4,6 @@ var regRegions    = require('./regions.js');
 
 const {JWT}       = require('google-auth-library');
 
-
 var async         = require('async');
 
 var regions = function() {
@@ -268,11 +267,11 @@ var execute = async function(LocalGoogleConfig, collection, service, callObj, ca
         collectionItems = myEngine ? collection[service][myEngine][callKey][region] : collection[service][callKey][region];
         let set = true;
         if (data.data.items) {
-            resultItems = setData(collectionItems, data.data.items, postCall, parent);
+            resultItems = setData(collectionItems, data.data.items, postCall, parent, {'service': service, 'callKey': callKey});
         } else if (data.data[service]) {
-            resultItems = setData(collectionItems, data.data[service], postCall, parent);
+            resultItems = setData(collectionItems, data.data[service], postCall, parent, {'service': service, 'callKey': callKey});
         } else if (!myEngine && data.data.accounts) {
-            resultItems = setData(collectionItems, data.data.accounts, postCall, parent);
+            resultItems = setData(collectionItems, data.data.accounts, postCall, parent, {'service': service, 'callKey': callKey});
         } else if (!myEngine && data.data) {
             set = false;
             if (data.data.constructor.name === 'Array') {
@@ -282,7 +281,7 @@ var execute = async function(LocalGoogleConfig, collection, service, callObj, ca
             } else if (!myEngine && !(collection[service][callKey][region].data.length)) {
                 collection[service][callKey][region].data = [];
             }
-            resultItems = setData(collection[service][callKey][region], data.data, postCall, parent);
+            resultItems = setData(collection[service][callKey][region], data.data, postCall, parent, {'service': service, 'callKey': callKey});
         } else {
             set = false;
             myEngine ? collection[service][myEngine][callKey][region].data = [] : collection[service][callKey][region].data = [];
@@ -374,7 +373,8 @@ function makeApiCall(client, originalUrl, callCb, nextToken, config) {
     });    
 }
 
-function setData(collection, dataToAdd, postCall, parent) {
+function setData(collection, dataToAdd, postCall, parent, serviceInfo) {
+    console.log(`[PLUGINCHECK] ${JSON.stringify(serviceInfo, null, 2)}`);
     if (postCall && !!parent) {
         if (dataToAdd && dataToAdd.length) {
             dataToAdd.map(item => {
@@ -386,7 +386,11 @@ function setData(collection, dataToAdd, postCall, parent) {
         }
     }
     if (dataToAdd.constructor.name === 'Array') {
-        collection.data = collection.data.concat(dataToAdd);
+        if (Array.isArray(collection.data)) {
+            collection.data = collection.data.concat(dataToAdd);
+        } else {
+            collection.data = dataToAdd.push(collection.data);
+        }
     } else {
         let existingData = collection.data;
         if (existingData && existingData.length) {
