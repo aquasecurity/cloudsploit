@@ -293,6 +293,12 @@ var calls = {
             location: null,
             pagination: true
         }
+    },
+    apiKeys: {
+        list: {
+            url: 'https://apikeys.googleapis.com/v2/projects/{projectId}/locations/global/keys',
+            location: null
+        }
     }
 };
 
@@ -397,6 +403,20 @@ var postcalls = {
             method: 'POST', 
             pagination: true,
             paginationKey: 'pageSize'
+        },
+        getCmekSettings: {
+            url: 'https://logging.googleapis.com/v2/organizations/{organizationId}/cmekSettings',
+            reliesOnService: ['organizations'],
+            reliesOnCall: ['list'],
+            properties: ['organizationId']
+        }
+    },
+    apiKeys: {
+        get: {
+            url: 'https://apikeys.googleapis.com/v2/{name}',
+            reliesOnService: ['apiKeys'],
+            reliesOnCall: ['list'],
+            properties: ['name']
         }
     }
 };
@@ -426,7 +446,6 @@ var collect = function(GoogleConfig, settings, callback) {
                         postcallCb();
                     });
                 }, function() {
-                    JSON.stringify(collection, null, 2);
                     callback(null, collection);
                 });
             });
