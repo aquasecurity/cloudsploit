@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-protect-stacks.html',
     recommended_action: 'Enable termination protection for CloudFormation stack',
     apis: ['CloudFormation:listStacks', 'CloudFormation:describeStacks'],
-    remediation_description: 'Stack Termination protection will be enabled.',
+    remediation_description: 'Stack termination protection will be enabled for affected stacks.',
     remediation_min_version: '202205161341',
     apis_remediate: ['CloudFormation:listStacks', 'CloudFormation:describeStacks'],
     actions: {
@@ -91,7 +91,7 @@ module.exports = {
 
         var stackLocation = stackNameArr[3];
 
-        // add the location of the parameter group to the config
+        // add the location of the cloudformation stack to the config
         config.region = stackLocation;
         var params = {};
 
