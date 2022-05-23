@@ -14,11 +14,9 @@ module.exports = function(AWSConfig, collection, retries, callback) {
         };
 
         helpers.makeCustomCollectorCall(eks, 'listNodegroups', params, retries, null, null, null, function(err, data) {
-            if (err) {
-                collection.eks.listNodegroups[AWSConfig.region][cluster].err = err;
-            }
+            if (err) collection.eks.listNodegroups[AWSConfig.region][cluster].err = err;
 
-            collection.eks.listNodegroups[AWSConfig.region][cluster].data = data.nodegroups;
+            if (data) collection.eks.listNodegroups[AWSConfig.region][cluster].data = data.nodegroups;
 
             cb();
         });

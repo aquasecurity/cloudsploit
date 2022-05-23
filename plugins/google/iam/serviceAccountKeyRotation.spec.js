@@ -17,7 +17,7 @@ const createCache = (err, data) => {
 
 describe('serviceAccountKeyRotation', function () {
     describe('run', function () {
-        it('should give unknown result if a project error is passed or no data is present', function (done) {
+        it('should give unknown result if a keys error is passed or no data is present', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(3);
@@ -34,7 +34,7 @@ describe('serviceAccountKeyRotation', function () {
             plugin.run(cache, {}, callback);
         });
 
-        it('should give passing result if no project records are found', function (done) {
+        it('should give passing result if no service account keys found', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
@@ -51,11 +51,11 @@ describe('serviceAccountKeyRotation', function () {
             plugin.run(cache, {}, callback);
         });
 
-        it('should give passing result if the projects services are all within service limits', function (done) {
-            const callback = (err, results) => {
+        it('should give passing result if the service account key has been rotated within defined threshold time', function (done) {
+            const callback = (err, results) => {    
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('he service account key has been rotated within 90 days');
+                expect(results[0].message).to.include('The service account key has been rotated within 90 days');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -77,14 +77,14 @@ describe('serviceAccountKeyRotation', function () {
                 ]
             );
 
-            plugin.run(cache, {}, callback);
+            plugin.run(cache, { service_account_keys_rotated_fail: '90' }, callback);
         });
 
-        it('should give failing result if the projects services are very close to the service limits', function (done) {
+        it('should give failing result if the the service account key has not been rotated within defined threshold time', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('The service account key has not been rotated in over 90 days');
+                expect(results[0].message).to.include('The service account key has not been rotated in over 80 days');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -107,7 +107,7 @@ describe('serviceAccountKeyRotation', function () {
                 ]
             );
 
-            plugin.run(cache, {}, callback);
+            plugin.run(cache, { service_account_keys_rotated_fail: '80' }, callback);
         })
     })
 });
