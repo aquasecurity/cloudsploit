@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Web Apps FTPS-only access Enabled',
+    title: 'FTPS Only Access Enabled',
     category: 'App Service',
     domain: 'Application Integration',
     description: 'Ensures that Azure Web Apps have FTPS only access enabled.',
