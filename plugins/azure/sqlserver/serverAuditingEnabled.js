@@ -50,14 +50,14 @@ module.exports = {
                     if (!serverBlobAuditingPolicies.data.length) {
                         helpers.addResult(results, 2, 'No Server Auditing policies found', location, server.id);
                     } else {
-                        serverBlobAuditingPolicies.data.forEach(serverBlobAuditingPolicy => {
-                            if (serverBlobAuditingPolicy.state &&
-                                serverBlobAuditingPolicy.state.toLowerCase() === 'enabled') {
-                                helpers.addResult(results, 0, 'Server auditing is enabled on the SQL Server', location, server.id);
-                            } else {
-                                helpers.addResult(results, 2, 'Server auditing is not enabled on the SQL Server', location, server.id);
-                            }
-                        });
+                        let auditingEnabled = serverBlobAuditingPolicies.data.find(serverBlobAuditingPolicy =>
+                            serverBlobAuditingPolicy.state &&
+                            serverBlobAuditingPolicy.state.toLowerCase() === 'enabled');
+                        if (auditingEnabled) {
+                            helpers.addResult(results, 0, 'Server auditing is enabled on the SQL Server', location, server.id);
+                        } else {
+                            helpers.addResult(results, 2, 'Server auditing is not enabled on the SQL Server', location, server.id);
+                        }
                     }
                 }
             });
