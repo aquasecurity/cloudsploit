@@ -710,6 +710,8 @@ module.exports = {
         'sqlServerTlsVersion'           : require(__dirname + '/plugins/azure/sqlserver/sqlServerTlsVersion.js'),
         'autoFailoverGroupsEnabled'     : require(__dirname + '/plugins/azure/sqlserver/autoFailoverGroupsEnabled.js'),
         'automaticTuningEnabled'        : require(__dirname + '/plugins/azure/sqlserver/automaticTuningEnabled.js'),
+        'serverSendEmailToAdmins'       : require(__dirname + '/plugins/azure/sqlserver/serverSendEmailToAdmins.js'),
+        'sqlServerRecurringScans'       : require(__dirname + '/plugins/azure/sqlserver/sqlServerRecurringScans.js'),
 
         'javaVersion'                   : require(__dirname + '/plugins/azure/appservice/javaVersion.js'),
         'phpVersion'                    : require(__dirname + '/plugins/azure/appservice/phpVersion.js'),
@@ -727,6 +729,10 @@ module.exports = {
         'scmSiteAccessRestriction'      : require(__dirname + '/plugins/azure/appservice/scmSiteAccessRestriction.js'),
         'appServiceAccessRestriction'   : require(__dirname + '/plugins/azure/appservice/appServiceAccessRestriction.js'),
         'webAppsADEnabled'              : require(__dirname + '/plugins/azure/appservice/webAppsADEnabled.js'),
+        'appInsightsEnabled'            : require(__dirname + '/plugins/azure/appservice/appInsightsEnabled.js'),
+        'automatedBackupsEnabled'       : require(__dirname + '/plugins/azure/appservice/automatedBackupsEnabled.js'),
+        'ftpsOnlyAccessEnabled'         : require(__dirname + '/plugins/azure/appservice/ftpsOnlyAccessEnabled.js'),
+        'backupRetentionPeriod'         : require(__dirname + '/plugins/azure/appservice/backupRetentionPeriod.js'),
         'disableFTPDeployments'         : require(__dirname + '/plugins/azure/appservice/disableFTPDeployments.js'),
 
         'rbacEnabled'                   : require(__dirname + '/plugins/azure/kubernetesservice/rbacEnabled.js'),
@@ -757,10 +763,17 @@ module.exports = {
         'kvRecoveryEnabled'             : require(__dirname + '/plugins/azure/keyvaults/kvRecoveryEnabled.js'),
         'keyExpirationEnabled'          : require(__dirname + '/plugins/azure/keyvaults/keyExpirationEnabled.js'),
         'secretExpirationEnabled'       : require(__dirname + '/plugins/azure/keyvaults/secretExpirationEnabled.js'),
+        'keyVaultInUse'                 : require(__dirname + '/plugins/azure/keyvaults/keyVaultInUse.js'),
 
         'advancedThreatProtection'      : require(__dirname + '/plugins/azure/cosmosdb/advancedThreatProtection.js'),
         'cosmosPublicAccessDisabled'    : require(__dirname + '/plugins/azure/cosmosdb/cosmosPublicAccessDisabled.js'),
         'automaticFailoverEnabled'      : require(__dirname + '/plugins/azure/cosmosdb/automaticFailoverEnabled.js'),
+
+        'checkAdvisorRecommendations'   : require(__dirname + '/plugins/azure/advisor/checkAdvisorRecommendations.js'),
+
+        'enableDefenderForStorage'      : require(__dirname + '/plugins/azure/defender/enableDefenderForStorage.js'),
+        'enableDefenderForContainers'   : require(__dirname + '/plugins/azure/defender/enableDefenderForContainers.js'),
+        'enableDefenderForSqlServers'   : require(__dirname + '/plugins/azure/defender/enableDefenderForSqlServers.js'),
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
@@ -799,6 +812,7 @@ module.exports = {
         'userAuthTokenRotated'          : require(__dirname + '/plugins/oracle/identity/userAuthTokenRotated.js'),
         'userCustomerSecretKeysRotated' : require(__dirname + '/plugins/oracle/identity/userCustomerSecretKeysRotated.js'),
         'userAPIKeysRotated'            : require(__dirname + '/plugins/oracle/identity/userAPIKeysRotated.js'),
+        'usersPasswordLastUsed'         : require(__dirname + '/plugins/oracle/identity/usersPasswordLastUsed.js'),
 
         'openSSH'                       : require(__dirname + '/plugins/oracle/networking/openSSH.js'),
         'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/oracle/networking/openOracleAutoDataWarehouse.js'),
@@ -854,6 +868,8 @@ module.exports = {
         'blockPolicyProtection'         : require(__dirname + '/plugins/oracle/blockstorage/blockPolicyProtection.js'),
 
         'logRetentionPeriod'            : require(__dirname + '/plugins/oracle/audit/logRetentionPeriod.js'),
+
+        'okePrivateEndpoint'            : require(__dirname + '/plugins/oracle/oke/okePrivateEndpoint.js'),
     },
     google: {
         'excessiveFirewallRules'        : require(__dirname + '/plugins/google/vpcnetwork/excessiveFirewallRules.js'),
@@ -922,9 +938,12 @@ module.exports = {
         'applicationConsistentSnapshots': require(__dirname + '/plugins/google/compute/applicationConsistentSnapshots.js'),
         'deprecatedImages'              : require(__dirname + '/plugins/google/compute/deprecatedImages.js'),
         'enableUsageExport'             : require(__dirname + '/plugins/google/compute/enableUsageExport.js'),
+        'instanceGroupAutoHealing'      : require(__dirname + '/plugins/google/compute/instanceGroupAutoHealing.js'),
+        'publicDiskImages'              : require(__dirname + '/plugins/google/compute/publicDiskImages.js'),
 
         'keyRotation'                   : require(__dirname + '/plugins/google/cryptographickeys/keyRotation.js'),
         'keyProtectionLevel'            : require(__dirname + '/plugins/google/cryptographickeys/keyProtectionLevel.js'),
+        'kmsPublicAccess'               : require(__dirname + '/plugins/google/cryptographickeys/kmsPublicAccess.js'),
 
         'dbRestorable'                  : require(__dirname + '/plugins/google/sql/dbRestorable.js'),
         'dbAutomatedBackups'            : require(__dirname + '/plugins/google/sql/dbAutomatedBackups.js'),
@@ -948,6 +967,8 @@ module.exports = {
         'storageAutoIncreaseEnabled'    : require(__dirname + '/plugins/google/sql/storageAutoIncreaseEnabled.js'),
         'serverCertificateRotation'     : require(__dirname + '/plugins/google/sql/serverCertificateRotation.js'),
         'sqlCMKEncryption'              : require(__dirname + '/plugins/google/sql/sqlCMKEncryption.js'),
+        'mysqlLatestVersion'            : require(__dirname + '/plugins/google/sql/mysqlLatestVersion.js'),
+        'postgresqlLatestVersion'       : require(__dirname + '/plugins/google/sql/postgresqlLatestVersion.js'),
 
         'bucketVersioning'              : require(__dirname + '/plugins/google/storage/bucketVersioning.js'),
         'bucketLogging'                 : require(__dirname + '/plugins/google/storage/bucketLogging.js'),
@@ -973,6 +994,9 @@ module.exports = {
 
         'serviceAccountTokenCreator'    : require(__dirname + '/plugins/google/iam/serviceAccountTokenCreator.js'),
         'memberAdmin'                   : require(__dirname + '/plugins/google/iam/memberAdmin.js'),
+
+        'apiKeyRotation'                : require(__dirname + '/plugins/google/api/apiKeyRotation.js'),
+        'apiKeyApplicationRestriction'  : require(__dirname + '/plugins/google/api/apiKeyApplicationRestriction.js'),
       
         'privateEndpoint'               : require(__dirname + '/plugins/google/kubernetes/privateEndpoint.js'),
         'monitoringEnabled'             : require(__dirname + '/plugins/google/kubernetes/monitoringEnabled.js'),
@@ -1047,7 +1071,8 @@ module.exports = {
         'disableVMIPForwarding'         : require(__dirname + '/plugins/google/cloudresourcemanager/disableVMIPForwarding.js'),
         'trustedImageProjects'          : require(__dirname + '/plugins/google/cloudresourcemanager/trustedImageProjects.js'),
         'skipDefaultNetworkCreation'    : require(__dirname + '/plugins/google/cloudresourcemanager/skipDefaultNetworkCreation.js'),
-        'locationBasedRestriction'      : require(__dirname + '/plugins/google/cloudresourcemanager/locationBasedRestriction.js')
+        'locationBasedRestriction'      : require(__dirname + '/plugins/google/cloudresourcemanager/locationBasedRestriction.js'),
+        'disableServiceAccountCreation'  : require(__dirname + '/plugins/google/cloudresourcemanager/disableServiceAccountCreation.js')
     },
     alibaba: {
         'passwordMinLength'             : require(__dirname + '/plugins/alibaba/ram/passwordMinLength.js'),

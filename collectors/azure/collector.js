@@ -26,6 +26,11 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/resourcegroups?api-version=2019-10-01'
         }
     },
+    advisor: {
+        recommendationsList: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Advisor/recommendations?api-version=2020-01-01'
+        }
+    },
     activityLogAlerts: {
         listBySubscriptionId: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/microsoft.insights/activityLogAlerts?api-version=2020-10-01'
@@ -261,6 +266,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/securityAlertPolicies?api-version=2017-03-01-preview'
         }
     },
+    vulnerabilityAssessments: {
+        listByServer: {
+            reliesOnPath: 'servers.listSql',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/vulnerabilityAssessments?api-version=2021-02-01-preview'
+        }
+    },
     failoverGroups: {
         listByServer: {
             reliesOnPath: 'servers.listSql',
@@ -395,6 +407,17 @@ var postcalls = {
             reliesOnPath: 'webApps.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/config?api-version=2019-08-01'
+        },
+        listAppSettings: {
+            reliesOnPath: 'webApps.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/config/appsettings/list?api-version=2021-02-01',
+        },
+        getBackupConfiguration: {
+            reliesOnPath: 'webApps.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/config/backup/list?api-version=2021-02-01',
+            post: true
         }
     },
     endpoints: {

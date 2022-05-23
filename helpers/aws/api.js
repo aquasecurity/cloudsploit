@@ -544,6 +544,8 @@ var calls = {
         describeLoadBalancers: {
             property: 'LoadBalancers',
             paginate: 'NextMarker',
+            reliesOnService: 'ec2',
+            reliesOnCall: 'describeVpcs',
             paginateReqProp: 'Marker'
         },
         describeTargetGroups: {
@@ -558,8 +560,12 @@ var calls = {
         },
         sendIntegration: {
             enabled: true,
-            reliesOnCalls: ['ELBv2:describeTargetGroups', 'ELBv2:describeTargetHealth']
-        }
+            reliesOnCalls: ['ELBv2:describeTargetGroups', 'ELBv2:describeTargetHealth'],
+            integrationReliesOn: {
+                serviceName: 'EC2',
+                calls: ['ELBv2:describeLoadBalancers']
+            }
+        },
     },
     EMR: {
         listClusters: {
