@@ -728,6 +728,7 @@ module.exports = {
         'certificateExpiry'             : require(__dirname + '/plugins/azure/appservice/certificateExpiry.js'),
         'scmSiteAccessRestriction'      : require(__dirname + '/plugins/azure/appservice/scmSiteAccessRestriction.js'),
         'appServiceAccessRestriction'   : require(__dirname + '/plugins/azure/appservice/appServiceAccessRestriction.js'),
+        'webAppsADEnabled'              : require(__dirname + '/plugins/azure/appservice/webAppsADEnabled.js'),
         'appInsightsEnabled'            : require(__dirname + '/plugins/azure/appservice/appInsightsEnabled.js'),
         'automatedBackupsEnabled'       : require(__dirname + '/plugins/azure/appservice/automatedBackupsEnabled.js'),
         'ftpsOnlyAccessEnabled'         : require(__dirname + '/plugins/azure/appservice/ftpsOnlyAccessEnabled.js'),
@@ -763,6 +764,7 @@ module.exports = {
         'keyExpirationEnabled'          : require(__dirname + '/plugins/azure/keyvaults/keyExpirationEnabled.js'),
         'secretExpirationEnabled'       : require(__dirname + '/plugins/azure/keyvaults/secretExpirationEnabled.js'),
         'allowedCertificateKeyTypes'   : require(__dirname + '/plugins/azure/keyvaults/allowedCertificateKeyTypes.js'),
+        'appTierCmkInUse'               : require(__dirname + '/plugins/azure/keyvaults/appTierCmkInUse.js'),
         'keyVaultInUse'                 : require(__dirname + '/plugins/azure/keyvaults/keyVaultInUse.js'),
 
         'advancedThreatProtection'      : require(__dirname + '/plugins/azure/cosmosdb/advancedThreatProtection.js'),
