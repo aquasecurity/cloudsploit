@@ -45,6 +45,7 @@ module.exports = {
                     helpers.addResult(results, 3,
                         `Unable to get Evaluation Results: ${helpers.addError(getComplianceDetailsByConfigRule)}`,
                         region, resource);
+                    continue;
                 }
 
                 if (!getComplianceDetailsByConfigRule.data.EvaluationResults ||

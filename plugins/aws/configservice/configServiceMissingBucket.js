@@ -41,8 +41,8 @@ module.exports = {
                 var headBucket = helpers.addSource(cache, source,
                     ['s3', 'headBucket', region, record.s3BucketName]);
 
-                if (headBucket && headBucket.err && headBucket.err.code &&
-                    headBucket.err.code.toLowerCase() == 'notfound'){
+                if (headBucket && headBucket.err && headBucket.err.message &&
+                    headBucket.err.message.toLowerCase().includes('not found')){
                     deletedBuckets.push(record);
                 } else if (!headBucket || headBucket.err) {
                     helpers.addResult(results, 3,
