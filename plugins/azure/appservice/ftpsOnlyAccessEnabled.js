@@ -46,7 +46,7 @@ module.exports = {
                     return scb();
                 }
 
-                const ftpsOnlyAcces = configs.data[0] && configs.data[0].ftpsState;
+                const ftpsOnlyAcces = configs.data.every(config => config.ftpsState && config.ftpsState.toLowerCase() == 'ftpsonly');
 
                 if (ftpsOnlyAcces && ftpsOnlyAcces.toLowerCase() === 'ftpsonly') {
                     helpers.addResult(results, 0, 'FTPS-only access is enabled for the Web App', location, webApp.id);
