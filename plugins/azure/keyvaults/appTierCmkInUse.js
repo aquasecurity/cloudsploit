@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'CMK Creation for App Tier Enabled',
+    title: 'App Tier CMK In Use',
     category: 'Key Vaults',
     domain: 'Application Integration',
     description: 'Ensure that a Customer-Managed Key (CMK) is created and configured for your Microsoft Azure application tier.',
