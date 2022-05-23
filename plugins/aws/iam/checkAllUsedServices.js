@@ -7,7 +7,7 @@ module.exports = {
     title: 'Check All Used Services',
     category: 'IAM',
     domain: 'Identity and Access management',
-    description: 'Ensures IAM role policies are properly scoped with specific permissions',
+    description: 'Ensure that IAM role policies are scoped properly as to not provide access to unused AWS services.',
     more_info: 'Policies attached to IAM roles should be scoped to least-privileged access and avoid the use of wildcards.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html',
     recommended_action: 'Ensure that all IAM roles are scoped to specific services and API calls.',
