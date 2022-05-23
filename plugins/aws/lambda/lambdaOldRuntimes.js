@@ -22,10 +22,13 @@ module.exports = {
             { 'id':'nodejs4.3-edge', 'name': 'Node.js 4.3', 'endOfLifeDate': '2018-04-30' },
             { 'id':'nodejs6.10', 'name': 'Node.js 6.10', 'endOfLifeDate': '2019-08-12' },
             { 'id':'nodejs8.10', 'name': 'Node.js 8.10', 'endOfLifeDate': '2020-03-06' },
+            { 'id':'nodejs10.x', 'name': 'Node.js 10.x', 'endOfLifeDate': '2022-02-14' },
+            { 'id':'dotnetcore2.1', 'name': '.Net Core 2.1', 'endOfLifeDate': '2022-02-14' },
             { 'id':'dotnetcore2.0', 'name': '.Net Core 2.0', 'endOfLifeDate': '2018-10-01' },
             { 'id':'dotnetcore1.0', 'name': '.Net Core 1.0', 'endOfLifeDate': '2019-06-27' },
-            { 'id':'python2.7', 'name': 'Python 2.7', 'endOfLifeDate': '2020-01-01' },
+            { 'id':'python2.7', 'name': 'Python 2.7', 'endOfLifeDate': '2022-02-14' },
             { 'id':'python3.5', 'name': 'Python 3.5', 'endOfLifeDate': '2020-09-13' },
+            { 'id':'ruby2.5', 'name': 'Ruby 2.5', 'endOfLifeDate': '2022-02-14' },
         ];
 
         async.each(regions.lambda, function(region, rcb){
