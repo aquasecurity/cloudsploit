@@ -142,14 +142,17 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        allResources = allResources.map((resource) => {
+        allResources = allResources.reduce((result, resource) => {
             let arr  = resource.resourceType.split(':');
-            return {
-                service: arr[2].toLowerCase(),
-                subService: arr[4].toLowerCase(),
-                count: resource.count
-            };
-        });
+            let key = arr[2].toLowerCase();
+            result[key] = result[key] || [];
+
+            if (resource.count > 0) {
+                result[key].push(arr[4]);
+            }
+
+            return result;
+        }, {});
 
         var listRoles = helpers.addSource(cache, source,
             ['iam', 'listRoles', iamRegion]);
@@ -248,8 +251,7 @@ module.exports = {
                             let service = statements.find((doc) => doc.Resource[0].includes('arn:'));
                             if (service) {
                                 let serviceName = service.Resource[0].split(':')[2];
-                                let serviceFound =  allResources.find((resource) => resource.service === serviceName && resource.count > 0);
-                                if (!serviceFound) {
+                                if (!(serviceName in allResources)) {
                                     if (policyFailures.indexOf(serviceName) === -1) policyFailures.push(serviceName);
                                 }
                             }
@@ -278,8 +280,7 @@ module.exports = {
                         for (let statement of statements) {
                             let services = [... new Set(statement.Action.map((action) => action.split(':')[0].toLowerCase()))];
                             services.forEach((service) => {
-                                let serviceFound =  allResources.find((resource) => resource.service === service && resource.count > 0);
-                                if (!serviceFound) {
+                                if (!(service in allResources)) {
                                     if (policyFailures.indexOf(service) === -1) policyFailures.push(service);
                                 }
                             });
