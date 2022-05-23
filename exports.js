@@ -691,6 +691,7 @@ module.exports = {
         'openSalt'                      : require(__dirname + '/plugins/azure/networksecuritygroups/openSalt.js'),
         'openSMBoTCP'                   : require(__dirname + '/plugins/azure/networksecuritygroups/openSMBoTCP.js'),
         'openSQLServer'                 : require(__dirname + '/plugins/azure/networksecuritygroups/openSQLServer.js'),
+        'openUDP'                       : require(__dirname + '/plugins/azure/networksecuritygroups/openUDP.js'),
 
         'nsgFlowLogsRetentionPeriod'    : require(__dirname + '/plugins/azure/networkwatchers/nsgFlowLogsRetentionPeriod.js'),
 
