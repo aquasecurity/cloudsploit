@@ -2,12 +2,12 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Enable WDATP Integration',
+    title: 'Enable Defender Endpoint Integration',
     category: 'Defender',
-    domain: 'Management and Governance',
-    description: 'Ensures that WDATP integration is enabled for Microsoft Defender for Cloud.',
+    domain: 'Security',
+    description: 'Ensures that Microsoft Defender for Endpoint integration is enabled.',
     more_info: 'WDATP integration brings comprehensive Endpoint Detection and Response (EDR) capabilities within Microsoft Defender for Cloud. This integration helps to spot abnormalities, detect and respond to advanced attacks on Windows server endpoints monitored by Microsoft Defender for Cloud. Windows Defender ATP in Microsoft Defender for Cloud supports detection on Windows Server 2016, 2012 R2, and 2008 R2 SP1 operating systems in a Standard service subscription.',
-    recommended_action: 'Ensure that Microsoft Defender for Endpoint integration is selected with Microsoft Defender for Cloud.',
+    recommended_action: 'Enable "Allow Microsoft Defender for Endpoint to access my data setting" in Defender environment settings.',
     link: 'https://docs.microsoft.com/en-in/azure/defender-for-cloud/integration-defender-for-endpoint?tabs=windows',
     apis: ['securityCenter:list'],
 
@@ -35,9 +35,9 @@ module.exports = {
 
             const wdatpIntegration = defenderSettings.data.find((settings) => settings.name && settings.name.toLowerCase() === 'wdatp');
             if (wdatpIntegration && wdatpIntegration.enabled) {
-                helpers.addResult(results, 0, 'WDATP integration is enabled for Microsoft Defender', location, wdatpIntegration.id);
+                helpers.addResult(results, 0, 'Endpoint integration is enabled for Microsoft Defender', location, wdatpIntegration.id);
             } else {
-                helpers.addResult(results, 2, 'WDATP integration is not enabled for Microsoft Defender', location);
+                helpers.addResult(results, 2, 'Endpoint integration is not enabled for Microsoft Defender', location);
             }
 
             rcb();
