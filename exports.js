@@ -710,6 +710,7 @@ module.exports = {
         'sqlServerTlsVersion'           : require(__dirname + '/plugins/azure/sqlserver/sqlServerTlsVersion.js'),
         'autoFailoverGroupsEnabled'     : require(__dirname + '/plugins/azure/sqlserver/autoFailoverGroupsEnabled.js'),
         'automaticTuningEnabled'        : require(__dirname + '/plugins/azure/sqlserver/automaticTuningEnabled.js'),
+        'enableATP'                     : require(__dirname + '/plugins/azure/sqlserver/enableATP.js'),
         'serverSendEmailToAdmins'       : require(__dirname + '/plugins/azure/sqlserver/serverSendEmailToAdmins.js'),
         'sqlServerRecurringScans'       : require(__dirname + '/plugins/azure/sqlserver/sqlServerRecurringScans.js'),
 

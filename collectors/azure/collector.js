@@ -266,6 +266,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/securityAlertPolicies?api-version=2017-03-01-preview'
         }
     },
+    advancedThreatProtectionSettings: {
+        listByServer: {
+            reliesOnPath: 'servers.listSql',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/advancedThreatProtectionSettings?api-version=2021-11-01-preview'
+        }
+    },
     vulnerabilityAssessments: {
         listByServer: {
             reliesOnPath: 'servers.listSql',
