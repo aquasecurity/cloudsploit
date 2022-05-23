@@ -42,12 +42,12 @@ module.exports = {
                     ['webApps', 'getBackupConfiguration', location, webApp.id]);
 
                 if (configs && configs.err) {
-                    helpers.addResult(results, 3, 'Unable to query for Web App Backup Configs: ' + helpers.addError(configs), location);
+                    helpers.addResult(results, 3, 'Unable to query for Web App backup configs: ' + helpers.addError(configs), location);
                     return scb();
                 }
 
                 if (!configs || !configs.data) {
-                    helpers.addResult(results, 2, 'Backups are not configured for this WebApp', location, webApp.id);
+                    helpers.addResult(results, 2, 'Backups are not configured for WebApp', location, webApp.id);
                 } else {
                     helpers.addResult(results, 0, 'Backups are configured for this WebApp', location, webApp.id);
                 }
