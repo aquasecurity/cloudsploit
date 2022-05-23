@@ -49,7 +49,7 @@ module.exports = {
                 if (!configs || !configs.data) {
                     helpers.addResult(results, 2, 'Backups are not configured for WebApp', location, webApp.id);
                 } else {
-                    helpers.addResult(results, 0, 'Backups are configured for this WebApp', location, webApp.id);
+                    helpers.addResult(results, 0, 'Backups are configured for WebApp', location, webApp.id);
                 }
 
                 scb();
