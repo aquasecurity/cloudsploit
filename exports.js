@@ -763,10 +763,11 @@ module.exports = {
         'kvRecoveryEnabled'             : require(__dirname + '/plugins/azure/keyvaults/kvRecoveryEnabled.js'),
         'keyExpirationEnabled'          : require(__dirname + '/plugins/azure/keyvaults/keyExpirationEnabled.js'),
         'secretExpirationEnabled'       : require(__dirname + '/plugins/azure/keyvaults/secretExpirationEnabled.js'),
+        'manageKeyAccessAndPermissions' : require(__dirname + '/plugins/azure/keyvaults/manageKeyAccessAndPermissions.js'),
         'rsaCertificateKeySize'         : require(__dirname + '/plugins/azure/keyvaults/rsaCertificateKeySize.js'),
         'keyVaultSecretExpiry'          : require(__dirname + '/plugins/azure/keyvaults/keyVaultSecretExpiry.js'),
         'keyVaultKeyExpiry'             : require(__dirname + '/plugins/azure/keyvaults/keyVaultKeyExpiry.js'),
-        'allowedCertificateKeyTypes'   : require(__dirname + '/plugins/azure/keyvaults/allowedCertificateKeyTypes.js'),
+        'allowedCertificateKeyTypes'    : require(__dirname + '/plugins/azure/keyvaults/allowedCertificateKeyTypes.js'),
         'appTierCmkInUse'               : require(__dirname + '/plugins/azure/keyvaults/appTierCmkInUse.js'),
         'keyVaultInUse'                 : require(__dirname + '/plugins/azure/keyvaults/keyVaultInUse.js'),
 
