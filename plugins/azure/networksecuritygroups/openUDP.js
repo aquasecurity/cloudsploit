@@ -37,7 +37,6 @@ module.exports = {
 
             for (let s in networkSecurityGroups.data) {
                 var sg = networkSecurityGroups.data[s];
-
                 let openUdpPorts = false;
                 if (sg.securityRules &&
                     sg.securityRules.length) {
@@ -69,6 +68,9 @@ module.exports = {
                         helpers.addResult(results, 0,
                             'The security group: ' + sg.name + ' does not have open UDP ports for internet access', location, sg.id);
                     }
+                } else {
+                    helpers.addResult(results, 0,
+                        'The security group: ' + sg.name + ' does not have any security rules', location, sg.id);
                 }
             }
             rcb();
