@@ -167,7 +167,7 @@ describe('rsaCertificateKeySize', function() {
                 done()
             };
 
-            auth.run(createCache(null, [listVaults[0]], { "/subscriptions/abcdef123-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.KeyVault/vaults/testvault": { data: [certificates] } }, { data: [certificatePolicy[1]] } ), {}, callback);
+            auth.run(createCache(null, [listVaults[0]], { "/subscriptions/abcdef123-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.KeyVault/vaults/testvault": { data: [certificates] } }, { data: certificatePolicy[1] } ), {}, callback);
         });
 
         it('should give passing result if certificate has allowed key type', function(done) {

@@ -59,16 +59,20 @@ module.exports = {
                         if (!certificatePolicy || certificatePolicy.err || !certificatePolicy.data) {
                             helpers.addResult(results, 3, 'Unable to query for Certificate Policy: ' + helpers.addError(certificatePolicy), location, certificate.id);
                         } else {
-                            const certificateKeys = certificatePolicy.data.key_props;
+                            if (certificatePolicy.data.attributes && certificatePolicy.data.attributes.enabled) {
+                                const certificateKeys = certificatePolicy.data.key_props;
 
-                            if (certificateKeys && certificateKeys.kty) {
-                                if (certificateKeys.key_size >= config.min_rsa_certificate_key_size) {
-                                    helpers.addResult(results, 0, `RSA Certificate key size is ${certificateKeys.key_size}`, location, certificate.id);
+                                if (certificateKeys && certificateKeys.kty) {
+                                    if (certificateKeys.key_size >= config.min_rsa_certificate_key_size) {
+                                        helpers.addResult(results, 0, `RSA Certificate key size is ${certificateKeys.key_size}`, location, certificate.id);
+                                    } else {
+                                        helpers.addResult(results, 2, `RSA Certificate key size is ${certificateKeys.key_size}`, location, certificate.id);
+                                    }
                                 } else {
-                                    helpers.addResult(results, 2, `RSA Certificate key size is ${certificateKeys.key_size}`, location, certificate.id);
+                                    helpers.addResult(results, 3, 'Unable to list key type for Key Vault Certificate: ' + helpers.addError(certificatePolicy), location, certificate.id);
                                 }
                             } else {
-                                helpers.addResult(results, 3, 'Unable to list key type for Key Vault Certificate: ' + helpers.addError(certificatePolicy), location, certificate.id);
+                                helpers.addResult(results, 0, 'RSA Certificate is not enabled', location, certificate.id);
                             }
                         }
                     });

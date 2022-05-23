@@ -45,16 +45,17 @@ module.exports = {
                     if (!vulnerabilityAssessments.data.length) {
                         helpers.addResult(results, 2, 'No Vulnerability Assessments setting found', location, server.id);
                     } else {
-                        vulnerabilityAssessments.data.forEach(vulnerabilityAssessment => {
-                            if (vulnerabilityAssessment.recurringScans && vulnerabilityAssessment.recurringScans.emails
-                                    && vulnerabilityAssessment.recurringScans.emails.length) {
-                                helpers.addResult(results, 0,
-                                    'Send Scan Reports for the SQL server is enabled', location, server.id);
-                            } else {
-                                helpers.addResult(results, 2,
-                                    'Send Scan Reports for the SQL server is disabled', location, server.id);
-                            }
-                        });
+                        let scanReports = vulnerabilityAssessments.data.find(vulnerabilityAssessment =>
+                            vulnerabilityAssessment.recurringScans &&
+                            vulnerabilityAssessment.recurringScans.emails&&
+                            vulnerabilityAssessment.recurringScans.emails.length);
+                        if (scanReports) {
+                            helpers.addResult(results, 0,
+                                'Send Scan Reports for the SQL server is enabled', location, server.id);
+                        } else {
+                            helpers.addResult(results, 2,
+                                'Send Scan Reports for the SQL server is disabled', location, server.id);
+                        }
                     }
                 }
             });

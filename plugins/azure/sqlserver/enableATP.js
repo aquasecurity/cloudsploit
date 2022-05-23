@@ -45,16 +45,16 @@ module.exports = {
                     if (!advancedThreatProtectionSettings.data.length) {
                         helpers.addResult(results, 2, 'No Advanced Threat Protection setting found', location, server.id);
                     } else {
-                        advancedThreatProtectionSettings.data.forEach(threadProtectionSetting => {
-                            if (threadProtectionSetting.state &&
-                                threadProtectionSetting.state.toLowerCase() == 'enabled') {
-                                helpers.addResult(results, 0,
-                                    'Advanced Threat Protection for the SQL server is enabled', location, server.id);
-                            } else {
-                                helpers.addResult(results, 2,
-                                    'Advanced Threat Protection for the SQL server is disabled', location, server.id);
-                            }
-                        });
+                        let atpEnabled = advancedThreatProtectionSettings.data.find(threadProtectionSetting => 
+                            threadProtectionSetting.state &&
+                            threadProtectionSetting.state.toLowerCase() == 'enabled');
+                        if (atpEnabled) {
+                            helpers.addResult(results, 0,
+                                'Advanced Threat Protection for the SQL server is enabled', location, server.id);
+                        } else {
+                            helpers.addResult(results, 2,
+                                'Advanced Threat Protection for the SQL server is disabled', location, server.id);
+                        }
                     }
                 }
             });

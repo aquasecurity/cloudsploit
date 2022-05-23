@@ -48,16 +48,20 @@ module.exports = {
                         if (!certificatePolicy || certificatePolicy.err || !certificatePolicy.data) {
                             helpers.addResult(results, 3, 'Unable to query for Certificate Policy: ' + helpers.addError(certificatePolicy), location, certificate.id);
                         } else {
-                            const lifetimeActions = certificatePolicy.data.lifetime_actions;
-
-                            let autoRenew = lifetimeActions && lifetimeActions.find(lifetimeAction =>
-                                lifetimeAction.action && lifetimeAction.action.action_type &&
-                                lifetimeAction.action.action_type.toLowerCase() == 'autorenew');
-
-                            if (autoRenew) {
-                                helpers.addResult(results, 0, 'SSL Certificate auto renewal is enabled', location, certificate.id);
+                            if (certificatePolicy.data.attributes && certificatePolicy.data.attributes.enabled) {
+                                const lifetimeActions = certificatePolicy.data.lifetime_actions;
+    
+                                let autoRenew = lifetimeActions && lifetimeActions.find(lifetimeAction =>
+                                    lifetimeAction.action && lifetimeAction.action.action_type &&
+                                    lifetimeAction.action.action_type.toLowerCase() == 'autorenew');
+    
+                                if (autoRenew) {
+                                    helpers.addResult(results, 0, 'SSL Certificate auto renewal is enabled', location, certificate.id);
+                                } else {
+                                    helpers.addResult(results, 2, 'SSL Certificate auto renewal is not enabled', location, certificate.id);
+                                }
                             } else {
-                                helpers.addResult(results, 2, 'SSL Certificate auto renewal is not enabled', location, certificate.id);
+                                helpers.addResult(results, 0, 'SSL Certificate is not enabled', location, certificate.id);
                             }
                         }
                     });
