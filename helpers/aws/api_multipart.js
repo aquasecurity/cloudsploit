@@ -125,7 +125,8 @@ var calls = [
                 paginate: 'nextToken',
                 params: {
                     limit: 50
-                }
+                },
+                rateLimit: 500
             },
             describeMetricFilters: {
                 property: 'metricFilters',
@@ -1037,8 +1038,12 @@ var calls = [
             },
             sendIntegration: {
                 enabled: true,
-                reliesOnCalls: ['ELBv2:describeTargetGroups', 'ELBv2:describeTargetHealth']
-            }
+                reliesOnCalls: ['ELBv2:describeTargetGroups', 'ELBv2:describeTargetHealth'],
+                integrationReliesOn: {
+                    serviceName: 'EC2',
+                    calls: ['ELBv2:describeLoadBalancers']
+                }
+            },
         }
     }
 ];
