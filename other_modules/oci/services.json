@@ -291,6 +291,16 @@
                 "endpoint": "filestorage.{{region}}.oraclecloud.com"
             }
         },
+        "fileSystem": {
+            "list": {
+                "allowedQueryStrings": [
+                    "opc-request-id", "displayName", "availabilityDomain", "exportSetId", "id", "compartmentId", "limit", "page", "sortBy", "sortOrder", "lifecycleState"
+                ],
+                "method": "GET",
+                "path": "fileSystems",
+                "endpoint": "filestorage.{{region}}.oraclecloud.com"
+            }
+        },
         "mountTarget": {
             "list": {
                 "allowedQueryStrings": [

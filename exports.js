@@ -868,6 +868,7 @@ module.exports = {
 
         'nfsPublicAccess'               : require(__dirname + '/plugins/oracle/filestorage/nfsPublicAccess.js'),
         'nfsPolicyProtection'           : require(__dirname + '/plugins/oracle/filestorage/nfsPolicyProtection.js'),
+        'fileSystemsCMKEncryption'      : require(__dirname + '/plugins/oracle/filestorage/fileSystemsCMKEncryption.js'),
 
         'dbBackupEnabled'               : require(__dirname + '/plugins/oracle/database/dbBackupEnabled.js'),
         'dbPrivateSubnetOnly'           : require(__dirname + '/plugins/oracle/database/dbPrivateSubnetOnly.js'),

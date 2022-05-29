@@ -47,6 +47,7 @@ module.exports = {
     authenticationPolicy: regions,
     exprt: regions,
     exportSummary: regions,
+    fileSystem: regions,
     compartment: regions,
     bucket: regions,
     waasPolicy: regions,
