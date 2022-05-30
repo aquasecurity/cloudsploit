@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/aws');
 var managedAdminPolicy = 'arn:aws:iam::aws:policy/AdministratorAccess';
 
 module.exports = {
-    title: 'Check All Used Services',
+    title: 'IAM Role Policy Unused Services',
     category: 'IAM',
     domain: 'Identity and Access management',
     description: 'Ensure that IAM role policies are scoped properly as to not provide access to unused AWS services.',
@@ -89,6 +89,57 @@ module.exports = {
         var iamRegion = helpers.defaultRegion(settings);
 
         var allResources = [];
+        const allServices = { 
+            apigateway: ['stage',  'restapi', 'api'],
+            cloudfront: ['distribution', 'streamingdistribution'],
+            cloudwatch: ['Alarm'],
+            dynamodb: ['table'],
+            ec2: ['volume', 'host', 'eip', 'instance', 'networkinterface', 'securitygroup', 'natgateway', 'egressonlyinternetgateway',
+                'flowlog', 'transitgateway', 'vpcendpoint', 'vpcendpointservice', 'vpcpeeringconnection', 'registeredhainstance', 'launchtemplate',
+                'customergateway', 'internetgateway', 'networkacl', 'routetable', 'subnet', 'vpc', 'vpcconnection', 'vpngateway'],
+            ecr: ['repository', 'publicrepository'],
+            ecs: ['cluster', 'taskdefinition', 'service'],
+            efs: ['filesystem', 'accesspoint'],
+            eks: ['cluster'],
+            emr: ['securityconfiguration'],
+            guardduty: ['detector'],
+            elasticsearch: ['domain'],
+            opensearch: ['domain'],
+            qldb: ['ledger'],
+            kinesis: ['stream', 'streamconsumer'],
+            redshift: ['cluster', 'clusterparametergroup', 'clustersecuritygroup', 'clustersnapshot', 'clustersubnetgroup', 'eventsubscription'],
+            rds: ['dbinstance', 'dbsecuritygroup', 'dbsnapshot', 'dbsubnetgroup', 'eventsubscription', 'dbcluster', 'dbclustersnapshot'],
+            sagemaker: ['coderepository', 'model'],
+            sns: ['topic'],
+            sqs: ['queue'],
+            s3: ['buckets', 'accountpublicaccessblock'],
+            autoscaling: ['autoscalinggroup', 'launchconfguration', 'scalingpolicy', 'scheduledaction'],
+            backup: ['backupplan', 'backupselection', 'backupvault', 'recoverypoint'],
+            acm: ['certificate'],
+            cloudformation: ['stack'],
+            cloudtrail: ['trail'],
+            codebuild: ['project'],
+            codedeploy: ['application', 'deploymentconfig', 'deploymentgroup'],
+            codepipeline: ['pipeline'],
+            config: ['resourcecompliance', 'conformancepackcompliance'],
+            elasticbeanstalk: ['applicstion', 'applicationversion', 'environment'],
+            iam: ['user', 'group', 'role', 'policy'],
+            kms: ['key'],
+            lambda: ['function'],
+            networkfirewall: ['firewall', 'firewallpolicy', 'rulegroup'],
+            secretsmanager: ['secret'],
+            servicecatalog: ['cloudFormationproduct', 'cloudformationprovisionedproduct', 'portfolio'],
+            shield: ['protection', 'protection'],
+            stepfunctions: ['statemachine'],
+            ssm: ['managedinstanceinventory', 'patchcompliance', 'associationcompliance', 'filedata'],
+            waf: ['ratebasedrule', 'rule', 'webacl', 'rulegroup', 'ratebasedrule', 'rule', 'webacl'],
+            wafv2: ['webacl', 'rulegroup', 'managedruleset', 'ipset'],
+            xray: ['encryptionconfig'],
+            elasticloadbalancing: ['loadbalancer'],
+            elasticloadbalancingv2: ['loadbalancer']
+        };
+
+        const customServices = ['s3', 'codepipeline'];
 
         async.each(regions.configservice, function(region, rcb) {
             var configSRecorderStatus = helpers.addSource(cache, source,
@@ -144,11 +195,12 @@ module.exports = {
 
         allResources = allResources.reduce((result, resource) => {
             let arr  = resource.resourceType.split(':');
-            let key = arr[2].toLowerCase();
-            result[key] = result[key] || [];
+            let service = arr[2].toLowerCase();
+            let subService = arr[4].toLowerCase();
+            result[service] = result[service] || [];
 
-            if (resource.count > 0) {
-                result[key].push(arr[4]);
+            if (resource.count > 0 && (allServices[service] && allServices[service].includes(subService))) {
+                result[service].push(subService);
             }
 
             return result;
@@ -250,9 +302,27 @@ module.exports = {
 
                             let service = statements.find((doc) => doc.Resource[0].includes('arn:'));
                             if (service) {
-                                let serviceName = service.Resource[0].split(':')[2];
-                                if (!(serviceName in allResources)) {
-                                    if (policyFailures.indexOf(serviceName) === -1) policyFailures.push(serviceName);
+                                let arr = service.Resource[0].split(':');
+                                let serviceName = arr[2];
+                                let subService = arr[5];
+                                let subServiceName;
+
+                                if (subService.indexOf('/') < 0) {
+                                    subServiceName = subService;
+                                } else {
+                                    let indexOfSlash = subService.indexOf('/');
+                                    let subServicelength = subService.length;
+                                    subServiceName = indexOfSlash < 2 ? subService.substring(indexOfSlash + 1, subServicelength) : subService.substring(0,  indexOfSlash);
+                                }
+
+                                subServiceName = subServiceName.replace(/\/|[*_-]/g, '');
+
+                                if (!(serviceName in allResources) || !allResources[serviceName].includes(subServiceName)) {
+                                    if (!(serviceName in allResources) && customServices.includes(serviceName)) {
+                                        if (policyFailures.indexOf(serviceName) === -1) policyFailures.push(serviceName);
+                                    } else {
+                                        if (policyFailures.indexOf(`${serviceName}:${subServiceName}`) === -1) policyFailures.push(`${serviceName}:${subServiceName}`);
+                                    }
                                 }
                             }
 
@@ -278,12 +348,37 @@ module.exports = {
                         if (!statements) break;
 
                         for (let statement of statements) {
-                            let services = [... new Set(statement.Action.map((action) => action.split(':')[0].toLowerCase()))];
-                            services.forEach((service) => {
-                                if (!(service in allResources)) {
-                                    if (policyFailures.indexOf(service) === -1) policyFailures.push(service);
+                            if (statement.Resource.indexOf('*') > -1) {
+                                let services = [... new Set(statement.Action.map((action) => action.split(':')[0].toLowerCase()))];
+                                services.forEach((service) => {
+                                    if (!(service in allResources)) {
+                                        if (policyFailures.indexOf(service) === -1) policyFailures.push(service);
+                                    }
+                                });
+                            } else {
+                                let arr = statement.Resource[0].split(':');
+                                let serviceName = arr[2];
+                                let subService = arr[5];
+                                let subServiceName;
+
+                                if (subService.indexOf('/') < 0) {
+                                    subServiceName = subService;
+                                } else {
+                                    let indexOfSlash = subService.indexOf('/');
+                                    let subServicelength = subService.length;
+                                    subServiceName = indexOfSlash < 2 ? subService.substring(indexOfSlash + 1, subServicelength) : subService.substring(0,  indexOfSlash);
                                 }
-                            });
+
+                                subServiceName = subServiceName.replace(/\/|[*_-]/g, '');
+
+                                if (!(serviceName in allResources) || !allResources[serviceName].includes(subServiceName)) {
+                                    if (!(serviceName in allResources) && customServices.includes(serviceName)) {
+                                        if (policyFailures.indexOf(serviceName) === -1) policyFailures.push(serviceName);
+                                    } else {
+                                        if (policyFailures.indexOf(`${serviceName}:${subServiceName}`) === -1) policyFailures.push(`${serviceName}:${subServiceName}`);
+                                    }
+                                }
+                            }
                         }
 
                         addRoleFailures(roleFailures, statements, 'inline', config.ignore_service_specific_wildcards);
