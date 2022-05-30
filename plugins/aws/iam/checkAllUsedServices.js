@@ -112,7 +112,7 @@ module.exports = {
             sagemaker: ['coderepository', 'model'],
             sns: ['topic'],
             sqs: ['queue'],
-            s3: ['buckets', 'accountpublicaccessblock'],
+            s3: ['bucket', 'accountpublicaccessblock'],
             autoscaling: ['autoscalinggroup', 'launchconfguration', 'scalingpolicy', 'scheduledaction'],
             backup: ['backupplan', 'backupselection', 'backupvault', 'recoverypoint'],
             acm: ['certificate'],
@@ -222,6 +222,8 @@ module.exports = {
             return callback(null, results, source);
         }
 
+        console.log(JSON.stringify(allResources, null, 2));
+
         async.each(listRoles.data, function(role, cb){
             if (!role.RoleName) return cb();
 
@@ -300,31 +302,50 @@ module.exports = {
 
                             if (!statements) break;
 
-                            let service = statements.find((doc) => doc.Resource[0].includes('arn:'));
-                            if (service) {
-                                let arr = service.Resource[0].split(':');
-                                let serviceName = arr[2];
-                                let subService = arr[5];
-                                let subServiceName;
+                            for (let statement of statements) {
+                                if (statement.Action && statement.Action.length) {
+                                    for (let action of statement.Action) {
+                                        // console.log(action);
+                                        let service = action.split(':')[0].toLowerCase();
+                                        let resuourceAction = action.split(':')[1].toLowerCase();
 
-                                if (subService.indexOf('/') < 0) {
-                                    subServiceName = subService;
-                                } else {
-                                    let indexOfSlash = subService.indexOf('/');
-                                    let subServicelength = subService.length;
-                                    subServiceName = indexOfSlash < 2 ? subService.substring(indexOfSlash + 1, subServicelength) : subService.substring(0,  indexOfSlash);
-                                }
-
-                                subServiceName = subServiceName.replace(/\/|[*_-]/g, '');
-
-                                if (!(serviceName in allResources) || !allResources[serviceName].includes(subServiceName)) {
-                                    if (!(serviceName in allResources) && customServices.includes(serviceName)) {
-                                        if (policyFailures.indexOf(serviceName) === -1) policyFailures.push(serviceName);
-                                    } else {
-                                        if (policyFailures.indexOf(`${serviceName}:${subServiceName}`) === -1) policyFailures.push(`${serviceName}:${subServiceName}`);
+                                        if (allServices[service]) {
+                                            for (let supportedResource of allServices[service]) {
+                                                if (resuourceAction.includes(supportedResource)) {
+                                                    if (!allResources[service] || !allResources[service].includes(supportedResource)) {
+                                                        if (policyFailures.indexOf(action) === -1) policyFailures.push(action);
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
+                            // let service = statements.find((doc) => doc.Resource[0].includes('arn:'));
+                            // if (service) {
+                            //     let arr = service.Resource[0].split(':');
+                            //     let serviceName = arr[2];
+                            //     let subService = arr[5];
+                            //     let subServiceName;
+
+                            //     if (subService.indexOf('/') < 0) {
+                            //         subServiceName = subService;
+                            //     } else {
+                            //         let indexOfSlash = subService.indexOf('/');
+                            //         let subServicelength = subService.length;
+                            //         subServiceName = indexOfSlash < 2 ? subService.substring(indexOfSlash + 1, subServicelength) : subService.substring(0,  indexOfSlash);
+                            //     }
+
+                            //     subServiceName = subServiceName.replace(/\/|[*_-]/g, '');
+
+                            //     if (!(serviceName in allResources) || !allResources[serviceName].includes(subServiceName)) {
+                            //         if (!(serviceName in allResources) && customServices.includes(serviceName)) {
+                            //             if (policyFailures.indexOf(serviceName) === -1) policyFailures.push(serviceName);
+                            //         } else {
+                            //             if (policyFailures.indexOf(`${serviceName}:${subServiceName}`) === -1) policyFailures.push(`${serviceName}:${subServiceName}`);
+                            //         }
+                            //     }
+                            // }
 
                             addRoleFailures(roleFailures, statements, 'managed', config.ignore_service_specific_wildcards);
                         }
@@ -348,38 +369,57 @@ module.exports = {
                         if (!statements) break;
 
                         for (let statement of statements) {
-                            if (statement.Resource.indexOf('*') > -1) {
-                                let services = [... new Set(statement.Action.map((action) => action.split(':')[0].toLowerCase()))];
-                                services.forEach((service) => {
-                                    if (!(service in allResources)) {
-                                        if (policyFailures.indexOf(service) === -1) policyFailures.push(service);
-                                    }
-                                });
-                            } else {
-                                let arr = statement.Resource[0].split(':');
-                                let serviceName = arr[2];
-                                let subService = arr[5];
-                                let subServiceName;
+                            if (statement.Action && statement.Action.length) {
+                                for (let action of statement.Action) {
+                                    // console.log(action);
+                                    let service = action.split(':')[0].toLowerCase();
+                                    let resuourceAction = action.split(':')[1].toLowerCase();
 
-                                if (subService.indexOf('/') < 0) {
-                                    subServiceName = subService;
-                                } else {
-                                    let indexOfSlash = subService.indexOf('/');
-                                    let subServicelength = subService.length;
-                                    subServiceName = indexOfSlash < 2 ? subService.substring(indexOfSlash + 1, subServicelength) : subService.substring(0,  indexOfSlash);
-                                }
-
-                                subServiceName = subServiceName.replace(/\/|[*_-]/g, '');
-
-                                if (!(serviceName in allResources) || !allResources[serviceName].includes(subServiceName)) {
-                                    if (!(serviceName in allResources) && customServices.includes(serviceName)) {
-                                        if (policyFailures.indexOf(serviceName) === -1) policyFailures.push(serviceName);
-                                    } else {
-                                        if (policyFailures.indexOf(`${serviceName}:${subServiceName}`) === -1) policyFailures.push(`${serviceName}:${subServiceName}`);
+                                    if (allServices[service]) {
+                                        for (let supportedResource of allServices[service]) {
+                                            if (resuourceAction.includes(supportedResource)) {
+                                                if (!allResources[service] || !allResources[service].includes(supportedResource)) {
+                                                    if (policyFailures.indexOf(action) === -1) policyFailures.push(action);
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
+                        // for (let statement of statements) {
+                        //     if (statement.Resource.indexOf('*') > -1) {
+                        //         let services = [... new Set(statement.Action.map((action) => action.split(':')[0].toLowerCase()))];
+                        //         services.forEach((service) => {
+                        //             if (!(service in allResources)) {
+                        //                 if (policyFailures.indexOf(service) === -1) policyFailures.push(service);
+                        //             }
+                        //         });
+                        //     } else {
+                        //         let arr = statement.Resource[0].split(':');
+                        //         let serviceName = arr[2];
+                        //         let subService = arr[5];
+                        //         let subServiceName;
+
+                        //         if (subService.indexOf('/') < 0) {
+                        //             subServiceName = subService;
+                        //         } else {
+                        //             let indexOfSlash = subService.indexOf('/');
+                        //             let subServicelength = subService.length;
+                        //             subServiceName = indexOfSlash < 2 ? subService.substring(indexOfSlash + 1, subServicelength) : subService.substring(0,  indexOfSlash);
+                        //         }
+
+                        //         subServiceName = subServiceName.replace(/\/|[*_-]/g, '');
+
+                        //         if (!(serviceName in allResources) || !allResources[serviceName].includes(subServiceName)) {
+                        //             if (!(serviceName in allResources) && customServices.includes(serviceName)) {
+                        //                 if (policyFailures.indexOf(serviceName) === -1) policyFailures.push(serviceName);
+                        //             } else {
+                        //                 if (policyFailures.indexOf(`${serviceName}:${subServiceName}`) === -1) policyFailures.push(`${serviceName}:${subServiceName}`);
+                        //             }
+                        //         }
+                        //     }
+                        // }
 
                         addRoleFailures(roleFailures, statements, 'inline', config.ignore_service_specific_wildcards);
                     }
@@ -387,7 +427,7 @@ module.exports = {
             }
 
             if (policyFailures.length || roleFailures.length) {
-                let failureMsg = policyFailures.length ? 'Role has policy with following resources which are not being used in this account: ' +
+                let failureMsg = policyFailures.length ? 'Role policies contain actions of resource types which are not in use: ' +
                     '[ ' + policyFailures.join(', ') + ' ]' + '\r\n' + roleFailures.join(', ') : roleFailures.join(', ');
                 helpers.addResult(results, 2, failureMsg, 'global', role.Arn, custom);
             } else {
