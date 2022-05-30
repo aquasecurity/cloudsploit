@@ -54,10 +54,6 @@ module.exports = {
                 }
             }
 
-            var message = 'Instances using insecure V1 endpoint: ' + instancesInsecure.length + '; ' +
-                          'instances using secure V2 endpoint: ' + instancesTokensRequired.length + '; ' +
-                          'instances with disabled endpoints: ' + instancesEndpointDisabled.length;
-
             var totalCount = instancesInsecure.length + instancesTokensRequired.length + instancesEndpointDisabled.length;
 
             if (!totalCount) {
