@@ -8,9 +8,9 @@ module.exports = {
     category: 'IAM',
     domain: 'Identity and Access management',
     description: 'Ensure that IAM role policies are scoped properly as to not provide access to unused AWS services.',
-    more_info: 'Policies attached to IAM roles should be scoped to least-privileged access and avoid the use of wildcards.',
+    more_info: 'IAM role policies should only contain actions for resource types which are being used in your account i.e. dynamodb:ListTables permission should only be given when there are DynamoDB tables to adhere to security best practices and to follow principal of least-privilege.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html',
-    recommended_action: 'Ensure that all IAM roles are scoped to specific services and API calls.',
+    recommended_action: 'Ensure that all IAM roles are scoped to specific services and resource types.',
     apis: ['IAM:listRoles', 'IAM:listRolePolicies', 'IAM:listAttachedRolePolicies', 'IAM:listPolicies',
         'IAM:getPolicy', 'IAM:getPolicyVersion', 'IAM:getRolePolicy', 'ConfigService:describeConfigurationRecorderStatus', 'ConfigService:getDiscoveredResourceCounts'],
     settings: {
@@ -139,8 +139,6 @@ module.exports = {
             elasticloadbalancingv2: ['loadbalancer']
         };
 
-        const customServices = ['s3', 'codepipeline'];
-
         async.each(regions.configservice, function(region, rcb) {
             var configSRecorderStatus = helpers.addSource(cache, source,
                 ['configservice', 'describeConfigurationRecorderStatus', region]);
@@ -150,21 +148,22 @@ module.exports = {
             }
 
             if (configSRecorderStatus.err || !configSRecorderStatus.data) {
-                helpers.addResult(results, 0,
-                    'Unable to query config service: ' + helpers.addError(configSRecorderStatus));
-                return rcb(null, results, source);
+                helpers.addResult(results, 3,
+                    'Unable to query config service: ' + helpers.addError(configSRecorderStatus), region);
+                return rcb();
             }
 
             if (!configSRecorderStatus.data.length) {
                 helpers.addResult(results, 0,
-                    'Config service is not configured: ' + helpers.addError(configSRecorderStatus));
-                return rcb(null, results, source);
+                    'Config service is not enabled', region);
+                return rcb();
             }
 
+            console.log(JSON.stringify(configSRecorderStatus, null, 2));
             if (!configSRecorderStatus.data[0].recording) {
                 helpers.addResult(results, 0,
-                    'Config service is not configured: ' + helpers.addError(configSRecorderStatus));
-                return rcb(null, results, source);
+                    'Config service is not recording', region);
+                return rcb();
             }
 
             if (!configSRecorderStatus.data[0].lastStatus &&
@@ -172,7 +171,7 @@ module.exports = {
                  configSRecorderStatus.data[0].lastStatus.toUpperCase() !== 'PENDING')) {
                 helpers.addResult(results, 0,
                     'Config Service is configured, and recording, but not delivering properly', region);
-                return rcb(null, results, source);
+                return rcb();
             }
 
             var discoveredResources = helpers.addSource(cache, source,
@@ -181,7 +180,7 @@ module.exports = {
             if (discoveredResources.err || !discoveredResources.data) {
                 helpers.addResult(results, 3,
                     'Unable to query for Config Resources: ' + helpers.addError(discoveredResources));
-                return rcb(null, results, source);
+                return rcb();
             }
 
             allResources.push(...discoveredResources.data);
@@ -189,7 +188,7 @@ module.exports = {
         });
 
         if (!allResources.length) {
-            helpers.addResult(results, 2, 'No Config Resources found.');
+            helpers.addResult(results, 0, 'No Config Resources found.');
             return callback(null, results, source);
         }
 
@@ -221,8 +220,6 @@ module.exports = {
             helpers.addResult(results, 0, 'No IAM roles found');
             return callback(null, results, source);
         }
-
-        console.log(JSON.stringify(allResources, null, 2));
 
         async.each(listRoles.data, function(role, cb){
             if (!role.RoleName) return cb();
@@ -321,31 +318,6 @@ module.exports = {
                                     }
                                 }
                             }
-                            // let service = statements.find((doc) => doc.Resource[0].includes('arn:'));
-                            // if (service) {
-                            //     let arr = service.Resource[0].split(':');
-                            //     let serviceName = arr[2];
-                            //     let subService = arr[5];
-                            //     let subServiceName;
-
-                            //     if (subService.indexOf('/') < 0) {
-                            //         subServiceName = subService;
-                            //     } else {
-                            //         let indexOfSlash = subService.indexOf('/');
-                            //         let subServicelength = subService.length;
-                            //         subServiceName = indexOfSlash < 2 ? subService.substring(indexOfSlash + 1, subServicelength) : subService.substring(0,  indexOfSlash);
-                            //     }
-
-                            //     subServiceName = subServiceName.replace(/\/|[*_-]/g, '');
-
-                            //     if (!(serviceName in allResources) || !allResources[serviceName].includes(subServiceName)) {
-                            //         if (!(serviceName in allResources) && customServices.includes(serviceName)) {
-                            //             if (policyFailures.indexOf(serviceName) === -1) policyFailures.push(serviceName);
-                            //         } else {
-                            //             if (policyFailures.indexOf(`${serviceName}:${subServiceName}`) === -1) policyFailures.push(`${serviceName}:${subServiceName}`);
-                            //         }
-                            //     }
-                            // }
 
                             addRoleFailures(roleFailures, statements, 'managed', config.ignore_service_specific_wildcards);
                         }
@@ -387,39 +359,6 @@ module.exports = {
                                 }
                             }
                         }
-                        // for (let statement of statements) {
-                        //     if (statement.Resource.indexOf('*') > -1) {
-                        //         let services = [... new Set(statement.Action.map((action) => action.split(':')[0].toLowerCase()))];
-                        //         services.forEach((service) => {
-                        //             if (!(service in allResources)) {
-                        //                 if (policyFailures.indexOf(service) === -1) policyFailures.push(service);
-                        //             }
-                        //         });
-                        //     } else {
-                        //         let arr = statement.Resource[0].split(':');
-                        //         let serviceName = arr[2];
-                        //         let subService = arr[5];
-                        //         let subServiceName;
-
-                        //         if (subService.indexOf('/') < 0) {
-                        //             subServiceName = subService;
-                        //         } else {
-                        //             let indexOfSlash = subService.indexOf('/');
-                        //             let subServicelength = subService.length;
-                        //             subServiceName = indexOfSlash < 2 ? subService.substring(indexOfSlash + 1, subServicelength) : subService.substring(0,  indexOfSlash);
-                        //         }
-
-                        //         subServiceName = subServiceName.replace(/\/|[*_-]/g, '');
-
-                        //         if (!(serviceName in allResources) || !allResources[serviceName].includes(subServiceName)) {
-                        //             if (!(serviceName in allResources) && customServices.includes(serviceName)) {
-                        //                 if (policyFailures.indexOf(serviceName) === -1) policyFailures.push(serviceName);
-                        //             } else {
-                        //                 if (policyFailures.indexOf(`${serviceName}:${subServiceName}`) === -1) policyFailures.push(`${serviceName}:${subServiceName}`);
-                        //             }
-                        //         }
-                        //     }
-                        // }
 
                         addRoleFailures(roleFailures, statements, 'inline', config.ignore_service_specific_wildcards);
                     }
@@ -427,7 +366,7 @@ module.exports = {
             }
 
             if (policyFailures.length || roleFailures.length) {
-                let failureMsg = policyFailures.length ? 'Role policies contain actions of resource types which are not in use: ' +
+                let failureMsg = policyFailures.length ? 'Role policies contain actions for resource types which are not in use: ' +
                     '[ ' + policyFailures.join(', ') + ' ]' + '\r\n' + roleFailures.join(', ') : roleFailures.join(', ');
                 helpers.addResult(results, 2, failureMsg, 'global', role.Arn, custom);
             } else {

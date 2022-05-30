@@ -296,7 +296,7 @@ module.exports = {
         'iamDbAuthenticationEnabled'    : require(__dirname + '/plugins/aws/rds/iamDbAuthenticationEnabled.js'),
         'iamSupportPolicy'              : require(__dirname + '/plugins/aws/iam/iamSupportPolicy.js'),
         'iamUserPresent'                : require(__dirname + '/plugins/aws/iam/iamUserPresent.js'),
-        'checkAllUsedServices'          : require(__dirname + '/plugins/aws/iam/checkAllUsedServices.js'),
+        'rolePolicyUnusedServices'      : require(__dirname + '/plugins/aws/iam/rolePolicyUnusedServices.js'),
 
         'iamUserInUse'                  : require(__dirname + '/plugins/aws/iam/iamUserInUse.js'),
         'kinesisEncrypted'              : require(__dirname + '/plugins/aws/kinesis/kinesisEncrypted.js'),
