@@ -89,7 +89,7 @@ module.exports = {
         var iamRegion = helpers.defaultRegion(settings);
 
         var allResources = [];
-        const allServices = { 
+        const allServices = {
             apigateway: ['stage',  'restapi', 'api'],
             cloudfront: ['distribution', 'streamingdistribution'],
             cloudwatch: ['Alarm'],
@@ -140,36 +140,35 @@ module.exports = {
         };
 
         async.each(regions.configservice, function(region, rcb) {
-            var configSRecorderStatus = helpers.addSource(cache, source,
+            var configRecorderStatus = helpers.addSource(cache, source,
                 ['configservice', 'describeConfigurationRecorderStatus', region]);
 
-            if (!configSRecorderStatus) {
+            if (!configRecorderStatus) {
                 return rcb();
             }
 
-            if (configSRecorderStatus.err || !configSRecorderStatus.data) {
+            if (configRecorderStatus.err || !configRecorderStatus.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query config service: ' + helpers.addError(configSRecorderStatus), region);
+                    'Unable to query config service: ' + helpers.addError(configRecorderStatus), region);
                 return rcb();
             }
 
-            if (!configSRecorderStatus.data.length) {
-                helpers.addResult(results, 0,
+            if (!configRecorderStatus.data.length) {
+                helpers.addResult(results, 2,
                     'Config service is not enabled', region);
                 return rcb();
             }
 
-            console.log(JSON.stringify(configSRecorderStatus, null, 2));
-            if (!configSRecorderStatus.data[0].recording) {
-                helpers.addResult(results, 0,
+            if (!configRecorderStatus.data[0].recording) {
+                helpers.addResult(results, 2,
                     'Config service is not recording', region);
                 return rcb();
             }
 
-            if (!configSRecorderStatus.data[0].lastStatus &&
-                (configSRecorderStatus.data[0].lastStatus.toUpperCase() !== 'SUCCESS' ||
-                 configSRecorderStatus.data[0].lastStatus.toUpperCase() !== 'PENDING')) {
-                helpers.addResult(results, 0,
+            if (!configRecorderStatus.data[0].lastStatus ||
+                (configRecorderStatus.data[0].lastStatus.toUpperCase() !== 'SUCCESS' &&
+                configRecorderStatus.data[0].lastStatus.toUpperCase() !== 'PENDING')) {
+                helpers.addResult(results, 2,
                     'Config Service is configured, and recording, but not delivering properly', region);
                 return rcb();
             }
@@ -179,7 +178,7 @@ module.exports = {
 
             if (discoveredResources.err || !discoveredResources.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for Config Resources: ' + helpers.addError(discoveredResources));
+                    'Unable to query for Discovered Resources: ' + helpers.addError(discoveredResources));
                 return rcb();
             }
 
@@ -188,7 +187,7 @@ module.exports = {
         });
 
         if (!allResources.length) {
-            helpers.addResult(results, 0, 'No Config Resources found.');
+            helpers.addResult(results, 0, 'No Discovered Resources found.');
             return callback(null, results, source);
         }
 
@@ -302,13 +301,12 @@ module.exports = {
                             for (let statement of statements) {
                                 if (statement.Action && statement.Action.length) {
                                     for (let action of statement.Action) {
-                                        // console.log(action);
                                         let service = action.split(':')[0].toLowerCase();
-                                        let resuourceAction = action.split(':')[1].toLowerCase();
+                                        let resourceAction = action.split(':')[1].toLowerCase();
 
                                         if (allServices[service]) {
                                             for (let supportedResource of allServices[service]) {
-                                                if (resuourceAction.includes(supportedResource)) {
+                                                if (resourceAction.includes(supportedResource)) {
                                                     if (!allResources[service] || !allResources[service].includes(supportedResource)) {
                                                         if (policyFailures.indexOf(action) === -1) policyFailures.push(action);
                                                     }
@@ -341,15 +339,19 @@ module.exports = {
                         if (!statements) break;
 
                         for (let statement of statements) {
-                            if (statement.Action && statement.Action.length) {
+                            if ((statement.Action && statement.Action.length === 1 && statement.Action[0] === '*') && (statement.Resource && statement.Resource.length === 1 &&  statement.Resource[0] === '*')) {
+                                continue;
+                            }
+
+                            let service = statement.Resource[0].includes('arn') ? statement.Resource[0].split(':')[2].toLowerCase() :
+                                statement.Action[0].split(':')[1].toLowerCase();
+                            if (statement.Action.length > 1 || statement.Action[0] !== '*') {
                                 for (let action of statement.Action) {
-                                    // console.log(action);
-                                    let service = action.split(':')[0].toLowerCase();
-                                    let resuourceAction = action.split(':')[1].toLowerCase();
+                                    let resourceAction = action.split(':')[1].toLowerCase();
 
                                     if (allServices[service]) {
                                         for (let supportedResource of allServices[service]) {
-                                            if (resuourceAction.includes(supportedResource)) {
+                                            if (resourceAction.includes(supportedResource)) {
                                                 if (!allResources[service] || !allResources[service].includes(supportedResource)) {
                                                     if (policyFailures.indexOf(action) === -1) policyFailures.push(action);
                                                 }
