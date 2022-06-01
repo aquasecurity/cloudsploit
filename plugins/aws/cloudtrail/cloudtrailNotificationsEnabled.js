@@ -65,7 +65,7 @@ module.exports = {
                     helpers.addResult(results, 3,
                         `Unable to query for SNS topic: ${helpers.addError(describeTrails)}`, 
                         region, resource);
-                }  else {
+                } else {
                     helpers.addResult(results, 0,
                         'CloudTrail trail is using active SNS topic',
                         region, resource);
