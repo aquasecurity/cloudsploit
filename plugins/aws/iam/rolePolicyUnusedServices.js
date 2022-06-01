@@ -92,7 +92,7 @@ module.exports = {
         const allServices = {
             apigateway: ['stage',  'restapi', 'api'],
             cloudfront: ['distribution', 'streamingdistribution'],
-            cloudwatch: ['Alarm'],
+            cloudwatch: ['alarm'],
             dynamodb: ['table'],
             ec2: ['volume', 'host', 'eip', 'instance', 'networkinterface', 'securitygroup', 'natgateway', 'egressonlyinternetgateway',
                 'flowlog', 'transitgateway', 'vpcendpoint', 'vpcendpointservice', 'vpcpeeringconnection', 'registeredhainstance', 'launchtemplate',
