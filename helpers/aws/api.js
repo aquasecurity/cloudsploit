@@ -27,6 +27,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    AppConfig: {
+        listApplications: {
+            property: 'Items',
+            paginate: 'NextToken'
+        }
+    },
     AppMesh: {
         listMeshes: {
             property: 'meshes',
@@ -1109,6 +1115,14 @@ var postcalls = [
                 reliesOnCall: 'getRestApis',
                 filterKey: 'restApiId',
                 filterValue: 'id'
+            }
+        },
+        AppConfig: {
+            listConfigurationProfiles: {
+                reliesOnService: 'appconfig',
+                reliesOnCall: 'listApplications',
+                filterKey: 'ApplicationId',
+                filterValue: 'Id'
             }
         },
         AppMesh: {
