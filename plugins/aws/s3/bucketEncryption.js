@@ -206,7 +206,6 @@ module.exports = {
 
                 cb();
             },
-            //Find Buckets available in AppConfig that are not whitelisted
             function(cb){
                 if (!config.whitelist_appconfig_s3_buckets) return cb(); 
 
