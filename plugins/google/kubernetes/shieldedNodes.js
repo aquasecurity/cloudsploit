@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Shielded GKE nodes give strong cryptographic identity. This prevents attackers from being able to impersonate a node in your GKE cluster even if the attacker can extract the node credentials.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/shielded-gke-nodes',
     recommended_action: 'Ensure that shielded nodes setting is enabled in your GKE cluster',
-    apis: ['clusters:list', 'projects:get'],
+    apis: ['clusters:list'],
    
     run: function(cache, settings, callback) {
         var results = [];

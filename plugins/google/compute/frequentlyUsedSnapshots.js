@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'If you are repeatedly using a snapshot in the same zone to create a persistent disk, save networking costs by using the snapshot once and creating an image of that snapshot. Store this image and use it to create your disk and start a VM instance.',
     link: 'https://cloud.google.com/compute/docs/disks/snapshot-best-practices#prepare_for_consistency',
     recommended_action: 'Ensure that your disk snapshots have images created from them.',
-    apis: ['snapshots:list', 'images:list', 'projects:get'],
+    apis: ['snapshots:list', 'images:list'],
     settings: {
         snapshots_to_check: {
             name: 'Snapshots to Check for Images',

@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Log sinks send log data to a storage service for archival and compliance. A log sink with no filter is necessary to ensure that all logs are being properly sent. If logs are sent to a storage bucket, the bucket must exist and bucket versioning should exist.',
     link: 'https://cloud.google.com/logging/docs/export/',
     recommended_action: 'Ensure a log sink is configured properly with an empty filter and a destination.',
-    apis: ['sinks:list', 'buckets:list', 'projects:get'],
+    apis: ['sinks:list', 'buckets:list'],
 
     run: function(cache, settings, callback) {
         var results = [];

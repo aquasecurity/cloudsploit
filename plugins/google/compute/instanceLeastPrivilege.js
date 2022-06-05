@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'To support the principle of least privilege and prevent potential privilege escalation, it is recommended that instances are not assigned to the default service account, Compute Engine default service account with a scope allowing full access to all cloud APIs.',
     link: 'https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances',
     recommended_action: 'For all instances, if the default service account is used, ensure full access to all cloud APIs is not configured.',
-    apis: ['instances:compute:list', 'projects:get'],
+    apis: ['instances:compute:list'],
     compliance: {
         pci: 'PCI has explicit requirements around default accounts and ' +
             'resources. PCI recommends removing all default accounts, ' +

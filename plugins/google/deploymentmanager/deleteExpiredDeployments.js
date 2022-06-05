@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Cloud Deployment Manager deployments should be deleted after desired time period from their creation time as determined by your governance rules.',
     link: 'https://cloud.google.com/deployment-manager/docs/deployments/deleting-deployments',
     recommended_action: 'Delete expired deoplyments from Deployment Manager',
-    apis: ['deployments:list', 'projects:get'],
+    apis: ['deployments:list'],
     settings: {
         deployments_expiration_time: {
             name: 'Deployments Expiration Time',

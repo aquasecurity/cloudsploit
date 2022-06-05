@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Enabling autoscale increases efficiency and improves cost management for resources.',
     link: 'https://cloud.google.com/compute/docs/autoscaler/',
     recommended_action: 'Ensure autoscaling is enabled for all instance groups.',
-    apis: ['instanceGroups:aggregatedList', 'autoscalers:aggregatedList','clusters:list', 'projects:get'],
+    apis: ['instanceGroups:aggregatedList', 'autoscalers:aggregatedList','clusters:list'],
 
     run: function(cache, settings, callback) {
         var results = [];

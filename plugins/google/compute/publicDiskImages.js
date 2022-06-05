@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'To avoid exposing sensitive information, make sure that your virtual machine disk images are not being publicly shared with all other GCP accounts.',
     link: 'https://cloud.google.com/compute/docs/images',
     recommended_action: 'Ensure that your VM disk images are not accessible by allUsers or allAuthenticatedUsers.',
-    apis: ['images:list', 'images:getIamPolicy', 'projects:get'],
+    apis: ['images:list', 'images:getIamPolicy'],
     
     run: function(cache, settings, callback) {
         var results = [];

@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'To prevent attackers from identifying and exploiting the services running on your instances, make sure the VPC Network custom ports are not open to public.',
     link: 'https://cloud.google.com/vpc/docs/firewalls',
     recommended_action: 'Ensure that your VPC Network firewall rules do not allow inbound traffic for a range of ports.',
-    apis: ['firewalls:list', 'projects:get'],
+    apis: ['firewalls:list'],
     settings: {
         restricted_open_ports: {
             name: 'Restricted Open Ports',
