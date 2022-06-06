@@ -75,13 +75,19 @@ parser.add_argument('--cloud', {
     choices: ['aws', 'azure', 'github', 'google', 'oracle','alibaba'],
     action: 'append'
 });
+parser.add_argument('--gcp-bucket', {
+    help: 'The name of the gcp bucket to upload the generated reports',
+    action: 'append'
+});
 parser.add_argument('--run-asl', {
     help: 'When set, it will execute custom plugins.',
     action: 'store_false'
 });
 
 let settings = parser.parse_args();
+console.log(settings);
 let cloudConfig = {};
+
 
 // Now execute the scans using the defined configuration information.
 if (!settings.config) {
@@ -105,8 +111,10 @@ if (settings.compliance && settings.compliance.indexOf('cis') > -1) {
 console.log(`INFO: Using CloudSploit config file: ${settings.config}`);
 
 try {
+    console.log(process.env.GOOGLE_PRIVATE_KEY);
     var config = require(settings.config);
 } catch (e) {
+    console.log(e);
     console.error('ERROR: Config file could not be loaded. Please ensure you have copied the config_example.js file to config.js');
     process.exit(1);
 }
