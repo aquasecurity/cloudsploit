@@ -1,6 +1,17 @@
 var fs = require('fs');
 var ttytable = require('tty-table');
 
+var https = require('https');
+var AWS = require('aws-sdk');
+
+var agent = new https.Agent({maxSockets: 100});
+AWS.config.update({httpOptions: {agent: agent}});
+
+const s3 = new AWS.S3({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
+});
+
 function exchangeStatusWord(result) {
     if (result.status === 0) return 'OK';
     if (result.status === 1) return 'WARN';
@@ -15,6 +26,39 @@ function commaSafe(str) {
 
 function log(msg, settings) {
     if (!settings.mocha) console.log(msg);
+}
+
+function generateTimeStamp(){
+    let date_ob = new Date();
+
+    let date = ('0' + date_ob.getDate()).slice(-2);
+    let month = ('0' + (date_ob.getMonth() + 1)).slice(-2);
+    let year = date_ob.getFullYear();
+    let hours = date_ob.getHours();
+    let minutes = date_ob.getMinutes();
+    return `${year}${month}${date}${hours}${minutes}`;
+}
+
+function uploadToAWSS3Bucket(stream, fileName, bucketName){
+    var modifiedFileName = fileName.replace(/(\.[\w\d_-]+)$/i, `_${generateTimeStamp()}$1`);
+
+    const params = {
+        Bucket: bucketName || 'cloudsploit-output',
+        Key: modifiedFileName,
+        Body: stream
+    };
+
+    console.log(`Using Bucket ${bucketName} for uploading the file ${fileName}`);
+    
+    return s3.upload(params, (err, data) => {
+        if (err) {
+            console.log(err);
+        }
+        console.log(data.stringify);
+        console.log(`File uploaded successfully. ${data.Location}`);
+        console.log(`Finished uploading the file ${fileName} to Bucket ${bucketName}.`);
+        
+    }).promise();
 }
 
 // For the console output, we don't need any state since we can write
@@ -105,6 +149,14 @@ module.exports = {
             close: function() {
                 this.writer.end();
                 log(`INFO: CSV file written to ${settings.csv}`, settings);
+                var fileContent = fs.readFileSync(settings.csv);
+                (async()=>{
+                    const result  = await uploadToAWSS3Bucket(fileContent, settings.csv, settings.aws_s3_bucket);
+                    console.log(result);           
+                })();
+                log(`INFO: CSV file uploaded to ${settings.aws_s3_bucket}`, settings);
+                fs.unlinkSync(settings.csv);
+
             }
         };
     },
@@ -139,6 +191,14 @@ module.exports = {
                 this.stream.write(JSON.stringify(results, null, 2));
                 this.stream.end();
                 log(`INFO: JSON file written to ${settings.json}`, settings);
+                var fileContent = fs.readFileSync(settings.json);
+                (async()=>{
+                    const result  = await uploadToAWSS3Bucket(fileContent, settings.json, settings.aws_s3_bucket);
+                    console.log(result);           
+                })();
+                log(`INFO: JSON file uploaded to ${settings.aws_s3_bucket}`, settings);
+                fs.unlinkSync(settings.json);
+
             }
         };
     },
@@ -230,6 +290,14 @@ module.exports = {
                 
                 this.stream.end();
                 log(`INFO: JUnit file written to ${settings.junit}`, settings);
+                var fileContent = fs.readFileSync(settings.junit);
+                (async()=>{
+                    const result  = await uploadToAWSS3Bucket(fileContent, settings.junit, settings.aws_s3_bucket);
+                    console.log(result);           
+                })();
+                log(`INFO: JUnit file uploaded to ${settings.aws_s3_bucket}`, settings);
+                fs.unlinkSync(settings.junit);
+
             },
 
             /**
@@ -300,6 +368,14 @@ module.exports = {
                 this.stream.write(JSON.stringify(results, null, 2));
                 this.stream.end();
                 log(`INFO: Collection file written to ${settings.collection}`, settings);
+                var fileContent = fs.readFileSync(settings.collection);
+                (async()=>{
+                    const result  = await uploadToAWSS3Bucket(fileContent, settings.collection, settings.aws_s3_bucket);
+                    console.log(result);           
+                })();
+                log(`INFO: Collection file uploaded to ${settings.aws_s3_bucket}`, settings);
+                fs.unlinkSync(settings.collection);
+
             }
         };
     },
