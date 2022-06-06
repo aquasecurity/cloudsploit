@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/cloudsploit/scans.git"
+    "url": "https://github.com/aquasecurity/cloudsploit.git"
   },
   "keywords": [
     "aws",
@@ -32,7 +32,7 @@
   "author": "Aqua Security",
   "license": "GPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/cloudsploit/scans/issues"
+    "url": "https://github.com/aquasecurity/cloudsploit/issues"
   },
   "homepage": "https://cloud.aquasec.com",
   "publishConfig": {

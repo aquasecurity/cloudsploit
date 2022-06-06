@@ -22,7 +22,7 @@ CloudFront: {
 },
 ```
 
-The second section in `collect.js` is `postcalls`, which is an array of objects defining API calls that rely on other calls first returned. For example, if you need to query for all `CloudFront distributions`, and then loop through each one and run a more detailed call, you would add the `CloudFront:listDistributions` call in the [`calls`](https://github.com/cloudsploit/scans/blob/master/collectors/aws/collector.js#L58-L64) section and then the more detailed call in [`postcalls`](https://github.com/cloudsploit/scans/blob/master/collectors/aws/collector.js#L467-L473), setting it to rely on the output of `listDistributions` call.
+The second section in `collect.js` is `postcalls`, which is an array of objects defining API calls that rely on other calls first returned. For example, if you need to query for all `CloudFront distributions`, and then loop through each one and run a more detailed call, you would add the `CloudFront:listDistributions` call in the [`calls`](https://github.com/aquasecurity/cloudsploit/blob/master/collectors/aws/collector.js#L58-L64) section and then the more detailed call in [`postcalls`](https://github.com/aquasecurity/cloudsploit/blob/master/collectors/aws/collector.js#L467-L473), setting it to rely on the output of `listDistributions` call.
 
 An example:  
 
@@ -37,7 +37,7 @@ getGroup: {
 
 This section tells CloudSploit to wait until the `IAM:listGroups` call has been made, and then loop through the data that is returned. The `filterKey` tells CloudSploit the name of the key from the original response, while `filterValue` tells it which property to set in the `getGroup` call filter. For example: `iam.getGroup({GroupName:abc})` where `abc` is the `GroupName` from the returned list. CloudSploit will loop through each response, re-invoking `getGroup` for each element.
 
-You can find the [AWS Collector here.](https://github.com/cloudsploit/scans/blob/master/collectors/aws/collector.js)
+You can find the [AWS Collector here.](https://github.com/aquasecurity/cloudsploit/blob/master/collectors/aws/collector.js)
 
 #### Azure Collection
 
@@ -52,7 +52,7 @@ virtualMachines: {
 },
 ```
 
-The second section in `collect.js` is `postcalls`, which is an array of objects defining API calls that rely on other calls first returned. For example, if you need to query for all `Virtual Machine instances`, and then loop through each one and run a more detailed call, you would add the `virtualMachines:listAll` call in the [`calls`](https://github.com/cloudsploit/scans/blob/master/collectors/azure/collector.js#L50-L55) section and then the more detailed call in [`postcalls`](https://github.com/cloudsploit/scans/blob/master/collectors/azure/collector.js#L293-L302), setting it to rely on the output of `listDistributions` call.
+The second section in `collect.js` is `postcalls`, which is an array of objects defining API calls that rely on other calls first returned. For example, if you need to query for all `Virtual Machine instances`, and then loop through each one and run a more detailed call, you would add the `virtualMachines:listAll` call in the [`calls`](https://github.com/aquasecurity/cloudsploit/blob/master/collectors/azure/collector.js#L50-L55) section and then the more detailed call in [`postcalls`](https://github.com/aquasecurity/cloudsploit/blob/master/collectors/azure/collector.js#L293-L302), setting it to rely on the output of `listDistributions` call.
 
 ```
 virtualMachineExtensions: {
@@ -67,7 +67,7 @@ virtualMachineExtensions: {
 },
 ```
 
-You can find the [Azure Collector here.](https://github.com/cloudsploit/scans/blob/master/collectors/azure/collector.js)
+You can find the [Azure Collector here.](https://github.com/aquasecurity/cloudsploit/blob/master/collectors/azure/collector.js)
 
 #### GCP Collection
 
@@ -83,7 +83,7 @@ buckets: {
 },
 ```
 
-The second section in `collect.js` is `postcalls`, which is an array of objects defining API calls that rely on other calls first returned. For example, if you need to query for all `Storage Buckets`, and then loop through each one and run a more detailed call, you would add the `buckets:list` call in the [`calls`](https://github.com/cloudsploit/scans/blob/master/collectors/google/collector.js#L103-L109) section and then the more detailed call in [`postcalls`](https://github.com/cloudsploit/scans/blob/master/collectors/google/collector.js#L213-L223), setting it to rely on the output of `getIamPolicy` call.
+The second section in `collect.js` is `postcalls`, which is an array of objects defining API calls that rely on other calls first returned. For example, if you need to query for all `Storage Buckets`, and then loop through each one and run a more detailed call, you would add the `buckets:list` call in the [`calls`](https://github.com/aquasecurity/cloudsploit/blob/master/collectors/google/collector.js#L103-L109) section and then the more detailed call in [`postcalls`](https://github.com/aquasecurity/cloudsploit/blob/master/collectors/google/collector.js#L213-L223), setting it to rely on the output of `getIamPolicy` call.
 
 ```
 buckets: {
@@ -99,7 +99,7 @@ buckets: {
 },
 ```
 
-You can find the [GCP Collector here.](https://github.com/cloudsploit/scans/blob/master/collectors/google/collector.js)
+You can find the [GCP Collector here.](https://github.com/aquasecurity/cloudsploit/blob/master/collectors/google/collector.js)
 
 #### Oracle Collection
 
@@ -115,7 +115,7 @@ vcn: {
 },
 ```
 
-The second section in `collect.js` is `postcalls`, which is an array of objects defining API calls that rely on other calls first returned. For example, if you need to query for all `VCNs`, and then loop through each one and run a more detailed call, you would add the `vcn:list` call in the [`calls`](https://github.com/cloudsploit/scans/blob/master/collectors/oracle/collector.js#L41-L47) section and then the more detailed call in [`postcalls`](https://github.com/cloudsploit/scans/blob/master/collectors/oracle/collector.js#L243-L251), setting it to rely on the output of `get` call.
+The second section in `collect.js` is `postcalls`, which is an array of objects defining API calls that rely on other calls first returned. For example, if you need to query for all `VCNs`, and then loop through each one and run a more detailed call, you would add the `vcn:list` call in the [`calls`](https://github.com/aquasecurity/cloudsploit/blob/master/collectors/oracle/collector.js#L41-L47) section and then the more detailed call in [`postcalls`](https://github.com/aquasecurity/cloudsploit/blob/master/collectors/oracle/collector.js#L243-L251), setting it to rely on the output of `get` call.
 
 ```
 vcn: {
@@ -129,7 +129,7 @@ vcn: {
 },
 ```
 
-You can find the [Oracle Collector here.](https://github.com/cloudsploit/scans/blob/master/collectors/oracle/collector.js)
+You can find the [Oracle Collector here.](https://github.com/aquasecurity/cloudsploit/blob/master/collectors/oracle/collector.js)
 
 ## Scanning Phase
 
