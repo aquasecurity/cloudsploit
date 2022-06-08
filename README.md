@@ -341,6 +341,11 @@ The `--plugin` flag can be used if you only wish to run one plugin.
 $ ./index.js --plugin acmValidation
 ```
 
+The `--plugins` flag can be used if you only wish to run plugins.
+```
+$ ./index.js --plugins bucketLogging bucketVersioning 
+```
+
 ## Architecture
 CloudSploit works in two phases. First, it queries the cloud infrastructure APIs for various metadata about your account, namely the "collection" phase. Once all the necessary data is collected, the result is passed to the "scanning" phase. The scan uses the collected data to search for potential misconfigurations, risks, and other security issues, which are the resulting output.
 
