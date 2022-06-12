@@ -611,8 +611,7 @@ module.exports = {
         'logProfileArchiveData'         : require(__dirname + '/plugins/azure/monitor/logProfileArchiveData.js'),
         'logProfileRetentionPolicy'     : require(__dirname + '/plugins/azure/monitor/logProfileRetentionPolicy.js'),
         'monitorLogsEnabled'            : require(__dirname + '/plugins/azure/monitor/monitorLogsEnabled.js'),
-        'diagnosticsCapturedCategories' : require(__dirname + '/plugins/azure/monitor/diagnosticsCapturedCategories.js'),
-
+        'diagnosticsSettingsEnabled'    : require(__dirname + '/plugins/azure/monitor/diagnosticsSettingsEnabled.js'),
 
         'securityPolicyAlertsEnabled'   : require(__dirname + '/plugins/azure/logalerts/securityPolicyAlertsEnabled.js'),
         'nsgLoggingEnabled'             : require(__dirname + '/plugins/azure/logalerts/nsgLoggingEnabled.js'),
@@ -789,8 +788,6 @@ module.exports = {
         'enableDefenderForContainers'   : require(__dirname + '/plugins/azure/defender/enableDefenderForContainers.js'),
         'enableDefenderForSqlServers'   : require(__dirname + '/plugins/azure/defender/enableDefenderForSqlServers.js'),
         'enableEndpointIntegration'     : require(__dirname + '/plugins/azure/defender/enableEndpointIntegration.js'),
-
-        'diagnosticsSettingsEnabled'    : require(__dirname + '/plugins/azure/diagnostics/diagnosticsSettingsEnabled.js'),
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
