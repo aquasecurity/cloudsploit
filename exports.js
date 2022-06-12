@@ -787,6 +787,8 @@ module.exports = {
         'enableDefenderForContainers'   : require(__dirname + '/plugins/azure/defender/enableDefenderForContainers.js'),
         'enableDefenderForSqlServers'   : require(__dirname + '/plugins/azure/defender/enableDefenderForSqlServers.js'),
         'enableEndpointIntegration'     : require(__dirname + '/plugins/azure/defender/enableEndpointIntegration.js'),
+
+        'captureAppropriateCategories'  : require(__dirname + '/plugins/azure/diagnostics/captureAppropriateCategories.js'),
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
