@@ -612,7 +612,7 @@ module.exports = {
         'logProfileRetentionPolicy'     : require(__dirname + '/plugins/azure/monitor/logProfileRetentionPolicy.js'),
         'monitorLogsEnabled'            : require(__dirname + '/plugins/azure/monitor/monitorLogsEnabled.js'),
         'diagnosticsCapturedCategories' : require(__dirname + '/plugins/azure/monitor/diagnosticsCapturedCategories.js'),
-
+        'diagnosticsSettingsEnabled'    : require(__dirname + '/plugins/azure/monitor/diagnosticsSettingsEnabled.js'),
 
         'securityPolicyAlertsEnabled'   : require(__dirname + '/plugins/azure/logalerts/securityPolicyAlertsEnabled.js'),
         'nsgLoggingEnabled'             : require(__dirname + '/plugins/azure/logalerts/nsgLoggingEnabled.js'),
