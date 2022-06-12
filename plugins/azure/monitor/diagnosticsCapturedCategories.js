@@ -3,12 +3,14 @@ const _ = require('underscore');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Capture Appropriate Categories Logs',
+    title: 'Diagnostics Captured Categories',
     category: 'Monitor',
     domain: 'Management and Governance',
-    description: 'Ensures that Diagnostics Settings is capturing logs for all appropriate categories.',
-    more_info: 'A diagnostic setting controls how the diagnostic log is exported. Capturing the diagnostic setting categories for appropriate control/management plane activities allows proper alerting.',
-    recommended_action: 'Ensure that Diagnostic settings is enabled on all appropriate categories.',
+    description: 'Ensures that Diagnostics Settings is configured to log activities for all appropriate categories.',
+    more_info: 'Monitor diagnostic setting in Azure controls how the diagnostic logs are exported. When a diagnostic setting is created, ' +
+        'by default no log categories are selected. Capturing the appropriate log categories (Administrative, Security, Alert, and Policy) ' +
+        'for the activities performed within your Azure subscriptions provides proper alerting.',
+    recommended_action: 'Ensure the categories Administrative, Alert, Policy, and Security are set to Enabled for all diagnostic settings.',
     link: 'https://docs.microsoft.com/en-us/azure/azure-monitor/samples/resource-manager-diagnostic-settings',
     apis: ['diagnosticSettingsOperations:list'],
 
@@ -30,12 +32,12 @@ module.exports = {
             }
 
             if (!diagnosticSettings.data.length) {
-                helpers.addResult(results, 2, 'No existing Diagnostic Settings found', location);
+                helpers.addResult(results, 0, 'No existing Diagnostic Settings found', location);
                 return rcb();
             }
 
             let enabledCategories = [];
-            diagnosticSettings.data.forEach(settings => {
+            diagnosticSettings.data.forEach(settings => { 
                 if (settings.logs && settings.logs.length) {
                     settings.logs.forEach(log => {
                         if (log.enabled && appropriateCategories.indexOf(log.category) > -1) {
@@ -45,11 +47,13 @@ module.exports = {
                         }
                     });
 
-                    if (_.difference(appropriateCategories, enabledCategories).length === 0) {
-                        helpers.addResult(results, 0, 'Logs for all appropriate categories are enabled for Diagnostic Settings', location);
+                    if (!_.difference(appropriateCategories, enabledCategories).length) {
+                        helpers.addResult(results, 0, 'Diagnostic Setting is configured to log required categories', location, settings.id);
                     } else {
-                        helpers.addResult(results, 2, 'Logs for all appropriate categories are not enabled for Diagnostic Settings', location);
+                        helpers.addResult(results, 2, 'Diagnostic Setting is not configured to log required categories', location, settings.id);
                     }
+                } else {
+                    helpers.addResult(results, 2, 'Diagnostic Setting does not have any logs configured', location, settings.id);
                 }
             });
 

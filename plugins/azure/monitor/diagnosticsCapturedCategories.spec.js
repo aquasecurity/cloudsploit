@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var captureAppropriateCategories = require('./captureAppropriateCategories');
+var diagnosticsCapturedCategories = require('./diagnosticsCapturedCategories');
 
 const diagnosticSettings = [
     {
@@ -100,13 +100,13 @@ const createCache = (diagnosticSettings) => {
     };
 };
 
-describe('captureAppropriateCategories', function() {
+describe('diagnosticsCapturedCategories', function() {
     describe('run', function() {
-        it('should give failing result if no diagnostic settings found', function(done) {
+        it('should give passing result if no diagnostic settings found', function(done) {
             const cache = createCache([]);
-            captureAppropriateCategories.run(cache, {}, (err, results) => {
+            diagnosticsCapturedCategories.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
+                expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No existing Diagnostic Settings found');
                 expect(results[0].region).to.equal('global');
                 done();
@@ -115,7 +115,7 @@ describe('captureAppropriateCategories', function() {
 
         it('should give unknown result if unable to query for diagnostic settings', function(done) {
             const cache = createCache();
-            captureAppropriateCategories.run(cache, {}, (err, results) => {
+            diagnosticsCapturedCategories.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for Diagnostic Settings');
@@ -126,10 +126,10 @@ describe('captureAppropriateCategories', function() {
 
         it('should give passing result if logs are enabled for all appropriate categories', function(done) {
             const cache = createCache([diagnosticSettings[0]]);
-            captureAppropriateCategories.run(cache, {}, (err, results) => {
+            diagnosticsCapturedCategories.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Logs for all appropriate categories are enabled for Diagnostic Settings');
+                expect(results[0].message).to.include('Diagnostic Setting is configured to log required categories');
                 expect(results[0].region).to.equal('global');
                 done();
             });
@@ -137,10 +137,10 @@ describe('captureAppropriateCategories', function() {
 
         it('should give failing result if logs are not enabled for all appropriate categories', function(done) {
             const cache = createCache([diagnosticSettings[1]]);
-            captureAppropriateCategories.run(cache, {}, (err, results) => {
+            diagnosticsCapturedCategories.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Logs for all appropriate categories are not enabled for Diagnostic Settings');
+                expect(results[0].message).to.include('Diagnostic Setting is not configured to log required categories');
                 expect(results[0].region).to.equal('global');
                 done();
             });
