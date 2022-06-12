@@ -1,5 +1,4 @@
 const async = require('async');
-const _ = require('underscore');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
@@ -36,8 +35,9 @@ module.exports = {
                 return rcb();
             }
 
-            let enabledCategories = [];
             diagnosticSettings.data.forEach(settings => { 
+                let enabledCategories = [];
+
                 if (settings.logs && settings.logs.length) {
                     settings.logs.forEach(log => {
                         if (log.enabled && appropriateCategories.indexOf(log.category) > -1) {
@@ -47,7 +47,7 @@ module.exports = {
                         }
                     });
 
-                    if (!_.difference(appropriateCategories, enabledCategories).length) {
+                    if (appropriateCategories.length == enabledCategories.length) {
                         helpers.addResult(results, 0, 'Diagnostic Setting is configured to log required categories', location, settings.id);
                     } else {
                         helpers.addResult(results, 2, 'Diagnostic Setting is not configured to log required categories', location, settings.id);
