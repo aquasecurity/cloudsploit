@@ -611,6 +611,7 @@ module.exports = {
         'logProfileArchiveData'         : require(__dirname + '/plugins/azure/monitor/logProfileArchiveData.js'),
         'logProfileRetentionPolicy'     : require(__dirname + '/plugins/azure/monitor/logProfileRetentionPolicy.js'),
         'monitorLogsEnabled'            : require(__dirname + '/plugins/azure/monitor/monitorLogsEnabled.js'),
+        'diagnosticsCapturedCategories' : require(__dirname + '/plugins/azure/monitor/diagnosticsCapturedCategories.js'),
         'diagnosticsSettingsEnabled'    : require(__dirname + '/plugins/azure/monitor/diagnosticsSettingsEnabled.js'),
 
         'securityPolicyAlertsEnabled'   : require(__dirname + '/plugins/azure/logalerts/securityPolicyAlertsEnabled.js'),
