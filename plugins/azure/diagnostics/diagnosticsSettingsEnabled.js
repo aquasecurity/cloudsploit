@@ -6,7 +6,7 @@ module.exports = {
     category: 'Monitor',
     domain: 'Management and Governance',
     description: 'Ensures that Diagnostics Settings for exporting logs is enabled.',
-    more_info: 'Enable Diagnostic settings for exporting activity logs. Diagnostic setting are available for each individual resources within a subscription. Settings should be configured for all appropriate resources for your environment.',
+    more_info: 'Diagnostic setting should be configured for all appropriate resources for your environment in order to log the interactions within your cloud resources and gain insight into the operations that were performed within that resource itself.',
     recommended_action: 'Ensure that a Diagnostic status is enabled on all appropriate resources.',
     link: 'https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-overview-activity-logs#export-the-activity-log-with-a-log-profile',
     apis: ['diagnosticSettingsOperations:list'],
@@ -33,6 +33,10 @@ module.exports = {
             }
 
             diagnosticSettings.data.forEach(settings => {
+                if (!settings.logs) {
+                    helpers.addResult(results, 2, 'Diagnostic Setting does not have any logs configured', location, settings.id);
+                    return;
+                }
                 if (settings.logs && settings.logs.length) {
                     let disabledLog = settings.logs.find(log => !log.enabled);
 
