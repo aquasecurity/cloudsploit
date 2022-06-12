@@ -155,45 +155,23 @@ describe('diagnosticsSettingsEnabled', function() {
             });
         });
 
+        it('should give passing result if diagnostic settings found', function(done) {
+            const cache = createCache(diagnosticSettings);
+            diagnosticsSettingsEnabled.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Diagnostic Settings exist');
+                expect(results[0].region).to.equal('global');
+                done();
+            });
+        });
+
         it('should give unknown result if unable to query for diagnostic settings', function(done) {
             const cache = createCache();
             diagnosticsSettingsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for Diagnostic Settings');
-                expect(results[0].region).to.equal('global');
-                done();
-            });
-        });
-
-        it('should give passing result if logs are enabled for all logging categories and storage account configured', function(done) {
-            const cache = createCache([diagnosticSettings[0]]);
-            diagnosticsSettingsEnabled.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Diagnostic Setting is enabled for exporting logs for all resources');
-                expect(results[0].region).to.equal('global');
-                done();
-            });
-        });
-
-        it('should give failing result if logs are not enabled for all logging categories and storage account configured', function(done) {
-            const cache = createCache([diagnosticSettings[1]]);
-            diagnosticsSettingsEnabled.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Diagnostic Setting is not enabled for exporting logs on all resources');
-                expect(results[0].region).to.equal('global');
-                done();
-            });
-        });
-
-        it('should give failing result if logs are enabled for all logging categories and storage account is not configured', function(done) {
-            const cache = createCache([diagnosticSettings[2]]);
-            diagnosticsSettingsEnabled.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Diagnostic Setting does not have a Storage Account configured for Azure Monitor Logs');
                 expect(results[0].region).to.equal('global');
                 done();
             });
