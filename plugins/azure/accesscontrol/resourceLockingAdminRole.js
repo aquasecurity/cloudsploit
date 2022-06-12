@@ -41,13 +41,17 @@ module.exports = {
             });
 
             if (!customRoles.length) {
-                helpers.addResult(results, 0,'No custom roles found', location);
+                helpers.addResult(results, 2,'No custom roles found', location);
                 return rcb();
             }
 
             customRoles.forEach(function(roleDefinition) {
-                var subscription = roleDefinition.id.split('/').slice(0, 3).join('/');
-                var subAlone = subscription.split('/').slice(2, 3).join('/');
+                var subscription, subAlone;
+                if (roleDefinition.id) {
+                    subscription = roleDefinition.id.split('/').slice(0, 3).join('/');
+                    subAlone = subscription.split('/').slice(2, 3).join('/');
+                }
+
                 var action = false;
                 var scope = false;
                 if (roleDefinition.permissions &&
