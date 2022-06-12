@@ -809,6 +809,7 @@ module.exports = {
         'bootVolumeRestorable'          : require(__dirname + '/plugins/oracle/compute/bootVolumeRestorable.js'),
         'bootVolumeBackupEnabled'       : require(__dirname + '/plugins/oracle/compute/bootVolumeBackupEnabled.js'),
         'instancePolicyProtection'      : require(__dirname + '/plugins/oracle/compute/instancePolicyProtection.js'),
+        'legacyEndpointDisabled'        : require(__dirname + '/plugins/oracle/compute/legacyEndpointDisabled.js'),
 
         'usersMfaEnabled'               : require(__dirname + '/plugins/oracle/identity/usersMfaEnabled.js'),
         'passwordRequiresLowercase'     : require(__dirname + '/plugins/oracle/identity/passwordRequiresLowercase.js'),
