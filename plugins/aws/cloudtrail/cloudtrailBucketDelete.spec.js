@@ -26,6 +26,18 @@ const trails = [
         "HasCustomEventSelectors": false,
         "HasInsightSelectors": false,
         "IsOrganizationTrail": false
+    },
+    {
+        "Name": "trail-3",
+        "S3BucketName": "codepipeline-cloudtrail-placeholder-bucket-us-east-1",
+        "IncludeGlobalServiceEvents": true,
+        "IsMultiRegionTrail": false,
+        "HomeRegion": "us-east-1",
+        "TrailARN": "arn:aws:cloudtrail:us-east-1:123456654321:trail/trail-2",
+        "LogFileValidationEnabled": false,
+        "HasCustomEventSelectors": false,
+        "HasInsightSelectors": false,
+        "IsOrganizationTrail": false
     }
 ];
 
@@ -128,11 +140,11 @@ describe('cloudtrailBucketDelete', function () {
             });
         });
 
-        it('should PASS if no S3 bucket to check', function (done) {
-            const cache = createCache([]);
+        it('should FAIL if Unable to locate S3 bucket, it may has been deleted', function (done) {
+            const cache = createCache([trails[2]], [listBuckets[1]], getBucketVersioning[1]);
             cloudtrailBucketDelete.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
+                expect(results[0].status).to.equal(2);
                 done();
             });
         });
@@ -155,12 +167,5 @@ describe('cloudtrailBucketDelete', function () {
             });
         });
 
-        it('should not return any results if describe CloudTrail response not found', function (done) {
-            const cache = createNullCache();
-            cloudtrailBucketDelete.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(0);
-                done();
-            });
-        });
     });
 });

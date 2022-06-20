@@ -13,6 +13,7 @@ module.exports = {
     apis: ['Backup:listBackupVaults', 'Backup:getBackupVaultNotifications' ],
 
     run: function(cache, settings, callback) {
+        // console.log(JSON.stringify(cache, null, 2));
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
@@ -42,8 +43,9 @@ module.exports = {
                 let getBackupVaultNotifications = helpers.addSource(cache, source,
                     ['backup', 'getBackupVaultNotifications', region, vault.BackupVaultName]);
 
-                if (getBackupVaultNotifications && getBackupVaultNotifications.err && getBackupVaultNotifications.err.code &&
-                    getBackupVaultNotifications.err.code == 'ResourceNotFoundException') {
+
+                if (getBackupVaultNotifications && getBackupVaultNotifications.err && getBackupVaultNotifications.err.message &&
+                    getBackupVaultNotifications.err.message == `Failed reading notifications from database for Backup vault ${vault.BackupVaultName}`) {
                     helpers.addResult(results, 2,
                         'Backup vault does not have any notifications configured', region, resource);
                     continue;
