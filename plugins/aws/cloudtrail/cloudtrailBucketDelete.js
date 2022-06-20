@@ -25,7 +25,6 @@ module.exports = {
 
         var listBuckets = helpers.addSource(cache, source,
             ['s3', 'listBuckets', defaultRegion]);
-            console.log(listBuckets);
 
         if (!listBuckets || listBuckets.err || !listBuckets.data) {
             helpers.addResult(results, 3,
