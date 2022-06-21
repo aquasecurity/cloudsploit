@@ -68,14 +68,14 @@ function addResult(results, status, message, region, resource, custom, err, requ
     }
 }
 
-function findOpenPorts(ngs, protocols, service, location, results, cache, callback, source) {
+function findOpenPorts(ngs, protocols, service, location, results, cache, source) {
     let projects = shared.addSource(cache, source,
         ['projects','get', 'global']);
 
     if (!projects || projects.err || !projects.data || !projects.data.length) {
         addResult(results, 3,
             'Unable to query for projects: ' + shared.addError(projects), 'global', null, null, (projects) ? projects.err : null);
-        return callback(null, results, source);
+        return;
     }
 
     var project = projects.data[0].name;
@@ -137,14 +137,14 @@ function findOpenPorts(ngs, protocols, service, location, results, cache, callba
     }
 }
 
-function findOpenAllPorts(ngs, location, results, cache, callback, source) {
+function findOpenAllPorts(ngs, location, results, cache, source) {
     let projects = shared.addSource(cache, source,
         ['projects','get', 'global']);
 
     if (!projects || projects.err || !projects.data || !projects.data.length) {
         addResult(results, 3,
             'Unable to query for projects: ' + shared.addError(projects), 'global', null, null, (projects) ? projects.err : null);
-        return callback(null, results, source);
+        return;
     }
 
     var project = projects.data[0].name;
