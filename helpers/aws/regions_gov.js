@@ -116,5 +116,6 @@ module.exports = {
     voiceid: regions,
     appmesh: regions,
     frauddetector: regions,
-    imagebuilder: regions
+    imagebuilder: regions,
+    appconfig: regions
 };

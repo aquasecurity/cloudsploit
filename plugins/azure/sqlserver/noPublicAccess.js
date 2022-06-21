@@ -10,11 +10,24 @@ module.exports = {
     recommended_action: 'Ensure that the firewall of each SQL Server is configured to prohibit traffic from the public 0.0.0.0 global IP address.',
     link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-security-overview/',
     apis: ['servers:listSql','firewallRules:listByServer'],
+    settings: {
+        server_firewall_end_ip: {
+            name: 'SQL Server Firewall Rule End IP',
+            description: 'Comma separated list of IP addresses which cannot be end IPs for firewall rule',
+            regex: '((25[0-5]|2[0-4]|[01]??)(25[0-5]|2[0-4]|[01]??)(25[0-5]|2[0-4]|[01]??)(25[0-5]|2[0-4]|[01]??)(,\n|,?$))',
+            default: ''
+        }
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
+
+        var config = {
+            server_firewall_end_ip: settings.server_firewall_end_ip || this.settings.server_firewall_end_ip.default
+        };
+        var checkEndIp = (config.server_firewall_end_ip.length > 0);
 
         async.each(locations.servers, function(location, rcb) {
 
@@ -49,8 +62,14 @@ module.exports = {
 
                         firewallRules.data.forEach(firewallRule => {
                             const startIpAddr = firewallRule['startIpAddress'];
-
-                            if ((startIpAddr && startIpAddr.toString().indexOf('0.0.0.0') > -1)) {
+                            
+                            if (checkEndIp) {
+                                const endIpAddr = firewallRule['endIpAddress'];
+                                if (startIpAddr && startIpAddr.toString().indexOf('0.0.0.0') > -1 &&
+                                    endIpAddr && config.server_firewall_end_ip.includes(endIpAddr.toString())) {
+                                    publicAccess = true;
+                                }
+                            } else if (startIpAddr && startIpAddr.toString().indexOf('0.0.0.0') > -1) {
                                 publicAccess = true;
                             }
                         });

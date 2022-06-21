@@ -52,7 +52,9 @@ module.exports = {
 
                 let resource = helpers.createResourceName('clusters', cluster.name, project, 'location', location);
 
-                if (cluster.privateCluster) {
+                if (cluster.privateClusterConfig &&
+                    cluster.privateClusterConfig.privateEndpoint &&
+                    cluster.privateClusterConfig.privateEndpoint.length) {
                     helpers.addResult(results, 0, 'Private cluster is enabled on the Kubernetes cluster', region, resource);
                 } else {
                     helpers.addResult(results, 2, 'Private cluster is disabled on the Kubernetes cluster', region, resource);
