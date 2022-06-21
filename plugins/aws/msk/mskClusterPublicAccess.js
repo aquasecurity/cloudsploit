@@ -45,7 +45,7 @@ module.exports = {
                     cluster.BrokerNodeGroupInfo.ConnectivityInfo.PublicAccess.Type &&
                     cluster.BrokerNodeGroupInfo.ConnectivityInfo.PublicAccess.Type.toUpperCase() === 'DISABLED') {
                     helpers.addResult(results, 0,
-                        'msk cluster does not have public access enabled', region, resource);
+                        'MSK cluster does not have public access enabled', region, resource);
                 } else {
                     helpers.addResult(results, 2,
                         'msk cluster has public access enabled', region, resource);
