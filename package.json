@@ -45,7 +45,7 @@
     "@octokit/rest": "^16.3.2",
     "ali-oss": "^6.15.2",
     "argparse": "^2.0.0",
-    "async": "^2.6.1",
+    "async": "^2.6.4",
     "aws-sdk": "^2.1148.0",
     "azure-storage": "^2.10.3",
     "csv-write-stream": "^2.0.0",
