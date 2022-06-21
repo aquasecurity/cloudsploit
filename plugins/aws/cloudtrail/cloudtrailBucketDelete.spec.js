@@ -140,11 +140,20 @@ describe('cloudtrailBucketDelete', function () {
             });
         });
 
-        it('should FAIL if Unable to locate S3 bucket, it may has been deleted', function (done) {
+        it('should FAIL if Unable to locate S3 bucket, it may have been deleted', function (done) {
             const cache = createCache([trails[2]], [listBuckets[1]], getBucketVersioning[1]);
             cloudtrailBucketDelete.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                done();
+            });
+        });
+
+        it('should PASS if no S3 bucket to check', function (done) {
+            const cache = createCache([], [], null);
+            cloudtrailBucketDelete.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
                 done();
             });
         });

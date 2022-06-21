@@ -55,7 +55,7 @@ module.exports = {
 
                 if (!listBuckets.data.find(bucket => bucket.Name == trail.S3BucketName)) {
                     helpers.addResult(results, 2,
-                        'Unable to locate S3 bucket, it may has been deleted',
+                        'Unable to locate S3 bucket, it may have been deleted',
                         region, 'arn:aws:s3:::' + trail.S3BucketName);
                     return cb(); 
                 }
