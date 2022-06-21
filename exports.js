@@ -858,6 +858,7 @@ module.exports = {
         'lbNSGEnabled'                  : require(__dirname + '/plugins/oracle/networking/lbNSGEnabled.js'),
         'lbNoInstances'                 : require(__dirname + '/plugins/oracle/networking/lbNoInstances.js'),
         'wafPublicIpEnabled'            : require(__dirname + '/plugins/oracle/networking/wafPublicIpEnabled.js'),
+        'inboundSecurityLists'          : require(__dirname + '/plugins/oracle/networking/inboundSecurityLists.js'),
 
         'multipleSubnets'               : require(__dirname + '/plugins/oracle/networking/multipleSubnets.js'),
         'subnetMultiAd'                 : require(__dirname + '/plugins/oracle/networking/subnetMultiAd.js'),
