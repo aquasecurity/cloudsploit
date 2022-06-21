@@ -104,7 +104,7 @@ describe('mskClusterPublicAccess', function () {
             });
         });
 
-        it('should PASS if msk cluster does not have public access enabled', function (done) {
+        it('should PASS if MSK cluster does not have public access enabled', function (done) {
             const cache = createCache([listClusters[1]]);
             mskClusterPublicAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
