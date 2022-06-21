@@ -39,13 +39,13 @@ module.exports = {
 
             if (!listComponents) return rcb();
 
-            // if (listComponents.err) {
-            //     helpers.addResult(results, 3,
-            //         'Unable to query component version list: ' + helpers.addError(listComponents), region);
-            //     return rcb();
-            // }
+            if (listComponents.err) {
+                helpers.addResult(results, 3,
+                    'Unable to query component version list: ' + helpers.addError(listComponents), region);
+                return rcb();
+            }
 
-            if (listComponents.err || !listComponents.data || !listComponents.data.length) {
+            if (!listComponents.data || !listComponents.data.length) {
                 helpers.addResult(results, 0, 'No component version list found', region);
                 return rcb();
             }
