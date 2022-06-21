@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'To minimize data loss in case of inadvertent or malicious deletes, make sure that all your object store buckets are configured with object versioning.',
     recommended_action: 'Enable bucket versioning for all object store buckets.',
     link: 'https://docs.oracle.com/en-us/iaas/Content/Object/Tasks/usingversioning.htm',
-    apis: ['namespace:get','bucket:list', 'bucket:get'],
+    apis: ['namespace:get', 'bucket:list', 'bucket:get'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -35,10 +35,10 @@ module.exports = {
                         if (bucket.versioning &&
                             bucket.versioning === 'Enabled') {
                             helpers.addResult(results, 0,
-                                `Object store bucket (${bucket.name}) has versioning enabled.`, region, bucket.id);
+                                `Object store bucket (${bucket.name}) has versioning enabled`, region, bucket.id);
                         } else {
                             helpers.addResult(results, 2,
-                                `Object store bucket (${bucket.name}) does not have versioning enabled.`, region, bucket.id);
+                                `Object store bucket (${bucket.name}) does not have versioning enabled`, region, bucket.id);
                         }
                     });
                 }
