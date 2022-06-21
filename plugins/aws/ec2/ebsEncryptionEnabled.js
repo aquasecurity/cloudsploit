@@ -85,7 +85,7 @@ module.exports = {
             for (let volume of describeVolumes.data) {
                 var resource = 'arn:' + awsOrGov + ':ec2:' + region + ':' + accountId + ':volume/' + volume.VolumeId;
                 if (!volume.Encrypted || !volume.KmsKeyId){
-                    helpers.addResult(results, 2, 'EBS volume is unencrypted', region);
+                    helpers.addResult(results, 2, 'EBS volume is unencrypted', region, resource);
                     continue;
                 }
 

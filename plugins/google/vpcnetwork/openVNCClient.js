@@ -38,7 +38,7 @@ module.exports = {
 
             let service = 'VNC Client';
 
-            helpers.findOpenPorts(firewalls.data, ports, service, region, results, cache, callback, source);
+            helpers.findOpenPorts(firewalls.data, ports, service, region, results, cache, source);
 
             rcb();
         }, function(){

@@ -19,7 +19,7 @@ module.exports = {
                 '2. IAM condition keys which work with "Numeric" or "Date" operators are not used' +
                 '3. Bool values are set to "true" with "Allow" and "false" with "Deny"',
             regex: '^.*$',
-            default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceOwner,aws:SourceArn,aws:SourceAccount'
+            default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceOwner,aws:SourceArn,aws:SourceAccount,sns:Endpoint'
         }
     },
 
