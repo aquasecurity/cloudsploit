@@ -94,7 +94,7 @@ const createErrorCache = () => {
 
 describe('mskClusterPublicAccess', function () {
     describe('run', function () {
-        it('should FAIL if msk cluster has public access enabled', function (done) {
+        it('should FAIL if MSK cluster has public access enabled', function (done) {
             const cache = createCache([listClusters[0]]);
             mskClusterPublicAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
