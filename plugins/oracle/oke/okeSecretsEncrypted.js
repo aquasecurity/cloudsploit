@@ -14,7 +14,7 @@ module.exports = {
         oke_encryption_level: {
             name: 'OKE Encryption Level',
             description: 'Desired protection level for OKE Secrets. default: oracle-managed, cloudcmek: customer managed encryption keys, ' +
-                'cloudhsm: customer managed HSM encryption key, external: imported or externally managed key',
+                'cloudhsm: customer managed HSM encryption key',
             regex: '^(default|cloudcmek|cloudhsm)$',
             default: 'cloudcmek'
         }
