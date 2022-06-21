@@ -3,9 +3,9 @@ var dockerfileTemplateEncrypted = require('./dockerfileTemplateEncrypted');
 
 const listContainerRecipes = [
     {
-        "arn": "arn:aws:imagebuilder:us-east-1:000011112222:container-recipe/akhtar-dcr-image/1.0.0",
+        "arn": "arn:aws:imagebuilder:us-east-1:000011112222:container-recipe/test-dcr-image/1.0.0",
         "containerType": "DOCKER",
-        "name": "akhtar-dcr-image",
+        "name": "test-dcr-image",
         "platform": "Linux",
         "owner": "000011112222",
         "parentImage": "amazonlinux:latest",
@@ -13,9 +13,9 @@ const listContainerRecipes = [
         "tags": {}
     },
     {
-        "arn": "arn:aws:imagebuilder:us-east-1:000011112222:container-recipe/akhtar-dcr-image1/1.0.0",
+        "arn": "arn:aws:imagebuilder:us-east-1:000011112222:container-recipe/test-dcr-image1/1.0.0",
         "containerType": "DOCKER",
-        "name": "akhtar-dcr-image1",
+        "name": "test-dcr-image1",
         "platform": "Linux",
         "owner": "000011112222",
         "parentImage": "amazonlinux:latest",
@@ -29,9 +29,9 @@ const getContainerRecipe = [
     {
         "requestId": "70fcd2ec-f5d6-4beb-999b-b1376d2cc69c",
         "containerRecipe": {
-            "arn": "arn:aws:imagebuilder:us-east-1:000011112222:container-recipe/akhtar-dcr-image/1.0.0",
+            "arn": "arn:aws:imagebuilder:us-east-1:000011112222:container-recipe/test-dcr-image/1.0.0",
             "containerType": "DOCKER",
-            "name": "akhtar-dcr-image",
+            "name": "test-dcr-image",
             "platform": "Linux",
             "owner": "000011112222",
             "version": "1.0.0",
@@ -55,9 +55,9 @@ const getContainerRecipe = [
     {
         "requestId": "28a69c0b-1296-4220-a755-02edac9db0ce",
         "containerRecipe": {
-            "arn": "arn:aws:imagebuilder:us-east-1:000011112222:container-recipe/akhtar-dcr-image1/1.0.0",
+            "arn": "arn:aws:imagebuilder:us-east-1:000011112222:container-recipe/test-dcr-image1/1.0.0",
             "containerType": "DOCKER",
-            "name": "akhtar-dcr-image1",
+            "name": "test-dcr-image1",
             "platform": "Linux",
             "owner": "000011112222",
             "version": "1.0.0",
@@ -73,7 +73,7 @@ const getContainerRecipe = [
             "tags": {},
             "targetRepository": {
                 "service": "ECR",
-                "repositoryName": "sadeedrep"
+                "repositoryName": "testrep"
             }
         }
     }

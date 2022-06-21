@@ -75,7 +75,6 @@ module.exports = {
                 keyArn = alias.AliasArn.replace(/:alias\/.*/, ':key/' + alias.TargetKeyId);
                 kmsAliasArnMap[alias.AliasArn] = keyArn;
             });
-
          
             for (let recipe of listContainerRecipes.data) {
                 let resource = recipe.arn;
