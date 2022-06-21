@@ -81,7 +81,7 @@ describe('backupNotificationEnabled', function () {
         });
 
         it('should FAIL if Backup vault does not have any notifications configured', function (done) {
-            const cache = createCache([listBackupVaults[0]], null , null, { message: 'Failed reading notifications from database for Backup vault sadeed1'} );
+            const cache = createCache([listBackupVaults[0]], null , null, { message: 'Failed reading notifications from database'} );
             backupNotificationEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
