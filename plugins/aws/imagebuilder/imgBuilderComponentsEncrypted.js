@@ -39,13 +39,13 @@ module.exports = {
 
             if (!listComponents) return rcb();
 
-            if (listComponents.err) {
-                helpers.addResult(results, 3,
-                    'Unable to query component version list: ' + helpers.addError(listComponents), region);
-                return rcb();
-            }
+            // if (listComponents.err) {
+            //     helpers.addResult(results, 3,
+            //         'Unable to query component version list: ' + helpers.addError(listComponents), region);
+            //     return rcb();
+            // }
 
-            if (!listComponents.data || !listComponents.data.length) {
+            if (listComponents.err || !listComponents.data || !listComponents.data.length) {
                 helpers.addResult(results, 0, 'No component version list found', region);
                 return rcb();
             }
@@ -115,12 +115,12 @@ module.exports = {
 
                 if (currentEncryptionLevel >= desiredEncryptionLevel) {
                     helpers.addResult(results, 0,
-                        `Image builder component is encrypted with ${currentEncryptionLevelString} \
+                        `Image Builder component is encrypted with ${currentEncryptionLevelString} \
                         which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `Image builder component is encrypted with ${currentEncryptionLevelString} \
+                        `Image Builder component is encrypted with ${currentEncryptionLevelString} \
                         which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 }
