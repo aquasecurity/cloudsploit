@@ -111,6 +111,13 @@ var calls = {
             pagination: true
         }
     },
+    instanceGroupManagers: {
+        list: {
+            url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/zones/{locationId}/instanceGroupManagers',
+            location: 'zone',
+            pagination: true
+        }
+    },
     functions: {
         list : {
             url: 'https://cloudfunctions.googleapis.com/v1/projects/{projectId}/locations/{locationId}/functions',
@@ -293,6 +300,12 @@ var calls = {
             location: null,
             pagination: true
         }
+    },
+    apiKeys: {
+        list: {
+            url: 'https://apikeys.googleapis.com/v2/projects/{projectId}/locations/global/keys',
+            location: null
+        }
     }
 };
 
@@ -397,8 +410,42 @@ var postcalls = {
             method: 'POST', 
             pagination: true,
             paginationKey: 'pageSize'
+        },
+        getCmekSettings: {
+            url: 'https://logging.googleapis.com/v2/organizations/{organizationId}/cmekSettings',
+            reliesOnService: ['organizations'],
+            reliesOnCall: ['list'],
+            properties: ['organizationId']
+        }
+    },
+    apiKeys: {
+        get: {
+            url: 'https://apikeys.googleapis.com/v2/{name}',
+            reliesOnService: ['apiKeys'],
+            reliesOnCall: ['list'],
+            properties: ['name']
+        }
+    },
+    images: {
+        getIamPolicy: {
+            url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/global/images/{name}/getIamPolicy',
+            reliesOnService: ['images'],
+            reliesOnCall: ['list'],
+            properties: ['name'],
+            pagination: false
         }
     }
+};
+var tertiarycalls = {
+    cryptoKeys: {
+        getIamPolicy: {
+            url: 'https://cloudkms.googleapis.com/v1/{name}:getIamPolicy',
+            location: 'region',
+            reliesOnService: ['cryptoKeys'],
+            reliesOnCall: ['list'],
+            properties: ['name'],
+        }    
+    },
 };
 
 var collect = function(GoogleConfig, settings, callback) {
@@ -409,6 +456,9 @@ var collect = function(GoogleConfig, settings, callback) {
 
     var regions = helpers.regions();
 
+    if (settings.gather) {
+        return callback(null, calls, postcalls);
+    }
     helpers.authenticate(GoogleConfig)
         .then(client => {
             async.eachOfLimit(calls, 10, function(call, service, serviceCb) {
@@ -423,8 +473,13 @@ var collect = function(GoogleConfig, settings, callback) {
                         postcallCb();
                     });
                 }, function() {
-                    JSON.stringify(collection, null, 2);
-                    callback(null, collection);
+                    async.eachOfLimit(tertiarycalls, 10, function(tertiaryCallObj, service, tertiaryCallCb) {
+                        helpers.processCall(GoogleConfig, collection, settings, regions, tertiaryCallObj, service, client, function() {
+                            tertiaryCallCb();
+                        });
+                    }, function() {
+                        callback(null, collection);
+                    });
                 });
             });
         });

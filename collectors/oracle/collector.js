@@ -67,6 +67,14 @@ var calls = {
             filterValue: ['compartmentId']
         }
     },
+    cluster: {
+        list: {
+            api: 'oke',
+            restVersion: '/20180222',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId']
+        }
+    }, 
     user: {
         list: {
             api: 'iam',
