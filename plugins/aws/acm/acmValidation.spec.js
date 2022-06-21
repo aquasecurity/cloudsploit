@@ -87,7 +87,6 @@ const describeCertificate = [
         }
     },
     {
-        
     "Certificate": {
         "CertificateArn": "arn:aws:acm:us-east-1:000011122222:certificate/8951d876-8417-4d5c-8caa-5f73a3b1211e",
         "DomainName": "*.viteace.com",
