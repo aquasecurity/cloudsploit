@@ -48,7 +48,7 @@ module.exports = {
                         'MSK cluster does not have public access enabled', region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'msk cluster has public access enabled', region, resource);
+                        'MSK cluster has public access enabled', region, resource);
                 }
             }
 
