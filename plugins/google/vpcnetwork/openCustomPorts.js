@@ -57,7 +57,7 @@ module.exports = {
                 return rcb();
             }
 
-            helpers.findOpenPorts(firewalls.data, ports, 'custom', region, results, cache, callback, source);
+            helpers.findOpenPorts(firewalls.data, ports, 'custom', region, results, cache, source);
 
             rcb();
         }, function() {

@@ -39,7 +39,7 @@ module.exports = {
 
             let service = 'DNS';
 
-            helpers.findOpenPorts(firewalls.data, ports, service, region, results, cache, callback, source);
+            helpers.findOpenPorts(firewalls.data, ports, service, region, results, cache, source);
 
             rcb();
         }, function(){

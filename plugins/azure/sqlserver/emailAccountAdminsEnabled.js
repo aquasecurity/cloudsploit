@@ -45,17 +45,17 @@ module.exports = {
                     if (!serverSecurityAlertPolicies.data.length) {
                         helpers.addResult(results, 2, 'Database Threat Detection Policies are not enabled on the server', location, server.id);
                     } else {
-                        serverSecurityAlertPolicies.data.forEach(serverSecurityAlertPolicy => {
-                            if (serverSecurityAlertPolicy.state &&
-                                serverSecurityAlertPolicy.state.toLowerCase() == 'enabled' &&
-                                serverSecurityAlertPolicy.emailAccountAdmins) {
-                                helpers.addResult(results, 0,
-                                    'Email Account Admins is enabled on the SQL server', location, server.id);
-                            } else {
-                                helpers.addResult(results, 2,
-                                    'Email Account Admins is not enabled on the SQL server', location, server.id);
-                            }
-                        });
+                        let emailAccountsAdmins = serverSecurityAlertPolicies.data.find(serverSecurityAlertPolicy =>
+                            serverSecurityAlertPolicy.state &&
+                            serverSecurityAlertPolicy.state.toLowerCase() == 'enabled' &&
+                            serverSecurityAlertPolicy.emailAccountAdmins);
+                        if (emailAccountsAdmins) {
+                            helpers.addResult(results, 0,
+                                'Email Account Admins is enabled on the SQL server', location, server.id);
+                        } else {
+                            helpers.addResult(results, 2,
+                                'Email Account Admins is not enabled on the SQL server', location, server.id);
+                        }
                     }
                 }
             });

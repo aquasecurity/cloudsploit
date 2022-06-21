@@ -17,11 +17,9 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             };
 
             helpers.makeCustomCollectorCall(eks, 'describeNodegroup', params, retries, null, null, null, function(err, data) {
-                if (err) {
-                    collection.eks.describeNodegroups[AWSConfig.region][cluster][nodeGroup].err = err;
-                }
+                if (err) collection.eks.describeNodegroups[AWSConfig.region][cluster][nodeGroup].err = err;
                 //var autoScalingGroupNames = [];
-                collection.eks.describeNodegroups[AWSConfig.region][cluster][nodeGroup].data = data.nodegroup;
+                if (data) collection.eks.describeNodegroups[AWSConfig.region][cluster][nodeGroup].data = data.nodegroup;
                 // right now we are taking the maxSize to count the node. But if we decide to count the exact node count
                 // we need to uncomment the below code.
                 // collection.eks.describeNodegroups[AWSConfig.region][cluster][nodeGroup].data['nodecount'] = 0;
