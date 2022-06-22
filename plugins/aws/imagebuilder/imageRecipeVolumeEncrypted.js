@@ -17,7 +17,7 @@ module.exports = {
             name: 'Image Recipe EBS Volumes Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk'
+            default: ''
         }
     },
     
@@ -101,7 +101,7 @@ module.exports = {
                     } else {
                         var encryptionKey = mapping.ebs.kmsKeyId;
                         var encryptionKeyArr = encryptionKey.split(':');
-                        encryptionKey = encryptionKeyArr[encryptionKeyArr.length-1]
+                        encryptionKey = encryptionKeyArr[encryptionKeyArr.length-1];
                         let kmsKeyArn = (encryptionKey.includes('alias/')) ?
                             (kmsAliasArnMap[encryptionKey]) ? kmsAliasArnMap[encryptionKey] :
                                 encryptionKey : encryptionKey;
@@ -114,7 +114,7 @@ module.exports = {
                             helpers.addResult(results, 3,
                                 `Unable to query KMS key: ${helpers.addError(describeKey)}`,
                                 region, kmsKeyArn);
-                                continue;
+                            continue;
                         }
                         currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
                     } 
@@ -124,8 +124,8 @@ module.exports = {
                     helpers.addResult(results, 2,
                         'Image recipe : ' + poorlyEncrypted.length + ' ebs volumes does not have encryption enabled',
                         region, resource);
-                        continue;
-                    }  
+                    continue;
+                }  
  
                 let currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
 
