@@ -170,12 +170,12 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
             let strings = [];
 
             for (const key in ports) {
-                strings.push(`${key.toUpperCase()}:${ports[key]}`)
+                strings.push(`${key.toUpperCase()}:${ports[key]}`);
             }
-            if(strings.length){
+            if (strings.length){
                 addResult(results, 0,
-                `Security group: ${groups[g].GroupId} (${groups[g].GroupName}) does not have ${strings.join(', ')} open to 0.0.0.0/0 or ::0`,
-                region, resource);
+                    `Security group: ${groups[g].GroupId} (${groups[g].GroupName}) does not have ${strings.join(', ')} open to 0.0.0.0/0 or ::0`,
+                    region, resource);
             }
         }
     }
