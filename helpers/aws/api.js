@@ -684,6 +684,12 @@ var calls = {
             override: true
         }
     },
+    Imagebuilder: {
+        listImageRecipes: {
+            property: 'imageRecipeSummaryList',
+            paginate: 'nextToken'
+        }
+    },
     IoTSiteWise: {
         describeDefaultEncryptionConfiguration: {
         }
@@ -1589,6 +1595,14 @@ var postcalls = [
                 reliesOnCall: 'listClusters',
                 filterKey: 'ClusterId',
                 filterValue: 'Id'
+            }
+        },
+        Imagebuilder: {
+            getImageRecipe: {
+                reliesOnService: 'imagebuilder',
+                reliesOnCall: 'listImageRecipes',
+                filterKey: 'imageRecipeArn',
+                filterValue: 'arn'
             }
         },
         DLM: {
