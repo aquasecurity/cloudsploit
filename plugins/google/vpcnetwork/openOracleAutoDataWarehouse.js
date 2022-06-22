@@ -38,7 +38,7 @@ module.exports = {
 
             let service = 'Oracle Auto Data Warehouse';
 
-            helpers.findOpenPorts(firewalls.data, ports, service, region, results, cache, callback, source);
+            helpers.findOpenPorts(firewalls.data, ports, service, region, results, cache, source);
 
             rcb();
         }, function(){
