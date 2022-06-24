@@ -268,5 +268,12 @@ if (settings.remediate && settings.remediate.length) {
     }
 }
 
+if (config.settings) {
+    // Load custom plugins parameters
+    Object.keys(config.settings).forEach(function(key) {
+        settings[key] = config.settings[key];
+    });
+}
+
 // Now execute the scans using the defined configuration information.
 engine(cloudConfig, settings);
