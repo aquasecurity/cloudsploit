@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'Network Watcher Enabled',
     category: 'Network Security Groups',
+    domain: 'Network Access Control',
     description: 'Ensures Network Watcher is enabled in all locations',
     more_info: 'Network Watcher helps locate, diagnose, and gain insights into Azure networks. Enabling Network Watcher in all locations ensures that no resources are being used in locations that are not authorized.',
     recommended_action: 'Enable the Network Watcher service in all locations.',
@@ -43,8 +44,9 @@ module.exports = {
             }
 
             networkWatchers.data.forEach((networkWatcher) => {
-                if (networkWatcher.provisioningState &&
-                    networkWatcher.provisioningState.toLowerCase() == 'succeeded') {
+                if (networkWatcher.properties &&
+                    networkWatcher.properties.provisioningState &&
+                    networkWatcher.properties.provisioningState.toLowerCase() == 'succeeded') {
                     helpers.addResult(results, 0, 'Network Watcher is enabled', location, networkWatcher.id);
                 } else {
                     helpers.addResult(results, 2, 'Network Watcher is not successfully provisioned for the region', location, networkWatcher.id);

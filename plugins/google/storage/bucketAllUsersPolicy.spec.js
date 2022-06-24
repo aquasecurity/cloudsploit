@@ -2,9 +2,15 @@ var assert = require('assert');
 var expect = require('chai').expect;
 var plugin = require('./bucketAllUsersPolicy');
 
-const createCache = (err, data) => {
+const createCache = (err, data, bucketErr, bucketData) => {
     return {
         buckets: {
+            list: {
+                'global': {
+                    err: bucketErr,
+                    data: bucketData
+                }
+            },
             getIamPolicy: {
                 'global': {
                     err: err,
@@ -29,6 +35,8 @@ describe('bucketAllUsersPolicy', function () {
             const cache = createCache(
                 ['error'],
                 null,
+                ['error'],
+                null,
             );
 
             plugin.run(cache, {}, callback);
@@ -44,16 +52,22 @@ describe('bucketAllUsersPolicy', function () {
 
             const cache = createCache(
                 null,
-                [],
+                null,
+                null,
+                [
+                        {
+                            "kind": "storage#buckets"
+                        }
+                    ]
             );
 
             plugin.run(cache, {}, callback);
         });
-        it('should give passing result if no bucks have anonymous or public access', function (done) {
+        it('should give passing result if no buckets have anonymous or public access', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No buckets have anonymous or public access.');
+                expect(results[0].message).to.include('Bucket does not have anonymous or public access');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -62,49 +76,113 @@ describe('bucketAllUsersPolicy', function () {
                 null,
                 [
                     {
-                        "name": "giotestdnszone1",
-                        "dnsName": "cloudsploit.com.",
-                        "description": "",
-                        "id": "4534388710135378441",
-                        "nameServers": [
-                            "ns-cloud-e1.googledomains.com.",
-                            "ns-cloud-e2.googledomains.com.",
-                            "ns-cloud-e3.googledomains.com.",
-                            "ns-cloud-e4.googledomains.com."
+                        "kind": "storage#policy",
+                        "resourceId": "projects/_/buckets/us.artifacts.rosy-booth-253119.appspot.com",
+                        "bindings": [
+                            {
+                                "role": "roles/storage.legacyBucketOwner",
+                                "members": [
+                                    "projectEditor:rosy-booth-253119",
+                                    "projectOwner:rosy-booth-253119"
+                                ]
+                            },
+                            {
+                                "role": "roles/storage.legacyBucketReader",
+                                "members": [
+                                    "projectViewer:rosy-booth-253119"
+                                ]
+                            }
                         ],
-                        "creationTime": "2019-10-03T21:11:18.894Z",
-                        "dnssecConfig": {
-                            "state": "on",
-                            "defaultKeySpecs": [
-                                {
-                                    "keyType": "keySigning",
-                                    "algorithm": "rsasha256",
-                                    "keyLength": 2048,
-                                    "kind": "dns#dnsKeySpec"
-                                },
-                                {
-                                    "keyType": "zoneSigning",
-                                    "algorithm": "rsasha256",
-                                    "keyLength": 1024,
-                                    "kind": "dns#dnsKeySpec"
-                                }
-                            ],
-                            "nonExistence": "nsec3",
-                            "kind": "dns#managedZoneDnsSecConfig"
+                        "etag": "CAE=",
+                        "version": 1
+                    },
+                    {
+                        "kind": "storage#policy",
+                        "resourceId": "projects/_/buckets/staging.rosy-booth-253119.appspot.com",
+                        "bindings": [
+                            {
+                                "role": "roles/storage.legacyBucketOwner",
+                                "members": [
+                                    "projectEditor:rosy-booth-253119",
+                                    "projectOwner:rosy-booth-253119"
+                                ]
+                            },
+                            {
+                                "role": "roles/storage.legacyBucketReader",
+                                "members": [
+                                    "projectViewer:rosy-booth-253119"
+                                ]
+                            }
+                        ],
+                        "etag": "CAE=",
+                        "version": 1
+                    },
+                    {
+                        "kind": "storage#policy",
+                        "resourceId": "projects/_/buckets/rosy-booth-253119.appspot.com",
+                        "version": 1,
+                        "bindings": [
+                            {
+                                "role": "roles/iam.securityReviewer",
+                                "members": [
+                                    "projectEditor:rosy-booth-253119",
+                                ]
+                            },
+                            {
+                                "role": "roles/storage.legacyBucketOwner",
+                                "members": [
+                                    "projectEditor:rosy-booth-253119",
+                                    "projectOwner:rosy-booth-253119"
+                                ]
+                            },
+                            {
+                                "role": "roles/storage.legacyBucketReader",
+                                "members": [
+                                    "projectViewer:rosy-booth-253119"
+                                ]
+                            }
+                        ],
+                        "etag": "CAs="
+                    }
+                ],
+                null,
+                [
+                    {
+                        "kind": "storage#bucket",
+                        "selfLink": "https://www.googleapis.com/storage/v1/b/testio",
+                        "id": "testio",
+                        "name": "testio",
+                        "projectNumber": "664367550207",
+                        "metageneration": "1",
+                        "location": "US",
+                        "storageClass": "STANDARD",
+                        "etag": "CAE=",
+                        "defaultEventBasedHold": false,
+                        "timeCreated": "2021-04-06T16:06:14.799Z",
+                        "updated": "2021-04-06T16:06:14.799Z",
+                        "iamConfiguration": {
+                            "bucketPolicyOnly": {
+                                "enabled": true,
+                                "lockedTime": "2021-07-05T16:06:14.799Z"
+                            },
+                            "uniformBucketLevelAccess": {
+                                "enabled": true,
+                                "lockedTime": "2021-07-05T16:06:14.799Z"
+                            }
                         },
-                        "visibility": "public",
-                        "kind": "dns#managedZone"
+                        "locationType": "multi-region",
+                        "satisfiesPZS": false
                     }
                 ]
             );
 
             plugin.run(cache, {}, callback);
         });
-        it('should give failing result if the managed zone does not have dns sec enabled', function (done) {
+        it('should give failing result if bucket has anonymous or public access', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('The following buckets have anonymous or public access');
+                expect(results[0].message).to.include('Bucket has anonymous or public access');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -181,6 +259,35 @@ describe('bucketAllUsersPolicy', function () {
                             }
                         ],
                         "etag": "CAs="
+                    }
+                ],
+                null,
+                [
+                    {
+                        "kind": "storage#bucket",
+                        "selfLink": "https://www.googleapis.com/storage/v1/b/testio",
+                        "id": "testio",
+                        "name": "testio",
+                        "projectNumber": "664367550207",
+                        "metageneration": "1",
+                        "location": "US",
+                        "storageClass": "STANDARD",
+                        "etag": "CAE=",
+                        "defaultEventBasedHold": false,
+                        "timeCreated": "2021-04-06T16:06:14.799Z",
+                        "updated": "2021-04-06T16:06:14.799Z",
+                        "iamConfiguration": {
+                            "bucketPolicyOnly": {
+                                "enabled": true,
+                                "lockedTime": "2021-07-05T16:06:14.799Z"
+                            },
+                            "uniformBucketLevelAccess": {
+                                "enabled": true,
+                                "lockedTime": "2021-07-05T16:06:14.799Z"
+                            }
+                        },
+                        "locationType": "multi-region",
+                        "satisfiesPZS": false
                     }
                 ]
             );

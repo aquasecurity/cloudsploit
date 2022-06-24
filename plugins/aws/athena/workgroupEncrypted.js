@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Workgroup Encrypted',
     category: 'Athena',
+    domain: 'Databases',
     description: 'Ensures Athena workgroups are configured to encrypt all data at rest.',
     more_info: 'Athena workgroups support full server-side encryption for all data at rest which should be enabled.',
     link: 'https://docs.aws.amazon.com/athena/latest/ug/encryption.html',

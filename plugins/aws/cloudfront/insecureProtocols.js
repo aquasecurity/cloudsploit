@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Insecure CloudFront Protocols',
     category: 'CloudFront',
+    domain: 'Content Delivery',
     description: 'Detects the use of insecure HTTPS SSL/TLS protocols for use with HTTPS traffic between viewers and CloudFront',
     more_info: 'CloudFront supports SSLv3 and TLSv1 protocols for use with HTTPS traffic, but only TLSv1.1 or higher should be used unless there is a valid business justification to support the older, insecure SSLv3.',
     link: 'http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/secure-connections-supported-viewer-protocols-ciphers.html',

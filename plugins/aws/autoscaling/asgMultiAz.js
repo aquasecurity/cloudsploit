@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'ASG Multiple AZ',
     category: 'AutoScaling',
+    domain: 'Availability',
     description: 'Ensures that ASGs are created to be cross-AZ for high availability.',
     more_info: 'ASGs can easily be configured to allow instances to launch in multiple availability zones. This ensures that the ASG can continue to scale, even when AWS is experiencing downtime in one or more zones.',
     link: 'http://docs.aws.amazon.com/autoscaling/latest/userguide/AutoScalingGroup.html',
@@ -35,16 +36,17 @@ module.exports = {
 
             // loop through autoscaling Instances
             describeAutoScalingGroups.data.forEach(function(Asg){
+                var resource = Asg.AutoScalingGroupARN;
                 if (Asg.AvailabilityZones.length <=1) {
                     helpers.addResult(results, 2,
                         'Auto scaling group is only using ' + Asg.AvailabilityZones.length +
                         ' availability zones',
-                        region, Asg.AutoScalingGroupName);
+                        region, resource);
                 } else {
                     helpers.addResult(results, 0,
                         'Auto scaling group using ' + Asg.AvailabilityZones.length +
                         ' availability zones',
-                        region, Asg.AutoScalingGroupName);
+                        region, resource);
                 }
             });
             rcb();

@@ -4,11 +4,12 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Open Redis',
     category: 'VPC Network',
+    domain: 'Network Access Control',
     description: 'Determines if TCP port 6379 for Redis is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Redis should be restricted to known IP addresses.',
     link: 'https://cloud.google.com/vpc/docs/using-firewalls',
     recommended_action: 'Restrict TCP port 6379 to known IP addresses.',
-    apis: ['firewalls:list'],
+    apis: ['firewalls:list', 'projects:get'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -22,7 +23,7 @@ module.exports = {
             if (!firewalls) return rcb();
 
             if (firewalls.err || !firewalls.data) {
-                helpers.addResult(results, 3, 'Unable to query firewall rules: ' + helpers.addError(firewalls), region);
+                helpers.addResult(results, 3, 'Unable to query firewall rules', region, null, null, firewalls.err);
                 return rcb();
             }
 
@@ -37,11 +38,11 @@ module.exports = {
 
             let service = 'Redis';
 
-            helpers.findOpenPorts(firewalls.data, ports, service, region, results);
+            helpers.findOpenPorts(firewalls.data, ports, service, region, results, cache, source);
 
             rcb();
         }, function(){
             callback(null, results, source);
         });
     }
-}
+};

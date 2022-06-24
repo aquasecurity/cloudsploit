@@ -169,7 +169,9 @@ describe('bootVolumeBackupEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(1)
                 expect(results[0].status).to.equal(0)
+                expect(results[1].status).to.equal(0)
                 expect(results[0].message).to.include('The boot volume has backup policies enabled')
+                expect(results[1].message).to.include('The boot volume has backup policies enabled')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -195,6 +197,9 @@ describe('bootVolumeBackupEnabled', function () {
                         "sourceDetails": null,
                         "timeCreated": "2019-08-29T21:46:01.836Z",
                         "volumeGroupId": null
+                    },
+                    {
+                        "id": "ocid1.bootvolume.oc1.uk-london-1.abwgiljtpbow2jvc3dnuqwxg63ljrszfmmhkdffbm2lgihwxyiddzti2ja2q"
                     }
                 ],
                 [
@@ -218,6 +223,12 @@ describe('bootVolumeBackupEnabled', function () {
                         "uniqueSizeInGBs": 1,
                         "uniqueSizeInMbs": 1,
                         "bootVolumeId": "ocid1.volume.oc1.iad.abuwcljtquhbwu5divro64gimkrnfdaxo43cy44cbpuz42g652ol4gw6qsma"
+                    },
+                    {
+                        "assetId": "ocid1.bootvolume.oc1.uk-london-1.abwgiljtpbow2jvc3dnuqwxg63ljrszfmmhkdffbm2lgihwxyiddzti2ja2q",
+                        "id": "ocid1.volumebackuppolicyassign.oc1.uk-london-1.abwgiljt3we7xn7kllp2kpxzbnhy57xqvhwcukvkuk57rqd7iaiodr37xjba",
+                        "policyId": "ocid1.volumebackuppolicy.oc1..aaaaaaaa7hwv7iscewqqcmyqe2zuzfce6setvckhbxduswtxf6ctew7e54ja",
+                        "timeCreated": "2021-02-19T09:20:35.840Z"
                     }
                 ],
                 null

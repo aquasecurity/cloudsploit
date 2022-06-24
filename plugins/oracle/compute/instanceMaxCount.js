@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/oracle/');
 module.exports = {
     title: 'Instance Max Count',
     category: 'Compute',
+    domain: 'Compute',
     description: 'Ensures the total number of VM instances does not exceed a set threshold.',
     more_info: 'The number of running VM instances should be carefully audited, especially in unused regions, to ensure only approved applications are consuming compute resources. Many compromised Oracle accounts see large numbers of VM instances launched.',
     recommended_action: 'Ensure that the number of running VM instances matches the expected count. If instances are launched above the threshold, investigate to ensure they are legitimate.',
@@ -87,6 +88,114 @@ module.exports = {
             description: 'Checks for the number of running instances in the eu-zurich-1 region and triggers a failing result if it exceeds the specified count',
             regex: '^[0-9]{1,4}$',
             default: 50
+        },
+        instance_count_region_threshold_ap_melbourne_1: {
+            name: 'Instance Count Region Threshold: ap-melbourne-1',
+            description: 'Checks for the number of running instances in the ap-melbourne-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 50
+        },
+        instance_count_region_threshold_sa_vinhedo_1: {
+            name: 'Instance Count Region Threshold: sa-vinhedo-1',
+            description: 'Checks for the number of running instances in the sa-vinhedo-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 50
+        },
+        instance_count_region_threshold_ca_montreal_1: {
+            name: 'Instance Count Region Threshold: ca-montreal-1',
+            description: 'Checks for the number of running instances in the ca-montreal-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 50
+        },
+        instance_count_region_threshold_sa_santiago_1: {
+            name: 'Instance Count Region Threshold: sa-santiago-1',
+            description: 'Checks for the number of running instances in the sa-santiago-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 50
+        },
+        instance_count_region_threshold_ap_hyderabad_1: {
+            name: 'Instance Count Region Threshold: ap-hyderabad-1',
+            description: 'Checks for the number of running instances in the ap-hyderabad-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 50
+        },
+        instance_count_region_threshold_eu_amsterdam_1: {
+            name: 'Instance Count Region Threshold: eu-amsterdam-1',
+            description: 'Checks for the number of running instances in the eu-amsterdam-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 50
+        },
+        instance_count_region_threshold_me_jeddah_1: {
+            name: 'Instance Count Region Threshold: me-jeddah-1',
+            description: 'Checks for the number of running instances in the me-jeddah-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 50
+        },
+        instance_count_region_threshold_ap_chuncheon_1: {
+            name: 'Instance Count Region Threshold: ap-chuncheon-1',
+            description: 'Checks for the number of running instances in the ap-chuncheon-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 50
+        },
+        instance_count_region_threshold_me_dubai_1: {
+            name: 'Instance Count Region Threshold: me-dubai-1',
+            description: 'Checks for the number of running instances in the me-dubai-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 50
+        },
+        instance_count_region_threshold_uk_cardiff_1: {
+            name: 'Instance Count Region Threshold: uk-cardiff-1',
+            description: 'Checks for the number of running instances in the uk-cardiff-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 50
+        },
+        instance_count_region_threshold_us_sanjose_1: {
+            name: 'Instance Count Region Threshold: us-sanjose-1',
+            description: 'Checks for the number of running instances in the us-sanjose-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 50
+        },
+        instance_count_region_threshold_eu_marseille_1: {
+            name: 'Instance Count Region Threshold: eu-marseille-1',
+            description: 'Checks for the number of running instances in the eu-marseille-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 50
+        },
+        instance_count_region_threshold_il_jerusalem_1: {
+            name: 'Instance Count Region Threshold: il-jerusalem-1',
+            description: 'Checks for the number of running instances in the il-jerusalem-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 50
+        },
+        instance_count_region_threshold_eu_milan_1: {
+            name: 'Instance Count Region Threshold: eu-milan-1',
+            description: 'Checks for the number of running instances in the eu-milan-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 50
+        },
+        instance_count_region_threshold_ap_singapore_1: {
+            name: 'Instance Count Region Threshold: ap-singapore-1',
+            description: 'Checks for the number of running instances in the ap-singapore-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 50
+        },
+        instance_count_region_threshold_eu_amsterdam_1: {
+            name: 'Instance Count Region Threshold: eu-amsterdam-1',
+            description: 'Checks for the number of running instances in the eu-amsterdam-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 50
+        },
+        instance_count_region_threshold_af_johannesburg_1: {
+            name: 'Instance Count Region Threshold: af-johannesburg-1',
+            description: 'Checks for the number of running instances in the af-johannesburg-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 50
+        },
+        instance_count_region_threshold_eu_stockholm_1: {
+            name: 'Instance Count Region Threshold: eu-stockholm-1',
+            description: 'Checks for the number of running instances in the eu-stockholm-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 50
         }
     },
 
@@ -105,7 +214,17 @@ module.exports = {
             instance_count_region_threshold_sa_saopaulo_1: settings.instance_count_region_threshold_sa_saopaulo_1 || this.settings.instance_count_region_threshold_sa_saopaulo_1.default,
             instance_count_region_threshold_ap_osaka_1: settings.instance_count_region_threshold_ap_osaka_1 || this.settings.instance_count_region_threshold_ap_osaka_1.default,
             instance_count_region_threshold_eu_zurich_1: settings.instance_count_region_threshold_eu_zurich_1 || this.settings.instance_count_region_threshold_eu_zurich_1.default,
-
+            instance_count_region_threshold_ap_melbourne_1: settings.instance_count_region_threshold_ap_melbourne_1 || this.settings.instance_count_region_threshold_ap_melbourne_1.default,
+            instance_count_region_threshold_sa_vinhedo_1: settings.instance_count_region_threshold_sa_vinhedo_1 || this.settings.instance_count_region_threshold_sa_vinhedo_1.default,
+            instance_count_region_threshold_ca_montreal_1: settings.instance_count_region_threshold_ca_montreal_1 || this.settings.instance_count_region_threshold_ca_montreal_1.default,
+            instance_count_region_threshold_sa_santiago_1: settings.instance_count_region_threshold_sa_santiago_1 || this.settings.instance_count_region_threshold_sa_santiago_1.default,
+            instance_count_region_threshold_ap_hyderabad_1: settings.instance_count_region_threshold_ap_hyderabad_1 || this.settings.instance_count_region_threshold_ap_hyderabad_1.default,
+            instance_count_region_threshold_eu_amsterdam_1: settings.instance_count_region_threshold_eu_amsterdam_1 || this.settings.instance_count_region_threshold_eu_amsterdam_1.default,
+            instance_count_region_threshold_me_jeddah_1: settings.instance_count_region_threshold_me_jeddah_1 || this.settings.instance_count_region_threshold_me_jeddah_1.default,
+            instance_count_region_threshold_ap_chuncheon_1: settings.instance_count_region_threshold_ap_chuncheon_1 || this.settings.instance_count_region_threshold_ap_chuncheon_1.default,
+            instance_count_region_threshold_me_dubai_1: settings.instance_count_region_threshold_me_dubai_1 || this.settings.instance_count_region_threshold_me_dubai_1.default,
+            instance_count_region_threshold_uk_cardiff_1: settings.instance_count_region_threshold_uk_cardiff_1 || this.settings.instance_count_region_threshold_uk_cardiff_1.default,
+            instance_count_region_threshold_us_sanjose_1: settings.instance_count_region_threshold_us_sanjose_1 || this.settings.instance_count_region_threshold_us_sanjose_1.default
         };
 
         for (c in config) {

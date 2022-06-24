@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Log Duration Enabled',
     category: 'PostgreSQL Server',
+    domain: 'Databases',
     description: 'Ensures connection duration logs are enabled for PostgreSQL servers',
     more_info: 'Connection duration logs log duration times of connections to the server and can be used to locate suspicious long-running connections.',
     recommended_action: 'Ensure the server parameters for each PostgreSQL server have the log_duration setting enabled.',

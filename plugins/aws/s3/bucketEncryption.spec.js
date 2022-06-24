@@ -114,7 +114,21 @@ const createCache = (cmk, bucketErr, sseAes, kms, cfMatching) => {
           "us-east-1": {
             "bucket1": bucketObj
           }
-        }
+        },
+        "getBucketLocation": {
+          'us-east-1': {
+            "bucket1": {
+              data: {
+                LocationConstraint: 'us-east-1'
+            }
+          },
+        },
+        },
+        "getBucketWebsite": {
+          "us-east-1": {
+            "bucket1": bucketObj
+          }
+        },
       },
       "cloudfront": {
         "listDistributions": {
@@ -130,6 +144,38 @@ const createCache = (cmk, bucketErr, sseAes, kms, cfMatching) => {
             ]
           }
         }
+      },
+      "appconfig": {
+        "listApplications": {
+          "us-east-1": {
+            data: [
+              {
+                "Id": "wt4b09t",
+                "Name": "appBucket"
+              }
+            ]
+          }
+        },
+        "listConfigurationProfiles": {
+          "us-east-1": {
+            "wt4b09t": {
+              data: {
+                "Items": [
+                  {
+                      "ApplicationId": "wt4b09t",
+                      "Id": "nt17dsn",
+                      "Name": "testConfig",
+                      "LocationUri": "s3://bucket1/mine/AWSLogs/101363889637/Config/test",
+                      "ValidatorTypes": [
+                          "LAMBDA"
+                      ],
+                      "Type": "AWS.Freeform"
+                  }
+                ]
+              }
+            }
+          }
+        }
       }
     }
 };
@@ -141,6 +187,7 @@ describe('bucketEncryption', function () {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(2)
                 expect(results[0].message).to.include('has encryption disabled')
+                expect(results[0].region).to.equal('us-east-1');
                 done()
             };
 
@@ -154,6 +201,7 @@ describe('bucketEncryption', function () {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(0)
                 expect(results[0].message).to.include('has AES256 encryption enabled')
+                expect(results[0].region).to.equal('us-east-1');
                 done()
             };
 
@@ -162,11 +210,26 @@ describe('bucketEncryption', function () {
             s3.run(cache, {}, callback);
         })
 
+        it('should give passing result if S3 bucket is a source to AppConfig configuration profile', function (done) {
+          const callback = (err, results) => {
+              expect(results.length).to.equal(1)
+              expect(results[0].status).to.equal(0)
+              expect(results[0].message).to.include('Bucket is a source to AppConfig configuration profile')
+              expect(results[0].region).to.equal('us-east-1');
+              done()
+          };
+
+          const cache = createCache(false, false, true, false);
+
+          s3.run(cache, { whitelist_appconfig_s3_buckets: 'true' }, callback);
+      })
+
         it('should give passing result if S3 bucket has AWS KMS encryption', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(0)
                 expect(results[0].message).to.include('has aws:kms encryption enabled')
+                expect(results[0].region).to.equal('us-east-1');
                 done()
             };
 
@@ -175,11 +238,25 @@ describe('bucketEncryption', function () {
             s3.run(cache, {}, callback);
         })
 
+        it('should give passing result if s3_unencrypted_static_websites setting is enabled and bucket has static website hosting enabled', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1)
+                expect(results[0].status).to.equal(0)
+                expect(results[0].message).to.include('Bucket has static website hosting enabled')
+                done()
+            };
+
+            const cache = createCache(false, false, false, true);
+
+            s3.run(cache, { s3_allow_unencrypted_static_websites: 'true' }, callback);
+        })
+
         it('should give passing result if S3 bucket has CMK KMS encryption', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(0)
                 expect(results[0].message).to.include('has aws:kms encryption enabled')
+                expect(results[0].region).to.equal('us-east-1');
                 done()
             };
 
@@ -193,6 +270,7 @@ describe('bucketEncryption', function () {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(0)
                 expect(results[0].message).to.include('is whitelisted via custom setting')
+                expect(results[0].region).to.equal('us-east-1');
                 done()
             };
 
@@ -208,6 +286,7 @@ describe('bucketEncryption', function () {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(2)
                 expect(results[0].message).to.include('has encryption disabled')
+                expect(results[0].region).to.equal('us-east-1');
                 done()
             };
 
@@ -223,6 +302,7 @@ describe('bucketEncryption', function () {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(2)
                 expect(results[0].message).to.include('but is not using a CMK')
+                expect(results[0].region).to.equal('us-east-1');
                 done()
             };
 
@@ -236,6 +316,7 @@ describe('bucketEncryption', function () {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(2)
                 expect(results[0].message).to.include('but is not using a CMK')
+                expect(results[0].region).to.equal('us-east-1');
                 done()
             };
 
@@ -249,6 +330,7 @@ describe('bucketEncryption', function () {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(0)
                 expect(results[0].message).to.include('has aws:kms encryption enabled')
+                expect(results[0].region).to.equal('us-east-1');
                 done()
             };
 
@@ -262,6 +344,7 @@ describe('bucketEncryption', function () {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(0)
                 expect(results[0].message).to.include('has aws:kms encryption enabled using required KMS key')
+                expect(results[0].region).to.equal('us-east-1');
                 done()
             };
 
@@ -275,6 +358,7 @@ describe('bucketEncryption', function () {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(0)
                 expect(results[0].message).to.include('has aws:kms encryption enabled using required KMS key')
+                expect(results[0].region).to.equal('us-east-1');
                 done()
             };
 
@@ -288,6 +372,7 @@ describe('bucketEncryption', function () {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(2)
                 expect(results[0].message).to.include('but matching KMS key alias alias/my-unknown-alias could not be found in the account')
+                expect(results[0].region).to.equal('us-east-1');
                 done()
             };
 
@@ -301,6 +386,7 @@ describe('bucketEncryption', function () {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(0)
                 expect(results[0].message).to.include('has AES256 encryption enabled without a CMK but is a CloudFront origin')
+                expect(results[0].region).to.equal('us-east-1');
                 done()
             };
 
@@ -317,6 +403,7 @@ describe('bucketEncryption', function () {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(0)
                 expect(results[0].message).to.include('has AES256 encryption enabled but is a CloudFront origin')
+                expect(results[0].region).to.equal('us-east-1');
                 done()
             };
 
@@ -333,6 +420,7 @@ describe('bucketEncryption', function () {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(2)
                 expect(results[0].message).to.include('encryption (AES256) is not configured to use required KMS key')
+                expect(results[0].region).to.equal('us-east-1');
                 done()
             };
 

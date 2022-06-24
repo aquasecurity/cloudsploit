@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Redshift Cluster CMK Encryption',
     category: 'Redshift',
+    domain: 'Databases',
     description: 'Ensures Redshift clusters are encrypted using KMS customer master keys (CMKs)',
     more_info: 'KMS CMKs should be used to encrypt redshift clusters in order to have full control over data encryption and decryption.',
     link: 'http://docs.aws.amazon.com/redshift/latest/mgmt/working-with-db-encryption.html',

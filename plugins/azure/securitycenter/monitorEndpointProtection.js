@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Monitor Endpoint Protection',
     category: 'Security Center',
+    domain: 'Management and Governance',
     description: 'Ensures Endpoint Protection monitoring is enabled in Security Center',
     more_info: 'When this setting is enabled, Security Center audits the Endpoint Protection setting for all virtual machines for malware protection.',
     recommended_action: 'Enable Adaptive Application Controls for Endpoint Protection from the Azure Security Center by ensuring AuditIfNotExists setting is used to monitor missing Endpoint Protection.',

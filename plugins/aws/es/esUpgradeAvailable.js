@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'ElasticSearch Upgrade Available',
     category: 'ES',
+    domain: 'Databases',
     description: 'Ensures ElasticSearch domains are running the latest service software',
     more_info: 'ElasticSearch domains should be configured to run the latest service software which often contains security updates.',
     link: 'https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-version-migration.html',

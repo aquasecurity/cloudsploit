@@ -1,8 +1,7 @@
-var assert = require('assert');
 var expect = require('chai').expect;
 var plugin = require('./ipForwardingDisabled');
 
-const createCache = (instanceData, instanceDatab, error) => {
+const createCache = (instanceData, error) => {
     return {
         instances: {
             compute: {
@@ -10,19 +9,14 @@ const createCache = (instanceData, instanceDatab, error) => {
                     'us-central1-a': {
                         data: instanceData,
                         err: error
-                    },
-                    'us-central1-b': {
-                        data: instanceDatab,
-                        err: error
-                    },
-                    'us-central1-c': {
-                        data: instanceDatab,
-                        err: error
-                    },
-                    'us-central1-f': {
-                        data: instanceDatab,
-                        err: error
                     }
+                }
+            }
+        },
+        projects: {
+            get: {
+                'global': {
+                    data: 'test-proj'
                 }
             }
         }
@@ -35,16 +29,15 @@ describe('ipForwardingDisabled', function () {
         it('should give unknown if an instance error occurs', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
-                expect(results[4].status).to.equal(3);
-                expect(results[4].message).to.include('Unable to query instances');
-                expect(results[4].region).to.equal('us-central1');
+                expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query compute instances');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 
             const cache = createCache(
                 [],
-                [],
-                ['null']
+                ['error']
             );
 
             plugin.run(cache, {}, callback);
@@ -53,14 +46,13 @@ describe('ipForwardingDisabled', function () {
         it('should pass no VM Instances', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
-                expect(results[4].status).to.equal(0);
-                expect(results[4].message).to.include('No instances found');
-                expect(results[4].region).to.equal('us-central1');
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No instances found');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 
             const cache = createCache(
-                [],
                 [],
                 null
             );
@@ -70,10 +62,10 @@ describe('ipForwardingDisabled', function () {
 
         it('should fail if ip forwarding is enabled', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.above(1);
-                expect(results[4].status).to.equal(2);
-                expect(results[4].message).to.include('Instance IP forwarding is enabled for the following instances');
-                expect(results[4].region).to.equal('us-central1');
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('Instance has IP forwarding enabled');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 
@@ -166,21 +158,19 @@ describe('ipForwardingDisabled', function () {
                         },
                         "kind": "compute#instance"
                     }
-                ],
-                [],
-                null
+                ]
             );
 
             plugin.run(cache, {}, callback);
         })
 
-        it('should pass with block project-wide ssh key', function (done) {
+        it('should pass if instance does not have IP forwarding enabled', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.above(1);
-                expect(results[4].status).to.equal(0);
-                expect(results[4].message).to.equal('Instance IP forwarding is disabled for all instances in the region');
-                expect(results[4].region).to.equal('us-central1');
-                done()
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.equal('Instance does not have IP forwarding enabled');
+                expect(results[0].region).to.equal('us-central1');
+                done();
             };
 
             const cache = createCache(
@@ -274,7 +264,6 @@ describe('ipForwardingDisabled', function () {
                     }
                 ]
             );
-
             plugin.run(cache, {}, callback);
         })
 

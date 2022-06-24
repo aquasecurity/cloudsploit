@@ -3,6 +3,7 @@ var helpers = require('../../../helpers/oracle/');
 module.exports = {
     title: 'Log Retention Period',
     category: 'Audit',
+    domain: 'Management and Governance',
     description: 'Ensures that the audit log retention period is configured correctly.',
     more_info: 'Audit logs should be kept for as long as internal compliance requires. If no requirements exist, best practices suggest a minimum of 365 days.',
     recommended_action: 'Ensure that the audit log retention period is configured correctly.',

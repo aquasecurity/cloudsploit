@@ -11,6 +11,11 @@ const createCache = (err, data) => {
                     data: data
                 }
             },
+            get: {
+                'global': {
+                    data: [ { name: 'testproj' } ]
+                }
+            }
         },
     }
 };

@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Redshift Cluster In VPC',
     category: 'Redshift',
+    domain: 'Databases',
     description: 'Ensures that Amazon Redshift clusters are launched within a Virtual Private Cloud (VPC).',
     more_info: 'Amazon Redshift clusters should be launched within a Virtual Private Cloud (VPC) to ensure cluster security.',
     link: 'https://docs.aws.amazon.com/redshift/latest/mgmt/working-with-clusters.html#cluster-platforms',

@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Detect Insecure Custom Origin',
     category: 'CDN Profiles',
+    domain: 'Content Delivery',
     description: 'Ensures that HTTPS is enabled for CDN endpoints with a custom origin',
     more_info: 'All Azure CDN endpoints should enable HTTPS to secure traffic to the backend custom origin.',
     recommended_action: 'Enable HTTPS and disable HTTP for each custom origin endpoint for each CDN profile.',

@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Public S3 CloudFront Origin',
     category: 'CloudFront',
+    domain: 'Content Delivery',
     description: 'Detects the use of an S3 bucket as a CloudFront origin without an origin access identity',
     more_info: 'When S3 is used as an origin for a CloudFront bucket, the contents should be kept private and an origin access identity should allow CloudFront access. This prevents someone from bypassing the caching benefits that CloudFront provides, repeatedly loading objects directly from S3, and amassing a large access bill.',
     link: 'http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html',

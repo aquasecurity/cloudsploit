@@ -11,6 +11,13 @@ const createCache = (err, data) => {
                     data: data
                 }
             }
+        },
+        projects: {
+            get: {
+                'global': {
+                    data: [ { name: 'testproj' }]
+                }
+            }
         }
     }
 };
@@ -21,7 +28,7 @@ describe('privateClusterEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for clusters');
+                expect(results[0].message).to.include('Unable to query Kubernetes clusters');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -38,7 +45,7 @@ describe('privateClusterEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No clusters found');
+                expect(results[0].message).to.include('No Kubernetes clusters found');
                 expect(results[0].region).to.equal('global');
                 done()
             };

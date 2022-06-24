@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Log Profile Retention Policy',
     category: 'Monitor',
+    domain: 'Management and Governance',
     description: 'Ensures that Log Profiles have a long retention policy.',
     more_info: 'Log retention policies should be configured with sufficient retention to aid in investigation of prior security incidents and for compliance purposes.',
     recommended_action: 'Ensure that the Activity Log export to Event Hub is configured with a retention policy of at least 365 days.',

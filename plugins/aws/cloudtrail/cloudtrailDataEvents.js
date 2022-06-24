@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'CloudTrail Data Events',
     category: 'CloudTrail',
+    domain: 'Compliance',
     description: 'Ensure Data events are included into Amazon CloudTrail trails configuration.',
     more_info: 'AWS CloudTrail trails should be configured to enable Data Events in order to log S3 object-level API operations.',
     recommended_action: 'Update CloudTrail to enable data events.',

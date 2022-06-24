@@ -10,6 +10,13 @@ const createCache = (err, data) => {
                     data: data
                 }
             }
+        },
+        projects: {
+            get: {
+                'global': {
+                    data: 'testProj'
+                }
+            }
         }
     }
 };
@@ -142,7 +149,7 @@ describe('multipleSubnets', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('The VPC does not have any subnets in these regions');
+                expect(results[0].message).to.include('The VPC does not have any subnets');
                 expect(results[0].region).to.equal('global');
                 done()
             };

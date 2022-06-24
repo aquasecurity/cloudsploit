@@ -19,8 +19,14 @@ const createCache = (err, data, adata) => {
                     data: adata
                 }
             }
+        },
+        projects: {
+            get: {
+                'global': {
+                    data: [ { name: 'testproj' } ]
+                }
+            }
         }
-
     }
 };
 

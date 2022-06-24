@@ -23,6 +23,20 @@
             }
         }
     },
+    "oke": {
+        "cluster": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId",
+                    "page",
+                    "limit"
+                ],
+                "method": "GET",
+                "path": "clusters",
+                "endpoint": "containerengine.{{region}}.oci.oraclecloud.com"
+            }
+        }
+    },
     "core": {
         "instance": {
             "list": {
@@ -349,6 +363,33 @@
                 ],
                 "method": "GET",
                 "path": "userGroupMemberships",
+                "endpoint": "identity.{{region}}.oraclecloud.com"
+            }
+        },
+        "apiKey": {
+            "list": {
+                "encodedGet": "userId",
+                "method": "GET",
+                "path": "users",
+                "secondaryPath": "apiKeys",
+                "endpoint": "identity.{{region}}.oraclecloud.com"
+            }
+        },
+        "authToken": {
+            "list": {
+                "encodedGet": "userId",
+                "method": "GET",
+                "path": "users",
+                "secondaryPath": "authTokens",
+                "endpoint": "identity.{{region}}.oraclecloud.com"
+            }
+        },
+        "customerSecretKey": {
+            "list": {
+                "encodedGet": "userId",
+                "method": "GET",
+                "path": "users",
+                "secondaryPath": "customerSecretKeys",
                 "endpoint": "identity.{{region}}.oraclecloud.com"
             }
         }

@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Workspaces IP Access Control',
     category: 'Workspaces',
+    domain: 'Identity Access and Management',
     description: 'Ensures enforced IP Access Control on Workspaces',
     more_info: 'Checking the existence of IP Access control on Workspaces and ensuring that no Workspaces are open',
     link: 'https://docs.aws.amazon.com/workspaces/latest/adminguide/amazon-workspaces-ip-access-control-groups.html',

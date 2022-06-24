@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Open Hadoop HDFS NameNode Metadata Service',
     category: 'Network Security Groups',
+    domain: 'Network Access Control',
     description: 'Determine if TCP port 8020 for HDFS NameNode metadata service is open to the public.',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Hadoop/HDFS should be restricted to known IP addresses.',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',

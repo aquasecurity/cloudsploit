@@ -1,8 +1,7 @@
-var assert = require('assert');
 var expect = require('chai').expect;
 var plugin = require('./instanceLevelSSHOnly');
 
-const createCache = (instanceData, instanceDatab, error) => {
+const createCache = (instanceData, error) => {
     return {
         instances: {
             compute: {
@@ -10,19 +9,14 @@ const createCache = (instanceData, instanceDatab, error) => {
                     'us-central1-a': {
                         data: instanceData,
                         err: error
-                    },
-                    'us-central1-b': {
-                        data: instanceDatab,
-                        err: error
-                    },
-                    'us-central1-c': {
-                        data: instanceDatab,
-                        err: error
-                    },
-                    'us-central1-f': {
-                        data: instanceDatab,
-                        err: error
                     }
+                }
+            }
+        },
+        projects: {
+            get: {
+                'global': {
+                    data: 'test-proj'
                 }
             }
         }
@@ -35,16 +29,15 @@ describe('instanceLevelSSHOnly', function () {
         it('should give unknown if an instance error occurs', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
-                expect(results[4].status).to.equal(3);
-                expect(results[4].message).to.include('Unable to query instances');
-                expect(results[4].region).to.equal('us-central1');
+                expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query compute instances');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 
             const cache = createCache(
                 [],
-                [],
-                ['null']
+                ['error']
             );
 
             plugin.run(cache, {}, callback);
@@ -53,14 +46,13 @@ describe('instanceLevelSSHOnly', function () {
         it('should pass no VM Instances', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
-                expect(results[4].status).to.equal(0);
-                expect(results[4].message).to.include('No instances found');
-                expect(results[4].region).to.equal('us-central1');
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No instances found');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 
             const cache = createCache(
-                [],
                 [],
                 null
             );
@@ -70,11 +62,11 @@ describe('instanceLevelSSHOnly', function () {
 
         it('should fail with no block project-wide ssh keys', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.above(1);
-                expect(results[4].status).to.equal(2);
-                expect(results[4].message).to.include('Block project-wide SSH keys is disabled for the following instances');
-                expect(results[4].region).to.equal('us-central1');
-                done()
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('Block project-wide SSH keys is disabled for the instance');
+                expect(results[0].region).to.equal('us-central1');
+                done();
             };
 
             const cache = createCache(
@@ -97,8 +89,6 @@ describe('instanceLevelSSHOnly', function () {
                         }
                     }
                 ],
-                [],
-                null
             );
 
             plugin.run(cache, {}, callback);
@@ -106,10 +96,10 @@ describe('instanceLevelSSHOnly', function () {
 
         it('should pass with block project-wide ssh key', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.be.above(1);
-                expect(results[4].status).to.equal(0);
-                expect(results[4].message).to.equal('Block project-wide SSH keys is enabled for all instances in the region');
-                expect(results[4].region).to.equal('us-central1');
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.equal('Block project-wide SSH keys is enabled for the instance');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 

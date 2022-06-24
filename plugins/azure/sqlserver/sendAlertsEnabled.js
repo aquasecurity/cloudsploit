@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Send Alerts Enabled',
     category: 'SQL Server',
+    domain: 'Databases',
     description: 'Ensures that send alerts is enabled in advanced data security for SQL servers.',
     more_info: 'Enabling send alerts in advanced data security on all SQL servers ensures that monitored data for unusual activity, vulnerabilities, and threats get sent to the email addresses configured in advanced data protections.',
     recommended_action: 'Ensure that an email address is activated under send alerts in advanced data security for all SQL servers.',
@@ -44,19 +45,19 @@ module.exports = {
                     if (!serverSecurityAlertPolicies.data.length) {
                         helpers.addResult(results, 2, 'Database Threat Detection Policies are not enabled on the server', location, server.id);
                     } else {
-                        serverSecurityAlertPolicies.data.forEach(serverSecurityAlertPolicy => {
-                            if (serverSecurityAlertPolicy.state &&
-                                serverSecurityAlertPolicy.state.toLowerCase() == 'enabled' &&
-                                serverSecurityAlertPolicy.emailAddresses &&
-                                serverSecurityAlertPolicy.emailAddresses[0] &&
-                                serverSecurityAlertPolicy.emailAddresses[0] != '') {
-                                helpers.addResult(results, 0,
-                                    'Send alerts is enabled on the SQL server', location, server.id);
-                            } else {
-                                helpers.addResult(results, 2,
-                                    'Send alerts is not enabled on the SQL server', location, server.id);
-                            }
-                        });
+                        let alertsEnabled = serverSecurityAlertPolicies.data.find(serverSecurityAlertPolicy => 
+                            serverSecurityAlertPolicy.state &&
+                            serverSecurityAlertPolicy.state.toLowerCase() == 'enabled' &&
+                            serverSecurityAlertPolicy.emailAddresses &&
+                            serverSecurityAlertPolicy.emailAddresses[0] &&
+                            serverSecurityAlertPolicy.emailAddresses[0] != '');
+                        if (alertsEnabled) {
+                            helpers.addResult(results, 0,
+                                'Send alerts is enabled on the SQL server', location, server.id);
+                        } else {
+                            helpers.addResult(results, 2,
+                                'Send alerts is not enabled on the SQL server', location, server.id);
+                        }
                     }
                 }
             });

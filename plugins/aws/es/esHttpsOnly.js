@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'ElasticSearch HTTPS Only',
     category: 'ES',
+    domain: 'Databases',
     description: 'Ensures ElasticSearch domains are configured to enforce HTTPS connections',
     more_info: 'ElasticSearch domains should be configured to enforce HTTPS connections for all clients to ensure encryption of data in transit.',
     link: 'https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-createupdatedomains.html',

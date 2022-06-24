@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'EMR Encryption In Transit',
     category: 'EMR',
+    domain: 'Compute',
     description: 'Ensures encryption in transit is enabled for EMR clusters',
     more_info: 'EMR clusters should be configured to enable encryption in transit.',
     link: 'https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-data-encryption-options.html',

@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Advanced Threat Protection Enabled',
     category: 'Cosmos DB',
+    domain: 'Databases',
     description: 'Ensures that Advanced Threat Protection feature is enabled for Microsoft Azure Cosmos DB accounts.',
     more_info: 'Advanced Threat Protection for Azure Cosmos DB provides an additional layer of security intelligence that detects unusual and potentially harmful attempts to access or exploit Azure Cosmos DB accounts.',
     link: 'https://docs.microsoft.com/en-us/azure/cosmos-db/cosmos-db-advanced-threat-protection',
@@ -42,8 +43,9 @@ module.exports = {
 
                     if (!advancedThreatProtection || advancedThreatProtection.err || !advancedThreatProtection.data) {
                         helpers.addResult(results, 3,
-                            `Unable to query advanced threat protection for Cosmos DB account: ${advancedThreatProtection}`,
+                            'Unable to query advanced threat protection for Cosmos DB account: ' + helpers.addError(advancedThreatProtection),
                             location, account.id);
+                        return cb();
                     }
 
                     if (advancedThreatProtection.data.isEnabled) {
@@ -57,9 +59,12 @@ module.exports = {
                     helpers.addResult(results, 0,
                         'Advanced threat protection feature is not supported for current resource', location, account.id);
                 }
+
+                cb();
+            }, function() {
+                rcb();
             });
 
-            rcb();
         }, function() {
             callback(null, results, source);
         });

@@ -18,13 +18,16 @@ const listBuckets = [
 
 const getBucketPolicy = [
     {
-        Policy: '{"Version":"2012-10-17","Id":"ExamplePolicy","Statement":[{"Sid":"AllowSSLRequestsOnly","Effect":"Deny","Principal":"*","Action":"s3:*","Resource":["arn:aws:s3:::test-bucket-130","arn:aws:s3:::test-bucket-130/*"],"Condition":{"Bool":{"aws:SecureTransport":"false"}}}]}'
+        Policy: '{"Version":"2012-10-17","Id":"ExamplePolicy","Statement":[{"Sid":"","Effect":"Allow","Principal":{"AWS":"arn:aws:iam::00000011111:root"},"Action":["s3:PutObject"],"Resource":["arn:aws:s3:::staging-01-sd-logs/*"]},{"Sid":"","Effect":"Deny","Principal":"*","Action":"s3:*","Resource":["arn:aws:s3:::staging-01-sd-logs/*","arn:aws:s3:::staging-01-sd-logs"],"Condition":{"Bool":{"aws:SecureTransport":"false"}}}]}'
     },
     {
-        Policy: '{"Version":"2008-10-17","Statement":[{"Sid":"eb-ad78f54a-f239-4c90-adda-49e5f56cb51e","Effect":"Allow","Principal":{"AWS":"arn:aws:iam::123456654321:role/aws-elasticbeanstalk-ec2-role"},"Action":"s3:PutObject","Resource":"arn:aws:s3:::elasticbeanstalk-us-east-1-123456654321/resources/environments/logs/*"},{"Sid":"eb-af163bf3-d27b-4712-b795-d1e33e331ca4","Effect":"Allow","Principal":{"AWS":"arn:aws:iam::123456654321:role/aws-elasticbeanstalk-ec2-role"},"Action":["s3:ListBucket","s3:ListBucketVersions","s3:GetObject","s3:GetObjectVersion"],"Resource":["arn:aws:s3:::elasticbeanstalk-us-east-1-123456654321","arn:aws:s3:::elasticbeanstalk-us-east-1-123456654321/resources/environments/*"]},{"Sid":"eb-58950a8c-feb6-11e2-89e0-0800277d041b","Effect":"Deny","Principal":{"AWS":"*"},"Action":"s3:DeleteBucket","Resource":"arn:aws:s3:::elasticbeanstalk-us-east-1-123456654321"}]}'
+        Policy: '{"Version":"2008-10-17","Statement":[{"Sid":"Stmt1537431944913","Effect":"Allow","Principal":{"AWS":"arn:aws:iam::00001111122:root"},"Action":["s3:PutObject"],"Resource":["arn:aws:s3:::alqemy-upwork/*"]},{"Sid":"Stmt1537431944211","Effect":"Deny","Principal":"*","Action":"s3:*","Resource":["arn:aws:s3:::alqemy-upwork/*","arn:aws:s3:::alqemy-upwork"],"Condition":{"Bool":{"aws:SecureTransport":"false"}}}]}'
     },
     {
         Policy: '{"Version":"2012-10-17","Id":"ExamplePolicy","Statement":[]}'
+    },
+    {
+        Policy: '{"Version":"2012-10-17","Id":"ExamplePolicy","Statement":[{"Sid":"","Effect":"Allow","Principal":{"AWS":"arn:aws:iam::00000011111:root"},"Action":["s3:PutObject"],"Resource":["arn:aws:s3:::staging-01-sd-logs/*"]},{"Sid":"","Effect":"Deny","Principal":"*","Action":"s3:*","Resource":["arn:aws:s3:::staging-01-sd-logs/*","arn:aws:s3:::staging-01-sd-logs"],"Condition":{"Bool":{"aws:SecureTransport":"true"}}}]}'
     },
 ];
 
@@ -43,6 +46,15 @@ const createCache = (listBuckets, getBucketPolicy) => {
                         data: getBucketPolicy
                     },
                 },
+            },
+            getBucketLocation: {
+                'us-east-1': {
+                    [listBuckets[0].Name]: {
+                        data: {
+                            LocationConstraint: 'us-east-1'
+                        }
+                    }
+                }
             }
         },
     };
@@ -90,6 +102,7 @@ describe('bucketSecureTransportEnabled', function () {
             bucketSecureTransportEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
@@ -99,15 +112,17 @@ describe('bucketSecureTransportEnabled', function () {
             bucketSecureTransportEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
 
         it('should FAIL if S3 bucket does not enforce SSL to secure data in transit', function (done) {
-            const cache = createCache([listBuckets[0]], getBucketPolicy[0]);
+            const cache = createCache([listBuckets[0]], getBucketPolicy[3]);
             bucketSecureTransportEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });

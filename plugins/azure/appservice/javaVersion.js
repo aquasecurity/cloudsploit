@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'Java Version',
     category: 'App Service',
+    domain: 'Application Integration',
     description: 'Ensures the latest version of Java is installed for all App Services',
     more_info: 'Installing the latest version of Java will reduce the security risk of missing security patches.',
     recommended_action: 'Select the latest version of Java for all Java-based App Services',

@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Amazon EBS Public Snapshots',
     category: 'EC2',
+    domain: 'Compute',
     description: 'Ensure that Amazon EBS volume snapshots are not shared to all AWS accounts.',
     more_info: 'AWS Elastic Block Store (EBS) volume snapshots should not be not publicly shared with other AWS account to avoid data exposure.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-modifying-snapshot-permissions.html',

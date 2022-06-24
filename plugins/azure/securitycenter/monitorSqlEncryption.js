@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Monitor SQL Encryption',
     category: 'Security Center',
+    domain: 'Management and Governance',
     description: 'Ensures that Monitor SQL Encryption is enabled in Security Center',
     more_info: 'When this setting is enabled, Security Center will monitor for unencrypted SQL databases, associated backups, and transaction log files.',
     recommended_action: 'Ensure SQL encryption monitoring is configured for SQL databases from the Azure Security Center.',

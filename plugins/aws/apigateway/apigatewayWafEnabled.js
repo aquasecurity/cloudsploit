@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'API Gateway WAF Enabled',
     category: 'API Gateway',
+    domain: 'Availability',
     description: 'Ensures that API Gateway APIs are associated with a Web Application Firewall.',
     more_info: 'API Gateway APIs should be associated with a Web Application Firewall to ensure API security.',
     recommended_action: 'Associate API Gateway API with Web Application Firewall',

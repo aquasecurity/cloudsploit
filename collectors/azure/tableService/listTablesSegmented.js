@@ -13,7 +13,7 @@ module.exports = function(collection, reliesOn, callback) {
         collection['tableService']['listTablesSegmented'][region] = {};
         collection['tableService']['getTableAcl'][region] = {};
 
-        async.eachOf(regionObj, function(subObj, resourceId, sCb) {
+        async.eachOfLimit(regionObj, 5, function(subObj, resourceId, sCb) {
             collection['tableService']['listTablesSegmented'][region][resourceId] = {};
 
             if (subObj && subObj.data && subObj.data.keys && subObj.data.keys[0] && subObj.data.keys[0].value) {
@@ -29,7 +29,7 @@ module.exports = function(collection, reliesOn, callback) {
                         collection['tableService']['listTablesSegmented'][region][resourceId].data = tableResults.entries;
 
                         // Add table ACLs
-                        async.each(tableResults.entries, function(tableName, tableCb){
+                        async.eachLimit(tableResults.entries, 10, function(tableName, tableCb){
                             var tableId = `${resourceId}/tableService/${tableName}`;
                             collection['tableService']['getTableAcl'][region][tableId] = {};
 

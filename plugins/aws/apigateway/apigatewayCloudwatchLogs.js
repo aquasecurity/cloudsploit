@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'API Gateway CloudWatch Logs',
     category: 'API Gateway',
+    domain: 'Availability',
     description: 'Ensures that Amazon API Gateway API stages have Amazon CloudWatch Logs enabled.',
     more_info: 'API Gateway API stages should have Amazon CloudWatch Logs enabled to help debug issues related to request execution or client access to your API.',
     recommended_action: 'Modify API Gateway API stages to enable CloudWatch Logs',

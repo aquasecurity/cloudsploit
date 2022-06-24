@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'XRay Encryption Enabled',
     category: 'XRay',
+    domain: 'Application Integration',
     description: 'Ensures CMK-based encryption is enabled for XRay traces.',
     more_info: 'AWS XRay supports default encryption based on an AWS-managed KMS key as well as encryption using a customer managed key (CMK). For maximum security, the CMK-based encryption should be used.',
     link: 'https://docs.aws.amazon.com/xray/latest/devguide/xray-console-encryption.html',

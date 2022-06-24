@@ -25,6 +25,15 @@ const firewallRules = [
         "kind": "v12.0",
         "startIpAddress": "0.0.0.0",
         "endIpAddress": "0.0.0.0"
+    },
+    {
+        "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Sql/servers/test-server/firewallRules/AllowAllWindowsAzureIps",
+        "name": "AllowAllWindowsAzureIps",
+        "type": "Microsoft.Sql/servers/firewallRules",
+        "location": "East US",
+        "kind": "v12.0",
+        "startIpAddress": "0.0.0.0",
+        "endIpAddress": "255.255.255.255"
     }
 ];
 
@@ -102,6 +111,23 @@ describe('noPublicAccess', function() {
             );
 
             noPublicAccess.run(cache, {}, callback);
+        });
+
+        it('should give failing result if SQL Server firewall end IP setting is enabled and firewall end IP matches the set value', function(done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('SQL Server is open to outside traffic');
+                expect(results[0].region).to.equal('eastus');
+                done()
+            };
+
+            const cache = createCache(
+                servers,
+                [firewallRules[2]]
+            );
+
+            noPublicAccess.run(cache, { server_firewall_end_ip: '255.255.255.255' }, callback);
         });
 
         it('should give passing result if The SQL server is protected from outside traffic', function(done) {

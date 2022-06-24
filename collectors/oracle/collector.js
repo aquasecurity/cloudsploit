@@ -67,6 +67,14 @@ var calls = {
             filterValue: ['compartmentId']
         }
     },
+    cluster: {
+        list: {
+            api: 'oke',
+            restVersion: '/20180222',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId']
+        }
+    }, 
     user: {
         list: {
             api: 'iam',
@@ -285,6 +293,36 @@ var postcalls = {
             reliesOnService: ['group'],
             reliesOnCall: ['list'],
             filterKey: ['compartmentId', 'groupId'],
+            filterValue: ['compartmentId', 'id'],
+            filterConfig: [true, false],
+        }
+    },
+    apiKey: {
+        list: {
+            api: 'iam',
+            reliesOnService: ['user'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'userId'],
+            filterValue: ['compartmentId', 'id'],
+            filterConfig: [true, false],
+        }
+    },
+    authToken: {
+        list: {
+            api: 'iam',
+            reliesOnService: ['user'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'userId'],
+            filterValue: ['compartmentId', 'id'],
+            filterConfig: [true, false],
+        }
+    },
+    customerSecretKey: {
+        list: {
+            api: 'iam',
+            reliesOnService: ['user'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'userId'],
             filterValue: ['compartmentId', 'id'],
             filterConfig: [true, false],
         }

@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'CLB No Instances',
     category: 'CLB',
+    domain: 'Availability',
     description: 'Detects CLBs that have no backend instances attached',
     more_info: 'GCP does not allow for Load Balancers to be configured without backend instances attached.',
     link: 'https://cloud.google.com/load-balancing/docs/load-balancing-overview',
@@ -23,7 +24,7 @@ module.exports = {
 
             if (backendServices.err || !backendServices.data) {
                 helpers.addResult(results, 3, 
-                    'Unable to query backend services: ' + helpers.addError(backendServices), region);
+                    'Unable to query backend services', region, null, null, backendServices.err);
                 return rcb();
             }
 
@@ -40,4 +41,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

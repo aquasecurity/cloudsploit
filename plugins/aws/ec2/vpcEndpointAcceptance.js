@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'VPC PrivateLink Endpoint Acceptance Required',
     category: 'EC2',
+    domain: 'Compute',
     description: 'Ensures VPC PrivateLink endpoints require acceptance',
     more_info: 'VPC PrivateLink endpoints should be configured to require acceptance so that access to the endpoint is controlled on a case-by-case basis.',
     recommended_action: 'Update the VPC PrivateLink endpoint to require acceptance',

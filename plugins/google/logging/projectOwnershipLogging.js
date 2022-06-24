@@ -4,10 +4,11 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Project Ownership Logging',
     category: 'Logging',
+    domain: 'Management and Governance',
     description: 'Ensures that logging and log alerts exist for project ownership assignments and changes',
     more_info: 'Project Ownership is the highest level of privilege on a project, any changes in project ownership should be heavily monitored to prevent unauthorized changes.',
     link: 'https://cloud.google.com/logging/docs/logs-based-metrics/',
-    recommended_action: 'Ensure that log alerts exist for project ownership assignments and changes.',
+    recommended_action: 'Ensure that log metric and alert exist for project ownership assignments and changes.',
     apis: ['metrics:list', 'alertPolicies:list'],
     compliance: {
         pci: 'PCI requires tracking and monitoring of all access to environments ' +
@@ -33,13 +34,13 @@ module.exports = {
 
             if ((metrics.err && metrics.err.length > 0) || !metrics.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for log metrics: ' + helpers.addError(metrics), region);
+                    'Unable to query for log metrics: ' + helpers.addError(metrics), region, null, null, metrics.err);
                 return rcb();
             }
 
             if ((alertPolicies.err && alertPolicies.err.length > 0) || !alertPolicies.data ) {
                 helpers.addResult(results, 3,
-                    'Unable to query for log alert policies: ' + helpers.addError(alertPolicies), region);
+                    'Unable to query for log alert policies: ' + helpers.addError(alertPolicies), region, null, null, alertPolicies.err);
                 return rcb();
             }
 
@@ -55,7 +56,6 @@ module.exports = {
 
             var metricExists = false;
             var metricName = '';
-            var missingMetricStr;
 
             var testMetrics = [
                 '(protoPayload.serviceName="cloudresourcemanager.googleapis.com") AND (ProjectOwnership',
@@ -64,10 +64,11 @@ module.exports = {
                 '(protoPayload.serviceData.policyDelta.bindingDeltas.action="ADD" AND protoPayload.serviceData.policyDelta.bindingDeltas.role="roles/owner")'
             ];
 
-            metrics.data.forEach(metric => {
+            let disabled = false;
+            for (let metric of metrics.data) {
                 if (metric.filter) {
-                    if (metricExists) return;
-                    var checkMetrics = metric.filter.trim().split(' OR ');
+                    if (metricExists) break;
+                    var checkMetrics = metric.filter.trim().replace(/\r|\n/g, '');
                     var missingMetrics = [];
 
                     testMetrics.forEach(testMetric => {
@@ -76,19 +77,20 @@ module.exports = {
                         }
                     });
 
-                    if (missingMetrics.length > 2) {
-                        return;
-                    } else if (missingMetrics.length > 0) {
-                        metricExists = true;
-                        missingMetricStr = missingMetrics.join(', ');
-                    } else if (missingMetrics.length === 0) {
-                        metricExists = true;
-                        metricName = metric.metricDescriptor.type;
+                    if (missingMetrics.length === 0) {
+                        if (metric.disabled) disabled = true;
+                        else {
+                            disabled = false;
+                            metricExists = true;
+                            metricName = metric.metricDescriptor.type;
+                        }
                     }
                 }
-            });
+            }
 
-            if (metricExists && metricName.length) {
+            if (disabled) {
+                helpers.addResult(results, 2, 'Log metric for project ownership changes is disbled', region);
+            } else if (metricExists && metricName.length) {
                 var conditionFound = false;
 
                 alertPolicies.data.forEach(alertPolicy => {
@@ -105,7 +107,7 @@ module.exports = {
                                     helpers.addResult(results, 0, 'Log alert for project ownership changes is enabled', region, alertPolicy.name);
                                 }
                             }
-                        })
+                        });
                     }
                 });
 

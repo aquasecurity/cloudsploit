@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'CodeStar Valid Repository Providers',
     category: 'CodeStar',
+    domain: 'Application Integration',
     description: 'Ensure that CodeStar projects are not using undesired repository providers.',
     more_info: 'CodeStar should use only allowed repository providers in order to follow your organizations\'s security and compliance requirements.',
     link: 'https://docs.aws.amazon.com/codestar/latest/userguide/getting-started.html#getting-started-create',

@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'CloudTrail Bucket Delete Policy',
     category: 'CloudTrail',
+    domain: 'Compliance',
     description: 'Ensures CloudTrail logging bucket has a policy to prevent deletion of logs without an MFA token',
     more_info: 'To provide additional security, CloudTrail logging buckets should require an MFA token to delete objects',
     recommended_action: 'Enable MFA delete on the CloudTrail bucket',
@@ -40,7 +41,7 @@ module.exports = {
             }
 
             async.each(describeTrails.data, function(trail, cb){
-                if (!trail.S3BucketName) return cb();
+                if (!trail.S3BucketName || (trail.HomeRegion && trail.HomeRegion.toLowerCase() !== region)) return cb();
                 // Skip CloudSploit-managed events bucket
                 if (trail.S3BucketName == helpers.CLOUDSPLOIT_EVENTS_BUCKET) return cb();
 

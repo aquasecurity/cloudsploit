@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'SSM Agent Active All Instances',
     category: 'SSM',
+    domain: 'Identity Access and Management',
     description: 'Ensures SSM agents are installed and active on all servers',
     more_info: 'SSM allows for centralized monitoring of all servers and should be activated on all EC2 instances.',
     link: 'https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-setting-up.html',
