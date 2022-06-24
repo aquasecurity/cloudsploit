@@ -21,7 +21,7 @@ describe('serviceLimits', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(3)
-                expect(results[0].message).to.include('Unable to query projects:')
+                expect(results[0].message).to.include('Unable to query projects')
                 expect(results[0].region).to.equal('global')
                 done()
             };

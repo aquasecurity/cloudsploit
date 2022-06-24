@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Redshift Cluster Default Master Username',
     category: 'Redshift',
+    domain: 'Databases',
     description: 'Ensures that Amazon Redshift clusters are not using "awsuser" (default master username) for database access.',
     more_info: 'Amazon Redshift clusters should not use default master username for database access to ensure cluster security.',
     link: 'https://docs.amazonaws.cn/en_us/redshift/latest/gsg/rs-gsg-launch-sample-cluster.html',

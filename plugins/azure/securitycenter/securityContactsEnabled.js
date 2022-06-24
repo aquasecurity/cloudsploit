@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Security Contacts Enabled',
     category: 'Security Center',
+    domain: 'Management and Governance',
     description: 'Ensures that security contact phone number and email address are set',
     more_info: 'Setting security contacts ensures that any security incidents detected by Azure are sent to a security team equipped to handle the incident.',
     recommended_action: 'Ensure that email notifications are configured for the subscription from the Security Center.',

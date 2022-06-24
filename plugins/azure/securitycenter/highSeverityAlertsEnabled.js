@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'High Severity Alerts Enabled',
     category: 'Security Center',
+    domain: 'Management and Governance',
     description: 'Ensures that high severity alerts are properly configured.',
     more_info: 'Enabling high severity alerts ensures that microsoft alerts for potential security issues are sent and allows for quick mitigation of the associated risks.',
     recommended_action: 'Ensure that high severity alerts are configured to be sent.',

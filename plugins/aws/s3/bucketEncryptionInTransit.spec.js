@@ -23,6 +23,15 @@ const createCacheUnparsed = (statement) => {
                     },
                 },
             },
+            getBucketLocation: {
+                'us-east-1': {
+                    mybucket: {
+                        data: {
+                            LocationConstraint: 'us-east-1'
+                        }
+                    }
+                }
+            }
         },
     };
 }
@@ -44,6 +53,26 @@ const createCache = (statement) => {
                                 Version: '2008-10-17',
                                 Statement: statement ? [statement] : [],
                             }),
+                        },
+                    },
+                },
+            },
+            getBucketLocation: {
+                'us-east-1': {
+                    mybucket: {
+                        data: {
+                            LocationConstraint: 'us-east-1'
+                        }
+                    }
+                }
+            },
+            getBucketWebsite: {
+                'us-east-1': {
+                    mybucket: {
+                        data: {
+                            "IndexDocument": {
+                                "Suffix": "index.html"
+                            }
                         },
                     },
                 },
@@ -121,6 +150,15 @@ describe('bucketEncryptionInTransit', function () {
             });
         });
 
+        it('should PASS if s3_unencrypted_static_websites if enabled and bucket has static website hosting enabled', function (done) {
+            const cache = createCache();
+            bucketEncryptionInTransit.run(cache, { s3_allow_unencrypted_static_websites: 'true' }, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
+
         it('should PASS when there are no buckets', function (done) {
             const cache = createCacheNoBuckets();
             bucketEncryptionInTransit.run(cache, {}, (err, results) => {
@@ -146,6 +184,7 @@ describe('bucketEncryptionInTransit', function () {
             bucketEncryptionInTransit.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
@@ -180,6 +219,7 @@ describe('bucketEncryptionInTransit', function () {
             bucketEncryptionInTransit.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
@@ -197,6 +237,7 @@ describe('bucketEncryptionInTransit', function () {
             bucketEncryptionInTransit.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
@@ -214,6 +255,7 @@ describe('bucketEncryptionInTransit', function () {
             bucketEncryptionInTransit.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
@@ -231,6 +273,7 @@ describe('bucketEncryptionInTransit', function () {
             bucketEncryptionInTransit.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
@@ -248,6 +291,7 @@ describe('bucketEncryptionInTransit', function () {
             bucketEncryptionInTransit.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });

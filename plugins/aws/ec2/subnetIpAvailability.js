@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Subnet IP Availability',
     category: 'EC2',
+    domain: 'Compute',
     description: 'Determine if a subnet is at risk of running out of IP addresses',
     more_info: 'Subnets have finite IP addresses. Running out of IP addresses could prevent resources from launching.',
     recommended_action: 'Add a new subnet with larger CIDR block and migrate resources.',
@@ -57,21 +58,25 @@ module.exports = {
             }
 
             for (var i in describeSubnets.data){
-                var subnetSize = helpers.cidrSize(describeSubnets.data[i].CidrBlock);
-                var consumedIPs = subnetSize - describeSubnets.data[i].AvailableIpAddressCount;
-                var percentageConsumed = Math.ceil((consumedIPs / subnetSize) * 100);
-                var subnetArn = 'arn:aws:ec2:' + region + ':' + accountId + ':subnet/' + describeSubnets.data[i].SubnetId;
+                if (describeSubnets.data[i] && describeSubnets.data[i].CidrBlock) {
+                    var subnetSize = helpers.cidrSize(describeSubnets.data[i].CidrBlock);
+                    var consumedIPs = subnetSize - describeSubnets.data[i].AvailableIpAddressCount;
+                    var percentageConsumed = Math.ceil((consumedIPs / subnetSize) * 100);
+                    var subnetArn = 'arn:aws:ec2:' + region + ':' + accountId + ':subnet/' + describeSubnets.data[i].SubnetId;
 
-                var returnMsg = 'Subnet ' + describeSubnets.data[i].SubnetId
-                            + ' is using ' + consumedIPs + ' of '
-                            + subnetSize + ' (' + percentageConsumed + '%) available IPs.';
+                    var returnMsg = 'Subnet ' + describeSubnets.data[i].SubnetId
+                        + ' is using ' + consumedIPs + ' of '
+                        + subnetSize + ' (' + percentageConsumed + '%) available IPs.';
 
-                if (percentageConsumed >= config.subnet_ip_availability_percentage_fail) {
-                    helpers.addResult(results, 2, returnMsg, region, subnetArn, custom);
-                } else if (percentageConsumed >= config.subnet_ip_availability_percentage_warn) {
-                    helpers.addResult(results, 1, returnMsg, region, subnetArn, custom);
+                    if (percentageConsumed >= config.subnet_ip_availability_percentage_fail) {
+                        helpers.addResult(results, 2, returnMsg, region, subnetArn, custom);
+                    } else if (percentageConsumed >= config.subnet_ip_availability_percentage_warn) {
+                        helpers.addResult(results, 1, returnMsg, region, subnetArn, custom);
+                    } else {
+                        helpers.addResult(results, 0, returnMsg, region, subnetArn, custom);
+                    }
                 } else {
-                    helpers.addResult(results, 0, returnMsg, region, subnetArn, custom);
+                    helpers.addResult(results, 3, 'No CIDR data found', region);
                 }
             }
             rcb();

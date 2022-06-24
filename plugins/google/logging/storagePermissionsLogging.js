@@ -4,10 +4,11 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Storage Permissions Logging',
     category: 'Logging',
+    domain: 'Management and Governance',
     description: 'Ensures that logging and log alerts exist for storage permission changes',
     more_info: 'Storage permissions include access to the buckets that store the logs, any changes in storage permissions should be heavily monitored to prevent unauthorized changes.',
     link: 'https://cloud.google.com/logging/docs/logs-based-metrics/',
-    recommended_action: 'Ensure that log alerts exist for storage permission changes.',
+    recommended_action: 'Ensure that log metric and alert for storage permission changes.',
     apis: ['metrics:list', 'alertPolicies:list'],
     compliance: {
         pci: 'PCI requires tracking and monitoring of all access to environments ' +
@@ -34,13 +35,13 @@ module.exports = {
 
             if ((metrics.err && metrics.err.length > 0) || !metrics.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for log metrics: ' + helpers.addError(metrics), region);
+                    'Unable to query for log metrics: ' + helpers.addError(metrics), region, null, null, metrics.err);
                 return rcb();
             }
 
             if ((alertPolicies.err && alertPolicies.err.length > 0) || !alertPolicies.data ) {
                 helpers.addResult(results, 3,
-                    'Unable to query for log alert policies: ' + helpers.addError(alertPolicies), region);
+                    'Unable to query for log alert policies: ' + helpers.addError(alertPolicies), region, null, null, alertPolicies.err);
                 return rcb();
             }
 
@@ -56,25 +57,28 @@ module.exports = {
 
             var metricExists = false;
             var metricName = '';
-            var missingMetricStr;
 
             var testMetrics = 'resource.type=gcs_bucket AND protoPayload.methodName="storage.setIamPermissions"';
 
-
-            metrics.data.forEach(metric => {
+            let disabled = false;
+            for (let metric of metrics.data) {
                 if (metric.filter) {
-                    if (metricExists) return;
+                    if (metricExists) break;
 
                     if (metric.filter.trim() === testMetrics) {
-                        metricExists = true;
-                        metricName = metric.metricDescriptor.type;
-                    } else {
-                        return
+                        if (metric.disabled) disabled = true;
+                        else {
+                            disabled = false;
+                            metricExists = true;
+                            metricName = metric.metricDescriptor.type;
+                        }
                     }
                 }
-            });
+            }
 
-            if (metricExists && metricName.length) {
+            if (disabled) {
+                helpers.addResult(results, 2, 'Log metric for storage permission changes is disbled', region);
+            } else if (metricExists && metricName.length) {
                 var conditionFound = false;
 
                 alertPolicies.data.forEach(alertPolicy => {
@@ -91,7 +95,7 @@ module.exports = {
                                     helpers.addResult(results, 0, 'Log alert for storage permission changes is enabled', region, alertPolicy.name);
                                 }
                             }
-                        })
+                        });
                     }
                 });
 

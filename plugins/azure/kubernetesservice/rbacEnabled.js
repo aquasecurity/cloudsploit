@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'Kubernetes RBAC Enabled',
     category: 'Kubernetes Service',
+    domain: 'Containers',
     description: 'Ensures that RBAC is enabled on all Azure Kubernetes Service instances',
     more_info: 'Role Based Access Control (RBAC) provides greater control and security for Kubernetes clusters and should be enabled on all instances.',
     recommended_action: 'Enable RBAC authentication for all Azure Kubernetes Clusters',

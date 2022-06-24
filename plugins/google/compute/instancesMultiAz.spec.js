@@ -2,25 +2,13 @@ var assert = require('assert');
 var expect = require('chai').expect;
 var plugin = require('./instancesMultiAz');
 
-const createCache = (instanceData, instanceDatab, instanceGroupData, error, iGErr) => {
+const createCache = (instanceData, instanceGroupData, error, iGErr) => {
     return {
         instances: {
             compute: {
                 list: {
                     'us-central1-a': {
                         data: instanceData,
-                        err: error
-                    },
-                    'us-central1-b': {
-                        data: instanceDatab,
-                        err: error
-                    },
-                    'us-central1-c': {
-                        data: instanceDatab,
-                        err: error
-                    },
-                    'us-central1-f': {
-                        data: instanceDatab,
                         err: error
                     }
                 }
@@ -31,6 +19,13 @@ const createCache = (instanceData, instanceDatab, instanceGroupData, error, iGEr
                 'global': {
                     data: instanceGroupData,
                     err: iGErr
+                }
+            }
+        },
+        projects: {
+            get: {
+                'global': {
+                    data: 'testProj'
                 }
             }
         }
@@ -52,7 +47,6 @@ describe('instancesMultiAz', function () {
                 [],
                 null,
                 null,
-                ['error'],
                 ['error']
             );
 
@@ -61,16 +55,16 @@ describe('instancesMultiAz', function () {
         it('should return unknown if an instance error or no data returned', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
-                expect(results[4].status).to.equal(3);
-                expect(results[4].message).to.include('Unable to query instances');
-                expect(results[4].region).to.equal('us-central1');
+                expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query instances');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 
             const cache = createCache(
                 [],
-                null,
-                ['hellooo']
+                [],
+                ['error']
             );
 
             plugin.run(cache, {}, callback);
@@ -79,14 +73,13 @@ describe('instancesMultiAz', function () {
         it('should pass if no VM Instances found', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
-                expect(results[4].status).to.equal(0);
-                expect(results[4].message).to.include('No instances found');
-                expect(results[4].region).to.equal('us-central1');
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No instances found');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 
             const cache = createCache(
-                [],
                 [],
                 [],
                 null,
@@ -99,10 +92,10 @@ describe('instancesMultiAz', function () {
         it('should fail if instances are available in only one zone', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
-                expect(results[4].status).to.equal(2);
-                expect(results[4].message).to.include('These instances are only available in one zone');
-                expect(results[4].region).to.equal('us-central1');
-                done()
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('Instance is available in single zone');
+                expect(results[0].region).to.equal('us-central1');
+                done();
             };
 
             const cache = createCache(
@@ -122,7 +115,6 @@ describe('instancesMultiAz', function () {
                         ]
                     }
                 ],
-                [],
                 {
                     "regions/us-central1": {
                         "warning": {
@@ -1109,12 +1101,12 @@ describe('instancesMultiAz', function () {
             plugin.run(cache, {}, callback);
         });
 
-        it('should pass if the instance groups in the region are highly available', function (done) {
+        it('should pass if the Instance is regional and highly available', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
-                expect(results[4].status).to.equal(0);
-                expect(results[4].message).to.include('The instance groups in the region are highly available');
-                expect(results[4].region).to.equal('us-central1');
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Instance is regional and highly available');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 
@@ -1217,7 +1209,6 @@ describe('instancesMultiAz', function () {
                         "kind": "compute#instance"
                     }
                 ],
-                [],
                 {
                     "regions/us-central1": {
                         "instanceGroups": [

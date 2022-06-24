@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/oracle');
 module.exports = {
     title: 'Default Security List',
     category: 'Networking',
+    domain: 'Network Access Control',
     description: 'Ensure the default security lists block all traffic by default',
     more_info: 'The default security list is often used for resources launched without a defined security list. For this reason, the default rules should be to block all traffic to prevent an accidental exposure.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Network/Concepts/securitylists.htm',

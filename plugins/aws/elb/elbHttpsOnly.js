@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'ELB HTTPS Only',
     category: 'ELB',
+    domain: 'Content Delivery',
     description: 'Ensures ELBs are configured to only accept' + 
                  ' connections on HTTPS ports.',
     more_info: 'For maximum security, ELBs can be configured to only'+

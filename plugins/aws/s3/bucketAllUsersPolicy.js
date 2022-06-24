@@ -3,16 +3,29 @@ var helpers = require('../../../helpers/aws/');
 module.exports = {
     title: 'S3 Bucket All Users Policy',
     category: 'S3',
+    domain: 'Storage',
     description: 'Ensures S3 bucket policies do not allow global write, delete, or read permissions',
     more_info: 'S3 buckets can be configured to allow the global principal to access the bucket via the bucket policy. This policy should be restricted only to known users or accounts.',
     recommended_action: 'Remove wildcard principals from the bucket policy statements.',
     link: 'https://docs.aws.amazon.com/AmazonS3/latest/dev/using-iam-policies.html',
-    apis: ['S3:listBuckets', 'S3:getBucketPolicy'],
+    apis: ['S3:listBuckets', 'S3:getBucketPolicy', 'S3:getBucketLocation'],
     compliance: {
         pci: 'PCI requires that cardholder data can only be accessed by those with ' +
              'a legitimate business need. If PCI-restricted data is stored in S3, ' +
              'those buckets should not enable global user access.'
     },
+    remediation_description: 'Bucket policy will be deleted for affected buckets.',
+    remediation_min_version: '202201131602',
+    apis_remediate: ['S3:listBuckets', 'S3:getBucketLocation'],
+    actions: {
+        remediate: ['S3:deleteBucketPolicy'],
+        rollback: ['S3:putBucketPolicy']
+    },
+    permissions: {
+        remediate: ['s3:DeleteBucketPolicy'],
+        rollback: ['s3:PutBucketPolicy']
+    },
+    realtime_triggers: [],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -41,6 +54,7 @@ module.exports = {
             if (!bucket.Name) continue;
 
             var bucketResource = 'arn:aws:s3:::' + bucket.Name;
+            var bucketLocation = helpers.getS3BucketLocation(cache, region, bucket.Name);
 
             var getBucketPolicy = helpers.addSource(cache, source,
                 ['s3', 'getBucketPolicy', region, bucket.Name]);
@@ -50,13 +64,13 @@ module.exports = {
                 getBucketPolicy.err.code && getBucketPolicy.err.code === 'NoSuchBucketPolicy') {
                 helpers.addResult(results, 0,
                     'No additional bucket policy found',
-                    'global', bucketResource);
+                    bucketLocation, bucketResource);
             } else if (!getBucketPolicy || getBucketPolicy.err ||
                        !getBucketPolicy.data || !getBucketPolicy.data.Policy) {
                 helpers.addResult(results, 3,
                     'Error querying for bucket policy for bucket: ' + bucket.Name +
                     ': ' + helpers.addError(getBucketPolicy),
-                    'global', bucketResource);
+                    bucketLocation, bucketResource);
             } else {
                 try {
                     var policyJson = JSON.parse(getBucketPolicy.data.Policy);
@@ -66,11 +80,11 @@ module.exports = {
                         helpers.addResult(results, 3,
                             'Error querying for bucket policy for bucket: ' + bucket.Name +
                             ': Policy JSON is invalid or does not contain valid statements.',
-                            'global', bucketResource);
+                            bucketLocation, bucketResource);
                     } else if (!policyJson.Statement.length) {
                         helpers.addResult(results, 0,
                             'Bucket policy does not contain any statements',
-                            'global', bucketResource);
+                            bucketLocation, bucketResource);
                     } else {
                         var policyMessage = [];
                         var policyResult = 0;
@@ -115,22 +129,74 @@ module.exports = {
                         if (!policyMessage.length) {
                             helpers.addResult(results, 0,
                                 'Bucket policy does not contain any insecure allow statements',
-                                'global', bucketResource);
+                                bucketLocation, bucketResource);
                         } else {
                             helpers.addResult(results, policyResult,
                                 policyMessage.join(' '),
-                                'global', bucketResource);
+                                bucketLocation, bucketResource);
                         }
                     }
                 } catch (e) {
                     helpers.addResult(results, 3,
                         'Error querying for bucket policy for bucket: ' + bucket.Name +
                         ': Policy JSON could not be parsed.',
-                        'global', bucketResource);
+                        bucketLocation, bucketResource);
                 }
             }
         }
         
         callback(null, results, source);
+    },
+
+    remediate: function(config, cache, settings, resource, callback) {
+        var putCall = this.actions.remediate;
+        var pluginName = 'bucketAllUsersPolicy';
+        var bucketNameArr = resource.split(':');
+        var bucketName = bucketNameArr[bucketNameArr.length - 1];
+
+        // find the location of the bucket needing to be remediated
+        var bucketLocations = cache['s3']['getBucketLocation'];
+        var bucketLocation;
+
+        for (var key in bucketLocations) {
+            if (bucketLocations[key][bucketName]) {
+                bucketLocation = key;
+                break;
+            }
+        }
+
+        // add the location of the bucket to the config
+        config.region = bucketLocation;
+
+        // create the params necessary for the remediation
+        var params = {
+            Bucket: bucketName
+        };
+
+        var remediation_file = settings.remediation_file;
+
+        remediation_file['pre_remediate']['actions'][pluginName][resource] = {
+            'Policy': 'Enabled',
+            'Bucket': bucketName
+        };
+
+        // passes the config, put call, and params to the remediate helper function
+        helpers.remediatePlugin(config, putCall[0], params, function(err) {
+            if (err) {
+                remediation_file['remediate']['actions'][pluginName]['error'] = err;
+                return callback(err, null);
+            }
+
+            let action = params;
+            action.action = putCall;
+
+            remediation_file['post_remediate']['actions'][pluginName][resource] = action;
+            remediation_file['remediate']['actions'][pluginName][resource] = {
+                'Policy': 'Disabled',
+                'Bucket': bucketName
+            };
+            settings.remediation_file = remediation_file;
+            return callback(null, action);
+        });
     }
 };

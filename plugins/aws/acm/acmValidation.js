@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'ACM Certificate Validation',
     category: 'ACM',
+    domain: 'Identity and Access management',
     description: 'ACM certificates should be configured to use DNS validation.',
     more_info: 'With DNS validation, ACM will automatically renew certificates before they expire, as long as the DNS CNAME record is in place.',
     link: 'https://aws.amazon.com/blogs/security/easier-certificate-validation-using-dns-with-aws-certificate-manager/',

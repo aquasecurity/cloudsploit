@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/oracle');
 module.exports = {
     title: 'Bucket Public Access Type',
     category: 'Object Store',
+    domain: 'Storage',
     description: 'Ensures object store buckets do not allow global write, delete, or read permissions',
     more_info: 'Object store buckets can be configured to allow anyone, regardless of whether they are an Oracle cloud user or not, to write objects to a bucket or delete objects. This option should not be configured unless there is a strong business requirement.',
     recommended_action: 'Disable global all users policies on all object store buckets and ensure the bucket is configured with the least privileges.',

@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Automatic OS Upgrades Enabled',
     category: 'Virtual Machines',
+    domain: 'Compute',
     description: 'Ensure that automatic operating system (OS) upgrades are enabled for Microsoft Azure virtual machine scale sets.',
     more_info: 'Enabling automatic OS image upgrades on your scale set helps ease update management by safely and automatically upgrading the OS disk for all instances in the scale set.',
     recommended_action: 'Enable automatic OS upgrades under operating system settings',

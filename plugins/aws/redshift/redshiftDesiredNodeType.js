@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Redshift Desired Node Type',
     category: 'Redshift',
+    domain: 'Databases',
     description: 'Ensures that Amazon Redshift cluster nodes are of given types.',
     more_info: 'Amazon Redshift clusters nodes should be of the given types to ensure the internal compliance and prevent unexpected billing charges.',
     link: 'https://docs.aws.amazon.com/redshift/latest/mgmt/working-with-clusters.html#working-with-clusters-overview',

@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/oracle');
 module.exports = {
     title: 'Empty Groups',
     category: 'Identity',
+    domain: 'Identity and Access Management',
     description: 'Ensures all groups have at least one member.',
     more_info: 'While having empty groups does not present a direct security risk, it does broaden the management landscape which could potentially introduce risks in the future.',
     link: 'https://docs.oracle.com/cd/E10391_01/doc.910/e10360/usergroups.htm',
@@ -50,7 +51,7 @@ module.exports = {
             });
 
             if (users && users.length) {
-                helpers.addResult(results, 0, `Group: ${group.name} contains ' + users.length + ' user(s)`, defaultRegion, group.id);
+                helpers.addResult(results, 0, `Group: ${group.name} contains ${users.length} user(s)`, defaultRegion, group.id);
             } else {
                 helpers.addResult(results, 1, `Group: ${group.name} does not contain any users`, defaultRegion,group.id)
             }

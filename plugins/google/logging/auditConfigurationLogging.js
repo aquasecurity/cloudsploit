@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Audit Configuration Logging',
     category: 'Logging',
+    domain: 'Management and Governance',
     description: 'Ensures that logging and log alerts exist for audit configuration changes.',
     more_info: 'Project Ownership is the highest level of privilege on a project, any changes in audit configuration should be heavily monitored to prevent unauthorized changes.',
     link: 'https://cloud.google.com/logging/docs/logs-based-metrics/',
@@ -32,7 +33,7 @@ module.exports = {
 
             if ((metrics.err && metrics.err.length > 0) || !metrics.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for log metrics: ' + helpers.addError(metrics), region);
+                    'Unable to query for log metrics: ' + helpers.addError(metrics), region, null, null, metrics.err);
                 return rcb();
             }
 
@@ -54,7 +55,6 @@ module.exports = {
 
             var metricExists = false;
             var metricName = '';
-            var missingMetricStr;
 
             var testMetrics = 'protoPayload.methodName="SetIamPolicy" AND protoPayload.serviceData.policyDelta.auditConfigDeltas:*';
 
@@ -67,7 +67,7 @@ module.exports = {
                         metricExists = true;
                         metricName = metric.metricDescriptor.type;
                     } else {
-                       return
+                        return;
                     }
                 }
             });
@@ -89,7 +89,7 @@ module.exports = {
                                     helpers.addResult(results, 0, 'Log alert for audit configuration changes is enabled', region, alertPolicy.name);
                                 }
                             }
-                        })
+                        });
                     }
                 });
 

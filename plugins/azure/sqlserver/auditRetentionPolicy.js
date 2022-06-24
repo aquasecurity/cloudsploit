@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'Audit Retention Policy',
     category: 'SQL Server',
+    domain: 'Databases',
     description: 'Ensures that SQL Server Auditing retention policy is set to greater than 90 days',
     more_info: 'Enabling SQL Server Auditing ensures that all activities are being logged properly, including potentially-malicious activity. Having a long retention policy ensures that all logs are kept for auditing and legal purposes.',
     recommended_action: 'Ensure that the storage account retention policy for each SQL server is set to greater than 90 days.',
@@ -47,7 +48,7 @@ module.exports = {
                     } else {
                         serverBlobAuditingPolicies.data.forEach(serverBlobAuditingPolicy => {
                             if (serverBlobAuditingPolicy.retentionDays &&
-                                serverBlobAuditingPolicy.retentionDays > 90) {
+                                serverBlobAuditingPolicy.retentionDays >= 90) {
                                 helpers.addResult(results, 0, 'Server Auditing retention is greater than 90 days', location, server.id);
                             } else if (serverBlobAuditingPolicy.retentionDays &&
                                 serverBlobAuditingPolicy.retentionDays < 90) {

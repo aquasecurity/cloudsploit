@@ -60,29 +60,7 @@ describe('eksKubernetesVersion', function () {
                   "cluster": {
                     "name": "mycluster",
                     "arn": "arn:aws:eks:us-east-1:012345678911:cluster/mycluster",
-                    "version": "1.10",
-                  }
-                }
-            );
-
-            eks.run(cache, {}, callback);
-        })
-
-        it('should give warning result if EKS cluster is outdated', function (done) {
-            const callback = (err, results) => {
-                expect(results.length).to.equal(1)
-                expect(results[0].status).to.equal(1)
-                expect(results[0].message).to.include('which is currently outdated')
-                done()
-            };
-
-            const cache = createCache(
-                ['mycluster'],
-                {
-                  "cluster": {
-                    "name": "mycluster",
-                    "arn": "arn:aws:eks:us-east-1:012345678911:cluster/mycluster",
-                    "version": "1.12",
+                    "version": "1.15",
                   }
                 }
             );
@@ -104,7 +82,7 @@ describe('eksKubernetesVersion', function () {
                   "cluster": {
                     "name": "mycluster",
                     "arn": "arn:aws:eks:us-east-1:012345678911:cluster/mycluster",
-                    "version": "1.13",
+                    "version": "1.21",
                   }
                 }
             );

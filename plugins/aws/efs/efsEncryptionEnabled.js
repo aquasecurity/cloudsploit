@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'EFS Encryption Enabled',
     category: 'EFS',
+    domain: 'Storage',
     description: 'Ensures that EFS volumes are encrypted at rest',
     more_info: 'EFS offers data at rest encryption using keys managed through AWS Key Management Service (KMS).',
     link: 'https://aws.amazon.com/blogs/aws/new-encryption-at-rest-for-amazon-elastic-file-system-efs/',

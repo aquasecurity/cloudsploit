@@ -40,7 +40,7 @@ const createNullCache = () => {
 
 describe('cloudfrontWafEnabled', function () {
     describe('run', function () {
-        it('should PASS if All CloudFront distributions have WAF enabled', function (done) {
+        it('should PASS if CloudFront distributions has WAF enabled', function (done) {
             const cache = createCache([listDistributions[0]]);
             cloudfrontWafEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -50,7 +50,7 @@ describe('cloudfrontWafEnabled', function () {
             });
         });
 
-        it('should FAIL if The Cloudfront Distribution does not have WAF enabled', function (done) {
+        it('should FAIL if Cloudfront Distribution does not have WAF enabled', function (done) {
             const cache = createCache([listDistributions[1]]);
             cloudfrontWafEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);

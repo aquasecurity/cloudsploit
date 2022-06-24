@@ -2,7 +2,7 @@ var assert = require('assert');
 var expect = require('chai').expect;
 var plugin = require('./instanceLeastPrivilege');
 
-const createCache = (instanceData, instanceDatab, error) => {
+const createCache = (instanceData, error) => {
     return {
         instances: {
             compute: {
@@ -10,19 +10,14 @@ const createCache = (instanceData, instanceDatab, error) => {
                     'us-central1-a': {
                         data: instanceData,
                         err: error
-                    },
-                    'us-central1-b': {
-                        data: instanceDatab,
-                        err: error
-                    },
-                    'us-central1-c': {
-                        data: instanceDatab,
-                        err: error
-                    },
-                    'us-central1-f': {
-                        data: instanceDatab,
-                        err: error
                     }
+                }
+            }
+        },
+        projects: {
+            get: {
+                'global': {
+                    data: 'test-proj'
                 }
             }
         }
@@ -34,16 +29,15 @@ describe('instanceLeastPrivilege', function () {
         it('should return unknown if an instance error or no data returned', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
-                expect(results[4].status).to.equal(3);
-                expect(results[4].message).to.equal('Unable to query instances');
-                expect(results[4].region).to.equal('us-central1');
+                expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.equal('Unable to query compute instances');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 
             const cache = createCache(
                 [],
-                null,
-                ['hellooo']
+                ['error']
             );
 
             plugin.run(cache, {}, callback);
@@ -52,14 +46,13 @@ describe('instanceLeastPrivilege', function () {
         it('should pass no VM Instances', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
-                expect(results[4].status).to.equal(0);
-                expect(results[4].message).to.include('No instances found');
-                expect(results[4].region).to.equal('us-central1');
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No instances found');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 
             const cache = createCache(
-                [],
                 [],
                 null
             );
@@ -70,9 +63,9 @@ describe('instanceLeastPrivilege', function () {
         it('should fail with full access service account', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
-                expect(results[4].status).to.equal(2);
-                expect(results[4].message).to.include('The following service accounts have full access');
-                expect(results[4].region).to.equal('us-central1');
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('Instance Service account has full access');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 
@@ -93,7 +86,6 @@ describe('instanceLeastPrivilege', function () {
                         ]
                     }
                 ],
-                [],
                 null
             );
 
@@ -103,9 +95,9 @@ describe('instanceLeastPrivilege', function () {
         it('should pass with no full access service account', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
-                expect(results[4].status).to.equal(0);
-                expect(results[4].message).to.include('All instance service accounts follow least privilege');
-                expect(results[4].region).to.equal('us-central1');
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Instance Service account follows least privilege');
+                expect(results[0].region).to.equal('us-central1');
                 done()
             };
 

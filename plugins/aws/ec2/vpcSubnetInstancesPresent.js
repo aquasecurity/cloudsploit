@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'VPC Subnet Instances Present',
     category: 'EC2',
+    domain: 'Compute',
     description: 'Ensures that there are instances attached to every subnet.',
     more_info: 'All subnets should have instances associated and unused subnets should be removed to avoid reaching the limit.',
     recommended_action: 'Update VPC subnets and attach instances to it or remove the unused VPC subnets',

@@ -2,6 +2,19 @@ var shared = require(__dirname + '/../shared.js');
 var auth = require(__dirname + '/auth.js');
 var async = require('async');
 
+const defualyPolicyAssignments = {
+    adaptiveApplicationControlsMonitoringEffect: 'AuditIfNotExists',
+    diskEncryptionMonitoringEffect: 'AuditIfNotExists',
+    endpointProtectionMonitoringEffect: 'AuditIfNotExists',
+    identityRemoveExternalAccountWithWritePermissionsMonitoringEffect: 'AuditIfNotExists',
+    disableIPForwardingMonitoringEffect: 'AuditIfNotExists',
+    jitNetworkAccessMonitoringEffect: 'AuditIfNotExists',
+    nextGenerationFirewallMonitoringEffect: 'AuditIfNotExists',
+    identityDesignateLessThanOwnersMonitoringEffect: 'AuditIfNotExists',
+    systemUpdatesMonitoringEffect: 'AuditIfNotExists',
+    systemConfigurationsMonitoringEffect: 'AuditIfNotExists'
+};
+
 function addResult(results, status, message, region, resource, custom) {
     // Override unknown results for known error messages
     if (status == 3 && message && typeof message == 'string') {
@@ -76,7 +89,8 @@ function findOpenPorts(ngs, protocols, service, location, results) {
                             securityRule.properties['direction'] &&
                             securityRule.properties['direction'] === 'Inbound' &&
                             securityRule.properties['protocol'] &&
-                            (securityRule.properties['protocol'] === protocol || securityRule.properties['protocol'] === '*')) {
+                            typeof securityRule.properties['protocol'] == 'string' &&
+                            (securityRule.properties['protocol'].toUpperCase() === protocol || securityRule.properties['protocol'].toUpperCase() === '*')) {
                             if (securityRule.properties['destinationPortRange']) {
                                 if (securityRule.properties['destinationPortRange'].toString().indexOf("-") > -1) {
                                     let portRange = securityRule.properties['destinationPortRange'].split("-");
@@ -176,10 +190,13 @@ function checkPolicyAssignment(policyAssignments, param, text, results, location
         return;
     }
 
-    if (policyAssignment.parameters &&
-        policyAssignment.parameters[param] &&
-        policyAssignment.parameters[param].value &&
-        (policyAssignment.parameters[param].value == 'AuditIfNotExists' || policyAssignment.parameters[param].value == 'Audit')) {
+    const policyAssignmentStatus = (policyAssignment.parameters && policyAssignment.parameters[param] && policyAssignment.parameters[param].value) ||
+    defualyPolicyAssignments[param] || '';
+
+    if (!policyAssignmentStatus.length) {
+        addResult(results, 0,
+            text + ' is no supported', location, policyAssignment.id);
+    } else if (policyAssignmentStatus == 'AuditIfNotExists' || policyAssignmentStatus == 'Audit') {
         addResult(results, 0,
             text + ' is enabled', location, policyAssignment.id);
     } else {
@@ -226,17 +243,22 @@ function checkLogAlerts(activityLogAlerts, conditionResource, text, results, loc
             allConditions.allOf.forEach(condition => {
                 if (condition.field && (condition.field === 'resourceType') && (condition.equals && (condition.equals.toLowerCase() === conditionResource))) {
                     alertCreateDeleteEnabled = (!alertCreateDeleteEnabled && activityLogAlertResource.enabled ? true : alertCreateDeleteEnabled);
-                } else if (condition.equals.toLowerCase().indexOf(conditionResource + '/write') > -1) {
+                } else if (condition.equals && condition.equals.toLowerCase().indexOf(conditionResource + '/write') > -1) {
                     alertCreateUpdateEnabled = (!alertCreateUpdateEnabled && activityLogAlertResource.enabled ? true : alertCreateUpdateEnabled);
-                } else
-                if (condition.equals.toLowerCase().indexOf(conditionResource + '/delete') > -1) {
+                } else if (condition.equals && condition.equals.toLowerCase().indexOf(conditionResource + '/delete') > -1) {
                     alertDeleteEnabled = (!alertDeleteEnabled && activityLogAlertResource.enabled ? true : alertDeleteEnabled);
                 }
             })
         }
     }
 
-    if ((alertCreateDeleteEnabled && alertDeleteEnabled && alertCreateUpdateEnabled) ||
+    if (conditionResource == 'microsoft.security/policies' && alertCreateUpdateEnabled) {
+        addResult(results, 0,
+            `Log Alert for ${text} write/update is enabled`, location, subscriptionId);
+    } else if (conditionResource == 'microsoft.security/policies' && !alertCreateUpdateEnabled) {
+        addResult(results, 2,
+            `Log Alert for ${text} write/update is not enabled`, location, subscriptionId);
+    } else if ((alertCreateDeleteEnabled && alertDeleteEnabled && alertCreateUpdateEnabled) ||
         (alertCreateUpdateEnabled && alertDeleteEnabled) ||
         (alertCreateDeleteEnabled && !alertDeleteEnabled && !alertCreateUpdateEnabled)) {
         addResult(results, 0,

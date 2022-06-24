@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'SQL Server Automatic Tuning Enabled',
     category: 'SQL Server',
+    domain: 'Databases',
     description: 'Ensures that Microsoft Azure SQL servers have automatic tuning configured.',
     more_info: 'Automatic tuning is a fully managed intelligent performance service that uses built-in intelligence to continuously monitor queries executed on a database, and it automatically improves their performance.',
     recommended_action: 'Modify SQL server to enable automatic tuning',

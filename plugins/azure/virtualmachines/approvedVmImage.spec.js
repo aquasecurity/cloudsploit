@@ -67,23 +67,23 @@ describe('approvedVmImage', function() {
             });
         });
 
-        it('should give passing result if VM is launced using Azure managed VM image', function(done) {
+        it('should give passing result if VM is launched using Azure managed VM image', function(done) {
             const cache = createCache([virtualMachines[0]]);
             approvedVmImage.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('VM is launced using Azure managed VM image');
+                expect(results[0].message).to.include('VM is launched using Azure managed VM image');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
         });
 
-        it('should give failing result if VM is not launced using Azure managed VM image', function(done) {
+        it('should give failing result if VM is not launched using Azure managed VM image', function(done) {
             const cache = createCache([virtualMachines[1]]);
             approvedVmImage.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('VM is not launced using Azure managed VM image');
+                expect(results[0].message).to.include('VM is not launched using Azure managed VM image');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

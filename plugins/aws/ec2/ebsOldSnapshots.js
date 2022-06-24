@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'EBS Volumes Too Old Snapshots',
     category: 'EC2',
+    domain: 'Compute',
     description: 'Ensure that EBS volume snapshots are deleted after defined time period.',
     more_info: 'EBS volume snapshots older than indicated should be deleted after defined time period for cost optimization.',
     link: 'https://docs.amazonaws.cn/en_us/AWSEC2/latest/UserGuide/ebs-deleting-snapshot.html',
@@ -53,7 +54,6 @@ module.exports = {
             }
 
             var now = new Date();
-            var oldSnapshots = [];
             describeSnapshots.data.forEach(snapshot => {
                 if (!snapshot.SnapshotId) return;
 
@@ -62,22 +62,14 @@ module.exports = {
                 var difference = helpers.daysBetween(then, now);
 
                 if (Math.abs(difference) > config.ebs_snapshot_life) {
-                    oldSnapshots.push(resource);
+                    helpers.addResult(results, 2,
+                        `EBS snapshots is ${config.ebs_snapshot_life} days old`, region, resource);
+                } else {
+                    helpers.addResult(results, 0,
+                        'No old EBS snapshots found', region, resource);
                 }
             });
 
-            if (oldSnapshots.length > config.ebs_result_limit) {
-                helpers.addResult(results, 2,
-                    `More than ${config.ebs_result_limit} EBS snapshots are too old`, region);
-            } else if (oldSnapshots.length) {
-                for (var o in oldSnapshots) {
-                    helpers.addResult(results, 2,
-                        `EBS snapshot is more than ${config.ebs_snapshot_life} days old`, region, oldSnapshots[o]);
-                }
-            } else {
-                helpers.addResult(results, 0,
-                    'No old EBS snapshots found', region);
-            }
 
             rcb();
         }, function(){

@@ -3,6 +3,7 @@ var helpers = require('../../../helpers/oracle');
 module.exports = {
     title: 'File Storage Policy Protection',
     category: 'File Storage',
+    domain: 'Storage',
     description: 'Ensures policy statements have deletion protection for file storage services unless it is an administrator group.',
     more_info: 'Adding deletion protection to Oracle file storage policies mitigates unintended deletion of file storage services by unauthorized users or groups.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Security/Reference/filestorage_security.htm',

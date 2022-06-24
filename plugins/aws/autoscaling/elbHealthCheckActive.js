@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'ELB Health Check Active',
     category: 'AutoScaling',
+    domain: 'Availability',
     description: 'Ensures all Auto Scaling groups have ELB health check active.',
     more_info: 'Auto Scaling groups should have ELB health checks active to replace unhealthy instances in time.',
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-add-elb-healthcheck.html',

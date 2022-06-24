@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'SNS Topic Encrypted',
     category: 'SNS',
+    domain: 'Application Integration',
     description: 'Ensures that Amazon SNS topics enforce Server-Side Encryption (SSE)',
     more_info: 'SNS topics should enforce Server-Side Encryption (SSE) to secure data at rest. SSE protects the contents of messages in Amazon SNS topics using keys managed in AWS Key Management Service (AWS KMS).',
     recommended_action: 'Enable Server-Side Encryption to protect the content of SNS topic messages.',

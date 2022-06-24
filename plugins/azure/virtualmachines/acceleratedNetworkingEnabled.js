@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Accelerated Networking Enabled',
     category: 'Virtual Machines',
+    domain: 'Compute',
     description: 'Ensures that accelerated networking is enabled on Azure virtual machines(VM).',
     more_info: 'Accelerated networking enables single root I/O virtualization (SR-IOV) to a VM, greatly improving its networking performance.',
     recommended_action: 'Enable accelerated networking in virtual machine network interfaces',

@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/oracle/');
 module.exports = {
     title: 'Open SQLServer',
     category: 'Networking',
+    domain: 'Network Access Control',
     description: 'Determine if TCP port 1433 or UDP port 1434 for SQL Server is open to ' +
         'the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the ' +

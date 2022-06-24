@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'SSM Encrypted Parameters',
     category: 'SSM',
+    domain: 'Identity Access and Management',
     description: 'Ensures SSM Parameters are encrypted',
     more_info: 'SSM Parameters should be encrypted. This allows their values to be used by approved systems, while restricting access to other users of the account.',
     link: 'https://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-paramstore-about.html#sysman-paramstore-securestring',

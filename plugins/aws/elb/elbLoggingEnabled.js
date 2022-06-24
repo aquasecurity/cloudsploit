@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'ELB Logging Enabled',
     category: 'ELB',
+    domain: 'Content Delivery',
     description: 'Ensures load balancers have request logging enabled.',
     more_info: 'Logging requests to ELB endpoints is a helpful way ' + 
                 'of detecting and investigating potential attacks, ' + 

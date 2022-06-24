@@ -1,4 +1,4 @@
-[<img src="https://cloudsploit.com/images/logos/cloudsploit_by_aqua_A02.png" height="130">](https://cloud.aquasec.com/signup)
+[<img src="https://cloudsploit.com/images/logos/cloudsploit_by_aqua_2021.png" height="130">](https://cloud.aquasec.com/signup)
 
 [![Build Status](https://travis-ci.com/aquasecurity/cloudsploit.svg?branch=master)](https://travis-ci.com/aquasecurity/cloudsploit)
 
@@ -39,7 +39,7 @@ $ docker run -e AWS_ACCESS_KEY_ID=XX -e AWS_SECRET_ACCESS_KEY=YY cloudsploit:0.0
   + [CloudSploit Config File](#cloudsploit-config-file)
   + [Credential Files](#credential-files)
     + [AWS](#aws)
-    + [Azure](#azur)
+    + [Azure](#azure)
     + [GCP](#gcp)
     + [Oracle OCI](#oracle-oci)
   + [Environment Variables](#environment-variables)

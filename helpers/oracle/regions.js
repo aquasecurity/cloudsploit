@@ -2,6 +2,7 @@
 
 var regions = [
     'us-ashburn-1',
+    'il-jerusalem-1',
     'us-phoenix-1',
     'eu-frankfurt-1',
     'uk-london-1',
@@ -13,6 +14,24 @@ var regions = [
     'sa-saopaulo-1',
     'ap-osaka-1',
     'eu-zurich-1',
+    'ap-melbourne-1',
+    'sa-vinhedo-1',
+    'ca-montreal-1',
+    'sa-santiago-1',
+    'ap-hyderabad-1',
+    'eu-amsterdam-1',
+    'me-jeddah-1',
+    'ap-chuncheon-1',
+    'me-dubai-1',
+    'uk-cardiff-1',
+    'us-sanjose-1',
+    'eu-marseille-1',
+    'il-jerusalem-1',
+    'eu-milan-1',
+    'ap-singapore-1',
+    'eu-amsterdam-1',
+    'af-johannesburg-1',
+    'eu-stockholm-1'
 ];
 
 module.exports = {
@@ -54,5 +73,9 @@ module.exports = {
     configuration: ['default'],
     dbSystem: regions,
     mountTarget: regions,
-    namespace: regions
+    namespace: regions,
+    apiKey: ['default'],
+    authToken: ['default'],
+    customerSecretKey: ['default'],
+    cluster: regions,
 };

@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'CodeBuild Valid Source Providers',
     category: 'CodeBuild',
+    domain: 'Application Integration',
     description: 'Ensure that CodeBuild projects are using only valid source providers.',
     more_info: 'CodeBuild should use only desired source providers in order to follow your organizations\'s security and compliance requirements.',
     link: 'https://docs.aws.amazon.com/codebuild/latest/APIReference/API_ProjectSource.html',

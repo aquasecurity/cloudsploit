@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'GuardDuty is Enabled',
     category: 'GuardDuty',
+    domain: 'Management and Governance',
     description: 'Ensures GuardDuty is enabled',
     more_info: 'GuardDuty provides threat intelligence by analyzing several AWS data sources for security risks and should be enabled in all accounts.',
     recommended_action: 'Enable GuardDuty for all AWS accounts.',

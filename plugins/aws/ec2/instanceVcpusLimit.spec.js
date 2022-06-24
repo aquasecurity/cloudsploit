@@ -1,4 +1,3 @@
-var assert = require('assert');
 var expect = require('chai').expect;
 var instanceLimit = require('./instanceVcpusLimit')
 
@@ -630,75 +629,14 @@ const serviceQuotas = [
     }
 ];
 
-const accountAttributes = [
-    {
-        "AttributeName": "supported-platforms",
-        "AttributeValues": [
-            {
-                "AttributeValue": "VPC"
-            }
-        ]
-    },
-    {
-        "AttributeName": "vpc-max-security-groups-per-interface",
-        "AttributeValues": [
-            {
-                "AttributeValue": "5"
-            }
-        ]
-    },
-    {
-        "AttributeName": "max-elastic-ips",
-        "AttributeValues": [
-            {
-                "AttributeValue": "5"
-            }
-        ]
-    },
-    {
-        "AttributeName": "max-instances",
-        "AttributeValues": [
-            {
-                "AttributeValue": "20"
-            }
-        ]
-    },
-    {
-        "AttributeName": "vpc-max-elastic-ips",
-        "AttributeValues": [
-            {
-                "AttributeValue": "5"
-            }
-        ]
-    },
-    {
-        "AttributeName": "default-vpc",
-        "AttributeValues": [
-            {
-                "AttributeValue": "vpc-3baa5252"
-            }
-        ]
-    }
-];
-
 const createCache = (instances) => {
     return {
         ec2: {
             describeInstances: {
                 'us-east-1': {
                     data: [{
-                        Instances: instances['us-east-1']
+                        Instances: instances
                     }],
-                },
-                'eu-north-1': {
-                    data: [{
-                        Instances: instances['eu-north-1']
-                    }],
-                },
-            },
-            describeAccountAttributes: {
-                'eu-north-1': {
-                    data: accountAttributes
                 }
             }
         },
@@ -899,6 +837,33 @@ const createNullServiceQuotaCache = (instances) => {
 
 describe('instanceLimit', function () {
     describe('run', function () {
+        it('should PASS if account contains instances less than the defined warn percentage', function (done) {
+            const cache = createCache([oneInstance]);
+            instanceLimit.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
+
+        it('should WARN if account contains instances within the defined warn percentage', function (done) {
+            const cache = createCache([oneInstance]);
+            instanceLimit.run(cache, { instance_limit_percentage_warn: '1' }, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(1);
+                done();
+            });
+        });
+
+        it('should FAIL if elastic ip usage is more than the defined fail percentage', function (done) {
+            const cache = createCache([oneInstance]);
+            instanceLimit.run(cache, { instance_limit_percentage_fail: '1' }, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                done();
+            });
+        });
+
         it('should PASS if there are no instances', function (done) {
             const cache = createEmptyInstancesCache([]);
             instanceLimit.run(cache, {}, (err, results) => {
@@ -973,203 +938,6 @@ describe('instanceLimit', function () {
                 expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(3);
                 expect(results[1].status).to.equal(3);
-                done();
-            });
-        });
-
-        it('should return a value even if empty account attributes data (use default limit), notify user', function (done) {
-            var instances = [];
-            instances['eu-north-1'] = [];
-
-            for (i=0;i<10;i++){
-                instances['eu-north-1'].push(oneInstance);
-            }
-
-            const cache = createEmptyAccountAttributesCache(instances);
-
-            instanceLimit.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(2);
-                expect(results[0].status).to.equal(3);
-                expect(results[1].status).to.equal(0);
-                done();
-            });
-        });
-
-        it('should return a value even if error account attributes data (use default limit), notify user', function (done) {
-            var instances = [];
-            instances['eu-north-1'] = [];
-
-            for (i=0;i<10;i++){
-                instances['eu-north-1'].push(oneInstance);
-            }
-
-            const cache = createErrorAccountAttributesCache(instances);
-
-            instanceLimit.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(2);
-                expect(results[0].status).to.equal(3);
-                expect(results[1].status).to.equal(0);
-                done();
-            });
-        });
-
-        it('should return a value even if null account attributes data (use default limit), notify user', function (done) {
-            var instances = [];
-            instances['eu-north-1'] = [];
-
-            for (i=0;i<10;i++){
-                instances['eu-north-1'].push(oneInstance);
-            }
-
-            const cache = createNullAccountAttributesCache(instances);
-
-            instanceLimit.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(2);
-                expect(results[0].status).to.equal(3);
-                expect(results[1].status).to.equal(0);
-                done();
-            });
-        });
-
-        it('Low Usage: should PASS if instances usage is less than the Instance Limit Percentage Fail', function (done) {
-            var instances = [];
-            instances['eu-north-1'] = [];
-            instances['us-east-1'] = [];
-
-            for (i=0;i<10;i++){
-                instances['eu-north-1'].push(oneInstance);
-                instances['us-east-1'].push(oneInstance);
-            }
-
-            const cache = createCache(instances);
-
-            instanceLimit.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(2);
-                expect(results[0].status).to.equal(0);
-                expect(results[1].status).to.equal(0);
-                done();
-            });
-        });
-
-        it('Medium Usage: should WARN if instances usage is more than the Instance Limit Percentage Warn', function (done) {
-            var instances = [];
-            instances['eu-north-1'] = [];
-            instances['us-east-1'] = [];
-
-            for (i=0;i<17;i++){
-                instances['eu-north-1'].push(oneInstance);
-            }
-
-            for (i=0;i<27;i++){
-                instances['us-east-1'].push(oneInstance);
-            }
-
-            const cache = createCache(instances);
-
-            instanceLimit.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(2);
-                expect(results[0].status).to.equal(1);
-                expect(results[1].status).to.equal(1);
-                done();
-            });
-        });
-
-        it('Medium Usage: should FAIL for legacy region, PASS for vCPU region', function (done) {
-            var instances = [];
-            instances['eu-north-1'] = [];
-            instances['us-east-1'] = [];
-
-            for (i=0;i<20;i++){
-                instances['eu-north-1'].push(oneInstance);
-                instances['us-east-1'].push(oneInstance);
-            }
-
-            const cache = createCache(instances);
-
-            instanceLimit.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(2);
-                expect(results[0].status).to.equal(0);
-                expect(results[1].status).to.equal(2);
-                done();
-            });
-        });
-
-        it('High Usage: should FAIL if instances usage is more than the Instance Limit Percentage Fail', function (done) {
-            var instances = [];
-            instances['eu-north-1'] = [];
-            instances['us-east-1'] = [];
-
-            for (i=0;i<20;i++){
-                instances['eu-north-1'].push(oneInstance);
-            }
-
-            for (i=0;i<34;i++){
-                instances['us-east-1'].push(oneInstance);
-            }
-
-            const cache = createCache(instances);
-
-            instanceLimit.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(2);
-                expect(results[0].status).to.equal(2);
-                expect(results[1].status).to.equal(2);
-                done();
-            });
-        });
-
-        it('High Usage: should FAIL for legacy region, PASS for vCPU region', function (done) {
-            var instances = [];
-            instances['eu-north-1'] = [];
-            instances['us-east-1'] = [];
-
-            for (i=0;i<20;i++){
-                instances['eu-north-1'].push(oneInstance);
-            }
-
-            for (i=0;i<17;i++){
-                instances['us-east-1'].push(oneInstance);
-            }
-
-            const cache = createCache(instances);
-
-            instanceLimit.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(2);
-                expect(results[0].status).to.equal(0);
-                expect(results[1].status).to.equal(2);
-                done();
-            });
-        });
-
-        it('High Usage: should FAIL for all vCPU regions and PASS for legacy region', function (done) {
-            var instances = [];
-            instances['eu-north-1'] = [];
-            instances['us-east-1'] = [];
-
-            for (i=0;i<10;i++){
-                instances['eu-north-1'].push(oneInstance);
-            }
-
-            for (i=0;i<30;i++){
-                instances['us-east-1'].push(oneInstance);
-            }
-
-            var instanceTemplateString = JSON.stringify(oneInstance);
-            var f5Instance = JSON.parse(instanceTemplateString);
-            f5Instance.InstanceType = 'f5.large';
-            f5Instance.CpuOptions.CoreCount = 6;
-            f5Instance.CpuOptions.ThreadsPerCore = 9;
-
-            for (i=0;i<5;i++){
-                instances['us-east-1'].push(f5Instance);
-            }
-
-            const cache = createCache(instances);
-
-            instanceLimit.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(3);
-                expect(results[0].status).to.equal(2);
-                expect(results[1].status).to.equal(2);
-                expect(results[2].status).to.equal(0);
                 done();
             });
         });

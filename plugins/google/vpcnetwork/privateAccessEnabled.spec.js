@@ -11,6 +11,13 @@ const createCache = (err, data) => {
                     data: data
                 }
             }
+        },
+        projects: {
+            get: {
+                'global': {
+                    data: 'testproj'
+                }
+            }
         }
     }
 };
@@ -53,7 +60,7 @@ describe('privateAccessEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('All Subnets in the Region have Private Google Access Enabled')
+                expect(results[0].message).to.include('Subnet has Private Google Access Enabled')
                 expect(results[0].region).to.equal('us-east1')
                 done()
             };
@@ -91,7 +98,7 @@ describe('privateAccessEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('The following Subnets do not have Private Google Access Enabled')
+                expect(results[0].message).to.include('Subnet does not have Private Google Access Enabled')
                 expect(results[0].region).to.equal('us-east1')
                 done()
             };

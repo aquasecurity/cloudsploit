@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Empty AutoScaling Group',
     category: 'AutoScaling',
+    domain: 'Availability',
     description: 'Ensures all autoscaling groups contain at least 1 instance.',
     more_info: 'AutoScaling groups that are no longer in use should be deleted to prevent accidental use.',
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/AutoScalingGroup.html',
