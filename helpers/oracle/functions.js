@@ -19,7 +19,6 @@ var ipProtocol = {
 };
 
 function findOpenPorts(groups, ports, service, region, results, isSecurityRule, securityGroups) {
-    var found = false;
     if (isSecurityRule) {
         for (var p in groups) {
             var messages = [];
@@ -44,7 +43,6 @@ function findOpenPorts(groups, ports, service, region, results, isSecurityRule, 
                         var message = portIndex.toUpperCase() +
                             ' port ' + port + ' open to 0.0.0.0/0';
                         if (messages.indexOf(message) === -1) messages.push(message);
-                        found = true;
                     }
                 }
             } else if (permission.isValid &&
@@ -67,7 +65,6 @@ function findOpenPorts(groups, ports, service, region, results, isSecurityRule, 
                         var message = portIndex.toUpperCase() +
                             ' port ' + port + ' open to 0.0.0.0/0';
                         if (messages.indexOf(message) === -1) messages.push(message);
-                        found = true;
                     }
                 }
             }
@@ -92,7 +89,6 @@ function findOpenPorts(groups, ports, service, region, results, isSecurityRule, 
                         var message = portIndex.toUpperCase() +
                             ' port ' + port + ' open to ::/0';
                         if (messages.indexOf(message) === -1) messages.push(message);
-                        found = true;
                     }
                 }
             } else if (permission.isValid &&
@@ -115,7 +111,6 @@ function findOpenPorts(groups, ports, service, region, results, isSecurityRule, 
                         var message = portIndex.toUpperCase() +
                             ' port ' + port + ' open to ::/0';
                         if (messages.indexOf(message) === -1) messages.push(message);
-                        found = true;
                     }
                 }
             }
@@ -154,7 +149,6 @@ function findOpenPorts(groups, ports, service, region, results, isSecurityRule, 
                             var message = portIndex.toUpperCase() +
                                 ' port ' + port + ' open to 0.0.0.0/0';
                             if (messages.indexOf(message) === -1) messages.push(message);
-                            found = true;
                         }
                     }
                 } else if (permission.udpOptions && permission.source === '0.0.0.0/0') {
@@ -171,7 +165,6 @@ function findOpenPorts(groups, ports, service, region, results, isSecurityRule, 
                             var message = portIndex.toUpperCase() +
                                 ' port ' + port + ' open to 0.0.0.0/0';
                             if (messages.indexOf(message) === -1) messages.push(message);
-                            found = true;
                         }
                     }
                 }
@@ -190,7 +183,6 @@ function findOpenPorts(groups, ports, service, region, results, isSecurityRule, 
                             var message = portIndex.toUpperCase() +
                                 ' port ' + port + ' open to ::/0';
                             if (messages.indexOf(message) === -1) messages.push(message);
-                            found = true;
                         }
                     }
                 } else if (permission.udpOptions && permission.source === '::/0') {
@@ -207,7 +199,6 @@ function findOpenPorts(groups, ports, service, region, results, isSecurityRule, 
                             var message = portIndex.toUpperCase() +
                                 ' port ' + port + ' open to ::/0';
                             if (messages.indexOf(message) === -1) messages.push(message);
-                            found = true;
                         }
                     }
                 }
@@ -219,17 +210,14 @@ function findOpenPorts(groups, ports, service, region, results, isSecurityRule, 
                     ' has ' + service + ': ' + messages.join(' and '), region,
                     resource);
             }
-
+            else {
+                shared.addResult(results, 0,
+                    'The Security List: ' + sgroups.displayName +
+                    ' does not have ' + service + ' port open', region,
+                    resource);
+            }
         }
     }
-    if (!found &&
-        isSecurityRule) {
-        shared.addResult(results, 0, 'No open ports found in Network Security Groups', region);
-    } else {
-        shared.addResult(results, 0, 'No open ports found in Security Lists', region);
-
-    }
-
     return;
 }
 

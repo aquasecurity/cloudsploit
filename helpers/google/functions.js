@@ -79,7 +79,6 @@ function findOpenPorts(ngs, protocols, service, location, results, cache, source
     }
 
     var project = projects.data[0].name;
-    let found = false;
     for (let sgroups of ngs) {
         let strings = [];
         let resource = createResourceName('firewalls', sgroups.name, project, 'global');
@@ -109,13 +108,11 @@ function findOpenPorts(ngs, protocols, service, location, results, cache, source
                                             var string = `` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
                                                 ` port ` + port + ` open to ` + sourcefilter; strings.push(string);
                                             if (strings.indexOf(string) === -1) strings.push(string);
-                                            found = true;
                                         }
                                     } else if (parseInt(portRange) === port) {
                                         var string = `` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
                                             ` port ` + port + ` open to ` + sourcefilter;
                                         if (strings.indexOf(string) === -1) strings.push(string);
-                                        found = true;
                                     }
                                 });
                             }
@@ -130,10 +127,12 @@ function findOpenPorts(ngs, protocols, service, location, results, cache, source
                 ') has ' + service + ': ' + strings.join(' and '), location,
                 resource);
         }
-    }
-
-    if (!found) {
-        shared.addResult(results, 0, 'No public open ports found', location);
+        else {
+            shared.addResult(results, 0,
+                'Firewall Rule:(' + sgroups.name +
+                ') does not have ' + service + ' port open ' , location,
+                resource);
+        }
     }
 }
 
