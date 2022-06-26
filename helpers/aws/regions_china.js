@@ -117,5 +117,6 @@ module.exports = {
     voiceid: regions,
     appmesh: regions,
     frauddetector: regions,
+    computeoptimizer: ['cn-north-1'],
     appconfig: regions
 };

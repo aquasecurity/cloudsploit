@@ -192,6 +192,12 @@ var calls = {
             paginate: 'nextToken'
         }
     },
+    ComputeOptimizer: {
+        getRecommendationSummaries : {
+            property: 'recommendationSummaries',
+            paginate: 'nextToken'
+        }
+    },
     Comprehend: {
         listEntitiesDetectionJobs: {
             property: 'EntitiesDetectionJobPropertiesList',
