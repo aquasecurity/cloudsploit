@@ -698,6 +698,12 @@ var calls = {
             override: true
         }
     },
+    Imagebuilder: {
+        listImagePipelines: {
+            property: 'imagePipelineList',
+            paginate: 'nextToken'
+        }
+    },
     IoTSiteWise: {
         describeDefaultEncryptionConfiguration: {
         }
