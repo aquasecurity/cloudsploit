@@ -5,7 +5,7 @@ module.exports = {
     title: 'EBS Volumes Optimized',
     category: 'Compute Optimizer',
     domain: 'Management and Governance',
-    description: 'Ensure that Compute Optimizer EBS volume recommendations are in order to take the actions to optimize Amazon EBS volumes that are under-performing.',
+    description: 'Ensure that Compute Optimizer EBS volume recommendations are enabled.',
     more_info: 'An EBS volume is considered optimized when Compute Optimizer determines that the volume is correctly provisioned to run your workload, based on the chosen volume type, volume size, and IOPS specification. For optimized resources, Compute Optimizer might sometimes recommend a new generation volume type.',
     link: 'https://docs.aws.amazon.com/compute-optimizer/latest/ug/view-ebs-recommendations.html',
     recommended_action: 'Enable Compute Optimizer Opt In options for EBS volume recommendations',
@@ -49,7 +49,7 @@ module.exports = {
                 
                 if (!notOptimized.value  && !optimized.value){
                     helpers.addResult(results, 0,
-                        'EBS volumes have no recommendations enabled', region);
+                        'No recommendations found for EBS volumes', region);
                 } else if (notOptimized.value){
                     helpers.addResult(results, 2,
                         `EBS volumes are not optimized,  NOT_OPTIMIZED: ${notOptimized.value}`, region);
@@ -59,7 +59,7 @@ module.exports = {
                 }
             } else {
                 helpers.addResult(results, 2,
-                    'No EBS volumes configured', region);
+                    'Recommendation summaries are not configured for EBS Volumes', region);
             }
 
             rcb();

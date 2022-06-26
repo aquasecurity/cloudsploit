@@ -102,13 +102,13 @@ describe('ebsVolumesOptimized', function () {
             });
         });
 
-        it('should PASS if EBS volumes have no recommendations enabled', function (done) {
+        it('should PASS if EBS volumes have no recommendations found for EBS volumes', function (done) {
             const cache = createCache([getRecommendationSummaries[2]]);
             ebsVolumesOptimized.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('EBS volumes have no recommendations enabled');
+                expect(results[0].message).to.include('No recommendations found for EBS volumes');
                 done();
             });
         });
