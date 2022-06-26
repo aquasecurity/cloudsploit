@@ -99,7 +99,7 @@ describe('mskClusterPublicAccess', function () {
             mskClusterPublicAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('MSK cluster has public access enabled');
+                expect(results[0].message).to.include('MSK cluster is not publicly accessible');
                 done();
             });
         });
@@ -109,7 +109,7 @@ describe('mskClusterPublicAccess', function () {
             mskClusterPublicAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('MSK cluster does not have public access enabled');
+                expect(results[0].message).to.include('MSK cluster is not publicly accessible');
                 done();
             });
         });
