@@ -109,7 +109,7 @@ describe('ec2InstancesOptimized', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('EC2 instances are not optimized');
+                expect(results[0].message).to.include('over-provisioned EC2 instances');
                 done();
             });
         });
@@ -125,13 +125,13 @@ describe('ec2InstancesOptimized', function () {
             });
         });
 
-        it('should PASS if Optimization for summaries is not configured', function (done) {
+        it('should PASS if no Compute Optimizer recommendation summaries found', function (done) {
             const cache = createCache([]);
             ec2InstancesOptimized.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Optimization for summaries is not configured');
+                expect(results[0].message).to.include('No Compute Optimizer recommendation summaries found');
                 done();
             });
         });
