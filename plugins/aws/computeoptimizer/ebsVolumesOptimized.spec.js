@@ -113,7 +113,7 @@ describe('ebsVolumesOptimized', function () {
             });
         });
 
-        it('should PASS if Optimization for summaries is not configured', function (done) {
+        it('should PASS if No Compute Optimizer recommendation summaries found', function (done) {
             const cache = createCache([]);
             ebsVolumesOptimized.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
