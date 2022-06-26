@@ -423,6 +423,7 @@ module.exports = {
       
         'memorydbClusterEncrypted'      : require(__dirname + '/plugins/aws/memorydb/memorydbClusterEncrypted.js'),
       
+        'mskClusterUnauthAccess'        : require(__dirname + '/plugins/aws/msk/mskClusterUnauthAccess.js'),
         'mskClusterEncryptionAtRest'    : require(__dirname + '/plugins/aws/msk/mskClusterEncryptionAtRest.js'),
         'mskClusterEncryptionInTransit' : require(__dirname + '/plugins/aws/msk/mskClusterEncryptionInTransit.js'),
       
