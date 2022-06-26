@@ -29,7 +29,7 @@ module.exports = {
             } else if (getRecommendationSummaries.err || !getRecommendationSummaries.data || 
                       !getRecommendationSummaries.data.length) {
                 helpers.addResult(results, 3,
-                    'Unable to get recommendation summaries: ' + helpers.addError(getRecommendationSummaries), region);       
+                    'Unable to get Compute Optimizer recommendation summaries: ' + helpers.addError(getRecommendationSummaries), region);       
             } else {
                 helpers.addResult(results, 0,
                     'Compute Optimizer is Enabled', region);
