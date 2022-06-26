@@ -34,10 +34,11 @@ module.exports = {
                 helpers.addResult(results, 0,
                     'Compute Optimizer is Enabled', region);
             }
-          
+
             rcb();
         }, function(){
             callback(null, results, source);
         });
     }
-};
+}; 
+	

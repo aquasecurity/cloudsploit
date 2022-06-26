@@ -61,8 +61,6 @@ module.exports = {
         'volumeEncryption'              : require(__dirname + '/plugins/aws/comprehend/volumeEncryption.js'),
         'outputResultEncryption'        : require(__dirname + '/plugins/aws/comprehend/outputResultEncryption.js'),
 
-        'asgOptimized'                  : require(__dirname + '/plugins/aws/computeoptimizer/asgOptimized.js'),
-
         'plainTextParameters'           : require(__dirname + '/plugins/aws/cloudformation/plainTextParameters.js'),
         'stackFailedStatus'             : require(__dirname + '/plugins/aws/cloudformation/stackFailedStatus.js'),
         'driftDetection'                :  require(__dirname + '/plugins/aws/cloudformation/driftDetection.js'),
@@ -86,15 +84,16 @@ module.exports = {
         'globalLoggingDuplicated'       : require(__dirname + '/plugins/aws/cloudtrail/globalLoggingDuplicated.js'),
         'cloudtrailNotificationsEnabled': require(__dirname + '/plugins/aws/cloudtrail/cloudtrailNotificationsEnabled.js'),
 
+        'ec2InstancesOptimized'         : require(__dirname + '/plugins/aws/computeoptimizer/ec2InstancesOptimized.js'),
+        'lambdaFunctionsOptimized'      : require(__dirname + '/plugins/aws/computeoptimizer/lambdaFunctionsOptimized.js'),
         'optimizerRecommendationsEnabled': require(__dirname + '/plugins/aws/computeoptimizer/optimizerRecommendationsEnabled.js'),
         'ebsVolumesOptimized'           : require(__dirname + '/plugins/aws/computeoptimizer/ebsVolumesOptimized.js'),
+        'asgOptimized'                  : require(__dirname + '/plugins/aws/computeoptimizer/asgOptimized.js'),
 
         'configServiceEnabled'          : require(__dirname + '/plugins/aws/configservice/configServiceEnabled.js'),
         'configComplaintRules'          : require(__dirname + '/plugins/aws/configservice/configComplaintRules.js'),
         'configDeliveryFailing'         : require(__dirname + '/plugins/aws/configservice/configDeliveryFailing.js'),
         'configServiceMissingBucket'    : require(__dirname + '/plugins/aws/configservice/configServiceMissingBucket.js'),
-
-        'ec2InstancesOptimized'         : require(__dirname + '/plugins/aws/computeoptimizer/ec2InstancesOptimized.js'),
 
         'devOpsGuruNotificationEnabled' : require(__dirname + '/plugins/aws/devopsguru/devOpsGuruNotificationEnabled.js'),
        
