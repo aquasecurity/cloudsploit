@@ -116,6 +116,7 @@ module.exports = {
     voiceid: regions,
     appmesh: regions,
     frauddetector: regions,
-    computeoptimizer: ['us-gov-west-1'],
+    imagebuilder: regions,
+    computeoptimizer: regions,
     appconfig: regions
 };
