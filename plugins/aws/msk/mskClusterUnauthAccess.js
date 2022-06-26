@@ -43,7 +43,7 @@ module.exports = {
                     cluster.ClientAuthentication.Unauthenticated && 
                     cluster.ClientAuthentication.Unauthenticated.Enabled) {
                     helpers.addResult(results, 2,
-                        'Cluster had unauthenticated access enabled', region, resource);
+                        'Cluster has unauthenticated access enabled', region, resource);
                 } else {
                     helpers.addResult(results, 0,
                         'Cluster does not have unauthenticated access enabled', region, resource);
