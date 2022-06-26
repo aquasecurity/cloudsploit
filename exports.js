@@ -85,11 +85,15 @@ module.exports = {
         'cloudtrailNotificationsEnabled': require(__dirname + '/plugins/aws/cloudtrail/cloudtrailNotificationsEnabled.js'),
 
         'lambdaFunctionsOptimized'      : require(__dirname + '/plugins/aws/computeoptimizer/lambdaFunctionsOptimized.js'),
+        'optimizerRecommendationsEnabled': require(__dirname + '/plugins/aws/computeoptimizer/optimizerRecommendationsEnabled.js'),
+        'ebsVolumesOptimized'           : require(__dirname + '/plugins/aws/computeoptimizer/ebsVolumesOptimized.js'),
 
         'configServiceEnabled'          : require(__dirname + '/plugins/aws/configservice/configServiceEnabled.js'),
         'configComplaintRules'          : require(__dirname + '/plugins/aws/configservice/configComplaintRules.js'),
         'configDeliveryFailing'         : require(__dirname + '/plugins/aws/configservice/configDeliveryFailing.js'),
         'configServiceMissingBucket'    : require(__dirname + '/plugins/aws/configservice/configServiceMissingBucket.js'),
+
+        'ec2InstancesOptimized'         : require(__dirname + '/plugins/aws/computeoptimizer/ec2InstancesOptimized.js'),
 
         'devOpsGuruNotificationEnabled' : require(__dirname + '/plugins/aws/devopsguru/devOpsGuruNotificationEnabled.js'),
        
@@ -111,6 +115,9 @@ module.exports = {
         'unassociatedElasticIp'         : require(__dirname + '/plugins/aws/ec2/unassociatedElasticIp.js'),
         'subnetIpAvailability'          : require(__dirname + '/plugins/aws/ec2/subnetIpAvailability.js'),
         'excessiveSecurityGroups'       : require(__dirname + '/plugins/aws/ec2/excessiveSecurityGroups.js'),
+
+        'enhancedMetadataEnabled'       : require(__dirname + '/plugins/aws/imagebuilder/enhancedMetadataEnabled.js'),
+
         'instanceLimit'                 : require(__dirname + '/plugins/aws/ec2/instanceLimit.js'),
         'instanceVcpusLimit'            : require(__dirname + '/plugins/aws/ec2/instanceVcpusLimit.js'),
         'instanceMaxCount'              : require(__dirname + '/plugins/aws/ec2/instanceMaxCount.js'),
@@ -425,6 +432,10 @@ module.exports = {
       
         'memorydbClusterEncrypted'      : require(__dirname + '/plugins/aws/memorydb/memorydbClusterEncrypted.js'),
       
+        'mskClusterCBEncryption'        : require(__dirname + '/plugins/aws/msk/mskClusterCBEncryption.js'),
+ 
+        'mskClusterPublicAccess'        : require(__dirname + '/plugins/aws/msk/mskClusterPublicAccess.js'),
+        'mskClusterUnauthAccess'        : require(__dirname + '/plugins/aws/msk/mskClusterUnauthAccess.js'),
         'mskClusterEncryptionAtRest'    : require(__dirname + '/plugins/aws/msk/mskClusterEncryptionAtRest.js'),
         'mskClusterEncryptionInTransit' : require(__dirname + '/plugins/aws/msk/mskClusterEncryptionInTransit.js'),
       
@@ -813,6 +824,8 @@ module.exports = {
         'bootVolumeRestorable'          : require(__dirname + '/plugins/oracle/compute/bootVolumeRestorable.js'),
         'bootVolumeBackupEnabled'       : require(__dirname + '/plugins/oracle/compute/bootVolumeBackupEnabled.js'),
         'instancePolicyProtection'      : require(__dirname + '/plugins/oracle/compute/instancePolicyProtection.js'),
+        'bootVolumeCMKEncryption'       : require(__dirname + '/plugins/oracle/compute/bootVolumeCMKEncryption.js'),
+        'legacyEndpointDisabled'        : require(__dirname + '/plugins/oracle/compute/legacyEndpointDisabled.js'),
 
         'usersMfaEnabled'               : require(__dirname + '/plugins/oracle/identity/usersMfaEnabled.js'),
         'passwordRequiresLowercase'     : require(__dirname + '/plugins/oracle/identity/passwordRequiresLowercase.js'),
@@ -830,6 +843,8 @@ module.exports = {
         'userCustomerSecretKeysRotated' : require(__dirname + '/plugins/oracle/identity/userCustomerSecretKeysRotated.js'),
         'userAPIKeysRotated'            : require(__dirname + '/plugins/oracle/identity/userAPIKeysRotated.js'),
         'usersPasswordLastUsed'         : require(__dirname + '/plugins/oracle/identity/usersPasswordLastUsed.js'),
+        'defaultTagsForResources'       : require(__dirname + '/plugins/oracle/identity/defaultTagsForResources.js'),
+        'notificationTopicSubscription' : require(__dirname + '/plugins/oracle/identity/notificationTopicSubscription.js'),
 
         'openSSH'                       : require(__dirname + '/plugins/oracle/networking/openSSH.js'),
         'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/oracle/networking/openOracleAutoDataWarehouse.js'),
@@ -862,6 +877,7 @@ module.exports = {
         'lbNSGEnabled'                  : require(__dirname + '/plugins/oracle/networking/lbNSGEnabled.js'),
         'lbNoInstances'                 : require(__dirname + '/plugins/oracle/networking/lbNoInstances.js'),
         'wafPublicIpEnabled'            : require(__dirname + '/plugins/oracle/networking/wafPublicIpEnabled.js'),
+        'inboundSecurityLists'          : require(__dirname + '/plugins/oracle/networking/inboundSecurityLists.js'),
 
         'multipleSubnets'               : require(__dirname + '/plugins/oracle/networking/multipleSubnets.js'),
         'subnetMultiAd'                 : require(__dirname + '/plugins/oracle/networking/subnetMultiAd.js'),
@@ -870,9 +886,13 @@ module.exports = {
         'preAuthRequestsExpiry'         : require(__dirname + '/plugins/oracle/objectstore/preAuthRequestsExpiry.js'),
         'preAuthRequestsAccess'         : require(__dirname + '/plugins/oracle/objectstore/preAuthRequestsAccess.js'),
         'objectPolicyProtection'        : require(__dirname + '/plugins/oracle/objectstore/objectPolicyProtection.js'),
+        'bucketCMKEncryption'           : require(__dirname + '/plugins/oracle/objectstore/bucketCMKEncryption.js'),
+        'bucketVersioning'              : require(__dirname + '/plugins/oracle/objectstore/bucketVersioning.js'),
+        'bucketObjectEvents'            : require(__dirname + '/plugins/oracle/objectstore/bucketObjectEvents.js'),
 
         'nfsPublicAccess'               : require(__dirname + '/plugins/oracle/filestorage/nfsPublicAccess.js'),
         'nfsPolicyProtection'           : require(__dirname + '/plugins/oracle/filestorage/nfsPolicyProtection.js'),
+        'fileSystemsCMKEncryption'      : require(__dirname + '/plugins/oracle/filestorage/fileSystemsCMKEncryption.js'),
 
         'dbBackupEnabled'               : require(__dirname + '/plugins/oracle/database/dbBackupEnabled.js'),
         'dbPrivateSubnetOnly'           : require(__dirname + '/plugins/oracle/database/dbPrivateSubnetOnly.js'),
@@ -883,10 +903,12 @@ module.exports = {
         'blockVolumeBackupEnabled'      : require(__dirname + '/plugins/oracle/blockstorage/blockVolumeBackupEnabled.js'),
         'volumeGroupsRestorable'        : require(__dirname + '/plugins/oracle/blockstorage/volumeGroupsRestorable.js'),
         'blockPolicyProtection'         : require(__dirname + '/plugins/oracle/blockstorage/blockPolicyProtection.js'),
+        'blockVolumeCMKEncryption'      : require(__dirname + '/plugins/oracle/blockstorage/blockVolumeCMKEncryption.js'),
 
         'logRetentionPeriod'            : require(__dirname + '/plugins/oracle/audit/logRetentionPeriod.js'),
 
         'okePrivateEndpoint'            : require(__dirname + '/plugins/oracle/oke/okePrivateEndpoint.js'),
+        'okeSecretsEncrypted'           : require(__dirname + '/plugins/oracle/oke/okeSecretsEncrypted.js'),
     },
     google: {
         'excessiveFirewallRules'        : require(__dirname + '/plugins/google/vpcnetwork/excessiveFirewallRules.js'),
