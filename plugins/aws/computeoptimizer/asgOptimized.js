@@ -5,10 +5,10 @@ module.exports = {
     title: 'Auto Scaling Group Optimized',
     category: 'Compute Optimizer',
     domain: 'Management and Governance',
-    description: 'Ensure that Compute Optimizer ASGs findings are in order to take the actions to optimize Amazon Auto Scaling groups that are under-performing.',
+    description: 'Ensure that Compute Optimizer does not have active recommendation summaries for unoptimized Auto Scaling groups.',
     more_info: 'An Auto Scaling group is considered optimized when Compute Optimizer determines that the group is correctly provisioned to run your workload, based on the chosen instance type. For optimized Auto Scaling groups, Compute Optimizer might sometimes recommend a new generation instance type.',
     link: 'https://docs.aws.amazon.com/compute-optimizer/latest/ug/view-asg-recommendations.html',
-    recommended_action: 'Enable Compute Optimizer Opt In options for Auto Scaling Groups recommendations',
+    recommended_action: 'Resolve Compute Optimizer recommendations for Auto Scaling groups.',
     apis: ['ComputeOptimizer:getRecommendationSummaries'],
 
     run: function(cache, settings, callback) {
@@ -22,8 +22,9 @@ module.exports = {
             
             if (!getRecommendationSummaries) return rcb();
 
-            if (getRecommendationSummaries && getRecommendationSummaries.err && 
-                getRecommendationSummaries.err.code === 'OptInRequiredException'){
+            if (getRecommendationSummaries && getRecommendationSummaries.err &&
+                getRecommendationSummaries.err.code &&
+                getRecommendationSummaries.err.code.toUpperCase() === 'OPTINREQUIREDEXCEPTION'){
                 helpers.addResult(results, 0, 
                     'Compute Optimizer is not enabled', region);
                 return rcb();
@@ -37,11 +38,12 @@ module.exports = {
 
             if (!getRecommendationSummaries.data.length) {
                 helpers.addResult(results, 0, 
-                    'Optimization for summaries is not configured', region);
+                    'No Compute Optimizer recommendation summaries found', region);
                 return rcb();
             }
 
-            let findings = getRecommendationSummaries.data.find(resourceType => resourceType.recommendationResourceType === 'AutoScalingGroup');
+            let findings = getRecommendationSummaries.data.find(resourceType => resourceType.recommendationResourceType &&
+                resourceType.recommendationResourceType.toUpperCase() === 'AUTOSCALINGGROUP');
             if (findings) {
                 
                 let notOptimized = findings.summaries.find(notOpt => notOpt.name && notOpt.name.toUpperCase() === 'NOT_OPTIMIZED');
@@ -49,17 +51,17 @@ module.exports = {
       
                 if (!notOptimized.value && !Optimized.value){
                     helpers.addResult(results, 0,
-                        'Auto Scaling Groups have no recommendations enabled', region);
+                        'No recommendations found for Auto Scaling groups', region);
                 } else if (notOptimized.value){
                     helpers.addResult(results, 2,
-                        `Auto Scaling Groups are not optimized,  NOT_OPTIMIZED: ${notOptimized.value}`, region);
+                        `Found ${notOptimized.value} unoptimized Auto Scaling groups`, region);
                 } else {
                     helpers.addResult(results, 0,
-                        'All Auto Scaling Groups are optimized', region);
+                        'All Auto Scaling groups are optimized', region);
                 }
             } else {
                 helpers.addResult(results, 2,
-                    'No Auto Scaling Group configured', region);
+                    'Recommendation summaries are not configured for Auto Scaling groups', region);
             }
 
             rcb();

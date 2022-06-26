@@ -86,7 +86,7 @@ describe('asgOptimized', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('All Auto Scaling Groups are optimized');
+                expect(results[0].message).to.include('All Auto Scaling groups are optimized');
                 done();
             });
         });
@@ -97,29 +97,29 @@ describe('asgOptimized', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Auto Scaling Groups are not optimized');
+                expect(results[0].message).to.include('unoptimized Auto Scaling groups');
                 done();
             });
         });
 
-        it('should PASS if Auto Scaling Groups have no recommendations enabled', function (done) {
+        it('should PASS if no recommendations found for Auto Scaling groups', function (done) {
             const cache = createCache([getRecommendationSummaries[2]]);
             asgOptimized.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Auto Scaling Groups have no recommendations enabled');
+                expect(results[0].message).to.include('No recommendations found for Auto Scaling groups');
                 done();
             });
         });
 
-        it('should PASS if Optimization for summaries is not configured', function (done) {
+        it('should PASS if no Compute Optimizer recommendation summaries found', function (done) {
             const cache = createCache([]);
             asgOptimized.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Optimization for summaries is not configured');
+                expect(results[0].message).to.include('No Compute Optimizer recommendation summaries found');
                 done();
             });
         });
