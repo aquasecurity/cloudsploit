@@ -35,11 +35,11 @@ module.exports = {
                 securityLists.data.forEach(securityList => {
                     if (securityList.ingressSecurityRules && securityList.ingressSecurityRules.length) {
                         helpers.addResult(results, 0,
-                            `Security list has ingress rules configured`, region, securityList.displayName);
+                            `Security list has ingress rules configured`, region, securityList.id);
                     }
                     else {
                         helpers.addResult(results, 2,
-                            `Security list does not have ingress rules configured`, region, securityList.displayName);
+                            `Security list does not have ingress rules configured`, region, securityList.id);
                     }
 
 
