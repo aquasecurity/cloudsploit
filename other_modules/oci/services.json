@@ -45,7 +45,6 @@
                 "method": "GET",
                 "path": "clusters",
                 "endpoint": "containerengine.{{region}}.oci.oraclecloud.com"
-                
             }
         }
     },

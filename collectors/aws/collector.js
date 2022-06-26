@@ -82,7 +82,6 @@ var collect = function(AWSConfig, settings, callback) {
         async.eachOfLimit(helpers.calls, 10, function(call, service, serviceCb) {
             var serviceName = service;
             var serviceLower = service.toLowerCase();
-            var serviceIntegration = helpers.calls[serviceName] && helpers.calls[serviceName].sendIntegration && helpers.calls[serviceName].sendIntegration.enabled ? true : false;
             if (!collection[serviceLower]) collection[serviceLower] = {};
 
             // Loop through each of the service's functions
@@ -230,19 +229,7 @@ var collect = function(AWSConfig, settings, callback) {
                     callCb();
                 });
             }, function() {
-                if (serviceIntegration &&
-                    settings.identifier &&
-                    collection[serviceLower] &&
-                    Object.keys(collection[serviceLower]) &&
-                    Object.keys(collection[serviceLower]).length &&
-                    helpers.callsCollected(serviceName, collection, helpers.calls, helpers.postcalls)
-                ) {
-                    helpers.processIntegration(serviceName, settings, collection, helpers.calls, helpers.postcalls, debugMode, function() {
-                        return serviceCb();
-                    });
-                } else {
-                    return serviceCb();
-                }
+                return serviceCb();
             });
         }, function() {
             // Now loop through the follow up calls
@@ -250,7 +237,10 @@ var collect = function(AWSConfig, settings, callback) {
                 async.eachOfLimit(postcallObj, 10, function(serviceObj, service, serviceCb) {
                     var serviceName = service;
                     var serviceLower = service.toLowerCase();
-                    var serviceIntegration = postcallObj && postcallObj[serviceName] && postcallObj[serviceName].sendIntegration && postcallObj[serviceName].sendIntegration.enabled ? true : false;
+                    var serviceIntegration = {
+                        enabled : postcallObj && postcallObj[serviceName] && postcallObj[serviceName].sendIntegration && postcallObj[serviceName].sendIntegration.enabled ? true : false,
+                        sendLast : postcallObj && postcallObj[serviceName] && postcallObj[serviceName].sendIntegration && postcallObj[serviceName].sendIntegration.sendLast ? true : false
+                    };
 
                     if (!collection[serviceLower]) collection[serviceLower] = {};
 
@@ -376,16 +366,21 @@ var collect = function(AWSConfig, settings, callback) {
                             callCb();
                         });
                     }, function() {
-                        if (serviceIntegration &&
+                        if (serviceIntegration.enabled &&
+                            !serviceIntegration.sendLast &&
                             settings.identifier &&
                             collection[serviceLower] &&
                             Object.keys(collection[serviceLower]) &&
                             Object.keys(collection[serviceLower]).length &&
                             helpers.callsCollected(serviceName, collection, helpers.calls, helpers.postcalls)
                         ) {
-                            helpers.processIntegration(serviceName, settings, collection, helpers.calls, helpers.postcalls, debugMode,function() {
+                            try {
+                                helpers.processIntegration(serviceName, settings, collection, helpers.calls, helpers.postcalls, debugMode,function() {
+                                    return serviceCb();
+                                });
+                            } catch (e) {
                                 return serviceCb();
-                            });
+                            }
                         } else {
                             return serviceCb();
                         }
@@ -394,7 +389,36 @@ var collect = function(AWSConfig, settings, callback) {
                     postcallCb();
                 });
             }, function() {
-                callback(null, collection, runApiCalls, errorSummary, errorTypeSummary, errors, retries);
+                if (settings.identifier) {
+                    async.each(helpers.integrationSendLast, function(serv, cb) {
+                        settings.identifier.service = serv.toLowerCase();
+
+                        if (collection[serv.toLowerCase()] &&
+                            Object.keys(collection[serv.toLowerCase()]) &&
+                            Object.keys(collection[serv.toLowerCase()]).length &&
+                            helpers.callsCollected(serv, collection, helpers.calls, helpers.postcalls)
+                        ) {
+                            try {
+                                helpers.processIntegration(serv, settings, collection, helpers.calls, helpers.postcalls, debugMode, function() {
+                                    console.log(`Integration for service ${serv} processed.`);
+                                    cb();
+                                });
+                            } catch (e) {
+                                cb();
+                            }
+
+                        } else {
+                            cb();
+                        }
+                    }, function() {
+                        callback(null, collection, runApiCalls, errorSummary, errorTypeSummary, errors, retries);
+                    });
+
+                } else {
+                    callback(null, collection, runApiCalls, errorSummary, errorTypeSummary, errors, retries);
+
+                }
+
             });
         });
     });
