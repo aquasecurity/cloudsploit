@@ -2,13 +2,13 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Optimized Configuration Error',
+    title: 'Compute Optimizer Recommendations Enabled',
     category: 'Compute Optimizer',
     domain: 'Management and Governance',
-    description: 'Ensure that Compute Optimizer is enabled to avoid any Opt In exception error.',
+    description: 'Ensure that Compute Optimizer is enabled for your AWS account.',
     more_info: 'AWS Compute Optimizer is a service that analyzes the configuration and utilization metrics of your AWS resources. It reports whether your resources are optimal, and generates optimization recommendations to reduce the cost and improve the performance of your workloads.',
     link: 'https://docs.aws.amazon.com/compute-optimizer/latest/ug/what-is-compute-optimizer.html',
-    recommended_action: 'Enable Compute Optimizer Opt In options to avoid Opt In Required exception error',
+    recommended_action: 'Enable Compute Optimizer Opt In options for current of all AWS account in your organization.',
     apis: ['ComputeOptimizer:getRecommendationSummaries'],
 
     run: function(cache, settings, callback) {

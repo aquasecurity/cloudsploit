@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var optimizedConfigurationError = require('./optimizedConfigurationError');
+var optimizerRecommendationsEnabled = require('./optimizerRecommendationsEnabled');
 
 const getRecommendationSummaries =  [
     {
@@ -48,11 +48,11 @@ const createCache = (recommendation, recommendationErr) => {
     };
 };
 
-describe('optimizedConfigurationError', function () {
+describe('optimizerRecommendationsEnabled', function () {
     describe('run', function () {
         it('should PASS if Compute Optimizer is Enabled', function (done) {
             const cache = createCache([getRecommendationSummaries[0]]);
-            optimizedConfigurationError.run(cache, {}, (err, results) => {
+            optimizerRecommendationsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -63,7 +63,7 @@ describe('optimizedConfigurationError', function () {
 
         it('should FAIL if Compute Optimizer is not enabled', function (done) {
             const cache = createCache(null, {  message: 'Aws account is not registered for recommendation.', code: 'OptInRequiredException' });
-            optimizedConfigurationError.run(cache, {}, (err, results) => {
+            optimizerRecommendationsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
@@ -75,7 +75,7 @@ describe('optimizedConfigurationError', function () {
 
         it('should UNKNOWN if Unable to get recommendation summaries', function (done) {
             const cache = createCache(null, { message: "Unable to get recommendation summaries" });
-            optimizedConfigurationError.run(cache, {}, (err, results) => {
+            optimizerRecommendationsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
@@ -85,7 +85,7 @@ describe('optimizedConfigurationError', function () {
         });
 
         it('should not return anything if get recommendation summaries status response is not found', () => {
-            optimizedConfigurationError.run({}, {}, (err, results) => {
+            optimizerRecommendationsEnabled.run({}, {}, (err, results) => {
                 expect(results.length).to.equal(0);
             })
         });
