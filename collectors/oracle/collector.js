@@ -114,6 +114,14 @@ var calls = {
             restVersion: '/20171215',
         }
     },
+    fileSystem: {
+        list: {
+            api: 'fileStorage',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+            restVersion: '/20171215',
+        }
+    },
     mountTarget: {
         list: {
             api: 'fileStorage',
