@@ -606,6 +606,10 @@ var collect = function(AzureConfig, settings, callback) {
             }, function(err, data) {
                 if (err) return cb(err);
 
+                // If a new nextLink is provided, this will be updated.  There shouldn't
+                // be a need to hold on to the previous value
+                obj.nextUrl = null;
+
                 if (data && data.value && Array.isArray(data.value) && data.value.length && localData && localData.value) {
                     localData.value = localData.value.concat(data.value);
                 } else if (localData && localData.value && localData.value.length && (!data || !((obj.paginate && data[obj.paginate]) || data['nextLink']))) {
@@ -613,7 +617,7 @@ var collect = function(AzureConfig, settings, callback) {
                 }
 
                 if (data && ((obj.paginate && data[obj.paginate]) || data['nextLink'])) {
-                    obj.url = data['nextLink'] || data[obj.paginate];
+                    obj.nextUrl = data['nextLink'] || data[obj.paginate];
                     processCall(obj, cb, localData || data);
                 } else {
                     return cb(null, localData || data || []);
@@ -622,7 +626,7 @@ var collect = function(AzureConfig, settings, callback) {
         };
 
         var processCall = function(obj, cb, localData) {
-            var localUrl = obj.url.replace(/\{subscriptionId\}/g, AzureConfig.SubscriptionID);
+            var localUrl = obj.nextUrl || obj.url.replace(/\{subscriptionId\}/g, AzureConfig.SubscriptionID);
             if (obj.rateLimit) {
                 setTimeout(function() {
                     makeCall(localUrl, obj, cb, localData);

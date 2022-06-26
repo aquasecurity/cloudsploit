@@ -45,7 +45,7 @@ module.exports = {
         remediate: ['ec2:AuthorizeSecurityGroupIngress','ec2:RevokeSecurityGroupIngress'],
         rollback:['ec2:AuthorizeSecurityGroupIngress']
     },
-    realtime_triggers: ['ec2:AuthorizeSecurityGroupIngress'],
+    realtime_triggers: ['ec2:AuthorizeSecurityGroupIngress', 'ec2:ModifySecurityGroupRules'],
 
     run: function(cache, settings, callback) {
         var config = {
