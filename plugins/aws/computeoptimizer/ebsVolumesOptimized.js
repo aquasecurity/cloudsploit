@@ -37,7 +37,7 @@ module.exports = {
 
             if (!getRecommendationSummaries.data.length) {
                 helpers.addResult(results, 0, 
-                    'Optimization for summaries is not configured', region);
+                    'No Compute Optimizer recommendation summaries found', region);
                 return rcb();
             }
 
