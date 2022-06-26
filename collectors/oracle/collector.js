@@ -114,6 +114,14 @@ var calls = {
             restVersion: '/20171215',
         }
     },
+    fileSystem: {
+        list: {
+            api: 'fileStorage',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+            restVersion: '/20171215',
+        }
+    },
     mountTarget: {
         list: {
             api: 'fileStorage',
@@ -132,10 +140,34 @@ var calls = {
             filterValue: ['compartmentId'],
         }
     },
+    defaultTags: {
+        list: {
+            api: 'iam',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+            restVersion: '/20160918'
+        }
+    },
     waasPolicy: {
         list: {
             api: 'waas',
             restVersion: '/20181116',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    topics: {
+        list: {
+            api: 'notification',
+            restVersion: '/20181201',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    subscriptions: {
+        list: {
+            api: 'notification',
+            restVersion: '/20181201',
             filterKey: ['compartmentId'],
             filterValue: ['compartmentId'],
         }
@@ -407,6 +439,17 @@ var postcalls = {
             restVersion: '/20180608'
         }
     },
+    cluster: {
+        get: {
+            api: 'oke',
+            reliesOnService: ['cluster'],
+            reliesOnCall: ['list'],
+            restVersion: '/20180222',
+            filterKey: ['id'],
+            filterValue: ['id'],
+            filterConfig: [false]
+        },
+    }
 };
 
 // Important Note: All relies must be passed in an array format []
