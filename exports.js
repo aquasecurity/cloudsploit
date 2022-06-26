@@ -874,6 +874,7 @@ module.exports = {
         'preAuthRequestsAccess'         : require(__dirname + '/plugins/oracle/objectstore/preAuthRequestsAccess.js'),
         'objectPolicyProtection'        : require(__dirname + '/plugins/oracle/objectstore/objectPolicyProtection.js'),
         'bucketCMKEncryption'           : require(__dirname + '/plugins/oracle/objectstore/bucketCMKEncryption.js'),
+        'bucketVersioning'              : require(__dirname + '/plugins/oracle/objectstore/bucketVersioning.js'),
         'bucketObjectEvents'            : require(__dirname + '/plugins/oracle/objectstore/bucketObjectEvents.js'),
 
         'nfsPublicAccess'               : require(__dirname + '/plugins/oracle/filestorage/nfsPublicAccess.js'),
@@ -889,6 +890,7 @@ module.exports = {
         'blockVolumeBackupEnabled'      : require(__dirname + '/plugins/oracle/blockstorage/blockVolumeBackupEnabled.js'),
         'volumeGroupsRestorable'        : require(__dirname + '/plugins/oracle/blockstorage/volumeGroupsRestorable.js'),
         'blockPolicyProtection'         : require(__dirname + '/plugins/oracle/blockstorage/blockPolicyProtection.js'),
+        'blockVolumeCMKEncryption'      : require(__dirname + '/plugins/oracle/blockstorage/blockVolumeCMKEncryption.js'),
 
         'logRetentionPeriod'            : require(__dirname + '/plugins/oracle/audit/logRetentionPeriod.js'),
 
