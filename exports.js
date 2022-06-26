@@ -829,6 +829,7 @@ module.exports = {
         'userAPIKeysRotated'            : require(__dirname + '/plugins/oracle/identity/userAPIKeysRotated.js'),
         'usersPasswordLastUsed'         : require(__dirname + '/plugins/oracle/identity/usersPasswordLastUsed.js'),
         'defaultTagsForResources'       : require(__dirname + '/plugins/oracle/identity/defaultTagsForResources.js'),
+        'notificationTopicSubscription' : require(__dirname + '/plugins/oracle/identity/notificationTopicSubscription.js'),
 
         'openSSH'                       : require(__dirname + '/plugins/oracle/networking/openSSH.js'),
         'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/oracle/networking/openOracleAutoDataWarehouse.js'),

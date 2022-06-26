@@ -50,6 +50,8 @@ module.exports = {
     compartment: regions,
     bucket: regions,
     waasPolicy: regions,
+    topics: regions,
+    subscriptions: regions,
     policy: regions,
     defaultTags: regions,
     subnet: regions,

@@ -148,6 +148,22 @@ var calls = {
             filterValue: ['compartmentId'],
         }
     },
+    topics: {
+        list: {
+            api: 'notification',
+            restVersion: '/20181201',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    subscriptions: {
+        list: {
+            api: 'notification',
+            restVersion: '/20181201',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
     policy: {
         list: {
             api: 'iam',
