@@ -871,6 +871,7 @@ module.exports = {
         'preAuthRequestsExpiry'         : require(__dirname + '/plugins/oracle/objectstore/preAuthRequestsExpiry.js'),
         'preAuthRequestsAccess'         : require(__dirname + '/plugins/oracle/objectstore/preAuthRequestsAccess.js'),
         'objectPolicyProtection'        : require(__dirname + '/plugins/oracle/objectstore/objectPolicyProtection.js'),
+        'bucketObjectEvents'            : require(__dirname + '/plugins/oracle/objectstore/bucketObjectEvents.js'),
 
         'nfsPublicAccess'               : require(__dirname + '/plugins/oracle/filestorage/nfsPublicAccess.js'),
         'nfsPolicyProtection'           : require(__dirname + '/plugins/oracle/filestorage/nfsPolicyProtection.js'),
