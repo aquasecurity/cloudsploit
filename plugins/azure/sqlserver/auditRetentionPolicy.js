@@ -48,7 +48,7 @@ module.exports = {
                     } else {
                         serverBlobAuditingPolicies.data.forEach(serverBlobAuditingPolicy => {
                             if (serverBlobAuditingPolicy.retentionDays &&
-                                serverBlobAuditingPolicy.retentionDays > 90) {
+                                serverBlobAuditingPolicy.retentionDays >= 90) {
                                 helpers.addResult(results, 0, 'Server Auditing retention is greater than 90 days', location, server.id);
                             } else if (serverBlobAuditingPolicy.retentionDays &&
                                 serverBlobAuditingPolicy.retentionDays < 90) {
