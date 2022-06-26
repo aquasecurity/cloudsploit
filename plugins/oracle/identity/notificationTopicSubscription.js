@@ -6,7 +6,7 @@ module.exports = {
     category: 'Identity',
     domain: 'Logging and Monitoring',
     description: 'Ensure that there is at least one notification topic and subscription to receive monitoring alerts.',
-    more_info: 'HCreating and subscribing to one or more notification topics allows administrators to be notified of any changes in the Oracle Cloud Infrastructure.',
+    more_info: 'Creating and subscribing to one or more notification topics allows administrators to be notified of any changes in the Oracle Cloud Infrastructure.',
     link: 'https://docs.oracle.com/en-us/iaas/Content/Notification/Tasks/managingtopicsandsubscriptions.htm',
     recommended_action: 'Create at least one notification topic with an active subscription.',
     apis: ['topics:list','subscriptions:list'],
@@ -18,9 +18,7 @@ module.exports = {
         var regions = helpers.regions(settings.govcloud);
 
         async.each(regions.subscriptions, function(region, rcb) {
-
             if (helpers.checkRegionSubscription(cache, source, results, region)) {
-
                 var topics = helpers.addSource(cache, source,
                     ['topics', 'list', region]);
 
@@ -49,9 +47,8 @@ module.exports = {
                 var subscriptions = helpers.addSource(cache, source,
                     ['subscriptions', 'list', region]);
 
-                if (!subscriptions) return rcb();
 
-                if (subscriptions.err || !subscriptions.data) {
+                if (!subscriptions || subscriptions.err || !subscriptions.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for subscriptions: ' + helpers.addError(subscriptions), region);
                     return rcb();
@@ -79,50 +76,3 @@ module.exports = {
         });
     }
 };
-
-// async.each(regions.subscriptions, function (region, rcb) {
-
-//     if (helpers.checkRegionSubscription(cache, source, results, region)) {
-
-//         var topics = helpers.addSource(cache, source,
-//             ['topics', 'list', region]);
-
-//         if (!topics) return rcb();
-
-//         if (topics.err || !topics.data) {
-//             helpers.addResult(results, 3,
-//                 'Unable to query for topics: ' + helpers.addError(topics), region);
-//         }
-//         if (!topics.data.length) {
-//             helpers.addResult(results, 2, 'No topics found in the region', region);
-//         }
-
-//         var subscriptions = helpers.addSource(cache, source,
-//             ['subscriptions', 'list', region]);
-
-//         if (!subscriptions) return rcb();
-
-//         if (subscriptions.err || !subscriptions.data) {
-//             helpers.addResult(results, 3,
-//                 'Unable to query for osubscriptions: ' + helpers.addError(subscriptions), region);
-//         }
-//         if (!subscriptions.data.length) {
-//             helpers.addResult(results, 2, 'No subscriptions found in the region', region);
-//         }
-
-//         const activeSubscription = subscriptions.data.find(subscription =>
-//             subscription.lifecycleState && subscription.lifecycleState === 'ACTIVE'
-//         );
-
-//         if (activeSubscription) {
-//             helpers.addResult(results, 0,
-//                 `There is at least one notification topic with an active subscription`, region);
-//         } else {
-//             helpers.addResult(results, 2,
-//                 'No notification topics with active subscriptions found');
-//         }
-//     }
-//     rcb();
-// }, function () {
-//     callback(null, results, source);
-// });
