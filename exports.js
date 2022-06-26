@@ -84,6 +84,8 @@ module.exports = {
         'globalLoggingDuplicated'       : require(__dirname + '/plugins/aws/cloudtrail/globalLoggingDuplicated.js'),
         'cloudtrailNotificationsEnabled': require(__dirname + '/plugins/aws/cloudtrail/cloudtrailNotificationsEnabled.js'),
 
+        'ebsVolumesOptimized'           : require(__dirname + '/plugins/aws/computeoptimizer/ebsVolumesOptimized.js'),
+
         'configServiceEnabled'          : require(__dirname + '/plugins/aws/configservice/configServiceEnabled.js'),
         'configComplaintRules'          : require(__dirname + '/plugins/aws/configservice/configComplaintRules.js'),
         'configDeliveryFailing'         : require(__dirname + '/plugins/aws/configservice/configDeliveryFailing.js'),
