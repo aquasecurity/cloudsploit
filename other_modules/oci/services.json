@@ -45,7 +45,32 @@
                 "method": "GET",
                 "path": "clusters",
                 "endpoint": "containerengine.{{region}}.oci.oraclecloud.com"
-                
+            }
+        }
+    },
+    "notification": {
+        "topics": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId",
+                    "limit",
+                    "page"
+                ],
+                "method": "GET",
+                "path": "topics",
+                "endpoint": "notification.{{region}}.oraclecloud.com"
+            }
+        },
+        "subscriptions": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId",
+                    "limit",
+                    "page"
+                ],
+                "method": "GET",
+                "path": "subscriptions",
+                "endpoint": "notification.{{region}}.oraclecloud.com"
             }
         }
     },
@@ -336,6 +361,18 @@
                 "encodedGet": "compartmentId",
                 "method": "GET",
                 "path": "compartments",
+                "endpoint": "identity.{{region}}.oraclecloud.com"
+            }
+        },
+        "defaultTags": {
+            "list" :  {
+                "allowedQueryStrings": [
+                    "compartmentId",
+                    "page",
+                    "limit"
+                ],
+                "method": "GET",
+                "path": "tagDefaults",
                 "endpoint": "identity.{{region}}.oraclecloud.com"
             }
         },
