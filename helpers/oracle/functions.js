@@ -1,4 +1,5 @@
 var shared = require(__dirname + '/../shared.js');
+var async = require('async');
 
 var ipProtocol = {
     "tcp" : {
@@ -326,6 +327,22 @@ function normalizePolicyStatement(policyStatement) {
     return statementObj;
 }
 
+function getProtectionLevel(cryptographickey, encryptionLevels) {
+    if (cryptographickey && cryptographickey.protectionMode) {
+        if (cryptographickey.protectionMode.toUpperCase() == 'SOFTWARE') return encryptionLevels.indexOf('cloudcmek');
+        else if (cryptographickey.protectionMode.toUpperCase() == 'HSM') return encryptionLevels.indexOf('cloudhsm');
+    }
+
+    return encryptionLevels.indexOf('unspecified');
+}
+
+function listToObj(resultObj, listData, onKey) {
+    async.each(listData, function (entry, cb) {
+        if (entry[onKey]) resultObj[entry[onKey]] = entry;
+        cb();
+    });
+}
+
 function testStatement(statementObj, resourceTypes, policyAdmins, verbs) {
     let whereNames = ['request.user.id', 'request.user.name', 'request.groups.id', 'request.group.name', 'request.networkSource.name', 'target.user.name', 'request.instance.compartment.id', 'request.ad'];
 
@@ -363,5 +380,7 @@ module.exports = {
     findOpenPortsAll: findOpenPortsAll,
     checkRegionSubscription: checkRegionSubscription,
     normalizePolicyStatement: normalizePolicyStatement,
-    testStatement: testStatement
+    testStatement: testStatement,
+    getProtectionLevel: getProtectionLevel,
+    listToObj: listToObj
 };

@@ -192,6 +192,12 @@ var calls = {
             paginate: 'nextToken'
         }
     },
+    ComputeOptimizer: {
+        getRecommendationSummaries : {
+            property: 'recommendationSummaries',
+            paginate: 'nextToken'
+        }
+    },
     Comprehend: {
         listEntitiesDetectionJobs: {
             property: 'EntitiesDetectionJobPropertiesList',
@@ -690,6 +696,12 @@ var calls = {
         },
         generateCredentialReport: {
             override: true
+        }
+    },
+    Imagebuilder: {
+        listImagePipelines: {
+            property: 'imagePipelineList',
+            paginate: 'nextToken'
         }
     },
     IoTSiteWise: {
