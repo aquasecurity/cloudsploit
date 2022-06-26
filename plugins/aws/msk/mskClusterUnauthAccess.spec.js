@@ -98,7 +98,7 @@ describe('mskClusterUnauthAccess', function () {
             mskClusterUnauthAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Cluster has authenticated access enabled');
+                expect(results[0].message).to.include('Cluster has unauthenticated access enabled');
                 done();
             });
         });
