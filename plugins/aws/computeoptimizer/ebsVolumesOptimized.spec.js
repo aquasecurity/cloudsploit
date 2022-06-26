@@ -97,7 +97,7 @@ describe('ebsVolumesOptimized', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('EBS volumes are not optimized');
+                expect(results[0].message).to.include('unoptimized EBS volumes');
                 done();
             });
         });

@@ -52,7 +52,7 @@ module.exports = {
                         'No recommendations found for EBS volumes', region);
                 } else if (notOptimized.value){
                     helpers.addResult(results, 2,
-                        `EBS volumes are not optimized,  NOT_OPTIMIZED: ${notOptimized.value}`, region);
+                        `Found ${notOptimized.value} unoptimized EBS volumes`, region);
                 } else {
                     helpers.addResult(results, 0,
                         'All EBS volumes are optimized', region);
