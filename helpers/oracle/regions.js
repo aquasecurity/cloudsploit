@@ -47,10 +47,14 @@ module.exports = {
     authenticationPolicy: regions,
     exprt: regions,
     exportSummary: regions,
+    fileSystem: regions,
     compartment: regions,
     bucket: regions,
     waasPolicy: regions,
+    topics: regions,
+    subscriptions: regions,
     policy: regions,
+    defaultTags: ['default'],
     subnet: regions,
     dbHome: regions,
     database: regions,
@@ -78,4 +82,6 @@ module.exports = {
     authToken: ['default'],
     customerSecretKey: ['default'],
     cluster: regions,
+    vault: regions,
+    keys: regions
 };
