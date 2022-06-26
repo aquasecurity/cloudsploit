@@ -8,6 +8,12 @@ module.exports = function(api, service, key, OracleConfig, parameters, callback)
 
     var localService = services[api][service][key];
 
+    //replacing endpoint with managementRndpoint value from vault for keys api
+    if (api === 'kms' && localService.path === 'keys') {
+        localService.endpoint = parameters.managementEndpoint.replace('https://', '');
+        delete parameters['managementEndpoint'];
+    }
+
     var suffix = '';
     if (localService.encodedGet) {
         suffix += ('/' + encodeURIComponent(parameters[localService.encodedGet]));
