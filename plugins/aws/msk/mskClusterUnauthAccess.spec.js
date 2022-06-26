@@ -98,7 +98,7 @@ describe('mskClusterUnauthAccess', function () {
             mskClusterUnauthAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Unauthentication is enabled for clients, and all actions are allowed');
+                expect(results[0].message).to.include('Cluster has authenticated access enabled');
                 done();
             });
         });
@@ -108,7 +108,7 @@ describe('mskClusterUnauthAccess', function () {
             mskClusterUnauthAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Unauthentication is disabled for clients, and all actions are not allowed');
+                expect(results[0].message).to.include('Cluster does not have unauthenticated access enabled');
                 done();
             });
         });
