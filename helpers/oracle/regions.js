@@ -51,6 +51,7 @@ module.exports = {
     bucket: regions,
     waasPolicy: regions,
     policy: regions,
+    defaultTags: regions,
     subnet: regions,
     dbHome: regions,
     database: regions,

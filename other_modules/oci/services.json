@@ -317,6 +317,18 @@
                 "endpoint": "identity.{{region}}.oraclecloud.com"
             }
         },
+        "defaultTags": {
+            "list" :  {
+                "allowedQueryStrings": [
+                    "compartmentId",
+                    "page",
+                    "limit"
+                ],
+                "method": "GET",
+                "path": "tagDefaults",
+                "endpoint": "identity.{{region}}.oraclecloud.com"
+            }
+        },
         "group": {
             "list": {
                 "allowedQueryStrings": [
