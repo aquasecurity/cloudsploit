@@ -98,5 +98,7 @@ module.exports = {
     resourceGroups: locations,
     policyDefinitions: locations,
     diagnosticSettingsOperations: ['global'],
-    databaseAccounts: locations
+    databaseAccounts: locations,
+    securityCenter: ['global'],
+    advisor: ['global']
 };

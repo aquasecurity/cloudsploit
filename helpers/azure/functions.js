@@ -89,7 +89,8 @@ function findOpenPorts(ngs, protocols, service, location, results) {
                             securityRule.properties['direction'] &&
                             securityRule.properties['direction'] === 'Inbound' &&
                             securityRule.properties['protocol'] &&
-                            (securityRule.properties['protocol'] === protocol || securityRule.properties['protocol'] === '*')) {
+                            typeof securityRule.properties['protocol'] == 'string' &&
+                            (securityRule.properties['protocol'].toUpperCase() === protocol || securityRule.properties['protocol'].toUpperCase() === '*')) {
                             if (securityRule.properties['destinationPortRange']) {
                                 if (securityRule.properties['destinationPortRange'].toString().indexOf("-") > -1) {
                                     let portRange = securityRule.properties['destinationPortRange'].split("-");

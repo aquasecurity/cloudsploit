@@ -78,5 +78,6 @@ module.exports = {
     authToken: ['default'],
     customerSecretKey: ['default'],
     vault: regions,
-    keys: regions
+    keys: regions,
+    cluster: regions
 };

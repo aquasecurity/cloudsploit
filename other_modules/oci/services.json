@@ -23,6 +23,20 @@
             }
         }
     },
+    "oke": {
+        "cluster": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId",
+                    "page",
+                    "limit"
+                ],
+                "method": "GET",
+                "path": "clusters",
+                "endpoint": "containerengine.{{region}}.oci.oraclecloud.com"
+            }
+        }
+    },
     "core": {
         "instance": {
             "list": {

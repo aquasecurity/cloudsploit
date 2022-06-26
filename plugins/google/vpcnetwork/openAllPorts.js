@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, services should be restricted to known IP addresses.',
     link: 'https://cloud.google.com/vpc/docs/using-firewalls',
     recommended_action: 'Restrict ports to known IP addresses.',
-    apis: ['firewalls:list'],
+    apis: ['firewalls:list', 'projects:get'],
     compliance: {
         hipaa: 'HIPAA requires strict access controls to networks and services ' +
             'processing sensitive data. Firewalls are the built-in ' +
@@ -41,7 +41,7 @@ module.exports = {
                 return rcb();
             }
 
-            helpers.findOpenAllPorts(firewalls.data, region, results, cache, callback, source);
+            helpers.findOpenAllPorts(firewalls.data, region, results, cache, source);
 
             rcb();
         }, function(){
