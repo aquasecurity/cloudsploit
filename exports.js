@@ -424,6 +424,8 @@ module.exports = {
         'mqBrokerEncrypted'             : require(__dirname + '/plugins/aws/mq/mqBrokerEncrypted.js'),
       
         'memorydbClusterEncrypted'      : require(__dirname + '/plugins/aws/memorydb/memorydbClusterEncrypted.js'),
+      
+        'mskClusterCBEncryption'        : require(__dirname + '/plugins/aws/msk/mskClusterCBEncryption.js'),
  
         'mskClusterPublicAccess'        : require(__dirname + '/plugins/aws/msk/mskClusterPublicAccess.js'),
         'mskClusterUnauthAccess'        : require(__dirname + '/plugins/aws/msk/mskClusterUnauthAccess.js'),
