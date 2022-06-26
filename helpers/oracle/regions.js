@@ -53,6 +53,7 @@ module.exports = {
     topics: regions,
     subscriptions: regions,
     policy: regions,
+    defaultTags: ['default'],
     subnet: regions,
     dbHome: regions,
     database: regions,

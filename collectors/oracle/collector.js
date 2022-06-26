@@ -132,6 +132,14 @@ var calls = {
             filterValue: ['compartmentId'],
         }
     },
+    defaultTags: {
+        list: {
+            api: 'iam',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+            restVersion: '/20160918'
+        }
+    },
     waasPolicy: {
         list: {
             api: 'waas',
