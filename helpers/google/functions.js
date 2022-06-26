@@ -147,7 +147,6 @@ function findOpenAllPorts(ngs, location, results, cache, source) {
     }
 
     var project = projects.data[0].name;
-    let found = false;
     let protocols = {'tcp': '*', 'udp' : '*'};
     for (let sgroups of ngs) {
         let strings = [];
@@ -174,12 +173,10 @@ function findOpenAllPorts(ngs, location, results, cache, source) {
                                     if (parseInt(startPort) === 0 && parseInt(endPort) === 65535) {
                                         var string = 'all ports open to the public';
                                         if (strings.indexOf(string) === -1) strings.push(string);
-                                        found = true;
                                     }
                                 } else if (portRange === 'all') {
                                     var string = 'all ports open to the public';
                                     if (strings.indexOf(string) === -1) strings.push(string);
-                                    found = true;
                                 }
                             });
                         }
@@ -190,8 +187,6 @@ function findOpenAllPorts(ngs, location, results, cache, source) {
                         (sourceAddressPrefix.includes('*') || sourceAddressPrefix.includes('') || sourceAddressPrefix.includes('0.0.0.0/0') || sourceAddressPrefix.includes('<nw>/0') || sourceAddressPrefix.includes('/0') || sourceAddressPrefix.includes('internet'))) {
                         var string = 'all ports open to the public';
                         if (strings.indexOf(string) === -1) strings.push(string);
-                        found = true;
-
                     }
                 }
             }
@@ -202,10 +197,12 @@ function findOpenAllPorts(ngs, location, results, cache, source) {
                 ') has ' + strings.join(' and '), location,
                 resource);
         }
-    }
-
-    if (!found) {
-        shared.addResult(results, 0, 'No public open ports found', location);
+        else {
+            shared.addResult(results, 0,
+                'Firewall Rule:(' + sgroups.name +
+                ') does not have all ports open to the public', location,
+                resource);
+        }
     }
 }
 
