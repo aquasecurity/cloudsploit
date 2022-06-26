@@ -1032,6 +1032,8 @@ var collectRateError = function(err, rateError) {
 
 var processIntegration = function(serviceName, settings, collection, calls, postcalls, debugMode, iCb) {
     let localEvent = {};
+    let localSettings = {};
+    localSettings = settings;
 
     localEvent.collection = {};
     localEvent.previousCollection = {};
@@ -1042,26 +1044,30 @@ var processIntegration = function(serviceName, settings, collection, calls, post
     localEvent.collection[serviceName.toLowerCase()] = collection[serviceName.toLowerCase()] ? collection[serviceName.toLowerCase()] : {};
     localEvent.previousCollection[serviceName.toLowerCase()] = settings.previousCollection && settings.previousCollection[serviceName.toLowerCase()] ? settings.previousCollection[serviceName.toLowerCase()] : {};
 
-    localEvent.identifier = settings.identifier;
-    localEvent.identifier.service = serviceName.toLowerCase();
+    if (!localSettings.identifier) localSettings.identifier = {};
+    localSettings.identifier.service = serviceName.toLowerCase();
 
-    processIntegrationAdditionalData(serviceName, settings, collection, calls, postcalls, localEvent.collection);
-    processIntegrationAdditionalData(serviceName, settings, settings.previousCollection, calls, postcalls, localEvent.previousCollection);
+    processIntegrationAdditionalData(serviceName, settings, collection, calls, postcalls, localEvent.collection, function(collectionReturned){
+        localEvent.collection = collectionReturned;
 
-    settings.integration(localEvent, function() {
-        if (debugMode) console.log(`Processed Event: ${JSON.stringify(localEvent)}`);
+        processIntegrationAdditionalData(serviceName, settings, settings.previousCollection, calls, postcalls, localEvent.previousCollection, function(previousCollectionReturned){
+            localEvent.previousCollection = previousCollectionReturned;
+            localSettings.integration(localEvent, function() {
+                if (debugMode) console.log(`Processed Event: ${JSON.stringify(localEvent)}`);
 
-        return iCb();
+                return iCb();
+            });
+        });
     });
 };
 
-var processIntegrationAdditionalData = function(serviceName, settings, localCollection, calls, postcalls, localEventCollection){
+var processIntegrationAdditionalData = function(serviceName, localSettings, localCollection, calls, postcalls, localEventCollection, callback){
     if (localCollection == undefined ||
         (localCollection &&
             (JSON.stringify(localCollection)==='{}' ||
                 localCollection[serviceName.toLowerCase()] == undefined ||
                 JSON.stringify(localCollection[serviceName.toLowerCase()])==='{}'))) {
-        return;
+        return callback(null);
     }
 
     let callsMap = Object.keys(calls[serviceName]);
@@ -1070,14 +1076,15 @@ var processIntegrationAdditionalData = function(serviceName, settings, localColl
     if (callsMap.find(mycall => mycall == 'sendIntegration') &&
         reliesOnFound(calls, localCollection, serviceName)) {
         foundData = reliesOnData(calls, localCollection, serviceName);
-    } else if (callsMap.find(mycall => mycall == 'sendIntegration') &&
+    }
+
+    if (callsMap.find(mycall => mycall == 'sendIntegration') &&
         integrationReliesOnFound(calls, localCollection, serviceName)) {
         foundData = integrationReliesOnData(calls, localCollection, serviceName);
 
         if (foundData &&
             Object.keys(foundData).length){
             for (let d of Object.keys(foundData)){
-                settings.identifier.service = d;
                 localEventCollection[d]=foundData[d];
             }
         }
@@ -1092,19 +1099,23 @@ var processIntegrationAdditionalData = function(serviceName, settings, localColl
         if (postCallsMap.find(mycall => mycall == 'sendIntegration') &&
             reliesOnFound(postcall, localCollection, serviceName)){
             foundData = reliesOnData(postcall, localCollection, serviceName);
-        } else if (postCallsMap.find(mycall => mycall == 'sendIntegration') &&
+        }
+
+        if (postCallsMap.find(mycall => mycall == 'sendIntegration') &&
             integrationReliesOnFound(postcall, localCollection, serviceName)){
             foundData = integrationReliesOnData(postcall, localCollection, serviceName);
 
             if (foundData &&
                 Object.keys(foundData).length){
                 for (let d of Object.keys(foundData)){
-                    settings.identifier.service = d;
                     localEventCollection[d]=foundData[d];
                 }
             }
         }
     }
+
+    localSettings.identifier.service = serviceName.toLowerCase();
+    return callback(localEventCollection);
 };
 
 var reliesOnFound = function(calls, localCollection, serviceName){
@@ -1143,8 +1154,9 @@ var integrationReliesOnFound = function(calls, localCollection, serviceName){
             calls[serviceName].sendIntegration &&
             calls[serviceName].sendIntegration.enabled &&
             calls[serviceName].sendIntegration.integrationReliesOn &&
-            calls[serviceName].sendIntegration.integrationReliesOn.calls &&
-            calls[serviceName].sendIntegration.integrationReliesOn.calls.length) {
+            calls[serviceName].sendIntegration.integrationReliesOn.serviceName &&
+            Array.isArray(calls[serviceName].sendIntegration.integrationReliesOn.serviceName) &&
+            calls[serviceName].sendIntegration.integrationReliesOn.serviceName.length) {
             return true;
         } else {
             return false;
@@ -1184,22 +1196,22 @@ var integrationReliesOnData = function(calls, localCollection, serviceName){
     let callsMap = Object.keys(calls[serviceName]);
 
     if (callsMap.find(mycall => mycall == 'sendIntegration')) {
-        if (calls[serviceName] &&
+        if (localCollection &&
+            calls[serviceName] &&
             calls[serviceName].sendIntegration &&
             calls[serviceName].sendIntegration.enabled &&
             calls[serviceName].sendIntegration.integrationReliesOn &&
-            calls[serviceName].sendIntegration.integrationReliesOn.calls &&
-            calls[serviceName].sendIntegration.integrationReliesOn.calls.length) {
+            calls[serviceName].sendIntegration.integrationReliesOn.serviceName &&
+                Array.isArray(calls[serviceName].sendIntegration.integrationReliesOn.serviceName) &&
+                calls[serviceName].sendIntegration.integrationReliesOn.serviceName.length) {
 
             let serviceReliedOn = {};
-            if (localCollection &&
-                calls[serviceName] &&
-                calls[serviceName].sendIntegration &&
-                calls[serviceName].sendIntegration.integrationReliesOn &&
-                calls[serviceName].sendIntegration.integrationReliesOn.serviceName &&
-                localCollection[calls[serviceName].sendIntegration.integrationReliesOn.serviceName.toLowerCase()]) {
-                serviceReliedOn[calls[serviceName].sendIntegration.integrationReliesOn.serviceName.toLowerCase()] = localCollection[calls[serviceName].sendIntegration.integrationReliesOn.serviceName.toLowerCase()];
+            for (let serv of calls[serviceName].sendIntegration.integrationReliesOn.serviceName) {
+                if (localCollection[serv.toLowerCase()]) {
+                    serviceReliedOn[serv.toLowerCase()] = localCollection[serv.toLowerCase()];
+                }
             }
+
             return serviceReliedOn;
         } else {
             return {};

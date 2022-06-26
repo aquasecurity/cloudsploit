@@ -48,7 +48,7 @@ module.exports = {
                         encryptionProtectors.data.forEach(encryptionProtector => {
                             if ((encryptionProtector.kind &&
                                 encryptionProtector.kind.toLowerCase() != 'azurekeyvault') ||
-                                (encryptionProtector.serverKeyType ||
+                                (encryptionProtector.serverKeyType &&
                                     encryptionProtector.serverKeyType.toLowerCase() != 'azurekeyvault') ||
                                 !encryptionProtector.uri) {
                                 helpers.addResult(results, 2,
