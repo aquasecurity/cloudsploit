@@ -909,6 +909,7 @@ module.exports = {
 
         'okePrivateEndpoint'            : require(__dirname + '/plugins/oracle/oke/okePrivateEndpoint.js'),
         'okeSecretsEncrypted'           : require(__dirname + '/plugins/oracle/oke/okeSecretsEncrypted.js'),
+        'okeSecurityGroups'            : require(__dirname + '/plugins/oracle/oke/okeSecurityGroups.js'),
     },
     google: {
         'excessiveFirewallRules'        : require(__dirname + '/plugins/google/vpcnetwork/excessiveFirewallRules.js'),
