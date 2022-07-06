@@ -34,35 +34,19 @@ const endpoints = [
         "isHttpsAllowed": true,
         "queryStringCachingBehavior": "IgnoreQueryString"
         
-    },
-    {
-        "id": "/subscriptions/234/resourcegroups/sadeedrg/providers/Microsoft.Cdn/profiles/test-profile/endpoints/test-end",
-        "type": "Microsoft.Cdn/profiles/endpoints",
-        "name": "test-end",
-        "location": "Global",
-        "tags": {},
-        "hostName": "test-end.azureedge.net",
-        "originHostHeader": "akhtar-test.azurewebsites.net",
-        "originPath": null,
-        "isCompressionEnabled": true,
-        "isHttpAllowed": false,
-        "isHttpsAllowed": true,
-        "queryStringCachingBehavior": "IgnoreQueryString"
-    
-    },
-
+    }
 ];
 
 const diagnosticSettings = [
     {
-        "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourcegroups/sadeedrg/providers/microsoft.cdn/profiles/test-profile/endpoints/test-end/providers/microsoft.insights/diagnosticSettings/test-diagnostic",
+        "id": "/subscriptions/234/resourcegroups/sadeedrg/providers/microsoft.cdn/profiles/test-profile/endpoints/test-end/providers/microsoft.insights/diagnosticSettings/test-diagnostic",
         "type": "Microsoft.Insights/diagnosticSettings",
         "name": "test-diagnostic",
         "location": null,
         "kind": null,
         "tags": null,
         "identity": null,
-        "storageAccountId": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/akhtar-rg/providers/Microsoft.Storage/storageAccounts/akhtarrgdiag",
+        "storageAccountId": "/subscriptions/234/resourceGroups/akhtar-rg/providers/Microsoft.Storage/storageAccounts/akhtarrgdiag",
         "serviceBusRuleId": null,
         "workspaceId": null,
         "eventHubAuthorizationRuleId": null,
@@ -82,14 +66,14 @@ const diagnosticSettings = [
         "logAnalyticsDestinationType": null
     },
     {
-        "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourcegroups/sadeedrg/providers/microsoft.cdn/profiles/test-profile/endpoints/test-end/providers/microsoft.insights/diagnosticSettings/test-diagnostic",
+        "id": "/subscriptions/234/resourcegroups/sadeedrg/providers/microsoft.cdn/profiles/test-profile/endpoints/test-end/providers/microsoft.insights/diagnosticSettings/test-diagnostic",
         "type": "Microsoft.Insights/diagnosticSettings",
-        "name": "test-diagnostic",
+        "name": "test-diagnostic2",
         "location": null,
         "kind": null,
         "tags": null,
         "identity": null,
-        "storageAccountId": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/akhtar-rg/providers/Microsoft.Storage/storageAccounts/akhtarrgdiag",
+        "storageAccountId": "/subscriptions/234/resourceGroups/akhtar-rg/providers/Microsoft.Storage/storageAccounts/akhtarrgdiag",
         "serviceBusRuleId": null,
         "workspaceId": null,
         "eventHubAuthorizationRuleId": null,
