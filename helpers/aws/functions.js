@@ -172,7 +172,7 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
             }
         }
     }
-
+ 
     return;
 }
 

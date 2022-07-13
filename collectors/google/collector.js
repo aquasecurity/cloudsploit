@@ -478,6 +478,21 @@ var collect = function(GoogleConfig, settings, callback) {
                             tertiaryCallCb();
                         });
                     }, function() {
+                        if (collection && (!collection.projects || !collection.projects.get)) {
+                            collection.projects = {
+                                ...collection.projects,
+                                get: {
+                                    global: {
+                                        data: [
+                                            {
+                                                kind: 'compute#project',
+                                                name: GoogleConfig.project
+                                            }
+                                        ]
+                                    }
+                                }
+                            };
+                        }
                         callback(null, collection);
                     });
                 });

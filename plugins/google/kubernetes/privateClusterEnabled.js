@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Kubernetes private clusters only have internal ip ranges, which ensures that their workloads are isolated from the public internet.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters',
     recommended_action: 'Ensure that all Kubernetes clusters have private cluster enabled.',
-    apis: ['clusters:list', 'projects:get'],
+    apis: ['clusters:list'],
 
     run: function(cache, settings, callback) {
         var results = [];

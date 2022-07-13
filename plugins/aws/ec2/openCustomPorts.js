@@ -15,7 +15,7 @@ module.exports = {
             name: 'Restricted Open Ports',
             description: 'Comma separated list of ports/port-ranges that should be restricted and not publicly open. Example: tcp:80,tcp:443,tcp:80-443',
             regex: '[a-zA-Z0-9,:]',
-            default: 'tcp:22,udp:15,udp:20'
+            default: ''
         },
         ec2_skip_unused_groups: {
             name: 'EC2 Skip Unused Groups',

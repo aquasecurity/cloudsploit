@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'By default, all storage buckets are encrypted using Google-managed keys. To have better control over how your storage bucktes are encrypted, you can use Customer-Managed Keys (CMKs).',
     link: 'https://cloud.google.com/storage/docs/encryption/customer-managed-keys',
     recommended_action: 'Ensure that all storage buckets have desired encryption level.',
-    apis: ['buckets:list', 'projects:get', 'keyRings:list', 'cryptoKeys:list'],
+    apis: ['buckets:list', 'keyRings:list', 'cryptoKeys:list'],
     settings: {
         bucket_encryption_level: {
             name: 'Storage Bucket Encryption Level',

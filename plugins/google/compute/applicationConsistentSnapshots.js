@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Application consistent snapshots are more reliable because they are created after making sure that current operations are temporarily ceased and any data in memory is flushed to disk.',
     link: 'https://cloud.google.com/compute/docs/disks/snapshot-best-practices#prepare_for_consistency',
     recommended_action: 'Ensure that all disk snapshot schedules are application consistent.',
-    apis: ['resourcePolicies:list', 'projects:get'],
+    apis: ['resourcePolicies:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
