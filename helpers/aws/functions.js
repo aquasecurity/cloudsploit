@@ -64,8 +64,6 @@ function addResult(results, status, message, region, resource, custom){
 }
 
 function findOpenPorts(groups, ports, service, region, results, cache, config, callback) {
-    var found = false;
-    var usedGroup = false;
     if (config.ec2_skip_unused_groups) {
         var usedGroups = getUsedSecurityGroups(cache, results, region);
         if (usedGroups && usedGroups.length && usedGroups[0] === 'Error') return callback();
@@ -95,7 +93,6 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
                                 if (permission.FromPort <= i && permission.ToPort >= i) {
                                     string = `some of ${permission.IpProtocol.toUpperCase()}:${port}`;
                                     openV4Ports.push(string);
-                                    found = true;
                                     break;
                                 }
                             }
@@ -104,7 +101,6 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
                             if (permission.FromPort <= port && permission.ToPort >= port) {
                                 string = `${permission.IpProtocol.toUpperCase()}:${port}`;
                                 if (openV4Ports.indexOf(string) === -1) openV4Ports.push(string);
-                                found = true;
                             }
                         }
                     }
@@ -126,7 +122,6 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
                                 if (permission.FromPort <= i && permission.ToPort >= i) {
                                     string = `some of ${permission.IpProtocol.toUpperCase()}:${portV6}`;
                                     openV6Ports.push(string);
-                                    found = true;
                                     break;
                                 }
                             }
@@ -135,7 +130,6 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
                             if (permission.FromPort <= portV6 && permission.ToPort >= portV6) {
                                 var stringV6 = `${permission.IpProtocol.toUpperCase()}:${portV6}`;
                                 if (openV6Ports.indexOf(stringV6) === -1) openV6Ports.push(stringV6);
-                                found = true;
                             }
                         }
                     }
@@ -160,18 +154,17 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
             if (config.ec2_skip_unused_groups && groups[g].GroupId && !usedGroups.includes(groups[g].GroupId)) {
                 addResult(results, 1, `Security Group: ${groups[g].GroupId} is not in use`,
                     region, resource);
-                usedGroup = true;
             } else {
                 addResult(results, 2, resultsString,
                     region, resource);
             }
         } else {
-            found = true;
             let strings = [];
 
             for (const key in ports) {
                 strings.push(`${key.toUpperCase()}:${ports[key]}`);
             }
+
             if (strings.length){
                 addResult(results, 0,
                     `Security group: ${groups[g].GroupId} (${groups[g].GroupName}) does not have ${strings.join(', ')} open to 0.0.0.0/0 or ::0`,
@@ -179,11 +172,7 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
             }
         }
     }
-
-    if (!found && !usedGroup) {
-        addResult(results, 0, 'No EC2 security groups found', region);
-    }
-
+ 
     return;
 }
 
