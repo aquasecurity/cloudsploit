@@ -20,7 +20,6 @@ var ipProtocol = {
 };
 
 function findOpenPorts(groups, ports, service, region, results, isSecurityRule, securityGroups) {
-    var found = false;
     if (isSecurityRule) {
         for (var p in groups) {
             var messages = [];
@@ -45,7 +44,6 @@ function findOpenPorts(groups, ports, service, region, results, isSecurityRule, 
                         var message = portIndex.toUpperCase() +
                             ' port ' + port + ' open to 0.0.0.0/0';
                         if (messages.indexOf(message) === -1) messages.push(message);
-                        found = true;
                     }
                 }
             } else if (permission.isValid &&
@@ -68,7 +66,6 @@ function findOpenPorts(groups, ports, service, region, results, isSecurityRule, 
                         var message = portIndex.toUpperCase() +
                             ' port ' + port + ' open to 0.0.0.0/0';
                         if (messages.indexOf(message) === -1) messages.push(message);
-                        found = true;
                     }
                 }
             }
@@ -93,7 +90,6 @@ function findOpenPorts(groups, ports, service, region, results, isSecurityRule, 
                         var message = portIndex.toUpperCase() +
                             ' port ' + port + ' open to ::/0';
                         if (messages.indexOf(message) === -1) messages.push(message);
-                        found = true;
                     }
                 }
             } else if (permission.isValid &&
@@ -116,7 +112,6 @@ function findOpenPorts(groups, ports, service, region, results, isSecurityRule, 
                         var message = portIndex.toUpperCase() +
                             ' port ' + port + ' open to ::/0';
                         if (messages.indexOf(message) === -1) messages.push(message);
-                        found = true;
                     }
                 }
             }
@@ -155,7 +150,6 @@ function findOpenPorts(groups, ports, service, region, results, isSecurityRule, 
                             var message = portIndex.toUpperCase() +
                                 ' port ' + port + ' open to 0.0.0.0/0';
                             if (messages.indexOf(message) === -1) messages.push(message);
-                            found = true;
                         }
                     }
                 } else if (permission.udpOptions && permission.source === '0.0.0.0/0') {
@@ -172,7 +166,6 @@ function findOpenPorts(groups, ports, service, region, results, isSecurityRule, 
                             var message = portIndex.toUpperCase() +
                                 ' port ' + port + ' open to 0.0.0.0/0';
                             if (messages.indexOf(message) === -1) messages.push(message);
-                            found = true;
                         }
                     }
                 }
@@ -191,7 +184,6 @@ function findOpenPorts(groups, ports, service, region, results, isSecurityRule, 
                             var message = portIndex.toUpperCase() +
                                 ' port ' + port + ' open to ::/0';
                             if (messages.indexOf(message) === -1) messages.push(message);
-                            found = true;
                         }
                     }
                 } else if (permission.udpOptions && permission.source === '::/0') {
@@ -208,7 +200,6 @@ function findOpenPorts(groups, ports, service, region, results, isSecurityRule, 
                             var message = portIndex.toUpperCase() +
                                 ' port ' + port + ' open to ::/0';
                             if (messages.indexOf(message) === -1) messages.push(message);
-                            found = true;
                         }
                     }
                 }
@@ -220,22 +211,18 @@ function findOpenPorts(groups, ports, service, region, results, isSecurityRule, 
                     ' has ' + service + ': ' + messages.join(' and '), region,
                     resource);
             }
-
+            else {
+                shared.addResult(results, 0,
+                    'The Security List: ' + sgroups.displayName +
+                    ' does not have ' + service + ' port open', region,
+                    resource);
+            }
         }
     }
-    if (!found &&
-        isSecurityRule) {
-        shared.addResult(results, 0, 'No open ports found in Network Security Groups', region);
-    } else {
-        shared.addResult(results, 0, 'No open ports found in Security Lists', region);
-
-    }
-
     return;
 }
 
 function findOpenPortsAll(groups, ports, service, region, results) {
-    var found = false;
     for (g in groups) {
         var messages = [];
         var sgroups = groups[g];
@@ -252,7 +239,6 @@ function findOpenPortsAll(groups, ports, service, region, results) {
                 permission.source === '0.0.0.0/0') {
                 message = 'all protocols open to 0.0.0.0/0';
                 if (messages.indexOf(message) === -1) messages.push(message);
-                found = true;
 
             } else if (permission.source &&
                 permission.source === '0.0.0.0/0' &&
@@ -263,7 +249,6 @@ function findOpenPortsAll(groups, ports, service, region, results) {
                 !permission.tcpOptions.destinationPortRange))) {
                 message = `all ${ipProtocol.tcp.name} ports open to 0.0.0.0/0`;
                 if (messages.indexOf(message) === -1) messages.push(message);
-                found = true;
 
             } else if (permission.source &&
                 permission.source === '0.0.0.0/0' &&
@@ -274,7 +259,6 @@ function findOpenPortsAll(groups, ports, service, region, results) {
                 !permission.udpOptions.destinationPortRange))) {
                 message = `all ${ipProtocol.udp.name} ports open to 0.0.0.0/0`;
                 if (messages.indexOf(message) === -1) messages.push(message);
-                found = true;
             }
         }
 
@@ -284,12 +268,13 @@ function findOpenPortsAll(groups, ports, service, region, results) {
                 ' has ' + service + ': ' + messages.join(' and '), region,
                 resource);
         }
+        else {
+            shared.addResult(results, 0,
+                'The Security List: ' + sgroups.displayName +
+                ' does not have all ports open to the public', region,
+                resource);
+        }
     }
-
-    if (!found) {
-        shared.addResult(results, 0, 'No public open ports found', region);
-    }
-
 }
 
 function checkRegionSubscription (cache, source, results, region) {
