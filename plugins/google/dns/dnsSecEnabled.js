@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'DNS Security is a feature that authenticates all responses to domain name lookups. This prevents attackers from committing DNS hijacking or man in the middle attacks.',
     link: 'https://cloud.google.com/dns/docs/dnssec',
     recommended_action: 'Ensure DNSSEC is enabled for all managed zones in the cloud DNS service.',
-    apis: ['managedZones:list', 'projects:get'],
+    apis: ['managedZones:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
