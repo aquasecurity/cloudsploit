@@ -56,7 +56,6 @@ module.exports = {
                 return rcb();
             }
 
-            var found = false;
             var groups = describeSecurityGroups.data;
             var usedGroup = false;
             if (config.ec2_skip_unused_groups) {
@@ -79,13 +78,11 @@ module.exports = {
                             if (!permission.FromPort && (!permission.ToPort || permission.ToPort === 65535)) {
                                 var string = 'all ports open to 0.0.0.0/0';
                                 if (strings.indexOf(string) === -1) strings.push(string);
-                                found = true;
                             }
 
                             if (permission.IpProtocol === '-1') {
                                 var stringO = 'all protocols open to 0.0.0.0/0';
                                 if (strings.indexOf(stringO) === -1) strings.push(stringO);
-                                found = true;
                             }
                         }
                     }
@@ -97,7 +94,6 @@ module.exports = {
                             if (!permission.FromPort && (!permission.ToPort || permission.ToPort === 65535)) {
                                 var stringV6 = 'all ports open to ::/0';
                                 if (strings.indexOf(stringV6) === -1) strings.push(stringV6);
-                                found = true;
                             }
 
                             if (permission.IpProtocol === '-1') {
@@ -121,11 +117,11 @@ module.exports = {
                             ') has ' + strings.join(' and '), region,
                             resource);
                     }
+                } else {
+                    helpers.addResult(results, 0,
+                        `Security group: ${groups[g].GroupId} (${groups[g].GroupName}) does not have all ports or protocols open to the public`,
+                        region, resource);
                 }
-            }
-
-            if (!found && !usedGroup) {
-                helpers.addResult(results, 0, 'No public open ports found', region);
             }
 
             rcb();
