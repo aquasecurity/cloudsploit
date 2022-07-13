@@ -41,35 +41,47 @@ module.exports = {
 
             if (listTopics.err || !listTopics.data) {
                 helpers.addResult(results, 3,
-                    `Unable to query for SNS topics: ${helpers.addError(listTopics)}`, region);
+                    `Unable to list SNS topics: ${helpers.addError(listTopics)}`, region);
                 return rcb();
             }
 
+            var trailFound;
             for (let trail of describeTrails.data) {
-                if (!trail.TrailARN) continue;
+                if (!trail.TrailARN ||
+                    (trail.HomeRegion && trail.HomeRegion.toLowerCase() != region)) continue;
 
+                trailFound = true;
                 var resource = trail.TrailARN;
+
+                if (!trail.SnsTopicARN) {
+                    helpers.addResult(results, 2,
+                        'CloudTrail trail has no SNS topic attached', region, resource);
+                    continue;
+                }
 
                 var getTopicAttributes = helpers.addSource(cache, source,
                     ['sns', 'getTopicAttributes', region, trail.SnsTopicARN]);
 
-                if (getTopicAttributes && getTopicAttributes.err && getTopicAttributes.err.code &&
-                    getTopicAttributes.err.code == 'NotFound') {
+                if (!getTopicAttributes) {
                     helpers.addResult(results, 2,
                         'CloudTrail trail SNS topic not found', region, resource);
                     continue;
                 } 
 
-                if (!getTopicAttributes || getTopicAttributes.err ||
+                if (getTopicAttributes.err ||
                     !getTopicAttributes.data) {
                     helpers.addResult(results, 3,
-                        `Unable to query for SNS topic: ${helpers.addError(describeTrails)}`, 
+                        `Unable to query for SNS topic attributes: ${helpers.addError(getTopicAttributes)}`, 
                         region, resource);
                 } else {
                     helpers.addResult(results, 0,
                         'CloudTrail trail is using active SNS topic',
                         region, resource);
                 }
+            }
+
+            if (!trailFound) {
+                helpers.addResult(results, 0, 'No CloudTrail trails found', region);
             }
 
             rcb();
