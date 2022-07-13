@@ -57,7 +57,6 @@ module.exports = {
             }
 
             var groups = describeSecurityGroups.data;
-            var usedGroup = false;
             if (config.ec2_skip_unused_groups) {
                 var usedGroups = helpers.getUsedSecurityGroups(cache, results, region, rcb);
             }
@@ -109,7 +108,6 @@ module.exports = {
                     if (config.ec2_skip_unused_groups && groups[g].GroupId && !usedGroups.includes(groups[g].GroupId)) {
                         helpers.addResult(results, 1, `Security Group: ${groups[g].GroupId} is not in use`,
                             region, resource);
-                        usedGroup = true;
                     } else {
                         helpers.addResult(results, 2,
                             'Security group: ' + groups[g].GroupId +

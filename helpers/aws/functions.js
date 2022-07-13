@@ -64,7 +64,6 @@ function addResult(results, status, message, region, resource, custom){
 }
 
 function findOpenPorts(groups, ports, service, region, results, cache, config, callback) {
-    var usedGroup = false;
     if (config.ec2_skip_unused_groups) {
         var usedGroups = getUsedSecurityGroups(cache, results, region);
         if (usedGroups && usedGroups.length && usedGroups[0] === 'Error') return callback();
@@ -155,7 +154,6 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
             if (config.ec2_skip_unused_groups && groups[g].GroupId && !usedGroups.includes(groups[g].GroupId)) {
                 addResult(results, 1, `Security Group: ${groups[g].GroupId} is not in use`,
                     region, resource);
-                usedGroup = true;
             } else {
                 addResult(results, 2, resultsString,
                     region, resource);
