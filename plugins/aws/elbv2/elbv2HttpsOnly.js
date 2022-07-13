@@ -52,7 +52,7 @@ module.exports = {
                 var non_https_listener = [];
                 var noListeners = true;
                 var elbArn = lb.LoadBalancerArn;
-                if (describeListeners.data && describeListeners.data.Listeners && describeListeners.data.Listeners.length) {
+                if (describeListeners && describeListeners.data && describeListeners.data.Listeners && describeListeners.data.Listeners.length) {
                     noListeners = false;
                     describeListeners.data.Listeners.forEach(function(listener){
                         // if it is not https add errors to results

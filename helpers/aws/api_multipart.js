@@ -2057,10 +2057,11 @@ var postcalls = [
     },
     {
         IAM: {
-            getPolicyVersion: {
+            getPolicy: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listPolicies',
-                override: true,
+                filterKey: 'PolicyArn',
+                filterValue: 'Arn',
                 rateLimit: 500
             }
         },
@@ -2101,11 +2102,10 @@ var postcalls = [
     },
     {
         IAM: {
-            getPolicy: {
+            getPolicyVersion: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listPolicies',
-                filterKey: 'PolicyArn',
-                filterValue: 'Arn',
+                override: true,
                 rateLimit: 500
             },
             getRole: {
