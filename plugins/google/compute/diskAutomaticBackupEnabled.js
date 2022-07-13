@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Having scheduled snapshots configured for your disks will periodically backup data from your persistent disks.',
     link: 'https://cloud.google.com/compute/docs/disks/scheduled-snapshots',
     recommended_action: 'Ensure that all compute disks have a snapshot schedule attached.',
-    apis: ['disks:aggregatedList', 'projects:get'],
+    apis: ['disks:aggregatedList'],
     
     run: function(cache, settings, callback) {
         var results = [];

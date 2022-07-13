@@ -10,7 +10,7 @@ module.exports = {
         'that incoming connections for database instance remain secure.',
     link: 'https://cloud.google.com/sql/docs/postgres/configure-ssl-instance?authuser=1#server-certs',
     recommended_action: 'Edit Cloud SQL DB instances and rotate server certificates under Connections->MANAGE CERTIFICATES',
-    apis: ['instances:sql:list', 'projects:get'],
+    apis: ['instances:sql:list'],
     settings: {
         server_certicate_expiration_threshold: {
             name: 'SQL Server Certificate Expiration Threshold',

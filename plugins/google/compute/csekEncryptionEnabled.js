@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Google encrypts all disks at rest by default. By using CSEK only the users with the key can access the disk. Anyone else, including Google, cannot access the disk data.',
     link: 'https://cloud.google.com/compute/docs/disks/customer-supplied-encryption',
     recommended_action: 'CSEK can only be configured when creating a disk. Delete the disk and redeploy with CSEK.',
-    apis: ['disks:aggregatedList', 'projects:get'],
+    apis: ['disks:aggregatedList'],
     compliance: {
         hipaa: 'HIPAA requires that all data is encrypted, including data at rest. ' +
             'Enabling encryption of disk data helps to protect this data.',

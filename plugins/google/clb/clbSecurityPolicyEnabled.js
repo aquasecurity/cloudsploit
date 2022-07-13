@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Security policies on backend services control the traffic on the load balancer. This creates edge security and can deny or allow specified IP addresses.',
     link: 'https://cloud.google.com/armor/docs/security-policy-concepts',
     recommended_action: 'Ensure all load balancers have an attached Cloud Armor security policy.',
-    apis: ['backendServices:list', 'projects:get'],
+    apis: ['backendServices:list'],
 
     run: function(cache, settings, callback) {
         var results = [];

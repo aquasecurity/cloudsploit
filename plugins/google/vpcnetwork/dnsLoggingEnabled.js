@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Cloud DNS logging records the queries coming from Compute Engine VMs, GKE containers, or other GCP resources provisioned within the VPC to Stackdriver.',
     link: 'https://cloud.google.com/dns/docs/monitoring',
     recommended_action: 'Create Cloud DNS Server Policy with logging enabled for VPC Networks',
-    apis: ['networks:list', 'policies:list', 'projects:get'],
+    apis: ['networks:list', 'policies:list'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Unused Compute disks should be deleted to prevent accidental exposure of data and to avoid unnecessary billing.',
     link: 'https://cloud.google.com/compute/docs/disks',
     recommended_action: 'Delete unused Compute disks.',
-    apis: ['disks:aggregatedList', 'projects:get'],
+    apis: ['disks:aggregatedList'],
     
     run: function(cache, settings, callback) {
         var results = [];

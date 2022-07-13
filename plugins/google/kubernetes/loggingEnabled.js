@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'This setting should be enabled to ensure Kubernetes control plane logs are properly recorded.',
     link: 'https://cloud.google.com/monitoring/kubernetes-engine/legacy-stackdriver/logging',
     recommended_action: 'Ensure that logging is enabled on all Kubernetes clusters.',
-    apis: ['clusters:list', 'projects:get'],
+    apis: ['clusters:list'],
     compliance: {
         hipaa: 'HIPAA requires the logging of all activity ' +
             'including access and all actions taken.'
