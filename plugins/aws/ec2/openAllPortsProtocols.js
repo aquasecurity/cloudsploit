@@ -98,7 +98,6 @@ module.exports = {
                             if (permission.IpProtocol === '-1') {
                                 var stringP = 'all protocols open to ::/0';
                                 if (strings.indexOf(stringP) === -1) strings.push(stringP);
-                                found = true;
                             }
                         }
                     }
