@@ -55,7 +55,6 @@ function addResult(results, status, message, region, resource, custom) {
 }
 
 function findOpenPorts(ngs, protocols, service, location, results) {
-    let found = false;
     var openPrefix = ['*', '0.0.0.0', '0.0.0.0/0', '<nw/0>', '/0', '::/0', 'internet'];
 
     for (let sGroups of ngs) {
@@ -80,6 +79,7 @@ function findOpenPorts(ngs, protocols, service, location, results) {
                     break;
                 }
             }
+
             if (sourceFound) {
                 for (let protocol in protocols) {
                     let ports = protocols[protocol];
@@ -92,6 +92,7 @@ function findOpenPorts(ngs, protocols, service, location, results) {
                             typeof securityRule.properties['protocol'] == 'string' &&
                             (securityRule.properties['protocol'].toUpperCase() === protocol || securityRule.properties['protocol'].toUpperCase() === '*')) {
                             if (securityRule.properties['destinationPortRange']) {
+
                                 if (securityRule.properties['destinationPortRange'].toString().indexOf("-") > -1) {
                                     let portRange = securityRule.properties['destinationPortRange'].split("-");
                                     let startPort = portRange[0];
@@ -101,20 +102,19 @@ function findOpenPorts(ngs, protocols, service, location, results) {
                                             ` port ` + ports + ` open to ` + sourceFilter;
                                         strings.push(string);
                                         if (strings.indexOf(string) === -1) strings.push(string);
-                                        found = true;
                                     }
-                                } else if (parseInt(securityRule.properties['destinationPortRange']) === port ) {
+                                } else if (parseInt(securityRule.properties['destinationPortRange']) === port ||
+                                    securityRule.properties['destinationPortRange'] === port ||
+                                    securityRule.properties['destinationPortRange'] === '*') {
                                     var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
                                         (ports === '*' ? ` and all ports` : ` port ` + ports) + ` open to ` + sourceFilter;
                                     if (strings.indexOf(string) === -1) strings.push(string);
-                                    found = true;
                                 }
                             } else if (securityRule.properties['destinationPortRanges']) {
                                 if (securityRule.properties['destinationPortRanges'].indexOf(port.toString()) > -1) {
                                     var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
                                         ` port ` + ports + ` open to ` + sourceFilter;
                                     if (strings.indexOf(string) === -1) strings.push(string);
-                                    found = true;
                                 } else {
                                     for (let portRange of securityRule.properties['destinationPortRanges']){
                                         if (portRange.toString().indexOf("-") > -1) {
@@ -126,7 +126,6 @@ function findOpenPorts(ngs, protocols, service, location, results) {
                                                     ` port ` + ports + ` open to ` + sourceFilter;
                                                 strings.push(string);
                                                 if (strings.indexOf(string) === -1) strings.push(string);
-                                                found = true;
                                                 break;
                                             }
                                         }
@@ -143,11 +142,18 @@ function findOpenPorts(ngs, protocols, service, location, results) {
                 'Security group:(' + sGroups.name +
                 ') has ' + service + ': ' + strings.join(' and '), location,
                 resource);
-        }
-    }
+        } else {
+            let strings = [];
 
-    if (!found) {
-        addResult(results, 0, 'No public open ports found', location);
+            for (const key in protocols) {
+                strings.push(`${key.toUpperCase()}:${protocols[key]}`);
+            }
+            if (strings.length){
+                addResult(results, 0,
+                    `Security group:( ${sGroups.name}) does not have ${strings.join(', ')} open *`,
+                    location, resource);
+            }
+        }
     }
 
     return;
