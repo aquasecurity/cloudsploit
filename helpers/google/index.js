@@ -275,14 +275,6 @@ var execute = async function(LocalGoogleConfig, collection, service, callObj, ca
         } else if (!myEngine && data.data.keys) {
             resultItems = setData(collectionItems, data.data.keys, postCall, parent, {'service': service, 'callKey': callKey});
         } else if (!myEngine && data.data) {
-            set = false;
-            if (data.data.constructor.name === 'Array') {
-                collection[service][callKey][region].data.concat(data.data);
-            } else if (Object.keys(data.data).length) {
-                collection[service][callKey][region].data.push(data.data);
-            } else if (!myEngine && !(collection[service][callKey][region].data.length)) {
-                collection[service][callKey][region].data = [];
-            }
             resultItems = setData(collection[service][callKey][region], data.data, postCall, parent, {'service': service, 'callKey': callKey});
         } else {
             set = false;
@@ -387,20 +379,21 @@ function setData(collection, dataToAdd, postCall, parent, serviceInfo) {
             dataToAdd.parent = parent;
         }
     }
+
     if (dataToAdd.constructor.name === 'Array') {
         if (Array.isArray(collection.data)) {
             collection.data = collection.data.concat(dataToAdd);
         } else {
-            collection.data = dataToAdd.push(collection.data);
-        }
-    } else {
-        let existingData = collection.data;
-        if (existingData && existingData.length) {
-            collection.data = existingData.concat(dataToAdd);
-        } else {
             collection.data = dataToAdd;
         }
+    } else if (dataToAdd.constructor.name === 'Object' && Object.keys(dataToAdd).length) {
+        if (Array.isArray(collection.data)) {
+            collection.data.push(dataToAdd);
+        } else {
+            collection.data = [dataToAdd];
+        }
     }
+    
     return collection;
 }
 
@@ -416,3 +409,6 @@ for (var s in shared) helpers[s] = shared[s];
 for (var f in functions) helpers[f] = functions[f];
 
 module.exports = helpers;
+
+
+

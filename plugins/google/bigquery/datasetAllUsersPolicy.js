@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Granting permissions to allUsers or allAuthenticatedUsers allows anyone to access the dataset. Such access might not be desirable if sensitive data is being stored in the dataset.',
     link: 'https://cloud.google.com/bigquery/docs/dataset-access-controls',
     recommended_action: 'Ensure that each dataset is configured so that no member is set to allUsers or allAuthenticatedUsers.',
-    apis: ['datasets:list', 'datasets:get', 'projects:get'],
+    apis: ['datasets:list', 'datasets:get'],
 
     run: function(cache, settings, callback) {
         var results = [];
