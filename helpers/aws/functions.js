@@ -165,11 +165,23 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
                 addResult(results, 2, resultsString,
                     region, resource);
             }
+        } else {
+            found = true;
+            let strings = [];
+
+            for (const key in ports) {
+                strings.push(`${key.toUpperCase()}:${ports[key]}`);
+            }
+            if (strings.length){
+                addResult(results, 0,
+                    `Security group: ${groups[g].GroupId} (${groups[g].GroupName}) does not have ${strings.join(', ')} open to 0.0.0.0/0 or ::0`,
+                    region, resource);
+            }
         }
     }
 
     if (!found && !usedGroup) {
-        addResult(results, 0, 'No public open ports found', region);
+        addResult(results, 0, 'No EC2 security groups found', region);
     }
 
     return;
