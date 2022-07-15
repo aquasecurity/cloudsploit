@@ -464,6 +464,26 @@ var finalcalls = {
             restVersion: '',
         }
     },
+    keys: {
+        get: {
+            api: 'kms',
+            reliesOnService: ['keys'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'id'],
+            filterValue: ['compartmentId', 'id'],
+            restVersion: '/20180608'
+        }
+    },
+    keyVersions: {
+        list: {
+            api: 'kms',
+            reliesOnService: ['keys'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'id'],
+            filterValue: ['compartmentId', 'id'],
+            restVersion: '/20180608'
+        }
+    },
     exprt: {
         get: {
             api: 'fileStorage',

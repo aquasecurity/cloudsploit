@@ -473,6 +473,27 @@
                 "method": "GET",
                 "path": "keys",
                 "endpoint": "{{managementEndpoint}}"
+            },
+            "get": {
+                "allowedQueryStrings": [
+                    "compartmentId", "page", "limit"
+                ],
+                "encodedGet": "id",
+                "method": "GET",
+                "path": "keys",
+                "endpoint": "-management.kms.{{region}}.oraclecloud.com"
+            }
+        },
+        "keyVersions": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId", "page", "limit"
+                ],
+                "encodedGet": "id",
+                "method": "GET",
+                "path": "keys",
+                "secondaryPath": "keyVersions",
+                "endpoint": "-management.kms.{{region}}.oraclecloud.com"
             }
         }
     },
