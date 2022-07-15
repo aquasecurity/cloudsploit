@@ -490,6 +490,27 @@
             }
         }
     },
+    "logging": {
+        "logGroup": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId", "displayname", "limit", "page", "sortBy", "sortOrder", "lifecycleState"
+                ],
+                "method": "GET",
+                "path": "logGroups",
+                "endpoint": "logging.{{region}}.oci.oraclecloud.com"
+            }
+        },
+        "log": {
+            "list": {
+                "encodedGet": "id",
+                "method": "GET",
+                "path": "logGroups",
+                "secondaryPath": "logs",
+                "endpoint": "logging.{{region}}.oci.oraclecloud.com"
+            }
+        }
+    },
     "objectStore": {
         "bucket": {
             "list": {

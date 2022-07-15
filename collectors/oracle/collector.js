@@ -44,6 +44,14 @@ var calls = {
             filterValue: ['compartmentId'],
         }
     },
+    logGroup: {
+        list: {
+            api: 'logging',
+            restVersion: '/20200531',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId']
+        }
+    },
     publicIp: {
         list: {
             api: 'core',
@@ -437,6 +445,16 @@ var postcalls = {
             filterKey: ['compartmentId', 'managementEndpoint'],
             filterValue: ['compartmentId', 'managementEndpoint'],
             restVersion: '/20180608'
+        }
+    },
+    log: {
+        list: {
+            api: 'logging',
+            reliesOnService: ['logGroup'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'id'],
+            filterValue: ['compartmentId', 'id'],
+            restVersion: '/20200531'
         }
     },
     cluster: {

@@ -869,6 +869,7 @@ module.exports = {
         'openKibana'                    : require(__dirname + '/plugins/oracle/networking/openKibana.js'),
         'openSalt'                      : require(__dirname + '/plugins/oracle/networking/openSalt.js'),
         'openSMTP'                      : require(__dirname + '/plugins/oracle/networking/openSMTP.js'),
+        'flowLogsEnabled'               : require(__dirname + '/plugins/oracle/networking/flowLogsEnabled.js'),
 
         'statelessSecurityRules'        : require(__dirname + '/plugins/oracle/networking/statelessSecurityRules.js'),
         'defaultSecurityList'           : require(__dirname + '/plugins/oracle/networking/defaultSecurityList.js'),
