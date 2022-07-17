@@ -99,6 +99,14 @@ var calls = {
             filterConfig: [true]
         }
     },
+    cloudguardConfiguration: {
+        get: {
+            api: 'cloudguard',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+            restVersion: '/20200131',
+        }
+    },
     group: {
         list: {
             api: 'iam',
@@ -379,6 +387,7 @@ var postcalls = {
             limit: 900
         }
     },
+
     waasPolicy: {
         get: {
             api: 'waas',
