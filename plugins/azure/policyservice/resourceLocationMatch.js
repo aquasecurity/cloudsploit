@@ -12,6 +12,7 @@ module.exports = {
     apis: ['policyAssignments:list'],
 
     run: function(cache, settings, callback) {
+        // console.log(JSON.stringify(cache, null, 2));
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
