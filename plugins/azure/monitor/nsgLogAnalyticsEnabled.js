@@ -20,6 +20,7 @@ module.exports = {
     },
 
     run: function(cache, settings, callback) {
+        // console.log(JSON.stringify(cache, null, 2));
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
@@ -55,7 +56,7 @@ module.exports = {
                     diagnosticSettings.data.forEach(function(ds) {
                         if (ds.logs && ds.logs.length) found = true;
                     });
-
+                    
                     if (found) {
                         helpers.addResult(results, 0, 'NSG Log Analytics is enabled for NSG', location, nsg.id);
                     } else {
