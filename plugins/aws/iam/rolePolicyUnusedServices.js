@@ -193,15 +193,17 @@ module.exports = {
 
         allResources = allResources.reduce((result, resource) => {
             let arr  = resource.resourceType.split(':');
-            let service = arr[2].toLowerCase();
-            let subService = arr[4].toLowerCase();
-            result[service] = result[service] || [];
+            if (arr.length && arr.length > 5) {
+                let service = arr[2].toLowerCase();
+                let subService = arr[4].toLowerCase();
+                result[service] = result[service] || [];
 
-            if (resource.count > 0 && (allServices[service] && allServices[service].includes(subService))) {
-                result[service].push(subService);
+                if (resource.count > 0 && (allServices[service] && allServices[service].includes(subService))) {
+                    result[service].push(subService);
+                }
+
+                return result;
             }
-
-            return result;
         }, {});
 
         var listRoles = helpers.addSource(cache, source,
@@ -301,8 +303,8 @@ module.exports = {
                             for (let statement of statements) {
                                 if (statement.Action && statement.Action.length) {
                                     for (let action of statement.Action) {
-                                        let service = action.split(':')[0].toLowerCase();
-                                        let resourceAction = action.split(':')[1].toLowerCase();
+                                        let service = action.split(':')[0] ? action.split(':')[0].toLowerCase() : '';
+                                        let resourceAction = action.split(':')[1] ? action.split(':')[1].toLowerCase() : '';
 
                                         if (allServices[service]) {
                                             for (let supportedResource of allServices[service]) {
@@ -339,7 +341,8 @@ module.exports = {
                         if (!statements) break;
 
                         for (let statement of statements) {
-                            if ((statement.Action && statement.Action.length === 1 && statement.Action[0] === '*') && (statement.Resource && statement.Resource.length === 1 &&  statement.Resource[0] === '*')) {
+                            if ((statement.Action && statement.Action.length && statement.Action[0] === '*') ||
+                                (statement.Resource && statement.Resource.length &&  statement.Resource[0] === '*')) {
                                 continue;
                             }
 
