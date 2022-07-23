@@ -54,7 +54,7 @@ function addResult(results, status, message, region, resource, custom) {
     });
 }
 
-function findOpenPorts(ngs, protocols, service, location, results) {
+function findOpenPorts(ngs, protocols, service, location, results, checkAllPorts) {
     var openPrefix = ['*', '0.0.0.0', '0.0.0.0/0', '<nw/0>', '/0', '::/0', 'internet'];
 
     for (let sGroups of ngs) {
@@ -103,12 +103,15 @@ function findOpenPorts(ngs, protocols, service, location, results) {
                                         strings.push(string);
                                         if (strings.indexOf(string) === -1) strings.push(string);
                                     }
-                                } else if (parseInt(securityRule.properties['destinationPortRange']) === port ||
-                                    securityRule.properties['destinationPortRange'] === port ||
-                                    securityRule.properties['destinationPortRange'] === '*') {
+                                } else if (parseInt(securityRule.properties['destinationPortRange']) === port) {
                                     var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
                                         (ports === '*' ? ` and all ports` : ` port ` + ports) + ` open to ` + sourceFilter;
                                     if (strings.indexOf(string) === -1) strings.push(string);
+                                } else if (checkAllPorts &&
+                                    openPrefix.includes(securityRule.properties['destinationPortRange'])) {
+                                    var openAllstring = `Security Rule "` + securityRule['name'] + `": ` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
+                                        (ports === '*' ? ` and all ports` : ` port ` + ports) + ` open to ` + sourceFilter;
+                                    if (strings.indexOf(openAllstring) === -1) strings.push(openAllstring);
                                 }
                             } else if (securityRule.properties['destinationPortRanges']) {
                                 if (securityRule.properties['destinationPortRanges'].indexOf(port.toString()) > -1) {
@@ -211,7 +214,7 @@ function checkPolicyAssignment(policyAssignments, param, text, results, location
     }
 }
 
-function checkLogAlerts(activityLogAlerts, conditionResource, text, results, location) {
+function checkLogAlerts(activityLogAlerts, conditionResource, text, results, location, parentConditionResource) {
     if (!activityLogAlerts) return;
 
     if (activityLogAlerts.err || !activityLogAlerts.data) {
@@ -241,11 +244,18 @@ function checkLogAlerts(activityLogAlerts, conditionResource, text, results, loc
 
         if (!allConditions || !allConditions.allOf || !allConditions.allOf.length) continue;
 
-
         var conditionOperation = allConditions.allOf.filter((d) => {
-            return (d.equals && d.equals.toLowerCase().indexOf(conditionResource) > -1);
+            return (d.equals && d.equals.toLowerCase().indexOf(conditionResource) > -1 ||
+                (parentConditionResource && d.equals && d.equals.toLowerCase().indexOf(parentConditionResource) > -1));
         });
+
         if (conditionOperation && conditionOperation.length) {
+            if (conditionResource.includes('microsoft.security') && allConditions.allOf.every(condition => condition.field && condition.field == 'category' &&
+                condition.equals && condition.equals.toLowerCase() == 'security')) {
+                alertCreateUpdateEnabled = (!alertCreateUpdateEnabled && activityLogAlertResource.enabled ? true : alertCreateUpdateEnabled);
+                break;
+            }
+
             allConditions.allOf.forEach(condition => {
                 if (condition.field && (condition.field === 'resourceType') && (condition.equals && (condition.equals.toLowerCase() === conditionResource))) {
                     alertCreateDeleteEnabled = (!alertCreateDeleteEnabled && activityLogAlertResource.enabled ? true : alertCreateDeleteEnabled);
@@ -254,7 +264,7 @@ function checkLogAlerts(activityLogAlerts, conditionResource, text, results, loc
                 } else if (condition.equals && condition.equals.toLowerCase().indexOf(conditionResource + '/delete') > -1) {
                     alertDeleteEnabled = (!alertDeleteEnabled && activityLogAlertResource.enabled ? true : alertDeleteEnabled);
                 }
-            })
+            });
         }
     }
 
