@@ -1,5 +1,4 @@
 var expect = require('chai').expect;
-const { container } = require('googleapis/build/src/apis/container');
 var queueServiceAllAccessAcl = require('./queueServiceAllAccessAcl');
 
 const storageAccounts = [
