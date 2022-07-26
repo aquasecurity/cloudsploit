@@ -15,7 +15,7 @@ module.exports = {
             name: 'Key Vault Certificate Expiry Days',
             description: 'Return a failing result when certificate expiration date is within this number of days in the future for triggering auto renewal',
             regex: '^[1-9]{1}[0-9]{0,3}$',
-            default: '30'
+            default: ''
         }
     },
 
