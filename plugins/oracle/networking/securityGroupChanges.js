@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/oracle');
 module.exports = {
     title: 'Security Group Changes',
     category: 'Networking',
-    domain: 'Management and Governance',
+    domain: 'Network Access Control',
     description: 'Ensure an event rule is configured for security group changes.',
     more_info: 'Monitoring changes to security groups like create, update and delete will help in identifying changes to the security controls.',
     link: 'https://docs.oracle.com/en-us/iaas/Content/Events/Task/managingrules.htm',
