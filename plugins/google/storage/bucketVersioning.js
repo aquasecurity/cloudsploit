@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://cloud.google.com/storage/docs/using-object-versioning',
     recommended_action: 'Bucket Versioning can only be enabled by using the Command Line Interface, use this command to enable Versioning: gsutil versioning set on gs://[BUCKET_NAME]',
     apis: ['buckets:list'],
-    remediation_min_version: '202201291836',
+    remediation_min_version: '202207281836',
     remediation_description: 'Bucket versioning will be enabled on storage buckets',
     apis_remediate: ['buckets:list'],
     actions: {remediate:['storage.buckets.update'], rollback:['storage.buckets.update']},
