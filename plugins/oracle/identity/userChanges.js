@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/oracle');
 module.exports = {
     title: 'User Changes',
     category: 'Identity',
-    domain: 'Management and Governance',
+    domain: 'Identity and Access Management',
     description: 'Ensure an event rule is configured for User changes.',
     more_info: 'Monitoring changes to users and their states and capabilities will help in identifying changes to the security posture.',
     link: 'https://docs.oracle.com/en-us/iaas/Content/Events/Task/managingrules.htm',
