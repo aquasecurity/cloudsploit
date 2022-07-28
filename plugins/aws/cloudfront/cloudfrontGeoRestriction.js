@@ -52,8 +52,8 @@ module.exports = {
             if (distribution.Restrictions && distribution.Restrictions.GeoRestriction 
                 && distribution.Restrictions.GeoRestriction.RestrictionType 
                 && distribution.Restrictions.GeoRestriction.RestrictionType.toLowerCase() === 'whitelist'){
-                    let item = distribution.Restrictions.GeoRestriction.Items;
-                    let whitelistItems = item.filter(element => config.cloudfront_whitelisted_regions.includes(element));
+                let item = distribution.Restrictions.GeoRestriction.Items;
+                let whitelistItems = item.filter(element => config.cloudfront_whitelisted_regions.includes(element));
                 if (whitelistItems.length) {
                     helpers.addResult(results, 0,
                         `CloudFront distribution has ${whitelistItems} available for its content distribution.`, 'global', distribution.ARN);
@@ -65,16 +65,16 @@ module.exports = {
             } else if (distribution.Restrictions && distribution.Restrictions.GeoRestriction 
                 && distribution.Restrictions.GeoRestriction.RestrictionType 
                 && distribution.Restrictions.GeoRestriction.RestrictionType.toLowerCase() === 'blacklist'){
-                    let items = distribution.Restrictions.GeoRestriction.Items
-                    let blacklistItems = items.filter(element => config.cloudfront_whitelisted_regions.includes(element));
-                    if (blacklistItems.length) {
-                        helpers.addResult(results, 2,
-                            `CloudFront distribution has ${blacklistItems} region blacklisted for its content distribution.`, 'global', distribution.ARN);
-                    } else {
-                        helpers.addResult(results, 0,
-                            'CloudFront distribution does not have Blacklisted regions for its content distribution', 'global', distribution.ARN);
-                    }    
-                }
+                let items = distribution.Restrictions.GeoRestriction.Items;
+                let blacklistItems = items.filter(element => config.cloudfront_whitelisted_regions.includes(element));
+                if (blacklistItems.length) {
+                    helpers.addResult(results, 2,
+                        `CloudFront distribution has ${blacklistItems} region blacklisted for its content distribution.`, 'global', distribution.ARN);
+                } else {
+                    helpers.addResult(results, 0,
+                        'CloudFront distribution does not have Blacklisted regions for its content distribution', 'global', distribution.ARN);
+                }    
+            }
 
             if (distribution.Restrictions && distribution.Restrictions.GeoRestriction 
                 && distribution.Restrictions.GeoRestriction.RestrictionType 
