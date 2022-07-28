@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/oracle');
 module.exports = {
     title: 'Key Rotation',
     category: 'Vaults',
-    domain: 'Management and Governance',
+    domain: 'Application Integration',
     description: 'Ensure that your OCI Vault Keys are periodically rotated.',
     more_info: 'Rotating keys periodically limits the data encrypted under one key version. Key rotation thereby reduces the risk in case a key is ever compromised.',
     link: 'https://docs.oracle.com/en-us/iaas/Content/KeyManagement/Tasks/managingkeys.htm',
