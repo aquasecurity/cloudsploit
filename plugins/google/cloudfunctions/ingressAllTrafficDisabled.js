@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://cloud.google.com/functions/docs/securing/authenticating',
     recommended_action: 'Ensure that your Google Cloud functions do not allow external traffic from the internet.',
     apis: ['functions:list'],
-    remediation_min_version: '202202132132',
+    remediation_min_version: '202207282132',
     remediation_description: 'All Google Cloud Functions will be configured to allow only internal traffic and traffic from Cloud Load Balancer.',
     apis_remediate: ['functions:list'],
     actions: {remediate:['CloudFunctionsService.UpdateFunction'], rollback:['CloudFunctionsService.UpdateFunction']},
