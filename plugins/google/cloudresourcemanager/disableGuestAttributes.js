@@ -9,7 +9,7 @@ module.exports = {
     link: 'https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints',
     recommended_action: 'Ensure that "Disable Guest Attributes of Compute Engine Metadata" constraint is enforced at the organization level.',
     apis: ['organizations:list', 'organizations:listOrgPolicies'],
-    remediation_min_version: '202202200432',
+    remediation_min_version: '202207280432',
     remediation_description: 'The "Disable Guest Attributes of Compute Engine Metadata" constraint will be enforced at the organization level.',
     apis_remediate: ['organizations:list', 'organizations:listOrgPolicies'],
     actions: {remediate:['SetOrgPolicy'], rollback:['SetOrgPolicy']},
