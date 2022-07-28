@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/oracle');
 module.exports = {
     title: 'Bucket Write Logs Enabled',
     category: 'Object Store',
-    domain: 'Management and Governance',
+    domain: 'Storage',
     description: 'Ensures write level Object Storage logging is enabled for all buckets.',
     more_info: 'Enabling write level logging for object store buckets will provide you more visibility into changes to objects in your buckets.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Object/Tasks/managingbuckets.htm',
