@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://cloud.google.com/storage/docs/uniform-bucket-level-access#should-you-use',
     recommended_action: 'Make sure that storage buckets have uniform level access enabled',
     apis: ['buckets:list'],
-    remediation_min_version: '202202071836',
+    remediation_min_version: '202207281836',
     remediation_description: 'Unfiorm Level Access will be enabled on all storage buckets',
     apis_remediate: ['buckets:list'],
     actions: {remediate:['storage.buckets.update'], rollback:['storage.buckets.update']},
