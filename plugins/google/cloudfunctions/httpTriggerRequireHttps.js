@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://cloud.google.com/functions/docs/writing/http',
     recommended_action: 'Ensure that your Google Cloud functions always require HTTPS.',
     apis: ['functions:list', 'projects:get'],
-    remediation_min_version: '202202132132',
+    remediation_min_version: '202207282132',
     remediation_description: 'All Google Cloud Functions will be configured to require HTTPS for HTTP invocations.',
     apis_remediate: ['functions:list', 'projects:get'],
     actions: {remediate:['CloudFunctionsService.UpdateFunction'], rollback:['CloudFunctionsService.UpdateFunction']},
