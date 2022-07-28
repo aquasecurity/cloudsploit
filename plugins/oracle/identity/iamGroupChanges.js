@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/oracle');
 module.exports = {
     title: 'IAM Group Changes',
     category: 'Identity',
-    domain: 'Management and Governance',
+    domain: 'Identity and Access Management',
     description: 'Ensure an event rule is configured for IAM Group changes.',
     more_info: 'Monitoring changes to IAM groups like create, update and delete will help in identifying changes to satisfy least privilege principle.',
     link: 'https://docs.oracle.com/en-us/iaas/Content/Events/Task/managingrules.htm',

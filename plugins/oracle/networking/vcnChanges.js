@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/oracle');
 module.exports = {
     title: 'VCN Changes',
     category: 'Networking',
-    domain: 'Management and Governance',
+    domain: 'Network Access Control',
     description: 'Ensure an event rule is configured for VCN changes.',
     more_info: 'Monitoring changes to VCNs will help in identifying changes to the security posture.',
     link: 'https://docs.oracle.com/en-us/iaas/Content/Events/Task/managingrules.htm',
