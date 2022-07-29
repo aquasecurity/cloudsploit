@@ -661,6 +661,10 @@ var calls = {
         }
     },
     Imagebuilder: {
+        listContainerRecipes: {
+            property: 'containerRecipeSummaryList',
+            paginate: 'nextToken'
+        },
         listComponents: {
             property: 'componentVersionList',
             paginate: 'nextToken'
@@ -1256,6 +1260,20 @@ var postcalls = [
                 reliesOnCall: 'describeTrails',
                 filterKey: 'TrailName',
                 filterValue: 'TrailARN'
+            }
+        },
+        Imagebuilder: {
+            getContainerRecipe: {
+                reliesOnService: 'imagebuilder',
+                reliesOnCall: 'listContainerRecipes',
+                filterKey: 'containerRecipeArn',
+                filterValue: 'arn'
+            },
+            getComponent: {
+                reliesOnService: 'imagebuilder',
+                reliesOnCall: 'listComponents',
+                filterKey: 'componentBuildVersionArn',
+                filterValue: 'arn'
             }
         },
         CloudWatch: {
