@@ -23,6 +23,16 @@
             }
         }
     },
+    "cloudguard": {
+        "cloudguardConfiguration": {
+            "get": {
+                "allowedQueryStrings": ["compartmentId"],
+                "method": "GET",
+                "path": "configuration",
+                "endpoint": "cloudguard-cp-api.{{region}}.oci.oraclecloud.com"
+            }
+        }
+    },
     "oke": {
         "cluster": {
             "list": {

@@ -880,7 +880,6 @@ module.exports = {
         'securityListChanges'           : require(__dirname + '/plugins/oracle/networking/securityListChanges.js'),
         'securityGroupChanges'          : require(__dirname + '/plugins/oracle/networking/securityGroupChanges.js'),
         'networkGatewayChanges'         : require(__dirname + '/plugins/oracle/networking/networkGatewayChanges.js'),
-
         'statelessSecurityRules'        : require(__dirname + '/plugins/oracle/networking/statelessSecurityRules.js'),
         'defaultSecurityList'           : require(__dirname + '/plugins/oracle/networking/defaultSecurityList.js'),
         'excessiveSecurityLists'        : require(__dirname + '/plugins/oracle/networking/excessiveSecurityLists.js'),
@@ -889,7 +888,6 @@ module.exports = {
         'lbNoInstances'                 : require(__dirname + '/plugins/oracle/networking/lbNoInstances.js'),
         'wafPublicIpEnabled'            : require(__dirname + '/plugins/oracle/networking/wafPublicIpEnabled.js'),
         'inboundSecurityLists'          : require(__dirname + '/plugins/oracle/networking/inboundSecurityLists.js'),
-
         'multipleSubnets'               : require(__dirname + '/plugins/oracle/networking/multipleSubnets.js'),
         'subnetMultiAd'                 : require(__dirname + '/plugins/oracle/networking/subnetMultiAd.js'),
 
@@ -923,8 +921,9 @@ module.exports = {
         'okeSecretsEncrypted'           : require(__dirname + '/plugins/oracle/oke/okeSecretsEncrypted.js'),
         'okeSecurityGroups'            : require(__dirname + '/plugins/oracle/oke/okeSecurityGroups.js'),
 
-        'keyRotation'                  : require(__dirname + '/plugins/oracle/vaults/keyRotation.js'),
+        'cloudguardEnabled'            : require(__dirname + '/plugins/oracle/cloudguard/cloudguardEnabled.js'),
 
+        'keyRotation'                  : require(__dirname + '/plugins/oracle/vaults/keyRotation.js'),
     },
     google: {
         'excessiveFirewallRules'        : require(__dirname + '/plugins/google/vpcnetwork/excessiveFirewallRules.js'),

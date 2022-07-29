@@ -86,6 +86,7 @@ module.exports = {
     customerSecretKey: ['default'],
     vault: regions,
     keys: regions,
+    cluster: regions,
+    cloudguardConfiguration: ['default'],
     keyVersions: regions,
-    cluster: regions
 };
