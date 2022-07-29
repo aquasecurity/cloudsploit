@@ -49,8 +49,9 @@ module.exports = {
 
                         firewallRules.data.forEach(firewallRule => {
                             const startIpAddr = firewallRule['startIpAddress'];
+                            const endIpAddr = firewallRule['endIpAddress'];
 
-                            if ((startIpAddr && startIpAddr.toString().indexOf('0.0.0.0') > -1)) {
+                            if (startIpAddr === '0.0.0.0' && endIpAddr === '255.255.255.255') {
                                 publicAccess = true;
                             }
                         });
