@@ -845,6 +845,11 @@ module.exports = {
         'usersPasswordLastUsed'         : require(__dirname + '/plugins/oracle/identity/usersPasswordLastUsed.js'),
         'defaultTagsForResources'       : require(__dirname + '/plugins/oracle/identity/defaultTagsForResources.js'),
         'notificationTopicSubscription' : require(__dirname + '/plugins/oracle/identity/notificationTopicSubscription.js'),
+        'identityProviderChanges'       : require(__dirname + '/plugins/oracle/identity/identityProviderChanges.js'),
+        'idpGroupMappingChanges'        : require(__dirname + '/plugins/oracle/identity/idpGroupMappingChanges.js'),
+        'iamGroupChanges'               : require(__dirname + '/plugins/oracle/identity/iamGroupChanges.js'),
+        'iamPolicyChanges'              : require(__dirname + '/plugins/oracle/identity/iamPolicyChanges.js'),
+        'userChanges'                   : require(__dirname + '/plugins/oracle/identity/userChanges.js'),
 
         'openSSH'                       : require(__dirname + '/plugins/oracle/networking/openSSH.js'),
         'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/oracle/networking/openOracleAutoDataWarehouse.js'),
@@ -869,7 +874,12 @@ module.exports = {
         'openKibana'                    : require(__dirname + '/plugins/oracle/networking/openKibana.js'),
         'openSalt'                      : require(__dirname + '/plugins/oracle/networking/openSalt.js'),
         'openSMTP'                      : require(__dirname + '/plugins/oracle/networking/openSMTP.js'),
-
+        'flowLogsEnabled'               : require(__dirname + '/plugins/oracle/networking/flowLogsEnabled.js'),
+        'vcnChanges'                    : require(__dirname + '/plugins/oracle/networking/vcnChanges.js'),
+        'routeTableChanges'             : require(__dirname + '/plugins/oracle/networking/routeTableChanges.js'),
+        'securityListChanges'           : require(__dirname + '/plugins/oracle/networking/securityListChanges.js'),
+        'securityGroupChanges'          : require(__dirname + '/plugins/oracle/networking/securityGroupChanges.js'),
+        'networkGatewayChanges'         : require(__dirname + '/plugins/oracle/networking/networkGatewayChanges.js'),
         'statelessSecurityRules'        : require(__dirname + '/plugins/oracle/networking/statelessSecurityRules.js'),
         'defaultSecurityList'           : require(__dirname + '/plugins/oracle/networking/defaultSecurityList.js'),
         'excessiveSecurityLists'        : require(__dirname + '/plugins/oracle/networking/excessiveSecurityLists.js'),
@@ -878,7 +888,6 @@ module.exports = {
         'lbNoInstances'                 : require(__dirname + '/plugins/oracle/networking/lbNoInstances.js'),
         'wafPublicIpEnabled'            : require(__dirname + '/plugins/oracle/networking/wafPublicIpEnabled.js'),
         'inboundSecurityLists'          : require(__dirname + '/plugins/oracle/networking/inboundSecurityLists.js'),
-
         'multipleSubnets'               : require(__dirname + '/plugins/oracle/networking/multipleSubnets.js'),
         'subnetMultiAd'                 : require(__dirname + '/plugins/oracle/networking/subnetMultiAd.js'),
 
@@ -889,6 +898,7 @@ module.exports = {
         'bucketCMKEncryption'           : require(__dirname + '/plugins/oracle/objectstore/bucketCMKEncryption.js'),
         'bucketVersioning'              : require(__dirname + '/plugins/oracle/objectstore/bucketVersioning.js'),
         'bucketObjectEvents'            : require(__dirname + '/plugins/oracle/objectstore/bucketObjectEvents.js'),
+        'bucketWriteLogsEnabled' : require(__dirname + '/plugins/oracle/objectstore/bucketWriteLogsEnabled.js'),
 
         'nfsPublicAccess'               : require(__dirname + '/plugins/oracle/filestorage/nfsPublicAccess.js'),
         'nfsPolicyProtection'           : require(__dirname + '/plugins/oracle/filestorage/nfsPolicyProtection.js'),
@@ -913,6 +923,7 @@ module.exports = {
 
         'cloudguardEnabled'            : require(__dirname + '/plugins/oracle/cloudguard/cloudguardEnabled.js'),
 
+        'keyRotation'                  : require(__dirname + '/plugins/oracle/vaults/keyRotation.js'),
     },
     google: {
         'excessiveFirewallRules'        : require(__dirname + '/plugins/google/vpcnetwork/excessiveFirewallRules.js'),

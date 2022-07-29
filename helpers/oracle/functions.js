@@ -277,6 +277,41 @@ function findOpenPortsAll(groups, ports, service, region, results) {
     }
 }
 
+function checkEventRules(rules, eventsToCheck, displayName, compartment, region, results) {
+    let enabledRules = [];
+    let rulesFound = false;
+    rules.map(rule => {
+        if (rule.lifecycleState === 'ACTIVE' && rule.isEnabled && rule.condition) {
+            try {
+                const conditions = JSON.parse(rule.condition);
+                if (conditions && conditions.eventType && conditions.eventType.length) {
+                    enabledRules = [...enabledRules, ...conditions.eventType];
+                }
+            }
+            catch (err) {
+                return [];
+            }
+        }
+    });
+    rulesFound = eventsToCheck.every(event => enabledRules.includes(event.value));
+    let activeRules = [];
+    let inactiveRules = [];
+    if (!rulesFound) {
+        activeRules =  eventsToCheck.filter(event => enabledRules.includes(event.value)).map(rule => rule.displayName);
+        inactiveRules = eventsToCheck.filter(event => !enabledRules.includes(event.value)).map(rule => rule.displayName);
+    }
+
+    if (!rulesFound && !activeRules.length) {
+        shared.addResult(results, 2, `No event rules are configured for ${displayName} changes`, region, compartment);
+    }
+    else if (!rulesFound && inactiveRules.length) {
+        shared.addResult(results, 2, `Event rules are missing for ${displayName} ${inactiveRules.join(', ')} events`, region, compartment);
+    }
+    else if (rulesFound) {
+        shared.addResult(results, 0, `Event rules are configured for all ${displayName} changes`, region, compartment);
+    }
+}
+
 function checkRegionSubscription (cache, source, results, region) {
     var regionSubscription = shared.addSource(cache, source,
         ['regionSubscription', 'list', shared.objectFirstKey(cache['regionSubscription']['list'])]);
@@ -382,5 +417,6 @@ module.exports = {
     normalizePolicyStatement: normalizePolicyStatement,
     testStatement: testStatement,
     getProtectionLevel: getProtectionLevel,
-    listToObj: listToObj
+    listToObj: listToObj,
+    checkEventRules: checkEventRules
 };

@@ -44,6 +44,14 @@ var calls = {
             filterValue: ['compartmentId'],
         }
     },
+    logGroup: {
+        list: {
+            api: 'logging',
+            restVersion: '/20200531',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId']
+        }
+    },
     publicIp: {
         list: {
             api: 'core',
@@ -160,6 +168,14 @@ var calls = {
         list: {
             api: 'waas',
             restVersion: '/20181116',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    rules: {
+        list: {
+            api: 'events',
+            restVersion: '/20181201',
             filterKey: ['compartmentId'],
             filterValue: ['compartmentId'],
         }
@@ -448,6 +464,16 @@ var postcalls = {
             restVersion: '/20180608'
         }
     },
+    log: {
+        list: {
+            api: 'logging',
+            reliesOnService: ['logGroup'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'id'],
+            filterValue: ['compartmentId', 'id'],
+            restVersion: '/20200531'
+        }
+    },
     cluster: {
         get: {
             api: 'oke',
@@ -471,6 +497,26 @@ var finalcalls = {
             filterKey: ['bucketName', 'namespaceName'],
             filterValue: ['name','namespace'],
             restVersion: '',
+        }
+    },
+    keys: {
+        get: {
+            api: 'kms',
+            reliesOnService: ['keys'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'id'],
+            filterValue: ['compartmentId', 'id'],
+            restVersion: '/20180608'
+        }
+    },
+    keyVersions: {
+        list: {
+            api: 'kms',
+            reliesOnService: ['keys'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'id'],
+            filterValue: ['compartmentId', 'id'],
+            restVersion: '/20180608'
         }
     },
     exprt: {

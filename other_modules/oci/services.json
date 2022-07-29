@@ -84,6 +84,20 @@
             }
         }
     },
+    "events": {
+        "rules": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId",
+                    "limit",
+                    "page"
+                ],
+                "method": "GET",
+                "path": "rules",
+                "endpoint": "events.{{region}}.oci.oraclecloud.com"
+            }
+        }
+    },
     "core": {
         "instance": {
             "list": {
@@ -483,6 +497,27 @@
                 "method": "GET",
                 "path": "keys",
                 "endpoint": "{{managementEndpoint}}"
+            },
+            "get": {
+                "allowedQueryStrings": [
+                    "compartmentId", "page", "limit"
+                ],
+                "encodedGet": "id",
+                "method": "GET",
+                "path": "keys",
+                "endpoint": "-management.kms.{{region}}.oraclecloud.com"
+            }
+        },
+        "keyVersions": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId", "page", "limit"
+                ],
+                "encodedGet": "id",
+                "method": "GET",
+                "path": "keys",
+                "secondaryPath": "keyVersions",
+                "endpoint": "-management.kms.{{region}}.oraclecloud.com"
             }
         }
     },
@@ -497,6 +532,27 @@
                 "method": "GET",
                 "path": "loadBalancers",
                 "endpoint": "iaas.{{region}}.oraclecloud.com"
+            }
+        }
+    },
+    "logging": {
+        "logGroup": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId", "displayname", "limit", "page", "sortBy", "sortOrder", "lifecycleState"
+                ],
+                "method": "GET",
+                "path": "logGroups",
+                "endpoint": "logging.{{region}}.oci.oraclecloud.com"
+            }
+        },
+        "log": {
+            "list": {
+                "encodedGet": "id",
+                "method": "GET",
+                "path": "logGroups",
+                "secondaryPath": "logs",
+                "endpoint": "logging.{{region}}.oci.oraclecloud.com"
             }
         }
     },

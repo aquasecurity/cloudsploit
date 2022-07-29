@@ -51,11 +51,14 @@ module.exports = {
     compartment: regions,
     bucket: regions,
     waasPolicy: regions,
+    rules: regions,
     topics: regions,
     subscriptions: regions,
     policy: regions,
     defaultTags: ['default'],
     subnet: regions,
+    logGroup: regions,
+    log: regions,
     dbHome: regions,
     database: regions,
     instance: regions,
@@ -85,4 +88,5 @@ module.exports = {
     keys: regions,
     cluster: regions,
     cloudguardConfiguration: ['default']
+    keyVersions: regions,
 };
