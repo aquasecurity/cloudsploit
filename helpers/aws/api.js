@@ -668,6 +668,10 @@ var calls = {
         paginatelistImagePipelines: {
             property: 'imagePipelineList',
             paginate: 'nextToken'
+        },
+        listImageRecipes: {
+            property: 'imageRecipeSummaryList',
+            paginate: 'nextToken'
         }
     },
     IAM: {
@@ -706,12 +710,6 @@ var calls = {
         },
         generateCredentialReport: {
             override: true
-        }
-    },
-    Imagebuilder: {
-        listImageRecipes: {
-            property: 'imageRecipeSummaryList',
-            paginate: 'nextToken'
         }
     },
     IoTSiteWise: {
@@ -1377,6 +1375,12 @@ var postcalls = [
                 reliesOnCall: 'listComponents',
                 filterKey: 'componentBuildVersionArn',
                 filterValue: 'arn'
+            },
+            getImageRecipe: {
+                reliesOnService: 'imagebuilder',
+                reliesOnCall: 'listImageRecipes',
+                filterKey: 'imageRecipeArn',
+                filterValue: 'arn'
             }
         },
         S3: {
@@ -1641,14 +1645,6 @@ var postcalls = [
                 reliesOnCall: 'listClusters',
                 filterKey: 'ClusterId',
                 filterValue: 'Id'
-            }
-        },
-        Imagebuilder: {
-            getImageRecipe: {
-                reliesOnService: 'imagebuilder',
-                reliesOnCall: 'listImageRecipes',
-                filterKey: 'imageRecipeArn',
-                filterValue: 'arn'
             }
         },
         DLM: {
