@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Compute',
     severity: 'Medium',
     description: 'Ensure that public access feature within the cluster is disabled for your Amazon MSK clusters.',
-    more_info: 'Amazon MSK gives you the option to turn on public access to the brokers of MSK clusters running Apache Kafka 2.6.0 or later versions. For security reasons, you can'/'t turn on public access while creating an MSK cluster. However, you can update an existing cluster to make it publicly accessible.',
+    more_info: 'Amazon MSK gives you the option to turn on public access to the brokers of MSK clusters running Apache Kafka 2.6.0 or later versions. For security reasons, you cannot turn on public access while creating an MSK cluster. However, you can update an existing cluster to make it publicly accessible.',
     link: 'https://docs.aws.amazon.com/msk/latest/developerguide/public-access.html',
     recommended_action: 'Check for public access feature within the cluster for all MSK clusters',
     apis: ['Kafka:listClusters'],
