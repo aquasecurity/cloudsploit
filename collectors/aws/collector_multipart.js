@@ -27,9 +27,9 @@ var agent = new https.Agent({maxSockets: 100});
 AWS.config.update({httpOptions: {agent: agent}});
 
 var CALLS_CONFIG = {
-    TOTAL_PARTS: 13,
+    TOTAL_PARTS: 14,
     CALLS_PARTS: 4,
-    POSTCALLS_PARTS: 9
+    POSTCALLS_PARTS: 10
 };
 
 var rateError = {message: 'rate', statusCode: 429};

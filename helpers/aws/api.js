@@ -192,6 +192,12 @@ var calls = {
             paginate: 'nextToken'
         }
     },
+    ComputeOptimizer: {
+        getRecommendationSummaries : {
+            property: 'recommendationSummaries',
+            paginate: 'nextToken'
+        }
+    },
     Comprehend: {
         listEntitiesDetectionJobs: {
             property: 'EntitiesDetectionJobPropertiesList',
@@ -652,6 +658,16 @@ var calls = {
         listFHIRDatastores: {
             property: 'DatastorePropertiesList',
             paginate: 'NextToken'
+        }
+    },
+    Imagebuilder: {
+        listComponents: {
+            property: 'componentVersionList',
+            paginate: 'nextToken'
+        },
+        paginatelistImagePipelines: {
+            property: 'imagePipelineList',
+            paginate: 'nextToken'
         }
     },
     IAM: {
@@ -1355,6 +1371,14 @@ var postcalls = [
                 filterValue: 'DomainName'
             }
         },
+        Imagebuilder: {
+            getComponent: {
+                reliesOnService: 'imagebuilder',
+                reliesOnCall: 'listComponents',
+                filterKey: 'componentBuildVersionArn',
+                filterValue: 'arn'
+            }
+        },
         S3: {
             getBucketLogging: {
                 reliesOnService: 's3',
@@ -1447,6 +1471,12 @@ var postcalls = [
                 filterValue: 'Name'
             },
             headBucket: {
+                reliesOnService: 's3',
+                reliesOnCall: 'listBuckets',
+                filterKey: 'Bucket',
+                filterValue: 'Name'
+            },
+            listObjects: {
                 reliesOnService: 's3',
                 reliesOnCall: 'listBuckets',
                 filterKey: 'Bucket',

@@ -404,11 +404,70 @@ function setData(collection, dataToAdd, postCall, parent, serviceInfo) {
     return collection;
 }
 
+function remediateOrgPolicy(config, constraintName, policyType, policyValue, resource, remediation_file, putCall, pluginName, callback) {
+
+    // url to update org policy
+    var baseUrl = 'https://cloudresourcemanager.googleapis.com/v1/{resource}:setOrgPolicy';
+    var method = 'POST';
+
+    // create the params necessary for the remediation
+    var body;
+    if (policyType == 'booleanPolicy') {
+        body = {
+            policy: {
+                constraint: constraintName,
+                booleanPolicy: {
+                    enforced: policyValue
+                }
+            }
+        };
+    }
+    // logging
+    remediation_file['pre_remediate']['actions'][pluginName][resource] = {
+        constraintName: policyValue ? 'Disabled' : 'Enabled'
+    };
+
+    remediatePlugin(config, method, body, baseUrl, resource, remediation_file, putCall, pluginName, callback);
+}
+
+function remediatePlugin(config, method, body, baseUrl, resource, remediation_file, putCall, pluginName, callback) {
+    makeRemediationCall(config, method, body, baseUrl, resource, function(err) {
+        if (err) {
+            remediation_file['remediate']['actions'][pluginName]['error'] = err;
+            return callback(err, null);
+        }
+
+        let action = body;
+        return callback(null, action);
+    });
+}
+
+function makeRemediationCall(GoogleConfig, method, body, baseUrl, resource, callCb) {
+    authenticate(GoogleConfig).then(client => {
+        if (resource) {
+            baseUrl = baseUrl.replace(/\{resource\}/g, resource);
+        }
+        client.request({
+            url: baseUrl,
+            method,
+            data: body
+        }, function(err, res) {
+            if (err) {
+                callCb(err);
+            } else if (res && res.data) {
+                callCb(null);
+            }
+        });
+    });
+}
+
 var helpers = {
     regions: regions,
     MAX_REGIONS_AT_A_TIME: 6,
     authenticate: authenticate,
     processCall: processCall,
+    remediatePlugin: remediatePlugin,
+    remediateOrgPolicy: remediateOrgPolicy,
     PROTECTION_LEVELS: ['unspecified', 'default', 'cloudcmek', 'cloudhsm', 'external'],
 };
 

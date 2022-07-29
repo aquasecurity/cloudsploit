@@ -43,7 +43,8 @@ module.exports = {
                 var describeLoadBalancerAttributes = helpers.addSource(cache, source,
                     ['elb', 'describeLoadBalancerAttributes', region, lb.DNSName]);
 
-                if (!describeLoadBalancerAttributes.data ||
+                if (!describeLoadBalancerAttributes ||
+                    !describeLoadBalancerAttributes.data ||
                     describeLoadBalancerAttributes.err || 
                     !describeLoadBalancerAttributes.data || 
                     !describeLoadBalancerAttributes.data.LoadBalancerAttributes) {

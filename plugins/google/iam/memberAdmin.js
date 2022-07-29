@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'For best security practices, use only predefined IAM roles and do not use primitive roles to prevent any unauthorized access to your resources.',
     link: 'https://cloud.google.com/iam/docs/overview',
     recommended_action: 'Ensure that no IAM member has a primitive role.',
-    apis: ['projects:getIamPolicy', 'projects:get'],
+    apis: ['projects:getIamPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

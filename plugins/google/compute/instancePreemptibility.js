@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Preemptible instances are excess Compute Engine capacity, so their availability varies with usage. Compute Engine can terminate preemptible instances if it requires access to these resources for other tasks.',
     link: 'https://cloud.google.com/compute/docs/instances/preemptible',
     recommended_action: 'Ensure that your Google Compute Engine VM instances are not preemptible.',
-    apis: ['instances:compute:list', 'projects:get'],
+    apis: ['instances:compute:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
