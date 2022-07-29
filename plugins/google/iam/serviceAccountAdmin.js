@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Service accounts are primarily used for API access to Google. It is recommended to not use admin access for service accounts.',
     link: 'https://cloud.google.com/iam/docs/overview',
     recommended_action: 'Ensure that no service accounts have admin, owner, or write privileges.',
-    apis: ['projects:get','projects:getIamPolicy'],
+    apis: ['projects:getIamPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

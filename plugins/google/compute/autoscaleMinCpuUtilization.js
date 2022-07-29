@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'The autoscaler treats the target CPU utilization level as a fraction of the average use of all vCPUs over time in the instance group. If the average utilization of your total vCPUs exceeds the target utilization, the autoscaler adds more VM instances. If the average utilization of your total vCPUs is less than the target utilization, the autoscaler removes instances.',
     link: 'https://cloud.google.com/compute/docs/autoscaler/scaling-cpu',
     recommended_action: 'Ensure all instance groups have Minimum CPU Utilization greater than or equal to target value.',
-    apis: ['instanceGroups:aggregatedList', 'autoscalers:aggregatedList', 'clusters:list', 'projects:get'],
+    apis: ['instanceGroups:aggregatedList', 'autoscalers:aggregatedList', 'clusters:list'],
     settings: {
         minimum_cpu_utilization_target: {
             name: 'Autoscale Minimum CPU Utilization Target',

@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Kubernetes cluster nodes should use customized service accounts that have minimal privileges to run. This reduces the attack surface in the case of a malicious attack on the cluster.',
     link: 'https://cloud.google.com/container-optimized-os/',
     recommended_action: 'Ensure that no Kubernetes cluster nodes are using the default service account',
-    apis: ['clusters:list', 'projects:get'],
+    apis: ['clusters:list'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -1458,6 +1458,12 @@ var postcalls = [
                 filterKey: 'Bucket',
                 filterValue: 'Name'
             },
+            listObjects: {
+                reliesOnService: 's3',
+                reliesOnCall: 'listBuckets',
+                filterKey: 'Bucket',
+                filterValue: 'Name'
+            },
             sendIntegration: {
                 enabled: true
             }

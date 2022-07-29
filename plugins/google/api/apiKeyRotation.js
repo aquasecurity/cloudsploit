@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Make sure that your Google API Keys are regenerated regularly to avoid data leaks and unauthorized access through outdated API Keys.',
     link: 'https://cloud.google.com/docs/authentication/api-keys',
     recommended_action: 'Ensure that all your Google Cloud API keys are regenerated (rotated) after a specific period.',
-    apis: ['apiKeys:list', 'projects:get'],
+    apis: ['apiKeys:list'],
     settings: {
         api_keys_rotation_interval: {
             name: 'API Keys Rotation Interval',

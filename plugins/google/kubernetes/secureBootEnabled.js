@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Secure Boot feature protects your cluster nodes from malware and makes sure the system runs only authentic software.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/shielded-gke-nodes#secure_boot',
     recommended_action: 'Ensure that Secure Boot feature is enabled for all node pools in your GKE clusters.',
-    apis: ['clusters:list', 'projects:get'],
+    apis: ['clusters:list'],
 
     run: function(cache, settings, callback) {
         var results = [];

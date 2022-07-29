@@ -51,7 +51,7 @@ module.exports = {
 
             let service = 'All Ports';
 
-            helpers.findOpenPorts(networkSecurityGroups.data, ports, service, location, results);
+            helpers.findOpenPorts(networkSecurityGroups.data, ports, service, location, results, true);
 
             rcb();
         }, function() {

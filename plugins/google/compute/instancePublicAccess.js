@@ -10,7 +10,7 @@ module.exports = {
         'in order to minimize the instance\'s exposure to the internet.',
     link: 'https://cloud.google.com/compute/docs/ip-addresses/reserve-static-external-ip-address',
     recommended_action: 'Modify compute instances and set External IP to None for network interface',
-    apis: ['instances:compute:list', 'projects:get'],
+    apis: ['instances:compute:list'],
 
     run: function(cache, settings, callback) {
         var results = [];

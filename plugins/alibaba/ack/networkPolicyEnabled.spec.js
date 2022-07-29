@@ -4,7 +4,7 @@ var networkPolicyEnabled = require('./networkPolicyEnabled.js');
 const describeClusters = [
     {
 		"name": "aqua-cluster2",
-		"cluster_id": "cc377f7509590489da921de83a1cad919",
+		"cluster_id": "cc377f7509590489da921de83a1cad918",
 		"size": 2,
 		"region_id": "us-west-1",
 		"state": "initial",
