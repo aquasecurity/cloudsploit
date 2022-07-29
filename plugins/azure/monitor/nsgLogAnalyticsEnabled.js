@@ -55,7 +55,6 @@ module.exports = {
                     diagnosticSettings.data.forEach(function(ds) {
                         if (ds.logs && ds.logs.length) found = true;
                     });
-
                     if (found) {
                         helpers.addResult(results, 0, 'NSG Log Analytics is enabled for NSG', location, nsg.id);
                     } else {
