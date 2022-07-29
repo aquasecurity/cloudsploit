@@ -1085,6 +1085,28 @@ var calls = [
                 paginate: 'NextMarker',
                 paginateReqProp: 'Marker'
             }
+        },
+        Imagebuilder: {
+            listContainerRecipes: {
+                property: 'containerRecipeSummaryList',
+                paginate: 'nextToken'
+            },
+            listComponents: {
+                property: 'componentVersionList',
+                paginate: 'nextToken'
+            },
+            paginatelistImagePipelines: {
+                property: 'imagePipelineList',
+                paginate: 'nextToken'
+            },
+            listImageRecipes: {
+                property: 'imageRecipeSummaryList',
+                paginate: 'nextToken'
+            },
+            listInfrastructureConfigurations: {
+                property: 'infrastructureConfigurationSummaryList',
+                paginate: 'nextToken'
+            }
         }
     }
 ];
@@ -2166,7 +2188,33 @@ var postcalls = [
                 filterKey: 'DomainName',
                 filterValue: 'DomainName'
             },
-        }
+        },
+        Imagebuilder: {
+            getContainerRecipe: {
+                reliesOnService: 'imagebuilder',
+                reliesOnCall: 'listContainerRecipes',
+                filterKey: 'containerRecipeArn',
+                filterValue: 'arn'
+            },
+            getComponent: {
+                reliesOnService: 'imagebuilder',
+                reliesOnCall: 'listComponents',
+                filterKey: 'componentBuildVersionArn',
+                filterValue: 'arn'
+            },
+            getInfrastructureConfiguration: {
+                reliesOnService: 'imagebuilder',
+                reliesOnCall: 'listInfrastructureConfigurations',
+                filterKey: 'infrastructureConfigurationArn',
+                filterValue: 'arn'
+            },
+            getImageRecipe: {
+                reliesOnService: 'imagebuilder',
+                reliesOnCall: 'listImageRecipes',
+                filterKey: 'imageRecipeArn',
+                filterValue: 'arn'
+            }
+        },
     },
 ];
 
