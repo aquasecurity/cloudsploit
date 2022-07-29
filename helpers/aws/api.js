@@ -660,6 +660,16 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    Imagebuilder: {
+        listComponents: {
+            property: 'componentVersionList',
+            paginate: 'nextToken'
+        },
+        paginatelistImagePipelines: {
+            property: 'imagePipelineList',
+            paginate: 'nextToken'
+        }
+    },
     IAM: {
         listServerCertificates: {
             property: 'ServerCertificateMetadataList',
@@ -696,12 +706,6 @@ var calls = {
         },
         generateCredentialReport: {
             override: true
-        }
-    },
-    Imagebuilder: {
-        listImagePipelines: {
-            property: 'imagePipelineList',
-            paginate: 'nextToken'
         }
     },
     IoTSiteWise: {
@@ -1359,6 +1363,14 @@ var postcalls = [
                 reliesOnCall: 'listDomainNames',
                 filterKey: 'DomainName',
                 filterValue: 'DomainName'
+            }
+        },
+        Imagebuilder: {
+            getComponent: {
+                reliesOnService: 'imagebuilder',
+                reliesOnCall: 'listComponents',
+                filterKey: 'componentBuildVersionArn',
+                filterValue: 'arn'
             }
         },
         S3: {
