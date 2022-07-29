@@ -212,7 +212,6 @@ describe('openSSH', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No open ports found in Security Lists')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -232,9 +231,8 @@ describe('openSSH', function () {
         it('should PASS if no open ports found in network security groups', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
-                expect(results[1].status).to.equal(0)
-                expect(results[1].message).to.include('No open ports found in Network Security Groups')
-                expect(results[1].region).to.equal('us-ashburn-1')
+                expect(results[0].status).to.equal(0)
+                expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
 

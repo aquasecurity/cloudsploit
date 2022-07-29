@@ -192,6 +192,12 @@ var calls = {
             paginate: 'nextToken'
         }
     },
+    ComputeOptimizer: {
+        getRecommendationSummaries : {
+            property: 'recommendationSummaries',
+            paginate: 'nextToken'
+        }
+    },
     Comprehend: {
         listEntitiesDetectionJobs: {
             property: 'EntitiesDetectionJobPropertiesList',
@@ -696,6 +702,12 @@ var calls = {
         },
         generateCredentialReport: {
             override: true
+        }
+    },
+    Imagebuilder: {
+        listImagePipelines: {
+            property: 'imagePipelineList',
+            paginate: 'nextToken'
         }
     },
     IoTSiteWise: {
@@ -1455,6 +1467,12 @@ var postcalls = [
                 filterValue: 'Name'
             },
             headBucket: {
+                reliesOnService: 's3',
+                reliesOnCall: 'listBuckets',
+                filterKey: 'Bucket',
+                filterValue: 'Name'
+            },
+            listObjects: {
                 reliesOnService: 's3',
                 reliesOnCall: 'listBuckets',
                 filterKey: 'Bucket',

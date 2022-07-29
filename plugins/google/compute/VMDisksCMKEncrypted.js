@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Google encrypts all disks at rest by default. By using CMKs you can have better control over your disk encryption.',
     link: 'https://cloud.google.com/compute/docs/disks/customer-supplied-encryption',
     recommended_action: 'Ensure that your VM instances have CMK encryption enabled.',
-    apis: ['disks:list', 'projects:get', 'keyRings:list', 'cryptoKeys:list'],
+    apis: ['disks:list', 'keyRings:list', 'cryptoKeys:list'],
     settings: {
         disk_encryption_level: {
             name: 'Disk Encryption Protection Level',

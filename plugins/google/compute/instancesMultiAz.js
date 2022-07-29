@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Creating instances in a single zone creates a single point of failure for all systems in the VPC. All managed instances should be created as Regional to ensure proper failover.',
     link: 'https://cloud.google.com/vpc/docs/vpc',
     recommended_action: 'Launch new instances as regional instance groups.',
-    apis: ['instanceGroups:aggregatedList', 'instances:compute:list', 'projects:get'],
+    apis: ['instanceGroups:aggregatedList', 'instances:compute:list'],
 
     run: function(cache, settings, callback) {
         var results = [];

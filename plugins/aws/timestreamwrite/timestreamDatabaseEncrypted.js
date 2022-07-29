@@ -2,14 +2,14 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: ' Timestream Database Encrypted',
+    title: 'Timestream Database Encrypted',
     category: 'Timestream',
     domain: 'Databases',
     description: 'Ensure that AWS Timestream databases are encrypted with KMS Customer Master Keys (CMKs) instead of AWS managed-keys.',
     more_info: 'Timestream encryption at rest provides enhanced security by encrypting all your data at rest using encryption keys. ' +
         'This functionality helps reduce the operational burden and complexity involved in protecting sensitive data. ' +
         'With encryption at rest using customer-managed keys, you can build security-sensitive applications that meet strict encryption compliance and regulatory requirements. ',
-    recommended_action: 'Modify Trimestream database encryption configuration to use desired encryption key',
+    recommended_action: 'Modify Timestream database encryption configuration to use desired encryption key',
     link: 'https://docs.aws.amazon.com/timestream/latest/developerguide/EncryptionAtRest.html',
     apis: ['TimestreamWrite:listDatabases', 'KMS:describeKey', 'KMS:listKeys'],
     settings: {

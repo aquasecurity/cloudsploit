@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Virtual Machine instance should be of the given types to ensure the internal compliance and prevent unexpected billing charges.',
     link: 'https://cloud.google.com/compute/docs/machine-types',
     recommended_action: 'Stop the Virtual Machine instance, change the machine type to the desired type  and restart the instance.',
-    apis: ['instances:compute:list', 'projects:get'],
+    apis: ['instances:compute:list'],
     settings: {
         instance_desired_machine_types: {
             name: 'Instance Desired Machine Types',

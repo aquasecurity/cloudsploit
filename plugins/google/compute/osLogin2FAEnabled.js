@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Enable OS login Two-Factor Authentication (2FA) to add an additional security layer to your VM instances. The risk of your VM instances getting attcked is reduced significantly if 2FA is enabled.',
     link: 'https://cloud.google.com/compute/docs/oslogin/setup-two-factor-authentication',
     recommended_action: 'Set enable-oslogin-2fa to true in custom metadata for the instance.',
-    apis: ['instances:compute:list', 'projects:get'],
+    apis: ['instances:compute:list'],
     compliance: {
         pci: 'PCI recommends implementing additional security features for ' +
             'any required service. This includes using secured technologies ' +

@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Authorized networks are a way of specifying a restricted range of IP addresses that are permitted to access your container clusters Kubernetes master endpoint.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/authorized-networks',
     recommended_action: 'Enable master authorized networks on all clusters.',
-    apis: ['clusters:list', 'projects:get'],
+    apis: ['clusters:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
