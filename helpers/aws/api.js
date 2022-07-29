@@ -673,6 +673,10 @@ var calls = {
             property: 'imagePipelineList',
             paginate: 'nextToken'
         },
+        listImageRecipes: {
+            property: 'imageRecipeSummaryList',
+            paginate: 'nextToken'
+        },
         listInfrastructureConfigurations: {
             property: 'infrastructureConfigurationSummaryList',
             paginate: 'nextToken'
@@ -1281,6 +1285,12 @@ var postcalls = [
                 filterKey: 'infrastructureConfigurationArn',
                 filterValue: 'arn'
             },
+            getImageRecipe: {
+                reliesOnService: 'imagebuilder',
+                reliesOnCall: 'listImageRecipes',
+                filterKey: 'imageRecipeArn',
+                filterValue: 'arn'
+            }
         },
         CloudWatch: {
             getEsMetricStatistics: {
