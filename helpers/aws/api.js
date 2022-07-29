@@ -664,6 +664,7 @@ var calls = {
         listContainerRecipes: {
             property: 'containerRecipeSummaryList',
             paginate: 'nextToken'
+        },
         listComponents: {
             property: 'componentVersionList',
             paginate: 'nextToken'
