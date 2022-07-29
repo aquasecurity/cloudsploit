@@ -10,6 +10,12 @@ module.exports = {
     link: 'https://cloud.google.com/functions/docs/securing/authenticating',
     recommended_action: 'Ensure that your Google Cloud functions do not allow external traffic from the internet.',
     apis: ['functions:list'],
+    remediation_min_version: '202207282132',
+    remediation_description: 'All Google Cloud Functions will be configured to allow only internal traffic and traffic from Cloud Load Balancer.',
+    apis_remediate: ['functions:list'],
+    actions: {remediate:['CloudFunctionsService.UpdateFunction'], rollback:['CloudFunctionsService.UpdateFunction']},
+    permissions: {remediate: ['cloudfunctions.functions.update'], rollback: ['cloudfunctions.functions.create	']},
+    realtime_triggers: ['google.cloud.functions.v1.CloudFunctionsService.UpdateFunction', 'google.cloud.functions.v1.CloudFunctionsService.CreateFunction'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -46,6 +52,37 @@ module.exports = {
             rcb();
         }, function() {
             callback(null, results, source);
+        });
+    },
+    remediate: function(config, cache, settings, resource, callback) {
+        var remediation_file = settings.remediation_file;
+
+        // inputs specific to the plugin
+        var pluginName = 'ingressAllTrafficDisabled';
+        var baseUrl = 'https://cloudfunctions.googleapis.com/v1/{resource}?updateMask=ingressSettings';
+        var method = 'PATCH';
+        var putCall = this.actions.remediate;
+
+        // create the params necessary for the remediation
+        var body = {
+            ingressSettings: 'ALLOW_INTERNAL_AND_GCLB'
+        };
+        // logging
+        remediation_file['pre_remediate']['actions'][pluginName][resource] = {
+            'ingressAllTraffic': 'Enabled'
+        };
+
+        helpers.remediatePlugin(config, method, body, baseUrl, resource, remediation_file, putCall, pluginName, function(err, action) {
+            if (err) return callback(err);
+            if (action) action.action = putCall;
+
+
+            remediation_file['post_remediate']['actions'][pluginName][resource] = action;
+            remediation_file['remediate']['actions'][pluginName][resource] = {
+                'Action': 'Disabled'
+            };
+
+            callback(null, action);
         });
     }
 };
