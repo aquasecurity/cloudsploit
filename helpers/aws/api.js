@@ -668,6 +668,10 @@ var calls = {
         paginatelistImagePipelines: {
             property: 'imagePipelineList',
             paginate: 'nextToken'
+        },
+        listInfrastructureConfigurations: {
+            property: 'infrastructureConfigurationSummaryList',
+            paginate: 'nextToken'
         }
     },
     IAM: {
@@ -706,12 +710,6 @@ var calls = {
         },
         generateCredentialReport: {
             override: true
-        }
-    },
-    Imagebuilder: {
-        listInfrastructureConfigurations: {
-            property: 'infrastructureConfigurationSummaryList',
-            paginate: 'nextToken'
         }
     },
     IoTSiteWise: {
