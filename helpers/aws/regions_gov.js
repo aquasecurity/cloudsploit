@@ -119,4 +119,5 @@ module.exports = {
     imagebuilder: regions,
     computeoptimizer: regions,
     appconfig: regions
+
 };
