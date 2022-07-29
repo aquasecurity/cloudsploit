@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'SQL instance for PostgreSQL databases provides log_temp_files flag. It is used to log the temporary files name and size. It is not enabled by default. Enabling it will make sure to log names and sizes of all the temporary files that were created during any operation(sort, hashes, query_results etc).',
     link: 'https://cloud.google.com/sql/docs/postgres/flags',
     recommended_action: 'Ensure that log_temp_files flag is enabled for all PostgreSQL instances.',
-    apis: ['instances:sql:list', 'projects:get'],
+    apis: ['instances:sql:list'],
 
     run: function(cache, settings, callback) {
         var results = [];

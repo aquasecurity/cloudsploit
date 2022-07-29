@@ -34,11 +34,12 @@ module.exports = {
             }
 
             var groups = describeSecurityGroups.data;
-            var usedGroups = helpers.getUsedSecurityGroups(cache, results, region, rcb);
+            var usedGroups = helpers.getUsedSecurityGroups(cache, results, region);
+            if (usedGroups && usedGroups.length && usedGroups[0] === 'Error') return rcb();
             for (var g in groups) {
                 var resource = 'arn:aws:ec2:' + region + ':' + groups[g].OwnerId + ':security-group/' +
                                groups[g].GroupId;      
-                if (groups[g].GroupId && usedGroups.includes(groups[g].GroupId)) {
+                if (groups[g].GroupId && usedGroups && usedGroups.includes(groups[g].GroupId)) {
                     helpers.addResult(results, 0, 'Security group is being used', region, resource);
                 } else {
                     helpers.addResult(results, 2, 'Security group is not being used', region, resource);

@@ -41,7 +41,7 @@ module.exports = {
                 return rcb();
             }
 
-            helpers.findOpenAllPorts(firewalls.data, region, results, cache, callback, source);
+            helpers.findOpenAllPorts(firewalls.data, region, results, cache, source);
 
             rcb();
         }, function(){

@@ -57,7 +57,8 @@ module.exports = {
                 var describeLoadBalancerAttributes = helpers.addSource(cache, source,
                     ['elb', 'describeLoadBalancerAttributes', region, lb.DNSName]);
 
-                if ( describeLoadBalancerAttributes.data && 
+                if (describeLoadBalancerAttributes &&
+                    describeLoadBalancerAttributes.data &&
                     describeLoadBalancerAttributes.data.LoadBalancerAttributes && 
                     describeLoadBalancerAttributes.data.LoadBalancerAttributes.AccessLog) {
                     var accessLog = describeLoadBalancerAttributes.data.LoadBalancerAttributes.AccessLog;

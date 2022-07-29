@@ -19,107 +19,7 @@ const describeSnapshots = [
         "Encrypted": false,
         "OwnerId": '111122223333',
         "SnapshotId": 'snap-0a97ac5b19a598f50'
-    },
-    {
-        "Encrypted": false,
-        "OwnerId": '111122223333',
-        "SnapshotId": 'snap-0a97ac5b19a598f50'
-    },
-    {
-        "Encrypted": false,
-        "OwnerId": '111122223333',
-        "SnapshotId": 'snap-0a97ac5b19a598f50'
-    },
-    {
-        "Encrypted": false,
-        "OwnerId": '111122223333',
-        "SnapshotId": 'snap-0a97ac5b19a598f50'
-    },
-    {
-        "Encrypted": false,
-        "OwnerId": '111122223333',
-        "SnapshotId": 'snap-0a97ac5b19a598f50'
-    },
-    {
-        "Encrypted": false,
-        "OwnerId": '111122223333',
-        "SnapshotId": 'snap-0a97ac5b19a598f50'
-    },
-    {
-        "Encrypted": false,
-        "OwnerId": '111122223333',
-        "SnapshotId": 'snap-0a97ac5b19a598f50'
-    },
-    {
-        "Encrypted": false,
-        "OwnerId": '111122223333',
-        "SnapshotId": 'snap-0a97ac5b19a598f50'
-    },
-    {
-        "Encrypted": false,
-        "OwnerId": '111122223333',
-        "SnapshotId": 'snap-0a97ac5b19a598f50'
-    },
-    {
-        "Encrypted": false,
-        "OwnerId": '111122223333',
-        "SnapshotId": 'snap-0a97ac5b19a598f50'
-    },
-    {
-        "Encrypted": false,
-        "OwnerId": '111122223333',
-        "SnapshotId": 'snap-0a97ac5b19a598f50'
-    },
-    {
-        "Encrypted": false,
-        "OwnerId": '111122223333',
-        "SnapshotId": 'snap-0a97ac5b19a598f50'
-    },
-    {
-        "Encrypted": false,
-        "OwnerId": '111122223333',
-        "SnapshotId": 'snap-0a97ac5b19a598f50'
-    },
-    {
-        "Encrypted": false,
-        "OwnerId": '111122223333',
-        "SnapshotId": 'snap-0a97ac5b19a598f50'
-    },
-    {
-        "Encrypted": false,
-        "OwnerId": '111122223333',
-        "SnapshotId": 'snap-0a97ac5b19a598f50'
-    },
-    {
-        "Encrypted": false,
-        "OwnerId": '111122223333',
-        "SnapshotId": 'snap-0a97ac5b19a598f50'
-    },
-    {
-        "Encrypted": false,
-        "OwnerId": '111122223333',
-        "SnapshotId": 'snap-0a97ac5b19a598f50'
-    },
-    {
-        "Encrypted": false,
-        "OwnerId": '111122223333',
-        "SnapshotId": 'snap-0a97ac5b19a598f50'
-    },
-    {
-        "Encrypted": false,
-        "OwnerId": '111122223333',
-        "SnapshotId": 'snap-0a97ac5b19a598f50'
-    },
-    {
-        "Encrypted": false,
-        "OwnerId": '111122223333',
-        "SnapshotId": 'snap-0a97ac5b19a598f50'
-    },
-    {
-        "Encrypted": false,
-        "OwnerId": '111122223333',
-        "SnapshotId": 'snap-0a97ac5b19a598f50'
-    },
+    },  
 ];
 
 
@@ -161,7 +61,7 @@ const createNullCache = () => {
 
 describe('ebsEncryptedSnapshots', function () {
     describe('run', function () {
-        it('should PASS if no unencrypted snapshots found', function (done) {
+        it('should PASS if EBS snapshot is encrypted', function (done) {
             const cache = createCache([describeSnapshots[0]]);
             ebsEncryptedSnapshots.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -172,15 +72,6 @@ describe('ebsEncryptedSnapshots', function () {
         
         it('should FAIL if EBS snapshot is unencrypted', function (done) {
             const cache = createCache([describeSnapshots[1]]);
-            ebsEncryptedSnapshots.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                done();
-            });
-        });
-        
-        it('should FAIL if more than 20 EBS snapshots are unencrypted', function (done) {
-            const cache = createCache(describeSnapshots);
             ebsEncryptedSnapshots.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);

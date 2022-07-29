@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'You can make your google cloud functions call secure by making sure that they require HTTPS.',
     link: 'https://cloud.google.com/functions/docs/writing/http',
     recommended_action: 'Ensure that your Google Cloud functions always require HTTPS.',
-    apis: ['functions:list', 'projects:get'],
+    apis: ['functions:list'],
 
     run: function(cache, settings, callback) {
         var results = [];

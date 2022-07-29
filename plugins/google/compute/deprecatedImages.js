@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Deprecated Compute Disk Images should not be used to create VM instances.',
     link: 'https://cloud.google.com/compute/docs/images/image-management-best-practices',
     recommended_action: 'Ensure that no compute instances are created from deprecated images.',
-    apis: ['instances:compute:list', 'disks:list', 'images:list', 'projects:get'],
+    apis: ['instances:compute:list', 'disks:list', 'images:list'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -21,6 +21,16 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var defaultRegion = helpers.defaultRegion(settings);
+
+        var listBuckets = helpers.addSource(cache, source,
+            ['s3', 'listBuckets', defaultRegion]);
+
+        if (!listBuckets || listBuckets.err || !listBuckets.data) {
+            helpers.addResult(results, 3,
+                'Unable to query for S3 buckets: ' + helpers.addError(listBuckets));
+            return callback(null, results, source);
+        }
 
         async.each(regions.cloudtrail, function(region, rcb){
 
@@ -44,6 +54,13 @@ module.exports = {
                 if (!trail.S3BucketName || (trail.HomeRegion && trail.HomeRegion.toLowerCase() !== region)) return cb();
                 // Skip CloudSploit-managed events bucket
                 if (trail.S3BucketName == helpers.CLOUDSPLOIT_EVENTS_BUCKET) return cb();
+
+                if (!listBuckets.data.find(bucket => bucket.Name == trail.S3BucketName)) {
+                    helpers.addResult(results, 2,
+                        'Unable to locate S3 bucket, it may have been deleted',
+                        region, 'arn:aws:s3:::' + trail.S3BucketName);
+                    return cb(); 
+                }
 
                 var s3Region = helpers.defaultRegion(settings);
 

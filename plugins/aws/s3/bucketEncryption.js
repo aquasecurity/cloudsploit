@@ -9,7 +9,8 @@ module.exports = {
     more_info: 'S3 object encryption provides fully-managed encryption of all objects uploaded to an S3 bucket.',
     recommended_action: 'Enable CMK KMS-based encryption for all S3 buckets.',
     link: 'https://docs.aws.amazon.com/AmazonS3/latest/dev/bucket-encryption.html',
-    apis: ['S3:listBuckets', 'S3:getBucketEncryption', 'KMS:listKeys', 'KMS:describeKey', 'KMS:listAliases', 'CloudFront:listDistributions', 'S3:getBucketWebsite', 'S3:getBucketLocation'],
+    apis: ['S3:listBuckets', 'S3:getBucketEncryption', 'KMS:listKeys', 'KMS:describeKey', 
+        'KMS:listAliases', 'CloudFront:listDistributions', 'AppConfig:listApplications', 'AppConfig:listConfigurationProfiles', 'S3:getBucketWebsite', 'S3:getBucketLocation', 'STS:getCallerIdentity'],
     remediation_description: 'The impacted bucket will be configured to use either AES-256 encryption, or CMK-based encryption if a KMS key ID is provided.',
     remediation_min_version: '202006020730',
     apis_remediate: ['S3:listBuckets', 'S3:getBucketEncryption', 'S3:getBucketLocation'],
@@ -60,6 +61,12 @@ module.exports = {
             description: 'Allow buckets having static website enabled to skip encryption',
             regex: '^(true|false)$',
             default: 'false',
+        },
+        whitelist_appconfig_s3_buckets: {
+            name: 'Whitelist AppConfig S3 Buckets',
+            description: 'When set to true, whitelists buckets which are source to AppConfig configuration profiles',
+            regex: '^(true|false)$',
+            default: 'false'
         }
     },
 
@@ -69,12 +76,15 @@ module.exports = {
             s3_encryption_allow_pattern: settings.s3_encryption_allow_pattern || this.settings.s3_encryption_allow_pattern.default,
             s3_encryption_kms_alias: settings.s3_encryption_kms_alias || this.settings.s3_encryption_kms_alias.default,
             s3_encryption_allow_cloudfront: settings.s3_encryption_allow_cloudfront || this.settings.s3_encryption_allow_cloudfront.default,
-            s3_allow_unencrypted_static_websites: settings.s3_allow_unencrypted_static_websites || this.settings.s3_allow_unencrypted_static_websites.default
+            s3_allow_unencrypted_static_websites: settings.s3_allow_unencrypted_static_websites || this.settings.s3_allow_unencrypted_static_websites.default,
+            whitelist_appconfig_s3_buckets: settings.whitelist_appconfig_s3_buckets || this.settings.whitelist_appconfig_s3_buckets.default
         };
 
         config.s3_encryption_require_cmk = (config.s3_encryption_require_cmk == 'true');
         config.s3_encryption_allow_cloudfront = (config.s3_encryption_allow_cloudfront == 'true');
         config.s3_allow_unencrypted_static_websites = (config.s3_allow_unencrypted_static_websites == 'true');
+        config.whitelist_appconfig_s3_buckets = (config.whitelist_appconfig_s3_buckets == 'true');
+
 
         var custom = helpers.isCustom(settings, this.settings);
 
@@ -82,9 +92,14 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
 
+        var defaultRegion = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
+        var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', defaultRegion, 'data']);
+
         var cloudfrontOrigins = [];
         var aliasKeyIds = [];
         var defaultKeyIds = [];
+        var appConfigBuckets = [];
         var defaultKeyDesc = 'Default master key that protects my S3 objects';
 
         async.series([
@@ -191,6 +206,52 @@ module.exports = {
 
                 cb();
             },
+            function(cb){
+                if (!config.whitelist_appconfig_s3_buckets) return cb(); 
+
+                async.each(regions.appconfig, function(region, rcb) {
+                    var listApplications = helpers.addSource(cache, source,
+                        ['appconfig', 'listApplications', region]);
+
+                    if (!listApplications) return rcb();
+
+                    if (listApplications.err || !listApplications.data) {
+                        helpers.addResult(results, 3,
+                            'Unable to query for AppConfig applications: ' + helpers.addError(listApplications), region);
+                        return rcb();
+                    }
+
+                    if (listApplications.data.length) {
+                        listApplications.data.forEach(function(application){
+                            if (!application.Id) return;
+                            let resource = `arn:${awsOrGov}:appconfig:${region}:${accountId}:application/${application.Id}`;
+
+                            var listConfigurationProfiles = helpers.addSource(cache, source,
+                                ['appconfig', 'listConfigurationProfiles', region, application.Id]);
+            
+                            if (!listConfigurationProfiles || listConfigurationProfiles.err ||
+                                !listConfigurationProfiles.data || !listConfigurationProfiles.data.Items) {
+                                helpers.addResult(results, 3,
+                                    `Unable to get configuration profiles description: ${helpers.addError(listConfigurationProfiles)}`,
+                                    region, resource); 
+                            }
+
+                            if (listConfigurationProfiles.data.Items.length) {
+                                for (let config of listConfigurationProfiles.data.Items){
+                                    if (config.LocationUri && config.LocationUri.startsWith('s3://')) {
+                                        let bucketName = config.LocationUri.split('/')[2];
+                                        if (!appConfigBuckets.includes(bucketName)) appConfigBuckets.push(bucketName);
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    rcb();
+                }, function(){
+                    cb();
+                });
+            },
             // Check the S3 buckets for encryption
             function(cb) {
                 var region = helpers.defaultRegion(settings);
@@ -217,6 +278,12 @@ module.exports = {
                 listBuckets.data.forEach(function(bucket){
                     let bucketResource = 'arn:aws:s3:::' + bucket.Name;
                     var bucketLocation = helpers.getS3BucketLocation(cache, region, bucket.Name);
+                    if (config.whitelist_appconfig_s3_buckets && appConfigBuckets.includes(bucket.Name)) {
+                        helpers.addResult(results, 0,
+                            'Bucket is a source to AppConfig configuration profile',
+                            bucketLocation, bucketResource);
+                        return;
+                    }
 
                     if (allowRegex && allowRegex.test(bucket.Name)) {
                         helpers.addResult(results, 0,
@@ -417,3 +484,4 @@ module.exports = {
         });
     }
 };
+
