@@ -1274,7 +1274,13 @@ var postcalls = [
                 reliesOnCall: 'listComponents',
                 filterKey: 'componentBuildVersionArn',
                 filterValue: 'arn'
-            }
+            },
+            getInfrastructureConfiguration: {
+                reliesOnService: 'imagebuilder',
+                reliesOnCall: 'listInfrastructureConfigurations',
+                filterKey: 'infrastructureConfigurationArn',
+                filterValue: 'arn'
+            },
         },
         CloudWatch: {
             getEsMetricStatistics: {
@@ -1385,20 +1391,6 @@ var postcalls = [
                 reliesOnCall: 'listDomainNames',
                 filterKey: 'DomainName',
                 filterValue: 'DomainName'
-            }
-        },
-        Imagebuilder: {
-            getInfrastructureConfiguration: {
-                reliesOnService: 'imagebuilder',
-                reliesOnCall: 'listInfrastructureConfigurations',
-                filterKey: 'infrastructureConfigurationArn',
-                filterValue: 'arn'
-            },
-            getComponent: {
-                reliesOnService: 'imagebuilder',
-                reliesOnCall: 'listComponents',
-                filterKey: 'componentBuildVersionArn',
-                filterValue: 'arn'
             }
         },
         S3: {
