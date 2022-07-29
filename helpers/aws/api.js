@@ -1264,6 +1264,12 @@ var postcalls = [
                 reliesOnCall: 'listContainerRecipes',
                 filterKey: 'containerRecipeArn',
                 filterValue: 'arn'
+            },
+            getComponent: {
+                reliesOnService: 'imagebuilder',
+                reliesOnCall: 'listComponents',
+                filterKey: 'componentBuildVersionArn',
+                filterValue: 'arn'
             }
         },
         CloudWatch: {
@@ -1375,14 +1381,6 @@ var postcalls = [
                 reliesOnCall: 'listDomainNames',
                 filterKey: 'DomainName',
                 filterValue: 'DomainName'
-            }
-        },
-        Imagebuilder: {
-            getComponent: {
-                reliesOnService: 'imagebuilder',
-                reliesOnCall: 'listComponents',
-                filterKey: 'componentBuildVersionArn',
-                filterValue: 'arn'
             }
         },
         S3: {
