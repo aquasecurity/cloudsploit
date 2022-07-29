@@ -1377,6 +1377,7 @@ var postcalls = [
                 reliesOnCall: 'listInfrastructureConfigurations',
                 filterKey: 'infrastructureConfigurationArn',
                 filterValue: 'arn'
+            },
             getComponent: {
                 reliesOnService: 'imagebuilder',
                 reliesOnCall: 'listComponents',
