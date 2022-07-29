@@ -86,5 +86,6 @@ module.exports = {
     customerSecretKey: ['default'],
     vault: regions,
     keys: regions,
+    keyVersions: regions,
     cluster: regions
 };
