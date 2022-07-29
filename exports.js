@@ -845,6 +845,11 @@ module.exports = {
         'usersPasswordLastUsed'         : require(__dirname + '/plugins/oracle/identity/usersPasswordLastUsed.js'),
         'defaultTagsForResources'       : require(__dirname + '/plugins/oracle/identity/defaultTagsForResources.js'),
         'notificationTopicSubscription' : require(__dirname + '/plugins/oracle/identity/notificationTopicSubscription.js'),
+        'identityProviderChanges'       : require(__dirname + '/plugins/oracle/identity/identityProviderChanges.js'),
+        'idpGroupMappingChanges'        : require(__dirname + '/plugins/oracle/identity/idpGroupMappingChanges.js'),
+        'iamGroupChanges'               : require(__dirname + '/plugins/oracle/identity/iamGroupChanges.js'),
+        'iamPolicyChanges'              : require(__dirname + '/plugins/oracle/identity/iamPolicyChanges.js'),
+        'userChanges'                   : require(__dirname + '/plugins/oracle/identity/userChanges.js'),
 
         'openSSH'                       : require(__dirname + '/plugins/oracle/networking/openSSH.js'),
         'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/oracle/networking/openOracleAutoDataWarehouse.js'),
@@ -870,6 +875,11 @@ module.exports = {
         'openSalt'                      : require(__dirname + '/plugins/oracle/networking/openSalt.js'),
         'openSMTP'                      : require(__dirname + '/plugins/oracle/networking/openSMTP.js'),
         'flowLogsEnabled'               : require(__dirname + '/plugins/oracle/networking/flowLogsEnabled.js'),
+        'vcnChanges'                    : require(__dirname + '/plugins/oracle/networking/vcnChanges.js'),
+        'routeTableChanges'             : require(__dirname + '/plugins/oracle/networking/routeTableChanges.js'),
+        'securityListChanges'           : require(__dirname + '/plugins/oracle/networking/securityListChanges.js'),
+        'securityGroupChanges'          : require(__dirname + '/plugins/oracle/networking/securityGroupChanges.js'),
+        'networkGatewayChanges'         : require(__dirname + '/plugins/oracle/networking/networkGatewayChanges.js'),
 
         'statelessSecurityRules'        : require(__dirname + '/plugins/oracle/networking/statelessSecurityRules.js'),
         'defaultSecurityList'           : require(__dirname + '/plugins/oracle/networking/defaultSecurityList.js'),

@@ -164,6 +164,14 @@ var calls = {
             filterValue: ['compartmentId'],
         }
     },
+    rules: {
+        list: {
+            api: 'events',
+            restVersion: '/20181201',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
     topics: {
         list: {
             api: 'notification',
