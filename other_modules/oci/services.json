@@ -74,6 +74,20 @@
             }
         }
     },
+    "events": {
+        "rules": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId",
+                    "limit",
+                    "page"
+                ],
+                "method": "GET",
+                "path": "rules",
+                "endpoint": "events.{{region}}.oci.oraclecloud.com"
+            }
+        }
+    },
     "core": {
         "instance": {
             "list": {
