@@ -46,6 +46,7 @@ module.exports = {
         'workgroupEncrypted'            : require(__dirname + '/plugins/aws/athena/workgroupEncrypted.js'),
         'workgroupEnforceConfiguration' : require(__dirname + '/plugins/aws/athena/workgroupEnforceConfiguration.js'),
 
+        'infraConfigNotificationEnabled': require(__dirname + '/plugins/aws/imagebuilder/infraConfigNotificationEnabled.js'),
         'publicS3Origin'                : require(__dirname + '/plugins/aws/cloudfront/publicS3Origin.js'),
         'secureOrigin'                  : require(__dirname + '/plugins/aws/cloudfront/secureOrigin.js'),
         'insecureProtocols'             : require(__dirname + '/plugins/aws/cloudfront/insecureProtocols.js'),

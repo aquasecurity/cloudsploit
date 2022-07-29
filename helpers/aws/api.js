@@ -676,6 +676,10 @@ var calls = {
         listImageRecipes: {
             property: 'imageRecipeSummaryList',
             paginate: 'nextToken'
+        },
+        listInfrastructureConfigurations: {
+            property: 'infrastructureConfigurationSummaryList',
+            paginate: 'nextToken'
         }
     },
     IAM: {
@@ -1274,7 +1278,13 @@ var postcalls = [
                 reliesOnCall: 'listComponents',
                 filterKey: 'componentBuildVersionArn',
                 filterValue: 'arn'
-            }
+            },
+            getInfrastructureConfiguration: {
+                reliesOnService: 'imagebuilder',
+                reliesOnCall: 'listInfrastructureConfigurations',
+                filterKey: 'infrastructureConfigurationArn',
+                filterValue: 'arn'
+            },
         },
         CloudWatch: {
             getEsMetricStatistics: {
