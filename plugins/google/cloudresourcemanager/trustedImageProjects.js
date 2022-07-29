@@ -15,6 +15,17 @@ module.exports = {
         var results = [];
         var source = {};
 
+        let organizations = helpers.addSource(cache, source,
+            ['organizations','list', 'global']);
+
+        if (!organizations || organizations.err || !organizations.data || !organizations.data.length) {
+            helpers.addResult(results, 3,
+                'Unable to query for organizations: ' + helpers.addError(organizations), 'global', null, null, (organizations) ? organizations.err : null);
+            return callback(null, results, source);
+        }
+
+        var organization = organizations.data[0].name;
+
         let listOrgPolicies = helpers.addSource(cache, source,
             ['organizations', 'listOrgPolicies', 'global']);
 
@@ -31,7 +42,7 @@ module.exports = {
         }
         let orgPolicies = listOrgPolicies.data[0];
 
-        helpers.checkOrgPolicy(orgPolicies, 'compute.trustedImageProjects', 'listPolicy', true, false, 'Define Trusted Image Projects', results);
+        helpers.checkOrgPolicy(orgPolicies, 'compute.trustedImageProjects', 'listPolicy', true, false, 'Define Trusted Image Projects', results, organization);
 
         return callback(null, results, source);
     }

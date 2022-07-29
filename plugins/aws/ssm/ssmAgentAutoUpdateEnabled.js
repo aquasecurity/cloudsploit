@@ -69,7 +69,7 @@ module.exports = {
             describeInstanceInformation.data.forEach(function(instance) {
                 var resource = 'arn:' + awsOrGov + ':ec2:' + region + ':' + accountId + ':instance/' + instance.InstanceId;
 
-                if (associatedInstances.includes(resource) || associatedInstances.includes('*')) {
+                if (associatedInstances.includes(instance.InstanceId) || associatedInstances.includes('*')) {
                     helpers.addResult(results, 0, 
                         'Instance has SSM Agent auto update enabled', region, resource);
                 } else {

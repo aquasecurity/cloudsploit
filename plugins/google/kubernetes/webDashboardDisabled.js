@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'It is recommended to disable the web dashboard because it is backed by a highly privileged service account.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards',
     recommended_action: 'Ensure that no Kubernetes clusters have the web dashboard enabled',
-    apis: ['clusters:list', 'projects:get'],
+    apis: ['clusters:list'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -39,7 +39,7 @@ $ docker run -e AWS_ACCESS_KEY_ID=XX -e AWS_SECRET_ACCESS_KEY=YY cloudsploit:0.0
   + [CloudSploit Config File](#cloudsploit-config-file)
   + [Credential Files](#credential-files)
     + [AWS](#aws)
-    + [Azure](#azur)
+    + [Azure](#azure)
     + [GCP](#gcp)
     + [Oracle OCI](#oracle-oci)
   + [Environment Variables](#environment-variables)

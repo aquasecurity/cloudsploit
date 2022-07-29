@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Enabling SSL ensures that the sensitive data being transferred from the database is encrypted.',
     link: 'https://cloud.google.com/sql/docs/mysql/instance-settings',
     recommended_action: 'Ensure that SSL is enabled on all SQL databases.',
-    apis: ['instances:sql:list', 'projects:get'],
+    apis: ['instances:sql:list'],
     compliance: {
         pci: 'PCI requires strong cryptographic and security protocols ' +
              'when transmitting user data, this includes using SSL.',

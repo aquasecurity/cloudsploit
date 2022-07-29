@@ -9,10 +9,21 @@ module.exports = {
     link: 'https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints',
     recommended_action: 'Ensure that "Resource Location Restriction" constraint is enforced at the organization level.',
     apis: ['organizations:list', 'organizations:listOrgPolicies'],
-
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
+
+        let organizations = helpers.addSource(cache, source,
+            ['organizations','list', 'global']);
+
+        if (!organizations || organizations.err || !organizations.data || !organizations.data.length) {
+            helpers.addResult(results, 3,
+                'Unable to query for organizations: ' + helpers.addError(organizations), 'global', null, null, (organizations) ? organizations.err : null);
+            return callback(null, results, source);
+        }
+
+        var organization = organizations.data[0].name;
 
         let listOrgPolicies = helpers.addSource(cache, source,
             ['organizations', 'listOrgPolicies', 'global']);
@@ -30,7 +41,7 @@ module.exports = {
         }
         let orgPolicies = listOrgPolicies.data[0];
 
-        helpers.checkOrgPolicy(orgPolicies, 'gcp.resourceLocations', 'listPolicy', true, false, 'Resource Location Restriction', results);
+        helpers.checkOrgPolicy(orgPolicies, 'gcp.resourceLocations', 'listPolicy', true, false, 'Resource Location Restriction', results, organization);
 
         return callback(null, results, source);
     }

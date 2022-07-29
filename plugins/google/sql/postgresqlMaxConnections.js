@@ -10,7 +10,7 @@ module.exports = {
         'If this no value is set for max_connections flag, instance assumes default value which is calculated per instance memory size.',
     link: 'https://cloud.google.com/sql/docs/postgres/flags#setting_a_database_flag',
     recommended_action: 'Ensure that all PostgreSQL database instances have log_checkpoints flag and it value is set to on.',
-    apis: ['instances:sql:list', 'projects:get'],
+    apis: ['instances:sql:list'],
     settings: {
         min_postgres_max_connections: {
             name: 'Minimum PostgreSQL Max Connections',

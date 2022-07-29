@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Alias IP ranges allow users to assign ranges of internal IP addresses as alias to a network interface.',
     link: 'https://cloud.google.com/monitoring/kubernetes-engine/',
     recommended_action: 'Ensure that Kubernetes clusters have alias IP ranges enabled.',
-    apis: ['clusters:list', 'projects:get'],
+    apis: ['clusters:list'],
 
     run: function(cache, settings, callback) {
         var results = [];

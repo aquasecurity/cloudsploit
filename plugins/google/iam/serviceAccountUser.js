@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'The Service Account User role gives users the access to all service accounts of a project. This can result in an elevation of privileges and is not recommended.',
     link: 'https://cloud.google.com/iam/docs/overview',
     recommended_action: 'Ensure that no service accounts have the Service Account User role attached.',
-    apis: ['projects:getIamPolicy', 'projects:get'],
+    apis: ['projects:getIamPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

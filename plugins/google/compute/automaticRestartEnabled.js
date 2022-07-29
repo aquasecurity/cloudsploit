@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Automatic Restart sets the virtual machine restart behavior when an instance is crashed or stopped by the system. If it is enabled, Google Cloud Compute Engine restarts the instance if it crashes or is stopped.',
     link: 'https://cloud.google.com/compute/docs/instances/setting-instance-scheduling-options#autorestart',
     recommended_action: 'Ensure automatic restart is enabled for all virtual machine instances.',
-    apis: ['instances:compute:list', 'projects:get'],
+    apis: ['instances:compute:list'],
     remediation_min_version: '202202080432',
     remediation_description: 'Automatic Restart will be enabled for all virtual machine instances.',
     apis_remediate: ['instances:compute:list', 'projects:get'],

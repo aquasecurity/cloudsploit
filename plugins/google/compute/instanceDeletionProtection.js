@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'VM instances should have deletion protection enabled in order to prevent them for being accidentally deleted.',
     link: 'https://cloud.google.com/compute/docs/instances/preventing-accidental-vm-deletion',
     recommended_action: 'Modify VM instances to enable deletion protection',
-    apis: ['instances:compute:list', 'projects:get'],
+    apis: ['instances:compute:list'],
 
     run: function(cache, settings, callback) {
         var results = [];

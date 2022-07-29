@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'SQL instance for PostgreSQL databases provides log_min_error_statement flag. It is used to mention/tag that the error messages. Setting it to Error value will help to find the error messages appropriately.',
     link: 'https://cloud.google.com/sql/docs/postgres/flags',
     recommended_action: 'Ensure that log_min_error_statement flag is set to Error for all PostgreSQL instances.',
-    apis: ['instances:sql:list', 'projects:get'],
+    apis: ['instances:sql:list'],
     settings: {
         log_min_error_statement: {
             name: 'Log Min Error Statement',
