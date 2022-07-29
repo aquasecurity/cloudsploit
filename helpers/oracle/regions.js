@@ -87,6 +87,6 @@ module.exports = {
     vault: regions,
     keys: regions,
     cluster: regions,
-    cloudguardConfiguration: ['default']
+    cloudguardConfiguration: ['default'],
     keyVersions: regions,
 };
