@@ -900,6 +900,7 @@ module.exports = {
         'bucketCMKEncryption'           : require(__dirname + '/plugins/oracle/objectstore/bucketCMKEncryption.js'),
         'bucketVersioning'              : require(__dirname + '/plugins/oracle/objectstore/bucketVersioning.js'),
         'bucketObjectEvents'            : require(__dirname + '/plugins/oracle/objectstore/bucketObjectEvents.js'),
+        'bucketWriteLogsEnabled'        : require(__dirname + '/plugins/oracle/objectstore/bucketWriteLogsEnabled.js'),
 
         'nfsPublicAccess'               : require(__dirname + '/plugins/oracle/filestorage/nfsPublicAccess.js'),
         'nfsPolicyProtection'           : require(__dirname + '/plugins/oracle/filestorage/nfsPolicyProtection.js'),
