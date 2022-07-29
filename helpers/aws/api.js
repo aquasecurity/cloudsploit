@@ -661,6 +661,10 @@ var calls = {
         }
     },
     Imagebuilder: {
+        listContainerRecipes: {
+            property: 'containerRecipeSummaryList',
+            paginate: 'nextToken'
+        },
         listComponents: {
             property: 'componentVersionList',
             paginate: 'nextToken'
@@ -1254,6 +1258,20 @@ var postcalls = [
                 filterValue: 'TrailARN'
             }
         },
+        Imagebuilder: {
+            getContainerRecipe: {
+                reliesOnService: 'imagebuilder',
+                reliesOnCall: 'listContainerRecipes',
+                filterKey: 'containerRecipeArn',
+                filterValue: 'arn'
+            },
+            getComponent: {
+                reliesOnService: 'imagebuilder',
+                reliesOnCall: 'listComponents',
+                filterKey: 'componentBuildVersionArn',
+                filterValue: 'arn'
+            }
+        },
         CloudWatch: {
             getEsMetricStatistics: {
                 reliesOnService: 'es',
@@ -1363,14 +1381,6 @@ var postcalls = [
                 reliesOnCall: 'listDomainNames',
                 filterKey: 'DomainName',
                 filterValue: 'DomainName'
-            }
-        },
-        Imagebuilder: {
-            getComponent: {
-                reliesOnService: 'imagebuilder',
-                reliesOnCall: 'listComponents',
-                filterKey: 'componentBuildVersionArn',
-                filterValue: 'arn'
             }
         },
         S3: {
