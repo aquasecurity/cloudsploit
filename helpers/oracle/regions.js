@@ -57,6 +57,8 @@ module.exports = {
     policy: regions,
     defaultTags: ['default'],
     subnet: regions,
+    logGroup: regions,
+    log: regions,
     dbHome: regions,
     database: regions,
     instance: regions,
