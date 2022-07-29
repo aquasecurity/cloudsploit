@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'SQL instance for PostgreSQL database provides log_lock_waits flag. It is not enabled by default. Enabling it will make sure that log messages are generated whenever a session waits longer than deadlock_timeout to acquire a lock.',
     link: 'https://cloud.google.com/sql/docs/postgres/flags#config',
     recommended_action: 'Ensure that log_lock_waits flag is enabled for all PostgreSQL instances.',
-    apis: ['instances:sql:list', 'projects:get'],
+    apis: ['instances:sql:list'],
 
     run: function(cache, settings, callback) {
         var results = [];

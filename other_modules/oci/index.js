@@ -7,6 +7,16 @@ module.exports = function(api, service, key, OracleConfig, parameters, callback)
         !services[api][service][key]) return callback({code: 'Invalid API'});
 
     var localService = services[api][service][key];
+   
+    //replacing endpoint with managementRndpoint value from vault for keys api
+    if (api === 'kms' && localService.path === 'keys') {
+        if (!localService.secondaryPath && key === 'list') {
+            localService.endpoint = parameters.managementEndpoint.replace('https://', '');
+            delete parameters['managementEndpoint'];
+        } else if (key === 'get' || (localService.secondaryPath && localService.secondaryPath === 'keyVersions')) {
+            localService.endpoint = localService.endpoint.replace(/^[^\s-]*(?=-)/, parameters.id.split('.')[4]);
+        }
+    }
 
     var suffix = '';
     if (localService.encodedGet) {

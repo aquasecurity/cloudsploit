@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'To improve the availability of your application, configure a health check to verify that the application is responding as expected.',
     link: 'https://cloud.google.com/compute/docs/instance-groups/autohealing-instances-in-migs',
     recommended_action: 'Ensure autohealing is enabled for all instance groups.',
-    apis: ['instanceGroupManagers:list', 'projects:get'],
+    apis: ['instanceGroupManagers:list'],
 
     run: function(cache, settings, callback) {
         var results = [];

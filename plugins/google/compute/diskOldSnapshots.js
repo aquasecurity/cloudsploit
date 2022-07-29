@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'To optimize storage costs, make sure that there are no old disk snapshots in your GCP project.',
     link: 'https://cloud.google.com/compute/docs/disks/create-snapshots',
     recommended_action: 'Ensure that there are no snapshots older than specified number of days.',
-    apis: ['snapshots:list', 'projects:get'],
+    apis: ['snapshots:list'],
     settings: {
         compute_disk_snapshot_life: {
             name: 'Disk Snapshot Result Life',

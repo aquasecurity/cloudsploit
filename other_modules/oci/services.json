@@ -23,6 +23,16 @@
             }
         }
     },
+    "cloudguard": {
+        "cloudguardConfiguration": {
+            "get": {
+                "allowedQueryStrings": ["compartmentId"],
+                "method": "GET",
+                "path": "configuration",
+                "endpoint": "cloudguard-cp-api.{{region}}.oci.oraclecloud.com"
+            }
+        }
+    },
     "oke": {
         "cluster": {
             "list": {
@@ -34,6 +44,57 @@
                 "method": "GET",
                 "path": "clusters",
                 "endpoint": "containerengine.{{region}}.oci.oraclecloud.com"
+            },
+            "get": {
+                "encodedGet": "id",
+                "allowedQueryStrings": [
+                    "compartmentId",
+                    "page",
+                    "limit"
+                ],
+                "method": "GET",
+                "path": "clusters",
+                "endpoint": "containerengine.{{region}}.oci.oraclecloud.com"
+            }
+        }
+    },
+    "notification": {
+        "topics": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId",
+                    "limit",
+                    "page"
+                ],
+                "method": "GET",
+                "path": "topics",
+                "endpoint": "notification.{{region}}.oraclecloud.com"
+            }
+        },
+        "subscriptions": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId",
+                    "limit",
+                    "page"
+                ],
+                "method": "GET",
+                "path": "subscriptions",
+                "endpoint": "notification.{{region}}.oraclecloud.com"
+            }
+        }
+    },
+    "events": {
+        "rules": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId",
+                    "limit",
+                    "page"
+                ],
+                "method": "GET",
+                "path": "rules",
+                "endpoint": "events.{{region}}.oci.oraclecloud.com"
             }
         }
     },
@@ -279,6 +340,16 @@
                 "endpoint": "filestorage.{{region}}.oraclecloud.com"
             }
         },
+        "fileSystem": {
+            "list": {
+                "allowedQueryStrings": [
+                    "opc-request-id", "displayName", "availabilityDomain", "exportSetId", "id", "compartmentId", "limit", "page", "sortBy", "sortOrder", "lifecycleState"
+                ],
+                "method": "GET",
+                "path": "fileSystems",
+                "endpoint": "filestorage.{{region}}.oraclecloud.com"
+            }
+        },
         "mountTarget": {
             "list": {
                 "allowedQueryStrings": [
@@ -314,6 +385,18 @@
                 "encodedGet": "compartmentId",
                 "method": "GET",
                 "path": "compartments",
+                "endpoint": "identity.{{region}}.oraclecloud.com"
+            }
+        },
+        "defaultTags": {
+            "list" :  {
+                "allowedQueryStrings": [
+                    "compartmentId",
+                    "page",
+                    "limit"
+                ],
+                "method": "GET",
+                "path": "tagDefaults",
                 "endpoint": "identity.{{region}}.oraclecloud.com"
             }
         },
@@ -394,6 +477,51 @@
             }
         }
     },
+    "kms": {   
+        "vault": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId", "page", "limit"
+                ],
+                "method": "GET",
+                "path": "vaults",
+                "endpoint": "kms.{{region}}.oraclecloud.com"
+            }
+        },
+
+        "keys": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId", "page", "limit"
+                ],
+                "method": "GET",
+                "path": "keys",
+                "endpoint": "{{managementEndpoint}}"
+            },
+            "get": {
+                "allowedQueryStrings": [
+                    "compartmentId", "page", "limit"
+                ],
+                "encodedGet": "id",
+                "method": "GET",
+                "path": "keys",
+                "endpoint": "-management.kms.{{region}}.oraclecloud.com"
+            }
+        },
+        "keyVersions": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId", "page", "limit"
+                ],
+                "encodedGet": "id",
+                "method": "GET",
+                "path": "keys",
+                "secondaryPath": "keyVersions",
+                "endpoint": "-management.kms.{{region}}.oraclecloud.com"
+            }
+        }
+    },
+
     "loadBalance": {
         "loadBalancer": {
             "list": {
@@ -404,6 +532,27 @@
                 "method": "GET",
                 "path": "loadBalancers",
                 "endpoint": "iaas.{{region}}.oraclecloud.com"
+            }
+        }
+    },
+    "logging": {
+        "logGroup": {
+            "list": {
+                "allowedQueryStrings": [
+                    "compartmentId", "displayname", "limit", "page", "sortBy", "sortOrder", "lifecycleState"
+                ],
+                "method": "GET",
+                "path": "logGroups",
+                "endpoint": "logging.{{region}}.oci.oraclecloud.com"
+            }
+        },
+        "log": {
+            "list": {
+                "encodedGet": "id",
+                "method": "GET",
+                "path": "logGroups",
+                "secondaryPath": "logs",
+                "endpoint": "logging.{{region}}.oci.oraclecloud.com"
             }
         }
     },

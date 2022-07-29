@@ -25,7 +25,7 @@ module.exports = {
             var activityLogAlerts = helpers.addSource(cache, source,
                 ['activityLogAlerts', 'listBySubscriptionId', location]);
 
-            helpers.checkLogAlerts(activityLogAlerts, conditionResource, text, results, location);
+            helpers.checkLogAlerts(activityLogAlerts, conditionResource, text, results, location, 'security');
             
             rcb();
         }, function() {

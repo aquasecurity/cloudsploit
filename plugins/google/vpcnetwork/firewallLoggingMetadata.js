@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'You can significantly reduce the size of your log files and optimize storage costs by not including metadata. By default, metadata is included in firewall rule log files.',
     link: 'https://cloud.google.com/vpc/docs/firewall-rules-logging',
     recommended_action: 'Ensure that metadata is not included in firewall rule log files.',
-    apis: ['networks:list', 'firewalls:list', 'projects:get'],
+    apis: ['networks:list', 'firewalls:list'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -185,7 +185,6 @@ describe('apiProtocol', () => {
         it('should PASS if API has HTTPS protocol configured', done => {
             const cache = createCache([describeApis], describeApi[0]);
             apiProtocol.run(cache, {}, (err, results) => {
-                console.log(results);
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('API has HTTPS protocol configured');

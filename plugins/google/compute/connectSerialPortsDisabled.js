@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'The serial console does not allow restricting IP Addresses, which allows any IP address to connect to instance and should therefore be disabled.',
     link: 'https://cloud.google.com/compute/docs/instances/interacting-with-serial-console',
     recommended_action: 'Ensure the Enable Connecting to Serial Ports option is disabled for all compute instances.',
-    apis: ['instances:compute:list', 'projects:get'],
+    apis: ['instances:compute:list'],
 
     run: function(cache, settings, callback) {
         var results = [];

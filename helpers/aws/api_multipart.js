@@ -1166,18 +1166,6 @@ var postcalls = [
                 filterValue: 'Name'
             }
         },
-        AutoScaling: {
-            describeNotificationConfigurations: {
-                reliesOnService: 'autoscaling',
-                reliesOnCall: 'describeAutoScalingGroups',
-                override: true
-            },
-            describeLaunchConfigurations: {
-                reliesOnService: 'autoscaling',
-                reliesOnCall: 'describeAutoScalingGroups',
-                override: true
-            }
-        },
         Backup: {
             getBackupVaultNotifications: {
                 reliesOnService: 'backup',
@@ -1432,6 +1420,12 @@ var postcalls = [
                 filterKey: 'Bucket',
                 filterValue: 'Name'
             },
+            listObjects: {
+                reliesOnService: 's3',
+                reliesOnCall: 'listBuckets',
+                filterKey: 'Bucket',
+                filterValue: 'Name'
+            },
             sendIntegration: {
                 enabled: true
             }
@@ -1443,17 +1437,6 @@ var postcalls = [
                 reliesOnService: 'ec2',
                 reliesOnCall: 'describeVpcs',
                 override: true
-            },
-            describeSnapshotAttribute: {
-                reliesOnService: 'ec2',
-                reliesOnCall: 'describeSnapshots',
-                override: true
-            },
-            describeVpcEndpointServicePermissions: {
-                reliesOnService: 'ec2',
-                reliesOnCall: 'describeVpcEndpointServices',
-                filterKey: 'ServiceId',
-                filterValue: 'ServiceId'
             },
             describeLaunchTemplateVersions: {
                 reliesOnService: 'ec2',
@@ -1517,13 +1500,6 @@ var postcalls = [
                 override: true
             }
         },
-        ElasticBeanstalk: {
-            describeConfigurationSettings: {
-                reliesOnService: 'elasticbeanstalk',
-                reliesOnCall: 'describeEnvironments',
-                override: true
-            }
-        },
         ElasticTranscoder: {
             listJobsByPipeline:  {
                 reliesOnService: 'elastictranscoder',
@@ -1534,11 +1510,6 @@ var postcalls = [
         },
         ELB: {
             describeLoadBalancerPolicies: {
-                reliesOnService: 'elb',
-                reliesOnCall: 'describeLoadBalancers',
-                override: true
-            },
-            describeLoadBalancerAttributes: {
                 reliesOnService: 'elb',
                 reliesOnCall: 'describeLoadBalancers',
                 override: true
@@ -1556,21 +1527,6 @@ var postcalls = [
                 filterKey: 'TargetGroupArn',
                 filterValue: 'TargetGroupArn'
             },
-            describeLoadBalancerAttributes: {
-                reliesOnService: 'elbv2',
-                reliesOnCall: 'describeLoadBalancers',
-                override: true
-            },
-            describeListeners: {
-                reliesOnService: 'elbv2',
-                reliesOnCall: 'describeLoadBalancers',
-                override: true
-            },
-            describeTargetGroups: {
-                reliesOnService: 'elbv2',
-                reliesOnCall: 'describeLoadBalancers',
-                override: true
-            },
             describeTargetGroupAttributes: {
                 reliesOnService: 'elbv2',
                 reliesOnCall: 'describeTargetGroups',
@@ -1583,12 +1539,6 @@ var postcalls = [
         },
         EMR: {
             describeCluster: {
-                reliesOnService: 'emr',
-                reliesOnCall: 'listClusters',
-                filterKey: 'ClusterId',
-                filterValue: 'Id'
-            },
-            listInstanceGroups: {
                 reliesOnService: 'emr',
                 reliesOnCall: 'listClusters',
                 filterKey: 'ClusterId',
@@ -1617,6 +1567,72 @@ var postcalls = [
                 reliesOnCall: 'listVaults',
                 filterKey: 'vaultName',
                 filterValue: 'VaultName'
+            }
+        },
+    },
+    {
+        EC2: {
+            describeSnapshotAttribute: {
+                reliesOnService: 'ec2',
+                reliesOnCall: 'describeSnapshots',
+                override: true
+            },
+            describeVpcEndpointServicePermissions: {
+                reliesOnService: 'ec2',
+                reliesOnCall: 'describeVpcEndpointServices',
+                filterKey: 'ServiceId',
+                filterValue: 'ServiceId'
+            },
+        },
+        ElasticBeanstalk: {
+            describeConfigurationSettings: {
+                reliesOnService: 'elasticbeanstalk',
+                reliesOnCall: 'describeEnvironments',
+                override: true
+            }
+        },
+        ELB: {
+            describeLoadBalancerAttributes: {
+                reliesOnService: 'elb',
+                reliesOnCall: 'describeLoadBalancers',
+                override: true
+            },
+        },
+        ELBv2: {
+            describeLoadBalancerAttributes: {
+                reliesOnService: 'elbv2',
+                reliesOnCall: 'describeLoadBalancers',
+                override: true
+            },
+            describeListeners: {
+                reliesOnService: 'elbv2',
+                reliesOnCall: 'describeLoadBalancers',
+                override: true
+            },
+            describeTargetGroups: {
+                reliesOnService: 'elbv2',
+                reliesOnCall: 'describeLoadBalancers',
+                override: true
+            },
+        },
+        EMR: {
+            listInstanceGroups: {
+                reliesOnService: 'emr',
+                reliesOnCall: 'listClusters',
+                filterKey: 'ClusterId',
+                filterValue: 'Id'
+            }
+        },
+        AutoScaling: {
+            describeNotificationConfigurations: {
+                reliesOnService: 'autoscaling',
+                reliesOnCall: 'describeAutoScalingGroups',
+                override: true
+            },
+            describeLaunchConfigurations: {
+                reliesOnService: 'autoscaling',
+                reliesOnCall: 'describeAutoScalingGroups',
+                override: true
             }
         },
     },
@@ -2057,10 +2073,11 @@ var postcalls = [
     },
     {
         IAM: {
-            getPolicyVersion: {
+            getPolicy: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listPolicies',
-                override: true,
+                filterKey: 'PolicyArn',
+                filterValue: 'Arn',
                 rateLimit: 500
             }
         },
@@ -2101,11 +2118,10 @@ var postcalls = [
     },
     {
         IAM: {
-            getPolicy: {
+            getPolicyVersion: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listPolicies',
-                filterKey: 'PolicyArn',
-                filterValue: 'Arn',
+                override: true,
                 rateLimit: 500
             },
             getRole: {
@@ -2151,7 +2167,7 @@ var postcalls = [
                 filterValue: 'DomainName'
             },
         }
-    }
+    },
 ];
 
 module.exports = {

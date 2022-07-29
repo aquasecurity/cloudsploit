@@ -42,8 +42,8 @@ module.exports = {
                 let getBackupVaultNotifications = helpers.addSource(cache, source,
                     ['backup', 'getBackupVaultNotifications', region, vault.BackupVaultName]);
 
-                if (getBackupVaultNotifications && getBackupVaultNotifications.err && getBackupVaultNotifications.err.code &&
-                    getBackupVaultNotifications.err.code == 'ResourceNotFoundException') {
+                if (getBackupVaultNotifications && getBackupVaultNotifications.err && getBackupVaultNotifications.err.message &&
+                    getBackupVaultNotifications.err.message.toUpperCase().includes('FAILED READING NOTIFICATIONS FROM DATABASE')) {
                     helpers.addResult(results, 2,
                         'Backup vault does not have any notifications configured', region, resource);
                     continue;

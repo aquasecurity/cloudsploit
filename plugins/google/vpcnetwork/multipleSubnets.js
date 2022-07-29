@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'A single network within a VPC increases the risk of a broader blast radius in the event of a compromise.',
     link: 'https://cloud.google.com/vpc/docs/vpc',
     recommended_action: 'Create multiple networks/subnets in each VPC and change the architecture to take advantage of public and private tiers.',
-    apis: ['networks:list', 'projects:get'],
+    apis: ['networks:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
