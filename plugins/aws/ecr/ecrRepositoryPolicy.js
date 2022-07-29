@@ -105,11 +105,11 @@ module.exports = {
                             if (Array.isArray(srcAcct) && srcAcct.length == 1 && srcAcct[0] == registryId) continue;
                         }
 
-                        if (helpers.globalPrincipal(statement.Principal) && config.ecr_check_global_principal) {
+                        if (statement.Principal && helpers.globalPrincipal(statement.Principal) && config.ecr_check_global_principal) {
                             // Check for global access
                             found.push('Repository allows global access for actions: ' + statement.Action.join(', ') + '.');
                             if (result < 2) result = 2;
-                        } else if (helpers.crossAccountPrincipal(statement.Principal, registryId) && config.ecr_check_cross_account_principal) {
+                        } else if (statement.Principal && helpers.crossAccountPrincipal(statement.Principal, registryId) && config.ecr_check_cross_account_principal) {
                             // Check for cross-account access
                             found.push('Repository allows cross-account access for actions: ' + statement.Action.join(', ') + '.');
                             if (result < 2) result = 2;

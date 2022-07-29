@@ -89,33 +89,6 @@ const createCache = (describeTrails, listTopics, getTopicAttributes, describeTra
         }
     }
 };
-const createNullCache = (describeTrails, listTopics, describeTrailsErr, listTopicsErr) => {
-    let Arn = (describeTrails && describeTrails.length) ? describeTrails[0].SnsTopicARN : null;
-    return {
-        cloudtrail: {
-            describeTrails: {
-                'us-east-1': {
-                    data: describeTrails,
-                    err: describeTrailsErr
-                }
-            },
-        },
-        sns: {
-            listTopics: {
-                'us-east-1': {
-                    data: listTopics,
-                    err: listTopicsErr
-                }
-            },
-            getTopicAttributes: {
-                'us-east-1': {
-                    [Arn]: null
-                }
-            }
-        
-        }
-    }
-};
 
 describe('cloudtrailNotificationsEnabled', function () {
     describe('run', function () {
@@ -130,13 +103,14 @@ describe('cloudtrailNotificationsEnabled', function () {
             });
         });
 
-        it('should FAIL if CloudTrail trail SNS topic not found', function (done) {
-            const cache = createNullCache([describeTrails[1]], listTopics[2]);
+        it('should FAIL if CloudTrail trail has no SNS topic attached', function (done) {
+            const cache = createCache([describeTrails[0]], listTopics[2], null, null, null, { message: 'CloudTrail trail has no SNS topic attached'} );
             cloudtrailNotificationsEnabled.run(cache, {}, (err, results) => {
+                console.log(results);
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('CloudTrail trail SNS topic not found')
+                expect(results[0].message).to.include('CloudTrail trail has no SNS topic attached')
                 done();
             });
         });
@@ -163,7 +137,7 @@ describe('cloudtrailNotificationsEnabled', function () {
         });
 
         it('should UNKNOWN if unable to list SNS topics', function (done) {
-            const cache = createCache([describeTrails[1]], [], null, null, { message: 'Unable to query for SNS topics' });
+            const cache = createCache([describeTrails[1]], [], null, null, { message: 'Unable to list SNS topics' });
             cloudtrailNotificationsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
@@ -172,12 +146,12 @@ describe('cloudtrailNotificationsEnabled', function () {
             });
         });
 
-        it('should UNKNOWN if unable to query for SNS topic', function (done) {
-            const cache = createCache([describeTrails[1]], listTopics[1], null, null, null, { message: 'Unable to query for SNS topic' });
+        it('should UNKNOWN if unable to query for SNS topic attributes', function (done) {
+            const cache = createCache([describeTrails[1]], listTopics[1], null, null, null, { message: 'Unable to query for SNS topic attributes' });
             cloudtrailNotificationsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for SNS topic')
+                expect(results[0].message).to.include('Unable to query for SNS topic attributes')
                 done();
             });
         });

@@ -22,10 +22,10 @@ module.exports = {
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
         var latestVersions = {
-            '1.21' : 4,
-            '1.20' : 3,
-            '1.19': 7,
-            '1.18': 9,
+            '1.22' : 2,
+            '1.21' : 7,
+            '1.20' : 6,
+            '1.19': 10
         };
 
         var deprecatedVersions = {
@@ -36,7 +36,8 @@ module.exports = {
             '1.14': '2020-12-08',
             '1.15': '2021-05-03',
             '1.16': '2021-09-27',
-            '1.17': '2021-11-02'
+            '1.17': '2021-11-02',
+            '1.18': '2022-03-31'
         };
 
         async.each(regions.eks, function(region, rcb) {

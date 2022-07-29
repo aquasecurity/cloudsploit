@@ -8,6 +8,10 @@ var globalServices = [
     'WAF'
 ];
 
+var integrationSendLast = [
+    'EC2', 'IAM'
+];
+
 var calls = {
     AccessAnalyzer: {
         listAnalyzers: {
@@ -24,6 +28,12 @@ var calls = {
     APIGateway: {
         getRestApis: {
             property: 'items',
+            paginate: 'NextToken'
+        }
+    },
+    AppConfig: {
+        listApplications: {
+            property: 'Items',
             paginate: 'NextToken'
         }
     },
@@ -182,6 +192,12 @@ var calls = {
             paginate: 'nextToken'
         }
     },
+    ComputeOptimizer: {
+        getRecommendationSummaries : {
+            property: 'recommendationSummaries',
+            paginate: 'nextToken'
+        }
+    },
     Comprehend: {
         listEntitiesDetectionJobs: {
             property: 'EntitiesDetectionJobPropertiesList',
@@ -245,6 +261,10 @@ var calls = {
         },
         describeDeliveryChannels: {
             property: 'DeliveryChannels'
+        },
+        getDiscoveredResourceCounts: {
+            property: 'resourceCounts',
+            paginate: 'NextToken'
         }
     },
     CustomerProfiles: {
@@ -465,10 +485,6 @@ var calls = {
         describeLaunchTemplates: {
             property: 'LaunchTemplates',
             paginate: 'NextToken',
-        },
-        sendIntegration: {
-            enabled: true,
-            reliesOnCalls: ['EC2:describeSnapshotAttribute']
         }
     },
     ElastiCache: {
@@ -544,6 +560,8 @@ var calls = {
         describeLoadBalancers: {
             property: 'LoadBalancers',
             paginate: 'NextMarker',
+            reliesOnService: 'ec2',
+            reliesOnCall: 'describeVpcs',
             paginateReqProp: 'Marker'
         },
         describeTargetGroups: {
@@ -555,10 +573,6 @@ var calls = {
             property: 'TargetGroups',
             paginate: 'NextMarker',
             paginateReqProp: 'Marker'
-        },
-        sendIntegration: {
-            enabled: true,
-            reliesOnCalls: ['ELBv2:describeTargetGroups', 'ELBv2:describeTargetHealth']
         }
     },
     EMR: {
@@ -644,6 +658,16 @@ var calls = {
         listFHIRDatastores: {
             property: 'DatastorePropertiesList',
             paginate: 'NextToken'
+        }
+    },
+    Imagebuilder: {
+        listComponents: {
+            property: 'componentVersionList',
+            paginate: 'nextToken'
+        },
+        paginatelistImagePipelines: {
+            property: 'imagePipelineList',
+            paginate: 'nextToken'
         }
     },
     IAM: {
@@ -1102,13 +1126,26 @@ var postcalls = [
                 override: true
             }
         },
-
         APIGateway: {
             getStages: {
                 reliesOnService: 'apigateway',
                 reliesOnCall: 'getRestApis',
                 filterKey: 'restApiId',
                 filterValue: 'id'
+            },
+            getResources: {
+                reliesOnService: 'apigateway',
+                reliesOnCall: 'getRestApis',
+                filterKey: 'restApiId',
+                filterValue: 'id'
+            }
+        },
+        AppConfig: {
+            listConfigurationProfiles: {
+                reliesOnService: 'appconfig',
+                reliesOnCall: 'listApplications',
+                filterKey: 'ApplicationId',
+                filterValue: 'Id'
             }
         },
         AppMesh: {
@@ -1340,6 +1377,11 @@ var postcalls = [
                 reliesOnCall: 'listInfrastructureConfigurations',
                 filterKey: 'infrastructureConfigurationArn',
                 filterValue: 'arn'
+            getComponent: {
+                reliesOnService: 'imagebuilder',
+                reliesOnCall: 'listComponents',
+                filterKey: 'componentBuildVersionArn',
+                filterValue: 'arn'
             }
         },
         S3: {
@@ -1439,7 +1481,12 @@ var postcalls = [
                 filterKey: 'Bucket',
                 filterValue: 'Name'
             },
-
+            listObjects: {
+                reliesOnService: 's3',
+                reliesOnCall: 'listBuckets',
+                filterKey: 'Bucket',
+                filterValue: 'Name'
+            },
             sendIntegration: {
                 enabled: true
             }
@@ -1468,10 +1515,10 @@ var postcalls = [
                 filterValue: 'LaunchTemplateId'
             },
             sendIntegration: {
+                sendLast: true,
                 enabled: true,
                 integrationReliesOn: {
-                    serviceName: 'EC2',
-                    calls: ['EC2:describeInstances']
+                    serviceName: ['ELBv2']
                 }
             }
         },
@@ -1584,12 +1631,8 @@ var postcalls = [
                 filterValue: 'TargetGroupArn'
             },
             sendIntegration: {
-                enabled: true,
-                integrationReliesOn: {
-                    serviceName: 'ELBv2',
-                    calls: ['ELBv2:describeLoadBalancers']
-                }
-            }
+                enabled: true
+            },
         },
         EMR: {
             describeCluster: {
@@ -1697,10 +1740,10 @@ var postcalls = [
                 override: true
             },
             sendIntegration: {
+                sendLast: true,
                 enabled: true,
                 integrationReliesOn: {
-                    serviceName: 'EC2',
-                    calls: ['IAM:getInstanceProfile']
+                    serviceName: ['EC2']
                 }
             }
         },
@@ -1769,6 +1812,12 @@ var postcalls = [
                 reliesOnCall: 'listFunctions',
                 filterKey: 'Resource',
                 filterValue: 'FunctionArn'
+            },
+            getFunctionUrlConfig :{
+                reliesOnService: 'lambda',
+                reliesOnCall: 'listFunctions',
+                filterKey: 'FunctionName',
+                filterValue: 'FunctionName',
             },
             sendIntegration: {
                 enabled: true
@@ -1990,6 +2039,14 @@ var postcalls = [
                 reliesOnService: 'apigateway',
                 reliesOnCall: 'getRestApis',
                 override: true
+            },
+            getIntegration: {
+                reliesOnService: 'apigateway',
+                reliesOnCall: 'getRestApis',
+                override: true
+            },
+            sendIntegration: {
+                enabled: true
             }
         },
         AppMesh: {
@@ -2042,11 +2099,7 @@ var postcalls = [
                 override: true
             },
             sendIntegration: {
-                enabled: true,
-                integrationReliesOn: {
-                    serviceName: 'EKS',
-                    calls: ['EKS:listClusters']
-                }
+                enabled: true
             }
         },
         ECS: {
@@ -2109,11 +2162,7 @@ var postcalls = [
                 override:true
             },
             sendIntegration: {
-                enabled: true,
-                integrationReliesOn: {
-                    serviceName: 'ECS',
-                    calls: ['ECS:listClusters']
-                }
+                enabled: true
             }
         },
     }
@@ -2122,5 +2171,6 @@ var postcalls = [
 module.exports = {
     globalServices: globalServices,
     calls: calls,
-    postcalls: postcalls
+    postcalls: postcalls,
+    integrationSendLast: integrationSendLast
 };

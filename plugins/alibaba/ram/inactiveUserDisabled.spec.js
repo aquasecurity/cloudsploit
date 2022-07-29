@@ -3,6 +3,8 @@ var helpers = require('../../../helpers/alibaba');
 var inactiveUserDisabled = require('./inactiveUserDisabled')
 
 const currentDate = new Date();
+var failDate = new Date();
+failDate.setMonth(failDate.getMonth() - 4);
 const listUsers = [
     {
         "UserName": "aqua",
@@ -18,13 +20,13 @@ const getUserData = [
     {
 		"UserName": "aqua",
 		"UserId": "214008820731498041",
-		"LastLoginDate": "2021-01-13T02:11:29Z",
+		"LastLoginDate": currentDate,
 		"CreateDate": "2021-05-11T11:11:38Z",
 	},
     {
 		"UserName": "cloudsploit",
 		"UserId": "214008820731498041",
-		"LastLoginDate": "2021-05-13T02:11:29Z",
+		"LastLoginDate": failDate,
 		"CreateDate": "2021-05-11T11:11:38Z",
 	}
 ];
@@ -79,7 +81,7 @@ describe('inactiveUserDisabled', function () {
             inactiveUserDisabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include(`RAM user inactive for ${diffInDays} days is enabled`);
+                expect(results[0].message).to.include(`RAM user inactive for`);
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
@@ -91,7 +93,7 @@ describe('inactiveUserDisabled', function () {
             inactiveUserDisabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include(`RAM user inactive for ${diffInDays} days is not enabled`);
+                expect(results[0].message).to.include(`RAM user inactive for`);
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });

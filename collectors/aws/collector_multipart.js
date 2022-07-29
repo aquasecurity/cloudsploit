@@ -27,9 +27,9 @@ var agent = new https.Agent({maxSockets: 100});
 AWS.config.update({httpOptions: {agent: agent}});
 
 var CALLS_CONFIG = {
-    TOTAL_PARTS: 13,
+    TOTAL_PARTS: 14,
     CALLS_PARTS: 4,
-    POSTCALLS_PARTS: 9
+    POSTCALLS_PARTS: 10
 };
 
 var rateError = {message: 'rate', statusCode: 429};
@@ -98,7 +98,6 @@ var collect = function(AWSConfig, settings, callback) {
             if (callsPart >= CALLS_CONFIG.CALLS_PARTS) return serviceCb();
             var serviceName = service;
             var serviceLower = service.toLowerCase();
-            var serviceIntegration = helpers.callsMultipart[callsPart] && helpers.callsMultipart[callsPart][serviceName] && helpers.callsMultipart[callsPart][serviceName].sendIntegration && helpers.callsMultipart[callsPart][serviceName].sendIntegration.enabled ? true : false;
             if (!collection[serviceLower]) collection[serviceLower] = {};
 
             // Loop through each of the service's functions
@@ -246,19 +245,7 @@ var collect = function(AWSConfig, settings, callback) {
                     callCb();
                 });
             }, function() {
-                // Note: We intentionally verify against the full api calls and postcalls array below instead of the multipart
-                if (serviceIntegration &&
-                    settings.identifier &&
-                    collection[serviceLower] &&
-                    Object.keys(collection[serviceLower]) &&
-                    Object.keys(collection[serviceLower]).length &&
-                    helpers.callsCollected(serviceName, collection, helpers.calls, helpers.postcalls)) {
-                    helpers.processIntegration(serviceName, settings, collection, helpers.calls, helpers.postcalls, debugMode, function() {
-                        return serviceCb();
-                    });
-                } else {
-                    return serviceCb();
-                }
+                return serviceCb();
             });
         }, function() {
             // Now loop through the follow up calls
@@ -271,7 +258,11 @@ var collect = function(AWSConfig, settings, callback) {
             async.eachOfLimit(helpers.postcallsMultipart[callsPart], 10, function(serviceObj, service, serviceCb) {
                 var serviceName = service;
                 var serviceLower = service.toLowerCase();
-                var serviceIntegration = helpers.postcallsMultipart[callsPart] && helpers.postcallsMultipart[callsPart][serviceName] && helpers.postcallsMultipart[callsPart][serviceName].sendIntegration && helpers.postcallsMultipart[callsPart][serviceName].sendIntegration.enabled ? true : false;
+                var sendIntegration = helpers.postcallsMultipart[callsPart] && helpers.postcallsMultipart[callsPart][serviceName] && helpers.postcallsMultipart[callsPart][serviceName].sendIntegration ? helpers.postcallsMultipart[callsPart][serviceName].sendIntegration : false;
+                var serviceIntegration = {
+                    enabled : sendIntegration && sendIntegration.enabled ? true : false,
+                    sendLast : sendIntegration && sendIntegration.sendLast ? true : false
+                };
 
                 if (!collection[serviceLower]) collection[serviceLower] = {};
 
@@ -399,7 +390,8 @@ var collect = function(AWSConfig, settings, callback) {
                     });
                 }, function() {
                     // Note: We intentionally verify against the full api calls and postcalls array below instead of the multipart
-                    if (serviceIntegration &&
+                    if (serviceIntegration.enabled &&
+                        !serviceIntegration.sendLast &&
                         settings.identifier &&
                         collection[serviceLower] &&
                         Object.keys(collection[serviceLower]) &&
@@ -413,6 +405,22 @@ var collect = function(AWSConfig, settings, callback) {
                     }
                 });
             }, function() {
+                if (settings.identifier &&
+                    settings.part == CALLS_CONFIG.TOTAL_PARTS) {
+                    for (let serv of helpers.integrationSendLast) {
+                        settings.identifier.service = serv.toLowerCase();
+
+                        if (collection[serv.toLowerCase()] &&
+                            Object.keys(collection[serv.toLowerCase()]) &&
+                            Object.keys(collection[serv.toLowerCase()]).length &&
+                            helpers.callsCollected(serv, collection, helpers.calls, helpers.postcalls)
+                        ) {
+                            helpers.processIntegration(serv, settings, collection, helpers.calls, helpers.postcalls, debugMode, function() {
+                                console.log(`Integration for service ${serv} processed.`);
+                            });
+                        }
+                    }
+                }
                 callback(null, collection, runApiCalls, errorSummary, errorTypeSummary, errors, retries);
             });
         });

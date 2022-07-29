@@ -8,6 +8,10 @@ var globalServices = [
     'WAF'
 ];
 
+var integrationSendLast = [
+    'EC2', 'IAM'
+];
+
 var calls = [
     {
         AccessAnalyzer: {
@@ -26,6 +30,18 @@ var calls = [
             getRestApis: {
                 property: 'items',
                 paginate: 'NextToken'
+            }
+        },
+        AppConfig: {
+            listApplications: {
+                property: 'Items',
+                paginate: 'NextToken'
+            }
+        },
+        AppMesh: {
+            listMeshes: {
+                property: 'meshes',
+                paginate: 'nextToken'
             }
         },
         AppRunner: {
@@ -77,6 +93,13 @@ var calls = [
             listBackupVaults: {
                 property: 'BackupVaultList',
                 paginate: 'NextToken',
+            },
+            describeRegionSettings: {
+                property: 'ResourceTypeOptInPreference',
+            },
+            listBackupPlans: {
+                property: 'BackupPlansList',
+                paginate: 'NextToken'
             }
         },
         CloudFormation: {
@@ -117,6 +140,12 @@ var calls = [
         CloudTrail: {
             describeTrails: {
                 property: 'trailList'
+            }
+        },
+        CloudWatch: {
+            describeAlarms: {
+                property: 'MetricAlarms',
+                paginate: 'NextToken'
             }
         },
         CloudWatchLogs: {
@@ -216,12 +245,23 @@ var calls = [
             },
             describeConfigurationRecorderStatus: {
                 property: 'ConfigurationRecordersStatus'
+            },
+            describeConfigRules: {
+                property: 'ConfigRules',
+                paginate: 'NextToken'
+            },
+            describeDeliveryChannels: {
+                property: 'DeliveryChannels'
+            },
+            getDiscoveredResourceCounts: {
+                property: 'resourceCounts',
+                paginate: 'NextToken'
             }
         },
         CustomerProfiles: {
             listDomains: {
                 property: 'Items',
-                paginate: 'NextToken',
+                paginate: 'NextToken'
             }
         },
         DataBrew: {
@@ -438,12 +478,7 @@ var calls = [
             describeLaunchTemplates: {
                 property: 'LaunchTemplates',
                 paginate: 'NextToken',
-            },
-            sendIntegration: {
-                enabled: true,
-                reliesOnCalls: ['EC2:describeSnapshotAttribute']
             }
-
         },
         ElastiCache: {
             describeCacheClusters: {
@@ -537,6 +572,10 @@ var calls = [
                 params: {
                     Limit: 100,
                 }
+            },
+            listRules: {
+                property: 'Rules',
+                paginate: 'NextToken',
             }
         },
         Finspace: {
@@ -587,14 +626,14 @@ var calls = [
                     accountId: '-',
                     limit: '50'
                 },
-            }
+            },
         },
         HealthLake: {
             listFHIRDatastores: {
                 property: 'DatastorePropertiesList',
                 paginate: 'NextToken'
-            }
-        }
+            },
+        },
     },
     {
         IAM: {
@@ -884,7 +923,6 @@ var calls = [
                 rateLimit: 1000 // ms to rate limit between regions
             },
             describeActiveReceiptRuleSet: {
-                property: 'Rules'
             }
         },
         Shield: {
@@ -902,7 +940,11 @@ var calls = [
             listTopics: {
                 property: 'Topics',
                 paginate: 'NextToken'
-            }
+            },
+            listSubscriptions: {
+                property: 'Subscriptions',
+                paginate: 'NextToken'
+            },
         },
         SQS: {
             listQueues: {
@@ -934,7 +976,14 @@ var calls = [
                 params: {
                     SettingId: '/ssm/documents/console/public-sharing-permission'
                 }
-            }
+            },
+            describeSessions: {
+                property: 'Sessions',
+                paginate: 'NextToken',
+                params: {
+                    State: 'Active'
+                }
+            },
         },
         STS: {
             getCallerIdentity: {
@@ -1035,10 +1084,6 @@ var calls = [
                 property: 'TargetGroups',
                 paginate: 'NextMarker',
                 paginateReqProp: 'Marker'
-            },
-            sendIntegration: {
-                enabled: true,
-                reliesOnCalls: ['ELBv2:describeTargetGroups', 'ELBv2:describeTargetHealth']
             }
         }
     }
@@ -1054,12 +1099,47 @@ var postcalls = [
                 filterValue: 'CertificateArn'
             }
         },
+        AccessAnalyzer: {
+            listFindings: {
+                reliesOnService: 'accessanalyzer',
+                reliesOnCall: 'listAnalyzers',
+                override: true
+            }
+        },
         APIGateway: {
             getStages: {
                 reliesOnService: 'apigateway',
                 reliesOnCall: 'getRestApis',
                 filterKey: 'restApiId',
                 filterValue: 'id'
+            },
+            getResources: {
+                reliesOnService: 'apigateway',
+                reliesOnCall: 'getRestApis',
+                filterKey: 'restApiId',
+                filterValue: 'id'
+            }
+        },
+        AppConfig: {
+            listConfigurationProfiles: {
+                reliesOnService: 'appconfig',
+                reliesOnCall: 'listApplications',
+                filterKey: 'ApplicationId',
+                filterValue: 'Id'
+            }
+        },
+        AppMesh: {
+            listVirtualGateways: {
+                reliesOnService: 'appmesh',
+                reliesOnCall: 'listMeshes',
+                filterKey: 'meshName',
+                filterValue: 'meshName'
+            },
+            describeMesh: {
+                reliesOnService: 'appmesh',
+                reliesOnCall: 'listMeshes',
+                filterKey: 'meshName',
+                filterValue: 'meshName'
             }
         },
         AppRunner: {
@@ -1086,16 +1166,24 @@ var postcalls = [
                 filterValue: 'Name'
             }
         },
-        AutoScaling: {
-            describeNotificationConfigurations: {
-                reliesOnService: 'autoscaling',
-                reliesOnCall: 'describeAutoScalingGroups',
-                override: true
+        Backup: {
+            getBackupVaultNotifications: {
+                reliesOnService: 'backup',
+                reliesOnCall: 'listBackupVaults',
+                filterKey: 'BackupVaultName',
+                filterValue: 'BackupVaultName',
             },
-            describeLaunchConfigurations: {
-                reliesOnService: 'autoscaling',
-                reliesOnCall: 'describeAutoScalingGroups',
-                override: true
+            getBackupVaultAccessPolicy: {
+                reliesOnService: 'backup',
+                reliesOnCall: 'listBackupVaults',
+                filterKey: 'BackupVaultName',
+                filterValue: 'BackupVaultName',
+            },
+            getBackupPlan: {
+                reliesOnService: 'backup',
+                reliesOnCall: 'listBackupPlans',
+                filterKey: 'BackupPlanId',
+                filterValue: 'BackupPlanId',
             }
         },
         CloudFront: {
@@ -1135,6 +1223,14 @@ var postcalls = [
                 reliesOnCall: 'describeCacheClusters',
                 override: true,
             },
+        },
+        ConfigService: {
+            getComplianceDetailsByConfigRule: {
+                reliesOnService: 'configservice',
+                reliesOnCall: 'describeConfigRules',
+                filterKey: 'ConfigRuleName',
+                filterValue: 'ConfigRuleName'
+            }
         },
         CodeStar: {
             describeProject: {
@@ -1201,6 +1297,11 @@ var postcalls = [
                 override: true
             },
             describeContinuousBackups: {
+                reliesOnService: 'dynamodb',
+                reliesOnCall: 'listTables',
+                override: true
+            },
+            listBackups: {
                 reliesOnService: 'dynamodb',
                 reliesOnCall: 'listTables',
                 override: true
@@ -1313,6 +1414,18 @@ var postcalls = [
                 filterKey: 'Bucket',
                 filterValue: 'Name'
             },
+            headBucket: {
+                reliesOnService: 's3',
+                reliesOnCall: 'listBuckets',
+                filterKey: 'Bucket',
+                filterValue: 'Name'
+            },
+            listObjects: {
+                reliesOnService: 's3',
+                reliesOnCall: 'listBuckets',
+                filterKey: 'Bucket',
+                filterValue: 'Name'
+            },
             sendIntegration: {
                 enabled: true
             }
@@ -1325,17 +1438,6 @@ var postcalls = [
                 reliesOnCall: 'describeVpcs',
                 override: true
             },
-            describeSnapshotAttribute: {
-                reliesOnService: 'ec2',
-                reliesOnCall: 'describeSnapshots',
-                override: true
-            },
-            describeVpcEndpointServicePermissions: {
-                reliesOnService: 'ec2',
-                reliesOnCall: 'describeVpcEndpointServices',
-                filterKey: 'ServiceId',
-                filterValue: 'ServiceId'
-            },
             describeLaunchTemplateVersions: {
                 reliesOnService: 'ec2',
                 reliesOnCall: 'describeLaunchTemplates',
@@ -1343,10 +1445,10 @@ var postcalls = [
                 filterValue: 'LaunchTemplateId'
             },
             sendIntegration: {
+                sendLast: true,
                 enabled: true,
                 integrationReliesOn: {
-                    serviceName: 'EC2',
-                    calls: ['EC2:describeInstances']
+                    serviceName: ['ELBv2']
                 }
             }
         },
@@ -1398,13 +1500,6 @@ var postcalls = [
                 override: true
             }
         },
-        ElasticBeanstalk: {
-            describeConfigurationSettings: {
-                reliesOnService: 'elasticbeanstalk',
-                reliesOnCall: 'describeEnvironments',
-                override: true
-            }
-        },
         ElasticTranscoder: {
             listJobsByPipeline:  {
                 reliesOnService: 'elastictranscoder',
@@ -1415,11 +1510,6 @@ var postcalls = [
         },
         ELB: {
             describeLoadBalancerPolicies: {
-                reliesOnService: 'elb',
-                reliesOnCall: 'describeLoadBalancers',
-                override: true
-            },
-            describeLoadBalancerAttributes: {
                 reliesOnService: 'elb',
                 reliesOnCall: 'describeLoadBalancers',
                 override: true
@@ -1437,21 +1527,6 @@ var postcalls = [
                 filterKey: 'TargetGroupArn',
                 filterValue: 'TargetGroupArn'
             },
-            describeLoadBalancerAttributes: {
-                reliesOnService: 'elbv2',
-                reliesOnCall: 'describeLoadBalancers',
-                override: true
-            },
-            describeListeners: {
-                reliesOnService: 'elbv2',
-                reliesOnCall: 'describeLoadBalancers',
-                override: true
-            },
-            describeTargetGroups: {
-                reliesOnService: 'elbv2',
-                reliesOnCall: 'describeLoadBalancers',
-                override: true
-            },
             describeTargetGroupAttributes: {
                 reliesOnService: 'elbv2',
                 reliesOnCall: 'describeTargetGroups',
@@ -1459,21 +1534,11 @@ var postcalls = [
                 filterValue: 'TargetGroupArn'
             },
             sendIntegration: {
-                enabled: true,
-                integrationReliesOn: {
-                    serviceName: 'ELBv2',
-                    calls: ['ELBv2:describeLoadBalancers']
-                }
-            }
+                enabled: true
+            },
         },
         EMR: {
             describeCluster: {
-                reliesOnService: 'emr',
-                reliesOnCall: 'listClusters',
-                filterKey: 'ClusterId',
-                filterValue: 'Id'
-            },
-            listInstanceGroups: {
                 reliesOnService: 'emr',
                 reliesOnCall: 'listClusters',
                 filterKey: 'ClusterId',
@@ -1502,6 +1567,72 @@ var postcalls = [
                 reliesOnCall: 'listVaults',
                 filterKey: 'vaultName',
                 filterValue: 'VaultName'
+            }
+        },
+    },
+    {
+        EC2: {
+            describeSnapshotAttribute: {
+                reliesOnService: 'ec2',
+                reliesOnCall: 'describeSnapshots',
+                override: true
+            },
+            describeVpcEndpointServicePermissions: {
+                reliesOnService: 'ec2',
+                reliesOnCall: 'describeVpcEndpointServices',
+                filterKey: 'ServiceId',
+                filterValue: 'ServiceId'
+            },
+        },
+        ElasticBeanstalk: {
+            describeConfigurationSettings: {
+                reliesOnService: 'elasticbeanstalk',
+                reliesOnCall: 'describeEnvironments',
+                override: true
+            }
+        },
+        ELB: {
+            describeLoadBalancerAttributes: {
+                reliesOnService: 'elb',
+                reliesOnCall: 'describeLoadBalancers',
+                override: true
+            },
+        },
+        ELBv2: {
+            describeLoadBalancerAttributes: {
+                reliesOnService: 'elbv2',
+                reliesOnCall: 'describeLoadBalancers',
+                override: true
+            },
+            describeListeners: {
+                reliesOnService: 'elbv2',
+                reliesOnCall: 'describeLoadBalancers',
+                override: true
+            },
+            describeTargetGroups: {
+                reliesOnService: 'elbv2',
+                reliesOnCall: 'describeLoadBalancers',
+                override: true
+            },
+        },
+        EMR: {
+            listInstanceGroups: {
+                reliesOnService: 'emr',
+                reliesOnCall: 'listClusters',
+                filterKey: 'ClusterId',
+                filterValue: 'Id'
+            }
+        },
+        AutoScaling: {
+            describeNotificationConfigurations: {
+                reliesOnService: 'autoscaling',
+                reliesOnCall: 'describeAutoScalingGroups',
+                override: true
+            },
+            describeLaunchConfigurations: {
+                reliesOnService: 'autoscaling',
+                reliesOnCall: 'describeAutoScalingGroups',
+                override: true
             }
         },
     },
@@ -1623,10 +1754,10 @@ var postcalls = [
                 rateLimit: 500
             },
             sendIntegration: {
+                sendLast: true,
                 enabled: true,
                 integrationReliesOn: {
-                    serviceName: 'EC2',
-                    calls: ['IAM:getInstanceProfile']
+                    serviceName: ['EC2']
                 }
             }
         },
@@ -1635,11 +1766,7 @@ var postcalls = [
                 override:true
             },
             sendIntegration: {
-                enabled: true,
-                integrationReliesOn: {
-                    serviceName: 'ECS',
-                    calls: ['ECS:listClusters']
-                }
+                enabled: true
             }
         }
     },
@@ -1689,6 +1816,11 @@ var postcalls = [
                 reliesOnCall: 'listKeys',
                 filterKey: 'KeyId',
                 filterValue: 'KeyId'
+            },
+            listGrants: {
+                reliesOnService: 'kms',
+                reliesOnCall: 'listKeys',
+                override: true
             }
         },
         Lambda: {
@@ -1705,8 +1837,84 @@ var postcalls = [
                 filterKey: 'Resource',
                 filterValue: 'FunctionArn'
             },
+            getFunctionUrlConfig :{
+                reliesOnService: 'lambda',
+                reliesOnCall: 'listFunctions',
+                filterKey: 'FunctionName',
+                filterValue: 'FunctionName',
+            },
             sendIntegration: {
                 enabled: true
+            }
+        },
+        LookoutEquipment: {
+            describeDataset: {
+                reliesOnService: 'lookoutequipment',
+                reliesOnCall: 'listDatasets',
+                filterKey: 'DatasetName',
+                filterValue: 'DatasetName'
+            }
+        },
+        Location: {
+            describeTracker: {
+                reliesOnService: 'location',
+                reliesOnCall: 'listTrackers',
+                filterKey: 'TrackerName',
+                filterValue: 'TrackerName'
+            },
+            describeGeofenceCollection: {
+                reliesOnService: 'location',
+                reliesOnCall: 'listGeofenceCollections',
+                filterKey: 'CollectionName',
+                filterValue: 'CollectionName'
+            }
+        },
+        LookoutVision: {
+            listModels: {
+                reliesOnService: 'lookoutvision',
+                reliesOnCall: 'listProjects',
+                filterKey: 'ProjectName',
+                filterValue: 'ProjectName'
+            }
+        },
+        LexModelsV2: {
+            listBotAliases: {
+                reliesOnService: 'lexmodelsv2',
+                reliesOnCall: 'listBots',
+                filterKey: 'botId',
+                filterValue: 'botId'
+            }
+        },
+        QLDB: {
+            describeLedger: {
+                reliesOnService: 'qldb',
+                reliesOnCall: 'listLedgers',
+                filterKey: 'Name',
+                filterValue: 'Name'
+            }
+        },
+        ManagedBlockchain: {
+            listMembers: {
+                reliesOnService: 'managedblockchain',
+                reliesOnCall: 'listNetworks',
+                filterKey: 'NetworkId',
+                filterValue: 'Id'
+            }
+        },
+        MQ: {
+            describeBroker: {
+                reliesOnService: 'mq',
+                reliesOnCall: 'listBrokers',
+                filterKey: 'BrokerId',
+                filterValue: 'BrokerId'
+            }
+        },
+        LookoutMetrics: {
+            describeAnomalyDetector: {
+                reliesOnService: 'lookoutmetrics',
+                reliesOnCall: 'listAnomalyDetectors',
+                filterKey: 'AnomalyDetectorArn',
+                filterValue: 'AnomalyDetectorArn'
             }
         },
         MWAA: {
@@ -1714,6 +1922,14 @@ var postcalls = [
                 reliesOnService: 'mwaa',
                 reliesOnCall: 'listEnvironments',
                 override: true
+            }
+        },
+        Proton: {
+            getEnvironmentTemplate: {
+                reliesOnService: 'proton',
+                reliesOnCall: 'listEnvironmentTemplates',
+                filterKey: 'name',
+                filterValue: 'name'
             }
         },
         S3Control: {
@@ -1800,20 +2016,6 @@ var postcalls = [
                 override: true,
             },
         },
-        LexModelsV2:{
-            describeBotAlias: {
-                reliesOnService: 'lexmodelsv2',
-                reliesOnCall: 'listBots',
-                override: true,
-            }
-        },
-        ManagedBlockchain: {
-            getMember: {
-                reliesOnService: 'managedblockchain',
-                reliesOnCall: 'listNetworks',
-                override: true
-            }
-        }
     },
     {
         APIGateway: {
@@ -1821,6 +2023,14 @@ var postcalls = [
                 reliesOnService: 'apigateway',
                 reliesOnCall: 'getRestApis',
                 override: true
+            },
+            getIntegration: {
+                reliesOnService: 'apigateway',
+                reliesOnCall: 'getRestApis',
+                override: true
+            },
+            sendIntegration: {
+                enabled: true
             }
         },
         EMR: {
@@ -1857,23 +2067,9 @@ var postcalls = [
                 override: true
             },
             sendIntegration: {
-                enabled: true,
-                integrationReliesOn: {
-                    serviceName: 'EKS',
-                    calls: ['EKS:listClusters', 'EKS:describeClusters', 'EKS:listNodegroups']
-                }
+                enabled: true
             }
         },
-    },
-    {
-        IAM: {
-            getPolicyVersion: {
-                reliesOnService: 'iam',
-                reliesOnCall: 'listPolicies',
-                override: true,
-                rateLimit: 500
-            }
-        }
     },
     {
         IAM: {
@@ -1882,6 +2078,50 @@ var postcalls = [
                 reliesOnCall: 'listPolicies',
                 filterKey: 'PolicyArn',
                 filterValue: 'Arn',
+                rateLimit: 500
+            }
+        },
+        LookoutVision: {
+            describeModel: {
+                reliesOnService: 'lookoutvision',
+                reliesOnCall: 'listProjects',
+                override: true
+            }
+        },
+        GuardDuty: {
+            getFindings: {
+                reliesOnService: 'guardduty',
+                reliesOnCall: 'listDetectors',
+                override: true,
+            },
+            describePublishingDestination: {
+                reliesOnService: 'guardduty',
+                reliesOnCall: 'listDetectors',
+                override: true,
+            },
+        },
+        LexModelsV2:{
+            describeBotAlias: {
+                reliesOnService: 'lexmodelsv2',
+                reliesOnCall: 'listBots',
+                override: true,
+            }
+        },
+        ManagedBlockchain: {
+            getMember: {
+                reliesOnService: 'managedblockchain',
+                reliesOnCall: 'listNetworks',
+                override: true
+            }
+        }
+
+    },
+    {
+        IAM: {
+            getPolicyVersion: {
+                reliesOnService: 'iam',
+                reliesOnCall: 'listPolicies',
+                override: true,
                 rateLimit: 500
             },
             getRole: {
@@ -1927,11 +2167,12 @@ var postcalls = [
                 filterValue: 'DomainName'
             },
         }
-    }
+    },
 ];
 
 module.exports = {
     globalServicesMultipart: globalServices,
     callsMultipart: calls,
-    postcallsMultipart: postcalls
+    postcallsMultipart: postcalls,
+    integrationSendLast: integrationSendLast
 };

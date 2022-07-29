@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'It is recommended to add labels to Kubernetes clusters to apply specific security settings and auto configure objects at creation.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/creating-managing-labels',
     recommended_action: 'Ensure labels are added to Kubernetes clusters',
-    apis: ['clusters:list', 'projects:get'],
+    apis: ['clusters:list'],
 
     run: function(cache, settings, callback) {
         var results = [];

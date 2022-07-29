@@ -118,4 +118,7 @@ module.exports = {
     appmesh: regions,
     frauddetector: regions,
     imagebuilder: regions
+    computeoptimizer: regions,
+    appconfig: regions
+
 };

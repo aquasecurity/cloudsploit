@@ -44,6 +44,14 @@ var calls = {
             filterValue: ['compartmentId'],
         }
     },
+    logGroup: {
+        list: {
+            api: 'logging',
+            restVersion: '/20200531',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId']
+        }
+    },
     publicIp: {
         list: {
             api: 'core',
@@ -67,6 +75,14 @@ var calls = {
             filterValue: ['compartmentId']
         }
     },
+    cluster: {
+        list: {
+            api: 'oke',
+            restVersion: '/20180222',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId']
+        }
+    }, 
     user: {
         list: {
             api: 'iam',
@@ -91,6 +107,14 @@ var calls = {
             filterConfig: [true]
         }
     },
+    cloudguardConfiguration: {
+        get: {
+            api: 'cloudguard',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+            restVersion: '/20200131',
+        }
+    },
     group: {
         list: {
             api: 'iam',
@@ -99,6 +123,14 @@ var calls = {
         }
     },
     exportSummary: {
+        list: {
+            api: 'fileStorage',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+            restVersion: '/20171215',
+        }
+    },
+    fileSystem: {
         list: {
             api: 'fileStorage',
             filterKey: ['compartmentId'],
@@ -124,10 +156,42 @@ var calls = {
             filterValue: ['compartmentId'],
         }
     },
+    defaultTags: {
+        list: {
+            api: 'iam',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+            restVersion: '/20160918'
+        }
+    },
     waasPolicy: {
         list: {
             api: 'waas',
             restVersion: '/20181116',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    rules: {
+        list: {
+            api: 'events',
+            restVersion: '/20181201',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    topics: {
+        list: {
+            api: 'notification',
+            restVersion: '/20181201',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+        }
+    },
+    subscriptions: {
+        list: {
+            api: 'notification',
+            restVersion: '/20181201',
             filterKey: ['compartmentId'],
             filterValue: ['compartmentId'],
         }
@@ -245,7 +309,15 @@ var calls = {
             filterKey: ['compartmentId'],
             filterValue: ['compartmentId'],
         }
-    }
+    },
+    vault: {
+        list: {
+            api: 'kms',
+            filterKey: ['compartmentId'],
+            filterValue: ['compartmentId'],
+            restVersion: '/20180608',
+        }
+    },
 };
 
 // Important Note: All relies must be passed in an array format []
@@ -331,6 +403,7 @@ var postcalls = {
             limit: 900
         }
     },
+
     waasPolicy: {
         get: {
             api: 'waas',
@@ -381,6 +454,37 @@ var postcalls = {
             filterConfig: [true, false],
         }
     },
+    keys: {
+        list: {
+            api: 'kms',
+            reliesOnService: ['vault'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'managementEndpoint'],
+            filterValue: ['compartmentId', 'managementEndpoint'],
+            restVersion: '/20180608'
+        }
+    },
+    log: {
+        list: {
+            api: 'logging',
+            reliesOnService: ['logGroup'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'id'],
+            filterValue: ['compartmentId', 'id'],
+            restVersion: '/20200531'
+        }
+    },
+    cluster: {
+        get: {
+            api: 'oke',
+            reliesOnService: ['cluster'],
+            reliesOnCall: ['list'],
+            restVersion: '/20180222',
+            filterKey: ['id'],
+            filterValue: ['id'],
+            filterConfig: [false]
+        },
+    }
 };
 
 // Important Note: All relies must be passed in an array format []
@@ -393,6 +497,26 @@ var finalcalls = {
             filterKey: ['bucketName', 'namespaceName'],
             filterValue: ['name','namespace'],
             restVersion: '',
+        }
+    },
+    keys: {
+        get: {
+            api: 'kms',
+            reliesOnService: ['keys'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'id'],
+            filterValue: ['compartmentId', 'id'],
+            restVersion: '/20180608'
+        }
+    },
+    keyVersions: {
+        list: {
+            api: 'kms',
+            reliesOnService: ['keys'],
+            reliesOnCall: ['list'],
+            filterKey: ['compartmentId', 'id'],
+            filterValue: ['compartmentId', 'id'],
+            restVersion: '/20180608'
         }
     },
     exprt: {

@@ -10,7 +10,7 @@ module.exports = {
         'the recommended method to authenticate into the Kubernetes API server.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster',
     recommended_action: 'Disable basic authentication on all clusters',
-    apis: ['clusters:list', 'projects:get'],
+    apis: ['clusters:list'],
 
     run: function(cache, settings, callback) {
         var results = [];

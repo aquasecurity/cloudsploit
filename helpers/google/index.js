@@ -4,7 +4,6 @@ var regRegions    = require('./regions.js');
 
 const {JWT}       = require('google-auth-library');
 
-
 var async         = require('async');
 
 var regions = function() {
@@ -268,11 +267,13 @@ var execute = async function(LocalGoogleConfig, collection, service, callObj, ca
         collectionItems = myEngine ? collection[service][myEngine][callKey][region] : collection[service][callKey][region];
         let set = true;
         if (data.data.items) {
-            resultItems = setData(collectionItems, data.data.items, postCall, parent);
+            resultItems = setData(collectionItems, data.data.items, postCall, parent, {'service': service, 'callKey': callKey});
         } else if (data.data[service]) {
-            resultItems = setData(collectionItems, data.data[service], postCall, parent);
+            resultItems = setData(collectionItems, data.data[service], postCall, parent, {'service': service, 'callKey': callKey});
         } else if (!myEngine && data.data.accounts) {
-            resultItems = setData(collectionItems, data.data.accounts, postCall, parent);
+            resultItems = setData(collectionItems, data.data.accounts, postCall, parent, {'service': service, 'callKey': callKey});
+        } else if (!myEngine && data.data.keys) {
+            resultItems = setData(collectionItems, data.data.keys, postCall, parent, {'service': service, 'callKey': callKey});
         } else if (!myEngine && data.data) {
             set = false;
             if (data.data.constructor.name === 'Array') {
@@ -282,7 +283,7 @@ var execute = async function(LocalGoogleConfig, collection, service, callObj, ca
             } else if (!myEngine && !(collection[service][callKey][region].data.length)) {
                 collection[service][callKey][region].data = [];
             }
-            resultItems = setData(collection[service][callKey][region], data.data, postCall, parent);
+            resultItems = setData(collection[service][callKey][region], data.data, postCall, parent, {'service': service, 'callKey': callKey});
         } else {
             set = false;
             myEngine ? collection[service][myEngine][callKey][region].data = [] : collection[service][callKey][region].data = [];
@@ -374,7 +375,8 @@ function makeApiCall(client, originalUrl, callCb, nextToken, config) {
     });    
 }
 
-function setData(collection, dataToAdd, postCall, parent) {
+function setData(collection, dataToAdd, postCall, parent, serviceInfo) {
+    console.log(`[PLUGINCHECK] ${JSON.stringify(serviceInfo, null, 2)}`);
     if (postCall && !!parent) {
         if (dataToAdd && dataToAdd.length) {
             dataToAdd.map(item => {
@@ -402,11 +404,70 @@ function setData(collection, dataToAdd, postCall, parent) {
     return collection;
 }
 
+function remediateOrgPolicy(config, constraintName, policyType, policyValue, resource, remediation_file, putCall, pluginName, callback) {
+
+    // url to update org policy
+    var baseUrl = 'https://cloudresourcemanager.googleapis.com/v1/{resource}:setOrgPolicy';
+    var method = 'POST';
+
+    // create the params necessary for the remediation
+    var body;
+    if (policyType == 'booleanPolicy') {
+        body = {
+            policy: {
+                constraint: constraintName,
+                booleanPolicy: {
+                    enforced: policyValue
+                }
+            }
+        };
+    }
+    // logging
+    remediation_file['pre_remediate']['actions'][pluginName][resource] = {
+        constraintName: policyValue ? 'Disabled' : 'Enabled'
+    };
+
+    remediatePlugin(config, method, body, baseUrl, resource, remediation_file, putCall, pluginName, callback);
+}
+
+function remediatePlugin(config, method, body, baseUrl, resource, remediation_file, putCall, pluginName, callback) {
+    makeRemediationCall(config, method, body, baseUrl, resource, function(err) {
+        if (err) {
+            remediation_file['remediate']['actions'][pluginName]['error'] = err;
+            return callback(err, null);
+        }
+
+        let action = body;
+        return callback(null, action);
+    });
+}
+
+function makeRemediationCall(GoogleConfig, method, body, baseUrl, resource, callCb) {
+    authenticate(GoogleConfig).then(client => {
+        if (resource) {
+            baseUrl = baseUrl.replace(/\{resource\}/g, resource);
+        }
+        client.request({
+            url: baseUrl,
+            method,
+            data: body
+        }, function(err, res) {
+            if (err) {
+                callCb(err);
+            } else if (res && res.data) {
+                callCb(null);
+            }
+        });
+    });
+}
+
 var helpers = {
     regions: regions,
     MAX_REGIONS_AT_A_TIME: 6,
     authenticate: authenticate,
     processCall: processCall,
+    remediatePlugin: remediatePlugin,
+    remediateOrgPolicy: remediateOrgPolicy,
     PROTECTION_LEVELS: ['unspecified', 'default', 'cloudcmek', 'cloudhsm', 'external'],
 };
 
