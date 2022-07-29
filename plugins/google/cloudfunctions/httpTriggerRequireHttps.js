@@ -9,14 +9,13 @@ module.exports = {
     more_info: 'You can make your google cloud functions call secure by making sure that they require HTTPS.',
     link: 'https://cloud.google.com/functions/docs/writing/http',
     recommended_action: 'Ensure that your Google Cloud functions always require HTTPS.',
-    apis: ['functions:list', 'projects:get'],
+    apis: ['functions:list'],
     remediation_min_version: '202207282132',
     remediation_description: 'All Google Cloud Functions will be configured to require HTTPS for HTTP invocations.',
     apis_remediate: ['functions:list', 'projects:get'],
     actions: {remediate:['CloudFunctionsService.UpdateFunction'], rollback:['CloudFunctionsService.UpdateFunction']},
     permissions: {remediate: ['cloudfunctions.functions.update'], rollback: ['cloudfunctions.functions.create	']},
     realtime_triggers: ['google.cloud.functions.v1.CloudFunctionsService.UpdateFunction', 'google.cloud.functions.v1.CloudFunctionsService.CreateFunction'],
-
 
     run: function(cache, settings, callback) {
         var results = [];

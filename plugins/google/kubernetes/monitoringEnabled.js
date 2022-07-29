@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Kubernetes supports monitoring through Stackdriver.',
     link: 'https://cloud.google.com/monitoring/kubernetes-engine/',
     recommended_action: 'Ensure monitoring is enabled on all Kubernetes clusters.',
-    apis: ['clusters:list', 'projects:get'],
+    apis: ['clusters:list'],
 
     run: function(cache, settings, callback) {
         var results = [];

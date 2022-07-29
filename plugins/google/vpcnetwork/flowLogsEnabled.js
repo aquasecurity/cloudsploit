@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'VPC flow logs record all traffic flowing in to and out of a VPC. These logs are critical for auditing and review after security incidents.',
     link: 'https://cloud.google.com/vpc/docs/using-flow-logs',
     recommended_action: 'Enable VPC flow logs for each VPC subnet',
-    apis: ['subnetworks:list', 'projects:get'],
+    apis: ['subnetworks:list'],
     compliance: {
         hipaa: 'VPC Flow Logs provide a detailed traffic log of a VPC network ' +
             'containing HIPAA data. Flow Logs should be enabled to satisfy ' +

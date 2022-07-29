@@ -8,13 +8,25 @@ module.exports = {
     more_info: 'S3 buckets should not be configured with static website hosting with public objects. Instead, a CloudFront distribution should be configured with an origin access identity.',
     recommended_action: 'Disable S3 bucket static website hosting in favor or CloudFront distributions.',
     link: 'https://aws.amazon.com/premiumsupport/knowledge-center/cloudfront-https-requests-s3/',
-    apis: ['S3:listBuckets', 'S3:getBucketWebsite', 'S3:getBucketLocation'],
+    apis: ['S3:listBuckets', 'S3:getBucketWebsite', 'S3:getBucketLocation', 'S3:listObjects'],
+    settings: {
+        s3_website_whitelist_empty_buckets: {
+            name: 'S3 Website Whitelist Empty Buckets',
+            description: 'When set to true, whitelist empty buckets without checking bucket website configutation',
+            regex: '^(true|false)$',
+            default: 'false'
+        }
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
 
         var region = helpers.defaultRegion(settings);
+        var config = {
+            s3_website_whitelist_empty_buckets: settings.s3_website_whitelist_empty_buckets || this.settings.s3_website_whitelist_empty_buckets.default,
+        };
+        var ignoreEmptyBuckets = (config.s3_website_whitelist_empty_buckets == 'true');
 
         var listBuckets = helpers.addSource(cache, source,
             ['s3', 'listBuckets', region]);
@@ -34,6 +46,23 @@ module.exports = {
 
         listBuckets.data.forEach(function(bucket){
             var bucketLocation = helpers.getS3BucketLocation(cache, region, bucket.Name);
+
+            if (ignoreEmptyBuckets){
+                var listObjects = helpers.addSource(cache, source,
+                    ['s3', 'listObjects', region, bucket.Name]);
+
+                if (!listObjects || listObjects.err || !listObjects.data) {
+                    helpers.addResult(results, 3,
+                        'Unable to list S3 bucket objects: ' + helpers.addError(listObjects), bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                    return;
+                }
+
+                if (!listObjects.data.Contents || !listObjects.data.Contents.length){
+                    helpers.addResult(results, 0,
+                        'Bucket : ' + bucket.Name + ' is empty', bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                    return;
+                }
+            }
 
             var getBucketWebsite = helpers.addSource(cache, source,
                 ['s3', 'getBucketWebsite', region, bucket.Name]);

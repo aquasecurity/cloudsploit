@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Unless there is a specific business requirement, SQL instances should not have a public endpoint and should only be accessed from within a VPC.',
     link: 'https://cloud.google.com/sql/docs/mysql/authorize-networks',
     recommended_action: 'Ensure that SQL instances are configured to prohibit traffic from the public 0.0.0.0 global IP address.',
-    apis: ['instances:sql:list', 'projects:get'],
+    apis: ['instances:sql:list'],
     compliance: {
         hipaa: 'SQL instances should only be launched in VPC environments and ' +
             'accessed through private endpoints. Exposing SQL instances to ' +

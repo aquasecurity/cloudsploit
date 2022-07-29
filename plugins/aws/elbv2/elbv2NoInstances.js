@@ -53,7 +53,7 @@ module.exports = {
                     ['elbv2', 'describeTargetGroups', region, lb.DNSName]);
 
                 var elbArn = lb.LoadBalancerArn;
-                if (describeTargetGroups.data && describeTargetGroups.data.TargetGroups && describeTargetGroups.data.TargetGroups.length){
+                if (describeTargetGroups && describeTargetGroups.data && describeTargetGroups.data.TargetGroups && describeTargetGroups.data.TargetGroups.length){
                     helpers.addResult(results, 0,
                         'ELB has ' + describeTargetGroups.data.TargetGroups.length + ' target groups', region, elbArn);
                 } else {

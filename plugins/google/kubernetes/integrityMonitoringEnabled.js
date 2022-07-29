@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Integrity Monitoring feature automatically monitors the integrity of your cluster nodes.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/shielded-gke-nodes#integrity_monitoring',
     recommended_action: 'Enable Integrity Monitoring feature for your cluster nodes',
-    apis: ['clusters:list', 'projects:get'],
+    apis: ['clusters:list'],
 
     run: function(cache, settings, callback) {
         var results = [];

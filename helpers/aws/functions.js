@@ -64,10 +64,9 @@ function addResult(results, status, message, region, resource, custom){
 }
 
 function findOpenPorts(groups, ports, service, region, results, cache, config, callback) {
-    var found = false;
-    var usedGroup = false;
     if (config.ec2_skip_unused_groups) {
-        var usedGroups = getUsedSecurityGroups(cache, results, region, callback);
+        var usedGroups = getUsedSecurityGroups(cache, results, region);
+        if (usedGroups && usedGroups.length && usedGroups[0] === 'Error') return callback();
     }
 
     for (var g in groups) {
@@ -75,15 +74,6 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
         var openV4Ports = [];
         var openV6Ports = [];
         var resource = `arn:aws:ec2:${region}:${groups[g].OwnerId}:security-group/${groups[g].GroupId}`;
-
-        if (config.ec2_skip_unused_groups) {
-            if (groups[g].GroupId && !usedGroups.includes(groups[g].GroupId)) {
-                addResult(results, 1, `Security Group: ${groups[g].GroupId} is not in use`,
-                    region, resource);
-                usedGroup = true;
-                continue;
-            }
-        }
 
         for (var p in groups[g].IpPermissions) {
             var permission = groups[g].IpPermissions[p];
@@ -103,7 +93,6 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
                                 if (permission.FromPort <= i && permission.ToPort >= i) {
                                     string = `some of ${permission.IpProtocol.toUpperCase()}:${port}`;
                                     openV4Ports.push(string);
-                                    found = true;
                                     break;
                                 }
                             }
@@ -112,7 +101,6 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
                             if (permission.FromPort <= port && permission.ToPort >= port) {
                                 string = `${permission.IpProtocol.toUpperCase()}:${port}`;
                                 if (openV4Ports.indexOf(string) === -1) openV4Ports.push(string);
-                                found = true;
                             }
                         }
                     }
@@ -134,7 +122,6 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
                                 if (permission.FromPort <= i && permission.ToPort >= i) {
                                     string = `some of ${permission.IpProtocol.toUpperCase()}:${portV6}`;
                                     openV6Ports.push(string);
-                                    found = true;
                                     break;
                                 }
                             }
@@ -143,7 +130,6 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
                             if (permission.FromPort <= portV6 && permission.ToPort >= portV6) {
                                 var stringV6 = `${permission.IpProtocol.toUpperCase()}:${portV6}`;
                                 if (openV6Ports.indexOf(stringV6) === -1) openV6Ports.push(stringV6);
-                                found = true;
                             }
                         }
                     }
@@ -165,15 +151,28 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
                 }
             }
 
-            addResult(results, 2, resultsString,
-                region, resource);
+            if (config.ec2_skip_unused_groups && groups[g].GroupId && !usedGroups.includes(groups[g].GroupId)) {
+                addResult(results, 1, `Security Group: ${groups[g].GroupId} is not in use`,
+                    region, resource);
+            } else {
+                addResult(results, 2, resultsString,
+                    region, resource);
+            }
+        } else {
+            let strings = [];
+
+            for (const key in ports) {
+                strings.push(`${key.toUpperCase()}:${ports[key]}`);
+            }
+
+            if (strings.length){
+                addResult(results, 0,
+                    `Security group: ${groups[g].GroupId} (${groups[g].GroupName}) does not have ${strings.join(', ')} open to 0.0.0.0/0 or ::0`,
+                    region, resource);
+            }
         }
     }
-
-    if (!found && !usedGroup) {
-        addResult(results, 0, 'No public open ports found', region);
-    }
-
+ 
     return;
 }
 
@@ -703,21 +702,26 @@ function remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, 
             function(rCb) {
                 if (!settings.input || (openIpRange && (!settings.input[ipv4InputKey] || !settings.input[ipv4InputKey].length)) && (openIpv6Range && (!settings.input[ipv6InputKey] || !settings.input[ipv6InputKey].length))) return rCb();
 
-                var newIpRange = settings.input[ipv4InputKey] ? {CidrIp: settings.input[ipv4InputKey]} : null;
-                var newIpv6Range = settings.input[ipv6InputKey] ? {CidrIpv6: settings.input[ipv6InputKey]} : null;
-                if (ipDescription && newIpRange) newIpRange.Description = ipDescription;
-                if (ipv6Description && newIpv6Range) newIpRange.Description = ipv6Description;
-
                 if (openIpRange && !localIpExists && settings.input[ipv4InputKey]) {
-                    params.IpPermissions[0].IpRanges.push(newIpRange);
-                    finalIpRanges.push(newIpRange);
+                    var newIpCidrRange = settings.input[ipv4InputKey].split(',');
+                    for (var newIpCidr of newIpCidrRange) {
+                        var newIpRange = {CidrIp: newIpCidr};
+                        if (ipDescription && newIpRange) newIpRange.Description = ipDescription;
+                        params.IpPermissions[0].IpRanges.push(newIpRange);
+                        finalIpRanges.push(newIpRange);
+                    }
                 } else if (!openIpRange || (openIpRange && localIpExists) || (!settings.input[ipv4InputKey] || !settings.input[ipv4InputKey].length)) {
                     params.IpPermissions[0].IpRanges = null;
                 }
 
                 if (openIpv6Range && !localIpV6Exists && settings.input[ipv6InputKey]) {
-                    params.IpPermissions[0].Ipv6Ranges.push(newIpv6Range);
-                    finalIpv6Ranges.push(newIpv6Range);
+                    var newIpv6CidrRange = settings.input[ipv6InputKey].split(',');
+                    for (var newIpv6Cidr of newIpv6CidrRange) {
+                        var newIpv6Range = {CidrIpv6: newIpv6Cidr};
+                        if (ipv6Description && newIpv6Range) newIpv6Range.Description = ipv6Description;
+                        params.IpPermissions[0].Ipv6Ranges.push(newIpv6Range);
+                        finalIpv6Ranges.push(newIpv6Range);
+                    }
                 } else if (!openIpv6Range || (openIpv6Range && localIpV6Exists) || (!settings.input[ipv6InputKey] || !settings.input[ipv6InputKey].length)) {
                     params.IpPermissions[0].Ipv6Ranges = null;
                 }
@@ -853,7 +857,7 @@ function getOrganizationAccounts(listAccounts, accountId) {
     return orgAccountIds;
 }
 
-function getUsedSecurityGroups(cache, results, region, callback) {
+function getUsedSecurityGroups(cache, results, region) {
     let result = [];
     const describeNetworkInterfaces = helpers.addSource(cache, {},
         ['ec2', 'describeNetworkInterfaces', region]);
@@ -861,7 +865,7 @@ function getUsedSecurityGroups(cache, results, region, callback) {
     if (!describeNetworkInterfaces || describeNetworkInterfaces.err || !describeNetworkInterfaces.data) {
         helpers.addResult(results, 3,
             'Unable to query for network interfaces: ' + helpers.addError(describeNetworkInterfaces), region);
-        return callback();
+        return  result['Error'];
     }
 
     const listFunctions = helpers.addSource(cache, {},
@@ -870,7 +874,7 @@ function getUsedSecurityGroups(cache, results, region, callback) {
     if (!listFunctions || listFunctions.err || !listFunctions.data) {
         helpers.addResult(results, 3,
             'Unable to list lambda functions: ' + helpers.addError(listFunctions), region);
-        return callback();
+        return  result['Error'];
     }
 
     describeNetworkInterfaces.data.forEach(interface => {
@@ -930,30 +934,18 @@ function getSubnetRTMap(subnets, routeTables) {
     return subnetRTMap;
 }
 
-function isRateError(err) {
-    let isError=false;
-    let rateError = [{message: 'rate'}];
-    for (var e in rateError) {
-        if (err &&
-            err.statusCode &&
-            rateError[e] &&
-            rateError[e].statusCode &&
-            rateError[e].statusCode.filter(code => {
-                return code == err.statusCode;
-            }).length){
-            isError=true;
-            break;
-        } else if (err &&
-            rateError[e] &&
-            rateError[e].message &&
-            err.message &&
-            err.message.toLowerCase().indexOf(rateError[e].message.toLowerCase())>-1){
-            isError=true;
-            break;
-        }
+var isRateError = function(err) {
+    let isError = false;
+    var rateError = {message: 'rate', statusCode: 429};
+    if (err && err.statusCode && rateError.statusCode == err.statusCode){
+        isError = true;
+    } else if (err && rateError && rateError.message && err.message &&
+        err.message.toLowerCase().indexOf(rateError.message.toLowerCase()) > -1){
+        isError = true;
     }
+
     return isError;
-}
+};
 
 function makeCustomCollectorCall(executor, callKey, params, retries, apiRetryAttempts=2, apiRetryCap=1000, apiRetryBackoff=500, callback) {
     async.retry({
@@ -968,19 +960,312 @@ function makeCustomCollectorCall(executor, callKey, params, retries, apiRetryAtt
             console.log(`Trying ${callKey} again in: ${retry_seconds/1000} seconds`);
             retries.push({seconds: Math.round(retry_seconds/1000)});
             return retry_seconds;
+        },
+        errorFilter: function(err) {
+            return isRateError(err);
         }
     }, function(cb) {
         executor[callKey](params, function(err, data) {
-            if (isRateError(err)) {
-                return cb(err);
-            } else {
-                return cb(err, data);
-            }
+            return cb(err, data);
         });
     }, function(err, result) {
         callback(err, result);
     });
 }
+
+var debugApiCalls = function(call, service, debugMode, finished) {
+    if (!debugMode) return;
+    finished ? console.log(`[INFO] ${service}:${call} returned`) : console.log(`[INFO] ${service}:${call} invoked`);
+};
+
+var logError = function(service, call, region, err, errorsLocal, apiCallErrorsLocal, apiCallTypeErrorsLocal, totalApiCallErrorsLocal, errorSummaryLocal, errorTypeSummaryLocal, debugMode) {
+    totalApiCallErrorsLocal++;
+
+    if (!errorSummaryLocal[service]) errorSummaryLocal[service] = {};
+
+    if (!errorSummaryLocal[service][call]) errorSummaryLocal[service][call] = {};
+
+    if (err.code && !errorSummaryLocal[service][call][err.code]) {
+        apiCallErrorsLocal++;
+        errorSummaryLocal[service][call][err.code] = {};
+        errorSummaryLocal[service][call][err.code].total = apiCallErrorsLocal;
+        errorSummaryLocal.total = totalApiCallErrorsLocal;
+    }
+
+    if (err.code && !errorTypeSummaryLocal[err.code]) errorTypeSummaryLocal[err.code] = {};
+    if (err.code && !errorTypeSummaryLocal[err.code][service]) errorTypeSummaryLocal[err.code][service] = {};
+    if (err.code && !errorTypeSummaryLocal[err.code][service][call]) {
+        apiCallTypeErrorsLocal++;
+        errorTypeSummaryLocal[err.code][service][call] = {};
+        errorTypeSummaryLocal[err.code][service][call].total = apiCallTypeErrorsLocal;
+        errorTypeSummaryLocal.total = totalApiCallErrorsLocal;
+    }
+
+    if (debugMode){
+        if (!errorsLocal[service]) errorsLocal[service] = {};
+        if (!errorsLocal[service][call]) errorsLocal[service][call] = {};
+        if (err.code && !errorsLocal[service][call][err.code]) {
+            errorsLocal[service][call][err.code] = {};
+            errorsLocal[service][call][err.code].total = apiCallErrorsLocal;
+            if (err.requestId) {
+                errorsLocal[service][call][err.code][err.requestId] = {};
+                if (err.statusCode) errorsLocal[service][call][err.code][err.requestId].statusCode = err.statusCode;
+                if (err.message) errorsLocal[service][call][err.code][err.requestId].message = err.message;
+                if (err.time) errorsLocal[service][call][err.code][err.requestId].time = err.time;
+                if (region) errorsLocal[service][call][err.code][err.requestId].region = region;
+            }
+        }
+    }
+};
+
+var collectRateError = function(err, rateError) {
+    let isError = false;
+
+    if (err && err.statusCode && rateError && rateError.statusCode == err.statusCode) {
+        isError = true;
+    } else if (err && rateError && rateError.message && err.message &&
+        err.message.toLowerCase().indexOf(rateError.message.toLowerCase()) > -1) {
+        isError = true;
+    }
+
+    return isError;
+};
+
+var processIntegration = function(serviceName, settings, collection, calls, postcalls, debugMode, iCb) {
+    let localEvent = {};
+    let localSettings = {};
+    localSettings = settings;
+
+    localEvent.collection = {};
+    localEvent.previousCollection = {};
+
+    localEvent.collection[serviceName.toLowerCase()] = {};
+    localEvent.previousCollection[serviceName.toLowerCase()] = {};
+
+    localEvent.collection[serviceName.toLowerCase()] = collection[serviceName.toLowerCase()] ? collection[serviceName.toLowerCase()] : {};
+    localEvent.previousCollection[serviceName.toLowerCase()] = settings.previousCollection && settings.previousCollection[serviceName.toLowerCase()] ? settings.previousCollection[serviceName.toLowerCase()] : {};
+
+    if (!localSettings.identifier) localSettings.identifier = {};
+    localSettings.identifier.service = serviceName.toLowerCase();
+
+    processIntegrationAdditionalData(serviceName, settings, collection, calls, postcalls, localEvent.collection, function(collectionReturned){
+        localEvent.collection = collectionReturned;
+
+        processIntegrationAdditionalData(serviceName, settings, settings.previousCollection, calls, postcalls, localEvent.previousCollection, function(previousCollectionReturned){
+            localEvent.previousCollection = previousCollectionReturned;
+            localSettings.integration(localEvent, function() {
+                if (debugMode) console.log(`Processed Event: ${JSON.stringify(localEvent)}`);
+
+                return iCb();
+            });
+        });
+    });
+};
+
+var processIntegrationAdditionalData = function(serviceName, localSettings, localCollection, calls, postcalls, localEventCollection, callback){
+    if (localCollection == undefined ||
+        (localCollection &&
+            (JSON.stringify(localCollection)==='{}' ||
+                localCollection[serviceName.toLowerCase()] == undefined ||
+                JSON.stringify(localCollection[serviceName.toLowerCase()])==='{}'))) {
+        return callback(null);
+    }
+
+    let callsMap = Object.keys(calls[serviceName]);
+    let foundData=[];
+
+    if (callsMap.find(mycall => mycall == 'sendIntegration') &&
+        reliesOnFound(calls, localCollection, serviceName)) {
+        foundData = reliesOnData(calls, localCollection, serviceName);
+    }
+
+    if (callsMap.find(mycall => mycall == 'sendIntegration') &&
+        integrationReliesOnFound(calls, localCollection, serviceName)) {
+        foundData = integrationReliesOnData(calls, localCollection, serviceName);
+
+        if (foundData &&
+            Object.keys(foundData).length){
+            for (let d of Object.keys(foundData)){
+                localEventCollection[d]=foundData[d];
+            }
+        }
+    }
+
+    for (let postcall of postcalls) {
+        if (!postcall[serviceName]) continue;
+        let postCallsMap = Object.keys(postcall[serviceName]);
+
+        foundData=[];
+
+        if (postCallsMap.find(mycall => mycall == 'sendIntegration') &&
+            reliesOnFound(postcall, localCollection, serviceName)){
+            foundData = reliesOnData(postcall, localCollection, serviceName);
+        }
+
+        if (postCallsMap.find(mycall => mycall == 'sendIntegration') &&
+            integrationReliesOnFound(postcall, localCollection, serviceName)){
+            foundData = integrationReliesOnData(postcall, localCollection, serviceName);
+
+            if (foundData &&
+                Object.keys(foundData).length){
+                for (let d of Object.keys(foundData)){
+                    localEventCollection[d]=foundData[d];
+                }
+            }
+        }
+    }
+
+    localSettings.identifier.service = serviceName.toLowerCase();
+    return callback(localEventCollection);
+};
+
+var reliesOnFound = function(calls, localCollection, serviceName){
+    let callsMap = Object.keys(calls[serviceName]);
+
+    if (callsMap.find(mycall => mycall == 'sendIntegration')) {
+        if (calls[serviceName] &&
+            calls[serviceName].sendIntegration &&
+            calls[serviceName].sendIntegration.enabled &&
+            calls[serviceName].sendIntegration.reliesOnCalls &&
+            calls[serviceName].sendIntegration.reliesOnCalls.length) {
+
+            let allRelies = true;
+
+            for (let rc of calls[serviceName].sendIntegration.reliesOnCalls) {
+                let svc = rc.split(':')[0];
+                let svcCall = rc.split(':')[1];
+                if (!(localCollection[svc.toLowerCase()] &&
+                    localCollection[svc.toLowerCase()][svcCall] &&
+                    Object.keys(localCollection[svc.toLowerCase()][svcCall]) &&
+                    Object.keys(localCollection[svc.toLowerCase()][svcCall]).length>0)){
+                    allRelies = false;
+                }
+            }
+
+            return allRelies;
+        }
+    }
+};
+
+var integrationReliesOnFound = function(calls, localCollection, serviceName){
+    let callsMap = Object.keys(calls[serviceName]);
+
+    if (callsMap.find(mycall => mycall == 'sendIntegration')) {
+        if (calls[serviceName] &&
+            calls[serviceName].sendIntegration &&
+            calls[serviceName].sendIntegration.enabled &&
+            calls[serviceName].sendIntegration.integrationReliesOn &&
+            calls[serviceName].sendIntegration.integrationReliesOn.serviceName &&
+            Array.isArray(calls[serviceName].sendIntegration.integrationReliesOn.serviceName) &&
+            calls[serviceName].sendIntegration.integrationReliesOn.serviceName.length) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+};
+
+var reliesOnData = function(calls, localCollection, serviceName){
+    let callsMap = Object.keys(calls[serviceName]);
+
+    if (callsMap.find(mycall => mycall == 'sendIntegration')) {
+        if (calls[serviceName] &&
+            calls[serviceName].sendIntegration &&
+            calls[serviceName].sendIntegration.enabled &&
+            calls[serviceName].sendIntegration.reliesOnCalls &&
+            calls[serviceName].sendIntegration.reliesOnCalls.length) {
+
+            let allRelies = true;
+
+            for (let rc of calls[serviceName].sendIntegration.reliesOnCalls) {
+                let svc = rc.split(':')[0];
+                let svcCall = rc.split(':')[1];
+                if (!(localCollection[svc.toLowerCase()] &&
+                    localCollection[svc.toLowerCase()][svcCall] &&
+                    Object.keys(localCollection[svc.toLowerCase()][svcCall]) &&
+                    Object.keys(localCollection[svc.toLowerCase()][svcCall]).length>0)){
+                    allRelies = false;
+                }
+
+                return allRelies ? localCollection[svc.toLowerCase()] : [];
+            }
+        }
+    }
+};
+
+var integrationReliesOnData = function(calls, localCollection, serviceName){
+    let callsMap = Object.keys(calls[serviceName]);
+
+    if (callsMap.find(mycall => mycall == 'sendIntegration')) {
+        if (localCollection &&
+            calls[serviceName] &&
+            calls[serviceName].sendIntegration &&
+            calls[serviceName].sendIntegration.enabled &&
+            calls[serviceName].sendIntegration.integrationReliesOn &&
+            calls[serviceName].sendIntegration.integrationReliesOn.serviceName &&
+                Array.isArray(calls[serviceName].sendIntegration.integrationReliesOn.serviceName) &&
+                calls[serviceName].sendIntegration.integrationReliesOn.serviceName.length) {
+
+            let serviceReliedOn = {};
+            for (let serv of calls[serviceName].sendIntegration.integrationReliesOn.serviceName) {
+                if (localCollection[serv.toLowerCase()]) {
+                    serviceReliedOn[serv.toLowerCase()] = localCollection[serv.toLowerCase()];
+                }
+            }
+
+            return serviceReliedOn;
+        } else {
+            return {};
+        }
+    }
+};
+
+var callsCollected = function(serviceName, localCollection, calls, postcalls) {
+    var callsFoundMap = {};
+    let serviceCallMap = Object.keys(localCollection[serviceName.toLowerCase()]);
+
+    for (let call of serviceCallMap){
+        if (!(localCollection[serviceName.toLowerCase()] &&
+            localCollection[serviceName.toLowerCase()][call] &&
+            Object.keys(localCollection[serviceName.toLowerCase()][call]) &&
+            Object.keys(localCollection[serviceName.toLowerCase()][call]).length>0)){
+            return false;
+        }
+    }
+
+    if (calls[serviceName]) {
+        let callsMap = Object.keys(calls[serviceName]);
+        for (let checkCall of serviceCallMap) {
+            if (callsMap.find(mycall => mycall != 'sendIntegration' && mycall == checkCall)){
+                if (reliesOnFound(calls, localCollection, serviceName)==false) return false;
+
+                if (callsMap.find(mycall => mycall != 'sendIntegration' && mycall == checkCall) == serviceCallMap.find(mycall => mycall == checkCall)){
+                    callsFoundMap[checkCall]=true;
+                } else {
+                    return false;
+                }
+            }
+        }
+    }
+
+    for (let postcall of postcalls) {
+        if (!postcall[serviceName]) continue;
+        let postCallsMap = Object.keys(postcall[serviceName]);
+
+        for (let checkCall of serviceCallMap) {
+            if (callsFoundMap[checkCall]) continue;
+            if (reliesOnFound(postcall, localCollection, serviceName)==false) return false;
+
+            if (postCallsMap.find(mycall => mycall != 'sendIntegration' && mycall == checkCall)){
+                if (!(postCallsMap.find(mycall => mycall != 'sendIntegration' && mycall == checkCall) == serviceCallMap.find(mycall => mycall == checkCall))){
+                    return false;
+                }
+            }
+        }
+    }
+
+    return true;
+};
 
 module.exports = {
     addResult: addResult,
@@ -1011,5 +1296,10 @@ module.exports = {
     getUsedSecurityGroups: getUsedSecurityGroups,
     getPrivateSubnets: getPrivateSubnets,
     getSubnetRTMap: getSubnetRTMap,
-    makeCustomCollectorCall: makeCustomCollectorCall
+    makeCustomCollectorCall: makeCustomCollectorCall,
+    debugApiCalls: debugApiCalls,
+    logError: logError,
+    collectRateError: collectRateError,
+    processIntegration: processIntegration,
+    callsCollected: callsCollected
 };
