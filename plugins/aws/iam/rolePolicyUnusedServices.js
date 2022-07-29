@@ -139,6 +139,8 @@ module.exports = {
             elasticloadbalancingv2: ['loadbalancer']
         };
 
+
+
         async.each(regions.configservice, function(region, rcb) {
             var configRecorderStatus = helpers.addSource(cache, source,
                 ['configservice', 'describeConfigurationRecorderStatus', region]);
@@ -184,127 +186,174 @@ module.exports = {
 
             allResources.push(...discoveredResources.data);
             rcb();
-        });
-
-        if (!allResources.length) {
-            helpers.addResult(results, 0, 'No Discovered Resources found.');
-            return callback(null, results, source);
-        }
-
-        allResources = allResources.reduce((result, resource) => {
-            let arr  = resource.resourceType.split(':');
-            if (arr.length && arr.length > 5) {
-                let service = arr[2].toLowerCase();
-                let subService = arr[4].toLowerCase();
-                result[service] = result[service] || [];
-
-                if (resource.count > 0 && (allServices[service] && allServices[service].includes(subService))) {
-                    result[service].push(subService);
-                }
-
-                return result;
-            }
-        }, {});
-
-        var listRoles = helpers.addSource(cache, source,
-            ['iam', 'listRoles', iamRegion]);
-
-        if (!listRoles) return callback(null, results, source);
-
-        if (listRoles.err || !listRoles.data) {
-            helpers.addResult(results, 3,
-                'Unable to query for IAM roles: ' + helpers.addError(listRoles));
-            return callback(null, results, source);
-        }
-
-        if (!listRoles.data.length) {
-            helpers.addResult(results, 0, 'No IAM roles found');
-            return callback(null, results, source);
-        }
-
-        async.each(listRoles.data, function(role, cb){
-            if (!role.RoleName) return cb();
-
-            // Skip roles with user-defined paths
-            if (config.iam_role_policies_ignore_path &&
-                config.iam_role_policies_ignore_path.length &&
-                role.Path &&
-                role.Path.indexOf(config.iam_role_policies_ignore_path) > -1) {
-                return cb();
+        }, function() {
+            if (!allResources.length) {
+                helpers.addResult(results, 0, 'No Discovered Resources found.');
+                return callback(null, results, source);
             }
 
-            if (config.ignore_identity_federation_roles &&
-                helpers.hasFederatedUserRole(helpers.normalizePolicyDocument(role.AssumeRolePolicyDocument))) {
-                helpers.addResult(results, 0,
-                    'Role is federated user role',
-                    'global', role.Arn, custom);
-                return cb();
-            }
+            allResources = allResources.reduce((result, resource) => {
+                let arr  = resource.resourceType.split(':');
+                if (arr.length && arr.length >= 5) {
+                    let service = arr[2].toLowerCase();
+                    let subService = arr[4].toLowerCase();
+                    result[service] = result[service] || [];
 
-            // Get managed policies attached to role
-            var listAttachedRolePolicies = helpers.addSource(cache, source,
-                ['iam', 'listAttachedRolePolicies', iamRegion, role.RoleName]);
-
-            // Get inline policies attached to role
-            var listRolePolicies = helpers.addSource(cache, source,
-                ['iam', 'listRolePolicies', iamRegion, role.RoleName]);
-
-            var getRolePolicy = helpers.addSource(cache, source,
-                ['iam', 'getRolePolicy', iamRegion, role.RoleName]);
-
-            if (!listAttachedRolePolicies || listAttachedRolePolicies.err) {
-                helpers.addResult(results, 3,
-                    'Unable to query for IAM attached policy for role: ' + role.RoleName + ': ' + helpers.addError(listAttachedRolePolicies), 'global', role.Arn);
-                return cb();
-            }
-
-            if (!listRolePolicies || listRolePolicies.err) {
-                helpers.addResult(results, 3,
-                    'Unable to query for IAM role policy for role: ' + role.RoleName + ': ' + helpers.addError(listRolePolicies), 'global', role.Arn);
-                return cb();
-            }
-
-            var policyFailures = [];
-            var roleFailures = [];
-
-            // See if role has admin managed policy
-            if (listAttachedRolePolicies.data &&
-                listAttachedRolePolicies.data.AttachedPolicies) {
-
-                for (var policy of listAttachedRolePolicies.data.AttachedPolicies) {
-                    if (policy.PolicyArn === managedAdminPolicy) {
-                        roleFailures.push('Role has managed AdministratorAccess policy');
-                        break;
+                    if (resource.count > 0 && (allServices[service] && allServices[service].includes(subService))) {
+                        result[service].push(subService);
                     }
 
-                    if (config.ignore_aws_managed_iam_policies && /^arn:aws:iam::aws:.*/.test(policy.PolicyArn)) continue;
+                    return result;
+                }
+            }, {});
 
-                    if (config.ignore_customer_managed_iam_policies && /^arn:aws:iam::[0-9]{12}:.*/.test(policy.PolicyArn)) continue;
+            if (!allResources) allResources = {};
 
-                    var getPolicy = helpers.addSource(cache, source,
-                        ['iam', 'getPolicy', iamRegion, policy.PolicyArn]);
+            var listRoles = helpers.addSource(cache, source,
+                ['iam', 'listRoles', iamRegion]);
 
-                    if (getPolicy &&
-                        getPolicy.data &&
-                        getPolicy.data.Policy &&
-                        getPolicy.data.Policy.DefaultVersionId) {
-                        var getPolicyVersion = helpers.addSource(cache, source,
-                            ['iam', 'getPolicyVersion', iamRegion, policy.PolicyArn]);
+            if (!listRoles) return callback(null, results, source);
 
-                        if (getPolicyVersion &&
-                            getPolicyVersion.data &&
-                            getPolicyVersion.data.PolicyVersion &&
-                            getPolicyVersion.data.PolicyVersion.Document) {
-                            let statements = helpers.normalizePolicyDocument(
-                                getPolicyVersion.data.PolicyVersion.Document);
+            if (listRoles.err || !listRoles.data) {
+                helpers.addResult(results, 3,
+                    'Unable to query for IAM roles: ' + helpers.addError(listRoles));
+                return callback(null, results, source);
+            }
+
+            if (!listRoles.data.length) {
+                helpers.addResult(results, 0, 'No IAM roles found');
+                return callback(null, results, source);
+            }
+
+            async.each(listRoles.data, function(role, cb){
+                if (!role.RoleName) return cb();
+
+                // Skip roles with user-defined paths
+                if (config.iam_role_policies_ignore_path &&
+                    config.iam_role_policies_ignore_path.length &&
+                    role.Path &&
+                    role.Path.indexOf(config.iam_role_policies_ignore_path) > -1) {
+                    return cb();
+                }
+
+                if (config.ignore_identity_federation_roles &&
+                    helpers.hasFederatedUserRole(helpers.normalizePolicyDocument(role.AssumeRolePolicyDocument))) {
+                    helpers.addResult(results, 0,
+                        'Role is federated user role',
+                        'global', role.Arn, custom);
+                    return cb();
+                }
+
+                // Get managed policies attached to role
+                var listAttachedRolePolicies = helpers.addSource(cache, source,
+                    ['iam', 'listAttachedRolePolicies', iamRegion, role.RoleName]);
+
+                // Get inline policies attached to role
+                var listRolePolicies = helpers.addSource(cache, source,
+                    ['iam', 'listRolePolicies', iamRegion, role.RoleName]);
+
+                var getRolePolicy = helpers.addSource(cache, source,
+                    ['iam', 'getRolePolicy', iamRegion, role.RoleName]);
+
+                if (!listAttachedRolePolicies || listAttachedRolePolicies.err) {
+                    helpers.addResult(results, 3,
+                        'Unable to query for IAM attached policy for role: ' + role.RoleName + ': ' + helpers.addError(listAttachedRolePolicies), 'global', role.Arn);
+                    return cb();
+                }
+
+                if (!listRolePolicies || listRolePolicies.err) {
+                    helpers.addResult(results, 3,
+                        'Unable to query for IAM role policy for role: ' + role.RoleName + ': ' + helpers.addError(listRolePolicies), 'global', role.Arn);
+                    return cb();
+                }
+
+                var policyFailures = [];
+                var roleFailures = [];
+
+                // See if role has admin managed policy
+                if (listAttachedRolePolicies.data &&
+                    listAttachedRolePolicies.data.AttachedPolicies) {
+
+                    for (var policy of listAttachedRolePolicies.data.AttachedPolicies) {
+                        if (policy.PolicyArn === managedAdminPolicy) {
+                            roleFailures.push('Role has managed AdministratorAccess policy');
+                            break;
+                        }
+
+                        if (config.ignore_aws_managed_iam_policies && /^arn:aws:iam::aws:.*/.test(policy.PolicyArn)) continue;
+
+                        if (config.ignore_customer_managed_iam_policies && /^arn:aws:iam::[0-9]{12}:.*/.test(policy.PolicyArn)) continue;
+
+                        var getPolicy = helpers.addSource(cache, source,
+                            ['iam', 'getPolicy', iamRegion, policy.PolicyArn]);
+
+                        if (getPolicy &&
+                            getPolicy.data &&
+                            getPolicy.data.Policy &&
+                            getPolicy.data.Policy.DefaultVersionId) {
+                            var getPolicyVersion = helpers.addSource(cache, source,
+                                ['iam', 'getPolicyVersion', iamRegion, policy.PolicyArn]);
+
+                            if (getPolicyVersion &&
+                                getPolicyVersion.data &&
+                                getPolicyVersion.data.PolicyVersion &&
+                                getPolicyVersion.data.PolicyVersion.Document) {
+                                let statements = helpers.normalizePolicyDocument(
+                                    getPolicyVersion.data.PolicyVersion.Document);
+
+                                if (!statements) break;
+
+                                for (let statement of statements) {
+                                    if (statement.Action && statement.Action.length) {
+                                        for (let action of statement.Action) {
+                                            let service = action.split(':')[0] ? action.split(':')[0].toLowerCase() : '';
+                                            let resourceAction = action.split(':')[1] ? action.split(':')[1].toLowerCase() : '';
+
+                                            if (allServices[service]) {
+                                                for (let supportedResource of allServices[service]) {
+                                                    if (resourceAction.includes(supportedResource)) {
+                                                        if (!allResources[service] || !allResources[service].includes(supportedResource)) {
+                                                            if (policyFailures.indexOf(action) === -1) policyFailures.push(action);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                addRoleFailures(roleFailures, statements, 'managed', config.ignore_service_specific_wildcards);
+                            }
+                        }
+                    }
+                }
+
+                if (listRolePolicies.data &&
+                    listRolePolicies.data.PolicyNames) {
+
+                    for (var p in listRolePolicies.data.PolicyNames) {
+                        var policyName = listRolePolicies.data.PolicyNames[p];
+
+                        if (getRolePolicy &&
+                            getRolePolicy[policyName] &&
+                            getRolePolicy[policyName].data &&
+                            getRolePolicy[policyName].data.PolicyDocument) {
+                            var statements = helpers.normalizePolicyDocument(
+                                getRolePolicy[policyName].data.PolicyDocument);
 
                             if (!statements) break;
 
                             for (let statement of statements) {
-                                if (statement.Action && statement.Action.length) {
+                                if ((statement.Action && statement.Action.length && statement.Action[0] === '*') ||
+                                    (statement.Resource && statement.Resource.length &&  statement.Resource[0] === '*')) {
+                                    continue;
+                                }
+
+                                let service = statement.Resource[0].includes('arn') ? statement.Resource[0].split(':')[2].toLowerCase() :
+                                    statement.Action[0].split(':')[1].toLowerCase();
+                                if (statement.Action.length > 1 || statement.Action[0] !== '*') {
                                     for (let action of statement.Action) {
-                                        let service = action.split(':')[0] ? action.split(':')[0].toLowerCase() : '';
-                                        let resourceAction = action.split(':')[1] ? action.split(':')[1].toLowerCase() : '';
+                                        let resourceAction = action.split(':')[1].toLowerCase();
 
                                         if (allServices[service]) {
                                             for (let supportedResource of allServices[service]) {
@@ -319,70 +368,25 @@ module.exports = {
                                 }
                             }
 
-                            addRoleFailures(roleFailures, statements, 'managed', config.ignore_service_specific_wildcards);
+                            addRoleFailures(roleFailures, statements, 'inline', config.ignore_service_specific_wildcards);
                         }
                     }
                 }
-            }
 
-            if (listRolePolicies.data &&
-                listRolePolicies.data.PolicyNames) {
-
-                for (var p in listRolePolicies.data.PolicyNames) {
-                    var policyName = listRolePolicies.data.PolicyNames[p];
-
-                    if (getRolePolicy &&
-                        getRolePolicy[policyName] &&
-                        getRolePolicy[policyName].data &&
-                        getRolePolicy[policyName].data.PolicyDocument) {
-                        var statements = helpers.normalizePolicyDocument(
-                            getRolePolicy[policyName].data.PolicyDocument);
-
-                        if (!statements) break;
-
-                        for (let statement of statements) {
-                            if ((statement.Action && statement.Action.length && statement.Action[0] === '*') ||
-                                (statement.Resource && statement.Resource.length &&  statement.Resource[0] === '*')) {
-                                continue;
-                            }
-
-                            let service = statement.Resource[0].includes('arn') ? statement.Resource[0].split(':')[2].toLowerCase() :
-                                statement.Action[0].split(':')[1].toLowerCase();
-                            if (statement.Action.length > 1 || statement.Action[0] !== '*') {
-                                for (let action of statement.Action) {
-                                    let resourceAction = action.split(':')[1].toLowerCase();
-
-                                    if (allServices[service]) {
-                                        for (let supportedResource of allServices[service]) {
-                                            if (resourceAction.includes(supportedResource)) {
-                                                if (!allResources[service] || !allResources[service].includes(supportedResource)) {
-                                                    if (policyFailures.indexOf(action) === -1) policyFailures.push(action);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        addRoleFailures(roleFailures, statements, 'inline', config.ignore_service_specific_wildcards);
-                    }
+                if (policyFailures.length || roleFailures.length) {
+                    let failureMsg = policyFailures.length ? 'Role policies contain actions for resource types which are not in use: ' +
+                        '[ ' + policyFailures.join(', ') + ' ]' + '\r\n' + roleFailures.join(', ') : roleFailures.join(', ');
+                    helpers.addResult(results, 2, failureMsg, 'global', role.Arn, custom);
+                } else {
+                    helpers.addResult(results, 0,
+                        'Role does not have overly-permissive policy',
+                        'global', role.Arn, custom);
                 }
-            }
 
-            if (policyFailures.length || roleFailures.length) {
-                let failureMsg = policyFailures.length ? 'Role policies contain actions for resource types which are not in use: ' +
-                    '[ ' + policyFailures.join(', ') + ' ]' + '\r\n' + roleFailures.join(', ') : roleFailures.join(', ');
-                helpers.addResult(results, 2, failureMsg, 'global', role.Arn, custom);
-            } else {
-                helpers.addResult(results, 0,
-                    'Role does not have overly-permissive policy',
-                    'global', role.Arn, custom);
-            }
-
-            cb();
-        }, function() {
-            callback(null, results, source);
+                cb();
+            }, function() {
+                callback(null, results, source);
+            });
         });
     }
 };
