@@ -1,6 +1,5 @@
 var async = require('async');
 var helpers = require('../../../helpers/azure');
-var _ = require('underscore');
 
 module.exports = {
     title: 'Restrict Default Network Access for Azure Key Vaults',
